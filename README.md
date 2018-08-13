@@ -1,5 +1,4 @@
 ## console-ui-selenium
-
 This repository gathers Legion selenium/testng test framework and console-ui Selenium tests.
 Tests will be added progressively.
 
