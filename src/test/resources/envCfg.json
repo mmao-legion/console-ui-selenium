@@ -1,0 +1,10 @@
+{
+  "CHROME_DRIVER_PATH":"/Users/ytang/devtools/webdriver/chromedriver",
+  "DEVURL":"https://mobilestage.legion.work/",
+  "QAURL":"https://enterprise-stage.legion.work/",
+  "ENTERPRISE" : "LegionCoffee",
+  "DEFAULT_USERNAME" : "val.wu",
+  "DEFAULT_PASSWORD" : "awesome1",
+  "DEFAULT_PASSWORD_OLD" : "legionco1"
+
+}
