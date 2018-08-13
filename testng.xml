@@ -3,7 +3,7 @@
 <suite name="Suite">
   <test thread-count="5" name="Test">
     <classes>
-      <class name="com.legion.tests.core.LoginTest"/>
+      <class name="com.legion.tests.core.NavigationTest"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->

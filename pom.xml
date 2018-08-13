@@ -76,6 +76,7 @@
                 <version>2.12.4</version>
                 <configuration>
                 	<parallel>classes</parallel>
+                    <suiteXmlFiles>testng.xml</suiteXmlFiles>
           			<threadCount>40</threadCount>
                     <redirectTestOutputToFile>false</redirectTestOutputToFile>
                 </configuration>
