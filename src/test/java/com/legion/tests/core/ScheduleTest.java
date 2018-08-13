@@ -29,6 +29,6 @@ public class ScheduleTest extends TestBase{
         schedulePage.gotoToSchedulePage();
         AssertJUnit.assertTrue("Schedule Page Loaded Successfully", schedulePage.isSchedule());
         schedulePage.editWeeklySchedule(propertyMap);
-        //todo add assertion
+        //todo fix failure due to waiting on Edit button on a week without any schedule and add assertion
     }
 }

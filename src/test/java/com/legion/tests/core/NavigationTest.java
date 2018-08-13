@@ -21,11 +21,7 @@ import java.util.HashMap;
 
 public class NavigationTest extends TestBase {
     private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-    
-    /* Aug 03-The below Two lines are commented by Zorang Team and new lines are added as required */
-    //@Test(dataProvider = "browserDataProvider")
-    //public void navigationAsLegionAdmin(String browser, String version, String os, String pageobject, Method method)
-    //ytang 08.03.2018 change moethod name to make it more readable
+
     @Test(dataProvider = "browsers")
     public void navigationAsLegionAdmin(String browser, String version, String os, String pageobject)
 
