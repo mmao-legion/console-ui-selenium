@@ -1,43 +1,138 @@
 package com.legion.pages.core;
 
+import static com.legion.utils.MyThreadLocal.getDriver;
+
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.TeamPage;
 
 public class ConsoleTeamPage extends BasePage implements TeamPage{
 	
-	By goToTeamButton = By.cssSelector("[class='console-navigation-item-label Team']");
-	//By goToTeamCoverageTab = By.cssSelector("[class='sub-navigation-view-label ng-binding']");
-	By goToTeamCoverageTab = By.xpath("//*[@id=\"legion-app\"]/div/div[2]/div/div/div/div[2]/div/div/div[1]/sub-navigation/div/div[3]/div[1]/div[2]");
-
-	public ConsoleTeamPage(WebDriver driver) {
-        super(driver);
+	 @FindBy(css="[class='console-navigation-item-label Team']")
+	 private WebElement goToTeamButton;
+	 
+	 @FindBy(css="div.sub-navigation div.row div:nth-child(2) div.sub-navigation-view-link")
+	 private WebElement goToTeamCoverageTab;
+	 
+	 @FindBy(className="roster-body")
+	 private WebElement rosterBodyElement;
+	 
+	 @FindBy(className="coverage-view")
+	 private WebElement coverageViewElement;
+	 
+	 @FindBy(css="[ng-if=\"canShowTodos()\"]")
+	 private WebElement teamPageShowToDoButton;
+	 
+	 @FindBy(css="[ng-click=\"closeTodoPanelClick()\"]")
+	 private WebElement teamPageHideToDoButton;
+	 
+	 @FindBy(className="todos-container")
+	 private WebElement teamPageToDoContainer;
+	 
+	 @FindBy(css="[ng-show=\"subNavigation.canShowSelf\"]")
+	 private WebElement teamPageSubNavigationBar;
+	 
+	 @FindBy(css="[ng-click=\"setMode('availability')\"]")
+	 private WebElement teamPageCoverageAvailabilityButton;
+	 
+	 @FindBy(css="teamPageAvailabilityTeamMemberDataSection")
+	 private WebElement teamPageAvailabilityTeamMemberDataSection;
+	 
+	 @FindBy(css="[ng-click=\"openProfileModal(w.worker)\"]")
+	 private WebElement teamPageChangeInTeamMemberAvailability;
+	 
+	 @FindBy(className="coverage-info-row")
+	 private WebElement teamPageCoverageLabelData;
+	 
+	 @FindBy(css="[ng-style=\"dropDownButtonStyle()\"]")
+	 private WebElement teamPageCoverageJobTitleFilterButton;
+	 
+	 @FindBy(css="[ng-click=\"selectChoice($event, choice)\"]")
+	 private WebElement teamPageCoverageDropdownList;
+	 
+	 @FindBy(className="coverage-info-row")
+	 private WebElement teamPageCoverageLabelSection;
+	 
+	 @FindBy(css="[ng-click=\"setMode('timeoff')\"]")
+	 private WebElement teamPageCoverageTimeOff;
+	 
+	 @FindBy(css="ul.dropdown-menu.dropdown-menu-right")
+	 private WebElement teamPageCoverageDropdownMenu;
+	 
+	 @FindBy(className="sub-navigation-view-link")
+	 private List<WebElement> TeamPageHeaderTabs;
+	
+	public ConsoleTeamPage() {
+		PageFactory.initElements(getDriver(), this);
     }
     
     public void goToTeam() throws Exception
 	{
-    	waitForElement(goToTeamButton);
-		click(goToTeamButton);
+    	if(isElementLoaded(goToTeamButton))
+    	{
+    		click(goToTeamButton);
+    	}else{
+    		fail("Team button not present on the page",false);
+    	}
 	}
     
     public boolean isTeam() throws Exception
 	{
-    	By rosterBodyElement = By.className("roster-body");
-    	waitForElement(rosterBodyElement);
-    	return true;
+    	if(isElementLoaded(rosterBodyElement))
+    	{
+    		return true;
+    	}else{
+    		return false;
+    	}
+    	
 	}
     
     public void goToCoverage() throws Exception
     {
-    	waitForElement(goToTeamCoverageTab);
-		click(goToTeamCoverageTab);
+    	if(isElementLoaded(TeamPageHeaderTabs.get(0)))
+    	{
+    		for(WebElement teamPageHeaderTabElement : TeamPageHeaderTabs)
+    		{
+    			if(teamPageHeaderTabElement.getText().contains("COVERAGE"))
+    			{
+        			click(teamPageHeaderTabElement);
+    			}
+    		}
+    	}
     }
+    
     public boolean isCoverage() throws Exception
     {
-    	By coverageViewElement = By.className("coverage-view");
-    	waitForElement(coverageViewElement);
-    	return true;
+    	if(isElementLoaded(coverageViewElement))
+    	{
+    		return true;
+    	}else{
+    		return false;
+    	}
+    	
     }
+    
+    public void verifyTeamPage(boolean isTeamPage){
+    	if(isTeamPage){
+    		pass("Team Page Loaded Successfully!");
+    	}else{
+    		fail("Team Page not loaded Successfully!",true);
+    	}
+    }
+    
+    public void verifyCoveragePage(boolean isCoveragePage){
+    	if(isCoveragePage){
+    		pass("Team Page - Coverage Section Loaded Successfully!");
+    	}else{
+    		fail("Team Page - Coverage Section Loaded Successfully!",true);
+    	}
+    }
+    
 }
