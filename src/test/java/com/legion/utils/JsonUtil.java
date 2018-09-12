@@ -59,11 +59,5 @@ public class JsonUtil {
             System.err.println("No configuration file available.");
         }
         return objects;
-
     }
-
-
-
-
-
 }
