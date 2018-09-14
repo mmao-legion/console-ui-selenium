@@ -1,9 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Suite">
-  <test thread-count="5" name="Test">
+<suite verbose ="0" thread-count="5" name="LegionTest">
+	<parameter name="environment" value="DEV"/>
+  	<parameter name="enterprise" value="LegionCoffee"/>
+    <parameter name="browser" value="Chrome"/>
+    <listeners>
+ 		<listener class-name="com.legion.tests.listeners.LegionTestListener"></listener>
+ 	</listeners>
+  <test name="Sales Projected Sales">      
     <classes>
-      <class name="com.legion.tests.core.NavigationTest"/>
+       <class name="com.legion.tests.core.ScheduleProjectedSalesTest">
+      	<methods>
+           <include name="projectedSalesForecastDataAsStoreManagerTest"/>
+        </methods>
+      </class>
     </classes>
   </test> <!-- Test -->
+  
+  <test name="Navigation Flow">      
+    <classes>
+       <class name="com.legion.tests.core.NavigationTest">
+      	<methods>
+           <include name="legionConsoleNavigationFlow"/>
+        </methods>
+      </class>
+    </classes>
+  </test> <!-- Test -->
+  
+  
+  <test name="Analytics Test">      
+    <classes>
+       <class name="com.legion.tests.core.AnalyticsTest">
+      	<methods>
+           <include name="gotoAnalyticsPageTest"/>
+        </methods>
+      </class>
+    </classes>
+  </test> <!-- Test -->
+  
 </suite> <!-- Suite -->

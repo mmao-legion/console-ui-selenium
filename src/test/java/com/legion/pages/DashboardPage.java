@@ -6,4 +6,5 @@ package com.legion.pages;
 public interface DashboardPage {
     public void goToToday() throws Exception;
     public boolean isToday() throws Exception;
+    public void verifyDashboardPageLoadedProperly() throws Exception;
 }

@@ -6,4 +6,6 @@ public interface TeamPage {
     
     public void goToCoverage() throws Exception;
     public boolean isCoverage() throws Exception;
+    public void verifyTeamPage(boolean isTeamPage) throws Exception;
+    public void verifyCoveragePage(boolean isCoveragePage) throws Exception;
 }

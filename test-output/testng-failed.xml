@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" verbose="0" name="Failed suite [LegionTest]">
+  <parameter name="environment" value="DEV"/>
+  <parameter name="enterprise" value="LegionCoffee"/>
+  <parameter name="browser" value="Chrome"/>
+  <listeners>
+    <listener class-name="com.legion.tests.listeners.LegionTestListener"/>
+  </listeners>
+  <test name="LegionSampleTest">
+    <classes>
+      <class name="com.legion.tests.core.ScheduleProjectedSalesTest">
+        <methods>
+          <include name="projectedSalesForecastDataAsStoreManagerTest"/>
+        </methods>
+      </class> <!-- com.legion.tests.core.ScheduleProjectedSalesTest -->
+    </classes>
+  </test> <!-- LegionSampleTest -->
+</suite> <!-- Failed suite [LegionTest] -->

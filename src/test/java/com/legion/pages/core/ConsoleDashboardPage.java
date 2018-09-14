@@ -1,36 +1,127 @@
 package com.legion.pages.core;
 
+import static com.legion.utils.MyThreadLocal.getDriver;
+
+import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.testng.Reporter;
 
 public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
+	@FindBy(css="[ng-click='openSchedule()']")
+	private WebElement goToTodayScheduleButton;
+	
+	@FindBy(css="[ng-class = 'subNavigationViewLinkActiveClass(view)']")
+	private WebElement goToTodayScheduleView;
+	
+	@FindBy(css="[ng-if=\"scheduleForToday($index) && !scheduleForToday($index).length\"]")
+	private WebElement publishedShiftForTodayDiv;
+	
+	@FindBy(css="[ng-if=\"daySummary($index) && weeklyScheduleData($index) && canViewGuidance()\"]")
+	private WebElement dashboardTodaysForecastDiv;
+	
+	@FindBy(css="[ng-if=\"canViewProjectedSales()\"]")
+	private WebElement dashboardTodaysProjectedDemandGraphDiv;
+	
+	@FindBy(className="welcome-text")
+	private WebElement dashboardWelcomeSection;
+	
+	@FindBy(className="upcoming-shift-container")
+	private WebElement dashboardUpcomingShiftContainer;
+	
+	@FindBy(css="[ng-if=\"daySummary($index) && weeklyScheduleData($index) && canViewGuidance()\"]")
+	private WebElement dashboardTodaysForecastSection;
+	
+	@FindBy(css="[ng-if=\"graphData($index)\"]")
+	private WebElement dashboardProjectedDemandGraph;
 
-    //By goToTodayButton = By.cssSelector("#submit");
-	By goToTodayButton = By.cssSelector("[ng-click='openSchedule()']");
-
-    public ConsoleDashboardPage(WebDriver driver) {
-        super(driver);
-    }
-
-    @Override
-    public void goToToday() throws Exception {
-    	Reporter.log("Dashboard Page Loaded Successfully!");
-    	waitForElement(goToTodayButton);
-        click(goToTodayButton);
+    public ConsoleDashboardPage() {
+    	PageFactory.initElements(getDriver(), this);
     }
 
     @Override
     public boolean isToday() throws Exception {
-        //todo add validation on date string
-    	By goToTodayScheduleView = By.cssSelector("[ng-class = 'subNavigationViewLinkActiveClass(view)']");
-    	waitForElement(goToTodayScheduleView);
-    	Reporter.log("Today's schedule Section Loaded Successfully!");
-        return true;
+
+    	boolean bol = true;
+    	if(isElementLoaded(publishedShiftForTodayDiv)){
+    		pass("Today's published Shifts loaded Successfully on Dashboard!");
+    	}else{
+    		return false;
+    	}
+    	if(isElementLoaded(dashboardTodaysForecastDiv)){
+    		pass("Today's Fore Cast Labels loaded Successfully on Dashboard!");
+    	}else{
+    		return false;
+    	}
+    	if(isElementLoaded(dashboardTodaysProjectedDemandGraphDiv)){
+    		pass("Today's Projected Demand Graph loaded Successfully on Dashboard!");
+    	}else{
+    		return false;
+    	}
+   
+    	return true;
     }
+    
+    @Override
+    public void verifyDashboardPageLoadedProperly() throws Exception {
+    	/*
+    	 *  Check whether Welcome Text Section appear or not on Dashboard.
+    	 */
+    	if(isElementLoaded(dashboardWelcomeSection))
+        	pass("Dashboard Page Welcome Text Section Loaded Successfully!");
+    	else
+    		fail("Dashboard Page Welcome Text Section not loaded Successfully!",true);
+    	
+    	/*
+    	 *  Check whether 'VIEW TODAY'S SCHEDULE' Button appear or not on Dashboard.
+    	 */
+    	if(isElementLoaded(goToTodayScheduleButton))
+    		pass("Dashboard Page 'VIEW TODAY'S SCHEDULE' Button Loaded Successfully!");
+    	else
+    		fail("Dashboard Page 'VIEW TODAY'S SCHEDULE' Button not loaded Successfully!",true);
+    	
+    	/*
+    	 *  Check whether 'Upcoming Shift Container' Section appear or not on Dashboard.
+    	 */
+    	if(isElementLoaded(dashboardUpcomingShiftContainer))
+        	pass("Dashboard Page 'Upcoming Shift Container' Section Loaded Successfully!");
+    	else
+    		fail("Dashboard Page 'Upcoming Shift Container' Section Loaded Successfully!",true);
+    	
+    	/*
+    	 *  Check whether 'Today's Forecast' Section appear or not on Dashboard.
+    	 */
+    	if(isElementLoaded(dashboardTodaysForecastSection))
+        	pass("Dashboard Page 'Today's Forecast' Section Loaded Successfully!");
+    	else
+    		fail("Dashboard Page 'Today's Forecast' Section Loaded Successfully!",true);
+    	
+    	/*
+    	 *  Check whether 'Projected Demand Graph' Section appear or not on Dashboard.
+    	 */
+    	if(isElementLoaded(dashboardProjectedDemandGraph))
+        	pass("Dashboard Page 'Projected Demand Graph' Section Loaded Successfully!");
+    	else
+    		fail("Dashboard Page 'Projected Demand Graph' Section Loaded Successfully!",true);
+    	
+    }
+
+    @Override
+    public void goToToday() throws Exception {
+    	waitForPageLoaded(getDriver());
+    	pass("Dashboard Page Loaded Successfully!");
+        click(goToTodayScheduleButton);
+    }
+    
+
+    
+   
 
 }
