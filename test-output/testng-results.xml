@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+    <line>
+      <![CDATA[Logged-in Successfully!]]>
+    </line>
+  </reporter-output>
+  <suite name="LegionTest" duration-ms="64781" started-at="2018-09-14T12:20:04Z" finished-at="2018-09-14T12:21:09Z">
+    <groups>
+    </groups>
+    <test name="LegionSampleTest" duration-ms="64781" started-at="2018-09-14T12:20:04Z" finished-at="2018-09-14T12:21:09Z">
+      <class name="com.legion.tests.core.ScheduleProjectedSalesTest">
+        <test-method status="PASS" signature="openBrowser(java.lang.reflect.Method, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:com.legion.tests.core.ScheduleProjectedSalesTest@6f1de4c7]" name="openBrowser" is-config="true" duration-ms="1328" started-at="2018-09-14T17:50:04Z" finished-at="2018-09-14T17:50:05Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.legion.tests.core.ScheduleProjectedSalesTest.projectedSalesForecastDataAsStoreManagerTest(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[Chrome]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[LegionCoffee]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[DEV]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- openBrowser -->
+        <test-method status="PASS" signature="projectedSalesForecastDataAsStoreManagerTest(java.lang.String, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:com.legion.tests.core.ScheduleProjectedSalesTest@6f1de4c7]" name="projectedSalesForecastDataAsStoreManagerTest" duration-ms="63257" started-at="2018-09-14T17:50:05Z" data-provider="browsers" finished-at="2018-09-14T17:51:09Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[chrome]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[67.0.3396.99]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[LINUX]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[platform]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+            <line>
+              <![CDATA[Logged-in Successfully!]]>
+            </line>
+          </reporter-output>
+        </test-method> <!-- projectedSalesForecastDataAsStoreManagerTest -->
+        <test-method status="PASS" signature="closeBrowser(java.lang.reflect.Method)[pri:0, instance:com.legion.tests.core.ScheduleProjectedSalesTest@6f1de4c7]" name="closeBrowser" is-config="true" duration-ms="0" started-at="2018-09-14T17:51:09Z" finished-at="2018-09-14T17:51:09Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.legion.tests.core.ScheduleProjectedSalesTest.projectedSalesForecastDataAsStoreManagerTest(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws java.lang.Exception]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- closeBrowser -->
+      </class> <!-- com.legion.tests.core.ScheduleProjectedSalesTest -->
+    </test> <!-- LegionSampleTest -->
+  </suite> <!-- LegionTest -->
+</testng-results>

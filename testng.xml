@@ -9,14 +9,11 @@
  	</listeners>
   <test name="LegionSampleTest">      
     <classes>
-     
-       <class name="com.legion.tests.core.AnalyticsTest">
+       <class name="com.legion.tests.core.ScheduleProjectedSalesTest">
       	<methods>
-           <include name="gotoAnalyticsPageTest"/>
+           <include name="projectedSalesForecastDataAsStoreManagerTest"/>
         </methods>
       </class>
-       
-      
     </classes>
   </test> <!-- Test -->
   

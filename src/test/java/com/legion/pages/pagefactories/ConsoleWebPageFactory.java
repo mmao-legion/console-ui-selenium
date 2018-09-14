@@ -4,6 +4,7 @@ import com.legion.pages.core.ConsoleAnalyticsPage;
 import com.legion.pages.core.ConsoleControlsPage;
 import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.pages.core.ConsoleSchedulePage;
+import com.legion.pages.core.ConsoleScheduleProjectedSalesPage;
 import com.legion.pages.core.ConsoleTeamPage;
 import com.legion.pages.core.ConsoleUserAuthorizationPage;
 import com.legion.pages.core.ConsoleDashboardPage;
@@ -12,6 +13,7 @@ import com.legion.pages.ControlsPage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.SchedulePage;
+import com.legion.pages.ScheduleProjectedSalesPage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.UserAuthorizationPage;
 
@@ -58,5 +60,10 @@ public class ConsoleWebPageFactory implements PageFactory {
 	public UserAuthorizationPage createConsoleUserAuthorizationPage() {
 		// TODO Auto-generated method stub
 		return new ConsoleUserAuthorizationPage();
+	}
+	
+	@Override
+	public ScheduleProjectedSalesPage createScheduleProjectedSalesPage() {
+		return new ConsoleScheduleProjectedSalesPage();
 	}
 }

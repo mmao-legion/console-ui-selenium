@@ -54,8 +54,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.UnexpectedException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -376,7 +379,68 @@ public class TestBase {
                 + "</div>");
     }
     
+    public static void assertOnFail(String message, boolean isAssert, Boolean isExecutionContinue) {
+        if (isExecutionContinue) {
+            try {
+                assertTrue(isAssert);
+            } catch (Throwable e) {
+                addVerificationFailure(e);
+                extentTest.log(Status.ERROR, message);      
+            }
+        } else {
+        	try {
+                assertTrue(isAssert);
+            } catch (Throwable e) {
+            	extentTest.log(Status.FAIL, message);     
+                throw new AssertionError(message);
+            }	         
+        }
+    }
     
 
+    /*
+     * Methods related to Date
+     */
     
+    public int getCurrentDateDayOfYear()
+	{
+		LocalDate currentDate = LocalDate.now();
+		return currentDate.getDayOfYear();
+	}
+    
+    public int getCurrentISOYear()
+	{
+		LocalDate currentDate = LocalDate.now();
+		return currentDate.getYear();
+	}
+    
+    
+    public Map<String, String> getDayMonthDateFormatForCurrentPastAndFutureWeek(int dayOfYear, int isoYear)
+	{
+		LocalDate dateBasedOnGivenParameter = Year.of(isoYear).atDay(dayOfYear);
+	    LocalDate pastWeekDate = dateBasedOnGivenParameter.minusWeeks(1);
+	    LocalDate futureWeekDate = dateBasedOnGivenParameter.plusWeeks(1);
+	    Map<String, String> dateMonthOfCurrentPastAndFutureWeek = new HashMap<String, String>();
+	    dateMonthOfCurrentPastAndFutureWeek.put("currentWeekDate", getDayMonthDateFormat(dateBasedOnGivenParameter));
+	    dateMonthOfCurrentPastAndFutureWeek.put("pastWeekDate", getDayMonthDateFormat(pastWeekDate));
+	    dateMonthOfCurrentPastAndFutureWeek.put("futureWeekDate", getDayMonthDateFormat(futureWeekDate));
+	    return dateMonthOfCurrentPastAndFutureWeek;
+	}
+    
+    public String getDayMonthDateFormat(LocalDate localDate) {
+		String dayMonthDateFormat = null;
+		DayOfWeek dayOfWeek = localDate.getDayOfWeek();
+	    Month currentMonth = localDate.getMonth();
+	    int currentDate = localDate.getDayOfMonth();
+	    if(currentDate > 9)
+	    {
+		    dayMonthDateFormat = dayOfWeek.toString().substring(0, 3) + " " + currentMonth.toString().substring(0, 3) + " " +currentDate;
+	    }
+	    else
+	    {
+	    	dayMonthDateFormat = dayOfWeek.toString().substring(0, 3) + " " + currentMonth.toString().substring(0, 3) + " 0" +currentDate;
+	    }
+
+		return dayMonthDateFormat;
+	}
 }

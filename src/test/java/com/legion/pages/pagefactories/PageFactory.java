@@ -3,6 +3,7 @@ import com.legion.pages.AnalyticsPage;
 import com.legion.pages.ControlsPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.SchedulePage;
+import com.legion.pages.ScheduleProjectedSalesPage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.UserAuthorizationPage;
 import com.legion.pages.DashboardPage;
@@ -27,5 +28,7 @@ public interface PageFactory {
     AnalyticsPage createConsoleAnalyticsPage();
     
     ControlsPage createConsoleControlsPage();
+    
+    ScheduleProjectedSalesPage createScheduleProjectedSalesPage();
    
 }

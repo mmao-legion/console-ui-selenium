@@ -41,6 +41,7 @@ import org.testng.Reporter;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.legion.tests.TestBase;
+import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 
 /**
@@ -202,5 +203,28 @@ public class BasePage {
         List<Throwable> verificationFailures = getVerificationMap().get(Reporter.getCurrentTestResult());
         return verificationFailures == null ? new ArrayList<>() : verificationFailures;
     }
+    
+    public String getCurrentUsersJobTitle(String userName)
+    {
+    	Object[][] userDetails = JsonUtil.getArraysFromJsonFile("src/test/resources/legionUsersCredentials.json");
+    	String currentUserRole = "NA";
+    	for (Object[] user : userDetails) {
+			String userNameFromJson = (String) user[0];
+			String userTitleFromJson = (String) user[2];
+			if(userNameFromJson.contains(userName))
+				return userTitleFromJson;
+    	}
+    	return currentUserRole;
+    }
+    
+    public String getListElementTextAsString(List<WebElement> listWebElements, String separator)
+ 	{
+ 		String listWebElementsText = "";
+ 		for(WebElement listWebElement: listWebElements)
+ 		{
+ 			listWebElementsText = listWebElementsText + separator +listWebElement.getText();
+ 		}
+ 		return listWebElementsText;
+ 	}
     
 }
