@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <testng-results skipped="0" failed="1" total="1" passed="0">
   <reporter-output>
   </reporter-output>
@@ -12,6 +13,24 @@
             <param index="0">
               <value>
                 <![CDATA[public void com.legion.tests.core.AnalyticsTest.gotoAnalyticsPageTest(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws java.lang.Exception]]>
+=======
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+    <line>
+      <![CDATA[Logged-in Successfully!]]>
+    </line>
+  </reporter-output>
+  <suite name="LegionTest" duration-ms="64781" started-at="2018-09-14T12:20:04Z" finished-at="2018-09-14T12:21:09Z">
+    <groups>
+    </groups>
+    <test name="LegionSampleTest" duration-ms="64781" started-at="2018-09-14T12:20:04Z" finished-at="2018-09-14T12:21:09Z">
+      <class name="com.legion.tests.core.ScheduleProjectedSalesTest">
+        <test-method status="PASS" signature="openBrowser(java.lang.reflect.Method, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:com.legion.tests.core.ScheduleProjectedSalesTest@6f1de4c7]" name="openBrowser" is-config="true" duration-ms="1328" started-at="2018-09-14T17:50:04Z" finished-at="2018-09-14T17:50:05Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.legion.tests.core.ScheduleProjectedSalesTest.projectedSalesForecastDataAsStoreManagerTest(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws java.lang.Exception]]>
+>>>>>>> 7285909ac22f82b8565d5e9d9132d1d3ac0c5e3b
               </value>
             </param>
             <param index="1">
@@ -33,7 +52,11 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- openBrowser -->
+<<<<<<< HEAD
         <test-method status="FAIL" signature="gotoAnalyticsPageTest(java.lang.String, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:com.legion.tests.core.AnalyticsTest@1aafa419]" name="gotoAnalyticsPageTest" duration-ms="52624" started-at="2018-09-10T21:19:26Z" data-provider="browsers" finished-at="2018-09-10T21:20:19Z">
+=======
+        <test-method status="PASS" signature="projectedSalesForecastDataAsStoreManagerTest(java.lang.String, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:com.legion.tests.core.ScheduleProjectedSalesTest@6f1de4c7]" name="projectedSalesForecastDataAsStoreManagerTest" duration-ms="63257" started-at="2018-09-14T17:50:05Z" data-provider="browsers" finished-at="2018-09-14T17:51:09Z">
+>>>>>>> 7285909ac22f82b8565d5e9d9132d1d3ac0c5e3b
           <params>
             <param index="0">
               <value>
@@ -56,6 +79,7 @@
               </value>
             </param>
           </params>
+<<<<<<< HEAD
           <exception class="java.lang.AssertionError">
             <message>
               <![CDATA[Analytics Team Member Satisfaction Section not Loaded Successfully!]]>
@@ -92,13 +116,30 @@
             <param index="0">
               <value>
                 <![CDATA[public void com.legion.tests.core.AnalyticsTest.gotoAnalyticsPageTest(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws java.lang.Exception]]>
+=======
+          <reporter-output>
+            <line>
+              <![CDATA[Logged-in Successfully!]]>
+            </line>
+          </reporter-output>
+        </test-method> <!-- projectedSalesForecastDataAsStoreManagerTest -->
+        <test-method status="PASS" signature="closeBrowser(java.lang.reflect.Method)[pri:0, instance:com.legion.tests.core.ScheduleProjectedSalesTest@6f1de4c7]" name="closeBrowser" is-config="true" duration-ms="0" started-at="2018-09-14T17:51:09Z" finished-at="2018-09-14T17:51:09Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.legion.tests.core.ScheduleProjectedSalesTest.projectedSalesForecastDataAsStoreManagerTest(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws java.lang.Exception]]>
+>>>>>>> 7285909ac22f82b8565d5e9d9132d1d3ac0c5e3b
               </value>
             </param>
           </params>
           <reporter-output>
           </reporter-output>
         </test-method> <!-- closeBrowser -->
+<<<<<<< HEAD
       </class> <!-- com.legion.tests.core.AnalyticsTest -->
+=======
+      </class> <!-- com.legion.tests.core.ScheduleProjectedSalesTest -->
+>>>>>>> 7285909ac22f82b8565d5e9d9132d1d3ac0c5e3b
     </test> <!-- LegionSampleTest -->
   </suite> <!-- LegionTest -->
 </testng-results>

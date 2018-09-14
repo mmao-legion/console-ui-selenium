@@ -9,6 +9,7 @@
   </listeners>
   <test name="LegionSampleTest">
     <classes>
+<<<<<<< HEAD
       <class name="com.legion.tests.core.AnalyticsTest">
         <methods>
           <include name="gotoAnalyticsPageTest"/>
@@ -27,4 +28,13 @@
       </class> <!-- com.legion.tests.core.AnalyticsTest -->
     </classes>
   </test> <!-- LegionSampleTest(failed) -->
+=======
+      <class name="com.legion.tests.core.ScheduleProjectedSalesTest">
+        <methods>
+          <include name="projectedSalesForecastDataAsStoreManagerTest"/>
+        </methods>
+      </class> <!-- com.legion.tests.core.ScheduleProjectedSalesTest -->
+    </classes>
+  </test> <!-- LegionSampleTest -->
+>>>>>>> 7285909ac22f82b8565d5e9d9132d1d3ac0c5e3b
 </suite> <!-- Failed suite [LegionTest] -->
