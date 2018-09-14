@@ -23,8 +23,12 @@ import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.aventstack.extentreports.reporter.configuration.ChartLocation;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.legion.tests.TestBase;
+import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 //import com.legion.utils.ExtentManager;
+
+
 
 
 
@@ -34,7 +38,7 @@ import static com.legion.utils.MyThreadLocal.*;
 
 public class LegionTestListener extends TestBase implements ITestListener,IInvokedMethodListener{
 	
-	public static ExtentReports extent = ExtentManager.createInstance("test-output/AutomationReport");
+	public static ExtentReports extent = ExtentManager.createInstance("test-output");
 	public static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
 	
 	@Override
@@ -105,7 +109,7 @@ public class LegionTestListener extends TestBase implements ITestListener,IInvok
 	    public ExtentReports getInstance() {
 	    	
 			if (extent == null)
-	    		createInstance("test-output/Automation");
+	    		createInstance("test-output");
 	    	
 	        return extent;
 	    }
@@ -126,16 +130,17 @@ public class LegionTestListener extends TestBase implements ITestListener,IInvok
 	    }
 	    
 	    public static String createReportPath(String fileName){
+	    	
 	    	Date date=new Date();
 	    	SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
 			String strDate = formatter.format(date);  
 			String strDateFinal = strDate.replaceAll(" ", "_");
 			String reportName=date.toString().replace(":", "_").replace(" ", "_")+".html";
-			File file = new File(fileName + File.separator + strDateFinal);
+			File file = new File(fileName + File.separator + "AutomationReport" + File.separator + strDateFinal);
 			if (!file.exists()) {
-				file.mkdir();
-			}
-			String reportPath =fileName + File.separator + strDateFinal + File.separator + reportName;
+				boolean flag=file.mkdirs();
+			}	
+			String reportPath =fileName + File.separator + "AutomationReport" + File.separator + strDateFinal + File.separator + reportName;
 			return reportPath;
 	    }
 	}
@@ -154,7 +159,10 @@ public class LegionTestListener extends TestBase implements ITestListener,IInvok
             return;
         }
         TestName set = method.getTestMethod().getConstructorOrMethod().getMethod().getAnnotation(TestName.class);
-        extentTest = extent.createTest(set.description());
+        Owner own = method.getTestMethod().getConstructorOrMethod().getMethod().getAnnotation(Owner.class);
+        Automated automated = method.getTestMethod().getConstructorOrMethod().getMethod().getAnnotation(Automated.class);
+        extentTest = extent.createTest(result.getTestClass().getRealClass().getSimpleName()  + " - "  +" " +result.getMethod().getMethodName() + " " + set.description()+ " " +own.owner() + automated.automated() );
+        extentTest.assignCategory(result.getTestClass().getRealClass().getSimpleName());
         test.set(extentTest);     
 	}
 

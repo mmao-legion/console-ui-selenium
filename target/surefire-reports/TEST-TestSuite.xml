@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="TestSuite" time="65.324" tests="1" errors="0" skipped="0" failures="1">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="TestSuite" time="252.368" tests="4" errors="0" skipped="0" failures="1">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.8.0_171\jre\bin"/>
     <property name="java.vm.version" value="25.171-b11"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
-    <property name="maven.multiModuleProjectDirectory" value="D:\LatestCode\console-ui-selenium"/>
+    <property name="maven.multiModuleProjectDirectory" value="D:\NewGenartion\console-ui-selenium"/>
     <property name="java.vendor.url" value="http://java.oracle.com/"/>
     <property name="path.separator" value=";"/>
     <property name="guice.disable.misplaced.annotation.check" value="true"/>
@@ -16,7 +16,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value=""/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="user.dir" value="D:\LatestCode\console-ui-selenium"/>
+    <property name="user.dir" value="D:\NewGenartion\console-ui-selenium"/>
     <property name="java.runtime.version" value="1.8.0_171-b11"/>
     <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
     <property name="java.endorsed.dirs" value="C:\Program Files\Java\jdk1.8.0_171\jre\lib\endorsed"/>
@@ -64,14 +64,17 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase name="gotoAnalyticsPageTest" classname="com.legion.tests.core.AnalyticsTest" time="61.45">
+  <testcase name="projectedSalesForecastDataAsStoreManagerTest" classname="com.legion.tests.core.ScheduleProjectedSalesTest" time="68.597"/>
+  <testcase name="legionConsoleNavigationFlow" classname="com.legion.tests.core.NavigationTest" time="61.929"/>
+  <testcase name="shouldEditPublishedSchedule" classname="com.legion.tests.core.ScheduleTest" time="37.368"/>
+  <testcase name="gotoAnalyticsPageTest" classname="com.legion.tests.core.AnalyticsTest" time="63.398">
     <failure message="Analytics Team Member Satisfaction Section not Loaded Successfully!" type="java.lang.AssertionError">java.lang.AssertionError: Analytics Team Member Satisfaction Section not Loaded Successfully!
-	at com.legion.tests.core.AnalyticsTest.gotoAnalyticsPageTest(AnalyticsTest.java:26)
+	at com.legion.tests.core.AnalyticsTest.gotoAnalyticsPageTest(AnalyticsTest.java:29)
 </failure>
     <system-out><![CDATA[Staffing Forecast Accuracy
 Team Member Satisfaction
 ]]></system-out>
-    <system-err><![CDATA[Sep 14, 2018 7:21:31 PM org.openqa.selenium.remote.ProtocolHandshake createSession
+    <system-err><![CDATA[Sep 14, 2018 8:42:06 PM org.openqa.selenium.remote.ProtocolHandshake createSession
 INFO: Detected dialect: OSS
 ]]></system-err>
   </testcase>

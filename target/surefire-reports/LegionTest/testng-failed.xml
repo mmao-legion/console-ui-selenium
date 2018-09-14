@@ -7,7 +7,34 @@
   <listeners>
     <listener class-name="com.legion.tests.listeners.LegionTestListener"/>
   </listeners>
-  <test name="LegionSampleTest">
+  <test name="Sales Projected Sales">
+    <classes>
+      <class name="com.legion.tests.core.ScheduleProjectedSalesTest">
+        <methods>
+          <include name="projectedSalesForecastDataAsStoreManagerTest"/>
+        </methods>
+      </class> <!-- com.legion.tests.core.ScheduleProjectedSalesTest -->
+    </classes>
+  </test> <!-- Sales Projected Sales -->
+  <test name="Navigation Flow">
+    <classes>
+      <class name="com.legion.tests.core.NavigationTest">
+        <methods>
+          <include name="legionConsoleNavigationFlow"/>
+        </methods>
+      </class> <!-- com.legion.tests.core.NavigationTest -->
+    </classes>
+  </test> <!-- Navigation Flow -->
+  <test name="Schedule Test">
+    <classes>
+      <class name="com.legion.tests.core.ScheduleTest">
+        <methods>
+          <include name="shouldEditPublishedSchedule"/>
+        </methods>
+      </class> <!-- com.legion.tests.core.ScheduleTest -->
+    </classes>
+  </test> <!-- Schedule Test -->
+  <test name="Analytics Test">
     <classes>
       <class name="com.legion.tests.core.AnalyticsTest">
         <methods>
@@ -15,9 +42,27 @@
         </methods>
       </class> <!-- com.legion.tests.core.AnalyticsTest -->
     </classes>
-  </test> <!-- LegionSampleTest -->
-  <test name="LegionSampleTest(failed)">
+  </test> <!-- Analytics Test -->
+  <test name="Analytics Test(failed)">
     <classes>
+      <class name="com.legion.tests.core.ScheduleProjectedSalesTest">
+        <methods>
+          <include name="closeBrowser"/>
+          <include name="openBrowser"/>
+        </methods>
+      </class> <!-- com.legion.tests.core.ScheduleProjectedSalesTest -->
+      <class name="com.legion.tests.core.NavigationTest">
+        <methods>
+          <include name="closeBrowser"/>
+          <include name="openBrowser"/>
+        </methods>
+      </class> <!-- com.legion.tests.core.NavigationTest -->
+      <class name="com.legion.tests.core.ScheduleTest">
+        <methods>
+          <include name="closeBrowser"/>
+          <include name="openBrowser"/>
+        </methods>
+      </class> <!-- com.legion.tests.core.ScheduleTest -->
       <class name="com.legion.tests.core.AnalyticsTest">
         <methods>
           <include name="gotoAnalyticsPageTest" invocation-numbers="0"/>
@@ -26,5 +71,5 @@
         </methods>
       </class> <!-- com.legion.tests.core.AnalyticsTest -->
     </classes>
-  </test> <!-- LegionSampleTest(failed) -->
+  </test> <!-- Analytics Test(failed) -->
 </suite> <!-- Failed suite [LegionTest] -->

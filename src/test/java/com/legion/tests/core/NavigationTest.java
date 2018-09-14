@@ -20,6 +20,8 @@ import java.util.HashMap;
 
 import org.testng.annotations.*;
 
+import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;;
 
 
@@ -30,8 +32,9 @@ import com.legion.tests.annotations.TestName;;
 public class NavigationTest extends TestBase {
     private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
-    
-    @TestName(description = "legionConsoleNavigationFlow (Verify all the console navigations for Legion web application at high level)")
+    @Automated(automated =  "/"+"Automated]")
+	@Owner(owner = "[Naval")
+    @TestName(description = ":Verify all the console navigations for Legion web application at high level")
     @Test(dataProvider = "browsers")
     public void legionConsoleNavigationFlow(String browser, String version, String os, String pageobject)
 
@@ -60,8 +63,7 @@ public class NavigationTest extends TestBase {
         schedulePage.goToSchedule();
 //        AssertJUnit.assertTrue("Schedule Page Loaded Successfully", schedulePage.isSchedule());
         extentTest.log(Status.PASS,"Schedule Page - Navigation sales, guidance and schedule finish Successfully!");
-        extentTest.assignCategory("Legion Navigation Flow");
-        extentTest.assignAuthor("Zorang team");
+       
         
     }
 }

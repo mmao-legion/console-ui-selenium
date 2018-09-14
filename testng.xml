@@ -7,11 +7,32 @@
     <listeners>
  		<listener class-name="com.legion.tests.listeners.LegionTestListener"></listener>
  	</listeners>
-  <test name="LegionSampleTest">      
+  <test name="Sales Projected Sales">      
     <classes>
        <class name="com.legion.tests.core.ScheduleProjectedSalesTest">
       	<methods>
            <include name="projectedSalesForecastDataAsStoreManagerTest"/>
+        </methods>
+      </class>
+    </classes>
+  </test> <!-- Test -->
+  
+  <test name="Navigation Flow">      
+    <classes>
+       <class name="com.legion.tests.core.NavigationTest">
+      	<methods>
+           <include name="legionConsoleNavigationFlow"/>
+        </methods>
+      </class>
+    </classes>
+  </test> <!-- Test -->
+  
+  
+  <test name="Analytics Test">      
+    <classes>
+       <class name="com.legion.tests.core.AnalyticsTest">
+      	<methods>
+           <include name="gotoAnalyticsPageTest"/>
         </methods>
       </class>
     </classes>

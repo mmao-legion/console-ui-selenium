@@ -15,7 +15,6 @@ com\legion\pages\TeamPage.class
 com\legion\utils\SimpleUtils.class
 com\legion\pages\UserAuthorizationPage.class
 com\legion\tests\listeners\LegionTestListener.class
-com\legion\tests\core\UserAuthorizationTest.class
 com\legion\pages\core\ConsoleAnalyticsPage.class
 com\legion\pages\SchedulePage.class
 com\legion\utils\MyThreadLocal.class

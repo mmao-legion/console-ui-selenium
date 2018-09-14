@@ -7,14 +7,17 @@ import org.testng.annotations.Test;
 import com.legion.pages.AnalyticsPage;
 import com.legion.pages.LoginPage;
 import com.legion.tests.TestBase;
+import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.utils.JsonUtil;
 
 public class AnalyticsTest extends TestBase{
 	
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-    
-	@TestName(description = "gotoAnalyticsPageTest (Verify Analytics flow)")
+    @Automated(automated =  "/"+"Automated]")
+	@Owner(owner = "[Naval")
+	@TestName(description = ":Verify Analytics flow")
     @Test(dataProvider = "browsers")
     public void gotoAnalyticsPageTest(String browser, String version, String os, String pageobject) throws Exception { 
     	LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -24,7 +27,7 @@ public class AnalyticsTest extends TestBase{
 	    boolean isLoginDone = loginPage.isLoginDone();
 	    loginPage.verifyLoginDone(isLoginDone);
 		analyticsPage.gotoAnalyticsPage();
-		TestBase.extentTest.assignCategory("Analytics");
+		
     }
 
 }

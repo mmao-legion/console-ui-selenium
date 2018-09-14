@@ -11,6 +11,8 @@ import com.legion.pages.LoginPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.ScheduleProjectedSalesPage;
 import com.legion.tests.TestBase;
+import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.utils.JsonUtil;
 
@@ -18,6 +20,8 @@ public class ScheduleProjectedSalesTest extends TestBase{
 
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 	ScheduleProjectedSalesPage schedulePage = null;
+	@Automated(automated =  "/"+"Automated]")
+	@Owner(owner = "[Naval")
 	@TestName(description = "LEG-2422: As a store manager, can view Projected Sales Forecast data for past and current week")
     @Test(dataProvider = "browsers")
     public void projectedSalesForecastDataAsStoreManagerTest(String browser, String version, String os, String pageobject)
