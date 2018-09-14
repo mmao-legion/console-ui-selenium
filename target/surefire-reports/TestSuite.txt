@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: TestSuite
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 65.324 sec <<< FAILURE! - in TestSuite
+gotoAnalyticsPageTest(com.legion.tests.core.AnalyticsTest)  Time elapsed: 61.45 sec  <<< FAILURE!
+java.lang.AssertionError: Analytics Team Member Satisfaction Section not Loaded Successfully!
+	at com.legion.tests.core.AnalyticsTest.gotoAnalyticsPageTest(AnalyticsTest.java:26)
+
