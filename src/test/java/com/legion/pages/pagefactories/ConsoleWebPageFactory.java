@@ -4,7 +4,8 @@ import com.legion.pages.core.ConsoleAnalyticsPage;
 import com.legion.pages.core.ConsoleControlsPage;
 import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.pages.core.ConsoleSchedulePage;
-import com.legion.pages.core.ConsoleScheduleProjectedSalesPage;
+import com.legion.pages.core.ConsoleStaffingGuidancePage;
+import com.legion.pages.core.ConsoleSalesForecastPage;
 import com.legion.pages.core.ConsoleTeamPage;
 import com.legion.pages.core.ConsoleUserAuthorizationPage;
 import com.legion.pages.core.ConsoleDashboardPage;
@@ -13,11 +14,10 @@ import com.legion.pages.ControlsPage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.SchedulePage;
-import com.legion.pages.ScheduleProjectedSalesPage;
+import com.legion.pages.StaffingGuidancePage;
+import com.legion.pages.SalesForecastPage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.UserAuthorizationPage;
-
-import org.openqa.selenium.WebDriver;
 import org.testng.Reporter;
 
 /**
@@ -63,7 +63,13 @@ public class ConsoleWebPageFactory implements PageFactory {
 	}
 	
 	@Override
-	public ScheduleProjectedSalesPage createScheduleProjectedSalesPage() {
-		return new ConsoleScheduleProjectedSalesPage();
+	public SalesForecastPage createSalesForecastPage() {
+		return new ConsoleSalesForecastPage();
+	}
+
+	@Override
+	public StaffingGuidancePage createStaffingGuidancePage() {
+		// TODO Auto-generated method stub
+		return new ConsoleStaffingGuidancePage();
 	}
 }

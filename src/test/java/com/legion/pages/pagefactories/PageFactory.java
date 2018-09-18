@@ -3,13 +3,11 @@ import com.legion.pages.AnalyticsPage;
 import com.legion.pages.ControlsPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.SchedulePage;
-import com.legion.pages.ScheduleProjectedSalesPage;
+import com.legion.pages.StaffingGuidancePage;
+import com.legion.pages.SalesForecastPage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.UserAuthorizationPage;
 import com.legion.pages.DashboardPage;
-
-import org.openqa.selenium.WebDriver;
-
 /**
  * Yanming
  */
@@ -29,6 +27,8 @@ public interface PageFactory {
     
     ControlsPage createConsoleControlsPage();
     
-    ScheduleProjectedSalesPage createScheduleProjectedSalesPage();
+    SalesForecastPage createSalesForecastPage();
+    
+    StaffingGuidancePage createStaffingGuidancePage();
    
 }

@@ -19,6 +19,7 @@ import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
 import com.legion.pages.SchedulePage;
 import com.legion.tests.TestBase;
+import com.legion.utils.SimpleUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -296,19 +297,19 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         if(isElementLoaded(draft)){
         	pass("Draft is Displayed on the page");
         }else{
-        	fail("Draft not displayed on the page",true);
+        	SimpleUtils.fail("Draft not displayed on the page",true);
         }
         
         if(isElementLoaded(published)){
         	pass("Published is Displayed on the page");
         }else{
-        	fail("Published not displayed on the page",true);
+        	SimpleUtils.fail("Published not displayed on the page",true);
         }
         
         if(isElementLoaded(finalized)){
         	pass("Finalized is Displayed on the page");
         }else{
-        	fail("Finalized not displayed on the page",true);
+        	SimpleUtils.fail("Finalized not displayed on the page",true);
         }
         
   
@@ -329,7 +330,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     	if(isSchedulePageLoaded){
     		pass("Schedule Page Loaded Successfully!");
     	}else{
-    		fail("Schedule Page not Loaded Successfully!",false);
+    		SimpleUtils.fail("Schedule Page not Loaded Successfully!",false);
     	}
     }
 
@@ -343,13 +344,13 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         if(isElementLoaded(salesGuidance)){
         	pass("SalesGuidance is Displayed on the page");
         }else{
-        	fail("SalesGuidance not Displayed on the page",true);
+        	SimpleUtils.fail("SalesGuidance not Displayed on the page",true);
         }
         
         if(isElementLoaded(refresh)){
         	pass("Refresh is Displayed on the page");
         }else{
-        	fail("Refresh not Displayed on the page",true);
+        	SimpleUtils.fail("Refresh not Displayed on the page",true);
         }
        
     }
@@ -366,13 +367,13 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         if(isElementLoaded(guidance)){
         	pass("Guidance is Displayed on Staffing Guidance page");
         }else{
-        	fail("Guidance not Displayed on Staffing Guidance page",true);
+        	SimpleUtils.fail("Guidance not Displayed on Staffing Guidance page",true);
         }
         
         if(isElementLoaded(analyze)){
         	pass("Analyze is Displayed on Staffing Guidance page");
         }else{
-        	fail("Analyze not Displayed on Staffing Guidance page",true);
+        	SimpleUtils.fail("Analyze not Displayed on Staffing Guidance page",true);
         }
 
     }
@@ -388,7 +389,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         if(isElementLoaded(analyze)){
         	pass("Analyze is Displayed on Schdule page");
         }else{
-        	fail("Analyze not Displayed on Schedule page",true);
+        	SimpleUtils.fail("Analyze not Displayed on Schedule page",true);
         }
         
 //        if(isElementLoaded(refresh)){
@@ -400,7 +401,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         if(isElementLoaded(edit)){
         	pass("Edit is Displayed on Schedule page");
         }else{
-        	fail("EDit not Displayed on Schedule page",true);
+        	SimpleUtils.fail("EDit not Displayed on Schedule page",true);
         }
 
 
@@ -419,7 +420,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     	if(isScheduleTab){
     		pass("Schedule Tab loaded Successfully!");
     	}else{
-    		fail("Schedule Tab not loaded Successfully!",false);
+    		SimpleUtils.fail("Schedule Tab not loaded Successfully!",false);
     	}
     }
 

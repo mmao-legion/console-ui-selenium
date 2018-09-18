@@ -44,21 +44,25 @@ public class LegionTestListener extends TestBase implements ITestListener,IInvok
 	@Override
 	public void onTestStart(ITestResult result) {  
 		String testName = result.getMethod().getMethodName();
+//		set(result);
 		setLoc(testName);
         initialize();	
 	}
 
 	@Override
 	public void onTestSuccess(ITestResult result) {
-        extentTest.log(Status.PASS, MarkupHelper.createLabel("Test case Passed:",ExtentColor.GREEN));
-        String targetFile = takeScreenShot();
-        String screenshotLoc = System.getProperty("user.dir") + File.separator + targetFile;
-//		try {
-//			extentTest.addScreenCaptureFromPath("<a href='"+screenshotLoc+ "'>" +"Screenshots"+"</a>");
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+        if(getVerificationMap().size() > 0){
+        	 ITestContext testContext = result.getTestContext();
+             testContext.getPassedTests().removeResult(result);
+             result.setStatus(ITestResult.FAILURE);
+             testContext.getSkippedTests().addResult(result, result.getMethod());
+             extentTest.log(Status.FAIL,"FAIL: "
+                    + result.getMethod().getConstructorOrMethod().getMethod().getAnnotation(Test.class).testName()
+                    + " on " + result.getTestContext().getSuite().getName());
+        }else{
+        	extentTest.log(Status.PASS, MarkupHelper.createLabel("Test case Passed:",ExtentColor.GREEN));
+        }
+		
 	}
 
 	@Override
@@ -79,6 +83,10 @@ public class LegionTestListener extends TestBase implements ITestListener,IInvok
 	@Override
 	public void onTestSkipped(ITestResult result) {
 		// TODO Auto-generated method stub
+		if (result != null && result.getThrowable() != null) {
+			System.out.println("Skipped test case");     
+			result.getThrowable().printStackTrace();
+	        }
 		
 	}
 
@@ -123,7 +131,6 @@ public class LegionTestListener extends TestBase implements ITestListener,IInvok
 	        htmlReporter.config().setDocumentTitle(fileName);
 	        htmlReporter.config().setEncoding("utf-8");
 	        htmlReporter.config().setReportName("Custom Report");
-	        
 	        extent = new ExtentReports();
 	        extent.attachReporter(htmlReporter);
 	        return extent;
@@ -165,6 +172,6 @@ public class LegionTestListener extends TestBase implements ITestListener,IInvok
         extentTest.assignCategory(result.getTestClass().getRealClass().getSimpleName());
         test.set(extentTest);     
 	}
-
+	
 
 }
