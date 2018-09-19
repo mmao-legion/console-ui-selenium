@@ -177,54 +177,6 @@ public class BasePage {
                 + "</div>");
     }
     
-    public static void fail(String message, boolean continueExecution, String... severity) {
-        if (continueExecution) {
-            try {
-                assertTrue(false);
-            } catch (Throwable e) {
-                addVerificationFailure(e);
-                TestBase.extentTest.log(Status.ERROR, message);      
-            }
-        } else {
-        	TestBase.extentTest.log(Status.FAIL, message);
-            throw new AssertionError(message);
-        }
-    }
     
-    private static void addVerificationFailure(Throwable e) {
-        List<Throwable> verificationFailures = getVerificationFailures();
-        System.out.println(Reporter.getCurrentTestResult());
-        System.out.println(verificationFailures);
-        getVerificationMap().put(Reporter.getCurrentTestResult(), verificationFailures);
-        verificationFailures.add(e);
-    }
-    
-    private static List<Throwable> getVerificationFailures() {
-        List<Throwable> verificationFailures = getVerificationMap().get(Reporter.getCurrentTestResult());
-        return verificationFailures == null ? new ArrayList<>() : verificationFailures;
-    }
-    
-    public String getCurrentUsersJobTitle(String userName)
-    {
-    	Object[][] userDetails = JsonUtil.getArraysFromJsonFile("src/test/resources/legionUsersCredentials.json");
-    	String currentUserRole = "NA";
-    	for (Object[] user : userDetails) {
-			String userNameFromJson = (String) user[0];
-			String userTitleFromJson = (String) user[2];
-			if(userNameFromJson.contains(userName))
-				return userTitleFromJson;
-    	}
-    	return currentUserRole;
-    }
-    
-    public String getListElementTextAsString(List<WebElement> listWebElements, String separator)
- 	{
- 		String listWebElementsText = "";
- 		for(WebElement listWebElement: listWebElements)
- 		{
- 			listWebElementsText = listWebElementsText + separator +listWebElement.getText();
- 		}
- 		return listWebElementsText;
- 	}
     
 }

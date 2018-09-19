@@ -13,6 +13,7 @@ import com.aventstack.extentreports.Status;
 import com.legion.pages.AnalyticsPage;
 import com.legion.pages.BasePage;
 import com.legion.tests.TestBase;
+import com.legion.utils.SimpleUtils;
 
 public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	
@@ -34,7 +35,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	 @FindBy(css="[ng-if=\"hasHoursData()\"]")
 	 private WebElement analyticsHoursDataSectionDiv;
 	 
-	 @FindBy(css=".analytics-dashboard-sub-sectio")
+	 @FindBy(css=".analytics-dashboard-sub-section")
 	 private WebElement analyticsSubSection;
 	 
 	 @FindBy(css=".analytics-dashboard-sub-section")
@@ -129,7 +130,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		if(isElementLoaded(analyticsHoursDataSectionDiv)){
 			pass("Analytics Staffing Forecast Accuracy Section Loaded Successfully!");
 		}else{
-			fail("Analytics Staffing Forecast Accuracy Section not Loaded Successfully!",true);
+			SimpleUtils.fail("Analytics Staffing Forecast Accuracy Section not Loaded Successfully!",true);
 		}
 
 		String allHoursCheckboxClasses = analyticsAllHoursCheckBox.getAttribute("class");
@@ -151,13 +152,13 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		if(analyticsTMSHasHoursDataSectionText.contains("All Hrs")){
 			pass("All Hours under Analytics Staffing Forecast Accuracy Section Loaded Successfully!");
 		}else{
-			fail("All Hours under Analytics Staffing Forecast Accuracy Section not Loaded Successfully!",true);
+			SimpleUtils.fail("All Hours under Analytics Staffing Forecast Accuracy Section not Loaded Successfully!",true);
 		}
 	
 		if(analyticsTMSHasHoursDataSectionText.contains("Peak Hrs")){
 			pass("Peak Hours under Analytics Staffing Forecast Accuracy Section Loaded Successfully!");
 		}else{
-			fail("Peak Hours under Analytics Staffing Forecast Accuracy Section not Loaded Successfully!",true);
+			SimpleUtils.fail("Peak Hours under Analytics Staffing Forecast Accuracy Section not Loaded Successfully!",true);
 		}
 		
 	}
@@ -167,7 +168,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		if(isElementLoaded(analyticsSubSection)){
 			pass("Analytics Team Member Satisfaction Section Loaded Successfully!");
 		}else{
-			fail("Analytics Team Member Satisfaction Section not Loaded Successfully!",false);
+			SimpleUtils.fail("Analytics Team Member Satisfaction Section not Loaded Successfully!",false);
 		}
 			
 		System.out.println("teamMemberSatisfactionsElements Length: "+teamMemberSatisfactionsElements.size());

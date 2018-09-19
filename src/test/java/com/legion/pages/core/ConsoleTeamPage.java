@@ -12,6 +12,7 @@ import org.openqa.selenium.support.PageFactory;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.TeamPage;
+import com.legion.utils.SimpleUtils;
 
 public class ConsoleTeamPage extends BasePage implements TeamPage{
 	
@@ -79,7 +80,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
     	{
     		click(goToTeamButton);
     	}else{
-    		fail("Team button not present on the page",false);
+    		SimpleUtils.fail("Team button not present on the page",false);
     	}
 	}
     
@@ -123,7 +124,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
     	if(isTeamPage){
     		pass("Team Page Loaded Successfully!");
     	}else{
-    		fail("Team Page not loaded Successfully!",true);
+    		SimpleUtils.fail("Team Page not loaded Successfully!",true);
     	}
     }
     
@@ -131,7 +132,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
     	if(isCoveragePage){
     		pass("Team Page - Coverage Section Loaded Successfully!");
     	}else{
-    		fail("Team Page - Coverage Section Loaded Successfully!",true);
+    		SimpleUtils.fail("Team Page - Coverage Section Loaded Successfully!",true);
     	}
     }
     

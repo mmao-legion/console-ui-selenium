@@ -5,6 +5,7 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 import com.aventstack.extentreports.ExtentTest;
 import com.legion.pages.BasePage;
 import com.legion.pages.LoginPage;
+import com.legion.utils.SimpleUtils;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
@@ -89,7 +90,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     	if(isLoginDone){
     		pass("Login to Legion Application Successfully!");
     	}else{
-    		fail("Login to Legion Application Successfully!",true);
+    		SimpleUtils.fail("Login to Legion Application Successfully!",true);
     	}
     	
     }

@@ -45,7 +45,7 @@ public class NavigationTest extends TestBase {
         loginPage.goToDashboardHome(propertyMap);
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.verifyDashboardPageLoadedProperly();
-        dashboardPage.goToToday();
+        SchedulePage schedulePage = dashboardPage.goToToday();
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();
         boolean isTeamPage = teamPage.isTeam();
@@ -53,7 +53,6 @@ public class NavigationTest extends TestBase {
         teamPage.goToCoverage();
         boolean isCoveragePage = teamPage.isCoverage();
         teamPage.verifyCoveragePage(isCoveragePage);
-        SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
         schedulePage.gotoToSchedulePage();
 //        AssertJUnit.assertTrue("Schedule Page Loaded Successfully", schedulePage.isSchedule());
         schedulePage.goToProjectedSales();

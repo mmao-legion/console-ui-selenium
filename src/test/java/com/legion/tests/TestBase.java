@@ -12,6 +12,7 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
@@ -68,6 +69,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
+
 
 
 //import org.apache.log4j.Logger;
@@ -243,7 +245,7 @@ public class TestBase {
 	//added by Nishant
 	
 	@AfterMethod(alwaysRun = true)
-    protected void closeBrowser(Method method) throws IOException {
+    protected void closeBrowser(Method method,ITestResult result) throws IOException {
 		
 		if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
             try {
@@ -254,7 +256,13 @@ public class TestBase {
                 Reporter.log("Error closing browser");
             }
         }
-        getVerificationMap().clear();
+		
+		
+		 getVerificationMap().clear();
+		if(result.getStatus() == ITestResult.FAILURE){
+			Assert.fail();
+		}	
+       
     }
 	
 	public void initialize(){
@@ -306,10 +314,12 @@ public class TestBase {
                 assertTrue(false);
             } catch (Throwable e) {
                 addVerificationFailure(e);
-                extentTest.log(Status.ERROR, message);      
+                extentTest.log(Status.WARNING, "<div class=\"row\" style=\"background-color:#FDB45C; color:white; padding: 7px 5px;\">" + message
+                        + "</div>");    
             }
         } else {
-        	extentTest.log(Status.FAIL, message);
+        	extentTest.log(Status.FATAL, "<div class=\"row\" style=\"background-color:#ff0000; color:white; padding: 7px 5px;\">" + message
+                    + "</div>");  
             throw new AssertionError(message);
         }
     }
@@ -342,7 +352,11 @@ public class TestBase {
 			if(getDriver().getCurrentUrl().contains("analytics/dashboard")){
 				activeTabDashboard = "Analytics";
 				screenshotFinalLocation = screenshotLocation + File.separator + strDateFinal + File.separator + getSessionTimestamp() + File.separator + getCurrentTestMethodName() + File.separator + activeTabDashboard;
-			}else if(getDriver().getCurrentUrl().contains("schedule")){
+			}else if(getDriver().getCurrentUrl().contains("schedule/salesforecast")){
+				activeTabSchedule = "Sales Forecast Page";
+				screenshotFinalLocation = screenshotLocation + File.separator + strDateFinal + File.separator + getSessionTimestamp() + File.separator + getCurrentTestMethodName() + File.separator + activeTabSchedule;
+			}
+			else if(getDriver().getCurrentUrl().contains("schedule")){
 				activeTabSchedule = "SchedulePage";
 				screenshotFinalLocation = screenshotLocation + File.separator + strDateFinal + File.separator + getSessionTimestamp() + File.separator + getCurrentTestMethodName() + File.separator + activeTabSchedule;
 			}else if(getDriver().getCurrentUrl().contains("team")){
@@ -379,68 +393,5 @@ public class TestBase {
                 + "</div>");
     }
     
-    public static void assertOnFail(String message, boolean isAssert, Boolean isExecutionContinue) {
-        if (isExecutionContinue) {
-            try {
-                assertTrue(isAssert);
-            } catch (Throwable e) {
-                addVerificationFailure(e);
-                extentTest.log(Status.ERROR, message);      
-            }
-        } else {
-        	try {
-                assertTrue(isAssert);
-            } catch (Throwable e) {
-            	extentTest.log(Status.FAIL, message);     
-                throw new AssertionError(message);
-            }	         
-        }
-    }
     
-
-    /*
-     * Methods related to Date
-     */
-    
-    public int getCurrentDateDayOfYear()
-	{
-		LocalDate currentDate = LocalDate.now();
-		return currentDate.getDayOfYear();
-	}
-    
-    public int getCurrentISOYear()
-	{
-		LocalDate currentDate = LocalDate.now();
-		return currentDate.getYear();
-	}
-    
-    
-    public Map<String, String> getDayMonthDateFormatForCurrentPastAndFutureWeek(int dayOfYear, int isoYear)
-	{
-		LocalDate dateBasedOnGivenParameter = Year.of(isoYear).atDay(dayOfYear);
-	    LocalDate pastWeekDate = dateBasedOnGivenParameter.minusWeeks(1);
-	    LocalDate futureWeekDate = dateBasedOnGivenParameter.plusWeeks(1);
-	    Map<String, String> dateMonthOfCurrentPastAndFutureWeek = new HashMap<String, String>();
-	    dateMonthOfCurrentPastAndFutureWeek.put("currentWeekDate", getDayMonthDateFormat(dateBasedOnGivenParameter));
-	    dateMonthOfCurrentPastAndFutureWeek.put("pastWeekDate", getDayMonthDateFormat(pastWeekDate));
-	    dateMonthOfCurrentPastAndFutureWeek.put("futureWeekDate", getDayMonthDateFormat(futureWeekDate));
-	    return dateMonthOfCurrentPastAndFutureWeek;
-	}
-    
-    public String getDayMonthDateFormat(LocalDate localDate) {
-		String dayMonthDateFormat = null;
-		DayOfWeek dayOfWeek = localDate.getDayOfWeek();
-	    Month currentMonth = localDate.getMonth();
-	    int currentDate = localDate.getDayOfMonth();
-	    if(currentDate > 9)
-	    {
-		    dayMonthDateFormat = dayOfWeek.toString().substring(0, 3) + " " + currentMonth.toString().substring(0, 3) + " " +currentDate;
-	    }
-	    else
-	    {
-	    	dayMonthDateFormat = dayOfWeek.toString().substring(0, 3) + " " + currentMonth.toString().substring(0, 3) + " 0" +currentDate;
-	    }
-
-		return dayMonthDateFormat;
-	}
 }

@@ -28,6 +28,8 @@ public class AnalyticsTest extends TestBase{
 	    loginPage.verifyLoginDone(isLoginDone);
 		analyticsPage.gotoAnalyticsPage();
 		
+		
+		
     }
 
 }
