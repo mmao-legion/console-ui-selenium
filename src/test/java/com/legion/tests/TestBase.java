@@ -258,7 +258,10 @@ public class TestBase {
         }
 		
 		
-		 getVerificationMap().clear();
+		if (getVerificationMap() != null) {
+            getVerificationMap().clear();
+        }
+
 		if(result.getStatus() == ITestResult.FAILURE){
 			Assert.fail();
 		}	

@@ -34,6 +34,7 @@
            <include name="legionConsoleNavigationFlow"/>
         </methods>
       </class>
+      <class name="com.legion.tests.core.StoreManagerScheduleNavigationTest"></class>
     </classes>
   </test> <!-- Test -->
   
