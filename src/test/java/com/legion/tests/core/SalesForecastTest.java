@@ -14,6 +14,7 @@ import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
@@ -31,13 +32,12 @@ public class SalesForecastTest extends TestBase{
 	}
 	
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	
 	SalesForecastPage schedulePage = null;
-	@Automated(automated =  "/"+"Automated]")
-	@Owner(owner = "[Naval")
+	@Automated(automated ="Automated")
+	@Owner(owner = "Naval")
 	@TestName(description = "LEG-2422: As a store manager, can view Projected Sales Forecast data for past and current week")
     @Test(dataProvider = "browsers")
-	
-	
     public void salesForecastDataAsStoreManagerTest(String browser, String version, String os, String pageobject)
             throws Exception
     {
@@ -130,12 +130,29 @@ public class SalesForecastTest extends TestBase{
          *  Logging Projected Sales forecast Data card values
          */
         
-        extentTest.log(Status.INFO, weekType+" Projected Sales Cards Data Peak Demand Projected - "+peakDemandProjected );
-        extentTest.log(Status.INFO, weekType+" Projected Sales Cards Data Peak Demand Actual - "+peakDemandActual );
-        extentTest.log(Status.INFO, weekType+" Projected Sales Cards Data Total Demand Projected - "+totalDemandProjected);
-        extentTest.log(Status.INFO, weekType+" Projected Sales Cards Data Total Demand Actual - "+totalDemandActual );
-        extentTest.log(Status.INFO, weekType+" Projected Sales Cards Data Peak Time Projected - "+peakTimeProjected );
-        extentTest.log(Status.INFO, weekType+" Projected Sales Cards Data Peak Time Actual - "+peakTimeActual );
+        ExtentTestManager.extentTest.get().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Demand Projected - "+peakDemandProjected );
+        ExtentTestManager.extentTest.get().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Demand Actual - "+peakDemandActual );
+        ExtentTestManager.extentTest.get().log(Status.INFO, weekType+" Projected Sales Cards Data Total Demand Projected - "+totalDemandProjected);
+        ExtentTestManager.extentTest.get().log(Status.INFO, weekType+" Projected Sales Cards Data Total Demand Actual - "+totalDemandActual );
+        ExtentTestManager.extentTest.get().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Time Projected - "+peakTimeProjected );
+        ExtentTestManager.extentTest.get().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Time Actual - "+peakTimeActual );
 		
 	}
+	
+	
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "LEG-4975: Coffee Cups in All Sales Item filter is not showing any data")
+    @Test(dataProvider = "browsers")
+    public void shouldAllSalesItemDisplayEnabledFilter(String browser, String version, String os, String pageobject)
+            throws Exception
+    {
+		SimpleUtils.pass("Login as Store Manager Successfully");
+		SimpleUtils.pass("Successfully opened the Schedule app");
+		SimpleUtils.pass("Open a Sales Forecast of current week in Day/Week view ");
+		SimpleUtils.fail("Select All Sales Items from dropdown and assert it should display data in graphs",false); 
+		
+    }
+	
+	
 }

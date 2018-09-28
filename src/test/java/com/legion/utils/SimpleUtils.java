@@ -9,6 +9,7 @@ import org.testng.Reporter;
 
 import com.aventstack.extentreports.Status;
 import com.legion.tests.TestBase;
+import com.legion.tests.testframework.ExtentTestManager;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -51,10 +52,10 @@ public class SimpleUtils {
                 assertTrue(false);
             } catch (Throwable e) {
                 addVerificationFailure(e);
-                TestBase.extentTest.log(Status.ERROR, message);      
+                ExtentTestManager.extentTest.get().log(Status.ERROR, message);      
             }
         } else {
-        	TestBase.extentTest.log(Status.FAIL, message);
+        	ExtentTestManager.extentTest.get().log(Status.FAIL, message);
             throw new AssertionError(message);
         }
     }
@@ -113,13 +114,15 @@ public class SimpleUtils {
                 assertTrue(isAssert);
             } catch (Throwable e) {
                 addVerificationFailure(e);
-                TestBase.extentTest.log(Status.ERROR, message);      
+                //TestBase.extentTest.log(Status.ERROR, message); 
+                ExtentTestManager.extentTest.get().log(Status.ERROR, "<div class=\"row\" style=\"background-color:#FDB45C; color:white; padding: 7px 5px;\">" + message
+                        + "</div>");
             }
         } else {
         	try {
                 assertTrue(isAssert);
             } catch (Throwable e) {
-            	TestBase.extentTest.log(Status.FAIL, message);     
+            	ExtentTestManager.extentTest.get().log(Status.FAIL, message);     
                 throw new AssertionError(message);
             }	         
         }
@@ -168,5 +171,10 @@ public class SimpleUtils {
 			return dayMonthDateFormat;
 		}
 	    
-    
+	    public static void pass(String message) {
+	    	
+	    	ExtentTestManager.extentTest.get().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
+	                + "</div>");
+	    }
+	    
 }

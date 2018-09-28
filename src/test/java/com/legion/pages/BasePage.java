@@ -41,8 +41,10 @@ import org.testng.Reporter;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.legion.tests.TestBase;
+import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
+import com.legion.utils.SimpleUtils;
 
 /**
  * Yanming
@@ -58,7 +60,7 @@ public class BasePage {
             waitUntilElementIsVisible(element);
             element.click();
         } catch (TimeoutException te) {
-            TestBase.extentTest.log(Status.WARNING,te);
+        	ExtentTestManager.extentTest.get().log(Status.WARNING,te);
         }
     }
 
@@ -88,7 +90,7 @@ public class BasePage {
         WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(),30);
         try {
             wait.until(ExpectedConditions.visibilityOf(element));
-            pass("Element is present");
+            SimpleUtils.pass("Element is present");
         }
         catch (NoSuchElementException e)
         {
@@ -120,8 +122,6 @@ public class BasePage {
         } catch (Throwable ignored) {
         }
     }
-    
-    //added by Nishant
     
     public void waitForPageLoaded(WebDriver driver) {
         try {
@@ -160,23 +160,5 @@ public class BasePage {
         });
         return elementPresent;
     }
-    
-    protected boolean verifyElementPresent(WebElement element) {
-        boolean actual = true;
-        try {
-            element.isDisplayed();
-        } catch (NoSuchElementException e) {
-            actual = false;
-        }
-        return actual;
-    }
-    
-    public static void pass(String message) {
-    	
-    	TestBase.extentTest.log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
-                + "</div>");
-    }
-    
-    
-    
+   
 }
