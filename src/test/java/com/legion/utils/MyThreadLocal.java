@@ -39,6 +39,15 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> testMethodName = new ThreadLocal<>();
 	public static void setCurrentTestMethodName(String value) { testMethodName.set(value); }
     public static String getCurrentTestMethodName() { return testMethodName.get(); }
+    
+//    public static ThreadLocal<ExtentTest> extentTest = new ThreadLocal<>();
+//    
+//    public static void setExtentTest(ExtentTest test) { 
+//    	extentTest.set(test); 
+//    	}
+//    public static ExtentTest getExtentTest() { 
+//    	return extentTest.get();
+//    }
 		
 	public static void setTotalSuiteTestCases(Integer value) {
 		totalSuiteTestCases.set(value);

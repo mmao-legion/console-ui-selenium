@@ -1,7 +1,9 @@
 package com.legion.tests.core;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.testng.annotations.Test;
 
@@ -15,6 +17,7 @@ import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
@@ -22,12 +25,11 @@ public class StaffingGuidanceTest extends TestBase{
 	
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 	SalesForecastPage schedulePage = null;
-	@Automated(automated =  "/"+"Automated]")
-	@Owner(owner = "[Naval")
+	
+	@Automated(automated = "Automated")
+	@Owner(owner = "Naval")
 	@TestName(description = "LEG-2423: As a store manager, can view Staffing Guidance data for current week")
     @Test(dataProvider = "browsers")
-	
-	
     public void staffingGuidanceDataAsStoreManagerTest(String browser, String version, String os, String pageobject)
             throws Exception
     {
@@ -70,10 +72,10 @@ public class StaffingGuidanceTest extends TestBase{
         	staffingGuidanceDayViewTeamMembersTotalCount = staffingGuidanceDayViewTeamMembersTotalCount + itemsCount;
         	staffingGuidanceDayViewTeamMembersCountAsString = staffingGuidanceDayViewTeamMembersCountAsString + "|" + itemsCount;
         }
-        extentTest.log(Status.INFO,"Staffing Guidance for Day View");
-        extentTest.log(Status.INFO,dayViewTimeDurationAsString);
-        extentTest.log(Status.INFO,staffingGuidanceDayViewItemsCountAsString);
-        extentTest.log(Status.INFO,staffingGuidanceDayViewTeamMembersCountAsString);
+        ExtentTestManager.extentTest.get().log(Status.INFO,"Staffing Guidance for Day View");
+        ExtentTestManager.extentTest.get().log(Status.INFO,dayViewTimeDurationAsString);
+        ExtentTestManager.extentTest.get().log(Status.INFO,staffingGuidanceDayViewItemsCountAsString);
+        ExtentTestManager.extentTest.get().log(Status.INFO,staffingGuidanceDayViewTeamMembersCountAsString);
         SimpleUtils.assertOnFail( "Staffing Guidance Day View items Count is Zero!", (staffingGuidanceDayViewItemsTotalCount != 0),true);
         SimpleUtils.assertOnFail( "Staffing Guidance Day View Team Memners Count is Zero!", (staffingGuidanceDayViewTeamMembersTotalCount != 0),true);
         
@@ -96,10 +98,51 @@ public class StaffingGuidanceTest extends TestBase{
         	staffingGuidanceWeekViewHoursTotalCount = staffingGuidanceWeekViewHoursTotalCount + staffingGuidanceWeekViewDayHours;
         	staffingGuidanceWeekViewDaysHoursAsString = staffingGuidanceWeekViewDaysHoursAsString + "|" + staffingGuidanceWeekViewDayHours;
         }
-        extentTest.log(Status.INFO,"Staffing Guidance for Week View");
-        extentTest.log(Status.INFO,weekViewDurationDataAsString);
-        extentTest.log(Status.INFO,staffingGuidanceWeekViewDaysHoursAsString);
+        ExtentTestManager.extentTest.get().log(Status.INFO,"Staffing Guidance for Week View");
+        ExtentTestManager.extentTest.get().log(Status.INFO,weekViewDurationDataAsString);
+        ExtentTestManager.extentTest.get().log(Status.INFO,staffingGuidanceWeekViewDaysHoursAsString);
         SimpleUtils.assertOnFail( "Staffing Guidance Week View Hours Count is Zero!", (staffingGuidanceWeekViewHoursTotalCount != 0),true);
+        staffingGuidancePage.clickOnStaffingGuidanceAnalyzeButton();
+        List<HashMap<String, String>> analyzePopupStaffingGuidanceData = staffingGuidancePage.getAnalyzePopupStaffingGuidanceAndLatestVersionData();
+        for(HashMap<String, String> analyzePopupData : analyzePopupStaffingGuidanceData)
+        {
+        	for(Map.Entry<String, String> entry : analyzePopupData.entrySet())
+            {
+            	System.out.println(entry.getKey() +" : "+entry.getValue());
+            }
+        }
+        
     }
+	
+	
+	@Automated(automated = "Manual")
+	@Owner(owner = "Manideep")
+	@TestName(description = "LEG-2423: Weekly Guidance Hours Should match the sum of individual day working hours (Failed with Jira Ticket#4923)")
+    @Test(dataProvider = "browsers")
+    public void weeklyGuidanceHoursShouldMatchTheSumOfEachDay(String browser, String version, String os, String pageobject)
+            throws Exception
+    {
+		SimpleUtils.pass("Login as Store Manager Successfully");
+		SimpleUtils.pass("Successfully opened the Schedule app");
+		SimpleUtils.pass("Open a Staffing Guidance of any Week (Not necessarily the current week) in Week view ");
+        SimpleUtils.pass("Staffing Guidance hours not matching with the sum of individual day working hours"); 
+    }
+	
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "LEG-2423: Weekly Guidance Hours Should match the sum of Work Roles Enabled")
+    @Test(dataProvider = "browsers")
+    public void weeklyGuidanceHoursShouldMatchTheSumOfWorkRolesEnabled(String browser, String version, String os, String pageobject)
+            throws Exception
+    {
+
+		SimpleUtils.pass("Login as Store Manager Successfully");
+		SimpleUtils.pass("Successfully opened the Schedule app");
+		SimpleUtils.pass("Open a Staffing Guidance of any Week (Not necessarily the current week) in Week view ");
+		SimpleUtils.pass("Select Work Roles from dropdown and it should match with the Weekly Guidance hours"); 
+		SimpleUtils.pass("Select Work Roles from dropdown and assert value of Work roles which are not enabled should be zero"); 
+    }
+	
+	
 
 }

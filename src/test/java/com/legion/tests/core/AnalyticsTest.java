@@ -15,9 +15,9 @@ import com.legion.utils.JsonUtil;
 public class AnalyticsTest extends TestBase{
 	
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-    @Automated(automated =  "/"+"Automated]")
-	@Owner(owner = "[Naval")
-	@TestName(description = ":Verify Analytics flow")
+    @Automated(automated ="Automated")
+	@Owner(owner = "Naval")
+	@TestName(description = "Verify Analytics flow")
     @Test(dataProvider = "browsers")
     public void gotoAnalyticsPageTest(String browser, String version, String os, String pageobject) throws Exception { 
     	LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -26,9 +26,7 @@ public class AnalyticsTest extends TestBase{
 	//         loginPage.loginToLegionWithCredential(propertyMap, propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
 	    boolean isLoginDone = loginPage.isLoginDone();
 	    loginPage.verifyLoginDone(isLoginDone);
-		analyticsPage.gotoAnalyticsPage();
-		
-		
+		analyticsPage.gotoAnalyticsPage();	
 		
     }
 

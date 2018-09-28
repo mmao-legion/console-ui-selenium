@@ -7,7 +7,8 @@ import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
 import com.legion.pages.pagefactories.ConsoleWebPageFactory;
 import com.legion.pages.pagefactories.PageFactory;
-import com.legion.tests.listeners.LegionWebDriverEventListener;
+import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.tests.testframework.LegionWebDriverEventListener;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
@@ -72,6 +73,10 @@ import javax.imageio.ImageIO;
 
 
 
+
+
+
+
 //import org.apache.log4j.Logger;
 import com.legion.tests.annotations.HasDependencies;
 
@@ -106,7 +111,7 @@ public class TestBase {
 //    protected static Logger log;
 
     private ThreadLocal<WebDriver> webDriver = new ThreadLocal<WebDriver>();
-    public static ExtentTest extentTest;
+//    public static ExtentTest extentTest;
 
 
     @DataProvider(name = "browsers", parallel = true)
@@ -124,10 +129,9 @@ public class TestBase {
     public WebDriver getWebDriver() {
         return webDriver.get();
     }
-    
-    
+     
     //added by Nishant
-
+    
     @Parameters({"browser", "enterprise","environment"})
     @BeforeMethod(alwaysRun = true)
     protected void openBrowser(Method method, @Optional String browser,
@@ -237,38 +241,35 @@ public class TestBase {
     }
 
     private PageFactory createPageFactory() {
-
         return new ConsoleWebPageFactory();
-
     }
 	
 	//added by Nishant
 	
 	@AfterMethod(alwaysRun = true)
-    protected void closeBrowser(Method method,ITestResult result) throws IOException {
+    protected void tearDown(Method method,ITestResult result) throws IOException {
 		
 		if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
             try {
                 getDriver().manage().deleteAllCookies();
                 getDriver().quit();
             } catch (Exception exp) {
-//            	extentTest.log(Status.PASS, "pass");
                 Reporter.log("Error closing browser");
             }
         }
 		
-		
 		if (getVerificationMap() != null) {
             getVerificationMap().clear();
         }
-
+		
 		if(result.getStatus() == ITestResult.FAILURE){
 			Assert.fail();
 		}	
-       
+		  
     }
 	
-	public void initialize(){
+	
+	public static void initialize(){
 		switch (getEnvironment()){
 			case "QA":
 				if(getEnterprise().equalsIgnoreCase(propertyMap.get("Coffee_Enterprise"))){
@@ -293,49 +294,21 @@ public class TestBase {
 					break;
 				}
 			default:
-				extentTest.log(Status.FAIL,"Unable to set the URL");
+				ExtentTestManager.extentTest.get().log(Status.FAIL,"Unable to set the URL");
 			}
 	}
 
    
-    public void loadURL() {
+    public static void loadURL() {
         try {
-           	getDriver().get(getURL() + "legion/?enterprise=" + getEnterprise() + " ");
+        	getDriver().get(getURL() + "legion/?enterprise=" + getEnterprise() + " ");
         } catch (TimeoutException te) {
             try {
                 getDriver().navigate().refresh();
             } catch (TimeoutException te1) {
-                fail("Page failed to load", false);
+                SimpleUtils.fail("Page failed to load", false);
             }
         }
-    }
-    
-  
-    public static void fail(String message, boolean continueExecution, String... severity) {
-        if (continueExecution) {
-            try {
-                assertTrue(false);
-            } catch (Throwable e) {
-                addVerificationFailure(e);
-                extentTest.log(Status.WARNING, "<div class=\"row\" style=\"background-color:#FDB45C; color:white; padding: 7px 5px;\">" + message
-                        + "</div>");    
-            }
-        } else {
-        	extentTest.log(Status.FATAL, "<div class=\"row\" style=\"background-color:#ff0000; color:white; padding: 7px 5px;\">" + message
-                    + "</div>");  
-            throw new AssertionError(message);
-        }
-    }
-    
-    private static void addVerificationFailure(Throwable e) {
-        List<Throwable> verificationFailures = getVerificationFailures();
-        getVerificationMap().put(Reporter.getCurrentTestResult(), verificationFailures);
-        verificationFailures.add(e);
-    }
-    
-    private static List<Throwable> getVerificationFailures() {
-        List<Throwable> verificationFailures = getVerificationMap().get(Reporter.getCurrentTestResult());
-        return verificationFailures == null ? new ArrayList<>() : verificationFailures;
     }
     
   
@@ -390,11 +363,6 @@ public class TestBase {
         return (String) executor.executeScript("return document.location.href");
       
     }
-    
-    public static void pass(String message) {
-        extentTest.log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
-                + "</div>");
-    }
-    
+   
     
 }

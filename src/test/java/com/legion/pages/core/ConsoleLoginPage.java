@@ -51,7 +51,6 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     	userNameField.sendKeys(propertyMap.get("DEFAULT_USERNAME"));
     	passwordField.sendKeys(propertyMap.get("DEFAULT_PASSWORD"));
 		click(loginButton);
-	
     }
     
     public void loginToLegionWithCredential(HashMap<String,String> propertyMap, String userName, String Password) throws Exception
@@ -88,9 +87,9 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     public void verifyLoginDone(boolean isLoginDone) throws Exception
     {
     	if(isLoginDone){
-    		pass("Login to Legion Application Successfully!");
+    		SimpleUtils.pass("Login to Legion Application Successfully!");
     	}else{
-    		SimpleUtils.fail("Login to Legion Application Successfully!",true);
+    		SimpleUtils.fail("Not bale to Login to Legion Application Successfully!",true);
     	}
     	
     }
