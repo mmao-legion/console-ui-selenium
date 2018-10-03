@@ -57,10 +57,10 @@ public class SimpleUtils {
                 assertTrue(false);
             } catch (Throwable e) {
                 addVerificationFailure(e);
-                ExtentTestManager.extentTest.get().log(Status.ERROR, message);      
+                ExtentTestManager.getTest().log(Status.ERROR, message);      
             }
         } else {
-        	ExtentTestManager.extentTest.get().log(Status.FAIL, message);
+        	ExtentTestManager.getTest().log(Status.FAIL, message);
             throw new AssertionError(message);
         }
     }
@@ -120,14 +120,14 @@ public class SimpleUtils {
             } catch (Throwable e) {
                 addVerificationFailure(e);
                 //TestBase.extentTest.log(Status.ERROR, message); 
-                ExtentTestManager.extentTest.get().log(Status.ERROR, "<div class=\"row\" style=\"background-color:#FDB45C; color:white; padding: 7px 5px;\">" + message
+                ExtentTestManager.getTest().log(Status.ERROR, "<div class=\"row\" style=\"background-color:#FDB45C; color:white; padding: 7px 5px;\">" + message
                         + "</div>");
             }
         } else {
         	try {
                 assertTrue(isAssert);
             } catch (Throwable e) {
-            	ExtentTestManager.extentTest.get().log(Status.FAIL, message);     
+            	ExtentTestManager.getTest().log(Status.FAIL, message);     
                 throw new AssertionError(message);
             }	         
         }
@@ -178,7 +178,7 @@ public class SimpleUtils {
 	    
 	    public static void pass(String message) {
 	    	
-	    	ExtentTestManager.extentTest.get().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
+	    	ExtentTestManager.getTest().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
 	                + "</div>");
 	    }
 	    

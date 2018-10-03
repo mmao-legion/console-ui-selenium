@@ -42,7 +42,7 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
         Then go back to Schedule tab directly
         Should open the the schedule of the same Day (Sep 1) in Day View
          */
-    	ExtentTestManager.getTest().log(Status.INFO, "hi");
+    	
     }
 
     @Automated(automated = "Manual")
