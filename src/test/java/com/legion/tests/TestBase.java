@@ -2,12 +2,15 @@ package com.legion.tests;
 
 import org.testng.annotations.AfterMethod;
 
+import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
 import com.legion.pages.pagefactories.ConsoleWebPageFactory;
 import com.legion.pages.pagefactories.PageFactory;
+import com.legion.tests.testframework.ExtentReportManager;
 import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.tests.testframework.LegionTestListener;
 import com.legion.tests.testframework.LegionWebDriverEventListener;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -39,6 +42,7 @@ import org.openqa.selenium.logging.LogEntry;
 import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
@@ -77,6 +81,11 @@ import javax.imageio.ImageIO;
 
 
 
+
+
+
+
+
 //import org.apache.log4j.Logger;
 import com.legion.tests.annotations.HasDependencies;
 
@@ -106,12 +115,12 @@ public class TestBase {
     public static String activeTabDashboard = null;
     protected static String screenshotFinalLocation = null;
     protected static String appURL = null;
-    
-   
+    private static ExtentReports extent = ExtentReportManager.getInstance();
+       
 //    protected static Logger log;
 
     private ThreadLocal<WebDriver> webDriver = new ThreadLocal<WebDriver>();
-//    public static ExtentTest extentTest;
+    public static ExtentTest extentTest;
 
 
     @DataProvider(name = "browsers", parallel = true)
@@ -131,7 +140,7 @@ public class TestBase {
     }
      
     //added by Nishant
-    
+   
     @Parameters({"browser", "enterprise","environment"})
     @BeforeMethod(alwaysRun = true)
     protected void openBrowser(Method method, @Optional String browser,
@@ -149,6 +158,13 @@ public class TestBase {
             setEnterprise(strEnterprise);
         }
     	
+    	String testName = ExtentTestManager.getTestName(method);
+    	String ownerName = ExtentTestManager.getOwnerName(method);
+    	String automatedName = ExtentTestManager.getAutomatedName(method);
+    	
+    	extentTest = ExtentTestManager.createTest(getClass().getSimpleName()  + " - "
+    	+" " + method.getName() + " : " + testName + ""
+    			+ " [" +ownerName + "/" + automatedName + "]","", getClass().getSimpleName());	
         setCurrentMethod(method);
         setBrowserNeeded(true);
         setCurrentTestMethodName(method.getName());
@@ -156,7 +172,7 @@ public class TestBase {
         String strDate = formatter.format(date);  
 		String strDateFinal = strDate.replaceAll(" ", "_");
         screenshotLocation = "Screenshots" + File.separator + "Results";
-        if (method.getAnnotation(Test.class) != null
+        if (method.getAnnotation(Test.class)!= null
                 && method.getAnnotation(Test.class).dependsOnMethods().length == 0) {
             if (getBrowserNeeded() && browser != null) {
             	setVerificationMap(new HashMap<>());
@@ -167,6 +183,7 @@ public class TestBase {
          
             }
         }
+       
     }
 
     protected void createDriver()
@@ -264,13 +281,15 @@ public class TestBase {
 		
 		if(result.getStatus() == ITestResult.FAILURE){
 			Assert.fail();
-		}	
-		  
+		}
+		ExtentTestManager.getTest().info("In After Method");
+		extent.flush();
     }
 	
 	
 	public static void initialize(){
-		switch (getEnvironment()){
+    
+        switch (getEnvironment()){
 			case "QA":
 				if(getEnterprise().equalsIgnoreCase(propertyMap.get("Coffee_Enterprise"))){
 					setURL(propertyMap.get("QAURL"));
@@ -294,7 +313,7 @@ public class TestBase {
 					break;
 				}
 			default:
-				ExtentTestManager.extentTest.get().log(Status.FAIL,"Unable to set the URL");
+				ExtentTestManager.getTest().log(Status.FAIL,"Unable to set the URL");
 			}
 	}
 

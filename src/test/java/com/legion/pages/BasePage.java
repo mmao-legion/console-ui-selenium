@@ -60,7 +60,7 @@ public class BasePage {
             waitUntilElementIsVisible(element);
             element.click();
         } catch (TimeoutException te) {
-        	ExtentTestManager.extentTest.get().log(Status.WARNING,te);
+        	ExtentTestManager.getTest().log(Status.WARNING,te);
         }
     }
 

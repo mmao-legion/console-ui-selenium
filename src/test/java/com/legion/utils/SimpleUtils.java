@@ -5,12 +5,17 @@ import static org.testng.AssertJUnit.assertTrue;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.ITestResult;
 import org.testng.Reporter;
 
 import com.aventstack.extentreports.Status;
 import com.legion.tests.TestBase;
+import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.Owner;
+import com.legion.tests.annotations.TestName;
 import com.legion.tests.testframework.ExtentTestManager;
 
+import java.lang.reflect.Method;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
@@ -176,5 +181,45 @@ public class SimpleUtils {
 	    	ExtentTestManager.extentTest.get().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
 	                + "</div>");
 	    }
+	    
+	    public synchronized static String getTestName(Method testMethod) {
+			
+	        String testName = "";
+	        // check if there is a Test annotation and get the test name
+//	        Method testCaseMethod = result.getMethod().getConstructorOrMethod().getMethod();
+	        TestName testCaseDescription = testMethod.getAnnotation(TestName.class);
+	        if (testCaseDescription != null && testCaseDescription.description().length() > 0) {
+	            testName = testCaseDescription.description();
+	        }
+	        
+	        return testName;
+	    }
+	    
+	    public synchronized static String getOwnerName(Method testMethod) {
+			
+	        String ownerName = "";
+	        // check if there is a Test annotation and get the test name
+//	        Method testCaseMethod = result.getMethod().getConstructorOrMethod().getMethod();
+	        Owner own = testMethod.getAnnotation(Owner.class);
+	        if (own != null &&  own.owner().length() > 0) {
+	        	ownerName =  own.owner();
+	        }
+	       
+	        return ownerName;
+	    }
+	    
+	    public synchronized static String getAutomatedName(Method testMethod) {
+			
+	        String automatedName = "";
+	        // check if there is a Test annotation and get the test name
+//	        Method testCaseMethod = result.getMethod().getConstructorOrMethod().getMethod();
+	        Automated automated = testMethod.getAnnotation(Automated.class);
+	        if (automated != null && automated.automated().length() > 0) {
+	        	automatedName = automated.automated();
+	        }
+	       
+	        return automatedName;
+	    }
+
 	    
 }

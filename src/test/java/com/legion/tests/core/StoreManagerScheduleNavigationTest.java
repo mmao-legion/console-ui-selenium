@@ -18,17 +18,17 @@ import java.util.HashMap;
 public class StoreManagerScheduleNavigationTest extends TestBase {
     private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
-    @BeforeClass
-    public void setUp () {
-        /*
-            Login as SM
-            Open Schedule app
-            Navigate to schedule overview
-            Pick next week which is one week from current date
-            Modify business hour and mark one day to be closed
-            Generate schedule
-         */
-    }
+//    @BeforeClass
+//    public void setUp () {
+//        /*
+//            Login as SM
+//            Open Schedule app
+//            Navigate to schedule overview
+//            Pick next week which is one week from current date
+//            Modify business hour and mark one day to be closed
+//            Generate schedule
+//         */
+//    }
 
 
     @Automated(automated = "Manual")
@@ -42,6 +42,7 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
         Then go back to Schedule tab directly
         Should open the the schedule of the same Day (Sep 1) in Day View
          */
+    	ExtentTestManager.getTest().log(Status.INFO, "hi");
     }
 
     @Automated(automated = "Manual")
@@ -170,12 +171,12 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
     
    
     
-    @AfterClass
-    public void cleanUp () {
-        /*
-            Ungenerate next week schedule
-            Ungenerate the week after next week's schedule
-            restore business hour of the next week
-         */
-    }
+//    @AfterClass
+//    public void cleanUp () {
+//        /*
+//            Ungenerate next week schedule
+//            Ungenerate the week after next week's schedule
+//            restore business hour of the next week
+//         */
+//    }
 }

@@ -44,10 +44,10 @@ import com.legion.utils.JsonUtil;
 
 import static com.legion.utils.MyThreadLocal.*;
 
-public class LegionTestListener implements ITestListener,IInvokedMethodListener {
+public class LegionTestListener implements ITestListener {
 	
-	public static ExtentReports extent = ExtentReportManager.createInstance("test-output");
-//	public static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
+//	public static ExtentReports extent = ExtentReportManager.createInstance("test-output");
+	public static ExtentTest test ;
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
 	
@@ -65,9 +65,9 @@ public class LegionTestListener implements ITestListener,IInvokedMethodListener 
         	 ITestContext testContext = result.getTestContext();
              testContext.getPassedTests().removeResult(result);
              result.setStatus(ITestResult.FAILURE);
-             ExtentTestManager.extentTest.get().log(Status.FAIL,"Found none-fatal error(s) at page level running test steps!");
+             ExtentTestManager.getTest().log(Status.FAIL,"Found none-fatal error(s) at page level running test steps!");
         }else{
-        	ExtentTestManager.extentTest.get().log(Status.PASS, MarkupHelper.createLabel("Test case Passed:",ExtentColor.GREEN));
+        	ExtentTestManager.getTest().log(Status.PASS, MarkupHelper.createLabel("Test case Passed:",ExtentColor.GREEN));
         }
 		
 	}
@@ -79,12 +79,12 @@ public class LegionTestListener implements ITestListener,IInvokedMethodListener 
 		String targetFile = TestBase.takeScreenShot();
         String screenshotLoc = propertyMap.get("Screenshot_Path") + File.separator + targetFile;
 		try {
-			ExtentTestManager.extentTest.get().addScreenCaptureFromPath("<a href='"+screenshotLoc+ "'>" +"Screenshots"+"</a>");
+			ExtentTestManager.getTest().addScreenCaptureFromPath("<a href='"+screenshotLoc+ "'>" +"Screenshots"+"</a>");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ExtentTestManager.extentTest.get().fail(result.getThrowable());
+		ExtentTestManager.getTest().fail(result.getThrowable());
 	}
 
 	@Override
@@ -113,72 +113,7 @@ public class LegionTestListener implements ITestListener,IInvokedMethodListener 
 	@Override
 	public void onFinish(ITestContext context) {
 		// TODO Auto-generated method stub
-		 extent.flush();
 		
 	}
-	
-	
-	@Override
-	public void afterInvocation(IInvokedMethod arg0, ITestResult arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void beforeInvocation(IInvokedMethod method, ITestResult result) {
-		// TODO Auto-generated method stub
-		//need to modify line no 129 and 130 code
-		if(!method.isTestMethod()){
-			return;
-		}
-		String testName = getTestName(result);
-		String ownerName = getOwnerName(result);
-		String getAutomatedName = getAutomatedName(result);
-        ExtentTestManager.createTest(result.getTestClass().getRealClass().getSimpleName()  + " - "  +" " +result.getMethod().getMethodName() + " : " + testName + " [" +ownerName + "/" + getAutomatedName + "]","",result.getTestClass().getRealClass().getSimpleName());	
-	}
-
-
-	
-	private String getTestName( ITestResult result) {
-		
-        String testName = "";
-        // check if there is a Test annotation and get the test name
-        Method testCaseMethod = result.getMethod().getConstructorOrMethod().getMethod();
-        TestName testCaseDescription = testCaseMethod.getAnnotation(TestName.class);
-        if (testCaseDescription != null && testCaseDescription.description().length() > 0) {
-            testName = testCaseDescription.description();
-        }
-        
-        return testName;
-    }
-	
-	private String getOwnerName( ITestResult result) {
-			
-	        String ownerName = "";
-	        // check if there is a Owner annotation and get the owner name
-	        Method testCaseMethod = result.getMethod().getConstructorOrMethod().getMethod();
-	      
-	        Owner own = testCaseMethod.getAnnotation(Owner.class);
-	        if (own != null && own.owner().length() > 0) {
-	        	ownerName = own.owner();
-	        }
-	              
-	        return ownerName;
-	    }
-	
-	private String getAutomatedName( ITestResult result) {
-		
-        String automatedName = "";
-        // check if there is a Automated annotation and get the automated name
-        Method testCaseMethod = result.getMethod().getConstructorOrMethod().getMethod();
-      
-        Automated automated = testCaseMethod.getAnnotation(Automated.class);
-        if (automated != null && automated.automated().length() > 0) {
-        	automatedName = automated.automated();
-        }
-       
-        return automatedName;
-    }
-		
 
 }

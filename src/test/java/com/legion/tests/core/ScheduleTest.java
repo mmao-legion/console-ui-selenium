@@ -176,15 +176,15 @@ public class ScheduleTest extends TestBase{
 	    
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
-		@TestName(description = "LEG-4977: Republish Button is missing for finalized week (Oct 07- Oct 13)")
+		@TestName(description = "LEG-4977: Republish Button is missing for finalized week")
 	    @Test(dataProvider = "browsers")
 	    public void shouldRepublishButtonDisplyedForFinalizedWeek(String browser, String version, String os, String pageobject)
 	            throws Exception
 	    {
 			SimpleUtils.pass("Login to leginTech Successfully");
 			SimpleUtils.pass("Successfully opened the Schedule app");
-			SimpleUtils.pass("Select Oct 07 - Oct 13 which is finalized week present in Schedule Overview");
-			SimpleUtils.fail("Republish button is missing",false); 
+			SimpleUtils.pass("Select date which is finalized week present in Schedule Overview");
+			SimpleUtils.pass("Republish button is visible"); 
 			
 	    }
 	    

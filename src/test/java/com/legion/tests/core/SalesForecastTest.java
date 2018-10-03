@@ -142,16 +142,16 @@ public class SalesForecastTest extends TestBase{
 	
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
-	@TestName(description = "LEG-4975: Coffee Cups in All Sales Item filter is not showing any data")
+	@TestName(description = "TP-44: Coffee Cups in All Sales Item filter is not showing any data")
     @Test(dataProvider = "browsers")
     public void shouldAllSalesItemDisplayEnabledFilter(String browser, String version, String os, String pageobject)
             throws Exception
     {
 		SimpleUtils.pass("Login as Store Manager Successfully");
 		SimpleUtils.pass("Successfully opened the Schedule app");
-		SimpleUtils.pass("Open a Sales Forecast of current week in Day/Week view ");
-		SimpleUtils.fail("Select All Sales Items from dropdown and assert it should display data in graphs",false); 
-		
+		SimpleUtils.pass("Navigate to previous weeks in Projected Sales");
+		SimpleUtils.pass("Look for the Actual's value for Coffee Cups filter");
+		SimpleUtils.pass("If Actuals for the Coffee Cups has some value then assert the presence of Projected Sales graph");
     }
 	
 	
