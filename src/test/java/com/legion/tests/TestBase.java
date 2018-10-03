@@ -280,6 +280,7 @@ public class TestBase {
         }
 		
 		if(result.getStatus() == ITestResult.FAILURE){
+			extent.flush();
 			Assert.fail();
 		}
 		ExtentTestManager.getTest().info("In After Method");

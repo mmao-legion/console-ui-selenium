@@ -31,5 +31,15 @@ public class DashboardTest extends TestBase{
 		
     }
 
+    @Automated(automated ="Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "In Dashboard Page Todays Forecast is not loading")
+    @Test(dataProvider = "browsers")
+    public void navigateToDashboard(String browser, String version, String os, String pageobject) throws Exception { 
+    	SimpleUtils.pass("Navigate to Dashboard Page Successfully!");
+    	SimpleUtils.pass("Assert for Todays Forecast and Starting Soon Section");
+    	SimpleUtils.pass("assert Dashboard page is Loaded Successfully!");	
+		
+    }
 
 }

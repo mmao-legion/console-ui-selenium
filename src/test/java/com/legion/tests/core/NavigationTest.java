@@ -62,7 +62,7 @@ public class NavigationTest extends TestBase {
 //        AssertJUnit.assertTrue("StaffingGuidance Page Loaded Successfully", schedulePage.isStaffingGuidance());
         schedulePage.goToSchedule();
 //        AssertJUnit.assertTrue("Schedule Page Loaded Successfully", schedulePage.isSchedule());
-        ExtentTestManager.extentTest.get().log(Status.PASS,"Schedule Page - Navigation sales, guidance and schedule finish Successfully!");
+        ExtentTestManager.getTest().log(Status.PASS,"Schedule Page - Navigation sales, guidance and schedule finish Successfully!");
        
         
     }

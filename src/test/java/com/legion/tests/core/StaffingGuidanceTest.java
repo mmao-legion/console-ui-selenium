@@ -72,10 +72,10 @@ public class StaffingGuidanceTest extends TestBase{
         	staffingGuidanceDayViewTeamMembersTotalCount = staffingGuidanceDayViewTeamMembersTotalCount + itemsCount;
         	staffingGuidanceDayViewTeamMembersCountAsString = staffingGuidanceDayViewTeamMembersCountAsString + "|" + itemsCount;
         }
-        ExtentTestManager.extentTest.get().log(Status.INFO,"Staffing Guidance for Day View");
-        ExtentTestManager.extentTest.get().log(Status.INFO,dayViewTimeDurationAsString);
-        ExtentTestManager.extentTest.get().log(Status.INFO,staffingGuidanceDayViewItemsCountAsString);
-        ExtentTestManager.extentTest.get().log(Status.INFO,staffingGuidanceDayViewTeamMembersCountAsString);
+        ExtentTestManager.getTest().log(Status.INFO,"Staffing Guidance for Day View");
+        ExtentTestManager.getTest().log(Status.INFO,dayViewTimeDurationAsString);
+        ExtentTestManager.getTest().log(Status.INFO,staffingGuidanceDayViewItemsCountAsString);
+        ExtentTestManager.getTest().log(Status.INFO,staffingGuidanceDayViewTeamMembersCountAsString);
         SimpleUtils.assertOnFail( "Staffing Guidance Day View items Count is Zero!", (staffingGuidanceDayViewItemsTotalCount != 0),true);
         SimpleUtils.assertOnFail( "Staffing Guidance Day View Team Memners Count is Zero!", (staffingGuidanceDayViewTeamMembersTotalCount != 0),true);
         
@@ -98,9 +98,9 @@ public class StaffingGuidanceTest extends TestBase{
         	staffingGuidanceWeekViewHoursTotalCount = staffingGuidanceWeekViewHoursTotalCount + staffingGuidanceWeekViewDayHours;
         	staffingGuidanceWeekViewDaysHoursAsString = staffingGuidanceWeekViewDaysHoursAsString + "|" + staffingGuidanceWeekViewDayHours;
         }
-        ExtentTestManager.extentTest.get().log(Status.INFO,"Staffing Guidance for Week View");
-        ExtentTestManager.extentTest.get().log(Status.INFO,weekViewDurationDataAsString);
-        ExtentTestManager.extentTest.get().log(Status.INFO,staffingGuidanceWeekViewDaysHoursAsString);
+        ExtentTestManager.getTest().log(Status.INFO,"Staffing Guidance for Week View");
+        ExtentTestManager.getTest().log(Status.INFO,weekViewDurationDataAsString);
+        ExtentTestManager.getTest().log(Status.INFO,staffingGuidanceWeekViewDaysHoursAsString);
         SimpleUtils.assertOnFail( "Staffing Guidance Week View Hours Count is Zero!", (staffingGuidanceWeekViewHoursTotalCount != 0),true);
         staffingGuidancePage.clickOnStaffingGuidanceAnalyzeButton();
         List<HashMap<String, String>> analyzePopupStaffingGuidanceData = staffingGuidancePage.getAnalyzePopupStaffingGuidanceAndLatestVersionData();
@@ -143,6 +143,34 @@ public class StaffingGuidanceTest extends TestBase{
 		SimpleUtils.pass("Select Work Roles from dropdown and assert value of Work roles which are not enabled should be zero"); 
     }
 	
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "LEG-5005: Refresh Guidance in LegionTech shows different guidance hours")
+    @Test(dataProvider = "browsers")
+    public void staffingGuidanceShowsDiffGuidanceHour(String browser, String version, String os, String pageobject)
+            throws Exception
+    {
+
+		SimpleUtils.pass("Login to Legiontech Successfully");
+		SimpleUtils.pass("Successfully opened the Schedule app");
+		SimpleUtils.pass("Open a Staffing Guidance of 09/23 Week view ");
+		SimpleUtils.pass("Data in Staffing Guidance table is same as yesterday"); 
+    }
+	
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "LEG-5037: Staffing guidance page gets blank on doing a refresh")
+    @Test(dataProvider = "browsers")
+    public void staffingGuidanceShouldNotBeBlankOnRefresh(String browser, String version, String os, String pageobject)
+            throws Exception
+    {
+
+		SimpleUtils.pass("Login to reverted environement Successfully");
+		SimpleUtils.pass("Successfully opened the Schedule app");
+		SimpleUtils.pass("Open a Staffing Guidance of any Week (Not necessarily the current week) in Week view ");
+		SimpleUtils.pass("Click Refresh button"); 
+		SimpleUtils.pass("Data in Staffing Guidance table is not getting disappear"); 
+    }
 	
 
 }
