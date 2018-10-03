@@ -85,19 +85,19 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 					}
 					else if(analyticsDivElement.getText().contains("Team Member Satisfaction"))
 					{
-						ExtentTestManager.extentTest.get().log(Status.INFO, "\n******************** Team Member Satisfaction Logs *****************************");
+						ExtentTestManager.getTest().log(Status.INFO, "\n******************** Team Member Satisfaction Logs *****************************");
 
 						getTeamMemberSatisfaction(analyticsDivElement);
 					}
 					else if(analyticsDivElement.getText().contains("Schedule Compliance"))
 					{
-						ExtentTestManager.extentTest.get().log(Status.INFO,"\n******************** Schedule Compliance Logs *****************************");
+						ExtentTestManager.getTest().log(Status.INFO,"\n******************** Schedule Compliance Logs *****************************");
 
 //						getScheduleCompliance(analyticsDivElement);
 					}
 					else if(analyticsDivElement.getText().contains("Shift Offers"))
 					{
-						ExtentTestManager.extentTest.get().log(Status.INFO,"\n******************** Shift Offers Logs *****************************");
+						ExtentTestManager.getTest().log(Status.INFO,"\n******************** Shift Offers Logs *****************************");
 						getShiftOffers(analyticsDivElement);
 					}
 				}
@@ -109,7 +109,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		 */
 		if(isElementLoaded(analyticsSubNavigationView))
 		{
-			ExtentTestManager.extentTest.get().log(Status.INFO,"\n******************** Analytics Report Logs *****************************");
+			ExtentTestManager.getTest().log(Status.INFO,"\n******************** Analytics Report Logs *****************************");
 			List<WebElement> analyticsSubNavigationViewTabs = getDriver().findElements(By.className("table-responsive"));
 			for(WebElement analyticsSubNavigationViewTab : analyticsSubNavigationViewTabs) {
 				if(analyticsSubNavigationViewTab.getText().contains("REPORTS"))
@@ -190,7 +190,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 						if(isElementLoaded(sectionSubTitleDiv))
 						{
 							String sectionSubHeaderText = sectionSubTitleDiv.getText();
-							ExtentTestManager.extentTest.get().log(Status.INFO,"Team Member Satisfaction - '"+sectionSubHeaderText+"' Loaded Successfully for - '"+TMSDropdownMenuOptionsListElement.getText()+"' Filter!");
+							ExtentTestManager.getTest().log(Status.INFO,"Team Member Satisfaction - '"+sectionSubHeaderText+"' Loaded Successfully for - '"+TMSDropdownMenuOptionsListElement.getText()+"' Filter!");
 						}
 					}
 				}
@@ -206,7 +206,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		{
 			for(WebElement analyticsShiftOffersSubSectionElement : analyticsShiftOffersSubSectionElements)
 			{
-				ExtentTestManager.extentTest.get().log(Status.INFO,"Analytics Shift Offers Section - '"+analyticsShiftOffersSubSectionElement.getText()+"' Loaded Successfully!");
+				ExtentTestManager.getTest().log(Status.INFO,"Analytics Shift Offers Section - '"+analyticsShiftOffersSubSectionElement.getText()+"' Loaded Successfully!");
 			}
 		}
 	}
