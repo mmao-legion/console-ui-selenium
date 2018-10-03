@@ -2,6 +2,8 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.util.List;
+
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
@@ -46,6 +48,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	
 	@FindBy(className="home-dashboard")
 	private WebElement dashboardSection;
+	
+	@FindBy(className="console-navigation-item")
+	private List<WebElement>consoleNavigationMenuItems;
 
     public ConsoleDashboardPage() {
     	PageFactory.initElements(getDriver(), this);

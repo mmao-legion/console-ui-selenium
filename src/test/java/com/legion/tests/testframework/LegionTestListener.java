@@ -113,6 +113,8 @@ public class LegionTestListener implements ITestListener {
 	@Override
 	public void onFinish(ITestContext context) {
 		// TODO Auto-generated method stub
+//		extent.flush();
+
 		
 	}
 

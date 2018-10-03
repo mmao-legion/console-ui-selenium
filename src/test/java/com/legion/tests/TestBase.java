@@ -135,9 +135,9 @@ public class TestBase {
     }
 
 
-    public WebDriver getWebDriver() {
-        return webDriver.get();
-    }
+//    public WebDriver getWebDriver() {
+//        return webDriver.get();
+//    }
      
     //added by Nishant
    
@@ -280,6 +280,7 @@ public class TestBase {
         }
 		
 		if(result.getStatus() == ITestResult.FAILURE){
+			extent.flush();
 			Assert.fail();
 		}
 		ExtentTestManager.getTest().info("In After Method");

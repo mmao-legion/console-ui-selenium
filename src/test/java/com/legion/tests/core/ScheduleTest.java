@@ -33,6 +33,20 @@ public class ScheduleTest extends TestBase{
 	        public int getValue() { return value; }
 		}
 	  
+	  public enum overviewWeeksStatus{
+		  NotAvailable("Not Available"),
+		  Draft("Draft"),
+		  Guidance("Guidance"),
+		  Finalized("Finalized");	
+		  
+		  private final String value;
+		  overviewWeeksStatus(final String newValue) {
+            value = newValue;
+          }
+        public String getValue() { return value; }
+		}
+	  
+	  
 	  public enum SchedulePageSubTabText{
 		  Overview("OVERVIEW"),
 		  ProjectedSales("PROJECTED SALES"),
@@ -139,39 +153,61 @@ public class ScheduleTest extends TestBase{
 	    @Test(dataProvider = "browsers")
 	    public void reviewPastGenerateCurrentAndFutureWeekSchedule(String browser, String version, String os, String pageobject)
 	    		throws Exception {
+	    	int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
+	    	System.out.println("overviewTotalWeekCount: "+overviewTotalWeekCount);
 	        LoginPage loginPage = pageFactory.createConsoleLoginPage();
 	        loginPage.goToDashboardHome(propertyMap);
 	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-	        SchedulePage schedulePage = dashboardPage.goToToday();
-	        SimpleUtils.assertOnFail("Today's Schedule not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+	        schedulePage.clickOnScheduleConsoleMenuItem();
+	        //schedulePage.goToSchedule();
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
 	        
 	        //Schedule overview should show 5 week's schedule
-	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 	        List<String> scheduleOverviewWeeksStatus = schedulePage.getScheduleWeeksStatus();
 	        int overviewWeeksStatusCount = scheduleOverviewWeeksStatus.size();
-	        for(String overviewWeeksStatus: scheduleOverviewWeeksStatus)
+	        SimpleUtils.assertOnFail("Schedule overview Page not dispaying upcomming 5 weeks",(overviewWeeksStatusCount < overviewTotalWeekCount) , true);
+	        System.out.println("overviewWeeksStatusCount: "+overviewWeeksStatusCount);
+	        for(String overviewWeeksStatusText: scheduleOverviewWeeksStatus)
 	        {
-	        	System.out.println("overviewWeeksStatus: "+overviewWeeksStatus);
+	        	int index = scheduleOverviewWeeksStatus.indexOf(overviewWeeksStatusText);
+		        SimpleUtils.assertOnFail("Schedule overview Page upcoming week on index '"+index+"' is 'Not Available'",(! overviewWeeksStatusText.contains(overviewWeeksStatus.NotAvailable.getValue())) , true);
+	        	System.out.println("overviewWeeksStatus: "+overviewWeeksStatusText);
 	        }
+	        
 	        //Must have at least "Past Week" schedule published
 	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-	        schedulePage.navigateSalesForecastWeekViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
+	        schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
 	        SimpleUtils.assertOnFail("Schedule Page: Past week not generated!",schedulePage.isWeekGenerated() , true);
-	        SimpleUtils.assertOnFail("Schedule Page: Past week not Published!",schedulePage.isWeekGenerated() , true);
+	        SimpleUtils.assertOnFail("Schedule Page: Past week not Published!",schedulePage.isWeekPublished() , true);
 	        
+	        //The schedules that are already published should remain unchanged
+	        schedulePage.clickOnDayView();
+	        schedulePage.clickOnEditButton();
+	        SimpleUtils.assertOnFail("User can add new shift for past week", (! schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
+	        schedulePage.clickOnCancelButtonOnEditMode();
+	        
+	        // No generate button for Past Week
+	        SimpleUtils.assertOnFail("Generate Button dispaying for Past week", (! schedulePage.isGenerateButtonLoaded()) , true);
+
 	        
 	        //there are at least one week in the future where schedule has not yet been published
-	        schedulePage.navigateSalesForecastWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+	        schedulePage.clickOnWeekView();
+	        schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 	        for(int index = 1; index < weekCount.values().length; index++)
 	        {
-	        	schedulePage.navigateSalesForecastWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
-	        	if(! schedulePage.isWeekGenerated())
-	        	{
-	        		//schedulePage.generateSchedule();
-	        		//break;
+	        	schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+	        	if(! schedulePage.isWeekGenerated()){
+	        	        SimpleUtils.assertOnFail("Schedule Page: Future week '"+schedulePage.getScheduleWeekStartDayMonthDate()+"' not Generated!",schedulePage.isWeekPublished() , true);
 	        	}
-	        }
+	        	else {
+	        		if(! schedulePage.isWeekPublished()){
+	        	        SimpleUtils.assertOnFail("Schedule Page: Future week '"+schedulePage.getScheduleWeekStartDayMonthDate()+"' not Published!",schedulePage.isWeekPublished() , true);
+	        		}
+	        	}
+	        }  
 	    }
 	    
 	    @Automated(automated = "Manual")

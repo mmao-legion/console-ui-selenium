@@ -82,7 +82,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	private List<WebElement> scheduleOverviewWeeksStatus;
 	
 	@FindBy(css="[ng-click='gotoNextWeek($event)']")
-	private WebElement salesForecastCalendarNavigationNextWeekArrow;
+	private WebElement calendarNavigationNextWeekArrow;
 	
 	@FindBy(css="[ng-click=\"gotoPreviousWeek($event)\"]")
 	private WebElement salesForecastCalendarNavigationPreviousWeekArrow;
@@ -107,9 +107,40 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	
 	@FindBy(css="[ng-click=\"goToSchedule()\"]")
 	private WebElement checkOutTheScheduleButton;
+	
+	@FindBy(className="console-navigation-item")
+	private List<WebElement>consoleNavigationMenuItems;
+	
+	@FindBy(css="[ng-click=\"callOkCallback()\"]")
+	private WebElement editAnywayPopupButton;
+	
+	@FindBy(css="[ng-if=\"canShowNewShiftButton()\"]")
+	private WebElement addNewShiftOnDayViewButton;
+	
+	@FindBy(className="sch-control-button-cancel")
+	private WebElement scheduleEditModeCancelButton;
+	
+		
+	@FindBy(css="[ng-click=\"regenerateFromOverview()\"]")
+	private WebElement scheduleGenerateButton;
+	
+	
+	String consoleScheduleMenuItemText = "Schedule";
+	
+	public void clickOnScheduleConsoleMenuItem() {
+		if(consoleNavigationMenuItems.size() != 0)
+		{
+			WebElement consoleScheduleMenuElement = SimpleUtils.getSubTabElement(consoleNavigationMenuItems, consoleScheduleMenuItemText);
+			click(consoleScheduleMenuElement);
+			SimpleUtils.pass("Console Menu Loaded Successfully!");
+		}
+		else {
+			SimpleUtils.fail("Console Menu Items Not Loaded Successfully!",false);
+		}
+	}
 
 	@Override
-	public void gotoToSchedulePage() throws Exception {
+	public void goToSchedulePage() throws Exception {
 
 		checkElementVisibility(goToScheduleButton);
         click(goToScheduleButton);
@@ -149,7 +180,6 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	 public Boolean varifyActivatedSubTab(String SubTabText) throws Exception
 	 {
-		 System.out.println("SubTabText: "+SubTabText);
 		 if(isElementLoaded(activatedSubTabElement))
 		 {
 			 if(activatedSubTabElement.getText().contains(SubTabText))
@@ -334,9 +364,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 
 	@Override
-	public void clickOnScheduleSubTab(String subTabString)
+	public void clickOnScheduleSubTab(String subTabString) throws Exception
 	{
-		if(ScheduleSubTabsElement.size() != 0)
+		if(ScheduleSubTabsElement.size() != 0 && ! varifyActivatedSubTab(subTabString))
 		{
 			for(WebElement ScheduleSubTabElement : ScheduleSubTabsElement)
 			{
@@ -369,30 +399,46 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	
 
 	@Override
-	public void navigateSalesForecastWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount) throws Exception
+	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount) 
 	{
-		 if(isElementLoaded(salesForecastCalendarNavigationNextWeekArrow) && isElementLoaded(salesForecastCalendarNavigationPreviousWeekArrow))
-		 {
-			 for(int i = 0; i < weekCount; i++)
-				{
-				 	String currentWeekStartingDay = ScheduleCalendarDayLabels.get(0).getText();
-					if(nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future"))
-					{
-						salesForecastCalendarNavigationNextWeekArrow.click();
+		String currentWeekStartingDay = "NA";
+		for(int i = 0; i < weekCount; i++)
+		{
+			if(ScheduleCalendarDayLabels.size() != 0)
+			{
+				currentWeekStartingDay = ScheduleCalendarDayLabels.get(0).getText();
+			}
+		 	 
+			if(nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future"))
+			{
+				try {
+					if(isElementLoaded(calendarNavigationNextWeekArrow)){
+							calendarNavigationNextWeekArrow.click();
 					}
-					else
-					{
+				} 
+				catch (Exception e) {
+					SimpleUtils.fail("Schedule page Calender Next Week Arrows Not Loaded/Clickable after '"+currentWeekStartingDay+ "'", true);
+				}
+			}
+			else
+			{
+				try {
+					if(isElementLoaded(salesForecastCalendarNavigationPreviousWeekArrow)){
 						salesForecastCalendarNavigationPreviousWeekArrow.click();
 					}
-					if(! currentWeekStartingDay.equals(ScheduleCalendarDayLabels.get(0).getText()))
-					{
-						SimpleUtils.fail("Week After '"+currentWeekStartingDay+"' not Clickable!", true);
-					}
-				}			
-		 }
-		 else {
-			 SimpleUtils.fail("Schedule page Calender Arrows Not Loaded!", false);
-		 }
+				} catch (Exception e) {
+					SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable after '"+currentWeekStartingDay+ "'", true);
+				}
+				
+			}
+			/*if(! currentWeekStartingDay.equals(ScheduleCalendarDayLabels.get(0).getText()))
+			{
+				SimpleUtils.fail("Week After '"+currentWeekStartingDay+"' not Clickable!", true);
+			}
+			else {
+				SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded!", true);
+			}*/
+		}
 	}
 
 
@@ -497,6 +543,58 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	public Boolean isStaffingGuidanceAnalyzePopupAppear() throws Exception
 	{
 		if(isElementLoaded(scheduleAnalyzePopup))
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public String getScheduleWeekStartDayMonthDate()
+	{
+		String scheduleWeekStartDuration = "NA";
+		if(ScheduleCalendarDayLabels.size() != 0)
+		{
+			scheduleWeekStartDuration = ScheduleCalendarDayLabels.get(0).getText().replace("\n", "");
+		}
+		return scheduleWeekStartDuration;
+	}
+	
+	public void clickOnEditButton() throws Exception
+	{
+		if(isElementLoaded(edit))
+		{
+			click(edit);
+			if(isElementLoaded(editAnywayPopupButton))
+			{
+				click(editAnywayPopupButton);
+			}
+		}
+	}
+	
+	public Boolean isAddNewDayViewShiftButtonLoaded() throws Exception
+	{
+		if(isElementLoaded(addNewShiftOnDayViewButton))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+	
+	public void clickOnCancelButtonOnEditMode() throws Exception
+	{
+		if(isElementLoaded(scheduleEditModeCancelButton))
+		{
+			click(scheduleEditModeCancelButton);
+		}
+	}
+	
+	public Boolean isGenerateButtonLoaded() throws Exception
+	{
+		if(isElementLoaded(scheduleGenerateButton))
 		{
 			return true;
 		}

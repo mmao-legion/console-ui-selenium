@@ -54,7 +54,7 @@ public class NavigationTest extends TestBase {
         teamPage.goToCoverage();
         boolean isCoveragePage = teamPage.isCoverage();
         teamPage.verifyCoveragePage(isCoveragePage);
-        schedulePage.gotoToSchedulePage();
+        schedulePage.goToSchedulePage();
 //        AssertJUnit.assertTrue("Schedule Page Loaded Successfully", schedulePage.isSchedule());
         schedulePage.goToProjectedSales();
 //        AssertJUnit.assertTrue("ProjectedSales Page Loaded Successfully", schedulePage.isProjectedSales());
