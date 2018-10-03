@@ -21,7 +21,8 @@
     <classes>
        <class name="com.legion.tests.core.DashboardTest">
       	<methods>
-             <include name="navigateToDashboardFromGlobalSetting"/>    
+             <include name="navigateToDashboardFromGlobalSetting"/>
+              <include name="navigateToDashboard"/>     
         </methods>
       </class>
     </classes>
@@ -33,7 +34,7 @@
       	<methods>
              <include name="shouldRepublishButtonDisplyedForFinalizedWeek"/>  
              <include name="hoursAndWagesCalculationOnSchedulePage"/>
-             <include name="reviewPastGenerateCurrentAndFutureWeekSchedule"/> 
+            
         </methods>
       </class>
     </classes>
@@ -46,6 +47,8 @@
            <include name="staffingGuidanceDataAsStoreManagerTest"/>
            <include name="weeklyGuidanceHoursShouldMatchTheSumOfEachDay"/>
            <include name="weeklyGuidanceHoursShouldMatchTheSumOfWorkRolesEnabled"/>
+           <include name="staffingGuidanceShouldNotBeBlankOnRefresh"/>
+           <include name="staffingGuidanceShowsDiffGuidanceHour"/>
         </methods>
       </class>
     </classes>
@@ -68,7 +71,6 @@
            <include name="legionConsoleNavigationFlow"/>
         </methods>
       </class>
-      <class name="com.legion.tests.core.StoreManagerScheduleNavigationTest"></class>
     </classes>
   </test> <!-- Test -->
   
