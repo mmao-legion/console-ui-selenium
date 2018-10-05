@@ -5,9 +5,11 @@ import com.legion.pages.LoginPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.StaffingGuidancePage;
 import com.legion.pages.SalesForecastPage;
+import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.UserAuthorizationPage;
 import com.legion.pages.DashboardPage;
+import com.legion.pages.LocationSelectorPage;
 /**
  * Yanming
  */
@@ -16,7 +18,9 @@ public interface PageFactory {
 
     DashboardPage createConsoleDashboardPage();
     
-    /* Aug 03- Zorang Added Below code */
+    /* 
+     * Aug 03- Zorang Added Below code 
+     * */
     TeamPage createConsoleTeamPage();
     
     SchedulePage createConsoleSchedulePage();
@@ -30,5 +34,9 @@ public interface PageFactory {
     SalesForecastPage createSalesForecastPage();
     
     StaffingGuidancePage createStaffingGuidancePage();
+    
+    LocationSelectorPage createLocationSelectorPage();
+    
+    ScheduleOverviewPage createScheduleOverviewPage();
    
 }

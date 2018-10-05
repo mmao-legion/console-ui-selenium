@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LoginPage;
+import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -161,12 +162,12 @@ public class ScheduleTest extends TestBase{
 	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 	        SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
 	        schedulePage.clickOnScheduleConsoleMenuItem();
-	        //schedulePage.goToSchedule();
 	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 	        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
 	        
 	        //Schedule overview should show 5 week's schedule
-	        List<String> scheduleOverviewWeeksStatus = schedulePage.getScheduleWeeksStatus();
+	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+	        List<String> scheduleOverviewWeeksStatus = scheduleOverviewPage.getScheduleWeeksStatus();
 	        int overviewWeeksStatusCount = scheduleOverviewWeeksStatus.size();
 	        SimpleUtils.assertOnFail("Schedule overview Page not dispaying upcomming 5 weeks",(overviewWeeksStatusCount < overviewTotalWeekCount) , true);
 	        System.out.println("overviewWeeksStatusCount: "+overviewWeeksStatusCount);
@@ -196,6 +197,8 @@ public class ScheduleTest extends TestBase{
 	        //there are at least one week in the future where schedule has not yet been published
 	        schedulePage.clickOnWeekView();
 	        schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+	        
+	        // to do - 
 	        for(int index = 1; index < weekCount.values().length; index++)
 	        {
 	        	schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
@@ -209,6 +212,8 @@ public class ScheduleTest extends TestBase{
 	        	}
 	        }  
 	    }
+	    
+	    
 	    
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")

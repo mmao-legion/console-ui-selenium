@@ -1,23 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="5" name="LegionTest">
+<suite verbose ="0" thread-count="5" name="LegionTest" parallel="tests">
 	<parameter name="environment" value="QA"/>
   	<parameter name="enterprise" value="LegionCoffee2"/>
     <parameter name="browser" value="Chrome"/>
     <listeners>
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
- <!-- <test name="Team Test">      
-    <classes>
+    <test name="Schedule Overview Test">      
+      <classes>
+       <class name="com.legion.tests.core.ScheduleOverviewTest">
+      	<methods>
+            <!--  <include name="changeLocationTest"/>     -->
+             <include name="verifyCurrentWeekDateAndDay"/>    
+             
+        </methods>
+       </class>
+      </classes>
+    </test> 
+    
+   <!--  <test name="Team Test">      
+      <classes>
        <class name="com.legion.tests.core.TeamTest">
       	<methods>
              <include name="shouldConvertToOpenShiftOption"/>    
         </methods>
-      </class>
-    </classes>
-  </test> --> <!-- Test -->
+       </class>
+      </classes>
+    </test> Test -->
   
- <!--  <test name="Dashboard Test">      
+<!--    <test name="Dashboard Test">      
     <classes>
        <class name="com.legion.tests.core.DashboardTest">
       	<methods>
@@ -25,20 +37,20 @@
         </methods>
       </class>
     </classes>
-  </test> -->
+  </test> 
   
   <test name="Schedule Test">      
     <classes>
        <class name="com.legion.tests.core.ScheduleTest">
       	<methods>
-            <!--  <include name="shouldRepublishButtonDisplyedForFinalizedWeek"/>  
-             <include name="hoursAndWagesCalculationOnSchedulePage"/> -->
+             <include name="shouldRepublishButtonDisplyedForFinalizedWeek"/>  
+             <include name="hoursAndWagesCalculationOnSchedulePage"/>
              <include name="reviewPastGenerateCurrentAndFutureWeekSchedule"/> 
         </methods>
       </class>
     </classes>
-  </test> <!-- Test
-  
+  </test> 
+    
   <test name="Staffing Guidance test">      
     <classes>
        <class name="com.legion.tests.core.StaffingGuidanceTest">
@@ -50,7 +62,7 @@
       </class>
     </classes>
   </test>
- 	 
+ 	
   <test name="Sales Projected Sales">      
     <classes>
        <class name="com.legion.tests.core.SalesForecastTest">
@@ -59,8 +71,8 @@
         </methods>
       </class>
     </classes>
-  </test> Test
-  
+  </test> 
+    
   <test name="Navigation Flow">      
     <classes>
        <class name="com.legion.tests.core.NavigationTest">
@@ -70,7 +82,7 @@
       </class>
       <class name="com.legion.tests.core.StoreManagerScheduleNavigationTest"></class>
     </classes>
-  </test> Test
+  </test> 
   
   
   <test name="Analytics Test">      
@@ -81,8 +93,8 @@
         </methods>
       </class>
     </classes>
-  </test> Test
-  
+  </test> 
+   
    <test name="StoreManager Schedule Navigation Test">      
     <classes>
        <class name="com.legion.tests.core.StoreManagerScheduleNavigationTest">
@@ -100,7 +112,7 @@
         </methods>
       </class>
     </classes>
-  </test> Test -->
+  </test>  -->
   
 </suite> <!-- Suite -->
 

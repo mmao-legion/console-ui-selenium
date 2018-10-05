@@ -12,7 +12,6 @@ import org.openqa.selenium.support.PageFactory;
 import com.aventstack.extentreports.Status;
 import com.legion.pages.AnalyticsPage;
 import com.legion.pages.BasePage;
-import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.SimpleUtils;
 

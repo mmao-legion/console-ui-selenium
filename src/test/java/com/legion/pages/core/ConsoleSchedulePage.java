@@ -78,9 +78,6 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@FindBy(css="div.sub-navigation-view-link")
 	private List<WebElement> ScheduleSubTabsElement;
 	
-	@FindBy(className="schedule-status-title")
-	private List<WebElement> scheduleOverviewWeeksStatus;
-	
 	@FindBy(css="[ng-click='gotoNextWeek($event)']")
 	private WebElement calendarNavigationNextWeekArrow;
 	
@@ -184,12 +181,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		 {
 			 if(activatedSubTabElement.getText().contains(SubTabText))
 			 {
-				 System.out.println("activatedSubTabElement: "+activatedSubTabElement);
 				 return true;
 			 }
 		 }
 		 else {
-			 System.out.println("Schedule Page not loaded successfully");
+			 SimpleUtils.fail("Schedule Page not loaded successfully", true);
 		 }
 		 return false;
 	 }
@@ -275,6 +271,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			{
 				click(scheduleWeekViewButton);
 			}
+			SimpleUtils.pass("Schedule page week view loaded successfully!");
 		}
 		else
 		{
@@ -289,6 +286,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			if(! scheduleDayViewButton.getAttribute("class").toString().contains("enabled")) {
 				click(scheduleDayViewButton);
 			}
+			SimpleUtils.pass("Schedule Page day view loaded successfully!");
 		}
 		else {
 			SimpleUtils.fail("Schedule Page Day View Button not Loaded Successfully!", true);
@@ -377,26 +375,16 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			}
 			
 		}
-	}
-
-
-	@Override
-	public List<String> getScheduleWeeksStatus()
-	{
-		List<String> overviewScheduleWeeksStatus = new ArrayList<String>();
-		if(scheduleOverviewWeeksStatus.size() != 0)
+		
+		if(varifyActivatedSubTab(subTabString))
 		{
-			for(WebElement overviewWeekStatus: scheduleOverviewWeeksStatus)
-			{
-				overviewScheduleWeeksStatus.add(overviewWeekStatus.getText());
-
-			}
+			SimpleUtils.pass("Schedule Page Overview tab loaded Successfully!");
 		}
-		return overviewScheduleWeeksStatus;
+		else
+		{
+			SimpleUtils.fail("Schedule Page Overview tab not loaded Successfully!", true);
+		}
 	}
-	
-
-	
 
 	@Override
 	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount) 
@@ -414,6 +402,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 				try {
 					if(isElementLoaded(calendarNavigationNextWeekArrow)){
 							calendarNavigationNextWeekArrow.click();
+							SimpleUtils.pass("Schedule Page Calender view for next week loaded successfully!");
 					}
 				} 
 				catch (Exception e) {
@@ -425,6 +414,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 				try {
 					if(isElementLoaded(salesForecastCalendarNavigationPreviousWeekArrow)){
 						salesForecastCalendarNavigationPreviousWeekArrow.click();
+						SimpleUtils.pass("Schedule Page Calender view for Previous week loaded successfully!");
 					}
 				} catch (Exception e) {
 					SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable after '"+currentWeekStartingDay+ "'", true);
@@ -567,6 +557,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			if(isElementLoaded(editAnywayPopupButton))
 			{
 				click(editAnywayPopupButton);
+				SimpleUtils.pass("Schedule edit shift page loaded successfully!");
 			}
 		}
 	}
@@ -589,6 +580,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		if(isElementLoaded(scheduleEditModeCancelButton))
 		{
 			click(scheduleEditModeCancelButton);
+			SimpleUtils.pass("Schedule edit shift page cancelled successfully!");
 		}
 	}
 	

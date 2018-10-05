@@ -59,7 +59,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     @Override
     public boolean isToday() throws Exception {
 
-    	boolean bol = true;
+    	//boolean bol = true;
     	if(isElementLoaded(publishedShiftForTodayDiv)){
     		SimpleUtils.pass("Today's published Shifts loaded Successfully on Dashboard!");
     	}else{

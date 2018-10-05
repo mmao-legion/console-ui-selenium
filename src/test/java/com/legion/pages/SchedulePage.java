@@ -17,7 +17,6 @@ public interface SchedulePage {
 	public Map<String, Float> getScheduleLabelHoursAndWagges() throws Exception;
 	public List<Map<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception;
 	public void clickOnScheduleSubTab(String subTabString) throws Exception;
-	public List<String> getScheduleWeeksStatus();
 	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount);
 	public Boolean isWeekGenerated() throws Exception;
 	public Boolean isWeekPublished() throws Exception;
