@@ -28,8 +28,5 @@ public class DashboardTest extends TestBase{
     	SimpleUtils.pass("Click on Global icon present next to Settings at top left section");
     	SimpleUtils.pass("Navigate back to Dashboard Page");
     	SimpleUtils.pass("assert Dashboard page is Loaded Successfully!");	
-		
     }
-
-
 }

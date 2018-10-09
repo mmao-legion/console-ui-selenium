@@ -1,12 +1,12 @@
 package com.legion.tests.core;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.testng.annotations.Test;
 
 import com.legion.pages.LocationSelectorPage;
-import com.legion.pages.LoginPage;
 import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
 import com.legion.tests.TestBase;
@@ -20,35 +20,80 @@ import com.legion.utils.SimpleUtils;
 public class ScheduleOverviewTest extends TestBase{
 
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	private String newLocationName = "Legion Coffee Mock Store";
+    
     @Automated(automated ="Automated")
 	@Owner(owner = "Naval")
 	@TestName(description = "change the location from Dashboard!")
-    @Test(dataProvider = "browsers")
-    public void changeLocationTest(String browser, String version, String os, String pageobject) throws Exception { 
-    	LoginPage loginPage = pageFactory.createConsoleLoginPage();
-	    loginPage.loginToLegionWithCredential(propertyMap, propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
-	    boolean isLoginDone = loginPage.isLoginDone();
-	    loginPage.verifyLoginDone(isLoginDone);		
-	    LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-	    locationSelectorPage.changeLocation("Legion Coffee Mock Store");
+    @Test
+    public void changeLocationTest() throws Exception { 
+    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
+    	LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+	    locationSelectorPage.changeLocation(newLocationName);
+	    SimpleUtils.assertOnFail("Dashboard Page: Location not changed!",locationSelectorPage.isLocationSelected(newLocationName), false);
     }
     
     @Automated(automated ="Automated")
 	@Owner(owner = "Naval")
-	@TestName(description = "Check the 1st week is highlighted and DateAndDay are correct")
-    @Test(dataProvider = "browsers")
-    public void verifyCurrentWeekDateAndDay(String browser, String version, String os, String pageobject) throws Exception { 
-    	LoginPage loginPage = pageFactory.createConsoleLoginPage();
-	    loginPage.loginToLegionWithCredential(propertyMap, propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
-	    boolean isLoginDone = loginPage.isLoginDone();
-	    loginPage.verifyLoginDone(isLoginDone);
-	    SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+	@TestName(description = "Check the 1st/current week is highlighted and DateAndDay are correct")
+    @Test
+    public void verifyCurrentWeekDateAndDayTest() throws Exception { 
+    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
+    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
 	    schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-        Map<String, String> currentWeekCalendarWeekDaysAndStartDay = scheduleOverviewPage.getWeekStartDayAndCurrentWeekDates();
-        System.out.println("currentWeekCalendarWeekDaysAndStartDay.get(\"weekStartDay\")" + currentWeekCalendarWeekDaysAndStartDay.get("weekStartDay"));
+        //Map<String, String> currentWeekCalendarWeekDaysAndStartDay = scheduleOverviewPage.getWeekStartDayAndCurrentWeekDates();
+	    SimpleUtils.assertOnFail("Current Week not Highlighted!",scheduleOverviewPage.isCurrentWeekHighLighted(), false);
+
     }
     
+    @Automated(automated ="Automated")
+	@Owner(owner = "Naval")
+	@TestName(description = "Check each week until weeks are not available DateAndDay are correct on overview page")
+    @Test
+    public void verifyDateAndDayForEachWeeksUntilNotAvailableTest() throws Exception { 
+    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
+    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+	    schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+	    SimpleUtils.assertOnFail("DateAndDay verification failed for each week",scheduleOverviewPage.verifyDateAndDayForEachWeekUntilNotAvailable(), false);
+    }
     
+    @Automated(automated ="Automated")
+	@Owner(owner = "Naval")
+	@TestName(description = "Click on each week to open schedule page and ensure the DayAndDate on schedule page matches the DayAndDate on overview page")
+    @Test
+    public void verifyDayAndDateOnSchedulePageMatchesDayAndDateOnOverviewPageTest() throws Exception { 
+    	String scheduleWeekStatusToVerify = "Not Available";
+    	Boolean isCurrentWeekSelected = false;
+    	int index = 0;
+    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
+    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+	    schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+        List<String> currentAndUpcomingActiveWeeksDatesOnCalendar = scheduleOverviewPage.getCurrentAndUpcomingActiveWeeksDaysOnCalendar();
+		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+		String overviewCalendarDays = scheduleOverviewPage.getOverviewCalenderWeekDays();
+		for(String scheduleWeekStatus : overviewPageScheduledWeekStatus)
+		{ 
+			if(!scheduleWeekStatus.contains(scheduleWeekStatusToVerify)) {
+				if(isCurrentWeekSelected) {
+					schedulePage.navigateWeekViewToPastOrFuture("next", 1);
+				}
+				else {
+					scheduleOverviewPage.clickOnCurrentWeekToOpenSchedule();
+					isCurrentWeekSelected = true;
+				}
+				
+		        String activeWeekTimeDurationForEachday = schedulePage.getActiveWeekDayMonthAndDateForEachDay();
+				Boolean isScheduleActiveWeekMatchedWithOverviewCalendarWeek = schedulePage.validateScheduleActiveWeekWithOverviewCalendarWeek(currentAndUpcomingActiveWeeksDatesOnCalendar.get(index), 
+						overviewCalendarDays, activeWeekTimeDurationForEachday);
+		        SimpleUtils.assertOnFail("Verification for DayAndDate On SchedulePage does not Matche with DayAndDate On OverviewPage!",isScheduleActiveWeekMatchedWithOverviewCalendarWeek, false);
+			}
+			index = index + 1;
+		}
+    } 
 }

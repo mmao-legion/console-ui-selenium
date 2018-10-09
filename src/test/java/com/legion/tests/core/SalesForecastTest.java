@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 
 import com.aventstack.extentreports.Status;
 import com.legion.pages.DashboardPage;
-import com.legion.pages.LoginPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.SalesForecastPage;
 import com.legion.tests.TestBase;
@@ -42,9 +41,7 @@ public class SalesForecastTest extends TestBase{
             throws Exception
     {
     	//To Do Should be separate Test from Schedule test
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        loginPage.loginToLegionWithCredential(propertyMap, propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
-        SimpleUtils.assertOnFail( "Login Failed!", loginPage.isLoginDone(),false);
+    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.goToToday();
         SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();

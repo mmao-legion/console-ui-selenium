@@ -6,6 +6,7 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
+import com.legion.pages.LoginPage;
 import com.legion.pages.pagefactories.ConsoleWebPageFactory;
 import com.legion.pages.pagefactories.PageFactory;
 import com.legion.tests.testframework.ExtentReportManager;
@@ -382,6 +383,17 @@ public class TestBase {
         JavascriptExecutor executor = (JavascriptExecutor) getDriver();
         return (String) executor.executeScript("return document.location.href");
       
+    }
+    
+    /*
+     * Login to Legion With Credential and assert on failure
+     */
+    public void loginToLegionAndVerifyIsLoginDone(String username, String Password) throws Exception
+    {
+    	LoginPage loginPage = pageFactory.createConsoleLoginPage();
+    	loginPage.loginToLegionWithCredential(username, Password);
+	    boolean isLoginDone = loginPage.isLoginDone();
+	    loginPage.verifyLoginDone(isLoginDone);
     }
    
     

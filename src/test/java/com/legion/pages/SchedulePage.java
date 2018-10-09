@@ -26,4 +26,7 @@ public interface SchedulePage {
 	public Boolean isAddNewDayViewShiftButtonLoaded() throws Exception;
 	public void clickOnCancelButtonOnEditMode() throws Exception;
 	public Boolean isGenerateButtonLoaded() throws Exception;
+	public String getActiveWeekDayMonthAndDateForEachDay() throws Exception;
+	public Boolean validateScheduleActiveWeekWithOverviewCalendarWeek(String overviewCalendarWeekDate, String overviewCalendarWeekDays, String scheduleActiveWeekDuration);
+
 }

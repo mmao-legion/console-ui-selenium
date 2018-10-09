@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="5" name="LegionTest" parallel="tests">
+<suite verbose ="0" thread-count="5" name="LegionTest" parallel="false">
 	<parameter name="environment" value="QA"/>
   	<parameter name="enterprise" value="LegionCoffee2"/>
     <parameter name="browser" value="Chrome"/>
@@ -11,8 +11,11 @@
       <classes>
        <class name="com.legion.tests.core.ScheduleOverviewTest">
       	<methods>
-            <!--  <include name="changeLocationTest"/>     -->
-             <include name="verifyCurrentWeekDateAndDay"/>    
+             <include name="changeLocationTest"/>    
+             <include name="changeLocationTest"/>    
+             <include name="verifyCurrentWeekDateAndDayTest"/> 
+             <include name="verifyDateAndDayForEachWeeksUntilNotAvailableTest"/> 
+             <include name="verifyDayAndDateOnSchedulePageMatchesDayAndDateOnOverviewPageTest"/> 
              
         </methods>
        </class>

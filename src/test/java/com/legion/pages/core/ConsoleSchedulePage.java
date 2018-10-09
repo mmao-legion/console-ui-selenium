@@ -592,5 +592,51 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		}
 		return false;
 	}
+	
+	public String getActiveWeekDayMonthAndDateForEachDay() throws Exception
+	{
+		String activeWeekTimeDuration = "";
+		if(ScheduleCalendarDayLabels.size() != 0)
+		{
+			for(WebElement ScheduleCalendarDayLabel : ScheduleCalendarDayLabels)
+			{
+				if(activeWeekTimeDuration != "")
+					activeWeekTimeDuration = activeWeekTimeDuration +","+ ScheduleCalendarDayLabel.getText().replace("\n", " ");
+				else
+					activeWeekTimeDuration = ScheduleCalendarDayLabel.getText().replace("\n", " ");
+			}
+		}
+		return activeWeekTimeDuration;
+	}
+	
+	public Boolean validateScheduleActiveWeekWithOverviewCalendarWeek(String overviewCalendarWeekDate, String overviewCalendarWeekDays, String scheduleActiveWeekDuration)
+	{
+		System.out.println("overviewCalendarWeekDate: "+overviewCalendarWeekDate);
+		System.out.println("overviewCalendarWeekDays: "+overviewCalendarWeekDays);
+		System.out.println("scheduleActiveWeekDuration: "+scheduleActiveWeekDuration);
+		String[] overviewCalendarDates = overviewCalendarWeekDate.split(",");
+		String[] overviewCalendarDays = overviewCalendarWeekDays.split(",");
+		String[]  scheduleActiveDays = scheduleActiveWeekDuration.split(",");
+		int index;
+		if(overviewCalendarDates.length == overviewCalendarDays.length && overviewCalendarDays.length == scheduleActiveDays.length)
+		{
+			for(index = 0; index < overviewCalendarDates.length; index++)
+			{
+				// Verify Days on Schedule Active week with Overview Calendar week
+				if(scheduleActiveDays[index].startsWith(overviewCalendarDays[index]))
+				{
+					// Verify Days on Schedule Active week with Overview Calendar week
+					if(scheduleActiveDays[index].contains(overviewCalendarDays[index]))
+					{
+						SimpleUtils.pass("Schedule week dayAndDate matched with Overview calendar DayAndDate for '"+scheduleActiveDays[index]+"'");
+					}
+				}
+			}
+			if(index != 0 )
+				return true;
+			
+		}
+		return false;
+	}
 	 
 }
