@@ -127,12 +127,12 @@ public class SalesForecastTest extends TestBase{
          *  Logging Projected Sales forecast Data card values
          */
         
-        ExtentTestManager.extentTest.get().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Demand Projected - "+peakDemandProjected );
-        ExtentTestManager.extentTest.get().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Demand Actual - "+peakDemandActual );
-        ExtentTestManager.extentTest.get().log(Status.INFO, weekType+" Projected Sales Cards Data Total Demand Projected - "+totalDemandProjected);
-        ExtentTestManager.extentTest.get().log(Status.INFO, weekType+" Projected Sales Cards Data Total Demand Actual - "+totalDemandActual );
-        ExtentTestManager.extentTest.get().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Time Projected - "+peakTimeProjected );
-        ExtentTestManager.extentTest.get().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Time Actual - "+peakTimeActual );
+        ExtentTestManager.getTest().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Demand Projected - "+peakDemandProjected );
+        ExtentTestManager.getTest().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Demand Actual - "+peakDemandActual );
+        ExtentTestManager.getTest().log(Status.INFO, weekType+" Projected Sales Cards Data Total Demand Projected - "+totalDemandProjected);
+        ExtentTestManager.getTest().log(Status.INFO, weekType+" Projected Sales Cards Data Total Demand Actual - "+totalDemandActual );
+        ExtentTestManager.getTest().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Time Projected - "+peakTimeProjected );
+        ExtentTestManager.getTest().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Time Actual - "+peakTimeActual );
 		
 	}
 	

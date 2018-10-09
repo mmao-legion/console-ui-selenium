@@ -12,7 +12,7 @@ public interface LoginPage {
     
     public void loginToLegionWithCredential(String userName, String Password) throws Exception;
     public boolean isLoginDone() throws Exception;
-    
+    public void goToDashboardHomePage(String username, String password) throws Exception;
     public void logOut() throws Exception;
     public void verifyLoginDone(boolean isLoginDone) throws Exception;
 }

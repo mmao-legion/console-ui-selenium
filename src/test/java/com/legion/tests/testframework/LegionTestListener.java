@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
 import org.testng.IAnnotationTransformer;
 import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
@@ -44,47 +45,41 @@ import com.legion.utils.JsonUtil;
 
 import static com.legion.utils.MyThreadLocal.*;
 
-public class LegionTestListener implements ITestListener {
+public class LegionTestListener implements ITestListener,IInvokedMethodListener {
 	
-//	public static ExtentReports extent = ExtentReportManager.createInstance("test-output");
 	public static ExtentTest test ;
+	private static ExtentReports extent = ExtentReportManager.getInstance();
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
 	
 	@Override
 	public void onTestStart(ITestResult result) {  
 		String testName = result.getMethod().getMethodName();
-//		set(result);
 		setLoc(testName);
 		TestBase.initialize();	
 	}
 
 	@Override
-	public void onTestSuccess(ITestResult result) {
-		if(getVerificationMap().size() > 0){
-        	 ITestContext testContext = result.getTestContext();
-             testContext.getPassedTests().removeResult(result);
-             result.setStatus(ITestResult.FAILURE);
-             ExtentTestManager.getTest().log(Status.FAIL,"Found none-fatal error(s) at page level running test steps!");
-        }else{
+	public void onTestSuccess(ITestResult result) {  
         	ExtentTestManager.getTest().log(Status.PASS, MarkupHelper.createLabel("Test case Passed:",ExtentColor.GREEN));
-        }
 		
 	}
 
 	@Override
 	public void onTestFailure(ITestResult result) {
 		// TODO Auto-generated method stub
-		ExtentTestManager.extentTest.get().log(Status.FAIL, MarkupHelper.createLabel("Test case Failed:",ExtentColor.RED));
-		String targetFile = TestBase.takeScreenShot();
-        String screenshotLoc = propertyMap.get("Screenshot_Path") + File.separator + targetFile;
-		try {
-			ExtentTestManager.getTest().addScreenCaptureFromPath("<a href='"+screenshotLoc+ "'>" +"Screenshots"+"</a>");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ExtentTestManager.getTest().fail(result.getThrowable());
+		
+			ExtentTestManager.getTest().log(Status.FAIL, MarkupHelper.createLabel("Test case Failed:",ExtentColor.RED));
+			String targetFile = TestBase.takeScreenShot();
+	        String screenshotLoc = propertyMap.get("Screenshot_Path") + File.separator + targetFile;
+			try {
+				ExtentTestManager.getTest().addScreenCaptureFromPath("<a href='"+screenshotLoc+ "'>" +"Screenshots"+"</a>");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			ExtentTestManager.getTest().fail(result.getThrowable());
+		
 	}
 
 	@Override
@@ -113,8 +108,32 @@ public class LegionTestListener implements ITestListener {
 	@Override
 	public void onFinish(ITestContext context) {
 		// TODO Auto-generated method stub
-//		extent.flush();
+		
+	}
 
+	@Override
+	public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
+		// TODO Auto-generated method stub
+		if(testResult.getMethod().isTest()){
+			if(getVerificationMap().size() > 0){
+				if (testResult.getStatus() == ITestResult.SUCCESS) {
+		            ITestContext testContext = Reporter.getCurrentTestResult().getTestContext();
+		            testContext.getPassedTests().addResult(testResult, Reporter.getCurrentTestResult().getMethod());
+		            testContext.getPassedTests().getAllMethods().remove(Reporter.getCurrentTestResult().getMethod());
+		            Reporter.getCurrentTestResult().setStatus(ITestResult.FAILURE);
+		            Reporter.getCurrentTestResult().setThrowable(new Exception("Found none-fatal error(s) at page level running test steps!"));
+		            testContext.getFailedTests().addResult(testResult, Reporter.getCurrentTestResult().getMethod());
+		        }
+			
+			}   
+
+		}
 		
 	}
 

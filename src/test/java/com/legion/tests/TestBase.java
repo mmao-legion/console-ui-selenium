@@ -134,12 +134,12 @@ public class TestBase {
     public synchronized static Object[][] usersDataProvider(Method testMethod) {
         return JsonUtil.getArraysFromJsonFile("src/test/resources/legionUsersCredentials.json");
     }
+    
+    @DataProvider(name = "usersDataCredential", parallel = true)
+    public synchronized static Object[][] usersDataCredentialProvider(Method testMethod) {
+    	return SimpleUtils.getUsersDataCredential();
+    }
 
-
-//    public WebDriver getWebDriver() {
-//        return webDriver.get();
-//    }
-     
     //added by Nishant
    
     @Parameters({"browser", "enterprise","environment"})
@@ -264,7 +264,7 @@ public class TestBase {
 	
 	//added by Nishant
 	
-	@AfterMethod(alwaysRun = true)
+    @AfterMethod(alwaysRun = true)
     protected void tearDown(Method method,ITestResult result) throws IOException {
 		
 		if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
@@ -280,11 +280,7 @@ public class TestBase {
             getVerificationMap().clear();
         }
 		
-		if(result.getStatus() == ITestResult.FAILURE){
-			extent.flush();
-			Assert.fail();
-		}
-		ExtentTestManager.getTest().info("In After Method");
+		ExtentTestManager.getTest().info("Inside After Method");
 		extent.flush();
     }
 	
@@ -332,10 +328,10 @@ public class TestBase {
         }
     }
     
-  
+  //To do make a seperate class and remove conditional statement as per Yanming's comment 
     public static String takeScreenShot() {
 		try {
-			File file = new File("Screenshot" + File.separator + "Results");
+			File file = new File("Screenshots" + File.separator + "Results");
 			if (!file.exists()) {
 				file.mkdir();
 			}

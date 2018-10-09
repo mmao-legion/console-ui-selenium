@@ -12,6 +12,7 @@ import com.legion.pages.TeamPage;
 import com.legion.pages.DashboardPage;
 import com.legion.tests.TestBase;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.SimpleUtils;
 
 import org.openqa.selenium.InvalidElementStateException;
 import org.openqa.selenium.WebDriver;
@@ -55,15 +56,25 @@ public class NavigationTest extends TestBase {
         boolean isCoveragePage = teamPage.isCoverage();
         teamPage.verifyCoveragePage(isCoveragePage);
         schedulePage.goToSchedulePage();
-//        AssertJUnit.assertTrue("Schedule Page Loaded Successfully", schedulePage.isSchedule());
         schedulePage.goToProjectedSales();
-//        AssertJUnit.assertTrue("ProjectedSales Page Loaded Successfully", schedulePage.isProjectedSales());
         schedulePage.goToStaffingGuidance();
-//        AssertJUnit.assertTrue("StaffingGuidance Page Loaded Successfully", schedulePage.isStaffingGuidance());
         schedulePage.goToSchedule();
-//        AssertJUnit.assertTrue("Schedule Page Loaded Successfully", schedulePage.isSchedule());
-        ExtentTestManager.extentTest.get().log(Status.PASS,"Schedule Page - Navigation sales, guidance and schedule finish Successfully!");
-       
-        
+        ExtentTestManager.getTest().log(Status.PASS,"Schedule Page - Navigation sales, guidance and schedule finish Successfully!"); 
     }
+    
+    
+    @Automated(automated = "Manual")
+    @Owner(owner = "Gunjan")
+    @TestName(description = "LEG-5112:LocationGroup forecast, guidance and dashboard not loading on 10.09 master build for Carmel Club on LegionCoffee2")
+    @Test(dataProvider = "browsers")
+    public void DataNotLoadingForCarmelClubLocation(String browser, String version, String os, String pageobject)
+           throws Exception
+    {
+        SimpleUtils.pass("Login to LegionCoffee2 Successfully");
+        SimpleUtils.pass("Navigate to Carmel Club location");
+        SimpleUtils.fail("assert navigation for carmel club location should load successfully ",false);
+
+    }
+    
+    
 }

@@ -104,11 +104,6 @@ public class ScheduleTest extends TestBase{
 	        Float scheduleWeekOtherHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.otherHours.getValue());
 	        Float scheduleWeekWagesBudgetedCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesBudgetedCount.getValue());
 	        Float scheduleWeekWagesScheduledCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesScheduledCount.getValue());
-	        System.out.println("scheduleWeekScheduledHours: "+scheduleWeekScheduledHours);
-	        System.out.println("scheduleWeekBudgetedHours: "+scheduleWeekBudgetedHours);
-	        System.out.println("scheduleWeekOtherHours: "+scheduleWeekOtherHours);
-	        System.out.println("scheduleWeekWagesBudgetedCount: "+scheduleWeekWagesBudgetedCount);
-	        System.out.println("scheduleWeekWagesScheduledCount: "+scheduleWeekWagesScheduledCount);
 	        
 	        //get days hours & Wages for current week
 	        schedulePage.clickOnDayView();
@@ -228,6 +223,94 @@ public class ScheduleTest extends TestBase{
 			SimpleUtils.pass("Republish button is visible"); 
 			
 	    }
+	    
+	    @Automated(automated = "Manual")
+		@Owner(owner = "Gunjan")
+		@TestName(description = "LEG-5064: On click refresh, Publish/Republish button disappears")
+	    @Test(dataProvider = "browsers")
+	    public void onRefreshPublishButtonDisappears(String browser, String version, String os, String pageobject)
+	            throws Exception
+	    {
+			SimpleUtils.pass("Login to leginCoffee Successfully");
+			SimpleUtils.pass("Successfully opened the Schedule app");
+			SimpleUtils.pass("Navigate to Oct15-Oct21 in Schedule tab");
+			SimpleUtils.pass("Click Refresh");
+			SimpleUtils.pass("assert on click refresh publish/republish button should not disappear");
+			
+	    }
+	    
+	    @Automated(automated = "Manual")
+		@Owner(owner = "Gunjan")
+		@TestName(description = "LEG-4845: Changes for Schedule wages are not getting reflected after adding new shift in Day view")
+	    @Test(dataProvider = "browsers")
+	    public void scheduleWagesDoesNotGetUpdatedForAdminShift(String browser, String version, String os, String pageobject)
+	            throws Exception
+	    {
+			SimpleUtils.pass("Login to LeginCoffee/LegionCoffee2 Successfully");
+			SimpleUtils.pass("Successfully opened the Schedule app");
+			SimpleUtils.pass("Add a Admin Shift Manual/Auto");
+			SimpleUtils.pass("assert schedule wages should get increased for Admin shift");
+			
+	    }
+	    
+	    @Automated(automated = "Manual")
+		@Owner(owner = "Gunjan")
+		@TestName(description = "TP-43: should be able to convert to open shift for Current date")
+	    @Test(dataProvider = "browsers")
+	    public void shouldConvertToOpenShiftOption(String browser, String version, String os, String pageobject)
+	            throws Exception
+	    {
+			SimpleUtils.pass("Login to leginTech Successfully");
+			SimpleUtils.pass("Successfully opened the Schedule app");
+			SimpleUtils.pass("Successfully Opened a Schedule of Present day in Day view");
+			SimpleUtils.pass("Successfully created shift using Assign team member option");
+			SimpleUtils.pass("Click on edit button");
+			SimpleUtils.pass("Convert to Open shift option is coming for the shift created in previous step");
+			
+	    }
+	    
+	    @Automated(automated = "Manual")
+	    @Owner(owner = "Gunjan")
+	    @TestName(description = "LEG-4845:Changes for Schedule wages are not getting reflected after adding new shift in Day view in LegionTech")
+	    @Test(dataProvider = "browsers")
+	    public void scheduleWagesDoesNotChangeForNewAddedShift(String browser, String version, String os, String pageobject)
+	           throws Exception
+	    {
+	        SimpleUtils.pass("Login to LegionTech Successfully");
+	        SimpleUtils.pass("Navigate to Schedule tab and Add a new");
+	        SimpleUtils.pass("Observe the change in Schedule wages");
+	        SimpleUtils.fail("assert schedule wages should have some value according to admin working hour ",false);
+
+	    }
+	    
+	    
+	    @Automated(automated = "Manual")
+	    @Owner(owner = "Gunjan")
+	    @TestName(description = "LEG-5110:Facing issue while deleting Shift using close icon in all the environments")
+	    @Test(dataProvider = "browsers")
+	    public void scheduleDeletionNotWorking(String browser, String version, String os, String pageobject)
+	           throws Exception
+	    {
+	        SimpleUtils.pass("Login to Environment Successfully");
+	        SimpleUtils.pass("Navigate to Schedule tab and Add a new shift by editing the schedule");
+	        SimpleUtils.pass("Try deleting any shift by clicking over the desired schedule");
+	        SimpleUtils.fail("assert on click a red cross icon should appear and it should be clickable ",false);
+
+	    }
+	    
+	    @Automated(automated = "Manual")
+	    @Owner(owner = "Gunjan")
+	    @TestName(description = "LEG-5111:Projected sales and Staffing Guidance data are showing as 0 on generated schedule page in LegionCoffee2")
+	    @Test(dataProvider = "browsers")
+	    public void projectedSalesAndStaffingGuidanceAreZeroOnGenerateSchedulePage(String browser, String version, String os, String pageobject)
+	           throws Exception
+	    {
+	        SimpleUtils.pass("Login to LegionCoffee2 Successfully");
+	        SimpleUtils.pass("Navigate to Schedule>Schedule (Mountain view location) and look for the week with schedule not generated");
+	        SimpleUtils.pass("Open week Oct15-Oct21");
+	        SimpleUtils.fail("assert for Projected sales and Staffing Guidance data are showing as 0 and Hours by workrole data are not present. This issue is applicable for all the views. ",false);
+
+	    } 
 	    
 	    
 	   

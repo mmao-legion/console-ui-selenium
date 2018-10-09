@@ -94,6 +94,14 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     	
     }
     
+    //added methods just for POC
+    public void goToDashboardHomePage(String username, String pwd) throws Exception {
+    	checkElementVisibility(userNameField);
+    	userNameField.sendKeys(username);
+    	passwordField.sendKeys(pwd);
+		click(loginButton);
+    }
+    
     
 
 
