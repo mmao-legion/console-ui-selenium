@@ -6,16 +6,20 @@ import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.pages.core.ConsoleSchedulePage;
 import com.legion.pages.core.ConsoleStaffingGuidancePage;
 import com.legion.pages.core.ConsoleSalesForecastPage;
+import com.legion.pages.core.ConsoleScheduleOverviewPage;
 import com.legion.pages.core.ConsoleTeamPage;
 import com.legion.pages.core.ConsoleUserAuthorizationPage;
 import com.legion.pages.core.ConsoleDashboardPage;
+import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.pages.AnalyticsPage;
 import com.legion.pages.ControlsPage;
 import com.legion.pages.DashboardPage;
+import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.StaffingGuidancePage;
 import com.legion.pages.SalesForecastPage;
+import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.UserAuthorizationPage;
 import org.testng.Reporter;
@@ -58,7 +62,6 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public UserAuthorizationPage createConsoleUserAuthorizationPage() {
-		// TODO Auto-generated method stub
 		return new ConsoleUserAuthorizationPage();
 	}
 	
@@ -69,7 +72,16 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public StaffingGuidancePage createStaffingGuidancePage() {
-		// TODO Auto-generated method stub
 		return new ConsoleStaffingGuidancePage();
+	}
+
+	@Override
+	public LocationSelectorPage createLocationSelectorPage() {
+		return new ConsoleLocationSelectorPage();
+	}
+
+	@Override
+	public ScheduleOverviewPage createScheduleOverviewPage() {
+		return new ConsoleScheduleOverviewPage();
 	}
 }

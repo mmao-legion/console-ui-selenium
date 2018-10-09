@@ -78,11 +78,8 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@FindBy(css="div.sub-navigation-view-link")
 	private List<WebElement> ScheduleSubTabsElement;
 	
-	@FindBy(className="schedule-status-title")
-	private List<WebElement> scheduleOverviewWeeksStatus;
-	
 	@FindBy(css="[ng-click='gotoNextWeek($event)']")
-	private WebElement salesForecastCalendarNavigationNextWeekArrow;
+	private WebElement calendarNavigationNextWeekArrow;
 	
 	@FindBy(css="[ng-click=\"gotoPreviousWeek($event)\"]")
 	private WebElement salesForecastCalendarNavigationPreviousWeekArrow;
@@ -107,9 +104,40 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	
 	@FindBy(css="[ng-click=\"goToSchedule()\"]")
 	private WebElement checkOutTheScheduleButton;
+	
+	@FindBy(className="console-navigation-item")
+	private List<WebElement>consoleNavigationMenuItems;
+	
+	@FindBy(css="[ng-click=\"callOkCallback()\"]")
+	private WebElement editAnywayPopupButton;
+	
+	@FindBy(css="[ng-if=\"canShowNewShiftButton()\"]")
+	private WebElement addNewShiftOnDayViewButton;
+	
+	@FindBy(className="sch-control-button-cancel")
+	private WebElement scheduleEditModeCancelButton;
+	
+		
+	@FindBy(css="[ng-click=\"regenerateFromOverview()\"]")
+	private WebElement scheduleGenerateButton;
+	
+	
+	String consoleScheduleMenuItemText = "Schedule";
+	
+	public void clickOnScheduleConsoleMenuItem() {
+		if(consoleNavigationMenuItems.size() != 0)
+		{
+			WebElement consoleScheduleMenuElement = SimpleUtils.getSubTabElement(consoleNavigationMenuItems, consoleScheduleMenuItemText);
+			click(consoleScheduleMenuElement);
+			SimpleUtils.pass("Console Menu Loaded Successfully!");
+		}
+		else {
+			SimpleUtils.fail("Console Menu Items Not Loaded Successfully!",false);
+		}
+	}
 
 	@Override
-	public void gotoToSchedulePage() throws Exception {
+	public void goToSchedulePage() throws Exception {
 
 		checkElementVisibility(goToScheduleButton);
         click(goToScheduleButton);
@@ -149,17 +177,15 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	 public Boolean varifyActivatedSubTab(String SubTabText) throws Exception
 	 {
-		 System.out.println("SubTabText: "+SubTabText);
 		 if(isElementLoaded(activatedSubTabElement))
 		 {
 			 if(activatedSubTabElement.getText().contains(SubTabText))
 			 {
-				 System.out.println("activatedSubTabElement: "+activatedSubTabElement);
 				 return true;
 			 }
 		 }
 		 else {
-			 System.out.println("Schedule Page not loaded successfully");
+			 SimpleUtils.fail("Schedule Page not loaded successfully", true);
 		 }
 		 return false;
 	 }
@@ -245,6 +271,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			{
 				click(scheduleWeekViewButton);
 			}
+			SimpleUtils.pass("Schedule page week view loaded successfully!");
 		}
 		else
 		{
@@ -259,6 +286,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			if(! scheduleDayViewButton.getAttribute("class").toString().contains("enabled")) {
 				click(scheduleDayViewButton);
 			}
+			SimpleUtils.pass("Schedule Page day view loaded successfully!");
 		}
 		else {
 			SimpleUtils.fail("Schedule Page Day View Button not Loaded Successfully!", true);
@@ -334,9 +362,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 
 	@Override
-	public void clickOnScheduleSubTab(String subTabString)
+	public void clickOnScheduleSubTab(String subTabString) throws Exception
 	{
-		if(ScheduleSubTabsElement.size() != 0)
+		if(ScheduleSubTabsElement.size() != 0 && ! varifyActivatedSubTab(subTabString))
 		{
 			for(WebElement ScheduleSubTabElement : ScheduleSubTabsElement)
 			{
@@ -347,52 +375,60 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			}
 			
 		}
-	}
-
-
-	@Override
-	public List<String> getScheduleWeeksStatus()
-	{
-		List<String> overviewScheduleWeeksStatus = new ArrayList<String>();
-		if(scheduleOverviewWeeksStatus.size() != 0)
+		
+		if(varifyActivatedSubTab(subTabString))
 		{
-			for(WebElement overviewWeekStatus: scheduleOverviewWeeksStatus)
-			{
-				overviewScheduleWeeksStatus.add(overviewWeekStatus.getText());
-
-			}
+			SimpleUtils.pass("Schedule Page Overview tab loaded Successfully!");
 		}
-		return overviewScheduleWeeksStatus;
+		else
+		{
+			SimpleUtils.fail("Schedule Page Overview tab not loaded Successfully!", true);
+		}
 	}
-	
-
-	
 
 	@Override
-	public void navigateSalesForecastWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount) throws Exception
+	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount) 
 	{
-		 if(isElementLoaded(salesForecastCalendarNavigationNextWeekArrow) && isElementLoaded(salesForecastCalendarNavigationPreviousWeekArrow))
-		 {
-			 for(int i = 0; i < weekCount; i++)
-				{
-				 	String currentWeekStartingDay = ScheduleCalendarDayLabels.get(0).getText();
-					if(nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future"))
-					{
-						salesForecastCalendarNavigationNextWeekArrow.click();
+		String currentWeekStartingDay = "NA";
+		for(int i = 0; i < weekCount; i++)
+		{
+			if(ScheduleCalendarDayLabels.size() != 0)
+			{
+				currentWeekStartingDay = ScheduleCalendarDayLabels.get(0).getText();
+			}
+		 	 
+			if(nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future"))
+			{
+				try {
+					if(isElementLoaded(calendarNavigationNextWeekArrow)){
+							calendarNavigationNextWeekArrow.click();
+							SimpleUtils.pass("Schedule Page Calender view for next week loaded successfully!");
 					}
-					else
-					{
+				} 
+				catch (Exception e) {
+					SimpleUtils.fail("Schedule page Calender Next Week Arrows Not Loaded/Clickable after '"+currentWeekStartingDay+ "'", true);
+				}
+			}
+			else
+			{
+				try {
+					if(isElementLoaded(salesForecastCalendarNavigationPreviousWeekArrow)){
 						salesForecastCalendarNavigationPreviousWeekArrow.click();
+						SimpleUtils.pass("Schedule Page Calender view for Previous week loaded successfully!");
 					}
-					if(! currentWeekStartingDay.equals(ScheduleCalendarDayLabels.get(0).getText()))
-					{
-						SimpleUtils.fail("Week After '"+currentWeekStartingDay+"' not Clickable!", true);
-					}
-				}			
-		 }
-		 else {
-			 SimpleUtils.fail("Schedule page Calender Arrows Not Loaded!", false);
-		 }
+				} catch (Exception e) {
+					SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable after '"+currentWeekStartingDay+ "'", true);
+				}
+				
+			}
+			/*if(! currentWeekStartingDay.equals(ScheduleCalendarDayLabels.get(0).getText()))
+			{
+				SimpleUtils.fail("Week After '"+currentWeekStartingDay+"' not Clickable!", true);
+			}
+			else {
+				SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded!", true);
+			}*/
+		}
 	}
 
 
@@ -499,6 +535,106 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		if(isElementLoaded(scheduleAnalyzePopup))
 		{
 			return true;
+		}
+		return false;
+	}
+	
+	public String getScheduleWeekStartDayMonthDate()
+	{
+		String scheduleWeekStartDuration = "NA";
+		if(ScheduleCalendarDayLabels.size() != 0)
+		{
+			scheduleWeekStartDuration = ScheduleCalendarDayLabels.get(0).getText().replace("\n", "");
+		}
+		return scheduleWeekStartDuration;
+	}
+	
+	public void clickOnEditButton() throws Exception
+	{
+		if(isElementLoaded(edit))
+		{
+			click(edit);
+			if(isElementLoaded(editAnywayPopupButton))
+			{
+				click(editAnywayPopupButton);
+				SimpleUtils.pass("Schedule edit shift page loaded successfully!");
+			}
+		}
+	}
+	
+	public Boolean isAddNewDayViewShiftButtonLoaded() throws Exception
+	{
+		if(isElementLoaded(addNewShiftOnDayViewButton))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+	
+	public void clickOnCancelButtonOnEditMode() throws Exception
+	{
+		if(isElementLoaded(scheduleEditModeCancelButton))
+		{
+			click(scheduleEditModeCancelButton);
+			SimpleUtils.pass("Schedule edit shift page cancelled successfully!");
+		}
+	}
+	
+	public Boolean isGenerateButtonLoaded() throws Exception
+	{
+		if(isElementLoaded(scheduleGenerateButton))
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public String getActiveWeekDayMonthAndDateForEachDay() throws Exception
+	{
+		String activeWeekTimeDuration = "";
+		if(ScheduleCalendarDayLabels.size() != 0)
+		{
+			for(WebElement ScheduleCalendarDayLabel : ScheduleCalendarDayLabels)
+			{
+				if(activeWeekTimeDuration != "")
+					activeWeekTimeDuration = activeWeekTimeDuration +","+ ScheduleCalendarDayLabel.getText().replace("\n", " ");
+				else
+					activeWeekTimeDuration = ScheduleCalendarDayLabel.getText().replace("\n", " ");
+			}
+		}
+		return activeWeekTimeDuration;
+	}
+	
+	public Boolean validateScheduleActiveWeekWithOverviewCalendarWeek(String overviewCalendarWeekDate, String overviewCalendarWeekDays, String scheduleActiveWeekDuration)
+	{
+		System.out.println("overviewCalendarWeekDate: "+overviewCalendarWeekDate);
+		System.out.println("overviewCalendarWeekDays: "+overviewCalendarWeekDays);
+		System.out.println("scheduleActiveWeekDuration: "+scheduleActiveWeekDuration);
+		String[] overviewCalendarDates = overviewCalendarWeekDate.split(",");
+		String[] overviewCalendarDays = overviewCalendarWeekDays.split(",");
+		String[]  scheduleActiveDays = scheduleActiveWeekDuration.split(",");
+		int index;
+		if(overviewCalendarDates.length == overviewCalendarDays.length && overviewCalendarDays.length == scheduleActiveDays.length)
+		{
+			for(index = 0; index < overviewCalendarDates.length; index++)
+			{
+				// Verify Days on Schedule Active week with Overview Calendar week
+				if(scheduleActiveDays[index].startsWith(overviewCalendarDays[index]))
+				{
+					// Verify Days on Schedule Active week with Overview Calendar week
+					if(scheduleActiveDays[index].contains(overviewCalendarDays[index]))
+					{
+						SimpleUtils.pass("Schedule week dayAndDate matched with Overview calendar DayAndDate for '"+scheduleActiveDays[index]+"'");
+					}
+				}
+			}
+			if(index != 0 )
+				return true;
+			
 		}
 		return false;
 	}

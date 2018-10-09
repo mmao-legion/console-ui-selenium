@@ -53,7 +53,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 		click(loginButton);
     }
     
-    public void loginToLegionWithCredential(HashMap<String,String> propertyMap, String userName, String Password) throws Exception
+    public void loginToLegionWithCredential(String userName, String Password) throws Exception
     {
     	checkElementVisibility(userNameField);
     	userNameField.clear();
@@ -92,6 +92,14 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     		SimpleUtils.fail("Not bale to Login to Legion Application Successfully!",true);
     	}
     	
+    }
+    
+    //added methods just for POC
+    public void goToDashboardHomePage(String username, String pwd) throws Exception {
+    	checkElementVisibility(userNameField);
+    	userNameField.sendKeys(username);
+    	passwordField.sendKeys(pwd);
+		click(loginButton);
     }
     
     
