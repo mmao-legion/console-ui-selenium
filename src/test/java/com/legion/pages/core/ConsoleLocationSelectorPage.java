@@ -10,6 +10,7 @@ import org.openqa.selenium.support.PageFactory;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.LocationSelectorPage;
+import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.SimpleUtils;
 
 public class ConsoleLocationSelectorPage extends BasePage implements LocationSelectorPage {
@@ -38,6 +39,10 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy (className = "location-selection-action-cancel")
     private WebElement dashboardLocationsPopupCancelButton;
     
+    @FindBy (css = "div.console-navigation-item-label.Dashboard")
+    private WebElement dashboardConsoleName;
+
+
     String dashboardConsoleMenuText = "Dashboard";
 
 
@@ -59,6 +64,8 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     public void changeLocation(String locationName) throws Exception
     {
         Boolean isLocationMatched = false;
+        activeConsoleName = activeConsoleMenuItem.getText();
+        ScreenshotManager.setScreenshotConsoleName(activeConsoleName);
         if(activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
             if(isChangeLocationButtonLoaded()) {
                 if(isLocationSelected(locationName)) {
@@ -106,5 +113,17 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             }
         }
         return false;
+    }
+
+    public String getCurrentUserLocation() throws Exception
+    {
+    	String selectedLocation = "";
+    	if(isElementLoaded(dashboardSelectedLocationText)) {
+    		selectedLocation = dashboardSelectedLocationText.getText();
+    	}
+    	else {
+        	SimpleUtils.fail("Active Location not appear on Dashboard!", false);
+    	}
+    	return selectedLocation;
     }
 }

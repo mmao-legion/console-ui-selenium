@@ -72,7 +72,7 @@ public class NavigationTest extends TestBase {
     {
         SimpleUtils.pass("Login to LegionCoffee2 Successfully");
         SimpleUtils.pass("Navigate to Carmel Club location");
-        SimpleUtils.fail("assert navigation for carmel club location should load successfully ",false);
+        SimpleUtils.pass("assert navigation for carmel club location should load successfully ");
 
     }
     

@@ -48,9 +48,12 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	
 	@FindBy(className="home-dashboard")
 	private WebElement dashboardSection;
-	
+
 	@FindBy(className="console-navigation-item")
 	private List<WebElement>consoleNavigationMenuItems;
+
+	@FindBy (css = "#legion-app navigation div:nth-child(4)")
+	private WebElement scheduleConsoleName;
 
     public ConsoleDashboardPage() {
     	PageFactory.initElements(getDriver(), this);
@@ -128,7 +131,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	waitForPageLoaded(getDriver());
     	checkElementVisibility(goToTodayScheduleButton);
     	SimpleUtils.pass("Dashboard Page Loaded Successfully!");
-        click(goToTodayScheduleButton);
+    	activeConsoleName = scheduleConsoleName.getText();
+    	click(goToTodayScheduleButton);
         return new ConsoleSchedulePage();
     }
     
@@ -141,7 +145,5 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	}
     	return false;
     }
-    
-   
 
 }

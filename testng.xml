@@ -31,16 +31,6 @@
     </classes>
   </test> <!-- Test -->
   
-  <test name="Team Test">      
-    <classes>
-       <class name="com.legion.tests.core.TeamTest">
-      	<methods>
-             <include name="coverageForTeamPageNotWorking"/>    
-        </methods>
-      </class>
-    </classes>
-  </test> <!-- Test -->
-  
   <test name="Schedule Test">      
     <classes>
        <class name="com.legion.tests.core.ScheduleTest">
@@ -51,9 +41,9 @@
              <include name="onRefreshPublishButtonDisappears"/> 
              <include name="scheduleWagesDoesNotGetUpdatedForAdminShift"/> 
              <include name="shouldConvertToOpenShiftOption"/> 
-             <include name="scheduleWagesDoesNotChangeForNewAddedShift"/> 
              <include name="scheduleDeletionNotWorking"/>
              <include name="projectedSalesAndStaffingGuidanceAreZeroOnGenerateSchedulePage"/>
+             <include name="budgetAndGuidanceHourNotEqual"/>
         </methods>
       </class>
     </classes>

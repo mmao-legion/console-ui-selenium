@@ -4,7 +4,9 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.legion.pages.BasePage;
+import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
+import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.SimpleUtils;
 
 import org.openqa.selenium.By;
@@ -38,7 +40,10 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     @FindBy(className="home-dashboard")
     private WebElement legionDashboardSection;
     
-    
+    @FindBy (css = "div.console-navigation-item-label.Dashboard")
+    private WebElement dashboardConsoleName;
+
+
     public ConsoleLoginPage() {
 //    	super(driver);
     	PageFactory.initElements(getDriver(), this);
@@ -48,6 +53,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     //public void goToDashboardHome() throws Exception {
     public void goToDashboardHome(HashMap<String,String> propertyMap) throws Exception {
     	checkElementVisibility(userNameField);
+    	getActiveConsoleName(loginButton);
     	userNameField.sendKeys(propertyMap.get("DEFAULT_USERNAME"));
     	passwordField.sendKeys(propertyMap.get("DEFAULT_PASSWORD"));
 		click(loginButton);
@@ -56,6 +62,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     public void loginToLegionWithCredential(String userName, String Password) throws Exception
     {
     	checkElementVisibility(userNameField);
+    	getActiveConsoleName(loginButton);
     	userNameField.clear();
     	passwordField.clear();
     	userNameField.sendKeys(userName);
@@ -73,7 +80,6 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     	catch (TimeoutException te) {
     		return false;
     	}
-    	
     }
     
     public void logOut() throws Exception
@@ -84,10 +90,11 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     	}
     }
     
-    public void verifyLoginDone(boolean isLoginDone) throws Exception
+    public void verifyLoginDone(boolean isLoginDone, String selectedLocation) throws Exception
     {
     	if(isLoginDone){
-    		SimpleUtils.pass("Login to Legion Application Successfully!");
+            getActiveConsoleName(dashboardConsoleName);
+    	    SimpleUtils.pass("Login to Legion Application Successfully with selected location: '"+selectedLocation+"'.");
     	}else{
     		SimpleUtils.fail("Not bale to Login to Legion Application Successfully!",true);
     	}
@@ -97,12 +104,15 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     //added methods just for POC
     public void goToDashboardHomePage(String username, String pwd) throws Exception {
     	checkElementVisibility(userNameField);
+    	getActiveConsoleName(loginButton);
     	userNameField.sendKeys(username);
     	passwordField.sendKeys(pwd);
 		click(loginButton);
     }
-    
-    
 
+    public void getActiveConsoleName(WebElement element){
+    	activeConsoleName = element.getText();
+    	ScreenshotManager.setScreenshotConsoleName(activeConsoleName);
+    }
 
 }
