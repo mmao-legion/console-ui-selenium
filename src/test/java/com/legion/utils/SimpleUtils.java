@@ -163,12 +163,12 @@ public class SimpleUtils {
 	}
 	    
 	    
-    public static Map<String, String> getDayMonthDateFormatForCurrentPastAndFutureWeek(int dayOfYear, int isoYear)
+    public static HashMap<String, String> getDayMonthDateFormatForCurrentPastAndFutureWeek(int dayOfYear, int isoYear)
 	{
 		LocalDate dateBasedOnGivenParameter = Year.of(isoYear).atDay(dayOfYear);
 	    LocalDate pastWeekDate = dateBasedOnGivenParameter.minusWeeks(1);
 	    LocalDate futureWeekDate = dateBasedOnGivenParameter.plusWeeks(1);
-	    Map<String, String> dateMonthOfCurrentPastAndFutureWeek = new HashMap<String, String>();
+	    HashMap<String, String> dateMonthOfCurrentPastAndFutureWeek = new HashMap<String, String>();
 	    dateMonthOfCurrentPastAndFutureWeek.put("currentWeekDate", getDayMonthDateFormat(dateBasedOnGivenParameter));
 	    dateMonthOfCurrentPastAndFutureWeek.put("pastWeekDate", getDayMonthDateFormat(pastWeekDate));
 	    dateMonthOfCurrentPastAndFutureWeek.put("futureWeekDate", getDayMonthDateFormat(futureWeekDate));

@@ -2,7 +2,7 @@
   "CHROME_DRIVER_PATH": "C:\\Users\\nishant08\\Downloads\\chromedriver\\chromedriver.exe",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://enterprise-stage.legion.work/",
-  "Screenshot_Path": "D:\\ZorangUpdated\\console-ui-selenium",
+  "Screenshot_Path": "D:\\NishantZorang\\console-ui-selenium",
   "ENTERPRISE" : "LegionCoffee2",
   "Coffee_Enterprise" : "LegionCoffee2",
   "LegionTech_Enterprise" : "LegionTech",

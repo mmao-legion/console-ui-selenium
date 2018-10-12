@@ -41,16 +41,6 @@ public class BasePage {
         	ExtentTestManager.getTest().log(Status.WARNING,te);
         }
     }
-    
-    
-    public void clickConsoleUI(WebElement element, String activeConsoleName) {
-    	try {
-            waitUntilElementIsVisible(element);
-            element.click();
-        } catch (TimeoutException te) {
-        	ExtentTestManager.getTest().log(Status.WARNING,te);
-        }
-    }
 
     public void waitForElement(String element) {
   
