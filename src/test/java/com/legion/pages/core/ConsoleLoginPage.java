@@ -4,6 +4,7 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.legion.pages.BasePage;
+import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
 import com.legion.utils.SimpleUtils;
 
@@ -73,7 +74,6 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     	catch (TimeoutException te) {
     		return false;
     	}
-    	
     }
     
     public void logOut() throws Exception
@@ -84,10 +84,10 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     	}
     }
     
-    public void verifyLoginDone(boolean isLoginDone) throws Exception
+    public void verifyLoginDone(boolean isLoginDone, String selectedLocation) throws Exception
     {
     	if(isLoginDone){
-    		SimpleUtils.pass("Login to Legion Application Successfully!");
+    		SimpleUtils.pass("Login to Legion Application Successfully with selected location: '"+selectedLocation+"'.");
     	}else{
     		SimpleUtils.fail("Not bale to Login to Legion Application Successfully!",true);
     	}

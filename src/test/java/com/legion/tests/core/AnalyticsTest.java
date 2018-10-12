@@ -34,12 +34,9 @@ public class AnalyticsTest extends TestBase{
 	@TestName(description = "Verify Analytics flow")
    @Test(dataProvider = "usersDataCredential")
    public void gotoAnalyticsPageTest(String username, String password, String location) throws Exception { 
-   		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+   		loginToLegionAndVerifyIsLoginDone(username,password);
 		AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
 		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-	    loginPage.goToDashboardHomePage(username,password);
-	    boolean isLoginDone = loginPage.isLoginDone();
-	    loginPage.verifyLoginDone(isLoginDone);
 	    locationSelectorPage.changeLocation(location);
 		analyticsPage.gotoAnalyticsPage();	
 		

@@ -6,6 +6,7 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
+import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.pagefactories.ConsoleWebPageFactory;
 import com.legion.pages.pagefactories.PageFactory;
@@ -146,7 +147,6 @@ public class TestBase {
     @BeforeMethod(alwaysRun = true)
     protected void openBrowser(Method method, @Optional String browser,
                                @Optional String enterprise, @Optional String environment) throws AWTException, IOException {
-    	
     	if (environment != null) {
         	setEnvironment(environment);
         } else {
@@ -319,6 +319,7 @@ public class TestBase {
     public static void loadURL() {
         try {
         	getDriver().get(getURL() + "legion/?enterprise=" + getEnterprise() + " ");
+        	//SimpleUtils.pass("Driver launched URL: '"+getURL()+" with Enterprise: '"+getEnterprise()+"' Successfully!");
         } catch (TimeoutException te) {
             try {
                 getDriver().navigate().refresh();
@@ -388,8 +389,10 @@ public class TestBase {
     {
     	LoginPage loginPage = pageFactory.createConsoleLoginPage();
     	loginPage.loginToLegionWithCredential(username, Password);
+    	LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+    	String selectedLocation = locationSelectorPage.getCurrentUserLocation();
 	    boolean isLoginDone = loginPage.isLoginDone();
-	    loginPage.verifyLoginDone(isLoginDone);
+	    loginPage.verifyLoginDone(isLoginDone, selectedLocation);
     }
    
     

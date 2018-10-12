@@ -2,20 +2,11 @@ package com.legion.utils;
 
 import static com.legion.utils.MyThreadLocal.getVerificationMap;
 import static org.testng.AssertJUnit.assertTrue;
-
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.testng.ITestResult;
 import org.testng.Reporter;
-
 import com.aventstack.extentreports.Status;
-import com.legion.tests.TestBase;
-import com.legion.tests.annotations.Automated;
-import com.legion.tests.annotations.Owner;
-import com.legion.tests.annotations.TestName;
 import com.legion.tests.testframework.ExtentTestManager;
-
-import java.lang.reflect.Method;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
@@ -23,7 +14,6 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Yanming
@@ -163,12 +153,12 @@ public class SimpleUtils {
 		}
 	    
 	    
-	    public static Map<String, String> getDayMonthDateFormatForCurrentPastAndFutureWeek(int dayOfYear, int isoYear)
+	    public static HashMap<String, String> getDayMonthDateFormatForCurrentPastAndFutureWeek(int dayOfYear, int isoYear)
 		{
 			LocalDate dateBasedOnGivenParameter = Year.of(isoYear).atDay(dayOfYear);
 		    LocalDate pastWeekDate = dateBasedOnGivenParameter.minusWeeks(1);
 		    LocalDate futureWeekDate = dateBasedOnGivenParameter.plusWeeks(1);
-		    Map<String, String> dateMonthOfCurrentPastAndFutureWeek = new HashMap<String, String>();
+		    HashMap<String, String> dateMonthOfCurrentPastAndFutureWeek = new HashMap<String, String>();
 		    dateMonthOfCurrentPastAndFutureWeek.put("currentWeekDate", getDayMonthDateFormat(dateBasedOnGivenParameter));
 		    dateMonthOfCurrentPastAndFutureWeek.put("pastWeekDate", getDayMonthDateFormat(pastWeekDate));
 		    dateMonthOfCurrentPastAndFutureWeek.put("futureWeekDate", getDayMonthDateFormat(futureWeekDate));

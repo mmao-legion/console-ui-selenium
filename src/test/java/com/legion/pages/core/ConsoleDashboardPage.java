@@ -141,7 +141,5 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	}
     	return false;
     }
-    
-   
 
 }

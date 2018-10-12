@@ -107,4 +107,16 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
         return false;
     }
+    
+    public String getCurrentUserLocation() throws Exception
+    {
+    	String selectedLocation = "";
+    	if(isElementLoaded(dashboardSelectedLocationText)) {
+    		selectedLocation = dashboardSelectedLocationText.getText();
+    	}
+    	else {
+        	SimpleUtils.fail("Active Location not appear on Dashboard!", false);
+    	}
+    	return selectedLocation;
+    }
 }

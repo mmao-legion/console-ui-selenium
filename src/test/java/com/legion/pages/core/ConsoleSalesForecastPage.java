@@ -12,13 +12,11 @@ import org.openqa.selenium.support.PageFactory;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.SalesForecastPage;
-import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
 public class ConsoleSalesForecastPage extends BasePage implements SalesForecastPage{
 
-	Object[][] salesForecastCategoriesOptions = JsonUtil.getArraysFromJsonFile("src/test/resources/salesForecastCategoriesOptions.json");
-	
+	//Object[][] salesForecastCategoriesOptions = JsonUtil.getArraysFromJsonFile("src/test/resources/salesForecastCategoriesOptions.json");
 	@FindBy(className="sub-navigation-view")
 	private List<WebElement> scheduleSubNavigationViewTab;
 	
@@ -153,35 +151,19 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 	}
 	
 	@Override
-	public Boolean validateSalesForecastItemOptionWithUserJobTitle(String userJobTitle) throws Exception
+	public Boolean validateSalesForecastItemOptionWithUserJobTitle(String currentUsersSalesForecastItemOption) throws Exception
 	{
-    	String currentUsersSalesForecastItemOption = "NA";
 		if(isElementLoaded(SchedulePageSelectedSubTab) && SchedulePageSelectedSubTab.getText().contains(salesForecastTabLabelText))
 		{
-			for (Object[] salesForecastItemOption : salesForecastCategoriesOptions) {
-				String userJobTitleFromJson = (String) salesForecastItemOption[0];
-				String salesForecastCategoriesOptionsFromJson = (String) salesForecastItemOption[1];
-				if(userJobTitleFromJson.toLowerCase().contains(userJobTitle.toLowerCase()))
-					currentUsersSalesForecastItemOption =  salesForecastCategoriesOptionsFromJson;
-	    	}
-			if(! currentUsersSalesForecastItemOption.contains("N/A")){
-				if(isElementLoaded(salesForecastFilterCategoriesDropDown))
-				{
-					click(salesForecastFilterCategoriesDropDown);
-					if(salesForecastFilterCategoriesDropDownOptions.size() != 0)
-					{
-						if(salesForecastFilterCategoriesDropDownOptions.size() == currentUsersSalesForecastItemOption.split(",").length){
-							for(WebElement salesForecastFilterCategoriesDropDownOption : salesForecastFilterCategoriesDropDownOptions)
-							{
-								if(! currentUsersSalesForecastItemOption.toLowerCase().contains(salesForecastFilterCategoriesDropDownOption.getText().toLowerCase()))
-								{
-									return false;
-								}
-							}
-							click(salesForecastFilterCategoriesDropDown);
-							return true;						
+			if(salesForecastFilterCategoriesDropDownOptions.size() != 0) {
+				if(salesForecastFilterCategoriesDropDownOptions.size() == currentUsersSalesForecastItemOption.split(",").length){
+					for(WebElement salesForecastFilterCategoriesDropDownOption : salesForecastFilterCategoriesDropDownOptions) {
+						if(! currentUsersSalesForecastItemOption.toLowerCase().contains(salesForecastFilterCategoriesDropDownOption.getText().toLowerCase())) {
+							return false;
 						}
 					}
+					SimpleUtils.pass("sales Forecast Filter Categories Matched with logged in User Role.");
+					return true;						
 				}
 			}
 		}

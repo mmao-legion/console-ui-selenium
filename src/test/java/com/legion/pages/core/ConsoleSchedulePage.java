@@ -307,7 +307,10 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		{
 			for(WebElement budgetedScheduledLabelDiv : budgetedScheduledLabelsDivElement)
 			{
-					if(budgetedScheduledLabelDiv.getText().contains("Wages") && budgetedScheduledLabelDiv.getText().contains("Budgeted") )
+				/*Wages
+				Guidance*/
+					if(budgetedScheduledLabelDiv.getText().contains("Wages") && budgetedScheduledLabelDiv.getText().contains("Guidance") 
+							|| budgetedScheduledLabelDiv.getText().contains("Wages") && budgetedScheduledLabelDiv.getText().contains("Budgeted") )
 					{
 						wagesBudgetedCount = budgetedScheduledLabelDiv.findElement(By.className("sch-control-kpi")).getText().replace(" Wages", "").replace("$", "");
 					}
@@ -611,9 +614,6 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	
 	public Boolean validateScheduleActiveWeekWithOverviewCalendarWeek(String overviewCalendarWeekDate, String overviewCalendarWeekDays, String scheduleActiveWeekDuration)
 	{
-		System.out.println("overviewCalendarWeekDate: "+overviewCalendarWeekDate);
-		System.out.println("overviewCalendarWeekDays: "+overviewCalendarWeekDays);
-		System.out.println("scheduleActiveWeekDuration: "+scheduleActiveWeekDuration);
 		String[] overviewCalendarDates = overviewCalendarWeekDate.split(",");
 		String[] overviewCalendarDays = overviewCalendarWeekDays.split(",");
 		String[]  scheduleActiveDays = scheduleActiveWeekDuration.split(",");

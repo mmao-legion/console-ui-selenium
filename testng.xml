@@ -7,8 +7,18 @@
     <listeners>
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
-   
-  <test name="Dashboard Test">      
+ 	 	
+  <!--  <test name="Schedule Test as Bartender">      
+    <classes>
+       <class name="com.legion.tests.core.BartenderScheduleTest">
+      	<methods>
+             <include name="scheduleTestAsBartender"/>    
+        </methods>
+      </class>
+    </classes>
+  </test>
+    -->
+  <!-- <test name="Dashboard Test">      
     <classes>
        <class name="com.legion.tests.core.DashboardTest">
       	<methods>
@@ -16,9 +26,9 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> --> <!-- Test -->
   
-  <test name="Schedule Overview Test">      
+  <!-- <test name="Schedule Overview Test">      
     <classes>
        <class name="com.legion.tests.core.ScheduleOverviewTest">
       	<methods>
@@ -29,9 +39,9 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> --> <!-- Test -->
   
-  <test name="Team Test">      
+  <!-- <test name="Team Test">      
     <classes>
        <class name="com.legion.tests.core.TeamTest">
       	<methods>
@@ -39,25 +49,25 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
-  
+  </test> Test
+  -->
   <test name="Schedule Test">      
     <classes>
        <class name="com.legion.tests.core.ScheduleTest">
       	<methods>
-             <include name="shouldRepublishButtonDisplyedForFinalizedWeek"/>  
+            <!--  <include name="shouldRepublishButtonDisplyedForFinalizedWeek"/>   -->
              <include name="hoursAndWagesCalculationOnSchedulePage"/>
              <include name="reviewPastGenerateCurrentAndFutureWeekSchedule"/> 
-             <include name="onRefreshPublishButtonDisappears"/> 
+            <!--  <include name="onRefreshPublishButtonDisappears"/> 
              <include name="scheduleWagesDoesNotGetUpdatedForAdminShift"/> 
              <include name="shouldConvertToOpenShiftOption"/> 
              <include name="scheduleWagesDoesNotChangeForNewAddedShift"/> 
              <include name="scheduleDeletionNotWorking"/>
-             <include name="projectedSalesAndStaffingGuidanceAreZeroOnGenerateSchedulePage"/>
+             <include name="projectedSalesAndStaffingGuidanceAreZeroOnGenerateSchedulePage"/> -->
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test><!--  Test
   
   <test name="Staffing Guidance test">      
     <classes>
@@ -76,8 +86,8 @@
       </class>
     </classes>
   </test>
- 	
-  <test name="Sales Forecast">      
+ 	-->
+ <!--  <test name="Sales Forecast">      
     <classes>
        <class name="com.legion.tests.core.SalesForecastTest">
       	<methods>
@@ -86,7 +96,7 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> --> <!-- 
   
   <test name="Navigation Flow">      
     <classes>
@@ -97,7 +107,7 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> Test
   
   
   <test name="Analytics Test">      
@@ -108,7 +118,7 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> Test
   
    <test name="StoreManager Schedule Navigation Test">      
     <classes>
@@ -127,7 +137,7 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> --> <!-- Test -->
   
    
 </suite> <!-- Suite -->
