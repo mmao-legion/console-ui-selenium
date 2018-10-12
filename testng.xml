@@ -7,22 +7,25 @@
     <listeners>
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
- <test name="Team Test">      
+   
+  <test name="Dashboard Test">      
     <classes>
-       <class name="com.legion.tests.core.TeamTest">
+       <class name="com.legion.tests.core.DashboardTest">
       	<methods>
-             <include name="shouldConvertToOpenShiftOption"/>    
+             <include name="navigateToDashboardFromGlobalSetting"/>    
         </methods>
       </class>
     </classes>
   </test> <!-- Test -->
   
-  <test name="Dashboard Test">      
+  <test name="Schedule Overview Test">      
     <classes>
-       <class name="com.legion.tests.core.DashboardTest">
+       <class name="com.legion.tests.core.ScheduleOverviewTest">
       	<methods>
-             <include name="navigateToDashboardFromGlobalSetting"/>
-              <include name="navigateToDashboard"/>     
+           <include name="changeLocationTest"/>
+           <include name="verifyCurrentWeekDateAndDayTest"/>
+           <include name="verifyDateAndDayForEachWeeksUntilNotAvailableTest"/>
+           <include name="verifyDayAndDateOnSchedulePageMatchesDayAndDateOnOverviewPageTest"/>
         </methods>
       </class>
     </classes>
@@ -34,7 +37,13 @@
       	<methods>
              <include name="shouldRepublishButtonDisplyedForFinalizedWeek"/>  
              <include name="hoursAndWagesCalculationOnSchedulePage"/>
-            
+             <include name="reviewPastGenerateCurrentAndFutureWeekSchedule"/> 
+             <include name="onRefreshPublishButtonDisappears"/> 
+             <include name="scheduleWagesDoesNotGetUpdatedForAdminShift"/> 
+             <include name="shouldConvertToOpenShiftOption"/> 
+             <include name="scheduleDeletionNotWorking"/>
+             <include name="projectedSalesAndStaffingGuidanceAreZeroOnGenerateSchedulePage"/>
+             <include name="budgetAndGuidanceHourNotEqual"/>
         </methods>
       </class>
     </classes>
@@ -47,18 +56,23 @@
            <include name="staffingGuidanceDataAsStoreManagerTest"/>
            <include name="weeklyGuidanceHoursShouldMatchTheSumOfEachDay"/>
            <include name="weeklyGuidanceHoursShouldMatchTheSumOfWorkRolesEnabled"/>
-           <include name="staffingGuidanceShouldNotBeBlankOnRefresh"/>
            <include name="staffingGuidanceShowsDiffGuidanceHour"/>
+           <include name="staffingGuidanceShouldNotBeBlankOnRefresh"/>
+           <include name="itemsOnstaffingGuidanceIsBlank"/>
+           <include name="analyzeShowsDifferentLocationInScheduleHistoryOfBayArea"/>
+           <include name="wagesAreZeroForGuidanceHourValue"/>
+           <include name="sumOfGuidanceHourNotEqualToTotalGuidanceHour"/>
         </methods>
       </class>
     </classes>
   </test>
  	
-  <test name="Sales Projected Sales">      
+  <test name="Sales Forecast">      
     <classes>
        <class name="com.legion.tests.core.SalesForecastTest">
       	<methods>
            <include name="salesForecastDataAsStoreManagerTest"/>
+           <include name="shouldAllSalesItemDisplayEnabledFilter"/>
         </methods>
       </class>
     </classes>
@@ -69,6 +83,7 @@
        <class name="com.legion.tests.core.NavigationTest">
       	<methods>
            <include name="legionConsoleNavigationFlow"/>
+           <include name="DataNotLoadingForCarmelClubLocation"/>
         </methods>
       </class>
     </classes>
@@ -104,5 +119,6 @@
     </classes>
   </test> <!-- Test -->
   
+   
 </suite> <!-- Suite -->
 
