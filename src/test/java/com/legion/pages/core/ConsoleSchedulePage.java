@@ -77,7 +77,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	
 	@FindBy(css="div.sub-navigation-view-link")
 	private List<WebElement> ScheduleSubTabsElement;
-	
+
 	@FindBy(css="[ng-click='gotoNextWeek($event)']")
 	private WebElement calendarNavigationNextWeekArrow;
 	
@@ -104,28 +104,28 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	
 	@FindBy(css="[ng-click=\"goToSchedule()\"]")
 	private WebElement checkOutTheScheduleButton;
-	
+
 	@FindBy(className="console-navigation-item")
 	private List<WebElement>consoleNavigationMenuItems;
-	
+
 	@FindBy(css="[ng-click=\"callOkCallback()\"]")
 	private WebElement editAnywayPopupButton;
-	
+
 	@FindBy(css="[ng-if=\"canShowNewShiftButton()\"]")
 	private WebElement addNewShiftOnDayViewButton;
-	
+
 	@FindBy(className="sch-control-button-cancel")
 	private WebElement scheduleEditModeCancelButton;
-		
+
 	@FindBy(css="[ng-click=\"regenerateFromOverview()\"]")
 	private WebElement scheduleGenerateButton;
-	
+
 	@FindBy (css = "#legion-app navigation div:nth-child(4)")
 	private WebElement analyticsConsoleName;
-	
-	
+
+
 	String consoleScheduleMenuItemText = "Schedule";
-	
+
 	public void clickOnScheduleConsoleMenuItem() {
 		if(consoleNavigationMenuItems.size() != 0)
 		{
@@ -312,7 +312,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		{
 			for(WebElement budgetedScheduledLabelDiv : budgetedScheduledLabelsDivElement)
 			{
-					if(budgetedScheduledLabelDiv.getText().contains("Wages") && budgetedScheduledLabelDiv.getText().contains("Budgeted") )
+
+					if(budgetedScheduledLabelDiv.getText().contains("Wages") && budgetedScheduledLabelDiv.getText().contains("Guidance")
+							|| budgetedScheduledLabelDiv.getText().contains("Wages") && budgetedScheduledLabelDiv.getText().contains("Budgeted") )
 					{
 						wagesBudgetedCount = budgetedScheduledLabelDiv.findElement(By.className("sch-control-kpi")).getText().replace(" Wages", "").replace("$", "");
 					}
@@ -380,7 +382,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			}
 			
 		}
-		
+
 		if(varifyActivatedSubTab(subTabString))
 		{
 			SimpleUtils.pass("Schedule Page Overview tab loaded Successfully!");
@@ -392,7 +394,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	}
 
 	@Override
-	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount) 
+	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount)
 	{
 		String currentWeekStartingDay = "NA";
 		for(int i = 0; i < weekCount; i++)
@@ -401,7 +403,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			{
 				currentWeekStartingDay = ScheduleCalendarDayLabels.get(0).getText();
 			}
-		 	 
+
 			if(nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future"))
 			{
 				try {
@@ -409,7 +411,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 							calendarNavigationNextWeekArrow.click();
 							SimpleUtils.pass("Schedule Page Calender view for next week loaded successfully!");
 					}
-				} 
+				}
 				catch (Exception e) {
 					SimpleUtils.fail("Schedule page Calender Next Week Arrows Not Loaded/Clickable after '"+currentWeekStartingDay+ "'", true);
 				}
@@ -424,7 +426,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 				} catch (Exception e) {
 					SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable after '"+currentWeekStartingDay+ "'", true);
 				}
-				
+
 			}
 			/*if(! currentWeekStartingDay.equals(ScheduleCalendarDayLabels.get(0).getText()))
 			{
@@ -543,7 +545,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		}
 		return false;
 	}
-	
+
 	public String getScheduleWeekStartDayMonthDate()
 	{
 		String scheduleWeekStartDuration = "NA";
@@ -553,7 +555,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		}
 		return scheduleWeekStartDuration;
 	}
-	
+
 	public void clickOnEditButton() throws Exception
 	{
 		if(isElementLoaded(edit))
@@ -566,7 +568,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			}
 		}
 	}
-	
+
 	public Boolean isAddNewDayViewShiftButtonLoaded() throws Exception
 	{
 		if(isElementLoaded(addNewShiftOnDayViewButton))
@@ -577,9 +579,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		{
 			return false;
 		}
-		
+
 	}
-	
+
 	public void clickOnCancelButtonOnEditMode() throws Exception
 	{
 		if(isElementLoaded(scheduleEditModeCancelButton))
@@ -588,7 +590,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			SimpleUtils.pass("Schedule edit shift page cancelled successfully!");
 		}
 	}
-	
+
 	public Boolean isGenerateButtonLoaded() throws Exception
 	{
 		if(isElementLoaded(scheduleGenerateButton))
@@ -597,7 +599,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		}
 		return false;
 	}
-	
+
 	public String getActiveWeekDayMonthAndDateForEachDay() throws Exception
 	{
 		String activeWeekTimeDuration = "";
@@ -613,12 +615,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		}
 		return activeWeekTimeDuration;
 	}
-	
+
 	public Boolean validateScheduleActiveWeekWithOverviewCalendarWeek(String overviewCalendarWeekDate, String overviewCalendarWeekDays, String scheduleActiveWeekDuration)
 	{
-		System.out.println("overviewCalendarWeekDate: "+overviewCalendarWeekDate);
-		System.out.println("overviewCalendarWeekDays: "+overviewCalendarWeekDays);
-		System.out.println("scheduleActiveWeekDuration: "+scheduleActiveWeekDuration);
 		String[] overviewCalendarDates = overviewCalendarWeekDate.split(",");
 		String[] overviewCalendarDays = overviewCalendarWeekDays.split(",");
 		String[]  scheduleActiveDays = scheduleActiveWeekDuration.split(",");
@@ -639,9 +638,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			}
 			if(index != 0 )
 				return true;
-			
+
 		}
 		return false;
 	}
-	 
+
 }

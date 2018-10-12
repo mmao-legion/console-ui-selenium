@@ -1,5 +1,6 @@
 package com.legion.tests.core;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -168,7 +169,7 @@ public class StaffingGuidanceTest extends TestBase{
 		SimpleUtils.pass("Data in Staffing Guidance table is not getting disappear"); 
     }
 	
-	
+
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
 	@TestName(description = "LEG-5062 : Items section of Day View on Staffing Guidance tab has no data on LegionCoffee env")
@@ -180,9 +181,9 @@ public class StaffingGuidanceTest extends TestBase{
 		SimpleUtils.pass("Login to LegionCoffee environment Successfully");
 		SimpleUtils.pass("Successfully opened the Schedule app");
 		SimpleUtils.pass("Open a day view in Staffing Guidance of any Week");
-		SimpleUtils.pass("assert Items section should not be empty."); 
+		SimpleUtils.pass("assert Items section should not be empty.");
     }
-	
+
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
 	@TestName(description = "LEG-5063 : For Bay Area location, Analyze section is showing Polo Alto by default even for Bay Area under Schedule History of Staffing Guidance")
@@ -195,9 +196,9 @@ public class StaffingGuidanceTest extends TestBase{
 		SimpleUtils.pass("Successfully opened the Schedule app");
 		SimpleUtils.pass("Open a day view in Staffing Guidance of any Week");
 		SimpleUtils.pass("Click Analyze button");
-		SimpleUtils.pass("location is configured to show data from three different locations"); 
+		SimpleUtils.pass("location is configured to show data from three different locations");
     }
-	
+
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
 	@TestName(description = "LEG-5108:Wages showing as zero for certain work roles having non-0 staffing guidance hour in LegionCoffee")
@@ -224,7 +225,7 @@ public class StaffingGuidanceTest extends TestBase{
 	       SimpleUtils.pass("assert sum of individual guidance hour should be equal to total guidance hour ");
 
 	}
-	
-	
+
+
 
 }

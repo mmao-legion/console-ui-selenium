@@ -48,10 +48,10 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	
 	@FindBy(className="home-dashboard")
 	private WebElement dashboardSection;
-	
+
 	@FindBy(className="console-navigation-item")
 	private List<WebElement>consoleNavigationMenuItems;
-	
+
 	@FindBy (css = "#legion-app navigation div:nth-child(4)")
 	private WebElement scheduleConsoleName;
 
@@ -144,6 +144,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     		return true;
     	}
     	return false;
-    } 
+    }
 
 }

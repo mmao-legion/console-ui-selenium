@@ -4,6 +4,7 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.legion.pages.BasePage;
+import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
 import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.SimpleUtils;
@@ -42,7 +43,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     @FindBy (css = "div.console-navigation-item-label.Dashboard")
     private WebElement dashboardConsoleName;
 
-        
+
     public ConsoleLoginPage() {
 //    	super(driver);
     	PageFactory.initElements(getDriver(), this);
@@ -79,7 +80,6 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     	catch (TimeoutException te) {
     		return false;
     	}
-    	
     }
     
     public void logOut() throws Exception
@@ -90,11 +90,11 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     	}
     }
     
-    public void verifyLoginDone(boolean isLoginDone) throws Exception
+    public void verifyLoginDone(boolean isLoginDone, String selectedLocation) throws Exception
     {
     	if(isLoginDone){
-    		getActiveConsoleName(dashboardConsoleName);
-    		SimpleUtils.pass("Login to Legion Application Successfully!");
+            getActiveConsoleName(dashboardConsoleName);
+    	    SimpleUtils.pass("Login to Legion Application Successfully with selected location: '"+selectedLocation+"'.");
     	}else{
     		SimpleUtils.fail("Not bale to Login to Legion Application Successfully!",true);
     	}
@@ -109,10 +109,10 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     	passwordField.sendKeys(pwd);
 		click(loginButton);
     }
-    
+
     public void getActiveConsoleName(WebElement element){
     	activeConsoleName = element.getText();
     	ScreenshotManager.setScreenshotConsoleName(activeConsoleName);
     }
-    
+
 }
