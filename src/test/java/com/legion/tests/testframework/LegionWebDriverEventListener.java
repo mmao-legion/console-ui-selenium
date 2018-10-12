@@ -7,6 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.events.WebDriverEventListener;
 
+import com.legion.pages.BasePage;
 import com.legion.tests.TestBase;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -44,15 +45,12 @@ public class LegionWebDriverEventListener implements WebDriverEventListener {
 
 	@Override
 	public void beforeNavigateTo(String url, WebDriver driver) {
-		// TODO Auto-generated method stub
-		 
-		
+		// TODO Auto-generated method stub	 
 	}
 
 	@Override
 	public void afterNavigateTo(String url, WebDriver driver) {
 		// TODO Auto-generated method stub
-		TestBase.takeScreenShot();
 	}
 
 	@Override
@@ -94,75 +92,17 @@ public class LegionWebDriverEventListener implements WebDriverEventListener {
 	@Override
 	public void beforeFindBy(By by, WebElement element, WebDriver driver) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void afterFindBy(By by, WebElement element, WebDriver driver) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void beforeClickOn(WebElement element, WebDriver driver) {
 		// TODO Auto-generated method stub
-		
-		elementTextToReport = "";
-        elementType = "";
-        if (element.getTagName().equals("input")) {
-            elementType = element.getAttribute("type");
-        } else {
-            elementType = element.getTagName();
-        }
-        if (elementType.equals("checkbox") || elementType.equals("radio")) {
-            selected = !element.isSelected();
-        }
-        String elementText = element.getText();
-        String elementName = element.getAttribute("name") != null ? element.getAttribute("name").replaceAll("[-_]", " ") : "";
-        String elementId = element.getAttribute("id") != null ? element.getAttribute("id") : "";
-        String elementValue = element.getAttribute("value") != null ? element.getAttribute("value") : "";
-        String elementTitle = element.getAttribute("title") != null ? element.getAttribute("title") : "";
-
-        isPopover = element.getAttribute("class").contains("mi-popover");
-
-        switch (elementType) {
-            case "option":
-                WebElement select = element.findElement(By.xpath(".."));
-                elementText = select.getText();
-                elementName = select.getAttribute("name") != null ? select.getAttribute("name").replaceAll("[-_]", " ") : "";
-                elementId = select.getAttribute("id") != null ? select.getAttribute("id") : "";
-                elementValue = select.getAttribute("value") != null ? select.getAttribute("value") : "";
-                elementTitle = select.getAttribute("title") != null ? select.getAttribute("title") : "";
-                if (!elementId.equals("")) {
-                    elementTextToReport = StringUtils
-                            .join(StringUtils.splitByCharacterTypeCamelCase(StringUtils.capitalize(elementId)), ' ');
-                } else if (!elementName.equals("")) {
-                    elementTextToReport = StringUtils
-                            .join(StringUtils.splitByCharacterTypeCamelCase(StringUtils.capitalize(elementName)), ' ');
-                } else if (!elementText.equals("")) {
-                    elementTextToReport = elementText;
-                } else if (!elementValue.equals("")) {
-                    elementTextToReport = elementValue;
-                } else if (!elementTitle.equals("")) {
-                    elementTextToReport = elementTitle;
-                }
-                break;
-            default:
-                if (!elementName.equals("")) {
-                    elementTextToReport = StringUtils
-                            .join(StringUtils.splitByCharacterTypeCamelCase(StringUtils.capitalize(elementName)), ' ');
-                } else if (!elementText.equals("")) {
-                    elementTextToReport = elementText;
-                } else if (!elementId.equals("")) {
-                    elementTextToReport = StringUtils
-                            .join(StringUtils.splitByCharacterTypeCamelCase(StringUtils.capitalize(elementId)), ' ');
-                } else if (!elementValue.equals("")) {
-                    elementTextToReport = elementValue;
-                } else if (!elementTitle.equals("")) {
-                    elementTextToReport = elementTitle;
-                }
-        }
-        TestBase.takeScreenShot();
+        ScreenshotManager.takeScreenShot();
 		
 	}
 
@@ -174,47 +114,43 @@ public class LegionWebDriverEventListener implements WebDriverEventListener {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			ScreenshotManager.setScreenshotConsoleName(BasePage.activeConsoleName);
+			ScreenshotManager.takeScreenShot();
 		}
-		TestBase.takeScreenShot();
-		
+	
 	}
 
 	@Override
 	public void beforeChangeValueOf(WebElement element, WebDriver driver,
 			CharSequence[] keysToSend) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void afterChangeValueOf(WebElement element, WebDriver driver,
 			CharSequence[] keysToSend) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void beforeScript(String script, WebDriver driver) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void afterScript(String script, WebDriver driver) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void beforeSwitchToWindow(String windowName, WebDriver driver) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void afterSwitchToWindow(String windowName, WebDriver driver) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

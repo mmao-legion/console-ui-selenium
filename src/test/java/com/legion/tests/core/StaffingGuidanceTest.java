@@ -1,6 +1,5 @@
 package com.legion.tests.core;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +8,6 @@ import org.testng.annotations.Test;
 
 import com.aventstack.extentreports.Status;
 import com.legion.pages.DashboardPage;
-import com.legion.pages.LoginPage;
 import com.legion.pages.SalesForecastPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.StaffingGuidancePage;
@@ -34,9 +32,7 @@ public class StaffingGuidanceTest extends TestBase{
             throws Exception
     {
     	//To Do Should be separate Test from Schedule test
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        loginPage.loginToLegionWithCredential(propertyMap, propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
-        SimpleUtils.assertOnFail( "Login Failed!", loginPage.isLoginDone(),false);
+    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.goToToday();
         SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
@@ -72,10 +68,10 @@ public class StaffingGuidanceTest extends TestBase{
         	staffingGuidanceDayViewTeamMembersTotalCount = staffingGuidanceDayViewTeamMembersTotalCount + itemsCount;
         	staffingGuidanceDayViewTeamMembersCountAsString = staffingGuidanceDayViewTeamMembersCountAsString + "|" + itemsCount;
         }
-        ExtentTestManager.getTest().log(Status.INFO,"Staffing Guidance for Day View");
-        ExtentTestManager.getTest().log(Status.INFO,dayViewTimeDurationAsString);
-        ExtentTestManager.getTest().log(Status.INFO,staffingGuidanceDayViewItemsCountAsString);
-        ExtentTestManager.getTest().log(Status.INFO,staffingGuidanceDayViewTeamMembersCountAsString);
+        ExtentTestManager.extentTest.get().log(Status.INFO,"Staffing Guidance for Day View");
+        ExtentTestManager.extentTest.get().log(Status.INFO,dayViewTimeDurationAsString);
+        ExtentTestManager.extentTest.get().log(Status.INFO,staffingGuidanceDayViewItemsCountAsString);
+        ExtentTestManager.extentTest.get().log(Status.INFO,staffingGuidanceDayViewTeamMembersCountAsString);
         SimpleUtils.assertOnFail( "Staffing Guidance Day View items Count is Zero!", (staffingGuidanceDayViewItemsTotalCount != 0),true);
         SimpleUtils.assertOnFail( "Staffing Guidance Day View Team Memners Count is Zero!", (staffingGuidanceDayViewTeamMembersTotalCount != 0),true);
         
@@ -98,9 +94,9 @@ public class StaffingGuidanceTest extends TestBase{
         	staffingGuidanceWeekViewHoursTotalCount = staffingGuidanceWeekViewHoursTotalCount + staffingGuidanceWeekViewDayHours;
         	staffingGuidanceWeekViewDaysHoursAsString = staffingGuidanceWeekViewDaysHoursAsString + "|" + staffingGuidanceWeekViewDayHours;
         }
-        ExtentTestManager.getTest().log(Status.INFO,"Staffing Guidance for Week View");
-        ExtentTestManager.getTest().log(Status.INFO,weekViewDurationDataAsString);
-        ExtentTestManager.getTest().log(Status.INFO,staffingGuidanceWeekViewDaysHoursAsString);
+        ExtentTestManager.extentTest.get().log(Status.INFO,"Staffing Guidance for Week View");
+        ExtentTestManager.extentTest.get().log(Status.INFO,weekViewDurationDataAsString);
+        ExtentTestManager.extentTest.get().log(Status.INFO,staffingGuidanceWeekViewDaysHoursAsString);
         SimpleUtils.assertOnFail( "Staffing Guidance Week View Hours Count is Zero!", (staffingGuidanceWeekViewHoursTotalCount != 0),true);
         staffingGuidancePage.clickOnStaffingGuidanceAnalyzeButton();
         List<HashMap<String, String>> analyzePopupStaffingGuidanceData = staffingGuidancePage.getAnalyzePopupStaffingGuidanceAndLatestVersionData();
@@ -171,6 +167,64 @@ public class StaffingGuidanceTest extends TestBase{
 		SimpleUtils.pass("Click Refresh button"); 
 		SimpleUtils.pass("Data in Staffing Guidance table is not getting disappear"); 
     }
+	
+	
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "LEG-5062 : Items section of Day View on Staffing Guidance tab has no data on LegionCoffee env")
+    @Test(dataProvider = "browsers")
+    public void itemsOnstaffingGuidanceIsBlank(String browser, String version, String os, String pageobject)
+            throws Exception
+    {
+
+		SimpleUtils.pass("Login to LegionCoffee environment Successfully");
+		SimpleUtils.pass("Successfully opened the Schedule app");
+		SimpleUtils.pass("Open a day view in Staffing Guidance of any Week");
+		SimpleUtils.pass("assert Items section should not be empty."); 
+    }
+	
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "LEG-5063 : For Bay Area location, Analyze section is showing Polo Alto by default even for Bay Area under Schedule History of Staffing Guidance")
+    @Test(dataProvider = "browsers")
+    public void analyzeShowsDifferentLocationInScheduleHistoryOfBayArea(String browser, String version, String os, String pageobject)
+            throws Exception
+    {
+
+		SimpleUtils.pass("Login to LegionCoffee environment Successfully");
+		SimpleUtils.pass("Successfully opened the Schedule app");
+		SimpleUtils.pass("Open a day view in Staffing Guidance of any Week");
+		SimpleUtils.pass("Click Analyze button");
+		SimpleUtils.pass("location is configured to show data from three different locations"); 
+    }
+	
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "LEG-5108:Wages showing as zero for certain work roles having non-0 staffing guidance hour in LegionCoffee")
+	@Test(dataProvider = "browsers")
+	public void wagesAreZeroForGuidanceHourValue(String browser, String version, String os, String pageobject)
+	          throws Exception
+	{
+	       SimpleUtils.pass("Login to LegionCoffee Successfully");
+	       SimpleUtils.pass("Navigate to Staffing Guidance tab under Schedule tab");
+	       SimpleUtils.pass("Open Guidance for Oct1-Oct7");
+	       SimpleUtils.pass("Select Key Manager in all work role filter");
+	       SimpleUtils.pass("assert for Non-0 Guidance hour schedule wages should be Non-0 ");
+	}
+
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "LEG-4923:After adding individual Guidance Hrs of each Day present in the week is not equals to Total Guidance Hrs of the week")
+	@Test(dataProvider = "browsers")
+	public void sumOfGuidanceHourNotEqualToTotalGuidanceHour(String browser, String version, String os, String pageobject)
+	          throws Exception
+	{
+	       SimpleUtils.pass("Login to environment Successfully");
+	       SimpleUtils.pass("Navigate to Staffing Guidance tab open any week");
+	       SimpleUtils.pass("assert sum of individual guidance hour should be equal to total guidance hour ");
+
+	}
+	
 	
 
 }

@@ -12,8 +12,8 @@ import org.openqa.selenium.support.PageFactory;
 import com.aventstack.extentreports.Status;
 import com.legion.pages.AnalyticsPage;
 import com.legion.pages.BasePage;
-import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.SimpleUtils;
 
 public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
@@ -45,7 +45,9 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	 @FindBy(css=".analytics-dashboard-sub-section")
 	 private List<WebElement> teamMemberSatisfactionsElements;
 	 
-	 
+	 @FindBy(css = "div.console-navigation-item.active")
+	 private WebElement activeConsoleMenuItem;
+	  
 	 @FindBy(className="sub-title")
 	 private WebElement sectionSubTitleDiv;
 	    
@@ -63,8 +65,11 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	
 	 @FindBy(className="sub-navigation-view-link")
 	 private WebElement analyticsSubNavigationView;
+	 
+	 @FindBy (css = "div.console-navigation-item-label.Analytics")
+	 private WebElement analyticsConsoleName;
 
-	
+
 	public ConsoleAnalyticsPage(){
 		PageFactory.initElements(getDriver(), this);
 	}
@@ -73,6 +78,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	public void gotoAnalyticsPage() throws Exception {
 		if(isElementLoaded(consoleAnalyticsPageTabElement))
 		{
+			activeConsoleName = analyticsConsoleName.getText();
 			click(consoleAnalyticsPageTabElement);
 			if(isElementLoaded(analyticsSectionsDivClass))
 			{

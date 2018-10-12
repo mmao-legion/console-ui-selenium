@@ -69,6 +69,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	 
 	 @FindBy(className="sub-navigation-view-link")
 	 private List<WebElement> TeamPageHeaderTabs;
+	 
+	 @FindBy (css = "div.console-navigation-item-label.Team")
+	 private WebElement teamConsoleName;
 	
 	public ConsoleTeamPage() {
 		PageFactory.initElements(getDriver(), this);
@@ -76,8 +79,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
     
     public void goToTeam() throws Exception
 	{
+    	
     	if(isElementLoaded(goToTeamButton))
     	{
+    		activeConsoleName = teamConsoleName.getText();
     		click(goToTeamButton);
     	}else{
     		SimpleUtils.fail("Team button not present on the page",false);

@@ -2,6 +2,8 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.util.List;
+
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
@@ -46,6 +48,12 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	
 	@FindBy(className="home-dashboard")
 	private WebElement dashboardSection;
+	
+	@FindBy(className="console-navigation-item")
+	private List<WebElement>consoleNavigationMenuItems;
+	
+	@FindBy (css = "#legion-app navigation div:nth-child(4)")
+	private WebElement scheduleConsoleName;
 
     public ConsoleDashboardPage() {
     	PageFactory.initElements(getDriver(), this);
@@ -54,7 +62,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     @Override
     public boolean isToday() throws Exception {
 
-    	boolean bol = true;
+    	//boolean bol = true;
     	if(isElementLoaded(publishedShiftForTodayDiv)){
     		SimpleUtils.pass("Today's published Shifts loaded Successfully on Dashboard!");
     	}else{
@@ -123,7 +131,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	waitForPageLoaded(getDriver());
     	checkElementVisibility(goToTodayScheduleButton);
     	SimpleUtils.pass("Dashboard Page Loaded Successfully!");
-        click(goToTodayScheduleButton);
+    	activeConsoleName = scheduleConsoleName.getText();
+    	click(goToTodayScheduleButton);
         return new ConsoleSchedulePage();
     }
     
@@ -135,8 +144,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     		return true;
     	}
     	return false;
-    }
-    
-   
+    } 
 
 }

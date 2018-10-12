@@ -1,48 +1,25 @@
 package com.legion.pages;
 
-import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
 import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.getFile;
-import static com.legion.utils.MyThreadLocal.getScreenNum;
-import static com.legion.utils.MyThreadLocal.getVerificationMap;
-import static com.legion.utils.MyThreadLocal.setScreenNum;
-import static org.testng.AssertJUnit.assertTrue;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import javax.imageio.ImageIO;
-
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Duration;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Reporter;
 
-import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
-import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
-import com.legion.utils.JsonUtil;
+import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
@@ -52,10 +29,21 @@ import com.legion.utils.SimpleUtils;
 public class BasePage {
 
     protected WebDriver driver;
+    public static String activeConsoleName;
 //    public static ExtentTest extentTest;
     
 
     public void click(WebElement element, boolean... shouldWait) {
+    	try {
+            waitUntilElementIsVisible(element);
+            element.click();
+        } catch (TimeoutException te) {
+        	ExtentTestManager.getTest().log(Status.WARNING,te);
+        }
+    }
+    
+    
+    public void clickConsoleUI(WebElement element, String activeConsoleName) {
     	try {
             waitUntilElementIsVisible(element);
             element.click();
