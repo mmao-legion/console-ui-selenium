@@ -1,9 +1,11 @@
 package com.legion.pages;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
@@ -14,8 +16,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.aventstack.extentreports.Status;
 import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
@@ -25,6 +29,7 @@ import com.legion.utils.SimpleUtils;
 public class BasePage {
 
     protected WebDriver driver;
+    public static String activeConsoleName;
 //    public static ExtentTest extentTest;
     
 

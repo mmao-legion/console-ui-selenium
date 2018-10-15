@@ -77,17 +77,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-
-
-
-
-
-
-
-
-
-
-
 //import org.apache.log4j.Logger;
 import com.legion.tests.annotations.HasDependencies;
 
@@ -135,7 +124,7 @@ public class TestBase {
     public synchronized static Object[][] usersDataProvider(Method testMethod) {
         return JsonUtil.getArraysFromJsonFile("src/test/resources/legionUsersCredentials.json");
     }
-    
+
     @DataProvider(name = "usersDataCredential", parallel = true)
     public synchronized static Object[][] usersDataCredentialProvider(Method testMethod) {
     	return SimpleUtils.getUsersDataCredential();
@@ -264,7 +253,7 @@ public class TestBase {
 	
 	//added by Nishant
 	
-    @AfterMethod(alwaysRun = true)
+	@AfterMethod(alwaysRun = true)
     protected void tearDown(Method method,ITestResult result) throws IOException {
 		
 		if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
@@ -279,12 +268,10 @@ public class TestBase {
 		if (getVerificationMap() != null) {
             getVerificationMap().clear();
         }
-		
 		ExtentTestManager.getTest().info("Inside After Method");
 		extent.flush();
     }
-	
-	
+
 	public static void initialize(){
     
         switch (getEnvironment()){
@@ -319,7 +306,6 @@ public class TestBase {
     public static void loadURL() {
         try {
         	getDriver().get(getURL() + "legion/?enterprise=" + getEnterprise() + " ");
-        	//SimpleUtils.pass("Driver launched URL: '"+getURL()+" with Enterprise: '"+getEnterprise()+"' Successfully!");
         } catch (TimeoutException te) {
             try {
                 getDriver().navigate().refresh();
@@ -328,52 +314,7 @@ public class TestBase {
             }
         }
     }
-    
-  //To do make a seperate class and remove conditional statement as per Yanming's comment 
-    public static String takeScreenShot() {
-		try {
-			File file = new File("Screenshots" + File.separator + "Results");
-			if (!file.exists()) {
-				file.mkdir();
-			}
-			Date date=new Date();
-			String screenShotName=date.toString().replace(":", "_").replace(" ", "_")+".png";
-			SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
-			String strDate = formatter.format(date);  
-			String strDateFinal = strDate.replaceAll(" ", "_");
 
-			appURL = getURL() + "legion/?enterprise=" + getEnterprise() + "#/";
-			if(getDriver().getCurrentUrl().contains("analytics/dashboard")){
-				activeTabDashboard = "Analytics";
-				screenshotFinalLocation = screenshotLocation + File.separator + strDateFinal + File.separator + getSessionTimestamp() + File.separator + getCurrentTestMethodName() + File.separator + activeTabDashboard;
-			}else if(getDriver().getCurrentUrl().contains("schedule/salesforecast")){
-				activeTabSchedule = "Sales Forecast Page";
-				screenshotFinalLocation = screenshotLocation + File.separator + strDateFinal + File.separator + getSessionTimestamp() + File.separator + getCurrentTestMethodName() + File.separator + activeTabSchedule;
-			}
-			else if(getDriver().getCurrentUrl().contains("schedule")){
-				activeTabSchedule = "SchedulePage";
-				screenshotFinalLocation = screenshotLocation + File.separator + strDateFinal + File.separator + getSessionTimestamp() + File.separator + getCurrentTestMethodName() + File.separator + activeTabSchedule;
-			}else if(getDriver().getCurrentUrl().contains("team")){
-				activeTabSchedule = "TeamPage";
-				screenshotFinalLocation = screenshotLocation + File.separator + strDateFinal + File.separator + getSessionTimestamp() + File.separator + getCurrentTestMethodName() + File.separator + activeTabSchedule;
-			}else if(getDriver().getCurrentUrl().equals(appURL)){
-				activeTabSchedule = "LoginPage";
-				screenshotFinalLocation = screenshotLocation + File.separator + strDateFinal + File.separator + getSessionTimestamp() + File.separator + getCurrentTestMethodName() + File.separator + activeTabSchedule;
-			}else if(getDriver().getCurrentUrl().contains("dashboard")){
-				activeTabSchedule = "DashboardPage";
-				screenshotFinalLocation = screenshotLocation + File.separator + strDateFinal + File.separator + getSessionTimestamp() + File.separator + getCurrentTestMethodName() + File.separator + activeTabSchedule;
-			}
-			
-			File screenshotFile = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
-			File targetFile = new File(screenshotFinalLocation, screenShotName);
-			FileUtils.copyFile(screenshotFile, targetFile);
-			String targetFinalFile = targetFile.toString();
-			return 	targetFinalFile;
-			
-		} catch (Exception e) {
-			return null;
-		}
-	}
     
     public static String displayCurrentURL()
     {
@@ -381,7 +322,7 @@ public class TestBase {
         return (String) executor.executeScript("return document.location.href");
       
     }
-    
+
     /*
      * Login to Legion With Credential and assert on failure
      */
@@ -394,6 +335,6 @@ public class TestBase {
 	    boolean isLoginDone = loginPage.isLoginDone();
 	    loginPage.verifyLoginDone(isLoginDone, selectedLocation);
     }
-   
+
     
 }
