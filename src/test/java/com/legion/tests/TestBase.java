@@ -99,6 +99,9 @@ public class TestBase {
     SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
     //added by Nishant
     private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+    
+	private static Object[][] legionUsersCredentials =  JsonUtil.getArraysFromJsonFile("src/test/resources/UsersCredentials.json");
+
     protected boolean screenshotsWanted = Boolean.parseBoolean(propertyMap.get("TAKE_SCREENSHOTS")) ;
     protected String strEnterprise = propertyMap.get("ENTERPRISE");
     public static String activeTabLogin = null;
@@ -107,7 +110,7 @@ public class TestBase {
     protected static String screenshotFinalLocation = null;
     protected static String appURL = null;
     private static ExtentReports extent = ExtentReportManager.getInstance();
-       
+           
 //    protected static Logger log;
 
     private ThreadLocal<WebDriver> webDriver = new ThreadLocal<WebDriver>();
@@ -129,7 +132,17 @@ public class TestBase {
     public synchronized static Object[][] usersDataCredentialProvider(Method testMethod) {
     	return SimpleUtils.getUsersDataCredential();
     }
+    
+    
+    /*
+     * add by Naval for Tean Schedule 
+     */
 
+    @DataProvider(name = "legionTeamCredentials", parallel = true)
+    public synchronized static Object[][] legionTeamCredentialsProvider(Method testMethod) {
+        return JsonUtil.getArraysFromJsonFile("src/test/resources/UsersCredentials.json");
+    }
+    
     //added by Nishant
    
     @Parameters({"browser", "enterprise","environment"})
@@ -326,14 +339,32 @@ public class TestBase {
     /*
      * Login to Legion With Credential and assert on failure
      */
-    public void loginToLegionAndVerifyIsLoginDone(String username, String Password) throws Exception
+    public void loginToLegionAndVerifyIsLoginDone(String username, String Password) 
     {
-    	LoginPage loginPage = pageFactory.createConsoleLoginPage();
-    	loginPage.loginToLegionWithCredential(username, Password);
-    	LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-    	String selectedLocation = locationSelectorPage.getCurrentUserLocation();
-	    boolean isLoginDone = loginPage.isLoginDone();
-	    loginPage.verifyLoginDone(isLoginDone, selectedLocation);
+    	try {
+    		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.loginToLegionWithCredential(username, Password);
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			String selectedLocation = locationSelectorPage.getCurrentUserLocation();
+			boolean isLoginDone = loginPage.isLoginDone();
+			loginPage.verifyLoginDone(isLoginDone, selectedLocation);
+    	} catch (Exception e) {
+			SimpleUtils.fail("Unable to Login with given credential", false);
+		}
+    }
+    
+    public HashMap<String, List<String>> getUserCredentialsAndLocations()
+    {
+    	HashMap<String, List<String>> userCredentials = new HashMap<String, List<String>>();
+    	for(Object[] legionUsersCredential : legionUsersCredentials)
+		  {
+			  List<String> credentialsAndLocation = new ArrayList<String>();
+			  credentialsAndLocation.add((String) legionUsersCredential[0]);
+			  credentialsAndLocation.add((String) legionUsersCredential[1]);
+			  credentialsAndLocation.add((String) legionUsersCredential[2]);
+			  userCredentials.put((String) legionUsersCredential[3], credentialsAndLocation);
+		  }
+    	return userCredentials;
     }
 
     

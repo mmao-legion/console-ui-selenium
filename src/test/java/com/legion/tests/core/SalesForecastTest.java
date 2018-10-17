@@ -55,8 +55,10 @@ public class SalesForecastTest extends TestBase{
          * Schedule Projected Sales as Week View
          */
         salesForecastPage.navigateToSalesForecastTabWeekView();
-        SimpleUtils.assertOnFail( "Projected Sales Forecast Tab Week View not loaded successfully!",salesForecastPage.isSalesForecastTabWeekViewActive() ,false);
-        SimpleUtils.assertOnFail( "Projected Sales Item Options/Categories With User Job Title not matched!",salesForecastPage.validateSalesForecastItemOptionWithUserJobTitle(salesForecastCategoriesOptions.get("Manager")) ,true);
+        SimpleUtils.assertOnFail( "Projected Sales Forecast Tab Week View not loaded successfully!",
+        		salesForecastPage.isSalesForecastTabWeekViewActive() ,false);
+        SimpleUtils.assertOnFail( "Projected Sales Item Options/Categories With User Job Title not matched!",
+        		salesForecastPage.validateSalesForecastItemOptionWithUserJobTitle(salesForecastCategoriesOptions.get("Manager")) ,true);
         //pass("Shedule page Projected Sales Item Option/Categories With User Job Title matched!");
         HashMap<String, String> dayMonthDateFormatForCurrentPastAndFutureWeek = SimpleUtils.getDayMonthDateFormatForCurrentPastAndFutureWeek(SimpleUtils.getCurrentDateDayOfYear(), SimpleUtils.getCurrentISOYear());
         String currentWeekDate = (String)dayMonthDateFormatForCurrentPastAndFutureWeek.get("currentWeekDate");
@@ -69,7 +71,8 @@ public class SalesForecastTest extends TestBase{
         /*
          * Projected Sales forecast for current week
          */
-        SimpleUtils.assertOnFail( "Projected Sales Current Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(currentWeekDate) ,true);
+        SimpleUtils.assertOnFail( "Projected Sales Current Week View not Loaded Successfully!",
+        		salesForecastPage.validateWeekViewWithDateFormat(currentWeekDate) ,true);
 		Map<String, String> currentWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
         salesForecastWeeksViewForeCastData(currentWeekSalesForecastCardsData, "Current Week");
        
@@ -77,8 +80,10 @@ public class SalesForecastTest extends TestBase{
         /*
          * Projected Sales forecast for Past week
          */
-        salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Previous Week", SalesForecastForecastCalenderWeekCount.One.getValue());
-        SimpleUtils.assertOnFail( "Projected Sales Previous Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(pastWeekDate) ,true);
+        salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Previous Week", 
+        		SalesForecastForecastCalenderWeekCount.One.getValue());
+        SimpleUtils.assertOnFail( "Projected Sales Previous Week View not Loaded Successfully!",
+        		salesForecastPage.validateWeekViewWithDateFormat(pastWeekDate) ,true);
         Map<String, String> previousWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
         salesForecastWeeksViewForeCastData(previousWeekSalesForecastCardsData, "Previous Week");
         
@@ -86,8 +91,10 @@ public class SalesForecastTest extends TestBase{
         /*
          * Projected Sales forecast for Future week
          */
-        salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Future Week", SalesForecastForecastCalenderWeekCount.TWO.getValue());
-        SimpleUtils.assertOnFail( "Projected Sales Future Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(futureWeekDate) ,true);
+        salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Future Week", 
+        		SalesForecastForecastCalenderWeekCount.TWO.getValue());
+        SimpleUtils.assertOnFail( "Projected Sales Future Week View not Loaded Successfully!",
+        		salesForecastPage.validateWeekViewWithDateFormat(futureWeekDate) ,true);
         Map<String, String> futureWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
         salesForecastWeeksViewForeCastData(futureWeekSalesForecastCardsData, "Future Week");
         

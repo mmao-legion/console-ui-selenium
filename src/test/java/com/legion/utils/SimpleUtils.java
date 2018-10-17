@@ -33,6 +33,8 @@ public class SimpleUtils {
     static HashMap<String,String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
     static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
+	
+    private static HashMap< String,ArrayList<ArrayList<String>>> userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/legionUsers.json");	
 
 
     public static DesiredCapabilities initCapabilities(String browser, String version, String os) {
@@ -209,6 +211,22 @@ public class SimpleUtils {
 			location = (String) user[2];
     	}
     	return userDetails;
+    }
+    
+    
+    public static ArrayList<String> getUserCredentialsAndLocation(String userCredentialsKey)
+    {
+       ArrayList<String> genericData = new ArrayList<String>();
+       ArrayList<ArrayList<String>> workRoles = userCredentials.get(userCredentialsKey);
+           for(ArrayList<String> workRole : workRoles)
+           {
+               genericData.add(workRole.get(0));
+               genericData.add(workRole.get(1));
+               genericData.add(workRole.get(2));
+               return genericData;
+           }
+           
+     return null;
     }
 	    
 }

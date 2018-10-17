@@ -59,7 +59,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 		click(loginButton);
     }
     
-    public void loginToLegionWithCredential(String userName, String Password) throws Exception
+    public void loginToLegionWithCredential(String userName, String Password)
     {
     	checkElementVisibility(userNameField);
     	getActiveConsoleName(loginButton);

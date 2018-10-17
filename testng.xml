@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="5" name="LegionTest">
+<suite verbose ="0" thread-count="5" name="LegionTest" parallel = "methods">
 	<parameter name="environment" value="QA"/>
   	<parameter name="enterprise" value="LegionCoffee2"/>
     <parameter name="browser" value="Chrome"/>
@@ -8,6 +8,21 @@
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
    
+   
+   <test name="Schedule Bartender Test">      
+    <classes>
+       <class name="com.legion.tests.core.BartenderScheduleTest">
+      	<methods>
+             <include name="scheduleTestAsTeamMember"/>    
+             <include name="scheduleTestAsTeamLead"/>    
+             <include name="scheduleTestAsStoreManager"/>   
+             <!-- <include name="loginToLegion"/>     -->
+        </methods>
+      </class>
+    </classes>
+  </test>
+  
+  <!--
   <test name="Dashboard Test">      
     <classes>
        <class name="com.legion.tests.core.DashboardTest">
@@ -16,7 +31,7 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> 
   
   <test name="Schedule Overview Test">      
     <classes>
@@ -29,9 +44,9 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
-  
-  <test name="Schedule Test">      
+  </test> 
+  -->
+  <!-- <test name="Schedule Test">      
     <classes>
        <class name="com.legion.tests.core.ScheduleTest">
       	<methods>
@@ -47,8 +62,8 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
-  
+  </test>  -->
+  <!-- 
   <test name="Staffing Guidance test">      
     <classes>
        <class name="com.legion.tests.core.StaffingGuidanceTest">
@@ -76,7 +91,7 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> 
   
   <test name="Navigation Flow">      
     <classes>
@@ -87,7 +102,7 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> 
   
   
   <test name="Analytics Test">      
@@ -98,7 +113,7 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> 
   
    <test name="StoreManager Schedule Navigation Test">      
     <classes>
@@ -117,8 +132,8 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
-  
+  </test> 
+  -->
    
 </suite> <!-- Suite -->
 
