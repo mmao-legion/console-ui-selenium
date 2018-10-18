@@ -66,14 +66,14 @@ public class JsonUtil {
      * Added by Naval
      */
     
-    public static HashMap< String,ArrayList<ArrayList<String>>> getCredentialsFromJsonFile(String pathname) {
-        HashMap< String,ArrayList<ArrayList<String>>> parameterList = null;
+    public static HashMap< String,ArrayList<String>> getCredentialsFromJsonFile(String pathname) {
+        HashMap< String,ArrayList<String>> parameterList = null;
 
         ObjectMapper mapper = new ObjectMapper();
 
         try {
             parameterList = mapper.readValue(new File(pathname),
-                    new TypeReference<HashMap< String,ArrayList<ArrayList<String>>>>() {
+                    new TypeReference<HashMap< String,ArrayList<String>>>() {
                     });
 
         } catch (JsonGenerationException e) {

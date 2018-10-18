@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="5" name="LegionTest" parallel = "methods">
+<suite verbose ="0" thread-count="5" name="LegionTest" >
 	<parameter name="environment" value="QA"/>
   	<parameter name="enterprise" value="LegionCoffee2"/>
     <parameter name="browser" value="Chrome"/>
@@ -9,14 +9,13 @@
  	</listeners>
    
    
-   <test name="Schedule Bartender Test">      
+   <test name="Schedule Role Based Test">      
     <classes>
-       <class name="com.legion.tests.core.BartenderScheduleTest">
+       <class name="com.legion.tests.core.ScheduleRoleBasedTest">
       	<methods>
              <include name="scheduleTestAsTeamMember"/>    
              <include name="scheduleTestAsTeamLead"/>    
              <include name="scheduleTestAsStoreManager"/>   
-             <!-- <include name="loginToLegion"/>     -->
         </methods>
       </class>
     </classes>

@@ -56,7 +56,7 @@ import static com.legion.utils.MyThreadLocal.*;
 		public void onTestStart(ITestResult result) {  
 			String testName = result.getMethod().getMethodName();
 			setLoc(testName);
-			TestBase.initialize();	
+			//TestBase.initialize();	
 		}
 	
 		@Override

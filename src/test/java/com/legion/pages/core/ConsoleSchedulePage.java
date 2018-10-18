@@ -185,7 +185,6 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	 {
 		 if(isElementLoaded(activatedSubTabElement))
 		 {
-			 System.out.println("activatedSubTabElement.getText(): "+activatedSubTabElement.getText()+" vs "+SubTabText);
 			 if(activatedSubTabElement.getText().contains(SubTabText))
 			 {
 				 return true;
@@ -381,16 +380,12 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public void clickOnScheduleSubTab(String subTabString) throws Exception
 	{
-		System.out.println("clickOnScheduleSubTab called ");
 		if(ScheduleSubTabsElement.size() != 0 && ! varifyActivatedSubTab(subTabString))
 		{
-			System.out.println("clickOnScheduleSubTab size "+ScheduleSubTabsElement.size());
 			for(WebElement ScheduleSubTabElement : ScheduleSubTabsElement)
 			{
-				System.out.println("clickOnScheduleSubTab ScheduleSubTabElement text "+ScheduleSubTabElement.getText() +"VS "+subTabString);
 				if(ScheduleSubTabElement.getText().contains(subTabString))
 				{
-					System.out.println("clickOnScheduleSubTab before click");
 					click(ScheduleSubTabElement);
 				}
 			}
@@ -482,9 +477,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 				 if(isElementLoaded(analyzePopupLatestVersionLabel))
 				 {
 					 String latestVersion = analyzePopupLatestVersionLabel.getText();
-					 //Version 0.6 Details
 					 latestVersion = latestVersion.split(" ")[1].split(".")[0];
-					 System.out.println("latestVersion: "+latestVersion);
 					 closeStaffingGuidanceAnalyzePopup();
 					 if(Integer.valueOf(latestVersion) < 1)
 					 {
@@ -662,12 +655,12 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		String scheduleStatus = "No Published Schedule";
 		try {
 			if(isElementLoaded(noPublishedSchedule)) {
-				System.out.println("noPublishedSchedule.getText(): "+noPublishedSchedule.getText());
 				if(noPublishedSchedule.getText().contains(scheduleStatus))
 					return false;
 			}
 		} catch (Exception e) {
 			SimpleUtils.pass("Schedule is Published for current Week!");
+			return true;
 		}
 		return true;
 	}

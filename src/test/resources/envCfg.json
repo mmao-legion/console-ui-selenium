@@ -8,7 +8,6 @@
   "LegionTech_Enterprise" : "LegionTech",
   "DEFAULT_USERNAME" : "admin2.a",
   "DEFAULT_PASSWORD" : "admin2.a",
-  "DEFAULT_PASSWORD_OLD" : "legionco1",
   "ENVIRONMENT" : "QA",
   "TAKE_SCREENSHOTS" : "TRUE",
   "INTERNET_EXPLORER" : "Internet Explorer",

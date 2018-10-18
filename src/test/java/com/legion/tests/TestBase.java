@@ -154,12 +154,8 @@ public class TestBase {
         } else {
             setEnvironment(propertyMap.get("ENVIRONMENT"));
         }
-    	
-    	if (enterprise != null) {
-            setEnterprise(enterprise);
-        } else {
-            setEnterprise(strEnterprise);
-        }
+        setEnterprise(strEnterprise);
+        
     	
     	String testName = ExtentTestManager.getTestName(method);
     	String ownerName = ExtentTestManager.getOwnerName(method);
@@ -285,36 +281,22 @@ public class TestBase {
 		extent.flush();
     }
 
+	
 	public static void initialize(){
-    
-        switch (getEnvironment()){
-			case "QA":
-				if(getEnterprise().equalsIgnoreCase(propertyMap.get("Coffee_Enterprise"))){
-					setURL(propertyMap.get("QAURL"));
-					loadURL();
-					break;
-				}
-				if(getEnterprise().equalsIgnoreCase(propertyMap.get("LegionTech_Enterprise"))){
-					setURL(propertyMap.get("QAURL"));
-					loadURL();
-					break;
-				}
-			case "DEV":
-				if(getEnterprise().equalsIgnoreCase(propertyMap.get("Coffee_Enterprise"))){
-					setURL(propertyMap.get("DEVURL"));
-					loadURL();
-					break;
-				}
-				if(getEnterprise().equalsIgnoreCase(propertyMap.get("LegionTech_Enterprise"))){
-					setURL(propertyMap.get("DEVURL"));
-					loadURL();
-					break;
-				}
-			default:
-				ExtentTestManager.getTest().log(Status.FAIL,"Unable to set the URL");
-			}
-	}
-
+        System.out.println(getEnterprise());
+       switch (getEnvironment()){
+            case "QA":
+                    setURL(propertyMap.get("QAURL"));
+                    loadURL();
+                    break;
+            case "DEV":
+                    setURL(propertyMap.get("DEVURL"));
+                    loadURL();
+                    break;
+            default:
+                ExtentTestManager.getTest().log(Status.FAIL,"Unable to set the URL");
+            }
+    }
    
     public static void loadURL() {
         try {

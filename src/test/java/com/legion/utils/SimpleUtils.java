@@ -34,7 +34,7 @@ public class SimpleUtils {
 
     static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
 	
-    private static HashMap< String,ArrayList<ArrayList<String>>> userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/legionUsers.json");	
+    private static HashMap< String,ArrayList<String>> userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/legionUsers.json");	
 
 
     public static DesiredCapabilities initCapabilities(String browser, String version, String os) {
@@ -217,16 +217,24 @@ public class SimpleUtils {
     public static ArrayList<String> getUserCredentialsAndLocation(String userCredentialsKey)
     {
        ArrayList<String> genericData = new ArrayList<String>();
-       ArrayList<ArrayList<String>> workRoles = userCredentials.get(userCredentialsKey);
-           for(ArrayList<String> workRole : workRoles)
-           {
-               genericData.add(workRole.get(0));
-               genericData.add(workRole.get(1));
-               genericData.add(workRole.get(2));
-               return genericData;
-           }
-           
-     return null;
+       ArrayList<String> workRole = userCredentials.get(userCredentialsKey);
+       genericData.add(workRole.get(0));
+       genericData.add(workRole.get(1));
+       genericData.add(workRole.get(2));
+       return genericData;
+    }
+    
+    public static HashMap<String, ArrayList<String>> getEnvironmentBasedUserCredentialsFromJson(String environmentName)
+    {
+    	try {
+	    	HashMap< String,ArrayList<String>> userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/"+environmentName+".json");	
+	    	return userCredentials;
+    	}
+    	catch(Exception e)
+    	{
+    		fail("Unable to get Data from Json file with FileName: '"+environmentName+"'", false);
+    	}
+    	return null;
     }
 	    
 }

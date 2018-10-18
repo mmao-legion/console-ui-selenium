@@ -1,13 +1,11 @@
 package com.legion.tests.core;
 
-import static com.legion.utils.MyThreadLocal.getEnterprise;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
+import java.util.Map.Entry;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import com.legion.pages.LocationSelectorPage;
@@ -19,11 +17,9 @@ import com.legion.tests.annotations.TestName;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
-public class BartenderScheduleTest extends TestBase{
-	  //private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-	  //private static HashMap<String, String> enterpriseCoffee2Credentials = JsonUtil.getPropertiesFromJsonFile("src/test/resources/enterpriseCoffee2Credentials.json");	
-	  private static HashMap<String, String> legionUsersCredentialsMethodsMapping = JsonUtil.getPropertiesFromJsonFile("src/test/resources/legionUsersCredentialsMethodsMapping.json");	
-	  
+public class ScheduleRoleBasedTest extends TestBase{
+	  private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+
 	  public enum weekCount{
 			Zero(0),
 			One(1),
@@ -99,35 +95,46 @@ public class BartenderScheduleTest extends TestBase{
 	  // ToDo - 
 	  @Automated(automated ="Automated")
 	  @Owner(owner = "Naval")
-	  @TestName(description = "Login as Bartender, navigate & verify Schedule page")
-	  @Test/*(dataProvider = "legionTeamCredentials")*/
-	  public void scheduleTestAsTeamMember(/*String username, String password, String location, String accessRole*/)
+	  @TestName(description = "Login as Team Member, navigate & verify Schedule page")
+	  @Test
+	  public void scheduleTestAsTeamMember()
 	  {
-		  //firstTest( username,  password,  location);
 		  SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
 				  schedulePage.isCurrentScheduleWeekPublished(), false);
+		  List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
+		  HashMap<String, Float> scheduleWeekViewLabelData = getCurrentWeekData();
+		  SimpleUtils.assertOnFail("Schedule Page: Wages are loaded for Team Member in week view.",
+				  ! iswagesLoadedInWeekView(scheduleWeekViewLabelData), false);
+		  comparingWeekScheduledHoursAndSumOfDaysScheduledHours(scheduleWeekViewLabelData, scheduleDaysViewLabelDataForWeekDays);
 	  }
 
 	  
 	  @Automated(automated ="Automated")
 	  @Owner(owner = "Naval")
-	  @TestName(description = "Login as Bartender, navigate & verify Schedule page")
-	  @Test/*(dataProvider = "legionTeamCredentials")*/
-	  public void scheduleTestAsTeamLead(/*String username, String password, String location, String accessRole*/)
+	  @TestName(description = "Login as Team Lead, navigate & verify Schedule page")
+	  @Test
+	  public void scheduleTestAsTeamLead()
 	  {
 		  SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
 				  schedulePage.isCurrentScheduleWeekPublished(), false);
-		  //comparingWeekScheduledHoursAndSumOfDaysScheduledHours(scheduleWeekViewLabelData, scheduleDaysViewLabelDataForWeekDays);
+		  HashMap<String, Float> scheduleWeekViewLabelData = getCurrentWeekData();
+		  List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
+		  SimpleUtils.assertOnFail("Schedule Page: Wages are loaded for Team Lead in week view.",
+				  ! iswagesLoadedInWeekView(scheduleWeekViewLabelData), false);
+		  comparingWeekScheduledHoursAndSumOfDaysScheduledHours(scheduleWeekViewLabelData, scheduleDaysViewLabelDataForWeekDays);
+		  
 	  }
 	  
 	  @Automated(automated ="Automated")
 	  @Owner(owner = "Naval")
-	  @TestName(description = "Login as Bartender, navigate & verify Schedule page")
-	  @Test/*(dataProvider = "legionTeamCredentials")*/
-	  public void scheduleTestAsStoreManager(/*String username, String password, String location, String accessRole*/)
+	  @TestName(description = "Login as Store Manager, navigate & verify Schedule page")
+	  @Test
+	  public void scheduleTestAsStoreManager()
 	  {
 		  HashMap<String, Float> scheduleWeekViewLabelData = getCurrentWeekData();
 		  List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
+		  SimpleUtils.assertOnFail("Schedule Page: Wages are not loaded for Store Manager in week view.",
+				  iswagesLoadedInWeekView(scheduleWeekViewLabelData), false);
 		  comparingWeekScheduledHoursAndSumOfDaysScheduledHours(scheduleWeekViewLabelData, scheduleDaysViewLabelDataForWeekDays);
 		  
 		
@@ -141,9 +148,9 @@ public class BartenderScheduleTest extends TestBase{
 	  public void navigateToSchedulePage()
 	  {
 	      try {
-	    	schedulePage = pageFactory.createConsoleSchedulePage();
-	    	schedulePage.clickOnScheduleConsoleMenuItem();
-			schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.value);
+	    	  schedulePage = pageFactory.createConsoleSchedulePage();
+	    	  schedulePage.clickOnScheduleConsoleMenuItem();
+			  schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.value);
 		} catch (Exception e) {
 			SimpleUtils.fail("Unable to load Schedule Sub Tab", false);
 		}
@@ -163,7 +170,7 @@ public class BartenderScheduleTest extends TestBase{
 		        scheduleWeekViewLabelData = schedulePage.getScheduleLabelHoursAndWagges();
 		  }
 		  catch(Exception e){
-			  SimpleUtils.fail("Unable to load Current Week Data!"+e.getMessage(), true);
+			  SimpleUtils.fail("Unable to load Current Week Data!", true);
 		  }
 		  return scheduleWeekViewLabelData;
 		  	
@@ -278,10 +285,14 @@ public class BartenderScheduleTest extends TestBase{
 	   
 	   
 	   public void initialSteps(Method testMethod) throws Exception{
-           for(Map.Entry<String, String> entry : legionUsersCredentialsMethodsMapping.entrySet())
+		   if(schedulePage == null)
+			   schedulePage = pageFactory.createConsoleSchedulePage();
+		   HashMap<String, ArrayList<String>> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(propertyMap.get("ENTERPRISE"));
+           
+		   for(Entry<String, ArrayList<String>> entry : userCredentials.entrySet())
              {
-                 ArrayList<String> genericData = SimpleUtils.getUserCredentialsAndLocation(entry.getValue());
                  if(testMethod.getName().contains(entry.getKey())){
+                	 ArrayList<String> genericData = entry.getValue();
                      loginToLegion(genericData.get(0), genericData.get(1));
                      changeLocationTest(genericData.get(2));
                      navigateToSchedulePage();
@@ -290,5 +301,14 @@ public class BartenderScheduleTest extends TestBase{
                  
              }
        }
+	   
+	   public boolean iswagesLoadedInWeekView(HashMap<String, Float> scheduleWeekViewLabelData)
+	   {
+	       Float scheduleWeekWagesBudgetedCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesBudgetedCount.getValue());
+	       Float scheduleWeekWagesScheduledCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesScheduledCount.getValue());
+		   if(scheduleWeekWagesBudgetedCount != null && scheduleWeekWagesScheduledCount != null)
+			   return true;
+		   return false;
+	   }
 
 }
