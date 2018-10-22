@@ -1,48 +1,27 @@
 package com.legion.pages;
 
-import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
 import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.getFile;
-import static com.legion.utils.MyThreadLocal.getScreenNum;
-import static com.legion.utils.MyThreadLocal.getVerificationMap;
-import static com.legion.utils.MyThreadLocal.setScreenNum;
-import static org.testng.AssertJUnit.assertTrue;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import javax.imageio.ImageIO;
-
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Duration;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Reporter;
 
-import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
-import com.legion.tests.TestBase;
-import com.legion.utils.JsonUtil;
+import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.MyThreadLocal;
+import com.legion.utils.SimpleUtils;
 
 /**
  * Yanming
@@ -50,6 +29,7 @@ import com.legion.utils.MyThreadLocal;
 public class BasePage {
 
     protected WebDriver driver;
+    public static String activeConsoleName;
 //    public static ExtentTest extentTest;
     
 
@@ -58,7 +38,7 @@ public class BasePage {
             waitUntilElementIsVisible(element);
             element.click();
         } catch (TimeoutException te) {
-            TestBase.extentTest.log(Status.WARNING,te);
+        	ExtentTestManager.getTest().log(Status.WARNING,te);
         }
     }
 
@@ -88,7 +68,7 @@ public class BasePage {
         WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(),30);
         try {
             wait.until(ExpectedConditions.visibilityOf(element));
-            pass("Element is present");
+            SimpleUtils.pass("Element is present");
         }
         catch (NoSuchElementException e)
         {
@@ -120,8 +100,6 @@ public class BasePage {
         } catch (Throwable ignored) {
         }
     }
-    
-    //added by Nishant
     
     public void waitForPageLoaded(WebDriver driver) {
         try {
@@ -160,23 +138,5 @@ public class BasePage {
         });
         return elementPresent;
     }
-    
-    protected boolean verifyElementPresent(WebElement element) {
-        boolean actual = true;
-        try {
-            element.isDisplayed();
-        } catch (NoSuchElementException e) {
-            actual = false;
-        }
-        return actual;
-    }
-    
-    public static void pass(String message) {
-    	
-    	TestBase.extentTest.log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
-                + "</div>");
-    }
-    
-    
-    
+   
 }

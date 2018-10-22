@@ -5,11 +5,17 @@ import static org.testng.AssertJUnit.assertTrue;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.ITestResult;
 import org.testng.Reporter;
 
 import com.aventstack.extentreports.Status;
 import com.legion.tests.TestBase;
+import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.Owner;
+import com.legion.tests.annotations.TestName;
+import com.legion.tests.testframework.ExtentTestManager;
 
+import java.lang.reflect.Method;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
@@ -51,10 +57,10 @@ public class SimpleUtils {
                 assertTrue(false);
             } catch (Throwable e) {
                 addVerificationFailure(e);
-                TestBase.extentTest.log(Status.ERROR, message);      
+                ExtentTestManager.getTest().log(Status.ERROR, message);      
             }
         } else {
-        	TestBase.extentTest.log(Status.FAIL, message);
+        	ExtentTestManager.getTest().log(Status.FAIL, message);
             throw new AssertionError(message);
         }
     }
@@ -81,6 +87,22 @@ public class SimpleUtils {
 				return userTitleFromJson;
     	}
     	return currentUserRole;
+    }
+    
+    public synchronized static HashMap<String, String> getUserNameAndPwd()
+    {
+    	Object[][] userDetails = JsonUtil.getArraysFromJsonFile("src/test/resources/UsersCredentials.json");
+    	String userNameFromJson= null;
+    	String userPwdFromJson= null;
+    	HashMap<String, String> userNameAndPwd = new HashMap<String, String>();
+    	for (Object[] user : userDetails) {
+			userNameFromJson = (String) user[0];
+			userPwdFromJson = (String) user[1];
+			break;
+    	}
+    	userNameAndPwd.put("UserName",userNameFromJson);
+    	userNameAndPwd.put("UserPassword",userPwdFromJson);
+    	return userNameAndPwd;
     }
     
     public static String getListElementTextAsString(List<WebElement> listWebElements, String separator)
@@ -113,13 +135,15 @@ public class SimpleUtils {
                 assertTrue(isAssert);
             } catch (Throwable e) {
                 addVerificationFailure(e);
-                TestBase.extentTest.log(Status.ERROR, message);      
+                //TestBase.extentTest.log(Status.ERROR, message); 
+                ExtentTestManager.getTest().log(Status.ERROR, "<div class=\"row\" style=\"background-color:#FDB45C; color:white; padding: 7px 5px;\">" + message
+                        + "</div>");
             }
         } else {
         	try {
                 assertTrue(isAssert);
             } catch (Throwable e) {
-            	TestBase.extentTest.log(Status.FAIL, message);     
+            	ExtentTestManager.getTest().log(Status.FAIL, message);     
                 throw new AssertionError(message);
             }	         
         }
@@ -132,41 +156,59 @@ public class SimpleUtils {
 			return currentDate.getDayOfYear();
 		}
 	    
-	    public static int getCurrentISOYear()
-		{
-			LocalDate currentDate = LocalDate.now();
-			return currentDate.getYear();
-		}
+    public static int getCurrentISOYear()
+	{
+		LocalDate currentDate = LocalDate.now();
+		return currentDate.getYear();
+	}
 	    
 	    
-	    public static Map<String, String> getDayMonthDateFormatForCurrentPastAndFutureWeek(int dayOfYear, int isoYear)
-		{
-			LocalDate dateBasedOnGivenParameter = Year.of(isoYear).atDay(dayOfYear);
-		    LocalDate pastWeekDate = dateBasedOnGivenParameter.minusWeeks(1);
-		    LocalDate futureWeekDate = dateBasedOnGivenParameter.plusWeeks(1);
-		    Map<String, String> dateMonthOfCurrentPastAndFutureWeek = new HashMap<String, String>();
-		    dateMonthOfCurrentPastAndFutureWeek.put("currentWeekDate", getDayMonthDateFormat(dateBasedOnGivenParameter));
-		    dateMonthOfCurrentPastAndFutureWeek.put("pastWeekDate", getDayMonthDateFormat(pastWeekDate));
-		    dateMonthOfCurrentPastAndFutureWeek.put("futureWeekDate", getDayMonthDateFormat(futureWeekDate));
-		    return dateMonthOfCurrentPastAndFutureWeek;
-		}
+    public static HashMap<String, String> getDayMonthDateFormatForCurrentPastAndFutureWeek(int dayOfYear, int isoYear)
+	{
+		LocalDate dateBasedOnGivenParameter = Year.of(isoYear).atDay(dayOfYear);
+	    LocalDate pastWeekDate = dateBasedOnGivenParameter.minusWeeks(1);
+	    LocalDate futureWeekDate = dateBasedOnGivenParameter.plusWeeks(1);
+	    HashMap<String, String> dateMonthOfCurrentPastAndFutureWeek = new HashMap<String, String>();
+	    dateMonthOfCurrentPastAndFutureWeek.put("currentWeekDate", getDayMonthDateFormat(dateBasedOnGivenParameter));
+	    dateMonthOfCurrentPastAndFutureWeek.put("pastWeekDate", getDayMonthDateFormat(pastWeekDate));
+	    dateMonthOfCurrentPastAndFutureWeek.put("futureWeekDate", getDayMonthDateFormat(futureWeekDate));
+	    return dateMonthOfCurrentPastAndFutureWeek;
+	}
 	    
-	    public static String getDayMonthDateFormat(LocalDate localDate) {
-			String dayMonthDateFormat = null;
-			DayOfWeek dayOfWeek = localDate.getDayOfWeek();
-		    Month currentMonth = localDate.getMonth();
-		    int currentDate = localDate.getDayOfMonth();
-		    if(currentDate > 9)
-		    {
-			    dayMonthDateFormat = dayOfWeek.toString().substring(0, 3) + " " + currentMonth.toString().substring(0, 3) + " " +currentDate;
-		    }
-		    else
-		    {
-		    	dayMonthDateFormat = dayOfWeek.toString().substring(0, 3) + " " + currentMonth.toString().substring(0, 3) + " 0" +currentDate;
-		    }
+    public static String getDayMonthDateFormat(LocalDate localDate) {
+		String dayMonthDateFormat = null;
+		DayOfWeek dayOfWeek = localDate.getDayOfWeek();
+	    Month currentMonth = localDate.getMonth();
+	    int currentDate = localDate.getDayOfMonth();
+	    if(currentDate > 9)
+	    {
+		    dayMonthDateFormat = dayOfWeek.toString().substring(0, 3) + " " + currentMonth.toString().substring(0, 3) + " " +currentDate;
+	    }
+	    else
+	    {
+	    	dayMonthDateFormat = dayOfWeek.toString().substring(0, 3) + " " + currentMonth.toString().substring(0, 3) + " 0" +currentDate;
+	    }
 
-			return dayMonthDateFormat;
-		}
+		return dayMonthDateFormat;
+	}
 	    
-    
+    public static void pass(String message) {
+    	
+    	ExtentTestManager.getTest().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
+                + "</div>");
+    }
+	     
+    public static Object[][] getUsersDataCredential(){
+    	Object[][] userDetails = JsonUtil.getArraysFromJsonFile("src/test/resources/UsersCredentials.json");
+    	String userNameFromJson= null;
+    	String userPwdFromJson= null;
+    	String location= null;
+    	for (Object[] user : userDetails) {
+			userNameFromJson = (String) user[0];
+			userPwdFromJson = (String) user[1];
+			location = (String) user[2];
+    	}
+    	return userDetails;
+    }
+	    
 }

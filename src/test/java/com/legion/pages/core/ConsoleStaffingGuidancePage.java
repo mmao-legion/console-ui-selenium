@@ -3,7 +3,10 @@ package com.legion.pages.core;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -47,6 +50,43 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 	
 	@FindBy(className = "sch-week-view-day-summary")
 	private List<WebElement> staffingGuidanceWeekViewDaysHours;
+	
+	@FindBy(css="[ng-click=\"controlPanel.fns.analyzeAction($event)\"]")
+	private WebElement staffingGuidanceAnalyzeButton;
+	
+	@FindBy(className="sch-schedule-analyze-content")
+	private WebElement staffingGuidanceAnalyzePopup;
+	
+	@FindBy(className="version-label")
+	private List<WebElement> versionHistoryAllSections;
+	
+	@FindBy(className="version-label-mini")
+	private List<WebElement> versionHistoryTotalHoursAndFeasibility;
+	
+	@FindBy(css="div.sch-view-dropdown-summary-content-item.first")
+	private WebElement analyzeStaffingGuidanceSection;
+	
+	@FindBy(css="div.sch-view-dropdown-summary-content-item.version")
+	private WebElement analyzeStaffingGuidanceLatestVersionSection;
+
+	@FindBy(css="div.sch-control-kpi-label")
+	private List<WebElement> staffingGuidanceKPILabelsText;
+	
+	@FindBy(css="div.sch-control-kpi")
+	private List<WebElement> staffingGuidanceKPILabelsData;
+	
+	@FindBy(css="[ng-style=\"dropDownButtonStyle()\"]")
+	private WebElement staffingGuidanceWorkRoleFilterButton;
+	
+	@FindBy(css="[ng-click=\"selectChoice($event, choice)\"]")
+	private List<WebElement> staffingGuidanceWorkRoleFilterOptions;
+	
+	@FindBy(className="sch-schedule-analyze-dismiss")
+	private WebElement staffingGuidanceAnalyzePopupCloseButton;
+
+	
+	@FindBy(className = "schedule-view")
+	private WebElement staffingGuidancePageView;
 	
 	public ConsoleStaffingGuidancePage(){
 		PageFactory.initElements(getDriver(), this);
@@ -215,6 +255,197 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 			SimpleUtils.fail("Staffing Guidance Week View not Loaded Successfully!", true);
 		}
 		return staffingGuidanceTeamMembersCount;
+	}
+	
+
+	public void clickOnStaffingGuidanceAnalyzeButton() throws Exception
+	{
+		if(isStaffingGuidanceTabActive())
+		{
+			if(isElementLoaded(staffingGuidanceAnalyzeButton))
+			{
+				click(staffingGuidanceAnalyzeButton);
+			}
+			else {
+				SimpleUtils.fail("Staffing Guidance Analyze Button not loaded successfully!", false);
+			}
+		}
+		else {
+			SimpleUtils.fail("Staffing Guidance tab not active!", false);
+		}
+	}
+	
+	public Boolean isStaffingGuidanceAnalyzePopupAppear() throws Exception
+	{
+		if(isStaffingGuidanceTabActive())
+		{
+			if(isElementLoaded(staffingGuidanceAnalyzePopup))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public List<HashMap<String, String>> getStaffingGuidanceVersionHistory() throws Exception
+	{
+		List<HashMap<String,String>> versionHistoryDetails = new ArrayList<HashMap<String,String>>();
+		if(isStaffingGuidanceAnalyzePopupAppear())
+		{
+			for(WebElement versionHistorySection : versionHistoryAllSections)
+			{
+				int index = versionHistoryAllSections.indexOf(versionHistorySection);
+				HashMap<String,String> versionHistoryData = new HashMap<String,String>();
+				String versionHistoryText = versionHistorySection.getText();
+				String ScheduleVersion = versionHistoryText.split("\\(")[0].trim();
+				String versionOwnerCreatedDate = versionHistoryText.split("\\(")[1].trim();
+				versionOwnerCreatedDate = versionOwnerCreatedDate.split("\\)")[0].trim();
+				String versionHistoryTotalHoursAndFeasibilityText = versionHistoryTotalHoursAndFeasibility.get(index).getText();
+				String versionHistoryTotalHours = versionHistoryTotalHoursAndFeasibilityText.split(",")[0].replace("TOTAL", "").trim();
+				String versionHistoryFeasibility = versionHistoryTotalHoursAndFeasibilityText.split(",")[1].replace("FEASIBILITY", "").trim();
+				versionHistoryData.put("ScheduleVersion", ScheduleVersion);
+				versionHistoryData.put("versionOwnerCreatedDate", versionOwnerCreatedDate);
+				versionHistoryData.put("versionHistoryTotalHours", versionHistoryTotalHours);
+				versionHistoryData.put("versionHistoryFeasibility", versionHistoryFeasibility);
+				versionHistoryDetails.add(versionHistoryData);
+			}
+		}
+		else
+		{
+			clickOnStaffingGuidanceAnalyzeButton();
+			getStaffingGuidanceVersionHistory();
+		}
+		return versionHistoryDetails;
+	}
+	
+	public List<HashMap<String, String>> getAnalyzePopupStaffingGuidanceAndLatestVersionData() throws Exception
+	{
+		List<HashMap<String, String>> staffingGuidancePopupData = new ArrayList<HashMap<String, String>> ();
+		staffingGuidancePopupData.add(getAnalyzePopupStaffingGuidanceData(analyzeStaffingGuidanceSection));
+		staffingGuidancePopupData.add(getAnalyzePopupStaffingGuidanceData(analyzeStaffingGuidanceLatestVersionSection));
+		closeStaffingGuidanceAnalyzePopup();
+		return staffingGuidancePopupData;
+	}
+	
+	
+	public HashMap<String, String> getAnalyzePopupStaffingGuidanceData(WebElement listWebElement) throws Exception
+	{
+		HashMap<String, String> staffingGuidanceData = new HashMap<String, String>();
+		if(isStaffingGuidanceAnalyzePopupAppear())
+		{
+			if(isElementLoaded(listWebElement))
+			{
+				Boolean isWorkRoleHours = false;
+				String[] StaffingGuidanceSectionDataTexts = listWebElement.getText().split("\n");
+				System.out.println("StaffingGuidanceSectionDataTexts size: "+StaffingGuidanceSectionDataTexts.length);
+				staffingGuidanceData.put("dataType", StaffingGuidanceSectionDataTexts[0]);
+				for(String StaffingGuidanceSectionDataText: StaffingGuidanceSectionDataTexts)
+				{
+					int index = Arrays.asList(StaffingGuidanceSectionDataTexts).indexOf(StaffingGuidanceSectionDataText);
+					if(StaffingGuidanceSectionDataText.contains("Created"))
+					{
+						staffingGuidanceData.put("totalHours", StaffingGuidanceSectionDataTexts[index - 1]);
+						staffingGuidanceData.put("ownerAndTime", StaffingGuidanceSectionDataText);
+						isWorkRoleHours = true;
+					}
+					if(isWorkRoleHours && StaffingGuidanceSectionDataText.contains("HRs") && (index + 1) < StaffingGuidanceSectionDataTexts.length)
+					{
+						staffingGuidanceData.put(StaffingGuidanceSectionDataTexts[index + 1], StaffingGuidanceSectionDataText);
+					}
+				}
+			}
+		}
+		
+		return staffingGuidanceData;
+	}
+	
+	public HashMap<String, String> getStaffingGuidanceKPILabel() throws Exception
+	{
+		HashMap<String,String> staffingGuidanceLabelsData = new HashMap<String,String>();
+		if(isStaffingGuidanceTabActive())
+		{
+			if(staffingGuidanceKPILabelsText.size() != 0 && staffingGuidanceKPILabelsData.size() != 0)
+			{
+				for(WebElement staffingGuidanceKPILabelData : staffingGuidanceKPILabelsData)
+				{
+					int index = staffingGuidanceKPILabelsData.indexOf(staffingGuidanceKPILabelData);
+					staffingGuidanceLabelsData.put(staffingGuidanceKPILabelsText.get(index).getText(), staffingGuidanceKPILabelData.getText());
+				}
+				
+			}
+		}
+		return staffingGuidanceLabelsData;
+	}
+	
+	public List<String> getStaffingGuidanceWorkRoleFilterOptions() throws Exception
+	{
+		List<String> staffingGuidanceWorkRolesFilterOptions = new ArrayList<String>();
+		if(isStaffingGuidanceTabActive())
+		{
+			if(isElementLoaded(staffingGuidanceWorkRoleFilterButton))
+			{
+				if(staffingGuidanceWorkRoleFilterOptions.size() != 0)
+				{
+					for(WebElement staffingGuidanceWorkRoleFilterOption: staffingGuidanceWorkRoleFilterOptions)
+					{
+						staffingGuidanceWorkRolesFilterOptions.add(staffingGuidanceWorkRoleFilterOption.getText());
+					}
+				}
+			}
+		}
+		return staffingGuidanceWorkRolesFilterOptions;
+	}
+	
+	public void filterStaffingGuidanceWorkRolesAsGivenOption(String workRoleFilterOption) throws Exception
+	{
+		if(isStaffingGuidanceTabActive())
+		{
+			if(isElementLoaded(staffingGuidanceWorkRoleFilterButton))
+			{
+				click(staffingGuidanceWorkRoleFilterButton);
+				if(staffingGuidanceWorkRoleFilterOptions.size() != 0)
+				{
+					if(! staffingGuidanceWorkRoleFilterOptions.get(0).getText().contains(workRoleFilterOption))
+					{
+						click(staffingGuidanceWorkRoleFilterOptions.get(0));
+					}
+					
+					for(WebElement staffingGuidanceWorkRoleFilterOption: staffingGuidanceWorkRoleFilterOptions)
+					{
+						if(staffingGuidanceWorkRoleFilterOption.getText().contains(workRoleFilterOption))
+						{
+							click(staffingGuidanceWorkRoleFilterOption);
+						}
+					}
+				}
+			}
+		}
+		else {
+			navigateToStaffingGuidanceTabDayView();
+		}
+	}
+	
+	public Boolean isStaffingGuidanceWorkRolesAsGivenOptionActivated(String workRoleFilterOption) throws Exception
+	{
+		if(isStaffingGuidanceTabActive())
+		{
+			if(isElementLoaded(staffingGuidanceWorkRoleFilterButton))
+			{
+				if(staffingGuidanceWorkRoleFilterButton.getText().contains(workRoleFilterOption))
+				{
+					return true;
+				}
+			}
+		}
+		return true;
+	}
+	
+	public void closeStaffingGuidanceAnalyzePopup() throws Exception
+	{
+		if(isStaffingGuidanceAnalyzePopupAppear())
+		{
+			click(staffingGuidanceAnalyzePopupCloseButton);
+		}
 	}
 	
 }

@@ -14,6 +14,7 @@ import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
 import com.legion.pages.UserAuthorizationPage;
 import com.legion.tests.TestBase;
+import com.legion.tests.testframework.ExtentTestManager;
 
 public class ConsoleUserAuthorizationPage extends BasePage implements UserAuthorizationPage {
 
@@ -36,7 +37,7 @@ public class ConsoleUserAuthorizationPage extends BasePage implements UserAuthor
     		if(menuElement.isDisplayed())
     		{
         		
-    			TestBase.extentTest.log(Status.PASS,menuElement.getText() +" present on console page");
+    			ExtentTestManager.extentTest.get().log(Status.PASS,menuElement.getText() +" present on console page");
     			index = index +1;
     		}
     	}

@@ -2,22 +2,25 @@
   "CHROME_DRIVER_PATH": "C:\\Users\\nishant08\\Downloads\\chromedriver\\chromedriver.exe",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://enterprise-stage.legion.work/",
-  "ENTERPRISE" : "LegionCoffee",
-  "Coffee_Enterprise" : "LegionCoffee",
+  "Screenshot_Path": "D:\\NishantZorang\\console-ui-selenium",
+  "ENTERPRISE" : "LegionCoffee2",
+  "Coffee_Enterprise" : "LegionCoffee2",
   "LegionTech_Enterprise" : "LegionTech",
-  "DEFAULT_USERNAME" : "val.wu",
-  "DEFAULT_PASSWORD" : "awesome1",
+  "DEFAULT_USERNAME" : "admin2.a",
+  "DEFAULT_PASSWORD" : "admin2.a",
   "DEFAULT_PASSWORD_OLD" : "legionco1",
-  "ENVIRONMENT" : "DEV",
+  "ENVIRONMENT" : "QA",
   "TAKE_SCREENSHOTS" : "TRUE",
   "INTERNET_EXPLORER" : "Internet Explorer",
   "CHROME" : "Chrome",
   "FIREFOX" : "Firefox",
   "console_logs" : "false",
-  "close_browser" : "false",
+  "close_browser" : "true",
   "show_report" : "true",
   "VERSION" : "68",
-  "OS" : "WINDOW"
+  "OS" : "WINDOW",
+  "scheduleWeekCount" : "6",
+  "WeekStartOn" : "MON"
   
  
 }

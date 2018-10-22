@@ -2,6 +2,8 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.util.List;
+
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
@@ -43,6 +45,15 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	
 	@FindBy(css="[ng-if=\"graphData($index)\"]")
 	private WebElement dashboardProjectedDemandGraph;
+	
+	@FindBy(className="home-dashboard")
+	private WebElement dashboardSection;
+
+	@FindBy(className="console-navigation-item")
+	private List<WebElement>consoleNavigationMenuItems;
+
+	@FindBy (css = "#legion-app navigation div:nth-child(4)")
+	private WebElement scheduleConsoleName;
 
     public ConsoleDashboardPage() {
     	PageFactory.initElements(getDriver(), this);
@@ -51,19 +62,19 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     @Override
     public boolean isToday() throws Exception {
 
-    	boolean bol = true;
+    	//boolean bol = true;
     	if(isElementLoaded(publishedShiftForTodayDiv)){
-    		pass("Today's published Shifts loaded Successfully on Dashboard!");
+    		SimpleUtils.pass("Today's published Shifts loaded Successfully on Dashboard!");
     	}else{
     		return false;
     	}
     	if(isElementLoaded(dashboardTodaysForecastDiv)){
-    		pass("Today's Fore Cast Labels loaded Successfully on Dashboard!");
+    		SimpleUtils.pass("Today's Fore Cast Labels loaded Successfully on Dashboard!");
     	}else{
     		return false;
     	}
     	if(isElementLoaded(dashboardTodaysProjectedDemandGraphDiv)){
-    		pass("Today's Projected Demand Graph loaded Successfully on Dashboard!");
+    		SimpleUtils.pass("Today's Projected Demand Graph loaded Successfully on Dashboard!");
     	}else{
     		return false;
     	}
@@ -77,7 +88,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	 *  Check whether Welcome Text Section appear or not on Dashboard.
     	 */
     	if(isElementLoaded(dashboardWelcomeSection))
-        	pass("Dashboard Page Welcome Text Section Loaded Successfully!");
+    		SimpleUtils.pass("Dashboard Page Welcome Text Section Loaded Successfully!");
     	else
     		SimpleUtils.fail("Dashboard Page Welcome Text Section not loaded Successfully!",true);
     	
@@ -85,7 +96,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	 *  Check whether 'VIEW TODAY'S SCHEDULE' Button appear or not on Dashboard.
     	 */
     	if(isElementLoaded(goToTodayScheduleButton))
-    		pass("Dashboard Page 'VIEW TODAY'S SCHEDULE' Button Loaded Successfully!");
+    		SimpleUtils.pass("Dashboard Page 'VIEW TODAY'S SCHEDULE' Button Loaded Successfully!");
     	else
     		SimpleUtils.fail("Dashboard Page 'VIEW TODAY'S SCHEDULE' Button not loaded Successfully!",true);
     	
@@ -93,7 +104,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	 *  Check whether 'Upcoming Shift Container' Section appear or not on Dashboard.
     	 */
     	if(isElementLoaded(dashboardUpcomingShiftContainer))
-        	pass("Dashboard Page 'Upcoming Shift Container' Section Loaded Successfully!");
+    		SimpleUtils.pass("Dashboard Page 'Upcoming Shift Container' Section Loaded Successfully!");
     	else
     		SimpleUtils.fail("Dashboard Page 'Upcoming Shift Container' Section Loaded Successfully!",true);
     	
@@ -101,7 +112,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	 *  Check whether 'Today's Forecast' Section appear or not on Dashboard.
     	 */
     	if(isElementLoaded(dashboardTodaysForecastSection))
-        	pass("Dashboard Page 'Today's Forecast' Section Loaded Successfully!");
+    		SimpleUtils.pass("Dashboard Page 'Today's Forecast' Section Loaded Successfully!");
     	else
     		SimpleUtils.fail("Dashboard Page 'Today's Forecast' Section Loaded Successfully!",true);
     	
@@ -109,7 +120,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	 *  Check whether 'Projected Demand Graph' Section appear or not on Dashboard.
     	 */
     	if(isElementLoaded(dashboardProjectedDemandGraph))
-        	pass("Dashboard Page 'Projected Demand Graph' Section Loaded Successfully!");
+    		SimpleUtils.pass("Dashboard Page 'Projected Demand Graph' Section Loaded Successfully!");
     	else
     		SimpleUtils.fail("Dashboard Page 'Projected Demand Graph' Section Loaded Successfully!",true);
 
@@ -119,13 +130,20 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     public SchedulePage goToToday() throws Exception {
     	waitForPageLoaded(getDriver());
     	checkElementVisibility(goToTodayScheduleButton);
-    	pass("Dashboard Page Loaded Successfully!");
-        click(goToTodayScheduleButton);
+    	SimpleUtils.pass("Dashboard Page Loaded Successfully!");
+    	activeConsoleName = scheduleConsoleName.getText();
+    	click(goToTodayScheduleButton);
         return new ConsoleSchedulePage();
     }
     
 
-    
-   
+    public Boolean isDashboardPageLoaded() throws Exception
+    {
+    	if(isElementLoaded(dashboardSection))
+    	{
+    		return true;
+    	}
+    	return false;
+    }
 
 }

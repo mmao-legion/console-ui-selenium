@@ -1,5 +1,6 @@
 package com.legion.pages;
 
+import java.util.HashMap;
 import java.util.List;
 public interface StaffingGuidancePage {
 
@@ -14,4 +15,9 @@ public interface StaffingGuidancePage {
 	public List<Integer> getStaffingGuidanceForecastDayViewTeamMembersCount() throws Exception;
 	public List<String> getStaffingGuidanceDayDateMonthLabelsForWeekView() throws Exception;
 	public List<Float> getStaffingGuidanceHoursCountForWeekView() throws Exception;
+	public void clickOnStaffingGuidanceAnalyzeButton() throws Exception;
+	public Boolean isStaffingGuidanceAnalyzePopupAppear() throws Exception;
+	public List<HashMap<String, String>> getStaffingGuidanceVersionHistory() throws Exception;
+	public List<HashMap<String, String>> getAnalyzePopupStaffingGuidanceAndLatestVersionData() throws Exception;
+	
 }

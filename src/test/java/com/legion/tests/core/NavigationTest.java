@@ -12,6 +12,7 @@ import com.legion.pages.TeamPage;
 import com.legion.pages.DashboardPage;
 import com.legion.tests.TestBase;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.SimpleUtils;
 
 import org.openqa.selenium.InvalidElementStateException;
 import org.openqa.selenium.WebDriver;
@@ -22,7 +23,8 @@ import org.testng.annotations.*;
 
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Owner;
-import com.legion.tests.annotations.TestName;;
+import com.legion.tests.annotations.TestName;
+import com.legion.tests.testframework.ExtentTestManager;
 
 
 /**
@@ -32,9 +34,9 @@ import com.legion.tests.annotations.TestName;;
 public class NavigationTest extends TestBase {
     private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
-    @Automated(automated =  "/"+"Automated]")
-	@Owner(owner = "[Naval")
-    @TestName(description = ":Verify all the console navigations for Legion web application at high level")
+    @Automated(automated = "Automated")
+	@Owner(owner = "Naval")
+    @TestName(description = "Verify all the console navigations for Legion web application at high level")
     @Test(dataProvider = "browsers")
     public void legionConsoleNavigationFlow(String browser, String version, String os, String pageobject)
 
@@ -53,16 +55,26 @@ public class NavigationTest extends TestBase {
         teamPage.goToCoverage();
         boolean isCoveragePage = teamPage.isCoverage();
         teamPage.verifyCoveragePage(isCoveragePage);
-        schedulePage.gotoToSchedulePage();
-//        AssertJUnit.assertTrue("Schedule Page Loaded Successfully", schedulePage.isSchedule());
+        schedulePage.goToSchedulePage();
         schedulePage.goToProjectedSales();
-//        AssertJUnit.assertTrue("ProjectedSales Page Loaded Successfully", schedulePage.isProjectedSales());
         schedulePage.goToStaffingGuidance();
-//        AssertJUnit.assertTrue("StaffingGuidance Page Loaded Successfully", schedulePage.isStaffingGuidance());
         schedulePage.goToSchedule();
-//        AssertJUnit.assertTrue("Schedule Page Loaded Successfully", schedulePage.isSchedule());
-        extentTest.log(Status.PASS,"Schedule Page - Navigation sales, guidance and schedule finish Successfully!");
-       
-        
+        ExtentTestManager.getTest().log(Status.PASS,"Schedule Page - Navigation sales, guidance and schedule finish Successfully!"); 
     }
+    
+    
+    @Automated(automated = "Manual")
+    @Owner(owner = "Gunjan")
+    @TestName(description = "LEG-5112:LocationGroup forecast, guidance and dashboard not loading on 10.09 master build for Carmel Club on LegionCoffee2")
+    @Test(dataProvider = "browsers")
+    public void DataNotLoadingForCarmelClubLocation(String browser, String version, String os, String pageobject)
+           throws Exception
+    {
+        SimpleUtils.pass("Login to LegionCoffee2 Successfully");
+        SimpleUtils.pass("Navigate to Carmel Club location");
+        SimpleUtils.pass("assert navigation for carmel club location should load successfully ");
+
+    }
+    
+    
 }

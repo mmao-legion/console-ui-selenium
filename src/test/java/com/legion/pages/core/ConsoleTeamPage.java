@@ -69,6 +69,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	 
 	 @FindBy(className="sub-navigation-view-link")
 	 private List<WebElement> TeamPageHeaderTabs;
+	 
+	 @FindBy (css = "div.console-navigation-item-label.Team")
+	 private WebElement teamConsoleName;
 	
 	public ConsoleTeamPage() {
 		PageFactory.initElements(getDriver(), this);
@@ -76,8 +79,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
     
     public void goToTeam() throws Exception
 	{
+    	
     	if(isElementLoaded(goToTeamButton))
     	{
+    		activeConsoleName = teamConsoleName.getText();
     		click(goToTeamButton);
     	}else{
     		SimpleUtils.fail("Team button not present on the page",false);
@@ -122,7 +127,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
     
     public void verifyTeamPage(boolean isTeamPage){
     	if(isTeamPage){
-    		pass("Team Page Loaded Successfully!");
+    		SimpleUtils.pass("Team Page Loaded Successfully!");
     	}else{
     		SimpleUtils.fail("Team Page not loaded Successfully!",true);
     	}
@@ -130,9 +135,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
     
     public void verifyCoveragePage(boolean isCoveragePage){
     	if(isCoveragePage){
-    		pass("Team Page - Coverage Section Loaded Successfully!");
+    		SimpleUtils.pass("Team Page - Coverage Section Loaded Successfully!");
     	}else{
-    		SimpleUtils.fail("Team Page - Coverage Section Loaded Successfully!",true);
+    		SimpleUtils.fail("Team Page - Coverage Section not Loaded Successfully for LegionTech Environment! (Jira Ticket :4978) ",false);
     	}
     }
     

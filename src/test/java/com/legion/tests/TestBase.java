@@ -2,12 +2,18 @@ package com.legion.tests;
 
 import org.testng.annotations.AfterMethod;
 
+import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
+import com.legion.pages.LocationSelectorPage;
+import com.legion.pages.LoginPage;
 import com.legion.pages.pagefactories.ConsoleWebPageFactory;
 import com.legion.pages.pagefactories.PageFactory;
-import com.legion.tests.listeners.LegionWebDriverEventListener;
+import com.legion.tests.testframework.ExtentReportManager;
+import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.tests.testframework.LegionTestListener;
+import com.legion.tests.testframework.LegionWebDriverEventListener;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
@@ -38,6 +44,7 @@ import org.openqa.selenium.logging.LogEntry;
 import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
@@ -70,8 +77,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-
-
 //import org.apache.log4j.Logger;
 import com.legion.tests.annotations.HasDependencies;
 
@@ -101,8 +106,8 @@ public class TestBase {
     public static String activeTabDashboard = null;
     protected static String screenshotFinalLocation = null;
     protected static String appURL = null;
-    
-   
+    private static ExtentReports extent = ExtentReportManager.getInstance();
+       
 //    protected static Logger log;
 
     private ThreadLocal<WebDriver> webDriver = new ThreadLocal<WebDriver>();
@@ -120,19 +125,17 @@ public class TestBase {
         return JsonUtil.getArraysFromJsonFile("src/test/resources/legionUsersCredentials.json");
     }
 
-
-    public WebDriver getWebDriver() {
-        return webDriver.get();
+    @DataProvider(name = "usersDataCredential", parallel = true)
+    public synchronized static Object[][] usersDataCredentialProvider(Method testMethod) {
+    	return SimpleUtils.getUsersDataCredential();
     }
-    
-    
-    //added by Nishant
 
+    //added by Nishant
+   
     @Parameters({"browser", "enterprise","environment"})
     @BeforeMethod(alwaysRun = true)
     protected void openBrowser(Method method, @Optional String browser,
                                @Optional String enterprise, @Optional String environment) throws AWTException, IOException {
-    	
     	if (environment != null) {
         	setEnvironment(environment);
         } else {
@@ -145,6 +148,13 @@ public class TestBase {
             setEnterprise(strEnterprise);
         }
     	
+    	String testName = ExtentTestManager.getTestName(method);
+    	String ownerName = ExtentTestManager.getOwnerName(method);
+    	String automatedName = ExtentTestManager.getAutomatedName(method);
+    	
+    	extentTest = ExtentTestManager.createTest(getClass().getSimpleName()  + " - "
+    	+" " + method.getName() + " : " + testName + ""
+    			+ " [" +ownerName + "/" + automatedName + "]","", getClass().getSimpleName());	
         setCurrentMethod(method);
         setBrowserNeeded(true);
         setCurrentTestMethodName(method.getName());
@@ -152,7 +162,7 @@ public class TestBase {
         String strDate = formatter.format(date);  
 		String strDateFinal = strDate.replaceAll(" ", "_");
         screenshotLocation = "Screenshots" + File.separator + "Results";
-        if (method.getAnnotation(Test.class) != null
+        if (method.getAnnotation(Test.class)!= null
                 && method.getAnnotation(Test.class).dependsOnMethods().length == 0) {
             if (getBrowserNeeded() && browser != null) {
             	setVerificationMap(new HashMap<>());
@@ -163,6 +173,7 @@ public class TestBase {
          
             }
         }
+       
     }
 
     protected void createDriver()
@@ -237,39 +248,33 @@ public class TestBase {
     }
 
     private PageFactory createPageFactory() {
-
         return new ConsoleWebPageFactory();
-
     }
 	
 	//added by Nishant
 	
 	@AfterMethod(alwaysRun = true)
-    protected void closeBrowser(Method method,ITestResult result) throws IOException {
+    protected void tearDown(Method method,ITestResult result) throws IOException {
 		
 		if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
             try {
                 getDriver().manage().deleteAllCookies();
                 getDriver().quit();
             } catch (Exception exp) {
-//            	extentTest.log(Status.PASS, "pass");
                 Reporter.log("Error closing browser");
             }
         }
 		
-		
 		if (getVerificationMap() != null) {
             getVerificationMap().clear();
         }
-
-		if(result.getStatus() == ITestResult.FAILURE){
-			Assert.fail();
-		}	
-       
+		ExtentTestManager.getTest().info("Inside After Method");
+		extent.flush();
     }
-	
-	public void initialize(){
-		switch (getEnvironment()){
+
+	public static void initialize(){
+    
+        switch (getEnvironment()){
 			case "QA":
 				if(getEnterprise().equalsIgnoreCase(propertyMap.get("Coffee_Enterprise"))){
 					setURL(propertyMap.get("QAURL"));
@@ -293,96 +298,23 @@ public class TestBase {
 					break;
 				}
 			default:
-				extentTest.log(Status.FAIL,"Unable to set the URL");
+				ExtentTestManager.getTest().log(Status.FAIL,"Unable to set the URL");
 			}
 	}
 
    
-    public void loadURL() {
+    public static void loadURL() {
         try {
-           	getDriver().get(getURL() + "legion/?enterprise=" + getEnterprise() + " ");
+        	getDriver().get(getURL() + "legion/?enterprise=" + getEnterprise() + " ");
         } catch (TimeoutException te) {
             try {
                 getDriver().navigate().refresh();
             } catch (TimeoutException te1) {
-                fail("Page failed to load", false);
+                SimpleUtils.fail("Page failed to load", false);
             }
         }
     }
-    
-  
-    public static void fail(String message, boolean continueExecution, String... severity) {
-        if (continueExecution) {
-            try {
-                assertTrue(false);
-            } catch (Throwable e) {
-                addVerificationFailure(e);
-                extentTest.log(Status.WARNING, "<div class=\"row\" style=\"background-color:#FDB45C; color:white; padding: 7px 5px;\">" + message
-                        + "</div>");    
-            }
-        } else {
-        	extentTest.log(Status.FATAL, "<div class=\"row\" style=\"background-color:#ff0000; color:white; padding: 7px 5px;\">" + message
-                    + "</div>");  
-            throw new AssertionError(message);
-        }
-    }
-    
-    private static void addVerificationFailure(Throwable e) {
-        List<Throwable> verificationFailures = getVerificationFailures();
-        getVerificationMap().put(Reporter.getCurrentTestResult(), verificationFailures);
-        verificationFailures.add(e);
-    }
-    
-    private static List<Throwable> getVerificationFailures() {
-        List<Throwable> verificationFailures = getVerificationMap().get(Reporter.getCurrentTestResult());
-        return verificationFailures == null ? new ArrayList<>() : verificationFailures;
-    }
-    
-  
-    public static String takeScreenShot() {
-		try {
-			File file = new File("Screenshot" + File.separator + "Results");
-			if (!file.exists()) {
-				file.mkdir();
-			}
-			Date date=new Date();
-			String screenShotName=date.toString().replace(":", "_").replace(" ", "_")+".png";
-			SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
-			String strDate = formatter.format(date);  
-			String strDateFinal = strDate.replaceAll(" ", "_");
 
-			appURL = getURL() + "legion/?enterprise=" + getEnterprise() + "#/";
-			if(getDriver().getCurrentUrl().contains("analytics/dashboard")){
-				activeTabDashboard = "Analytics";
-				screenshotFinalLocation = screenshotLocation + File.separator + strDateFinal + File.separator + getSessionTimestamp() + File.separator + getCurrentTestMethodName() + File.separator + activeTabDashboard;
-			}else if(getDriver().getCurrentUrl().contains("schedule/salesforecast")){
-				activeTabSchedule = "Sales Forecast Page";
-				screenshotFinalLocation = screenshotLocation + File.separator + strDateFinal + File.separator + getSessionTimestamp() + File.separator + getCurrentTestMethodName() + File.separator + activeTabSchedule;
-			}
-			else if(getDriver().getCurrentUrl().contains("schedule")){
-				activeTabSchedule = "SchedulePage";
-				screenshotFinalLocation = screenshotLocation + File.separator + strDateFinal + File.separator + getSessionTimestamp() + File.separator + getCurrentTestMethodName() + File.separator + activeTabSchedule;
-			}else if(getDriver().getCurrentUrl().contains("team")){
-				activeTabSchedule = "TeamPage";
-				screenshotFinalLocation = screenshotLocation + File.separator + strDateFinal + File.separator + getSessionTimestamp() + File.separator + getCurrentTestMethodName() + File.separator + activeTabSchedule;
-			}else if(getDriver().getCurrentUrl().equals(appURL)){
-				activeTabSchedule = "LoginPage";
-				screenshotFinalLocation = screenshotLocation + File.separator + strDateFinal + File.separator + getSessionTimestamp() + File.separator + getCurrentTestMethodName() + File.separator + activeTabSchedule;
-			}else if(getDriver().getCurrentUrl().contains("dashboard")){
-				activeTabSchedule = "DashboardPage";
-				screenshotFinalLocation = screenshotLocation + File.separator + strDateFinal + File.separator + getSessionTimestamp() + File.separator + getCurrentTestMethodName() + File.separator + activeTabSchedule;
-			}
-			
-			File screenshotFile = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
-			File targetFile = new File(screenshotFinalLocation, screenShotName);
-			FileUtils.copyFile(screenshotFile, targetFile);
-			String targetFinalFile = targetFile.toString();
-			return 	targetFinalFile;
-			
-		} catch (Exception e) {
-			return null;
-		}
-	}
     
     public static String displayCurrentURL()
     {
@@ -390,11 +322,19 @@ public class TestBase {
         return (String) executor.executeScript("return document.location.href");
       
     }
-    
-    public static void pass(String message) {
-        extentTest.log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
-                + "</div>");
+
+    /*
+     * Login to Legion With Credential and assert on failure
+     */
+    public void loginToLegionAndVerifyIsLoginDone(String username, String Password) throws Exception
+    {
+    	LoginPage loginPage = pageFactory.createConsoleLoginPage();
+    	loginPage.loginToLegionWithCredential(username, Password);
+    	LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+    	String selectedLocation = locationSelectorPage.getCurrentUserLocation();
+	    boolean isLoginDone = loginPage.isLoginDone();
+	    loginPage.verifyLoginDone(isLoginDone, selectedLocation);
     }
-    
+
     
 }

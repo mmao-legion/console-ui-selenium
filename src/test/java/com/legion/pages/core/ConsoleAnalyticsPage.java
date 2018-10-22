@@ -12,7 +12,8 @@ import org.openqa.selenium.support.PageFactory;
 import com.aventstack.extentreports.Status;
 import com.legion.pages.AnalyticsPage;
 import com.legion.pages.BasePage;
-import com.legion.tests.TestBase;
+import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.SimpleUtils;
 
 public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
@@ -44,7 +45,9 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	 @FindBy(css=".analytics-dashboard-sub-section")
 	 private List<WebElement> teamMemberSatisfactionsElements;
 	 
-	 
+	 @FindBy(css = "div.console-navigation-item.active")
+	 private WebElement activeConsoleMenuItem;
+	  
 	 @FindBy(className="sub-title")
 	 private WebElement sectionSubTitleDiv;
 	    
@@ -62,8 +65,11 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	
 	 @FindBy(className="sub-navigation-view-link")
 	 private WebElement analyticsSubNavigationView;
+	 
+	 @FindBy (css = "div.console-navigation-item-label.Analytics")
+	 private WebElement analyticsConsoleName;
 
-	
+
 	public ConsoleAnalyticsPage(){
 		PageFactory.initElements(getDriver(), this);
 	}
@@ -72,6 +78,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	public void gotoAnalyticsPage() throws Exception {
 		if(isElementLoaded(consoleAnalyticsPageTabElement))
 		{
+			activeConsoleName = analyticsConsoleName.getText();
 			click(consoleAnalyticsPageTabElement);
 			if(isElementLoaded(analyticsSectionsDivClass))
 			{
@@ -84,20 +91,19 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 					}
 					else if(analyticsDivElement.getText().contains("Team Member Satisfaction"))
 					{
-						System.out.println("Team Member Satisfaction");
-						TestBase.extentTest.log(Status.INFO, "\n******************** Team Member Satisfaction Logs *****************************");
+						ExtentTestManager.getTest().log(Status.INFO, "\n******************** Team Member Satisfaction Logs *****************************");
 
 						getTeamMemberSatisfaction(analyticsDivElement);
 					}
 					else if(analyticsDivElement.getText().contains("Schedule Compliance"))
 					{
-						TestBase.extentTest.log(Status.INFO,"\n******************** Schedule Compliance Logs *****************************");
+						ExtentTestManager.getTest().log(Status.INFO,"\n******************** Schedule Compliance Logs *****************************");
 
 //						getScheduleCompliance(analyticsDivElement);
 					}
 					else if(analyticsDivElement.getText().contains("Shift Offers"))
 					{
-						TestBase.extentTest.log(Status.INFO,"\n******************** Shift Offers Logs *****************************");
+						ExtentTestManager.getTest().log(Status.INFO,"\n******************** Shift Offers Logs *****************************");
 						getShiftOffers(analyticsDivElement);
 					}
 				}
@@ -109,13 +115,13 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		 */
 		if(isElementLoaded(analyticsSubNavigationView))
 		{
-			TestBase.extentTest.log(Status.INFO,"\n******************** Analytics Report Logs *****************************");
+			ExtentTestManager.getTest().log(Status.INFO,"\n******************** Analytics Report Logs *****************************");
 			List<WebElement> analyticsSubNavigationViewTabs = getDriver().findElements(By.className("table-responsive"));
 			for(WebElement analyticsSubNavigationViewTab : analyticsSubNavigationViewTabs) {
 				if(analyticsSubNavigationViewTab.getText().contains("REPORTS"))
 				{
 					analyticsSubNavigationViewTab.click();
-					pass("Analytics Report Section report Table Loaded Successfully!");
+					SimpleUtils.pass("Analytics Report Section report Table Loaded Successfully!");
 							
 				}
 			}
@@ -128,7 +134,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		String analyticsTMSHasHoursDataSectionText = "";
 		System.out.println("getStaffingForecastAccuracy Method called");
 		if(isElementLoaded(analyticsHoursDataSectionDiv)){
-			pass("Analytics Staffing Forecast Accuracy Section Loaded Successfully!");
+			SimpleUtils.pass("Analytics Staffing Forecast Accuracy Section Loaded Successfully!");
 		}else{
 			SimpleUtils.fail("Analytics Staffing Forecast Accuracy Section not Loaded Successfully!",true);
 		}
@@ -150,13 +156,13 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		analyticsTMSHasHoursDataSectionText = analyticsHoursDataSectionDiv.getText();
 		
 		if(analyticsTMSHasHoursDataSectionText.contains("All Hrs")){
-			pass("All Hours under Analytics Staffing Forecast Accuracy Section Loaded Successfully!");
+			SimpleUtils.pass("All Hours under Analytics Staffing Forecast Accuracy Section Loaded Successfully!");
 		}else{
 			SimpleUtils.fail("All Hours under Analytics Staffing Forecast Accuracy Section not Loaded Successfully!",true);
 		}
 	
 		if(analyticsTMSHasHoursDataSectionText.contains("Peak Hrs")){
-			pass("Peak Hours under Analytics Staffing Forecast Accuracy Section Loaded Successfully!");
+			SimpleUtils.pass("Peak Hours under Analytics Staffing Forecast Accuracy Section Loaded Successfully!");
 		}else{
 			SimpleUtils.fail("Peak Hours under Analytics Staffing Forecast Accuracy Section not Loaded Successfully!",true);
 		}
@@ -166,7 +172,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	public void getTeamMemberSatisfaction(WebElement analyticsDivElement) throws Exception {
 		
 		if(isElementLoaded(analyticsSubSection)){
-			pass("Analytics Team Member Satisfaction Section Loaded Successfully!");
+			SimpleUtils.pass("Analytics Team Member Satisfaction Section Loaded Successfully!");
 		}else{
 			SimpleUtils.fail("Analytics Team Member Satisfaction Section not Loaded Successfully!",false);
 		}
@@ -190,7 +196,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 						if(isElementLoaded(sectionSubTitleDiv))
 						{
 							String sectionSubHeaderText = sectionSubTitleDiv.getText();
-							TestBase.extentTest.log(Status.INFO,"Team Member Satisfaction - '"+sectionSubHeaderText+"' Loaded Successfully for - '"+TMSDropdownMenuOptionsListElement.getText()+"' Filter!");
+							ExtentTestManager.getTest().log(Status.INFO,"Team Member Satisfaction - '"+sectionSubHeaderText+"' Loaded Successfully for - '"+TMSDropdownMenuOptionsListElement.getText()+"' Filter!");
 						}
 					}
 				}
@@ -206,7 +212,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		{
 			for(WebElement analyticsShiftOffersSubSectionElement : analyticsShiftOffersSubSectionElements)
 			{
-				TestBase.extentTest.log(Status.INFO,"Analytics Shift Offers Section - '"+analyticsShiftOffersSubSectionElement.getText()+"' Loaded Successfully!");
+				ExtentTestManager.getTest().log(Status.INFO,"Analytics Shift Offers Section - '"+analyticsShiftOffersSubSectionElement.getText()+"' Loaded Successfully!");
 			}
 		}
 	}
