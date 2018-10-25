@@ -29,7 +29,7 @@ import static com.legion.utils.MyThreadLocal.*;
          }
     }
      
-     @DataProvider(name = "legionTeamCredentialsByEnterprise", parallel = true)
+     @DataProvider(name = "legionTeamCredentialsByEnterprise", parallel = false)
     public static Object[][] credentialsByEnterprise (Method testMethod) {
         String fileName = "UsersCredentials.json";
         Object[][] credentials = null;

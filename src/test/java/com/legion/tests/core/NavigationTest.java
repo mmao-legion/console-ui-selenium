@@ -47,7 +47,7 @@ public class NavigationTest extends TestBase {
 	}
     @Automated(automated = "Automated")
 	@Owner(owner = "Naval")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Coffee2_Enterprise")
     @TestName(description = "Verify all the console navigations for Legion web application at high level")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void legionConsoleNavigationFlow(String username, String password, String browser, String location)
@@ -56,7 +56,6 @@ public class NavigationTest extends TestBase {
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
 //        /* Aug 03-The below line is commented by Zorang Team and new line is added as required */
 //        //loginPage.goToDashboardHome(); 
-        loginPage.goToDashboardHome(propertyMap);
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.verifyDashboardPageLoadedProperly();
         SchedulePage schedulePage = dashboardPage.goToToday();
@@ -77,7 +76,7 @@ public class NavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Coffee2_Enterprise")
     @TestName(description = "LEG-5112:LocationGroup forecast, guidance and dashboard not loading on 10.09 master build for Carmel Club on LegionCoffee2")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void DataNotLoadingForCarmelClubLocation(String username, String password, String browser, String location)

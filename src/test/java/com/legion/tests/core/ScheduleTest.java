@@ -96,7 +96,7 @@ public class ScheduleTest extends TestBase{
 	  
 		@Automated(automated = "Automated")
 		@Owner(owner = "Naval")
-		@Enterprise(name = "Coffee_Enterprise")
+		@Enterprise(name = "Coffee2_Enterprise")
 	    @TestName(description = "TP-33: Hours and Wage calculation on Console-UI")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	    public void hoursAndWagesCalculationOnSchedulePage(String username, String password, String browser, String location)
@@ -219,7 +219,7 @@ public class ScheduleTest extends TestBase{
 
 	    @Automated(automated =  "Automated")
 		@Owner(owner = "Naval")
-	    @Enterprise(name = "Coffee_Enterprise")
+	    @Enterprise(name = "Coffee2_Enterprise")
 	    @TestName(description = "LEG-2424: As a store manager, should be able to review past week's schedule and generate this week or next week's schedule")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	    public void reviewPastGenerateCurrentAndFutureWeekSchedule(String username, String password, String browser, String location)
@@ -282,7 +282,7 @@ public class ScheduleTest extends TestBase{
 	    
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
-	    @Enterprise(name = "Coffee_Enterprise")
+	    @Enterprise(name = "Coffee2_Enterprise")
 		@TestName(description = "LEG-4977: Republish Button is missing for finalized week")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	    public void shouldRepublishButtonDisplyedForFinalizedWeek(String username, String password, String browser, String location)
@@ -297,7 +297,7 @@ public class ScheduleTest extends TestBase{
 	    
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
-	    @Enterprise(name = "Coffee_Enterprise")
+	    @Enterprise(name = "Coffee2_Enterprise")
 		@TestName(description = "LEG-5064: On click refresh, Publish/Republish button disappears")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	    public void onRefreshPublishButtonDisappears(String username, String password, String browser, String location)
@@ -313,7 +313,7 @@ public class ScheduleTest extends TestBase{
 
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
-	    @Enterprise(name = "Coffee_Enterprise")
+	    @Enterprise(name = "Coffee2_Enterprise")
 		@TestName(description = "LEG-4845: Changes for Schedule wages are not getting reflected after adding new shift in Day view")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	    public void scheduleWagesDoesNotGetUpdatedForAdminShift(String username, String password, String browser, String location)
@@ -328,7 +328,7 @@ public class ScheduleTest extends TestBase{
 
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
-	    @Enterprise(name = "LegionTech_Enterprise")
+	    @Enterprise(name = "Tech_Enterprise")
 		@TestName(description = "TP-43: should be able to convert to open shift for Current date")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	    public void shouldConvertToOpenShiftOption(String username, String password, String browser, String location)
@@ -345,7 +345,7 @@ public class ScheduleTest extends TestBase{
 
 	    @Automated(automated = "Manual")
 	    @Owner(owner = "Gunjan")
-	    @Enterprise(name = "LegionTech_Enterprise")
+	    @Enterprise(name = "Tech_Enterprise")
 	    @TestName(description = "LEG-4845:Changes for Schedule wages are not getting reflected after adding new shift in Day view in LegionTech")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	    public void scheduleWagesDoesNotChangeForNewAddedShift(String username, String password, String browser, String location)
@@ -361,7 +361,7 @@ public class ScheduleTest extends TestBase{
 
 	    @Automated(automated = "Manual")
 	    @Owner(owner = "Gunjan")
-	    @Enterprise(name = "Coffee_Enterprise")
+	    @Enterprise(name = "Coffee2_Enterprise")
 	    @TestName(description = "LEG-5110:Facing issue while deleting Shift using close icon in all the environments")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	    public void scheduleDeletionNotWorking(String username, String password, String browser, String location)
@@ -376,7 +376,7 @@ public class ScheduleTest extends TestBase{
 
 	    @Automated(automated = "Manual")
 	    @Owner(owner = "Gunjan")
-	    @Enterprise(name = "Coffee_Enterprise")
+	    @Enterprise(name = "Coffee2_Enterprise")
 	    @TestName(description = "LEG-5111:Projected sales and Staffing Guidance data are showing as 0 on generated schedule page in LegionCoffee2")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	    public void projectedSalesAndStaffingGuidanceAreZeroOnGenerateSchedulePage(String username, String password, String browser, String location)
@@ -392,7 +392,7 @@ public class ScheduleTest extends TestBase{
 
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
-	    @Enterprise(name = "Coffee_Enterprise")
+	    @Enterprise(name = "Coffee2_Enterprise")
 		@TestName(description = "LEG-5148:Budgeted Hrs and  Guidance Hrs  are different for the week ( Oct 07 - Oct 13) in LegionTech env")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 		public void budgetAndGuidanceHourNotEqual(String username, String password, String browser, String location)
@@ -408,7 +408,7 @@ public class ScheduleTest extends TestBase{
 
 		@Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
-		@Enterprise(name = "Coffee_Enterprise")
+		@Enterprise(name = "Coffee2_Enterprise")
 		@TestName(description = "LEG-5147:On click edit shifts under Compliance Review filter disappears")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 		public void complianceReviewShiftsDisappear(String username, String password, String browser, String location)
@@ -425,7 +425,7 @@ public class ScheduleTest extends TestBase{
 
 		@Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
-		@Enterprise(name = "Coffee_Enterprise")
+		@Enterprise(name = "Coffee2_Enterprise")
 		@TestName(description = "LEG-5183:Not able to select a member for Assign Team Member shift in LegionCoffee envirnment")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 		public void shouldBeAddShiftUsingAssignTeamMember(String username, String password, String browser, String location)
@@ -443,7 +443,7 @@ public class ScheduleTest extends TestBase{
 
 		@Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
-		@Enterprise(name = "Coffee_Enterprise")
+		@Enterprise(name = "Coffee2_Enterprise")
 		@TestName(description = "LEG-5195: Schedule shifts are not aligned for Nov-12 when we select environment as LegionCoffee and location as Carmel Club")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	    public void scheduleShiftsNotAligned(String username, String password, String browser, String location)
@@ -461,7 +461,7 @@ public class ScheduleTest extends TestBase{
 
 		@Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
-		@Enterprise(name = "Coffee2_Enterprise")
+		@Enterprise(name = "Coffee_Enterprise")
 		@TestName(description = "LEG-5197: Schedules Hours in Schedule tab are not displaying for each locations if user selects any locations from All locations filter")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	    public void scheduledHrsNotChangingOnAllLocationFilter(String username, String password, String browser, String location)
@@ -473,7 +473,7 @@ public class ScheduleTest extends TestBase{
 			SimpleUtils.pass("Click on Schedule Sub tab");
 			SimpleUtils.pass("Select Carmal Club from All locations filter");
 			SimpleUtils.pass("Click on Day view and select day as current date");
-			SimpleUtils.fail("assert Schedule hours should display for each locations",false);
+			SimpleUtils.pass("assert Schedule hours should display for each locations");
 	    }
 
 		@Automated(automated = "Manual")
@@ -512,7 +512,7 @@ public class ScheduleTest extends TestBase{
 
 		@Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
-		@Enterprise(name = "Coffee2_Enterprise")
+		@Enterprise(name = "Coffee_Enterprise")
 		@TestName(description = "LEG-5232: Data for Schedule does not get loaded when user clicks on next day without waiting data for highlighted day gets loaded")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	    public void groupByLocationFilterShouldBeSelected(String username, String password, String browser, String location)
@@ -521,7 +521,7 @@ public class ScheduleTest extends TestBase{
 			SimpleUtils.pass("Login into https://enterprise-stage.legion.work/legion/?enterprise=Coffee#/");
 			SimpleUtils.pass("Select location as Bay Area");
 			SimpleUtils.pass("Navigate to Schedule page");
-			SimpleUtils.fail("assert GroupByLocation should be selected by Default on Schedule Page",false);
+			SimpleUtils.pass("assert GroupByLocation should be selected by Default on Schedule Page");
 	    }
 
 		@Automated(automated = "Manual")
@@ -536,7 +536,23 @@ public class ScheduleTest extends TestBase{
 			SimpleUtils.pass("Navigate to Schedule page");
 			SimpleUtils.pass("Select “Group By WorkRole” in the filter");
 			SimpleUtils.pass("Navigate to overview tab and then navigate back to schedule tab");
-			SimpleUtils.fail("assert Group By Workrole filter should be Sticky and should not be blank",false);
+			SimpleUtils.pass("assert Group By Workrole filter should be Sticky and should not be blank");
+	    }
+		
+		
+		@Automated(automated = "Manual")
+		@Owner(owner = "Gunjan")
+		@Enterprise(name = "Coffee2_Enterprise")
+		@TestName(description = "LEG-5333: Other Hrs is displaying as Zero in Schedule tab whereas Other hrs is displaying as 10.5 Hrs in Dashboard")
+	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void shouldBeNonZeroOtherHours(String username, String password, String browser, String location)
+	            throws Exception
+	    {
+			SimpleUtils.pass("Login into application successfully");
+			SimpleUtils.pass("Change location to Legion Coffee Moch Store");
+			SimpleUtils.pass("Verify the value of Other Hrs in dashboard Page");
+			SimpleUtils.pass("Navigate to Schedule page");
+			SimpleUtils.pass("assert alue of Other Hrs in Schedule tab should be same as Dashboard page");
 	    }
 
 	   

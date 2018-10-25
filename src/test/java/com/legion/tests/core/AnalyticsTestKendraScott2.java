@@ -25,21 +25,17 @@ import com.legion.utils.MyThreadLocal;
 
 public class AnalyticsTestKendraScott2 extends TestBase{
     	
-	 private static HashMap< String,ArrayList<String>> userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/legionUsers.json");	
-	 private static HashMap<String, String> legionUsersCredentialsMethodsMapping = JsonUtil.getPropertiesFromJsonFile("src/test/resources/legionUsersCredentialsMethodsMapping.json");	
-
 	 @Override
 	 @BeforeMethod()
 	 public void firstTest(Method testMethod, Object[] params) throws Exception{
-	  this.createDriver((String)params[0],"69","Window");
-      visitPage(testMethod);
-      loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+	   this.createDriver((String)params[0],"69","Window");
+       visitPage(testMethod);
+       loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
      }
 	 
-	@FileName(fileName ="gotoAnalyticsPageTest")
 	@Automated(automated ="Automated")
 	@Owner(owner = "Naval")
-	@Enterprise(name = "LegionTech_Enterprise")
+	@Enterprise(name = "Kendrascott2_Enterprise")
 	@TestName(description = "Verify Analytics flow")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void gotoAnalyticsPageTest(String username, String password, String browser, String location) throws Exception {

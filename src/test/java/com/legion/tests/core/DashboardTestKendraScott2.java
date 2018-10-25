@@ -30,7 +30,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 	
 	@Automated(automated ="Manual")
 	@Owner(owner = "Gunjan")
-	@Enterprise(name = "LegionTech_Enterprise")
+	@Enterprise(name = "Kendrascott2_Enterprise")
 	@TestName(description = "LEG-4961: Should be able to set Location at Global Level")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void navigateToDashboardFromGlobalSetting(String username, String password, String browser, String location) throws Exception { 
@@ -45,7 +45,7 @@ public class DashboardTestKendraScott2 extends TestBase{
     
     @Automated(automated ="Manual")
 	@Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Kendrascott2_Enterprise")
 	@TestName(description = "LEG-5231: Team Lead Should not see Today's Forecast and Projected Demand Graph present in Dashboard Section")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void todayForecastAndProjectedDemandGraphTeamLead(String username, String password, String browser, String location) throws Exception { 

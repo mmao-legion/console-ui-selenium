@@ -13,8 +13,10 @@ import com.legion.pages.SchedulePage;
 import com.legion.pages.SalesForecastPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -30,9 +32,10 @@ public class SalesForecastTestKendraScott2 extends TestBase{
 	  }
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Kendrascott2_Enterprise")
 	@TestName(description = "TP-44: Coffee Cups in All Sales Item filter is not showing any data")
-    @Test(dataProvider = "browsers")
-    public void shouldAllSalesItemDisplayEnabledFilter(String browser, String version, String os, String pageobject)
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+    public void shouldAllSalesItemDisplayEnabledFilter(String username, String password, String browser, String location)
             throws Exception
     {
 		SimpleUtils.pass("Login as Store Manager Successfully");
@@ -44,9 +47,10 @@ public class SalesForecastTestKendraScott2 extends TestBase{
 	
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Kendrascott2_Enterprise")
 	@TestName(description = "LEG-5192: Sales Guidance Graphs are missing for both Day view and Week view in Projected Sales in LegionTech Env (Location-Toronto)")
-    @Test(dataProvider = "browsers")
-    public void salesForecastGraphMissing(String browser, String version, String os, String pageobject)
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+    public void salesForecastGraphMissing(String username, String password, String browser, String location)
             throws Exception
     {
 		SimpleUtils.pass("Login into Legiontech application successfully");
@@ -58,9 +62,10 @@ public class SalesForecastTestKendraScott2 extends TestBase{
 	
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Kendrascott2_Enterprise")
 	@TestName(description = "LEG-5196: Graphs are not changing in Sales Forecast in day view if user selects any locations from All locations filter")
-    @Test(dataProvider = "browsers")
-    public void salesForecastGraphNotChangingForAllLocationFilter(String browser, String version, String os, String pageobject)
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+    public void salesForecastGraphNotChangingForAllLocationFilter(String username, String password, String browser, String location)
             throws Exception
     {
 		SimpleUtils.pass("Login into Legion Coffee application successfully");
@@ -73,9 +78,10 @@ public class SalesForecastTestKendraScott2 extends TestBase{
 
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Kendrascott2_Enterprise")
 	@TestName(description = "LEG-5293: Actuals showing as NA Oct17(Wed) onwards in LegionCoffee")
-    @Test(dataProvider = "browsers")
-    public void smartCardActualsShowingAsNAForPastDate(String browser, String version, String os, String pageobject)
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+    public void smartCardActualsShowingAsNAForPastDate(String username, String password, String browser, String location)
             throws Exception
     {
 		SimpleUtils.pass("Login into Legion Coffee application successfully");

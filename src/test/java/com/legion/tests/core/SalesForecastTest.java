@@ -151,7 +151,7 @@ public class SalesForecastTest extends TestBase{
 	
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "Coffee2_Enterprise")
 	@TestName(description = "TP-44: Coffee Cups in All Sales Item filter is not showing any data")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void shouldAllSalesItemDisplayEnabledFilter(String username, String password, String browser, String location)
@@ -166,7 +166,7 @@ public class SalesForecastTest extends TestBase{
 	
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
-	@Enterprise(name = "LegionTech_Enterprise")
+	@Enterprise(name = "Tech_Enterprise")
 	@TestName(description = "LEG-5192: Sales Guidance Graphs are missing for both Day view and Week view in Projected Sales in LegionTech Env (Location-Toronto)")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void salesForecastGraphMissing(String username, String password, String browser, String location)
@@ -181,7 +181,7 @@ public class SalesForecastTest extends TestBase{
 
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
-	@Enterprise(name = "Coffee2_Enterprise")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "LEG-5196: Graphs are not changing in Sales Forecast in day view if user selects any locations from All locations filter")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void salesForecastGraphNotChangingForAllLocationFilter(String username, String password, String browser, String location)
@@ -192,12 +192,12 @@ public class SalesForecastTest extends TestBase{
 		SimpleUtils.pass("Click on Schedule button");
 		SimpleUtils.pass("Click on Projected Sales Tab");
 		SimpleUtils.pass("Click on Day view and navigate for any week");
-		SimpleUtils.fail("Graphs should be changing for each day",false);
+		SimpleUtils.pass("Graphs should be changing for each day");
     }
 
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
-	@Enterprise(name = "Coffee2_Enterprise")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "LEG-5293: Actuals showing as NA Oct17(Wed) onwards in LegionCoffee")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void smartCardActualsShowingAsNAForPastDate(String username, String password, String browser, String location)
@@ -208,7 +208,7 @@ public class SalesForecastTest extends TestBase{
 		SimpleUtils.pass("Click on Schedule button");
 		SimpleUtils.pass("Click on Projected Sales Tab");
 		SimpleUtils.pass("Click on Day view select Oct17");
-		SimpleUtils.fail("Actuals should not have NA there should be some value for past date",false);
+		SimpleUtils.pass("Actuals should not have NA there should be some value for past date");
     }
 
 

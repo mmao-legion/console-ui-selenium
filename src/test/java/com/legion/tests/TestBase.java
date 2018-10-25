@@ -130,7 +130,6 @@ public abstract class TestBase {
     
     @BeforeClass
     protected void init () {
-        System.out.println("YYYYY");
         ScreenshotManager.createScreenshotDirIfNotExist();
     }
     
@@ -142,7 +141,6 @@ public abstract class TestBase {
         String ownerName = ExtentTestManager.getOwnerName(method);
         String automatedName = ExtentTestManager.getAutomatedName(method);
         String enterpriseName =  SimpleUtils.getEnterprise(method);
-        extent.setSystemInfo("Enterprise", enterpriseName);
         List<String> categories =  new ArrayList<String>();
         categories.add(getClass().getSimpleName());
         categories.add(enterpriseName);

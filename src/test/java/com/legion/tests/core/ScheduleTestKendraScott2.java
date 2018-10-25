@@ -15,8 +15,10 @@ import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -33,9 +35,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 	  }
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
+	    @Enterprise(name = "Kendrascott2_Enterprise")
 		@TestName(description = "LEG-4977: Republish Button is missing for finalized week")
-	    @Test(dataProvider = "browsers")
-	    public void shouldRepublishButtonDisplyedForFinalizedWeek(String browser, String version, String os, String pageobject)
+	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void shouldRepublishButtonDisplyedForFinalizedWeek(String username, String password, String browser, String location)
 	            throws Exception
 	    {
 			SimpleUtils.pass("Login to leginTech Successfully");
@@ -47,9 +50,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 	    
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
+	    @Enterprise(name = "Kendrascott2_Enterprise")
 		@TestName(description = "LEG-5064: On click refresh, Publish/Republish button disappears")
-	    @Test(dataProvider = "browsers")
-	    public void onRefreshPublishButtonDisappears(String browser, String version, String os, String pageobject)
+	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void onRefreshPublishButtonDisappears(String username, String password, String browser, String location)
 	            throws Exception
 	    {
 			SimpleUtils.pass("Login to leginCoffee Successfully");
@@ -62,9 +66,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
+	    @Enterprise(name = "Kendrascott2_Enterprise")
 		@TestName(description = "LEG-4845: Changes for Schedule wages are not getting reflected after adding new shift in Day view")
-	    @Test(dataProvider = "browsers")
-	    public void scheduleWagesDoesNotGetUpdatedForAdminShift(String browser, String version, String os, String pageobject)
+	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void scheduleWagesDoesNotGetUpdatedForAdminShift(String username, String password, String browser, String location)
 	            throws Exception
 	    {
 			SimpleUtils.pass("Login to LeginCoffee/LegionCoffee2 Successfully");
@@ -76,9 +81,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
+	    @Enterprise(name = "Kendrascott2_Enterprise")
 		@TestName(description = "TP-43: should be able to convert to open shift for Current date")
-	    @Test(dataProvider = "browsers")
-	    public void shouldConvertToOpenShiftOption(String browser, String version, String os, String pageobject)
+	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void shouldConvertToOpenShiftOption(String username, String password, String browser, String location)
 	            throws Exception
 	    {
 			SimpleUtils.pass("Login to leginTech Successfully");
@@ -92,9 +98,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 
 	    @Automated(automated = "Manual")
 	    @Owner(owner = "Gunjan")
+	    @Enterprise(name = "Kendrascott2_Enterprise")
 	    @TestName(description = "LEG-4845:Changes for Schedule wages are not getting reflected after adding new shift in Day view in LegionTech")
-	    @Test(dataProvider = "browsers")
-	    public void scheduleWagesDoesNotChangeForNewAddedShift(String browser, String version, String os, String pageobject)
+	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void scheduleWagesDoesNotChangeForNewAddedShift(String username, String password, String browser, String location)
 	           throws Exception
 	    {
 	        SimpleUtils.pass("Login to LegionTech Successfully");
@@ -107,9 +114,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 
 	    @Automated(automated = "Manual")
 	    @Owner(owner = "Gunjan")
+	    @Enterprise(name = "Kendrascott2_Enterprise")
 	    @TestName(description = "LEG-5110:Facing issue while deleting Shift using close icon in all the environments")
-	    @Test(dataProvider = "browsers")
-	    public void scheduleDeletionNotWorking(String browser, String version, String os, String pageobject)
+	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void scheduleDeletionNotWorking(String username, String password, String browser, String location)
 	           throws Exception
 	    {
 	        SimpleUtils.pass("Login to Environment Successfully");
@@ -121,9 +129,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 
 	    @Automated(automated = "Manual")
 	    @Owner(owner = "Gunjan")
+	    @Enterprise(name = "Kendrascott2_Enterprise")
 	    @TestName(description = "LEG-5111:Projected sales and Staffing Guidance data are showing as 0 on generated schedule page in LegionCoffee2")
-	    @Test(dataProvider = "browsers")
-	    public void projectedSalesAndStaffingGuidanceAreZeroOnGenerateSchedulePage(String browser, String version, String os, String pageobject)
+	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void projectedSalesAndStaffingGuidanceAreZeroOnGenerateSchedulePage(String username, String password, String browser, String location)
 	           throws Exception
 	    {
 	        SimpleUtils.pass("Login to LegionCoffee2 Successfully");
@@ -136,9 +145,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
+	    @Enterprise(name = "Kendrascott2_Enterprise")
 		@TestName(description = "LEG-5148:Budgeted Hrs and  Guidance Hrs  are different for the week ( Oct 07 - Oct 13) in LegionTech env")
-		@Test(dataProvider = "browsers")
-		public void budgetAndGuidanceHourNotEqual(String browser, String version, String os, String pageobject)
+	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+		public void budgetAndGuidanceHourNotEqual(String username, String password, String browser, String location)
 		          throws Exception
 		{
 		       SimpleUtils.pass("Login to environment Successfully");
@@ -151,9 +161,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 
 		@Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
+		@Enterprise(name = "Kendrascott2_Enterprise")
 		@TestName(description = "LEG-5147:On click edit shifts under Compliance Review filter disappears")
-		@Test(dataProvider = "browsers")
-		public void complianceReviewShiftsDisappear(String browser, String version, String os, String pageobject)
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+		public void complianceReviewShiftsDisappear(String username, String password, String browser, String location)
 		          throws Exception
 		{
 		       SimpleUtils.pass("Login to environment Successfully");
@@ -167,9 +178,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 		
 		@Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
+		@Enterprise(name = "Kendrascott2_Enterprise")
 		@TestName(description = "LEG-5183:Not able to select a member for Assign Team Member shift in LegionCoffee envirnment")
-		@Test(dataProvider = "browsers")
-		public void shouldBeAddShiftUsingAssignTeamMember(String browser, String version, String os, String pageobject)
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+		public void shouldBeAddShiftUsingAssignTeamMember(String username, String password, String browser, String location)
 		          throws Exception
 		{
 		       SimpleUtils.pass("Login to environment Successfully");
@@ -184,9 +196,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 
 		@Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
+		@Enterprise(name = "Kendrascott2_Enterprise")
 		@TestName(description = "LEG-5195: Schedule shifts are not aligned for Nov-12 when we select environment as LegionCoffee and location as Carmel Club")
-	    @Test(dataProvider = "browsers")
-	    public void scheduleShiftsNotAligned(String browser, String version, String os, String pageobject)
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void scheduleShiftsNotAligned(String username, String password, String browser, String location)
 	            throws Exception
 	    {
 			SimpleUtils.pass("Login into LegionCoffee application successfully");
@@ -201,9 +214,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 		
 		@Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
+		@Enterprise(name = "Kendrascott2_Enterprise")
 		@TestName(description = "LEG-5197: Schedules Hours in Schedule tab are not displaying for each locations if user selects any locations from All locations filter")
-	    @Test(dataProvider = "browsers")
-	    public void scheduledHrsNotChangingOnAllLocationFilter(String browser, String version, String os, String pageobject)
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void scheduledHrsNotChangingOnAllLocationFilter(String username, String password, String browser, String location)
 	            throws Exception
 	    {
 			SimpleUtils.pass("Login into LegionCoffee application successfully");
@@ -217,9 +231,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 		
 		@Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
+		@Enterprise(name = "Kendrascott2_Enterprise")
 		@TestName(description = "LEG-5198: Not able to edit Budget as Budget popup is blank in LegionCoffee and LegionCoffee2 Environment")
-	    @Test(dataProvider = "browsers")
-	    public void shouldBeAbleToEditOnStaffingGuidance(String browser, String version, String os, String pageobject)
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void shouldBeAbleToEditOnStaffingGuidance(String username, String password, String browser, String location)
 	            throws Exception
 	    {
 			SimpleUtils.pass("Login into LegionCoffee application successfully");
@@ -233,9 +248,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 		
 		@Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
+		@Enterprise(name = "Kendrascott2_Enterprise")
 		@TestName(description = "LEG-5232: Data for Schedule does not get loaded when user clicks on next day without waiting data for highlighted day gets loaded")
-	    @Test(dataProvider = "browsers")
-	    public void shouldBeAbleToLoadScheduleDataOnDayView(String browser, String version, String os, String pageobject)
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void shouldBeAbleToLoadScheduleDataOnDayView(String username, String password, String browser, String location)
 	            throws Exception
 	    {
 			SimpleUtils.pass("Login into application successfully");
@@ -249,9 +265,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 		
 		@Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
+		@Enterprise(name = "Kendrascott2_Enterprise")
 		@TestName(description = "LEG-5232: Data for Schedule does not get loaded when user clicks on next day without waiting data for highlighted day gets loaded")
-	    @Test(dataProvider = "browsers")
-	    public void groupByLocationFilterShouldBeSelected(String browser, String version, String os, String pageobject)
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void groupByLocationFilterShouldBeSelected(String username, String password, String browser, String location)
 	            throws Exception
 	    {
 			SimpleUtils.pass("Login into https://enterprise-stage.legion.work/legion/?enterprise=Coffee#/");
@@ -262,9 +279,10 @@ public class ScheduleTestKendraScott2 extends TestBase{
 		
 		@Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
+		@Enterprise(name = "Kendrascott2_Enterprise")
 		@TestName(description = "LEG-5230: Group By selection filter is blank on navigating back from different tabs")
-	    @Test(dataProvider = "browsers")
-	    public void groupByAllShouldNotBeBlank(String browser, String version, String os, String pageobject)
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void groupByAllShouldNotBeBlank(String username, String password, String browser, String location)
 	            throws Exception
 	    {
 			SimpleUtils.pass("Login into application successfully");
