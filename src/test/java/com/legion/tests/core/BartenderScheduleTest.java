@@ -167,9 +167,9 @@ public class BartenderScheduleTest extends TestBase{
 		  	
 	  }
 	  
-	  public List<Map<String, Float>> getDaysDataofCurrentWeek()
+	  public List<HashMap<String, Float>> getDaysDataofCurrentWeek()
 	  {
-		  List<Map<String, Float>>  scheduleDaysViewLabelDataForWeekDays = new ArrayList<Map<String, Float>>();
+		  List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = new ArrayList<HashMap<String, Float>>();
 		  try {
 			  schedulePage.clickOnDayView();
 			  scheduleDaysViewLabelDataForWeekDays = schedulePage.getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek();

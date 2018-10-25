@@ -286,9 +286,7 @@ public class ScheduleTest extends TestBase{
 		@TestName(description = "LEG-4977: Republish Button is missing for finalized week")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	    public void shouldRepublishButtonDisplyedForFinalizedWeek(String username, String password, String browser, String location)
-	    @Test(dataProvider = "browsers")
-	    public void shouldRepublishButtonDisplayedForFinalizedWeek(String browser, String version, String os, String pageobject)
-	            throws Exception
+				throws Exception
 	    {
 			SimpleUtils.pass("Login to leginTech Successfully");
 			SimpleUtils.pass("Successfully opened the Schedule app");

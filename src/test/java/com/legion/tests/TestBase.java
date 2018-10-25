@@ -134,28 +134,7 @@ public abstract class TestBase {
         ScreenshotManager.createScreenshotDirIfNotExist();
     }
     
-    //TO DO NOT FORCE EVERY TEST TO EXECUTE ON DIFFERENT ENETRPRISE
-    @DataProvider(name = "legionTeamCredentials", parallel = true)
-    public synchronized static Object[][] legionTeamCredentialsProvider(Method testMethod) {
-        HashMap<String, ArrayList<String>> userCredentials = new HashMap<String, ArrayList<String>>();
-        String[] parallelEnterprises = propertyMap.get("ALL_ENTERPRISES").split(",");
-        Object[][] credentials = new Object[parallelEnterprises.length][];
-        int index = 0;
-        for(String enterprise : parallelEnterprises)
-        {
-            userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(enterprise.trim());
-            for(Map.Entry<String, ArrayList<String>> entry : userCredentials.entrySet())
-            {
-                if(testMethod.getName().contains(entry.getKey()))
-                {
-                    entry.getValue().add(enterprise.trim());
-                    credentials[index] =  entry.getValue().toArray();
-                    index = index + 1;
-                }
-            }
-        }
-           return credentials;
-    }
+
     
     @BeforeMethod(alwaysRun = true)
     protected void initTestFramework(Method method) throws AWTException, IOException {

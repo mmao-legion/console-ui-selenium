@@ -94,7 +94,7 @@ public class ScheduleRoleBasedTest extends TestBase{
 	    {
 	        this.createDriver((String)params[0],"68","Linux");
 	        visitPage(method);
-	        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2]);
+	        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2], (String)params[3]);
             navigateToSchedulePage();
 	    }
 	  
