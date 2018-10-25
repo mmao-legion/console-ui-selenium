@@ -15,7 +15,7 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
-public class TeamTest extends TestBase{
+public class TeamTestKendraScott2 extends TestBase{
 	
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     
@@ -28,7 +28,7 @@ public class TeamTest extends TestBase{
 	  }
 	 @Automated(automated = "Manual")
 	 @Owner(owner = "Gunjan")
-	 @Enterprise(name = "Tech_Enterprise")
+	 @Enterprise(name = "Kendrascott2_Enterprise")
 	 @TestName(description = "LEG-4978: In Team Page ,Coverage section is not displayed for LegionTech for Nov 4- Nov 10")
 	 @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	 public void coverageForTeamPageNotWorking(String username, String password, String browser, String location)
@@ -37,9 +37,8 @@ public class TeamTest extends TestBase{
 	       SimpleUtils.pass("Login to leginTech Successfully");
 	       SimpleUtils.pass("Successfully opened the Team Page");
 	       SimpleUtils.pass("Click on Coverage tab");
-	       SimpleUtils.pass("assert coverage page should load and show data");
+	       SimpleUtils.fail("assert coverage page should load and show data",false);
 
 	  }
 	
- 
 }

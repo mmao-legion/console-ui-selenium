@@ -23,29 +23,25 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 
-public class AnalyticsTest extends TestBase{
+public class AnalyticsTestKendraScott2 extends TestBase{
     	
 	 @Override
 	 @BeforeMethod()
 	 public void firstTest(Method testMethod, Object[] params) throws Exception{
-		  this.createDriver((String)params[0],"69","Window");
-	      visitPage(testMethod);
-	      loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
-	 }
+	   this.createDriver((String)params[0],"69","Window");
+       visitPage(testMethod);
+       loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+     }
 	 
-	
 	@Automated(automated ="Automated")
 	@Owner(owner = "Naval")
-	@Enterprise(name = "Coffee2_Enterprise")
+	@Enterprise(name = "Kendrascott2_Enterprise")
 	@TestName(description = "Verify Analytics flow")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void gotoAnalyticsPageTest(String username, String password, String browser, String location) throws Exception {
 	   AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
-	   analyticsPage.gotoAnalyticsPage();	
-		
+	   analyticsPage.gotoAnalyticsPage();			
    }
-	
-	
-	
+
 	
 }

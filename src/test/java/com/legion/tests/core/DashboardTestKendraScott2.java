@@ -17,21 +17,20 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
-public class DashboardTest extends TestBase{
+public class DashboardTestKendraScott2 extends TestBase{
 	
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-    
 	@Override
-	@BeforeMethod()
-  	public void firstTest(Method testMethod, Object[] params) throws Exception{
-	  this.createDriver((String)params[0],"69","Window");
-      visitPage(testMethod);
-      loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
-    }
+	  @BeforeMethod()
+	  public void firstTest(Method testMethod, Object[] params) throws Exception{
+		  this.createDriver((String)params[0],"69","Window");
+	      visitPage(testMethod);
+	      loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+	  }
 	
 	@Automated(automated ="Manual")
 	@Owner(owner = "Gunjan")
-	@Enterprise(name = "Coffee2_Enterprise")
+	@Enterprise(name = "Kendrascott2_Enterprise")
 	@TestName(description = "LEG-4961: Should be able to set Location at Global Level")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void navigateToDashboardFromGlobalSetting(String username, String password, String browser, String location) throws Exception { 
@@ -46,13 +45,13 @@ public class DashboardTest extends TestBase{
     
     @Automated(automated ="Manual")
 	@Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee2_Enterprise")
+    @Enterprise(name = "Kendrascott2_Enterprise")
 	@TestName(description = "LEG-5231: Team Lead Should not see Today's Forecast and Projected Demand Graph present in Dashboard Section")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void todayForecastAndProjectedDemandGraphTeamLead(String username, String password, String browser, String location) throws Exception { 
     	SimpleUtils.pass("Login into LegionCooffee2 Application Successfully!");
     	SimpleUtils.pass("Navigate to Dashboard Page Successfully!");
-    	SimpleUtils.pass("assert Today's Forecast and Projected Demand Graph should not be present for Team lead and Team member");	
-    }  
+    	SimpleUtils.fail("assert Today's Forecast and Projected Demand Graph should not be present for Team lead and Team member",false);	
+    }
     
 }
