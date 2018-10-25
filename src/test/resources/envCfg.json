@@ -1,5 +1,6 @@
 {
-  "CHROME_DRIVER_PATH": "/home/naval/Documents/chromedriver",
+  "CHROME_DRIVER_PATH": "C:\\Users\\nishant08\\Downloads\\chromedriver\\chromedriver.exe",
+  "FIREFOX_DRIVER_PATH": "D:\\geckodriver.exe",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://enterprise-stage.legion.work/",
   "Screenshot_Path": "D:\\NishantZorang\\console-ui-selenium",
@@ -18,7 +19,7 @@
   "CHROME" : "Chrome",
   "FIREFOX" : "Firefox",
   "console_logs" : "false",
-  "close_browser" : "false",
+  "close_browser" : "true",
   "show_report" : "true",
   "VERSION" : "68",
   "OS" : "WINDOW",

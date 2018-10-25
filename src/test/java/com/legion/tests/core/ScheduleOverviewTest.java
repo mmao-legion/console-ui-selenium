@@ -1,9 +1,11 @@
 package com.legion.tests.core;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.legion.pages.LocationSelectorPage;
@@ -22,12 +24,19 @@ public class ScheduleOverviewTest extends TestBase{
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 	private String newLocationName = "Legion Coffee Mock Store";
     
+	@Override
+	  @BeforeMethod()
+	  public void firstTest(Method testMethod, Object[] params) throws Exception{
+		  this.createDriver((String)params[0],"69","Window");
+	      visitPage(testMethod);
+	      loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+	  }
     @Automated(automated ="Automated")
 	@Owner(owner = "Naval")
 	@TestName(description = "change the location from Dashboard!")
     @Test
     public void changeLocationTest() throws Exception { 
-    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
+//    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
     	LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 	    locationSelectorPage.changeLocation(newLocationName);
 	    SimpleUtils.assertOnFail("Dashboard Page: Location not changed!",locationSelectorPage.isLocationSelected(newLocationName), false);
@@ -38,7 +47,7 @@ public class ScheduleOverviewTest extends TestBase{
 	@TestName(description = "Check the 1st/current week is highlighted and DateAndDay are correct")
     @Test
     public void verifyCurrentWeekDateAndDayTest() throws Exception { 
-    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
+//    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
     	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
 	    schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -53,7 +62,7 @@ public class ScheduleOverviewTest extends TestBase{
 	@TestName(description = "Check each week until weeks are not available DateAndDay are correct on overview page")
     @Test
     public void verifyDateAndDayForEachWeeksUntilNotAvailableTest() throws Exception { 
-    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
+//    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
     	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
 	    schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -70,7 +79,7 @@ public class ScheduleOverviewTest extends TestBase{
     	String scheduleWeekStatusToVerify = "Not Available";
     	Boolean isCurrentWeekSelected = false;
     	int index = 0;
-    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
+//    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
     	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
 	    schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -96,5 +105,11 @@ public class ScheduleOverviewTest extends TestBase{
 			}
 			index = index + 1;
 		}
-    } 
+		
+		
+		
+		
+    }
+	
+   
 }

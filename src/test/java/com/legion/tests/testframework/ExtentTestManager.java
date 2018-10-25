@@ -1,10 +1,12 @@
 package com.legion.tests.testframework;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.FileName;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 
@@ -17,9 +19,9 @@ public class ExtentTestManager {
         return extentTest.get();
     }
 
-    public synchronized static ExtentTest createTest(String name, String description, String category) {
+    public synchronized static ExtentTest createTest(String name, String description, List<String> categories) {
         ExtentTest test = extent.createTest(name, description);
-        if (category != null && !category.isEmpty()){
+        for (String category : categories) {
             test.assignCategory(category);
         }
         extentTest.set(test);
@@ -42,7 +44,6 @@ public class ExtentTestManager {
 		
         String testName = "";
         // check if there is a Test annotation and get the test name
-//        Method testCaseMethod = result.getMethod().getConstructorOrMethod().getMethod();
         TestName testCaseDescription = testMethod.getAnnotation(TestName.class);
         if (testCaseDescription != null && testCaseDescription.description().length() > 0) {
             testName = testCaseDescription.description();
@@ -55,7 +56,6 @@ public class ExtentTestManager {
 		
         String ownerName = "";
         // check if there is a Test annotation and get the test name
-//        Method testCaseMethod = result.getMethod().getConstructorOrMethod().getMethod();
         Owner own = testMethod.getAnnotation(Owner.class);
         if (own != null &&  own.owner().length() > 0) {
         	ownerName =  own.owner();
@@ -68,13 +68,25 @@ public class ExtentTestManager {
 		
         String automatedName = "";
         // check if there is a Test annotation and get the test name
-//        Method testCaseMethod = result.getMethod().getConstructorOrMethod().getMethod();
         Automated automated = testMethod.getAnnotation(Automated.class);
         if (automated != null && automated.automated().length() > 0) {
         	automatedName = automated.automated();
         }
        
         return automatedName;
+    }
+    
+    public synchronized static String getFileName(Method testMethod) {
+		
+        String fileName = "";
+        // check if there is a Test annotation and get the test name
+//        Method testCaseMethod = result.getMethod().getConstructorOrMethod().getMethod();
+        FileName file = testMethod.getAnnotation(FileName.class);
+        if (file != null && file.fileName().length() > 0) {
+        	fileName = file.fileName();
+        }
+       
+        return fileName;
     }
 
      

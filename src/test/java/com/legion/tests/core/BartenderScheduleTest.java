@@ -1,14 +1,19 @@
 package com.legion.tests.core;
 
+import static com.legion.utils.MyThreadLocal.getEnterprise;
+import static com.legion.utils.MyThreadLocal.setDriverType;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.SchedulePage;
 import com.legion.tests.TestBase;
@@ -18,11 +23,22 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
-public class ScheduleRoleBasedTest extends TestBase{
-	  private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-
+public class BartenderScheduleTest extends TestBase{
+	  //private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	  private static HashMap<String, String> enterpriseCoffee2Credentials = JsonUtil.getPropertiesFromJsonFile("src/test/resources/enterpriseCoffee2Credentials.json");	
+	
+	  @Override
+	  @BeforeMethod()
+	  public void firstTest(Method testMethod, Object[] params) throws Exception{
+		  this.createDriver((String)params[0],"69","Window");
+	      visitPage(testMethod);
+	      loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+	      navigateToSchedulePage();
+	  }
+	  
 	  public enum weekCount{
 			Zero(0),
 			One(1),
@@ -47,6 +63,7 @@ public class ScheduleRoleBasedTest extends TestBase{
 		  overviewWeeksStatus(final String newValue) {
           value = newValue;
         }
+		  
       public String getValue() { return value; }
 		}
 	  
@@ -88,118 +105,63 @@ public class ScheduleRoleBasedTest extends TestBase{
 	  
 	  SchedulePage schedulePage = null;
 	  
-	    @Override
-	    @BeforeMethod
-	    public  void  firstTest (Method method, Object[] params) throws Exception
-	    {
-	        this.createDriver((String)params[0],"68","Linux");
-	        visitPage(method);
-	        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2], (String)params[3]);
-            navigateToSchedulePage();
-	    }
-	  
-	  // ToDo - 
 	  @Automated(automated ="Automated")
 	  @Owner(owner = "Naval")
-	  @TestName(description = "Login as Team Member, navigate & verify Schedule page")
-	  @Enterprise(name = "Coffee_Enterprise")
-	  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	  public void scheduleTestAsTeamMember(String browser, String username,  String  password, String location)
+	  @TestName(description = "Login to Legion with Internal admin")
+	  @Test(dataProvider = "legionTeamCredentials", dataProviderClass=CredentialDataProviderSource.class)
+	  public void loginToLegionInternalAdmin(String browser, String username, String password, String location)
 	  {
-		  System.out.println("scheduleTestAsTeamMember called ");
-		  System.out.println("browser: "+browser + "username: "+username +"password: "+password +"location: "+location);
-		  SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
-				  schedulePage.isCurrentScheduleWeekPublished(), false);
-		  List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
-		  HashMap<String, Float> scheduleWeekViewLabelData = getCurrentWeekData();
-		  SimpleUtils.assertOnFail("Schedule Page: Wages are loaded for Team Member in week view.",
-				  ! iswagesLoadedInWeekView(scheduleWeekViewLabelData), false);
-		  comparingWeekScheduledHoursAndSumOfDaysScheduledHours(scheduleWeekViewLabelData, scheduleDaysViewLabelDataForWeekDays);
+		 System.out.println("Test method executed");
 	  }
-
-	  
+	 
 	  @Automated(automated ="Automated")
 	  @Owner(owner = "Naval")
-	  @Enterprise(name = "Coffee2_Enterprise")
-	  @TestName(description = "Login as Team Lead, navigate & verify Schedule page")
-	  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	  public void scheduleTestAsTeamLead(String browser, String username,  String  password, String location)
-	  {
-		  System.out.println("scheduleTestAsTeamLead called ");
-		  System.out.println("browser: "+browser + "username: "+username +"password: "+password +"location: "+location);
-		  SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
-				  schedulePage.isCurrentScheduleWeekPublished(), false);
-		  HashMap<String, Float> scheduleWeekViewLabelData = getCurrentWeekData();
-		  List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
-		  SimpleUtils.assertOnFail("Schedule Page: Wages are loaded for Team Lead in week view.",
-				  ! iswagesLoadedInWeekView(scheduleWeekViewLabelData), false);
-		  comparingWeekScheduledHoursAndSumOfDaysScheduledHours(scheduleWeekViewLabelData, scheduleDaysViewLabelDataForWeekDays);
-		  
-	  }
-	  
-	  @Automated(automated ="Automated")
-	  @Owner(owner = "Naval")
-	  @Enterprise(name = "Coffeerprise")
-	  @TestName(description = "Login as Store Manager, navigate & verify Schedule page")
-	  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	  public void scheduleTestAsStoreManager(String browser, String username,  String  password, String location)
-	  {
-		  System.out.println("scheduleTestAsStoreManager called ");
-		  System.out.println("browser: "+browser + "username: "+username +"password: "+password +"location: "+location);
-		  HashMap<String, Float> scheduleWeekViewLabelData = getCurrentWeekData();
-		  List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
-		  SimpleUtils.assertOnFail("Schedule Page: Wages are not loaded for Store Manager in week view.",
-				  iswagesLoadedInWeekView(scheduleWeekViewLabelData), false);
-		  comparingWeekScheduledHoursAndSumOfDaysScheduledHours(scheduleWeekViewLabelData, scheduleDaysViewLabelDataForWeekDays);
-		  
-		
-	  }
-	  
-	  
-	  @Automated(automated ="Automated")
-	  @Owner(owner = "Naval")
-	  @TestName(description = "Login to Legion with roles, navigate & verify Schedule page")
-	  @Enterprise(name = "Coffee2_Enterprise")
+	  @Enterprise(name = "LegionTech_Enterprise")
+	  @TestName(description = "Login to Legion")
 	  @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	  public void scheduleTestAsTeam(String browser, String username,  String  password, String location)
+	  public void loginToLegionNoneStoreManager(String username, String password, String browser, String location)
 	  {
-		  System.out.println("scheduleTestAsTeam called ");
-		  System.out.println("browser: "+browser + "username: "+username +"password: "+password +"location: "+location);
-		  SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
-				  schedulePage.isCurrentScheduleWeekPublished(), false);
-		  List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
-		  HashMap<String, Float> scheduleWeekViewLabelData = getCurrentWeekData();
-		  SimpleUtils.assertOnFail("Schedule Page: Wages are loaded for Team Member in week view.",
-				  ! iswagesLoadedInWeekView(scheduleWeekViewLabelData), false);
-		  comparingWeekScheduledHoursAndSumOfDaysScheduledHours(scheduleWeekViewLabelData, scheduleDaysViewLabelDataForWeekDays);
+		 System.out.println("Test method executed");
+	  }
+	 
+	 
+	 
+	  public void loginToLegion(String username, String password, String location)
+	  {
+		  try {
+			loginToLegionAndVerifyIsLoginDone(username, password, location);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	  }
 	  
-	  public void navigateToSchedulePage()
+	  public synchronized void navigateToSchedulePage()
 	  {
+		  schedulePage = pageFactory.createConsoleSchedulePage();
 	      try {
-	    	  schedulePage = pageFactory.createConsoleSchedulePage();
-	    	  schedulePage.clickOnScheduleConsoleMenuItem();
-			  schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.value);
+	    	schedulePage.clickOnScheduleConsoleMenuItem();
+			schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.value);
 		} catch (Exception e) {
 			SimpleUtils.fail("Unable to load Schedule Sub Tab", false);
 		}
 	  }
 	  
 	  
-	  public void changeLocationTest(String location) { 
+	  public void changeLocationTest(String location) throws Exception { 
 			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 			locationSelectorPage.changeLocation(location);
 			SimpleUtils.assertOnFail("Dashboard Page: Location not changed!",locationSelectorPage.isLocationSelected(location), false);
 	  }
 	  
-	  public HashMap<String, Float> getCurrentWeekData() {
-		  HashMap<String, Float> scheduleWeekViewLabelData = new HashMap<String, Float>();
+	  public Map<String, Float> getCurrentWeekData() {
+		  Map<String, Float> scheduleWeekViewLabelData = new HashMap<String, Float>();
 		  try {
 			  	schedulePage.clickOnWeekView();
 		        scheduleWeekViewLabelData = schedulePage.getScheduleLabelHoursAndWagges();
 		  }
 		  catch(Exception e){
-			  SimpleUtils.fail("Unable to load Current Week Data!", true);
+			  SimpleUtils.fail("Unable to load Current Week Data!"+e.getMessage(), true);
 		  }
 		  return scheduleWeekViewLabelData;
 		  	
@@ -218,7 +180,7 @@ public class ScheduleRoleBasedTest extends TestBase{
 		  return scheduleDaysViewLabelDataForWeekDays;
 	  }
 	    
-	   public void comparingWeekScheduledHoursAndSumOfDaysScheduledHours(HashMap<String, Float> scheduleWeekViewLabelData, List<HashMap<String, Float>> scheduleDaysViewLabelDataForWeekDays) {
+	   public void comparingWeekScheduledHoursAndSumOfDaysScheduledHours(Map<String, Float> scheduleWeekViewLabelData, List<Map<String, Float>> scheduleDaysViewLabelDataForWeekDays) {
 		   // Variables for Day View Data
 		   Float scheduleDaysScheduledHoursTotal = (float) 0;
 		   Float scheduleDaysBudgetedHoursTotal = (float) 0;
@@ -233,7 +195,7 @@ public class ScheduleRoleBasedTest extends TestBase{
 	       Float scheduleWeekWagesBudgetedCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesBudgetedCount.getValue());
 	       Float scheduleWeekWagesScheduledCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesScheduledCount.getValue());
 	       
-		   for(HashMap<String, Float> scheduleDaysViewLabelDataForWeekDay : scheduleDaysViewLabelDataForWeekDays)
+		   for(Map<String, Float> scheduleDaysViewLabelDataForWeekDay : scheduleDaysViewLabelDataForWeekDays)
 		   {
 			   if(scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.scheduledHours.getValue()) != null)
 				   scheduleDaysScheduledHoursTotal = scheduleDaysScheduledHoursTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.scheduledHours.getValue());
@@ -311,14 +273,21 @@ public class ScheduleRoleBasedTest extends TestBase{
 	   	        }
            }
 	   }
+
+	
 	   
-	   public boolean iswagesLoadedInWeekView(HashMap<String, Float> scheduleWeekViewLabelData)
-	   {
-	       Float scheduleWeekWagesBudgetedCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesBudgetedCount.getValue());
-	       Float scheduleWeekWagesScheduledCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesScheduledCount.getValue());
-		   if(scheduleWeekWagesBudgetedCount != null && scheduleWeekWagesScheduledCount != null)
-			   return true;
-		   return false;
-	   }
+	  
+//	   public void initialSteps1(Method testMethod, String enterprise, String username, String password, String location) throws Exception{
+//           if(schedulePage == null)
+//               schedulePage = pageFactory.createConsoleSchedulePage();
+//           loginToLegion(username, password);
+//           changeLocationTest(location);
+//           navigateToSchedulePage();
+
+//      }
+
+
+	   
 
 }
+

@@ -1,0 +1,149 @@
+package com.legion.tests.core;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import com.aventstack.extentreports.Status;
+import com.legion.pages.DashboardPage;
+import com.legion.pages.SalesForecastPage;
+import com.legion.pages.SchedulePage;
+import com.legion.pages.StaffingGuidancePage;
+import com.legion.tests.TestBase;
+import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.Owner;
+import com.legion.tests.annotations.TestName;
+import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.utils.JsonUtil;
+import com.legion.utils.SimpleUtils;
+
+public class StaffingGuidanceTestKendraScott2 extends TestBase{
+	
+	@Override
+	  @BeforeMethod()
+	  public void firstTest(Method testMethod, Object[] params) throws Exception{
+		  this.createDriver((String)params[0],"69","Window");
+	      visitPage(testMethod);
+	      loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+	  }
+	@Automated(automated = "Manual")
+	@Owner(owner = "Manideep")
+	@TestName(description = "LEG-2423: Weekly Guidance Hours Should match the sum of individual day working hours (Failed with Jira Ticket#4923)")
+    @Test(dataProvider = "browsers")
+    public void weeklyGuidanceHoursShouldMatchTheSumOfEachDay(String browser, String version, String os, String pageobject)
+            throws Exception
+    {
+		SimpleUtils.pass("Login as Store Manager Successfully");
+		SimpleUtils.pass("Successfully opened the Schedule app");
+		SimpleUtils.pass("Open a Staffing Guidance of any Week (Not necessarily the current week) in Week view ");
+        SimpleUtils.pass("Staffing Guidance hours not matching with the sum of individual day working hours"); 
+    }
+	
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "LEG-2423: Weekly Guidance Hours Should match the sum of Work Roles Enabled")
+    @Test(dataProvider = "browsers")
+    public void weeklyGuidanceHoursShouldMatchTheSumOfWorkRolesEnabled(String browser, String version, String os, String pageobject)
+            throws Exception
+    {
+
+		SimpleUtils.pass("Login as Store Manager Successfully");
+		SimpleUtils.pass("Successfully opened the Schedule app");
+		SimpleUtils.pass("Open a Staffing Guidance of any Week (Not necessarily the current week) in Week view ");
+		SimpleUtils.pass("Select Work Roles from dropdown and it should match with the Weekly Guidance hours"); 
+		SimpleUtils.pass("Select Work Roles from dropdown and assert value of Work roles which are not enabled should be zero"); 
+    }
+	
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "LEG-5005: Refresh Guidance in LegionTech shows different guidance hours")
+    @Test(dataProvider = "browsers")
+    public void staffingGuidanceShowsDiffGuidanceHour(String browser, String version, String os, String pageobject)
+            throws Exception
+    {
+
+		SimpleUtils.pass("Login to Legiontech Successfully");
+		SimpleUtils.pass("Successfully opened the Schedule app");
+		SimpleUtils.pass("Open a Staffing Guidance of 09/23 Week view ");
+		SimpleUtils.pass("Data in Staffing Guidance table is same as yesterday"); 
+    }
+	
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "LEG-5037: Staffing guidance page gets blank on doing a refresh")
+    @Test(dataProvider = "browsers")
+    public void staffingGuidanceShouldNotBeBlankOnRefresh(String browser, String version, String os, String pageobject)
+            throws Exception
+    {
+
+		SimpleUtils.pass("Login to reverted environement Successfully");
+		SimpleUtils.pass("Successfully opened the Schedule app");
+		SimpleUtils.pass("Open a Staffing Guidance of any Week (Not necessarily the current week) in Week view ");
+		SimpleUtils.pass("Click Refresh button"); 
+		SimpleUtils.pass("Data in Staffing Guidance table is not getting disappear"); 
+    }
+	
+
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "LEG-5062 : Items section of Day View on Staffing Guidance tab has no data on LegionCoffee env")
+    @Test(dataProvider = "browsers")
+    public void itemsOnstaffingGuidanceIsBlank(String browser, String version, String os, String pageobject)
+            throws Exception
+    {
+
+		SimpleUtils.pass("Login to LegionCoffee environment Successfully");
+		SimpleUtils.pass("Successfully opened the Schedule app");
+		SimpleUtils.pass("Open a day view in Staffing Guidance of any Week");
+		SimpleUtils.fail("assert Items section should not be empty.",false);
+    }
+
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "LEG-5063 : For Bay Area location, Analyze section is showing Polo Alto by default even for Bay Area under Schedule History of Staffing Guidance")
+    @Test(dataProvider = "browsers")
+    public void analyzeShowsDifferentLocationInScheduleHistoryOfBayArea(String browser, String version, String os, String pageobject)
+            throws Exception
+    {
+
+		SimpleUtils.pass("Login to LegionCoffee environment Successfully");
+		SimpleUtils.pass("Successfully opened the Schedule app");
+		SimpleUtils.pass("Open a day view in Staffing Guidance of any Week");
+		SimpleUtils.pass("Click Analyze button");
+		SimpleUtils.pass("location is configured to show data from three different locations");
+    }
+
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "LEG-5108:Wages showing as zero for certain work roles having non-0 staffing guidance hour in LegionCoffee")
+	@Test(dataProvider = "browsers")
+	public void wagesAreZeroForGuidanceHourValue(String browser, String version, String os, String pageobject)
+	          throws Exception
+	{
+	       SimpleUtils.pass("Login to LegionCoffee Successfully");
+	       SimpleUtils.pass("Navigate to Staffing Guidance tab under Schedule tab");
+	       SimpleUtils.pass("Open Guidance for Oct1-Oct7");
+	       SimpleUtils.pass("Select Key Manager in all work role filter");
+	       SimpleUtils.pass("assert for Non-0 Guidance hour schedule wages should be Non-0 ");
+	}
+
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@TestName(description = "LEG-4923:After adding individual Guidance Hrs of each Day present in the week is not equals to Total Guidance Hrs of the week")
+	@Test(dataProvider = "browsers")
+	public void sumOfGuidanceHourNotEqualToTotalGuidanceHour(String browser, String version, String os, String pageobject)
+	          throws Exception
+	{
+	       SimpleUtils.pass("Login to environment Successfully");
+	       SimpleUtils.pass("Navigate to Staffing Guidance tab open any week");
+	       SimpleUtils.pass("assert sum of individual guidance hour should be equal to total guidance hour ");
+
+	}
+	
+
+}

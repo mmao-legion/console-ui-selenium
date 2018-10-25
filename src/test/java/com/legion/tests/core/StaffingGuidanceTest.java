@@ -1,10 +1,12 @@
 package com.legion.tests.core;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.aventstack.extentreports.Status;
@@ -14,8 +16,10 @@ import com.legion.pages.SchedulePage;
 import com.legion.pages.StaffingGuidancePage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -25,15 +29,24 @@ public class StaffingGuidanceTest extends TestBase{
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 	SalesForecastPage schedulePage = null;
 	
+	@Override
+	  @BeforeMethod()
+	  public void firstTest(Method testMethod, Object[] params) throws Exception{
+		  this.createDriver((String)params[0],"69","Window");
+	      visitPage(testMethod);
+	      loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+	  }
+	
 	@Automated(automated = "Automated")
 	@Owner(owner = "Naval")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "LEG-2423: As a store manager, can view Staffing Guidance data for current week")
-    @Test(dataProvider = "browsers")
-    public void staffingGuidanceDataAsStoreManagerTest(String browser, String version, String os, String pageobject)
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+    public void staffingGuidanceDataAsStoreManagerTest(String username, String password, String browser, String location)
             throws Exception
     {
     	//To Do Should be separate Test from Schedule test
-    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
+//    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.goToToday();
         SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
@@ -114,9 +127,10 @@ public class StaffingGuidanceTest extends TestBase{
 	
 	@Automated(automated = "Manual")
 	@Owner(owner = "Manideep")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "LEG-2423: Weekly Guidance Hours Should match the sum of individual day working hours (Failed with Jira Ticket#4923)")
-    @Test(dataProvider = "browsers")
-    public void weeklyGuidanceHoursShouldMatchTheSumOfEachDay(String browser, String version, String os, String pageobject)
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+    public void weeklyGuidanceHoursShouldMatchTheSumOfEachDay(String username, String password, String browser, String location)
             throws Exception
     {
 		SimpleUtils.pass("Login as Store Manager Successfully");
@@ -127,9 +141,10 @@ public class StaffingGuidanceTest extends TestBase{
 	
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "LEG-2423: Weekly Guidance Hours Should match the sum of Work Roles Enabled")
-    @Test(dataProvider = "browsers")
-    public void weeklyGuidanceHoursShouldMatchTheSumOfWorkRolesEnabled(String browser, String version, String os, String pageobject)
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+    public void weeklyGuidanceHoursShouldMatchTheSumOfWorkRolesEnabled(String username, String password, String browser, String location)
             throws Exception
     {
 
@@ -142,9 +157,10 @@ public class StaffingGuidanceTest extends TestBase{
 	
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "LEG-5005: Refresh Guidance in LegionTech shows different guidance hours")
-    @Test(dataProvider = "browsers")
-    public void staffingGuidanceShowsDiffGuidanceHour(String browser, String version, String os, String pageobject)
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+    public void staffingGuidanceShowsDiffGuidanceHour(String username, String password, String browser, String location)
             throws Exception
     {
 
@@ -156,9 +172,10 @@ public class StaffingGuidanceTest extends TestBase{
 	
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "LEG-5037: Staffing guidance page gets blank on doing a refresh")
-    @Test(dataProvider = "browsers")
-    public void staffingGuidanceShouldNotBeBlankOnRefresh(String browser, String version, String os, String pageobject)
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+    public void staffingGuidanceShouldNotBeBlankOnRefresh(String username, String password, String browser, String location)
             throws Exception
     {
 
@@ -172,23 +189,25 @@ public class StaffingGuidanceTest extends TestBase{
 
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "LEG-5062 : Items section of Day View on Staffing Guidance tab has no data on LegionCoffee env")
-    @Test(dataProvider = "browsers")
-    public void itemsOnstaffingGuidanceIsBlank(String browser, String version, String os, String pageobject)
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+    public void itemsOnstaffingGuidanceIsBlank(String username, String password, String browser, String location)
             throws Exception
     {
 
 		SimpleUtils.pass("Login to LegionCoffee environment Successfully");
 		SimpleUtils.pass("Successfully opened the Schedule app");
 		SimpleUtils.pass("Open a day view in Staffing Guidance of any Week");
-		SimpleUtils.pass("assert Items section should not be empty.");
+		SimpleUtils.fail("assert Items section should not be empty.",false);
     }
 
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "LEG-5063 : For Bay Area location, Analyze section is showing Polo Alto by default even for Bay Area under Schedule History of Staffing Guidance")
-    @Test(dataProvider = "browsers")
-    public void analyzeShowsDifferentLocationInScheduleHistoryOfBayArea(String browser, String version, String os, String pageobject)
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+    public void analyzeShowsDifferentLocationInScheduleHistoryOfBayArea(String username, String password, String browser, String location)
             throws Exception
     {
 
@@ -201,9 +220,10 @@ public class StaffingGuidanceTest extends TestBase{
 
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "LEG-5108:Wages showing as zero for certain work roles having non-0 staffing guidance hour in LegionCoffee")
-	@Test(dataProvider = "browsers")
-	public void wagesAreZeroForGuidanceHourValue(String browser, String version, String os, String pageobject)
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void wagesAreZeroForGuidanceHourValue(String username, String password, String browser, String location)
 	          throws Exception
 	{
 	       SimpleUtils.pass("Login to LegionCoffee Successfully");
@@ -215,9 +235,10 @@ public class StaffingGuidanceTest extends TestBase{
 
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "LEG-4923:After adding individual Guidance Hrs of each Day present in the week is not equals to Total Guidance Hrs of the week")
-	@Test(dataProvider = "browsers")
-	public void sumOfGuidanceHourNotEqualToTotalGuidanceHour(String browser, String version, String os, String pageobject)
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void sumOfGuidanceHourNotEqualToTotalGuidanceHour(String username, String password, String browser, String location)
 	          throws Exception
 	{
 	       SimpleUtils.pass("Login to environment Successfully");
@@ -226,6 +247,7 @@ public class StaffingGuidanceTest extends TestBase{
 
 	}
 
+	
 
 
 }

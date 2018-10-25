@@ -12,6 +12,7 @@ import com.legion.tests.TestBase;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.utils.MyThreadLocal.getURL;
+import static com.legion.utils.MyThreadLocal.*;
 
 public class LegionWebDriverEventListener implements WebDriverEventListener {
 	
@@ -110,12 +111,12 @@ public class LegionWebDriverEventListener implements WebDriverEventListener {
 	public void afterClickOn(WebElement element, WebDriver driver) {
 		// TODO Auto-generated method stub
 		try {
-			Thread.sleep(4000);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally{
-			ScreenshotManager.setScreenshotConsoleName(BasePage.activeConsoleName);
+			setScreenshotConsoleName(BasePage.activeConsoleName);
 			ScreenshotManager.takeScreenShot();
 		}
 	

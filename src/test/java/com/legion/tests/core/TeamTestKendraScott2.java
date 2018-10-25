@@ -8,14 +8,12 @@ import org.testng.annotations.Test;
 
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
-import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
-import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
-public class TeamTest extends TestBase{
+public class TeamTestKendraScott2 extends TestBase{
 	
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     
@@ -28,10 +26,9 @@ public class TeamTest extends TestBase{
 	  }
 	 @Automated(automated = "Manual")
 	 @Owner(owner = "Gunjan")
-	 @Enterprise(name = "LegionTech_Enterprise")
 	 @TestName(description = "LEG-4978: In Team Page ,Coverage section is not displayed for LegionTech for Nov 4- Nov 10")
-	 @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	 public void coverageForTeamPageNotWorking(String username, String password, String browser, String location)
+	 @Test(dataProvider = "browsers")
+	 public void coverageForTeamPageNotWorking(String browser, String version, String os, String pageobject)
 	          throws Exception
 	 {
 	       SimpleUtils.pass("Login to leginTech Successfully");
@@ -41,5 +38,4 @@ public class TeamTest extends TestBase{
 
 	  }
 	
- 
 }
