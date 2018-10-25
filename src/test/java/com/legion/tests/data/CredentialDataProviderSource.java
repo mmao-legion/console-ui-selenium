@@ -32,41 +32,36 @@ import static com.legion.utils.MyThreadLocal.*;
      @DataProvider(name = "legionTeamCredentialsByEnterprise", parallel = true)
     public static Object[][] credentialsByEnterprise (Method testMethod) {
         String fileName = "UsersCredentials.json";
-        Enterprise e = testMethod.getAnnotation(Enterprise.class);
-        if (testMethod.getName().contains(Constants.EnterpriseSalesMonday30Slot) ||
-            e != null && !Strings.isNullOrEmpty(e.name()) &&
-                e.name().equalsIgnoreCase(Constants.EnterpriseSalesMonday30Slot) ) {
-            String name = propertyMap.get(Constants.EnterpriseSalesMonday30Slot);
-            fileName=name != null ? name+fileName : Constants.DefaultEnterpriseSalesMonday30Slot+fileName;
-        }
-        return JsonUtil.getArraysFromJsonFile("src/test/resources/" + fileName);
+        fileName=SimpleUtils.getEnterprise(testMethod)+fileName;
+        HashMap<String, ArrayList<String>> userCredentials = SimpleUtils
+       		 .getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] credentials = new Object[userCredentials.size()][];
+        int index = 0;
+        for(Map.Entry<String, ArrayList<String>> entry : userCredentials.entrySet())
+        {
+            credentials[index] =  entry.getValue().toArray();
+            index = index + 1;
+        } 
+        return credentials;
     }
-     
-     /*
-      * Added By Naval
-      */
      
      @DataProvider(name = "legionTeamCredentialsByRoles", parallel = true)
      public static Object[][] credentialsByRoles (Method testMethod) {
          String fileName = "UsersCredentials.json";
+         fileName=SimpleUtils.getEnterprise(testMethod)+fileName;
          int credentialsLength = 1;
-         Object[][] credentials = new Object[credentialsLength][];
-         Enterprise enterprise = testMethod.getAnnotation(Enterprise.class);
-         if (enterprise != null && !Strings.isNullOrEmpty(enterprise.name()) ) {
-             String name = propertyMap.get(enterprise.name());
-             fileName=name != null ? name+fileName : propertyMap.get(Constants.DefaultEnterpriseSalesMonday30Slot)+fileName;
-             HashMap<String, ArrayList<String>> userCredentials = SimpleUtils
-            		 .getEnvironmentBasedUserCredentialsFromJson(fileName);
-             int index = 0;
-             for(Map.Entry<String, ArrayList<String>> entry : userCredentials.entrySet())
+         Object[][] credentials = new Object[credentialsLength][];         
+         //ToDo -need to handle null userCredential map value
+         HashMap<String, ArrayList<String>> userCredentials = SimpleUtils
+        		 .getEnvironmentBasedUserCredentialsFromJson(fileName);
+         int index = 0;
+         for(Map.Entry<String, ArrayList<String>> entry : userCredentials.entrySet())
+         {
+             if(testMethod.getName().contains(entry.getKey()))
              {
-                 if(testMethod.getName().contains(entry.getKey()))
-                 {
-                     credentials[index] =  entry.getValue().toArray();
-                     index = index + 1;
-                 }
-             } 
-         }
+                 credentials[index] =  entry.getValue().toArray();
+             }
+         } 
          return credentials;
      }
 }

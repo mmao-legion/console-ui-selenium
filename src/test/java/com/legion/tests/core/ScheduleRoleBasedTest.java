@@ -88,26 +88,13 @@ public class ScheduleRoleBasedTest extends TestBase{
 	  
 	  SchedulePage schedulePage = null;
 	  
-	  
-	  /*@BeforeMethod()
-      public void scheduleInitialSteps(Method testMethod, Object[] params) throws Exception{
-            initialize();
-            initialSteps(testMethod);    
-      }*/
-	  
 	    @Override
 	    @BeforeMethod
 	    public  void  firstTest (Method method, Object[] params) throws Exception
 	    {
-	        String classname = getClass().getSimpleName();
-	        String methodName = method.getName();
-	        System.out.println("Running "+ classname + "." + methodName + "  before test");
-	        String paramsList = Arrays.asList(params).toString();
-	        System.out.println((String)params[0]+","+(String)params[1]+","+(String)params[2]+","+(String)params[3]);
 	        this.createDriver((String)params[0],"68","Linux");
 	        visitPage(method);
 	        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2]);
-	        //changeLocationTest(genericData.get(2));
             navigateToSchedulePage();
 	    }
 	  
@@ -119,7 +106,8 @@ public class ScheduleRoleBasedTest extends TestBase{
 	  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	  public void scheduleTestAsTeamMember(String browser, String username,  String  password, String location)
 	  {
-		  System.out.println("Under scheduleTestAsTeamMember");
+		  System.out.println("scheduleTestAsTeamMember called ");
+		  System.out.println("browser: "+browser + "username: "+username +"password: "+password +"location: "+location);
 		  SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
 				  schedulePage.isCurrentScheduleWeekPublished(), false);
 		  List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
@@ -137,7 +125,7 @@ public class ScheduleRoleBasedTest extends TestBase{
 	  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	  public void scheduleTestAsTeamLead(String browser, String username,  String  password, String location)
 	  {
-		  System.out.println("scheduleTestAsTeamLead Called ");
+		  System.out.println("scheduleTestAsTeamLead called ");
 		  System.out.println("browser: "+browser + "username: "+username +"password: "+password +"location: "+location);
 		  SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
 				  schedulePage.isCurrentScheduleWeekPublished(), false);
@@ -153,9 +141,11 @@ public class ScheduleRoleBasedTest extends TestBase{
 	  @Owner(owner = "Naval")
 	  @Enterprise(name = "Coffeerprise")
 	  @TestName(description = "Login as Store Manager, navigate & verify Schedule page")
-	  @Test
-	  public void scheduleTestAsStoreManager()
+	  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	  public void scheduleTestAsStoreManager(String browser, String username,  String  password, String location)
 	  {
+		  System.out.println("scheduleTestAsStoreManager called ");
+		  System.out.println("browser: "+browser + "username: "+username +"password: "+password +"location: "+location);
 		  HashMap<String, Float> scheduleWeekViewLabelData = getCurrentWeekData();
 		  List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
 		  SimpleUtils.assertOnFail("Schedule Page: Wages are not loaded for Store Manager in week view.",
@@ -168,12 +158,13 @@ public class ScheduleRoleBasedTest extends TestBase{
 	  
 	  @Automated(automated ="Automated")
 	  @Owner(owner = "Naval")
-	  @TestName(description = "Login as Team Member, navigate & verify Schedule page")
-	  @Enterprise(name = "Coffee_Enterprise")
-	  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	  public void scheduleTestAsCoffee2_Enterprise(String browser, String username,  String  password, String location)
+	  @TestName(description = "Login to Legion with roles, navigate & verify Schedule page")
+	  @Enterprise(name = "Coffee2_Enterprise")
+	  @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	  public void scheduleTestAsTeam(String browser, String username,  String  password, String location)
 	  {
-		  System.out.println("Under scheduleTestAsTeamMember");
+		  System.out.println("scheduleTestAsTeam called ");
+		  System.out.println("browser: "+browser + "username: "+username +"password: "+password +"location: "+location);
 		  SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
 				  schedulePage.isCurrentScheduleWeekPublished(), false);
 		  List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
@@ -320,25 +311,6 @@ public class ScheduleRoleBasedTest extends TestBase{
 	   	        }
            }
 	   }
-	   
-	   
-	   /*public void initialSteps(Method testMethod) throws Exception{
-		   if(schedulePage == null)
-			   schedulePage = pageFactory.createConsoleSchedulePage();
-		   HashMap<String, ArrayList<String>> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(propertyMap.get("ENTERPRISE"));
-           
-		   for(Entry<String, ArrayList<String>> entry : userCredentials.entrySet())
-             {
-                 if(testMethod.getName().contains(entry.getKey())){
-                	 ArrayList<String> genericData = entry.getValue();
-                     loginToLegion(genericData.get(0), genericData.get(1));
-                     changeLocationTest(genericData.get(2));
-                     navigateToSchedulePage();
-                     break;
-                 }
-                 
-             }
-       }*/
 	   
 	   public boolean iswagesLoadedInWeekView(HashMap<String, Float> scheduleWeekViewLabelData)
 	   {

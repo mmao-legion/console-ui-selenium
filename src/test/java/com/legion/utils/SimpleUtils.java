@@ -228,15 +228,15 @@ public class SimpleUtils {
     
     public static HashMap<String, ArrayList<String>> getEnvironmentBasedUserCredentialsFromJson(String environmentName)
     {
+    	HashMap< String,ArrayList<String>> userCredentials = new HashMap< String,ArrayList<String>>();
     	try {
-	    	HashMap< String,ArrayList<String>> userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/"+environmentName);	
-	    	return userCredentials;
+	    	userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/"+environmentName);	
     	}
     	catch(Exception e)
     	{
     		fail("Unable to get Data from Json file with FileName: '"+environmentName+"'", false);
     	}
-    	return null;
+    	return userCredentials;
     }
     
     public static String getDefaultEnterprise () {
@@ -260,7 +260,6 @@ public class SimpleUtils {
 		else {
 			enterpriseName = SimpleUtils.getDefaultEnterprise();
 		}
-		System.out.println("XXXX "+enterpriseName);
 		return enterpriseName;
 	}
 	    

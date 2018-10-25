@@ -137,7 +137,6 @@ abstract public class TestBase {
 //    @BeforeMethod(alwaysRun = true)
     protected void openBrowser(Method method, @Optional String browser,
                                @Optional String enterprise, @Optional String environment) throws AWTException, IOException {
-        System.out.println("XXXXX");
     	if (environment != null) {
         	setEnvironment(environment);
         } else {
@@ -181,7 +180,6 @@ abstract public class TestBase {
 
     @BeforeMethod(alwaysRun = true)
     protected void initTestFramework(Method method) throws AWTException, IOException {
-        System.out.println("XXXXX");
         String testName = ExtentTestManager.getTestName(method);
         String ownerName = ExtentTestManager.getOwnerName(method);
         String automatedName = ExtentTestManager.getAutomatedName(method);
@@ -221,14 +219,12 @@ abstract public class TestBase {
     protected void createDriver()
             throws MalformedURLException, UnexpectedException {
 
-    	System.out.println("createDriver called");
         //todo replace Chrome driver initializaton with what Manideep has
         DesiredCapabilities capabilities = null;
         String url = "";
         
         capabilities = SimpleUtils.initCapabilities(getDriverType(), getVersion(), getOS());
         url = SimpleUtils.getURL();
-        System.out.println("url: "+url);
         // Initialize browser
         if (url == null) {
         	if (getDriverType().equals(propertyMap.get("INTERNET_EXPLORER"))) {
@@ -315,37 +311,6 @@ abstract public class TestBase {
 		ExtentTestManager.getTest().info("Inside After Method");
 		extent.flush();
     }
-
- /*   protected void visitPage () {
-        setEnvironment(propertyMap.get("ENVIRONMENT"));
-        setEnterprise(propertyMap.get("ENTERPRISE"));
-        switch (getEnvironment()){
-            case "QA":
-                if(getEnterprise().equalsIgnoreCase(propertyMap.get("Coffee_Enterprise"))){
-                    setURL(propertyMap.get("QAURL"));
-                    loadURL();
-                    break;
-                }
-                if(getEnterprise().equalsIgnoreCase(propertyMap.get("LegionTech_Enterprise"))){
-                    setURL(propertyMap.get("QAURL"));
-                    loadURL();
-                    break;
-                }
-            case "DEV":
-                if(getEnterprise().equalsIgnoreCase(propertyMap.get("Coffee_Enterprise"))){
-                    setURL(propertyMap.get("DEVURL"));
-                    loadURL();
-                    break;
-                }
-                if(getEnterprise().equalsIgnoreCase(propertyMap.get("LegionTech_Enterprise"))){
-                    setURL(propertyMap.get("DEVURL"));
-                    loadURL();
-                    break;
-                }
-            default:
-                ExtentTestManager.getTest().log(Status.FAIL,"Unable to set the URL");
-        }
-    }*/
 	
 	 protected void visitPage (Method testMethod) {
 	        setEnvironment(propertyMap.get("ENVIRONMENT"));
@@ -360,27 +325,13 @@ abstract public class TestBase {
 	        setEnterprise(enterpriseName);
 	        switch (getEnvironment()){
 	            case "QA":
-	                //if(getEnterprise().equalsIgnoreCase(propertyMap.get("Coffee_Enterprise"))){
 	                    setURL(propertyMap.get("QAURL"));
 	                    loadURL();
 	                    break;
-	                /*}
-	                if(getEnterprise().equalsIgnoreCase(propertyMap.get("Restaurant_Enterprise"))){
-	                    setURL(propertyMap.get("QAURL"));
-	                    loadURL();
-	                    break;
-	                }*/
 	            case "DEV":
-	                //if(getEnterprise().equalsIgnoreCase(propertyMap.get("Coffee_Enterprise"))){
 	                    setURL(propertyMap.get("DEVURL"));
 	                    loadURL();
 	                    break;
-	               /* }
-	                if(getEnterprise().equalsIgnoreCase(propertyMap.get("LegionTech_Enterprise"))){
-	                    setURL(propertyMap.get("DEVURL"));
-	                    loadURL();
-	                    break;
-	                }*/
 	            default:
 	                ExtentTestManager.getTest().log(Status.FAIL,"Unable to set the URL");
 	        }
