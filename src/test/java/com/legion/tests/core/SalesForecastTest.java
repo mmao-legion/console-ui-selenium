@@ -26,8 +26,7 @@ public class SalesForecastTest extends TestBase{
 	public enum SalesForecastForecastCalenderWeekCount{
 		ZERO(0),
 		One(1),
-		TWO(2);
-
+		TWO(2);		
 		private final int value;
 		SalesForecastForecastCalenderWeekCount(final int newValue) {
             value = newValue;
@@ -63,9 +62,9 @@ public class SalesForecastTest extends TestBase{
         salesForecastPage.navigateToSalesForecastTab();
         SimpleUtils.assertOnFail( "Projected Sales Tab not Active!",salesForecastPage.isSalesForecastTabActive() ,false);
         
-        
+
          * Schedule Projected Sales as Week View
-         
+
         salesForecastPage.navigateToSalesForecastTabWeekView();
         SimpleUtils.assertOnFail( "Projected Sales Forecast Tab Week View not loaded successfully!",salesForecastPage.isSalesForecastTabWeekViewActive() ,false);
         SimpleUtils.assertOnFail( "Projected Sales Item Options/Categories With User Job Title not matched!",salesForecastPage.validateSalesForecastItemOptionWithUserJobTitle(salesForecastCategoriesOptions.get("Manager")) ,true);
@@ -78,26 +77,26 @@ public class SalesForecastTest extends TestBase{
         SimpleUtils.assertOnFail( "Map return pastWeekDate as 'null'!",(pastWeekDate != null) ,true);
         SimpleUtils.assertOnFail( "Map return futureWeekDate as 'null'!",(futureWeekDate != null) ,true);
         
-        
+
          * Projected Sales forecast for current week
-         
+
         SimpleUtils.assertOnFail( "Projected Sales Current Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(currentWeekDate) ,true);
 		Map<String, String> currentWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
         salesForecastWeeksViewForeCastData(currentWeekSalesForecastCardsData, "Current Week");
        
         
-        
+
          * Projected Sales forecast for Past week
-         
+
         salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Previous Week", SalesForecastForecastCalenderWeekCount.One.getValue());
         SimpleUtils.assertOnFail( "Projected Sales Previous Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(pastWeekDate) ,true);
         Map<String, String> previousWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
         salesForecastWeeksViewForeCastData(previousWeekSalesForecastCardsData, "Previous Week");
         
         
-        
+
          * Projected Sales forecast for Future week
-         
+
         salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Future Week", SalesForecastForecastCalenderWeekCount.TWO.getValue());
         SimpleUtils.assertOnFail( "Projected Sales Future Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(futureWeekDate) ,true);
         Map<String, String> futureWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
@@ -179,7 +178,7 @@ public class SalesForecastTest extends TestBase{
 		SimpleUtils.pass("Click on Projected Sales Tab");
 		SimpleUtils.pass("assert Sales Guidance Graphs are missing for both Day view and Week view");
     }
-	
+
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
 	@Enterprise(name = "Coffee2_Enterprise")
@@ -214,7 +213,7 @@ public class SalesForecastTest extends TestBase{
 
 
 
-	
-	
-	
+
+
+
 }

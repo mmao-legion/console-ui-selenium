@@ -62,7 +62,9 @@ public class JsonUtil {
         return objects;
     }
     
-    //added by Naval
+    /*
+     * Added by Naval
+     */
     
     public static HashMap< String,ArrayList<String>> getCredentialsFromJsonFile(String pathname) {
         HashMap< String,ArrayList<String>> parameterList = null;
@@ -86,5 +88,4 @@ public class JsonUtil {
         return parameterList;
 
     }
-    
 }

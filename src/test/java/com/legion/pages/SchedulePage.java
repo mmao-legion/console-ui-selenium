@@ -1,7 +1,7 @@
 package com.legion.pages;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public interface SchedulePage {
 	public void clickOnScheduleConsoleMenuItem();
@@ -14,8 +14,8 @@ public interface SchedulePage {
 	public boolean isSchedule() throws Exception;
 	public void clickOnWeekView() throws Exception;
 	public void clickOnDayView() throws Exception;
-	public Map<String, Float> getScheduleLabelHoursAndWagges() throws Exception;
-	public List<Map<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception;
+	public HashMap<String, Float> getScheduleLabelHoursAndWagges() throws Exception;
+	public List<HashMap<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception;
 	public void clickOnScheduleSubTab(String subTabString) throws Exception;
 	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount);
 	public Boolean isWeekGenerated() throws Exception;
@@ -28,5 +28,6 @@ public interface SchedulePage {
 	public Boolean isGenerateButtonLoaded() throws Exception;
 	public String getActiveWeekDayMonthAndDateForEachDay() throws Exception;
 	public Boolean validateScheduleActiveWeekWithOverviewCalendarWeek(String overviewCalendarWeekDate, String overviewCalendarWeekDays, String scheduleActiveWeekDuration);
-
+	public boolean isCurrentScheduleWeekPublished();
+	
 }

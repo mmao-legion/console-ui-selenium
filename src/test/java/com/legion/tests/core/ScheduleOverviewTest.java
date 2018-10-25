@@ -67,7 +67,8 @@ public class ScheduleOverviewTest extends TestBase{
 	    schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-	    SimpleUtils.assertOnFail("DateAndDay verification failed for each week",scheduleOverviewPage.verifyDateAndDayForEachWeekUntilNotAvailable(), false);
+	    SimpleUtils.assertOnFail("DateAndDay verification failed for each week",
+	    		scheduleOverviewPage.verifyDateAndDayForEachWeekUntilNotAvailable(), false);
     }
     
     @Automated(automated ="Automated")

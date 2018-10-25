@@ -123,6 +123,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@FindBy (css = "#legion-app navigation div:nth-child(4)")
 	private WebElement analyticsConsoleName;
 
+	@FindBy(className = "holiday-text")
+	private WebElement noPublishedSchedule;
+
 
 	String consoleScheduleMenuItemText = "Schedule";
 
@@ -302,11 +305,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public HashMap<String, Float> getScheduleLabelHoursAndWagges() throws Exception {
 		
-		String budgetedHours = "0";
-		String scheduledHours = "0";
-		String otherHours = "0";
-		String wagesBudgetedCount = "0";
-		String wagesScheduledCount = "0";
+		String budgetedHours = "";
+		String scheduledHours = "";
+		String otherHours = "";
+		String wagesBudgetedCount = "";
+		String wagesScheduledCount = "";
 		HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
 		if(isElementLoaded(budgetedScheduledLabelsDivElement.get(0)))
 		{
@@ -317,38 +320,45 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 							|| budgetedScheduledLabelDiv.getText().contains("Wages") && budgetedScheduledLabelDiv.getText().contains("Budgeted") )
 					{
 						wagesBudgetedCount = budgetedScheduledLabelDiv.findElement(By.className("sch-control-kpi")).getText().replace(" Wages", "").replace("$", "");
+						scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesBudgetedCount, "wagesBudgetedCount");
 					}
 					else if(budgetedScheduledLabelDiv.getText().contains("Wages") && budgetedScheduledLabelDiv.getText().contains("Scheduled") )
 					{
 						wagesScheduledCount = budgetedScheduledLabelDiv.findElement(By.className("sch-control-kpi")).getText().replace(" Wages", "").replace("$", "");
+						scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesScheduledCount, "wagesScheduledCount");
+
 					}
 					else if(budgetedScheduledLabelDiv.getText().contains("Budgeted") || budgetedScheduledLabelDiv.getText().contains("Guidance"))
 					{
 						budgetedHours = budgetedScheduledLabelDiv.findElement(By.className("sch-control-kpi")).getText().replace(" Hrs", "");
+						scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , budgetedHours, "budgetedHours");
 					}
 					else if(budgetedScheduledLabelDiv.getText().contains("Scheduled"))
 					{
 						scheduledHours = budgetedScheduledLabelDiv.findElement(By.className("sch-control-kpi")).getText().replace(" Hrs", "");
+						scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduledHours, "scheduledHours");
 					}
 					else if(budgetedScheduledLabelDiv.getText().contains("Other"))
 					{
 						otherHours = budgetedScheduledLabelDiv.findElement(By.className("sch-control-kpi")).getText().replace(" Hrs", "");
+						scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , otherHours, "otherHours");
 					}
 			}
 		}
-		scheduleHoursAndWages.put("budgetedHours", Float.valueOf(budgetedHours));
-		scheduleHoursAndWages.put("scheduledHours", Float.valueOf(scheduledHours));
-		scheduleHoursAndWages.put("otherHours", Float.valueOf(otherHours));
-		scheduleHoursAndWages.put("wagesBudgetedCount", Float.valueOf(wagesBudgetedCount));
-		scheduleHoursAndWages.put("wagesScheduledCount", Float.valueOf(wagesScheduledCount));	
 		return scheduleHoursAndWages;
  	}
 
 
-	
+
+	private HashMap<String, Float> updateScheduleHoursAndWages(HashMap<String, Float> scheduleHoursAndWages,
+			String hours, String hoursAndWagesKey) {
+		scheduleHoursAndWages.put(hoursAndWagesKey, Float.valueOf(hours));
+		return scheduleHoursAndWages;
+	}
+
 	@Override
-	public List<Map<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception {
-		List<Map<String, Float>> ScheduleLabelHoursAndWagesDataForDays = new ArrayList<Map<String, Float>>();
+	public List<HashMap<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception {
+		List<HashMap<String, Float>> ScheduleLabelHoursAndWagesDataForDays = new ArrayList<HashMap<String, Float>>();
 		if(isScheduleDayViewActive()) {
 			if(ScheduleCalendarDayLabels.size() != 0) {
 				for(WebElement ScheduleCalendarDayLabel: ScheduleCalendarDayLabels)
@@ -385,11 +395,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 		if(varifyActivatedSubTab(subTabString))
 		{
-			SimpleUtils.pass("Schedule Page Overview tab loaded Successfully!");
+			SimpleUtils.pass("Schedule Page: '" + subTabString +"' tab loaded Successfully!");
 		}
 		else
 		{
-			SimpleUtils.fail("Schedule Page Overview tab not loaded Successfully!", true);
+			SimpleUtils.fail("Schedule Page: '" + subTabString +"' tab not loaded Successfully!", true);
 		}
 	}
 
@@ -468,9 +478,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 				 if(isElementLoaded(analyzePopupLatestVersionLabel))
 				 {
 					 String latestVersion = analyzePopupLatestVersionLabel.getText();
-					 //Version 0.6 Details
 					 latestVersion = latestVersion.split(" ")[1].split(".")[0];
-					 System.out.println("latestVersion: "+latestVersion);
 					 closeStaffingGuidanceAnalyzePopup();
 					 if(Integer.valueOf(latestVersion) < 1)
 					 {
@@ -643,4 +651,18 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		return false;
 	}
 
+	public boolean isCurrentScheduleWeekPublished()
+	{
+		String scheduleStatus = "No Published Schedule";
+		try {
+			if(isElementLoaded(noPublishedSchedule)) {
+				if(noPublishedSchedule.getText().contains(scheduleStatus))
+					return false;
+			}
+		} catch (Exception e) {
+			SimpleUtils.pass("Schedule is Published for current Week!");
+			return true;
+		}
+		return true;
+	}
 }

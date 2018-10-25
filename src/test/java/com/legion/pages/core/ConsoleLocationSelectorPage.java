@@ -61,7 +61,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     }
     
     @Override
-    public void changeLocation(String locationName) throws Exception
+    public void changeLocation(String locationName)
     {
         Boolean isLocationMatched = false;
         activeConsoleName = activeConsoleMenuItem.getText();
@@ -101,17 +101,27 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                 click(dashboardConsoleMenu);
                 changeLocation(locationName);
             }
-        }
+    	}
+    	catch(Exception e) {
+    		SimpleUtils.fail("Unable to change location!", true);
+    	}
+
     }
     
     @Override
-    public Boolean isLocationSelected(String locationName) throws Exception
+    public Boolean isLocationSelected(String locationName)
     {
-        if(isChangeLocationButtonLoaded()) {
-            if(dashboardSelectedLocationText.getText().contains(locationName)) {
-                return true;
+    	try {
+    		if(isChangeLocationButtonLoaded()) {
+                if(dashboardSelectedLocationText.getText().contains(locationName)) {
+                    return true;
+                }
             }
-        }
+    	}
+    	catch(Exception e) {
+    		SimpleUtils.fail("Change Location Button not loaded!", true);
+    	}
+
         return false;
     }
 
