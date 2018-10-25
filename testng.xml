@@ -25,9 +25,9 @@
        <class name="com.legion.tests.core.ScheduleRoleBasedTest">
       	<methods>
              <include name="scheduleTestAsTeamMember"/> 
-             <include name="scheduleTestAsTeamLead"/>   
+            <!--  <include name="scheduleTestAsTeamLead"/>   
              <include name="scheduleTestAsStoreManager"/>
-             <include name="scheduleTestAsTeam"/>
+             <include name="scheduleTestAsTeam"/> -->
         </methods>
       </class>
     </classes>
