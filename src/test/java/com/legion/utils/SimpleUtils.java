@@ -3,6 +3,8 @@ package com.legion.utils;
 import static com.legion.utils.MyThreadLocal.getVerificationMap;
 import static org.testng.AssertJUnit.assertTrue;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.ITestResult;
@@ -17,6 +19,7 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.testframework.ExtentTestManager;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -228,15 +231,9 @@ public class SimpleUtils {
     
     public static HashMap<String, ArrayList<String>> getEnvironmentBasedUserCredentialsFromJson(String environmentName)
     {
-    	HashMap< String,ArrayList<String>> userCredentials = new HashMap< String,ArrayList<String>>();
-    	try {
-	    	userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/"+environmentName);	
-    	}
-    	catch(Exception e)
-    	{
-    		fail("Unable to get Data from Json file with FileName: '"+environmentName+"'", false);
-    	}
-    	return userCredentials;
+
+    	return JsonUtil.getCredentialsFromJsonFile("src/test/resources/"+environmentName);
+
     }
     
     public static String getDefaultEnterprise () {
