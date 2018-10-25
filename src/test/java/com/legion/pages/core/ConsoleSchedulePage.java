@@ -300,14 +300,14 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	
 	@Override
-	public Map<String, Float> getScheduleLabelHoursAndWagges() throws Exception {
+	public HashMap<String, Float> getScheduleLabelHoursAndWagges() throws Exception {
 		
 		String budgetedHours = "0";
 		String scheduledHours = "0";
 		String otherHours = "0";
 		String wagesBudgetedCount = "0";
 		String wagesScheduledCount = "0";
-		Map<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
+		HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
 		if(isElementLoaded(budgetedScheduledLabelsDivElement.get(0)))
 		{
 			for(WebElement budgetedScheduledLabelDiv : budgetedScheduledLabelsDivElement)

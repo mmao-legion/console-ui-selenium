@@ -56,7 +56,6 @@ import static com.legion.utils.MyThreadLocal.*;
 		public void onTestStart(ITestResult result) {  
 			String testName = result.getMethod().getMethodName();
 			setLoc(testName);
-			TestBase.initialize();	
 		}
 	
 		@Override
@@ -120,7 +119,11 @@ import static com.legion.utils.MyThreadLocal.*;
 		@Override
 		public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
 			// TODO Auto-generated method stub
-				if(!getVerificationMap().isEmpty() && testResult.getStatus() == ITestResult.SUCCESS){
+			if (getVerificationMap() == null) {
+				return;
+			}	
+			
+			if(!getVerificationMap().isEmpty() && testResult.getStatus() == ITestResult.SUCCESS){
 			            ITestContext testContext = Reporter.getCurrentTestResult().getTestContext();
 			            testContext.getPassedTests().addResult(testResult, Reporter.getCurrentTestResult().getMethod());
 			            testContext.getPassedTests().getAllMethods().remove(Reporter.getCurrentTestResult().getMethod());

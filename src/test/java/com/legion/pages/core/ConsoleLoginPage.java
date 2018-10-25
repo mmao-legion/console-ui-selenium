@@ -17,6 +17,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import static com.legion.utils.MyThreadLocal.*;
 
 import java.util.HashMap;
 
@@ -112,7 +113,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 
     public void getActiveConsoleName(WebElement element){
     	activeConsoleName = element.getText();
-    	ScreenshotManager.setScreenshotConsoleName(activeConsoleName);
+    	setScreenshotConsoleName(activeConsoleName);
     }
 
 }

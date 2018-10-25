@@ -1,7 +1,7 @@
 package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
-
+import static com.legion.utils.MyThreadLocal.*;
 import java.util.List;
 
 import org.openqa.selenium.WebElement;
@@ -65,7 +65,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     {
         Boolean isLocationMatched = false;
         activeConsoleName = activeConsoleMenuItem.getText();
-        ScreenshotManager.setScreenshotConsoleName(activeConsoleName);
+        setScreenshotConsoleName(activeConsoleName);
         if(activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
             if(isChangeLocationButtonLoaded()) {
                 if(isLocationSelected(locationName)) {
