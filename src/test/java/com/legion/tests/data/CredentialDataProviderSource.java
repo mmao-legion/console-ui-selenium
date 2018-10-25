@@ -32,16 +32,22 @@ import static com.legion.utils.MyThreadLocal.*;
      @DataProvider(name = "legionTeamCredentialsByEnterprise", parallel = true)
     public static Object[][] credentialsByEnterprise (Method testMethod) {
         String fileName = "UsersCredentials.json";
+        Object[][] credentials = null;
         fileName=SimpleUtils.getEnterprise(testMethod)+fileName;
         HashMap<String, ArrayList<String>> userCredentials = SimpleUtils
        		 .getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] credentials = new Object[userCredentials.size()][];
+        try{
+            credentials = new Object[userCredentials.size()][];
         int index = 0;
         for(Map.Entry<String, ArrayList<String>> entry : userCredentials.entrySet())
         {
             credentials[index] =  entry.getValue().toArray();
             index = index + 1;
-        } 
+        }
+        }catch(NullPointerException e){
+           return new Object[0][];
+        }
+        System.out.println("File name is "+fileName);
         return credentials;
     }
      
