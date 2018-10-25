@@ -31,7 +31,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     @FindBy(css="[ng-model='password']")
     private WebElement passwordField;
     
-    @FindBy(xpath="//div[@ng-click='loginClicked($event)']")
+    @FindBy(className="login-button-icon")
     private WebElement loginButton;
     
     @FindBy(className="fa-sign-out")

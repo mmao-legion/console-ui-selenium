@@ -77,6 +77,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import com.legion.tests.annotations.Enterprise;
 //import org.apache.log4j.Logger;
 import com.legion.tests.annotations.HasDependencies;
 
@@ -90,7 +91,7 @@ import static com.legion.utils.MyThreadLocal.*;
  *
  */
 
-public class TestBase {
+abstract public class TestBase {
 
     protected PageFactory pageFactory = null;
     public String targetFinalFile = null;
@@ -98,24 +99,21 @@ public class TestBase {
     Date date=new Date();
     SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
     //added by Nishant
-    private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-    
-	private static Object[][] legionUsersCredentials =  JsonUtil.getArraysFromJsonFile("src/test/resources/UsersCredentials.json");
-
+    protected static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     protected boolean screenshotsWanted = Boolean.parseBoolean(propertyMap.get("TAKE_SCREENSHOTS")) ;
-    protected String strEnterprise = propertyMap.get("ENTERPRISE");
+//    protected String strEnterprise = propertyMap.get("ENTERPRISE");
     public static String activeTabLogin = null;
     public static String activeTabSchedule = null;
     public static String activeTabDashboard = null;
     protected static String screenshotFinalLocation = null;
     protected static String appURL = null;
     private static ExtentReports extent = ExtentReportManager.getInstance();
-           
+       
 //    protected static Logger log;
 
-    private ThreadLocal<WebDriver> webDriver = new ThreadLocal<WebDriver>();
-    public static ExtentTest extentTest;
+//    private ThreadLocal<WebDriver> webDriver = new ThreadLocal<WebDriver>();
 
+    abstract protected void firstTest (Method method, Object[] params) throws Exception;
 
     @DataProvider(name = "browsers", parallel = true)
     public synchronized static Object[][] browserDataProvider(Method testMethod) {
@@ -132,36 +130,31 @@ public class TestBase {
     public synchronized static Object[][] usersDataCredentialProvider(Method testMethod) {
     	return SimpleUtils.getUsersDataCredential();
     }
-    
-    
-    /*
-     * add by Naval for Tean Schedule 
-     */
 
-    @DataProvider(name = "legionTeamCredentials", parallel = true)
-    public synchronized static Object[][] legionTeamCredentialsProvider(Method testMethod) {
-        return JsonUtil.getArraysFromJsonFile("src/test/resources/UsersCredentials.json");
-    }
-    
     //added by Nishant
-   
+
     @Parameters({"browser", "enterprise","environment"})
-    @BeforeMethod(alwaysRun = true)
+//    @BeforeMethod(alwaysRun = true)
     protected void openBrowser(Method method, @Optional String browser,
                                @Optional String enterprise, @Optional String environment) throws AWTException, IOException {
+        System.out.println("XXXXX");
     	if (environment != null) {
         	setEnvironment(environment);
         } else {
             setEnvironment(propertyMap.get("ENVIRONMENT"));
         }
-        setEnterprise(strEnterprise);
-        
+    	
+    	if (enterprise != null) {
+            setEnterprise(enterprise);
+        } else {
+            setEnterprise(propertyMap.get("ENTERPRISE"));
+        }
     	
     	String testName = ExtentTestManager.getTestName(method);
     	String ownerName = ExtentTestManager.getOwnerName(method);
     	String automatedName = ExtentTestManager.getAutomatedName(method);
     	
-    	extentTest = ExtentTestManager.createTest(getClass().getSimpleName()  + " - "
+    	ExtentTestManager.createTest(getClass().getSimpleName()  + " - "
     	+" " + method.getName() + " : " + testName + ""
     			+ " [" +ownerName + "/" + automatedName + "]","", getClass().getSimpleName());	
         setCurrentMethod(method);
@@ -171,29 +164,71 @@ public class TestBase {
         String strDate = formatter.format(date);  
 		String strDateFinal = strDate.replaceAll(" ", "_");
         screenshotLocation = "Screenshots" + File.separator + "Results";
-        if (method.getAnnotation(Test.class)!= null
-                && method.getAnnotation(Test.class).dependsOnMethods().length == 0) {
-            if (getBrowserNeeded() && browser != null) {
+//        if (method.getAnnotation(Test.class)!= null
+//                && method.getAnnotation(Test.class).dependsOnMethods().length == 0) {
+//            if (getBrowserNeeded() && browser != null) {
             	setVerificationMap(new HashMap<>());
-            	setDriverType(browser);
-                setVersion(propertyMap.get("VERSION"));
-                setOS(propertyMap.get("VERSION"));
-                createDriver();
+//            	setDriverType(browser);
+//                setVersion(propertyMap.get("VERSION"));
+//                setOS(propertyMap.get("VERSION"));
+//                createDriver();
          
-            }
-        }
+//            }
+//        }
        
+    }
+
+
+    @BeforeMethod(alwaysRun = true)
+    protected void initTestFramework(Method method) throws AWTException, IOException {
+        System.out.println("XXXXX");
+        String testName = ExtentTestManager.getTestName(method);
+        String ownerName = ExtentTestManager.getOwnerName(method);
+        String automatedName = ExtentTestManager.getAutomatedName(method);
+
+        ExtentTestManager.createTest(getClass().getSimpleName() + " - "
+            + " " + method.getName() + " : " + testName + ""
+            + " [" + ownerName + "/" + automatedName + "]", "", getClass().getSimpleName());
+        setCurrentMethod(method);
+        setBrowserNeeded(true);
+        setCurrentTestMethodName(method.getName());
+        setSessionTimestamp(date.toString().replace(":", "_").replace(" ", "_"));
+        String strDate = formatter.format(date);
+        String strDateFinal = strDate.replaceAll(" ", "_");
+        screenshotLocation = "Screenshots" + File.separator + "Results";
+
+        setVerificationMap(new HashMap<>());
+
+
+    }
+
+    /**
+     * @return the {@link WebDriver} for the current thread
+     */
+    public WebDriver getWebDriver() {
+        return getDriver();
+    }
+
+    protected void createDriver (String browser, String version, String os) throws Exception {
+        if (getBrowserNeeded() && browser != null) {
+            setDriverType(browser);
+            setVersion(version);
+            setOS(os);
+            createDriver();
+        }
     }
 
     protected void createDriver()
             throws MalformedURLException, UnexpectedException {
 
+    	System.out.println("createDriver called");
         //todo replace Chrome driver initializaton with what Manideep has
         DesiredCapabilities capabilities = null;
         String url = "";
         
         capabilities = SimpleUtils.initCapabilities(getDriverType(), getVersion(), getOS());
         url = SimpleUtils.getURL();
+        System.out.println("url: "+url);
         // Initialize browser
         if (url == null) {
         	if (getDriverType().equals(propertyMap.get("INTERNET_EXPLORER"))) {
@@ -281,22 +316,106 @@ public class TestBase {
 		extent.flush();
     }
 
-	
-	public static void initialize(){
-        System.out.println(getEnterprise());
-       switch (getEnvironment()){
+ /*   protected void visitPage () {
+        setEnvironment(propertyMap.get("ENVIRONMENT"));
+        setEnterprise(propertyMap.get("ENTERPRISE"));
+        switch (getEnvironment()){
             case "QA":
+                if(getEnterprise().equalsIgnoreCase(propertyMap.get("Coffee_Enterprise"))){
                     setURL(propertyMap.get("QAURL"));
                     loadURL();
                     break;
+                }
+                if(getEnterprise().equalsIgnoreCase(propertyMap.get("LegionTech_Enterprise"))){
+                    setURL(propertyMap.get("QAURL"));
+                    loadURL();
+                    break;
+                }
             case "DEV":
+                if(getEnterprise().equalsIgnoreCase(propertyMap.get("Coffee_Enterprise"))){
                     setURL(propertyMap.get("DEVURL"));
                     loadURL();
                     break;
+                }
+                if(getEnterprise().equalsIgnoreCase(propertyMap.get("LegionTech_Enterprise"))){
+                    setURL(propertyMap.get("DEVURL"));
+                    loadURL();
+                    break;
+                }
             default:
                 ExtentTestManager.getTest().log(Status.FAIL,"Unable to set the URL");
-            }
-    }
+        }
+    }*/
+	
+	 protected void visitPage (Method testMethod) {
+	        setEnvironment(propertyMap.get("ENVIRONMENT"));
+	        Enterprise e = testMethod.getAnnotation(Enterprise.class);
+	        String enterpriseName = null;
+	        if (e != null ) {
+	            enterpriseName = SimpleUtils.getEnterprise(e.name());
+	        }
+	        else {
+	            enterpriseName = SimpleUtils.getDefaultEnterprise();
+	        }
+	        setEnterprise(enterpriseName);
+	        switch (getEnvironment()){
+	            case "QA":
+	                //if(getEnterprise().equalsIgnoreCase(propertyMap.get("Coffee_Enterprise"))){
+	                    setURL(propertyMap.get("QAURL"));
+	                    loadURL();
+	                    break;
+	                /*}
+	                if(getEnterprise().equalsIgnoreCase(propertyMap.get("Restaurant_Enterprise"))){
+	                    setURL(propertyMap.get("QAURL"));
+	                    loadURL();
+	                    break;
+	                }*/
+	            case "DEV":
+	                //if(getEnterprise().equalsIgnoreCase(propertyMap.get("Coffee_Enterprise"))){
+	                    setURL(propertyMap.get("DEVURL"));
+	                    loadURL();
+	                    break;
+	               /* }
+	                if(getEnterprise().equalsIgnoreCase(propertyMap.get("LegionTech_Enterprise"))){
+	                    setURL(propertyMap.get("DEVURL"));
+	                    loadURL();
+	                    break;
+	                }*/
+	            default:
+	                ExtentTestManager.getTest().log(Status.FAIL,"Unable to set the URL");
+	        }
+	    }
+
+	public static void initialize(){
+    
+        switch (getEnvironment()){
+			case "QA":
+				if(getEnterprise().equalsIgnoreCase(propertyMap.get("Coffee_Enterprise"))){
+					setURL(propertyMap.get("QAURL"));
+					loadURL();
+					break;
+				}
+				if(getEnterprise().equalsIgnoreCase(propertyMap.get("LegionTech_Enterprise"))){
+					setURL(propertyMap.get("QAURL"));
+					loadURL();
+					break;
+				}
+			case "DEV":
+				if(getEnterprise().equalsIgnoreCase(propertyMap.get("Coffee_Enterprise"))){
+					setURL(propertyMap.get("DEVURL"));
+					loadURL();
+					break;
+				}
+				if(getEnterprise().equalsIgnoreCase(propertyMap.get("LegionTech_Enterprise"))){
+					setURL(propertyMap.get("DEVURL"));
+					loadURL();
+					break;
+				}
+			default:
+				ExtentTestManager.getTest().log(Status.FAIL,"Unable to set the URL");
+			}
+	}
+
    
     public static void loadURL() {
         try {
@@ -321,32 +440,14 @@ public class TestBase {
     /*
      * Login to Legion With Credential and assert on failure
      */
-    public void loginToLegionAndVerifyIsLoginDone(String username, String Password) 
+    public void loginToLegionAndVerifyIsLoginDone(String username, String Password) throws Exception
     {
-    	try {
-    		LoginPage loginPage = pageFactory.createConsoleLoginPage();
-			loginPage.loginToLegionWithCredential(username, Password);
-			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-			String selectedLocation = locationSelectorPage.getCurrentUserLocation();
-			boolean isLoginDone = loginPage.isLoginDone();
-			loginPage.verifyLoginDone(isLoginDone, selectedLocation);
-    	} catch (Exception e) {
-			SimpleUtils.fail("Unable to Login with given credential", false);
-		}
-    }
-    
-    public HashMap<String, List<String>> getUserCredentialsAndLocations()
-    {
-    	HashMap<String, List<String>> userCredentials = new HashMap<String, List<String>>();
-    	for(Object[] legionUsersCredential : legionUsersCredentials)
-		  {
-			  List<String> credentialsAndLocation = new ArrayList<String>();
-			  credentialsAndLocation.add((String) legionUsersCredential[0]);
-			  credentialsAndLocation.add((String) legionUsersCredential[1]);
-			  credentialsAndLocation.add((String) legionUsersCredential[2]);
-			  userCredentials.put((String) legionUsersCredential[3], credentialsAndLocation);
-		  }
-    	return userCredentials;
+    	LoginPage loginPage = pageFactory.createConsoleLoginPage();
+    	loginPage.loginToLegionWithCredential(username, Password);
+    	LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+    	String selectedLocation = locationSelectorPage.getCurrentUserLocation();
+	    boolean isLoginDone = loginPage.isLoginDone();
+	    loginPage.verifyLoginDone(isLoginDone, selectedLocation);
     }
 
     
