@@ -26,7 +26,8 @@ public class SalesForecastTest extends TestBase{
 	public enum SalesForecastForecastCalenderWeekCount{
 		ZERO(0),
 		One(1),
-		TWO(2);		
+		TWO(2);
+
 		private final int value;
 		SalesForecastForecastCalenderWeekCount(final int newValue) {
             value = newValue;
