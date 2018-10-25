@@ -3,10 +3,8 @@ package com.legion.tests.core;
 import com.aventstack.extentreports.Status;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
-import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
-import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -19,7 +17,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-public class StoreManagerScheduleNavigationTest extends TestBase {
+public class StoreManagerScheduleNavigationTestKendraScott2 extends TestBase {
     private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
 //    @BeforeClass
@@ -43,10 +41,9 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
 	  }
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "LEG-4249: should open the same day schedule when clicking Schedule tab from Overview")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-    public void dayViewShouldBeSticky (String username, String password, String browser, String location) {
+    @Test(dataProvider = "browsers")
+    public void dayViewShouldBeSticky (String browser, String version, String os, String pageobject) {
         /*
         Open a Schedule of any Day (Not necessarily the same Day) in Day View say (Sep 1)
         Then go to Schedule overview
@@ -58,10 +55,9 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
 
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "LEG-4249: should open the week schedule in TM view when clicking Schedule tab from Overview")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-    public void teamViewShouldBeSticky (String username, String password, String browser, String location) {
+    @Test(dataProvider = "browsers")
+    public void teamViewShouldBeSticky (String browser, String version, String os, String pageobject) {
         /*
         Open a Schedule of any Week (Not necessarily the current week) in TM view
         Then go to Schedule overview
@@ -72,10 +68,9 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
 
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "LEG-4249: should open the week schedule in TM view when clicking Schedule tab from Overview")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-    public void shouldNaviToNextWeekAndGenerateSchedule (String username, String password, String browser, String location) {
+    @Test(dataProvider = "browsers")
+    public void shouldNaviToNextWeekAndGenerateSchedule (String browser, String version, String os, String pageobject) {
         /*
             navigate to next week
             assert schedule shows there are no shifts on the day when store is closed
@@ -89,10 +84,9 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "LEG-2424: should open the week schedule in Day/Week view for Past week and verify already generated Schedule")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-    public void shouldBeNoGenerateButtonForPastWeek (String username, String password, String browser, String location) {
+    @Test(dataProvider = "browsers")
+    public void shouldBeNoGenerateButtonForPastWeek (String browser, String version, String os, String pageobject) {
 
     	SimpleUtils.pass("Navigate to past week successfully!");
     	SimpleUtils.pass("assert the schedules that are already published should remain unchanged");
@@ -104,10 +98,9 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "LEG-2592: should be able to view and filter Schedule and Group By")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-    public void shouldBeAbleToViewAndFilterSchedule(String username, String password, String browser, String location) {
+    @Test(dataProvider = "browsers")
+    public void shouldBeAbleToViewAndFilterSchedule(String browser, String version, String os, String pageobject) {
 
     	SimpleUtils.pass("Successfully Opened a Schedule of any Week (Not necessarily the current week) in Day/Week view");
     	SimpleUtils.pass("Select the dropdown of All Work Roles, All Shift Types, Group By All and assert all the options should be available");
@@ -120,10 +113,9 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "LEG-2592: verify Group by option is saved at session level.")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-    public void GroupByShouldBeStickyAtSessionLevel(String username, String password, String browser, String location) {
+    @Test(dataProvider = "browsers")
+    public void GroupByShouldBeStickyAtSessionLevel(String browser, String version, String os, String pageobject) {
     	SimpleUtils.pass("Successfully Opened a Schedule of any Week (Not necessarily the current week) in Day/Week view");
     	SimpleUtils.pass("Select the dropdown Group By All and naviagate out from Schedule");
     	SimpleUtils.pass("Go back to Schedule tab and assert Selection option should not be lost");    
@@ -132,10 +124,9 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "LEG-2592: verify Filter option is persisted locally")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-    public void FilterShouldBeSticky(String username, String password, String browser, String location) {
+    @Test(dataProvider = "browsers")
+    public void FilterShouldBeSticky(String browser, String version, String os, String pageobject) {
     	SimpleUtils.pass("Successfully Opened a Schedule of any Week (Not necessarily the current week) in Day/Week view");
     	SimpleUtils.pass("Select the dropdown All Shift Types, All Work Roles successfully");
     	SimpleUtils.pass("Switch between Guidance and Schedule page and assert filter option should not be lost");
@@ -146,10 +137,9 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "LEG-4515: should Display Sales/Labor Hr for traffic with Sales Amount set up")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-    public void DisplaySalesPerLaborHr(String username, String password, String browser, String location) {
+    @Test(dataProvider = "browsers")
+    public void DisplaySalesPerLaborHr(String browser, String version, String os, String pageobject) {
 
     	SimpleUtils.pass("Login on reverted enterprise Successfully!");   
     	SimpleUtils.pass("Successfully Opened a Schedule of any Week (Not necessarily the current week) in Day view");
@@ -161,10 +151,9 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "LEG-2425: should able to manually add admin shift (Failed with Jira Ticket#4922)")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-    public void editShiftManually(String username, String password, String browser, String location) {
+    @Test(dataProvider = "browsers")
+    public void editShiftManually(String browser, String version, String os, String pageobject) {
     	SimpleUtils.pass("Successfully Opened a Schedule of any Week (Not necessarily the current week) in Day view");
     	SimpleUtils.pass("Click on edit button and assert there is no pop up for Draft schedule");
     	SimpleUtils.pass("Click on + sign and assert there is Customize your new Shift window opens");
@@ -181,14 +170,14 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "LEG-3490: Manually added shift should not lead to corruption")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-    public void editShiftManuallyLeadtoCorruption(String username, String password, String browser, String location) {
+    @Test(dataProvider = "browsers")
+    public void editShiftManuallyLeadtoCorruption(String browser, String version, String os, String pageobject) {
     	ExtentTestManager.extentTest.get().log(Status.INFO,"Not able to verify the test due to Bug#4922");
 
     }
 	
+   
     
 //    @AfterClass
 //    public void cleanUp () {

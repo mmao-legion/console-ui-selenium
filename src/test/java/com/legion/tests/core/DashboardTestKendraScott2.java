@@ -17,10 +17,9 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
-public class DashboardTest extends TestBase{
+public class DashboardTestKendraScott2 extends TestBase{
 	
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-    
 	@Override
 	  @BeforeMethod()
 	  public void firstTest(Method testMethod, Object[] params) throws Exception{
@@ -53,6 +52,6 @@ public class DashboardTest extends TestBase{
     	SimpleUtils.pass("Login into LegionCooffee2 Application Successfully!");
     	SimpleUtils.pass("Navigate to Dashboard Page Successfully!");
     	SimpleUtils.fail("assert Today's Forecast and Projected Demand Graph should not be present for Team lead and Team member",false);	
-    }  
+    }
     
 }

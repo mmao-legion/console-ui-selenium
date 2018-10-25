@@ -12,6 +12,7 @@ import com.legion.utils.SimpleUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
@@ -121,7 +122,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	@FindBy (css = "#legion-app navigation div:nth-child(4)")
 	private WebElement analyticsConsoleName;
-	
+
 	@FindBy(className = "holiday-text")
 	private WebElement noPublishedSchedule;
 
@@ -348,7 +349,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
  	}
 
 
-	
+
 	private HashMap<String, Float> updateScheduleHoursAndWages(HashMap<String, Float> scheduleHoursAndWages,
 			String hours, String hoursAndWagesKey) {
 		scheduleHoursAndWages.put(hoursAndWagesKey, Float.valueOf(hours));
@@ -649,7 +650,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		}
 		return false;
 	}
-	
+
 	public boolean isCurrentScheduleWeekPublished()
 	{
 		String scheduleStatus = "No Published Schedule";

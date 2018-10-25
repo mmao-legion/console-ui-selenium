@@ -8,32 +8,6 @@
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
    
-   
-   <!-- <test name="My Test">      
-    <classes>
-       <class name="com.legion.tests.core.MyTest">
-      	<methods>
-             <include name="exampleTestInternalAdmin"/>    
-             <include name="exampleTest"/>    
-        </methods>
-      </class>
-    </classes>
-  </test> -->
-  
-   <test name="Schedule Role Based Test">      
-    <classes>
-       <class name="com.legion.tests.core.ScheduleRoleBasedTest">
-      	<methods>
-             <include name="scheduleTestAsTeamMember"/> 
-             <include name="scheduleTestAsTeamLead"/>   
-             <include name="scheduleTestAsStoreManager"/>
-             <include name="scheduleTestAsTeam"/>
-        </methods>
-      </class>
-    </classes>
-  </test> 
-  
-  <!--
   <test name="Dashboard Test">      
     <classes>
        <class name="com.legion.tests.core.DashboardTest">
@@ -42,7 +16,7 @@
         </methods>
       </class>
     </classes>
-  </test> 
+  </test> <!-- Test -->
   
   <test name="Schedule Overview Test">      
     <classes>
@@ -55,9 +29,9 @@
         </methods>
       </class>
     </classes>
-  </test> 
-  -->
-  <!-- <test name="Schedule Test">      
+  </test> <!-- Test -->
+  
+  <test name="Schedule Test">      
     <classes>
        <class name="com.legion.tests.core.ScheduleTest">
       	<methods>
@@ -73,8 +47,8 @@
         </methods>
       </class>
     </classes>
-  </test>  -->
-  <!-- 
+  </test> <!-- Test -->
+  
   <test name="Staffing Guidance test">      
     <classes>
        <class name="com.legion.tests.core.StaffingGuidanceTest">
@@ -102,7 +76,7 @@
         </methods>
       </class>
     </classes>
-  </test> 
+  </test> <!-- Test -->
   
   <test name="Navigation Flow">      
     <classes>
@@ -113,7 +87,7 @@
         </methods>
       </class>
     </classes>
-  </test> 
+  </test> <!-- Test -->
   
   
   <test name="Analytics Test">      
@@ -124,7 +98,7 @@
         </methods>
       </class>
     </classes>
-  </test> 
+  </test> <!-- Test -->
   
    <test name="StoreManager Schedule Navigation Test">      
     <classes>
@@ -143,8 +117,8 @@
         </methods>
       </class>
     </classes>
-  </test> 
-  -->
+  </test> <!-- Test -->
+  
    
 </suite> <!-- Suite -->
 

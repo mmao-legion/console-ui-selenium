@@ -1,7 +1,7 @@
 package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
-
+import static com.legion.utils.MyThreadLocal.*;
 import java.util.List;
 
 import org.openqa.selenium.WebElement;
@@ -63,55 +63,53 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public void changeLocation(String locationName)
     {
-    	try {
-    		Boolean isLocationMatched = false;
+        try {
+            Boolean isLocationMatched = false;
             activeConsoleName = activeConsoleMenuItem.getText();
-            ScreenshotManager.setScreenshotConsoleName(activeConsoleName);
-            if(activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
-                if(isChangeLocationButtonLoaded()) {
-                    if(isLocationSelected(locationName)) {
-                        SimpleUtils.pass("Given Location '"+ locationName +"' already selected!");
-                    }
-                    else {
+            setScreenshotConsoleName(activeConsoleName);
+            if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
+                if (isChangeLocationButtonLoaded()) {
+                    if (isLocationSelected(locationName)) {
+                        SimpleUtils.pass("Given Location '" + locationName + "' already selected!");
+                    } else {
                         click(locationSelectorButton);
-                        if(isElementLoaded(locationDropDownButton)) {
-                            if(availableLocationCardsName.size() != 0) {
-                                for(WebElement locationCardName : availableLocationCardsName) {
-                                    if(locationCardName.getText().contains(locationName)) {
+                        if (isElementLoaded(locationDropDownButton)) {
+                            if (availableLocationCardsName.size() != 0) {
+                                for (WebElement locationCardName : availableLocationCardsName) {
+                                    if (locationCardName.getText().contains(locationName)) {
                                         isLocationMatched = true;
                                         click(locationCardName);
                                         SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
                                         break;
                                     }
                                 }
-                                if(! isLocationMatched) {
-                                    if(isElementLoaded(dashboardLocationsPopupCancelButton)) {
+                                if (!isLocationMatched) {
+                                    if (isElementLoaded(dashboardLocationsPopupCancelButton)) {
                                         click(dashboardLocationsPopupCancelButton);
                                     }
                                     SimpleUtils.fail("Location does matched with '" + locationName + "'", true);
                                 }
-                            
+
                             }
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 WebElement dashboardConsoleMenu = SimpleUtils.getSubTabElement(consoleMenuItems, dashboardConsoleMenuText);
-                if(isElementLoaded(dashboardConsoleMenu)) {
+                if (isElementLoaded(dashboardConsoleMenu)) {
                     click(dashboardConsoleMenu);
                     changeLocation(locationName);
                 }
             }
-    	}
+        }
     	catch(Exception e) {
     		SimpleUtils.fail("Unable to change location!", true);
     	}
-        
+
     }
     
     @Override
-    public Boolean isLocationSelected(String locationName) 
+    public Boolean isLocationSelected(String locationName)
     {
     	try {
     		if(isChangeLocationButtonLoaded()) {
@@ -123,7 +121,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     	catch(Exception e) {
     		SimpleUtils.fail("Change Location Button not loaded!", true);
     	}
-        
+
         return false;
     }
 
