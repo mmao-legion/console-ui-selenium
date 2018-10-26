@@ -102,12 +102,10 @@ public class ScheduleRoleBasedTest extends TestBase{
 	  @Automated(automated ="Automated")
 	  @Owner(owner = "Naval")
 	  @TestName(description = "Login as Team Member, navigate & verify Schedule page")
-	  @Enterprise(name = "Coffee_Enterprise")
+	  @Enterprise(name = "Coffee2_Enterprise")
 	  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	  public void scheduleTestAsTeamMember(String browser, String username,  String  password, String location)
 	  {
-		  System.out.println("scheduleTestAsTeamMember called ");
-		  System.out.println("browser: "+browser + "username: "+username +"password: "+password +"location: "+location);
 		  SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
 				  schedulePage.isCurrentScheduleWeekPublished(), false);
 		  List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
@@ -125,8 +123,6 @@ public class ScheduleRoleBasedTest extends TestBase{
 	  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	  public void scheduleTestAsTeamLead(String browser, String username,  String  password, String location)
 	  {
-		  System.out.println("scheduleTestAsTeamLead called ");
-		  System.out.println("browser: "+browser + "username: "+username +"password: "+password +"location: "+location);
 		  SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
 				  schedulePage.isCurrentScheduleWeekPublished(), false);
 		  HashMap<String, Float> scheduleWeekViewLabelData = getCurrentWeekData();
@@ -139,13 +135,11 @@ public class ScheduleRoleBasedTest extends TestBase{
 	  
 	  @Automated(automated ="Automated")
 	  @Owner(owner = "Naval")
-	  @Enterprise(name = "Coffeerprise")
+	  @Enterprise(name = "Coffee2_Enterprise")
 	  @TestName(description = "Login as Store Manager, navigate & verify Schedule page")
 	  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	  public void scheduleTestAsStoreManager(String browser, String username,  String  password, String location)
 	  {
-		  System.out.println("scheduleTestAsStoreManager called ");
-		  System.out.println("browser: "+browser + "username: "+username +"password: "+password +"location: "+location);
 		  HashMap<String, Float> scheduleWeekViewLabelData = getCurrentWeekData();
 		  List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
 		  SimpleUtils.assertOnFail("Schedule Page: Wages are not loaded for Store Manager in week view.",
@@ -159,9 +153,9 @@ public class ScheduleRoleBasedTest extends TestBase{
 	  @Automated(automated ="Automated")
 	  @Owner(owner = "Naval")
 	  @TestName(description = "Login to Legion with roles, navigate & verify Schedule page")
-	  @Enterprise(name = "Coffee2_Enterprise")
-	  @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	  public void scheduleTestAsTeam(String browser, String username,  String  password, String location)
+	  @Enterprise(name = "Tech_Enterprise")
+	  @Test(dataProvider = "legionTeamCredentialsByEnterpriseP", dataProviderClass=CredentialDataProviderSource.class)
+	  public void scheduleTest(String browser, String username,  String  password, String location)
 	  {
 		  System.out.println("scheduleTestAsTeam called ");
 		  System.out.println("browser: "+browser + "username: "+username +"password: "+password +"location: "+location);
@@ -169,8 +163,6 @@ public class ScheduleRoleBasedTest extends TestBase{
 				  schedulePage.isCurrentScheduleWeekPublished(), false);
 		  List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
 		  HashMap<String, Float> scheduleWeekViewLabelData = getCurrentWeekData();
-		  SimpleUtils.assertOnFail("Schedule Page: Wages are loaded for Team Member in week view.",
-				  ! iswagesLoadedInWeekView(scheduleWeekViewLabelData), false);
 		  comparingWeekScheduledHoursAndSumOfDaysScheduledHours(scheduleWeekViewLabelData, scheduleDaysViewLabelDataForWeekDays);
 	  }
 	  
@@ -205,7 +197,7 @@ public class ScheduleRoleBasedTest extends TestBase{
 		  	
 	  }
 	  
-	  public List<HashMap<String, Float>> getDaysDataofCurrentWeek()
+	  public synchronized List<HashMap<String, Float>> getDaysDataofCurrentWeek()
 	  {
 		  List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = new ArrayList<HashMap<String, Float>>();
 		  try {
@@ -218,7 +210,7 @@ public class ScheduleRoleBasedTest extends TestBase{
 		  return scheduleDaysViewLabelDataForWeekDays;
 	  }
 	    
-	   public void comparingWeekScheduledHoursAndSumOfDaysScheduledHours(HashMap<String, Float> scheduleWeekViewLabelData, List<HashMap<String, Float>> scheduleDaysViewLabelDataForWeekDays) {
+	   public synchronized void comparingWeekScheduledHoursAndSumOfDaysScheduledHours(HashMap<String, Float> scheduleWeekViewLabelData, List<HashMap<String, Float>> scheduleDaysViewLabelDataForWeekDays) {
 		   // Variables for Day View Data
 		   Float scheduleDaysScheduledHoursTotal = (float) 0;
 		   Float scheduleDaysBudgetedHoursTotal = (float) 0;

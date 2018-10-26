@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -68,7 +69,6 @@ public class BasePage {
         WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(),30);
         try {
             wait.until(ExpectedConditions.visibilityOf(element));
-            SimpleUtils.pass("Element is present");
         }
         catch (NoSuchElementException e)
         {
@@ -137,6 +137,13 @@ public class BasePage {
             }
         });
         return elementPresent;
+    }
+    
+    public static String displayCurrentURL()
+    {
+        JavascriptExecutor executor = (JavascriptExecutor) getDriver();
+        return (String) executor.executeScript("return document.location.href");
+      
     }
    
 }

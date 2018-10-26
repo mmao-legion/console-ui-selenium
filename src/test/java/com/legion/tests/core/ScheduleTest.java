@@ -284,7 +284,7 @@ public class ScheduleTest extends TestBase{
 		@Owner(owner = "Gunjan")
 	    @Enterprise(name = "Coffee2_Enterprise")
 		@TestName(description = "LEG-4977: Republish Button is missing for finalized week")
-	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    @Test(dataProvider = "legionTeamCredentialsByEnterpriseP", dataProviderClass=CredentialDataProviderSource.class)
 	    public void shouldRepublishButtonDisplyedForFinalizedWeek(String username, String password, String browser, String location)
 				throws Exception
 	    {
@@ -394,7 +394,7 @@ public class ScheduleTest extends TestBase{
 		@Owner(owner = "Gunjan")
 	    @Enterprise(name = "Coffee2_Enterprise")
 		@TestName(description = "LEG-5148:Budgeted Hrs and  Guidance Hrs  are different for the week ( Oct 07 - Oct 13) in LegionTech env")
-		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+		@Test(dataProvider = "legionTeamCredentialsByEnterpriseP", dataProviderClass=CredentialDataProviderSource.class)
 		public void budgetAndGuidanceHourNotEqual(String username, String password, String browser, String location)
 		          throws Exception
 		{
