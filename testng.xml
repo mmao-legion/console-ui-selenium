@@ -12,11 +12,11 @@
   
   <test name="Schedule Test">      
     <classes>
-       <class name="com.legion.tests.core.ScheduleTest">
+       <class name="com.legion.tests.core.ScheduleRoleBasedTest">
       	<methods>
             
-             <include name="hoursAndWagesCalculationOnSchedulePage"/>
-             <include name="reviewPastGenerateCurrentAndFutureWeekSchedule"/> 
+             <include name="scheduleTestAsStoreManager"/>
+
             
         </methods>
       </class>
@@ -25,30 +25,7 @@
   
  
   
-  <test name="Navigation Flow">      
-    <classes>
-       <class name="com.legion.tests.core.NavigationTest">
-      	<methods>
-           <include name="legionConsoleNavigationFlow"/>
-           <include name="DataNotLoadingForCarmelClubLocation"/>
-        </methods>
-      </class>
-    </classes>
-  </test> <!-- Test -->
-  
-  
-  <test name="Analytics Test">      
-    <classes>
-       <class name="com.legion.tests.core.AnalyticsTest">
-      	<methods>
-           <include name="gotoAnalyticsPageTest"/>
-        </methods>
-      </class>
-    </classes>
-  </test> <!-- Test -->
-  
-  
-  
+
    
 </suite> <!-- Suite -->
 

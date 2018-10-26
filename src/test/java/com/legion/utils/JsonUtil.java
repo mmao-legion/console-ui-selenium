@@ -66,21 +66,21 @@ public class JsonUtil {
      * Added by Naval
      */
     
-    public static HashMap< String,ArrayList<String>> getCredentialsFromJsonFile(String pathname) {
-        HashMap< String,ArrayList<String>> parameterList = null;
+    public static HashMap< String,Object[][]> getCredentialsFromJsonFile(String pathname) {
+        HashMap< String,Object[][]> parameterList = new HashMap< String,Object[][]>();
 
         ObjectMapper mapper = new ObjectMapper();
 
         try {
             parameterList = mapper.readValue(new File(pathname),
-                    new TypeReference<HashMap< String,ArrayList<String>>>() {
+                    new TypeReference<HashMap< String,Object[][]>>() {
                     });
 
         } catch (JsonGenerationException e) {
-            System.err.println("The json configuration file is not valid. Please verify the file.");
+            System.err.println("The json configuration file is not valid. Please verify the file."+pathname);
 
         } catch (JsonMappingException  e) {
-            System.err.println("The json configuration file is not valid. Please verify the file.");
+            System.err.println("The json configuration file is not valid. Please verify the file."+pathname);
 
         } catch (IOException e) {
             System.err.println("No configuration file available.");
