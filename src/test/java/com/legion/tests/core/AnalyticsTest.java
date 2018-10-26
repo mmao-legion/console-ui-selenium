@@ -25,9 +25,6 @@ import com.legion.utils.MyThreadLocal;
 
 public class AnalyticsTest extends TestBase{
     	
-	 private static HashMap< String,ArrayList<String>> userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/legionUsers.json");	
-	 private static HashMap<String, String> legionUsersCredentialsMethodsMapping = JsonUtil.getPropertiesFromJsonFile("src/test/resources/legionUsersCredentialsMethodsMapping.json");	
-
 	 @Override
 	 @BeforeMethod()
 	 public void firstTest(Method testMethod, Object[] params) throws Exception{

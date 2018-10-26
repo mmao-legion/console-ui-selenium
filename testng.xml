@@ -23,8 +23,8 @@
     <classes>
        <class name="com.legion.tests.core.ScheduleRoleBasedTest">
       	<methods>
-             <include name="scheduleTestAsTeamMember"/> 
-            <!--  <include name="scheduleTestAsTeamLead"/>   
+              <include name="scheduleTestAsTeamMember"/> 
+             <!-- <include name="scheduleTestAsTeamLead"/>   
              <include name="scheduleTestAsStoreManager"/>
              <include name="scheduleTestAsTeam"/> -->
         </methods>
@@ -43,7 +43,7 @@
     </classes>
   </test> -->
   
-  <test name="Schedule Overview Test">      
+  <!-- <test name="Schedule Overview Test">      
     <classes>
        <class name="com.legion.tests.core.ScheduleOverviewTest">
       	<methods>
@@ -54,7 +54,7 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> Test
   
   <test name="Schedule Test">      
     <classes>
@@ -72,7 +72,7 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> Test
   
   <test name="Staffing Guidance test">      
     <classes>
@@ -101,7 +101,7 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> Test
   
   <test name="Navigation Flow">      
     <classes>
@@ -112,7 +112,7 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> Test
   
   
   <test name="Analytics Test">      
@@ -123,7 +123,7 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> Test
   
    <test name="StoreManager Schedule Navigation Test">      
     <classes>
@@ -142,7 +142,7 @@
         </methods>
       </class>
     </classes>
-  </test> <!-- Test -->
+  </test> --> <!-- Test -->
   
    
 </suite> <!-- Suite -->

@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Yanming
@@ -39,7 +40,7 @@ public class SimpleUtils {
 
     static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
 	
-    private static HashMap< String,ArrayList<String>> userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/legionUsers.json");	
+    private static HashMap< String,Object[][]> userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/legionUsers.json");	
 
 
     public static DesiredCapabilities initCapabilities(String browser, String version, String os) {
@@ -219,7 +220,7 @@ public class SimpleUtils {
     }
     
     
-    public static ArrayList<String> getUserCredentialsAndLocation(String userCredentialsKey)
+    /*public static ArrayList<String> getUserCredentialsAndLocation(String userCredentialsKey)
     {
        ArrayList<String> genericData = new ArrayList<String>();
        ArrayList<String> workRole = userCredentials.get(userCredentialsKey);
@@ -227,12 +228,12 @@ public class SimpleUtils {
        genericData.add(workRole.get(1));
        genericData.add(workRole.get(2));
        return genericData;
-    }
+    }*/
     
-    public static HashMap<String, ArrayList<String>> getEnvironmentBasedUserCredentialsFromJson(String environmentName)
+    public static HashMap<String, Object[][]> getEnvironmentBasedUserCredentialsFromJson(String fileName)
     {
 
-    	return JsonUtil.getCredentialsFromJsonFile("src/test/resources/"+environmentName);
+    	return JsonUtil.getCredentialsFromJsonFile("src/test/resources/"+fileName);
 
     }
     
@@ -259,5 +260,12 @@ public class SimpleUtils {
 		}
 		return enterpriseName;
 	}
+	
+	
+	public static void sortHashMapbykey(HashMap<String, Object[][]> hashMap) 
+    { 
+        TreeMap<String, Object[][]> sorted = new TreeMap<>(); 
+        sorted.putAll(hashMap);        
+    } 
 	    
 }

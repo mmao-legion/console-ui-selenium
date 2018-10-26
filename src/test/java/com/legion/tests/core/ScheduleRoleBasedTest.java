@@ -102,8 +102,8 @@ public class ScheduleRoleBasedTest extends TestBase{
 	  @Automated(automated ="Automated")
 	  @Owner(owner = "Naval")
 	  @TestName(description = "Login as Team Member, navigate & verify Schedule page")
-	  @Enterprise(name = "Coffee_Enterprise")
-	  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	  @Enterprise(name = "Coffee2_Enterprise")
+	  @Test(dataProvider = "legionTeamCredentialsByEnterpriseP", dataProviderClass=CredentialDataProviderSource.class)
 	  public void scheduleTestAsTeamMember(String browser, String username,  String  password, String location)
 	  {
 		  System.out.println("scheduleTestAsTeamMember called ");
@@ -122,7 +122,7 @@ public class ScheduleRoleBasedTest extends TestBase{
 	  @Owner(owner = "Naval")
 	  @Enterprise(name = "Coffee2_Enterprise")
 	  @TestName(description = "Login as Team Lead, navigate & verify Schedule page")
-	  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	  @Test(dataProvider = "legionTeamCredentialsByEnterpriseP", dataProviderClass=CredentialDataProviderSource.class)
 	  public void scheduleTestAsTeamLead(String browser, String username,  String  password, String location)
 	  {
 		  System.out.println("scheduleTestAsTeamLead called ");
@@ -161,7 +161,7 @@ public class ScheduleRoleBasedTest extends TestBase{
 	  @TestName(description = "Login to Legion with roles, navigate & verify Schedule page")
 	  @Enterprise(name = "Coffee2_Enterprise")
 	  @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	  public void scheduleTestAsTeam(String browser, String username,  String  password, String location)
+	  public void scheduleTest(String browser, String username,  String  password, String location)
 	  {
 		  System.out.println("scheduleTestAsTeam called ");
 		  System.out.println("browser: "+browser + "username: "+username +"password: "+password +"location: "+location);
