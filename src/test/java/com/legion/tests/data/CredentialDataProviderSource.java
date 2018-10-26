@@ -16,19 +16,7 @@ import static com.legion.utils.MyThreadLocal.*;
 
  public class CredentialDataProviderSource {
     private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-     @DataProvider(name = "legionTeamCredentials", parallel = true)
-    public static Object[][] credentialsByRole (Method testMethod) {
-        if (testMethod.getName().contains("InternalAdmin")) {
-            return new Object[][] { {"Chrome", "admin1.a", "admin1.a" }, {"Chrome", "admin2.a", "admin2.a" }};
-        }
-        else if (testMethod.getName().contains("NoneStoreManager")) {
-            return new Object[][] { {"Chrome", "Paris.P", "Paris.P" }, {"Chrome", "Dario.D", "Dario.D" }};
-        }
-        else {
-            return JsonUtil.getArraysFromJsonFile("src/test/resources/UsersCredentials.json");
-         }
-    }
-     
+
      @DataProvider(name = "legionTeamCredentialsByEnterprise", parallel = false)
     public static Object[][] credentialsByEnterprise (Method testMethod) {
         String fileName = "UsersCredentials.json";
@@ -47,7 +35,6 @@ import static com.legion.utils.MyThreadLocal.*;
         }catch(NullPointerException e){
            return new Object[0][];
         }
-        System.out.println("File name is "+fileName);
         return credentials;
     }
      
