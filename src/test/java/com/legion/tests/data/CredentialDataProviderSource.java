@@ -17,7 +17,7 @@ import static com.legion.utils.MyThreadLocal.*;
  public class CredentialDataProviderSource {
     private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
-     @DataProvider(name = "legionTeamCredentialsByEnterprise", parallel = false)
+    @DataProvider(name = "legionTeamCredentialsByEnterprise", parallel = false)
     public static Object[][] credentialsByEnterprise (Method testMethod) {
         String fileName = "UsersCredentials.json";
         Object[][] credentials = null;
