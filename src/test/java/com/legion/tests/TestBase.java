@@ -176,7 +176,7 @@ public abstract class TestBase {
         url = SimpleUtils.getURL();
         // Initialize browser
         if (url == null) {
-        	if (getDriverType().equals(propertyMap.get("INTERNET_EXPLORER"))) {
+        	if (getDriverType().equalsIgnoreCase(propertyMap.get("INTERNET_EXPLORER"))) {
                 InternetExplorerOptions options = new InternetExplorerOptions()
                         .requireWindowFocus()
                         .ignoreZoomSettings()
@@ -186,7 +186,7 @@ public abstract class TestBase {
                 setDriver(new InternetExplorerDriver(options));
                 
             }
-            if (getDriverType().equals(propertyMap.get("CHROME"))) {
+            if (getDriverType().equalsIgnoreCase(propertyMap.get("CHROME"))) {
             	System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
             	ChromeOptions options = new ChromeOptions();
         		options.addArguments("disable-infobars");
@@ -213,8 +213,9 @@ public abstract class TestBase {
 //                    e.printStackTrace();
 //                }
             }
-            if (getDriverType().equals(propertyMap.get("FIREFOX"))) {
-                FirefoxProfile profile = new FirefoxProfile();
+            if (getDriverType().equalsIgnoreCase(propertyMap.get("FIREFOX"))) {
+            	System.setProperty("webdriver.gecko.driver",propertyMap.get("FIREFOX_DRIVER_PATH"));
+            	FirefoxProfile profile = new FirefoxProfile();
                 profile.setAcceptUntrustedCertificates(true);
                 FirefoxOptions options = new FirefoxOptions();
                 options.setProfile(profile);
@@ -291,7 +292,6 @@ public abstract class TestBase {
    
     public static void loadURL() {
         try {
-        	getDriver().manage().window().maximize();
         	getDriver().get(getURL() + "legion/?enterprise=" + getEnterprise() + " ");
         } catch (TimeoutException te) {
             try {
@@ -302,18 +302,10 @@ public abstract class TestBase {
         }
     }
 
-    
-    public static String displayCurrentURL()
-    {
-        JavascriptExecutor executor = (JavascriptExecutor) getDriver();
-        return (String) executor.executeScript("return document.location.href");
-      
-    }
-
     /*
      * Login to Legion With Credential and assert on failure
      */
-    public void loginToLegionAndVerifyIsLoginDone(String username, String Password, String location) throws Exception
+    public synchronized void loginToLegionAndVerifyIsLoginDone(String username, String Password, String location) throws Exception
     {
     	LoginPage loginPage = pageFactory.createConsoleLoginPage();
     	loginPage.loginToLegionWithCredential(username, Password);

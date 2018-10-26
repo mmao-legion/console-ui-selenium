@@ -6,6 +6,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.legion.pages.BasePage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
+import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.SimpleUtils;
 
@@ -17,6 +18,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import static com.legion.utils.MyThreadLocal.*;
 
 import java.util.HashMap;
@@ -95,9 +97,9 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     {
     	if(isLoginDone){
             getActiveConsoleName(dashboardConsoleName);
-    	    SimpleUtils.pass("Login to Legion Application Successfully with selected location: '"+selectedLocation+"'.");
+    	    SimpleUtils.pass("Login to Legion Application "+displayCurrentURL()+ " Successfully with selected location: '"+selectedLocation+"'.");
     	}else{
-    		SimpleUtils.fail("Not bale to Login to Legion Application Successfully!",true);
+    		SimpleUtils.fail("Not able to Login to Legion Application Successfully!",true);
     	}
     	
     }
