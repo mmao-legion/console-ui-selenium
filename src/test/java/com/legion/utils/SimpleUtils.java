@@ -205,31 +205,14 @@ public class SimpleUtils {
     	ExtentTestManager.getTest().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
                 + "</div>");
     }
-	     
-    public static Object[][] getUsersDataCredential(){
-    	Object[][] userDetails = JsonUtil.getArraysFromJsonFile("src/test/resources/UsersCredentials.json");
-    	String userNameFromJson= null;
-    	String userPwdFromJson= null;
-    	String location= null;
-    	for (Object[] user : userDetails) {
-			userNameFromJson = (String) user[0];
-			userPwdFromJson = (String) user[1];
-			location = (String) user[2];
-    	}
-    	return userDetails;
+    
+    public static void report(String message) {
+    	
+    	ExtentTestManager.getTest().log(Status.INFO,"<div class=\"row\" style=\"background-color:#0000FF; color:white; padding: 7px 5px;\">" + message
+                + "</div>");
     }
-    
-    
-    /*public static ArrayList<String> getUserCredentialsAndLocation(String userCredentialsKey)
-    {
-       ArrayList<String> genericData = new ArrayList<String>();
-       ArrayList<String> workRole = userCredentials.get(userCredentialsKey);
-       genericData.add(workRole.get(0));
-       genericData.add(workRole.get(1));
-       genericData.add(workRole.get(2));
-       return genericData;
-    }*/
-    
+	     
+  
     public static HashMap<String, Object[][]> getEnvironmentBasedUserCredentialsFromJson(String fileName)
     {
 
