@@ -97,8 +97,7 @@ public abstract class TestBase {
 
     protected PageFactory pageFactory = null;
 
-    Date date=new Date();
-    SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
+    
     //added by Nishant
     public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     private static Object[][] legionUsersCredentials =  JsonUtil.getArraysFromJsonFile("src/test/resources/UsersCredentials.json");
@@ -117,7 +116,9 @@ public abstract class TestBase {
     
     @BeforeMethod(alwaysRun = true)
     protected void initTestFramework(Method method) throws AWTException, IOException {
-        String testName = ExtentTestManager.getTestName(method);
+    	Date date=new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
+    	String testName = ExtentTestManager.getTestName(method);
         String ownerName = ExtentTestManager.getOwnerName(method);
         String automatedName = ExtentTestManager.getAutomatedName(method);
         String enterpriseName =  SimpleUtils.getEnterprise(method);

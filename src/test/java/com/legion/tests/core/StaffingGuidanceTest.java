@@ -82,10 +82,10 @@ public class StaffingGuidanceTest extends TestBase{
         	staffingGuidanceDayViewTeamMembersTotalCount = staffingGuidanceDayViewTeamMembersTotalCount + itemsCount;
         	staffingGuidanceDayViewTeamMembersCountAsString = staffingGuidanceDayViewTeamMembersCountAsString + "|" + itemsCount;
         }
-        ExtentTestManager.extentTest.get().log(Status.INFO,"Staffing Guidance for Day View");
-        ExtentTestManager.extentTest.get().log(Status.INFO,dayViewTimeDurationAsString);
-        ExtentTestManager.extentTest.get().log(Status.INFO,staffingGuidanceDayViewItemsCountAsString);
-        ExtentTestManager.extentTest.get().log(Status.INFO,staffingGuidanceDayViewTeamMembersCountAsString);
+        ExtentTestManager.getTest().log(Status.INFO,"Staffing Guidance for Day View");
+        ExtentTestManager.getTest().log(Status.INFO,dayViewTimeDurationAsString);
+        ExtentTestManager.getTest().log(Status.INFO,staffingGuidanceDayViewItemsCountAsString);
+        ExtentTestManager.getTest().log(Status.INFO,staffingGuidanceDayViewTeamMembersCountAsString);
         SimpleUtils.assertOnFail( "Staffing Guidance Day View items Count is Zero!", (staffingGuidanceDayViewItemsTotalCount != 0),true);
         SimpleUtils.assertOnFail( "Staffing Guidance Day View Team Memners Count is Zero!", (staffingGuidanceDayViewTeamMembersTotalCount != 0),true);
         
@@ -108,9 +108,9 @@ public class StaffingGuidanceTest extends TestBase{
         	staffingGuidanceWeekViewHoursTotalCount = staffingGuidanceWeekViewHoursTotalCount + staffingGuidanceWeekViewDayHours;
         	staffingGuidanceWeekViewDaysHoursAsString = staffingGuidanceWeekViewDaysHoursAsString + "|" + staffingGuidanceWeekViewDayHours;
         }
-        ExtentTestManager.extentTest.get().log(Status.INFO,"Staffing Guidance for Week View");
-        ExtentTestManager.extentTest.get().log(Status.INFO,weekViewDurationDataAsString);
-        ExtentTestManager.extentTest.get().log(Status.INFO,staffingGuidanceWeekViewDaysHoursAsString);
+        ExtentTestManager.getTest().log(Status.INFO,"Staffing Guidance for Week View");
+        ExtentTestManager.getTest().log(Status.INFO,weekViewDurationDataAsString);
+        ExtentTestManager.getTest().log(Status.INFO,staffingGuidanceWeekViewDaysHoursAsString);
         SimpleUtils.assertOnFail( "Staffing Guidance Week View Hours Count is Zero!", (staffingGuidanceWeekViewHoursTotalCount != 0),true);
         staffingGuidancePage.clickOnStaffingGuidanceAnalyzeButton();
         List<HashMap<String, String>> analyzePopupStaffingGuidanceData = staffingGuidancePage.getAnalyzePopupStaffingGuidanceAndLatestVersionData();
