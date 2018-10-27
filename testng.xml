@@ -37,8 +37,6 @@
        <class name="com.legion.tests.core.StaffingGuidanceTest">
       	<methods>
            <include name="staffingGuidanceDataAsStoreManagerTest"/>
-           <include name="weeklyGuidanceHoursShouldMatchTheSumOfEachDay"/>
-          
         </methods>
       </class>
     </classes>
@@ -72,7 +70,8 @@
     <classes>
        <class name="com.legion.tests.core.NavigationTest">
       	<methods>
-           <include name="legionConsoleNavigationFlow"/>
+           <include name="legionConsoleNavigationFlowStoreManager"/>
+           <include name="legionConsoleNavigationFlowInternalAdmin"/>
         </methods>
       </class>
     </classes>
