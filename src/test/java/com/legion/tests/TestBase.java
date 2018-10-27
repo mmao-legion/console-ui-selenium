@@ -99,8 +99,7 @@ public abstract class TestBase {
 
     
     //added by Nishant
-    public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-    private static Object[][] legionUsersCredentials =  JsonUtil.getArraysFromJsonFile("src/test/resources/UsersCredentials.json");
+    public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json"); 
     private static ExtentReports extent = ExtentReportManager.getInstance();
 //    public abstract void firstTest(Method testMethod, String enterprise) throws Exception;
        
