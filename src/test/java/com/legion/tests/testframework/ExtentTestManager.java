@@ -6,7 +6,6 @@ import java.util.List;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.legion.tests.annotations.Automated;
-import com.legion.tests.annotations.FileName;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 
@@ -76,18 +75,7 @@ public class ExtentTestManager {
         return automatedName;
     }
     
-    public synchronized static String getFileName(Method testMethod) {
-		
-        String fileName = "";
-        // check if there is a Test annotation and get the test name
-//        Method testCaseMethod = result.getMethod().getConstructorOrMethod().getMethod();
-        FileName file = testMethod.getAnnotation(FileName.class);
-        if (file != null && file.fileName().length() > 0) {
-        	fileName = file.fileName();
-        }
-       
-        return fileName;
-    }
+   
 
      
 }

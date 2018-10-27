@@ -79,7 +79,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import com.legion.tests.annotations.Enterprise;
-import com.legion.tests.annotations.FileName;
+
 //import org.apache.log4j.Logger;
 import com.legion.tests.annotations.HasDependencies;
 
@@ -109,31 +109,11 @@ public abstract class TestBase {
 
     private ThreadLocal<WebDriver> webDriver = new ThreadLocal<WebDriver>();
     public static ExtentTest extentTest;
-   
-  //To do Browser and legionTeamCredentials dataProvider should be merged
-    
-    @DataProvider(name = "browsers", parallel = true)
-    public synchronized static Object[][] browserDataProvider(Method testMethod) {
-        return JsonUtil.getArraysFromJsonFile("src/test/resources/browsersCfg.json");
-    }
-    
-    
-    @DataProvider(name = "usersCredentials", parallel = true)
-    public synchronized static Object[][] usersDataProvider(Method testMethod) {
-        return JsonUtil.getArraysFromJsonFile("src/test/resources/legionUsersCredentials.json");
-    }
-
-    @DataProvider(name = "usersDataCredential", parallel = true)
-    public synchronized static Object[][] usersDataCredentialProvider(Method testMethod) {
-    	return SimpleUtils.getUsersDataCredential();
-    }
     
     @BeforeClass
     protected void init () {
         ScreenshotManager.createScreenshotDirIfNotExist();
     }
-    
-
     
     @BeforeMethod(alwaysRun = true)
     protected void initTestFramework(Method method) throws AWTException, IOException {
