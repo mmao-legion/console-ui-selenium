@@ -16,7 +16,6 @@ import com.legion.pages.LoginPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
-import com.legion.tests.annotations.FileName;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
@@ -36,7 +35,7 @@ public class AnalyticsTest extends TestBase{
 	
 	@Automated(automated ="Automated")
 	@Owner(owner = "Naval")
-	@Enterprise(name = "LegionTech_Enterprise")
+	@Enterprise(name = "Coffee2_Enterprise")
 	@TestName(description = "Verify Analytics flow")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void gotoAnalyticsPageTest(String username, String password, String browser, String location) throws Exception {
@@ -44,8 +43,5 @@ public class AnalyticsTest extends TestBase{
 	   analyticsPage.gotoAnalyticsPage();	
 		
    }
-	
-	
-	
 	
 }

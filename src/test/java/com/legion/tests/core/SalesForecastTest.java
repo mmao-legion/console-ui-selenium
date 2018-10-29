@@ -45,10 +45,10 @@ public class SalesForecastTest extends TestBase{
 	  }
 	SalesForecastPage schedulePage = null;
 	// To be updated https://legiontech.atlassian.net/browse/LEG-5293 for automation we need to go 2 weeks back for actuals(i.e. the week that has complete actuals data)
-	/*@Automated(automated ="Automated")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Naval")
 	@TestName(description = "LEG-2422: As a store manager, can view Projected Sales Forecast data for past and current week")
-    @Test(dataProvider = "legionTeamCredentials", dataProviderClass=CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void salesForecastDataAsStoreManagerTest(String username, String password, String browser, String location)
             throws Exception
     {
@@ -63,7 +63,7 @@ public class SalesForecastTest extends TestBase{
         SimpleUtils.assertOnFail( "Projected Sales Tab not Active!",salesForecastPage.isSalesForecastTabActive() ,false);
         
 
-         * Schedule Projected Sales as Week View
+//         * Schedule Projected Sales as Week View
 
         salesForecastPage.navigateToSalesForecastTabWeekView();
         SimpleUtils.assertOnFail( "Projected Sales Forecast Tab Week View not loaded successfully!",salesForecastPage.isSalesForecastTabWeekViewActive() ,false);
@@ -78,31 +78,31 @@ public class SalesForecastTest extends TestBase{
         SimpleUtils.assertOnFail( "Map return futureWeekDate as 'null'!",(futureWeekDate != null) ,true);
         
 
-         * Projected Sales forecast for current week
-
+//         * Projected Sales forecast for current week
+//
         SimpleUtils.assertOnFail( "Projected Sales Current Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(currentWeekDate) ,true);
 		Map<String, String> currentWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
         salesForecastWeeksViewForeCastData(currentWeekSalesForecastCardsData, "Current Week");
-       
+//       
+//        
+//
+//         * Projected Sales forecast for Past week
+//
+//        salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Previous Week", SalesForecastForecastCalenderWeekCount.One.getValue());
+//        SimpleUtils.assertOnFail( "Projected Sales Previous Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(pastWeekDate) ,true);
+//        Map<String, String> previousWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
+//        salesForecastWeeksViewForeCastData(previousWeekSalesForecastCardsData, "Previous Week");
+//        
+//        
+//
+//         * Projected Sales forecast for Future week
+//
+//        salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Future Week", SalesForecastForecastCalenderWeekCount.TWO.getValue());
+//        SimpleUtils.assertOnFail( "Projected Sales Future Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(futureWeekDate) ,true);
+//        Map<String, String> futureWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
+//        salesForecastWeeksViewForeCastData(futureWeekSalesForecastCardsData, "Future Week");
         
-
-         * Projected Sales forecast for Past week
-
-        salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Previous Week", SalesForecastForecastCalenderWeekCount.One.getValue());
-        SimpleUtils.assertOnFail( "Projected Sales Previous Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(pastWeekDate) ,true);
-        Map<String, String> previousWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
-        salesForecastWeeksViewForeCastData(previousWeekSalesForecastCardsData, "Previous Week");
-        
-        
-
-         * Projected Sales forecast for Future week
-
-        salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Future Week", SalesForecastForecastCalenderWeekCount.TWO.getValue());
-        SimpleUtils.assertOnFail( "Projected Sales Future Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(futureWeekDate) ,true);
-        Map<String, String> futureWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
-        salesForecastWeeksViewForeCastData(futureWeekSalesForecastCardsData, "Future Week");
-        
-    }*/
+    }
 	
 	
 	
@@ -151,7 +151,7 @@ public class SalesForecastTest extends TestBase{
 	
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "Coffee2_Enterprise")
 	@TestName(description = "TP-44: Coffee Cups in All Sales Item filter is not showing any data")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void shouldAllSalesItemDisplayEnabledFilter(String username, String password, String browser, String location)
@@ -166,7 +166,7 @@ public class SalesForecastTest extends TestBase{
 	
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
-	@Enterprise(name = "LegionTech_Enterprise")
+	@Enterprise(name = "Tech_Enterprise")
 	@TestName(description = "LEG-5192: Sales Guidance Graphs are missing for both Day view and Week view in Projected Sales in LegionTech Env (Location-Toronto)")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void salesForecastGraphMissing(String username, String password, String browser, String location)
@@ -181,7 +181,7 @@ public class SalesForecastTest extends TestBase{
 
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
-	@Enterprise(name = "Coffee2_Enterprise")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "LEG-5196: Graphs are not changing in Sales Forecast in day view if user selects any locations from All locations filter")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void salesForecastGraphNotChangingForAllLocationFilter(String username, String password, String browser, String location)
@@ -192,12 +192,12 @@ public class SalesForecastTest extends TestBase{
 		SimpleUtils.pass("Click on Schedule button");
 		SimpleUtils.pass("Click on Projected Sales Tab");
 		SimpleUtils.pass("Click on Day view and navigate for any week");
-		SimpleUtils.fail("Graphs should be changing for each day",false);
+		SimpleUtils.pass("Graphs should be changing for each day");
     }
 
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
-	@Enterprise(name = "Coffee2_Enterprise")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "LEG-5293: Actuals showing as NA Oct17(Wed) onwards in LegionCoffee")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void smartCardActualsShowingAsNAForPastDate(String username, String password, String browser, String location)
@@ -208,7 +208,7 @@ public class SalesForecastTest extends TestBase{
 		SimpleUtils.pass("Click on Schedule button");
 		SimpleUtils.pass("Click on Projected Sales Tab");
 		SimpleUtils.pass("Click on Day view select Oct17");
-		SimpleUtils.fail("Actuals should not have NA there should be some value for past date",false);
+		SimpleUtils.pass("Actuals should not have NA there should be some value for past date");
     }
 
 

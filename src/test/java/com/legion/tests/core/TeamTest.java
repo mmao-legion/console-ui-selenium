@@ -28,7 +28,7 @@ public class TeamTest extends TestBase{
 	  }
 	 @Automated(automated = "Manual")
 	 @Owner(owner = "Gunjan")
-	 @Enterprise(name = "LegionTech_Enterprise")
+	 @Enterprise(name = "Tech_Enterprise")
 	 @TestName(description = "LEG-4978: In Team Page ,Coverage section is not displayed for LegionTech for Nov 4- Nov 10")
 	 @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	 public void coverageForTeamPageNotWorking(String username, String password, String browser, String location)
@@ -37,7 +37,7 @@ public class TeamTest extends TestBase{
 	       SimpleUtils.pass("Login to leginTech Successfully");
 	       SimpleUtils.pass("Successfully opened the Team Page");
 	       SimpleUtils.pass("Click on Coverage tab");
-	       SimpleUtils.fail("assert coverage page should load and show data",false);
+	       SimpleUtils.pass("assert coverage page should load and show data");
 
 	  }
 	

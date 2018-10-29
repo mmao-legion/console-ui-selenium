@@ -1,9 +1,9 @@
 {
-  "CHROME_DRIVER_PATH": "/home/naval/Documents/chromedriver",
+  "CHROME_DRIVER_PATH": "C:\\Users\\nishant08\\Downloads\\chromedriver\\chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "D:\\geckodriver.exe",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://enterprise-stage.legion.work/",
-  "Screenshot_Path": "D:\\NishantZorang\\console-ui-selenium",
+  "Screenshot_Path": "D:\\DevelopZorang29Oct\\console-ui-selenium",
   "ENTERPRISE" : "LegionCoffee2",
   "Coffee_Enterprise" : "LegionCoffee",
   "LegionTech_Enterprise" : "LegionTech",

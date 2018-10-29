@@ -79,7 +79,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import com.legion.tests.annotations.Enterprise;
-import com.legion.tests.annotations.FileName;
+
 //import org.apache.log4j.Logger;
 import com.legion.tests.annotations.HasDependencies;
 
@@ -96,53 +96,22 @@ import static com.legion.utils.MyThreadLocal.*;
 public abstract class TestBase {
 
     protected PageFactory pageFactory = null;
-
-    Date date=new Date();
-    SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
-    //added by Nishant
-    public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-    private static Object[][] legionUsersCredentials =  JsonUtil.getArraysFromJsonFile("src/test/resources/UsersCredentials.json");
+    public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json"); 
     private static ExtentReports extent = ExtentReportManager.getInstance();
-//    public abstract void firstTest(Method testMethod, String enterprise) throws Exception;
-       
-//    protected static Logger log;
 
-    private ThreadLocal<WebDriver> webDriver = new ThreadLocal<WebDriver>();
-    public static ExtentTest extentTest;
-   
-  //To do Browser and legionTeamCredentials dataProvider should be merged
-    
-    @DataProvider(name = "browsers", parallel = true)
-    public synchronized static Object[][] browserDataProvider(Method testMethod) {
-        return JsonUtil.getArraysFromJsonFile("src/test/resources/browsersCfg.json");
-    }
-    
-    
-    @DataProvider(name = "usersCredentials", parallel = true)
-    public synchronized static Object[][] usersDataProvider(Method testMethod) {
-        return JsonUtil.getArraysFromJsonFile("src/test/resources/legionUsersCredentials.json");
-    }
-
-    @DataProvider(name = "usersDataCredential", parallel = true)
-    public synchronized static Object[][] usersDataCredentialProvider(Method testMethod) {
-    	return SimpleUtils.getUsersDataCredential();
-    }
-    
     @BeforeClass
     protected void init () {
-        System.out.println("YYYYY");
         ScreenshotManager.createScreenshotDirIfNotExist();
     }
     
-
-    
     @BeforeMethod(alwaysRun = true)
     protected void initTestFramework(Method method) throws AWTException, IOException {
-        String testName = ExtentTestManager.getTestName(method);
+    	Date date=new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
+    	String testName = ExtentTestManager.getTestName(method);
         String ownerName = ExtentTestManager.getOwnerName(method);
         String automatedName = ExtentTestManager.getAutomatedName(method);
         String enterpriseName =  SimpleUtils.getEnterprise(method);
-        extent.setSystemInfo("Enterprise", enterpriseName);
         List<String> categories =  new ArrayList<String>();
         categories.add(getClass().getSimpleName());
         categories.add(enterpriseName);
@@ -178,7 +147,7 @@ public abstract class TestBase {
         url = SimpleUtils.getURL();
         // Initialize browser
         if (url == null) {
-        	if (getDriverType().equals(propertyMap.get("INTERNET_EXPLORER"))) {
+        	if (getDriverType().equalsIgnoreCase(propertyMap.get("INTERNET_EXPLORER"))) {
                 InternetExplorerOptions options = new InternetExplorerOptions()
                         .requireWindowFocus()
                         .ignoreZoomSettings()
@@ -188,7 +157,7 @@ public abstract class TestBase {
                 setDriver(new InternetExplorerDriver(options));
                 
             }
-            if (getDriverType().equals(propertyMap.get("CHROME"))) {
+            if (getDriverType().equalsIgnoreCase(propertyMap.get("CHROME"))) {
             	System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
             	ChromeOptions options = new ChromeOptions();
         		options.addArguments("disable-infobars");
@@ -209,14 +178,10 @@ public abstract class TestBase {
                 options.setCapability("silent", true);
                 System.setProperty("webdriver.chrome.silentOutput", "true");
                 setDriver(new ChromeDriver(options));
-//                try {
-//                    setDriver(new RemoteWebDriver(new URL("http://192.168.230.127:4444/wd/hub"),capabilities));
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                }
             }
-            if (getDriverType().equals(propertyMap.get("FIREFOX"))) {
-                FirefoxProfile profile = new FirefoxProfile();
+            if (getDriverType().equalsIgnoreCase(propertyMap.get("FIREFOX"))) {
+            	System.setProperty("webdriver.gecko.driver",propertyMap.get("FIREFOX_DRIVER_PATH"));
+            	FirefoxProfile profile = new FirefoxProfile();
                 profile.setAcceptUntrustedCertificates(true);
                 FirefoxOptions options = new FirefoxOptions();
                 options.setProfile(profile);
@@ -242,12 +207,10 @@ public abstract class TestBase {
     private PageFactory createPageFactory() {
         return new ConsoleWebPageFactory();
     }
-	
-	//added by Nishant
-	
+
 	@AfterMethod(alwaysRun = true)
     protected void tearDown(Method method,ITestResult result) throws IOException {
-		
+		ExtentTestManager.getTest().info("tearDown started");
 		if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
             try {
                 getDriver().manage().deleteAllCookies();
@@ -260,8 +223,9 @@ public abstract class TestBase {
 		if (getVerificationMap() != null) {
             getVerificationMap().clear();
         }
-		ExtentTestManager.getTest().info("Inside After Method");
+		ExtentTestManager.getTest().info("tearDown finished");
 		extent.flush();
+
     }
 
 	
@@ -293,7 +257,6 @@ public abstract class TestBase {
    
     public static void loadURL() {
         try {
-        	getDriver().manage().window().maximize();
         	getDriver().get(getURL() + "legion/?enterprise=" + getEnterprise() + " ");
         } catch (TimeoutException te) {
             try {
@@ -304,18 +267,10 @@ public abstract class TestBase {
         }
     }
 
-    
-    public static String displayCurrentURL()
-    {
-        JavascriptExecutor executor = (JavascriptExecutor) getDriver();
-        return (String) executor.executeScript("return document.location.href");
-      
-    }
-
     /*
      * Login to Legion With Credential and assert on failure
      */
-    public void loginToLegionAndVerifyIsLoginDone(String username, String Password, String location) throws Exception
+    public synchronized void loginToLegionAndVerifyIsLoginDone(String username, String Password, String location) throws Exception
     {
     	LoginPage loginPage = pageFactory.createConsoleLoginPage();
     	loginPage.loginToLegionWithCredential(username, Password);

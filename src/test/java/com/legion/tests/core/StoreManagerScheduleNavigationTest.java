@@ -43,7 +43,7 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
 	  }
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Coffee2_Enterprise")
     @TestName(description = "LEG-4249: should open the same day schedule when clicking Schedule tab from Overview")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void dayViewShouldBeSticky (String username, String password, String browser, String location) {
@@ -58,7 +58,7 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
 
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Coffee2_Enterprise")
     @TestName(description = "LEG-4249: should open the week schedule in TM view when clicking Schedule tab from Overview")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void teamViewShouldBeSticky (String username, String password, String browser, String location) {
@@ -72,7 +72,7 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
 
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Coffee2_Enterprise")
     @TestName(description = "LEG-4249: should open the week schedule in TM view when clicking Schedule tab from Overview")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void shouldNaviToNextWeekAndGenerateSchedule (String username, String password, String browser, String location) {
@@ -89,7 +89,7 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Coffee2_Enterprise")
     @TestName(description = "LEG-2424: should open the week schedule in Day/Week view for Past week and verify already generated Schedule")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void shouldBeNoGenerateButtonForPastWeek (String username, String password, String browser, String location) {
@@ -104,7 +104,7 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Coffee2_Enterprise")
     @TestName(description = "LEG-2592: should be able to view and filter Schedule and Group By")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void shouldBeAbleToViewAndFilterSchedule(String username, String password, String browser, String location) {
@@ -120,7 +120,7 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Coffee2_Enterprise")
     @TestName(description = "LEG-2592: verify Group by option is saved at session level.")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void GroupByShouldBeStickyAtSessionLevel(String username, String password, String browser, String location) {
@@ -132,7 +132,7 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Coffee2_Enterprise")
     @TestName(description = "LEG-2592: verify Filter option is persisted locally")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void FilterShouldBeSticky(String username, String password, String browser, String location) {
@@ -146,7 +146,7 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Coffee2_Enterprise")
     @TestName(description = "LEG-4515: should Display Sales/Labor Hr for traffic with Sales Amount set up")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void DisplaySalesPerLaborHr(String username, String password, String browser, String location) {
@@ -161,7 +161,7 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Coffee2_Enterprise")
     @TestName(description = "LEG-2425: should able to manually add admin shift (Failed with Jira Ticket#4922)")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void editShiftManually(String username, String password, String browser, String location) {
@@ -181,7 +181,7 @@ public class StoreManagerScheduleNavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Coffee2_Enterprise")
     @TestName(description = "LEG-3490: Manually added shift should not lead to corruption")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void editShiftManuallyLeadtoCorruption(String username, String password, String browser, String location) {

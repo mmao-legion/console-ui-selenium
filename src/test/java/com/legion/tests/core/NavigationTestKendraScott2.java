@@ -48,7 +48,7 @@ public class NavigationTestKendraScott2 extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Kendrascott2_Enterprise")
     @TestName(description = "LEG-5112:LocationGroup forecast, guidance and dashboard not loading on 10.09 master build for Carmel Club on LegionCoffee2")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void DataNotLoadingForCarmelClubLocation(String username, String password, String browser, String location)

@@ -1,5 +1,7 @@
 package com.legion.tests.core;
 
+import static com.legion.utils.MyThreadLocal.setCurrentTestMethodName;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.AssertJUnit;
@@ -29,6 +31,7 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
+import static com.legion.utils.MyThreadLocal.*;
 
 
 /**
@@ -47,16 +50,38 @@ public class NavigationTest extends TestBase {
 	}
     @Automated(automated = "Automated")
 	@Owner(owner = "Naval")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Coffee2_Enterprise")
     @TestName(description = "Verify all the console navigations for Legion web application at high level")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-    public void legionConsoleNavigationFlow(String username, String password, String browser, String location)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void legionConsoleNavigationFlowStoreManager(String username, String password, String browser, String location)
 
             throws Exception {
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-//        /* Aug 03-The below line is commented by Zorang Team and new line is added as required */
-//        //loginPage.goToDashboardHome(); 
-        loginPage.goToDashboardHome(propertyMap);
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        dashboardPage.verifyDashboardPageLoadedProperly();
+        SchedulePage schedulePage = dashboardPage.goToToday();
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        boolean isTeamPage = teamPage.isTeam();
+        teamPage.verifyTeamPage(isTeamPage);
+        teamPage.goToCoverage();
+        boolean isCoveragePage = teamPage.isCoverage();
+        teamPage.verifyCoveragePage(isCoveragePage);
+        schedulePage.goToSchedulePage();
+        schedulePage.goToProjectedSales();
+        schedulePage.goToStaffingGuidance();
+        schedulePage.goToSchedule();
+        ExtentTestManager.getTest().log(Status.PASS,"Schedule Page - Navigation sales, guidance and schedule finish Successfully!"); 
+    }
+    
+    
+    @Automated(automated = "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee2_Enterprise")
+    @TestName(description = "Verify all the console navigations for Legion web application at high level")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+    public void legionConsoleNavigationFlowInternalAdmin(String username, String password, String browser, String location)
+
+            throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.verifyDashboardPageLoadedProperly();
         SchedulePage schedulePage = dashboardPage.goToToday();
@@ -77,7 +102,7 @@ public class NavigationTest extends TestBase {
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Coffee2_Enterprise")
     @TestName(description = "LEG-5112:LocationGroup forecast, guidance and dashboard not loading on 10.09 master build for Carmel Club on LegionCoffee2")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void DataNotLoadingForCarmelClubLocation(String username, String password, String browser, String location)
