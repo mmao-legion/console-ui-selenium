@@ -84,7 +84,6 @@ public class BasePage {
     	    return true;
     	}
     	catch (NoSuchElementException | TimeoutException te) {
-    		SimpleUtils.fail("isElementLoaded failed due to "+te,true);
     		return false;	
     	}
     	
