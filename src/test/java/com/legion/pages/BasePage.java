@@ -29,10 +29,7 @@ import com.legion.utils.SimpleUtils;
  */
 public class BasePage {
 
-    protected WebDriver driver;
     public static String activeConsoleName;
-//    public static ExtentTest extentTest;
-    
 
     public void click(WebElement element, boolean... shouldWait) {
     	try {
@@ -66,9 +63,9 @@ public class BasePage {
     
     public void checkElementVisibility(WebElement element)
     {
-        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(),30);
+        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(), 30);
         try {
-            wait.until(ExpectedConditions.visibilityOf(element));
+        	wait.until(ExpectedConditions.visibilityOf(element));
         }
         catch (NoSuchElementException e)
         {
@@ -80,13 +77,15 @@ public class BasePage {
    
     public boolean isElementLoaded(WebElement element) throws Exception
     {
-    	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), 30); 
+    	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), 30);
+    	 
     	try {
     	    tempWait.until(ExpectedConditions.visibilityOf(element)); 
     	    return true;
     	}
     	catch (NoSuchElementException | TimeoutException te) {
-    		return false;
+    		SimpleUtils.fail("isElementLoaded failed due to "+te,true);
+    		return false;	
     	}
     	
     }

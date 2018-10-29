@@ -16,10 +16,6 @@ import static com.legion.utils.MyThreadLocal.*;
 
 public class LegionWebDriverEventListener implements WebDriverEventListener {
 	
-	private String elementTextToReport = "";
-    private String elementType = "";
-    private boolean selected, isPopover, isClearable;
-
 	@Override
 	public void beforeAlertAccept(WebDriver driver) {
 		// TODO Auto-generated method stub

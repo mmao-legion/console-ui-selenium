@@ -3,6 +3,7 @@ package com.legion.pages.core;
 import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import com.legion.utils.MyThreadLocal;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -66,18 +67,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	
 	@FindBy(xpath="//span[contains(text(),'Staffing Guidance')]")
 	private WebElement goToStaffingGuidanceTab;
-	
-	@FindBy(css="[ng-click=\"selectDayWeekView($event, 'week')\"]")
-	private WebElement scheduleWeekViewButton;
-	
-	@FindBy(css="[ng-click=\"selectDayWeekView($event, 'day')\"]")
-	private WebElement scheduleDayViewButton;
-	
-	@FindBy(className="mt-18")
-	private List<WebElement> budgetedScheduledLabelsDivElement;
-	
-	@FindBy(className="sch-calendar-day-dimension")
-	private List<WebElement> ScheduleCalendarDayLabels;
+
+//	@FindBy(className="sch-calendar-day-dimension")
+//	private List<WebElement> ScheduleCalendarDayLabels;
 	
 	@FindBy(css="div.sub-navigation-view-link")
 	private List<WebElement> ScheduleSubTabsElement;
@@ -127,11 +119,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@FindBy (css = "#legion-app navigation div:nth-child(4)")
 	private WebElement analyticsConsoleName;
 
-	@FindBy(className = "holiday-text")
-	private WebElement noPublishedSchedule;
-
-
-	String consoleScheduleMenuItemText = "Schedule";
+	final static String consoleScheduleMenuItemText = "Schedule";
 
 	public void clickOnScheduleConsoleMenuItem() {
 		if(consoleNavigationMenuItems.size() != 0)
@@ -288,6 +276,8 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public void clickOnWeekView() throws Exception
 	{
+		WebElement scheduleWeekViewButton = MyThreadLocal.getDriver().
+			findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'week')\"]"));
 		if(isElementLoaded(scheduleWeekViewButton))
 		{
 			if(! scheduleWeekViewButton.getAttribute("class").toString().contains("enabled"))
@@ -305,6 +295,8 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	@Override
 	public void clickOnDayView() throws Exception {
+		WebElement scheduleDayViewButton = MyThreadLocal.getDriver().
+			findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'day')\"]"));
 		if(isElementLoaded(scheduleDayViewButton)) {
 			if(! scheduleDayViewButton.getAttribute("class").toString().contains("enabled")) {
 				click(scheduleDayViewButton);
@@ -326,6 +318,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		String wagesBudgetedCount = "";
 		String wagesScheduledCount = "";
 		HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
+		List<WebElement> budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElements(By.className("mt-18"));
 		if(isElementLoaded(budgetedScheduledLabelsDivElement.get(0)))
 		{
 			for(WebElement budgetedScheduledLabelDiv : budgetedScheduledLabelsDivElement)
@@ -374,6 +367,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public List<HashMap<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception {
 		List<HashMap<String, Float>> ScheduleLabelHoursAndWagesDataForDays = new ArrayList<HashMap<String, Float>>();
+		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("sch-calendar-day-dimension"));
 		if(isScheduleDayViewActive()) {
 			if(ScheduleCalendarDayLabels.size() != 0) {
 				for(WebElement ScheduleCalendarDayLabel: ScheduleCalendarDayLabels)
@@ -422,6 +416,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount)
 	{
 		String currentWeekStartingDay = "NA";
+		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("sch-calendar-day-dimension"));
 		for(int i = 0; i < weekCount; i++)
 		{
 			if(ScheduleCalendarDayLabels.size() != 0)
@@ -528,6 +523,8 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	
 	
 	public Boolean isScheduleWeekViewActive() {
+		WebElement scheduleWeekViewButton = MyThreadLocal.getDriver().
+			findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'week')\"]"));
 		if(scheduleWeekViewButton.getAttribute("class").toString().contains("enabled")) {
 			return true;
 		}
@@ -535,7 +532,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	}
 	
 	
-	public Boolean isScheduleDayViewActive() { 
+	public Boolean isScheduleDayViewActive() {
+		WebElement scheduleDayViewButton = MyThreadLocal.getDriver().
+			findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'day')\"]"));
 		if(scheduleDayViewButton.getAttribute("class").toString().contains("enabled")) {
 			return true;
 		}
@@ -573,6 +572,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	public String getScheduleWeekStartDayMonthDate()
 	{
 		String scheduleWeekStartDuration = "NA";
+		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("sch-calendar-day-dimension"));
 		if(ScheduleCalendarDayLabels.size() != 0)
 		{
 			scheduleWeekStartDuration = ScheduleCalendarDayLabels.get(0).getText().replace("\n", "");
@@ -627,6 +627,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	public String getActiveWeekDayMonthAndDateForEachDay() throws Exception
 	{
 		String activeWeekTimeDuration = "";
+		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("sch-calendar-day-dimension"));
 		if(ScheduleCalendarDayLabels.size() != 0)
 		{
 			for(WebElement ScheduleCalendarDayLabel : ScheduleCalendarDayLabels)
@@ -669,8 +670,10 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	public boolean isCurrentScheduleWeekPublished()
 	{
+		//todo yt 2018.10.28 this looks like a hack
 		String scheduleStatus = "No Published Schedule";
 		try {
+			WebElement noPublishedSchedule = MyThreadLocal.getDriver().findElement(By.className("holiday-text"));
 			if(isElementLoaded(noPublishedSchedule)) {
 				if(noPublishedSchedule.getText().contains(scheduleStatus))
 					return false;

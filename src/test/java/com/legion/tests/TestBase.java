@@ -96,18 +96,9 @@ import static com.legion.utils.MyThreadLocal.*;
 public abstract class TestBase {
 
     protected PageFactory pageFactory = null;
-
-    
-    //added by Nishant
     public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json"); 
     private static ExtentReports extent = ExtentReportManager.getInstance();
-//    public abstract void firstTest(Method testMethod, String enterprise) throws Exception;
-       
-//    protected static Logger log;
 
-    private ThreadLocal<WebDriver> webDriver = new ThreadLocal<WebDriver>();
-    public static ExtentTest extentTest;
-    
     @BeforeClass
     protected void init () {
         ScreenshotManager.createScreenshotDirIfNotExist();
@@ -187,11 +178,6 @@ public abstract class TestBase {
                 options.setCapability("silent", true);
                 System.setProperty("webdriver.chrome.silentOutput", "true");
                 setDriver(new ChromeDriver(options));
-//                try {
-//                    setDriver(new RemoteWebDriver(new URL("http://192.168.230.127:4444/wd/hub"),capabilities));
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                }
             }
             if (getDriverType().equalsIgnoreCase(propertyMap.get("FIREFOX"))) {
             	System.setProperty("webdriver.gecko.driver",propertyMap.get("FIREFOX_DRIVER_PATH"));
@@ -221,12 +207,10 @@ public abstract class TestBase {
     private PageFactory createPageFactory() {
         return new ConsoleWebPageFactory();
     }
-	
-	//added by Nishant
-	
+
 	@AfterMethod(alwaysRun = true)
     protected void tearDown(Method method,ITestResult result) throws IOException {
-		
+		ExtentTestManager.getTest().info("tearDown started");
 		if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
             try {
                 getDriver().manage().deleteAllCookies();
@@ -239,8 +223,9 @@ public abstract class TestBase {
 		if (getVerificationMap() != null) {
             getVerificationMap().clear();
         }
-		ExtentTestManager.getTest().info("Inside After Method");
+		ExtentTestManager.getTest().info("tearDown finished");
 		extent.flush();
+
     }
 
 	
