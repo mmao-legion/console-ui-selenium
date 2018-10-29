@@ -68,8 +68,8 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@FindBy(xpath="//span[contains(text(),'Staffing Guidance')]")
 	private WebElement goToStaffingGuidanceTab;
 
-	@FindBy(className="sch-calendar-day-dimension")
-	private List<WebElement> ScheduleCalendarDayLabels;
+//	@FindBy(className="sch-calendar-day-dimension")
+//	private List<WebElement> ScheduleCalendarDayLabels;
 	
 	@FindBy(css="div.sub-navigation-view-link")
 	private List<WebElement> ScheduleSubTabsElement;
@@ -367,6 +367,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public List<HashMap<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception {
 		List<HashMap<String, Float>> ScheduleLabelHoursAndWagesDataForDays = new ArrayList<HashMap<String, Float>>();
+		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("sch-calendar-day-dimension"));
 		if(isScheduleDayViewActive()) {
 			if(ScheduleCalendarDayLabels.size() != 0) {
 				for(WebElement ScheduleCalendarDayLabel: ScheduleCalendarDayLabels)
@@ -415,6 +416,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount)
 	{
 		String currentWeekStartingDay = "NA";
+		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("sch-calendar-day-dimension"));
 		for(int i = 0; i < weekCount; i++)
 		{
 			if(ScheduleCalendarDayLabels.size() != 0)
@@ -570,6 +572,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	public String getScheduleWeekStartDayMonthDate()
 	{
 		String scheduleWeekStartDuration = "NA";
+		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("sch-calendar-day-dimension"));
 		if(ScheduleCalendarDayLabels.size() != 0)
 		{
 			scheduleWeekStartDuration = ScheduleCalendarDayLabels.get(0).getText().replace("\n", "");
@@ -624,6 +627,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	public String getActiveWeekDayMonthAndDateForEachDay() throws Exception
 	{
 		String activeWeekTimeDuration = "";
+		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("sch-calendar-day-dimension"));
 		if(ScheduleCalendarDayLabels.size() != 0)
 		{
 			for(WebElement ScheduleCalendarDayLabel : ScheduleCalendarDayLabels)

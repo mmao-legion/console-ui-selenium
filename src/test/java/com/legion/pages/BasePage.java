@@ -63,9 +63,9 @@ public class BasePage {
     
     public void checkElementVisibility(WebElement element)
     {
-        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(),30);
+        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(), 30);
         try {
-            wait.until(ExpectedConditions.visibilityOf(element));
+        	wait.until(ExpectedConditions.visibilityOf(element));
         }
         catch (NoSuchElementException e)
         {
@@ -78,14 +78,13 @@ public class BasePage {
     public boolean isElementLoaded(WebElement element) throws Exception
     {
     	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), 30);
+    	 
     	try {
     	    tempWait.until(ExpectedConditions.visibilityOf(element)); 
     	    return true;
     	}
     	catch (NoSuchElementException | TimeoutException te) {
-//            SimpleUtils.fail("isElementLoaded failed due to "+te,true);
-            //TODO yt 2018.10.28 we have 3 tests fail here. Please uncomment this line and fix each tests.
-            return false;
+    		return false;	
     	}
     	
     }

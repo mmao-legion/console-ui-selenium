@@ -1,6 +1,5 @@
 package com.legion.tests.core;
 
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -181,9 +180,6 @@ public class ScheduleRoleBasedTest extends TestBase {
     @Enterprise(name = "Tech_Enterprise")
     @Test(dataProvider = "legionTeamCredentialsByEnterpriseP", dataProviderClass = CredentialDataProviderSource.class)
     public void scheduleTest(String browser, String username, String password, String location) throws Exception {
-        System.out.println("scheduleTestAsTeam called ");
-        System.out.println(
-            "browser: " + browser + "username: " + username + "password: " + password + "location: " + location);
         SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
         SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
 				  schedulePage.isCurrentScheduleWeekPublished(), false);
