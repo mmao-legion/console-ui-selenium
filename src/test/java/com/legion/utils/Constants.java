@@ -5,5 +5,5 @@ public class Constants {
     public static final String DefaultEnterpriseSalesMonday30Slot = "Coffee2_Enterprise";
     public static final String EnterpriseSalesSunday15Slot = "Tech_Enterprise";
     public static final String EnterpriseTrafficMonday30Slot = "Reverted_Enterprise";
-    public static final String EnterpriseTrafficSunday30Slot = "Kendrascott2_Enterprise";
+    public static final String EnterpriseTrafficSunday30Slot = "KendraScott2_Enterprise";
 }
