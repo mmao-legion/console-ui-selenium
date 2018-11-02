@@ -1,24 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="10" name="LegionTest" parallel="methods">
+<suite verbose ="0" thread-count="10" name="LegionTest">
 	<parameter name="environment" value="QA"/>
   	
     <listeners>
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
+ 	
+ 	 <test name="Schedule New UI Test">      
+    <classes>
+       <class name="com.legion.tests.core.ScheduleNewUITest">
+      	<methods>
+             <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/> 
+        </methods>
+      </class>
+    </classes>
+   </test>
    
-   <test name="Role Based Schedule Test">      
+  <!--  <test name="Role Based Schedule Test">      
     <classes>
        <class name="com.legion.tests.core.ScheduleRoleBasedNewUITest">
       	<methods>
              <include name="scheduleTestAsTeamMember"/> 
              <include name="scheduleTestAsTeamLead"/>
              <include name="scheduleTestAsStoreManager"/> 
-             <!--<include name="scheduleTest"/>  -->
+             <include name="scheduleTest"/> 
         </methods>
       </class>
     </classes>
-   </test>
+   </test> -->
  	
 <!--   <test name="Schedule Overview Test">      
     <classes>

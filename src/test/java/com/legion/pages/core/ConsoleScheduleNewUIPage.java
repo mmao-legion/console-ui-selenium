@@ -2,6 +2,7 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static org.testng.Assert.fail;
 
 import com.legion.utils.MyThreadLocal;
 import org.openqa.selenium.By;
@@ -67,10 +68,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(xpath="//div[contains(@class,'sub-navigation-view')]//span[contains(text(),'Schedule')]")
 	private WebElement goToScheduleTab;
 	
-	@FindBy(css="div[ng-click*='analyze'] span.sch-control-button-label")
+	@FindBy(css="lg-button[label=\"Analyze\"]")
 	private WebElement analyze;
 	
-	@FindBy(css="div[ng-click*='edit'] span.sch-control-button-label")
+	@FindBy(css="lg-button[label=\"Edit\"]")
 	private WebElement edit;
 	
 	@FindBy(xpath="//span[contains(text(),'Projected Sales')]")
@@ -94,16 +95,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(css="div.sub-navigation-view-link")
 	private List<WebElement> ScheduleSubTabsElement;
 
-	@FindBy(css="[ng-click='gotoNextWeek($event)']")
+	@FindBy(className="day-week-picker-arrow-right")
 	private WebElement calendarNavigationNextWeekArrow;
 	
-	@FindBy(css="[ng-click=\"gotoPreviousWeek($event)\"]")
-	private WebElement salesForecastCalendarNavigationPreviousWeekArrow;
+	@FindBy(className="day-week-picker-arrow-left")
+	private WebElement calendarNavigationPreviousWeekArrow;
 	
 	@FindBy(css="[ng-click=\"regenerateFromOverview()\"]")
 	private WebElement generateSheduleButton;
 	
-	@FindBy(css="[ng-click=\"controlPanel.fns.publishConfirmation($event, false)\"]")
+	@FindBy(css="lg-button[label=\"Publish\"]")
 	private WebElement publishSheduleButton;
 	
 	@FindBy(css="div.sch-view-dropdown-summary-content-item-heading.ng-binding")
@@ -130,7 +131,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(css="[ng-if=\"canShowNewShiftButton()\"]")
 	private WebElement addNewShiftOnDayViewButton;
 
-	@FindBy(className="sch-control-button-cancel")
+	@FindBy(css="lg-button[label=\"Cancel\"]")
 	private WebElement scheduleEditModeCancelButton;
 
 	@FindBy(css="[ng-click=\"regenerateFromOverview()\"]")
@@ -428,7 +429,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount)
 	{
 		String currentWeekStartingDay = "NA";
-		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("sch-calendar-day-dimension"));
+		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
 		for(int i = 0; i < weekCount; i++)
 		{
 			if(ScheduleCalendarDayLabels.size() != 0)
@@ -436,38 +437,47 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 				currentWeekStartingDay = ScheduleCalendarDayLabels.get(0).getText();
 			}
 
-			if(nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future"))
+			int displayedWeekCount = ScheduleCalendarDayLabels.size();
+			for(WebElement ScheduleCalendarDayLabel: ScheduleCalendarDayLabels)
 			{
-				try {
-					if(isElementLoaded(calendarNavigationNextWeekArrow)){
-							calendarNavigationNextWeekArrow.click();
-							SimpleUtils.pass("Schedule Page Calender view for next week loaded successfully!");
+				if(ScheduleCalendarDayLabel.getAttribute("class").toString().contains("day-week-picker-period-active"))
+				{	
+					if(nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future"))
+					{
+						try {
+								int activeWeekIndex = ScheduleCalendarDayLabels.indexOf(ScheduleCalendarDayLabel);
+								if(activeWeekIndex < (displayedWeekCount - 1))
+								{
+									click(ScheduleCalendarDayLabels.get(activeWeekIndex + 1));
+								}
+								else {
+									click(calendarNavigationNextWeekArrow);
+									click(ScheduleCalendarDayLabels.get(0));
+								}
+						}
+						catch (Exception e) {
+							SimpleUtils.report("Schedule page Calender Next Week Arrows Not Loaded/Clickable after '"+ScheduleCalendarDayLabel.getText().replace("\n", "")+ "'");
+						}
 					}
-				}
-				catch (Exception e) {
-//					SimpleUtils.fail("Schedule page Calender Next Week Arrows Not Loaded/Clickable after '"+currentWeekStartingDay+ "'", true);
-					SimpleUtils.report("Schedule page Calender Next Week Arrows Not Loaded/Clickable after '"+currentWeekStartingDay+ "'");
-				}
-			}
-			else
-			{
-				try {
-					if(isElementLoaded(salesForecastCalendarNavigationPreviousWeekArrow)){
-						salesForecastCalendarNavigationPreviousWeekArrow.click();
-						SimpleUtils.pass("Schedule Page Calender view for Previous week loaded successfully!");
+					else
+					{
+						try {
+							int activeWeekIndex = ScheduleCalendarDayLabels.indexOf(ScheduleCalendarDayLabel);
+							if(activeWeekIndex > 0)
+							{
+								click(ScheduleCalendarDayLabels.get(activeWeekIndex - 1));
+							}
+							else {
+								click(calendarNavigationPreviousWeekArrow);
+								click(ScheduleCalendarDayLabels.get(displayedWeekCount - 1));
+							}
+						} catch (Exception e) {
+							SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable after '"+ScheduleCalendarDayLabel.getText().replace("\n", "")+ "'", true);
+						}
 					}
-				} catch (Exception e) {
-					SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable after '"+currentWeekStartingDay+ "'", true);
+					break;
 				}
-
 			}
-			/*if(! currentWeekStartingDay.equals(ScheduleCalendarDayLabels.get(0).getText()))
-			{
-				SimpleUtils.fail("Week After '"+currentWeekStartingDay+"' not Clickable!", true);
-			}
-			else {
-				SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded!", true);
-			}*/
 		}
 	}
 
@@ -483,6 +493,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 				 return false;
 			 }
 		 }
+		 SimpleUtils.pass("Week: '"+getActiveWeekText()+"' Already Generated!");
 		 return true;
 	 }
 
@@ -510,7 +521,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 				 }
 			 }
 		 }
+		 else if(isConsoleMessageError())
+		 {
+			return false;
+		 }
+		 SimpleUtils.pass("Week: '"+getActiveWeekText()+"' Already Published!");
 		 return true;
+		 
 	 }
 	
 	
@@ -555,9 +572,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	public void clickOnScheduleAnalyzeButton() throws Exception
 	{
-		if(isElementLoaded(scheduleAnalyzeButton))
+		if(isElementLoaded(analyze))
 		{
-			click(scheduleAnalyzeButton);
+			click(analyze);
 		}
 		else {
 			SimpleUtils.fail("Schedule Analyze Button not loaded successfully!", false);
@@ -584,10 +601,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	public String getScheduleWeekStartDayMonthDate()
 	{
 		String scheduleWeekStartDuration = "NA";
-		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("sch-calendar-day-dimension"));
-		if(ScheduleCalendarDayLabels.size() != 0)
-		{
-			scheduleWeekStartDuration = ScheduleCalendarDayLabels.get(0).getText().replace("\n", "");
+		WebElement scheduleCalendarActiveWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
+		try {
+			if(isElementLoaded(scheduleCalendarActiveWeek))
+			{
+				scheduleWeekStartDuration = scheduleCalendarActiveWeek.getText().replace("\n", "");
+			}
+		} catch (Exception e) {
+			SimpleUtils.fail("Calender duration bar not loaded successfully", true);
 		}
 		return scheduleWeekStartDuration;
 	}
@@ -690,10 +711,41 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 				if(noPublishedSchedule.getText().contains(scheduleStatus))
 					return false;
 			}
+			else if(isConsoleMessageError())
+			{
+				return false;
+			}
 		} catch (Exception e) {
 			SimpleUtils.pass("Schedule is Published for current Week!");
 			return true;
 		}
+		SimpleUtils.pass("Schedule is Published for current Week!");
 		return true;
+	}
+	
+	public boolean isConsoleMessageError() throws Exception 
+	{
+		List<WebElement> carouselCards = MyThreadLocal.getDriver().findElements(By.cssSelector("div.card-carousel-card.card-carousel-card-default"));
+		WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")); 
+		if(carouselCards.size() != 0)
+		{
+			for(WebElement carouselCard: carouselCards)
+			{
+				if(carouselCard.getText().toUpperCase().contains("CONSOLE MESSAGE"))
+				{
+					SimpleUtils.report("Week: '"+activeWeek.getText().replace("\n", " ")+"' Not Published because of Console Message Error: '"+carouselCard.getText().replace("\n", " ")+"'");
+					return true;
+				}
+			}
+		}
+    	return false;
+	}
+	
+	public String getActiveWeekText() throws Exception
+	{
+		WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")); 
+		if(isElementLoaded(activeWeek))
+			return activeWeek.getText().replace("\n", " ");
+		return "";
 	}
 }
