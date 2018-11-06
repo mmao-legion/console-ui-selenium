@@ -12,8 +12,7 @@
              <include name="scheduleTestAsTeamMember"/>
              <include name="scheduleTestAsTeamLead"/> 
              <include name="scheduleTestAsStoreManager"/> 
-             <include name="scheduleTest"/> 
-            
+             <include name="scheduleTest"/>  
         </methods>
       </class>
     </classes>

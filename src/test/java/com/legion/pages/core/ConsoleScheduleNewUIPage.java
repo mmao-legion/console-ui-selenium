@@ -2,6 +2,7 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static org.testng.Assert.fail;
 
 import com.legion.utils.MyThreadLocal;
 import org.openqa.selenium.By;
@@ -19,9 +20,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ConsoleSchedulePage extends BasePage implements SchedulePage {
+public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
-	public ConsoleSchedulePage()
+	public enum scheduleHoursAndWagesData {
+        scheduledHours("scheduledHours"),
+        budgetedHours("budgetedHours"),
+        otherHours("otherHours"),
+        budgetedWages("budgetedWages"),
+        scheduledWages("scheduledWages"),
+        otherWages("otherWages"),
+        wages("Wages"),
+        hours("hours");
+        private final String value;
+
+        scheduleHoursAndWagesData(final String newValue) {
+            value = newValue;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+	
+	public ConsoleScheduleNewUIPage()
 	{
 		PageFactory.initElements(getDriver(), this);
 	}
@@ -47,10 +68,10 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@FindBy(xpath="//div[contains(@class,'sub-navigation-view')]//span[contains(text(),'Schedule')]")
 	private WebElement goToScheduleTab;
 	
-	@FindBy(css="div[ng-click*='analyze'] span.sch-control-button-label")
+	@FindBy(css="lg-button[label=\"Analyze\"]")
 	private WebElement analyze;
 	
-	@FindBy(css="div[ng-click*='edit'] span.sch-control-button-label")
+	@FindBy(css="lg-button[label=\"Edit\"]")
 	private WebElement edit;
 	
 	@FindBy(xpath="//span[contains(text(),'Projected Sales')]")
@@ -74,16 +95,16 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@FindBy(css="div.sub-navigation-view-link")
 	private List<WebElement> ScheduleSubTabsElement;
 
-	@FindBy(css="[ng-click='gotoNextWeek($event)']")
+	@FindBy(className="day-week-picker-arrow-right")
 	private WebElement calendarNavigationNextWeekArrow;
 	
-	@FindBy(css="[ng-click=\"gotoPreviousWeek($event)\"]")
-	private WebElement salesForecastCalendarNavigationPreviousWeekArrow;
+	@FindBy(className="day-week-picker-arrow-left")
+	private WebElement calendarNavigationPreviousWeekArrow;
 	
 	@FindBy(css="[ng-click=\"regenerateFromOverview()\"]")
 	private WebElement generateSheduleButton;
 	
-	@FindBy(css="[ng-click=\"controlPanel.fns.publishConfirmation($event, false)\"]")
+	@FindBy(css="lg-button[label=\"Publish\"]")
 	private WebElement publishSheduleButton;
 	
 	@FindBy(css="div.sch-view-dropdown-summary-content-item-heading.ng-binding")
@@ -110,7 +131,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@FindBy(css="[ng-if=\"canShowNewShiftButton()\"]")
 	private WebElement addNewShiftOnDayViewButton;
 
-	@FindBy(className="sch-control-button-cancel")
+	@FindBy(css="lg-button[label=\"Cancel\"]")
 	private WebElement scheduleEditModeCancelButton;
 
 	@FindBy(css="[ng-click=\"regenerateFromOverview()\"]")
@@ -178,7 +199,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	 {
 		 if(isElementLoaded(activatedSubTabElement))
 		 {
-			 if(activatedSubTabElement.getText().contains(SubTabText))
+			 if(activatedSubTabElement.getText().equalsIgnoreCase(SubTabText))
 			 {
 				 return true;
 			 }
@@ -275,12 +296,15 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	
 	@Override
 	public void clickOnWeekView() throws Exception
-	{
+	{   
+		/*WebElement scheduleWeekViewButton = MyThreadLocal.getDriver().
+			findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'week')\"]"));*/
+	
 		WebElement scheduleWeekViewButton = MyThreadLocal.getDriver().
-			findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'week')\"]"));
+			findElement(By.cssSelector("div.lg-button-group-last"));
 		if(isElementLoaded(scheduleWeekViewButton))
 		{
-			if(! scheduleWeekViewButton.getAttribute("class").toString().contains("enabled"))
+			if(! scheduleWeekViewButton.getAttribute("class").toString().contains("selected"))//selected
 			{
 				click(scheduleWeekViewButton);
 			}
@@ -295,8 +319,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	@Override
 	public void clickOnDayView() throws Exception {
+		/*WebElement scheduleDayViewButton = MyThreadLocal.getDriver().
+			findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'day')\"]"));*/
 		WebElement scheduleDayViewButton = MyThreadLocal.getDriver().
-			findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'day')\"]"));
+				findElement(By.cssSelector("div.lg-button-group-first"));
+		
 		if(isElementLoaded(scheduleDayViewButton)) {
 			if(! scheduleDayViewButton.getAttribute("class").toString().contains("enabled")) {
 				click(scheduleDayViewButton);
@@ -311,46 +338,32 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	
 	@Override
 	public HashMap<String, Float> getScheduleLabelHoursAndWagges() throws Exception {
-		
-		String budgetedHours = "";
-		String scheduledHours = "";
-		String otherHours = "";
-		String wagesBudgetedCount = "";
-		String wagesScheduledCount = "";
 		HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
-		List<WebElement> budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElements(By.className("mt-18"));
-		if(isElementLoaded(budgetedScheduledLabelsDivElement.get(0)))
+		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("div.card-carousel-card.card-carousel-card-primary"));
+		if(isElementLoaded(budgetedScheduledLabelsDivElement))
 		{
-			for(WebElement budgetedScheduledLabelDiv : budgetedScheduledLabelsDivElement)
+			String scheduleWagesAndHoursCardText = budgetedScheduledLabelsDivElement.getText();
+			String[] scheduleWagesAndHours = scheduleWagesAndHoursCardText.split("\n");
+			for(String wagesAndHours: scheduleWagesAndHours)
 			{
-
-					if(budgetedScheduledLabelDiv.getText().contains("Wages") && budgetedScheduledLabelDiv.getText().contains("Guidance")
-							|| budgetedScheduledLabelDiv.getText().contains("Wages") && budgetedScheduledLabelDiv.getText().contains("Budgeted") )
-					{
-						wagesBudgetedCount = budgetedScheduledLabelDiv.findElement(By.className("sch-control-kpi")).getText().replace(" Wages", "").replace("$", "");
-						scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesBudgetedCount, "wagesBudgetedCount");
-					}
-					else if(budgetedScheduledLabelDiv.getText().contains("Wages") && budgetedScheduledLabelDiv.getText().contains("Scheduled") )
-					{
-						wagesScheduledCount = budgetedScheduledLabelDiv.findElement(By.className("sch-control-kpi")).getText().replace(" Wages", "").replace("$", "");
-						scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesScheduledCount, "wagesScheduledCount");
-
-					}
-					else if(budgetedScheduledLabelDiv.getText().contains("Budgeted") || budgetedScheduledLabelDiv.getText().contains("Guidance"))
-					{
-						budgetedHours = budgetedScheduledLabelDiv.findElement(By.className("sch-control-kpi")).getText().replace(" Hrs", "");
-						scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , budgetedHours, "budgetedHours");
-					}
-					else if(budgetedScheduledLabelDiv.getText().contains("Scheduled"))
-					{
-						scheduledHours = budgetedScheduledLabelDiv.findElement(By.className("sch-control-kpi")).getText().replace(" Hrs", "");
-						scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduledHours, "scheduledHours");
-					}
-					else if(budgetedScheduledLabelDiv.getText().contains("Other"))
-					{
-						otherHours = budgetedScheduledLabelDiv.findElement(By.className("sch-control-kpi")).getText().replace(" Hrs", "");
-						scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , otherHours, "otherHours");
-					}
+				if(wagesAndHours.toLowerCase().contains(scheduleHoursAndWagesData.hours.getValue().toLowerCase()))
+				{
+					scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[1], 
+							scheduleHoursAndWagesData.budgetedHours.getValue());
+					scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[2], 
+							scheduleHoursAndWagesData.scheduledHours.getValue());
+					scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[3], 
+							scheduleHoursAndWagesData.otherHours.getValue());
+				}
+				else if(wagesAndHours.toLowerCase().contains(scheduleHoursAndWagesData.wages.getValue().toLowerCase()))
+				{
+					scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[1]
+							.replace("$", ""), scheduleHoursAndWagesData.budgetedWages.getValue());
+					scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[2]
+							.replace("$", ""), scheduleHoursAndWagesData.scheduledWages.getValue());
+					scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[3]
+							.replace("$", ""), scheduleHoursAndWagesData.otherWages.getValue());
+				}
 			}
 		}
 		return scheduleHoursAndWages;
@@ -367,7 +380,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public synchronized List<HashMap<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception {
 		List<HashMap<String, Float>> ScheduleLabelHoursAndWagesDataForDays = new ArrayList<HashMap<String, Float>>();
-		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("sch-calendar-day-dimension"));
+		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
 		if(isScheduleDayViewActive()) {
 			if(ScheduleCalendarDayLabels.size() != 0) {
 				for(WebElement ScheduleCalendarDayLabel: ScheduleCalendarDayLabels)
@@ -390,16 +403,12 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public void clickOnScheduleSubTab(String subTabString) throws Exception
 	{
-		System.out.println("clickOnScheduleSubTab called1: "+subTabString);
 		if(ScheduleSubTabsElement.size() != 0 && ! varifyActivatedSubTab(subTabString))
 		{
-			System.out.println("clickOnScheduleSubTab size: "+ScheduleSubTabsElement.size());
 			for(WebElement ScheduleSubTabElement : ScheduleSubTabsElement)
 			{
-				System.out.println("ScheduleSubTabElement Text: "+ScheduleSubTabElement.getText());
 				if(ScheduleSubTabElement.getText().equalsIgnoreCase(subTabString))
 				{
-					System.out.println("CLicked");
 					click(ScheduleSubTabElement);
 				}
 			}
@@ -420,7 +429,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount)
 	{
 		String currentWeekStartingDay = "NA";
-		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("sch-calendar-day-dimension"));
+		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
 		for(int i = 0; i < weekCount; i++)
 		{
 			if(ScheduleCalendarDayLabels.size() != 0)
@@ -428,38 +437,47 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 				currentWeekStartingDay = ScheduleCalendarDayLabels.get(0).getText();
 			}
 
-			if(nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future"))
+			int displayedWeekCount = ScheduleCalendarDayLabels.size();
+			for(WebElement ScheduleCalendarDayLabel: ScheduleCalendarDayLabels)
 			{
-				try {
-					if(isElementLoaded(calendarNavigationNextWeekArrow)){
-							calendarNavigationNextWeekArrow.click();
-							SimpleUtils.pass("Schedule Page Calender view for next week loaded successfully!");
+				if(ScheduleCalendarDayLabel.getAttribute("class").toString().contains("day-week-picker-period-active"))
+				{	
+					if(nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future"))
+					{
+						try {
+								int activeWeekIndex = ScheduleCalendarDayLabels.indexOf(ScheduleCalendarDayLabel);
+								if(activeWeekIndex < (displayedWeekCount - 1))
+								{
+									click(ScheduleCalendarDayLabels.get(activeWeekIndex + 1));
+								}
+								else {
+									click(calendarNavigationNextWeekArrow);
+									click(ScheduleCalendarDayLabels.get(0));
+								}
+						}
+						catch (Exception e) {
+							SimpleUtils.report("Schedule page Calender Next Week Arrows Not Loaded/Clickable after '"+ScheduleCalendarDayLabel.getText().replace("\n", "")+ "'");
+						}
 					}
-				}
-				catch (Exception e) {
-//					SimpleUtils.fail("Schedule page Calender Next Week Arrows Not Loaded/Clickable after '"+currentWeekStartingDay+ "'", true);
-					SimpleUtils.report("Schedule page Calender Next Week Arrows Not Loaded/Clickable after '"+currentWeekStartingDay+ "'");
-				}
-			}
-			else
-			{
-				try {
-					if(isElementLoaded(salesForecastCalendarNavigationPreviousWeekArrow)){
-						salesForecastCalendarNavigationPreviousWeekArrow.click();
-						SimpleUtils.pass("Schedule Page Calender view for Previous week loaded successfully!");
+					else
+					{
+						try {
+							int activeWeekIndex = ScheduleCalendarDayLabels.indexOf(ScheduleCalendarDayLabel);
+							if(activeWeekIndex > 0)
+							{
+								click(ScheduleCalendarDayLabels.get(activeWeekIndex - 1));
+							}
+							else {
+								click(calendarNavigationPreviousWeekArrow);
+								click(ScheduleCalendarDayLabels.get(displayedWeekCount - 1));
+							}
+						} catch (Exception e) {
+							SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable after '"+ScheduleCalendarDayLabel.getText().replace("\n", "")+ "'", true);
+						}
 					}
-				} catch (Exception e) {
-					SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable after '"+currentWeekStartingDay+ "'", true);
+					break;
 				}
-
 			}
-			/*if(! currentWeekStartingDay.equals(ScheduleCalendarDayLabels.get(0).getText()))
-			{
-				SimpleUtils.fail("Week After '"+currentWeekStartingDay+"' not Clickable!", true);
-			}
-			else {
-				SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded!", true);
-			}*/
 		}
 	}
 
@@ -475,6 +493,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 				 return false;
 			 }
 		 }
+		 SimpleUtils.pass("Week: '"+getActiveWeekText()+"' Already Generated!");
 		 return true;
 	 }
 
@@ -502,7 +521,13 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 				 }
 			 }
 		 }
+		 else if(isConsoleMessageError())
+		 {
+			return false;
+		 }
+		 SimpleUtils.pass("Week: '"+getActiveWeekText()+"' Already Published!");
 		 return true;
+		 
 	 }
 	
 	
@@ -547,9 +572,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	public void clickOnScheduleAnalyzeButton() throws Exception
 	{
-		if(isElementLoaded(scheduleAnalyzeButton))
+		if(isElementLoaded(analyze))
 		{
-			click(scheduleAnalyzeButton);
+			click(analyze);
 		}
 		else {
 			SimpleUtils.fail("Schedule Analyze Button not loaded successfully!", false);
@@ -576,10 +601,14 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	public String getScheduleWeekStartDayMonthDate()
 	{
 		String scheduleWeekStartDuration = "NA";
-		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("sch-calendar-day-dimension"));
-		if(ScheduleCalendarDayLabels.size() != 0)
-		{
-			scheduleWeekStartDuration = ScheduleCalendarDayLabels.get(0).getText().replace("\n", "");
+		WebElement scheduleCalendarActiveWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
+		try {
+			if(isElementLoaded(scheduleCalendarActiveWeek))
+			{
+				scheduleWeekStartDuration = scheduleCalendarActiveWeek.getText().replace("\n", "");
+			}
+		} catch (Exception e) {
+			SimpleUtils.fail("Calender duration bar not loaded successfully", true);
 		}
 		return scheduleWeekStartDuration;
 	}
@@ -682,10 +711,41 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 				if(noPublishedSchedule.getText().contains(scheduleStatus))
 					return false;
 			}
+			else if(isConsoleMessageError())
+			{
+				return false;
+			}
 		} catch (Exception e) {
 			SimpleUtils.pass("Schedule is Published for current Week!");
 			return true;
 		}
+		SimpleUtils.pass("Schedule is Published for current Week!");
 		return true;
+	}
+	
+	public boolean isConsoleMessageError() throws Exception 
+	{
+		List<WebElement> carouselCards = MyThreadLocal.getDriver().findElements(By.cssSelector("div.card-carousel-card.card-carousel-card-default"));
+		WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")); 
+		if(carouselCards.size() != 0)
+		{
+			for(WebElement carouselCard: carouselCards)
+			{
+				if(carouselCard.getText().toUpperCase().contains("CONSOLE MESSAGE"))
+				{
+					SimpleUtils.report("Week: '"+activeWeek.getText().replace("\n", " ")+"' Not Published because of Console Message Error: '"+carouselCard.getText().replace("\n", " ")+"'");
+					return true;
+				}
+			}
+		}
+    	return false;
+	}
+	
+	public String getActiveWeekText() throws Exception
+	{
+		WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")); 
+		if(isElementLoaded(activeWeek))
+			return activeWeek.getText().replace("\n", " ");
+		return "";
 	}
 }

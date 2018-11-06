@@ -38,5 +38,7 @@ public interface PageFactory {
     LocationSelectorPage createLocationSelectorPage();
     
     ScheduleOverviewPage createScheduleOverviewPage();
+    
+    SchedulePage createConsoleScheduleNewUIPage();
    
 }

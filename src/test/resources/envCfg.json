@@ -1,5 +1,5 @@
 {
-  "CHROME_DRIVER_PATH": "C:\\Users\\nishant08\\Downloads\\chromedriver\\chromedriver.exe",
+  "CHROME_DRIVER_PATH": "/home/naval/Documents/chromedriver",
   "FIREFOX_DRIVER_PATH": "D:\\geckodriver.exe",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://enterprise-stage.legion.work/",
@@ -10,7 +10,7 @@
   "Coffee2_Enterprise" : "LegionCoffee2",
   "Tech_Enterprise" : "LegionTech",
   "Reverted_Enterprise" : "LegionReverted",
-  "Kendrascott2_Enterprise" : "KendraScott2",
+  "KendraScott2_Enterprise" : "KendraScott2",
   "DEFAULT_USERNAME" : "admin2.a",
   "DEFAULT_PASSWORD" : "admin2.a",
   "ENVIRONMENT" : "QA",
@@ -19,12 +19,12 @@
   "CHROME" : "Chrome",
   "FIREFOX" : "Firefox",
   "console_logs" : "false",
-  "close_browser" : "true",
+  "close_browser" : "false",
   "show_report" : "true",
   "VERSION" : "68",
   "OS" : "WINDOW",
   "scheduleWeekCount" : "6",
-  "WeekStartOn" : "MON"
-  
- 
+  "WeekStartOn" : "MON",
+  "isParallelBrowser" : "false"
+
 }

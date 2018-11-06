@@ -5,6 +5,8 @@ import org.testng.annotations.AfterMethod;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.markuputils.Markup;
+import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.legion.pages.BasePage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
@@ -102,6 +104,7 @@ public abstract class TestBase {
     @BeforeClass
     protected void init () {
         ScreenshotManager.createScreenshotDirIfNotExist();
+//        extent.setSystemInfo(enterpriseName.toString(), "LegionCoffee");
     }
     
     @BeforeMethod(alwaysRun = true)
@@ -114,10 +117,13 @@ public abstract class TestBase {
         String enterpriseName =  SimpleUtils.getEnterprise(method);
         List<String> categories =  new ArrayList<String>();
         categories.add(getClass().getSimpleName());
-        categories.add(enterpriseName);
+//        categories.add(enterpriseName);
+        List<String> enterprises =  new ArrayList<String>();
+        enterprises.add(enterpriseName);
         ExtentTestManager.createTest(getClass().getSimpleName() + " - "
             + " " + method.getName() + " : " + testName + ""
             + " [" + ownerName + "/" + automatedName + "]", "", categories);
+        extent.setSystemInfo(method.getName(), enterpriseName.toString());
         setCurrentMethod(method);
         setBrowserNeeded(true);
         setCurrentTestMethodName(method.getName());
@@ -225,7 +231,6 @@ public abstract class TestBase {
         }
 		ExtentTestManager.getTest().info("tearDown finished");
 		extent.flush();
-
     }
 
 	

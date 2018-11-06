@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 
 /**
  * Yanming
@@ -129,7 +130,7 @@ public class SimpleUtils {
 	{
 		for(WebElement listWebElement : listWebElements)
 		{
-			if(listWebElement.getText().contains(subTabText))
+			if(listWebElement.getText().toLowerCase().contains(subTabText.toLowerCase()))
 			{
 				return listWebElement;
 			}
@@ -249,6 +250,24 @@ public class SimpleUtils {
     { 
         TreeMap<String, Object[][]> sorted = new TreeMap<>(); 
         sorted.putAll(hashMap);        
+    } 
+	
+	public static Object[][] concatenateObjects(Object[][] browersData, Object[][] credentialsByRole) 
+    { 
+		Object[][] combinedresult = new Object[credentialsByRole.length * browersData.length][];
+		int index = 0;
+       	for(Object[] credentialByRole: credentialsByRole)
+       	{
+   		    Object[] result = new Object[credentialByRole.length + 1]; 
+       		for(Object[] browerData : browersData)
+            {
+	       		System.arraycopy(browerData, 0, result, 0, 1); 
+	   	        System.arraycopy(credentialByRole, 0, result, 1, credentialByRole.length);
+		       	combinedresult[index] = result;
+		       	index = index + 1;
+            }	       	
+        }
+	    return combinedresult;
     } 
 	    
 }
