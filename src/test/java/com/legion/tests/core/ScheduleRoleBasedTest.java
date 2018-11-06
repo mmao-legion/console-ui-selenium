@@ -6,8 +6,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.SchedulePage;
 import com.legion.tests.TestBase;
@@ -16,6 +18,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
@@ -120,11 +123,11 @@ public class ScheduleRoleBasedTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Naval")
     @TestName(description = "Login as Team Member, navigate & verify Schedule page")
-    @Enterprise(name = "Coffee2_Enterprise")
+    @Enterprise(name = "Tech_Enterprise")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void scheduleTestAsTeamMember(String browser, String username, String password, String location)
         throws Exception {
-        SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
         SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
             schedulePage.isCurrentScheduleWeekPublished(), false);
         List<HashMap<String, Float>> scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
@@ -133,12 +136,13 @@ public class ScheduleRoleBasedTest extends TestBase {
             !iswagesLoadedInWeekView(scheduleWeekViewLabelData), false);
         comparingWeekScheduledHoursAndSumOfDaysScheduledHours(scheduleWeekViewLabelData,
             scheduleDaysViewLabelDataForWeekDays);
+        
     }
 
 
     @Automated(automated = "Automated")
     @Owner(owner = "Naval")
-    @Enterprise(name = "Coffee2_Enterprise")
+    @Enterprise(name = "Tech_Enterprise")
     @TestName(description = "Login as Team Lead, navigate & verify Schedule page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void scheduleTestAsTeamLead(String browser, String username, String password, String location)
