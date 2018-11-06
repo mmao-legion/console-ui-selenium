@@ -1,7 +1,11 @@
 package com.legion.tests.data;
 
+import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -18,7 +22,8 @@ public class CredentialDataProviderSource {
         userCredentials.putAll(SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName)); 
         for(Map.Entry<String, Object[][]> entry : userCredentials.entrySet())
         {
-            return entry.getValue();
+            //return entry.getValue();
+        	return SimpleUtils.concatenateObjects(browserDataProvider(testMethod), entry.getValue()) ;
         }
         return new Object[0][];
         //return Constants.DefaultInternalAdminCredentials;
@@ -35,13 +40,15 @@ public class CredentialDataProviderSource {
          fileName=SimpleUtils.getEnterprise(testMethod)+fileName;
          HashMap<String, Object[][]> userCredentials = SimpleUtils
         		 .getEnvironmentBasedUserCredentialsFromJson(fileName);
-         for(Map.Entry<String, Object[][]> entry : userCredentials.entrySet())
-         {
-             if(testMethod.getName().contains(entry.getKey()))
+         
+        	 for(Map.Entry<String, Object[][]> entry : userCredentials.entrySet())
              {
-                 return  entry.getValue();
+                 if(testMethod.getName().contains(entry.getKey()))
+                 {
+                     return SimpleUtils.concatenateObjects(browserDataProvider(testMethod), entry.getValue()) ;
+                 }
              }
-         }
+         
          return new Object[0][];
         //return Constants.DefaultInternalAdminCredentials;
      }
@@ -49,5 +56,10 @@ public class CredentialDataProviderSource {
      @DataProvider(name = "legionTeamCredentialsByRolesP", parallel = true)
      public static Object[][] credentialsByRolesP (Method testMethod) {
          return credentialsByRoles(testMethod);
+     }
+     
+     @DataProvider(name = "browsers", parallel = true)
+     public synchronized static Object[][] browserDataProvider(Method testMethod) {
+         return JsonUtil.getArraysFromJsonFile("src/test/resources/browsersCfg.json");
      }
 }

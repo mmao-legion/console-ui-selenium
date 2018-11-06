@@ -6,6 +6,7 @@ import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.pages.core.ConsoleSchedulePage;
 import com.legion.pages.core.ConsoleStaffingGuidancePage;
 import com.legion.pages.core.ConsoleSalesForecastPage;
+import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.pages.core.ConsoleScheduleOverviewPage;
 import com.legion.pages.core.ConsoleTeamPage;
 import com.legion.pages.core.ConsoleUserAuthorizationPage;
@@ -83,5 +84,10 @@ public class ConsoleWebPageFactory implements PageFactory {
 	@Override
 	public ScheduleOverviewPage createScheduleOverviewPage() {
 		return new ConsoleScheduleOverviewPage();
+	}
+
+	@Override
+	public SchedulePage createConsoleScheduleNewUIPage() {
+		return new ConsoleScheduleNewUIPage();
 	}
 }
