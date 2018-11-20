@@ -9,6 +9,7 @@ import com.legion.pages.core.ConsoleSalesForecastPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.pages.core.ConsoleScheduleOverviewPage;
 import com.legion.pages.core.ConsoleTeamPage;
+import com.legion.pages.core.ConsoleTrafficForecastPage;
 import com.legion.pages.core.ConsoleUserAuthorizationPage;
 import com.legion.pages.core.ConsoleDashboardPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
@@ -22,6 +23,7 @@ import com.legion.pages.StaffingGuidancePage;
 import com.legion.pages.SalesForecastPage;
 import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.TeamPage;
+import com.legion.pages.TrafficForecastPage;
 import com.legion.pages.UserAuthorizationPage;
 import org.testng.Reporter;
 
@@ -89,5 +91,10 @@ public class ConsoleWebPageFactory implements PageFactory {
 	@Override
 	public SchedulePage createConsoleScheduleNewUIPage() {
 		return new ConsoleScheduleNewUIPage();
+	}
+
+	@Override
+	public TrafficForecastPage createTrafficForecastPage() {
+		return new ConsoleTrafficForecastPage();
 	}
 }

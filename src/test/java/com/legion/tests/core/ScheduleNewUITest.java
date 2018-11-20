@@ -3,10 +3,8 @@ package com.legion.tests.core;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
-
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import com.aventstack.extentreports.Status;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.ScheduleOverviewPage;
@@ -16,7 +14,6 @@ import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
-import com.legion.tests.core.ScheduleRoleBasedNewUITest.SchedulePageSubTabText;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
@@ -97,6 +94,21 @@ public class ScheduleNewUITest extends TestBase{
 	        public String getValue() { return value; }
 		}
 	  
+	  public enum scheduleGroupByFilterOptions{
+		  groupbyAll("Group by All"),
+		  groupbyWorkRole(" Group by Work Role"),
+		  groupbyTM("Group by TM");
+			private final String value;
+			scheduleGroupByFilterOptions(final String newValue) {
+	            value = newValue;
+	        }
+	        public String getValue() { return value; }
+		}
+	  
+	 
+	  
+	  
+	  
 
 	    @Automated(automated =  "Automated")
 		@Owner(owner = "Naval")
@@ -152,5 +164,153 @@ public class ScheduleNewUITest extends TestBase{
 	        	}
 	        }
 	    }
+	    
+	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-21: Automation Script for - JIRA ID - 2592 - \"Should be able to view and filter Schedule and Group By 'All'\"")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void viewAndFilterScheduleWithGroupByAllInWeekViewAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        
+	        /*
+	         *  Navigate to Schedule Week view
+	         */
+	        boolean isWeekView = true;
+	        schedulePage.clickOnWeekView();
+	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyAll.getValue());
+	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+	        schedulePage.clickOnEditButton();
+	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+	        schedulePage.clickOnCancelButtonOnEditMode();
+	    }
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-21: Automation Script for - JIRA ID - 2592 - \"Should be able to view and filter Schedule and Group By 'Work Role'\"")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void viewAndFilterScheduleWithGroupByWorkRoleInWeekViewAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        
+	        /*
+	         *  Navigate to Schedule Week view
+	         */
+	        boolean isWeekView = true;
+	        schedulePage.clickOnWeekView();
+	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+	        schedulePage.clickOnEditButton();
+	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+	        schedulePage.clickOnCancelButtonOnEditMode();
+
+	    }
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-21: Automation Script for - JIRA ID - 2592 - \"Should be able to view and filter Schedule and Group By 'TMs'\"")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void viewAndFilterScheduleWithGroupByTMsInWeekViewAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        
+	        /*
+	         *  Navigate to Schedule Week view
+	         */
+	        boolean isWeekView = true;
+	        schedulePage.clickOnWeekView();	        
+	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
+	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+	        schedulePage.clickOnEditButton();
+	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+	        schedulePage.clickOnCancelButtonOnEditMode();
+	    }
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-21: Automation Script for - JIRA ID - 2592 - \"Should be able to view Day View and filter Schedule and Group By 'All'\"")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void viewAndFilterScheduleWithGroupByAllDayViewAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        
+	        /*
+	         *  Navigate to Schedule Day view
+	         */
+	        boolean isWeekView = false;
+	        schedulePage.clickOnDayView();;	        
+	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyAll.getValue());
+	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+	        schedulePage.clickOnEditButton();
+	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+	        schedulePage.clickOnCancelButtonOnEditMode();
+	    }
+	    
 	   
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-21: Automation Script for - JIRA ID - 2592 - \"Should be able to view Day View and filter Schedule and Group By 'Work Role'\"")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void viewAndFilterScheduleWithGroupByWorkRoleDayViewAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        
+	        /*
+	         *  Navigate to Schedule Day view
+	         */
+	        boolean isWeekView = false;
+	        schedulePage.clickOnDayView();        
+	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+	        schedulePage.clickOnEditButton();
+	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+	        schedulePage.clickOnCancelButtonOnEditMode();
+	    }
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-21: Automation Script for - JIRA ID - 2592 - \"Should be able to view Day View and filter Schedule and Group By 'TMs'\"")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void viewAndFilterScheduleWithGroupByTMsDayViewAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        
+	        /*
+	         *  Navigate to Schedule Day view
+	         */
+	        boolean isWeekView = false;
+	        schedulePage.clickOnWeekView();        
+	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
+	        schedulePage.clickOnDayView();       
+	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+	        schedulePage.clickOnEditButton();
+	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+	        schedulePage.clickOnCancelButtonOnEditMode();
+	    }
 }

@@ -130,7 +130,7 @@ public class SimpleUtils {
 	{
 		for(WebElement listWebElement : listWebElements)
 		{
-			if(listWebElement.getText().contains(subTabText))
+			if(listWebElement.getText().toLowerCase().contains(subTabText.toLowerCase()))
 			{
 				return listWebElement;
 			}

@@ -310,7 +310,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	
 	@Override
-	public HashMap<String, Float> getScheduleLabelHoursAndWagges() throws Exception {
+	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
 		
 		String budgetedHours = "";
 		String scheduledHours = "";
@@ -373,7 +373,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 				for(WebElement ScheduleCalendarDayLabel: ScheduleCalendarDayLabels)
 				{
 					click(ScheduleCalendarDayLabel);
-					ScheduleLabelHoursAndWagesDataForDays.add(getScheduleLabelHoursAndWagges());
+					ScheduleLabelHoursAndWagesDataForDays.add(getScheduleLabelHoursAndWages());
 				}
 			}
 			else {
@@ -687,5 +687,17 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			return true;
 		}
 		return true;
+	}
+
+	@Override
+	public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void selectGroupByFilter(String optionVisibleText) {
+		// TODO Auto-generated method stub
+		
 	}
 }
