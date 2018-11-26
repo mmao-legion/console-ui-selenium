@@ -24,6 +24,8 @@ import com.legion.utils.SimpleUtils;
 
 public class ScheduleNewUITest extends TestBase{
 	  private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	  private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
+	  private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
 	  SchedulePage schedulePage = null;
 	  @Override
 	  @BeforeMethod
@@ -47,6 +49,36 @@ public class ScheduleNewUITest extends TestBase{
 	        }
 	        public int getValue() { return value; }
 		}
+	
+	public enum dayCount{
+		Seven(7);
+		private final int value;
+		dayCount(final int newValue) {
+            value = newValue;
+        }
+        public int getValue() { return value; }
+	}
+	
+	public enum sliderShiftCount{
+		SliderShiftStartCount(2),
+		SliderShiftEndTimeCount(10);
+		private final int value;
+		sliderShiftCount(final int newValue) {
+            value = newValue;
+        }
+        public int getValue() { return value; }
+	}
+	
+	public enum staffingOption{
+		OpenShift("Auto"),
+		ManualShift("Manual"),
+		AssignTeamMemberShift("Assign Team Member");
+		private final String value;
+		staffingOption(final String newValue) {
+            value = newValue;
+        }
+        public String getValue() { return value; }
+	}
 	  
 	  public enum overviewWeeksStatus{
 		  NotAvailable("Not Available"),
@@ -79,6 +111,16 @@ public class ScheduleNewUITest extends TestBase{
 		  Previous("Previous");
 			private final String value;
 			weekViewType(final String newValue) {
+	            value = newValue;
+	        }
+	        public String getValue() { return value; }
+		}
+	  
+	  public enum shiftSliderDroppable{
+		  StartPoint("Start"),
+		  EndPoint("End");
+			private final String value;
+			shiftSliderDroppable(final String newValue) {
 	            value = newValue;
 	        }
 	        public String getValue() { return value; }
@@ -151,6 +193,80 @@ public class ScheduleNewUITest extends TestBase{
 	        		}
 	        	}
 	        }
+	    }
+	    
+	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Nishant")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-18: As a store manager, should be able to review past week's schedule and generate this week or next week's schedule")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void editPopUpScheduleShouldNotPresentAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	    	int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
+//	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+	        schedulePage.clickOnScheduleConsoleMenuItem();
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+	       
+	        //Must have at least "Past Week" schedule published
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+	        schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
+	        SimpleUtils.assertOnFail("Schedule Page: Past week not generated!",schedulePage.isWeekGenerated() , true);
+	        SimpleUtils.assertOnFail("Schedule Page: Past week not Published!",schedulePage.isWeekPublished() , true);
+	        //The schedules that are already published should remain unchanged
+	        schedulePage.clickOnDayView();
+	        schedulePage.navigateDayViewToPast(weekViewType.Previous.getValue(), dayCount.Seven.getValue());
+	        schedulePage.clickOnEditButton();
+	        SimpleUtils.assertOnFail("User can add new shift for past week", (! schedulePage.isAddNewDayViewShiftButtonLoaded()) , false);
+//	        schedulePage.clickOnCancelButtonOnEditMode();
+	       
+	    }
+	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Nishant")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-18: As a store manager, should be able to review past week's schedule and generate this week or next week's schedule")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void editOpenShiftScheduleAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	    	int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
+//	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+	        schedulePage.clickOnScheduleConsoleMenuItem();
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+	        
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+	        //The schedules that are already published should remain unchanged
+	        schedulePage.clickOnDayView();
+	        schedulePage.clickOnEditButton();
+	        HashMap<List<String>,List<String>> teamCount = schedulePage.calculateTeamCount();
+	        SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
+	        String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();   
+	        schedulePage.customizeNewShiftPage();
+	        schedulePage.compareCustomizeStartDay(textStartDay);
+	        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"),sliderShiftCount.SliderShiftEndTimeCount.getValue(), shiftSliderDroppable.EndPoint.getValue());
+	        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  sliderShiftCount.SliderShiftStartCount.getValue(), shiftSliderDroppable.StartPoint.getValue());
+	        HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
+	        schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+	        schedulePage.clickRadioBtnStaffingOption(staffingOption.OpenShift.getValue());
+//	        schedulePage.clickRadioBtnStaffingOption(staffingOption.ManualShift.getValue());
+//	        schedulePage.clickRadioBtnStaffingOption(staffingOption.AssignTeamMemberShift.getValue());
+	        schedulePage.clickOnCreateOrNextBtn();
+	        List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
+	        List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
+	        SimpleUtils.verifyTeamCount(previousTeamCount,currentTeamCount);
+	        schedulePage.clickSaveBtn();
+	        schedulePage.clickOnVersionSaveBtn();
+	        schedulePage.clickOnPostSaveBtn();
 	    }
 	   
 }

@@ -5,6 +5,7 @@ import static org.testng.AssertJUnit.assertTrue;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.ITestResult;
@@ -42,7 +43,6 @@ public class SimpleUtils {
     static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
 	
     private static HashMap< String,Object[][]> userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/legionUsers.json");	
-
 
     public static DesiredCapabilities initCapabilities(String browser, String version, String os) {
         DesiredCapabilities caps = new DesiredCapabilities();
@@ -269,5 +269,21 @@ public class SimpleUtils {
         }
 	    return combinedresult;
     } 
-	    
+	 
+	
+	public static void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception {
+		if(previousTeamCount.size() == currentTeamCount.size()){
+			for(int i =0; i<currentTeamCount.size();i++){
+				String currentCount = currentTeamCount.get(i);
+				String previousCount = previousTeamCount.get(i);
+				if(Integer.parseInt(currentCount) == Integer.parseInt(previousCount)+1){
+					SimpleUtils.pass("Current Team Count is greater than Previous Team Count");
+				}else{
+					SimpleUtils.fail("Current Team Count is not greater than Previous Team Count",true);
+				}
+			}
+		}else{
+			SimpleUtils.fail("Size of Current Team Count should be equal to Previous Team Count",false);
+		}
+	}
 }

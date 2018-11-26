@@ -113,9 +113,7 @@ public class ScheduleRoleBasedTest extends TestBase {
     @Override
     @BeforeMethod
     public void firstTest(Method method, Object[] params) throws Exception {
-    	System.out.println("Under firstTest");
         this.createDriver((String) params[0], "68", "Linux");
-    	System.out.println("Under firstTest2");
         visitPage(method);
         loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
         navigateToSchedulePage();
@@ -127,7 +125,7 @@ public class ScheduleRoleBasedTest extends TestBase {
     @TestName(description = "Login as Team Member, navigate & verify Schedule page")
     @Enterprise(name = "Tech_Enterprise")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void scheduleTestAsTeamMember(String browser, String username, String password, String location)
+    public void scheduleTestAsTeamMember(String username, String password, String browser, String location)
         throws Exception {
     	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
         SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
@@ -147,7 +145,7 @@ public class ScheduleRoleBasedTest extends TestBase {
     @Enterprise(name = "Tech_Enterprise")
     @TestName(description = "Login as Team Lead, navigate & verify Schedule page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void scheduleTestAsTeamLead(String browser, String username, String password, String location)
+    public void scheduleTestAsTeamLead(String username, String password, String browser, String location)
         throws Exception {
         SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
         SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
@@ -166,7 +164,7 @@ public class ScheduleRoleBasedTest extends TestBase {
     @Enterprise(name = "Coffee2_Enterprise")
     @TestName(description = "Login as Store Manager, navigate & verify Schedule page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void scheduleTestAsStoreManager(String browser, String username, String password, String location)
+    public void scheduleTestAsStoreManager(String username, String password, String browser, String location)
         throws Exception {
         SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
         SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
@@ -184,7 +182,7 @@ public class ScheduleRoleBasedTest extends TestBase {
     @Owner(owner = "Naval")
     @TestName(description = "Login to Legion with roles, navigate & verify Schedule page")
     @Enterprise(name = "Tech_Enterprise")
-    @Test(dataProvider = "legionTeamCredentialsByEnterpriseP", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void scheduleTest(String browser, String username, String password, String location) throws Exception {
         SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
         SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
@@ -354,7 +352,8 @@ public class ScheduleRoleBasedTest extends TestBase {
     }
 
     public boolean iswagesLoadedInWeekView(HashMap<String, Float> scheduleWeekViewLabelData) {
-        Float scheduleWeekWagesBudgetedCount = scheduleWeekViewLabelData
+    	
+    	Float scheduleWeekWagesBudgetedCount = scheduleWeekViewLabelData
             .get(scheduleHoursAndWagesData.wagesBudgetedCount.getValue());
         Float scheduleWeekWagesScheduledCount = scheduleWeekViewLabelData
             .get(scheduleHoursAndWagesData.wagesScheduledCount.getValue());

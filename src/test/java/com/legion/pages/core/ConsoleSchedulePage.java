@@ -3,7 +3,9 @@ package com.legion.pages.core;
 import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import com.legion.tests.core.ScheduleRoleBasedTest.scheduleHoursAndWagesData;
 import com.legion.utils.MyThreadLocal;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -16,15 +18,13 @@ import com.legion.utils.SimpleUtils;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
-	public ConsoleSchedulePage()
-	{
-		PageFactory.initElements(getDriver(), this);
-	}
+	
 	
 	@FindBy(xpath="//*[@id='legion-app']/div/div[2]/div/div/div/div[1]/navigation/div/div[4]")
 	private WebElement goToScheduleButton;
@@ -118,7 +118,34 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	@FindBy (css = "#legion-app navigation div:nth-child(4)")
 	private WebElement analyticsConsoleName;
-
+	
+	@FindBy(className = "left-banner")
+	private List<WebElement> weeklyScheduleDateElements;
+	
+	@FindBy(css = "[ng-click=\"controlPanel.fns.publishConfirmation($event, false)\"]")
+	private WebElement publishButton;
+	
+	@FindBy(css = "[ng-if='!loading']")
+	private WebElement weeklyScheduleTableBodyElement;
+	
+	@FindBy(css = "[ng-if='!isLocationGroup()']")
+	private List<WebElement> weeklyScheduleStatusElements;
+	
+	@FindBy(css = "[ng-click=\"confirmPublishAction()\"]")
+	private WebElement schedulePublishButton;
+	
+	@FindBy(css = "[ng-click=\"OkAction()\"]")
+	private WebElement successfullyPublishedOkOption;
+	
+	public ConsoleSchedulePage()
+	{
+		PageFactory.initElements(getDriver(), this);
+	}
+	List<String> scheduleWeekDate = new ArrayList<String>();
+	List<String> scheduleWeekStatus = new ArrayList<String>();
+	
+	Map<String, String> weeklyTableRowsDatesAndStatus = new LinkedHashMap<String, String>();
+	
 	final static String consoleScheduleMenuItemText = "Schedule";
 
 	public void clickOnScheduleConsoleMenuItem() {
@@ -178,7 +205,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	 {
 		 if(isElementLoaded(activatedSubTabElement))
 		 {
-			 if(activatedSubTabElement.getText().contains(SubTabText))
+			 if(activatedSubTabElement.getText().toUpperCase().contains(SubTabText))
 			 {
 				 return true;
 			 }
@@ -513,7 +540,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		 if(isElementLoaded(generateSheduleButton))
 		 {
 			 click(generateSheduleButton);
-			 Thread.sleep(5000);
+			 waitForSeconds(4);
 			 if(isElementLoaded(checkOutTheScheduleButton))
 			 {
 				 click(checkOutTheScheduleButton);
@@ -688,4 +715,224 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		}
 		return true;
 	}
+	
+	
+	//added by manideep
+	
+	public void isGenerateScheduleButton() throws Exception {
+		if (isElementLoaded(scheduleGenerateButton)) {
+			SimpleUtils.pass("Generate Schedule Button is Displayed on Schedule page");
+		} else {
+			SimpleUtils.fail("Generate Schedule Button is Displayed on Schedule page", true);
+		}
+	}
+
+	public void validatingRefreshButtononPublishedSchedule() throws Exception {
+		if (isElementLoaded(refresh)) {
+			SimpleUtils.fail("Refresh Button is Displayed on Schedule page", true);
+		} else {
+			SimpleUtils.pass("Refresh Button is not Displayed on Schedule page");
+		}
+
+	}
+
+	
+	public void validateSchedulePageRefreshButton() throws Exception {
+
+		goToSchedulePage();
+		int weekDate = 0;
+		
+		if (isElementLoaded(weeklyScheduleTableBodyElement) && isElementLoaded(weeklyScheduleDateElements.get(0))) {
+
+			for (WebElement weeklyScheduleDateElement : weeklyScheduleDateElements) {
+				scheduleWeekDate.add(weeklyScheduleDateElement.getText());
+				int weekStatus = 0;
+				for (WebElement weeklyScheduleStatusElement : weeklyScheduleStatusElements) {
+
+					if (weekDate == weekStatus) {
+						scheduleWeekStatus.add(weeklyScheduleStatusElement.getText());
+						weeklyTableRowsDatesAndStatus.put(weeklyScheduleDateElement.getText().replace("\n", ""),
+								weeklyScheduleStatusElement.getText().replace("\n", ""));
+
+						break;
+					}
+					weekStatus++;
+				}
+				weekDate++;
+
+			}
+			int mapIndex = 0;
+
+			for (Map.Entry<String, String> tableRowIndex : weeklyTableRowsDatesAndStatus.entrySet()) {
+				SimpleUtils.pass("SCHEDULE WEEK: " + scheduleWeekDate.get(mapIndex) + "  SCHEDULE STATUS: "
+						+ scheduleWeekStatus.get(mapIndex));
+				if (tableRowIndex.getValue().contains("Finalized") || tableRowIndex.getValue().contains("Published")) {
+
+					weeklyScheduleDateElements.get(mapIndex).click();
+
+					checkElementVisibility(goToScheduleTab);
+					SimpleUtils.pass("Schedule Page Loading..!");
+					validatingRefreshButtononPublishedSchedule();
+
+				} else if (tableRowIndex.getValue().contains("Draft")) {
+					weeklyScheduleDateElements.get(mapIndex).click();
+
+					checkElementVisibility(goToScheduleTab);
+
+					SimpleUtils.pass("Schedule Page Loading..!");
+					if (isElementLoaded(publishButton)) {
+						SimpleUtils.pass(" PublishButton is Displayed on Schedule page");
+						validatingScheduleRefreshButton();
+
+						clickOnSchedulePublishButton();
+
+						validatingRefreshButtononPublishedSchedule();
+
+					} else {
+						SimpleUtils.fail(" Publish Button is not Displayed on Schedule page", true);
+					}
+
+				} else if (tableRowIndex.getValue().contains("Guidance")) {
+					weeklyScheduleDateElements.get(mapIndex).click();
+					isGenerateScheduleButton();
+
+				}
+
+				click(goToScheduleButton);
+				mapIndex++;
+
+			}
+
+		}
+
+	}
+
+	
+
+	@Override
+	public void clickOnSchedulePublishButton() throws Exception {
+		if (isElementLoaded(publishButton)) {
+			click(publishButton);
+			if (isElementLoaded(schedulePublishButton)) {
+				Thread.sleep(5000);
+				click(schedulePublishButton);
+				if (isElementLoaded(successfullyPublishedOkOption)) {
+					click(successfullyPublishedOkOption);
+					SimpleUtils.pass("New Published Schedule page loaded successfully!");
+				}
+			}
+		}
+	}
+
+	@Override
+	public void validatingScheduleRefreshButton() throws Exception {
+		if (isElementLoaded(refresh)) {
+			SimpleUtils.pass("Refresh Button is Displayed on Schedule page");
+		} else {
+			SimpleUtils.fail("Refresh Button not Displayed on Schedule page", true);
+		}
+
+	}
+
+	@Override
+	public void navigateDayViewToPast(String nextWeekViewOrPreviousWeekView,
+			int weekCount) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String clickNewDayViewShiftButtonLoaded() throws Exception {
+		return null;
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void customizeNewShiftPage() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void compareCustomizeStartDay(String textStartDay) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void moveSliderAtSomePoint(String shiftTime, int shiftStartingCount, String startingPoint)
+			throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public HashMap<String, String> calculateHourDifference() throws Exception {
+		HashMap<String, String> shiftTimeSchedule = new HashMap<String, String>();
+		return shiftTimeSchedule;
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void selectWorkRole(String workRoles) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clickRadioBtnStaffingOption(String staffingOption) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clickOnCreateOrNextBtn() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public HashMap<List<String>,List<String>> calculateTeamCount()throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> calculatePreviousTeamCount(
+			HashMap<String, String> previousTeamCount, HashMap<List<String>,List<String>> 
+			gridDayHourPrevTeamCount)throws Exception{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> calculateCurrentTeamCount(
+			HashMap<String, String> shiftTiming) throws Exception {
+				return null;
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clickSaveBtn() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clickOnVersionSaveBtn() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clickOnPostSaveBtn() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	
 }
