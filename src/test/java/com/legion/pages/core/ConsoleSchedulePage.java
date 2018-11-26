@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
-	
+
 	
 	@FindBy(xpath="//*[@id='legion-app']/div/div[2]/div/div/div/div[1]/navigation/div/div[4]")
 	private WebElement goToScheduleButton;
@@ -118,34 +118,34 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	@FindBy (css = "#legion-app navigation div:nth-child(4)")
 	private WebElement analyticsConsoleName;
-	
+
 	@FindBy(className = "left-banner")
 	private List<WebElement> weeklyScheduleDateElements;
-	
+
 	@FindBy(css = "[ng-click=\"controlPanel.fns.publishConfirmation($event, false)\"]")
 	private WebElement publishButton;
-	
+
 	@FindBy(css = "[ng-if='!loading']")
 	private WebElement weeklyScheduleTableBodyElement;
-	
+
 	@FindBy(css = "[ng-if='!isLocationGroup()']")
 	private List<WebElement> weeklyScheduleStatusElements;
-	
+
 	@FindBy(css = "[ng-click=\"confirmPublishAction()\"]")
 	private WebElement schedulePublishButton;
-	
+
 	@FindBy(css = "[ng-click=\"OkAction()\"]")
 	private WebElement successfullyPublishedOkOption;
-	
+
 	public ConsoleSchedulePage()
 	{
 		PageFactory.initElements(getDriver(), this);
 	}
 	List<String> scheduleWeekDate = new ArrayList<String>();
 	List<String> scheduleWeekStatus = new ArrayList<String>();
-	
+
 	Map<String, String> weeklyTableRowsDatesAndStatus = new LinkedHashMap<String, String>();
-	
+
 	final static String consoleScheduleMenuItemText = "Schedule";
 
 	public void clickOnScheduleConsoleMenuItem() {
@@ -337,7 +337,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	
 	@Override
-	public HashMap<String, Float> getScheduleLabelHoursAndWagges() throws Exception {
+	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
 		
 		String budgetedHours = "";
 		String scheduledHours = "";
@@ -400,7 +400,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 				for(WebElement ScheduleCalendarDayLabel: ScheduleCalendarDayLabels)
 				{
 					click(ScheduleCalendarDayLabel);
-					ScheduleLabelHoursAndWagesDataForDays.add(getScheduleLabelHoursAndWagges());
+					ScheduleLabelHoursAndWagesDataForDays.add(getScheduleLabelHoursAndWages());
 				}
 			}
 			else {
@@ -715,10 +715,58 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		}
 		return true;
 	}
-	
-	
+
+	@Override
+	public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void selectGroupByFilter(String optionVisibleText) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String getActiveWeekText() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<WebElement> getAllAvailableShiftsInWeekView() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<HashMap<String, String>> getHoursAndShiftsCountForEachWorkRolesInWeekView() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Float> getAllVesionLabels() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void publishActiveSchedule() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isPublishButtonLoaded() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
 	//added by manideep
-	
+
 	public void isGenerateScheduleButton() throws Exception {
 		if (isElementLoaded(scheduleGenerateButton)) {
 			SimpleUtils.pass("Generate Schedule Button is Displayed on Schedule page");
@@ -736,12 +784,12 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	}
 
-	
+
 	public void validateSchedulePageRefreshButton() throws Exception {
 
 		goToSchedulePage();
 		int weekDate = 0;
-		
+
 		if (isElementLoaded(weeklyScheduleTableBodyElement) && isElementLoaded(weeklyScheduleDateElements.get(0))) {
 
 			for (WebElement weeklyScheduleDateElement : weeklyScheduleDateElements) {
@@ -807,7 +855,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	}
 
-	
+
 
 	@Override
 	public void clickOnSchedulePublishButton() throws Exception {
@@ -838,33 +886,33 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	public void navigateDayViewToPast(String nextWeekViewOrPreviousWeekView,
 			int weekCount) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public String clickNewDayViewShiftButtonLoaded() throws Exception {
 		return null;
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void customizeNewShiftPage() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void compareCustomizeStartDay(String textStartDay) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void moveSliderAtSomePoint(String shiftTime, int shiftStartingCount, String startingPoint)
 			throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -872,25 +920,25 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		HashMap<String, String> shiftTimeSchedule = new HashMap<String, String>();
 		return shiftTimeSchedule;
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void selectWorkRole(String workRoles) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void clickRadioBtnStaffingOption(String staffingOption) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void clickOnCreateOrNextBtn() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -901,7 +949,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	@Override
 	public List<String> calculatePreviousTeamCount(
-			HashMap<String, String> previousTeamCount, HashMap<List<String>,List<String>> 
+			HashMap<String, String> previousTeamCount, HashMap<List<String>,List<String>>
 			gridDayHourPrevTeamCount)throws Exception{
 		// TODO Auto-generated method stub
 		return null;
@@ -912,27 +960,27 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			HashMap<String, String> shiftTiming) throws Exception {
 				return null;
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void clickSaveBtn() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void clickOnVersionSaveBtn() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void clickOnPostSaveBtn() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
-	
+
+
 }

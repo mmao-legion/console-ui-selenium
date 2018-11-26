@@ -1,7 +1,10 @@
 package com.legion.pages;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import org.openqa.selenium.WebElement;
 
 public interface SchedulePage {
 	public void clickOnScheduleConsoleMenuItem();
@@ -14,7 +17,7 @@ public interface SchedulePage {
 	public boolean isSchedule() throws Exception;
 	public void clickOnWeekView() throws Exception;
 	public void clickOnDayView() throws Exception;
-	public HashMap<String, Float> getScheduleLabelHoursAndWagges() throws Exception;
+	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception;
 	public List<HashMap<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception;
 	public void clickOnScheduleSubTab(String subTabString) throws Exception;
 	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount);
@@ -50,5 +53,16 @@ public interface SchedulePage {
 	public void clickSaveBtn() throws Exception;
 	public void clickOnVersionSaveBtn() throws Exception;
 	public void clickOnPostSaveBtn() throws Exception;
+	
+	
+	//public void getAvailableFilters();
+    public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView);
+    public void selectGroupByFilter(String optionVisibleText);
+    public String getActiveWeekText() throws Exception;
+    public ArrayList<WebElement> getAllAvailableShiftsInWeekView();
+    public ArrayList<HashMap<String, String>> getHoursAndShiftsCountForEachWorkRolesInWeekView() throws Exception;
+    public ArrayList<Float> getAllVesionLabels() throws Exception;
+	public void publishActiveSchedule()throws Exception;
+	public boolean isPublishButtonLoaded();
 	
 }

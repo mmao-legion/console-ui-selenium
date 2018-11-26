@@ -2,6 +2,7 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.aventstack.extentreports.Status;
@@ -134,6 +135,16 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	activeConsoleName = scheduleConsoleName.getText();
     	click(goToTodayScheduleButton);
         return new ConsoleSchedulePage();
+    }
+    
+    @Override
+    public SchedulePage goToTodayForNewUI() throws Exception {
+    	waitForPageLoaded(getDriver());
+    	checkElementVisibility(goToTodayScheduleButton);
+    	SimpleUtils.pass("Dashboard Page Loaded Successfully!");
+    	activeConsoleName = scheduleConsoleName.getText();
+    	click(goToTodayScheduleButton);
+        return new ConsoleScheduleNewUIPage();
     }
     
 

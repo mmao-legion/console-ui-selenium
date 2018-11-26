@@ -7,17 +7,20 @@
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
  	
-  <test name="Schedule UI New Test">      
+ 	
+  <test name="Schedule New UI Test">      
     <classes>
        <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
+
              <include name="editOpenShiftScheduleAsStoreManager"/>
-           
+			
         </methods>
       </class>
     </classes>
-  </test> 
-  
-  
+   </test>  
    
-</suite> 
+  
+ 
+   
+</suite> <!-- Suite -->

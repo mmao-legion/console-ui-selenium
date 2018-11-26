@@ -212,7 +212,7 @@ public class ScheduleRoleBasedNewUITest extends TestBase {
         HashMap<String, Float> scheduleWeekViewLabelData = new HashMap<String, Float>();
         //SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
         schedulePage.clickOnWeekView();
-        scheduleWeekViewLabelData = schedulePage.getScheduleLabelHoursAndWagges();
+        scheduleWeekViewLabelData = schedulePage.getScheduleLabelHoursAndWages();
 
         return scheduleWeekViewLabelData;
 
