@@ -1,7 +1,10 @@
 package com.legion.pages;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import org.openqa.selenium.WebElement;
 
 public interface SchedulePage {
 	public void clickOnScheduleConsoleMenuItem();
@@ -34,5 +37,11 @@ public interface SchedulePage {
 	//public void getAvailableFilters();
     public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView);
     public void selectGroupByFilter(String optionVisibleText);
+    public String getActiveWeekText() throws Exception;
+    public ArrayList<WebElement> getAllAvailableShiftsInWeekView();
+    public ArrayList<HashMap<String, String>> getHoursAndShiftsCountForEachWorkRolesInWeekView() throws Exception;
+    public ArrayList<Float> getAllVesionLabels() throws Exception;
+	public void publishActiveSchedule()throws Exception;
+	public boolean isPublishButtonLoaded();
 	
 }

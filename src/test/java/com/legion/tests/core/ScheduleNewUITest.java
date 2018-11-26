@@ -1,12 +1,16 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import com.aventstack.extentreports.Status;
 import com.legion.pages.DashboardPage;
+import com.legion.pages.LoginPage;
 import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
 import com.legion.tests.TestBase;
@@ -312,5 +316,210 @@ public class ScheduleNewUITest extends TestBase{
 	        schedulePage.clickOnEditButton();
 	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
 	        schedulePage.clickOnCancelButtonOnEditMode();
+	    }
+	    
+	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-80: Should not show unpublished schedule in AV view for Team Member, Team Lead")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void verifyUnpublishedScheduleVisibilityForTMsAndTLsAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        
+	        /*
+	         *  Navigate to Schedule Day view
+	         */
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+			List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			
+			String fileName = "UsersCredentials.json";
+	        fileName=SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;	        
+	        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+	        Object[][] teamLeadCredentials = userCredentials.get("TeamLead");
+	        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+	        
+
+	        /*
+	         * Login as Team Lead
+	         */
+	        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamLeadCredentials[0][0]), String.valueOf(teamLeadCredentials[0][1]), String.valueOf(teamLeadCredentials[0][2]));
+	        dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        schedulePage.clickOnWeekView();
+	        for(String weekStatus : overviewPageScheduledWeekStatus)
+			{
+	        	boolean isSchedulePublished = schedulePage.isCurrentScheduleWeekPublished();
+	        	if(weekStatus.toLowerCase().equals(overviewWeeksStatus.Draft.getValue().toLowerCase()))
+	        		SimpleUtils.assertOnFail("UnPublished week:'"+ schedulePage.getActiveWeekText() 
+	        		+ "' Schedule is visible for Team Lead", ! isSchedulePublished, true);
+	        	else
+	        		SimpleUtils.assertOnFail("Published week:'"+ schedulePage.getActiveWeekText() 
+	        		+"' Schedule is not visible for Team Lead", isSchedulePublished, true);
+				schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+			}
+	        loginPage.logOut();
+	        
+	        /*
+	         * Login as Team Member
+	         */
+	        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), 
+	        		String.valueOf(teamMemberCredentials[0][1]), String.valueOf(teamMemberCredentials[0][2]));
+	        dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        schedulePage.clickOnWeekView();
+	        for(String weekStatus : overviewPageScheduledWeekStatus)
+			{
+	        	boolean isSchedulePublished = schedulePage.isCurrentScheduleWeekPublished();
+	        	if(weekStatus.toLowerCase().equals(overviewWeeksStatus.Draft.getValue().toLowerCase()))
+	        		SimpleUtils.assertOnFail("UnPublished week:'"+ schedulePage.getActiveWeekText() 
+	        		+"' Schedule is visible for Team Member", ! isSchedulePublished, true);
+	        	else
+	        		SimpleUtils.assertOnFail("Published week:'"+ schedulePage.getActiveWeekText() 
+	        		+"' Schedule is not visible for Team Member", isSchedulePublished, true);
+	        	
+	        	schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+			}
+	    }
+	    
+	    /*
+	     * Automation Script for - JIRA ID -LEG-2428 : "Store manager should be able to publish schedule versioned 1.0"
+	     */
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-82: Should not show unpublished schedule in AV view for Team Member, Team Lead")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void verifyAndPublishScheduleAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!" ,
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+			List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+	        schedulePage.clickOnWeekView();
+	        
+	        int scheduleOverViewStatusCount = overviewPageScheduledWeekStatus.size();
+			for(int index = 0; index < scheduleOverViewStatusCount; index++)
+			{
+				String status = overviewPageScheduledWeekStatus.get(index);
+				if(index != 0)
+					schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+				
+				if(status.toLowerCase().equals(overviewWeeksStatus.Draft.getValue().toLowerCase()))
+				{
+					SimpleUtils.report("Selected Week: '"+schedulePage.getActiveWeekText()+"'");
+					/*
+					 * Assertions: 	
+					 */
+					
+					/*
+					 * Total # of scheduled hours under Version 0.n Details should not be 0
+					 */
+					HashMap<String, Float> ScheduleWeekViewCardData = schedulePage.getScheduleLabelHoursAndWages();
+					SimpleUtils.report("Schedule Hours for Selected Week: '"+ 
+							ScheduleWeekViewCardData.get(scheduleHoursAndWagesData.scheduledHours.getValue()) +"'");
+					SimpleUtils.assertOnFail("Active Unpublished Schedule contains '0' Hours.", 
+							! (0 == Math.round(ScheduleWeekViewCardData.get(scheduleHoursAndWagesData.scheduledHours.getValue()))),
+									false);
+					
+					/*
+					 * Total # of shifts under Version 0.n Details should not be 0
+					 */
+					SimpleUtils.report("Available Shift count for Selected Week: '"+ 
+							schedulePage.getAllAvailableShiftsInWeekView().size() +"'");
+					
+					SimpleUtils.assertOnFail("Available Shift count for active week is '0'.", 
+							! (0 == schedulePage.getAllAvailableShiftsInWeekView().size()), false);
+					
+					
+					/*
+					 * Each enabled workrole should have an entry and #HRs/#Shifts can't be 0
+					 */
+					
+					ArrayList<HashMap<String, String>> workRoleData = schedulePage.getHoursAndShiftsCountForEachWorkRolesInWeekView();
+					for(HashMap<String, String> eachWorkRoledata : workRoleData)
+					{
+						SimpleUtils.report("Selected Week Schudule Hours for '"
+								+ eachWorkRoledata.get("workRole") + "': '"	
+									+ eachWorkRoledata.get("scheduledHours")+"'");
+						SimpleUtils.assertOnFail("Available Schedule Hours of WorkRole: '"+ eachWorkRoledata.get("workRole") +"' for active week is '0'.", 
+								! (0 == Math.round(Float.valueOf(eachWorkRoledata.get("scheduledHours")))), false);
+						
+						SimpleUtils.report("Selected Week Shift count for '"
+								+ eachWorkRoledata.get("workRole") + "': '"	
+									+ eachWorkRoledata.get("shiftsCount")+"'");
+						SimpleUtils.assertOnFail("Available Shift count of WorkRole: '"+ eachWorkRoledata.get("workRole") +"' for active week is '0'.", 
+								! (0 == Integer.valueOf(eachWorkRoledata.get("shiftsCount"))), false);
+					}
+					
+					/*
+					 * Version History should have entries from 0.0 to 0.n
+					 */
+					ArrayList<Float> versionHistory = schedulePage.getAllVesionLabels();
+					String versionHistoryText = "";
+					for(Float version : versionHistory)
+					{
+						if(versionHistoryText == "")
+							versionHistoryText = "Version "+version;
+						else
+							versionHistoryText = versionHistoryText + ", " + "Version "+version;
+								
+						SimpleUtils.assertOnFail("Version History contains 'Version "+ version + " for active Unpublished Schedule.", 
+								(version < 1), true);
+					}
+					
+					SimpleUtils.report("Selected Week Version History: '"
+							+ versionHistoryText +"'");
+					
+					/*
+					 * On the publish page, Scheduled hours should be non 0 - pending
+					 */
+					
+					
+					/*
+					 * Publish the Schedule
+					 */
+					schedulePage.publishActiveSchedule();
+					
+					/*
+					 * Verify: Schedule Button Should not appear.
+					 */
+					SimpleUtils.assertOnFail("'Publish' button loaded for Active Week: '"+schedulePage.getActiveWeekText()+"' after Schedule published.", 
+							! schedulePage.isPublishButtonLoaded(), true);
+				}
+			}
+
+	        
+	        /*
+	         *  Navigate to Schedule Day view
+	         */
+	       /* schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+			List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();	 */      
 	    }
 }

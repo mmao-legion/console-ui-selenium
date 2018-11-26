@@ -7,21 +7,24 @@
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
  	
- 	<test name="Schedule New UI Test">      
+ 	
+  <test name="Schedule New UI Test">      
     <classes>
        <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
-             <!-- <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/>  -->
+             <!-- <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/> 
              <include name="viewAndFilterScheduleWithGroupByAllInWeekViewAsStoreManager"/>
 			 <include name="viewAndFilterScheduleWithGroupByWorkRoleInWeekViewAsStoreManager"/>
 			 <include name="viewAndFilterScheduleWithGroupByTMsInWeekViewAsStoreManager"/>
 			 <include name="viewAndFilterScheduleWithGroupByAllDayViewAsStoreManager"/>
 			 <include name="viewAndFilterScheduleWithGroupByWorkRoleDayViewAsStoreManager"/>
 			 <include name="viewAndFilterScheduleWithGroupByTMsDayViewAsStoreManager"/>
+			 <include name="verifyUnpublishedScheduleVisibilityForTMsAndTLsAsStoreManager"/> -->
+			 <include name="verifyAndPublishScheduleAsStoreManager"/>
         </methods>
       </class>
     </classes>
-   </test> 
+   </test>  
    
   <!--  <test name="Role Based Schedule Test">      
     <classes>

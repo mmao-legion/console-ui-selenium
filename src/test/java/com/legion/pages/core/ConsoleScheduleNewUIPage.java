@@ -13,8 +13,10 @@ import com.legion.pages.BasePage;
 import com.legion.pages.SchedulePage;
 import com.legion.utils.SimpleUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
@@ -369,6 +371,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
 		HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
 		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("div.card-carousel-card.card-carousel-card-primary"));
+		Thread.sleep(1000);
 		if(isElementLoaded(budgetedScheduledLabelsDivElement))
 		{
 			String scheduleWagesAndHoursCardText = budgetedScheduledLabelsDivElement.getText();
@@ -727,34 +730,41 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	public boolean isCurrentScheduleWeekPublished()
 	{
 		//todo yt 2018.10.28 this looks like a hack
+		WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")); 
 		String scheduleStatus = "No Published Schedule";
 		try {
-			WebElement noPublishedSchedule = MyThreadLocal.getDriver().findElement(By.className("holiday-text"));
-			if(isElementLoaded(noPublishedSchedule)) {
-				if(noPublishedSchedule.getText().contains(scheduleStatus))
+			List<WebElement> noPublishedSchedules = MyThreadLocal.getDriver().findElements(By.className("holiday-text"));
+			if(noPublishedSchedules.size() != 0) {
+				if(noPublishedSchedules.get(0).getText().contains(scheduleStatus))
 					return false;
 			}
 			else if(isConsoleMessageError())
 			{
 				return false;
 			}
+			else if(isElementLoaded(publishSheduleButton))
+			{
+				return false;
+			}
 		} catch (Exception e) {
-			SimpleUtils.pass("Schedule is Published for current Week!");
+			SimpleUtils.pass("Schedule is Published for current Week! ('"+ activeWeek.getText().replace("\n", " ") +"')");
 			return true;
 		}
-		SimpleUtils.pass("Schedule is Published for current Week!");
+		SimpleUtils.pass("Schedule is Published for current Week! ('"+ activeWeek.getText().replace("\n", " ") +"')");
 		return true;
 	}
 	
 	public boolean isConsoleMessageError() throws Exception 
 	{
-		List<WebElement> carouselCards = MyThreadLocal.getDriver().findElements(By.cssSelector("div.card-carousel-card.card-carousel-card-default"));
+		List<WebElement> carouselCards = MyThreadLocal.getDriver().findElements(By.cssSelector("div.card-carousel-card"));
 		WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")); 
 		if(carouselCards.size() != 0)
 		{
 			for(WebElement carouselCard: carouselCards)
 			{
-				if(carouselCard.getText().toUpperCase().contains("CONSOLE MESSAGE"))
+				if((carouselCard.getText().toUpperCase().contains("CONSOLE MESSAGE") 
+						|| carouselCard.getText().toUpperCase().contains("REQUIRED ACTION")) 
+							&& !isElementLoaded(publishSheduleButton))
 				{
 					SimpleUtils.report("Week: '"+activeWeek.getText().replace("\n", " ")+"' Not Published because of Console Message Error: '"+carouselCard.getText().replace("\n", " ")+"'");
 					return true;
@@ -852,7 +862,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 				SimpleUtils.report("Active Week Card's Data: "+cardHoursAndWagesText);
 				getHoursAndTeamMembersForEachDaysOfWeek();
 				SimpleUtils.assertOnFail("Sum of Daily Schedule Hours not equal to Active Week Schedule Hours!", verifyActiveWeekDailyScheduleHoursInWeekView(), true);
-				verifyActiveWeekTeamMembersCountAvailableShifytCount();
+				verifyActiveWeekTeamMembersCountAvailableShiftCount();
 			} catch (Exception e) {
 				SimpleUtils.fail("Unable to get Card data for active week!", true);
 			}
@@ -1032,7 +1042,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     	return false;
     }
     
-    public boolean verifyActiveWeekTeamMembersCountAvailableShifytCount()
+    public boolean verifyActiveWeekTeamMembersCountAvailableShiftCount()
     {
     	int weekDaysTMsCount = 0;
     	int weekDaysShiftsCount = 0;
@@ -1086,4 +1096,134 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     		}
     	}
     }
+    
+    public ArrayList<WebElement> getAllAvailableShiftsInWeekView()
+    {
+    	ArrayList<WebElement> avalableShifts = new ArrayList<WebElement>();
+    	if(shiftsOnScheduleView.size() != 0)
+		{
+			for(WebElement shiftOnScheduleView : shiftsOnScheduleView)
+			{
+				if(shiftOnScheduleView.getText().trim().length() > 0 && shiftOnScheduleView.isDisplayed())
+				{
+					avalableShifts.add(shiftOnScheduleView);
+				}
+			}
+		}
+    	return avalableShifts;
+    }
+    
+    public ArrayList<HashMap<String, String>> getHoursAndShiftsCountForEachWorkRolesInWeekView() throws Exception
+    {
+    	String workRoleFilterKey = "workrole";
+    	ArrayList<HashMap<String, String>> eachWorkRolesData = new ArrayList<HashMap<String, String>>();
+    	HashMap<String, ArrayList<WebElement>> availableFilters = getAvailableFilters();
+    	if(availableFilters.size() > 1)
+    	{
+        	ArrayList<WebElement> workRoleFilters = availableFilters.get(workRoleFilterKey);
+        	for(WebElement workRoleFilter: workRoleFilters)
+        	{        		
+        		if(filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+        			click(filterButton);
+        		unCheckFilters(workRoleFilters);
+        		click(workRoleFilter);
+        		
+        		//adding workrole name
+        		HashMap<String, String> workRole = new HashMap<String, String>();
+        		workRole.put("workRole", workRoleFilter.getText());
+        		
+        		//Adding Card data (Hours & Wages)
+        		for (Entry<String, Float> e : getScheduleLabelHoursAndWages().entrySet())
+        			workRole.put(e.getKey(), e.getValue().toString());
+        		// Adding Shifts Count
+        		workRole.put("shiftsCount", ""+getAllAvailableShiftsInWeekView().size());
+        		
+        		eachWorkRolesData.add(workRole);
+        	}
+        	unCheckFilters(workRoleFilters);
+        	if(! filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+    			click(filterButton);
+    	}
+    	else {
+    		SimpleUtils.fail("Filters are not appears on Schedule page!", false);
+    	}
+    	
+    	return eachWorkRolesData;
+    }
+    
+    @FindBy(css = "div.version-label")
+    private List<WebElement> versionHistoryLabels;
+    
+    @FindBy(className = "sch-schedule-analyze-dismiss-button")
+    private WebElement dismissanAlyzeButton;
+    
+    public ArrayList<Float> getAllVesionLabels() throws Exception
+    {
+    	ArrayList<Float> allVersions = new ArrayList<Float>();
+    	if(isElementLoaded(analyze))
+    	{
+    		click(analyze);
+        	if(versionHistoryLabels.size() != 0)
+        	{
+        		for(WebElement eachVersionLabel: versionHistoryLabels)
+        		{
+        			String LabelsText = eachVersionLabel.getText().split("\\(Created")[0];
+        			allVersions.add(Float.valueOf(LabelsText.split("Version")[1].trim()));
+        		}
+        	}
+        	closeAnalyticPopup();
+    	}
+    	
+    	
+    	return allVersions;
+    }
+    
+    public void closeAnalyticPopup() throws Exception
+    {
+    	if(isElementLoaded(dismissanAlyzeButton))
+    	{
+    		click(dismissanAlyzeButton);
+    	}
+    }
+
+    @FindBy(className = "sch-publish-confirm-btn")
+    private WebElement publishConfirmBtn;
+    
+    @FindBy(className = "successful-publish-message-btn-ok")
+    private WebElement successfulPublishOkBtn;
+    
+	@Override
+	public void publishActiveSchedule() throws Exception {
+		if(! isCurrentScheduleWeekPublished())
+		{
+			if(isConsoleMessageError())
+				SimpleUtils.fail("Schedule Can not be publish because of Action Require for week: '"+ getActiveWeekText() +"'", false);
+			else
+			{
+				click(publishSheduleButton);
+				if(isElementLoaded(publishConfirmBtn))
+				{
+					click(publishConfirmBtn);
+					SimpleUtils.pass("Schedule published successfully for week: '"+ getActiveWeekText() +"'");
+					if(isElementLoaded(successfulPublishOkBtn))
+					{
+						click(successfulPublishOkBtn);
+					}
+				}
+			}
+				
+		}
+	}
+	
+	public boolean isPublishButtonLoaded()
+	{
+		try {
+			if(isElementLoaded(publishSheduleButton))
+				return true;
+			else
+				return false;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 }

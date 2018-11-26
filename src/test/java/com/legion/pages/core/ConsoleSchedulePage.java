@@ -700,4 +700,40 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public String getActiveWeekText() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<WebElement> getAllAvailableShiftsInWeekView() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<HashMap<String, String>> getHoursAndShiftsCountForEachWorkRolesInWeekView() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Float> getAllVesionLabels() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void publishActiveSchedule() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isPublishButtonLoaded() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
