@@ -510,16 +510,5 @@ public class ScheduleNewUITest extends TestBase{
 							! schedulePage.isPublishButtonLoaded(), true);
 				}
 			}
-
-	        
-	        /*
-	         *  Navigate to Schedule Day view
-	         */
-	       /* schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
-	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
-	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-			List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
-			LoginPage loginPage = pageFactory.createConsoleLoginPage();
-			loginPage.logOut();	 */      
 	    }
 }
