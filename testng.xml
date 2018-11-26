@@ -7,108 +7,17 @@
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
  	
- 	 <test name="Schedule New UI Test">      
+  <test name="Schedule UI New Test">      
     <classes>
        <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
-             <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/> 
+             <include name="editOpenShiftScheduleAsStoreManager"/>
+           
         </methods>
       </class>
     </classes>
-   </test>
+  </test> 
+  
+  
    
-  <!--  <test name="Role Based Schedule Test">      
-    <classes>
-       <class name="com.legion.tests.core.ScheduleRoleBasedNewUITest">
-      	<methods>
-             <include name="scheduleTestAsTeamMember"/> 
-             <include name="scheduleTestAsTeamLead"/>
-             <include name="scheduleTestAsStoreManager"/> 
-             <include name="scheduleTest"/> 
-        </methods>
-      </class>
-    </classes>
-   </test> -->
- 	
-<!--   <test name="Schedule Overview Test">      
-    <classes>
-       <class name="com.legion.tests.core.ScheduleOverviewTest">
-      	<methods>
-           <include name="verifyCurrentWeekDateAndDayTest"/>
-           <include name="verifyDateAndDayForEachWeeksUntilNotAvailableTest"/>
-           <include name="verifyDayAndDateOnSchedulePageMatchesDayAndDateOnOverviewPageTest"/>
-        </methods>
-      </class>
-    </classes>
-  </test> Test
-  
-  <test name="Schedule Test">      
-    <classes>
-       <class name="com.legion.tests.core.ScheduleTest">
-      	<methods>
-             <include name="hoursAndWagesCalculationOnSchedulePage"/>
-             <include name="reviewPastGenerateCurrentAndFutureWeekSchedule"/> 
-            
-        </methods>
-      </class>
-    </classes>
-  </test> Test
-  
-  <test name="Staffing Guidance test">      
-    <classes>
-       <class name="com.legion.tests.core.StaffingGuidanceTest">
-      	<methods>
-           <include name="staffingGuidanceDataAsStoreManagerTest"/>
-        </methods>
-      </class>
-    </classes>
-  </test>
-  
-  <test name="Schedule Role Based Test">      
-    <classes>
-       <class name="com.legion.tests.core.ScheduleRoleBasedTest">
-      	<methods>
-             <include name="scheduleTestAsTeamMember"/>
-             <include name="scheduleTestAsTeamLead"/> 
-             <include name="scheduleTestAsStoreManager"/> 
-             <include name="scheduleTest"/> 
-            
-        </methods>
-      </class>
-    </classes>
-  </test> Test
- 	
-  <test name="Sales Forecast">      
-    <classes>
-       <class name="com.legion.tests.core.SalesForecastTest">
-      	<methods>
-           <include name="salesForecastDataAsStoreManagerTest"/>
-        </methods>
-      </class>
-    </classes>
-  </test> Test
-  
-  <test name="Navigation Flow">      
-    <classes>
-       <class name="com.legion.tests.core.NavigationTest">
-      	<methods>
-           <include name="legionConsoleNavigationFlowStoreManager"/>
-           <include name="legionConsoleNavigationFlowInternalAdmin"/>
-        </methods>
-      </class>
-    </classes>
-  </test> Test
-  
-  
-  <test name="Analytics Test">      
-    <classes>
-       <class name="com.legion.tests.core.AnalyticsTest">
-      	<methods>
-           <include name="gotoAnalyticsPageTest"/>
-        </methods>
-      </class>
-    </classes>
-  </test> Test -->
- 
-   
-</suite> <!-- Suite -->
+</suite> 
