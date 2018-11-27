@@ -29,6 +29,11 @@ public class ExtentReportManager {
         htmlReporter.config().setDocumentTitle(fileName);
         htmlReporter.config().setEncoding("utf-8");
         htmlReporter.config().setReportName("Custom Report");
+     // add custom css
+        htmlReporter.config().setCSS("css-string");
+
+        // add custom javascript
+        htmlReporter.config().setJS("js-string");
         extent = new ExtentReports();
         extent.attachReporter(htmlReporter);
         return extent;

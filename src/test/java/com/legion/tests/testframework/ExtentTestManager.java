@@ -19,16 +19,35 @@ public class ExtentTestManager {
     }
 
     public synchronized static ExtentTest createTest(String name, String description, List<String> categories) {
-        ExtentTest test = extent.createTest(name, description);
+    	
+    	ExtentTest test = extent.createTest(name, description);
+        
+        for (String category : categories) {
+            test.assignCategory(category);
+           
+        }
+      
+        extentTest.set(test);
+        return getTest();
+    }
+    
+    public synchronized static ExtentTest createTest(String name, String description, List<String> categories, List<String> enterprises) {
+    	
+    	ExtentTest test = extent.createTest(name, description);
+        
         for (String category : categories) {
             test.assignCategory(category);
         }
+        for (String enterprise : enterprises) {
+        	extent.setSystemInfo("Enterprise",enterprise);
+        }
+      
         extentTest.set(test);
         return getTest();
     }
 
     public synchronized static ExtentTest createTest(String name, String description) {
-        return createTest(name, description, null);
+        return createTest(name, description, null,null);
     }
 
     public synchronized static ExtentTest createTest(String name) {
@@ -38,6 +57,12 @@ public class ExtentTestManager {
     public synchronized static void log(String message) {
         getTest().info(message);
     }
+    
+    public synchronized static void setEnterpriseInfo(String categories) {
+    	 
+    	extent.setSystemInfo("Environment",categories);
+    }
+    
     
     public synchronized static String getTestName(Method testMethod) {
 		

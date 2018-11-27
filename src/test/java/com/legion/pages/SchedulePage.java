@@ -32,6 +32,27 @@ public interface SchedulePage {
 	public String getActiveWeekDayMonthAndDateForEachDay() throws Exception;
 	public Boolean validateScheduleActiveWeekWithOverviewCalendarWeek(String overviewCalendarWeekDate, String overviewCalendarWeekDays, String scheduleActiveWeekDuration);
 	public boolean isCurrentScheduleWeekPublished();
+	public void validatingRefreshButtononPublishedSchedule() throws Exception;
+	public void isGenerateScheduleButton() throws Exception;
+	public void validatingScheduleRefreshButton() throws Exception;
+	public void clickOnSchedulePublishButton() throws Exception;
+	public void navigateDayViewToPast(String nextWeekViewOrPreviousWeekView, int weekCount) throws Exception;
+	public String clickNewDayViewShiftButtonLoaded() throws Exception;
+	public void customizeNewShiftPage() throws Exception;
+	public void compareCustomizeStartDay(String textStartDay) throws Exception;
+	public void moveSliderAtSomePoint(String shiftTime, int shiftStartingCount, String startingPoint) throws Exception;
+	public HashMap<String, String> calculateHourDifference() throws Exception;
+	public void selectWorkRole(String workRoles) throws Exception;
+	public void clickRadioBtnStaffingOption(String staffingOption) throws Exception;
+	public void clickOnCreateOrNextBtn() throws Exception;
+	public HashMap<List<String>,List<String>> calculateTeamCount()throws Exception;
+	public List<String> calculatePreviousTeamCount(
+			HashMap<String, String> previousTeamCount, HashMap<List<String>,List<String>> 
+			gridDayHourPrevTeamCount)throws Exception;
+	public List<String> calculateCurrentTeamCount(HashMap<String, String> shiftTiming)throws Exception;
+	public void clickSaveBtn() throws Exception;
+	public void clickOnVersionSaveBtn() throws Exception;
+	public void clickOnPostSaveBtn() throws Exception;
 	
 	
 	//public void getAvailableFilters();
