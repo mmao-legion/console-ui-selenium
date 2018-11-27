@@ -12,6 +12,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -142,6 +143,20 @@ public class BasePage {
         JavascriptExecutor executor = (JavascriptExecutor) getDriver();
         return (String) executor.executeScript("return document.location.href");
       
+    }
+    
+    public void mouseHover(WebElement element)
+    {
+        Actions actions = new Actions(getDriver());
+        actions.moveToElement(element).clickAndHold().build().perform();
+        SimpleUtils.report("Menu expanded on Hovering" + element.getText());
+    }
+    
+    public void mouseHoverDragandDrop(WebElement fromDestination, WebElement toDestination)
+    {
+        Actions actions = new Actions(getDriver());
+        actions.dragAndDrop(fromDestination, toDestination).build().perform();
+//        SimpleUtils.report("Menu expanded on Hovering" + element.getText());
     }
    
 }

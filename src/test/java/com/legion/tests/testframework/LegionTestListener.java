@@ -16,6 +16,7 @@ import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
+import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.annotations.ITestAnnotation;
@@ -42,6 +43,7 @@ import com.legion.tests.annotations.TestName;
 
 
 import com.legion.utils.JsonUtil;
+import com.legion.utils.SimpleUtils;
 
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -99,15 +101,12 @@ import static com.legion.utils.MyThreadLocal.*;
 		@Override
 		public void onStart(ITestContext context) {
 			// TODO Auto-generated method stub
-			
 		
-	
 		}
 	
 		@Override
 		public void onFinish(ITestContext context) {
-			// TODO Auto-generated method stub
-			
+			// TODO Auto-generated method stub	
 		}
 	
 		@Override
@@ -132,4 +131,7 @@ import static com.legion.utils.MyThreadLocal.*;
 			            testContext.getFailedTests().addResult(testResult, Reporter.getCurrentTestResult().getMethod());
 		        }		
 		}
+		
+		
+		
 	}

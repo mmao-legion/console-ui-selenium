@@ -23,6 +23,20 @@ import com.legion.utils.SimpleUtils;
 
 public class SalesForecastTestKendraScott2 extends TestBase{
 
+	public enum SalesForecastForecastCalenderWeekCount{
+		ZERO(0),
+		One(1),
+		TWO(2);		
+		private final int value;
+		SalesForecastForecastCalenderWeekCount(final int newValue) {
+            value = newValue;
+        }
+        public int getValue() { return value; }
+	}
+	
+	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	private static HashMap<String, String> salesForecastCategoriesOptions = JsonUtil.getPropertiesFromJsonFile("src/test/resources/salesForecastCategoriesOptions.json");
+	
 	@Override
 	  @BeforeMethod()
 	  public void firstTest(Method testMethod, Object[] params) throws Exception{
@@ -30,6 +44,113 @@ public class SalesForecastTestKendraScott2 extends TestBase{
 	      visitPage(testMethod);
 	      loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
 	  }
+	
+	SalesForecastPage schedulePage = null;
+	// To be updated https://legiontech.atlassian.net/browse/LEG-5293 for automation we need to go 2 weeks back for actuals(i.e. the week that has complete actuals data)
+	@Automated(automated ="Automated")
+	@Owner(owner = "Naval")
+	@Enterprise(name = "Kendrascott2_Enterprise")
+	@TestName(description = "LEG-2422: As a store manager, can view Projected Sales Forecast data for past and current week")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void salesForecastDataAsStoreManagerTestStoreManager(String username, String password, String browser, String location)
+            throws Exception
+    {
+    	//To Do Should be separate Test from Schedule test
+//    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        dashboardPage.goToToday();
+        SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+        SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", schedulePage.isSchedule(),false);
+        SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();  
+        salesForecastPage.navigateToSalesForecastTab();
+        SimpleUtils.assertOnFail( "Projected Sales Tab not Active!",salesForecastPage.isSalesForecastTabActive() ,false);
+        
+
+//         * Schedule Projected Sales as Week View
+
+        salesForecastPage.navigateToSalesForecastTabWeekView();
+        SimpleUtils.assertOnFail( "Projected Sales Forecast Tab Week View not loaded successfully!",salesForecastPage.isSalesForecastTabWeekViewActive() ,false);
+        SimpleUtils.assertOnFail( "Projected Sales Item Options/Categories With User Job Title not matched!",salesForecastPage.validateSalesForecastItemOptionWithUserJobTitle(salesForecastCategoriesOptions.get("Manager")) ,true);
+        //pass("Shedule page Projected Sales Item Option/Categories With User Job Title matched!");
+        HashMap<String, String> dayMonthDateFormatForCurrentPastAndFutureWeek = SimpleUtils.getDayMonthDateFormatForCurrentPastAndFutureWeek(SimpleUtils.getCurrentDateDayOfYear(), SimpleUtils.getCurrentISOYear());
+        String currentWeekDate = (String)dayMonthDateFormatForCurrentPastAndFutureWeek.get("currentWeekDate");
+        String pastWeekDate = (String)dayMonthDateFormatForCurrentPastAndFutureWeek.get("pastWeekDate");
+        String futureWeekDate = (String)dayMonthDateFormatForCurrentPastAndFutureWeek.get("futureWeekDate");
+        SimpleUtils.assertOnFail( "Map return currentWeekDate as 'null'!",(currentWeekDate != null) ,false);
+        SimpleUtils.assertOnFail( "Map return pastWeekDate as 'null'!",(pastWeekDate != null) ,true);
+        SimpleUtils.assertOnFail( "Map return futureWeekDate as 'null'!",(futureWeekDate != null) ,true);
+        
+
+//         * Projected Sales forecast for current week
+//
+        SimpleUtils.assertOnFail( "Projected Sales Current Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(currentWeekDate) ,true);
+		Map<String, String> currentWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
+        salesForecastWeeksViewForeCastData(currentWeekSalesForecastCardsData, "Current Week");
+//       
+//        
+//
+//         * Projected Sales forecast for Past week
+//
+//        salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Previous Week", SalesForecastForecastCalenderWeekCount.One.getValue());
+//        SimpleUtils.assertOnFail( "Projected Sales Previous Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(pastWeekDate) ,true);
+//        Map<String, String> previousWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
+//        salesForecastWeeksViewForeCastData(previousWeekSalesForecastCardsData, "Previous Week");
+//        
+//        
+//
+//         * Projected Sales forecast for Future week
+//
+//        salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Future Week", SalesForecastForecastCalenderWeekCount.TWO.getValue());
+//        SimpleUtils.assertOnFail( "Projected Sales Future Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(futureWeekDate) ,true);
+//        Map<String, String> futureWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
+//        salesForecastWeeksViewForeCastData(futureWeekSalesForecastCardsData, "Future Week");
+        
+    }
+	
+	
+	
+	private void salesForecastWeeksViewForeCastData(Map<String, String> WeekSalesForecastCardsData, String weekType) {
+		
+    	String peakDemandProjected = (String)WeekSalesForecastCardsData.get("peakDemandProjected");
+    	String peakDemandActual = (String)WeekSalesForecastCardsData.get("peakDemandActual");
+    	String totalDemandProjected = (String)WeekSalesForecastCardsData.get("totalDemandProjected");
+    	String totalDemandActual = (String)WeekSalesForecastCardsData.get("totalDemandActual");
+    	String peakTimeProjected = (String)WeekSalesForecastCardsData.get("peakTimeProjected");
+    	String peakTimeActual = (String)WeekSalesForecastCardsData.get("peakTimeActual");
+    	
+    	/*
+         * Fail on Projected & Actual values are null
+         */
+    	SimpleUtils.assertOnFail( weekType+" Projected Sales Cards Data Peak Demand Projected is'null'!",(peakDemandProjected != null) ,true);
+    	SimpleUtils.assertOnFail( weekType+" Projected Sales Cards Data Peak Demand Actual is'null'!",(peakDemandActual != null) ,true);
+    	SimpleUtils.assertOnFail( weekType+" Projected Sales Cards Data Total Demand Projected is'null'!",(totalDemandProjected != null) ,true);
+    	SimpleUtils.assertOnFail( weekType+" Projected Sales Cards Data Total Demand Actual is'null'!",(totalDemandActual != null) ,true);
+    	SimpleUtils.assertOnFail( weekType+" Projected Sales Cards Data Peak Time Projected is'null'!",(peakTimeProjected != null) ,true);
+    	SimpleUtils.assertOnFail( weekType+" Projected Sales Cards Data Peak Time Actual is'null'!",(peakTimeActual != null) ,true);
+        /*
+         * fail on "N/A" value of Actuals on Past & Current Week
+         */
+        /*if(!weekType.toLowerCase().contains("future"))
+        {
+        	SimpleUtils.assertOnFail( weekType+" Projected Sales Cards Data Peak Demand Actual is 'N/A'!",(! peakDemandActual.contains("N/A")),true);
+        	SimpleUtils.assertOnFail( weekType+" Projected Sales Cards Data Total Demand Actual is 'N/A'!",(! totalDemandActual.contains("N/A")) ,true);
+        	SimpleUtils.assertOnFail( weekType+" Projected Sales Cards Data Peak Time Actual is 'N/A'!",(! peakTimeActual.contains("N/A")) ,true);
+        }*/
+        
+        
+        /*
+         *  Logging Projected Sales forecast Data card values
+         */
+        
+        ExtentTestManager.getTest().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Demand Projected - "+peakDemandProjected );
+        ExtentTestManager.getTest().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Demand Actual - "+peakDemandActual );
+        ExtentTestManager.getTest().log(Status.INFO, weekType+" Projected Sales Cards Data Total Demand Projected - "+totalDemandProjected);
+        ExtentTestManager.getTest().log(Status.INFO, weekType+" Projected Sales Cards Data Total Demand Actual - "+totalDemandActual );
+        ExtentTestManager.getTest().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Time Projected - "+peakTimeProjected );
+        ExtentTestManager.getTest().log(Status.INFO, weekType+" Projected Sales Cards Data Peak Time Actual - "+peakTimeActual );
+		
+	}
+	
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
 	@Enterprise(name = "Kendrascott2_Enterprise")

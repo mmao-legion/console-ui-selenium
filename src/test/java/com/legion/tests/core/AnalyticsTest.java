@@ -32,7 +32,6 @@ public class AnalyticsTest extends TestBase{
 	      loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
 	 }
 	 
-	
 	@Automated(automated ="Automated")
 	@Owner(owner = "Naval")
 	@Enterprise(name = "Coffee2_Enterprise")

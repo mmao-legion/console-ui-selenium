@@ -26,7 +26,7 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 	@FindBy(css="[ng-click=\"selectDayWeekView($event, 'week')\"]")
 	private WebElement salesForecastPageWeekViewButton;
 	
-	String salesForecastTabLabelText = "PROJECTED SALES";
+	String salesForecastTabLabelText = "PROJECTED";
 	
 	@FindBy(css="[ng-click=\"selectDayWeekView($event, 'day')\"]")
 	private WebElement salesForecastPageDayViewButton;
@@ -71,7 +71,7 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 	@Override
 	public Boolean isSalesForecastTabActive() throws Exception
 	{
-		if(isElementLoaded(SchedulePageSelectedSubTab) && SchedulePageSelectedSubTab.getText().contains(salesForecastTabLabelText))
+		if(isElementLoaded(SchedulePageSelectedSubTab) && SchedulePageSelectedSubTab.getText().toLowerCase().contains(salesForecastTabLabelText.toLowerCase()))
 		{
 			return true;
 		}
