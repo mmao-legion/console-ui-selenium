@@ -104,7 +104,6 @@ public abstract class TestBase {
     @BeforeClass
     protected void init () {
         ScreenshotManager.createScreenshotDirIfNotExist();
-//        extent.setSystemInfo(enterpriseName.toString(), "LegionCoffee");
     }
     
     @BeforeMethod(alwaysRun = true)

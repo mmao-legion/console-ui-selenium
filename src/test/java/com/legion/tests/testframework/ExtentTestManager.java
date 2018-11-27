@@ -93,6 +93,7 @@ public class ExtentTestManager {
         String automatedName = "";
         // check if there is a Test annotation and get the test name
         Automated automated = testMethod.getAnnotation(Automated.class);
+        Owner owner = testMethod.getAnnotation(Owner.class);
         if (automated != null && automated.automated().length() > 0) {
         	automatedName = automated.automated();
         }

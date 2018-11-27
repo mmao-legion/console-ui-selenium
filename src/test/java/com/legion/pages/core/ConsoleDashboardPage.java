@@ -54,6 +54,12 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@FindBy (css = "#legion-app navigation div:nth-child(4)")
 	private WebElement scheduleConsoleName;
+	
+	@FindBy (css=".fa.fa-tachometer.fs-22")
+	private WebElement dashboardTabIcon;
+	
+	
+	
 
     public ConsoleDashboardPage() {
     	PageFactory.initElements(getDriver(), this);
@@ -145,5 +151,11 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	}
     	return false;
     }
+
+	@Override
+	public void navigateToDashboardFromGlobalSetting() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

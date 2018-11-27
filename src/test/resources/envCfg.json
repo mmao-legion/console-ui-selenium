@@ -1,5 +1,5 @@
 {
-  "CHROME_DRIVER_PATH": "/home/naval/Documents/chromedriver",
+  "CHROME_DRIVER_PATH": "C:\\chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "D:\\geckodriver.exe",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://enterprise-stage.legion.work/",

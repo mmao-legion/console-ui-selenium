@@ -3,6 +3,7 @@ package com.legion.pages;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -40,6 +41,10 @@ public class BasePage {
         }
     }
 
+    public int calcListLength(List<WebElement> listLength){
+    	return listLength.size();
+    }
+    
     public void waitForElement(String element) {
   
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(
