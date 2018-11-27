@@ -108,7 +108,7 @@ public class ScheduleTest extends TestBase{
 	        SimpleUtils.assertOnFail("Today's Schedule not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
 	        //get Week view Hours & Wages
 	        schedulePage.clickOnWeekView();
-	        HashMap<String, Float> scheduleWeekViewLabelData = schedulePage.getScheduleLabelHoursAndWagges();
+	        HashMap<String, Float> scheduleWeekViewLabelData = schedulePage.getScheduleLabelHoursAndWages();
 	        Float scheduleWeekScheduledHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.scheduledHours.getValue());
 	        Float scheduleWeekBudgetedHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.budgetedHours.getValue());
 	        Float scheduleWeekOtherHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.otherHours.getValue());

@@ -26,7 +26,8 @@ public class SalesForecastTest extends TestBase{
 	public enum SalesForecastForecastCalenderWeekCount{
 		ZERO(0),
 		One(1),
-		TWO(2);		
+		Two(2),
+		Three(3);
 		private final int value;
 		SalesForecastForecastCalenderWeekCount(final int newValue) {
             value = newValue;
@@ -34,7 +35,7 @@ public class SalesForecastTest extends TestBase{
         public int getValue() { return value; }
 	}
 	
-	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	//private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 	private static HashMap<String, String> salesForecastCategoriesOptions = JsonUtil.getPropertiesFromJsonFile("src/test/resources/salesForecastCategoriesOptions.json");
 	@Override
 	  @BeforeMethod()
@@ -68,39 +69,36 @@ public class SalesForecastTest extends TestBase{
         salesForecastPage.navigateToSalesForecastTabWeekView();
         SimpleUtils.assertOnFail( "Projected Sales Forecast Tab Week View not loaded successfully!",salesForecastPage.isSalesForecastTabWeekViewActive() ,false);
         SimpleUtils.assertOnFail( "Projected Sales Item Options/Categories With User Job Title not matched!",salesForecastPage.validateSalesForecastItemOptionWithUserJobTitle(salesForecastCategoriesOptions.get("Manager")) ,true);
-        //pass("Shedule page Projected Sales Item Option/Categories With User Job Title matched!");
+/*        //pass("Shedule page Projected Sales Item Option/Categories With User Job Title matched!");
         HashMap<String, String> dayMonthDateFormatForCurrentPastAndFutureWeek = SimpleUtils.getDayMonthDateFormatForCurrentPastAndFutureWeek(SimpleUtils.getCurrentDateDayOfYear(), SimpleUtils.getCurrentISOYear());
         String currentWeekDate = (String)dayMonthDateFormatForCurrentPastAndFutureWeek.get("currentWeekDate");
         String pastWeekDate = (String)dayMonthDateFormatForCurrentPastAndFutureWeek.get("pastWeekDate");
         String futureWeekDate = (String)dayMonthDateFormatForCurrentPastAndFutureWeek.get("futureWeekDate");
         SimpleUtils.assertOnFail( "Map return currentWeekDate as 'null'!",(currentWeekDate != null) ,false);
         SimpleUtils.assertOnFail( "Map return pastWeekDate as 'null'!",(pastWeekDate != null) ,true);
-        SimpleUtils.assertOnFail( "Map return futureWeekDate as 'null'!",(futureWeekDate != null) ,true);
+        SimpleUtils.assertOnFail( "Map return futureWeekDate as 'null'!",(futureWeekDate != null) ,true);*/
         
 
-//         * Projected Sales forecast for current week
-//
-        SimpleUtils.assertOnFail( "Projected Sales Current Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(currentWeekDate) ,true);
+         //* Projected Sales forecast for current week
+
 		Map<String, String> currentWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
         salesForecastWeeksViewForeCastData(currentWeekSalesForecastCardsData, "Current Week");
-//       
-//        
-//
-//         * Projected Sales forecast for Past week
-//
-//        salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Previous Week", SalesForecastForecastCalenderWeekCount.One.getValue());
-//        SimpleUtils.assertOnFail( "Projected Sales Previous Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(pastWeekDate) ,true);
-//        Map<String, String> previousWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
-//        salesForecastWeeksViewForeCastData(previousWeekSalesForecastCardsData, "Previous Week");
-//        
-//        
-//
-//         * Projected Sales forecast for Future week
-//
-//        salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Future Week", SalesForecastForecastCalenderWeekCount.TWO.getValue());
-//        SimpleUtils.assertOnFail( "Projected Sales Future Week View not Loaded Successfully!",salesForecastPage.validateWeekViewWithDateFormat(futureWeekDate) ,true);
-//        Map<String, String> futureWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
-//        salesForecastWeeksViewForeCastData(futureWeekSalesForecastCardsData, "Future Week");
+       
+        
+
+       // Projected Sales forecast for Past 2nd Week
+
+        salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Previous Week", SalesForecastForecastCalenderWeekCount.Two.getValue());
+        Map<String, String> previousWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
+        salesForecastWeeksViewForeCastData(previousWeekSalesForecastCardsData, "Previous Week");
+        
+        
+
+         // Projected Sales forecast for Future week
+
+        salesForecastPage.navigateSalesForecastWeekViewTpPastOrFuture("Future Week", SalesForecastForecastCalenderWeekCount.Three.getValue());
+        Map<String, String> futureWeekSalesForecastCardsData =  salesForecastPage.getSalesForecastForeCastData();
+        salesForecastWeeksViewForeCastData(futureWeekSalesForecastCardsData, "Future Week");
         
     }
 	
@@ -127,12 +125,12 @@ public class SalesForecastTest extends TestBase{
         /*
          * fail on "N/A" value of Actuals on Past & Current Week
          */
-        /*if(!weekType.toLowerCase().contains("future"))
+        if(!weekType.toLowerCase().contains("future") && !weekType.toLowerCase().contains("current"))
         {
         	SimpleUtils.assertOnFail( weekType+" Projected Sales Cards Data Peak Demand Actual is 'N/A'!",(! peakDemandActual.contains("N/A")),true);
         	SimpleUtils.assertOnFail( weekType+" Projected Sales Cards Data Total Demand Actual is 'N/A'!",(! totalDemandActual.contains("N/A")) ,true);
         	SimpleUtils.assertOnFail( weekType+" Projected Sales Cards Data Peak Time Actual is 'N/A'!",(! peakTimeActual.contains("N/A")) ,true);
-        }*/
+        }
         
         
         /*

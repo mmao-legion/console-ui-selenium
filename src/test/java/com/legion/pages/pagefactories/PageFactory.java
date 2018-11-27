@@ -7,7 +7,7 @@ import com.legion.pages.StaffingGuidancePage;
 import com.legion.pages.SalesForecastPage;
 import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.TeamPage;
-import com.legion.pages.TeamPage_Gunjan;
+import com.legion.pages.TrafficForecastPage;
 import com.legion.pages.UserAuthorizationPage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LocationSelectorPage;
@@ -23,7 +23,7 @@ public interface PageFactory {
      * Aug 03- Zorang Added Below code 
      * */
     TeamPage createConsoleTeamPage();
-   
+    
     SchedulePage createConsoleSchedulePage();
     
     UserAuthorizationPage createConsoleUserAuthorizationPage();
@@ -41,7 +41,7 @@ public interface PageFactory {
     ScheduleOverviewPage createScheduleOverviewPage();
     
     SchedulePage createConsoleScheduleNewUIPage();
-
-	TeamPage_Gunjan createConsoleTeamPage_Gunjan();
+    
+    TrafficForecastPage createTrafficForecastPage();
    
 }

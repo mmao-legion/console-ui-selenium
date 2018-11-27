@@ -10,14 +10,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.legion.pages.TeamPage;
-import com.legion.pages.TeamPage_Gunjan;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
-import com.legion.tests.core.TeamTest_Gunjan.weekCount;
-import com.legion.tests.core.TeamTest_Gunjan.weekViewType;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -80,7 +77,7 @@ public class TeamTest extends TestBase{
 		@Enterprise(name = "Coffee2_Enterprise")
 		@TestName(description = "Testing")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	    public void teamTestClick(String username, String password, String browser, String location)
+	    public void validateTeamTab(String username, String password, String browser, String location)
 	            throws Exception
 	    {
 	    	//To Do Should be separate Test from Schedule test
