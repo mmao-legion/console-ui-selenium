@@ -45,6 +45,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 	
+	public enum dayCount{
+		Seven(7);
+		private final int value;
+		dayCount(final int newValue) {
+            value = newValue;
+        }
+        public int getValue() { return value; }
+	}
+	
 	public ConsoleScheduleNewUIPage()
 	{
 		PageFactory.initElements(getDriver(), this);
@@ -244,6 +253,28 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "select.ng-valid-required")
     private WebElement scheduleGroupByButton;
 
+	
+	@FindBy(css="button.btn-success")
+	private WebElement upgradeAndGenerateScheduleBtn;
+	
+    @FindBy(css = "div.version-label")
+    private List<WebElement> versionHistoryLabels;
+
+    @FindBy(className = "sch-schedule-analyze-dismiss-button")
+    private WebElement dismissanAlyzeButton;
+    
+    @FindBy(className = "sch-publish-confirm-btn")
+    private WebElement publishConfirmBtn;
+
+    @FindBy(className = "successful-publish-message-btn-ok")
+    private WebElement successfulPublishOkBtn;
+    
+    @FindBy(css = "div.holiday-logo-container")
+    private WebElement holidayLogoContainer;
+    
+    @FindBy(css = "tr[ng-repeat=\"day in summary.workingHours\"]")
+	private List<WebElement> guidanceWeekOperatingHours;
+    
 	final static String consoleScheduleMenuItemText = "Schedule";
 
 
@@ -634,7 +665,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		 return true;
 		 
 	 }
-	
+
 	
 
 	@Override
@@ -648,6 +679,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			 {
 				 click(checkOutTheScheduleButton);
 				 SimpleUtils.pass("Schedule Generated Successfuly!");
+			 }
+			 else if(isElementLoaded(upgradeAndGenerateScheduleBtn))
+			 {
+				 click(upgradeAndGenerateScheduleBtn);
+				 Thread.sleep(5000);
+				 if(isElementLoaded(checkOutTheScheduleButton))
+				 {
+					 click(checkOutTheScheduleButton);
+					 SimpleUtils.pass("Schedule Generated Successfuly!");
+				 }
 			 }
 		 }
 		 else {
@@ -1199,7 +1240,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         try {
             if(isElementLoaded(filterButton))
             {
-                click(filterButton);
+            	if(filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+                    click(filterButton);
                 for(WebElement scheduleFilterElement: scheduleFilterElements)
                 {
                     WebElement filterLabel = scheduleFilterElement.findElement(By.className("lg-filter__category-label"));
@@ -1561,11 +1603,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return eachWorkRolesData;
     }
 
-    @FindBy(css = "div.version-label")
-    private List<WebElement> versionHistoryLabels;
-
-    @FindBy(className = "sch-schedule-analyze-dismiss-button")
-    private WebElement dismissanAlyzeButton;
 
     public ArrayList<Float> getAllVesionLabels() throws Exception
     {
@@ -1596,11 +1633,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    @FindBy(className = "sch-publish-confirm-btn")
-    private WebElement publishConfirmBtn;
-
-    @FindBy(className = "successful-publish-message-btn-ok")
-    private WebElement successfulPublishOkBtn;
 
     @Override
     public void publishActiveSchedule() throws Exception {
@@ -1636,6 +1668,145 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             return false;
         }
     }
+
+    
+	@Override
+	public boolean inActiveWeekDayClosed(int dayIndex) throws Exception {
+		if(isWeekGenerated())
+		{
+			navigateDayViewWithIndex(dayIndex);
+			if(isElementLoaded(holidayLogoContainer))
+				return true;
+		}
+		else
+		{
+			if(guidanceWeekOperatingHours.size() != 0)
+			{
+				if(guidanceWeekOperatingHours.get(dayIndex).getText().contains("Closed"))
+					return true;
+			}
+		}
+		return false;
+			
+	}
+
+	@Override
+	public void navigateDayViewWithIndex(int dayIndex) {
+		if(dayIndex < 7 && dayIndex >= 0) {
+			try {
+				clickOnDayView();
+				List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+				if(ScheduleCalendarDayLabels.size() == 7)
+				{
+					click(ScheduleCalendarDayLabels.get(dayIndex));
+				}
+			} catch (Exception e) {
+				SimpleUtils.fail("Unable to navigate to in Day View", false);
+			}
+		}
+		else {
+			SimpleUtils.fail("Invalid dayIndex value to verify Store is Closed for the day", false);
+		}
+		
+	}
+
+	@Override
+	public String getActiveGroupByFilter() throws Exception {
+		String selectedGroupByFilter = "";
+		if(isElementLoaded(scheduleGroupByButton))
+		{
+			Select groupBySelectElement = new Select(scheduleGroupByButton);
+			selectedGroupByFilter = groupBySelectElement.getFirstSelectedOption().getText();
+		}
+		else
+		{
+			SimpleUtils.fail("Group By Filter not loaded successfully for active Week/Day: '"+ getActiveWeekText() +"'", false);
+		}
+		return selectedGroupByFilter;
+	}
+
+	
+	@Override
+	public boolean isActiveWeekHasOneDayClose() throws Exception {
+		for(int index =0; index < dayCount.Seven.getValue(); index++)
+		{
+			if(inActiveWeekDayClosed(index))
+				return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean isActiveWeekAssignedToCurrentUser(String userName) throws Exception {
+		clickOnWeekView();
+		if(shiftsOnScheduleView.size() != 0)
+        {
+            for(WebElement shiftOnScheduleView : shiftsOnScheduleView)
+            {
+                if(shiftOnScheduleView.getText().trim().length() > 0 && shiftOnScheduleView.isDisplayed()
+                		&& shiftOnScheduleView.getText().toLowerCase().contains(userName.toLowerCase()))
+                {
+                    SimpleUtils.pass("Active Week/Day: '"+ getActiveWeekText() +"' assigned to '"+userName+"'.");
+                    return true;
+                }
+            }
+        }
+		SimpleUtils.report("Active Week/Day: '"+ getActiveWeekText() +"' not assigned to '"+userName+"'.");
+		return false;
+	}
+	
+	@FindBy(className = "sch-group-header")
+	private List<WebElement> scheduleShiftHeaders;
+
+	@Override
+	public boolean isScheduleGroupByWorkRole(String workRoleOption) throws Exception {
+		if(getActiveGroupByFilter().equalsIgnoreCase(workRoleOption))
+		{
+			String filterType = "workrole";
+			ArrayList<WebElement> availableWorkRoleFilters = getAvailableFilters().get(filterType);
+			if(availableWorkRoleFilters.size() == scheduleShiftHeaders.size())
+			{
+				return true;
+			}
+			
+		}
+		return false;
+	}
+	
+	public void selectWorkRoleFilterByIndex(int index) throws Exception
+	{
+		String filterType = "workrole";
+		ArrayList<WebElement> availableWorkRoleFilters = getAvailableFilters().get(filterType);
+		if(availableWorkRoleFilters.size() >= index)
+		{
+			unCheckFilters(availableWorkRoleFilters);
+			click(availableWorkRoleFilters.get(index));
+			SimpleUtils.pass("Schedule Work Role:'"+ availableWorkRoleFilters.get(index).getText() +"' Filter selected Successfully!");
+		}
+	}
+
+	@Override
+	public ArrayList<String> getSelectedWorkRoleOnSchedule() throws Exception {
+		ArrayList<String> selectedScheduleTabWorkRoles = new ArrayList<String>();
+		String filterType = "workrole";
+		ArrayList<WebElement> availableWorkRoleFilters = getAvailableFilters().get(filterType);
+		if(availableWorkRoleFilters.size() > 0)
+		{
+			for(WebElement filterElement: availableWorkRoleFilters)
+	        {
+	            WebElement filterCheckBox = filterElement.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+	            String elementClasses = filterCheckBox.getAttribute("class").toLowerCase();
+	            if(elementClasses.contains("ng-not-empty"))
+	            {
+	            	selectedScheduleTabWorkRoles.add(filterElement.getText());
+	            	SimpleUtils.report("Selected Work Role: '" + filterElement.getText() + "'");
+	            }	
+	        }
+			if(! filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+                click(filterButton);
+		}
+		return selectedScheduleTabWorkRoles;
+	}
 
 
 }

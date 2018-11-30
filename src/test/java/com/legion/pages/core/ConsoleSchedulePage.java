@@ -981,6 +981,54 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	}
 
+	@Override
+	public boolean inActiveWeekDayClosed(int dayIndex) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void navigateDayViewWithIndex(int dayIndex) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getActiveGroupByFilter() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isActiveWeekHasOneDayClose() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isActiveWeekAssignedToCurrentUser(String userName) throws Exception{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isScheduleGroupByWorkRole(String workRoleOption) throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void selectWorkRoleFilterByIndex(int index) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ArrayList<String> getSelectedWorkRoleOnSchedule() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 
 }

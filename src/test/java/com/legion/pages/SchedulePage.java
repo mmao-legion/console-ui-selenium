@@ -64,5 +64,13 @@ public interface SchedulePage {
     public ArrayList<Float> getAllVesionLabels() throws Exception;
 	public void publishActiveSchedule()throws Exception;
 	public boolean isPublishButtonLoaded();
+	public boolean inActiveWeekDayClosed(int dayIndex) throws Exception;
+	public void navigateDayViewWithIndex(int dayIndex);
+	public String getActiveGroupByFilter() throws Exception;
+	public boolean isActiveWeekHasOneDayClose() throws Exception;
+	public boolean isActiveWeekAssignedToCurrentUser(String userName) throws Exception;
+	public boolean isScheduleGroupByWorkRole(String workRoleOption) throws Exception;
+	public void selectWorkRoleFilterByIndex(int index) throws Exception;
+	public ArrayList<String> getSelectedWorkRoleOnSchedule() throws Exception;
 	
 }

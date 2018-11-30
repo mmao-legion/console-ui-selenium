@@ -13,16 +13,19 @@
        <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
              <!-- <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/> 
-             --><include name="viewAndFilterScheduleWithGroupByAllInWeekViewAsStoreManager"/><!-- 
+             <include name="viewAndFilterScheduleWithGroupByAllInWeekViewAsStoreManager"/>
              <include name="viewAndFilterScheduleWithGroupByWorkRoleInWeekViewAsStoreManager"/>
 			 <include name="viewAndFilterScheduleWithGroupByTMsInWeekViewAsStoreManager"/>
 			 <include name="viewAndFilterScheduleWithGroupByAllDayViewAsStoreManager"/>
 			 <include name="viewAndFilterScheduleWithGroupByWorkRoleDayViewAsStoreManager"/>
-			 <include name="viewAndFilterScheduleWithGroupByTMsDayViewAsStoreManager"/>
-			 <include name="verifyUnpublishedScheduleVisibilityForTMsAndTLsAsStoreManager"/> -->
-			 <!-- <include name="verifyAndPublishScheduleAsStoreManager"/> -->
+			 <include name="viewAndFilterScheduleWithGroupByTMsDayViewAsStoreManager"/> -->
+			 <!-- <include name="verifyUnpublishedScheduleVisibilityForTMsAndTLsAsStoreManager"/>  -->
+			<!--  <include name="verifyAndPublishScheduleAsStoreManager"/> 
 
-             <include name="editOpenShiftScheduleAsStoreManager"/>
+             <include name="editOpenShiftScheduleAsStoreManager"/> 
+             
+             <include name="navigateToCurrentAndOtherWeekAsStoreManager"/> -->
+             <include name="viewAndFilterScheduleWithGroupByAndNavigateToOtherTabAsStoreManager"/>
 			
         </methods>
       </class>
