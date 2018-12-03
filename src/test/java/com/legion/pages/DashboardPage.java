@@ -9,5 +9,6 @@ public interface DashboardPage {
     public SchedulePage goToTodayForNewUI() throws Exception;
     public void verifyDashboardPageLoadedProperly() throws Exception;
     public Boolean isDashboardPageLoaded() throws Exception;
-    public void navigateToDashboardFromGlobalSetting();
+    public void navigateToDashboard() throws Exception;
+    public void verifySuccessfulNavToDashboardnLoading() throws Exception;
 }

@@ -56,11 +56,20 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy (css = "#legion-app navigation div:nth-child(4)")
 	private WebElement scheduleConsoleName;
 	
-	@FindBy (css=".fa.fa-tachometer.fs-22")
-	private WebElement dashboardTabIcon;
+	@FindBy(className="home-dashboard")
+	private WebElement legionDashboardSection;
+	    
+	@FindBy (css = "div.console-navigation-item-label.Dashboard")
+	private WebElement dashboardConsoleName;
 	
+	@FindBy (css = "div.console-navigation-item-label.Controls")
+	private WebElement controlsConsoleName;
 	
+	@FindBy (css = ".lg-location-chooser__global.ng-scope")
+	private WebElement globalIconControls;
 	
+	@FindBy (css = ".center.ng-scope")
+	private WebElement controlsPage;
 
     public ConsoleDashboardPage() {
     	PageFactory.initElements(getDriver(), this);
@@ -158,15 +167,33 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     {
     	if(isElementLoaded(dashboardSection))
     	{
+    		SimpleUtils.pass("Dashboard loaded successfully");
     		return true;
-    	}
-    	return false;
+       	}else{
+    		SimpleUtils.fail("Dashboard not Loaded",false);
+    		return false;
+       	}
     }
+    
+
+
 
 	@Override
-	public void navigateToDashboardFromGlobalSetting() {
+	public void navigateToDashboard() throws Exception {
 		// TODO Auto-generated method stub
-		
+		if(isElementLoaded(dashboardConsoleName)){
+			dashboardConsoleName.click();
+    	}else{
+    		SimpleUtils.fail("Dashboard menu in left navigation is not loaded!",false);
+    	}
 	}
 
+	@Override
+	public void verifySuccessfulNavToDashboardnLoading() throws Exception {
+		// TODO Auto-generated method stub
+		navigateToDashboard();
+    	isDashboardPageLoaded();
+	}
+
+	
 }

@@ -7,7 +7,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.legion.pages.AnalyticsPage;
+import com.legion.pages.ControlsPage;
+import com.legion.pages.DashboardPage;
 import com.legion.pages.LoginPage;
+import com.legion.pages.core.ConsoleControlsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -29,19 +32,19 @@ public class DashboardTest extends TestBase{
       loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
     }
 	
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Gunjan")
-	@Enterprise(name = "Coffee2_Enterprise")
-	@TestName(description = "LEG-4961: Should be able to set Location at Global Level")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-    public void navigateToDashboardFromGlobalSetting(String username, String password, String browser, String location) throws Exception { 
-    	SimpleUtils.pass("Navigate to Dashboard Page Successfully!");
-    	SimpleUtils.pass("Click on Settings menu");
-    	SimpleUtils.pass("Go back to Dashboard assert Dashboard loaded Successfully");
-    	SimpleUtils.pass("Click on Settings menu again");
-    	SimpleUtils.pass("Click on Global icon present next to Settings at top left section");
-    	SimpleUtils.pass("Navigate back to Dashboard Page");
-    	SimpleUtils.pass("assert Dashboard page is Loaded Successfully!");	
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "LEG-4961: Empty Dashboard issue ")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void navigateToDashboardFromGlobalSettingInternalAdmin(String username, String password, String browser, String location) throws Throwable { 
+    	DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+    	ControlsPage consoleControlsPage = pageFactory.createConsoleControlsPage();
+    	consoleControlsPage.gotoControlsPage();
+    	dashboardPage.verifySuccessfulNavToDashboardnLoading();
+    	consoleControlsPage.gotoControlsPage();
+    	consoleControlsPage.clickGlobalSettings();
+    	dashboardPage.verifySuccessfulNavToDashboardnLoading();    	
     }
     
     @Automated(automated ="Manual")
