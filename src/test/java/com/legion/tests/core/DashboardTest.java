@@ -56,6 +56,5 @@ public class DashboardTest extends TestBase{
     	SimpleUtils.pass("Login into LegionCooffee2 Application Successfully!");
     	SimpleUtils.pass("Navigate to Dashboard Page Successfully!");
     	SimpleUtils.pass("assert Today's Forecast and Projected Demand Graph should not be present for Team lead and Team member");	
-    }  
-    
+    }
 }
