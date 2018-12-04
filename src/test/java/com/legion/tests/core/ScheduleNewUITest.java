@@ -676,8 +676,6 @@ public class ScheduleNewUITest extends TestBase{
 	        schedulePage.clickOnCreateOrNextBtn();
 	        schedulePage.customizeNewShiftPage();
 	        schedulePage.verifySelectTeamMembersOption();
-//	        schedulePage.searchText(propertySearchTeamMember.get("AssignTeamMember"));
-//	        schedulePage.getAvailableStatus();
 	        schedulePage.clickOnOfferOrAssignBtn();
 	        int updatedGutterCount = schedulePage.getgutterSize();
 	        List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
@@ -696,7 +694,7 @@ public class ScheduleNewUITest extends TestBase{
 	    @Enterprise(name = "KendraScott2_Enterprise")
 	    @TestName(description = "TP-39: As a store manager, should be able to review past week's schedule and generate this week or next week's schedule")
 	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	    public void editAssignTeamcheduleAsStoreManager(String browser, String username, String password, String location)
+	    public void editAssignTeamScheduleAsStoreManager(String browser, String username, String password, String location)
 	    		throws Exception {
 	    	int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
 //	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
@@ -726,7 +724,6 @@ public class ScheduleNewUITest extends TestBase{
 	        schedulePage.clickOnCreateOrNextBtn();
 	        schedulePage.customizeNewShiftPage();
 	        schedulePage.verifySelectTeamMembersOption();
-//	        schedulePage.searchText(propertySearchTeamMember.get("AssignTeamMember"));
 	        schedulePage.clickOnOfferOrAssignBtn();
 	        int updatedGutterCount = schedulePage.getgutterSize();
 	        List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
