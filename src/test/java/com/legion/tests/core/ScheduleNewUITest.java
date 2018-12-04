@@ -800,20 +800,13 @@ public class ScheduleNewUITest extends TestBase{
 	    }
 
 	    public boolean checkAddedShift(int guttercount)throws Exception {
-			boolean bolDeleteShift = false;
-	    	if(guttercount>0){
-				schedulePage.clickOnShiftContainer(guttercount);
-				bolDeleteShift = true;
-			}
-	    	return bolDeleteShift;
-
-
-
-
-
-
-
-
+            boolean bolDeleteShift = false;
+            if (guttercount > 0) {
+                schedulePage.clickOnShiftContainer(guttercount);
+                bolDeleteShift = true;
+            }
+            return bolDeleteShift;
+        }
 
 	    @Automated(automated =  "Automated")
 		@Owner(owner = "Naval")
@@ -1081,7 +1074,7 @@ public class ScheduleNewUITest extends TestBase{
 			}
 	    }
 
-		}
+    }
 
 
-}
+
