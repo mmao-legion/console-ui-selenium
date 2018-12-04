@@ -5,6 +5,7 @@ import static org.testng.AssertJUnit.assertTrue;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.ITestResult;
@@ -42,7 +43,6 @@ public class SimpleUtils {
     static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
 	
     private static HashMap< String,Object[][]> userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/legionUsers.json");	
-
 
     public static DesiredCapabilities initCapabilities(String browser, String version, String os) {
         DesiredCapabilities caps = new DesiredCapabilities();
@@ -269,5 +269,5 @@ public class SimpleUtils {
         }
 	    return combinedresult;
     } 
-	    
+	
 }

@@ -447,5 +447,17 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 			click(staffingGuidanceAnalyzePopupCloseButton);
 		}
 	}
+
+	@FindBy(css = "[attr-id=\"workerRoles\"]")
+	private WebElement guidanceWorkRoleDropDown;
+	@Override
+	public String getActiveWorkRole() throws Exception {
+		String selectedWorkRole = "";
+		if(isElementLoaded(guidanceWorkRoleDropDown)) {
+			selectedWorkRole = guidanceWorkRoleDropDown.getText();
+		}
+		SimpleUtils.report("Staffing Guidance Active Work Role filter '"+ selectedWorkRole +"'");
+		return selectedWorkRole;
+	}
 	
 }

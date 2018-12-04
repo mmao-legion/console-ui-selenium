@@ -6,8 +6,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.SchedulePage;
 import com.legion.tests.TestBase;
@@ -23,6 +25,7 @@ public class ScheduleRoleBasedNewUITest extends TestBase {
 
     private static HashMap<String, String> propertyMap = JsonUtil
         .getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+   
 
     SchedulePage schedulePage = null;
     public enum weekCount {
@@ -209,7 +212,7 @@ public class ScheduleRoleBasedNewUITest extends TestBase {
         HashMap<String, Float> scheduleWeekViewLabelData = new HashMap<String, Float>();
         //SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
         schedulePage.clickOnWeekView();
-        scheduleWeekViewLabelData = schedulePage.getScheduleLabelHoursAndWagges();
+        scheduleWeekViewLabelData = schedulePage.getScheduleLabelHoursAndWages();
 
         return scheduleWeekViewLabelData;
 

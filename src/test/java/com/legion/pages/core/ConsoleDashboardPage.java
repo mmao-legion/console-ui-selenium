@@ -2,6 +2,7 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.aventstack.extentreports.Status;
@@ -54,6 +55,21 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@FindBy (css = "#legion-app navigation div:nth-child(4)")
 	private WebElement scheduleConsoleName;
+	
+	@FindBy(className="home-dashboard")
+	private WebElement legionDashboardSection;
+	    
+	@FindBy (css = "div.console-navigation-item-label.Dashboard")
+	private WebElement dashboardConsoleName;
+	
+	@FindBy (css = "div.console-navigation-item-label.Controls")
+	private WebElement controlsConsoleName;
+	
+	@FindBy (css = ".lg-location-chooser__global.ng-scope")
+	private WebElement globalIconControls;
+	
+	@FindBy (css = ".center.ng-scope")
+	private WebElement controlsPage;
 
     public ConsoleDashboardPage() {
     	PageFactory.initElements(getDriver(), this);
@@ -136,14 +152,48 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
         return new ConsoleSchedulePage();
     }
     
+    @Override
+    public SchedulePage goToTodayForNewUI() throws Exception {
+    	waitForPageLoaded(getDriver());
+    	checkElementVisibility(goToTodayScheduleButton);
+    	SimpleUtils.pass("Dashboard Page Loaded Successfully!");
+    	activeConsoleName = scheduleConsoleName.getText();
+    	click(goToTodayScheduleButton);
+        return new ConsoleScheduleNewUIPage();
+    }
+    
 
     public Boolean isDashboardPageLoaded() throws Exception
     {
     	if(isElementLoaded(dashboardSection))
     	{
+    		SimpleUtils.pass("Dashboard loaded successfully");
     		return true;
-    	}
-    	return false;
+       	}else{
+    		SimpleUtils.fail("Dashboard not Loaded",false);
+    		return false;
+       	}
     }
+    
 
+
+
+	@Override
+	public void navigateToDashboard() throws Exception {
+		// TODO Auto-generated method stub
+		if(isElementLoaded(dashboardConsoleName)){
+			dashboardConsoleName.click();
+    	}else{
+    		SimpleUtils.fail("Dashboard menu in left navigation is not loaded!",false);
+    	}
+	}
+
+	@Override
+	public void verifySuccessfulNavToDashboardnLoading() throws Exception {
+		// TODO Auto-generated method stub
+		navigateToDashboard();
+    	isDashboardPageLoaded();
+	}
+
+	
 }

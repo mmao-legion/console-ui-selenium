@@ -300,4 +300,11 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		}
 		return weekDays;
 	}
+
+	@FindBy(css="div.row-fx.schedule-table-row")
+	private List<WebElement> overviewScheduleWeekList;
+	@Override
+	public List<WebElement> getOverviewScheduleWeeks() {
+		return overviewScheduleWeekList;
+	}
 }
