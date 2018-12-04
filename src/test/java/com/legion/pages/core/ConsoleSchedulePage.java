@@ -1029,6 +1029,42 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		return null;
 	}
 
+	@Override
+	public boolean isRequiredActionUnAssignedShiftForActiveWeek() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void clickOnRefreshButton() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void selectShiftTypeFilterByText(String filterText) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<WebElement> getAvailableShiftsInDayView() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void dragShiftToRightSide(WebElement shift, int xOffSet) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 
 }

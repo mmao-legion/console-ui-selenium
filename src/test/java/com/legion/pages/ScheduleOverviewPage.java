@@ -1,8 +1,11 @@
 package com.legion.pages;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.openqa.selenium.WebElement;
 
 public interface ScheduleOverviewPage {
 
@@ -15,4 +18,5 @@ public interface ScheduleOverviewPage {
 	public List<String> getCurrentAndUpcomingActiveWeeksDaysOnCalendar() throws Exception;
 	public void clickOnCurrentWeekToOpenSchedule() throws Exception;
 	public String getOverviewCalenderWeekDays() throws Exception;
+	public List<WebElement> getOverviewScheduleWeeks();
 }

@@ -25,7 +25,9 @@
              <include name="editOpenShiftScheduleAsStoreManager"/> 
              
              <include name="navigateToCurrentAndOtherWeekAsStoreManager"/> -->
-             <include name="viewAndFilterScheduleWithGroupByAndNavigateToOtherTabAsStoreManager"/>
+             <!-- <include name="viewAndFilterScheduleWithGroupByAndNavigateToOtherTabAsStoreManager"/> -->
+             <!-- <include name="verifyRequiredActionToConsoleMessageAfterRefreshAsStoreManager"/> -->
+             <include name="verifyComplianceSmartcardAfterExdendingAShiftToOTAsStoreManager"/>
 			
         </methods>
       </class>

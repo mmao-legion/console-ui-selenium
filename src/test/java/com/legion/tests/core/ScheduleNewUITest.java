@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import com.aventstack.extentreports.Status;
+import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.ScheduleOverviewPage;
@@ -667,44 +669,41 @@ public class ScheduleNewUITest extends TestBase{
 				String status = overviewPageScheduledWeekStatus.get(index);
 				if(index != 0)
 					schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+					
+				SimpleUtils.report("Selected Week: '"+schedulePage.getActiveWeekText()+"'");
+				/*
+				 * Assertions: First week have 1 day closed
+				 */
 
-				//if(status.toLowerCase().equals(overviewWeeksStatus.Draft.getValue().toLowerCase()))
-				{
-					SimpleUtils.report("Selected Week: '"+schedulePage.getActiveWeekText()+"'");
-					/*
-					 * Assertions: First week have 1 day closed
-					 */
-
-					if(status.toLowerCase().equals(overviewWeeksStatus.Guidance.getValue().toLowerCase()) 
-							&& overviewPageScheduledWeekStatus.get(index + 1).toLowerCase().equals(overviewWeeksStatus.Guidance.getValue().toLowerCase())) {
-						isStoreClosed = schedulePage.isActiveWeekHasOneDayClose();
-						if(isStoreClosed)
-						{
-							SimpleUtils.report("Generating Schedule for the Week: '"+schedulePage.getActiveWeekText()+"'");
-							schedulePage.generateSchedule();
-							schedulePage.clickOnWeekView();	
-							schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
-						}
-							
-					}
-					else if(status.toLowerCase().equals(overviewWeeksStatus.Guidance.getValue().toLowerCase())) {
-						
-						System.out.println("Active Week: '"+schedulePage.getActiveWeekText()+"' Not Generated.");
-						
-						// Generating Active Week
-						if(isStoreClosed)
-						{
-							SimpleUtils.report("Generating Schedule for the Week: '"+schedulePage.getActiveWeekText()+"'");
-							schedulePage.generateSchedule();
-							break;
-						}
-							
-						
-						isStoreClosed = schedulePage.isActiveWeekHasOneDayClose();
+				if(status.toLowerCase().equals(overviewWeeksStatus.Guidance.getValue().toLowerCase()) 
+						&& overviewPageScheduledWeekStatus.get(index + 1).toLowerCase().equals(overviewWeeksStatus.Guidance.getValue().toLowerCase())) {
+					isStoreClosed = schedulePage.isActiveWeekHasOneDayClose();
+					if(isStoreClosed)
+					{
+						SimpleUtils.report("Generating Schedule for the Week: '"+schedulePage.getActiveWeekText()+"'");
+						schedulePage.generateSchedule();
 						schedulePage.clickOnWeekView();	
-						if(isStoreClosed)
-							schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
+						schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
 					}
+						
+				}
+				else if(status.toLowerCase().equals(overviewWeeksStatus.Guidance.getValue().toLowerCase())) {
+					
+					System.out.println("Active Week: '"+schedulePage.getActiveWeekText()+"' Not Generated.");
+					
+					// Generating Active Week
+					if(isStoreClosed)
+					{
+						SimpleUtils.report("Generating Schedule for the Week: '"+schedulePage.getActiveWeekText()+"'");
+						schedulePage.generateSchedule();
+						break;
+					}
+						
+					
+					isStoreClosed = schedulePage.isActiveWeekHasOneDayClose();
+					schedulePage.clickOnWeekView();	
+					if(isStoreClosed)
+						schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
 				}
 			}
 			
@@ -815,6 +814,97 @@ public class ScheduleNewUITest extends TestBase{
 	        
 	        SimpleUtils.assertOnFail("Work Role filter not reseting after visiting Projected Traffic Tab",
 	        		(0 == schedulePage.getSelectedWorkRoleOnSchedule().size()) , true);
+	    }
+	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-91: Automation Script for - JIRA ID - "
+	    		+ "FOR-733- Required Action(Unassigned Shift) changes to Console Message(Infeasible Schedule) on clicking Refresh Button(KendraScott2) ")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void verifyRequiredActionToConsoleMessageAfterRefreshAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+			List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+	        schedulePage.clickOnWeekView();
+
+	        int scheduleOverViewStatusCount = overviewPageScheduledWeekStatus.size();
+			for(int index = 0; index < scheduleOverViewStatusCount; index++)
+			{
+				String status = overviewPageScheduledWeekStatus.get(index);
+				if(index != 0)
+					schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+
+				if(status.toLowerCase().equals(overviewWeeksStatus.Draft.getValue().toLowerCase()))
+				{
+					boolean isRequiredActionUnAssignedShift = schedulePage.isRequiredActionUnAssignedShiftForActiveWeek();
+					schedulePage.clickOnRefreshButton();
+					
+					SimpleUtils.assertOnFail("Action Required as Unassigned Shift changed to Console Message After Refresh for The Week: '"+schedulePage.getActiveWeekText()+"'",
+			        		(isRequiredActionUnAssignedShift == schedulePage.isRequiredActionUnAssignedShiftForActiveWeek()) , true);
+				}
+			}
+	    }
+	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-89: Automation Script for - JIRA ID - FOR-599- Compliance smartcard is missing when new compliance warning introduced after initial schedule generation.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void verifyComplianceSmartcardAfterExdendingAShiftToOTAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+			List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+			for(WebElement overviewScheduleWeek : overviewPageScheduledWeeks)
+			{
+				String compareWeekStatus = "draft";
+				if(overviewScheduleWeek.getText().toLowerCase().contains(compareWeekStatus))
+				{
+					BasePage basePage = new BasePage();
+					basePage.click(overviewScheduleWeek);
+					schedulePage.clickOnDayView();
+					String shiftTypeFilterText = "Compliance Review";
+					schedulePage.selectShiftTypeFilterByText(shiftTypeFilterText);
+					List<WebElement> availableShifts = schedulePage.getAvailableShiftsInDayView();
+					if(availableShifts.size() == 0)
+					{
+						shiftTypeFilterText = "None";
+						schedulePage.selectShiftTypeFilterByText(shiftTypeFilterText);
+						schedulePage.clickOnEditButton();
+						schedulePage.dragShiftToRightSide(schedulePage.getAvailableShiftsInDayView().get(0), 400);
+						schedulePage.clickSaveBtn();
+						shiftTypeFilterText = "Compliance Review";
+						schedulePage.selectShiftTypeFilterByText(shiftTypeFilterText);
+						availableShifts = schedulePage.getAvailableShiftsInDayView();
+						SimpleUtils.assertOnFail("Shift with OT not displaying under 'Compliance Review filter",
+				        		(availableShifts.size()!= 0) , true);
+					}
+					
+					String complianceReviewCardTextLabel = "require compliance review";
+					SimpleUtils.assertOnFail("Compliance smartcard is missing when extended a shift into OT for the Week/Day: '"+ schedulePage.getActiveWeekText() +"'.",
+							schedulePage.isSmartCardAvailableByLabel(complianceReviewCardTextLabel) , true);
+					break;
+				}
+			}
 	    }
 
 }

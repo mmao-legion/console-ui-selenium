@@ -8,6 +8,7 @@ import com.legion.utils.MyThreadLocal;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -92,8 +93,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(css="ui-view[name='forecastControlPanel'] span.highlight-when-help-mode-is-on")
 	private WebElement salesGuidance;
 	
-	@FindBy(css="div[ng-click*='refresh'] span.sch-control-button-label")
+	@FindBy(css="[ng-click=\"controlPanel.fns.refreshConfirmation($event)\"]")
 	private WebElement refresh;
+	
+	@FindBy(css = "button.btn.sch-publish-confirm-btn")
+	private WebElement confirmRefreshButton;
+	
+	@FindBy(css = "button.btn.successful-publish-message-btn-ok")
+	private WebElement okRefreshButton;
 	
 	@FindBy(xpath="//div[contains(text(),'Guidance')]")
 	private WebElement guidance;
@@ -274,6 +281,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     
     @FindBy(css = "tr[ng-repeat=\"day in summary.workingHours\"]")
 	private List<WebElement> guidanceWeekOperatingHours;
+    
+    @FindBy(className = "sch-group-header")
+	private List<WebElement> scheduleShiftHeaders;
+	
+	@FindBy(css = "div.card-carousel-card.card-carousel-card-smart-card-required")
+	private WebElement requiredActionCard;
+	
+	@FindBy(className= "sch-day-view-shift-outer")
+	private List<WebElement> dayViewAvailableShifts;
+	
+	@FindBy(css = "div.card-carousel-card")
+	private List<WebElement> carouselCards;
     
 	final static String consoleScheduleMenuItemText = "Schedule";
 
@@ -1134,7 +1153,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		HashMap<List<String>,List<String>> gridDayHourTeamCount = new HashMap<List<String>,List<String>>();
 		List<String> gridDayCount = new ArrayList<String>();
 		List<String> gridTeamCount = new ArrayList<String>();
-//		HashMap<String,String> gridDayHourTeamCounts = new HashMap<String, String>();
 		if(gridHeaderDayHour.size()!=0 && gridHeaderTeamCount.size() !=0 &&
 				gridHeaderDayHour.size() == gridHeaderTeamCount.size()){
 			for(int i=0; i< gridHeaderDayHour.size();i++){
@@ -1154,7 +1172,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			gridDayHourPrevTeamCount)throws Exception{
 		int count = 0;
 		waitForSeconds(3);
-//		HashMap<List<String>,List<String>> gridDayHourCurrentTeamCount = calculateTeamCount();
 		List<String> gridDayHourTeamCount = new ArrayList<String>();
 		exit:
 		for (Map.Entry<List<String>,List<String>> entry : gridDayHourPrevTeamCount.entrySet()) {
@@ -1206,6 +1223,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	public void clickSaveBtn() throws Exception{
 		if(isElementLoaded(scheduleSaveBtn)){
 			click(scheduleSaveBtn);
+			if(isElementLoaded(scheduleVersionSaveBtn))
+				click(scheduleVersionSaveBtn);
+			if(isElementLoaded(btnOK))
+				click(btnOK);
 			SimpleUtils.pass("Schedule Save button clicked Successfully!");
 		}else{
 			SimpleUtils.fail("Schedule Save button not clicked Successfully!",false);
@@ -1231,8 +1252,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			SimpleUtils.fail("Schedule Ok button not clicked Successfully!",false);
 		}
 	}
-
-	//added by Naval
 
     public HashMap<String, ArrayList<WebElement>> getAvailableFilters()
     {
@@ -1755,8 +1774,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		return false;
 	}
 	
-	@FindBy(className = "sch-group-header")
-	private List<WebElement> scheduleShiftHeaders;
 
 	@Override
 	public boolean isScheduleGroupByWorkRole(String workRoleOption) throws Exception {
@@ -1808,5 +1825,86 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		return selectedScheduleTabWorkRoles;
 	}
 
+	
+	@Override
+	public boolean isRequiredActionUnAssignedShiftForActiveWeek() throws Exception {
+		String unAssignedShiftRequireActionText = "unassigned shift";
+		if(isElementLoaded(requiredActionCard))
+		{
+			if(requiredActionCard.getText().toLowerCase().contains(unAssignedShiftRequireActionText))
+			{
+				SimpleUtils.report("Required Action for Unassigned Shift found for the week: '"+ getActiveWeekText() +"'");
+				return true;
+			}
+		}
+		return false;
+	}
 
+
+	public void clickOnRefreshButton() throws Exception
+	{
+		if(isElementLoaded(refresh))
+			click(refresh);
+			if(isElementLoaded(confirmRefreshButton))
+				click(confirmRefreshButton);
+				if(isElementLoaded(okRefreshButton)) {
+					click(okRefreshButton);
+					SimpleUtils.pass("Active Week: '"+ getActiveWeekText() +"' refreshed successfully!");
+				}
+	}
+	
+	public void selectShiftTypeFilterByText(String filterText) throws Exception
+	{
+		String shiftTypeFilterKey = "shifttype";
+		ArrayList<WebElement> shiftTypeFilters = getAvailableFilters().get(shiftTypeFilterKey);
+		unCheckFilters(shiftTypeFilters);
+		for(WebElement shiftTypeOption : shiftTypeFilters)
+		{
+			if(shiftTypeOption.getText().toLowerCase().contains(filterText.toLowerCase()))
+			{
+				click(shiftTypeOption);
+				break;
+			}
+		}
+		if(! filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+            click(filterButton);
+	}
+	
+	
+	public List<WebElement> getAvailableShiftsInDayView()
+	{
+		
+		return dayViewAvailableShifts;
+	}
+	
+	public void dragShiftToRightSide(WebElement shift, int xOffSet)
+	{
+		WebElement shiftRightSlider = shift.findElement(By.cssSelector("div.sch-day-view-shift-pinch.right"));
+		moveDayViewCards(shiftRightSlider, xOffSet);
+	}
+	
+	public void moveDayViewCards(WebElement webElement, int xOffSet)
+	{
+		Actions builder = new Actions(MyThreadLocal.getDriver());
+		builder.moveToElement(webElement)
+	         .clickAndHold()
+	         .moveByOffset(xOffSet, 0)
+	         .release()
+	         .build()
+	         .perform();
+	}
+	
+	
+	public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception
+	{
+		if(carouselCards.size() !=0)
+		{
+			for(WebElement carouselCard: carouselCards)
+			{
+				if(carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase()))
+					return true;
+			}
+		}
+		return false;
+	}
 }

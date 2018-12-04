@@ -72,5 +72,11 @@ public interface SchedulePage {
 	public boolean isScheduleGroupByWorkRole(String workRoleOption) throws Exception;
 	public void selectWorkRoleFilterByIndex(int index) throws Exception;
 	public ArrayList<String> getSelectedWorkRoleOnSchedule() throws Exception;
+	public boolean isRequiredActionUnAssignedShiftForActiveWeek() throws Exception;
+	public void clickOnRefreshButton() throws Exception;
+	public void selectShiftTypeFilterByText(String filterText) throws Exception;
+	public List<WebElement> getAvailableShiftsInDayView();
+	public void dragShiftToRightSide(WebElement shift, int xOffSet);
+	public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception;
 	
 }
