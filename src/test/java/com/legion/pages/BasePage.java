@@ -148,8 +148,8 @@ public class BasePage {
     public void mouseHover(WebElement element)
     {
         Actions actions = new Actions(getDriver());
-        actions.moveToElement(element).clickAndHold().build().perform();
-        SimpleUtils.report("Menu expanded on Hovering" + element.getText());
+        actions.moveToElement(element).click().build().perform();
+        SimpleUtils.report("Clicked on " + element.getText());
     }
     
     public void mouseHoverDragandDrop(WebElement fromDestination, WebElement toDestination)

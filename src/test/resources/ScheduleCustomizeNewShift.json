@@ -1,26 +1,4 @@
 {
-  
   "INCREASE_START_TIME" : "4",
-  "INCREASE_END_TIME" : "9",
-  "LegionTech_Enterprise" : "LegionTech",
-  "Coffee2_Enterprise" : "LegionCoffee2",
-  "Tech_Enterprise" : "LegionTech",
-  "Reverted_Enterprise" : "LegionReverted",
-  "KendraScott2_Enterprise" : "KendraScott2",
-  "DEFAULT_USERNAME" : "admin2.a",
-  "DEFAULT_PASSWORD" : "admin2.a",
-  "ENVIRONMENT" : "QA",
-  "TAKE_SCREENSHOTS" : "TRUE",
-  "INTERNET_EXPLORER" : "Internet Explorer",
-  "CHROME" : "Chrome",
-  "FIREFOX" : "Firefox",
-  "console_logs" : "false",
-  "close_browser" : "false",
-  "show_report" : "false",
-  "VERSION" : "68",
-  "OS" : "WINDOW",
-  "scheduleWeekCount" : "6",
-  "WeekStartOn" : "MON",
-  "isParallelBrowser" : "false"
-
+  "INCREASE_END_TIME" : "9"
 }

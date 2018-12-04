@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import com.aventstack.extentreports.Status;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LoginPage;
@@ -27,7 +30,9 @@ public class ScheduleNewUITest extends TestBase{
 	  private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 	  private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
 	  private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
+	  private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
 	  SchedulePage schedulePage = null;
+	  
 	  @Override
 	  @BeforeMethod
 	  public void firstTest(Method method, Object[] params) throws Exception {
@@ -602,11 +607,13 @@ public class ScheduleNewUITest extends TestBase{
 	        schedulePage.clickOnScheduleConsoleMenuItem();
 	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 	        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
-
 	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
 	        //The schedules that are already published should remain unchanged
 	        schedulePage.clickOnDayView();
-	        schedulePage.clickOnEditButton();
+	        int previousGutterCount = schedulePage.getgutterSize();
+	        scheduleNavigationTest(previousGutterCount);
+	        HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
+	        Float scheduledHoursBeforeEditing = ScheduledHours.get("scheduledHours");
 	        HashMap<List<String>,List<String>> teamCount = schedulePage.calculateTeamCount();
 	        SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
 	        String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
@@ -620,12 +627,183 @@ public class ScheduleNewUITest extends TestBase{
 //	        schedulePage.clickRadioBtnStaffingOption(staffingOption.ManualShift.getValue());
 //	        schedulePage.clickRadioBtnStaffingOption(staffingOption.AssignTeamMemberShift.getValue());
 	        schedulePage.clickOnCreateOrNextBtn();
+	        int updatedGutterCount = schedulePage.getgutterSize();
 	        List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
 	        List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
-	        SimpleUtils.verifyTeamCount(previousTeamCount,currentTeamCount);
+	        verifyTeamCount(previousTeamCount,currentTeamCount);
 	        schedulePage.clickSaveBtn();
 	        schedulePage.clickOnVersionSaveBtn();
 	        schedulePage.clickOnPostSaveBtn();
+	        HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
+	        Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
+	        verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
+	        
 	    }
+	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Nishant")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-39: As a store manager, should be able to review past week's schedule and generate this week or next week's schedule")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void editManualShiftScheduleAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	    	int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
+//	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+	        schedulePage.clickOnScheduleConsoleMenuItem();
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+	        //The schedules that are already published should remain unchanged
+	        schedulePage.clickOnDayView();
+	        int previousGutterCount = schedulePage.getgutterSize();
+	        scheduleNavigationTest(previousGutterCount);
+	        HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
+	        Float scheduledHoursBeforeEditing = ScheduledHours.get("scheduledHours");
+	        HashMap<List<String>,List<String>> teamCount = schedulePage.calculateTeamCount();
+	        SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
+	        String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
+	        schedulePage.customizeNewShiftPage();
+	        schedulePage.compareCustomizeStartDay(textStartDay);
+	        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"),sliderShiftCount.SliderShiftEndTimeCount.getValue(), shiftSliderDroppable.EndPoint.getValue());
+	        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  sliderShiftCount.SliderShiftStartCount.getValue(), shiftSliderDroppable.StartPoint.getValue());
+	        HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
+	        schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+	        schedulePage.clickRadioBtnStaffingOption(staffingOption.ManualShift.getValue());
+	        schedulePage.clickOnCreateOrNextBtn();
+	        schedulePage.customizeNewShiftPage();
+	        schedulePage.verifySelectTeamMembersOption();
+//	        schedulePage.searchText(propertySearchTeamMember.get("AssignTeamMember"));
+//	        schedulePage.getAvailableStatus();
+	        schedulePage.clickOnOfferOrAssignBtn();
+	        int updatedGutterCount = schedulePage.getgutterSize();
+	        List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
+	        List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
+	        verifyTeamCount(previousTeamCount,currentTeamCount);
+	        schedulePage.clickSaveBtn();
+	        schedulePage.clickOnVersionSaveBtn();
+	        schedulePage.clickOnPostSaveBtn();
+	        HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
+	        Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
+	        verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
+	    }
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Nishant")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-39: As a store manager, should be able to review past week's schedule and generate this week or next week's schedule")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void editAssignTeamcheduleAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	    	int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
+//	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+	        schedulePage.clickOnScheduleConsoleMenuItem();
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+	        schedulePage.clickOnDayView();
+	        int previousGutterCount = schedulePage.getgutterSize();
+	        scheduleNavigationTest(previousGutterCount);
+	        HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
+	        Float scheduledHoursBeforeEditing = ScheduledHours.get("scheduledHours");
+	        HashMap<List<String>,List<String>> teamCount = schedulePage.calculateTeamCount();
+	        SimpleUtils.assertOnFail("User can add new shift for past week", 
+	        		(schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
+	        String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
+	        schedulePage.customizeNewShiftPage();
+	        schedulePage.compareCustomizeStartDay(textStartDay);
+	        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"),sliderShiftCount.SliderShiftEndTimeCount.getValue(), shiftSliderDroppable.EndPoint.getValue());
+	        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  sliderShiftCount.SliderShiftStartCount.getValue(), shiftSliderDroppable.StartPoint.getValue());
+	        HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
+	        schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+	        schedulePage.clickRadioBtnStaffingOption(staffingOption.AssignTeamMemberShift.getValue());
+	        schedulePage.clickOnCreateOrNextBtn();
+	        schedulePage.customizeNewShiftPage();
+	        schedulePage.verifySelectTeamMembersOption();
+//	        schedulePage.searchText(propertySearchTeamMember.get("AssignTeamMember"));
+	        schedulePage.clickOnOfferOrAssignBtn();
+	        int updatedGutterCount = schedulePage.getgutterSize();
+	        List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
+	        List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
+	        verifyTeamCount(previousTeamCount,currentTeamCount);
+	        schedulePage.clickSaveBtn();
+	        schedulePage.clickOnVersionSaveBtn();
+	        schedulePage.clickOnPostSaveBtn();
+	        HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
+	        Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
+	        verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
+	       
+	    }
+	    
+	    public void verifyScheduleLabelHours(String shiftTimeSchedule,
+	  			Float scheduledHoursBeforeEditing, Float scheduledHoursAfterEditing) throws Exception{
+	  			Float scheduledHoursExpectedValueEditing = 0.0f;
+	  		if(Float.parseFloat(shiftTimeSchedule) >= 6){
+	  			scheduledHoursExpectedValueEditing = (float) (scheduledHoursBeforeEditing + (Float.parseFloat(shiftTimeSchedule) - 0.5));
+	  			System.out.println("Scheduled hour is "+scheduledHoursAfterEditing);
+	  		}else{
+	  			scheduledHoursExpectedValueEditing = (float)(scheduledHoursBeforeEditing + Float.parseFloat(shiftTimeSchedule));
+	  			System.out.println("Scheduled hour is "+scheduledHoursAfterEditing);
+	  		}
+	  		
+	  		if(scheduledHoursExpectedValueEditing.equals(scheduledHoursAfterEditing)){
+	  			SimpleUtils.pass("Scheduled Hours Expected value "+scheduledHoursExpectedValueEditing+" matches with Scheduled Hours Actual value "+scheduledHoursAfterEditing);
+	  		}else{
+	  			SimpleUtils.fail("Scheduled Hours Expected value "+scheduledHoursExpectedValueEditing+" does not match with Scheduled Hours Actual value "+scheduledHoursAfterEditing,false);
+	  		}
+	  	}
+	    
+	    
+	    public void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception {
+			if(previousTeamCount.size() == currentTeamCount.size()){
+				for(int i =0; i<currentTeamCount.size();i++){
+					String currentCount = currentTeamCount.get(i);
+					String previousCount = previousTeamCount.get(i);
+					if(Integer.parseInt(currentCount) == Integer.parseInt(previousCount)+1){
+						SimpleUtils.pass("Current Team Count is greater than Previous Team Count");
+					}else{
+						SimpleUtils.fail("Current Team Count is not greater than Previous Team Count",true);
+					}
+				}
+			}else{
+				SimpleUtils.fail("Size of Current Team Count should be equal to Previous Team Count",false);
+			}
+		}
+	    
+	    public void verifyGutterCount(int previousGutterCount, int updatedGutterCount){
+	    	if(updatedGutterCount == previousGutterCount + 1){
+	    		SimpleUtils.pass("Size of gutter is "+updatedGutterCount+" greater than previous value "+previousGutterCount);
+	    	}else{
+	    		SimpleUtils.fail("Size of gutter is "+updatedGutterCount+" greater than previous value "+previousGutterCount, false);
+	    	}
+	    }
+	    
+	    
+	    public void scheduleNavigationTest(int previousGutterCount) throws Exception{
+	    	 schedulePage.clickOnEditButton();
+	    	 boolean bolDeleteShift = checkAddedShift(previousGutterCount);
+	    	 if(bolDeleteShift){
+	    		 schedulePage.clickSaveBtn();
+		    	 schedulePage.clickOnVersionSaveBtn();
+		    	 schedulePage.clickOnPostSaveBtn();
+		    	 schedulePage.clickOnEditButton(); 
+	    	 }	
+	    }
+	    
+	    public boolean checkAddedShift(int guttercount)throws Exception {
+			boolean bolDeleteShift = false;
+	    	if(guttercount>0){
+				schedulePage.clickOnShiftContainer(guttercount);
+				bolDeleteShift = true;
+			}
+	    	return bolDeleteShift;
+		}
 
+	    
 }

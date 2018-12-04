@@ -64,5 +64,15 @@ public interface SchedulePage {
     public ArrayList<Float> getAllVesionLabels() throws Exception;
 	public void publishActiveSchedule()throws Exception;
 	public boolean isPublishButtonLoaded();
+	public HashMap<String, Float> getScheduleLabelHours() throws Exception; 
+	public int getgutterSize();
+	public void verifySelectTeamMembersOption() throws Exception;
+	public void searchText(String searchInput) throws Exception;
+	public void getAvailableStatus()throws Exception;
+	public void clickOnOfferOrAssignBtn() throws Exception;
+	public void clickOnShiftContainer(int index) throws Exception;
+	public void deleteShift();
+	public void deleteShiftGutterText();
+	public boolean getScheduleStatus()throws Exception;
 	
 }

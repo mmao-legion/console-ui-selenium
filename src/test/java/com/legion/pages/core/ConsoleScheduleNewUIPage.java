@@ -4,6 +4,7 @@ import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static org.testng.Assert.fail;
 
+import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 
 import org.openqa.selenium.By;
@@ -14,17 +15,22 @@ import org.openqa.selenium.support.PageFactory;
 import com.legion.pages.BasePage;
 import com.legion.pages.SchedulePage;
 import com.legion.utils.SimpleUtils;
+
 import org.openqa.selenium.support.ui.Select;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
+	private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
 	public enum scheduleHoursAndWagesData {
         scheduledHours("scheduledHours"),
         budgetedHours("budgetedHours"),
@@ -184,11 +190,23 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(css=".tma-staffing-option-radio-button")
 	private List<WebElement> radioBtnStaffingOptions;
 	
+	@FindBy(xpath="//div[contains(@class,'sch-day-view-right-gutter-text')]//parent::div//parent::div/parent::div[contains(@class,'sch-shift-container')]")
+	private List<WebElement> shiftContainer;
+	
 	@FindBy(css="button.tma-action")
 	private WebElement btnSave;
 	
+	@FindBy(css="div.sch-day-view-shift-delete")
+	private List<WebElement> shiftDeleteBtn;
+	
+	@FindBy(xpath="//div[contains(text(),'Delete')]")
+	private List<WebElement> shiftDeleteGutterText;
+	
 	@FindBy(css="div.sch-day-view-right-gutter-text")
 	private List<WebElement> gutterText;
+	
+	@FindBy(css="div.sch-day-view-right-gutter")
+	private List<WebElement> gutterCount;
 	
 	@FindBy(css="div.sch-day-view-grid-header.fill span")
 	private List<WebElement> gridHeaderDayHour;
@@ -210,7 +228,33 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	
 	@FindBy(css="button.btn.sch-save-confirm-btn")
 	private WebElement scheduleVersionSaveBtn;
-
+	
+	@FindBy(css=".tma-search-field-input-text")
+	private WebElement textSearch;
+	
+	@FindBy(css=".sch-search")
+	private WebElement searchIcon;
+	
+	@FindBy(css=".table-row")
+	private List<WebElement> tableRowCount;
+	
+	@FindBy(xpath="//div[@class='worker-edit-availability-status']//span[contains(text(),'Available')]")
+	private List<WebElement> availableStatus;
+	
+	@FindBy(xpath="//div[@class='worker-edit-availability-status']")
+	private List<WebElement> scheduleStatus;
+	
+	@FindBy(xpath="//span[contains(text(),'Best')]")
+	private List<WebElement> scheduleBestMatchStatus;
+	
+	@FindBy(css="td.table-field.action-field.tr>div")
+	private List<WebElement> radionBtnSelectTeamMembers;
+	
+	@FindBy(css="button.tma-action.sch-save")
+	private WebElement btnOffer;
+	
+	
+	
 	//added by Naval
 
     @FindBy(css = "ng-form.input-form.ng-pristine.ng-valid-minlength")
@@ -243,6 +287,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(css = "select.ng-valid-required")
     private WebElement scheduleGroupByButton;
+    
+    @FindBy(css = "div.tab.ng-scope")
+    private List<WebElement> selectTeamMembersOption ;
+    
+    @FindBy(xpath = "//span[contains(text(),'TMs')]")
+    private WebElement selectRecommendedOption ;
 
 	final static String consoleScheduleMenuItemText = "Schedule";
 
@@ -473,8 +523,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		}
 		return scheduleHoursAndWages;
  	}
-
-
+	
 
 	private HashMap<String, Float> updateScheduleHoursAndWages(HashMap<String, Float> scheduleHoursAndWages,
 			String hours, String hoursAndWagesKey) {
@@ -1065,7 +1114,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 				index = index+1;
 				if(radioBtnShiftText.getText().contains(staffingOption)){
 					click(radioBtnStaffingOptions.get(index));
-					SimpleUtils.pass(radioBtnShiftText+ "Radio Button clicked Successfully!");
+					SimpleUtils.pass(radioBtnShiftText.getText()+ "Radio Button clicked Successfully!");
 					flag = true;
 					break;
 				}
@@ -1636,6 +1685,176 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             return false;
         }
     }
+    
+    
+  //added by Nishant
+	
+  	@Override
+  	public HashMap<String, Float> getScheduleLabelHours() throws Exception {
+  		HashMap<String, Float> scheduleHours = new HashMap<String, Float>();
+  		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("div.card-carousel-card.card-carousel-card-primary"));
+  		if(isElementLoaded(budgetedScheduledLabelsDivElement))
+  		{
+  			String scheduleWagesAndHoursCardText = budgetedScheduledLabelsDivElement.getText();
+  			String[] scheduleWagesAndHours = scheduleWagesAndHoursCardText.split("\n");
+  			for(String wagesAndHours: scheduleWagesAndHours)
+  			{
+  				if(wagesAndHours.toLowerCase().contains(scheduleHoursAndWagesData.hours.getValue().toLowerCase()))
+  				{
+  					scheduleHours = updateScheduleHoursAndWages(scheduleHours , wagesAndHours.split(" ")[2], 
+  							scheduleHoursAndWagesData.scheduledHours.getValue());
+  					scheduleHours = updateScheduleHoursAndWages(scheduleHours , wagesAndHours.split(" ")[3], 
+  							scheduleHoursAndWagesData.otherHours.getValue());
+  				}
+  				
+  			}
+  		}
+  		return scheduleHours;
+   	}
+  	
+  	
+  	public int getgutterSize(){
+  		int guttercount =0;
+  		try{
+  			guttercount = gutterCount.size();	
+  		}catch(Exception e){
+  			SimpleUtils.fail("Gutter element not available on the page", false);
+  		}
+  		return guttercount;
+  	}
+  	
+  	public void verifySelectTeamMembersOption() throws Exception{
+  		waitForSeconds(4);
+  		if(selectTeamMembersOption.size()!=0){
+  			if(isElementLoaded(selectRecommendedOption)){
+  				String[] txtRecommendedOption = selectRecommendedOption.getText().replaceAll("\\p{P}","").split(" ");
+  				if(Integer.parseInt(txtRecommendedOption[2])==0){
+  					searchText(propertySearchTeamMember.get("AssignTeamMember"));
+  					SimpleUtils.pass(txtRecommendedOption[0]+" Option selected By default for Select Team member option");
+  				}else{
+  					getScheduleBestMatchStatus();
+  					SimpleUtils.pass(txtRecommendedOption[0]+" Option selected By default for Select Team member option");
+  				}
+  		       
+			}
+  		}
+  	}
 
+	public void searchText(String searchInput) throws Exception {
+		String[] searchAssignTeamMember = searchInput.split(",");
+		if(isElementLoaded(textSearch) && isElementLoaded(searchIcon)){
+			for(int i=0; i<searchAssignTeamMember.length;i++){
+				textSearch.sendKeys(searchAssignTeamMember[i]);
+				click(searchIcon);
+				if(getScheduleStatus()){
+					break;
+				}
+				
+			}
+			
+		}else{
+			SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+		}
 
+	}
+	
+	public boolean getScheduleStatus()throws Exception {
+		boolean ScheduleStatus = false;
+		if(scheduleStatus.size()!=0 && radionBtnSelectTeamMembers.size() == scheduleStatus.size()){
+			for(int i=0; i<scheduleStatus.size();i++){
+				if(scheduleStatus.get(i).getText().contains("Available") 
+						|| scheduleStatus.get(i).getText().contains("Unknown")){
+					click(radionBtnSelectTeamMembers.get(i));
+					ScheduleStatus = true;
+					break;
+				}
+			}
+		}else{
+			SimpleUtils.fail("Not able to found Available status in SearchResult", false);
+		}
+		
+		return ScheduleStatus;
+	}
+	
+	public boolean getScheduleBestMatchStatus()throws Exception {
+		boolean ScheduleBestMatchStatus = false;
+		if(scheduleStatus.size()!=0 || scheduleBestMatchStatus.size()!=0 && radionBtnSelectTeamMembers.size() == scheduleStatus.size()){
+			for(int i=0; i<scheduleBestMatchStatus.size();i++){
+				if(scheduleBestMatchStatus.get(i).getText().contains("Best") 
+						|| scheduleStatus.get(i).getText().contains("Unknown")){
+					click(radionBtnSelectTeamMembers.get(i));
+					ScheduleBestMatchStatus = true;
+					break;
+				}
+			}
+		}else{
+			SimpleUtils.fail("Not able to found Available status in SearchResult", false);
+		}
+		
+		return ScheduleBestMatchStatus;
+	}
+	
+	public void getAvailableStatus()throws Exception {
+		if(scheduleStatus.size()!=0 && availableStatus.size()!=0 && radionBtnSelectTeamMembers.size() == scheduleStatus.size()){
+			for(int i=0; i<scheduleStatus.size();i++){
+				if(scheduleStatus.get(i).getText().contains(availableStatus.get(i).getText())){
+					click(radionBtnSelectTeamMembers.get(i));
+					break;
+				}
+			}
+		}else{
+			SimpleUtils.fail("Not able to found Available status in SearchResult", false);
+		}
+	}
+	
+	public void clickOnOfferOrAssignBtn() throws Exception{
+		if(isElementLoaded(btnOffer)){
+			click(btnOffer);
+		}else{
+			SimpleUtils.fail("Offer Or Assign Button is not clickable", false);
+		}
+	}
+
+	public void clickOnShiftContainer(int index) throws Exception{
+		int guttercount = getgutterSize();
+		waitForSeconds(2);
+		if(shiftContainer.size()!=0 && index<=shiftContainer.size() && isElementLoaded(shiftContainer.get(0))){
+			for(int i=0;i<index;i++){
+				mouseHover(shiftContainer.get(i));
+//				click(shiftContainer.get(i));
+				deleteShift();
+				waitForSeconds(2);
+			}
+			
+		}else{
+			SimpleUtils.report("Shift container does not any gutter text");
+		}
+	}
+	
+	
+	public void deleteShift(){
+		if(shiftDeleteBtn.size()!=0){
+			for(int i=0;i<shiftDeleteBtn.size();i++){
+				click(shiftDeleteBtn.get(i));
+			}
+		}else{
+			SimpleUtils.fail("Delete button is not available on Shift container",false);
+		}
+	}
+	
+	
+	public void deleteShiftGutterText(){
+		if(shiftDeleteGutterText.size()!=0){
+			for(int i=0;i<shiftDeleteGutterText.size();i++){
+				if(shiftDeleteGutterText.get(i).equals("Delete")){
+					SimpleUtils.pass(shiftDeleteGutterText.get(i)+" Option as gutter is present on shift container");
+				}
+				
+			}
+		}else{
+			SimpleUtils.fail("Delete text is not present on Shift container gutter",true);
+		}
+	}
+	
+	
 }
