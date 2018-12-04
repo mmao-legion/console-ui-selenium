@@ -996,43 +996,43 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public void verifySelectTeamMembersOption() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void searchText(String searchInput) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void getAvailableStatus() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void clickOnOfferOrAssignBtn() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void clickOnShiftContainer(int index) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deleteShift() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deleteShiftGutterText() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -1040,6 +1040,90 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	@Override
+	public boolean inActiveWeekDayClosed(int dayIndex) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void navigateDayViewWithIndex(int dayIndex) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String getActiveGroupByFilter() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isActiveWeekHasOneDayClose() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isActiveWeekAssignedToCurrentUser(String userName) throws Exception{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isScheduleGroupByWorkRole(String workRoleOption) throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void selectWorkRoleFilterByIndex(int index) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public ArrayList<String> getSelectedWorkRoleOnSchedule() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isRequiredActionUnAssignedShiftForActiveWeek() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void clickOnRefreshButton() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void selectShiftTypeFilterByText(String filterText) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<WebElement> getAvailableShiftsInDayView() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void dragShiftToRightSide(WebElement shift, int xOffSet) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 
 }

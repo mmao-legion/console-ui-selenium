@@ -64,7 +64,7 @@ public interface SchedulePage {
     public ArrayList<Float> getAllVesionLabels() throws Exception;
 	public void publishActiveSchedule()throws Exception;
 	public boolean isPublishButtonLoaded();
-	public HashMap<String, Float> getScheduleLabelHours() throws Exception; 
+	public HashMap<String, Float> getScheduleLabelHours() throws Exception;
 	public int getgutterSize();
 	public void verifySelectTeamMembersOption() throws Exception;
 	public void searchText(String searchInput) throws Exception;
@@ -74,5 +74,19 @@ public interface SchedulePage {
 	public void deleteShift();
 	public void deleteShiftGutterText();
 	public boolean getScheduleStatus()throws Exception;
-	
+	public boolean inActiveWeekDayClosed(int dayIndex) throws Exception;
+	public void navigateDayViewWithIndex(int dayIndex);
+	public String getActiveGroupByFilter() throws Exception;
+	public boolean isActiveWeekHasOneDayClose() throws Exception;
+	public boolean isActiveWeekAssignedToCurrentUser(String userName) throws Exception;
+	public boolean isScheduleGroupByWorkRole(String workRoleOption) throws Exception;
+	public void selectWorkRoleFilterByIndex(int index) throws Exception;
+	public ArrayList<String> getSelectedWorkRoleOnSchedule() throws Exception;
+	public boolean isRequiredActionUnAssignedShiftForActiveWeek() throws Exception;
+	public void clickOnRefreshButton() throws Exception;
+	public void selectShiftTypeFilterByText(String filterText) throws Exception;
+	public List<WebElement> getAvailableShiftsInDayView();
+	public void dragShiftToRightSide(WebElement shift, int xOffSet);
+	public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception;
+
 }

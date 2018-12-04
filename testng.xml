@@ -8,11 +8,11 @@
  	</listeners>
  
   
-  <test name="TeamPageGunjan">      
+  <test name="Team Page">
     <classes>
-       <class name="com.legion.tests.core.TeamTest">
+       <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
-           <include name="teamTestClick"/>
+           <include name="editAssignTeamScheduleAsStoreManager"/>
         </methods>
       </class>
     </classes>
