@@ -48,6 +48,7 @@ public class NavigationTest extends TestBase {
       visitPage(testMethod);
       loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
 	}
+    
     @Automated(automated = "Automated")
 	@Owner(owner = "Naval")
     @Enterprise(name = "Coffee2_Enterprise")
@@ -59,13 +60,13 @@ public class NavigationTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.verifyDashboardPageLoadedProperly();
         SchedulePage schedulePage = dashboardPage.goToToday();
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        boolean isTeamPage = teamPage.isTeam();
-        teamPage.verifyTeamPage(isTeamPage);
-        teamPage.goToCoverage();
-        boolean isCoveragePage = teamPage.isCoverage();
-        teamPage.verifyCoveragePage(isCoveragePage);
+//        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+//        teamPage.goToTeam();
+//        boolean isTeamPage = teamPage.isTeam();
+//        teamPage.verifyTeamPage(isTeamPage);
+//        teamPage.goToCoverage();
+//        boolean isCoveragePage = teamPage.isCoverage();
+//        teamPage.verifyCoveragePage(isCoveragePage);
         schedulePage.goToSchedulePage();
         schedulePage.goToProjectedSales();
         schedulePage.goToStaffingGuidance();
@@ -85,13 +86,13 @@ public class NavigationTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.verifyDashboardPageLoadedProperly();
         SchedulePage schedulePage = dashboardPage.goToToday();
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        boolean isTeamPage = teamPage.isTeam();
-        teamPage.verifyTeamPage(isTeamPage);
-        teamPage.goToCoverage();
-        boolean isCoveragePage = teamPage.isCoverage();
-        teamPage.verifyCoveragePage(isCoveragePage);
+//        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+//        teamPage.goToTeam();
+//        boolean isTeamPage = teamPage.isTeam();
+//        teamPage.verifyTeamPage(isTeamPage);
+//        teamPage.goToCoverage();
+//        boolean isCoveragePage = teamPage.isCoverage();
+//        teamPage.verifyCoveragePage(isCoveragePage);
         schedulePage.goToSchedulePage();
         schedulePage.goToProjectedSales();
         schedulePage.goToStaffingGuidance();

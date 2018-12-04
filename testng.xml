@@ -6,21 +6,23 @@
     <listeners>
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
- 	
- 	
-  <test name="Schedule New UI Test">      
+ 
+  
+  <test name="TeamPageGunjan">      
     <classes>
-       <class name="com.legion.tests.core.ScheduleNewUITest">
+       <class name="com.legion.tests.core.TeamTest">
       	<methods>
-
-             <include name="editOpenShiftScheduleAsStoreManager"/>
-			
+           <include name="teamTestClick"/>
         </methods>
       </class>
     </classes>
-   </test>  
-   
+  </test> 
+  
   
  
    
 </suite> <!-- Suite -->
+
+
+
+
