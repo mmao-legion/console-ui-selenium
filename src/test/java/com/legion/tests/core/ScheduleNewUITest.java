@@ -800,6 +800,7 @@ public class ScheduleNewUITest extends TestBase{
 				bolDeleteShift = true;
 			}
 	    	return bolDeleteShift;
+
 		}
 
 	    
