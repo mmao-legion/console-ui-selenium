@@ -876,8 +876,7 @@ public class ScheduleNewUITest extends TestBase{
 			List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
 			for(WebElement overviewScheduleWeek : overviewPageScheduledWeeks)
 			{
-				String compareWeekStatus = "draft";
-				if(overviewScheduleWeek.getText().toLowerCase().contains(compareWeekStatus))
+				if(overviewScheduleWeek.getText().toLowerCase().contains(overviewWeeksStatus.Draft.getValue().toLowerCase()))
 				{
 					BasePage basePage = new BasePage();
 					basePage.click(overviewScheduleWeek);
@@ -902,6 +901,45 @@ public class ScheduleNewUITest extends TestBase{
 					String complianceReviewCardTextLabel = "require compliance review";
 					SimpleUtils.assertOnFail("Compliance smartcard is missing when extended a shift into OT for the Week/Day: '"+ schedulePage.getActiveWeekText() +"'.",
 							schedulePage.isSmartCardAvailableByLabel(complianceReviewCardTextLabel) , true);
+					break;
+				}
+			}
+	    }
+	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-93: Automation Script for - JIRA ID - FOR-707:- Incorrect date when refreshing.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void verifyFutureScheduleWeekDateAfteRefreshBrowserAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+			List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+			for(WebElement overviewScheduleWeek : overviewPageScheduledWeeks)
+			{
+				if(! overviewScheduleWeek.getText().toLowerCase().contains(overviewWeeksStatus.Guidance.getValue().toLowerCase())
+						&& ! overviewScheduleWeek.getText().toLowerCase().contains(overviewWeeksStatus.NotAvailable.getValue().toLowerCase()))
+				{
+					BasePage basePage = new BasePage();
+					basePage.click(overviewScheduleWeek);
+					
+					ArrayList<String> ScheduleWeekDatesBeforeRefresh = schedulePage.getActiveWeekCalendarDates();
+					
+					schedulePage.refreshBrowserPage();
+					
+					ArrayList<String> ScheduleWeekDatesAfterRefresh = schedulePage.getActiveWeekCalendarDates();
+					
+					SimpleUtils.assertOnFail("Incorrect dates when refreshing for the active Week/day: '"+ schedulePage.getActiveWeekText() +"'" ,
+							ScheduleWeekDatesBeforeRefresh.equals(ScheduleWeekDatesAfterRefresh), false);
 					break;
 				}
 			}

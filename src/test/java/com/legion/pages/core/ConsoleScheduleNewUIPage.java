@@ -1907,4 +1907,31 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		}
 		return false;
 	}
+	
+	@FindBy(css = "div.sch-calendar-day-dimension.sch-calendar-day")
+	private List<WebElement> ScheduleWeekCalendarDates;
+	
+	public ArrayList<String> getActiveWeekCalendarDates() throws Exception
+	{
+		ArrayList<String> scheduleWeekCalendarDates = new ArrayList<String>();
+		String catendarWeekDatesAsText = "";
+		for(WebElement ScheduleWeekCalendarDate : ScheduleWeekCalendarDates)
+		{
+			scheduleWeekCalendarDates.add(ScheduleWeekCalendarDate.getText().replace("\n", " "));
+			if(catendarWeekDatesAsText == "")
+				catendarWeekDatesAsText = ScheduleWeekCalendarDate.getText().replace("\n", " ");
+			else
+				catendarWeekDatesAsText = catendarWeekDatesAsText+ " | " +ScheduleWeekCalendarDate.getText().replace("\n", " ");
+		}
+		SimpleUtils.report("Active Week Calendar Dates: '" + catendarWeekDatesAsText + "'");
+		return scheduleWeekCalendarDates;
+	}
+
+	@Override
+	public void refreshBrowserPage() throws Exception {
+		MyThreadLocal.getDriver().navigate().refresh();
+		Thread.sleep(5000);
+		SimpleUtils.pass("Browser Refreshed Successfully for the Week/Day: '"+ getActiveWeekText() +"'!");
+		
+	}
 }

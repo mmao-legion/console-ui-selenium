@@ -1065,6 +1065,18 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		return false;
 	}
 
+	@Override
+	public ArrayList<String> getActiveWeekCalendarDates() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void refreshBrowserPage() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 }

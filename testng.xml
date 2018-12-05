@@ -27,7 +27,8 @@
              <include name="navigateToCurrentAndOtherWeekAsStoreManager"/> -->
              <!-- <include name="viewAndFilterScheduleWithGroupByAndNavigateToOtherTabAsStoreManager"/> -->
              <!-- <include name="verifyRequiredActionToConsoleMessageAfterRefreshAsStoreManager"/> -->
-             <include name="verifyComplianceSmartcardAfterExdendingAShiftToOTAsStoreManager"/>
+             <!-- <include name="verifyComplianceSmartcardAfterExdendingAShiftToOTAsStoreManager"/> -->
+             <include name="verifyFutureScheduleWeekDateAfteRefreshBrowserAsStoreManager"/>
 			
         </methods>
       </class>
