@@ -88,5 +88,6 @@ public interface SchedulePage {
 	public List<WebElement> getAvailableShiftsInDayView();
 	public void dragShiftToRightSide(WebElement shift, int xOffSet);
 	public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception;
-
+	public ArrayList<String> getActiveWeekCalendarDates() throws Exception;
+	public void refreshBrowserPage() throws Exception;
 }
