@@ -6,36 +6,23 @@
     <listeners>
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
- 	
- 	
-  <test name="Schedule New UI Test">      
+ 
+  
+  <test name="Team Page">
     <classes>
        <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
-             <!-- <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/> 
-             <include name="viewAndFilterScheduleWithGroupByAllInWeekViewAsStoreManager"/>
-             <include name="viewAndFilterScheduleWithGroupByWorkRoleInWeekViewAsStoreManager"/>
-			 <include name="viewAndFilterScheduleWithGroupByTMsInWeekViewAsStoreManager"/>
-			 <include name="viewAndFilterScheduleWithGroupByAllDayViewAsStoreManager"/>
-			 <include name="viewAndFilterScheduleWithGroupByWorkRoleDayViewAsStoreManager"/>
-			 <include name="viewAndFilterScheduleWithGroupByTMsDayViewAsStoreManager"/> -->
-			 <!-- <include name="verifyUnpublishedScheduleVisibilityForTMsAndTLsAsStoreManager"/>  -->
-			<!--  <include name="verifyAndPublishScheduleAsStoreManager"/> 
-
-             <include name="editOpenShiftScheduleAsStoreManager"/> 
-             
-             <include name="navigateToCurrentAndOtherWeekAsStoreManager"/> -->
-             <!-- <include name="viewAndFilterScheduleWithGroupByAndNavigateToOtherTabAsStoreManager"/> -->
-             <!-- <include name="verifyRequiredActionToConsoleMessageAfterRefreshAsStoreManager"/> -->
-             <!-- <include name="verifyComplianceSmartcardAfterExdendingAShiftToOTAsStoreManager"/> -->
-             <include name="verifyFutureScheduleWeekDateAfteRefreshBrowserAsStoreManager"/>
-			
+           <include name="editAssignTeamScheduleAsStoreManager"/>
         </methods>
       </class>
     </classes>
-   </test>  
-   
+  </test> 
+  
   
  
    
 </suite> <!-- Suite -->
+
+
+
+

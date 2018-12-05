@@ -3,6 +3,7 @@ package com.legion.pages;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -41,6 +42,10 @@ public class BasePage {
         }
     }
 
+    public int calcListLength(List<WebElement> listLength){
+    	return listLength.size();
+    }
+    
     public void waitForElement(String element) {
   
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(
@@ -148,8 +153,8 @@ public class BasePage {
     public void mouseHover(WebElement element)
     {
         Actions actions = new Actions(getDriver());
-        actions.moveToElement(element).clickAndHold().build().perform();
-        SimpleUtils.report("Menu expanded on Hovering" + element.getText());
+        actions.moveToElement(element).click().build().perform();
+        SimpleUtils.report("Clicked on " + element.getText());
     }
     
     public void mouseHoverDragandDrop(WebElement fromDestination, WebElement toDestination)

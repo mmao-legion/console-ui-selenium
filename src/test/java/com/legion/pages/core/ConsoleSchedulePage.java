@@ -982,6 +982,65 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	}
 
 	@Override
+	public HashMap<String, Float> getScheduleLabelHours() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getgutterSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void verifySelectTeamMembersOption() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void searchText(String searchInput) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void getAvailableStatus() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void clickOnOfferOrAssignBtn() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void clickOnShiftContainer(int index) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void deleteShift() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void deleteShiftGutterText() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean getScheduleStatus() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
 	public boolean inActiveWeekDayClosed(int dayIndex) {
 		// TODO Auto-generated method stub
 		return false;
@@ -990,7 +1049,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public void navigateDayViewWithIndex(int dayIndex) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -1020,7 +1079,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public void selectWorkRoleFilterByIndex(int index) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -1038,13 +1097,13 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public void clickOnRefreshButton() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void selectShiftTypeFilterByText(String filterText) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -1056,7 +1115,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public void dragShiftToRightSide(WebElement shift, int xOffSet) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
