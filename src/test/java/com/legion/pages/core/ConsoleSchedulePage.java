@@ -1142,6 +1142,18 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		
 	}
 
+	@Override
+	public boolean isSmartCardPanelDisplay() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isNextWeekAvaibale() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 
 }

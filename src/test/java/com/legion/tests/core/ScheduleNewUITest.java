@@ -1249,6 +1249,62 @@ public class ScheduleNewUITest extends TestBase{
 	        	schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 			}
 	    }
+	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-96: TM and TL should not see smart card panel")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void verifySmartCardPanelForTMAndTLAsTeamLead(String browser, String username, String password, String location)
+	    		throws Exception {
+	    	SimpleUtils.pass("Logged-in to Legion as Team Lead");
+	    	String fileName = "UsersCredentials.json";
+	    	boolean isFirstWeek = true;
+	        fileName=SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+	        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+	        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        schedulePage.clickOnWeekView();
+	        while(schedulePage.isNextWeekAvaibale())
+	        {
+	        	if(! isFirstWeek)
+		 	       schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+	        	boolean isSmartCardPanel = schedulePage.isSmartCardPanelDisplay();
+	 	        SimpleUtils.assertOnFail("Schedule Page: Smart Card Panel loaded for Team Lead for Week: '"+ schedulePage.getActiveWeekText() +"'",
+       				(! isSmartCardPanel) , false);
+	 	        SimpleUtils.pass("Schedule Page: Smart Card Panel not available for Team Lead for Week: '"+ schedulePage.getActiveWeekText()+"'");
+	 	        isFirstWeek = false;
+	        }
+	        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+	        loginPage.logOut();
+	        
+	        
+	    	loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]),
+	        		String.valueOf(teamMemberCredentials[0][1]), String.valueOf(teamMemberCredentials[0][2]));
+	    	SimpleUtils.pass("Logged-in to Legion as Team Member");
+	        dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        schedulePage.clickOnWeekView();
+	        isFirstWeek = true;
+	        while(schedulePage.isNextWeekAvaibale())
+	        {
+	        	if(! isFirstWeek)
+		 	       schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+	        	boolean isSmartCardPanel = schedulePage.isSmartCardPanelDisplay();
+	        	SimpleUtils.assertOnFail("Schedule Page: Smart Card Panel loaded for Team Member for Week: '"+ schedulePage.getActiveWeekText() +"'",
+	       				(! isSmartCardPanel) , false);
+		 	    SimpleUtils.pass("Schedule Page: Smart Card Panel not available for Team Member for Week: '"+ schedulePage.getActiveWeekText()+"'");
+		 	    isFirstWeek = false;
+	        }
+	    }
+	    	
 
     }
 

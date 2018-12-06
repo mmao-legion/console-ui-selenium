@@ -344,6 +344,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	@FindBy(css = "div.card-carousel-card")
 	private List<WebElement> carouselCards;
+	
+	@FindBy(css = "div.sch-calendar-day-dimension.sch-calendar-day")
+	private List<WebElement> ScheduleWeekCalendarDates;
+	
+	@FindBy(css = "div.card-carousel")
+	private WebElement smartCardPanel;
 
 	final static String consoleScheduleMenuItemText = "Schedule";
 
@@ -2127,11 +2133,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			SimpleUtils.fail("Delete text is not present on Shift container gutter",true);
 		}
 	}
-
-
-	
-	@FindBy(css = "div.sch-calendar-day-dimension.sch-calendar-day")
-	private List<WebElement> ScheduleWeekCalendarDates;
 	
 	public ArrayList<String> getActiveWeekCalendarDates() throws Exception
 	{
@@ -2157,6 +2158,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		
 	}
 	
+	@Override
 	public void addOpenShiftWithDefaultTime(String workRole) throws Exception
 	{
 		if(isElementLoaded(addNewShiftOnDayViewButton))
@@ -2170,5 +2172,27 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		else
 			SimpleUtils.fail("Day View Schedule edit mode, add new shift button not found for Week Day: '" + 
 					getActiveWeekText() + "'", false);
+	}
+	
+	@Override
+	public boolean isNextWeekAvaibale() throws Exception
+	{
+		if(! isElementLoaded(calendarNavigationNextWeekArrow))
+		{
+			List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+			if(ScheduleCalendarDayLabels.get(ScheduleCalendarDayLabels.size() - 1).getAttribute("class").toLowerCase().contains("active"))
+				return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public boolean isSmartCardPanelDisplay() throws Exception
+	{
+		if(isElementLoaded(smartCardPanel))
+		{
+			return true;
+		}
+		return false;
 	}
 }

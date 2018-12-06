@@ -91,4 +91,6 @@ public interface SchedulePage {
 	public ArrayList<String> getActiveWeekCalendarDates() throws Exception;
 	public void refreshBrowserPage() throws Exception;
 	public void addOpenShiftWithDefaultTime(String workRole) throws Exception;
+	public boolean isNextWeekAvaibale() throws Exception;
+	public boolean isSmartCardPanelDisplay() throws Exception;
 }

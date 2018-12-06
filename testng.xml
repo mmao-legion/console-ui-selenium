@@ -13,7 +13,8 @@
        <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
            <!-- <include name="verifyFutureScheduleWeekDateAfteRefreshBrowserAsStoreManager"/> -->
-           <include name="verifyTMCanViewNewScheduleAndOffersAsStoreManager"/>
+           <!-- <include name="verifyTMCanViewNewScheduleAndOffersAsStoreManager"/> -->
+           <include name="verifySmartCardPanelForTMAndTLAsTeamLead"/>
         </methods>
       </class>
     </classes>
