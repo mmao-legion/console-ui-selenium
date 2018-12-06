@@ -14,6 +14,7 @@ import org.openqa.selenium.support.PageFactory;
 import com.legion.pages.BasePage;
 import com.legion.pages.SchedulePage;
 import com.legion.utils.SimpleUtils;
+
 import org.openqa.selenium.support.ui.Select;
 
 import java.lang.reflect.Method;
@@ -1636,6 +1637,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             return false;
         }
     }
+
+ 
+	
+	
+
+	@Override
+	public void validateBudgetPopUpHeader(String nextWeekView, int weekCount) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 }

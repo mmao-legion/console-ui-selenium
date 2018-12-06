@@ -64,5 +64,6 @@ public interface SchedulePage {
     public ArrayList<Float> getAllVesionLabels() throws Exception;
 	public void publishActiveSchedule()throws Exception;
 	public boolean isPublishButtonLoaded();
+	public void validateBudgetPopUpHeader(String nextWeekView, int weekCount);
 	
 }

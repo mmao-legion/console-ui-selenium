@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import com.aventstack.extentreports.Status;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LoginPage;
@@ -627,5 +628,16 @@ public class ScheduleNewUITest extends TestBase{
 	        schedulePage.clickOnVersionSaveBtn();
 	        schedulePage.clickOnPostSaveBtn();
 	    }
+	    
+//	    @Automated(automated =  "Automated")
+//		@Owner(owner = "Nishant")
+//	    @Enterprise(name = "KendraScott2_Enterprise")
+//	    @TestName(description = "TP-18: As a store manager, should be able to review past week's schedule and generate this week or next week's schedule")
+//	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+//	    public void editBudgetPopUpHeaderStoreManager(String username, String password, String browser, String location) throws Throwable { 
+//	    	System.out.println("method started");
+//	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+//	    	schedulePage.validateBudgetPopUpHeader();  	
+//	    }
 
 }
