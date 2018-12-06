@@ -12,7 +12,8 @@
     <classes>
        <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
-           <include name="editAssignTeamScheduleAsStoreManager"/>
+           <!-- <include name="verifyFutureScheduleWeekDateAfteRefreshBrowserAsStoreManager"/> -->
+           <include name="verifyTMCanViewNewScheduleAndOffersAsStoreManager"/>
         </methods>
       </class>
     </classes>

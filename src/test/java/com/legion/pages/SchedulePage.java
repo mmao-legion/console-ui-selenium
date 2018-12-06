@@ -90,4 +90,5 @@ public interface SchedulePage {
 	public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception;
 	public ArrayList<String> getActiveWeekCalendarDates() throws Exception;
 	public void refreshBrowserPage() throws Exception;
+	public void addOpenShiftWithDefaultTime(String workRole) throws Exception;
 }

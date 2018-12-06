@@ -15,6 +15,7 @@ import org.openqa.selenium.support.PageFactory;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.SchedulePage;
+import com.legion.tests.core.ScheduleNewUITest.staffingOption;
 import com.legion.utils.SimpleUtils;
 
 import org.openqa.selenium.support.ui.Select;
@@ -2154,5 +2155,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		Thread.sleep(5000);
 		SimpleUtils.pass("Browser Refreshed Successfully for the Week/Day: '"+ getActiveWeekText() +"'!");
 		
+	}
+	
+	public void addOpenShiftWithDefaultTime(String workRole) throws Exception
+	{
+		if(isElementLoaded(addNewShiftOnDayViewButton))
+		{
+			click(addNewShiftOnDayViewButton);
+			selectWorkRole(workRole);
+			clickRadioBtnStaffingOption(staffingOption.OpenShift.getValue());
+			clickOnCreateOrNextBtn();
+			Thread.sleep(2000);
+		}
+		else
+			SimpleUtils.fail("Day View Schedule edit mode, add new shift button not found for Week Day: '" + 
+					getActiveWeekText() + "'", false);
 	}
 }

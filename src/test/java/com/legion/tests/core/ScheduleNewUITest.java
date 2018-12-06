@@ -93,6 +93,7 @@ public class ScheduleNewUITest extends TestBase{
 		  NotAvailable("Not Available"),
 		  Draft("Draft"),
 		  Guidance("Guidance"),
+		  Published("Published"),
 		  Finalized("Finalized");
 
 		  private final String value;
@@ -1109,6 +1110,143 @@ public class ScheduleNewUITest extends TestBase{
 							ScheduleWeekDatesBeforeRefresh.equals(ScheduleWeekDatesAfterRefresh), false);
 					break;
 				}
+			}
+	    }
+	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-79: As a TM should be able to view the new schedule and offers")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void verifyTMCanViewNewScheduleAndOffersAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	    	
+	    	String fileName = "UsersCredentials.json";
+	        fileName=SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+	        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+	        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+	        Object[][] storeMenageCredentials = userCredentials.get("StoreManager");
+	        
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+			List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+			ArrayList<Boolean> isTeamMemberAssignedToOverviewWeeks = new ArrayList<Boolean>();
+			
+			schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        schedulePage.clickOnWeekView();
+			for(String weekStatus : overviewPageScheduledWeekStatus)
+			{
+	        	if(! weekStatus.toLowerCase().contains(overviewWeeksStatus.NotAvailable.getValue().toLowerCase()))
+	        		isTeamMemberAssignedToOverviewWeeks.add(
+	        				schedulePage.isActiveWeekAssignedToCurrentUser(String.valueOf(teamMemberCredentials[0][0])));
+	        	else
+	        		isTeamMemberAssignedToOverviewWeeks.add(false);
+	        	schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+			}
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			
+	        /*
+	         * Login as Team Member
+	         */
+	        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]),
+	        		String.valueOf(teamMemberCredentials[0][1]), String.valueOf(teamMemberCredentials[0][2]));
+	        dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        schedulePage.clickOnWeekView();
+	        for(int index = 0; index < overviewPageScheduledWeekStatus.size(); index++)
+			{
+	        	String weekStatus = overviewPageScheduledWeekStatus.get(index);
+	        	boolean isWeekAssignedToTM = isTeamMemberAssignedToOverviewWeeks.get(index);
+	        	boolean isSchedulePublished = schedulePage.isCurrentScheduleWeekPublished();
+	        	if(weekStatus.toLowerCase().contains(overviewWeeksStatus.Draft.getValue().toLowerCase()))
+	        	{
+	        		SimpleUtils.assertOnFail("UnPublished week:'"+ schedulePage.getActiveWeekText()
+	        		+"' Schedule is visible for Team Member", ! isSchedulePublished, true);
+	        	}
+	        	else
+	        	{
+	        		if(isWeekAssignedToTM)
+	        			SimpleUtils.assertOnFail("Published week:'"+ schedulePage.getActiveWeekText()
+		        		+"' assigned to current Team Member but Schedule is not visible", isSchedulePublished, true);
+	        		else
+	        			SimpleUtils.assertOnFail("Published week:'"+ schedulePage.getActiveWeekText()
+		        		+"' not assigned to current Team Member and Schedule is not visible", isSchedulePublished, true);
+	        	}
+	        	schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+			}
+	        loginPage.logOut();
+	        
+	        // If there is any modifications done in published week schedule, it should not be visible in TM’s login unless or until it is republished.
+	        // Adding new Shift to Published Schedule as Store Manager
+	        String activeDayText = "";
+	        int shiftCountBeforeAdded = 0;
+	        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeMenageCredentials[0][0]),
+	        		String.valueOf(storeMenageCredentials[0][1]), String.valueOf(storeMenageCredentials[0][2]));
+	        dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        schedulePage.clickOnWeekView();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        for(String weekStatus : overviewPageScheduledWeekStatus)
+			{
+	        	if(weekStatus.toLowerCase().contains(overviewWeeksStatus.Finalized.getValue().toLowerCase()) 
+	        			|| weekStatus.toLowerCase().contains(overviewWeeksStatus.Published.getValue().toLowerCase()))
+	        	{
+	        		schedulePage.clickOnDayView();
+	        		activeDayText = schedulePage.getActiveWeekText();
+	        		shiftCountBeforeAdded = schedulePage.getAvailableShiftsInDayView().size();
+	        		schedulePage.clickOnEditButton();
+	        		schedulePage.addOpenShiftWithDefaultTime(scheduleWorkRoles.get("WorkRole"));
+	        		schedulePage.clickSaveBtn();
+	        		SimpleUtils.assertOnFail("Unable to add shift in day view",
+	        				(schedulePage.getAvailableShiftsInDayView().size() > shiftCountBeforeAdded) , true);
+	        		break;
+	        	}
+	        	schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+			}
+	        loginPage.logOut();
+	        
+	        
+	        
+	        // Login as Team Member to verify Schedule modification Reflects or not.
+	        
+	        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]),
+	        		String.valueOf(teamMemberCredentials[0][1]), String.valueOf(teamMemberCredentials[0][2]));
+	        dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        schedulePage.clickOnWeekView();
+	        for(String weekStatus : overviewPageScheduledWeekStatus)
+			{
+	        	if(weekStatus.toLowerCase().contains(overviewWeeksStatus.Finalized.getValue().toLowerCase()) 
+	        			|| weekStatus.toLowerCase().contains(overviewWeeksStatus.Published.getValue().toLowerCase()))
+	        	{
+	        		schedulePage.clickOnDayView();
+	        		if(activeDayText.contains(schedulePage.getActiveWeekText()))
+	        		{
+	        			SimpleUtils.assertOnFail("Schedule Modification Reflected to Team Member",
+		        				(schedulePage.getAvailableShiftsInDayView().size() <= shiftCountBeforeAdded) , false);
+	        			SimpleUtils.pass("Schedule Modification not reflecting to Team Member without Re-Publishing Schedule.");
+	        			break;
+	        		}
+	        	}
+	        	schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 			}
 	    }
 

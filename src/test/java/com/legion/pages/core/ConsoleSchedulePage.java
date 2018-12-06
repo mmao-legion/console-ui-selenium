@@ -1136,6 +1136,12 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		
 	}
 
+	@Override
+	public void addOpenShiftWithDefaultTime(String workRole) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 }
