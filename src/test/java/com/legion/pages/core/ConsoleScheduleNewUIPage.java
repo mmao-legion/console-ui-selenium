@@ -343,6 +343,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	@FindBy(css = "div.card-carousel-card")
 	private List<WebElement> carouselCards;
+	
+	//added by Manideep
+	
+	@FindBy(className = "left-banner")
+	private List<WebElement> weeklyScheduleDateElements;
+	@FindBy(css = "[ng-if='!isLocationGroup()']")
+	private List<WebElement> weeklyScheduleStatusElements;
+	public String newlyAddedScheduledate = "" ;
 
 	final static String consoleScheduleMenuItemText = "Schedule";
 
@@ -1052,16 +1060,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	
 	public void compareCustomizeStartDay(String textStartDay) throws Exception
 	{
-		if(isElementLoaded(customizeShiftStartdayLabel))
-		{
+		if(isElementLoaded(customizeShiftStartdayLabel)){
 			String[] actualTextStartDay = customizeShiftStartdayLabel.getText().split(":");
 			if(actualTextStartDay[0].equals(textStartDay)){
 				SimpleUtils.pass("Start time on Custimize New shift page "+actualTextStartDay[0]+" is same as "+textStartDay);
 			}else{
 				SimpleUtils.fail("Start time on Custimize New shift page "+actualTextStartDay[0]+" is not same as "+textStartDay,true);
 			}
-		}else
-		{
+		}else{
 			SimpleUtils.fail("Customize New Shift Page not loaded Successfully!",false);
 		}
 			
@@ -1070,16 +1076,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	
 	public void clickOnStartDay(String textStartDay) throws Exception
 	{
-		if(isElementLoaded(customizeShiftStartdayLabel))
-		{
+		if(isElementLoaded(customizeShiftStartdayLabel)){
 			String[] actualTextStartDay = customizeShiftStartdayLabel.getText().split(":");
 			if(actualTextStartDay[0].equals(textStartDay)){
 				SimpleUtils.pass("Start time on Customize New shift page "+actualTextStartDay[0]+" is same as "+textStartDay);
 			}else{
 				SimpleUtils.fail("Start time on Customize New shift page "+actualTextStartDay[0]+" is not same as "+textStartDay,true);
 			}
-		}else
-		{
+		}else{
 			SimpleUtils.fail("Customize New Shift Page not loaded Successfully!",false);
 		}
 			
@@ -1273,6 +1277,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		if(isElementLoaded(scheduleSaveBtn)){
 			click(scheduleSaveBtn);
 			if(isElementLoaded(scheduleVersionSaveBtn))
+				waitForSeconds(2);
 				click(scheduleVersionSaveBtn);
 			if(isElementLoaded(btnOK))
 				click(btnOK);
@@ -1950,7 +1955,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		{
 			for(WebElement carouselCard: carouselCards)
 			{
-				if(carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase()))
+				if(carouselCard.isDisplayed() &&
+						carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase()))
 					return true;
 			}
 		}
@@ -2127,8 +2133,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		}
 	}
 
-
-	
 	@FindBy(css = "div.sch-calendar-day-dimension.sch-calendar-day")
 	private List<WebElement> ScheduleWeekCalendarDates;
 	
@@ -2154,5 +2158,56 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		Thread.sleep(5000);
 		SimpleUtils.pass("Browser Refreshed Successfully for the Week/Day: '"+ getActiveWeekText() +"'!");
 		
+	}
+	
+	public void validatingGenrateSchedule() throws Exception {
+
+		Boolean guidanceWeek = false;
+
+		if(weeklyScheduleDateElements.size() == weeklyScheduleStatusElements.size()){
+			try{
+				for(int i=0; i<weeklyScheduleStatusElements.size(); i++){
+					if(weeklyScheduleStatusElements.get(i).getText().contains("Guidance")){
+						guidanceWeek = true;
+						click(weeklyScheduleStatusElements.get(i));
+						break;
+					}					
+				}
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+
+		if(guidanceWeek.equals("false")){
+			SimpleUtils.fail("Guidance Week is not Available",true);
+		}
+		else{
+			generateSchedule();
+			click(goToScheduleButton);
+			if(weeklyScheduleDateElements.size() == weeklyScheduleStatusElements.size()){
+				try {
+					for(int i=0; i<weeklyScheduleDateElements.size(); i++){
+						String weeklyScheduleDateElement =
+								weeklyScheduleDateElements.get(i).getText();
+						if(weeklyScheduleDateElement.equalsIgnoreCase
+								(newlyAddedScheduledate.split("Schedule")[0]
+										.trim().replace(" - ", "\n—\n"))){
+							click(weeklyScheduleDateElements.get(i));
+							if(isElementLoaded(generateSheduleButton)){
+								SimpleUtils.fail("Schedule is not Published for the week ",false);
+							}else{
+								SimpleUtils.pass("Schedule is Published for the week : "+ weeklyScheduleDateElement);
+							}
+
+							break;
+						}					
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+			}
+
+		}
+
 	}
 }

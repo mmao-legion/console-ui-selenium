@@ -630,16 +630,12 @@ public class ScheduleNewUITest extends TestBase{
 	        HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
 	        schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
 	        schedulePage.clickRadioBtnStaffingOption(staffingOption.OpenShift.getValue());
-//	        schedulePage.clickRadioBtnStaffingOption(staffingOption.ManualShift.getValue());
-//	        schedulePage.clickRadioBtnStaffingOption(staffingOption.AssignTeamMemberShift.getValue());
 	        schedulePage.clickOnCreateOrNextBtn();
 	        int updatedGutterCount = schedulePage.getgutterSize();
 	        List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
 	        List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
 	        verifyTeamCount(previousTeamCount,currentTeamCount);
 	        schedulePage.clickSaveBtn();
-	        schedulePage.clickOnVersionSaveBtn();
-	        schedulePage.clickOnPostSaveBtn();
 	        HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
 	        Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
 	        verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
@@ -688,8 +684,6 @@ public class ScheduleNewUITest extends TestBase{
 	        List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
 	        verifyTeamCount(previousTeamCount,currentTeamCount);
 	        schedulePage.clickSaveBtn();
-	        schedulePage.clickOnVersionSaveBtn();
-	        schedulePage.clickOnPostSaveBtn();
 	        HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
 	        Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
 	        verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
@@ -736,8 +730,6 @@ public class ScheduleNewUITest extends TestBase{
 	        List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
 	        verifyTeamCount(previousTeamCount,currentTeamCount);
 	        schedulePage.clickSaveBtn();
-	        schedulePage.clickOnVersionSaveBtn();
-	        schedulePage.clickOnPostSaveBtn();
 	        HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
 	        Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
 	        verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
@@ -793,8 +785,6 @@ public class ScheduleNewUITest extends TestBase{
 	    	 boolean bolDeleteShift = checkAddedShift(previousGutterCount);
 	    	 if(bolDeleteShift){
 	    		 schedulePage.clickSaveBtn();
-		    	 schedulePage.clickOnVersionSaveBtn();
-		    	 schedulePage.clickOnPostSaveBtn();
 		    	 schedulePage.clickOnEditButton();
 	    	 }
 	    }
@@ -1111,6 +1101,23 @@ public class ScheduleNewUITest extends TestBase{
 				}
 			}
 	    }
+	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Manideep")
+		@Enterprise(name = "KendraScott2_Enterprise")
+		@TestName(description = "FOR-679: Cannot generate schedule when directly go to unscheduled week from overview")
+		@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+		public void validatingGenerateScheduleStoreManager(String browser, String username, String password, String location)
+				throws Exception {
+			int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
+			//	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+			schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			schedulePage.validatingGenrateSchedule();
+		}
 
     }
 
