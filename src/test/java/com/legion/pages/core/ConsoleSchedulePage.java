@@ -1077,7 +1077,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	}
 
 	@Override
-	public void selectWorkRoleFilterByIndex(int index) throws Exception {
+	public void selectWorkRoleFilterByIndex(int index, boolean isClearWorkRoleFilters) throws Exception {
 		// TODO Auto-generated method stub
 
 	}

@@ -1846,13 +1846,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		return false;
 	}
 
-	public void selectWorkRoleFilterByIndex(int index) throws Exception
+	public void selectWorkRoleFilterByIndex(int index, boolean isClearWorkRoleFilters) throws Exception
 	{
 		String filterType = "workrole";
 		ArrayList<WebElement> availableWorkRoleFilters = getAvailableFilters().get(filterType);
 		if(availableWorkRoleFilters.size() >= index)
 		{
-			unCheckFilters(availableWorkRoleFilters);
+			if(isClearWorkRoleFilters)
+				unCheckFilters(availableWorkRoleFilters);
 			click(availableWorkRoleFilters.get(index));
 			SimpleUtils.pass("Schedule Work Role:'"+ availableWorkRoleFilters.get(index).getText() +"' Filter selected Successfully!");
 		}

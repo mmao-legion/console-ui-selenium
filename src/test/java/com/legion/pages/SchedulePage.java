@@ -80,7 +80,7 @@ public interface SchedulePage {
 	public boolean isActiveWeekHasOneDayClose() throws Exception;
 	public boolean isActiveWeekAssignedToCurrentUser(String userName) throws Exception;
 	public boolean isScheduleGroupByWorkRole(String workRoleOption) throws Exception;
-	public void selectWorkRoleFilterByIndex(int index) throws Exception;
+	public void selectWorkRoleFilterByIndex(int index, boolean isClearWorkRoleFilters) throws Exception;
 	public ArrayList<String> getSelectedWorkRoleOnSchedule() throws Exception;
 	public boolean isRequiredActionUnAssignedShiftForActiveWeek() throws Exception;
 	public void clickOnRefreshButton() throws Exception;

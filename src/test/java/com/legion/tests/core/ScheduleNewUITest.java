@@ -58,6 +58,21 @@ public class ScheduleNewUITest extends TestBase{
 	        }
 	        public int getValue() { return value; }
 		}
+	
+	public enum filtersIndex{
+		Zero(0),
+		One(1),
+		Two(2),
+		Three(3),
+		Four(4),
+		Five(5);		
+		private final int value;
+		filtersIndex(final int newValue) {
+            value = newValue;
+        }
+        public int getValue() { return value; }
+	}
+	
 
 	public enum dayCount{
 		Seven(7);
@@ -951,10 +966,11 @@ public class ScheduleNewUITest extends TestBase{
 	         *  Navigate to Schedule Week view
 	         */
 	        int workRoleIndex = 1;
+	        Boolean isClearWorkRoleFilters = true;
 	        schedulePage.clickOnWeekView();
 	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
 	        schedulePage.isScheduleGroupByWorkRole(scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
-	        schedulePage.selectWorkRoleFilterByIndex(workRoleIndex);
+	        schedulePage.selectWorkRoleFilterByIndex(workRoleIndex, isClearWorkRoleFilters);
 	        ArrayList<String> scheduleSelectedWorkRole = schedulePage.getSelectedWorkRoleOnSchedule();
 	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.StaffingGuidance.getValue());
 	        SimpleUtils.assertOnFail("'Staffing Guidance' sub tab not loaded Successfully!",
@@ -1305,6 +1321,62 @@ public class ScheduleNewUITest extends TestBase{
 	        }
 	    }
 	    	
+	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-98: FOR-710 :- Workrole filter selection should preserve selection (across new, draft, published schedule week) until user update/clear the filter.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void verifyWorkRoleFilterPreserveSelectionOnScheduleGeneratePageAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , false);
+	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+	        List<WebElement> overViewWeekList = scheduleOverviewPage.getOverviewScheduleWeeks();
+	        boolean isGuidanceWeekFound = false;
+	        for(int index = 0;index < (overViewWeekList.size() - 1); index++)
+	        {
+	        	int nextIndex = index + 1;
+	        	WebElement overviewWeek = overViewWeekList.get(index);
+	        	WebElement overviewNextWeek = overViewWeekList.get(nextIndex);
+	        	String nextWeekText = overviewNextWeek.getText().replace("\n", " ");
+	        	String overviewWeekText = overviewWeek.getText().replace("\n", " ");
+	        	if(nextWeekText.toLowerCase().contains(overviewWeeksStatus.Guidance.getValue().toLowerCase()) 
+	        			&& ! overviewWeekText.toLowerCase().contains(overviewWeeksStatus.Guidance.getValue().toLowerCase())
+	        				&& ! overviewWeekText.toLowerCase().contains(overviewWeeksStatus.NotAvailable.getValue().toLowerCase()))
+	        	{
+	        		isGuidanceWeekFound = true;
+	        		BasePage basePage = new BasePage();
+					basePage.click(overviewWeek);
+					schedulePage.clickOnWeekView();
+					boolean isClearWorkRoleFilters = true;
+					schedulePage.selectWorkRoleFilterByIndex(filtersIndex.Zero.getValue(), isClearWorkRoleFilters);
+					isClearWorkRoleFilters = false;
+					schedulePage.selectWorkRoleFilterByIndex(filtersIndex.One.getValue(), isClearWorkRoleFilters);
+					ArrayList<String> workroleActiveFiltersBeforeNavigation = schedulePage.getSelectedWorkRoleOnSchedule();					
+					//Navigate to Guidance Week
+					schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+					
+					//Navigate to Previous Week
+					schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
+					ArrayList<String> workroleActiveFiltersAfterNavigation = schedulePage.getSelectedWorkRoleOnSchedule();
+					SimpleUtils.assertOnFail("WorkRole Filter not preserve selection on schedule generate page for the week: '"+ schedulePage.getActiveWeekText() +"'",
+		       				(workroleActiveFiltersBeforeNavigation.equals(workroleActiveFiltersAfterNavigation)) , false);
+					SimpleUtils.pass("WorkRole Filter preserves selection on schedule generate page for the week: '"+ schedulePage.getActiveWeekText());
+					break;
+	        	}
+	        }
+	        if(! isGuidanceWeekFound)
+	        	SimpleUtils.report("No Guidance week found!");
+	        
+	    }
 
     }
 
