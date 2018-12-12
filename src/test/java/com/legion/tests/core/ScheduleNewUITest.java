@@ -1499,12 +1499,14 @@ public class ScheduleNewUITest extends TestBase{
 	        schedulePage.clickOnScheduleConsoleMenuItem();
 	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
 	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , false);
+	        
 	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
 	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+	        
 	        ArrayList<String> selectedWorkRoles = schedulePage.getSelectedWorkRoleOnSchedule();
 	        SimpleUtils.assertOnFail("Work Role filter not cleared after navigating to Dashboard and overview page.",
-	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+	        		(selectedWorkRoles.size() == 0) , false);
 	        SimpleUtils.pass("Work Role filter cleared after navigating to Dashboard and overview page.");
 	    }
 
