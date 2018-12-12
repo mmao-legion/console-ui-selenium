@@ -35,6 +35,12 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	@FindBy(className="schedule-table-row")
 	private List<WebElement> overviewTableRows;
 	
+	@FindBy(css="div.row-fx.schedule-table-row")
+	private List<WebElement> overviewScheduleWeekList;
+	
+	@FindBy(css = "div.lgn-calendar.current-month")
+	private List<WebElement> overviewCalendarMonthsYears;
+	
 	
 	public ConsoleScheduleOverviewPage()
 	{
@@ -301,10 +307,23 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		return weekDays;
 	}
 
-	@FindBy(css="div.row-fx.schedule-table-row")
-	private List<WebElement> overviewScheduleWeekList;
 	@Override
 	public List<WebElement> getOverviewScheduleWeeks() {
 		return overviewScheduleWeekList;
+	}
+	
+	
+	@Override
+	public ArrayList<String> getOverviewCalendarMonthsYears() throws Exception
+	{
+		ArrayList<String> overviewCalendarMonthsYearsText = new ArrayList<String>();
+		if(overviewCalendarMonthsYears.size() != 0)
+		{
+			for(WebElement overviewCalendarMonthYear : overviewCalendarMonthsYears)
+			{
+				overviewCalendarMonthsYearsText.add(overviewCalendarMonthYear.getText().replace("\n", ""));
+			}
+		}
+		return overviewCalendarMonthsYearsText;
 	}
 }

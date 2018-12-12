@@ -19,4 +19,5 @@ public interface ScheduleOverviewPage {
 	public void clickOnCurrentWeekToOpenSchedule() throws Exception;
 	public String getOverviewCalenderWeekDays() throws Exception;
 	public List<WebElement> getOverviewScheduleWeeks();
+	public ArrayList<String> getOverviewCalendarMonthsYears() throws Exception;
 }

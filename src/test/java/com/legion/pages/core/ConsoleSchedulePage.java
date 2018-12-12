@@ -1154,6 +1154,24 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		return false;
 	}
 
+	@Override
+	public void convertAllUnAssignedShiftToOpenShift() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void selectWorkRoleFilterByText(String workRoleLabel, boolean isClearWorkRoleFilters) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 }

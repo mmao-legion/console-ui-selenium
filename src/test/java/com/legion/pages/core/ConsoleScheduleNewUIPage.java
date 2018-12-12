@@ -15,6 +15,7 @@ import org.openqa.selenium.support.PageFactory;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.SchedulePage;
+import com.legion.tests.core.ScheduleNewUITest.SchedulePageSubTabText;
 import com.legion.tests.core.ScheduleNewUITest.staffingOption;
 import com.legion.utils.SimpleUtils;
 
@@ -350,6 +351,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	
 	@FindBy(css = "div.card-carousel")
 	private WebElement smartCardPanel;
+	
+	@FindBy(css = "div.sch-worker-popover")
+	private WebElement shiftPopover;
+	
+	@FindBy(css= "button.sch-action.sch-save")
+	private WebElement convertToOpenYesBtn;
 
 	final static String consoleScheduleMenuItemText = "Schedule";
 
@@ -1858,6 +1865,21 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			SimpleUtils.pass("Schedule Work Role:'"+ availableWorkRoleFilters.get(index).getText() +"' Filter selected Successfully!");
 		}
 	}
+	
+	@Override
+	public void selectWorkRoleFilterByText(String workRoleLabel, boolean isClearWorkRoleFilters) throws Exception
+	{
+		String filterType = "workrole";
+		ArrayList<WebElement> availableWorkRoleFilters = getAvailableFilters().get(filterType);
+		if(isClearWorkRoleFilters)
+			unCheckFilters(availableWorkRoleFilters);
+		for(WebElement availableWorkRoleFilter : availableWorkRoleFilters) {
+			if(availableWorkRoleFilter.getText().equalsIgnoreCase(workRoleLabel)) {
+				click(availableWorkRoleFilter);
+				SimpleUtils.pass("Schedule Work Role:'"+ availableWorkRoleFilter.getText() +"' Filter selected Successfully!");
+			}
+		}
+	}
 
 	@Override
 	public ArrayList<String> getSelectedWorkRoleOnSchedule() throws Exception {
@@ -2195,5 +2217,87 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public void convertAllUnAssignedShiftToOpenShift() throws Exception {
+		if(varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()))
+		{
+			clickOnWeekView();
+			clickOnEditButton();
+			for(WebElement unAssignedShift : getUnAssignedShifts())
+			{
+				convertUnAssignedShiftToOpenShift(unAssignedShift);
+			}
+			clickSaveBtn();
+		}
+		else {
+			SimpleUtils.fail("Unable to convert UnAssigned Shift to Open Shift as 'Schedule' tab not active.", false);
+		}
+		
+	}
+	
+	public void convertUnAssignedShiftToOpenShift(WebElement unAssignedShift) throws Exception
+	{
+		By isUnAssignedShift = By.cssSelector("[ng-if=\"isUnassignedShift()\"]");
+		WebElement unAssignedPlusBtn = unAssignedShift.findElement(isUnAssignedShift);
+		if(isElementLoaded(unAssignedPlusBtn))
+		{
+			click(unAssignedPlusBtn);
+			if(isElementLoaded(shiftPopover))
+			{
+				WebElement convertToOpenOption = shiftPopover.findElement(By.cssSelector("[ng-if=\"canConvertToOpenShift()\"]"));
+				if(isElementLoaded(convertToOpenOption))
+				{
+					click(convertToOpenOption);
+					if(isElementLoaded(convertToOpenYesBtn))
+					{
+						click(convertToOpenYesBtn);
+						Thread.sleep(2000);
+					}
+				}
+			}
+		}
+	}
+
+	private List<WebElement> getUnAssignedShifts() {
+		String unAssignedShiftsLabel = "unassigned";
+		List<WebElement> unAssignedShiftsObj = new ArrayList<WebElement>();
+		if(shiftsOnScheduleView.size() != 0)
+		{
+			for(WebElement shift : shiftsOnScheduleView)
+			{
+				if(shift.getText().toLowerCase().contains(unAssignedShiftsLabel) && shift.isDisplayed())
+					unAssignedShiftsObj.add(shift);
+			}
+		}
+		return unAssignedShiftsObj;
+	}
+
+	@Override
+	public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception {
+		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+		for(WebElement activeWeekDay : ScheduleCalendarDayLabels)
+		{
+			click(activeWeekDay);
+			List<WebElement> availableDayShifts = getAvailableShiftsInDayView();
+			if(availableDayShifts.size() != 0)
+			{
+				clickOnEditButton();
+				for(WebElement shiftWithOT: getAvailableShiftsInDayView())
+				{
+					WebElement shiftRightSlider = shiftWithOT.findElement(By.cssSelector("div.sch-day-view-shift-pinch.right"));
+					String OTString = "hrs ot";
+					int xOffSet = -50;
+					while(shiftWithOT.getText().toLowerCase().contains(OTString))
+					{
+						moveDayViewCards(shiftRightSlider, xOffSet);
+					}
+				}
+				clickSaveBtn();
+				break;
+			}
+		}
+		
 	}
 }

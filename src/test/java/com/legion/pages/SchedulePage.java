@@ -93,4 +93,7 @@ public interface SchedulePage {
 	public void addOpenShiftWithDefaultTime(String workRole) throws Exception;
 	public boolean isNextWeekAvaibale() throws Exception;
 	public boolean isSmartCardPanelDisplay() throws Exception;
+	public void convertAllUnAssignedShiftToOpenShift() throws Exception;
+	public void selectWorkRoleFilterByText(String workRoleLabel, boolean isClearWorkRoleFilters) throws Exception;
+	public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception;
 }

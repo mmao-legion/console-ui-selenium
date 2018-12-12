@@ -1,7 +1,9 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -1363,19 +1365,147 @@ public class ScheduleNewUITest extends TestBase{
 					ArrayList<String> workroleActiveFiltersBeforeNavigation = schedulePage.getSelectedWorkRoleOnSchedule();					
 					//Navigate to Guidance Week
 					schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
-					
+					SimpleUtils.pass("Visited to Guidance Week: '"+ schedulePage.getActiveWeekText() +"'");
 					//Navigate to Previous Week
 					schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
 					ArrayList<String> workroleActiveFiltersAfterNavigation = schedulePage.getSelectedWorkRoleOnSchedule();
 					SimpleUtils.assertOnFail("WorkRole Filter not preserve selection on schedule generate page for the week: '"+ schedulePage.getActiveWeekText() +"'",
 		       				(workroleActiveFiltersBeforeNavigation.equals(workroleActiveFiltersAfterNavigation)) , false);
-					SimpleUtils.pass("WorkRole Filter preserves selection on schedule generate page for the week: '"+ schedulePage.getActiveWeekText());
+					SimpleUtils.pass("WorkRole Filter preserves selection on schedule generate page for the week: '"+ schedulePage.getActiveWeekText()+"'");
 					break;
 	        	}
 	        }
 	        if(! isGuidanceWeekFound)
 	        	SimpleUtils.report("No Guidance week found!");
 	        
+	    }
+	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-103: LEG-5000:- On schedule overview page wrong calendar is displayed when transitioning to next month.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void verifyScheduleOverviewPageCalendarMonthsAndYearsAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , false);
+	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+	        ArrayList<String> overviewPageCalendarMonthsAndYears = scheduleOverviewPage.getOverviewCalendarMonthsYears();
+	        int duplicateValueCount = SimpleUtils.countDuplicates(overviewPageCalendarMonthsAndYears);
+	        System.out.println("Duplecates : "+duplicateValueCount);
+	        LocalDate currentDate = SimpleUtils.getCurrentLocalDateObject();
+	        for(int index = 0; index < overviewPageCalendarMonthsAndYears.size(); index++)
+	        {
+	        	String[] overviewCalenderMonthAndYear = overviewPageCalendarMonthsAndYears.get(index).split(" ");
+	        	String month = String.valueOf(currentDate.plusMonths(index).getMonth());
+	        	String year = String.valueOf(currentDate.plusMonths(index).getYear());
+	        	SimpleUtils.assertOnFail("Wrong month ('" +overviewCalenderMonthAndYear[0] 
+	        		+ "') displaying on Overview Calendar. Currect Month:'"+ month +"'",
+	        			overviewPageCalendarMonthsAndYears.get(index).toLowerCase().contains(month.toLowerCase()) , false);
+		        
+	        	SimpleUtils.assertOnFail("Wrong Year ('" +overviewCalenderMonthAndYear[overviewCalenderMonthAndYear.length - 1] 
+		        		+ "') displaying on Overview Calendar. Currect Year:'"+ year +"'",
+		        			overviewPageCalendarMonthsAndYears.get(index).toLowerCase().contains(year.toLowerCase()) , false);
+	        	
+	        }	        
+	        SimpleUtils.pass("Overview Calendar diplaying currect Months & Years.");
+	    }
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-94: FOR-718:- When unassigned or compliance shifts are resolved, the unassigned/compliance smartcard should disappear upon save.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void verifyUnAssignedAndComplianceSmartCardAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , false);
+	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+	        List<WebElement> overViewWeekList = scheduleOverviewPage.getOverviewScheduleWeeks();
+	        int weekSize = overViewWeekList.size();
+	        BasePage basePage = new BasePage();
+			basePage.click(overViewWeekList.get(0));
+	        for(int index = 0; index < weekSize; index++)
+	        {
+	        	schedulePage.clickOnWeekView();
+				if(index != 0)
+					schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+
+				// Verify UnAssigned Shift SmartCard
+				String SmartCardLabelForUnassignedShift = "unassigned shift";
+				if(schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForUnassignedShift))
+				{
+					SimpleUtils.report("UnAssigned Shift SmartCard found for the Week: '"+ schedulePage.getActiveWeekText() +"'");
+					schedulePage.convertAllUnAssignedShiftToOpenShift();
+					SimpleUtils.assertOnFail("Unassigned smartcard not disappeared After Converting UnAssigned Shift to Open Shift for: '"
+					+ schedulePage.getActiveWeekText() +"'", (! schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForUnassignedShift)), true);
+					
+					if(! schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForUnassignedShift))
+						SimpleUtils.pass("UnAssigned Shift SmartCard disappear after converting unassigned shift to open shift.");
+				}
+				
+				// Verify compliance review Shift SmartCard
+				String SmartCardLabelForComplianceReview = "compliance review";
+				if(schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForComplianceReview))
+				{
+					SimpleUtils.report("UnAssigned Shift SmartCard found for the Week: '"+ schedulePage.getActiveWeekText() +"'");
+					String shiftTypeFilterText = "Compliance Review";
+					schedulePage.selectShiftTypeFilterByText(shiftTypeFilterText);
+					schedulePage.clickOnDayView();
+					schedulePage.reduceOvertimeHoursOfActiveWeekShifts();
+					
+					SimpleUtils.assertOnFail("Compliance Review smartcard not disappeared After reducing Overtime of Shift(s) for: '"
+							+ schedulePage.getActiveWeekText() +"'", (! schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForComplianceReview)), true);
+					
+					if(! schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForComplianceReview))
+						SimpleUtils.pass("Compliance Review smartcard disappeared After reducing Overtime of Shift(s) for: '"
+								+ schedulePage.getActiveWeekText() +"'");
+					
+					schedulePage.selectShiftTypeFilterByText("Clearing All Shift Type Filters");
+				}
+			}
+	        
+	    }
+	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-92: FOR-456 :- Should not keep the stickiness of filter in Guidance and Schedule when re-entering schedule app.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+	        schedulePage.clickOnWeekView();
+	        schedulePage.selectWorkRoleFilterByText("Manager", true);
+	        dashboardPage.navigateToDashboard();
+	        schedulePage.clickOnScheduleConsoleMenuItem();
+	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , false);
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+	        ArrayList<String> selectedWorkRoles = schedulePage.getSelectedWorkRoleOnSchedule();
+	        SimpleUtils.assertOnFail("Work Role filter not cleared after navigating to Dashboard and overview page.",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+	        SimpleUtils.pass("Work Role filter cleared after navigating to Dashboard and overview page.");
 	    }
 
     }

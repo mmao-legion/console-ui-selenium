@@ -183,6 +183,11 @@ public class SimpleUtils {
 	    dateMonthOfCurrentPastAndFutureWeek.put("futureWeekDate", getDayMonthDateFormat(futureWeekDate));
 	    return dateMonthOfCurrentPastAndFutureWeek;
 	}
+    
+    public static LocalDate getCurrentLocalDateObject()
+    {
+    	return Year.of(LocalDate.now().getYear()).atDay(LocalDate.now().getDayOfYear());
+    }
 	    
     public static String getDayMonthDateFormat(LocalDate localDate) {
 		String dayMonthDateFormat = null;
@@ -269,5 +274,23 @@ public class SimpleUtils {
         }
 	    return combinedresult;
     } 
+	
+	public static int countDuplicates(ArrayList list)
+	   {
+	       int duplicates = 0;
+	       for (int i = 0; i < list.size()-1;i++) {
+	           boolean found = false;
+	           for (int j = i+1; !found && j < list.size(); j++)  {
+	               if (list.get(i).equals(list.get(j)))
+	               {
+	            	   System.out.println("list.get(i) vs (list.get(j): "+list.get(i)+" "+list.get(j));
+	            	   found = true;
+		               duplicates++;
+	               }
+	               
+	           }
+	       }
+	       return duplicates;
+	   }
 	
 }

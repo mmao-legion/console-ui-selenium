@@ -15,7 +15,8 @@
            <!-- <include name="verifyFutureScheduleWeekDateAfteRefreshBrowserAsStoreManager"/> -->
            <!-- <include name="verifyTMCanViewNewScheduleAndOffersAsStoreManager"/> -->
            <!-- <include name="verifySmartCardPanelForTMAndTLAsTeamLead"/> -->
-           <include name="verifyWorkRoleFilterPreserveSelectionOnScheduleGeneratePageAsStoreManager"/>
+          <!--  <include name="verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager"/> -->
+           <include name="verifyUnAssignedAndComplianceSmartCardAsStoreManager"/>
         </methods>
       </class>
     </classes>
