@@ -644,7 +644,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	}
 
 	@Override
-	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount)
+	public void navigateWeekViewOrDayViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount)
 	{
 		String currentWeekStartingDay = "NA";
 		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
@@ -1286,10 +1286,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	public void clickSaveBtn() throws Exception{
 		if(isElementLoaded(scheduleSaveBtn)){
 			click(scheduleSaveBtn);
-			if(isElementLoaded(scheduleVersionSaveBtn))
-				click(scheduleVersionSaveBtn);
-			if(isElementLoaded(btnOK))
-				click(btnOK);
+			clickOnVersionSaveBtn();
+			clickOnPostSaveBtn();
 			SimpleUtils.pass("Schedule Save button clicked Successfully!");
 		}else{
 			SimpleUtils.fail("Schedule Save button not clicked Successfully!",false);
@@ -2299,5 +2297,38 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			}
 		}
 		
+	}
+	
+	@FindBy(css ="div.schedule-action-buttons")
+	private List<WebElement> actionButtonDiv;
+	@Override
+	public boolean isActionButtonLoaded(String actionBtnText) throws Exception
+	{
+		if(actionButtonDiv.size() != 0)
+		{
+			if(actionButtonDiv.get(0).getText().toLowerCase().contains(actionBtnText.toLowerCase()))
+				return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void navigateToNextDayIfStoreClosedForActiveDay() throws Exception {
+		String dayType = "Next";
+		int dayCount = 1;
+		if(isStoreClosedForActiveWeek())
+			navigateWeekViewOrDayViewToPastOrFuture(dayType, dayCount);
+		if(! isStoreClosedForActiveWeek())
+			SimpleUtils.pass("Navigated to Next day successfully!");
+	}
+	
+	public boolean isStoreClosedForActiveWeek() throws Exception
+	{
+		if(isElementLoaded(holidayLogoContainer))
+		{
+			SimpleUtils.report("Store is Closed for the Day/Week: '"+ getActiveWeekText() +"'.");
+			return true;
+		}
+		return false;
 	}
 }

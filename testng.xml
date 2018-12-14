@@ -16,7 +16,7 @@
            <!-- <include name="verifyTMCanViewNewScheduleAndOffersAsStoreManager"/> -->
            <!-- <include name="verifySmartCardPanelForTMAndTLAsTeamLead"/> -->
           <!--  <include name="verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager"/> -->
-           <include name="verifyUnAssignedAndComplianceSmartCardAsStoreManager"/>
+           <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>
         </methods>
       </class>
     </classes>

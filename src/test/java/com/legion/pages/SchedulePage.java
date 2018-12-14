@@ -20,7 +20,7 @@ public interface SchedulePage {
 	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception;
 	public List<HashMap<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception;
 	public void clickOnScheduleSubTab(String subTabString) throws Exception;
-	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount);
+	public void navigateWeekViewOrDayViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount);
 	public Boolean isWeekGenerated() throws Exception;
 	public Boolean isWeekPublished() throws Exception;
 	public void generateSchedule() throws Exception;
@@ -96,4 +96,6 @@ public interface SchedulePage {
 	public void convertAllUnAssignedShiftToOpenShift() throws Exception;
 	public void selectWorkRoleFilterByText(String workRoleLabel, boolean isClearWorkRoleFilters) throws Exception;
 	public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception;
+	public boolean isActionButtonLoaded(String actionBtnText) throws Exception;
+	public void navigateToNextDayIfStoreClosedForActiveDay() throws Exception;
 }

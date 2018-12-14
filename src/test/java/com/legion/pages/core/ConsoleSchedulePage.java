@@ -444,7 +444,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	}
 
 	@Override
-	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount)
+	public void navigateWeekViewOrDayViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount)
 	{
 		String currentWeekStartingDay = "NA";
 		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("sch-calendar-day-dimension"));
@@ -1168,6 +1168,18 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	@Override
 	public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isActionButtonLoaded(String actionBtnText) throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void navigateToNextDayIfStoreClosedForActiveDay() throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
