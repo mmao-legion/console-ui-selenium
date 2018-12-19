@@ -10,13 +10,10 @@
   
   <test name="Team Page">
     <classes>
-       <class name="com.legion.tests.core.ScheduleNewUITest">
+       <class name="com.legion.tests.core.TimeSheetTest">
       	<methods>
-           <!-- <include name="verifyFutureScheduleWeekDateAfteRefreshBrowserAsStoreManager"/> -->
-           <!-- <include name="verifyTMCanViewNewScheduleAndOffersAsStoreManager"/> -->
-           <!-- <include name="verifySmartCardPanelForTMAndTLAsTeamLead"/> -->
-          <!--  <include name="verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager"/> -->
-           <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>
+           <!-- <include name="validateAndDeleteATimeSheetClockAsStoreManager"/> -->
+           <include name="verifyNewTimesheetEntryAddedAsStoreManager"/>
         </methods>
       </class>
     </classes>

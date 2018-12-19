@@ -95,6 +95,21 @@ public class BasePage {
     	
     }
     
+    
+    public boolean isElementLoaded(WebElement element, long timeOutInSeconds) throws Exception
+    {
+    	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), timeOutInSeconds);
+    	 
+    	try {
+    	    tempWait.until(ExpectedConditions.visibilityOf(element)); 
+    	    return true;
+    	}
+    	catch (NoSuchElementException | TimeoutException te) {
+    		return false;	
+    	}
+    	
+    }
+    
     public static void waitUntilElementIsVisible(final WebElement element) {
         ExpectedCondition<Boolean> expectation = _driver -> element.isDisplayed();
 
