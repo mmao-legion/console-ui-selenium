@@ -3,6 +3,7 @@ package com.legion.pages.core;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +58,80 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy(css="div.popover.fade.in")
 	private WebElement clickPopover;
 	
+
+
+	@FindBy(css="lg-button[label=\"Add Timeclock\"]")
+	private WebElement addTimeClockBtn;
+	
+	@FindBy(css="lg-select[label=\"Location\"]")
+	private WebElement addTCLocationField;
+	
+	@FindBy(css="input-field[label=\"Date\"]")
+	private WebElement addTCDateField;
+	
+	@FindBy(css="lg-picker-input[label=\"Employee\"]")
+	private WebElement addTCEmployeeField;
+	
+	@FindBy(css="select[aria-label=\"Work Role\"]")
+	private WebElement addTCWorkRoleDropDown;
+	
+	@FindBy(css="input[aria-label=\"Shift Start\"]")
+	private WebElement addTCShiftStartTimeTextField;
+	
+	@FindBy(css="input[aria-label=\"Shift End\"]")
+	private WebElement addTCShiftEndTimeTextField;
+	
+	@FindBy(css="input[aria-label=\"Add Note\"]")
+	private WebElement addTCAddNotesTextField;
+	
+	@FindBy(css="lg-button[label=\"Add\"]")
+	private WebElement addTimeClockSaveBtn;
+	
+	@FindBy(css="div.lg-search-options__option-wrapper")
+	private List<WebElement> dropdownOptions;
+	
+	@FindBy(className = "lg-single-calendar-month")
+	private WebElement timeClockCalendarLabel;
+	
+	@FindBy(css="[ng-click=\"$ctrl.changeMonth(-1)\"]")
+	private WebElement timeClockPreviousMonthArrow;
+	
+	@FindBy(css="[ng-click=\"$ctrl.changeMonth(1)\"]")
+	private WebElement timeClockNextMonthArrow;
+	
+	@FindBy(css="div.lg-single-calendar-date")
+	private List<WebElement> calenderDates;
+	
+	@FindBy(css = "div.lg-add-clock")
+	private WebElement addClockPopup;
+
+	@FindBy(css="div.lg-button-group-last")
+	private WebElement payPeriodBtn;
+	
+	@FindBy(css="input[placeholder=\"You can search by name, location, and job title.\"]")
+	private WebElement timeSheetWorkerSearchBox;
+	
+	@FindBy(css = "div.lg-button-group-first")
+	private WebElement timeSheetDayViewBtn;
+	
+	@FindBy(css="[ng-repeat=\"clockIn in $ctrl.clockIns\"]")
+	private List<WebElement> savedClockes;
+	
+	@FindBy(css = "div.day-week-picker-period.day-week-picker-period-active")
+	private WebElement timeSheetActivePeriod;
+	
+	@FindBy(className="day-week-picker-arrow-left")
+	private WebElement timeSheetNavigationPreviousDurationArrow;
+	
+	@FindBy(className="day-week-picker-arrow-right")
+	private WebElement timeSheetNavigationNextDurationArrow;
+	
+	@FindBy(css = "lg-eg-status[type=\"Pending\"]")
+	private List<WebElement> timeSheetPendingStatusList;
+	
+	@FindBy(css = "lg-button[ng-click=\"$ctrl.approve()\"]")
+	private WebElement timeSheetPopUpApproveBtn;
+	
 	
 	String timeSheetHeaderLabel = "Timesheet";
 	public ConsoleTimeSheetPage(){
@@ -87,7 +162,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	
 	
 	@Override
-	public void OpenATimeSheetWithClockInAndOut() throws Exception
+	public void openATimeSheetWithClockInAndOut() throws Exception
 	{
 		if(isElementLoaded(timesheetTable))
 		{
@@ -216,51 +291,6 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	}
 
 
-
-	@FindBy(css="lg-button[label=\"Add Timeclock\"]")
-	private WebElement addTimeClockBtn;
-	
-	@FindBy(css="lg-select[label=\"Location\"]")
-	private WebElement addTCLocationField;
-	
-	@FindBy(css="input-field[label=\"Date\"]")
-	private WebElement addTCDateField;
-	
-	@FindBy(css="lg-picker-input[label=\"Employee\"]")
-	private WebElement addTCEmployeeField;
-	
-	@FindBy(css="select[aria-label=\"Work Role\"]")
-	private WebElement addTCWorkRoleDropDown;
-	
-	@FindBy(css="input[aria-label=\"Shift Start\"]")
-	private WebElement addTCShiftStartTimeTextField;
-	
-	@FindBy(css="input[aria-label=\"Shift End\"]")
-	private WebElement addTCShiftEndTimeTextField;
-	
-	@FindBy(css="input[aria-label=\"Add Note\"]")
-	private WebElement addTCAddNotesTextField;
-	
-	@FindBy(css="lg-button[label=\"Add\"]")
-	private WebElement addTimeClockSaveBtn;
-	
-	@FindBy(css="div.lg-search-options__option-wrapper")
-	private List<WebElement> dropdownOptions;
-	
-	@FindBy(className = "lg-single-calendar-month")
-	private WebElement timeClockCalendarLabel;
-	
-	@FindBy(css="[ng-click=\"$ctrl.changeMonth(-1)\"]")
-	private WebElement timeClockPreviousMonthArrow;
-	
-	@FindBy(css="[ng-click=\"$ctrl.changeMonth(1)\"]")
-	private WebElement timeClockNextMonthArrow;
-	
-	@FindBy(css="div.lg-single-calendar-date")
-	private List<WebElement> calenderDates;
-	
-	@FindBy(css = "div.lg-add-clock")
-	private WebElement addClockPopup;
 	
 	@Override
 	public void addNewTimeClock(String location, String timeClockDate, String employee, String workRole, String startTime, String endTime, String notes) throws Exception {
@@ -347,12 +377,6 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		}
 	}
 	
-
-	@FindBy(css="div.lg-button-group-last")
-	private WebElement payPeriodBtn;
-	
-	@FindBy(css="input[placeholder=\"You can search by name, location, and job title.\"]")
-	private WebElement timeSheetWorkerSearchBox;
 	
 	@Override
 	public void valiadteTimeClock(String location, String timeClockDate, String employee, String workRole, 
@@ -448,8 +472,20 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("Timesheet: Pay Period Button not loaded!", false);
 	}
 	
-	@FindBy(css="[ng-repeat=\"clockIn in $ctrl.clockIns\"]")
-	private List<WebElement> savedClockes;
+
+	@Override
+	public void clickOnDayView() throws Exception
+	{
+		String activeButtonClassKeyword = "selected";
+		if(isElementLoaded(timeSheetDayViewBtn))
+		{
+			if(! timeSheetDayViewBtn.getAttribute("class").toLowerCase().contains(activeButtonClassKeyword))
+				click(timeSheetDayViewBtn);
+		}
+		else
+			SimpleUtils.fail("Timesheet: Pay Period Button not loaded!", false);
+	}
+	
 	
 	public ArrayList<WebElement> getAllAvailableClocksOnClockDetailsPopup()
 	{
@@ -460,6 +496,177 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				availableClocks.add(clockDetails);
 		}
 		return availableClocks;
+	}
+
+
+
+	@Override
+	public HashMap<String, Float> getTimeClockHours(String timeClockDate, String timeClockEmployee) throws Exception {
+		HashMap<String, Float> allHours = new HashMap<String, Float>();
+		clickOnTimeSheetConsoleMenu();
+		clickOnPayPeriodDuration();
+		if(isElementLoaded(timeSheetWorkerSearchBox, 10))
+		{
+			timeSheetWorkerSearchBox.click();
+			timeSheetWorkerSearchBox.sendKeys(timeClockEmployee.split(" ")[0]);
+			timeSheetWorkerSearchBox.sendKeys(Keys.TAB);
+			Thread.sleep(2000);
+			if(timeSheetWorkersRows.size() != 0) {
+				for(WebElement workerRow: timeSheetWorkersRows) {
+					if(workerRow.getText().toLowerCase().contains(timeClockEmployee.toLowerCase())) {
+						click(workerRow);
+						for(WebElement WorkersDayRow : getTimeSheetDisplayedWorkersDayRows()) {
+							if(WorkersDayRow.getText().toLowerCase().contains(timeClockDate.toLowerCase().split(",")[0])) {
+								String[] workerRowColumnsText =  WorkersDayRow.getText().split("\n");
+								if(workerRowColumnsText.length > 10) {
+									float regHours = Float.valueOf(workerRowColumnsText[2]);
+									float oTHours = Float.valueOf(workerRowColumnsText[3]);
+									float dTHours = Float.valueOf(workerRowColumnsText[4]);
+									float holHours = Float.valueOf(workerRowColumnsText[5]);
+									float totalHours = Float.valueOf(workerRowColumnsText[6]);
+									float schedHours = Float.valueOf(workerRowColumnsText[7]);
+									float diffHours = Float.valueOf(workerRowColumnsText[8]);
+									float tipsHours = Float.valueOf(workerRowColumnsText[9]);
+									float mealHours = Float.valueOf(workerRowColumnsText[10]);
+									allHours.put("regHours", regHours);
+									allHours.put("oTHours", oTHours);
+									allHours.put("dTHours", dTHours);
+									allHours.put("holHours", holHours);
+									allHours.put("totalHours", totalHours);
+									allHours.put("schedHours", schedHours);
+									allHours.put("diffHours", diffHours);
+									allHours.put("tipsHours", tipsHours);
+									allHours.put("mealHours", mealHours);
+								}
+								else {
+									SimpleUtils.fail("Timesheet table all hours not loaded for the worker '"+ timeClockEmployee +"' on date: '"+ timeClockDate +"'.", true);
+								}
+								
+							}
+						}
+					}
+				}
+			}
+		}
+		return allHours;
+	}
+
+
+
+	@Override
+	public String getActiveDayWeekOrPayPeriod() throws Exception {
+		String activePeriodText = "";
+		if(isElementLoaded(timeSheetActivePeriod))
+		{
+			activePeriodText = timeSheetActivePeriod.getText().replace("\n", " ");
+		}
+		else
+			SimpleUtils.fail("Timesheet duration list not loaded Successfully.", false);
+		
+		return activePeriodText;
+	}
+	
+
+	@Override
+	public void navigateDayWeekOrPayPeriodToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount)
+	{
+		List<WebElement> timeSheetDurationNavigatorLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+		for(int i = 0; i < weekCount; i++)
+		{
+			int displayedWeekCount = timeSheetDurationNavigatorLabels.size();
+			for(WebElement ScheduleCalendarDayLabel: timeSheetDurationNavigatorLabels)
+			{
+				if(ScheduleCalendarDayLabel.getAttribute("class").toString().contains("day-week-picker-period-active"))
+				{	
+					if(nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future"))
+					{
+						try {
+								int activeWeekIndex = timeSheetDurationNavigatorLabels.indexOf(ScheduleCalendarDayLabel);
+								if(activeWeekIndex < (displayedWeekCount - 1))
+								{
+									click(timeSheetDurationNavigatorLabels.get(activeWeekIndex + 1));
+								}
+								else {
+									click(timeSheetNavigationNextDurationArrow);
+									click(timeSheetDurationNavigatorLabels.get(0));
+								}
+						}
+						catch (Exception e) {
+							SimpleUtils.report("Schedule page Calender Next Week Arrows Not Loaded/Clickable after '"+ScheduleCalendarDayLabel.getText().replace("\n", "")+ "'");
+						}
+					}
+					else
+					{
+						try {
+							int activeWeekIndex = timeSheetDurationNavigatorLabels.indexOf(ScheduleCalendarDayLabel);
+							if(activeWeekIndex > 0)
+							{
+								click(timeSheetDurationNavigatorLabels.get(activeWeekIndex - 1));
+							}
+							else {
+								click(timeSheetNavigationPreviousDurationArrow);
+								click(timeSheetDurationNavigatorLabels.get(displayedWeekCount - 1));
+							}
+						} catch (Exception e) {
+							SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable after '"+ScheduleCalendarDayLabel.getText().replace("\n", "")+ "'", true);
+						}
+					}
+					break;
+				}
+			}
+		}
+	}
+
+	
+	@Override
+	public void openFirstPendingTimeSheet() throws Exception
+	{
+		if(isElementLoaded(timesheetTable))
+		{
+			if(timeSheetWorkersRows.size() != 0) {
+				for(WebElement workerRow: timeSheetWorkersRows)
+				{
+					if(workerRow.findElements(By.cssSelector("lg-eg-status[type=\"Pending\"]")).size() != 0)
+					{
+						click(workerRow);
+						List<WebElement> timeSheetDisplayedWorkersDayRows = getTimeSheetDisplayedWorkersDayRows();
+						for(WebElement activeRow: timeSheetDisplayedWorkersDayRows)
+						{
+							if(activeRow.findElements(By.cssSelector("lg-eg-status[type=\"Pending\"]")).size() != 0)
+							{
+								WebElement activeRowPopUpLink = activeRow.findElement(By.cssSelector("lg-button[action-link]"));
+								if(isElementLoaded(activeRowPopUpLink))
+								{
+									click(activeRowPopUpLink);
+									break;
+								}
+							}
+						}
+						break;
+					}
+						
+				}
+			}
+		}
+		
+	}
+
+	@Override
+	public boolean isTimeSheetPopupApproveButtonActive() throws Exception
+	{
+		if(isElementLoaded(timeSheetPopUpApproveBtn))
+		{
+			List<WebElement> approveBtnList = timeSheetPopUpApproveBtn.findElements(By.cssSelector("button[type=\"button\"]"));
+			if( approveBtnList.size() != 0)
+			{
+				if(approveBtnList.get(0).isEnabled())
+				{
+					return true;
+				}	
+			}
+		}
+		
+		return false;
 	}
 	
 }

@@ -3,6 +3,7 @@ package com.legion.tests.core;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -24,6 +25,30 @@ public class TimeSheetTest extends TestBase{
 	private static HashMap<String, String> addTimeClockDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddTimeClock.json");
 
 
+	public enum dayWeekOrPayPeriodViewType{
+		  Next("Next"),
+		  Previous("Previous");
+			private final String value;
+			dayWeekOrPayPeriodViewType(final String newValue) {
+	            value = newValue;
+	        }
+	        public String getValue() { return value; }
+	}
+	
+	public enum dayWeekOrPayPeriodCount{
+		Zero(0),
+		One(1),
+		Two(2),
+		Three(3),
+		Four(4),
+		Five(5);		
+		private final int value;
+		dayWeekOrPayPeriodCount(final int newValue) {
+            value = newValue;
+        }
+        public int getValue() { return value; }
+	}
+	
 	@Override
 	@BeforeMethod
 	public void firstTest(Method method, Object[] params) throws Exception {
@@ -53,7 +78,7 @@ public class TimeSheetTest extends TestBase{
         // Spot a timesheet with a clock in and out entered
         // Click on that time sheet to open the edit modal
         
-        timeSheetPage.OpenATimeSheetWithClockInAndOut();
+        timeSheetPage.openATimeSheetWithClockInAndOut();
         int clickIndex = 0;
         
         // click in the edit button of a clock in
@@ -103,4 +128,87 @@ public class TimeSheetTest extends TestBase{
         timeSheetPage.valiadteTimeClock(timeClockLocation, timeClockDate, timeClockEmployee, timeClockWorkRole, timeClockStartTime, timeClockEndTime, timeClockAddNote);
         timeSheetPage.closeTimeSheetDetailPopUp();
 	}
+	
+	
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TP-113 : Automation TA Module : Validate the number of hours in for the TS of the TM in the REG column is 8 and OT is 2.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void validateNumberOfHoursAfterAddingTimeClockAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeLocation(location);
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        
+        // Click on "Timesheet" option menu.
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+        String timeClockLocation = addTimeClockDetails.get("Location");
+        String timeClockDate = addTimeClockDetails.get("Date");
+        String timeClockEmployee = addTimeClockDetails.get("Employee");
+        String timeClockWorkRole = addTimeClockDetails.get("Work_Role");
+        String timeClockStartTime = "09:00AM";
+        String timeClockEndTime = "07:00pm";
+        String timeClockAddNote = addTimeClockDetails.get("Add_Note");
+        
+        timeSheetPage.addNewTimeClock(timeClockLocation, timeClockDate, timeClockEmployee,timeClockWorkRole, timeClockStartTime, timeClockEndTime, timeClockAddNote);
+        HashMap<String, Float> allHours = timeSheetPage.getTimeClockHours(timeClockDate, timeClockEmployee);
+		float regHours = allHours.get("regHours");
+		float totalHours = allHours.get("totalHours");
+		float dTHours = allHours.get("dTHours");
+		float oTHours = allHours.get("oTHours");
+		float expectedRegHours = 8;
+		float expectedOTHours = totalHours - (regHours + dTHours);
+		float expectedDTHours = totalHours - (regHours + oTHours);
+		
+		if(dTHours > 0)
+			SimpleUtils.pass("Timesheet Total hours for user'"+ timeClockEmployee +"' found '" + totalHours + "' hours");
+		
+		if(regHours == expectedRegHours)
+			SimpleUtils.pass("Timesheet Regular hours for user'"+ timeClockEmployee +"' found '" + regHours + "' hours");
+		else
+			SimpleUtils.fail("Timesheet Regular hours found'"+ regHours +"', expected '" + expectedRegHours + "' hours", true);
+		
+		if(oTHours == expectedOTHours)
+			SimpleUtils.pass("Timesheet Overtime hours for user'"+ timeClockEmployee +"' found '" + oTHours + "' hours");
+		else
+			SimpleUtils.fail("Timesheet Overtime hours found'"+ oTHours +"', expected '" + expectedOTHours + "' hours", true);
+		
+		if(dTHours == expectedDTHours)
+			SimpleUtils.pass("Timesheet Double Time hours for user'"+ timeClockEmployee +"' found '" + dTHours + "' hours");
+		else
+			SimpleUtils.fail("Timesheet Double Time hours found'"+ dTHours +"', expected '" + expectedDTHours + "' hours", true);
+	}
+	
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TP-114: Automation TA module : Verify Manager can review past payperiod and cannot approve pending status.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void verifyPastPayPeriodAndCanNotApprovePastPendingStatusAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeLocation(location);
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+        SimpleUtils.pass("Timesheet PayPeriod duration: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"' loaded.");
+        timeSheetPage.clickOnDayView();
+        SimpleUtils.pass("Timesheet Day View: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"' loaded.");
+        timeSheetPage.navigateDayWeekOrPayPeriodToPastOrFuture(dayWeekOrPayPeriodViewType.Previous.getValue()
+        		, dayWeekOrPayPeriodCount.One.getValue());
+        SimpleUtils.pass("Timesheet Day View: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"' loaded.");
+        timeSheetPage.openFirstPendingTimeSheet();
+        SimpleUtils.assertOnFail("Manager can approve TimeSheet of past date: '" + timeSheetPage.getActiveDayWeekOrPayPeriod() + "'", 
+        		(! timeSheetPage.isTimeSheetPopupApproveButtonActive()), false);  
+        SimpleUtils.pass("Manager can not approve TimeSheet of past date: '" + timeSheetPage.getActiveDayWeekOrPayPeriod() + "'");  
+        timeSheetPage.closeTimeSheetDetailPopUp();
+	}
+	
+	
 }

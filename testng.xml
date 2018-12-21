@@ -13,11 +13,12 @@
        <class name="com.legion.tests.core.TimeSheetTest">
       	<methods>
            <!-- <include name="validateAndDeleteATimeSheetClockAsStoreManager"/> -->
-           <include name="verifyNewTimesheetEntryAddedAsStoreManager"/>
+           <include name="verifyPastPayPeriodAndCanNotApprovePastPendingStatusAsStoreManager"/>
         </methods>
       </class>
     </classes>
-  </test> 
+  </test>  
+  
   
   
  

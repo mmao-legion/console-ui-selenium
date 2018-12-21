@@ -1583,9 +1583,6 @@ public class ScheduleNewUITest extends TestBase{
 	        
 	        schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
 	    }
-	    
-	    
-
     }
 
 

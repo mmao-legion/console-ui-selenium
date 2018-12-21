@@ -98,4 +98,5 @@ public interface SchedulePage {
 	public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception;
 	public boolean isActionButtonLoaded(String actionBtnText) throws Exception;
 	public void navigateToNextDayIfStoreClosedForActiveDay() throws Exception;
+	/*public void validatingRequiredActionforUnAssignedShift() throws Exception;*/
 }
