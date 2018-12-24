@@ -297,7 +297,6 @@ public class SimpleUtils {
 	       return duplicates;
 	   }
 
-}
 	public static void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception {
 		if(previousTeamCount.size() == currentTeamCount.size()){
 			for(int i =0; i<currentTeamCount.size();i++){
