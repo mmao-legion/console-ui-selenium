@@ -4,6 +4,7 @@ import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 import com.legion.tests.core.ScheduleRoleBasedTest.scheduleHoursAndWagesData;
+import com.legion.tests.core.ScheduleTest.SchedulePageSubTabText;
 import com.legion.utils.MyThreadLocal;
 
 import org.openqa.selenium.By;
@@ -12,6 +13,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import com.legion.pages.BasePage;
+import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
 import com.legion.utils.SimpleUtils;
 
@@ -21,11 +23,14 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 
-	
+	String dayWeekPicker;
+
 	@FindBy(xpath="//*[@id='legion-app']/div/div[2]/div/div/div/div[1]/navigation/div/div[4]")
 	private WebElement goToScheduleButton;
 	
@@ -136,6 +141,24 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	@FindBy(css = "[ng-click=\"OkAction()\"]")
 	private WebElement successfullyPublishedOkOption;
+
+	@FindBy(css = "span[ng-click='c.action()']")
+	private WebElement enterBudgetLink;
+
+	@FindBy(css = "span.header-text.fl-left.ng-binding")
+	private WebElement budgetHeader;
+
+	@FindBy(css = "div.day-week-picker-period-active")
+	private WebElement daypicker;
+
+	@FindBy(css = "div.row-fx.schedule-table-row.ng-scope")
+	private List<WebElement> schedulesForWeekOnOverview;
+
+	@FindBy(css = ".cancel-action-text")
+	private WebElement enterBudgetCancelButton;
+
+	@FindBy(css = "div.col-sm-10.plr-0-0 > div:nth-child(1) > div > span")
+	private WebElement returnToOverviewTab;
 
 	public ConsoleSchedulePage()
 	{
@@ -444,7 +467,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	}
 
 	@Override
-	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount)
+	public void navigateWeekViewOrDayViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount)
 	{
 		String currentWeekStartingDay = "NA";
 		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("sch-calendar-day-dimension"));
@@ -1077,7 +1100,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	}
 
 	@Override
-	public void selectWorkRoleFilterByIndex(int index) throws Exception {
+	public void selectWorkRoleFilterByIndex(int index, boolean isClearWorkRoleFilters) throws Exception {
 		// TODO Auto-generated method stub
 
 	}
@@ -1133,13 +1156,122 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public void refreshBrowserPage() throws Exception {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public void addOpenShiftWithDefaultTime(String workRole) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isSmartCardPanelDisplay() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isNextWeekAvaibale() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void convertAllUnAssignedShiftToOpenShift() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void selectWorkRoleFilterByText(String workRoleLabel, boolean isClearWorkRoleFilters) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isActionButtonLoaded(String actionBtnText) throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void navigateToNextDayIfStoreClosedForActiveDay() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+
+
+	@Override
+	public void validateBudgetPopUpHeader(String nextWeekView, int weekCount) {
+		// TODO Auto-generated method stub
+
+		for(int i = 0; i < weekCount; i++)
+			{
+			if(nextWeekView.toLowerCase().contains("next") || nextWeekView.toLowerCase().contains("future"))
+			{
+				try {
+					if(isElementLoaded(schedulesForWeekOnOverview.get(0))){
+						click(schedulesForWeekOnOverview.get(i));
+						dayWeekPicker= daypicker.getText();
+						String[] weekActiveArray=daypicker.getText().split("\n");
+						String weekActiveDate = weekActiveArray[1];
+						String budgetPopUpHeader = "Budget - Week of "+ SimpleUtils.dateWeekPickerDateComparision(weekActiveDate);
+						checkElementVisibility(enterBudgetLink);
+						waitForSeconds(2);
+						click(enterBudgetLink);
+							if(budgetPopUpHeader.equalsIgnoreCase(budgetHeader.getText())){
+								SimpleUtils.pass("Budget pop-up header week duration "+ budgetHeader.getText() +" matches " +weekActiveDate);
+								checkElementVisibility(enterBudgetCancelButton);
+								click(enterBudgetCancelButton);
+								checkElementVisibility(returnToOverviewTab);
+								click(returnToOverviewTab);
+							}
+							else {
+								SimpleUtils.fail("Budget-PopUp opens up for "+ SimpleUtils.dateWeekPickerDateComparision(weekActiveDate), false);
+							}
+					}
+				}
+				catch (Exception e) {
+					SimpleUtils.fail("Budget pop-up not opening ",false);
+				}
+			}
+
+
+			}
+
+	}
+
+	@Override
+	public void disableNextWeekArrow() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void clickScheduleDraftAndGuidanceStatus(
+			List<String> overviewScheduleWeeksStatus) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void editBudgetHours() {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void validatingGenrateSchedule() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 

@@ -35,7 +35,13 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	@FindBy(className="schedule-table-row")
 	private List<WebElement> overviewTableRows;
 	
-	
+	@FindBy(css="div.row-fx.schedule-table-row")
+	private List<WebElement> overviewScheduleWeekList;
+
+	@FindBy(css = "div.lgn-calendar.current-month")
+	private List<WebElement> overviewCalendarMonthsYears;
+
+
 	public ConsoleScheduleOverviewPage()
 	{
 		PageFactory.initElements(getDriver(), this);
@@ -301,10 +307,36 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		return weekDays;
 	}
 
-	@FindBy(css="div.row-fx.schedule-table-row")
-	private List<WebElement> overviewScheduleWeekList;
 	@Override
 	public List<WebElement> getOverviewScheduleWeeks() {
 		return overviewScheduleWeekList;
+	}
+
+	public void clickScheduleDraftAndGuidanceStatus(List<String> overviewScheduleWeeksStatus){
+
+		for(int i=0;i<overviewScheduleWeeksStatus.size();i++){
+			if(overviewScheduleWeeksStatus.get(i).contains("Finalized") ||
+					overviewScheduleWeeksStatus.get(i).contains("Published") ||
+					overviewScheduleWeeksStatus.get(i).contains("Draft")&&
+					overviewScheduleWeeksStatus.get(i+1).contains("Guidance")){
+				System.out.println("pass ho gaya");
+			}
+
+		}
+	}
+
+
+	@Override
+	public ArrayList<String> getOverviewCalendarMonthsYears() throws Exception
+	{
+		ArrayList<String> overviewCalendarMonthsYearsText = new ArrayList<String>();
+		if(overviewCalendarMonthsYears.size() != 0)
+		{
+			for(WebElement overviewCalendarMonthYear : overviewCalendarMonthsYears)
+			{
+				overviewCalendarMonthsYearsText.add(overviewCalendarMonthYear.getText().replace("\n", ""));
+			}
+		}
+		return overviewCalendarMonthsYearsText;
 	}
 }

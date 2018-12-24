@@ -2,12 +2,14 @@ package com.legion.tests.core;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.aventstack.extentreports.Status;
+import com.legion.pages.ControlsPage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
@@ -16,6 +18,8 @@ import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.TeamTest.weekCount;
+import com.legion.tests.core.TeamTest.weekViewType;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
@@ -36,7 +40,8 @@ public class ScheduleTest extends TestBase{
 			Two(2),
 			Three(3),
 			Four(4),
-			Five(5);		
+			Five(5),
+			Six(6);		
 			private final int value;
 			weekCount(final int newValue) {
 	            value = newValue;
@@ -48,7 +53,8 @@ public class ScheduleTest extends TestBase{
 		  NotAvailable("Not Available"),
 		  Draft("Draft"),
 		  Guidance("Guidance"),
-		  Finalized("Finalized");
+		  Finalized("Finalized"),
+		  Published("Published");
 
 		  private final String value;
 		  overviewWeeksStatus(final String newValue) {
@@ -254,7 +260,7 @@ public class ScheduleTest extends TestBase{
 	        
 	        //Must have at least "Past Week" schedule published
 	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-	        schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
+	        schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
 	        SimpleUtils.assertOnFail("Schedule Page: Past week not generated!",schedulePage.isWeekGenerated() , true);
 	        SimpleUtils.assertOnFail("Schedule Page: Past week not Published!",schedulePage.isWeekPublished() , true);
 	        
@@ -270,12 +276,12 @@ public class ScheduleTest extends TestBase{
 
 	        //there are at least one week in the future where schedule has not yet been published
 	        schedulePage.clickOnWeekView();
-	        schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+	        schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 
 	        // to do -
 	        for(int index = 1; index < weekCount.values().length; index++)
 	        {
-	        	schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+	        	schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 	        	if(! schedulePage.isWeekGenerated()){
         			ExtentTestManager.getTest().log(Status.INFO, "Schedule Page: Future week '"+schedulePage.getScheduleWeekStartDayMonthDate()+"' not Generated!");
 	        	}
@@ -285,6 +291,24 @@ public class ScheduleTest extends TestBase{
 	        		}
 	        	}
 	        }
+	    }
+
+	    @Automated(automated ="Automated")
+		@Owner(owner = "Gunjan")
+		@Enterprise(name = "KendraScott2_Enterprise")
+		@TestName(description = "FOR-596:Budget modal header should display the week instead of UNDEFINED")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void enterBudgetPopUpHeaderStoreManager(String username, String password, String browser, String location) throws Throwable {
+	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+	    	schedulePage.clickOnScheduleConsoleMenuItem();
+	    	schedulePage.validateBudgetPopUpHeader(weekViewType.Next.getValue(), weekCount.Six.getValue());
+//			schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+//	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+//			List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+//			for (int i = 0; i < overviewPageScheduledWeekStatus.size(); i++) {
+//				overviewPageScheduledWeekStatus.get(i)
+//			}		}
+//	    	schedulePage.validateBudgetPopUpHeader();  	
 	    }
 	    
 	    @Automated(automated = "Manual")
