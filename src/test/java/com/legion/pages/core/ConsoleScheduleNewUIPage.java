@@ -2365,4 +2365,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
+    @Override
+    public void validatingGenrateSchedule() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
 }
