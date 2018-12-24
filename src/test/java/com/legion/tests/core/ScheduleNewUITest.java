@@ -933,6 +933,17 @@ public class ScheduleNewUITest extends TestBase{
 	        SimpleUtils.assertOnFail("Not remember the Last Active Group By Filter ("+oldGroupByFilter +" / "+newGroupByFilter+").",
 	        		oldGroupByFilter.contains(newGroupByFilter) , true);
 	    }
+	    
+//	    @Automated(automated =  "Automated")
+//		@Owner(owner = "Nishant")
+//	    @Enterprise(name = "KendraScott2_Enterprise")
+//	    @TestName(description = "TP-18: As a store manager, should be able to review past week's schedule and generate this week or next week's schedule")
+//	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+//	    public void editBudgetPopUpHeaderStoreManager(String username, String password, String browser, String location) throws Throwable { 
+//	    	System.out.println("method started");
+//	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+//	    	schedulePage.validateBudgetPopUpHeader();  	
+//	    }
 
 	    @Automated(automated =  "Automated")
 		@Owner(owner = "Naval")

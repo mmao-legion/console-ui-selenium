@@ -8,18 +8,18 @@
  	</listeners>
  
   
-  <test name="Team Page">
+  <test name="Schedule Page">
     <classes>
        <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
+           <include name="editOpenShiftScheduleAsStoreManager"/>
+           <include name="editManualShiftScheduleAsStoreManager"/>
            <include name="editAssignTeamScheduleAsStoreManager"/>
+         
         </methods>
       </class>
     </classes>
   </test> 
-  
-  
- 
    
 </suite> <!-- Suite -->
 

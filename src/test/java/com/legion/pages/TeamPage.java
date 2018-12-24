@@ -9,7 +9,7 @@ public interface TeamPage {
 //    public boolean isCoverage() throws Exception;
 //    public void verifyTeamPage(boolean isTeamPage) throws Exception;
 //    public void verifyCoveragePage(boolean isCoveragePage) throws Exception;
-    public void performSearchRoster(List list)throws Exception;
+    public void performSearchRoster(List<String> list)throws Exception;
 	public void coverage();
 	public void coverageViewToPastOrFuture(String nextWeekView, int weekCount);
 }

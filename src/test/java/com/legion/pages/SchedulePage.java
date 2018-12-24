@@ -89,4 +89,6 @@ public interface SchedulePage {
 	public void dragShiftToRightSide(WebElement shift, int xOffSet);
 	public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception;
 
+	public void validateBudgetPopUpHeader(String nextWeekView, int weekCount);
+
 }

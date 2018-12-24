@@ -1737,6 +1737,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+ 
+	
+	
+
+	@Override
+	public void validateBudgetPopUpHeader(String nextWeekView, int weekCount) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 	@Override
 	public boolean inActiveWeekDayClosed(int dayIndex) throws Exception {

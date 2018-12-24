@@ -28,9 +28,12 @@ import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
@@ -269,5 +272,44 @@ public class SimpleUtils {
         }
 	    return combinedresult;
     } 
+	 
 	
+	public static void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception {
+		if(previousTeamCount.size() == currentTeamCount.size()){
+			for(int i =0; i<currentTeamCount.size();i++){
+				String currentCount = currentTeamCount.get(i);
+				String previousCount = previousTeamCount.get(i);
+				if(Integer.parseInt(currentCount) == Integer.parseInt(previousCount)+1){
+					SimpleUtils.pass("Current Team Count is greater than Previous Team Count");
+				}else{
+					SimpleUtils.fail("Current Team Count is not greater than Previous Team Count",true);
+				}
+			}
+		}else{
+			SimpleUtils.fail("Size of Current Team Count should be equal to Previous Team Count",false);
+		}
+	}
+
+	public static String dateWeekPickerDateComparision(String weekActiveDate){
+		int i=0;
+		List<String> listWeekActiveDate = new ArrayList();
+		String dateRangeDayPicker = null;
+		Pattern pattern = Pattern.compile("(\\d+)");
+		Matcher match = pattern.matcher(weekActiveDate);
+		String[] dateRange= weekActiveDate.split("-");
+		while(match.find())
+		{
+			if(Integer.parseInt(match.group(1))<10){
+				String padded = String.format("%02d" , Integer.parseInt(match.group(1)));
+				listWeekActiveDate.add(dateRange[i].replace(match.group(1), padded));
+			}else{
+				listWeekActiveDate.add(dateRange[i]);
+			}
+			i++;
+		}
+		dateRangeDayPicker = listWeekActiveDate.get(0)+"-"+listWeekActiveDate.get(1);
+		return dateRangeDayPicker;
+
+
+	}
 }
