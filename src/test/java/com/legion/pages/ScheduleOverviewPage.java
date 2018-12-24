@@ -20,4 +20,5 @@ public interface ScheduleOverviewPage {
 	public String getOverviewCalenderWeekDays() throws Exception;
 	public List<WebElement> getOverviewScheduleWeeks();
 	public void clickScheduleDraftAndGuidanceStatus(List<String> overviewScheduleWeeksStatus);
+	public ArrayList<String> getOverviewCalendarMonthsYears() throws Exception;
 }

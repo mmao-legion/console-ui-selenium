@@ -95,7 +95,7 @@ public class ScheduleOverviewTest extends TestBase{
 		{ 
 			if(!scheduleWeekStatus.contains(scheduleWeekStatusToVerify)) {
 				if(isCurrentWeekSelected) {
-					schedulePage.navigateWeekViewToPastOrFuture("next", 1);
+					schedulePage.navigateWeekViewOrDayViewToPastOrFuture("next", 1);
 				}
 				else {
 					scheduleOverviewPage.clickOnCurrentWeekToOpenSchedule();

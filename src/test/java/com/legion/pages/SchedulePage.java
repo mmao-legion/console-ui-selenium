@@ -20,7 +20,7 @@ public interface SchedulePage {
 	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception;
 	public List<HashMap<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception;
 	public void clickOnScheduleSubTab(String subTabString) throws Exception;
-	public void navigateWeekViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount);
+	public void navigateWeekViewOrDayViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount);
 	public Boolean isWeekGenerated() throws Exception;
 	public Boolean isWeekPublished() throws Exception;
 	public void generateSchedule() throws Exception;
@@ -80,7 +80,7 @@ public interface SchedulePage {
 	public boolean isActiveWeekHasOneDayClose() throws Exception;
 	public boolean isActiveWeekAssignedToCurrentUser(String userName) throws Exception;
 	public boolean isScheduleGroupByWorkRole(String workRoleOption) throws Exception;
-	public void selectWorkRoleFilterByIndex(int index) throws Exception;
+	public void selectWorkRoleFilterByIndex(int index, boolean isClearWorkRoleFilters) throws Exception;
 	public ArrayList<String> getSelectedWorkRoleOnSchedule() throws Exception;
 	public boolean isRequiredActionUnAssignedShiftForActiveWeek() throws Exception;
 	public void clickOnRefreshButton() throws Exception;
@@ -92,6 +92,17 @@ public interface SchedulePage {
 	public void disableNextWeekArrow() throws Exception;
 	public void clickScheduleDraftAndGuidanceStatus(List<String> overviewScheduleWeeksStatus);
 	public void editBudgetHours();
-		
-	
+
+
+	public ArrayList<String> getActiveWeekCalendarDates() throws Exception;
+	public void refreshBrowserPage() throws Exception;
+	public void addOpenShiftWithDefaultTime(String workRole) throws Exception;
+	public boolean isNextWeekAvaibale() throws Exception;
+	public boolean isSmartCardPanelDisplay() throws Exception;
+	public void convertAllUnAssignedShiftToOpenShift() throws Exception;
+	public void selectWorkRoleFilterByText(String workRoleLabel, boolean isClearWorkRoleFilters) throws Exception;
+	public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception;
+	public boolean isActionButtonLoaded(String actionBtnText) throws Exception;
+	public void navigateToNextDayIfStoreClosedForActiveDay() throws Exception;
+	/*public void validatingRequiredActionforUnAssignedShift() throws Exception;*/
 }
