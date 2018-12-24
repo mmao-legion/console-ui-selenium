@@ -12,8 +12,8 @@
     <classes>
        <class name="com.legion.tests.core.TimeSheetTest">
       	<methods>
-           <!-- <include name="validateAndDeleteATimeSheetClockAsStoreManager"/> -->
-           <include name="verifyPastPayPeriodAndCanNotApprovePastPendingStatusAsStoreManager"/>
+           <!-- <include name="verifyNewTimesheetEntryAddedAsStoreManager"/> -->
+           <include name="verifyNoShowAlertWhenTMDoesNotClockInAsStoreManager"/> 
         </methods>
       </class>
     </classes>

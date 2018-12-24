@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.SimpleLayout;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -155,7 +157,7 @@ public class TimeSheetTest extends TestBase{
         String timeClockAddNote = addTimeClockDetails.get("Add_Note");
         
         timeSheetPage.addNewTimeClock(timeClockLocation, timeClockDate, timeClockEmployee,timeClockWorkRole, timeClockStartTime, timeClockEndTime, timeClockAddNote);
-        HashMap<String, Float> allHours = timeSheetPage.getTimeClockHours(timeClockDate, timeClockEmployee);
+        HashMap<String, Float> allHours = timeSheetPage.getTimeClockHoursByDate(timeClockDate, timeClockEmployee);
 		float regHours = allHours.get("regHours");
 		float totalHours = allHours.get("totalHours");
 		float dTHours = allHours.get("dTHours");
@@ -208,6 +210,42 @@ public class TimeSheetTest extends TestBase{
         		(! timeSheetPage.isTimeSheetPopupApproveButtonActive()), false);  
         SimpleUtils.pass("Manager can not approve TimeSheet of past date: '" + timeSheetPage.getActiveDayWeekOrPayPeriod() + "'");  
         timeSheetPage.closeTimeSheetDetailPopUp();
+	}
+	
+	
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TP-115: Automation TA module : Verify Admin/Manager are alerted when a TM doesn't clock in and it displays a no show alert.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void verifyNoShowAlertWhenTMDoesNotClockInAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeLocation(location);
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+        SimpleUtils.pass("Timesheet PayPeriod duration: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"' loaded.");
+        String timeClockEmployee = addTimeClockDetails.get("Employee");
+        SimpleUtils.assertOnFail("TimeSheet worker: '"+ timeClockEmployee +"' not found.",
+        		timeSheetPage.seachAndSelectWorkerByName(timeClockEmployee) , false);
+        String expectedAlertMessage = "No show";
+        
+        for(WebElement workersDayRow : timeSheetPage.getTimeSheetDisplayedWorkersDayRows()) {
+        	HashMap<String, Float> timesheetWorkerDaysHours = timeSheetPage.getTimesheetWorkerHoursByDay(workersDayRow);
+        	String[] workersDayRowText = workersDayRow.getText().split("\n");
+        	if(timesheetWorkerDaysHours.get("regHours") == 0)
+        	{
+        		String workerTimeSheetAlert = timeSheetPage.getWorkerTimeSheetAlert(workersDayRow);
+        		if(workerTimeSheetAlert.toLowerCase().contains(expectedAlertMessage.toLowerCase()))
+        			SimpleUtils.pass("Manager alerted when a TM ('" + timeClockEmployee + 
+        					"') doesn't clock in and it displays a no show alert for duration: '" + workersDayRowText[0] +"'.");
+        		else
+        			SimpleUtils.fail("Manager is not alerted with message 'No show' when a TM ('" + timeClockEmployee + "') doesn't clock in '" + workersDayRowText[0] +"'.", false);
+        	}
+        }
 	}
 	
 	
