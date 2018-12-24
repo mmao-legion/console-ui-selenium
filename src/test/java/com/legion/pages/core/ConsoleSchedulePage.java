@@ -30,7 +30,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 
 	String dayWeekPicker;
-	
+
 	@FindBy(xpath="//*[@id='legion-app']/div/div[2]/div/div/div/div[1]/navigation/div/div[4]")
 	private WebElement goToScheduleButton;
 	
@@ -72,6 +72,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	
 	@FindBy(xpath="//span[contains(text(),'Staffing Guidance')]")
 	private WebElement goToStaffingGuidanceTab;
+
+//	@FindBy(className="sch-calendar-day-dimension")
+//	private List<WebElement> ScheduleCalendarDayLabels;
 	
 	@FindBy(css="div.sub-navigation-view-link")
 	private List<WebElement> ScheduleSubTabsElement;
@@ -1153,13 +1156,13 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public void refreshBrowserPage() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void addOpenShiftWithDefaultTime(String workRole) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -1177,19 +1180,19 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public void convertAllUnAssignedShiftToOpenShift() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void selectWorkRoleFilterByText(String workRoleLabel, boolean isClearWorkRoleFilters) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -1201,7 +1204,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public void navigateToNextDayIfStoreClosedForActiveDay() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
@@ -1249,22 +1252,28 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public void disableNextWeekArrow() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void clickScheduleDraftAndGuidanceStatus(
 			List<String> overviewScheduleWeeksStatus) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void editBudgetHours() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
-	
+	@Override
+	public void validatingGenrateSchedule() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+
+
 }

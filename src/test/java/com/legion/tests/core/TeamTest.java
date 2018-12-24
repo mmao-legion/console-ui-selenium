@@ -73,7 +73,7 @@ public class TeamTest extends TestBase{
 	  }
 	 
 	 @Automated(automated = "Automated")
-		@Owner(owner = "Gunjan")
+	 @Owner(owner = "Gunjan")
 		@Enterprise(name = "Coffee2_Enterprise")
 		@TestName(description = "TP-81: Validate Team Search and Coverage in Team Tab")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)

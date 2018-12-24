@@ -105,4 +105,5 @@ public interface SchedulePage {
 	public boolean isActionButtonLoaded(String actionBtnText) throws Exception;
 	public void navigateToNextDayIfStoreClosedForActiveDay() throws Exception;
 	/*public void validatingRequiredActionforUnAssignedShift() throws Exception;*/
+	public void validatingGenrateSchedule() throws Exception;
 }
