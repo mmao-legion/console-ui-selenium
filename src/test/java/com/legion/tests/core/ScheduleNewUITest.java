@@ -67,6 +67,15 @@ public class ScheduleNewUITest extends TestBase{
         }
         public int getValue() { return value; }
 	}
+	
+	public enum schedulePlanningWindow{
+		Eight(8);
+		private final int value;
+		schedulePlanningWindow(final int newValue) {
+            value = newValue;
+        }
+        public int getValue() { return value; }
+	}
 
 	public enum sliderShiftCount{
 		SliderShiftStartCount(2),
@@ -638,8 +647,8 @@ public class ScheduleNewUITest extends TestBase{
 	        List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
 	        verifyTeamCount(previousTeamCount,currentTeamCount);
 	        schedulePage.clickSaveBtn();
-	        schedulePage.clickOnVersionSaveBtn();
-	        schedulePage.clickOnPostSaveBtn();
+//	        schedulePage.clickOnVersionSaveBtn();
+//	        schedulePage.clickOnPostSaveBtn();
 	        HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
 	        Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
 	        verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
@@ -688,8 +697,6 @@ public class ScheduleNewUITest extends TestBase{
 	        List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
 	        verifyTeamCount(previousTeamCount,currentTeamCount);
 	        schedulePage.clickSaveBtn();
-	        schedulePage.clickOnVersionSaveBtn();
-	        schedulePage.clickOnPostSaveBtn();
 	        HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
 	        Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
 	        verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
@@ -736,8 +743,6 @@ public class ScheduleNewUITest extends TestBase{
 	        List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
 	        verifyTeamCount(previousTeamCount,currentTeamCount);
 	        schedulePage.clickSaveBtn();
-	        schedulePage.clickOnVersionSaveBtn();
-	        schedulePage.clickOnPostSaveBtn();
 	        HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
 	        Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
 	        verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
@@ -749,10 +754,8 @@ public class ScheduleNewUITest extends TestBase{
 	  			Float scheduledHoursExpectedValueEditing = 0.0f;
 	  		if(Float.parseFloat(shiftTimeSchedule) >= 6){
 	  			scheduledHoursExpectedValueEditing = (float) (scheduledHoursBeforeEditing + (Float.parseFloat(shiftTimeSchedule) - 0.5));
-	  			System.out.println("Scheduled hour is "+scheduledHoursAfterEditing);
 	  		}else{
 	  			scheduledHoursExpectedValueEditing = (float)(scheduledHoursBeforeEditing + Float.parseFloat(shiftTimeSchedule));
-	  			System.out.println("Scheduled hour is "+scheduledHoursAfterEditing);
 	  		}
 
 	  		if(scheduledHoursExpectedValueEditing.equals(scheduledHoursAfterEditing)){
@@ -793,8 +796,6 @@ public class ScheduleNewUITest extends TestBase{
 	    	 boolean bolDeleteShift = checkAddedShift(previousGutterCount);
 	    	 if(bolDeleteShift){
 	    		 schedulePage.clickSaveBtn();
-		    	 schedulePage.clickOnVersionSaveBtn();
-		    	 schedulePage.clickOnPostSaveBtn();
 		    	 schedulePage.clickOnEditButton();
 	    	 }
 	    }
@@ -1033,6 +1034,8 @@ public class ScheduleNewUITest extends TestBase{
 				}
 			}
 	    }
+	    
+	    
 
 
 	    @Automated(automated =  "Automated")
@@ -1084,8 +1087,35 @@ public class ScheduleNewUITest extends TestBase{
 				}
 			}
 	    }
-
-    }
-
-
-
+	    
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Nishant")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "TP-35: Automation Script for - JIRA ID - "
+			+ "FOR-394- Forecast and schedule should disable navigation selecting future week outside schedule planning window")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void disableWeekViewNavOutsideSchPlanningWindowStoreManager(String browser, String username, String password, String location)
+			throws Exception {
+	    DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	    SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+	    schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	    SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
+	    		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+	    ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+	    schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+	    schedulePage.clickOnWeekView();
+	    int scheduleOverViewStatusCount = schedulePlanningWindow.Eight.getValue();
+		for(int index = 0; index <= scheduleOverViewStatusCount; index++)
+		{
+			if(index == scheduleOverViewStatusCount){
+				schedulePage.disableNextWeekArrow();
+				break;
+			}
+			schedulePage.navigateWeekViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());	
+		}
+	}
+		
+}

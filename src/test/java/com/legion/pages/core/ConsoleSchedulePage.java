@@ -1185,4 +1185,26 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			}
 
 	}
+
+	@Override
+	public void disableNextWeekArrow() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clickScheduleDraftAndGuidanceStatus(
+			List<String> overviewScheduleWeeksStatus) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void editBudgetHours() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	
 }

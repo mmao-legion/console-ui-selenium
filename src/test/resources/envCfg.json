@@ -3,7 +3,7 @@
   "FIREFOX_DRIVER_PATH": "D:\\geckodriver.exe",
  "DEVURL": "https://mobilestage.legion.work/",
  "QAURL": "https://enterprise-stage.legion.work/",
- "Screenshot_Path": "D:\\ZorangDevelop06Nov\\console-ui-selenium",
+ "Screenshot_Path": "D:\\ZorangDev05December\\console-ui-selenium",
  "ENTERPRISE" : "LegionCoffee2",
  "Coffee_Enterprise" : "LegionCoffee",
  "LegionTech_Enterprise" : "LegionTech",

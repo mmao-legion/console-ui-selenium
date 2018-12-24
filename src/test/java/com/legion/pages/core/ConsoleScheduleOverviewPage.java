@@ -307,4 +307,17 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	public List<WebElement> getOverviewScheduleWeeks() {
 		return overviewScheduleWeekList;
 	}
+	
+	public void clickScheduleDraftAndGuidanceStatus(List<String> overviewScheduleWeeksStatus){
+		
+		for(int i=0;i<overviewScheduleWeeksStatus.size();i++){
+			if(overviewScheduleWeeksStatus.get(i).contains("Finalized") ||
+					overviewScheduleWeeksStatus.get(i).contains("Published") ||
+					overviewScheduleWeeksStatus.get(i).contains("Draft")&& 
+					overviewScheduleWeeksStatus.get(i+1).contains("Guidance")){
+				System.out.println("pass ho gaya");
+			}
+				
+		}
+	}
 }
