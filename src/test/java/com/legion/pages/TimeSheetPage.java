@@ -50,4 +50,8 @@ public interface TimeSheetPage {
 
 	public String getWorkerTimeSheetAlert(WebElement workersDayRow)  throws Exception;
 
+	public void openWorkerDayTimeSheetByElement(WebElement workersDayRow) throws Exception;
+
+	public boolean isTimesheetPopupModelContainsKeyword(String keyword) throws Exception;
+
 }

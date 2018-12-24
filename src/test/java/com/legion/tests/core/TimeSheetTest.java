@@ -232,20 +232,82 @@ public class TimeSheetTest extends TestBase{
         SimpleUtils.assertOnFail("TimeSheet worker: '"+ timeClockEmployee +"' not found.",
         		timeSheetPage.seachAndSelectWorkerByName(timeClockEmployee) , false);
         String expectedAlertMessage = "No show";
-        
+        String textToVerifyOnTimesheetPopup = "No shifts scheduled today";
+        boolean isScheduleShiftWithOutClockInFound = false;
         for(WebElement workersDayRow : timeSheetPage.getTimeSheetDisplayedWorkersDayRows()) {
         	HashMap<String, Float> timesheetWorkerDaysHours = timeSheetPage.getTimesheetWorkerHoursByDay(workersDayRow);
         	String[] workersDayRowText = workersDayRow.getText().split("\n");
         	if(timesheetWorkerDaysHours.get("regHours") == 0)
         	{
-        		String workerTimeSheetAlert = timeSheetPage.getWorkerTimeSheetAlert(workersDayRow);
-        		if(workerTimeSheetAlert.toLowerCase().contains(expectedAlertMessage.toLowerCase()))
-        			SimpleUtils.pass("Manager alerted when a TM ('" + timeClockEmployee + 
-        					"') doesn't clock in and it displays a no show alert for duration: '" + workersDayRowText[0] +"'.");
-        		else
-        			SimpleUtils.fail("Manager is not alerted with message 'No show' when a TM ('" + timeClockEmployee + "') doesn't clock in '" + workersDayRowText[0] +"'.", false);
+        		timeSheetPage.openWorkerDayTimeSheetByElement(workersDayRow);
+            	if(! timeSheetPage.isTimesheetPopupModelContainsKeyword(textToVerifyOnTimesheetPopup))
+            	{
+            		isScheduleShiftWithOutClockInFound = true;
+            		timeSheetPage.closeTimeSheetDetailPopUp();
+            		Thread.sleep(1000);
+            		String workerTimeSheetAlert = timeSheetPage.getWorkerTimeSheetAlert(workersDayRow);
+            		if(workerTimeSheetAlert.toLowerCase().contains(expectedAlertMessage.toLowerCase()))
+            			SimpleUtils.pass("Manager alerted when a TM ('" + timeClockEmployee + 
+            					"') doesn't clock in and it displays a no show alert for duration: '" + workersDayRowText[0] +"'.");
+            		else
+            			SimpleUtils.fail("Manager is not alerted with message '" + expectedAlertMessage + "' when a TM ('" + 
+            					timeClockEmployee + "') doesn't clock in for duration: '" + workersDayRowText[0] +"'.", false);
+            		break;
+            	}
+            	timeSheetPage.closeTimeSheetDetailPopUp();
         	}
         }
+        if(! isScheduleShiftWithOutClockInFound)
+        	SimpleUtils.report("No Schedule Shift without clock-in found.");
+	}
+	
+	
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TP-116: Automation TA module : Verify Admin/Manager are alerted when a TM clocks in and he hadn't got a shift and gets a unschedule.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void verifyUnscheduledAlertWhenTMClockInWhileNotHavingShiftAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeLocation(location);
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+        SimpleUtils.pass("Timesheet PayPeriod duration: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"' loaded.");
+        String timeClockEmployee = addTimeClockDetails.get("Employee");
+        SimpleUtils.assertOnFail("TimeSheet worker: '"+ timeClockEmployee +"' not found.",
+        		timeSheetPage.seachAndSelectWorkerByName(timeClockEmployee) , false);
+        String textToVerifyOnTimesheetPopup_1 = "No shifts scheduled today";
+        String textToVerifyOnTimesheetPopup_2 = "No Timeclocks to Display";
+        String expectedAlertMessage = "unscheduled";
+        boolean isunScheduleClockFound = false;
+        
+        for(WebElement workersDayRow : timeSheetPage.getTimeSheetDisplayedWorkersDayRows()) {
+        	String[] workersDayRowText = workersDayRow.getText().split("\n");
+        	timeSheetPage.openWorkerDayTimeSheetByElement(workersDayRow);
+        	if(timeSheetPage.isTimesheetPopupModelContainsKeyword(textToVerifyOnTimesheetPopup_1) && 
+        			! timeSheetPage.isTimesheetPopupModelContainsKeyword(textToVerifyOnTimesheetPopup_2))
+        	{
+        		isunScheduleClockFound = true;
+        		timeSheetPage.closeTimeSheetDetailPopUp();
+        		Thread.sleep(1000);
+        		String workerTimeSheetAlert = timeSheetPage.getWorkerTimeSheetAlert(workersDayRow);
+        		if(workerTimeSheetAlert.toLowerCase().contains(expectedAlertMessage.toLowerCase()))
+        			SimpleUtils.pass("Manager alerted '"+ expectedAlertMessage +"' when a TM ('" + timeClockEmployee + 
+        					"') clock in while not having schedule shift for duration: '" + workersDayRowText[0] +"'.");
+        		else
+        			SimpleUtils.fail("Manager is not alerted with message ' " + expectedAlertMessage + "' when a TM ('" + 
+        					timeClockEmployee + "') clock in while not having shift for the duration: '" + workersDayRowText[0] +"'.", false);
+        		
+        		break;
+        	}
+        	timeSheetPage.closeTimeSheetDetailPopUp();
+        }
+        if(! isunScheduleClockFound)
+        	SimpleUtils.report("No unSchedule Clock found.");
 	}
 	
 	

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -676,11 +675,43 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@Override
 	public String getWorkerTimeSheetAlert(WebElement workersDayRow) throws Exception {
 		String timeSheetAlert = "";
-		WebElement workerDayAlertBtn = workersDayRow.findElement(By.cssSelector("lg-timesheet-alert[ng-if=\"day.alerts.length\"]"));
-		mouseHover(workerDayAlertBtn);
-		if(isElementLoaded(popoverDiv))
-			timeSheetAlert = popoverDiv.getText().replace("\n", " ");
-
+		List<WebElement> workerDayAlertBtn = workersDayRow.findElements(By.cssSelector("lg-timesheet-alert[ng-if=\"day.alerts.length\"]"));
+		if(workerDayAlertBtn.size() != 0)
+		{
+			mouseHover(workerDayAlertBtn.get(0));
+			if(isElementLoaded(popoverDiv))
+				timeSheetAlert = popoverDiv.getText().replace("\n", " ");
+		}
+		else
+			SimpleUtils.report("Timesheet alert not available for:'"+workersDayRow.getText().split("\n")[0]+"'.");
 		return timeSheetAlert;
+	}
+
+
+	@FindBy(css = "div.timesheet-details-modal")
+	private WebElement TSPopupDetailsModel;
+
+	@Override
+	public void openWorkerDayTimeSheetByElement(WebElement workersDayRow) throws Exception {
+		 WebElement activeRowPopUpLink = workersDayRow.findElement(By.cssSelector("lg-button[action-link]"));
+		 if(isElementLoaded(activeRowPopUpLink)) {
+			 click(activeRowPopUpLink);
+		 }
+		 else {
+			 SimpleUtils.fail("Active Row PopUp Link not found.", false);
+		 }
+	}
+	
+	@Override
+	public boolean isTimesheetPopupModelContainsKeyword(String keyword) throws Exception
+	{
+		if(isElementLoaded(TSPopupDetailsModel)) {
+			if(TSPopupDetailsModel.getText().toLowerCase().contains(keyword.toLowerCase()))
+				return true;
+		}
+		else
+			SimpleUtils.fail("Timesheet details popup not loaded successfully.", false);
+		
+		return false;
 	}
 }
