@@ -338,7 +338,7 @@ public class ScheduleNewUITest extends TestBase{
 	         *  Navigate to Schedule Day view
 	         */
 	        boolean isWeekView = false;
-	        schedulePage.clickOnDayView();;
+	        schedulePage.clickOnDayView();
 	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyAll.getValue());
 	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
 	        schedulePage.clickOnEditButton();

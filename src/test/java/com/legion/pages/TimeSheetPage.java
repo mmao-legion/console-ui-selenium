@@ -2,6 +2,9 @@ package com.legion.pages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import org.openqa.selenium.WebElement;
 
 public interface TimeSheetPage {
 
@@ -27,7 +30,7 @@ public interface TimeSheetPage {
 
 	public void clickOnPayPeriodDuration() throws Exception;
 
-	public HashMap<String, Float> getTimeClockHours(String timeClockDate, String timeClockEmployee) throws Exception;
+	public HashMap<String, Float> getTimeClockHoursByDate(String timeClockDate, String timeClockEmployee) throws Exception;
 
 	public String getActiveDayWeekOrPayPeriod() throws Exception;
 	
@@ -38,5 +41,17 @@ public interface TimeSheetPage {
 	public void openFirstPendingTimeSheet() throws Exception;
 
 	public boolean isTimeSheetPopupApproveButtonActive() throws Exception;
+
+	public boolean seachAndSelectWorkerByName(String workerName) throws Exception;
+
+	public List<WebElement> getTimeSheetDisplayedWorkersDayRows();
+
+	public HashMap<String, Float> getTimesheetWorkerHoursByDay(WebElement WorkersDayRow);
+
+	public String getWorkerTimeSheetAlert(WebElement workersDayRow)  throws Exception;
+
+	public void openWorkerDayTimeSheetByElement(WebElement workersDayRow) throws Exception;
+
+	public boolean isTimesheetPopupModelContainsKeyword(String keyword) throws Exception;
 
 }
