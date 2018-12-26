@@ -12,8 +12,14 @@
     <classes>
        <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
-           <include name="disableWeekViewNavOutsideSchPlanningWindowStoreManager"/>
-
+           <include name="viewAndFilterScheduleWithGroupByTMsInWeekViewAsStoreManager"/>
+           <include name="viewAndFilterScheduleWithGroupByAllDayViewAsStoreManager"/>
+           <include name="viewAndFilterScheduleWithGroupByWorkRoleDayViewAsStoreManager"/>
+           <include name="verifyUnpublishedScheduleVisibilityForTMsAndTLsAsStoreManager"/>
+           <include name="verifyAndPublishScheduleAsStoreManager"/>
+           <include name="editPopUpScheduleShouldNotPresentAsStoreManager"/>
+          
+           
         </methods>
       </class>
     </classes>
