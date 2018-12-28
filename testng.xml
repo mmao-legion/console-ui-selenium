@@ -12,8 +12,11 @@
     <classes>
        <class name="com.legion.tests.core.TimeSheetTest">
       	<methods>
-           <include name="verifyNoShowAlertWhenTMDoesNotClockInAsStoreManager"/> 
-           <include name="verifyUnscheduledAlertWhenTMClockInWhileNotHavingShiftAsStoreManager"/> 
+           <!-- <include name="verifyNoShowAlertWhenTMDoesNotClockInAsStoreManager"/> 
+           <include name="verifyUnscheduledAlertWhenTMClockInWhileNotHavingShiftAsStoreManager"/>  -->
+           <!-- <include name="verifyMealBreakAlertAsStoreManager"/> -->
+          <!--  <include name="reviewTimeClockAndApproveAsStoreManager"/> -->
+          <include name="validateEditTimeSheetEntryToBeSavedInHistoryAsStoreManager"/>
         </methods>
       </class>
     </classes>

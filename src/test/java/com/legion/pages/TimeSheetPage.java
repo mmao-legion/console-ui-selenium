@@ -46,12 +46,26 @@ public interface TimeSheetPage {
 
 	public List<WebElement> getTimeSheetDisplayedWorkersDayRows();
 
-	public HashMap<String, Float> getTimesheetWorkerHoursByDay(WebElement WorkersDayRow);
+	public HashMap<String, Float> getTimesheetWorkerHoursByDay(WebElement workersDayRow);
 
 	public String getWorkerTimeSheetAlert(WebElement workersDayRow)  throws Exception;
 
 	public void openWorkerDayTimeSheetByElement(WebElement workersDayRow) throws Exception;
 
 	public boolean isTimesheetPopupModelContainsKeyword(String keyword) throws Exception;
+
+	public boolean isWorkerDayRowStatusPending(WebElement workerDayRow) throws Exception;
+
+	public void clickOnApproveButton() throws Exception;
+
+	public boolean isTimeSheetApproved() throws Exception;
+
+	public String getTimeClockHistoryText() throws Exception;
+
+	public void displayTimeClockHistory() throws Exception;
+
+	public List<WebElement> getAllTimeSheetEditBtnElements() throws Exception;
+
+	public void clickOnEditTimesheetClock(WebElement webElement) throws Exception;
 
 }

@@ -3,6 +3,7 @@ package com.legion.tests.core;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.SimpleLayout;
@@ -10,6 +11,7 @@ import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.TimeSheetPage;
@@ -309,6 +311,134 @@ public class TimeSheetTest extends TestBase{
         if(! isunScheduleClockFound)
         	SimpleUtils.report("No unSchedule Clock found.");
 	}
+	
+	
+	
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TP-117 : Automation TA module : Verify Admin/Manager are alerted when a TM misses a mealbreak gets a missed meal-break alert.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void verifyMealBreakAlertAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeLocation(location);
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+        SimpleUtils.pass("Timesheet PayPeriod duration: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"' loaded.");
+        String timeClockEmployee = addTimeClockDetails.get("Employee");
+        SimpleUtils.assertOnFail("TimeSheet worker: '"+ timeClockEmployee +"' not found.",
+        		timeSheetPage.seachAndSelectWorkerByName(timeClockEmployee) , false);
+        String textToVerifyOnTimesheetPopup_1 = "Break:";
+        float verifyTotalHours = 6;
+        String expectedAlertMessage = "Missed Meal";
+        boolean isTimeClockFound = false;
+        
+        for(WebElement workersDayRow : timeSheetPage.getTimeSheetDisplayedWorkersDayRows()) {
+        	String[] workersDayRowText = workersDayRow.getText().split("\n");
+           	HashMap<String, Float> workerDayRowHours = timeSheetPage.getTimesheetWorkerHoursByDay(workersDayRow);
+        	if(workerDayRowHours.size() != 0)
+        	{ 
+        		float totalHours = workerDayRowHours.get("totalHours");
+        		if(totalHours > verifyTotalHours)
+        		{
+        			timeSheetPage.openWorkerDayTimeSheetByElement(workersDayRow);
+        			boolean isWorkerTookBreak = timeSheetPage.isTimesheetPopupModelContainsKeyword(textToVerifyOnTimesheetPopup_1);
+        			timeSheetPage.closeTimeSheetDetailPopUp();
+        			Thread.sleep(1000);
+        			isTimeClockFound = true;
+        			String workerTimeSheetAlert = timeSheetPage.getWorkerTimeSheetAlert(workersDayRow);
+        			
+        			if(isWorkerTookBreak)
+        				SimpleUtils.pass("Verify Meal Break Alert: Worker: ' "+ timeClockEmployee +"' Took a break for the duration: '" 
+        						+ workersDayRowText[0] +"'.");
+        			else if (workerTimeSheetAlert.toLowerCase().contains(expectedAlertMessage.toLowerCase()))
+            			SimpleUtils.pass("Manager alerted '"+ expectedAlertMessage +"' when a TM ('" + timeClockEmployee + 
+            					"') missed the meal break for duration: '" + workersDayRowText[0] +"'.");
+            		else
+            			SimpleUtils.fail("Manager is not alerted with message ' " + expectedAlertMessage + "' when a TM ('" + 
+            					timeClockEmployee + "') missed the meal break for the duration: '" + workersDayRowText[0] +"'.", false);
+            		
+            		break;
+        		}
+        	}
+        }
+        if(! isTimeClockFound)
+        	SimpleUtils.report("No Time clock with more than '"+ verifyTotalHours + " Hours' found for Worker: '"+ timeClockEmployee +"'.");
+	}
+	
+	
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TP-118: Automation TA module : Verify Manager can review detail of TM and approve it.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void reviewTimeClockAndApproveAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeLocation(location);
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+        SimpleUtils.pass("Timesheet Day duration: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"' loaded.");
+        String timeClockEmployee = addTimeClockDetails.get("Employee");
+        String date = addTimeClockDetails.get("Date"); 
+    	String workRole = addTimeClockDetails.get("Work_Role");
+    	String startTime = addTimeClockDetails.get("Shift_Start");
+    	String endTime = addTimeClockDetails.get("Shift_End");
+    	String notes = addTimeClockDetails.get("Add_Note");
+    	
+        timeSheetPage.addNewTimeClock(location, date, timeClockEmployee, workRole, startTime, endTime, notes);
+        timeSheetPage.valiadteTimeClock(location, date, timeClockEmployee, workRole, startTime, endTime, notes);
+        
+        SimpleUtils.assertOnFail("Time Clock: approve button not active for '"+ timeClockEmployee 
+					+"' and duration: '"+timeClockEmployee +"'.", timeSheetPage.isTimeSheetPopupApproveButtonActive(), false);
+		
+        timeSheetPage.clickOnApproveButton();
+			
+		SimpleUtils.assertOnFail("Time Clock: unable to approve timesheet for '"+ timeClockEmployee 
+					+"' and duration: '"+timeClockEmployee +"'.", timeSheetPage.isTimeSheetApproved(), false);
+
+		timeSheetPage.closeTimeSheetDetailPopUp();
+ 	}
+	
+	
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TP- 120: Automation TA module : Validate Edit timesheet entry is saved in the story: Edit time is saved in history.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void validateEditTimeSheetEntryToBeSavedInHistoryAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeLocation(location);
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+        SimpleUtils.pass("Timesheet Pay Period duration: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"' loaded.");
+    	timeSheetPage.openATimeSheetWithClockInAndOut();
+    	timeSheetPage.displayTimeClockHistory();
+    	String timeSheetHistoryBeforeModifying = timeSheetPage.getTimeClockHistoryText();
+    	for(WebElement timeSheetEditbtn : timeSheetPage.getAllTimeSheetEditBtnElements())
+    	{
+    		timeSheetPage.clickOnEditTimesheetClock(timeSheetEditbtn);
+        	timeSheetPage.clickOnDeleteClockButton();
+    	}
+    	String timeSheetHistoryAfterModifying = timeSheetPage.getTimeClockHistoryText();
+    	if(timeSheetHistoryAfterModifying.length() > timeSheetHistoryBeforeModifying.length())
+    		SimpleUtils.pass("Edit timesheet entry is saved in the story successfully.");
+    	else
+    		SimpleUtils.fail("Edit timesheet entry not saved in the story.", false);
+    	timeSheetPage.closeTimeSheetDetailPopUp();
+ 	}
+	
 	
 	
 }

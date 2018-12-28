@@ -22,14 +22,17 @@ import com.legion.tests.testframework.ExtentTestManager;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
@@ -292,5 +295,12 @@ public class SimpleUtils {
 	       }
 	       return duplicates;
 	   }
-	
+	public static String getCurrentDateMonthYearWithTimeZone(String timeZone)
+	{
+		String date = "";
+		SimpleDateFormat dateTimeInGMT = new SimpleDateFormat("yyyy-MMM-dd");
+		dateTimeInGMT.setTimeZone(TimeZone.getTimeZone(timeZone));
+		date = dateTimeInGMT.format(new Date());
+		return date;
+	}
 }
