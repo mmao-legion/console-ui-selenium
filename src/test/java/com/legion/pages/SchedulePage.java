@@ -53,9 +53,6 @@ public interface SchedulePage {
 	public void clickSaveBtn() throws Exception;
 	public void clickOnVersionSaveBtn() throws Exception;
 	public void clickOnPostSaveBtn() throws Exception;
-	
-	
-	//public void getAvailableFilters();
     public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView);
     public void selectGroupByFilter(String optionVisibleText);
     public String getActiveWeekText() throws Exception;
@@ -65,5 +62,6 @@ public interface SchedulePage {
 	public void publishActiveSchedule()throws Exception;
 	public boolean isPublishButtonLoaded();
 	public void validateBudgetPopUpHeader(String nextWeekView, int weekCount);
-	
+	public void noBudgetDisplayWhenBudgetNotEntered(String nextWeekView, int weekCount);
+	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView, int weekCount);
 }

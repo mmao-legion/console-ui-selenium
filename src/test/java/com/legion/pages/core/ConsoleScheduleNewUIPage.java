@@ -1648,5 +1648,19 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		
 	}
 
+	@Override
+	public void noBudgetDisplayWhenBudgetNotEntered(String nextWeekView,
+			int weekCount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView,
+			int weekCount) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }
