@@ -439,6 +439,24 @@ public class TimeSheetTest extends TestBase{
     	timeSheetPage.closeTimeSheetDetailPopUp();
  	}
 	
-	
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TP- 122: Automation TA module : Verify if auto approved shift is unapproved, shift with less than 5.5 hours..")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void verifyAutoApprovedShiftIsUnApprovedAfterDeletingClockOutAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeLocation(location);
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+        SimpleUtils.pass("Timesheet Pay Period duration: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"' loaded.");
+    	
+        
+    	timeSheetPage.closeTimeSheetDetailPopUp();
+ 	}
 	
 }

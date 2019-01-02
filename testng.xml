@@ -12,15 +12,25 @@
     <classes>
        <class name="com.legion.tests.core.TimeSheetTest">
       	<methods>
-           <!-- <include name="verifyNoShowAlertWhenTMDoesNotClockInAsStoreManager"/> 
-           <include name="verifyUnscheduledAlertWhenTMClockInWhileNotHavingShiftAsStoreManager"/>  -->
-           <!-- <include name="verifyMealBreakAlertAsStoreManager"/> -->
-          <!--  <include name="reviewTimeClockAndApproveAsStoreManager"/> -->
-          <include name="validateEditTimeSheetEntryToBeSavedInHistoryAsStoreManager"/>
+          <!--  <include name="verifyNoShowAlertWhenTMDoesNotClockInAsStoreManager"/> 
+           <include name="verifyUnscheduledAlertWhenTMClockInWhileNotHavingShiftAsStoreManager"/> 
+           <include name="verifyMealBreakAlertAsStoreManager"/>
+           <include name="reviewTimeClockAndApproveAsStoreManager"/> -->
+          <include name="verifyAutoApprovedShiftIsUnApprovedAfterDeletingClockOutAsStoreManager"/>
         </methods>
-      </class>
+      </class> 
     </classes>
-  </test>  
+  </test>   
+  
+   <!-- <test name="Schedule Page For New UI">
+    <classes>
+       <class name="com.legion.tests.core.ScheduleNewUITest">
+      	<methods>
+          <include name="validateGuidanceScheduleAndOtherHoursOnDashBoardForAllLocationAsStoreManager"/>
+        </methods>
+      </class> 
+    </classes>
+  </test>   -->
   
   
   

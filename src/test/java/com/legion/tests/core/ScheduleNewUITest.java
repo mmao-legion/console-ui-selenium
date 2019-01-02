@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,6 +18,7 @@ import org.testng.annotations.Test;
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
+import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
@@ -1583,6 +1585,62 @@ public class ScheduleNewUITest extends TestBase{
 	        
 	        schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
 	    }
+	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "Coffee_Enterprise")
+	    @TestName(description = "TP-126: LegionCoffee :- Validate Guidance Hours, Scheduled and Other Hrs on Dashboard page for all the locations.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void validateGuidanceScheduleAndOtherHoursOnDashBoardForAllLocationAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	    	String bayAreaLocation = "Bay Area";
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+	        locationSelectorPage.changeLocation(bayAreaLocation);
+	        float totalGuidanceHours = 0;
+	        float totalScheduledHours = 0;
+	        float totalOtherHours = 0;
+	        ArrayList<HashMap<String, Float>> dashBoardBayAreaForcastdata = dashboardPage.getDashboardForeCastDataForAllLocation();
+	        for(HashMap<String, Float> locationHours : dashBoardBayAreaForcastdata)
+	        {
+	        	totalGuidanceHours = totalGuidanceHours + locationHours.get("Guidance");
+	        	totalScheduledHours = totalScheduledHours + locationHours.get("Scheduled");
+	        	totalOtherHours = totalOtherHours + locationHours.get("Other");
+	        }
+	      
+	        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+	        schedulePage.clickOnScheduleConsoleMenuItem();
+	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , false);
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+	        schedulePage.clickOnDayView();
+	        HashMap<String, Float> dayViewHours = schedulePage.getScheduleLabelHoursAndWages();
+	        
+	        float bayAreaBudgetedHours = dayViewHours.get("budgetedHours");
+	        float bayScheduledHoursHours = dayViewHours.get("scheduledHours");
+	        float bayOtherHoursHours = dayViewHours.get("otherHours");
+	        
+	        SimpleUtils.assertOnFail("Sum of All Locatons Guidance Hours not matched with Bay Area Budgeted Hours ('" +
+	        		totalScheduledHours+"/"+ bayScheduledHoursHours +"'",
+	        		(totalScheduledHours == bayScheduledHoursHours) , false);
+	        
+	        SimpleUtils.assertOnFail("Sum of All Locatons Guidance Hours not matched with Bay Area Budgeted Hours ('" + 
+	        		totalGuidanceHours+"/"+ bayAreaBudgetedHours +"'",
+	        		(totalGuidanceHours == bayAreaBudgetedHours) , false);
+	        
+	        SimpleUtils.assertOnFail("Sum of All Locatons Guidance Hours not matched with Bay Area Budgeted Hours ('" + 
+	        		totalOtherHours+"/"+ bayOtherHoursHours +"'",
+	        		(totalOtherHours == bayOtherHoursHours) , false);
+	        
+	        SimpleUtils.pass("Bay Area Day view Guidance, Scheduled And Other Hours matched with sum of all locations Hours.");
+	        
+	        
+	    }
+	    
     }
 
 

@@ -1,5 +1,8 @@
 package com.legion.pages;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Yanming
  */
@@ -11,4 +14,5 @@ public interface DashboardPage {
     public Boolean isDashboardPageLoaded() throws Exception;
     public void navigateToDashboard() throws Exception;
     public void verifySuccessfulNavToDashboardnLoading() throws Exception;
+	public ArrayList<HashMap<String, Float>> getDashboardForeCastDataForAllLocation();
 }
