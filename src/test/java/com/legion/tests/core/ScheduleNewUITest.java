@@ -1641,6 +1641,82 @@ public class ScheduleNewUITest extends TestBase{
 	        
 	    }
 	    
+	    
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-128: Validation of weather forecast page on Schedule tab.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void validateWeatherForecastOnSchedulePageAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	    	String bayAreaLocation = "Bay Area";
+	    	String austinDowntownLocation = "AUSTIN DOWNTOWN";
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+	        if(locationSelectorPage.isLocationSelected(bayAreaLocation))
+	        	locationSelectorPage.changeLocation(austinDowntownLocation);
+	        
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+	        
+	        String WeatherCardText = "WEATHER";
+	        //Validate Weather Smart card on Week View
+	        schedulePage.clickOnWeekView();
+	        Thread.sleep(5000);
+	        String activeWeekText = schedulePage.getActiveWeekText();
+	        
+	        if(schedulePage.isSmartCardAvailableByLabel(WeatherCardText))
+	        {
+	        	SimpleUtils.pass("Weather Forecart Smart Card appeared for week view duration: '"+activeWeekText+"'");
+	        	String[] splitActiveWeekText = activeWeekText.split(" ");
+	        	String smartCardTextByLabel = schedulePage.getsmartCardTextByLabel(WeatherCardText);
+	        	String weatherTemperature = schedulePage.getWeatherTemperature();
+	        			
+	        	SimpleUtils.assertOnFail("Weather Forecart Smart Card not contain starting day('"+ splitActiveWeekText[0] +"') of active week: '"+activeWeekText+"'",
+	        			smartCardTextByLabel.toLowerCase().contains(splitActiveWeekText[0].toLowerCase()), true);
+	        	
+	        	SimpleUtils.assertOnFail("Weather Forecart Smart Card not contain Ending day('"+ splitActiveWeekText[0] +"') of active week: '"+activeWeekText+"'",
+	        			smartCardTextByLabel.toLowerCase().contains(splitActiveWeekText[0].toLowerCase()), true);
+	        	if(weatherTemperature != "")
+	        		SimpleUtils.pass("Weather Forecart Smart Card contains Temperature value: '" + weatherTemperature + "' for the duration: '"+
+	        				activeWeekText+"'");
+	        	else
+	        		SimpleUtils.fail("Weather Forecart Smart Card not contains Temperature value for the duration: '"+ activeWeekText+"'", true);
+	        }
+	        else {
+	        	SimpleUtils.fail("Weather Forecart Smart Card not appeared for week view duration: '"+activeWeekText+"'", true);
+	        }
+	        
+	      //Validate Weather Smart card on day View
+	        schedulePage.clickOnDayView();
+	        for(int index = 0; index < dayCount.Seven.getValue(); index++)
+	        {
+	        	if(index != 0)
+	        		schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+	        	
+	        	String activeDayText = schedulePage.getActiveWeekText();
+	        	if(schedulePage.isSmartCardAvailableByLabel(WeatherCardText))
+		        {
+		        	SimpleUtils.pass("Weather Forecart Smart Card appeared for week view duration: '"+activeDayText+"'");
+		        	String[] splitActiveWeekText = activeDayText.split(" ");
+		        	String smartCardTextByLabel = schedulePage.getsmartCardTextByLabel(WeatherCardText);
+		        	SimpleUtils.assertOnFail("Weather Forecart Smart Card not contain starting day('"+ splitActiveWeekText[1] +"') of active day: '"+activeDayText+"'",
+		        			smartCardTextByLabel.toLowerCase().contains(splitActiveWeekText[1].toLowerCase()), true);
+		        	String weatherTemperature = schedulePage.getWeatherTemperature();
+		        	if(weatherTemperature != "")
+		        		SimpleUtils.pass("Weather Forecart Smart Card contains Temperature value: '" + weatherTemperature + "' for the duration: '"+
+		        				activeWeekText+"'");
+		        	else
+		        		SimpleUtils.pass("Weather Forecart Smart Card not contains Temperature value for the duration: '"+ activeWeekText+"'");
+		        }
+		        else {
+		        	SimpleUtils.fail("Weather Forecart Smart Card not appeared for week view duration: '"+activeDayText+"'", true);
+		        }
+	        }
+	    }
+	    
     }
 
 

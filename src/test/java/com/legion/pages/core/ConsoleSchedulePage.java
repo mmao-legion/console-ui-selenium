@@ -1184,6 +1184,18 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		
 	}
 
+	@Override
+	public String getsmartCardTextByLabel(String cardLabel) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getWeatherTemperature() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 
 }

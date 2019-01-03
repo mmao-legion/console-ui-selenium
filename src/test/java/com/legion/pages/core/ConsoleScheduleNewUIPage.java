@@ -357,6 +357,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	
 	@FindBy(css= "button.sch-action.sch-save")
 	private WebElement convertToOpenYesBtn;
+	
+	@FindBy(css= "div.card-carousel-arrow.card-carousel-arrow-right")
+	private WebElement smartcardArrowRight;
+	
+	@FindBy(css= "div.card-carousel-arrow.card-carousel-arrow-left")
+	private WebElement smartcardArrowLeft;
+	
+	@FindBy(css ="div.schedule-action-buttons")
+	private List<WebElement> actionButtonDiv;
+	
+	@FindBy(css = "span.weather-forecast-temperature")
+	private List<WebElement> weatherTemperatures;
 
 	final static String consoleScheduleMenuItemText = "Schedule";
 
@@ -1978,11 +1990,42 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		{
 			for(WebElement carouselCard: carouselCards)
 			{
+				smartCardScrolleToLeft();				
 				if(carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase()))
 					return true;
+				else if(! carouselCard.isDisplayed()) {
+					while(isSmartCardScrolledToRightActive() == true)
+					{
+						if(carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase()))
+							return true;
+					}
+				}
 			}
 		}
 		return false;
+	}
+	
+
+	boolean isSmartCardScrolledToRightActive() throws Exception
+	{
+		if(isElementLoaded(smartcardArrowRight, 10) && smartcardArrowRight.getAttribute("class").contains("available"))
+		{
+			click(smartcardArrowRight);
+			return true;
+		}
+		return false;
+	}
+
+	void smartCardScrolleToLeft() throws Exception
+	{
+		if(isElementLoaded(smartcardArrowLeft, 2))
+		{
+			while(smartcardArrowLeft.getAttribute("class").contains("available"))
+			{
+				click(smartcardArrowLeft);
+			}
+		}
+		
 	}
 
 
@@ -2298,9 +2341,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		}
 		
 	}
+
 	
-	@FindBy(css ="div.schedule-action-buttons")
-	private List<WebElement> actionButtonDiv;
 	@Override
 	public boolean isActionButtonLoaded(String actionBtnText) throws Exception
 	{
@@ -2330,5 +2372,46 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public String getsmartCardTextByLabel(String cardLabel) {
+		if(carouselCards.size() !=0)
+		{
+			for(WebElement carouselCard: carouselCards)
+			{
+				if(carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase()))
+					return carouselCard.getText();
+			}
+		}
+		return null;
+	}
+
+
+	@Override
+	public String getWeatherTemperature() throws Exception {
+		String temperatureText = "";
+		if(weatherTemperatures.size() != 0)
+			for(WebElement weatherTemperature : weatherTemperatures)
+			{
+				if(weatherTemperature.isDisplayed())
+				{
+					if(temperatureText == "")
+						temperatureText = weatherTemperature.getText();
+					else
+						temperatureText = temperatureText + " | "+ weatherTemperature.getText();
+				}
+				else if(! weatherTemperature.isDisplayed()) {
+					while(isSmartCardScrolledToRightActive() == true)
+					{
+						if(temperatureText == "")
+							temperatureText = weatherTemperature.getText();
+						else
+							temperatureText = temperatureText + " | "+ weatherTemperature.getText();
+					}
+				}
+			}
+		
+		return temperatureText;
 	}
 }
