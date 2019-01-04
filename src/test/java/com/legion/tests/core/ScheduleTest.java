@@ -601,6 +601,5 @@ public class ScheduleTest extends TestBase{
 			SimpleUtils.pass("Navigate to Schedule page");
 			SimpleUtils.pass("assert alue of Other Hrs in Schedule tab should be same as Dashboard page");
 	    }
-
 	   
 }

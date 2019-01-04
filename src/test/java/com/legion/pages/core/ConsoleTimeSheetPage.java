@@ -130,6 +130,27 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	
 	@FindBy(css = "lg-button[ng-click=\"$ctrl.approve()\"]")
 	private WebElement timeSheetPopUpApproveBtn;
+
+	@FindBy(css = "lg-button[label=\"Edit\"]")
+	private List<WebElement> timesheetEditBtns;
+
+	@FindBy(css= "div.lg-picker-input__wrapper.lg-ng-animate")
+	private WebElement locatioOrDatePickerPopup;
+	
+	@FindBy(css = "lg-single-calendar.lg-calendar-input__widget")
+	private WebElement calendarInputWidget;
+
+	@FindBy(css = "div.timesheet-details-modal")
+	private WebElement TSPopupDetailsModel;
+	
+	@FindBy(css = "div.timesheet-details-modal__status-icon")
+	private WebElement timeSheetDetailPopupApproveStatus;
+	
+	@FindBy(css = "div.lg-timeclock-activities")
+	private WebElement timeClockHistoryDetailsSection;
+	
+	@FindBy(css = "div.lg-scheduled-shifts__expand")
+	private WebElement expandHistoryBtn;
 	
 	
 	String timeSheetHeaderLabel = "Timesheet";
@@ -163,21 +184,22 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@Override
 	public void openATimeSheetWithClockInAndOut() throws Exception
 	{
+		boolean isTimesheetSelected = false;
 		if(isElementLoaded(timesheetTable))
 		{
 			if(timeSheetWorkersRows.size() != 0) {
 				for(WebElement workerRow: timeSheetWorkersRows)
 				{
 					String[] workerRowColumnsText =  workerRow.getText().split("\n");
-					int regularHours = Integer.valueOf(workerRowColumnsText[4]);
+					float regularHours = Float.valueOf(workerRowColumnsText[4]);
 					if(regularHours > 0)
 					{
 						click(workerRow);
 						List<WebElement> displayedWorkersDayRows = getTimeSheetDisplayedWorkersDayRows();
 						for(WebElement activeRow: displayedWorkersDayRows)
 						{
-							String[] activeRowColumnText = activeRow.getText().split("\n");
-							int activeRowRegularHours = Integer.valueOf(activeRowColumnText[2]);
+							String[] activeRowColumnText = activeRow.getText().replace("--", "-1").split("\n");
+							float activeRowRegularHours = Float.valueOf(activeRowColumnText[2]);
 							if(activeRowRegularHours > 0)
 							{
 								WebElement activeRowPopUpLink = activeRow.findElement(By.cssSelector("lg-button[action-link]"));
@@ -185,12 +207,16 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 								{
 									click(activeRowPopUpLink);
 									SimpleUtils.pass("Timesheet Details edit view popup loaded!");
+									isTimesheetSelected = true;
 									break;
 								}
 							}
 						}
 						break;
 					}
+				}
+				if(! isTimesheetSelected) {
+					SimpleUtils.fail("Time Sheet Page: No timesheet with clock-in and clock-out found!", false);
 				}
 			}
 			else {
@@ -220,23 +246,33 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	public void clickOnEditTimesheetClock(int index) throws Exception
 	{
 		if(isElementLoaded(timeSheetDetailModel)) {
-			if(timeSheetDetailPopUpClocks.size() != index) {
-				WebElement shiftStartClockEditBtn = timeSheetDetailPopUpClocks.get(index).findElement(By.cssSelector("lg-button[label=\"Edit\"]"));
-				if(isElementLoaded(shiftStartClockEditBtn))
-				{
-					click(shiftStartClockEditBtn);
-					SimpleUtils.pass("Timesheet clock edit button clicked.");
-				}
-				else {
-					SimpleUtils.fail("TimeSheet Detail PopUp Clocks Edit button not Found!", false);
-				}
+			if(timesheetEditBtns.size() > index) {
+				click(timesheetEditBtns.get(index));
+				SimpleUtils.pass("Timesheet clock edit button clicked.");
 			}
 			else {
-				SimpleUtils.fail("Timesheet Popup No Clock entry found!",false);
+				SimpleUtils.fail("Timesheet Popup No Clock entry found!",true);
 			}
 		}
 		else {
-			SimpleUtils.fail("Time Sheet Detail Model/Popup not displayed!", false);
+			SimpleUtils.fail("Time Sheet Detail Model/Popup not displayed!", true);
+		}
+	}
+	
+	@Override
+	public void clickOnEditTimesheetClock(WebElement webElement) throws Exception
+	{
+		if(isElementLoaded(timeSheetDetailModel)) {
+			if(isElementLoaded(webElement, 10)) {
+				click(webElement);
+				SimpleUtils.pass("Timesheet clock edit button clicked.");
+			}
+			else {
+				SimpleUtils.fail("Timesheet Popup Edit button not found!",true);
+			}
+		}
+		else {
+			SimpleUtils.fail("Time Sheet Detail Model/Popup not displayed!", true);
 		}
 	}
 	
@@ -253,7 +289,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			}
 		}
 		else {
-			SimpleUtils.fail("Delete Shift Clock button not loaded successfully!", false);
+			SimpleUtils.fail("Delete Shift Clock button not loaded successfully!", true);
 		}
 	}
 	
@@ -290,8 +326,6 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	}
 
 
-	@FindBy(css= "div.lg-picker-input__wrapper.lg-ng-animate")
-	private WebElement locatioPickerPopup;
 	
 	@Override
 	public void addNewTimeClock(String location, String timeClockDate, String employee, String workRole, String startTime, String endTime, String notes) throws Exception {
@@ -307,7 +341,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			if(dropdownOptions.size() != 0) {
 				click(dropdownOptions.get(0));
 			}
-			if(! locatioPickerPopup.getAttribute("class").contains("ng-hide"))
+			if(! locatioOrDatePickerPopup.getAttribute("class").contains("ng-hide"))
 				click(addTCLocationField);
 			
 			// Select Date Month & Year
@@ -335,6 +369,8 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				}
 			}
 			
+			if( calendarInputWidget.isDisplayed())
+				click(addTCDateField);
 			
 			// Select Employee
 			boolean isEmployeeFound = false;
@@ -626,6 +662,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		{
 			
 			timeSheetWorkerSearchBox.click();
+			timeSheetWorkerSearchBox.clear();
 			timeSheetWorkerSearchBox.sendKeys(workerName.split(" ")[0]);
 			timeSheetWorkerSearchBox.sendKeys(Keys.TAB);
 			Thread.sleep(2000);
@@ -639,7 +676,6 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				}
 			}
 		}
-		SimpleUtils.fail("Timesheet worker: '"+ workerName +"' not found.",false);
 		return false;				
 	}
 	
@@ -688,8 +724,6 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	}
 
 
-	@FindBy(css = "div.timesheet-details-modal")
-	private WebElement TSPopupDetailsModel;
 
 	@Override
 	public void openWorkerDayTimeSheetByElement(WebElement workersDayRow) throws Exception {
@@ -713,5 +747,75 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("Timesheet details popup not loaded successfully.", false);
 		
 		return false;
+	}
+	
+	@Override
+	public boolean isWorkerDayRowStatusPending(WebElement workerDayRow) throws Exception
+	{
+		if(isElementLoaded(workerDayRow))
+		{
+			List<WebElement> workerRowPendingStatus = workerDayRow.findElements(By.cssSelector("lg-eg-status[type=\"Pending\"]"));
+			if(workerRowPendingStatus.size() > 0)
+				return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public void clickOnApproveButton() throws Exception
+	{
+		if(isElementLoaded(timeSheetPopUpApproveBtn))
+		{
+			click(timeSheetPopUpApproveBtn);
+			SimpleUtils.pass("Timesheet details popup 'Approve' button clicked successfully.");
+		}
+		else {
+			SimpleUtils.fail("Timesheet details popup 'Approve' button not loaded.", false);
+		}
+	}
+
+	
+	@Override
+	public boolean isTimeSheetApproved() throws Exception
+	{
+		if(isElementLoaded(timeSheetDetailPopupApproveStatus, 10))
+		{
+			SimpleUtils.pass("Timesheet approved for duration: '"+getActiveDayWeekOrPayPeriod()+"'.");
+			return true;
+		}
+		
+		return false;
+	}
+
+	
+	@Override
+	public String getTimeClockHistoryText() throws Exception
+	{
+		String timeClockHistoryText = "";
+		if(isElementLoaded(timeClockHistoryDetailsSection))
+			if(timeClockHistoryDetailsSection.isDisplayed())
+				timeClockHistoryText = timeClockHistoryDetailsSection.getText();
+		
+		return timeClockHistoryText;
+	}
+
+	
+	@Override
+	public void displayTimeClockHistory() throws Exception
+	{
+		if(isElementLoaded(expandHistoryBtn, 10))
+		{
+			click(expandHistoryBtn);
+		}
+		else {
+			SimpleUtils.fail("Timesheet Details popup Expand History Button not loaded.", false);
+		}
+	}
+	
+	
+	@Override
+	public List<WebElement> getAllTimeSheetEditBtnElements() throws Exception
+	{
+		return timesheetEditBtns;
 	}
 }

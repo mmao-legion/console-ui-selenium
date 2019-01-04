@@ -884,7 +884,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void selectWorkRole(String workRoles) throws Exception {
         // TODO Auto-generated method stub
 
-    }
+	}
 
     @Override
     public void clickRadioBtnStaffingOption(String staffingOption) throws Exception {
@@ -1202,47 +1202,62 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	@Override
 	public void noBudgetDisplayWhenBudgetNotEntered(String nextWeekView, int weekCount) {
 		// TODO Auto-generated method stub
-		String valueWhenBudgetNotEntered = "-- Hours";
 
-		for(int i = 0; i < weekCount; i++)
-			{
-			if(nextWeekView.toLowerCase().contains("next") || nextWeekView.toLowerCase().contains("future"))
-			{
-				try {
-					if(isElementLoaded(schedulesForWeekOnOverview.get(0))){
-						click(schedulesForWeekOnOverview.get(i));
-						waitForSeconds(3);
-						String budgetDisplayOnSmartCardSchedule = budgetOnbudgetSmartCard.getText();
-						String[] budgetDisplayOnSmartCard = budgetOnbudgetSmartCard.getText().split(" ");
-						String[] daypickers = daypicker.getText().split("\n");
-						checkElementVisibility(enterBudgetLink);
-						click(enterBudgetLink);
-						waitForSeconds(3);
-						String totalOfEnteredBudget = sumOfBudgetHour.getText();
-							if(Float.parseFloat(totalOfEnteredBudget)==0 && budgetDisplayOnSmartCardSchedule.equalsIgnoreCase(valueWhenBudgetNotEntered)){
-								SimpleUtils.pass("No Budget Entered for week "+daypickers[1]+", Budget SmartCard shows " + budgetDisplayOnSmartCard[0] );
-							}
-							else if(Float.parseFloat(totalOfEnteredBudget)>0 && Float.parseFloat(totalOfEnteredBudget)==Float.parseFloat(budgetDisplayOnSmartCard[0])){
-								SimpleUtils.pass("value on Budget Smart Card "+budgetDisplayOnSmartCard[0]+ " for week "+daypickers[1]+ ", and entered Budget is " + Float.parseFloat(totalOfEnteredBudget) );
-							}
-							else{
-								SimpleUtils.fail("Budget Smartcard shows wrong values "+Float.parseFloat(totalOfEnteredBudget),false);
-							}
-								checkElementVisibility(enterBudgetCancelButton);
-								click(enterBudgetCancelButton);
-								checkElementVisibility(returnToOverviewTab);
-								click(returnToOverviewTab);
-						}
+        String valueWhenBudgetNotEntered = "-- Hours";
 
-					}
-				catch (Exception e) {
-					SimpleUtils.fail("Budget pop-up not opening ",false);
-				}
-			}
+        for(int i = 0; i < weekCount; i++)
+        {
+            if(nextWeekView.toLowerCase().contains("next") || nextWeekView.toLowerCase().contains("future"))
+            {
+                try {
+                    if(isElementLoaded(schedulesForWeekOnOverview.get(0))){
+                        click(schedulesForWeekOnOverview.get(i));
+                        waitForSeconds(3);
+                        String budgetDisplayOnSmartCardSchedule = budgetOnbudgetSmartCard.getText();
+                        String[] budgetDisplayOnSmartCard = budgetOnbudgetSmartCard.getText().split(" ");
+                        String[] daypickers = daypicker.getText().split("\n");
+                        checkElementVisibility(enterBudgetLink);
+                        click(enterBudgetLink);
+                        waitForSeconds(3);
+                        String totalOfEnteredBudget = sumOfBudgetHour.getText();
+                        if(Float.parseFloat(totalOfEnteredBudget)==0 && budgetDisplayOnSmartCardSchedule.equalsIgnoreCase(valueWhenBudgetNotEntered)){
+                            SimpleUtils.pass("No Budget Entered for week "+daypickers[1]+", Budget SmartCard shows " + budgetDisplayOnSmartCard[0] );
+                        }
+                        else if(Float.parseFloat(totalOfEnteredBudget)>0 && Float.parseFloat(totalOfEnteredBudget)==Float.parseFloat(budgetDisplayOnSmartCard[0])){
+                            SimpleUtils.pass("value on Budget Smart Card "+budgetDisplayOnSmartCard[0]+ " for week "+daypickers[1]+ ", and entered Budget is " + Float.parseFloat(totalOfEnteredBudget) );
+                        }
+                        else{
+                            SimpleUtils.fail("Budget Smartcard shows wrong values "+Float.parseFloat(totalOfEnteredBudget),false);
+                        }
+                        checkElementVisibility(enterBudgetCancelButton);
+                        click(enterBudgetCancelButton);
+                        checkElementVisibility(returnToOverviewTab);
+                        click(returnToOverviewTab);
+                    }
+
+                }
+                catch (Exception e) {
+                    SimpleUtils.fail("Budget pop-up not opening ",false);
+                }
+            }
 
 
-			}
+        }
+		
 	}
+
+	@Override
+	public String getsmartCardTextByLabel(String cardLabel) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getWeatherTemperature() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 //	@Override
 //	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView,
