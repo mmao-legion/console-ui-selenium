@@ -53,9 +53,6 @@ public interface SchedulePage {
 	public void clickSaveBtn() throws Exception;
 	public void clickOnVersionSaveBtn() throws Exception;
 	public void clickOnPostSaveBtn() throws Exception;
-	
-	
-	//public void getAvailableFilters();
     public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView);
     public void selectGroupByFilter(String optionVisibleText);
     public String getActiveWeekText() throws Exception;
@@ -89,6 +86,8 @@ public interface SchedulePage {
 	public void dragShiftToRightSide(WebElement shift, int xOffSet);
 	public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception;
 	public void validateBudgetPopUpHeader(String nextWeekView, int weekCount);
+	public void noBudgetDisplayWhenBudgetNotEntered(String nextWeekView, int weekCount);
+	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView, int weekCount);
 	public void disableNextWeekArrow() throws Exception;
 	public void clickScheduleDraftAndGuidanceStatus(List<String> overviewScheduleWeeksStatus);
 	public void editBudgetHours();

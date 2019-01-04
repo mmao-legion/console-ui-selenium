@@ -1317,6 +1317,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			}
 		}
 
+	//added by Naval
+
     public HashMap<String, ArrayList<WebElement>> getAvailableFilters()
     {
         HashMap<String, ArrayList<WebElement>> scheduleFilters = new HashMap<String,ArrayList<WebElement>>();
@@ -2370,5 +2372,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         // TODO Auto-generated method stub
 
     }
+
+	@Override
+	public void noBudgetDisplayWhenBudgetNotEntered(String nextWeekView,
+			int weekCount) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView,
+			int weekCount) {
+		// TODO Auto-generated method stub
+
+	}
+
 
 }

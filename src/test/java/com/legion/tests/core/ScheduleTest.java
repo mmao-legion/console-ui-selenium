@@ -302,14 +302,30 @@ public class ScheduleTest extends TestBase{
 	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
 	    	schedulePage.clickOnScheduleConsoleMenuItem();
 	    	schedulePage.validateBudgetPopUpHeader(weekViewType.Next.getValue(), weekCount.Six.getValue());
-//			schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
-//	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-//			List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
-//			for (int i = 0; i < overviewPageScheduledWeekStatus.size(); i++) {
-//				overviewPageScheduledWeekStatus.get(i)
-//			}		}
-//	    	schedulePage.validateBudgetPopUpHeader();  	
 	    }
+	    
+
+	    @Automated(automated ="Automated")
+		@Owner(owner = "Gunjan")
+		@Enterprise(name = "KendraScott2_Enterprise")
+		@TestName(description = "TP-100: FOR-620: Budget smartcard shows budget hrs when no budget was entered (if navigate from a week with budget)")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void noBudgetHourDisplayWhenBudgetNotEnteredStoreManager(String username, String password, String browser, String location) throws Throwable {
+	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+	    	schedulePage.clickOnScheduleConsoleMenuItem();
+	    	schedulePage.noBudgetDisplayWhenBudgetNotEntered(weekViewType.Next.getValue(), weekCount.Six.getValue());
+	    }
+	    
+	    @Automated(automated ="Automated")
+  		@Owner(owner = "Gunjan")
+  		@Enterprise(name = "KendraScott2_Enterprise")
+  		@TestName(description = "TP-102: LEG 5500 : Budget Hours shown in budget modal (715 hrs) does not match the budgeted hours shown in schedule (1287 hrs)")
+  	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+  	    public void budgetHourInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
+  	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+  	    	schedulePage.clickOnScheduleConsoleMenuItem();
+  	    	schedulePage.budgetHourInScheduleNBudgetedSmartCard(weekViewType.Next.getValue(), weekCount.Six.getValue());
+  	    }
 	    
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")
