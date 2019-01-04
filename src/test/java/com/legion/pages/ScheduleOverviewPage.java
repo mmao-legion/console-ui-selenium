@@ -2,6 +2,7 @@ package com.legion.pages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,4 +21,5 @@ public interface ScheduleOverviewPage {
 	public String getOverviewCalenderWeekDays() throws Exception;
 	public List<WebElement> getOverviewScheduleWeeks();
 	public ArrayList<String> getOverviewCalendarMonthsYears() throws Exception;
+	public LinkedHashMap<String, Float> getWeekHoursByWeekElement(WebElement overViewWeek);
 }

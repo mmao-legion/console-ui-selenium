@@ -2,6 +2,7 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -68,6 +69,18 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	 
 	 @FindBy (css = "div.console-navigation-item-label.Analytics")
 	 private WebElement analyticsConsoleName;
+	 
+	 @FindBy(css = "div[data=\"hours\"]")
+	 private WebElement forecastedHoursElement;
+		
+	 @FindBy(css = "div[data=\"scheduleHours\"]")
+	 private WebElement scheduleHoursElement;
+	 
+	 @FindBy(css = "div.sch-calendar-navigation.right")
+	 private WebElement navigationArrowRight;
+	 
+	 @FindBy(css= "div.sch-calendar-day-dimension.sch-calendar-day")
+	 private List<WebElement> analyticsCalendarDays;
 
 
 	public ConsoleAnalyticsPage(){
@@ -132,7 +145,6 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	public void getStaffingForecastAccuracy(WebElement analyticsDivElement) throws Exception
 	{
 		String analyticsTMSHasHoursDataSectionText = "";
-		System.out.println("getStaffingForecastAccuracy Method called");
 		if(isElementLoaded(analyticsHoursDataSectionDiv)){
 			SimpleUtils.pass("Analytics Staffing Forecast Accuracy Section Loaded Successfully!");
 		}else{
@@ -141,9 +153,6 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 
 		String allHoursCheckboxClasses = analyticsAllHoursCheckBox.getAttribute("class");
 		String peakHoursCheckboxClasses = analyticsPeakHoursCheckBox.getAttribute("class");
-		
-		System.out.println("allHoursCheckboxClasses: "+allHoursCheckboxClasses);
-		System.out.println("peakHoursCheckboxClasses: "+peakHoursCheckboxClasses);
 		if(!allHoursCheckboxClasses.contains("checked"))
 		{
 			click(analyticsAllHoursCheckBox);
@@ -177,7 +186,6 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 			SimpleUtils.fail("Analytics Team Member Satisfaction Section not Loaded Successfully!",false);
 		}
 			
-		System.out.println("teamMemberSatisfactionsElements Length: "+teamMemberSatisfactionsElements.size());
 		if(isElementLoaded(TMSShowRoleFilterDropDownButton))
 		{
 			click(TMSShowRoleFilterDropDownButton);
@@ -217,6 +225,51 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		}
 	}
 	
+	@Override
+	public HashMap<String, Float> getForecastedHours() throws Exception {
+		HashMap<String, Float> forecastedHours = new HashMap<String, Float>();
+		if(isElementLoaded(forecastedHoursElement))
+		{
+			forecastedHours.put("forecastedHours", Float.valueOf(forecastedHoursElement.getText().replace(",", "").split("\n")[3]));
+			forecastedHours.put("forecastedActualHours", Float.valueOf(forecastedHoursElement.getText().replace(",", "").split("\n")[4]));
+		}
+		return forecastedHours;
+	}
 	
+	
+	@Override
+	public HashMap<String, Float> getScheduleHours() throws Exception {
+		HashMap<String, Float> forecastedHours = new HashMap<String, Float>();
+		if(isElementLoaded(scheduleHoursElement))
+		{
+			forecastedHours.put("initialScheduleHours", Float.valueOf(scheduleHoursElement.getText().replace(",", "").split("\n")[3]));
+			forecastedHours.put("publishedScheduleHours", Float.valueOf(scheduleHoursElement.getText().replace(",", "").split("\n")[4]));
+		}
+		return forecastedHours;
+	}
+
+	
+	@Override
+	public void navigateToNextWeek() throws Exception {
+		if(isElementLoaded(navigationArrowRight))
+		{
+			click(navigationArrowRight);
+			SimpleUtils.pass("Analytics: Navigated to next week Successfully!");
+		}
+		else {
+			SimpleUtils.fail("Analytics: Navigated to next week arrow not loaded!", false);
+		}
+		
+	}
+
+	@Override
+	public String getAnalyticsActiveDuration() {
+		String duration = "";
+		if(analyticsCalendarDays.size() != 0)
+		{
+			duration = analyticsCalendarDays.get(0).getText().replace("\n", " ") + " - " + analyticsCalendarDays.get(analyticsCalendarDays.size() - 1).getText().replace("\n", " ");
+		}
+		return duration;
+	}
 
 }
