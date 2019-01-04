@@ -140,14 +140,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(css="[ng-click=\"controlPanel.fns.analyzeAction($event)\"]")
 	private WebElement scheduleAnalyzeButton;
 
-	@FindBy(className="sch-schedule-analyze-content")
-	private WebElement scheduleAnalyzePopup;
-	
-	@FindBy(className="sch-schedule-analyze-dismiss")
-	private WebElement scheduleAnalyzePopupCloseButton;
-	
-	@FindBy(css="[ng-click=\"goToSchedule()\"]")
-	private WebElement checkOutTheScheduleButton;
+    @FindBy(className="sch-schedule-analyze-content")
+    private WebElement scheduleAnalyzePopup;
+
+    @FindBy(className="sch-schedule-analyze-dismiss")
+    private WebElement scheduleAnalyzePopupCloseButton;
+
+    @FindBy(css="[ng-click=\"goToSchedule()\"]")
+    private WebElement checkOutTheScheduleButton;
 
 	@FindBy(className="console-navigation-item")
 	private List<WebElement>consoleNavigationMenuItems;
@@ -345,32 +345,36 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	@FindBy(css = "div.card-carousel-card")
 	private List<WebElement> carouselCards;
-	
+
 	@FindBy(css = "div.sch-calendar-day-dimension.sch-calendar-day")
 	private List<WebElement> ScheduleWeekCalendarDates;
-	
+
 	@FindBy(css = "div.card-carousel")
 	private WebElement smartCardPanel;
-	
+
 	@FindBy(css = "div.sch-worker-popover")
 	private WebElement shiftPopover;
-	
+
 	@FindBy(css= "button.sch-action.sch-save")
 	private WebElement convertToOpenYesBtn;
-	
+
 	@FindBy(css= "div.card-carousel-arrow.card-carousel-arrow-right")
 	private WebElement smartcardArrowRight;
-	
+
 	@FindBy(css= "div.card-carousel-arrow.card-carousel-arrow-left")
 	private WebElement smartcardArrowLeft;
-	
+
 	@FindBy(css ="div.schedule-action-buttons")
 	private List<WebElement> actionButtonDiv;
-	
+
 	@FindBy(css = "span.weather-forecast-temperature")
 	private List<WebElement> weatherTemperatures;
 
-	final static String consoleScheduleMenuItemText = "Schedule";
+    @FindBy(css = "input[ng-class='hoursFieldClass(budget)']")
+    private List<WebElement> budgetEditHours;
+
+
+    final static String consoleScheduleMenuItemText = "Schedule";
 
 
 	public void clickOnScheduleConsoleMenuItem() {
@@ -1206,125 +1210,124 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 				}
 			}
 
-			if(flag == false){
-				SimpleUtils.fail("No Radio Button Selected!",false);
+				if(flag == false){
+					SimpleUtils.fail("No Radio Button Selected!",false);
+				}
+
+			}else{
+				SimpleUtils.fail("Staffing option Radio Button is not clickable!",false);
 			}
-			
-		}else{
-			SimpleUtils.fail("Staffing option Radio Button is not clickable!",false);
 		}
-	}
-	
-	public void clickOnCreateOrNextBtn() throws Exception{
-		if(isElementLoaded(btnSave)){
-			click(btnSave);
-			SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
-		}else{
-			SimpleUtils.fail("Create or Next Button not clicked Successfully on Customize new Shift page!",false);
-		}
-	}
-		
-	public HashMap<List<String>,List<String>> calculateTeamCount() throws Exception{
-		HashMap<List<String>,List<String>> gridDayHourTeamCount = new HashMap<List<String>,List<String>>();
-		List<String> gridDayCount = new ArrayList<String>();
-		List<String> gridTeamCount = new ArrayList<String>();
-		if(gridHeaderDayHour.size()!=0 && gridHeaderTeamCount.size() !=0 &&
-				gridHeaderDayHour.size() == gridHeaderTeamCount.size()){
-			for(int i=0; i< gridHeaderDayHour.size();i++){
-				gridDayCount.add(gridHeaderDayHour.get(i).getText());
-				gridTeamCount.add(gridHeaderTeamCount.get(i).getText());
-				SimpleUtils.pass("Day Hour is "+gridHeaderDayHour.get(i).getText()+ " And Team Count is "+gridHeaderTeamCount.get(i).getText());
+
+		public void clickOnCreateOrNextBtn() throws Exception{
+			if(isElementLoaded(btnSave)){
+				click(btnSave);
+				SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
+			}else{
+				SimpleUtils.fail("Create or Next Button not clicked Successfully on Customize new Shift page!",false);
 			}
-		}else{
-			SimpleUtils.fail("Team Count and Day hour does not match",false);
 		}
-		gridDayHourTeamCount.put(gridDayCount,gridTeamCount);
-		return gridDayHourTeamCount;
-	}
-	
-	public List<String> calculatePreviousTeamCount(
-			HashMap<String, String> shiftTimeSchedule, HashMap<List<String>,List<String>> 
-			gridDayHourPrevTeamCount)throws Exception{
-		int count = 0;
-		waitForSeconds(3);
-		List<String> gridDayHourTeamCount = new ArrayList<String>();
-		exit:
-		for (Map.Entry<List<String>,List<String>> entry : gridDayHourPrevTeamCount.entrySet()) {
-			 List<String> previousKeys = entry.getKey();
-			 List<String> val = entry.getValue();
-			 for(String previousKey : previousKeys){
-				 String[] arrayPreviousKey = previousKey.split(" ");
-				 count =count + 1;
-				 if(shiftTimeSchedule.get("CustomizeStartTimeLabel").equals(arrayPreviousKey[0])){
-					 for(int j=0;j<Integer.parseInt(shiftTimeSchedule.get("ScheduleHrDifference"));j++){
-						 count = count + 1;
-						 gridDayHourTeamCount.add(val.get(count-2));
-						 if(j==Integer.parseInt(shiftTimeSchedule.get("ScheduleHrDifference"))-1){
-							 break exit;
+
+		public HashMap<List<String>,List<String>> calculateTeamCount() throws Exception{
+			HashMap<List<String>,List<String>> gridDayHourTeamCount = new HashMap<List<String>,List<String>>();
+			List<String> gridDayCount = new ArrayList<String>();
+			List<String> gridTeamCount = new ArrayList<String>();
+			if(gridHeaderDayHour.size()!=0 && gridHeaderTeamCount.size() !=0 &&
+					gridHeaderDayHour.size() == gridHeaderTeamCount.size()){
+				for(int i=0; i< gridHeaderDayHour.size();i++){
+					gridDayCount.add(gridHeaderDayHour.get(i).getText());
+					gridTeamCount.add(gridHeaderTeamCount.get(i).getText());
+					SimpleUtils.pass("Day Hour is "+gridHeaderDayHour.get(i).getText()+ " And Team Count is "+gridHeaderTeamCount.get(i).getText());
+				}
+			}else{
+				SimpleUtils.fail("Team Count and Day hour does not match",false);
+			}
+			gridDayHourTeamCount.put(gridDayCount,gridTeamCount);
+			return gridDayHourTeamCount;
+		}
+
+		public List<String> calculatePreviousTeamCount(
+				HashMap<String, String> shiftTimeSchedule, HashMap<List<String>,List<String>>
+				gridDayHourPrevTeamCount)throws Exception{
+			int count = 0;
+			waitForSeconds(3);
+			List<String> gridDayHourTeamCount = new ArrayList<String>();
+			exit:
+			for (Map.Entry<List<String>,List<String>> entry : gridDayHourPrevTeamCount.entrySet()) {
+				 List<String> previousKeys = entry.getKey();
+				 List<String> val = entry.getValue();
+				 for(String previousKey : previousKeys){
+					 String[] arrayPreviousKey = previousKey.split(" ");
+					 count =count + 1;
+					 if(shiftTimeSchedule.get("CustomizeStartTimeLabel").equals(arrayPreviousKey[0])){
+						 for(int j=0;j<Integer.parseInt(shiftTimeSchedule.get("ScheduleHrDifference"));j++){
+							 count = count + 1;
+							 gridDayHourTeamCount.add(val.get(count-2));
+							 if(j==Integer.parseInt(shiftTimeSchedule.get("ScheduleHrDifference"))-1){
+								 break exit;
+							 }
 						 }
 					 }
-				 } 
-			 }
+				 }
+			}
+			return gridDayHourTeamCount;
 		}
-		return gridDayHourTeamCount;
-	}
-	
-	public List<String> calculateCurrentTeamCount(HashMap<String, String> shiftTiming )throws Exception{
-		int count = 0;
-		waitForSeconds(3);
-		HashMap<List<String>,List<String>> gridDayHourCurrentTeamCount = calculateTeamCount();
-		List<String> gridDayHourTeamCount = new ArrayList<String>();
-		exit:
-		for (Map.Entry<List<String>,List<String>> entry : gridDayHourCurrentTeamCount.entrySet()) {
-			 List<String> previousKeys = entry.getKey();
-			 List<String> val = entry.getValue();
-			 for(String previousKey : previousKeys){
-				 String[] arrayPreviousKey = previousKey.split(" ");
-				 count =count + 1;
-				 if(shiftTiming.get("CustomizeStartTimeLabel").equals(arrayPreviousKey[0])){
-					 for(int j=0;j<Integer.parseInt(shiftTiming.get("ScheduleHrDifference"));j++){
-						 count = count + 1;
-						 gridDayHourTeamCount.add(val.get(count-2));
-						 if(j==Integer.parseInt(shiftTiming.get("ScheduleHrDifference"))-1){
-							 break exit;
+
+		public List<String> calculateCurrentTeamCount(HashMap<String, String> shiftTiming )throws Exception{
+			int count = 0;
+			waitForSeconds(3);
+			HashMap<List<String>,List<String>> gridDayHourCurrentTeamCount = calculateTeamCount();
+			List<String> gridDayHourTeamCount = new ArrayList<String>();
+			exit:
+			for (Map.Entry<List<String>,List<String>> entry : gridDayHourCurrentTeamCount.entrySet()) {
+				 List<String> previousKeys = entry.getKey();
+				 List<String> val = entry.getValue();
+				 for(String previousKey : previousKeys){
+					 String[] arrayPreviousKey = previousKey.split(" ");
+					 count =count + 1;
+					 if(shiftTiming.get("CustomizeStartTimeLabel").equals(arrayPreviousKey[0])){
+						 for(int j=0;j<Integer.parseInt(shiftTiming.get("ScheduleHrDifference"));j++){
+							 count = count + 1;
+							 gridDayHourTeamCount.add(val.get(count-2));
+							 if(j==Integer.parseInt(shiftTiming.get("ScheduleHrDifference"))-1){
+								 break exit;
+							 }
 						 }
 					 }
-				 } 
-			 }
+				 }
+			}
+			return gridDayHourTeamCount;
 		}
-		return gridDayHourTeamCount;
-	}
-	
-	public void clickSaveBtn() throws Exception{
-		if(isElementLoaded(scheduleSaveBtn)){
-			click(scheduleSaveBtn);
-			clickOnVersionSaveBtn();
-			clickOnPostSaveBtn();
-			SimpleUtils.pass("Schedule Save button clicked Successfully!");
-		}else{
-			SimpleUtils.fail("Schedule Save button not clicked Successfully!",false);
+
+		public void clickSaveBtn() throws Exception{
+			if(isElementLoaded(scheduleSaveBtn)){
+				click(scheduleSaveBtn);
+				clickOnVersionSaveBtn();
+				clickOnPostSaveBtn();
+			}else{
+				SimpleUtils.fail("Schedule Save button not clicked Successfully!",false);
+			}
 		}
-	}
-	
-	public void clickOnVersionSaveBtn() throws Exception{
-		if(isElementLoaded(popUpPreSave) && isElementLoaded(scheduleVersionSaveBtn)){
-			click(scheduleVersionSaveBtn);
-			SimpleUtils.pass("Schedule Version Save button clicked Successfully!");
-			waitForSeconds(3);
-		}else{
-			SimpleUtils.fail("Schedule Version Save button not clicked Successfully!",false);
+
+		public void clickOnVersionSaveBtn() throws Exception{
+			if(isElementLoaded(popUpPreSave) && isElementLoaded(scheduleVersionSaveBtn)){
+				click(scheduleVersionSaveBtn);
+				SimpleUtils.pass("Schedule Version Save button clicked Successfully!");
+				waitForSeconds(3);
+			}else{
+				SimpleUtils.fail("Schedule Version Save button not clicked Successfully!",false);
+			}
 		}
-	}
-	
-	public void clickOnPostSaveBtn() throws Exception{
-		if(isElementLoaded(popUpPostSave) && isElementLoaded(btnOK)){
-			click(btnOK);
-			SimpleUtils.pass("Schedule Ok button clicked Successfully!");
-			waitForSeconds(3);
-		}else{
-			SimpleUtils.fail("Schedule Ok button not clicked Successfully!",false);
+
+		public void clickOnPostSaveBtn() throws Exception{
+			if(isElementLoaded(popUpPostSave) && isElementLoaded(btnOK)){
+				click(btnOK);
+				SimpleUtils.pass("Schedule Ok button clicked Successfully!");
+				waitForSeconds(3);
+			}else{
+				SimpleUtils.fail("Schedule Ok button not clicked Successfully!",false);
+			}
 		}
-	}
 
     public HashMap<String, ArrayList<WebElement>> getAvailableFilters()
     {
@@ -1875,7 +1878,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			SimpleUtils.pass("Schedule Work Role:'"+ availableWorkRoleFilters.get(index).getText() +"' Filter selected Successfully!");
 		}
 	}
-	
+
 	@Override
 	public void selectWorkRoleFilterByText(String workRoleLabel, boolean isClearWorkRoleFilters) throws Exception
 	{
@@ -1990,7 +1993,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		{
 			for(WebElement carouselCard: carouselCards)
 			{
-				smartCardScrolleToLeft();				
+				smartCardScrolleToLeft();
 				if(carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase()))
 					return true;
 				else if(! carouselCard.isDisplayed()) {
@@ -2004,7 +2007,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		}
 		return false;
 	}
-	
+
 
 	boolean isSmartCardScrolledToRightActive() throws Exception
 	{
@@ -2025,7 +2028,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 				click(smartcardArrowLeft);
 			}
 		}
-		
+
 	}
 
 
@@ -2197,31 +2200,55 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			SimpleUtils.fail("Delete text is not present on Shift container gutter",true);
 		}
 	}
-	
-	public ArrayList<String> getActiveWeekCalendarDates() throws Exception
-	{
-		ArrayList<String> scheduleWeekCalendarDates = new ArrayList<String>();
-		String catendarWeekDatesAsText = "";
-		for(WebElement ScheduleWeekCalendarDate : ScheduleWeekCalendarDates)
-		{
-			scheduleWeekCalendarDates.add(ScheduleWeekCalendarDate.getText().replace("\n", " "));
-			if(catendarWeekDatesAsText == "")
-				catendarWeekDatesAsText = ScheduleWeekCalendarDate.getText().replace("\n", " ");
-			else
-				catendarWeekDatesAsText = catendarWeekDatesAsText+ " | " +ScheduleWeekCalendarDate.getText().replace("\n", " ");
-		}
-		SimpleUtils.report("Active Week Calendar Dates: '" + catendarWeekDatesAsText + "'");
-		return scheduleWeekCalendarDates;
-	}
+
+    public void disableNextWeekArrow() throws Exception{
+        if(!calendarNavigationNextWeekArrow.isDisplayed()){
+            SimpleUtils.pass("Next week arrow is disabled");
+        }else{
+            SimpleUtils.fail("Next week arrow is not disabled",false);
+        }
+    }
+
+    @Override
+    public void clickScheduleDraftAndGuidanceStatus(
+            List<String> overviewScheduleWeeksStatus) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void editBudgetHours(){
+        if(budgetEditHours.size()>0){
+            for(int i=0; i< budgetEditHours.size();i++){
+                System.out.println(budgetEditHours.get(i).getText());
+            }
+        }
+    }
+
+    public ArrayList<String> getActiveWeekCalendarDates() throws Exception
+    {
+        ArrayList<String> scheduleWeekCalendarDates = new ArrayList<String>();
+        String catendarWeekDatesAsText = "";
+        for(WebElement ScheduleWeekCalendarDate : ScheduleWeekCalendarDates)
+        {
+            scheduleWeekCalendarDates.add(ScheduleWeekCalendarDate.getText().replace("\n", " "));
+            if(catendarWeekDatesAsText == "")
+                catendarWeekDatesAsText = ScheduleWeekCalendarDate.getText().replace("\n", " ");
+            else
+                catendarWeekDatesAsText = catendarWeekDatesAsText+ " | " +ScheduleWeekCalendarDate.getText().replace("\n", " ");
+        }
+        SimpleUtils.report("Active Week Calendar Dates: '" + catendarWeekDatesAsText + "'");
+        return scheduleWeekCalendarDates;
+    }
+
 
 	@Override
 	public void refreshBrowserPage() throws Exception {
 		MyThreadLocal.getDriver().navigate().refresh();
 		Thread.sleep(5000);
 		SimpleUtils.pass("Browser Refreshed Successfully for the Week/Day: '"+ getActiveWeekText() +"'!");
-		
+
 	}
-	
+
 	@Override
 	public void addOpenShiftWithDefaultTime(String workRole) throws Exception
 	{
@@ -2234,10 +2261,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			Thread.sleep(2000);
 		}
 		else
-			SimpleUtils.fail("Day View Schedule edit mode, add new shift button not found for Week Day: '" + 
+			SimpleUtils.fail("Day View Schedule edit mode, add new shift button not found for Week Day: '" +
 					getActiveWeekText() + "'", false);
 	}
-	
+
 	@Override
 	public boolean isNextWeekAvaibale() throws Exception
 	{
@@ -2249,7 +2276,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean isSmartCardPanelDisplay() throws Exception
 	{
@@ -2259,7 +2286,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void convertAllUnAssignedShiftToOpenShift() throws Exception {
 		if(varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()))
@@ -2275,9 +2302,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		else {
 			SimpleUtils.fail("Unable to convert UnAssigned Shift to Open Shift as 'Schedule' tab not active.", false);
 		}
-		
+
 	}
-	
+
 	public void convertUnAssignedShiftToOpenShift(WebElement unAssignedShift) throws Exception
 	{
 		By isUnAssignedShift = By.cssSelector("[ng-if=\"isUnassignedShift()\"]");
@@ -2339,10 +2366,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 				break;
 			}
 		}
-		
+
 	}
 
-	
+
+
 	@Override
 	public boolean isActionButtonLoaded(String actionBtnText) throws Exception
 	{
@@ -2363,7 +2391,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		if(! isStoreClosedForActiveWeek())
 			SimpleUtils.pass("Navigated to Next day successfully!");
 	}
-	
+
 	public boolean isStoreClosedForActiveWeek() throws Exception
 	{
 		if(isElementLoaded(holidayLogoContainer))
@@ -2373,6 +2401,34 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		}
 		return false;
 	}
+
+    @Override
+    public void validateBudgetPopUpHeader(String nextWeekView, int weekCount) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void validatingGenrateSchedule() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+	@Override
+	public void noBudgetDisplayWhenBudgetNotEntered(String nextWeekView,
+			int weekCount) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView,
+			int weekCount) {
+		// TODO Auto-generated method stub
+
+	}
+
+
 
 	@Override
 	public String getsmartCardTextByLabel(String cardLabel) {
@@ -2411,7 +2467,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 					}
 				}
 			}
-		
+
 		return temperatureText;
 	}
 }

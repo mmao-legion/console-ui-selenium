@@ -149,7 +149,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
   	}
 
   	@Override
-  	public void performSearchRoster(List list) throws Exception {
+  	public void performSearchRoster(List<String> list) throws Exception {
   		// TODO Auto-generated method stub
   		if(isElementLoaded(rosterLoading)){
   			waitForSeconds(3);

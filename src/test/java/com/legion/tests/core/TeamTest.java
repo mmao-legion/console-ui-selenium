@@ -73,9 +73,9 @@ public class TeamTest extends TestBase{
 	  }
 	 
 	 @Automated(automated = "Automated")
-		@Owner(owner = "Gunjan")
+	 @Owner(owner = "Gunjan")
 		@Enterprise(name = "Coffee2_Enterprise")
-		@TestName(description = "Testing")
+		@TestName(description = "TP-81: Validate Team Search and Coverage in Team Tab")
 	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	    public void validateTeamTab(String username, String password, String browser, String location)
 	            throws Exception

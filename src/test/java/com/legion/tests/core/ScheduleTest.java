@@ -2,12 +2,14 @@ package com.legion.tests.core;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.aventstack.extentreports.Status;
+import com.legion.pages.ControlsPage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
@@ -16,6 +18,8 @@ import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.TeamTest.weekCount;
+import com.legion.tests.core.TeamTest.weekViewType;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
@@ -36,7 +40,8 @@ public class ScheduleTest extends TestBase{
 			Two(2),
 			Three(3),
 			Four(4),
-			Five(5);		
+			Five(5),
+			Six(6);		
 			private final int value;
 			weekCount(final int newValue) {
 	            value = newValue;
@@ -48,7 +53,8 @@ public class ScheduleTest extends TestBase{
 		  NotAvailable("Not Available"),
 		  Draft("Draft"),
 		  Guidance("Guidance"),
-		  Finalized("Finalized");
+		  Finalized("Finalized"),
+		  Published("Published");
 
 		  private final String value;
 		  overviewWeeksStatus(final String newValue) {
@@ -286,6 +292,40 @@ public class ScheduleTest extends TestBase{
 	        	}
 	        }
 	    }
+
+	    @Automated(automated ="Automated")
+		@Owner(owner = "Gunjan")
+		@Enterprise(name = "KendraScott2_Enterprise")
+		@TestName(description = "FOR-596:Budget modal header should display the week instead of UNDEFINED")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void enterBudgetPopUpHeaderStoreManager(String username, String password, String browser, String location) throws Throwable {
+	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+	    	schedulePage.clickOnScheduleConsoleMenuItem();
+	    	schedulePage.validateBudgetPopUpHeader(weekViewType.Next.getValue(), weekCount.Six.getValue());
+	    }
+	    
+
+	    @Automated(automated ="Automated")
+		@Owner(owner = "Gunjan")
+		@Enterprise(name = "KendraScott2_Enterprise")
+		@TestName(description = "TP-100: FOR-620: Budget smartcard shows budget hrs when no budget was entered (if navigate from a week with budget)")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void noBudgetHourDisplayWhenBudgetNotEnteredStoreManager(String username, String password, String browser, String location) throws Throwable {
+	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+	    	schedulePage.clickOnScheduleConsoleMenuItem();
+	    	schedulePage.noBudgetDisplayWhenBudgetNotEntered(weekViewType.Next.getValue(), weekCount.Six.getValue());
+	    }
+	    
+	    @Automated(automated ="Automated")
+  		@Owner(owner = "Gunjan")
+  		@Enterprise(name = "KendraScott2_Enterprise")
+  		@TestName(description = "TP-102: LEG 5500 : Budget Hours shown in budget modal (715 hrs) does not match the budgeted hours shown in schedule (1287 hrs)")
+  	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+  	    public void budgetHourInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
+  	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+  	    	schedulePage.clickOnScheduleConsoleMenuItem();
+  	    	schedulePage.budgetHourInScheduleNBudgetedSmartCard(weekViewType.Next.getValue(), weekCount.Six.getValue());
+  	    }
 	    
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")

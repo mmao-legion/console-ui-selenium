@@ -6,46 +6,19 @@
     <listeners>
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
- 
-  
- <!--  <test name="Team Page">
-    <classes>
-       <class name="com.legion.tests.core.TimeSheetTest">
-      	<methods>
-           <include name="verifyNoShowAlertWhenTMDoesNotClockInAsStoreManager"/> 
-           <include name="verifyUnscheduledAlertWhenTMClockInWhileNotHavingShiftAsStoreManager"/> 
-           <include name="verifyMealBreakAlertAsStoreManager"/>
-           <include name="reviewTimeClockAndApproveAsStoreManager"/>
-          <include name="verifyAutoApprovedShiftIsUnApprovedAfterDeletingClockOutAsStoreManager"/>
-        </methods>
-      </class> 
-    </classes>
-  </test>    -->
-  
-   <!-- <test name="Schedule Page For New UI">
+
+  <test name="Schedule Page">
     <classes>
        <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
-          <include name="validateGuidanceScheduleAndOtherHoursOnDashBoardForAllLocationAsStoreManager"/>
-          <include name="validateWeatherForecastOnSchedulePageAsStoreManager"></include>
+           <include name="viewAndFilterScheduleWithGroupByAllDayViewAsStoreManager"/>
+        
+       
+           
         </methods>
-      </class> 
+      </class>
     </classes>
-  </test>    -->
-  
-  
-  <test name="Schedule Page For New UI">
-    <classes>
-       <class name="com.legion.tests.core.AnalyticsTestKendraScott2">
-      	<methods>
-          <include name="validateForecastAndScheduleHoursWithScheduleOverviewPageAsStoreManager"/>
-        </methods>
-      </class> 
-    </classes>
-  </test>
-  
-  
- 
+  </test> 
    
 </suite> <!-- Suite -->
 
