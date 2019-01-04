@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,6 +18,7 @@ import org.testng.annotations.Test;
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
+import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
@@ -339,6 +341,7 @@ public class ScheduleNewUITest extends TestBase{
 	         */
 	        boolean isWeekView = false;
 	        schedulePage.clickOnDayView();
+	        schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
 	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyAll.getValue());
 	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
 	        schedulePage.clickOnEditButton();
@@ -1509,109 +1512,6 @@ public class ScheduleNewUITest extends TestBase{
 
 
     @Automated(automated =  "Automated")
-    @Owner(owner = "Naval")
-    @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "TP-92: FOR-456 :- Should not keep the stickiness of filter in Guidance and Schedule when re-entering schedule app.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager(String browser, String username, String password, String location)
-            throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        schedulePage = dashboardPage.goToTodayForNewUI();
-        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
-                schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
-        schedulePage.clickOnWeekView();
-        schedulePage.selectWorkRoleFilterByText("Manager", true);
-        dashboardPage.navigateToDashboard();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
-                schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , false);
-        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
-                schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
-        ArrayList<String> selectedWorkRoles = schedulePage.getSelectedWorkRoleOnSchedule();
-        SimpleUtils.assertOnFail("Work Role filter not cleared after navigating to Dashboard and overview page.",
-                (selectedWorkRoles.size() == 0) , false);
-        SimpleUtils.pass("Work Role filter cleared after navigating to Dashboard and overview page.");
-    }
-
-    @Automated(automated =  "Automated")
-    @Owner(owner = "Naval")
-    @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "TP-106: Validate Schedule genation functionality works fine.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void validateScheduleGenerationFunctionalityAsStoreManager(String browser, String username, String password, String location)
-            throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        schedulePage = dashboardPage.goToTodayForNewUI();
-        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
-                schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
-        schedulePage.clickOnWeekView();
-        int scheduleWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
-        for(int index = 0; index < scheduleWeekCount; index++)
-        {
-            if(index != 0)
-                schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
-
-            if(schedulePage.isGenerateButtonLoaded())
-            {
-                SimpleUtils.pass("Guidance week found : '"+ schedulePage.getActiveWeekText() +"'");
-
-                SimpleUtils.assertOnFail("Schedule Page: 'Edit' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
-                        (! schedulePage.isActionButtonLoaded("Edit")) , false);
-
-                SimpleUtils.assertOnFail("Schedule Page: 'Analyze' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
-                        (! schedulePage.isActionButtonLoaded("Analyze")) , false);
-
-                SimpleUtils.assertOnFail("Schedule Page: 'Republish' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
-                        (! schedulePage.isActionButtonLoaded("Republish")) , false);
-
-                SimpleUtils.assertOnFail("Schedule Page: 'Refresh' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
-                        (! schedulePage.isActionButtonLoaded("Refresh")) , false);
-
-                SimpleUtils.assertOnFail("Schedule Page: 'Publish' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
-                        (! schedulePage.isActionButtonLoaded("Publish")) , false);
-
-                schedulePage.generateSchedule();
-
-                SimpleUtils.assertOnFail("Schedule Page: 'Generate' Button Displaying on after Generating Schedule on :'"+schedulePage.getActiveWeekText() +"'",
-                        (! schedulePage.isGenerateButtonLoaded()) , false);
-
-                ArrayList<Float> versionHistory = schedulePage.getAllVesionLabels();
-                float scheduleInitialVersion = (float) 0.0;
-
-                SimpleUtils.assertOnFail("Schedule Page: Version History Displaying more then one versions after Generating Schedule on :'"+schedulePage.getActiveWeekText() +"'",
-                        (1 == versionHistory.size()) , false);
-
-                SimpleUtils.assertOnFail("Schedule Page: Version History not starting with '0.0' after Generating Schedule on :'"+schedulePage.getActiveWeekText() +"'",
-                        (versionHistory.get(0).equals(scheduleInitialVersion)) , false);
-
-                SimpleUtils.pass("Schedule Generation functionality working fine.");
-                break;
-
-            }
-        }
-    }
-
-
-    @Automated(automated =  "Automated")
-    @Owner(owner = "Naval")
-    @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "TP-108: Validate Store is closed for current day and if it is so then navigate to next day schedule.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager(String browser, String username, String password, String location)
-            throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        schedulePage = dashboardPage.goToTodayForNewUI();
-        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
-                schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
-
-        schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
-    }
-
-    @Automated(automated =  "Automated")
     @Owner(owner = "Manideep")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "FOR-679: Cannot generate schedule when directly go to unscheduled week from overview")
@@ -1625,7 +1525,276 @@ public class ScheduleNewUITest extends TestBase{
         schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.validatingGenrateSchedule();
+				// Verify UnAssigned Shift SmartCard
+				String SmartCardLabelForUnassignedShift = "unassigned shift";
+				if(schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForUnassignedShift))
+				{
+					SimpleUtils.report("UnAssigned Shift SmartCard found for the Week: '"+ schedulePage.getActiveWeekText() +"'");
+					schedulePage.convertAllUnAssignedShiftToOpenShift();
+					SimpleUtils.assertOnFail("Unassigned smartcard not disappeared After Converting UnAssigned Shift to Open Shift for: '"
+					+ schedulePage.getActiveWeekText() +"'", (! schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForUnassignedShift)), true);
+
+					if(! schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForUnassignedShift))
+						SimpleUtils.pass("UnAssigned Shift SmartCard disappear after converting unassigned shift to open shift.");
+				}
+
+				// Verify compliance review Shift SmartCard
+				String SmartCardLabelForComplianceReview = "compliance review";
+				if(schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForComplianceReview))
+				{
+					SimpleUtils.report("UnAssigned Shift SmartCard found for the Week: '"+ schedulePage.getActiveWeekText() +"'");
+					String shiftTypeFilterText = "Compliance Review";
+					schedulePage.selectShiftTypeFilterByText(shiftTypeFilterText);
+					schedulePage.clickOnDayView();
+					schedulePage.reduceOvertimeHoursOfActiveWeekShifts();
+
+					SimpleUtils.assertOnFail("Compliance Review smartcard not disappeared After reducing Overtime of Shift(s) for: '"
+							+ schedulePage.getActiveWeekText() +"'", (! schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForComplianceReview)), true);
+
+					if(! schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForComplianceReview))
+						SimpleUtils.pass("Compliance Review smartcard disappeared After reducing Overtime of Shift(s) for: '"
+								+ schedulePage.getActiveWeekText() +"'");
+
+					schedulePage.selectShiftTypeFilterByText("Clearing All Shift Type Filters");
+				}
+        }
+
+
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-92: FOR-456 :- Should not keep the stickiness of filter in Guidance and Schedule when re-entering schedule app.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+	        schedulePage.clickOnWeekView();
+	        schedulePage.selectWorkRoleFilterByText("Manager", true);
+	        dashboardPage.navigateToDashboard();
+	        schedulePage.clickOnScheduleConsoleMenuItem();
+	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , false);
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+	        ArrayList<String> selectedWorkRoles = schedulePage.getSelectedWorkRoleOnSchedule();
+	        SimpleUtils.assertOnFail("Work Role filter not cleared after navigating to Dashboard and overview page.",
+	        		(selectedWorkRoles.size() == 0) , false);
+	        SimpleUtils.pass("Work Role filter cleared after navigating to Dashboard and overview page.");
+	    }
+
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-106: Validate Schedule genation functionality works fine.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void validateScheduleGenerationFunctionalityAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+	        schedulePage.clickOnWeekView();
+	        int scheduleWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
+	        for(int index = 0; index < scheduleWeekCount; index++)
+	        {
+	        	if(index != 0)
+					schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+
+	        	if(schedulePage.isGenerateButtonLoaded())
+	        	{
+	        		SimpleUtils.pass("Guidance week found : '"+ schedulePage.getActiveWeekText() +"'");
+
+	        		SimpleUtils.assertOnFail("Schedule Page: 'Edit' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
+	        				(! schedulePage.isActionButtonLoaded("Edit")) , false);
+
+	        		SimpleUtils.assertOnFail("Schedule Page: 'Analyze' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
+	        				(! schedulePage.isActionButtonLoaded("Analyze")) , false);
+
+	        		SimpleUtils.assertOnFail("Schedule Page: 'Republish' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
+	        				(! schedulePage.isActionButtonLoaded("Republish")) , false);
+
+	        		SimpleUtils.assertOnFail("Schedule Page: 'Refresh' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
+	        				(! schedulePage.isActionButtonLoaded("Refresh")) , false);
+
+	        		SimpleUtils.assertOnFail("Schedule Page: 'Publish' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
+	        				(! schedulePage.isActionButtonLoaded("Publish")) , false);
+
+	        		schedulePage.generateSchedule();
+
+	        		SimpleUtils.assertOnFail("Schedule Page: 'Generate' Button Displaying on after Generating Schedule on :'"+schedulePage.getActiveWeekText() +"'",
+	        				(! schedulePage.isGenerateButtonLoaded()) , false);
+
+	        		ArrayList<Float> versionHistory = schedulePage.getAllVesionLabels();
+	        		float scheduleInitialVersion = (float) 0.0;
+
+	        		SimpleUtils.assertOnFail("Schedule Page: Version History Displaying more then one versions after Generating Schedule on :'"+schedulePage.getActiveWeekText() +"'",
+	        				(1 == versionHistory.size()) , false);
+
+	        		SimpleUtils.assertOnFail("Schedule Page: Version History not starting with '0.0' after Generating Schedule on :'"+schedulePage.getActiveWeekText() +"'",
+	        				(versionHistory.get(0).equals(scheduleInitialVersion)) , false);
+
+	        		SimpleUtils.pass("Schedule Generation functionality working fine.");
+	        		break;
+
+	        	}
+	        }
+	    }
+
+
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-108: Validate Store is closed for current day and if it is so then navigate to next day schedule.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+
+	        schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
+	    }
+
+
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "Coffee_Enterprise")
+	    @TestName(description = "TP-126: LegionCoffee :- Validate Guidance Hours, Scheduled and Other Hrs on Dashboard page for all the locations.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void validateGuidanceScheduleAndOtherHoursOnDashBoardForAllLocationAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	    	String bayAreaLocation = "Bay Area";
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+	        locationSelectorPage.changeLocation(bayAreaLocation);
+	        float totalGuidanceHours = 0;
+	        float totalScheduledHours = 0;
+	        float totalOtherHours = 0;
+	        ArrayList<HashMap<String, Float>> dashBoardBayAreaForcastdata = dashboardPage.getDashboardForeCastDataForAllLocation();
+	        for(HashMap<String, Float> locationHours : dashBoardBayAreaForcastdata)
+	        {
+	        	totalGuidanceHours = totalGuidanceHours + locationHours.get("Guidance");
+	        	totalScheduledHours = totalScheduledHours + locationHours.get("Scheduled");
+	        	totalOtherHours = totalOtherHours + locationHours.get("Other");
+	        }
+
+	        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+	        schedulePage.clickOnScheduleConsoleMenuItem();
+	        SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , false);
+	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+	        schedulePage.clickOnDayView();
+	        HashMap<String, Float> dayViewHours = schedulePage.getScheduleLabelHoursAndWages();
+
+	        float bayAreaBudgetedHours = dayViewHours.get("budgetedHours");
+	        float bayScheduledHoursHours = dayViewHours.get("scheduledHours");
+	        float bayOtherHoursHours = dayViewHours.get("otherHours");
+
+	        SimpleUtils.assertOnFail("Sum of All Locatons Guidance Hours not matched with Bay Area Budgeted Hours ('" +
+	        		totalScheduledHours+"/"+ bayScheduledHoursHours +"'",
+	        		(totalScheduledHours == bayScheduledHoursHours) , false);
+
+	        SimpleUtils.assertOnFail("Sum of All Locatons Guidance Hours not matched with Bay Area Budgeted Hours ('" +
+	        		totalGuidanceHours+"/"+ bayAreaBudgetedHours +"'",
+	        		(totalGuidanceHours == bayAreaBudgetedHours) , false);
+
+	        SimpleUtils.assertOnFail("Sum of All Locatons Guidance Hours not matched with Bay Area Budgeted Hours ('" +
+	        		totalOtherHours+"/"+ bayOtherHoursHours +"'",
+	        		(totalOtherHours == bayOtherHoursHours) , false);
+
+	        SimpleUtils.pass("Bay Area Day view Guidance, Scheduled And Other Hours matched with sum of all locations Hours.");
+
+
+	    }
+
+
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-128: Validation of weather forecast page on Schedule tab.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void validateWeatherForecastOnSchedulePageAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	    	String bayAreaLocation = "Bay Area";
+	    	String austinDowntownLocation = "AUSTIN DOWNTOWN";
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+	        if(locationSelectorPage.isLocationSelected(bayAreaLocation))
+	        	locationSelectorPage.changeLocation(austinDowntownLocation);
+
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+
+	        String WeatherCardText = "WEATHER";
+	        //Validate Weather Smart card on Week View
+	        schedulePage.clickOnWeekView();
+	        Thread.sleep(5000);
+	        String activeWeekText = schedulePage.getActiveWeekText();
+
+	        if(schedulePage.isSmartCardAvailableByLabel(WeatherCardText))
+	        {
+	        	SimpleUtils.pass("Weather Forecart Smart Card appeared for week view duration: '"+activeWeekText+"'");
+	        	String[] splitActiveWeekText = activeWeekText.split(" ");
+	        	String smartCardTextByLabel = schedulePage.getsmartCardTextByLabel(WeatherCardText);
+	        	String weatherTemperature = schedulePage.getWeatherTemperature();
+
+	        	SimpleUtils.assertOnFail("Weather Forecart Smart Card not contain starting day('"+ splitActiveWeekText[0] +"') of active week: '"+activeWeekText+"'",
+	        			smartCardTextByLabel.toLowerCase().contains(splitActiveWeekText[0].toLowerCase()), true);
+
+	        	SimpleUtils.assertOnFail("Weather Forecart Smart Card not contain Ending day('"+ splitActiveWeekText[0] +"') of active week: '"+activeWeekText+"'",
+	        			smartCardTextByLabel.toLowerCase().contains(splitActiveWeekText[0].toLowerCase()), true);
+	        	if(weatherTemperature != "")
+	        		SimpleUtils.pass("Weather Forecart Smart Card contains Temperature value: '" + weatherTemperature + "' for the duration: '"+
+	        				activeWeekText+"'");
+	        	else
+	        		SimpleUtils.fail("Weather Forecart Smart Card not contains Temperature value for the duration: '"+ activeWeekText+"'", true);
+	        }
+	        else {
+	        	SimpleUtils.fail("Weather Forecart Smart Card not appeared for week view duration: '"+activeWeekText+"'", true);
+	        }
+
+	      //Validate Weather Smart card on day View
+	        schedulePage.clickOnDayView();
+	        for(int index = 0; index < dayCount.Seven.getValue(); index++)
+	        {
+	        	if(index != 0)
+	        		schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+
+	        	String activeDayText = schedulePage.getActiveWeekText();
+	        	if(schedulePage.isSmartCardAvailableByLabel(WeatherCardText))
+		        {
+		        	SimpleUtils.pass("Weather Forecart Smart Card appeared for week view duration: '"+activeDayText+"'");
+		        	String[] splitActiveWeekText = activeDayText.split(" ");
+		        	String smartCardTextByLabel = schedulePage.getsmartCardTextByLabel(WeatherCardText);
+		        	SimpleUtils.assertOnFail("Weather Forecart Smart Card not contain starting day('"+ splitActiveWeekText[1] +"') of active day: '"+activeDayText+"'",
+		        			smartCardTextByLabel.toLowerCase().contains(splitActiveWeekText[1].toLowerCase()), true);
+		        	String weatherTemperature = schedulePage.getWeatherTemperature();
+		        	if(weatherTemperature != "")
+		        		SimpleUtils.pass("Weather Forecart Smart Card contains Temperature value: '" + weatherTemperature + "' for the duration: '"+
+		        				activeWeekText+"'");
+		        	else
+		        		SimpleUtils.pass("Weather Forecart Smart Card not contains Temperature value for the duration: '"+ activeWeekText+"'");
+		        }
+		        else {
+		        	SimpleUtils.fail("Weather Forecart Smart Card not appeared for week view duration: '"+activeDayText+"'", true);
+		        }
+	        }
+	    }
+
     }
 
-}
+
 

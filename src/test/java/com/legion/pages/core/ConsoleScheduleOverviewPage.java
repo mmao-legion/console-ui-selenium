@@ -4,9 +4,11 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -338,5 +340,24 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 			}
 		}
 		return overviewCalendarMonthsYearsText;
+	}
+
+	/*@FindBy(css = "")
+	private List<WebElement> weekHoursElement;*/
+	@Override
+	public LinkedHashMap<String, Float> getWeekHoursByWeekElement(WebElement overViewWeek) {
+		LinkedHashMap<String, Float> weekHours = new LinkedHashMap<String, Float>();
+		List<WebElement> weekHoursElement = overViewWeek.findElements(By.cssSelector("span.text-hours"));
+		if(weekHoursElement.size() == 3)
+		{
+			float guidanceHours = Float.valueOf(weekHoursElement.get(0).getText().split(" ")[0]);
+			float scheduledHours = Float.valueOf(weekHoursElement.get(1).getText().split(" ")[0]);
+			float otherHours = Float.valueOf(weekHoursElement.get(2).getText().split(" ")[0]);
+			weekHours.put("guidanceHours", guidanceHours);
+			weekHours.put("scheduledHours", scheduledHours);
+			weekHours.put("otherHours", otherHours);
+
+		}
+		return weekHours;
 	}
 }

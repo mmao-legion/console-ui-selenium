@@ -6,19 +6,14 @@
     <listeners>
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
- 
-  
+
   <test name="Schedule Page">
     <classes>
        <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
-           <include name="viewAndFilterScheduleWithGroupByTMsInWeekViewAsStoreManager"/>
            <include name="viewAndFilterScheduleWithGroupByAllDayViewAsStoreManager"/>
-           <include name="viewAndFilterScheduleWithGroupByWorkRoleDayViewAsStoreManager"/>
-           <include name="verifyUnpublishedScheduleVisibilityForTMsAndTLsAsStoreManager"/>
-           <include name="verifyAndPublishScheduleAsStoreManager"/>
-           <include name="editPopUpScheduleShouldNotPresentAsStoreManager"/>
-          
+        
+       
            
         </methods>
       </class>

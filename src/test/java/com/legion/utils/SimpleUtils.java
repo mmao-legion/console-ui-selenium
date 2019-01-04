@@ -22,15 +22,18 @@ import com.legion.tests.testframework.ExtentTestManager;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -186,12 +189,12 @@ public class SimpleUtils {
 	    dateMonthOfCurrentPastAndFutureWeek.put("futureWeekDate", getDayMonthDateFormat(futureWeekDate));
 	    return dateMonthOfCurrentPastAndFutureWeek;
 	}
-
+    
     public static LocalDate getCurrentLocalDateObject()
     {
     	return Year.of(LocalDate.now().getYear()).atDay(LocalDate.now().getDayOfYear());
     }
-
+	    
     public static String getDayMonthDateFormat(LocalDate localDate) {
 		String dayMonthDateFormat = null;
 		DayOfWeek dayOfWeek = localDate.getDayOfWeek();
@@ -277,8 +280,7 @@ public class SimpleUtils {
         }
 	    return combinedresult;
     } 
-
-
+	
 	public static int countDuplicates(ArrayList list)
 	   {
 	       int duplicates = 0;
@@ -311,6 +313,14 @@ public class SimpleUtils {
 		}else{
 			SimpleUtils.fail("Size of Current Team Count should be equal to Previous Team Count",false);
 		}
+	}
+	public static String getCurrentDateMonthYearWithTimeZone(String timeZone)
+	{
+		String date = "";
+		SimpleDateFormat dateTimeInGMT = new SimpleDateFormat("yyyy-MMM-dd");
+		dateTimeInGMT.setTimeZone(TimeZone.getTimeZone(timeZone));
+		date = dateTimeInGMT.format(new Date());
+		return date;
 	}
 
 	public static String dateWeekPickerDateComparision(String weekActiveDate){
