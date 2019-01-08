@@ -7,14 +7,11 @@
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
 
-  <test name="Schedule Page">
+  <test name="Time Sheet Page">
     <classes>
-       <class name="com.legion.tests.core.ScheduleNewUITest">
+       <class name="com.legion.tests.core.TimeSheetTest">
       	<methods>
-           <include name="viewAndFilterScheduleWithGroupByAllDayViewAsStoreManager"/>
-        
-       
-           
+           <include name="verifyAutoApprovedShiftIsUnApprovedAfterDeletingClockOutAsStoreManager"/>
         </methods>
       </class>
     </classes>
