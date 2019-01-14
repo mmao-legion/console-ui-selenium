@@ -28,6 +28,7 @@ import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.annotations.UseAsTestRailId;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
@@ -324,6 +325,7 @@ public class ScheduleNewUITest extends TestBase{
 	        schedulePage.clickOnCancelButtonOnEditMode();
 	    }
 
+	    @UseAsTestRailId(testRailId = 32)
 	    @Automated(automated =  "Automated")
 		@Owner(owner = "Naval")
 	    @Enterprise(name = "KendraScott2_Enterprise")
@@ -333,20 +335,20 @@ public class ScheduleNewUITest extends TestBase{
 	    		throws Exception {
 	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-	        schedulePage = dashboardPage.goToTodayForNewUI();
-	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
-
-	        /*
-	         *  Navigate to Schedule Day view
-	         */
-	        boolean isWeekView = false;
-	        schedulePage.clickOnDayView();
-	        schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
-	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyAll.getValue());
-	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
-	        schedulePage.clickOnEditButton();
-	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
-	        schedulePage.clickOnCancelButtonOnEditMode();
+//	        schedulePage = dashboardPage.goToTodayForNewUI();
+//	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+//
+//	        /*
+//	         *  Navigate to Schedule Day view
+//	         */
+//	        boolean isWeekView = false;
+//	        schedulePage.clickOnDayView();
+//	        schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
+//	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyAll.getValue());
+//	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+//	        schedulePage.clickOnEditButton();
+//	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+//	        schedulePage.clickOnCancelButtonOnEditMode();
 	    }
 
 
@@ -1792,6 +1794,24 @@ public class ScheduleNewUITest extends TestBase{
 		        	SimpleUtils.fail("Weather Forecart Smart Card not appeared for week view duration: '"+activeDayText+"'", true);
 		        }
 	        }
+	    }
+	    
+	    
+	    @UseAsTestRailId(testRailId = 32)
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-108: Validate Store is closed for current day and if it is so then navigate to next day schedule.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void sampleTestRail(String browser, String username, String password, String location)
+	    		throws Exception {
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+	        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+
+	        schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
 	    }
 
     }

@@ -8,6 +8,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.annotations.UseAsTestRailId;
 
 public class ExtentTestManager {
 	
@@ -93,13 +94,26 @@ public class ExtentTestManager {
         String automatedName = "";
         // check if there is a Test annotation and get the test name
         Automated automated = testMethod.getAnnotation(Automated.class);
-        Owner owner = testMethod.getAnnotation(Owner.class);
         if (automated != null && automated.automated().length() > 0) {
         	automatedName = automated.automated();
         }
        
         return automatedName;
     }
+    
+    
+    public synchronized static int getTestRailId(Method testMethod) {
+		
+        int testRailId = 0;
+        // check if there is a Test annotation and get the test name
+        UseAsTestRailId useAsTestRailId = testMethod.getAnnotation(UseAsTestRailId.class);
+        if(useAsTestRailId != null && useAsTestRailId.testRailId()> 0){
+        	testRailId = useAsTestRailId.testRailId();
+        }
+       
+        return testRailId;
+    }
+    
     
    
 

@@ -13,6 +13,8 @@ import org.testng.Reporter;
 import org.testng.util.Strings;
 
 import com.aventstack.extentreports.Status;
+import com.legion.test.testrail.APIClient;
+import com.legion.test.testrail.APIException;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -344,5 +346,27 @@ public class SimpleUtils {
 		return dateRangeDayPicker;
 
 
+	}
+	
+	
+	// added code for TestRail connection
+	
+	public static void addTestResult(String testCaseId, String testRunId)
+			throws IOException, APIException {
+		//below credential is for Zorang 
+        APIClient client = new APIClient("https://zorang.testrail.io/");
+        client.setUser("prakash.nishant@gmail.com");
+        client.setPassword("bKHXaKuIyTG46/DLDSik");
+        //Below credential code for legiontech 
+//        APIClient client = new APIClient("https://legiontech.testrail.io/");
+//      client.setUser("nishant.prakash@zorang.com");
+//      client.setPassword("Prashant21#");
+
+        client.setPassword("bKHXaKuIyTG46/DLDSik");
+        Map data = new HashMap();
+        data.put("status_id", new Integer(1));
+        data.put("comment", "Test Executed - Status updated automatically in TestRail today");
+        client.sendPost("add_result_for_case/1/1",data );
+		
 	}
 }
