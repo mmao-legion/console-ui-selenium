@@ -390,7 +390,7 @@ public class SimpleUtils {
 	        	client.sendPost("update_case/"+testCaseId, updateTestTitle);
 	        }
 	        
-	        Map data = new HashMap();
+	        Map<String, Object> data = new HashMap<String, Object>();
 	        data.put("status_id", statusID);
 	        data.put("comment", comment);
 	        client.sendPost(addResultString,data );
