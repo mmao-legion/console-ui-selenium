@@ -12,9 +12,7 @@
        <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
            <include name="viewAndFilterScheduleWithGroupByAllDayViewAsStoreManager"/>
-        
-       
-           
+
         </methods>
       </class>
     </classes>
