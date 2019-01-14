@@ -723,6 +723,9 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			workerAllDayRowHours.put("tipsHours", tipsHours);
 			workerAllDayRowHours.put("mealHours", mealHours);
 		}
+		else {
+			SimpleUtils.fail("Unable to fetch time clock hours.", true);
+		}
 		return workerAllDayRowHours;
 	}
 
@@ -1088,6 +1091,32 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	}
 
 
+	@Override
+	public boolean isTimeClockApproved(WebElement workerTimeClock) throws Exception {
+		WebElement timeClockStatus = workerTimeClock.findElement(By.cssSelector("lg-eg-status[type]"));
+		if(isElementLoaded(timeClockStatus))
+			if(timeClockStatus.getAttribute("type").contains("Approved"))
+				return true;
+		return false;
+	}
+
+	@FindBy(css = "div[ng-repeat=\"key in ['in', 'out']\"]")
+	private List<WebElement> timeClockEntries;
+	
+	@Override
+	public void removeTimeClockEntryByLabel(String label) throws Exception
+	{
+		for(WebElement clockEntry : timeClockEntries)
+		{
+			if(clockEntry.getText().toLowerCase().contains(label.toLowerCase()))
+			{
+				WebElement editBtn = clockEntry.findElement(By.cssSelector("lg-button[label=\"Edit\"]"));
+				click(editBtn);
+				clickOnDeleteClockButton();
+			}
+		}
+	}
+	
 
 	
 	

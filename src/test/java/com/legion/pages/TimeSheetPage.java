@@ -84,4 +84,8 @@ public interface TimeSheetPage {
 
 	public void addTimeClockCheckInOnDetailPopupWithDefaultValue() throws Exception;
 
+	public boolean isTimeClockApproved(WebElement workerTimeClock) throws Exception;
+
+	public void removeTimeClockEntryByLabel(String label) throws Exception;
+
 }

@@ -488,9 +488,29 @@ public class TimeSheetTest extends TestBase{
     		SimpleUtils.pass("Editing timeclock for the Worker :'"+ workerNameAndRole[0] +"' and duration: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"'.");
     		
     		List<WebElement> workerTimeClocks = timeSheetPage.getTimeSheetDisplayedWorkersDayRows();
+    		for(WebElement workerTimeClock : workerTimeClocks)
+    		{
+    			HashMap<String, Float> workerDayRowHours = timeSheetPage.getTimesheetWorkerHoursByDay(workerTimeClock);
+    			for(Map.Entry<String, Float> entry : workerDayRowHours.entrySet())
+    			{
+    				System.out.println(entry.getKey()+" : "+entry.getValue());
+    			}
+    			if(timeSheetPage.isTimeClockApproved(workerTimeClock))
+    			{
+    				String clockLabel = "Clock Out";
+        			timeSheetPage.openWorkerDayTimeSheetByElement(workerTimeClock);
+        			timeSheetPage.removeTimeClockEntryByLabel(clockLabel);
+        			timeSheetPage.closeTimeSheetDetailPopUp();
+        			break;
+    			}
+    		}
+    		
     		/*
     		 * To Be complete ...
     		 */
+    		
+    		basePage.click(workerRow);
+    		break;
     	}
  	}
 	
