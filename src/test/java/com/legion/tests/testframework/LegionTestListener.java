@@ -40,11 +40,6 @@ import com.legion.tests.annotations.TestName;
 //import com.legion.utils.ExtentManager;
 
 
-
-
-
-
-
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
@@ -68,7 +63,7 @@ import static com.legion.utils.MyThreadLocal.*;
 	        	ExtentTestManager.getTest().log(Status.PASS, MarkupHelper.createLabel("Test case Passed:",ExtentColor.GREEN));
 		        String TestID = Integer.toString(ExtentTestManager.getTestRailId(getCurrentMethod()));
 	        	try {
-					SimpleUtils.addTestResult("1", "1");
+					SimpleUtils.addTestResult(TestID);
 				} catch (IOException | APIException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

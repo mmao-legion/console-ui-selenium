@@ -325,7 +325,7 @@ public class ScheduleNewUITest extends TestBase{
 	        schedulePage.clickOnCancelButtonOnEditMode();
 	    }
 
-	    @UseAsTestRailId(testRailId = 32)
+	    @UseAsTestRailId(testRailId = 1)
 	    @Automated(automated =  "Automated")
 		@Owner(owner = "Naval")
 	    @Enterprise(name = "KendraScott2_Enterprise")

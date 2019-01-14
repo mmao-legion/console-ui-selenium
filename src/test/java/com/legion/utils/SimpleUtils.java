@@ -351,22 +351,20 @@ public class SimpleUtils {
 	
 	// added code for TestRail connection
 	
-	public static void addTestResult(String testCaseId, String testRunId)
+	public static void addTestResult(String testCaseId)
 			throws IOException, APIException {
 		//below credential is for Zorang 
-        APIClient client = new APIClient("https://zorang.testrail.io/");
-        client.setUser("prakash.nishant@gmail.com");
-        client.setPassword("bKHXaKuIyTG46/DLDSik");
+//        APIClient client = new APIClient("https://zorang.testrail.io/");
+//        client.setUser("prakash.nishant@gmail.com");
+//        client.setPassword("bKHXaKuIyTG46/DLDSik");
         //Below credential code for legiontech 
-//        APIClient client = new APIClient("https://legiontech.testrail.io/");
-//      client.setUser("nishant.prakash@zorang.com");
-//      client.setPassword("Prashant21#");
-
-        client.setPassword("bKHXaKuIyTG46/DLDSik");
+        APIClient client = new APIClient("https://legiontech.testrail.io/");
+        client.setUser("nishant.prakash@zorang.com");
+        client.setPassword("Prashant21#");
         Map data = new HashMap();
         data.put("status_id", new Integer(1));
-        data.put("comment", "Test Executed - Status updated automatically in TestRail today");
-        client.sendPost("add_result_for_case/1/1",data );
+        data.put("comment", "Test Executed - Status updated automatically in TestRail. it's called magic");
+        client.sendPost("add_result/"+testCaseId+"",data );
 		
 	}
 }
