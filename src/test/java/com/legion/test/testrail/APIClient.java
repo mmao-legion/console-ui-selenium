@@ -37,7 +37,6 @@ public class APIClient
 		}
 		
 		this.m_url = base_url + "index.php?/api/v2/";
-		System.out.println("hello");
 	}
 
 	/**

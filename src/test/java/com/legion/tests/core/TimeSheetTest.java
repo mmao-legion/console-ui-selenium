@@ -20,6 +20,7 @@ import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.annotations.UseAsTestRailId;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -514,6 +515,7 @@ public class TimeSheetTest extends TestBase{
     	}
  	}
 	
+	@UseAsTestRailId(testRailId = 4)
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Naval")
     @Enterprise(name = "Coffee_Enterprise")

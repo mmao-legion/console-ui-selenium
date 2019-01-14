@@ -11,7 +11,7 @@
     <classes>
        <class name="com.legion.tests.core.TimeSheetTest">
       	<methods>
-           <include name="verifyAutoApprovedShiftIsUnApprovedAfterDeletingClockOutAsStoreManager"/>
+           <include name="verifyTimeSheetColumnsAsStoreManager"/>
         </methods>
       </class>
     </classes>

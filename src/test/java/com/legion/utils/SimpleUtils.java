@@ -6,6 +6,7 @@ import static org.testng.AssertJUnit.assertTrue;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import org.json.simple.JSONObject;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.ITestResult;
@@ -21,6 +22,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.tests.testframework.LegionTestListener;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -47,6 +49,8 @@ import java.util.stream.Stream;
 public class SimpleUtils {
 
     static HashMap<String,String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+    
+    static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
 
     static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
 	
@@ -69,6 +73,7 @@ public class SimpleUtils {
     }
     
     public static void fail(String message, boolean continueExecution, String... severity) {
+    	SimpleUtils.addTestResult(5, message);
         if (continueExecution) {
             try {
                 assertTrue(false);
@@ -218,6 +223,7 @@ public class SimpleUtils {
     	
     	ExtentTestManager.getTest().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
                 + "</div>");
+    	SimpleUtils.addTestResult(1, message);
     }
     
     public static void report(String message) {
@@ -351,22 +357,54 @@ public class SimpleUtils {
 	
 	// added code for TestRail connection
 	
-	public static void addTestResult(String testCaseId, String testRunId)
-			throws IOException, APIException {
-		//below credential is for Zorang 
-        APIClient client = new APIClient("https://zorang.testrail.io/");
-        client.setUser("prakash.nishant@gmail.com");
-        client.setPassword("bKHXaKuIyTG46/DLDSik");
-        //Below credential code for legiontech 
-//        APIClient client = new APIClient("https://legiontech.testrail.io/");
-//      client.setUser("nishant.prakash@zorang.com");
-//      client.setPassword("Prashant21#");
-
-        client.setPassword("bKHXaKuIyTG46/DLDSik");
-        Map data = new HashMap();
-        data.put("status_id", new Integer(1));
-        data.put("comment", "Test Executed - Status updated automatically in TestRail today");
-        client.sendPost("add_result_for_case/1/1",data );
+	public static void addTestResult(int statusID, String comment)
+	{
+		/*
+		 * TestRail Status ID : Description 
+		 * 1 : Passed
+		 * 2 : Blocked
+		 * 4 : Retest
+		 * 5 : Failed
+		 */
 		
+		MyThreadLocal myThreadLocal = new MyThreadLocal();
+    	String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
+    	String testName = ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod()); 	
+		String addResultString = "add_result/"+testCaseId+"";
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+		
+		try {
+			// Make a connection with Testrail Server
+	        APIClient client = new APIClient(testRailURL);
+	        client.setUser(testRailUser);
+	        client.setPassword(testRailPassword);
+	       
+	        JSONObject c = (JSONObject) client.sendGet("get_case/"+testCaseId);
+	        String TestRailTitle = (String) c.get("title");
+	        if(! TestRailTitle.equals(testName))
+	        {
+	        	Map<String, Object> updateTestTitle = new HashMap<String, Object>();
+	        	updateTestTitle.put("title", testName);
+	        	client.sendPost("update_case/"+testCaseId, updateTestTitle);
+	        }
+	        
+	        Map data = new HashMap();
+	        data.put("status_id", statusID);
+	        data.put("comment", comment);
+	        client.sendPost(addResultString,data );
+	        
+		}
+		
+		
+		catch(IOException ioException)
+		{
+			System.err.println(ioException.getMessage());
+		}
+		catch(APIException aPIException)
+		{
+			System.err.println(aPIException.getMessage());
+		}
 	}
 }
