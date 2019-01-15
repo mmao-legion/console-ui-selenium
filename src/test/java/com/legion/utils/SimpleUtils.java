@@ -351,7 +351,6 @@ public class SimpleUtils {
 		dateRangeDayPicker = listWeekActiveDate.get(0)+"-"+listWeekActiveDate.get(1);
 		return dateRangeDayPicker;
 
-
 	}
 	
 	
@@ -368,9 +367,9 @@ public class SimpleUtils {
 		 */
 
 		MyThreadLocal myThreadLocal = new MyThreadLocal();
-    	String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
-    	String testName = ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod());
-		String addResultString = "add_result/"+testCaseId+"";
+		String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
+		String testName = ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod());
+		String addResultString = "add_result_for_case/1/"+testCaseId+"";
 		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
@@ -380,8 +379,7 @@ public class SimpleUtils {
 	        APIClient client = new APIClient(testRailURL);
 	        client.setUser(testRailUser);
 	        client.setPassword(testRailPassword);
-
-	        JSONObject c = (JSONObject) client.sendGet("get_case/"+testCaseId);
+	        JSONObject c = (JSONObject) client.sendGet("get_case/38");
 	        String TestRailTitle = (String) c.get("title");
 	        if(! TestRailTitle.equals(testName))
 	        {
@@ -397,7 +395,6 @@ public class SimpleUtils {
 
 		}
 
-
 		catch(IOException ioException)
 		{
 			System.err.println(ioException.getMessage());
@@ -407,4 +404,5 @@ public class SimpleUtils {
 			System.err.println(aPIException.getMessage());
 		}
 	}
+	
 }
