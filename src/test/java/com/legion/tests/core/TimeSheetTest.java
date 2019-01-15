@@ -2,12 +2,15 @@ package com.legion.tests.core;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.SimpleLayout;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -24,6 +27,7 @@ import com.legion.tests.annotations.UseAsTestRailId;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import com.legion.utils.SpreadSheetUtils;
 
 public class TimeSheetTest extends TestBase{
 	
@@ -646,5 +650,61 @@ public class TimeSheetTest extends TestBase{
     		SimpleUtils.fail("Timesheet: worker's Meal Hours not equal to sum of days timeclock Meal Hours ("+totalMealHours+"/"+sumOfDaysMealHours+").", true);
    
  	}
+	
+	@UseAsTestRailId(testRailId = 4)
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TP- 134: Validate the columns present in Time sheet.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void addTestRailTestCaseAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+		String text = "This is a test string. Step 1. Step 2";
+		String[] steps = text.split(".");
+		//SimpleUtils.addTestCase("This is First Test Case Test 4", steps, 1);
+		
+		
+		String spreadsheetId = "1SayB4B_eYXwmDP4mcyEWIu0vy7AsCjnQT1a5Mk7s6V4"; 
+		String range = "UserInfo!A3:E";
+		String userName = "johns";
+		String password1 = "test@123";
+		
+		//login(userName,password1);
+		//String[] userProfileInfo = getProfileInfo();
+		//List<String> userData = Arrays.asList(userProfileInfo);
+		//Get data from sheet  and verify first profile info of john
+		/*Spreadsheet sheetAPI = new Spreadsheet();
+		System.out.println("Test 1");
+		List<List<Object>> values = sheetAPI.getSpreadSheetRecords(spreadsheetId, range);
+		System.out.println("Test 2");
+		for (List<Object> row : values) {
+			System.out.println("Test 3");
+			if(row.get(0).equals(userName)) {
+				System.out.println("Test 4");
+			//Assert.assertEquals(userData, row);
+			break;
+			}
+		}*/
+		
+		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/testCasesSpreadsheet.xlsx", "Sheet1");
+		System.out.println("spreadSheetData size: "+spreadSheetData.size());
+		for(HashMap<String, String> spreadSheetRow : spreadSheetData)
+		{
+			String testCaseSteps = spreadSheetRow.get("Test Steps");
+			String testCaseExpectedResult = spreadSheetRow.get("Expected Result");
+			String testCaseTitle = spreadSheetRow.get("Objective");
+			if(testCaseTitle.trim().length() == 0)
+				testCaseTitle = "Title is missing on SpreadSheet";
+			
+			if(testCaseSteps.trim().length() == 0)
+				testCaseSteps = "Steps are missing on SpreadSheet";
+			
+			if(testCaseExpectedResult.trim().length() == 0)
+				testCaseExpectedResult = "Expected result is missing on SpreadSheet";
+			
+			SimpleUtils.addTestCase(testCaseTitle, testCaseExpectedResult, testCaseSteps, 1);
+		}
+	}
+	
 	
 }

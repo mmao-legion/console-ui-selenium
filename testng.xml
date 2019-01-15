@@ -11,7 +11,7 @@
     <classes>
        <class name="com.legion.tests.core.TimeSheetTest">
       	<methods>
-           <include name="verifyTimeSheetColumnsAsStoreManager"/>
+           <include name="addTestRailTestCaseAsStoreManager"/>
         </methods>
       </class>
     </classes>
