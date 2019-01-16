@@ -6,6 +6,7 @@ import static org.testng.AssertJUnit.assertTrue;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -49,7 +50,7 @@ import java.util.stream.Stream;
 public class SimpleUtils {
 
     static HashMap<String,String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-
+    
     static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
 
     static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
@@ -351,6 +352,7 @@ public class SimpleUtils {
 		dateRangeDayPicker = listWeekActiveDate.get(0)+"-"+listWeekActiveDate.get(1);
 		return dateRangeDayPicker;
 
+
 	}
 	
 	
@@ -359,13 +361,13 @@ public class SimpleUtils {
 	public static void addTestResult(int statusID, String comment)
 	{
 		/*
-		 * TestRail Status ID : Description
+		 * TestRail Status ID : Description 
 		 * 1 : Passed
 		 * 2 : Blocked
 		 * 4 : Retest
 		 * 5 : Failed
 		 */
-
+		
 		MyThreadLocal myThreadLocal = new MyThreadLocal();
 		String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
 		String testName = ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod());
@@ -379,7 +381,8 @@ public class SimpleUtils {
 	        APIClient client = new APIClient(testRailURL);
 	        client.setUser(testRailUser);
 	        client.setPassword(testRailPassword);
-	        JSONObject c = (JSONObject) client.sendGet("get_case/38");
+	       
+	        JSONObject c = (JSONObject) client.sendGet("get_case/"+testCaseId);
 	        String TestRailTitle = (String) c.get("title");
 	        if(! TestRailTitle.equals(testName))
 	        {
@@ -395,6 +398,8 @@ public class SimpleUtils {
 
 		}
 
+
+
 		catch(IOException ioException)
 		{
 			System.err.println(ioException.getMessage());
@@ -404,5 +409,41 @@ public class SimpleUtils {
 			System.err.println(aPIException.getMessage());
 		}
 	}
-	
+
+
+	public static void addTestCase(String title, String expectedResult, String steps, int sectionID)
+	{
+		MyThreadLocal myThreadLocal = new MyThreadLocal();
+    	String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
+    	String testName = ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod());
+		String addResultString = "add_case/"+sectionID;
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+		try {
+			// Make a connection with Testrail Server
+	        APIClient client = new APIClient(testRailURL);
+	        client.setUser(testRailUser);
+	        client.setPassword(testRailPassword);
+//	        JSONObject c = (JSONObject) client.sendGet("get_case/"+testCaseId);
+//	        System.out.println(c);
+
+
+	        Map<String, Object> data = new HashMap<String, Object>();
+	        data.put("title", title);
+	        data.put("custom_steps", steps);
+	        data.put("custom_expected", expectedResult);
+	        System.out.println(client.sendPost(addResultString,data ));
+		}
+
+		catch(IOException ioException)
+		{
+			System.err.println(ioException.getMessage());
+		}
+		catch(APIException aPIException)
+		{
+			System.err.println(aPIException.getMessage());
+		}
+	}
+
 }
