@@ -410,7 +410,9 @@ public class SimpleUtils {
 	}
 	
 	
-	public static void addTestCase(String title, String expectedResult, String steps, int sectionID)
+	public static void addTestCase(String title, String priority, String references, String goals,
+			String category, String steps, String expectedResult, String type, String estimate,
+			String automated, int sectionID)
 	{		
 		MyThreadLocal myThreadLocal = new MyThreadLocal();
     	String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
@@ -424,13 +426,20 @@ public class SimpleUtils {
 	        APIClient client = new APIClient(testRailURL);
 	        client.setUser(testRailUser);
 	        client.setPassword(testRailPassword);
-//	        JSONObject c = (JSONObject) client.sendGet("get_case/"+testCaseId);
-//	        System.out.println(c);
-	     
 	        
 	        Map<String, Object> data = new HashMap<String, Object>();
 	        data.put("title", title);
+	        
+	        data.put("priority_id", getPriorityIntegerValue(priority));
+	        data.put("refs",references) ;
+	        data.put("custom_goals", goals);
+	        data.put("custom_custom_category", category);
 	        data.put("custom_steps", steps);
+	        if(estimate.length() > 0)
+	        	data.put("estimate", estimate.split("\\.")[0]+"M");
+	        data.put("custom_custom_automated",automated) ;
+	        data.put("custom_goals", goals);
+	        data.put("custom_custom_useraccess",type);
 	        data.put("custom_expected", expectedResult);
 	        System.out.println(client.sendPost(addResultString,data ));
 		}
@@ -444,4 +453,27 @@ public class SimpleUtils {
 			System.err.println(aPIException.getMessage());
 		}
 	}
+	
+	public static int getPriorityIntegerValue(String priority)
+	{
+		priority = priority.toLowerCase();
+		int integerPriority = 0;
+		switch (priority) { 
+        case "highest": 
+        	integerPriority = 4; 
+            break; 
+        case "high": 
+        	integerPriority = 3; 
+            break; 
+        case "Medium": 
+        	integerPriority = 2; 
+            break; 
+        default: 
+        	integerPriority = 1; 
+            break; 
+        } 
+		
+		return integerPriority;
+	}
+
 }

@@ -1,6 +1,5 @@
 {
-  "TEST_RAIL_URL": "https://zorang.testrail.io/",
-  "TEST_RAIL_USER": "prakash.nishant@gmail.com",
-  "TEST_RAIL_PASSWORD": "bKHXaKuIyTG46/DLDSik"
-  
+  "TEST_RAIL_URL": "https://legiontech.testrail.io/",
+  "TEST_RAIL_USER": "kapil.jain@zorang.com",
+  "TEST_RAIL_PASSWORD": "Zorang@01"
 }
