@@ -7,7 +7,8 @@
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
 
-  <test name="Time Sheet Page">
+   
+   <test name="Time Sheet Page">
     <classes>
        <class name="com.legion.tests.core.TimeSheetTest">
       	<methods>
@@ -16,7 +17,6 @@
       </class>
     </classes>
   </test> 
-   
 </suite> <!-- Suite -->
 
 

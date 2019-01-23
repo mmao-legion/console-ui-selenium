@@ -74,7 +74,7 @@ public class SimpleUtils {
     }
     
     public static void fail(String message, boolean continueExecution, String... severity) {
-    	SimpleUtils.addTestResult(5, message);
+    	//SimpleUtils.addTestResult(5, message);
         if (continueExecution) {
             try {
                 assertTrue(false);
@@ -224,7 +224,7 @@ public class SimpleUtils {
     	
     	ExtentTestManager.getTest().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
                 + "</div>");
-    	SimpleUtils.addTestResult(1, message);
+    	//SimpleUtils.addTestResult(1, message);
     }
     
     public static void report(String message) {
@@ -376,37 +376,41 @@ public class SimpleUtils {
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
 		
-		try {
-			// Make a connection with Testrail Server
-	        APIClient client = new APIClient(testRailURL);
-	        client.setUser(testRailUser);
-	        client.setPassword(testRailPassword);
-	       
-	        JSONObject c = (JSONObject) client.sendGet("get_case/"+testCaseId);
-	        String TestRailTitle = (String) c.get("title");
-	        if(! TestRailTitle.equals(testName))
-	        {
-	        	Map<String, Object> updateTestTitle = new HashMap<String, Object>();
-	        	updateTestTitle.put("title", testName);
-	        	client.sendPost("update_case/"+testCaseId, updateTestTitle);
-	        }
-	        
-	        Map<String, Object> data = new HashMap<String, Object>();
-	        data.put("status_id", statusID);
-	        data.put("comment", comment);
-	        client.sendPost(addResultString,data );
-	        
+		if(testCaseId != null && Integer.valueOf(testCaseId) > 0)
+		{
+			try {
+				// Make a connection with Testrail Server
+		        APIClient client = new APIClient(testRailURL);
+		        client.setUser(testRailUser);
+		        client.setPassword(testRailPassword);
+		       
+		        JSONObject c = (JSONObject) client.sendGet("get_case/"+testCaseId);
+		        String TestRailTitle = (String) c.get("title");
+		        if(! TestRailTitle.equals(testName))
+		        {
+		        	Map<String, Object> updateTestTitle = new HashMap<String, Object>();
+		        	updateTestTitle.put("title", testName);
+		        	client.sendPost("update_case/"+testCaseId, updateTestTitle);
+		        }
+		        
+		        Map<String, Object> data = new HashMap<String, Object>();
+		        data.put("status_id", statusID);
+		        data.put("comment", comment);
+		        client.sendPost(addResultString,data );
+		        
+			}
+			
+			
+			catch(IOException ioException)
+			{
+				System.err.println(ioException.getMessage());
+			}
+			catch(APIException aPIException)
+			{
+				System.err.println(aPIException.getMessage());
+			}
 		}
 		
-		
-		catch(IOException ioException)
-		{
-			System.err.println(ioException.getMessage());
-		}
-		catch(APIException aPIException)
-		{
-			System.err.println(aPIException.getMessage());
-		}
 	}
 	
 	
