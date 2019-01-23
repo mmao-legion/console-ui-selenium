@@ -329,12 +329,13 @@ public class ScheduleNewUITest extends TestBase{
 	    @Automated(automated =  "Automated")
 		@Owner(owner = "Naval")
 	    @Enterprise(name = "KendraScott2_Enterprise")
-	    @TestName(description = "TP-21: Automation Script for - JIRA ID - 2592 - \"Should be able to view Day View and filter Schedule and Group By 'All'\"")
+	    @TestName(description = "TP-22: Automation Script for - JIRA ID - 2592 - \"Should be able to view Day View and filter Schedule and Group By 'All'\"")
 	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	    public void viewAndFilterScheduleWithGroupByAllDayViewAsStoreManager(String browser, String username, String password, String location)
 	    		throws Exception {
 	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        SimpleUtils.fail("Test Failed", false);
 //	        schedulePage = dashboardPage.goToTodayForNewUI();
 //	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
 //

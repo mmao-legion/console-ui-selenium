@@ -7,11 +7,12 @@
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
 
-  <test name="Time Sheet Page">
+  <test name="Schedule Page">
     <classes>
        <class name="com.legion.tests.core.TimeSheetTest">
       	<methods>
-           <include name="addTestRailTestCaseAsStoreManager"/>
+           <include name="updateTestRailTestCaseAsStoreManager"/>
+
         </methods>
       </class>
     </classes>
