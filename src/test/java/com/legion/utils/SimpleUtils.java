@@ -224,7 +224,7 @@ public class SimpleUtils {
     	
     	ExtentTestManager.getTest().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
                 + "</div>");
-    	//SimpleUtils.addTestResult(1, message);
+    	SimpleUtils.addTestResult(1, message);
     }
     
     public static void report(String message) {
@@ -369,9 +369,9 @@ public class SimpleUtils {
 		 */
 		
 		MyThreadLocal myThreadLocal = new MyThreadLocal();
-    	String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
-    	String testName = ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod()); 	
-		String addResultString = "add_result/"+testCaseId+"";
+		String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
+		String testName = ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod());
+		String addResultString = "add_result_for_case/1/"+testCaseId+"";
 		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
@@ -430,10 +430,10 @@ public class SimpleUtils {
 	        APIClient client = new APIClient(testRailURL);
 	        client.setUser(testRailUser);
 	        client.setPassword(testRailPassword);
-	        
+
 	        Map<String, Object> data = new HashMap<String, Object>();
 	        data.put("title", title);
-	        
+
 	        data.put("priority_id", getPriorityIntegerValue(priority));
 	        data.put("refs",references) ;
 	        data.put("custom_goals", goals);
@@ -457,27 +457,77 @@ public class SimpleUtils {
 			System.err.println(aPIException.getMessage());
 		}
 	}
-	
+
+
+
+	public static void updateTestCase(String title, String priority, String references, String goals,
+								   String category, String steps, String expectedResult, String type, String estimate,
+								   String automated, int sectionID)
+	{
+		MyThreadLocal myThreadLocal = new MyThreadLocal();
+		String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
+		String testName = ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod());
+		String addResultString = "get_case/"+sectionID;
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+		try {
+			// Make a connection with Testrail Server
+			APIClient client = new APIClient(testRailURL);
+			client.setUser(testRailUser);
+			client.setPassword(testRailPassword);
+
+			JSONObject c = (JSONObject) client.sendGet("get_cases/4/&section_id=11");
+			String TestRailTitle = (String) c.get("title");
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("title", title);
+
+			data.put("priority_id", getPriorityIntegerValue(priority));
+			data.put("refs",references) ;
+			data.put("custom_goals", goals);
+			data.put("custom_custom_category", category);
+			data.put("custom_steps", steps);
+			if(estimate.length() > 0)
+				data.put("estimate", estimate.split("\\.")[0]+"M");
+			data.put("custom_custom_automated",automated) ;
+			data.put("custom_goals", goals);
+			data.put("custom_custom_useraccess",type);
+			data.put("custom_expected", expectedResult);
+			System.out.println(client.sendPost(addResultString,data ));
+		}
+
+		catch(IOException ioException)
+		{
+			System.err.println(ioException.getMessage());
+		}
+		catch(APIException aPIException)
+		{
+			System.err.println(aPIException.getMessage());
+		}
+	}
+
+
 	public static int getPriorityIntegerValue(String priority)
 	{
 		priority = priority.toLowerCase();
 		int integerPriority = 0;
-		switch (priority) { 
-        case "highest": 
-        	integerPriority = 4; 
-            break; 
-        case "high": 
-        	integerPriority = 3; 
-            break; 
-        case "Medium": 
-        	integerPriority = 2; 
-            break; 
-        default: 
-        	integerPriority = 1; 
-            break; 
-        } 
-		
+		switch (priority) {
+        case "highest":
+        	integerPriority = 4;
+            break;
+        case "high":
+        	integerPriority = 3;
+            break;
+        case "Medium":
+        	integerPriority = 2;
+            break;
+        default:
+        	integerPriority = 1;
+            break;
+        }
+
 		return integerPriority;
 	}
+
 
 }

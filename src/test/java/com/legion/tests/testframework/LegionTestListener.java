@@ -40,11 +40,6 @@ import com.legion.tests.annotations.TestName;
 //import com.legion.utils.ExtentManager;
 
 
-
-
-
-
-
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
