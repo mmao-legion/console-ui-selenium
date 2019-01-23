@@ -3,14 +3,10 @@ package com.legion.utils;
 import static com.legion.utils.MyThreadLocal.getVerificationMap;
 import static org.testng.AssertJUnit.assertTrue;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.util.Strings;
 
@@ -224,7 +220,7 @@ public class SimpleUtils {
     	
     	ExtentTestManager.getTest().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
                 + "</div>");
-    	SimpleUtils.addTestResult(1, message);
+    	//SimpleUtils.addTestResult(1, message);
     }
     
     public static void report(String message) {
@@ -465,44 +461,54 @@ public class SimpleUtils {
 								   String automated, int sectionID)
 	{
 		MyThreadLocal myThreadLocal = new MyThreadLocal();
-		String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
+		//String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
 		String testName = ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod());
-		String addResultString = "get_case/"+sectionID;
+		String updateResultString = "update_case";
 		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+		int projectId = Integer.valueOf(testRailConfig.get("TEST_RAIL_PROJECT_ID"));
 		try {
 			// Make a connection with Testrail Server
 			APIClient client = new APIClient(testRailURL);
 			client.setUser(testRailUser);
 			client.setPassword(testRailPassword);
-
-			JSONObject c = (JSONObject) client.sendGet("get_cases/4/&section_id=11");
-			String TestRailTitle = (String) c.get("title");
-			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("title", title);
-
-			data.put("priority_id", getPriorityIntegerValue(priority));
-			data.put("refs",references) ;
-			data.put("custom_goals", goals);
-			data.put("custom_custom_category", category);
-			data.put("custom_steps", steps);
-			if(estimate.length() > 0)
-				data.put("estimate", estimate.split("\\.")[0]+"M");
-			data.put("custom_custom_automated",automated) ;
-			data.put("custom_goals", goals);
-			data.put("custom_custom_useraccess",type);
-			data.put("custom_expected", expectedResult);
-			System.out.println(client.sendPost(addResultString,data ));
+	
+	        int testCaseID = getTestCaseIDFromTitle(title, projectId, client, sectionID);
+	        System.out.println("testCaseID : "+testCaseID);
+	        if(testCaseID > 0)
+	        {
+	        	Map<String, Object> testCaseDataToUpdate = new HashMap<String, Object>();
+		        testCaseDataToUpdate.put("priority_id", getPriorityIntegerValue(priority));
+		        testCaseDataToUpdate.put("refs",references) ;
+		        testCaseDataToUpdate.put("custom_goals", goals);
+		        testCaseDataToUpdate.put("custom_custom_category", category);
+		        testCaseDataToUpdate.put("custom_steps", steps);
+		        if(estimate.length() > 0)
+		        	testCaseDataToUpdate.put("estimate", estimate.split("\\.")[0]+"M");
+		        testCaseDataToUpdate.put("custom_custom_automated",automated) ;
+		        testCaseDataToUpdate.put("custom_goals", goals);
+		        testCaseDataToUpdate.put("custom_custom_useraccess",type);
+		        testCaseDataToUpdate.put("custom_expected", expectedResult);
+		        
+		        JSONObject updateTestCaseResult = (JSONObject) client.sendPost(updateResultString + "/" + testCaseID, testCaseDataToUpdate);
+		        pass("Test Case with ID :'"+ testCaseID +"' Updated Successfully ('"+ updateTestCaseResult +"");
+	        }
+	        else {
+	        	report("No Test Case found with the title :'"+ title +"'.");
+	        }
+	        
 		}
 
 		catch(IOException ioException)
 		{
 			System.err.println(ioException.getMessage());
+			fail(ioException.getMessage(), true);
 		}
 		catch(APIException aPIException)
 		{
 			System.err.println(aPIException.getMessage());
+			fail(aPIException.getMessage(), true);
 		}
 	}
 
@@ -529,5 +535,26 @@ public class SimpleUtils {
 		return integerPriority;
 	}
 
+	public static int getTestCaseIDFromTitle(String title, int projectID, APIClient client, int sectionID)
+	{
+		JSONArray testCasesList;
+		JSONObject jsonTestCase;
+		int testCaseID = 0;
+		try {
+			testCasesList = (JSONArray) client.sendGet("get_cases/"+projectID+"/&section_id="+sectionID);
+			for(Object testCase : testCasesList)
+			{
+				
+				jsonTestCase = (JSONObject) testCase;
+				if(title.trim().toLowerCase().equals(jsonTestCase.get("title").toString().trim().toLowerCase()))
+				{
+					testCaseID = Integer.valueOf(jsonTestCase.get("id").toString());
+				}
+			}
+		} catch (IOException | APIException | NullPointerException e) {
+			fail(e.getMessage(), true);
+		}        
+        return testCaseID;
+	}
 
 }
