@@ -61,9 +61,9 @@ public class TimeSheetTest extends TestBase{
 	@Override
 	@BeforeMethod
 	public void firstTest(Method method, Object[] params) throws Exception {
-		this.createDriver((String) params[0], "68", "Linux");
-	      visitPage(method);
-	      loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+//		this.createDriver((String) params[0], "68", "Linux");
+//	      visitPage(method);
+//	      loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
 	}
 	
 	
@@ -676,12 +676,46 @@ public class TimeSheetTest extends TestBase{
 			if(title == null || title.trim().length() == 0)
 				title = "Title is missing on SpreadSheet"; 
 			String testCaseExpectedResult = spreadSheetRow.get("Expected result");
-			int sectionID = 11;
+			int sectionID = 12;
 			SimpleUtils.addTestCase(title,priority, references, goals, category, steps,testCaseExpectedResult, 
 					type, estimate, automated, sectionID);
 			
 		}
 	}
-	
-	
+
+
+
+	@UseAsTestRailId(testRailId = 4)
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "TP- 134: Validate the columns present in Time sheet.")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void updateTestRailTestCaseAsStoreManager(String browser, String username, String password, String location)
+			throws Exception {
+		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/legionTestCases.xlsx", "Detailed Scope - Web");
+		for(HashMap<String, String> spreadSheetRow : spreadSheetData)
+		{
+
+			String priority = spreadSheetRow.get("Priority");
+			String references = spreadSheetRow.get("Environment To Be Tested");
+			String goals = spreadSheetRow.get("ID");
+			String category = spreadSheetRow.get("Category");
+			String title = spreadSheetRow.get("Summary");
+			String steps = spreadSheetRow.get("Details");
+			String type = spreadSheetRow.get("Access Level verification");
+			String estimate = spreadSheetRow.get("Effort for Manual Testing[Min]");
+			String automated = spreadSheetRow.get("Automation Done(Yes/No/In Progress)");
+
+			if(title == null || title.trim().length() == 0)
+				title = "Title is missing on SpreadSheet";
+			String testCaseExpectedResult = spreadSheetRow.get("Expected result");
+			int sectionID = 11;
+			SimpleUtils.updateTestCase(title,priority, references, goals, category, steps,testCaseExpectedResult,
+					type, estimate, automated, sectionID);
+
+		}
+	}
+
+
 }

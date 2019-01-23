@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.ITestResult;
@@ -459,7 +460,7 @@ public class SimpleUtils {
 
 	public static void updateTestCase(String title, String priority, String references, String goals,
 								   String category, String steps, String expectedResult, String type, String estimate,
-								   String automated, int sectionID)
+								   String automated, int sectionID) throws ParseException
 	{
 		MyThreadLocal myThreadLocal = new MyThreadLocal();
 		String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
@@ -473,8 +474,10 @@ public class SimpleUtils {
 			APIClient client = new APIClient(testRailURL);
 			client.setUser(testRailUser);
 			client.setPassword(testRailPassword);
-
-			JSONObject c = (JSONObject) client.sendGet("get_cases/4/&section_id=11");
+			String projectId = "4";
+			String sectionId = "11";
+//			JSONObject c = (JSONObject) client.sendGetTestCaseIdWithSectionId("get_cases/4/&section_id=11");
+			JSONObject c = (JSONObject) client.sendGet("get_cases/"+projectId+"/&section_id="+sectionId);
 			String TestRailTitle = (String) c.get("title");
 			Map<String, Object> data = new HashMap<String, Object>();
 			data.put("title", title);
