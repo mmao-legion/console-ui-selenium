@@ -29,35 +29,17 @@ public class SpreadSheetUtils {
 	    Workbook workbook = null;
 
 	    ArrayList<HashMap <String, String>> spreadSheetValue = new ArrayList<HashMap <String, String>>();
-	    //Find the file extension by splitting file name in substring  and getting only extension name
 
 	    String fileExtensionName = fileNameAndPath.substring(fileNameAndPath.indexOf("."));
 
-	    //Check condition if the file is xlsx file
-
 	    if(fileExtensionName.equals(".xlsx")){
-
-	    //If it is xlsx file then create object of XSSFWorkbook class
-
 	    	workbook = new XSSFWorkbook(inputStream);
-
 	    }
-
-	    //Check condition if the file is xls file
-
 	    else if(fileExtensionName.equals(".xls")){
-
-	        //If it is xls file then create object of XSSFWorkbook class
-
 	    	workbook = new HSSFWorkbook(inputStream);
-
 	    }
-
-	    //Read sheet inside the workbook by its name
 
 	    Sheet spreadSheet = workbook.getSheet(sheetName);
-
-	    //Find number of rows in excel file
 
 	    int rowCount = spreadSheet.getLastRowNum()-spreadSheet.getFirstRowNum();
 	    for (int i = 1; i < rowCount+1; i++) {
@@ -66,6 +48,7 @@ public class SpreadSheetUtils {
 	        if(! isEmptyRow(row))
 	        {
 	        	for (int j = 0; j < row.getLastCellNum(); j++) {
+	        		row.getCell(j).setCellType(Cell.CELL_TYPE_STRING);
 		            spreadSheetRow.put(spreadSheet.getRow(0).getCell(j).getStringCellValue().trim(), row.getCell(j).getStringCellValue());
 		        }
 	        	spreadSheetValue.add(spreadSheetRow);
@@ -77,12 +60,16 @@ public class SpreadSheetUtils {
 	
 	  public static boolean isEmptyRow(Row row){
 		     boolean isEmptyRow = true;
-		         for(int cellNum = row.getFirstCellNum(); cellNum < row.getLastCellNum(); cellNum++){
+		     //System.out.println(row);
+		     if(row != null)
+		     {
+		    	 for(int cellNum = row.getFirstCellNum(); cellNum < row.getLastCellNum(); cellNum++){
 		            Cell cell = row.getCell(cellNum);
 		            if(cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK && StringUtils.isNotBlank(cell.toString())){
 		            isEmptyRow = false;
 		            }    
 		         }
+		     }
 		     return isEmptyRow;
 		   }
 }

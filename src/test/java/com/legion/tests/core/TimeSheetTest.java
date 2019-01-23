@@ -659,50 +659,27 @@ public class TimeSheetTest extends TestBase{
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void addTestRailTestCaseAsStoreManager(String browser, String username, String password, String location)
     		throws Exception {
-		String text = "This is a test string. Step 1. Step 2";
-		String[] steps = text.split(".");
-		//SimpleUtils.addTestCase("This is First Test Case Test 4", steps, 1);
-		
-		
-		String spreadsheetId = "1SayB4B_eYXwmDP4mcyEWIu0vy7AsCjnQT1a5Mk7s6V4"; 
-		String range = "UserInfo!A3:E";
-		String userName = "johns";
-		String password1 = "test@123";
-		
-		//login(userName,password1);
-		//String[] userProfileInfo = getProfileInfo();
-		//List<String> userData = Arrays.asList(userProfileInfo);
-		//Get data from sheet  and verify first profile info of john
-		/*Spreadsheet sheetAPI = new Spreadsheet();
-		System.out.println("Test 1");
-		List<List<Object>> values = sheetAPI.getSpreadSheetRecords(spreadsheetId, range);
-		System.out.println("Test 2");
-		for (List<Object> row : values) {
-			System.out.println("Test 3");
-			if(row.get(0).equals(userName)) {
-				System.out.println("Test 4");
-			//Assert.assertEquals(userData, row);
-			break;
-			}
-		}*/
-		
-		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/testCasesSpreadsheet.xlsx", "Sheet1");
-		System.out.println("spreadSheetData size: "+spreadSheetData.size());
+		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/legionTestCases.xlsx", "Detailed Scope - Web");
 		for(HashMap<String, String> spreadSheetRow : spreadSheetData)
 		{
-			String testCaseSteps = spreadSheetRow.get("Test Steps");
-			String testCaseExpectedResult = spreadSheetRow.get("Expected Result");
-			String testCaseTitle = spreadSheetRow.get("Objective");
-			if(testCaseTitle.trim().length() == 0)
-				testCaseTitle = "Title is missing on SpreadSheet";
+	
+			String priority = spreadSheetRow.get("Priority");
+			String references = spreadSheetRow.get("Environment To Be Tested");
+			String goals = spreadSheetRow.get("ID");
+			String category = spreadSheetRow.get("Category");
+			String title = spreadSheetRow.get("Summary");
+			String steps = spreadSheetRow.get("Details");
+			String type = spreadSheetRow.get("Access Level verification"); 
+			String estimate = spreadSheetRow.get("Effort for Manual Testing[Min]");
+			String automated = spreadSheetRow.get("Automation Done(Yes/No/In Progress)");
+
+			if(title == null || title.trim().length() == 0)
+				title = "Title is missing on SpreadSheet"; 
+			String testCaseExpectedResult = spreadSheetRow.get("Expected result");
+			int sectionID = 11;
+			SimpleUtils.addTestCase(title,priority, references, goals, category, steps,testCaseExpectedResult, 
+					type, estimate, automated, sectionID);
 			
-			if(testCaseSteps.trim().length() == 0)
-				testCaseSteps = "Steps are missing on SpreadSheet";
-			
-			if(testCaseExpectedResult.trim().length() == 0)
-				testCaseExpectedResult = "Expected result is missing on SpreadSheet";
-			
-			SimpleUtils.addTestCase(testCaseTitle, testCaseExpectedResult, testCaseSteps, 1);
 		}
 	}
 	

@@ -9,9 +9,9 @@
 
   <test name="Schedule Page">
     <classes>
-       <class name="com.legion.tests.core.ScheduleNewUITest">
+       <class name="com.legion.tests.core.TimeSheetTest">
       	<methods>
-           <include name="viewAndFilterScheduleWithGroupByAllDayViewAsStoreManager"/>
+           <include name="updateTestRailTestCaseAsStoreManager"/>
 
         </methods>
       </class>
