@@ -410,9 +410,9 @@ public class SimpleUtils {
 	}
 	
 	
-	public static void addTestCase(String title, String priority, String references, String goals,
-			String category, String steps, String expectedResult, String type, String estimate,
-			String automated, int sectionID)
+	public static void addTestCase(String scenario, String summary, String testSteps, String expectedResult,
+			String actualResult, String testData, String preconditions, String testCaseType, String priority,
+			String isAutomated, String result, String actions, int sectionID)
 	{		
 		MyThreadLocal myThreadLocal = new MyThreadLocal();
     	String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
@@ -428,19 +428,15 @@ public class SimpleUtils {
 	        client.setPassword(testRailPassword);
 
 	        Map<String, Object> data = new HashMap<String, Object>();
-	        data.put("title", title);
-
+	        data.put("title", summary);
 	        data.put("priority_id", getPriorityIntegerValue(priority));
-	        data.put("refs",references) ;
-	        data.put("custom_goals", goals);
-	        data.put("custom_custom_category", category);
-	        data.put("custom_steps", steps);
-	        if(estimate.length() > 0)
-	        	data.put("estimate", estimate.split("\\.")[0]+"M");
-	        data.put("custom_custom_automated",automated) ;
-	        data.put("custom_goals", goals);
-	        data.put("custom_custom_useraccess",type);
+	        data.put("custom_custom_testdata",testData) ;
+	        data.put("custom_steps", testSteps);
+	        data.put("custom_custom_automated",isAutomated) ;
+	        //data.put("custom_custom_useraccess",testCaseType);
 	        data.put("custom_expected", expectedResult);
+	        data.put("custom_preconds", preconditions);
+	         
 	        System.out.println(client.sendPost(addResultString,data ));
 		}
 		
@@ -456,9 +452,9 @@ public class SimpleUtils {
 
 
 
-	public static void updateTestCase(String title, String priority, String references, String goals,
-								   String category, String steps, String expectedResult, String type, String estimate,
-								   String automated, int sectionID)
+	public static void updateTestCase(String scenario, String summary, String testSteps, String expectedResult,
+			String actualResult, String testData, String preconditions, String testCaseType, String priority,
+			String isAutomated, String result, String actions, int sectionID)
 	{
 		MyThreadLocal myThreadLocal = new MyThreadLocal();
 		//String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
@@ -474,28 +470,24 @@ public class SimpleUtils {
 			client.setUser(testRailUser);
 			client.setPassword(testRailPassword);
 	
-	        int testCaseID = getTestCaseIDFromTitle(title, projectId, client, sectionID);
+	        int testCaseID = getTestCaseIDFromTitle(summary, projectId, client, sectionID);
 	        System.out.println("testCaseID : "+testCaseID);
 	        if(testCaseID > 0)
 	        {
 	        	Map<String, Object> testCaseDataToUpdate = new HashMap<String, Object>();
-		        testCaseDataToUpdate.put("priority_id", getPriorityIntegerValue(priority));
-		        testCaseDataToUpdate.put("refs",references) ;
-		        testCaseDataToUpdate.put("custom_goals", goals);
-		        testCaseDataToUpdate.put("custom_custom_category", category);
-		        testCaseDataToUpdate.put("custom_steps", steps);
-		        if(estimate.length() > 0)
-		        	testCaseDataToUpdate.put("estimate", estimate.split("\\.")[0]+"M");
-		        testCaseDataToUpdate.put("custom_custom_automated",automated) ;
-		        testCaseDataToUpdate.put("custom_goals", goals);
-		        testCaseDataToUpdate.put("custom_custom_useraccess",type);
-		        testCaseDataToUpdate.put("custom_expected", expectedResult);
+	        	testCaseDataToUpdate.put("priority_id", getPriorityIntegerValue(priority));
+	        	testCaseDataToUpdate.put("custom_custom_testdata",testData) ;
+	        	testCaseDataToUpdate.put("custom_steps", testSteps);
+	        	testCaseDataToUpdate.put("custom_custom_automated",isAutomated) ;
+		        //data.put("custom_custom_useraccess",testCaseType);
+	        	testCaseDataToUpdate.put("custom_expected", expectedResult);
+	        	testCaseDataToUpdate.put("custom_preconds", preconditions);
 		        
 		        JSONObject updateTestCaseResult = (JSONObject) client.sendPost(updateResultString + "/" + testCaseID, testCaseDataToUpdate);
 		        pass("Test Case with ID :'"+ testCaseID +"' Updated Successfully ('"+ updateTestCaseResult +"");
 	        }
 	        else {
-	        	report("No Test Case found with the title :'"+ title +"'.");
+	        	report("No Test Case found with the title :'"+ summary +"'.");
 	        }
 	        
 		}
@@ -556,5 +548,57 @@ public class SimpleUtils {
 		}        
         return testCaseID;
 	}
+	
+	public static void deleteTestCaseByID(int testCaseID)
+	{
+		String deleteResultString = "delete_case";
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+		
+		try {
+			// Make a connection with Testrail Server
+			APIClient client = new APIClient(testRailURL);
+			client.setUser(testRailUser);
+			client.setPassword(testRailPassword);
+			
+			Map<String, Object> testCaseDataToDelete = new HashMap<String, Object>();
+			testCaseDataToDelete.put("id", testCaseID);
+			JSONObject deleteTestCaseResult = (JSONObject) client.sendPost(deleteResultString+ "/" + testCaseID, testCaseDataToDelete)/* client.sendGet(deleteResultString + "/" + testCaseID)*/;
+			
+			pass("Test Case with ID :'"+ testCaseID +"' Deleted Successfully ('"+ deleteTestCaseResult +"').");
+			System.out.println("Test Case with ID :'"+ testCaseID +"' Deleted Successfully ('"+ deleteTestCaseResult +"').");
+		}
+		
+		catch(IOException | APIException exception)
+		{
+			System.err.println(exception.getMessage());
+			fail(exception.getMessage(), true);
+		}
+	}
+	
+	public static void deleteTestCaseByTitle(String title, int projectId, int sectionID)
+	{
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+		
+		// Make a connection with Testrail Server
+		APIClient client = new APIClient(testRailURL);
+		client.setUser(testRailUser);
+		client.setPassword(testRailPassword);
+		
+		int testCaseID = getTestCaseIDFromTitle(title, projectId, client, sectionID);
+		
+		if(testCaseID > 0)
+		{
+			deleteTestCaseByID(testCaseID);
+		}
+			
+	}
+
+	
+	
+	
 
 }

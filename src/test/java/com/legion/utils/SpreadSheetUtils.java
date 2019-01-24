@@ -23,15 +23,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class SpreadSheetUtils {
 
 	public static ArrayList<HashMap<String, String>> readExcel(String fileNameAndPath,String sheetName) throws IOException {
-		
+				
 		File file =    new File(fileNameAndPath);
 	    FileInputStream inputStream = new FileInputStream(file);
 	    Workbook workbook = null;
-
 	    ArrayList<HashMap <String, String>> spreadSheetValue = new ArrayList<HashMap <String, String>>();
-
 	    String fileExtensionName = fileNameAndPath.substring(fileNameAndPath.indexOf("."));
-
 	    if(fileExtensionName.equals(".xlsx")){
 	    	workbook = new XSSFWorkbook(inputStream);
 	    }
@@ -48,13 +45,18 @@ public class SpreadSheetUtils {
 	        if(! isEmptyRow(row))
 	        {
 	        	for (int j = 0; j < row.getLastCellNum(); j++) {
-	        		row.getCell(j).setCellType(Cell.CELL_TYPE_STRING);
-		            spreadSheetRow.put(spreadSheet.getRow(0).getCell(j).getStringCellValue().trim(), row.getCell(j).getStringCellValue());
+	        		if(row.getCell(j) == null)  {
+	        			spreadSheetRow.put(spreadSheet.getRow(0).getCell(j).getStringCellValue().trim(), "");
+	        		}
+	        		else {
+	        			row.getCell(j).setCellType(Cell.CELL_TYPE_STRING);
+			            spreadSheetRow.put(spreadSheet.getRow(0).getCell(j).getStringCellValue().trim(), row.getCell(j).getStringCellValue());
+	        		}
+	        		
 		        }
 	        	spreadSheetValue.add(spreadSheetRow);
 	        }
 	    } 
-
 	    return spreadSheetValue;
 	}
 	

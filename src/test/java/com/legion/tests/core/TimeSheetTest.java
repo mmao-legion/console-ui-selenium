@@ -655,31 +655,37 @@ public class TimeSheetTest extends TestBase{
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Naval")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "TP- 134: Validate the columns present in Time sheet.")
+    @TestName(description = "TestRail API: Add Test Cases.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void addTestRailTestCaseAsStoreManager(String browser, String username, String password, String location)
     		throws Exception {
-		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/legionTestCases.xlsx", "Detailed Scope - Web");
+		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/TCs_Legion.xlsx", "Schedule>Schedule");
 		for(HashMap<String, String> spreadSheetRow : spreadSheetData)
 		{
-	
-			String priority = spreadSheetRow.get("Priority");
-			String references = spreadSheetRow.get("Environment To Be Tested");
-			String goals = spreadSheetRow.get("ID");
-			String category = spreadSheetRow.get("Category");
-			String title = spreadSheetRow.get("Summary");
-			String steps = spreadSheetRow.get("Details");
-			String type = spreadSheetRow.get("Access Level verification"); 
-			String estimate = spreadSheetRow.get("Effort for Manual Testing[Min]");
-			String automated = spreadSheetRow.get("Automation Done(Yes/No/In Progress)");
-
-			if(title == null || title.trim().length() == 0)
-				title = "Title is missing on SpreadSheet"; 
-			String testCaseExpectedResult = spreadSheetRow.get("Expected result");
-			int sectionID = 11;
-			SimpleUtils.addTestCase(title,priority, references, goals, category, steps,testCaseExpectedResult, 
-					type, estimate, automated, sectionID);
+			String defaultAction = "";
+			 String scenario = spreadSheetRow.get("Scenario/Module");
+			 String summary = spreadSheetRow.get("Summary");
+			 String testSteps = spreadSheetRow.get("Test Steps");
+			 String expectedResult = spreadSheetRow.get("Expected Result");
+			 String actualResult = spreadSheetRow.get("Actual Result");
+			 String testData = spreadSheetRow.get("Test Data");
+			 String preconditions = spreadSheetRow.get("Preconditions");
+			 String testCaseType = spreadSheetRow.get("Test Case Type");
+			 String priority = spreadSheetRow.get("Priority/Severifty");
+			 String isAutomated = spreadSheetRow.get("Automated (Y/N)");
+			 String result = spreadSheetRow.get("Result (Pass/Fail)");
+			 String action = spreadSheetRow.get("Action");
+			 int sectionID = Integer.valueOf(spreadSheetRow.get("Section_ID"));
+			 
+			 if(action != null && action.trim().length() > 0)
+				 defaultAction = action.toLowerCase();
+			 
+			if(summary == null || summary.trim().length() == 0)
+				summary = "Title is missing on SpreadSheet"; 
 			
+			if(defaultAction.contains("add"))
+				SimpleUtils.addTestCase(scenario , summary, testSteps, expectedResult, actualResult, testData, 
+						preconditions, testCaseType, priority, isAutomated, result, action, sectionID);
 		}
 	}
 	
@@ -687,31 +693,62 @@ public class TimeSheetTest extends TestBase{
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Naval")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "TP- 134: Validate the columns present in Time sheet.")
+    @TestName(description = "TestRail API: Update Test Cases.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void updateTestRailTestCaseAsStoreManager(String browser, String username, String password, String location)
     		throws Exception {
-		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/legionTestCases.xlsx", "Detailed Scope - Web");
+		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/TCs_Legion.xlsx", "Schedule>Schedule");
 		for(HashMap<String, String> spreadSheetRow : spreadSheetData)
 		{
-	
-			String priority = spreadSheetRow.get("Priority");
-			String references = spreadSheetRow.get("Environment To Be Tested");
-			String goals = spreadSheetRow.get("ID");
-			String category = spreadSheetRow.get("Category");
-			String title = spreadSheetRow.get("Summary");
-			String steps = spreadSheetRow.get("Details");
-			String type = spreadSheetRow.get("Access Level verification"); 
-			String estimate = spreadSheetRow.get("Effort for Manual Testing[Min]");
-			String automated = spreadSheetRow.get("Automation Done(Yes/No/In Progress)");
+			String defaultAction = "";
+			String scenario = spreadSheetRow.get("Scenario/Module");
+			String summary = spreadSheetRow.get("Summary");
+			String testSteps = spreadSheetRow.get("Test Steps");
+			String expectedResult = spreadSheetRow.get("Expected Result");
+			String actualResult = spreadSheetRow.get("Actual Result");
+			String testData = spreadSheetRow.get("Test Data");
+			String preconditions = spreadSheetRow.get("Preconditions");
+			String testCaseType = spreadSheetRow.get("Test Case Type");
+			String priority = spreadSheetRow.get("Priority/Severifty");
+			String isAutomated = spreadSheetRow.get("Automated (Y/N)");
+			String result = spreadSheetRow.get("Result (Pass/Fail)");
+			String action = spreadSheetRow.get("Action");
+			int sectionID = Integer.valueOf(spreadSheetRow.get("Section_ID"));
 
-			if(title == null || title.trim().length() == 0)
-				title = "Title is missing on SpreadSheet"; 
-			String testCaseExpectedResult = spreadSheetRow.get("Expected result");
-			int sectionID = 11;
-			SimpleUtils.updateTestCase(title,priority, references, goals, category, steps,testCaseExpectedResult, 
-					type, estimate, automated, sectionID);
-			break;
+			if(action != null && action.trim().length() > 0)
+				 defaultAction = action.toLowerCase();
+			
+			if(summary == null || summary.trim().length() == 0)
+				summary = "Title is missing on SpreadSheet"; 
+			
+			if(defaultAction.contains("update"))
+				SimpleUtils.updateTestCase(scenario , summary, testSteps, expectedResult, actualResult, testData, 
+						preconditions, testCaseType, priority, isAutomated, result, action, sectionID);
+		}
+	}
+	
+	@UseAsTestRailId(testRailId = 4)
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TestRail API: Delete Test Cases.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void deleteTestRailTestCaseAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/TCs_Legion.xlsx", "Schedule>Schedule");
+		for(HashMap<String, String> spreadSheetRow : spreadSheetData)
+		{
+			String defaultAction = "";
+		    HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
+			int projectId = Integer.valueOf(testRailConfig.get("TEST_RAIL_PROJECT_ID"));
+			String title = spreadSheetRow.get("Summary");
+			String action = spreadSheetRow.get("Action");
+			int sectionID = Integer.valueOf(spreadSheetRow.get("Section_ID"));
+			if(action != null && action.trim().length() > 0)
+				 defaultAction = action.toLowerCase();
+			
+			if(defaultAction.contains("remove"))
+				SimpleUtils.deleteTestCaseByTitle(title, projectId, sectionID);
 		}
 	}
 	
