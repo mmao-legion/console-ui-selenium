@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.SimpleLayout;
+import org.json.simple.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
@@ -26,6 +27,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.annotations.UseAsTestRailId;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.LegionRestAPI;
 import com.legion.utils.SimpleUtils;
 import com.legion.utils.SpreadSheetUtils;
 
@@ -750,6 +752,26 @@ public class TimeSheetTest extends TestBase{
 			if(defaultAction.contains("remove"))
 				SimpleUtils.deleteTestCaseByTitle(title, projectId, sectionID);
 		}
+	}
+	
+	@UseAsTestRailId(testRailId = 4)
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TestRail API: Delete Test Cases.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void getResponseFromLegionRestAPIAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+		
+		Map<String, Object> requestParams = new HashMap<String, Object>();
+		requestParams.put("enterpriseName", "KendraScott2"); // Cast
+		requestParams.put("sourceSystem", "legion");
+		requestParams.put("userName", "Ida.D");
+		requestParams.put("passwordPlainText", "Ida.D");
+		String requestURL = "https://enterprise-stage.legion.work/legion/authentication/login";
+		JSONObject legionResponse = LegionRestAPI.getLegionAPIResponse(requestURL , requestParams);
+		System.out.println("Response Time");
+		System.out.println(legionResponse);
 	}
 	
 }

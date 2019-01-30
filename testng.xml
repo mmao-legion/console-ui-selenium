@@ -7,17 +7,67 @@
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
    
-   <test name="Time Sheet Page">
+   <!-- <test name="Time Sheet Page">
     <classes>
        <class name="com.legion.tests.core.TimeSheetTest">
       	<methods>
            <include name="deleteTestRailTestCaseAsStoreManager"/>
            <include name="addTestRailTestCaseAsStoreManager"/>
-           <include name="updateTestRailTestCaseAsStoreManager"/>
+           <include name="getResponseFromLegionRestAPIAsStoreManager"/>
+        </methods>
+      </class>
+    </classes>
+  </test>  -->
+  
+  
+   <test name="Controls New UI Test">
+    <classes>
+       <class name="com.legion.tests.core.ControlsNewUITest">
+      	<methods>
+           <include name="updateUserLocationAsStoreManager"/>
         </methods>
       </class>
     </classes>
   </test> 
+  
+  <!-- <test name="Schedule New UI Test">
+    <classes>
+       <class name="com.legion.tests.core.ScheduleNewUITest">
+      	<methods>
+            <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/>
+			<include name="viewAndFilterScheduleWithGroupByAllInWeekViewAsStoreManager"/>
+			<include name="viewAndFilterScheduleWithGroupByTMsInWeekViewAsStoreManager"/>
+			<include name="viewAndFilterScheduleWithGroupByWorkRoleDayViewAsStoreManager"/>
+			<include name="verifyUnpublishedScheduleVisibilityForTMsAndTLsAsStoreManager"/>
+			<include name="verifyAndPublishScheduleAsStoreManager"/>
+			<include name="editPopUpScheduleShouldNotPresentAsStoreManager"/>
+			<include name="editOpenShiftScheduleAsStoreManager"/>
+			<include name="editManualShiftScheduleAsStoreManager"/>
+			<include name="editAssignTeamScheduleAsStoreManager"/>
+			<include name="verifyScheduleLabelHours"/>
+			<include name="navigateToCurrentAndOtherWeekAsStoreManager"/>
+			<include name="viewAndFilterScheduleWithGroupByAndNavigateToOtherTabAsStoreManager"/>
+			<include name="verifyRequiredActionToConsoleMessageAfterRefreshAsStoreManager"/>
+			<include name="verifyComplianceSmartcardAfterExdendingAShiftToOTAsStoreManager"/>
+			<include name="disableWeekViewNavOutsideSchPlanningWindowStoreManager"/>
+			<include name="verifyFutureScheduleWeekDateAfteRefreshBrowserAsStoreManager"/>
+			<include name="verifyTMCanViewNewScheduleAndOffersAsStoreManager"/>
+			<include name="verifySmartCardPanelForTMAndTLAsTeamLead"/>
+			<include name="verifyWorkRoleFilterPreserveSelectionOnScheduleGeneratePageAsStoreManager"/>
+			<include name="verifyScheduleOverviewPageCalendarMonthsAndYearsAsStoreManager"/>
+			<include name="verifyUnAssignedAndComplianceSmartCardAsStoreManager"/>
+			<include name="validatingGenerateScheduleStoreManager"/>
+			<include name="verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager"/>
+			<include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>
+			<include name="validateGuidanceScheduleAndOtherHoursOnDashBoardForAllLocationAsStoreManager"/>
+			<include name="validateWeatherForecastOnSchedulePageAsStoreManager"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+   -->
+  
+  
 </suite> <!-- Suite -->
 
 

@@ -1,6 +1,7 @@
 package com.legion.pages.pagefactories;
 
 import com.legion.pages.core.ConsoleAnalyticsPage;
+import com.legion.pages.core.ConsoleControlsNewUIPage;
 import com.legion.pages.core.ConsoleControlsPage;
 import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.pages.core.ConsoleSchedulePage;
@@ -15,6 +16,7 @@ import com.legion.pages.core.ConsoleUserAuthorizationPage;
 import com.legion.pages.core.ConsoleDashboardPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.pages.AnalyticsPage;
+import com.legion.pages.ControlsNewUIPage;
 import com.legion.pages.ControlsPage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LocationSelectorPage;
@@ -103,5 +105,10 @@ public class ConsoleWebPageFactory implements PageFactory {
 	@Override
 	public TimeSheetPage createTimeSheetPage() {
 		return new ConsoleTimeSheetPage();
+	}
+	
+	@Override
+	public ControlsNewUIPage createControlsNewUIPage() {
+		return new ConsoleControlsNewUIPage();
 	}
 }
