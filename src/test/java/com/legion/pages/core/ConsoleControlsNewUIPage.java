@@ -4,14 +4,17 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ControlsNewUIPage;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
 
@@ -29,51 +32,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "div.header-navigation-label")
 	private WebElement controlsPageHeaderLabel;
 	
-	String timeSheetHeaderLabel = "Controls";
-	
-	@Override
-	public void clickOnControlsConsoleMenu() throws Exception {
-		if(isElementLoaded(controlsConsoleMenuDiv))
-			click(controlsConsoleMenuDiv);
-		else
-			SimpleUtils.fail("Controls Console Menu not loaded Successfully!", false);
-	}
-
-
-	@Override
-	public boolean isControlsPageLoaded() throws Exception {
-		if(isElementLoaded(controlsPageHeaderLabel))
-			if(controlsPageHeaderLabel.getText().toLowerCase().contains(timeSheetHeaderLabel.toLowerCase())) {
-				SimpleUtils.pass("Controls Page loaded Successfully!");
-				return true;
-			}
-		return false;
-	}
-
-
-	@FindBy(css = "input-field[placeholder=\"Global\"]")
-	private WebElement globalLocationButton;
-	
-	@Override
-	public void clickOnGlobalLocationButton() throws Exception {
-		
-		if(isElementLoaded(globalLocationButton))
-			click(globalLocationButton);
-		else
-			SimpleUtils.fail("Controls Page: Global Location Button not Loaded!", false);
-	}
-
-
 	@FindBy(css = "lg-dashboard-card[title=\"Company Profile\"]")
 	private WebElement companyProfileCard;
-	
-	@Override
-	public void clickOnControlsCompanyProfileCard() throws Exception {
-		if(isElementLoaded(companyProfileCard))
-			click(companyProfileCard);
-		else
-			SimpleUtils.fail("Controls Page: Company Profile Card not Loaded!", false);
-	}
 	
 	@FindBy(css = "input[aria-label=\"Company Name\"]")
 	private WebElement locationCompanyNameField;
@@ -120,13 +80,78 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	
 	@FindBy(css = "lg-button[label=\"Save\"]")
 	private List<WebElement> locationProfileSaveBtn;
+	
+	@FindBy(css = "lg-dashboard-card[title=\"Working Hours\"]")
+	private WebElement workingHoursCard;
+	
+	@FindBy(css = "collapsible[block-title=\"'Regular'\"]")
+	private WebElement regularHoursBlock;
+	
+	@FindBy(css = "day-working-hours[id=\"day.dayOfTheWeek\"]")
+	private List<WebElement> regularHoursRows;
+	
+	@FindBy(css = "input-field[type=\"checkbox\"]")
+	private List<WebElement> regularHoursDaysCheckboxs;
+	
+	@FindBy(css = "div.lgn-time-slider-post")
+	private List<WebElement> editRegularHoursSliders;
+	
+	@FindBy(css = "lg-button[ng-click=\"saveWorkingHours()\"]")
+	private WebElement saveWorkersHoursBtn;
+	
+	@FindBy(css = "lg-button[ng-click=\"saveWorkdayHours()\"]")
+	private WebElement saveAllRegularHoursBtn;
+	
+	
+	String timeSheetHeaderLabel = "Controls";
+	
+	@Override
+	public void clickOnControlsConsoleMenu() throws Exception {
+		if(isElementLoaded(controlsConsoleMenuDiv))
+			click(controlsConsoleMenuDiv);
+		else
+			SimpleUtils.fail("Controls Console Menu not loaded Successfully!", false);
+	}
+
+
+	@Override
+	public boolean isControlsPageLoaded() throws Exception {
+		if(isElementLoaded(controlsPageHeaderLabel))
+			if(controlsPageHeaderLabel.getText().toLowerCase().contains(timeSheetHeaderLabel.toLowerCase())) {
+				SimpleUtils.pass("Controls Page loaded Successfully!");
+				return true;
+			}
+		return false;
+	}
+
+
+	@FindBy(css = "input-field[placeholder=\"Global\"]")
+	private WebElement globalLocationButton;
+	
+	@Override
+	public void clickOnGlobalLocationButton() throws Exception {
+		
+		if(isElementLoaded(globalLocationButton))
+			click(globalLocationButton);
+		else
+			SimpleUtils.fail("Controls Page: Global Location Button not Loaded!", false);
+	}
+
+	
+	@Override
+	public void clickOnControlsCompanyProfileCard() throws Exception {
+		if(isElementLoaded(companyProfileCard))
+			click(companyProfileCard);
+		else
+			SimpleUtils.fail("Controls Page: Company Profile Card not Loaded!", false);
+	}
+	
 
 	@Override
 	public void updateUserLocationProfile(String companyName, String businessAddress, String city, String state,
 			String country, String zipCode, String timeZone, String website, String firstName, String lastName,
 			String email, String phone) throws Exception {
 		
-		System.out.println("updateUserLocationProfile called");
 		locationCompanyNameField.clear();
 		locationCompanyNameField.sendKeys(companyName);
 		
@@ -208,13 +233,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Controls Page: Updating Location Profile - 'City' not updated.", true);
 		}
 		
-		/*Select drpCountry = new Select(locationCountryField);
-		if(! drpCountry.getFirstSelectedOption().getText().contains(country))
-		{
-			isProfileValueUpdated = false;
-			SimpleUtils.fail("Controls Page: Updating Location Profile - 'Country' not updated.", true);
-		}*/
-		
 		try {
 			Select drpStates = new Select(locationStateField);		
 			if(! drpStates.getFirstSelectedOption().getText().contains(state))
@@ -244,13 +262,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				SimpleUtils.fail("Controls Page: Updating Location Profile - 'Postal Code' not updated.", true);
 			}
 		}
-		
-		
-		/*if(! locationZipCodeField.getAttribute("value").contains(zipCode))
-		{
-			isProfileValueUpdated = false;
-			SimpleUtils.fail("Controls Page: Updating Location Profile - 'Zip Code' not updated.", true);
-		}*/
 		
 		Select drpTimeZone = new Select(locationTimeZoneField);
 		if(! drpTimeZone.getFirstSelectedOption().getText().contains(timeZone))
@@ -292,4 +303,112 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		return isProfileValueUpdated;
 	}
 	
+	@Override
+	public void clickOnControlsWorkingHoursCard() throws Exception {
+		if(isElementLoaded(workingHoursCard))
+			click(workingHoursCard);
+		else
+			SimpleUtils.fail("Controls Page: Working Hours Card not Loaded!", false);
+	}
+	
+
+	@Override
+	public void updateControlsRegularHours(String isStoreClosed, String openingHours, String closingHours, String day)
+			throws Exception {
+		openingHours = openingHours.replace(" ", "");
+		closingHours = closingHours.replace(" ", "");
+		WebElement collapsibleHeader = regularHoursBlock.findElement(By.cssSelector("div.collapsible.row"));
+		boolean isRegularHoursSectionOpened = collapsibleHeader.getAttribute("class").contains("open");
+		if(! isRegularHoursSectionOpened)
+			click(regularHoursBlock);
+		
+		if(regularHoursRows.size() > 0)
+		{
+			for(WebElement regularHoursRow : regularHoursRows)
+			{
+				if(regularHoursRow.getText().toLowerCase().contains(day.toLowerCase()))
+				{
+					WebElement regularHoursEditBtn = regularHoursRow.findElement(By.cssSelector("lg-button[label=\"Edit\"]"));
+					if(isElementLoaded(regularHoursEditBtn))
+					{
+						click(regularHoursEditBtn);
+
+						// Select Opening Hours
+						int openingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(0).getText().split(":")[0]);
+						if(editRegularHoursSliders.get(0).getText().toLowerCase().contains("pm"))
+							openingHourOnSlider = openingHourOnSlider + 12;
+						int openingHourOnJson = Integer.valueOf(openingHours.split(":")[0]);
+						if(openingHours.toLowerCase().contains("pm"))
+							openingHourOnJson = openingHourOnJson + 12;
+						int sliderOffSet = 5;
+						
+						if(openingHourOnSlider > openingHourOnJson)
+							sliderOffSet = -5;
+						
+						while(! editRegularHoursSliders.get(0).getText().toLowerCase().contains(openingHours.toLowerCase()))
+						{
+							moveDayViewCards(editRegularHoursSliders.get(0), sliderOffSet);
+						}
+						
+						// Select Closing Hours
+						int closingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(1).getText().split(":")[0]);
+						if(editRegularHoursSliders.get(1).getText().toLowerCase().contains("pm"))
+							closingHourOnSlider = closingHourOnSlider + 12;
+						int closingHourOnJson = Integer.valueOf(closingHours.split(":")[0]);
+						if(closingHours.toLowerCase().contains("pm"))
+							closingHourOnJson = closingHourOnJson + 12;
+						if(closingHourOnSlider > closingHourOnJson)
+							sliderOffSet = -5;
+						else
+							sliderOffSet = 5;
+
+						while(! editRegularHoursSliders.get(1).getText().toLowerCase().contains(closingHours.toLowerCase()))
+						{
+							moveDayViewCards(editRegularHoursSliders.get(1), sliderOffSet);
+						}
+						
+						if(isElementLoaded(saveWorkersHoursBtn))
+						{
+							click(saveWorkersHoursBtn);
+							SimpleUtils.pass("Controls Working Hours Section: Regular Hours Updated for the day ('"+ day  +"'). ");
+						}
+						else
+							SimpleUtils.fail("Controls Working Hours Section: Editing Regular Hours 'Save' Button not loaded.", true);
+					}
+					else {
+						SimpleUtils.fail("Controls Working Hours Section: Regular Hours 'Edit' Button not loaded.", true);
+					}
+				}
+				
+			}
+		}
+		else {
+			SimpleUtils.fail("Controls Working Hours Section: Regular Hours not loaded.", true);
+		}
+	}
+	
+	
+	public void moveDayViewCards(WebElement webElement, int xOffSet)
+	{
+		Actions builder = new Actions(MyThreadLocal.getDriver());
+		builder.moveToElement(webElement)
+	         .clickAndHold()
+	         .moveByOffset(xOffSet, 0)
+	         .release()
+	         .build()
+	         .perform();
+	}
+	
+	
+	@Override
+	public void clickOnSaveRegularHoursBtn() throws Exception
+	{
+		if(isElementLoaded(saveAllRegularHoursBtn))
+		{
+			click(saveAllRegularHoursBtn);
+			SimpleUtils.pass("Controls Working Hours Section: Regular Hours Saved successfully. ");
+		}else {
+			SimpleUtils.fail("Controls Working Hours Section: Regular Hours 'Save' Button not loaded.", true);
+		}
+	}
 }

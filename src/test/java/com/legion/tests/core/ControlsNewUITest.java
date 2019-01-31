@@ -1,7 +1,9 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -58,10 +60,10 @@ public class ControlsNewUITest extends TestBase{
 	//
 	
 	
-	@Automated(automated =  "Automated")
-	@Owner(owner = "Naval")
+  @Automated(automated =  "Automated")
+  @Owner(owner = "Naval")
   @Enterprise(name = "KendraScott2_Enterprise")
-  @TestName(description = "TP-119: Automation TA module : validate if it is possible to delete a clock in entry.")
+  @TestName(description = "TP-139: Controls :- User should be able to save data for Company Profile.")
   @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
   public void updateUserLocationAsInternalAdmin(String browser, String username, String password, String location)
   		throws Exception {
@@ -93,5 +95,34 @@ public class ControlsNewUITest extends TestBase{
     		  timeZone, website, firstName, lastName, email, phone);
 	  if(isUserLocationProfileUpdated)
 		  SimpleUtils.pass("User Location Profile Updated successfully.");
+  }
+  
+  
+  @Automated(automated =  "Automated")
+  @Owner(owner = "Naval")
+  @Enterprise(name = "KendraScott2_Enterprise")
+  @TestName(description = "TP-140 : Controls - User should be able to edit Controls > Working Hours successfully.")
+  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+  public void updateWorkingHoursAsInternalAdmin(String browser, String username, String password, String location)
+  		throws Exception {
+			
+	  ArrayList<HashMap< String,String>> regularWorkingHours = JsonUtil.getArrayOfMapFromJsonFile("src/test/resources/ControlsRegularWorkingHours.json");
+      DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+      SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);      
+      ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+      controlsNewUIPage.clickOnControlsConsoleMenu();
+      SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+      controlsNewUIPage.clickOnGlobalLocationButton();
+      controlsNewUIPage.clickOnControlsWorkingHoursCard();
+      for(HashMap<String, String> eachRegularHours : regularWorkingHours)
+      {
+    	  String isStoreClosed = eachRegularHours.get("isStoreClosed");
+	      String openingHours = eachRegularHours.get("Opening_Hours");
+	      String closingHours = eachRegularHours.get("Closing_Hours");
+	      String day = eachRegularHours.get("Day");
+    	  controlsNewUIPage.updateControlsRegularHours(isStoreClosed, openingHours, closingHours, day);
+      }
+      controlsNewUIPage.clickOnSaveRegularHoursBtn();
+
   }
 }

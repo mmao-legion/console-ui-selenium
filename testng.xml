@@ -24,13 +24,14 @@
     <classes>
        <class name="com.legion.tests.core.ControlsNewUITest">
       	<methods>
-           <include name="updateUserLocationAsStoreManager"/>
+          <include name="updateUserLocationAsInternalAdmin"/> 
+           <include name="updateWorkingHoursAsInternalAdmin"/> 
         </methods>
       </class>
     </classes>
-  </test> 
+  </test>  
   
-  <!-- <test name="Schedule New UI Test">
+  <!--  <test name="Schedule New UI Test">
     <classes>
        <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
@@ -65,7 +66,7 @@
       </class>
     </classes>
   </test>
-   -->
+    -->
   
   
 </suite> <!-- Suite -->

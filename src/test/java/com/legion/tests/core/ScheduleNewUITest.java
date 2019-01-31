@@ -197,48 +197,73 @@ public class ScheduleNewUITest extends TestBase{
 
 	    @Automated(automated =  "Automated")
 		@Owner(owner = "Naval")
-	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @Enterprise(name = "Coffee_Enterprise")
 	    @TestName(description = "LEG-2424: As a store manager, should be able to review past week's schedule and generate this week or next week's schedule")
 	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	    public void reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager(String browser, String username, String password, String location)
 	    		throws Exception {
+	    	System.out.println("Test 1");
 	    	int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
 //	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
-	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-	        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-	        schedulePage.clickOnScheduleConsoleMenuItem();
-	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
-	        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
-	        //Schedule overview should show 5 week's schedule
+	    	System.out.println("Test 2");
+	    	DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	    	System.out.println("Test 3");
+	    	SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	    	System.out.println("Test 4");
+	    	schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+	    	System.out.println("Test 5");
+	    	schedulePage.clickOnScheduleConsoleMenuItem();
+	    	System.out.println("Test 6");
+	    	schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	    	System.out.println("Test 7");
+	    	SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+	    	System.out.println("Test 8");
+	    	//Schedule overview should show 5 week's schedule
 	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+	        System.out.println("Test 9");
 	        List<String> scheduleOverviewWeeksStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+	        System.out.println("Test 10");
 	        int overviewWeeksStatusCount = scheduleOverviewWeeksStatus.size();
+	        System.out.println("Test 11");
 	        SimpleUtils.assertOnFail("Schedule overview Page not displaying upcoming 5 weeks",(overviewWeeksStatusCount == overviewTotalWeekCount) , true);
+	        System.out.println("Test 12");
 	        for( int index = 0;  index<scheduleOverviewWeeksStatus.size(); index++)
 	        {
 //		        SimpleUtils.assertOnFail("Schedule overview Page upcoming week on index '"+index+"' is 'Not Available'",(! overviewWeeksStatusText.contains(overviewWeeksStatus.NotAvailable.getValue())) , true);
 		        SimpleUtils.report("Schedule overview Page upcoming week on index '"+index+"' is '"+scheduleOverviewWeeksStatus.get(index)+"'");
 	        }
 	        //Must have at least "Past Week" schedule published
+	        System.out.println("Test 13");
 	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+	        System.out.println("Test 14");
 	        schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
+	        System.out.println("Test 15");
 	        SimpleUtils.assertOnFail("Schedule Page: Past week not generated!",schedulePage.isWeekGenerated() , true);
+	        System.out.println("Test 16");
 	        SimpleUtils.assertOnFail("Schedule Page: Past week not Published!",schedulePage.isWeekPublished() , true);
+	        System.out.println("Test 17");
 	        //The schedules that are already published should remain unchanged
 	        schedulePage.clickOnDayView();
+	        System.out.println("Test 18");
 	        schedulePage.clickOnEditButton();
+	        System.out.println("Test 19");
 	        SimpleUtils.assertOnFail("User can add new shift for past week", (! schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
+	        System.out.println("Test 20");
 	        schedulePage.clickOnCancelButtonOnEditMode();
+	        System.out.println("Test 21");
 	        // No generate button for Past Week
 	        SimpleUtils.assertOnFail("Generate Button displaying for Past week", (! schedulePage.isGenerateButtonLoaded()) , true);
-
+	        System.out.println("Test 22");
 	        //there are at least one week in the future where schedule has not yet been published
 	        schedulePage.clickOnWeekView();
+	        System.out.println("Test 23");
 	        schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+	        System.out.println("Test 24");
 	        for(int index = 1; index < weekCount.values().length; index++)
 	        {
+	        	System.out.println("Test 25");
 	        	schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+	        	System.out.println("Test 26");
 	        	if(! schedulePage.isWeekGenerated()){
         			ExtentTestManager.getTest().log(Status.INFO, "Schedule Page: Future week '"+schedulePage.getScheduleWeekStartDayMonthDate()+"' not Generated!");
 	        	}
@@ -247,6 +272,7 @@ public class ScheduleNewUITest extends TestBase{
 	        			ExtentTestManager.getTest().log(Status.INFO, "Schedule Page: Future week '"+schedulePage.getScheduleWeekStartDayMonthDate()+"' not Published!");
 	        		}
 	        	}
+	        	System.out.println("Test 27");
 	        }
 	    }
 
