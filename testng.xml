@@ -20,7 +20,7 @@
   </test>  -->
   
   
-   <test name="Controls New UI Test">
+   <!-- <test name="Controls New UI Test">
     <classes>
        <class name="com.legion.tests.core.ControlsNewUITest">
       	<methods>
@@ -29,44 +29,46 @@
         </methods>
       </class>
     </classes>
-  </test>  
+  </test>   -->
   
-  <!--  <test name="Schedule New UI Test">
+  <test name="Schedule New UI Test">
     <classes>
        <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
             <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/>
 			<include name="viewAndFilterScheduleWithGroupByAllInWeekViewAsStoreManager"/>
-			<include name="viewAndFilterScheduleWithGroupByTMsInWeekViewAsStoreManager"/>
+			<include name="viewAndFilterScheduleWithGroupByWorkRoleInWeekViewAsStoreManager"/> 
+            <include name="viewAndFilterScheduleWithGroupByTMsInWeekViewAsStoreManager"/>  
+			<include name="viewAndFilterScheduleWithGroupByAllDayViewAsStoreManager"/>
 			<include name="viewAndFilterScheduleWithGroupByWorkRoleDayViewAsStoreManager"/>
-			<include name="verifyUnpublishedScheduleVisibilityForTMsAndTLsAsStoreManager"/>
-			<include name="verifyAndPublishScheduleAsStoreManager"/>
-			<include name="editPopUpScheduleShouldNotPresentAsStoreManager"/>
-			<include name="editOpenShiftScheduleAsStoreManager"/>
-			<include name="editManualShiftScheduleAsStoreManager"/>
+			<include name="viewAndFilterScheduleWithGroupByTMsDayViewAsStoreManager"/> 
+			<include name="verifyUnpublishedScheduleVisibilityForTMsAndTLsAsStoreManager"/>  
+			<include name="verifyAndPublishScheduleAsStoreManager"/>  
+			<include name="editPopUpScheduleShouldNotPresentAsStoreManager"/> 
+			<include name="editOpenShiftScheduleAsStoreManager"/> 
+			<include name="editManualShiftScheduleAsStoreManager"/> 
 			<include name="editAssignTeamScheduleAsStoreManager"/>
-			<include name="verifyScheduleLabelHours"/>
-			<include name="navigateToCurrentAndOtherWeekAsStoreManager"/>
-			<include name="viewAndFilterScheduleWithGroupByAndNavigateToOtherTabAsStoreManager"/>
+			<include name="navigateToCurrentAndOtherWeekAsStoreManager"/>  
+			<include name="viewAndFilterScheduleWithGroupByAndNavigateToOtherTabAsStoreManager"/> 
 			<include name="verifyRequiredActionToConsoleMessageAfterRefreshAsStoreManager"/>
 			<include name="verifyComplianceSmartcardAfterExdendingAShiftToOTAsStoreManager"/>
 			<include name="disableWeekViewNavOutsideSchPlanningWindowStoreManager"/>
 			<include name="verifyFutureScheduleWeekDateAfteRefreshBrowserAsStoreManager"/>
-			<include name="verifyTMCanViewNewScheduleAndOffersAsStoreManager"/>
-			<include name="verifySmartCardPanelForTMAndTLAsTeamLead"/>
-			<include name="verifyWorkRoleFilterPreserveSelectionOnScheduleGeneratePageAsStoreManager"/>
+			<include name="verifyTMCanViewNewScheduleAndOffersAsStoreManager"/> 
+			<include name="verifySmartCardPanelForTMAndTLAsTeamLead"/> 
+			<include name="verifyWorkRoleFilterPreserveSelectionOnScheduleGeneratePageAsStoreManager"/> 
 			<include name="verifyScheduleOverviewPageCalendarMonthsAndYearsAsStoreManager"/>
 			<include name="verifyUnAssignedAndComplianceSmartCardAsStoreManager"/>
 			<include name="validatingGenerateScheduleStoreManager"/>
 			<include name="verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager"/>
+			<include name="validateScheduleGenerationFunctionalityAsStoreManager"/> 
 			<include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>
-			<include name="validateGuidanceScheduleAndOtherHoursOnDashBoardForAllLocationAsStoreManager"/>
-			<include name="validateWeatherForecastOnSchedulePageAsStoreManager"/>
+			<include name="validateGuidanceScheduleAndOtherHoursOnDashBoardForAllLocationAsStoreManager"/> 
+			<include name="validateWeatherForecastOnSchedulePageAsStoreManager"/> 
         </methods>
       </class>
     </classes>
   </test>
-    -->
   
   
 </suite> <!-- Suite -->
