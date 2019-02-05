@@ -7,12 +7,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -168,15 +163,14 @@ public class BasePage {
     public void mouseHover(WebElement element)
     {
         Actions actions = new Actions(getDriver());
-        actions.moveToElement(element).click().build().perform();
-        SimpleUtils.report("Clicked on " + element.getText());
+        actions.moveToElement(element,10,15).click().build().perform();
     }
+
     
     public void mouseHoverDragandDrop(WebElement fromDestination, WebElement toDestination)
     {
         Actions actions = new Actions(getDriver());
         actions.dragAndDrop(fromDestination, toDestination).build().perform();
-//        SimpleUtils.report("Menu expanded on Hovering" + element.getText());
     }
    
 }

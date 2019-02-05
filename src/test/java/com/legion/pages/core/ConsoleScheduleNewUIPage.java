@@ -208,7 +208,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(css=".tma-staffing-option-radio-button")
 	private List<WebElement> radioBtnStaffingOptions;
 	
-	@FindBy(xpath="//div[contains(@class,'sch-day-view-right-gutter-text')]//parent::div//parent::div/parent::div[contains(@class,'sch-shift-container')]")
+	@FindBy(xpath="//div[contains(@class,'sch-day-view-right-gutter-text')]//parent::div//parent::div/parent::div[contains(@class,'sch-shift-container')]//div[@class='break-container']")
 	private List<WebElement> shiftContainer;
 
 	@FindBy(css="button.tma-action")
@@ -1028,11 +1028,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		{
 		
 			try {
-				System.out.println(ScheduleCalendarDayLabels.get(i).getText());
 				click(ScheduleCalendarDayLabels.get(i));
 				clickOnEditButton();
 				clickOnCancelButtonOnEditMode();
-//						click(ScheduleCalendarDayLabel);
 				} catch (Exception e) {
 					SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable", true);
 				}
@@ -1125,10 +1123,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 					if(i == (shiftStartingCount + Integer.parseInt(shiftTime))){
 						WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child("+(i+Integer.parseInt(shiftTime))+")"));
 						mouseHoverDragandDrop(sliderNotchEnd,element);
-						MyThreadLocal.setScheduleHoursEndTime((i-2)+Integer.parseInt(shiftTime));
+						MyThreadLocal.setScheduleHoursEndTime(customizeShiftEnddayLabel.getText());
 						break;
 					}
-					
 				}
 				
 			}else{
@@ -1141,10 +1138,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 					if(i == (shiftStartingCount + Integer.parseInt(shiftTime))){
 						WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child("+(i+Integer.parseInt(shiftTime))+")"));
 						mouseHoverDragandDrop(sliderNotchStart,element);
-						MyThreadLocal.setScheduleHoursStartTime((i-2)+Integer.parseInt(shiftTime));
+						MyThreadLocal.setScheduleHoursStartTime(customizeShiftStartdayLabel.getText());
 						break;
 					}
-					
 				}
 				
 			}else{
@@ -1154,22 +1150,22 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	}
 	
 	public HashMap<String, String> calculateHourDifference() throws Exception {
-		int scheduleHoursDifference = 0;
+		Float scheduleHoursDifference = 0.0f;
 		HashMap<String, String> shiftTimeSchedule = new HashMap<String, String>();
 		if(isElementLoaded(sliderNotchStart) && sliderDroppableCount.size()>0){
-			int scheduledHoursStartTime = MyThreadLocal.getScheduleHoursStartTime();
-			int scheduledHoursEndTime = MyThreadLocal.getScheduleHoursEndTime();
-			scheduleHoursDifference = (scheduledHoursEndTime - scheduledHoursStartTime)/2;
+			String scheduledHoursStartTime = MyThreadLocal.getScheduleHoursStartTime();
+			String scheduledHoursEndTime = MyThreadLocal.getScheduleHoursEndTime();
+			scheduleHoursDifference =  SimpleUtils.convertDateIntotTwentyFourHrFormat(scheduledHoursStartTime , scheduledHoursEndTime);
 			String[] customizeStartTimeLabel = customizeShiftStartdayLabel.getText().split(":");
 			String[] customizeEndTimeLabel = customizeShiftEnddayLabel.getText().split(":");
 			SimpleUtils.pass("Schedule hour difference is "+scheduleHoursDifference);
-			shiftTimeSchedule.put("ScheduleHrDifference",Integer.toString(scheduleHoursDifference));
+			shiftTimeSchedule.put("ScheduleHrDifference",Float.toString(scheduleHoursDifference));
 			shiftTimeSchedule.put("CustomizeStartTimeLabel",customizeStartTimeLabel[0]);
 			shiftTimeSchedule.put("CustomizeEndTimeLabel",customizeEndTimeLabel[0]);
 		}
-		return shiftTimeSchedule; 
+		return shiftTimeSchedule;
 	}
-	
+
 	public void selectWorkRole(String workRoles) throws Exception{
 		if(isElementLoaded(btnWorkRole)){
 			  	click(btnWorkRole);
@@ -1260,13 +1256,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 					 String[] arrayPreviousKey = previousKey.split(" ");
 					 count =count + 1;
 					 if(shiftTimeSchedule.get("CustomizeStartTimeLabel").equals(arrayPreviousKey[0])){
-						 for(int j=0;j<Integer.parseInt(shiftTimeSchedule.get("ScheduleHrDifference"));j++){
+						 for(int j=0;j<Float.parseFloat(shiftTimeSchedule.get("ScheduleHrDifference"));j++){
 							 count = count + 1;
 							 gridDayHourTeamCount.add(val.get(count-2));
-							 if(j==Integer.parseInt(shiftTimeSchedule.get("ScheduleHrDifference"))-1){
-								 break exit;
-							 }
 						 }
+						 break exit;
 					 }
 				 }
 			}
@@ -1286,13 +1280,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 					 String[] arrayPreviousKey = previousKey.split(" ");
 					 count =count + 1;
 					 if(shiftTiming.get("CustomizeStartTimeLabel").equals(arrayPreviousKey[0])){
-						 for(int j=0;j<Integer.parseInt(shiftTiming.get("ScheduleHrDifference"));j++){
+						 for(int j=0;j<Float.parseFloat(shiftTiming.get("ScheduleHrDifference"));j++){
 							 count = count + 1;
 							 gridDayHourTeamCount.add(val.get(count-2));
-							 if(j==Integer.parseInt(shiftTiming.get("ScheduleHrDifference"))-1){
-								 break exit;
-							 }
 						 }
+						 break exit;
 					 }
 				 }
 			}
@@ -2166,6 +2158,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		if(shiftContainer.size()!=0 && index<=shiftContainer.size() && isElementLoaded(shiftContainer.get(0))){
 			for(int i=0;i<index;i++){
 				mouseHover(shiftContainer.get(i));
+				waitForSeconds(2);
 //				click(shiftContainer.get(i));
 				deleteShift();
 				waitForSeconds(2);

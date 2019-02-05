@@ -608,7 +608,6 @@ public class ScheduleNewUITest extends TestBase{
 	    public void editPopUpScheduleShouldNotPresentAsStoreManager(String browser, String username, String password, String location)
 	    		throws Exception {
 	    	int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
-//	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
 	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 	        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
