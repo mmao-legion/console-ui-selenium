@@ -88,4 +88,27 @@ public class JsonUtil {
         return parameterList;
 
     }
+    
+    public static ArrayList<HashMap< String,String>> getArrayOfMapFromJsonFile(String pathname) {
+    	ArrayList<HashMap< String,String>> parameterList = null;
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            parameterList = mapper.readValue(new File(pathname),
+                    new TypeReference<ArrayList<HashMap< String,String>>>() {
+                    });
+
+        } catch (JsonGenerationException e) {
+            System.err.println("The json configuration file is not valid. Please verify the file.");
+
+        } catch (JsonMappingException  e) {
+            System.err.println("The json configuration file is not valid. Please verify the file.");
+
+        } catch (IOException e) {
+            System.err.println("No configuration file available.");
+        }
+        return parameterList;
+
+    }
 }
