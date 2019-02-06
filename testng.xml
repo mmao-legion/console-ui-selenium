@@ -9,18 +9,38 @@
 
   
     <test name="Controls New UI Test">
-    <classes>
-       <class name="com.legion.tests.core.ControlsNewUITest">
-      	<methods>
-          <include name="updateUserLocationAsInternalAdmin"/>
-           <include name="updateWorkingHoursAsInternalAdmin"/>
-        </methods>
-      </class>
-    </classes>
-  </test>
+        <classes>
+            <class name="com.legion.tests.core.ControlsNewUITest">
+      	        <methods>
+                     <include name="updateUserLocationAsInternalAdmin"/>
+                    <include name="updateWorkingHoursAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Traffic Forecast for New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.TrafficForecastTest">
+                <methods>
+                    <include name="trafficForecastDataAsStoreManagerTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Staffing Guidance for New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.StaffingGuidanceTestKendraScott2">
+                <methods>
+                    <include name="staffingGuidanceDataAsStoreManagerTestKendraScott2"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 
 
-  <test name="Schedule New UI Test">
+    <test name="Schedule New UI Test">
     <classes>
        <class name="com.legion.tests.core.ScheduleNewUITest">
       	<methods>
@@ -51,7 +71,6 @@
 			<include name="verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager"/>
 			<include name="validateScheduleGenerationFunctionalityAsStoreManager"/>
 			<include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>
-
         </methods>
       </class>
     </classes>
