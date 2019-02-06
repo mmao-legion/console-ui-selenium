@@ -19,7 +19,7 @@
  "CHROME" : "Chrome",
  "FIREFOX" : "Firefox",
  "console_logs" : "false",
- "close_browser" : "false",
+ "close_browser" : "true",
  "show_report" : "false",
  "VERSION" : "68",
  "OS" : "WINDOW",
