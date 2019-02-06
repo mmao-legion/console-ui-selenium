@@ -21,6 +21,8 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -78,6 +80,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.legion.test.testrail.APIClient;
+import com.legion.test.testrail.APIException;
+
 import javax.imageio.ImageIO;
 
 import com.legion.tests.annotations.Enterprise;
@@ -98,8 +103,11 @@ import static com.legion.utils.MyThreadLocal.*;
 public abstract class TestBase {
 
     protected PageFactory pageFactory = null;
+    String TestID = null;
     public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json"); 
     private static ExtentReports extent = ExtentReportManager.getInstance();
+    public static final int TEST_CASE_PASSED_STATUS = 1;
+    public static final int TEST_CASE_FAILED_STATUS = 5;
 
     @BeforeClass
     protected void init () {
@@ -107,7 +115,7 @@ public abstract class TestBase {
     }
     
     @BeforeMethod(alwaysRun = true)
-    protected void initTestFramework(Method method) throws AWTException, IOException {
+    protected void initTestFramework(Method method) throws AWTException, IOException, APIException, JSONException {
     	Date date=new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
     	String testName = ExtentTestManager.getTestName(method);
@@ -279,6 +287,7 @@ public abstract class TestBase {
     	LoginPage loginPage = pageFactory.createConsoleLoginPage();
     	loginPage.loginToLegionWithCredential(username, Password);
     	LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+    	//locationSelectorPage.changeLocation(location);
 	    boolean isLoginDone = loginPage.isLoginDone();
 	    loginPage.verifyLoginDone(isLoginDone, location);
     }

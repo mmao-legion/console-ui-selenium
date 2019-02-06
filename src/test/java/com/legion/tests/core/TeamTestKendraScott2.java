@@ -1,8 +1,12 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
+import com.legion.pages.TeamPage;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -18,7 +22,7 @@ import com.legion.utils.SimpleUtils;
 public class TeamTestKendraScott2 extends TestBase{
 	
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-    
+	private static HashMap<String, String> searchDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/searchDetails.json");
 	@Override
 	  @BeforeMethod()
 	  public void firstTest(Method testMethod, Object[] params) throws Exception{
@@ -28,7 +32,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	  }
 	 @Automated(automated = "Manual")
 	 @Owner(owner = "Gunjan")
-	 @Enterprise(name = "Kendrascott2_Enterprise")
+	 @Enterprise(name = "KendraScott2_Enterprise")
 	 @TestName(description = "LEG-4978: In Team Page ,Coverage section is not displayed for LegionTech for Nov 4- Nov 10")
 	 @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	 public void coverageForTeamPageNotWorking(String username, String password, String browser, String location)
@@ -40,5 +44,24 @@ public class TeamTestKendraScott2 extends TestBase{
 	       SimpleUtils.fail("assert coverage page should load and show data",false);
 
 	  }
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "TP-81: Validate Team Search and Coverage in Team Tab")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateTeamTabAsStoreManager(String username, String password, String browser, String location)
+			throws Exception
+	{
+		//To Do Should be separate Test from Schedule test
+		//loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		String key=searchDetails.get("jobTitle");
+		List<String> list = new ArrayList<String>(Arrays.asList(key.split(",")));
+		teamPage.performSearchRoster(list);
+		teamPage.coverage();
+		teamPage.coverageViewToPastOrFuture(TeamTest.weekViewType.Next.getValue(), TeamTest.weekCount.Six.getValue());
+	}
 	
 }

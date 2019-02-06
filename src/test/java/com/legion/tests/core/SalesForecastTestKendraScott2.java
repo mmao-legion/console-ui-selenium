@@ -49,7 +49,7 @@ public class SalesForecastTestKendraScott2 extends TestBase{
 	// To be updated https://legiontech.atlassian.net/browse/LEG-5293 for automation we need to go 2 weeks back for actuals(i.e. the week that has complete actuals data)
 	@Automated(automated ="Automated")
 	@Owner(owner = "Naval")
-	@Enterprise(name = "Kendrascott2_Enterprise")
+	@Enterprise(name = "Coffee2_Enterprise")
 	@TestName(description = "LEG-2422: As a store manager, can view Projected Sales Forecast data for past and current week")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void salesForecastDataAsStoreManagerTestStoreManager(String username, String password, String browser, String location)

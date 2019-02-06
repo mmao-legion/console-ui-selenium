@@ -2,12 +2,16 @@ package com.legion.tests.core;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.SimpleLayout;
+import org.json.simple.JSONObject;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -20,9 +24,12 @@ import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.annotations.UseAsTestRailId;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.LegionRestAPI;
 import com.legion.utils.SimpleUtils;
+import com.legion.utils.SpreadSheetUtils;
 
 public class TimeSheetTest extends TestBase{
 	
@@ -415,34 +422,58 @@ public class TimeSheetTest extends TestBase{
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void validateEditTimeSheetEntryToBeSavedInHistoryAsStoreManager(String browser, String username, String password, String location)
     		throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeLocation(location);
         TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
         timeSheetPage.clickOnTimeSheetConsoleMenu();
         SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
         SimpleUtils.pass("Timesheet Pay Period duration: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"' loaded.");
-    	timeSheetPage.openATimeSheetWithClockInAndOut();
-    	timeSheetPage.displayTimeClockHistory();
-    	String timeSheetHistoryBeforeModifying = timeSheetPage.getTimeClockHistoryText();
-    	for(WebElement timeSheetEditbtn : timeSheetPage.getAllTimeSheetEditBtnElements())
+        boolean isTimeClockFound = false;
+        List<WebElement> allWorkersRow = timeSheetPage.getTimeSheetWorkersRow();
+        for(WebElement workerRow: allWorkersRow)
     	{
-    		timeSheetPage.clickOnEditTimesheetClock(timeSheetEditbtn);
-        	timeSheetPage.clickOnDeleteClockButton();
+    		String[] workerNameAndRole = timeSheetPage.getWorkerNameByWorkerRowElement(workerRow).split("\n");
+    		BasePage basePage = new BasePage();
+    		basePage.click(workerRow);
+    		SimpleUtils.pass("Editing timeclock for the Worker :'"+ workerNameAndRole[0] +"' and duration: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"'.");
+    		
+    		List<WebElement> workerTimeClocks = timeSheetPage.getTimeSheetDisplayedWorkersDayRows();
+    		String breakStartTime = "12:00";
+    		String breakEndTime = "12:20";
+    		if(workerTimeClocks.size() != 0)
+    		{
+    			isTimeClockFound = true;
+    			timeSheetPage.openWorkerDayTimeSheetByElement(workerTimeClocks.get(0));
+    			timeSheetPage.displayTimeClockHistory();
+    			String timeClockHistoryBeforeModification = timeSheetPage.getTimeClockHistoryText();
+    			timeSheetPage.closeTimeClockHistoryView();
+    			
+    			String noTimeClockText = "No Timeclocks to Display";
+    			if(timeSheetPage.isTimesheetPopupModelContainsKeyword(noTimeClockText))
+    				timeSheetPage.addTimeClockCheckInOnDetailPopupWithDefaultValue();
+    			else
+    				timeSheetPage.addBreakToOpenedTimeClock(breakStartTime, breakEndTime);
+    			
+    			timeSheetPage.displayTimeClockHistory();
+    			String timeClockHistoryAfterModification = timeSheetPage.getTimeClockHistoryText();
+    			timeSheetPage.closeTimeClockHistoryView();
+    			
+    			timeSheetPage.closeTimeSheetDetailPopUp();
+    			if(timeClockHistoryBeforeModification.equals(timeClockHistoryAfterModification))
+    				SimpleUtils.fail("Time clock History not updated after modification", false);
+    			else
+    				SimpleUtils.pass("Time clock History updated after modification.");
+    		}
+    		
+    		if(isTimeClockFound)
+    			break;
     	}
-    	String timeSheetHistoryAfterModifying = timeSheetPage.getTimeClockHistoryText();
-    	if(timeSheetHistoryAfterModifying.length() > timeSheetHistoryBeforeModifying.length())
-    		SimpleUtils.pass("Edit timesheet entry is saved in the story successfully.");
-    	else
-    		SimpleUtils.fail("Edit timesheet entry not saved in the story.", false);
-    	timeSheetPage.closeTimeSheetDetailPopUp();
  	}
 	
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Naval")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "TP- 122: Automation TA module : Verify if auto approved shift is unapproved, shift with less than 5.5 hours..")
+    @TestName(description = "TP- 122: Automation TA module : Verify if auto approved shift is unapproved, shift with less than 5.5 hours.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyAutoApprovedShiftIsUnApprovedAfterDeletingClockOutAsStoreManager(String browser, String username, String password, String location)
     		throws Exception {
@@ -454,9 +485,293 @@ public class TimeSheetTest extends TestBase{
         timeSheetPage.clickOnTimeSheetConsoleMenu();
         SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
         SimpleUtils.pass("Timesheet Pay Period duration: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"' loaded.");
-    	
-        
-    	timeSheetPage.closeTimeSheetDetailPopUp();
+        boolean isTimeClockFound = false;
+        List<WebElement> allWorkersRow = timeSheetPage.getTimeSheetWorkersRow();
+        for(WebElement workerRow: allWorkersRow)
+    	{
+    		String[] workerNameAndRole = timeSheetPage.getWorkerNameByWorkerRowElement(workerRow).split("\n");
+    		BasePage basePage = new BasePage();
+    		basePage.click(workerRow);
+    		SimpleUtils.pass("Editing timeclock for the Worker :'"+ workerNameAndRole[0] +"' and duration: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"'.");
+    		
+    		List<WebElement> workerTimeClocks = timeSheetPage.getTimeSheetDisplayedWorkersDayRows();
+    		for(WebElement workerTimeClock : workerTimeClocks)
+    		{
+    			HashMap<String, Float> workerDayRowHours = timeSheetPage.getTimesheetWorkerHoursByDay(workerTimeClock);
+    			for(Map.Entry<String, Float> entry : workerDayRowHours.entrySet())
+    			{
+    				System.out.println(entry.getKey()+" : "+entry.getValue());
+    			}
+    			if(timeSheetPage.isTimeClockApproved(workerTimeClock))
+    			{
+    				String clockLabel = "Clock Out";
+        			timeSheetPage.openWorkerDayTimeSheetByElement(workerTimeClock);
+        			timeSheetPage.removeTimeClockEntryByLabel(clockLabel);
+        			timeSheetPage.closeTimeSheetDetailPopUp();
+        			break;
+    			}
+    		}
+    		
+    		/*
+    		 * To Be complete ...
+    		 */
+    		
+    		basePage.click(workerRow);
+    		break;
+    	}
  	}
+	
+	@UseAsTestRailId(testRailId = 4)
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TP- 134: Validate the columns present in Time sheet.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void verifyTimeSheetColumnsAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        //LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        //locationSelectorPage.changeLocation(location);
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+        SimpleUtils.pass("Timesheet Pay Period duration: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"' loaded.");
+    	List<WebElement> allWorkersRow = timeSheetPage.getTimeSheetWorkersRow();
+    	
+    	float sumOfDaysRegHours = 0;
+    	float sumOfDaysOTHours = 0;
+    	float sumOfDaysDTHours = 0;
+    	float sumOfDaysHolHours = 0;
+    	float sumOfDaysTotalHours = 0;
+    	float sumOfDaysSchedHours = 0;
+    	float sumOfDaysDiffHours = 0;
+    	float sumOfDaysTipsHours = 0;
+    	float sumOfDaysMealHours = 0;
+    	
+    	float totalRegHours = 0;
+    	float totalOTHours = 0;
+    	float totalDTHours = 0;
+    	float totalHolHours = 0;
+    	float totalTotalHours = 0;
+    	float totalSchedHours = 0;
+    	float totalDiffHours = 0;
+    	float totalTipsHours = 0;
+    	float totalMealHours = 0;
+    	
+    	for(WebElement workerRow: allWorkersRow)
+    	{
+    		
+    		String[] workerNameAndRole = timeSheetPage.getWorkerNameByWorkerRowElement(workerRow).split("\n");
+    		HashMap<String, Float> workerTotalHours = timeSheetPage.getWorkerTotalHours(workerRow);
+    		totalRegHours = workerTotalHours.get("RegHours");
+    		totalOTHours = workerTotalHours.get("OTHours");
+    		totalDTHours = workerTotalHours.get("DTHours");
+    		totalHolHours = workerTotalHours.get("HolHours");
+    		totalTotalHours = workerTotalHours.get("TotalHours");
+    		totalSchedHours = workerTotalHours.get("SchedHours");
+    		totalDiffHours = workerTotalHours.get("DiffHours");
+    		totalTipsHours = workerTotalHours.get("TipsHours");
+    		totalMealHours = workerTotalHours.get("MealHours");
+    		
+    		BasePage basePage = new BasePage();
+    		basePage.click(workerRow);
+    		SimpleUtils.pass("Validating columns present in Time sheet for the Worker :'"+ 
+    				workerNameAndRole[0] +"' and duration: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"'.");
+    		
+    		// Checkbox validation
+    		if(timeSheetPage.isTimeSheetWorkerRowContainsCheckbox(workerRow))
+    			SimpleUtils.pass("Checkbox displayed for worker('"+ workerNameAndRole[0] +"') in timesheet list.");
+    		else
+    			SimpleUtils.fail("Checkbox not displayed for worker('"+ workerNameAndRole[0] +"') timesheet.", true);
+    		
+    		for(WebElement workersDayRow : timeSheetPage.getTimeSheetDisplayedWorkersDayRows()) {
+               	HashMap<String, Float> workerDayRowHours = timeSheetPage.getTimesheetWorkerHoursByDay(workersDayRow);               	
+               	sumOfDaysRegHours = sumOfDaysRegHours + workerDayRowHours.get("regHours");
+               	sumOfDaysOTHours = sumOfDaysOTHours + workerDayRowHours.get("oTHours");
+               	sumOfDaysDTHours = sumOfDaysDTHours + workerDayRowHours.get("dTHours");
+               	sumOfDaysHolHours = sumOfDaysHolHours + workerDayRowHours.get("holHours");
+               	sumOfDaysTotalHours = sumOfDaysTotalHours + workerDayRowHours.get("totalHours");
+               	sumOfDaysSchedHours = sumOfDaysSchedHours + workerDayRowHours.get("schedHours");
+               	sumOfDaysDiffHours = sumOfDaysDiffHours + workerDayRowHours.get("diffHours");
+               	sumOfDaysTipsHours = sumOfDaysTipsHours + workerDayRowHours.get("tipsHours");
+               	sumOfDaysMealHours = sumOfDaysMealHours + workerDayRowHours.get("mealHours");
+               	
+               	// Location validation
+               	timeSheetPage.vadidateWorkerTimesheetLocationsForAllTimeClocks(workersDayRow);
+               	
+    		}
+    		break;
+    	}
+    	
+    	
+    	// Hours validation
+    	if(totalRegHours == sumOfDaysRegHours)
+    		SimpleUtils.pass("Timesheet: worker's Regular Hours equal to sum of days timeclock Regular Hours ("+totalRegHours+"/"+sumOfDaysRegHours+").");
+    	else
+    		SimpleUtils.fail("Timesheet: worker's Regular Hours not equal to sum of days timeclock Regular Hours ("+totalRegHours+"/"+sumOfDaysRegHours+").", true);
+    	
+    	if(totalOTHours == sumOfDaysOTHours)
+    		SimpleUtils.pass("Timesheet: worker's Overtime Hours equal to sum of days timeclock Overtime Hours ("+totalOTHours+"/"+sumOfDaysOTHours+").");
+    	else
+    		SimpleUtils.fail("Timesheet: worker's Overtime Hours not equal to sum of days timeclock Overtime Hours ("+totalOTHours+"/"+sumOfDaysOTHours+").", true);
+    	
+    	if(totalDTHours == sumOfDaysDTHours)
+    		SimpleUtils.pass("Timesheet: worker's Double Time Hours equal to sum of days timeclock Double Time Hours ("+totalDTHours+"/"+sumOfDaysDTHours+").");
+    	else
+    		SimpleUtils.fail("Timesheet: worker's Double Time Hours not equal to sum of days timeclock Double Time Hours ("+totalDTHours+"/"+sumOfDaysDTHours+").", true);
+    	
+    	if(totalHolHours == sumOfDaysHolHours)
+    		SimpleUtils.pass("Timesheet: worker's Holiday Hours equal to sum of days timeclock Holiday Hours("+totalHolHours+"/"+sumOfDaysHolHours+"). ");
+    	else
+    		SimpleUtils.fail("Timesheet: worker's Holiday Hours not equal to sum of days timeclock Holiday Hours ("+totalHolHours+"/"+sumOfDaysHolHours+").", true);
+    	
+    	if(totalTotalHours == sumOfDaysTotalHours)
+    		SimpleUtils.pass("Timesheet: worker's Total Hours equal to sum of days timeclock Total Hours ("+totalTotalHours+"/"+sumOfDaysTotalHours+").");
+    	else
+    		SimpleUtils.fail("Timesheet: worker's Total Hours not equal to sum of days timeclock Total Hours ("+totalTotalHours+"/"+sumOfDaysTotalHours+").", true);
+    	
+    	if(totalSchedHours == sumOfDaysSchedHours)
+    		SimpleUtils.pass("Timesheet: worker's Scheduled Hours equal to sum of days timeclock Scheduled Hours ("+totalSchedHours+"/"+sumOfDaysSchedHours+").");
+    	else
+    		SimpleUtils.fail("Timesheet: worker's Scheduled Hours not equal to sum of days timeclock Scheduled Hours ("+totalSchedHours+"/"+sumOfDaysSchedHours+").", true);
+    	
+    	if(totalDiffHours == sumOfDaysDiffHours)
+    		SimpleUtils.pass("Timesheet: worker's Difference Hours equal to sum of days timeclock Difference Hours ("+totalDiffHours+"/"+sumOfDaysDiffHours+").");
+    	else
+    		SimpleUtils.fail("Timesheet: worker's Difference Hours not equal to sum of days timeclock Difference Hours ("+totalDiffHours+"/"+sumOfDaysDiffHours+").", true);
+    	
+    	if(totalTipsHours == sumOfDaysTipsHours)
+    		SimpleUtils.pass("Timesheet: worker's Tips Hours equal to sum of days timeclock Tips Hours ("+totalTipsHours+"/"+sumOfDaysTipsHours+").");
+    	else
+    		SimpleUtils.fail("Timesheet: worker's Tips Hours not equal to sum of days timeclock Tips Hours ("+totalTipsHours+"/"+sumOfDaysTipsHours+").", true);
+    	
+    	if(totalMealHours == sumOfDaysMealHours)
+    		SimpleUtils.pass("Timesheet: worker's Meal Hours equal to sum of days timeclock Meal Hours ("+totalMealHours+"/"+sumOfDaysMealHours+").");
+    	else
+    		SimpleUtils.fail("Timesheet: worker's Meal Hours not equal to sum of days timeclock Meal Hours ("+totalMealHours+"/"+sumOfDaysMealHours+").", true);
+   
+ 	}
+	
+	@UseAsTestRailId(testRailId = 4)
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TestRail API: Add Test Cases.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void addTestRailTestCaseAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/TCs_Legion.xlsx", "Schedule>Schedule");
+		for(HashMap<String, String> spreadSheetRow : spreadSheetData)
+		{
+			String defaultAction = "";
+			 String scenario = spreadSheetRow.get("Scenario/Module");
+			 String summary = spreadSheetRow.get("Summary");
+			 String testSteps = spreadSheetRow.get("Test Steps");
+			 String expectedResult = spreadSheetRow.get("Expected Result");
+			 String actualResult = spreadSheetRow.get("Actual Result");
+			 String testData = spreadSheetRow.get("Test Data");
+			 String preconditions = spreadSheetRow.get("Preconditions");
+			 String testCaseType = spreadSheetRow.get("Test Case Type");
+			 String priority = spreadSheetRow.get("Priority/Severifty");
+			 String isAutomated = spreadSheetRow.get("Automated (Y/N)");
+			 String result = spreadSheetRow.get("Result (Pass/Fail)");
+			 String action = spreadSheetRow.get("Action");
+			 int sectionID = Integer.valueOf(spreadSheetRow.get("Section_ID"));
+			 
+			 if(action != null && action.trim().length() > 0)
+				 defaultAction = action.toLowerCase();
+			 
+			if(summary == null || summary.trim().length() == 0)
+				summary = "Title is missing on SpreadSheet"; 
+			
+			if(defaultAction.contains("add"))
+				SimpleUtils.addTestCase(scenario , summary, testSteps, expectedResult, actualResult, testData, 
+						preconditions, testCaseType, priority, isAutomated, result, action, sectionID);
+		}
+	}
+	
+	@UseAsTestRailId(testRailId = 4)
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TestRail API: Update Test Cases.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void updateTestRailTestCaseAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/TCs_Legion.xlsx", "Schedule>Schedule");
+		for(HashMap<String, String> spreadSheetRow : spreadSheetData)
+		{
+			String defaultAction = "";
+			String scenario = spreadSheetRow.get("Scenario/Module");
+			String summary = spreadSheetRow.get("Summary");
+			String testSteps = spreadSheetRow.get("Test Steps");
+			String expectedResult = spreadSheetRow.get("Expected Result");
+			String actualResult = spreadSheetRow.get("Actual Result");
+			String testData = spreadSheetRow.get("Test Data");
+			String preconditions = spreadSheetRow.get("Preconditions");
+			String testCaseType = spreadSheetRow.get("Test Case Type");
+			String priority = spreadSheetRow.get("Priority/Severifty");
+			String isAutomated = spreadSheetRow.get("Automated (Y/N)");
+			String result = spreadSheetRow.get("Result (Pass/Fail)");
+			String action = spreadSheetRow.get("Action");
+			int sectionID = Integer.valueOf(spreadSheetRow.get("Section_ID"));
+
+			if(action != null && action.trim().length() > 0)
+				 defaultAction = action.toLowerCase();
+			
+			if(summary == null || summary.trim().length() == 0)
+				summary = "Title is missing on SpreadSheet"; 
+			
+			if(defaultAction.contains("update"))
+				SimpleUtils.updateTestCase(scenario , summary, testSteps, expectedResult, actualResult, testData, 
+						preconditions, testCaseType, priority, isAutomated, result, action, sectionID);
+		}
+	}
+	
+	@UseAsTestRailId(testRailId = 4)
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TestRail API: Delete Test Cases.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void deleteTestRailTestCaseAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/TCs_Legion.xlsx", "Schedule>Schedule");
+		for(HashMap<String, String> spreadSheetRow : spreadSheetData)
+		{
+			String defaultAction = "";
+		    HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
+			int projectId = Integer.valueOf(testRailConfig.get("TEST_RAIL_PROJECT_ID"));
+			String title = spreadSheetRow.get("Summary");
+			String action = spreadSheetRow.get("Action");
+			int sectionID = Integer.valueOf(spreadSheetRow.get("Section_ID"));
+			if(action != null && action.trim().length() > 0)
+				 defaultAction = action.toLowerCase();
+			
+			if(defaultAction.contains("remove"))
+				SimpleUtils.deleteTestCaseByTitle(title, projectId, sectionID);
+		}
+	}
+	
+	@UseAsTestRailId(testRailId = 4)
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TestRail API: Delete Test Cases.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void getResponseFromLegionRestAPIAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+		
+		Map<String, Object> requestParams = new HashMap<String, Object>();
+		requestParams.put("enterpriseName", "KendraScott2"); // Cast
+		requestParams.put("sourceSystem", "legion");
+		requestParams.put("userName", "Ida.D");
+		requestParams.put("passwordPlainText", "Ida.D");
+		String requestURL = "https://enterprise-stage.legion.work/legion/authentication/login";
+		JSONObject legionResponse = LegionRestAPI.getLegionAPIResponse(requestURL , requestParams);
+		System.out.println("Response Time");
+		System.out.println(legionResponse);
+	}
 	
 }

@@ -51,7 +51,7 @@ public class NavigationTest extends TestBase {
     
     @Automated(automated = "Automated")
 	@Owner(owner = "Naval")
-    @Enterprise(name = "Coffee2_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify all the console navigations for Legion web application at high level")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void legionConsoleNavigationFlowStoreManager(String username, String password, String browser, String location)
@@ -60,13 +60,6 @@ public class NavigationTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.verifyDashboardPageLoadedProperly();
         SchedulePage schedulePage = dashboardPage.goToToday();
-//        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-//        teamPage.goToTeam();
-//        boolean isTeamPage = teamPage.isTeam();
-//        teamPage.verifyTeamPage(isTeamPage);
-//        teamPage.goToCoverage();
-//        boolean isCoveragePage = teamPage.isCoverage();
-//        teamPage.verifyCoveragePage(isCoveragePage);
         schedulePage.goToSchedulePage();
         schedulePage.goToProjectedSales();
         schedulePage.goToStaffingGuidance();
@@ -77,7 +70,7 @@ public class NavigationTest extends TestBase {
     
     @Automated(automated = "Automated")
 	@Owner(owner = "Naval")
-    @Enterprise(name = "Coffee2_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify all the console navigations for Legion web application at high level")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void legionConsoleNavigationFlowInternalAdmin(String username, String password, String browser, String location)
@@ -86,13 +79,6 @@ public class NavigationTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.verifyDashboardPageLoadedProperly();
         SchedulePage schedulePage = dashboardPage.goToToday();
-//        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-//        teamPage.goToTeam();
-//        boolean isTeamPage = teamPage.isTeam();
-//        teamPage.verifyTeamPage(isTeamPage);
-//        teamPage.goToCoverage();
-//        boolean isCoveragePage = teamPage.isCoverage();
-//        teamPage.verifyCoveragePage(isCoveragePage);
         schedulePage.goToSchedulePage();
         schedulePage.goToProjectedSales();
         schedulePage.goToStaffingGuidance();

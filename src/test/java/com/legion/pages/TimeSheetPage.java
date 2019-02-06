@@ -68,4 +68,24 @@ public interface TimeSheetPage {
 
 	public void clickOnEditTimesheetClock(WebElement webElement) throws Exception;
 
+	public boolean isTimeSheetWorkerRowContainsCheckbox(WebElement workerRow);
+
+	public List<WebElement> getTimeSheetWorkersRow()  throws Exception;
+
+	public String getWorkerNameByWorkerRowElement(WebElement workerRow) throws Exception;
+
+	public HashMap<String, Float> getWorkerTotalHours(WebElement workerRow);
+
+	public void vadidateWorkerTimesheetLocationsForAllTimeClocks(WebElement workersDayRow) throws Exception;
+
+	public void addBreakToOpenedTimeClock(String breakStartTime, String breakEndTime) throws Exception;
+
+	public void closeTimeClockHistoryView() throws Exception;
+
+	public void addTimeClockCheckInOnDetailPopupWithDefaultValue() throws Exception;
+
+	public boolean isTimeClockApproved(WebElement workerTimeClock) throws Exception;
+
+	public void removeTimeClockEntryByLabel(String label) throws Exception;
+
 }

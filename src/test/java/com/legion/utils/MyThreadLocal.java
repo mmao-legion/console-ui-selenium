@@ -40,14 +40,14 @@ public class MyThreadLocal {
 	public static void setCurrentTestMethodName(String value) { testMethodName.set(value); }
     public static String getCurrentTestMethodName() { return testMethodName.get(); }
     public static ThreadLocal<String> consoleName = new ThreadLocal<>();
-    public static final ThreadLocal<Integer> scheduleHoursStartTime = new ThreadLocal<>();
-    public static final ThreadLocal<Integer> scheduleHoursEndTime = new ThreadLocal<>();
+    public static final ThreadLocal<String> scheduleHoursStartTime = new ThreadLocal<>();
+    public static final ThreadLocal<String> scheduleHoursEndTime = new ThreadLocal<>();
 
-	public static void setScheduleHoursStartTime(Integer value) { scheduleHoursStartTime.set(value); }
+	public static void setScheduleHoursStartTime(String value) { scheduleHoursStartTime.set(value); }
 
-	public static Integer getScheduleHoursStartTime() { return scheduleHoursStartTime.get(); }
-	public static void setScheduleHoursEndTime(Integer value) { scheduleHoursEndTime.set(value); }
-	public static Integer getScheduleHoursEndTime() { return scheduleHoursEndTime.get(); }
+	public static String getScheduleHoursStartTime() { return scheduleHoursStartTime.get(); }
+	public static void setScheduleHoursEndTime(String value) { scheduleHoursEndTime.set(value); }
+	public static String getScheduleHoursEndTime() { return scheduleHoursEndTime.get(); }
 		
 	public static void setTotalSuiteTestCases(Integer value) {
 		totalSuiteTestCases.set(value);

@@ -3,25 +3,27 @@ package com.legion.utils;
 import static com.legion.utils.MyThreadLocal.getVerificationMap;
 import static org.testng.AssertJUnit.assertTrue;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.util.Strings;
 
 import com.aventstack.extentreports.Status;
+import com.legion.test.testrail.APIClient;
+import com.legion.test.testrail.APIException;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.tests.testframework.LegionTestListener;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -45,6 +47,8 @@ import java.util.stream.Stream;
 public class SimpleUtils {
 
     static HashMap<String,String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+    
+    static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
 
     static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
 	
@@ -67,6 +71,7 @@ public class SimpleUtils {
     }
     
     public static void fail(String message, boolean continueExecution, String... severity) {
+    	//SimpleUtils.addTestResult(5, message);
         if (continueExecution) {
             try {
                 assertTrue(false);
@@ -216,6 +221,7 @@ public class SimpleUtils {
     	
     	ExtentTestManager.getTest().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
                 + "</div>");
+//    	SimpleUtils.addTestResult(1, message);
     }
     
     public static void report(String message) {
@@ -345,4 +351,275 @@ public class SimpleUtils {
 
 
 	}
+	
+	
+	// added code for TestRail connection
+	
+	public static void addTestResult(int statusID, String comment)
+	{
+		/*
+		 * TestRail Status ID : Description 
+		 * 1 : Passed
+		 * 2 : Blocked
+		 * 4 : Retest
+		 * 5 : Failed
+		 */
+		
+		MyThreadLocal myThreadLocal = new MyThreadLocal();
+		String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
+		String testName = ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod());
+		String addResultString = "add_result_for_case/1/"+testCaseId+"";
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+		
+		if(testCaseId != null && Integer.valueOf(testCaseId) > 0)
+		{
+			try {
+				// Make a connection with Testrail Server
+		        APIClient client = new APIClient(testRailURL);
+		        client.setUser(testRailUser);
+		        client.setPassword(testRailPassword);
+		       
+		        JSONObject c = (JSONObject) client.sendGet("get_case/"+testCaseId);
+		        String TestRailTitle = (String) c.get("title");
+		        if(! TestRailTitle.equals(testName))
+		        {
+		        	Map<String, Object> updateTestTitle = new HashMap<String, Object>();
+		        	updateTestTitle.put("title", testName);
+		        	client.sendPost("update_case/"+testCaseId, updateTestTitle);
+		        }
+		        
+		        Map<String, Object> data = new HashMap<String, Object>();
+		        data.put("status_id", statusID);
+		        data.put("comment", comment);
+		        client.sendPost(addResultString,data );
+		        
+			}
+			
+			
+			catch(IOException ioException)
+			{
+				System.err.println(ioException.getMessage());
+			}
+			catch(APIException aPIException)
+			{
+				System.err.println(aPIException.getMessage());
+			}
+		}
+		
+	}
+	
+	
+	public static void addTestCase(String scenario, String summary, String testSteps, String expectedResult,
+			String actualResult, String testData, String preconditions, String testCaseType, String priority,
+			String isAutomated, String result, String actions, int sectionID)
+	{		
+		MyThreadLocal myThreadLocal = new MyThreadLocal();
+    	String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
+    	String testName = ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod()); 	
+		String addResultString = "add_case/"+sectionID;
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+		try {
+			// Make a connection with Testrail Server
+	        APIClient client = new APIClient(testRailURL);
+	        client.setUser(testRailUser);
+	        client.setPassword(testRailPassword);
+
+	        Map<String, Object> data = new HashMap<String, Object>();
+	        data.put("title", summary);
+	        data.put("priority_id", getPriorityIntegerValue(priority));
+	        data.put("custom_custom_testdata",testData) ;
+	        data.put("custom_steps", testSteps);
+	        data.put("custom_custom_automated",isAutomated) ;
+	        //data.put("custom_custom_useraccess",testCaseType);
+	        data.put("custom_expected", expectedResult);
+	        data.put("custom_preconds", preconditions);
+
+	        System.out.println(client.sendPost(addResultString,data ));
+		}
+		
+		catch(IOException ioException)
+		{
+			System.err.println(ioException.getMessage());
+		}
+		catch(APIException aPIException)
+		{
+			System.err.println(aPIException.getMessage());
+		}
+	}
+
+
+
+	public static void updateTestCase(String scenario, String summary, String testSteps, String expectedResult,
+			String actualResult, String testData, String preconditions, String testCaseType, String priority,
+			String isAutomated, String result, String actions, int sectionID)
+	{
+		MyThreadLocal myThreadLocal = new MyThreadLocal();
+		//String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
+		String testName = ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod());
+		String updateResultString = "update_case";
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+		int projectId = Integer.valueOf(testRailConfig.get("TEST_RAIL_PROJECT_ID"));
+		try {
+			// Make a connection with Testrail Server
+			APIClient client = new APIClient(testRailURL);
+			client.setUser(testRailUser);
+			client.setPassword(testRailPassword);
+	
+	        int testCaseID = getTestCaseIDFromTitle(summary, projectId, client, sectionID);
+	        System.out.println("testCaseID : "+testCaseID);
+	        if(testCaseID > 0)
+	        {
+	        	Map<String, Object> testCaseDataToUpdate = new HashMap<String, Object>();
+	        	testCaseDataToUpdate.put("priority_id", getPriorityIntegerValue(priority));
+	        	testCaseDataToUpdate.put("custom_custom_testdata",testData) ;
+	        	testCaseDataToUpdate.put("custom_steps", testSteps);
+	        	testCaseDataToUpdate.put("custom_custom_automated",isAutomated) ;
+		        //data.put("custom_custom_useraccess",testCaseType);
+	        	testCaseDataToUpdate.put("custom_expected", expectedResult);
+	        	testCaseDataToUpdate.put("custom_preconds", preconditions);
+
+		        JSONObject updateTestCaseResult = (JSONObject) client.sendPost(updateResultString + "/" + testCaseID, testCaseDataToUpdate);
+		        pass("Test Case with ID :'"+ testCaseID +"' Updated Successfully ('"+ updateTestCaseResult +"");
+	        }
+	        else {
+	        	report("No Test Case found with the title :'"+ summary +"'.");
+	        }
+	        
+		}
+
+		catch(IOException ioException)
+		{
+			System.err.println(ioException.getMessage());
+			fail(ioException.getMessage(), true);
+		}
+		catch(APIException aPIException)
+		{
+			System.err.println(aPIException.getMessage());
+			fail(aPIException.getMessage(), true);
+		}
+	}
+
+
+	public static int getPriorityIntegerValue(String priority)
+	{
+		priority = priority.toLowerCase();
+		int integerPriority = 0;
+		switch (priority) {
+        case "highest":
+        	integerPriority = 4;
+            break;
+        case "high":
+        	integerPriority = 3;
+            break;
+        case "Medium":
+        	integerPriority = 2;
+            break;
+        default:
+        	integerPriority = 1;
+            break;
+        }
+
+		return integerPriority;
+	}
+
+	public static int getTestCaseIDFromTitle(String title, int projectID, APIClient client, int sectionID)
+	{
+		JSONArray testCasesList;
+		JSONObject jsonTestCase;
+		int testCaseID = 0;
+		try {
+			testCasesList = (JSONArray) client.sendGet("get_cases/"+projectID+"/&section_id="+sectionID);
+			for(Object testCase : testCasesList)
+			{
+
+				jsonTestCase = (JSONObject) testCase;
+				if(title.trim().toLowerCase().equals(jsonTestCase.get("title").toString().trim().toLowerCase()))
+				{
+					testCaseID = Integer.valueOf(jsonTestCase.get("id").toString());
+				}
+			}
+		} catch (IOException | APIException | NullPointerException e) {
+			fail(e.getMessage(), true);
+		}        
+        return testCaseID;
+	}
+
+	public static void deleteTestCaseByID(int testCaseID)
+	{
+		String deleteResultString = "delete_case";
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+
+		try {
+			// Make a connection with Testrail Server
+			APIClient client = new APIClient(testRailURL);
+			client.setUser(testRailUser);
+			client.setPassword(testRailPassword);
+
+			Map<String, Object> testCaseDataToDelete = new HashMap<String, Object>();
+			testCaseDataToDelete.put("id", testCaseID);
+			JSONObject deleteTestCaseResult = (JSONObject) client.sendPost(deleteResultString+ "/" + testCaseID, testCaseDataToDelete)/* client.sendGet(deleteResultString + "/" + testCaseID)*/;
+
+			pass("Test Case with ID :'"+ testCaseID +"' Deleted Successfully ('"+ deleteTestCaseResult +"').");
+			System.out.println("Test Case with ID :'"+ testCaseID +"' Deleted Successfully ('"+ deleteTestCaseResult +"').");
+		}
+
+		catch(IOException | APIException exception)
+		{
+			System.err.println(exception.getMessage());
+			fail(exception.getMessage(), true);
+		}
+	}
+
+	public static void deleteTestCaseByTitle(String title, int projectId, int sectionID)
+	{
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+
+		// Make a connection with Testrail Server
+		APIClient client = new APIClient(testRailURL);
+		client.setUser(testRailUser);
+		client.setPassword(testRailPassword);
+
+		int testCaseID = getTestCaseIDFromTitle(title, projectId, client, sectionID);
+
+		if(testCaseID > 0)
+		{
+			deleteTestCaseByID(testCaseID);
+		}
+
+	}
+
+   public static Float convertDateIntotTwentyFourHrFormat(String startDate, String endDate) throws ParseException {
+	   SimpleDateFormat displayFormat = new SimpleDateFormat("HH:mm");
+	   SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
+	   int shiftHourcalculation =0;
+	   Float shiftMinutecalculation =0.0f;
+	   Float scheduleHoursDifference = 0.0f;
+	   Date startDateFormat = parseFormat.parse(startDate.substring(0,startDate.length()-2) + " " +startDate.substring(startDate.length()-2));
+	   Date endDateFormat = parseFormat.parse(endDate.substring(0,endDate.length()-2) + " " +endDate.substring(endDate.length()-2));
+	   String strEndDate = displayFormat.format(endDateFormat).toString();
+	   String strStartDate = displayFormat.format(startDateFormat).toString();
+	   String[] arrEndDate = strEndDate.split(":");
+	   String[] arrStartDate = strStartDate.split(":");
+	   if(endDate.contains("AM")){
+	   	   shiftHourcalculation = (24 + Integer.parseInt(arrEndDate[0]))-(Integer.parseInt(arrStartDate[0]));
+	   	   shiftMinutecalculation =  (Float.parseFloat(arrEndDate[1]) -  Float.parseFloat(arrEndDate[1]))/60;
+		   scheduleHoursDifference = shiftHourcalculation + shiftMinutecalculation ;
+	   }else{
+		   shiftHourcalculation = Integer.parseInt(arrEndDate[0])-Integer.parseInt(arrStartDate[0]);
+		   shiftMinutecalculation =  (Float.parseFloat(arrEndDate[1]) -  Float.parseFloat(arrStartDate[1]))/60;
+		   scheduleHoursDifference = shiftHourcalculation + shiftMinutecalculation ;
+	   }
+
+	   return scheduleHoursDifference;
+   }
 }

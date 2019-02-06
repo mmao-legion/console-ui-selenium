@@ -337,7 +337,6 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 			{
 				Boolean isWorkRoleHours = false;
 				String[] StaffingGuidanceSectionDataTexts = listWebElement.getText().split("\n");
-				System.out.println("StaffingGuidanceSectionDataTexts size: "+StaffingGuidanceSectionDataTexts.length);
 				staffingGuidanceData.put("dataType", StaffingGuidanceSectionDataTexts[0]);
 				for(String StaffingGuidanceSectionDataText: StaffingGuidanceSectionDataTexts)
 				{
