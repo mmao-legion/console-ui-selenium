@@ -1,12 +1,14 @@
 package com.legion.tests.testframework;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.annotations.UseAsTestRailId;
 
 public class ExtentTestManager {
 	
@@ -17,17 +19,36 @@ public class ExtentTestManager {
         return extentTest.get();
     }
 
-    public synchronized static ExtentTest createTest(String name, String description, String category) {
-        ExtentTest test = extent.createTest(name, description);
-        if (category != null && !category.isEmpty()){
+    public synchronized static ExtentTest createTest(String name, String description, List<String> categories) {
+    	
+    	ExtentTest test = extent.createTest(name, description);
+        
+        for (String category : categories) {
+            test.assignCategory(category);
+           
+        }
+      
+        extentTest.set(test);
+        return getTest();
+    }
+    
+    public synchronized static ExtentTest createTest(String name, String description, List<String> categories, List<String> enterprises) {
+    	
+    	ExtentTest test = extent.createTest(name, description);
+        
+        for (String category : categories) {
             test.assignCategory(category);
         }
+        for (String enterprise : enterprises) {
+        	extent.setSystemInfo("Enterprise",enterprise);
+        }
+      
         extentTest.set(test);
         return getTest();
     }
 
     public synchronized static ExtentTest createTest(String name, String description) {
-        return createTest(name, description, null);
+        return createTest(name, description, null,null);
     }
 
     public synchronized static ExtentTest createTest(String name) {
@@ -38,11 +59,16 @@ public class ExtentTestManager {
         getTest().info(message);
     }
     
+    public synchronized static void setEnterpriseInfo(String categories) {
+    	 
+    	extent.setSystemInfo("Environment",categories);
+    }
+    
+    
     public synchronized static String getTestName(Method testMethod) {
 		
         String testName = "";
         // check if there is a Test annotation and get the test name
-//        Method testCaseMethod = result.getMethod().getConstructorOrMethod().getMethod();
         TestName testCaseDescription = testMethod.getAnnotation(TestName.class);
         if (testCaseDescription != null && testCaseDescription.description().length() > 0) {
             testName = testCaseDescription.description();
@@ -55,7 +81,6 @@ public class ExtentTestManager {
 		
         String ownerName = "";
         // check if there is a Test annotation and get the test name
-//        Method testCaseMethod = result.getMethod().getConstructorOrMethod().getMethod();
         Owner own = testMethod.getAnnotation(Owner.class);
         if (own != null &&  own.owner().length() > 0) {
         	ownerName =  own.owner();
@@ -68,7 +93,6 @@ public class ExtentTestManager {
 		
         String automatedName = "";
         // check if there is a Test annotation and get the test name
-//        Method testCaseMethod = result.getMethod().getConstructorOrMethod().getMethod();
         Automated automated = testMethod.getAnnotation(Automated.class);
         if (automated != null && automated.automated().length() > 0) {
         	automatedName = automated.automated();
@@ -76,6 +100,22 @@ public class ExtentTestManager {
        
         return automatedName;
     }
+    
+    
+    public synchronized static int getTestRailId(Method testMethod) {
+		
+        int testRailId = 0;
+        // check if there is a Test annotation and get the test name
+        UseAsTestRailId useAsTestRailId = testMethod.getAnnotation(UseAsTestRailId.class);
+        if(useAsTestRailId != null && useAsTestRailId.testRailId()> 0){
+        	testRailId = useAsTestRailId.testRailId();
+        }
+       
+        return testRailId;
+    }
+    
+    
+   
 
      
 }

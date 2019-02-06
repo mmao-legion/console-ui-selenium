@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -26,7 +27,7 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 	@FindBy(css="[ng-click=\"selectDayWeekView($event, 'week')\"]")
 	private WebElement salesForecastPageWeekViewButton;
 	
-	String salesForecastTabLabelText = "PROJECTED SALES";
+	String salesForecastTabLabelText = "PROJECTED";
 	
 	@FindBy(css="[ng-click=\"selectDayWeekView($event, 'day')\"]")
 	private WebElement salesForecastPageDayViewButton;
@@ -71,7 +72,7 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 	@Override
 	public Boolean isSalesForecastTabActive() throws Exception
 	{
-		if(isElementLoaded(SchedulePageSelectedSubTab) && SchedulePageSelectedSubTab.getText().contains(salesForecastTabLabelText))
+		if(isElementLoaded(SchedulePageSelectedSubTab) && SchedulePageSelectedSubTab.getText().toLowerCase().contains(salesForecastTabLabelText.toLowerCase()))
 		{
 			return true;
 		}
@@ -153,20 +154,27 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 	@Override
 	public Boolean validateSalesForecastItemOptionWithUserJobTitle(String currentUsersSalesForecastItemOption) throws Exception
 	{
-		if(isElementLoaded(SchedulePageSelectedSubTab) && SchedulePageSelectedSubTab.getText().contains(salesForecastTabLabelText))
+		if(isElementLoaded(salesForecastFilterCategoriesDropDown))
 		{
-			if(salesForecastFilterCategoriesDropDownOptions.size() != 0) {
-				if(salesForecastFilterCategoriesDropDownOptions.size() == currentUsersSalesForecastItemOption.split(",").length){
-					for(WebElement salesForecastFilterCategoriesDropDownOption : salesForecastFilterCategoriesDropDownOptions) {
-						if(! currentUsersSalesForecastItemOption.toLowerCase().contains(salesForecastFilterCategoriesDropDownOption.getText().toLowerCase())) {
-							return false;
+			click(salesForecastFilterCategoriesDropDown);
+			if(isElementLoaded(SchedulePageSelectedSubTab) && SchedulePageSelectedSubTab.getText().contains(salesForecastTabLabelText))
+			{
+				if(salesForecastFilterCategoriesDropDownOptions.size() != 0) {
+					if(salesForecastFilterCategoriesDropDownOptions.size() == currentUsersSalesForecastItemOption.split(",").length){
+						for(WebElement salesForecastFilterCategoriesDropDownOption : salesForecastFilterCategoriesDropDownOptions) {
+							if(! currentUsersSalesForecastItemOption.toLowerCase().contains(salesForecastFilterCategoriesDropDownOption.getText().toLowerCase())) {
+								return false;
+							}
 						}
+						SimpleUtils.pass("sales Forecast Filter Categories Matched with logged in User Role.");
+						if(salesForecastFilterCategoriesDropDown.findElement(By.className("dropdown")).getAttribute("class").contains("open"))
+							click(salesForecastFilterCategoriesDropDown);
+						return true;						
 					}
-					SimpleUtils.pass("sales Forecast Filter Categories Matched with logged in User Role.");
-					return true;						
 				}
 			}
 		}
+		
 		return false;
 	}
 	

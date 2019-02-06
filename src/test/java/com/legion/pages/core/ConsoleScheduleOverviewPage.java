@@ -4,9 +4,11 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -35,7 +37,13 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	@FindBy(className="schedule-table-row")
 	private List<WebElement> overviewTableRows;
 	
-	
+	@FindBy(css="div.row-fx.schedule-table-row")
+	private List<WebElement> overviewScheduleWeekList;
+
+	@FindBy(css = "div.lgn-calendar.current-month")
+	private List<WebElement> overviewCalendarMonthsYears;
+
+
 	public ConsoleScheduleOverviewPage()
 	{
 		PageFactory.initElements(getDriver(), this);
@@ -299,5 +307,57 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 			SimpleUtils.fail("Overview Page: Calendar week days not found!",true);
 		}
 		return weekDays;
+	}
+
+	@Override
+	public List<WebElement> getOverviewScheduleWeeks() {
+		return overviewScheduleWeekList;
+	}
+
+	public void clickScheduleDraftAndGuidanceStatus(List<String> overviewScheduleWeeksStatus){
+
+		for(int i=0;i<overviewScheduleWeeksStatus.size();i++){
+			if(overviewScheduleWeeksStatus.get(i).contains("Finalized") ||
+					overviewScheduleWeeksStatus.get(i).contains("Published") ||
+					overviewScheduleWeeksStatus.get(i).contains("Draft")&&
+					overviewScheduleWeeksStatus.get(i+1).contains("Guidance")){
+				System.out.println("pass ho gaya");
+			}
+
+		}
+	}
+
+
+	@Override
+	public ArrayList<String> getOverviewCalendarMonthsYears() throws Exception
+	{
+		ArrayList<String> overviewCalendarMonthsYearsText = new ArrayList<String>();
+		if(overviewCalendarMonthsYears.size() != 0)
+		{
+			for(WebElement overviewCalendarMonthYear : overviewCalendarMonthsYears)
+			{
+				overviewCalendarMonthsYearsText.add(overviewCalendarMonthYear.getText().replace("\n", ""));
+			}
+		}
+		return overviewCalendarMonthsYearsText;
+	}
+
+	/*@FindBy(css = "")
+	private List<WebElement> weekHoursElement;*/
+	@Override
+	public LinkedHashMap<String, Float> getWeekHoursByWeekElement(WebElement overViewWeek) {
+		LinkedHashMap<String, Float> weekHours = new LinkedHashMap<String, Float>();
+		List<WebElement> weekHoursElement = overViewWeek.findElements(By.cssSelector("span.text-hours"));
+		if(weekHoursElement.size() == 3)
+		{
+			float guidanceHours = Float.valueOf(weekHoursElement.get(0).getText().split(" ")[0]);
+			float scheduledHours = Float.valueOf(weekHoursElement.get(1).getText().split(" ")[0]);
+			float otherHours = Float.valueOf(weekHoursElement.get(2).getText().split(" ")[0]);
+			weekHours.put("guidanceHours", guidanceHours);
+			weekHours.put("scheduledHours", scheduledHours);
+			weekHours.put("otherHours", otherHours);
+
+		}
+		return weekHours;
 	}
 }

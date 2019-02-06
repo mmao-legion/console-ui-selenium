@@ -3,14 +3,12 @@ package com.legion.pages;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -28,10 +26,7 @@ import com.legion.utils.SimpleUtils;
  */
 public class BasePage {
 
-    protected WebDriver driver;
     public static String activeConsoleName;
-//    public static ExtentTest extentTest;
-    
 
     public void click(WebElement element, boolean... shouldWait) {
     	try {
@@ -42,6 +37,10 @@ public class BasePage {
         }
     }
 
+    public int calcListLength(List<WebElement> listLength){
+    	return listLength.size();
+    }
+    
     public void waitForElement(String element) {
   
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(
@@ -65,10 +64,9 @@ public class BasePage {
     
     public void checkElementVisibility(WebElement element)
     {
-        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(),30);
+        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(), 30);
         try {
-            wait.until(ExpectedConditions.visibilityOf(element));
-            SimpleUtils.pass("Element is present");
+        	wait.until(ExpectedConditions.visibilityOf(element));
         }
         catch (NoSuchElementException e)
         {
@@ -80,13 +78,29 @@ public class BasePage {
    
     public boolean isElementLoaded(WebElement element) throws Exception
     {
-    	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), 30); 
+    	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), 30);
+    	 
     	try {
     	    tempWait.until(ExpectedConditions.visibilityOf(element)); 
     	    return true;
     	}
     	catch (NoSuchElementException | TimeoutException te) {
-    		return false;
+    		return false;	
+    	}
+    	
+    }
+    
+    
+    public boolean isElementLoaded(WebElement element, long timeOutInSeconds) throws Exception
+    {
+    	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), timeOutInSeconds);
+    	 
+    	try {
+    	    tempWait.until(ExpectedConditions.visibilityOf(element)); 
+    	    return true;
+    	}
+    	catch (NoSuchElementException | TimeoutException te) {
+    		return false;	
     	}
     	
     }
@@ -137,6 +151,26 @@ public class BasePage {
             }
         });
         return elementPresent;
+    }
+    
+    public static String displayCurrentURL()
+    {
+        JavascriptExecutor executor = (JavascriptExecutor) getDriver();
+        return (String) executor.executeScript("return document.location.href");
+      
+    }
+    
+    public void mouseHover(WebElement element)
+    {
+        Actions actions = new Actions(getDriver());
+        actions.moveToElement(element,10,15).click().build().perform();
+    }
+
+    
+    public void mouseHoverDragandDrop(WebElement fromDestination, WebElement toDestination)
+    {
+        Actions actions = new Actions(getDriver());
+        actions.dragAndDrop(fromDestination, toDestination).build().perform();
     }
    
 }

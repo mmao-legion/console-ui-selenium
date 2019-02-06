@@ -103,7 +103,7 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 	
 	public Boolean isStaffingGuidanceTabActive() throws Exception
 	{
-		if(isElementLoaded(schedulePageSelectedSubTab) && schedulePageSelectedSubTab.getText().contains(staffingGuidanceTabLabelText))
+		if(isElementLoaded(schedulePageSelectedSubTab) && schedulePageSelectedSubTab.getText().toLowerCase().contains(staffingGuidanceTabLabelText.toLowerCase()))
 		{
 			return true;
 		}
@@ -337,7 +337,6 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 			{
 				Boolean isWorkRoleHours = false;
 				String[] StaffingGuidanceSectionDataTexts = listWebElement.getText().split("\n");
-				System.out.println("StaffingGuidanceSectionDataTexts size: "+StaffingGuidanceSectionDataTexts.length);
 				staffingGuidanceData.put("dataType", StaffingGuidanceSectionDataTexts[0]);
 				for(String StaffingGuidanceSectionDataText: StaffingGuidanceSectionDataTexts)
 				{
@@ -446,6 +445,18 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 		{
 			click(staffingGuidanceAnalyzePopupCloseButton);
 		}
+	}
+
+	@FindBy(css = "[attr-id=\"workerRoles\"]")
+	private WebElement guidanceWorkRoleDropDown;
+	@Override
+	public String getActiveWorkRole() throws Exception {
+		String selectedWorkRole = "";
+		if(isElementLoaded(guidanceWorkRoleDropDown)) {
+			selectedWorkRole = guidanceWorkRoleDropDown.getText();
+		}
+		SimpleUtils.report("Staffing Guidance Active Work Role filter '"+ selectedWorkRole +"'");
+		return selectedWorkRole;
 	}
 	
 }
