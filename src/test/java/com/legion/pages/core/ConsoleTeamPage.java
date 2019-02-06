@@ -165,7 +165,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
   					searchBtn.click();
   					int Size=jobTitle.size();
   						for (int i=0;i<jobTitle.size();i++){
-  							if(key.equalsIgnoreCase(jobTitle.get(i).getText())){
+  							if(key.equalsIgnoreCase(jobTitle.get(i).getText()) || (jobTitle.get(i).getText()).contains(key)){
   								count=count+1;
   							}else{ 
   								SimpleUtils.fail("Incorrect Search Result",false);

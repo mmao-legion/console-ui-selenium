@@ -773,12 +773,14 @@ public class ScheduleNewUITest extends TestBase{
 	    public void verifyScheduleLabelHours(String shiftTimeSchedule,
 	  			Float scheduledHoursBeforeEditing, Float scheduledHoursAfterEditing) throws Exception{
 	  			Float scheduledHoursExpectedValueEditing = 0.0f;
-	  		if(Float.parseFloat(shiftTimeSchedule) >= 6){
-	  			scheduledHoursExpectedValueEditing = (float) (scheduledHoursBeforeEditing + (Float.parseFloat(shiftTimeSchedule) - 0.5));
-	  		}else{
-	  			scheduledHoursExpectedValueEditing = (float)(scheduledHoursBeforeEditing + Float.parseFloat(shiftTimeSchedule));
-	  		}
-
+            // If meal break is applicable
+//	  		if(Float.parseFloat(shiftTimeSchedule) >= 6){
+//	  			scheduledHoursExpectedValueEditing = (float) (scheduledHoursBeforeEditing + (Float.parseFloat(shiftTimeSchedule) - 0.5));
+//	  		}else{
+//	  			scheduledHoursExpectedValueEditing = (float)(scheduledHoursBeforeEditing + Float.parseFloat(shiftTimeSchedule));
+//	  		}
+           // If meal break is not applicable
+            scheduledHoursExpectedValueEditing = (float)(scheduledHoursBeforeEditing + Float.parseFloat(shiftTimeSchedule));
 	  		if(scheduledHoursExpectedValueEditing.equals(scheduledHoursAfterEditing)){
 	  			SimpleUtils.pass("Scheduled Hours Expected value "+scheduledHoursExpectedValueEditing+" matches with Scheduled Hours Actual value "+scheduledHoursAfterEditing);
 	  		}else{

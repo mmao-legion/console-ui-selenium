@@ -221,7 +221,7 @@ public class SimpleUtils {
     	
     	ExtentTestManager.getTest().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
                 + "</div>");
-    	//SimpleUtils.addTestResult(1, message);
+//    	SimpleUtils.addTestResult(1, message);
     }
     
     public static void report(String message) {
@@ -597,10 +597,6 @@ public class SimpleUtils {
 		}
 
 	}
-
-
-
-
 
    public static Float convertDateIntotTwentyFourHrFormat(String startDate, String endDate) throws ParseException {
 	   SimpleDateFormat displayFormat = new SimpleDateFormat("HH:mm");
