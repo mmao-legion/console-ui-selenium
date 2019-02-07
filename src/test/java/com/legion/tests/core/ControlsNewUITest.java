@@ -9,12 +9,14 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.legion.pages.DashboardPage;
+import com.legion.pages.SchedulePage;
 import com.legion.pages.ControlsNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.ScheduleNewUITest.SchedulePageSubTabText;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -125,4 +127,61 @@ public class ControlsNewUITest extends TestBase{
       controlsNewUIPage.clickOnSaveRegularHoursBtn();
 
   }
+  
+  
+  @Automated(automated =  "Automated")
+  @Owner(owner = "Naval")
+  @Enterprise(name = "KendraScott2_Enterprise")
+  @TestName(description = "TP-141 : Controls - Scheduling Policies > Budget: Enable and disable the budget and check its impact on schedule.")
+  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+  public void verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin(String browser, String username, String password, String location)
+  		throws Exception {
+			
+      DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+      SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);      
+      ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+      navigateToControlsSchedulingPolicies(controlsNewUIPage);
+      
+      // Enable Budget Smartcard
+      boolean enableBudgetSmartcard = true;
+      controlsNewUIPage.enableDisableBudgetSmartcard(enableBudgetSmartcard);
+      
+      SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+  	  schedulePage.clickOnScheduleConsoleMenuItem();
+  	  schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+  	  SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+  	  
+  	  String budgetSmartcardText = "WEEKLY BUDGET";
+  	  boolean isBudgetSmartcardAppeared = schedulePage.isSmartCardAvailableByLabel(budgetSmartcardText);
+  	  SimpleUtils.assertOnFail("Budget Smartcard not loaded on 'Schedule' tab even Scheduling policies Enabled Budget Smartcard.",
+  			isBudgetSmartcardAppeared , false);
+  	  if(isBudgetSmartcardAppeared)
+  		SimpleUtils.pass("Budget Smartcard loaded on 'Schedule' tab when Scheduling policies Enabled Budget Smartcard.");
+  	  
+  	  // Disable Budget Smartcard
+  	  navigateToControlsSchedulingPolicies(controlsNewUIPage);
+  	  enableBudgetSmartcard = false;
+      controlsNewUIPage.enableDisableBudgetSmartcard(enableBudgetSmartcard);
+  	  schedulePage.clickOnScheduleConsoleMenuItem();
+ 	  schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+ 	  SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+  	  isBudgetSmartcardAppeared = schedulePage.isSmartCardAvailableByLabel(budgetSmartcardText);
+	  SimpleUtils.assertOnFail("Budget Smartcard loaded on 'Schedule' tab even Scheduling policies Disabled Budget Smartcard.",
+			! isBudgetSmartcardAppeared , false);
+	  if(! isBudgetSmartcardAppeared)
+		SimpleUtils.pass("Budget Smartcard not loaded on 'Schedule' tab when Scheduling policies Disabled Budget Smartcard.");
+  }
+  
+  public void navigateToControlsSchedulingPolicies(ControlsNewUIPage controlsNewUIPage)
+  {
+	  try {
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+	    controlsNewUIPage.clickOnGlobalLocationButton();
+	    controlsNewUIPage.clickOnControlsSchedulingPolicies();
+	} catch (Exception e) {
+  		SimpleUtils.fail(e.getMessage(), false);
+	}
+  }
+  
 }

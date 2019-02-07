@@ -12,14 +12,15 @@
         <classes>
             <class name="com.legion.tests.core.ControlsNewUITest">
       	        <methods>
-                     <include name="updateUserLocationAsInternalAdmin"/>
-                    <include name="updateWorkingHoursAsInternalAdmin"/>
+                    <!-- <include name="updateUserLocationAsInternalAdmin"/>
+                    <include name="updateWorkingHoursAsInternalAdmin"/> -->
+                    <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
     </test>
 
-    <test name="Traffic Forecast for New UI Test">
+    <!-- <test name="Traffic Forecast for New UI Test">
         <classes>
             <class name="com.legion.tests.core.TrafficForecastTest">
                 <methods>
@@ -87,7 +88,7 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test> -->
 
 
     <!--<test name="Team Test">-->

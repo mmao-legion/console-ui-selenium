@@ -38,6 +38,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "input[aria-label=\"Company Name\"]")
 	private WebElement locationCompanyNameField;
 	
+	@FindBy(css = "lg-dashboard-card[title=\"Scheduling Policies\"]")
+	private WebElement schedulingPoliciesCard;
+	
+	
 	@FindBy(css = "input[aria-label=\"Business Address\"]")
 	private WebElement locationBusinessAddressField;
 	
@@ -410,5 +414,56 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}else {
 			SimpleUtils.fail("Controls Working Hours Section: Regular Hours 'Save' Button not loaded.", true);
 		}
+	}
+
+
+	@Override
+	public void clickOnControlsSchedulingPolicies() throws Exception {
+		if(isElementLoaded(schedulingPoliciesCard))
+			click(schedulingPoliciesCard);
+		else
+			SimpleUtils.fail("Controls Page: Schedule Policies Card not Loaded!", false);
+	}
+	
+	
+	@FindBy(css = "form-section[form-title=\"Budget\"]")
+	private WebElement budgetFormSection;
+	
+	@Override
+	public void enableDisableBudgetSmartcard(boolean enable) throws Exception
+	{
+		WebElement enableBudgetYesBtn = budgetFormSection.findElement(By.cssSelector("div.lg-button-group-first"));
+		WebElement enableBudgetNoBtn = budgetFormSection.findElement(By.cssSelector("div.lg-button-group-last"));
+		if(enable && isBudgetSmartcardEnabled())
+			SimpleUtils.pass("Schedule Policies Budget card already enabled.");
+		else if(enable && ! isBudgetSmartcardEnabled())
+		{
+			click(enableBudgetYesBtn);
+			SimpleUtils.pass("Schedule Policies Budget card enabled successfully.");
+		}
+		else if(!enable && isBudgetSmartcardEnabled())
+		{
+			click(enableBudgetNoBtn);
+			SimpleUtils.pass("Schedule Policies Budget card disabled successfully.");
+		}
+		else
+			SimpleUtils.pass("Schedule Policies Budget card already disabled.");
+	}
+	
+	@Override
+	public boolean isBudgetSmartcardEnabled() throws Exception
+	{
+		if(isElementLoaded(budgetFormSection)) {
+			WebElement enableBudgetYesBtn = budgetFormSection.findElement(By.cssSelector("div.lg-button-group-first"));
+			if(isElementLoaded(enableBudgetYesBtn)) {
+				if(enableBudgetYesBtn.getAttribute("class").contains("selected"))
+					return true;
+			}
+			else
+				SimpleUtils.fail("Controls Page: Schedule Policies Budget form section 'Yes' button not loaded!", false);
+		}
+		else
+			SimpleUtils.fail("Controls Page: Schedule Policies Budget form section not loaded!", false);
+		return false;
 	}
 }

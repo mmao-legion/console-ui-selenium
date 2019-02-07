@@ -24,5 +24,11 @@ public interface ControlsNewUIPage {
 
 	public void clickOnSaveRegularHoursBtn() throws Exception;
 
+	public void clickOnControlsSchedulingPolicies() throws Exception;
+
+	public boolean isBudgetSmartcardEnabled() throws Exception;
+
+	public void enableDisableBudgetSmartcard(boolean enable) throws Exception;
+
 	
 }
