@@ -6,42 +6,103 @@
     <listeners>
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
-   
-  <test name="Traffic Forecast for New UI Test">
-    <classes>
-       <class name="com.legion.tests.core.TrafficForecastTest">
-      	<methods>
-          <include name="trafficForecastDataAsStoreManagerTest"/> 
-        </methods>
-      </class>
-    </classes>
-  </test>  
+
   
-  <test name="Staffing Guidance for New UI Test">
-    <classes>
-       <class name="com.legion.tests.core.StaffingGuidanceTestKendraScott2">
-      	<methods>
-          <include name="staffingGuidanceDataAsStoreManagerTestKendraScott2"/> 
-        </methods>
-      </class>
-    </classes>
-  </test>  
-  
-  <test name="Controls New UI Test">
-    <classes>
-       <class name="com.legion.tests.core.ControlsNewUITest">
-      	<methods>
-          <include name="updateUserLocationAsInternalAdmin"/> 
-           <include name="updateWorkingHoursAsInternalAdmin"/> 
-        </methods>
-      </class>
-    </classes>
-  </test>  
-  
-  
+    <test name="Controls New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.ControlsNewUITest">
+      	        <methods>
+                     <include name="updateUserLocationAsInternalAdmin"/>
+                    <include name="updateWorkingHoursAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Traffic Forecast for New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.TrafficForecastTest">
+                <methods>
+                    <include name="trafficForecastDataAsStoreManagerTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Staffing Guidance for New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.StaffingGuidanceTestKendraScott2">
+                <methods>
+                    <include name="staffingGuidanceDataAsStoreManagerTestKendraScott2"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <test name="Schedule New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleNewUITest">
+      	        <methods>
+                    <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/>
+                    <include name="viewAndFilterScheduleWithGroupByAllInWeekViewAsStoreManager"/>
+                    <include name="viewAndFilterScheduleWithGroupByWorkRoleInWeekViewAsStoreManager"/>
+                    <include name="viewAndFilterScheduleWithGroupByTMsInWeekViewAsStoreManager"/>
+                    <include name="viewAndFilterScheduleWithGroupByAllDayViewAsStoreManager"/>
+                    <include name="viewAndFilterScheduleWithGroupByWorkRoleDayViewAsStoreManager"/>
+                    <include name="viewAndFilterScheduleWithGroupByTMsDayViewAsStoreManager"/>
+                    <include name="verifyUnpublishedScheduleVisibilityForTMsAndTLsAsStoreManager"/>
+                    <include name="verifyAndPublishScheduleAsStoreManager"/>
+                    <include name="editPopUpScheduleShouldNotPresentAsStoreManager"/>
+                    <include name="editOpenShiftScheduleAsStoreManager"/>
+                    <include name="editManualShiftScheduleAsStoreManager"/>
+                    <include name="editAssignTeamScheduleAsStoreManager"/>
+                    <include name="navigateToCurrentAndOtherWeekAsStoreManager"/>
+                    <include name="verifyRequiredActionToConsoleMessageAfterRefreshAsStoreManager"/>
+                    <include name="verifyComplianceSmartcardAfterExdendingAShiftToOTAsStoreManager"/>
+                    <include name="disableWeekViewNavOutsideSchPlanningWindowStoreManager"/>
+                    <include name="verifyFutureScheduleWeekDateAfteRefreshBrowserAsStoreManager"/>
+                    <include name="verifyTMCanViewNewScheduleAndOffersAsStoreManager"/>
+                    <include name="verifySmartCardPanelForTMAndTLAsTeamLead"/>
+                    <include name="verifyWorkRoleFilterPreserveSelectionOnScheduleGeneratePageAsStoreManager"/>
+                    <include name="verifyScheduleOverviewPageCalendarMonthsAndYearsAsStoreManager"/>
+                    <include name="verifyUnAssignedAndComplianceSmartCardAsStoreManager"/>
+                    <include name="validatingGenerateScheduleStoreManager"/>
+                    <include name="verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager"/>
+                    <include name="validateScheduleGenerationFunctionalityAsStoreManager"/>
+                    <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>
+                </methods>
+             </class>
+        </classes>
+    </test>
+
+
+    <test name="Schedule Overview Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleOverviewTest">
+                <methods>
+                    <include name="verifyCurrentWeekDateAndDayTest"/>
+                    <include name="verifyDateAndDayForEachWeeksUntilNotAvailableTest"/>
+                    <include name="verifyDayAndDateOnSchedulePageMatchesDayAndDateOnOverviewPageTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <!--<test name="Team Test">-->
+        <!--<classes>-->
+            <!--<class name="com.legion.tests.core.TeamTestKendraScott2">-->
+                <!--<methods>-->
+                    <!--<include name="validateTeamTabAsStoreManager"/>-->
+                <!--</methods>-->
+            <!--</class>-->
+        <!--</classes>-->
+    <!--</test>-->
+
+
   
 </suite> <!-- Suite -->
-
 
 
 
