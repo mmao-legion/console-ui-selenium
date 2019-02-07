@@ -7,12 +7,11 @@
  	</listeners>  
   <test name="Schedule Role Based Test">      
     <classes>
-       <class name="com.legion.tests.core.ScheduleRoleBasedTest">
+       <class name="com.legion.tests.core.ScheduleRoleBasedNewUITest">
       	<methods>
              <include name="scheduleTestAsTeamMember"/>
              <include name="scheduleTestAsTeamLead"/> 
-             <include name="scheduleTestAsStoreManager"/> 
-             <include name="scheduleTest"/>  
+             <include name="scheduleTestAsStoreManager"/>
         </methods>
       </class>
     </classes>

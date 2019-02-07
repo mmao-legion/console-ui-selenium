@@ -138,15 +138,6 @@ public abstract class TestBase {
         String strDate = formatter.format(date);
         String strDateFinal = strDate.replaceAll(" ", "_");
         setVerificationMap(new HashMap<>());
-//        APIClient client = new APIClient("https://zorang.testrail.io/");
-////        client.setUser("nishant.prakash@zorang.com");
-//        client.setUser("prakash.nishant1@gmail.com");
-//        System.out.println(client.getUser());
-////        client.setPassword("Prashant21#");
-//        client.setPassword("bKHXaKuIyTG46/DLDSik");
-//       int testRailId = ExtentTestManager.getTestRailId(method);
-//       TestID = Integer.toString(testRailId);
-       
     }
 
     protected void createDriver (String browser, String version, String os) throws Exception {

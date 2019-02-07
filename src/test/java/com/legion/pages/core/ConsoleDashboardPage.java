@@ -200,6 +200,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	private List<WebElement> forecastDataElements;
 	@Override
 	public ArrayList<HashMap<String, Float>> getDashboardForeCastDataForAllLocation() {
+		waitForSeconds(4);
 		ArrayList<HashMap<String, Float>> forecastDataForAllLocations = new ArrayList<HashMap<String, Float>>();
 		if(forecastDataElements.size() != 0)
 		{

@@ -23,6 +23,7 @@ import com.legion.tests.testframework.LegionTestListener;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -220,7 +221,7 @@ public class SimpleUtils {
     	
     	ExtentTestManager.getTest().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
                 + "</div>");
-    	//SimpleUtils.addTestResult(1, message);
+//    	SimpleUtils.addTestResult(1, message);
     }
     
     public static void report(String message) {
@@ -436,7 +437,7 @@ public class SimpleUtils {
 	        //data.put("custom_custom_useraccess",testCaseType);
 	        data.put("custom_expected", expectedResult);
 	        data.put("custom_preconds", preconditions);
-	         
+
 	        System.out.println(client.sendPost(addResultString,data ));
 		}
 		
@@ -482,7 +483,7 @@ public class SimpleUtils {
 		        //data.put("custom_custom_useraccess",testCaseType);
 	        	testCaseDataToUpdate.put("custom_expected", expectedResult);
 	        	testCaseDataToUpdate.put("custom_preconds", preconditions);
-		        
+
 		        JSONObject updateTestCaseResult = (JSONObject) client.sendPost(updateResultString + "/" + testCaseID, testCaseDataToUpdate);
 		        pass("Test Case with ID :'"+ testCaseID +"' Updated Successfully ('"+ updateTestCaseResult +"");
 	        }
@@ -536,7 +537,7 @@ public class SimpleUtils {
 			testCasesList = (JSONArray) client.sendGet("get_cases/"+projectID+"/&section_id="+sectionID);
 			for(Object testCase : testCasesList)
 			{
-				
+
 				jsonTestCase = (JSONObject) testCase;
 				if(title.trim().toLowerCase().equals(jsonTestCase.get("title").toString().trim().toLowerCase()))
 				{
@@ -548,57 +549,77 @@ public class SimpleUtils {
 		}        
         return testCaseID;
 	}
-	
+
 	public static void deleteTestCaseByID(int testCaseID)
 	{
 		String deleteResultString = "delete_case";
 		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-		
+
 		try {
 			// Make a connection with Testrail Server
 			APIClient client = new APIClient(testRailURL);
 			client.setUser(testRailUser);
 			client.setPassword(testRailPassword);
-			
+
 			Map<String, Object> testCaseDataToDelete = new HashMap<String, Object>();
 			testCaseDataToDelete.put("id", testCaseID);
 			JSONObject deleteTestCaseResult = (JSONObject) client.sendPost(deleteResultString+ "/" + testCaseID, testCaseDataToDelete)/* client.sendGet(deleteResultString + "/" + testCaseID)*/;
-			
+
 			pass("Test Case with ID :'"+ testCaseID +"' Deleted Successfully ('"+ deleteTestCaseResult +"').");
 			System.out.println("Test Case with ID :'"+ testCaseID +"' Deleted Successfully ('"+ deleteTestCaseResult +"').");
 		}
-		
+
 		catch(IOException | APIException exception)
 		{
 			System.err.println(exception.getMessage());
 			fail(exception.getMessage(), true);
 		}
 	}
-	
+
 	public static void deleteTestCaseByTitle(String title, int projectId, int sectionID)
 	{
 		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-		
+
 		// Make a connection with Testrail Server
 		APIClient client = new APIClient(testRailURL);
 		client.setUser(testRailUser);
 		client.setPassword(testRailPassword);
-		
+
 		int testCaseID = getTestCaseIDFromTitle(title, projectId, client, sectionID);
-		
+
 		if(testCaseID > 0)
 		{
 			deleteTestCaseByID(testCaseID);
 		}
-			
+
 	}
 
-	
-	
-	
+   public static Float convertDateIntotTwentyFourHrFormat(String startDate, String endDate) throws ParseException {
+	   SimpleDateFormat displayFormat = new SimpleDateFormat("HH:mm");
+	   SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
+	   int shiftHourcalculation =0;
+	   Float shiftMinutecalculation =0.0f;
+	   Float scheduleHoursDifference = 0.0f;
+	   Date startDateFormat = parseFormat.parse(startDate.substring(0,startDate.length()-2) + " " +startDate.substring(startDate.length()-2));
+	   Date endDateFormat = parseFormat.parse(endDate.substring(0,endDate.length()-2) + " " +endDate.substring(endDate.length()-2));
+	   String strEndDate = displayFormat.format(endDateFormat).toString();
+	   String strStartDate = displayFormat.format(startDateFormat).toString();
+	   String[] arrEndDate = strEndDate.split(":");
+	   String[] arrStartDate = strStartDate.split(":");
+	   if(endDate.contains("AM")){
+	   	   shiftHourcalculation = (24 + Integer.parseInt(arrEndDate[0]))-(Integer.parseInt(arrStartDate[0]));
+	   	   shiftMinutecalculation =  (Float.parseFloat(arrEndDate[1]) -  Float.parseFloat(arrEndDate[1]))/60;
+		   scheduleHoursDifference = shiftHourcalculation + shiftMinutecalculation ;
+	   }else{
+		   shiftHourcalculation = Integer.parseInt(arrEndDate[0])-Integer.parseInt(arrStartDate[0]);
+		   shiftMinutecalculation =  (Float.parseFloat(arrEndDate[1]) -  Float.parseFloat(arrStartDate[1]))/60;
+		   scheduleHoursDifference = shiftHourcalculation + shiftMinutecalculation ;
+	   }
 
+	   return scheduleHoursDifference;
+   }
 }
