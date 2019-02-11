@@ -2,7 +2,6 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
 import static com.legion.utils.MyThreadLocal.getDriver;
-import static org.testng.Assert.fail;
 
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
@@ -21,15 +20,11 @@ import com.legion.utils.SimpleUtils;
 
 import org.openqa.selenium.support.ui.Select;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
@@ -387,7 +382,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "input[ng-class='hoursFieldClass(budget)']")
     private List<WebElement> budgetEditHours;
 
-
+	@FindBy(css = "div.sch-shift-container")
+	private List<WebElement> scheduleShiftsRows;
+	
+	@FindBy(css = "div.sch-day-view-grid-header.fill")
+	private List<WebElement> scheduleShiftTimeHeaderCells;
+	
     final static String consoleScheduleMenuItemText = "Schedule";
 
 
@@ -2491,4 +2491,60 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 		return temperatureText;
 	}
+
+	
+	@Override
+	public HashMap<String, Integer> getScheduleBufferHours() throws Exception
+	{
+		HashMap<String, Integer> schedulePageBufferHours = new HashMap<String, Integer>();
+		int gutterCellCount = 0;
+		int totalHoursCountForShift = scheduleShiftTimeHeaderCells.size();
+		int cellCountInAnHour = 2;
+		int openingBufferHours = 0;
+		int closingBufferHours = 0;
+		if(scheduleShiftsRows.size() > 0 )
+		{
+			for(WebElement scheduleShiftsRow : scheduleShiftsRows)
+			{
+				List<WebElement> scheduleShiftRowCells = scheduleShiftsRow.findElements(By.cssSelector("div.sch-day-view-grid-cell"));
+				String backgroundColorToVerify = "";
+				String[] styles = scheduleShiftRowCells.get(0).getAttribute("style").split(";");
+				for(String styleAttr : styles)
+				{
+					if(styleAttr.toLowerCase().contains("background-color"))
+						backgroundColorToVerify = styleAttr;
+				}
+				if(backgroundColorToVerify != "")
+				{
+					cellCountInAnHour = Integer.valueOf(scheduleShiftRowCells.size() / totalHoursCountForShift);
+					for(WebElement scheduleShiftRowCell : scheduleShiftRowCells)
+					{
+						if(scheduleShiftRowCell.getAttribute("style").contains(backgroundColorToVerify))
+							gutterCellCount++;
+						else {
+							if(openingBufferHours == 0)
+							{
+								openingBufferHours = gutterCellCount;
+								gutterCellCount = 0;
+							}
+								
+						}
+					}
+					closingBufferHours += gutterCellCount;
+				}
+				else
+					SimpleUtils.fail("Schedule Page: Unable to fetch backgroung color of 'Gutter Area'.", false);
+				
+				schedulePageBufferHours.put("closingBufferHours", (closingBufferHours/cellCountInAnHour));
+				schedulePageBufferHours.put("openingBufferHours", (openingBufferHours/cellCountInAnHour));
+				break;
+			}
+		}
+		else
+			SimpleUtils.fail("Schedule Page: Shift Rows not loaded.", false);
+		
+		return schedulePageBufferHours;
+	}
+	
+	
 }

@@ -1,5 +1,7 @@
 package com.legion.pages;
 
+import java.util.HashMap;
+
 public interface ControlsNewUIPage {
 
 	void clickOnControlsConsoleMenu() throws Exception;
@@ -29,6 +31,12 @@ public interface ControlsNewUIPage {
 	public boolean isBudgetSmartcardEnabled() throws Exception;
 
 	public void enableDisableBudgetSmartcard(boolean enable) throws Exception;
+
+	public String getAdvanceScheduleWeekCountToCreate() throws Exception;
+
+	public void updateAdvanceScheduleWeekCountToCreate(String scheduleWeekCoundToCreate) throws Exception;
+
+	public HashMap<String, Integer> getScheduleBufferHours() throws Exception;
 
 	
 }

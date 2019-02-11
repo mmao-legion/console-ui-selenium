@@ -14,7 +14,8 @@
       	        <methods>
                     <!-- <include name="updateUserLocationAsInternalAdmin"/>
                     <include name="updateWorkingHoursAsInternalAdmin"/> -->
-                    <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>
+                    <!-- <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/> -->
+                    <include name="verifySchedulePlanningWindowAndAdditionalScheduleHoursAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>

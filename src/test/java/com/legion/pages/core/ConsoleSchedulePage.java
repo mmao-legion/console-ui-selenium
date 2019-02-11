@@ -1332,5 +1332,12 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         // TODO Auto-generated method stub
     }
 
+	@Override
+	public HashMap<String, Integer> getScheduleBufferHours() throws Exception {
+		return null;
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

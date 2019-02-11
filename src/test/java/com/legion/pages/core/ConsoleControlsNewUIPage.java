@@ -2,10 +2,10 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
@@ -105,6 +105,21 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	
 	@FindBy(css = "lg-button[ng-click=\"saveWorkdayHours()\"]")
 	private WebElement saveAllRegularHoursBtn;
+	
+	@FindBy(css = "form-section[form-title=\"Budget\"]")
+	private WebElement budgetFormSection;
+
+	@FindBy(css = "input-field[origin=\"schedulingWindow\"]")
+	private WebElement schedulingWindowAdvanceWeekCount;
+	
+	@FindBy(css = "div.lg-advanced-box")
+	private List<WebElement> controlsAdvanceButtons;
+	
+	@FindBy(css = "input-field[value=\"sp.weeklySchedulePreference.openingBufferHours\"]")
+	private WebElement openingBufferHours;
+	
+	@FindBy(css = "input-field[value=\"sp.weeklySchedulePreference.closingBufferHours\"]")
+	private WebElement closingBufferHours;
 	
 	
 	String timeSheetHeaderLabel = "Controls";
@@ -424,10 +439,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		else
 			SimpleUtils.fail("Controls Page: Schedule Policies Card not Loaded!", false);
 	}
-	
-	
-	@FindBy(css = "form-section[form-title=\"Budget\"]")
-	private WebElement budgetFormSection;
+
 	
 	@Override
 	public void enableDisableBudgetSmartcard(boolean enable) throws Exception
@@ -465,5 +477,53 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		else
 			SimpleUtils.fail("Controls Page: Schedule Policies Budget form section not loaded!", false);
 		return false;
+	}
+
+	
+	@Override
+	public String getAdvanceScheduleWeekCountToCreate() throws Exception {
+		String selectedWeek = "";
+		if(isElementLoaded(schedulingWindowAdvanceWeekCount))
+		{
+			WebElement advanceScheduleWeekSelectBox = schedulingWindowAdvanceWeekCount.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			Select drpScheduleWeek = new Select(advanceScheduleWeekSelectBox);
+			selectedWeek = drpScheduleWeek.getFirstSelectedOption().getText();
+		}
+		else
+			SimpleUtils.fail("Controls Page: Schedule Policies Advance Schedule weeks not loaded.", false);
+		
+		return selectedWeek;
+	}
+
+
+	@Override
+	public void updateAdvanceScheduleWeekCountToCreate(String scheduleWeekCoundToCreate) throws Exception {
+		if(getAdvanceScheduleWeekCountToCreate().toLowerCase().contains(scheduleWeekCoundToCreate.toLowerCase()))
+			SimpleUtils.pass("Controls Page: Schedule Policies Advance Schedule weeks value '"+scheduleWeekCoundToCreate+" weeks' already Updated.");
+		else {
+			WebElement advanceScheduleWeekSelectBox = schedulingWindowAdvanceWeekCount.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			Select drpScheduleWeek = new Select(advanceScheduleWeekSelectBox);
+			drpScheduleWeek.selectByVisibleText(scheduleWeekCoundToCreate);
+			if(getAdvanceScheduleWeekCountToCreate().toLowerCase().contains(scheduleWeekCoundToCreate.toLowerCase()))
+				SimpleUtils.pass("Controls Page: Schedule Policies Advance Schedule weeks value '"+scheduleWeekCoundToCreate+"' Updated successfully.");
+			else
+				SimpleUtils.fail("Controls Page: Unable to update Schedule Policies Advance Schedule weeks value.", false);
+		}
+	}
+	
+	@Override
+	public HashMap<String, Integer> getScheduleBufferHours() throws Exception
+	{
+		HashMap<String, Integer> bufferHours = new HashMap<String, Integer>();
+		Thread.sleep(2000);
+		if(controlsAdvanceButtons.size() > 0)
+		{
+			click(controlsAdvanceButtons.get(0));
+			bufferHours.put("openingBufferHours", Integer.valueOf(
+					openingBufferHours.findElement(By.cssSelector("input[type=\"number\"]")).getAttribute("value")));
+			bufferHours.put("closingBufferHours", Integer.valueOf(
+					closingBufferHours.findElement(By.cssSelector("input[type=\"number\"]")).getAttribute("value")));
+		}
+		return bufferHours;
 	}
 }

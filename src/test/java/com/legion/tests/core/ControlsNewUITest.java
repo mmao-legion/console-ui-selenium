@@ -3,13 +3,13 @@ package com.legion.tests.core;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import com.legion.pages.DashboardPage;
+import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
+import com.legion.pages.BasePage;
 import com.legion.pages.ControlsNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -158,6 +158,7 @@ public class ControlsNewUITest extends TestBase{
   	  if(isBudgetSmartcardAppeared)
   		SimpleUtils.pass("Budget Smartcard loaded on 'Schedule' tab when Scheduling policies Enabled Budget Smartcard.");
   	  
+  	  
   	  // Disable Budget Smartcard
   	  navigateToControlsSchedulingPolicies(controlsNewUIPage);
   	  enableBudgetSmartcard = false;
@@ -183,5 +184,67 @@ public class ControlsNewUITest extends TestBase{
   		SimpleUtils.fail(e.getMessage(), false);
 	}
   }
+  
+  @Automated(automated =  "Automated")
+  @Owner(owner = "Naval")
+  @Enterprise(name = "KendraScott2_Enterprise")
+  @TestName(description = "TP-142 : Onboarding :- Verify Schedule planning window and additional schedule hours BEFORE and AFTER.")
+  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+  public void verifySchedulePlanningWindowAndAdditionalScheduleHoursAsInternalAdmin(String browser, String username, String password, String location)
+  		throws Exception {
+			
+      DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+      SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);      
+      ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+      //navigateToControlsSchedulingPolicies(controlsNewUIPage);
+      controlsNewUIPage.clickOnControlsConsoleMenu();
+	  SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+	  controlsNewUIPage.clickOnControlsSchedulingPolicies();
+      
+	  // How many weeks in advance can a schedule be created?
+      String scheduleWeekCoundToCreate = "6 weeks";  //8
+      controlsNewUIPage.updateAdvanceScheduleWeekCountToCreate(scheduleWeekCoundToCreate);
+      HashMap<String, Integer> schedulePoliciesBufferHours = controlsNewUIPage.getScheduleBufferHours();
+      // Verify Schedule week can be created in advance
+      SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+  	  schedulePage.clickOnScheduleConsoleMenuItem();
+  	  schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+  	  SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+  	  ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+  	  int weeksCountToBeCreated = scheduleOverviewPage.getScheduleOverviewWeeksCountCanBeCreatInAdvance();
+  	  
+  	  if(weeksCountToBeCreated == Integer.valueOf(scheduleWeekCoundToCreate.split(" ")[0]))
+  		  SimpleUtils.pass("Schedule can be created upto '"+scheduleWeekCoundToCreate+"' in advance as defined in Controls Scheduling Policies.");
+  	  else
+  		SimpleUtils.fail("Schedule can not be created upto '"+scheduleWeekCoundToCreate+"' in advance as defined in Controls Scheduling Policies.", true);
+      
+  	  for(WebElement week : scheduleOverviewPage.getOverviewScheduleWeeks())
+  	  {
+  		  if(! week.getText().toLowerCase().contains("guidance"))
+  		  {
+  			BasePage basePage = new BasePage();
+  			basePage.click(week);
+  			schedulePage.clickOnDayView();
+  			HashMap<String, Integer> schedulePageBufferHours = schedulePage.getScheduleBufferHours();
+  			
+  			// verifying opening buffer Hours
+  			if(schedulePoliciesBufferHours.get("openingBufferHours") == schedulePageBufferHours.get("openingBufferHours"))
+  				SimpleUtils.pass("Schedule page Opening Buffer Hours matched with Scheduling Policies Opening Buffer Hours ('"
+    	  				  + schedulePoliciesBufferHours.get("openingBufferHours") +"/"+ schedulePageBufferHours.get("openingBufferHours")+"').");
+  	  	    else
+  	  	    	SimpleUtils.fail("Schedule page Opening Buffer Hours not matched with Scheduling Policies Opening Buffer Hours ('"
+	  				  + schedulePoliciesBufferHours.get("openingBufferHours") +"/"+ schedulePageBufferHours.get("openingBufferHours")+"').", true);
+  			// verifying closing buffer Hours
+  			if(schedulePoliciesBufferHours.get("closingBufferHours") == schedulePageBufferHours.get("closingBufferHours"))
+  	  		  SimpleUtils.pass("Schedule page Closing Buffer Hours matched with Scheduling Policies Closing Buffer Hours ('"
+  	  				  + schedulePoliciesBufferHours.get("closingBufferHours") +"/"+ schedulePageBufferHours.get("closingBufferHours")+"').");
+  	  	    else
+  	  	    	SimpleUtils.fail("Schedule page Closing Buffer Hours not matched with Scheduling Policies Closing Buffer Hours ('"
+	  				  + schedulePoliciesBufferHours.get("closingBufferHours") +"/"+ schedulePageBufferHours.get("closingBufferHours")+"').", true);
+  			break;
+  		  }
+  	  }
+  }
+  
   
 }
