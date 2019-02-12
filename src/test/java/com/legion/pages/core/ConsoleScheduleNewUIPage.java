@@ -388,6 +388,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(css = "div.sch-day-view-grid-header.fill")
 	private List<WebElement> scheduleShiftTimeHeaderCells;
 	
+	@FindBy(css = "img[ng-if=\"hasViolateCompliance(line, scheduleWeekDay)\"]")
+	private List<WebElement> complianceReviewDangerImgs;
+	
+	
     final static String consoleScheduleMenuItemText = "Schedule";
 
 
@@ -2014,18 +2018,33 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			for(WebElement carouselCard: carouselCards)
 			{
 				smartCardScrolleToLeft();
-				if(carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase()))
+				if(carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase()) 
+						&& isSmartcardContainText(carouselCard))
 					return true;
 				else if(! carouselCard.isDisplayed()) {
 					while(isSmartCardScrolledToRightActive() == true)
 					{
-						if(carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase()))
+						if(carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase())
+								&& isSmartcardContainText(carouselCard))
 							return true;
 					}
 				}
 			}
 		}
 		return false;
+	}
+	
+	public boolean isSmartcardContainText(WebElement smartcardElement) throws Exception
+	{
+		if(smartcardElement.getText().trim().length() > 0)
+		{
+			return true;
+		}
+		else
+		{
+			SimpleUtils.fail("Schedule Page: Smartcard contains No Text or Spinning Icon on duration '"+getActiveWeekText()+"'.", true);
+			return false;
+		}
 	}
 
 
@@ -2547,4 +2566,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	}
 	
 	
+	@Override
+	public boolean isComlianceReviewRequiredForActiveWeek() throws Exception
+	{
+		if(complianceReviewDangerImgs.size() > 0)
+		{
+			return true;
+		}
+		return false;
+	}
 }

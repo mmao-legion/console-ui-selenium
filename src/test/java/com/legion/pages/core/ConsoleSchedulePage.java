@@ -1339,5 +1339,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		
 	}
 
+	@Override
+	public boolean isComlianceReviewRequiredForActiveWeek() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 }

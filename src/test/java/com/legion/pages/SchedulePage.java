@@ -108,4 +108,5 @@ public interface SchedulePage {
 	public String getWeatherTemperature() throws Exception;
 	public void validatingGenrateSchedule() throws Exception;
 	public HashMap<String, Integer> getScheduleBufferHours() throws Exception;
+	public boolean isComlianceReviewRequiredForActiveWeek() throws Exception;
 }

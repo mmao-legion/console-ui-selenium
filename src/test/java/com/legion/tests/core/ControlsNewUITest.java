@@ -125,7 +125,6 @@ public class ControlsNewUITest extends TestBase{
     	  controlsNewUIPage.updateControlsRegularHours(isStoreClosed, openingHours, closingHours, day);
       }
       controlsNewUIPage.clickOnSaveRegularHoursBtn();
-
   }
   
   
@@ -245,6 +244,5 @@ public class ControlsNewUITest extends TestBase{
   		  }
   	  }
   }
-  
   
 }

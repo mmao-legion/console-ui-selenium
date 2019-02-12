@@ -8,18 +8,18 @@
  	</listeners>
 
   
-    <test name="Controls New UI Test">
+    <!-- <test name="Controls New UI Test">
         <classes>
             <class name="com.legion.tests.core.ControlsNewUITest">
       	        <methods>
-                    <!-- <include name="updateUserLocationAsInternalAdmin"/>
-                    <include name="updateWorkingHoursAsInternalAdmin"/> -->
-                    <!-- <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/> -->
+                    <include name="updateUserLocationAsInternalAdmin"/>
+                    <include name="updateWorkingHoursAsInternalAdmin"/>
+                    <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>
                     <include name="verifySchedulePlanningWindowAndAdditionalScheduleHoursAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
-    </test>
+    </test> -->
 
     <!-- <test name="Traffic Forecast for New UI Test">
         <classes>
@@ -41,12 +41,12 @@
         </classes>
     </test>
 
-
+-->
     <test name="Schedule New UI Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleNewUITest">
       	        <methods>
-                    <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/>
+                   <!--  <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/>
                     <include name="viewAndFilterScheduleWithGroupByAllInWeekViewAsStoreManager"/>
                     <include name="viewAndFilterScheduleWithGroupByWorkRoleInWeekViewAsStoreManager"/>
                     <include name="viewAndFilterScheduleWithGroupByTMsInWeekViewAsStoreManager"/>
@@ -72,12 +72,14 @@
                     <include name="validatingGenerateScheduleStoreManager"/>
                     <include name="verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager"/>
                     <include name="validateScheduleGenerationFunctionalityAsStoreManager"/>
-                    <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>
+                    <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/> -->
+                    <!-- <include name="validateScheduleSmartCardsAsStoreManager"/> -->
+                    <include name="validateSchedulePublishFeatureAsStoreManager"/>
                 </methods>
              </class>
         </classes>
     </test>
-
+<!-- 
 
     <test name="Schedule Overview Test">
         <classes>
