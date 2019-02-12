@@ -71,6 +71,17 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy (css = ".center.ng-scope")
 	private WebElement controlsPage;
 
+	@FindBy (css = "div.col-sm-8.text-left")
+	private WebElement todaysForecast;
+	
+	@FindBy (css = "div.col-sm-4.text-left")
+	private WebElement startingSoon;
+	
+	@FindBy (css = "div.fx-center")
+	private WebElement welcomeText;
+	
+	
+	
     public ConsoleDashboardPage() {
     	PageFactory.initElements(getDriver(), this);
     }
@@ -85,7 +96,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     		return false;
     	}
     	if(isElementLoaded(dashboardTodaysForecastDiv)){
-    		SimpleUtils.pass("Today's Fore Cast Labels loaded Successfully on Dashboard!");
+    		SimpleUtils.pass("Today's ForeCast Labels loaded Successfully on Dashboard!");
     	}else{
     		return false;
     	}

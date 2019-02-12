@@ -105,6 +105,7 @@ public class BasePage {
     	
     }
     
+    
     public static void waitUntilElementIsVisible(final WebElement element) {
         ExpectedCondition<Boolean> expectation = _driver -> element.isDisplayed();
 

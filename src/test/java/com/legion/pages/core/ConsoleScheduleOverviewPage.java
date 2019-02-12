@@ -42,6 +42,15 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
 	@FindBy(css = "div.lgn-calendar.current-month")
 	private List<WebElement> overviewCalendarMonthsYears;
+	
+	@FindBy(css = "div[ng-if='!loading']")
+    private WebElement scheduleTable;
+
+    @FindBy(css = "div.calendar-week")
+    private WebElement calendar;
+    
+    @FindBy (css = "div.console-navigation-item-label.Schedule")
+    private WebElement consoleSchedulePageTabElement;
 
 
 	public ConsoleScheduleOverviewPage()
@@ -359,5 +368,31 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
 		}
 		return weekHours;
+	}
+	
+	//added by Gunjan
+	
+	@Override
+	public boolean loadScheduleOverview() throws Exception {
+		// TODO Auto-generated method stub
+		boolean flag=false;
+		if(isElementLoaded(consoleSchedulePageTabElement)){
+			consoleSchedulePageTabElement.click();
+			if(isElementLoaded(calendar)){
+				flag = true;
+				SimpleUtils.pass("Calendar on Schedule Overview Loaded Successfully!");
+			}else{
+				SimpleUtils.fail("Calendar on Schedule Overview Not Loaded Successfully!", false);
+			}
+			if(isElementLoaded(scheduleTable)){
+				flag = true;
+				SimpleUtils.pass("Schedule Table on Schedule Overview Loaded Successfully!");
+			}else{
+				SimpleUtils.fail("Schedule Table on Schedule Overview Not Loaded Successfully!", false);
+			}
+		}else{
+			SimpleUtils.fail("ScheduleTab left navigation menu not found", false);
+		}
+		return flag;
 	}
 }

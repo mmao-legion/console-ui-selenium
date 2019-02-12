@@ -9,8 +9,12 @@ import org.testng.AssertJUnit;
 import org.testng.Reporter;
 
 import com.aventstack.extentreports.Status;
+import com.legion.pages.AnalyticsPage;
 import com.legion.pages.LoginPage;
+import com.legion.pages.SalesForecastPage;
+import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
+import com.legion.pages.StaffingGuidancePage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.DashboardPage;
 import com.legion.tests.TestBase;
@@ -31,6 +35,7 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
+
 import static com.legion.utils.MyThreadLocal.*;
 
 
@@ -85,6 +90,29 @@ public class NavigationTest extends TestBase {
         schedulePage.goToSchedule();
         ExtentTestManager.getTest().log(Status.PASS,"Schedule Page - Navigation sales, guidance and schedule finish Successfully!"); 
     }
+    
+    @Automated(automated = "Automated")
+   	@Owner(owner = "Gunjan")
+       @Enterprise(name = "KendraScott2_Enterprise")
+       @TestName(description = "TP-144 : Validate navigation to below tabs and loading of data[No spinning icon]")
+       @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+       public void legionAppNavigationAllTabsStoreManager(String username, String password, String browser, String location) throws Exception {
+    	   AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+    	   analyticsPage.loadAnalyticsTab();
+    	   TeamPage teamPage = pageFactory.createConsoleTeamPage();
+    	   teamPage.loadTeamTab();
+    	   DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+           dashboardPage.isToday();
+           ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+           scheduleOverviewPage.loadScheduleOverview();
+           SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+           salesForecastPage.loadSalesForecast();
+           StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
+           staffingGuidancePage.loadStaffingGuidance();
+           SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+           schedulePage.loadSchedule();
+           
+       }
     
     
     @Automated(automated = "Manual")

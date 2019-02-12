@@ -12,4 +12,6 @@ public interface AnalyticsPage {
 	public void navigateToNextWeek() throws Exception;
 
 	public String getAnalyticsActiveDuration();
+	
+	public boolean loadAnalyticsTab() throws Exception;
 }

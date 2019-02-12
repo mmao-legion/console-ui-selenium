@@ -21,7 +21,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	
 	 @FindBy(css="div.console-navigation-item-label.Analytics")
 	 private WebElement consoleAnalyticsPageTabElement;
-	 
+	 	 
 	 @FindBy(className="analytics-dashboard-section")
 	 private WebElement analyticsSectionsDivClass;
 	 
@@ -81,7 +81,13 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	 
 	 @FindBy(css= "div.sch-calendar-day-dimension.sch-calendar-day")
 	 private List<WebElement> analyticsCalendarDays;
-
+	 
+	 @FindBy(css= "div.sch.ng-scope")
+	 private WebElement alalyticsDivReportElement;
+	 
+	 @FindBy(xpath= "//span[contains(text(),'Reports')]")
+	 private WebElement analyticsReportTab;
+	 
 
 	public ConsoleAnalyticsPage(){
 		PageFactory.initElements(getDriver(), this);
@@ -142,6 +148,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		
 	}
 	
+
 	public void getStaffingForecastAccuracy(WebElement analyticsDivElement) throws Exception
 	{
 		String analyticsTMSHasHoursDataSectionText = "";
@@ -271,5 +278,77 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		}
 		return duration;
 	}
+
+	
+	//added by Gunjan
+	
+	public boolean loadAnalyticsSubTab() throws Exception{
+		boolean flag = true;
+		if(isElementLoaded(consoleAnalyticsPageTabElement)){
+			//activeConsoleName = analyticsConsoleName.getText();
+			click(consoleAnalyticsPageTabElement);
+			if(analyticsDivElements.size()!=0){
+				for(int i=0;i< analyticsDivElements.size();i++){
+					if(isElementLoaded(analyticsDivElements.get(i))){
+						SimpleUtils.pass("Analytics sub-tab element loaded successfully!");
+						flag = true;
+						return flag;
+					}else{
+						SimpleUtils.report("Analytics sub-tab element not Loaded Successfully for few !");
+					}
+				}
+				
+			}else{
+				SimpleUtils.fail("Analytics sub-tab not Loaded Successfully!",true);
+				flag = false;
+				return flag;
+			}
+		}else{
+			SimpleUtils.fail("Analytics menu Tab not Loaded Successfully!",false);
+		}
+		return flag;
+
+	}
+	
+	public boolean loadReportsSubTab() throws Exception{
+		boolean flag = true;
+		if(isElementLoaded(analyticsReportTab)){
+			//activeConsoleName = analyticsConsoleName.getText();
+			click(analyticsReportTab);
+			if(isElementLoaded(alalyticsDivReportElement)){
+				SimpleUtils.pass("Analytics Report Section Loaded Successfully!");
+				flag = true;
+				return flag;
+				}else{
+					SimpleUtils.fail("Analytics Report Section not Loaded Successfully for few !",true);
+					flag = false;
+					return flag;
+			}
+		}else{
+			SimpleUtils.fail("Reports Analytics sub-menu Tab not Loaded Successfully!",false);
+			
+		}
+		return flag;
+
+	}
+	
+	@Override
+	public boolean loadAnalyticsTab() throws Exception{
+		// TODO Auto-generated method stub
+		boolean flag=true;
+		boolean resultLoadAnalyticsSubTab=loadAnalyticsSubTab();
+		boolean resultLoadReportsSubTab=loadReportsSubTab();
+		if(resultLoadAnalyticsSubTab==true && resultLoadReportsSubTab==true){
+			SimpleUtils.pass("Analytics tab loaded successfully");
+			flag = true;
+			return flag;
+		}else if(resultLoadAnalyticsSubTab!=true || resultLoadReportsSubTab!=true){
+			SimpleUtils.fail("Analytics tab not loaded successfully",false);
+		}else {
+			SimpleUtils.fail("Analytics tab not loaded successfully",false);
+		}
+		return flag;
+	}
+
 
 }

@@ -12,4 +12,5 @@ public interface TeamPage {
     public void performSearchRoster(List<String> list)throws Exception;
 	public void coverage();
 	public void coverageViewToPastOrFuture(String nextWeekView, int weekCount);
+	public boolean loadTeamTab() throws Exception;
 }

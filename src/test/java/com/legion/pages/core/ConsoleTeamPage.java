@@ -130,6 +130,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
     	}
 	}
     
+   //added by Gunjan
   //Check the presence of desired workrole in the TeamPage
   	public boolean checkRole(String key){
   		for (WebElement jobTitles : jobTitle){
@@ -230,7 +231,61 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
   					}
   				}
   			}
+  			
   		}
+  		
+  		public boolean rosterTeamLoading() throws Exception{
+  			boolean flag=false;
+  			goToTeam();
+  			if(isElementLoaded(rosterBodyElement)){
+					SimpleUtils.pass("Roster sub-tab of team tab loaded successfully");
+					flag=true;
+					return flag;
+  			}else{
+				SimpleUtils.fail("Roster sub-tab of team tab not loaded successfully",false);
+  			}
+			return flag;
+  			
+  		}
+  		
+  		public boolean coverageTeamLoading() throws Exception{
+  			boolean flag=false;
+  			if(isElementLoaded(goToCoverageTab))
+  			{
+  				SimpleUtils.pass("Coverage tab present on Team Page");
+  				goToCoverageTab.click();
+  				if(isElementLoaded(coverageLoading)){
+  					SimpleUtils.pass("Coverage Sub Tab of Team tab Loaded Successfully");
+  					flag=true;
+  					return flag;
+  				}else{
+  					SimpleUtils.fail("Coverage Sub Tab of Team tab Not Loaded Successfully",false);
+  				}
+  			
+  			}else{
+  				SimpleUtils.fail("Coverage tab not present on Team Tab",false);
+  			}
+			return flag;
+  			
+  		}
+
+		@Override
+		public boolean loadTeamTab() throws Exception {
+			// TODO Auto-generated method stub
+			boolean flag=false;
+			boolean resultrosterTeamLoading = rosterTeamLoading();
+			boolean resultcoverageTeamLoading = coverageTeamLoading();
+			if(resultrosterTeamLoading == true && resultcoverageTeamLoading == true){
+				SimpleUtils.pass("Team tab loaded successfully");
+				flag = true;
+				return flag;
+			}else {
+				SimpleUtils.fail("Team tab not loaded successfully",false);
+			}
+			return flag;
+		}
+  		
+  		
     
 //    public boolean isTeam() throws Exception
 //	{

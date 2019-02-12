@@ -2491,4 +2491,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 		return temperatureText;
 	}
+
+	@Override
+	public boolean loadSchedule() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

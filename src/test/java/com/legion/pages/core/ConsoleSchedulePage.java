@@ -39,6 +39,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @FindBy(css = "span[ng-if='canEditEstimatedHourlyWage(budget)']")
     private List<WebElement> scheduleDraftWages;
+    
+    @FindBy (xpath = "//span[contains(text(),'Schedule')]")
+	private WebElement ScheduleSubMenu;
 
     @FindBy(css = "div[helper-text-position='top'] span.legend-label")
     private WebElement published;
@@ -72,7 +75,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @FindBy(xpath = "//div[contains(text(),'Guidance')]")
     private WebElement guidance;
-
+    
     @FindBy(xpath = "//span[contains(text(),'Staffing Guidance')]")
     private WebElement goToStaffingGuidanceTab;
 
@@ -184,6 +187,25 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @FindBy(xpath = "//div[contains(@class,'card-carousel-card-sub-title')][contains(text(),'Hours')]")
     private WebElement budgetOnbudgetSmartCard;
+    
+    @FindBy (css = "div.console-navigation-item-label.Schedule")
+	private WebElement consoleSchedulePageTabElement;
+    
+    @FindBy (css = "div[ng-if*='guidance-week-shifts']")
+    private WebElement scheduleTableWeekView;
+    
+    @FindBy (css = "div.sch-day-view-grid")
+    private WebElement scheduleTableDayView;
+    
+    
+    @FindBy (css = "div.lg-button-group-first")
+	private WebElement scheduleDayView;
+    
+    @FindBy (css = "div.lg-button-group-last")
+    private WebElement scheduleWeekView;
+        
+    @FindBy (css = "div.card-carousel-carousel")
+    private WebElement smartcard;
 
     public ConsoleSchedulePage() {
         PageFactory.initElements(getDriver(), this);
@@ -1331,6 +1353,55 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	public void validatingGenrateSchedule() throws Exception {
         // TODO Auto-generated method stub
     }
+//added by Gunjan
+	@Override
+	public boolean loadSchedule() throws Exception {
+		// TODO Auto-generated method stub
+		boolean flag=false;
+		if(isElementLoaded(ScheduleSubMenu)){
+			click(ScheduleSubMenu);
+			SimpleUtils.pass("Clicked on Schedule Sub Menu... ");
+			if(isElementLoaded(scheduleDayView)){
+				click(scheduleDayView);
+				SimpleUtils.pass("Clicked on Day View of Schedule Tab");
+				if(isElementLoaded(smartcard)){
+					flag = true;
+					SimpleUtils.pass("Smartcard Section in Day View Loaded Successfully!");
+				}else{
+					SimpleUtils.fail("Smartcard Section in Day View Not Loaded Successfully!", false);
+				}
+				if(isElementLoaded(scheduleTableDayView)){
+					flag = true;
+					SimpleUtils.pass("Schedule in Day View Loaded Successfully!");
+				}else{
+					SimpleUtils.fail("Schedule in Day View Not Loaded Successfully!", false);
+				}
+			}else{
+				SimpleUtils.pass("Day View button not found in Schedule Sub Tab");
+			}
+			if(isElementLoaded(scheduleWeekView)){
+				click(scheduleWeekView);
+				SimpleUtils.pass("Clicked on Week View of Schedule Tab");
+				if(isElementLoaded(smartcard)){
+					flag = true;
+					SimpleUtils.pass("Smartcard Section in Week View Loaded Successfully!");
+				}else{
+					SimpleUtils.fail("Smartcard Section in Week View Not Loaded Successfully!", false);
+				}
+				if(isElementLoaded(scheduleTableWeekView)){
+					flag = true;
+					SimpleUtils.pass("Schedule in Week View Loaded Successfully!");
+				}else{
+					SimpleUtils.fail("Schedule in Week View Not Loaded Successfully!", false);
+				}
+			}else{
+				SimpleUtils.pass("Week View button not found in Schedule Sub Tab");
+			}
+		}else{
+			SimpleUtils.fail("Schedule Sub Menu Tab Not Found", false);
+		}
+		return flag;
+	}
 
 
 }
