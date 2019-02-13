@@ -296,7 +296,7 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 				flag = true;
 				SimpleUtils.pass("Projected Traffic Loaded in DayView Successfully!");
 				}else{
-					SimpleUtils.fail("Projected Traffic Not Loaded in DayView Successfully!", false);
+					SimpleUtils.fail("Projected Traffic Not Loaded in DayView Successfully!", true);
 				}
 			}else{
 				SimpleUtils.pass("Day View button not found in Projected Traffic");
@@ -308,13 +308,13 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 				flag = true;
 				SimpleUtils.pass("Projected Traffic Loaded in Week View Successfully!");
 				}else{
-					SimpleUtils.fail("Projected Traffic Not Loaded in Week View Successfully!", false);
+					SimpleUtils.fail("Projected Traffic Not Loaded in Week View Successfully!", true);
 				}
 			}else{
 				SimpleUtils.pass("Week View button not found in Projected Traffic");
 			}
 		}else{
-			SimpleUtils.fail("Projected Traffic Sub Menu Tab Not Found", false);
+			SimpleUtils.fail("Projected Traffic Sub Menu Tab Not Found", true);
 		}
 		return flag;
 	}

@@ -242,7 +242,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					flag=true;
 					return flag;
   			}else{
-				SimpleUtils.fail("Roster sub-tab of team tab not loaded successfully",false);
+				SimpleUtils.fail("Roster sub-tab of team tab not loaded successfully",true);
   			}
 			return flag;
   			
@@ -259,11 +259,11 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
   					flag=true;
   					return flag;
   				}else{
-  					SimpleUtils.fail("Coverage Sub Tab of Team tab Not Loaded Successfully",false);
+  					SimpleUtils.fail("Coverage Sub Tab of Team tab Not Loaded Successfully",true);
   				}
   			
   			}else{
-  				SimpleUtils.fail("Coverage tab not present on Team Tab",false);
+  				SimpleUtils.fail("Coverage tab not present on Team Tab",true);
   			}
 			return flag;
   			
@@ -280,7 +280,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				flag = true;
 				return flag;
 			}else {
-				SimpleUtils.fail("Team tab not loaded successfully",false);
+				SimpleUtils.fail("Team tab not loaded successfully",true);
 			}
 			return flag;
 		}

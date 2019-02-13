@@ -90,10 +90,10 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 	@FindBy (css = "div.console-navigation-item-label.Schedule")
 	private WebElement consoleSchedulePageTabElement;
 	
-	@FindBy (css = "div[ng-if*='guidance-week-chart']")
-	private WebElement staffingGuidanceWeekView;
+	@FindBy (css = "div[ng-if*='guidance-week-chart'] div.sch-slot-detail")
+	private List<WebElement> staffingGuidanceWeekView;
 	
-	@FindBy (css = "div.chart-box")
+	@FindBy (css = "div.day-chart-graph-container div[aria-label*='A']")
 	private WebElement staffingGuidanceDayViewGraph;
 
 	
@@ -486,7 +486,7 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 				flag = true;
 				SimpleUtils.pass("Staffing Guidance Loaded in DayView Successfully!");
 				}else{
-					SimpleUtils.fail("Staffing Guidance Not Loaded in DayView Successfully!", false);
+					SimpleUtils.fail("Staffing Guidance Not Loaded in DayView Successfully!", true);
 				}
 			}else{
 				SimpleUtils.pass("Day View button not found in Staffing Guidance");
@@ -494,17 +494,17 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 			if(isElementLoaded(staffingGuidancePageWeekViewButton)){
 				click(staffingGuidancePageWeekViewButton);
 				SimpleUtils.pass("Clicked on Staffing Guidance Week View");
-				if(isElementLoaded(staffingGuidanceWeekView)){
+				if(staffingGuidanceWeekView.size()!=0){
 					flag = true;
-					SimpleUtils.pass("Staffing Guidance Loaded Loaded in Week View Successfully!");
+					SimpleUtils.pass("Staffing Guidance Loaded in Week View Successfully!");
 				}else{
-					SimpleUtils.fail("Staffing Guidance Not Loaded in Week View Successfully!", false);
+					SimpleUtils.fail("Staffing Guidance Not Loaded in Week View Successfully!", true);
 				}
 			}else{
 				SimpleUtils.pass("Week View button not found in Staffing Guidance");
 			}
 		}else{
-			SimpleUtils.fail("Staffing Guidance Sub Menu Tab Not Found", false);
+			SimpleUtils.fail("Staffing Guidance Sub Menu Tab Not Found", true);
 		}
 		return flag;
 	}

@@ -304,7 +304,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 				return flag;
 			}
 		}else{
-			SimpleUtils.fail("Analytics menu Tab not Loaded Successfully!",false);
+			SimpleUtils.fail("Analytics menu Tab not Loaded Successfully!",true);
 		}
 		return flag;
 
@@ -325,7 +325,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 					return flag;
 			}
 		}else{
-			SimpleUtils.fail("Reports Analytics sub-menu Tab not Loaded Successfully!",false);
+			SimpleUtils.fail("Reports Analytics sub-menu Tab not Loaded Successfully!",true);
 			
 		}
 		return flag;
@@ -343,9 +343,9 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 			flag = true;
 			return flag;
 		}else if(resultLoadAnalyticsSubTab!=true || resultLoadReportsSubTab!=true){
-			SimpleUtils.fail("Analytics tab not loaded successfully",false);
+			SimpleUtils.fail("Analytics tab not loaded successfully",true);
 		}else {
-			SimpleUtils.fail("Analytics tab not loaded successfully",false);
+			SimpleUtils.fail("Analytics tab not loaded successfully",true);
 		}
 		return flag;
 	}

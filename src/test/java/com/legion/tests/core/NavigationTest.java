@@ -97,12 +97,10 @@ public class NavigationTest extends TestBase {
        @TestName(description = "TP-144 : Validate navigation to below tabs and loading of data[No spinning icon]")
        @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
        public void legionAppNavigationAllTabsStoreManager(String username, String password, String browser, String location) throws Exception {
-    	   AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
-    	   analyticsPage.loadAnalyticsTab();
+	       DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	       dashboardPage.verifyDashboardPageLoadedProperly();
     	   TeamPage teamPage = pageFactory.createConsoleTeamPage();
     	   teamPage.loadTeamTab();
-    	   DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-           dashboardPage.isToday();
            ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
            scheduleOverviewPage.loadScheduleOverview();
            SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
@@ -111,6 +109,8 @@ public class NavigationTest extends TestBase {
            staffingGuidancePage.loadStaffingGuidance();
            SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
            schedulePage.loadSchedule();
+           AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+    	   analyticsPage.loadAnalyticsTab();
            
        }
     

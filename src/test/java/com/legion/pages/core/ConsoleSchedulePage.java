@@ -1368,13 +1368,13 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 					flag = true;
 					SimpleUtils.pass("Smartcard Section in Day View Loaded Successfully!");
 				}else{
-					SimpleUtils.fail("Smartcard Section in Day View Not Loaded Successfully!", false);
+					SimpleUtils.fail("Smartcard Section in Day View Not Loaded Successfully!", true);
 				}
 				if(isElementLoaded(scheduleTableDayView)){
 					flag = true;
 					SimpleUtils.pass("Schedule in Day View Loaded Successfully!");
 				}else{
-					SimpleUtils.fail("Schedule in Day View Not Loaded Successfully!", false);
+					SimpleUtils.fail("Schedule in Day View Not Loaded Successfully!", true);
 				}
 			}else{
 				SimpleUtils.pass("Day View button not found in Schedule Sub Tab");
@@ -1386,19 +1386,19 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 					flag = true;
 					SimpleUtils.pass("Smartcard Section in Week View Loaded Successfully!");
 				}else{
-					SimpleUtils.fail("Smartcard Section in Week View Not Loaded Successfully!", false);
+					SimpleUtils.fail("Smartcard Section in Week View Not Loaded Successfully!", true);
 				}
 				if(isElementLoaded(scheduleTableWeekView)){
 					flag = true;
 					SimpleUtils.pass("Schedule in Week View Loaded Successfully!");
 				}else{
-					SimpleUtils.fail("Schedule in Week View Not Loaded Successfully!", false);
+					SimpleUtils.fail("Schedule in Week View Not Loaded Successfully!", true);
 				}
 			}else{
 				SimpleUtils.pass("Week View button not found in Schedule Sub Tab");
 			}
 		}else{
-			SimpleUtils.fail("Schedule Sub Menu Tab Not Found", false);
+			SimpleUtils.fail("Schedule Sub Menu Tab Not Found", true);
 		}
 		return flag;
 	}

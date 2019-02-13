@@ -382,16 +382,16 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 				flag = true;
 				SimpleUtils.pass("Calendar on Schedule Overview Loaded Successfully!");
 			}else{
-				SimpleUtils.fail("Calendar on Schedule Overview Not Loaded Successfully!", false);
+				SimpleUtils.fail("Calendar on Schedule Overview Not Loaded Successfully!", true);
 			}
 			if(isElementLoaded(scheduleTable)){
 				flag = true;
 				SimpleUtils.pass("Schedule Table on Schedule Overview Loaded Successfully!");
 			}else{
-				SimpleUtils.fail("Schedule Table on Schedule Overview Not Loaded Successfully!", false);
+				SimpleUtils.fail("Schedule Table on Schedule Overview Not Loaded Successfully!", true);
 			}
 		}else{
-			SimpleUtils.fail("ScheduleTab left navigation menu not found", false);
+			SimpleUtils.fail("ScheduleTab left navigation menu not found", true);
 		}
 		return flag;
 	}

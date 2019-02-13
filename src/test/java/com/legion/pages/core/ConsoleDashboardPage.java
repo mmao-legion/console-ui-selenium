@@ -133,7 +133,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	if(isElementLoaded(dashboardUpcomingShiftContainer))
     		SimpleUtils.pass("Dashboard Page 'Upcoming Shift Container' Section Loaded Successfully!");
     	else
-    		SimpleUtils.fail("Dashboard Page 'Upcoming Shift Container' Section Loaded Successfully!",true);
+    		SimpleUtils.fail("Dashboard Page 'Upcoming Shift Container' Section not Loaded Successfully!",true);
     	
     	/*
     	 *  Check whether 'Today's Forecast' Section appear or not on Dashboard.
@@ -141,7 +141,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	if(isElementLoaded(dashboardTodaysForecastSection))
     		SimpleUtils.pass("Dashboard Page 'Today's Forecast' Section Loaded Successfully!");
     	else
-    		SimpleUtils.fail("Dashboard Page 'Today's Forecast' Section Loaded Successfully!",true);
+    		SimpleUtils.fail("Dashboard Page 'Today's Forecast' Section not Loaded Successfully!",true);
     	
     	/*
     	 *  Check whether 'Projected Demand Graph' Section appear or not on Dashboard.
@@ -149,7 +149,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	if(isElementLoaded(dashboardProjectedDemandGraph))
     		SimpleUtils.pass("Dashboard Page 'Projected Demand Graph' Section Loaded Successfully!");
     	else
-    		SimpleUtils.fail("Dashboard Page 'Projected Demand Graph' Section Loaded Successfully!",true);
+    		SimpleUtils.fail("Dashboard Page 'Projected Demand Graph' Section not Loaded Successfully!",true);
 
     }
 
