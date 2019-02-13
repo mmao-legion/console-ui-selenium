@@ -2575,4 +2575,49 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		}
 		return false;
 	}
+
+	@FindBy(css = "lg-dropdown-base[ng-if=\"isAdmin\"]")
+	private WebElement scheduleAdminDropDownBtn;
+	
+	@FindBy(css = "div[ng-repeat=\"action in supportedAdminActions.actions\"]")
+	private List<WebElement> scheduleAdminDropDownOptions;
+	
+	@FindBy(css = "button[ng-click=\"yesClicked()\"]")
+	private WebElement unGenerateBtnOnPopup;
+	
+	@Override
+	public void unGenerateActiveScheduleScheduleWeek() throws Exception {
+		String unGenerateScheduleOptionText = "Ungenerate Schedule";
+		if(isElementLoaded(scheduleAdminDropDownBtn, 10))
+		{
+			click(scheduleAdminDropDownBtn);
+			if(scheduleAdminDropDownOptions.size() > 0)
+			{
+				for(WebElement scheduleAdminDropDownOption : scheduleAdminDropDownOptions)
+				{
+					if(scheduleAdminDropDownOption.getText().toLowerCase().contains(unGenerateScheduleOptionText.toLowerCase()))
+					{
+						click(scheduleAdminDropDownOption);
+						if(isElementLoaded(unGenerateBtnOnPopup))
+						{
+							click(unGenerateBtnOnPopup);
+							SimpleUtils.pass("Schedule Page: Active Week ('" + getActiveWeekText() + "') Ungenerated Successfully.");
+						}
+						else
+							SimpleUtils.fail("Schedule Page: Ungenerate popup 'Ungenerate Button not loaded for the week: '"
+								+ getActiveWeekText() +"'.", false);
+						break;
+					}
+						
+				}
+			}
+			else
+				SimpleUtils.fail("Schedule Page: Admin dropdown Options not loaded to Ungenerate the Schedule for the Week : '"
+						+ getActiveWeekText() +"'.", false);
+		}
+		else
+			SimpleUtils.fail("Schedule Page: Admin dropdown button not loaded to Ungenerate the Schedule for the Week : '"
+					+ getActiveWeekText() +"'.", false);
+			
+	}
 }

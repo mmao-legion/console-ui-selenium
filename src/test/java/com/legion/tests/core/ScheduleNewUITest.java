@@ -1922,4 +1922,47 @@ public class ScheduleNewUITest extends TestBase{
 	        	SimpleUtils.report("No Draft/Guidance week found.");
 	    }
 	    
+	    @Automated(automated =  "Automated")
+	    @Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-148 : Validate Schedule ungenerate feature.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void validateScheduleUngenerateFeatureAsInternalAdmin(String browser, String username, String password, String location)
+	    		throws Exception {
+	    	DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+	        schedulePage.clickOnScheduleConsoleMenuItem();
+	    	schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	    	SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!"
+	    			,schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+	    	
+	    	ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+	    	BasePage basePase = new BasePage();
+	        List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+	        boolean isWeekFoundToUnGenerate = false;
+	        for(WebElement overviewWeek : overviewWeeks)
+	        {
+	        	if(! overviewWeek.getText().contains(overviewWeeksStatus.Guidance.getValue()))
+	        	{
+	        		String weekStatus = overviewWeek.getText();
+	        		isWeekFoundToUnGenerate = true;
+	        		basePase.click(overviewWeek);
+	        		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+	        		SimpleUtils.assertOnFail("Schedule with status: '" + weekStatus + "' not Generated for week: '"+ schedulePage.getActiveWeekText() +"'"
+	        				, isActiveWeekGenerated, false);
+	        		schedulePage.unGenerateActiveScheduleScheduleWeek();
+	        		isActiveWeekGenerated = schedulePage.isWeekGenerated();
+	        		if(! isActiveWeekGenerated)
+	        			SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' UnGenerated Successfully.");
+	        		else
+	        			SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' not UnGenerated.", false);
+	        		break;
+	        	}
+	        }
+	        
+	        if(! isWeekFoundToUnGenerate)
+	        	SimpleUtils.report("No Draft/Published/Finalized week found to Ungenerate Schedule.");
+	    }
+	    
     }

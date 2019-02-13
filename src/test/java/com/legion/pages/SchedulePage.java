@@ -109,4 +109,5 @@ public interface SchedulePage {
 	public void validatingGenrateSchedule() throws Exception;
 	public HashMap<String, Integer> getScheduleBufferHours() throws Exception;
 	public boolean isComlianceReviewRequiredForActiveWeek() throws Exception;
+	public void unGenerateActiveScheduleScheduleWeek() throws Exception;
 }

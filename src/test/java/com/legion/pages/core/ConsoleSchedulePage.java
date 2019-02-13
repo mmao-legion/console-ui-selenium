@@ -1345,5 +1345,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		return false;
 	}
 
+	@Override
+	public void unGenerateActiveScheduleScheduleWeek() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

@@ -74,7 +74,8 @@
                     <include name="validateScheduleGenerationFunctionalityAsStoreManager"/>
                     <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/> -->
                     <!-- <include name="validateScheduleSmartCardsAsStoreManager"/> -->
-                    <include name="validateSchedulePublishFeatureAsStoreManager"/>
+                    <!-- <include name="validateSchedulePublishFeatureAsStoreManager"/> -->
+                    <include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>
                 </methods>
              </class>
         </classes>
