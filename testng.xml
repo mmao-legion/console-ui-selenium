@@ -43,11 +43,11 @@
     </test>
 
 -->
-    <!-- <test name="Schedule New UI Test">
+     <test name="Schedule New UI Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleNewUITest">
       	        <methods>
-                    <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/>
+                    <!-- <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/>
                     <include name="viewAndFilterScheduleWithGroupByAllInWeekViewAsStoreManager"/>
                     <include name="viewAndFilterScheduleWithGroupByWorkRoleInWeekViewAsStoreManager"/>
                     <include name="viewAndFilterScheduleWithGroupByTMsInWeekViewAsStoreManager"/>
@@ -76,11 +76,12 @@
                     <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>
                     <include name="validateScheduleSmartCardsAsStoreManager"/>
                     <include name="validateSchedulePublishFeatureAsStoreManager"/>
-                    <include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>
+                    <include name="validateScheduleUngenerateFeatureAsInternalAdmin"/> -->
+                    <include name="validateDashboardTodaysForcastAsStoreManager"/>
                 </methods>
              </class>
         </classes>
-    </test> -->
+    </test> 
 <!-- 
 
     <test name="Schedule Overview Test">
@@ -106,7 +107,7 @@
         <!--</classes>-->
     <!--</test>-->
     
-    <test name="Team Test">
+    <!-- <test name="Team Test">
         <classes>
             <class name="com.legion.tests.core.TimeSheetTest">
                 <methods>
@@ -114,7 +115,7 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test> -->
   
 </suite> <!-- Suite -->
 

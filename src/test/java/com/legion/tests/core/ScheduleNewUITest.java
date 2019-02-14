@@ -1965,4 +1965,33 @@ public class ScheduleNewUITest extends TestBase{
 	        	SimpleUtils.report("No Draft/Published/Finalized week found to Ungenerate Schedule.");
 	    }
 	    
+	    
+	    @Automated(automated =  "Automated")
+	    @Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-146 : Validate Today's Forecast should have a non-0 number[If zero, it should be for the day store is closed]")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void validateDashboardTodaysForcastAsStoreManager(String browser, String username, String password, String location)
+	    		throws Exception {
+	    	DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        HashMap<String, Float> todaysForcastData = dashboardPage.getTodaysForcastData();
+	        if(todaysForcastData.size() > 0)
+	        {
+	        	float demandForecast = todaysForcastData.get("demandForecast");
+	        	float guidanceHours = todaysForcastData.get("guidanceHours");
+	        	SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+		        boolean isStoreClosedToday = schedulePage.isStoreClosedForActiveWeek();
+		        if(! isStoreClosedToday && (demandForecast <= 0))
+		        	SimpleUtils.fail("Dashboard Page: Today's Forecast contains '0' Demand Forecast.", true);
+		        else
+		        	SimpleUtils.pass("Dashboard Page: Today's Forecast contains '"+ (int) demandForecast +"' Shoppers.");
+		        
+		        if(! isStoreClosedToday && (guidanceHours <= 0))
+		        	SimpleUtils.fail("Dashboard Page: Today' Forecast contains '0' Guidance Hours.", true);
+		        else
+		        	SimpleUtils.pass("Dashboard Page: Today's Forecast contains '"+ guidanceHours +"' Guidance Hours.");
+ 	        }	        
+	    }
+	    
     }

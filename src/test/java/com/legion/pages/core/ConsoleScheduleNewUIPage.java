@@ -2432,6 +2432,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			SimpleUtils.pass("Navigated to Next day successfully!");
 	}
 
+	@Override
 	public boolean isStoreClosedForActiveWeek() throws Exception
 	{
 		if(isElementLoaded(holidayLogoContainer))

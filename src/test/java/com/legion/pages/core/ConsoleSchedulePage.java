@@ -1351,5 +1351,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		
 	}
 
+	@Override
+	public boolean isStoreClosedForActiveWeek() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 }
