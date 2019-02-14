@@ -774,4 +774,32 @@ public class TimeSheetTest extends TestBase{
 		System.out.println(legionResponse);
 	}
 	
+	
+	
+	@UseAsTestRailId(testRailId = 4)
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "TP- 149: Timesheet :- Validate loading of Timesheet for any pay period[No spinning icon or blank screen].")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void validateLoadingOfTimeSheetForEveryPeriodsAsStoreManager(String browser, String username, String password, String location)
+    		throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+        timeSheetPage.clickOnDayView();
+        SimpleUtils.assertOnFail("TimeSheet Details Table not loaded for duration type '"+ timeSheetPage.getTimeSheetActiveDurationType() 
+        	+"'.",timeSheetPage.isTimeSheetDetailsTableLoaded() , true);
+        
+        timeSheetPage.clickOnWeekView();
+        SimpleUtils.assertOnFail("TimeSheet Details Table not loaded for duration type '"+ timeSheetPage.getTimeSheetActiveDurationType() 
+    	+"'.",timeSheetPage.isTimeSheetDetailsTableLoaded() , true);
+        
+        timeSheetPage.clickOnPayPeriodDuration();
+        SimpleUtils.assertOnFail("TimeSheet Details Table not loaded for duration type '"+ timeSheetPage.getTimeSheetActiveDurationType() 
+    	+"'.",timeSheetPage.isTimeSheetDetailsTableLoaded() , true);
+	}
+	
 }

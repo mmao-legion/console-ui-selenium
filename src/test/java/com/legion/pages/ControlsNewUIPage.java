@@ -38,5 +38,19 @@ public interface ControlsNewUIPage {
 
 	public HashMap<String, Integer> getScheduleBufferHours() throws Exception;
 
+	public void clickOnControlsLocationProfileSection() throws Exception;
+	public void clickOnControlsScheduleCollaborationSection() throws Exception;
+	public void clickOnControlsComplianceSection() throws Exception;
+	public void clickOnControlsUsersAndRolesSection() throws Exception;
+	public void clickOnControlsTasksAndWorkRolesSection() throws Exception;
+	
+	public boolean isControlsLocationProfileLoaded() throws Exception;
+	public boolean isControlsScheduleCollaborationLoaded() throws Exception;
+	public boolean isControlsComplianceLoaded() throws Exception;
+	public boolean isControlsUsersAndRolesLoaded() throws Exception;
+	public boolean isControlsTasksAndWorkRolesLoaded() throws Exception;
+	public boolean isControlsSchedulingPoliciesLoaded() throws Exception;
+	public boolean isControlsWorkingHoursLoaded() throws Exception;
+
 	
 }

@@ -16,10 +16,11 @@
                     <include name="updateWorkingHoursAsInternalAdmin"/>
                     <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>
                     <include name="verifySchedulePlanningWindowAndAdditionalScheduleHoursAsInternalAdmin"/>
+                    <include name="updateControlsSectionLoadingAsStoreManager"/>
                 </methods>
             </class>
         </classes>
-    </test> -->
+    </test>  -->
 
     <!-- <test name="Traffic Forecast for New UI Test">
         <classes>
@@ -42,11 +43,11 @@
     </test>
 
 -->
-    <test name="Schedule New UI Test">
+    <!-- <test name="Schedule New UI Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleNewUITest">
       	        <methods>
-                   <!--  <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/>
+                    <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/>
                     <include name="viewAndFilterScheduleWithGroupByAllInWeekViewAsStoreManager"/>
                     <include name="viewAndFilterScheduleWithGroupByWorkRoleInWeekViewAsStoreManager"/>
                     <include name="viewAndFilterScheduleWithGroupByTMsInWeekViewAsStoreManager"/>
@@ -72,14 +73,14 @@
                     <include name="validatingGenerateScheduleStoreManager"/>
                     <include name="verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager"/>
                     <include name="validateScheduleGenerationFunctionalityAsStoreManager"/>
-                    <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/> -->
-                    <!-- <include name="validateScheduleSmartCardsAsStoreManager"/> -->
-                    <!-- <include name="validateSchedulePublishFeatureAsStoreManager"/> -->
+                    <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>
+                    <include name="validateScheduleSmartCardsAsStoreManager"/>
+                    <include name="validateSchedulePublishFeatureAsStoreManager"/>
                     <include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>
                 </methods>
              </class>
         </classes>
-    </test>
+    </test> -->
 <!-- 
 
     <test name="Schedule Overview Test">
@@ -104,8 +105,16 @@
             <!--</class>-->
         <!--</classes>-->
     <!--</test>-->
-
-
+    
+    <test name="Team Test">
+        <classes>
+            <class name="com.legion.tests.core.TimeSheetTest">
+                <methods>
+                    <include name="validateLoadingOfTimeSheetForEveryPeriodsAsStoreManager"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
   
 </suite> <!-- Suite -->
 

@@ -122,6 +122,42 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement closingBufferHours;
 	
 	
+	@FindBy(css = "lg-dashboard-card[title=\"Location Profile\"]")
+	private WebElement locationProfileSection;
+	
+	@FindBy(css = "lg-dashboard-card[title=\"Schedule Collaboration\"]")
+	private WebElement scheduleCollaborationSection;
+	
+	@FindBy(css = "lg-dashboard-card[title=\"Compliance\"]")
+	private WebElement complianceSection;
+	
+	@FindBy(css = "lg-dashboard-card[title=\"Users and Roles\"]")
+	private WebElement usersAndRolesSection;
+	
+	@FindBy(css = "lg-dashboard-card[title=\"Tasks and Work Roles\"]")
+	private WebElement tasksAndWorkRolesSection;
+
+	@FindBy(css = "page-heading[page-title=\"Location Details\"]")
+	private WebElement breadcrumbsLocationDetails;
+
+	@FindBy(css = "page-heading[page-title=\"Scheduling Policies\"]")
+	private WebElement breadcrumbsSchedulingPolicies;
+	
+	@FindBy(css = "page-heading[page-title=\"Schedule Collaboration\"]")
+	private WebElement breadcrumbsScheduleCollaboration;
+
+	@FindBy(css = "page-heading[page-title=\"Compliance\"]")
+	private WebElement breadcrumbsCompliance;
+	
+	@FindBy(css = "page-heading[page-title=\"Users and Roles\"]")
+	private WebElement breadcrumbsUsersAndRoles;
+	
+	@FindBy(css = "page-heading[page-title=\"Tasks and Work Roles\"]")
+	private WebElement breadcrumbsTasksAndWorkRoles;
+	
+	@FindBy(css = "page-heading[page-title=\"Working Hours\"]")
+	private WebElement breadcrumbsWorkingHours;
+	
 	String timeSheetHeaderLabel = "Controls";
 	
 	@Override
@@ -526,4 +562,113 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 		return bufferHours;
 	}
+
+	
+	@Override
+	public void clickOnControlsLocationProfileSection() throws Exception {
+		if(isElementLoaded(locationProfileSection))
+			click(locationProfileSection);
+		else
+			SimpleUtils.fail("Controls Page: Location Profile Card not Loaded!", false);
+	}
+	
+	
+	@Override
+	public void clickOnControlsScheduleCollaborationSection() throws Exception {
+		if(isElementLoaded(scheduleCollaborationSection))
+			click(scheduleCollaborationSection);
+		else
+			SimpleUtils.fail("Controls Page: Schedule Collaboration Card not Loaded!", false);
+	}
+	
+	@Override
+	public void clickOnControlsComplianceSection() throws Exception {
+		if(isElementLoaded(complianceSection))
+			click(complianceSection);
+		else
+			SimpleUtils.fail("Controls Page: Compliance Card not Loaded!", false);
+	}
+	
+	@Override
+	public void clickOnControlsUsersAndRolesSection() throws Exception {
+		if(isElementLoaded(usersAndRolesSection))
+			click(usersAndRolesSection);
+		else
+			SimpleUtils.fail("Controls Page: Users and Roles Card not Loaded!", false);
+	}
+	
+	@Override
+	public void clickOnControlsTasksAndWorkRolesSection() throws Exception {
+		if(isElementLoaded(tasksAndWorkRolesSection))
+			click(tasksAndWorkRolesSection);
+		else
+			SimpleUtils.fail("Controls Page: tasksAndWorkRolesSection Card not Loaded!", false);
+	}
+
+
+	@Override
+	public boolean isControlsLocationProfileLoaded() throws Exception {
+		if(isElementLoaded(breadcrumbsLocationDetails)) {
+			SimpleUtils.pass("Controls Page: Location Profile Section Loaded Successfully.");
+			return true;
+		}
+		return false;
+	}
+
+
+	@Override
+	public boolean isControlsSchedulingPoliciesLoaded() throws Exception {
+		if(isElementLoaded(breadcrumbsSchedulingPolicies)) {
+			SimpleUtils.pass("Controls Page: Scheduling Policies Section Loaded Successfully.");
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean isControlsScheduleCollaborationLoaded() throws Exception {
+		if(isElementLoaded(breadcrumbsScheduleCollaboration)) {
+			SimpleUtils.pass("Controls Page: Schedule Collaboration Section Loaded Successfully.");
+			return true;
+		}
+		return false;
+	}
+
+
+	@Override
+	public boolean isControlsComplianceLoaded() throws Exception {
+		if(isElementLoaded(breadcrumbsCompliance)) {
+			SimpleUtils.pass("Controls Page: Compliance Section Loaded Successfully.");
+			return true;
+		}
+		return false;
+	}
+
+
+	@Override
+	public boolean isControlsUsersAndRolesLoaded() throws Exception {
+		if(isElementLoaded(breadcrumbsUsersAndRoles)) {
+			SimpleUtils.pass("Controls Page: Users and Roles Section Loaded Successfully.");
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean isControlsTasksAndWorkRolesLoaded() throws Exception {
+		if(isElementLoaded(breadcrumbsTasksAndWorkRoles)) {
+			SimpleUtils.pass("Controls Page: Tasks and Work Roles Section Loaded Successfully.");
+			return true;
+		}
+		return false;
+	}	
+	
+	@Override
+	public boolean isControlsWorkingHoursLoaded() throws Exception {
+		if(isElementLoaded(breadcrumbsWorkingHours)) {
+			SimpleUtils.pass("Controls Page: Working Hours Section Loaded Successfully.");
+			return true;
+		}
+		return false;
+	}	
 }

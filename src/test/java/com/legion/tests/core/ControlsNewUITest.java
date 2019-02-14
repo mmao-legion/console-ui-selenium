@@ -245,4 +245,63 @@ public class ControlsNewUITest extends TestBase{
   	  }
   }
   
+  
+  
+  
+  @Automated(automated =  "Automated")
+  @Owner(owner = "Naval")
+  @Enterprise(name = "KendraScott2_Enterprise")
+  @TestName(description = "Onboarding - Check navigation to different section in controls tab[On click it should not logout].")
+  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+  public void updateControlsSectionLoadingAsStoreManager(String browser, String username, String password, String location)
+  		throws Exception {
+			
+      DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+      SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);      
+      ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+      controlsNewUIPage.clickOnControlsConsoleMenu();
+      SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+      
+      // Validate Controls Location Profile Section
+      controlsNewUIPage.clickOnControlsLocationProfileSection();
+      boolean isLocationProfile = controlsNewUIPage.isControlsLocationProfileLoaded();
+      SimpleUtils.assertOnFail("Controls Page: Location Profile Section not Loaded.", isLocationProfile, true);
+      
+      // Validate Controls Scheduling Policies Section
+      controlsNewUIPage.clickOnControlsConsoleMenu();
+      controlsNewUIPage.clickOnControlsSchedulingPolicies();
+	  boolean isSchedulingPolicies = controlsNewUIPage.isControlsSchedulingPoliciesLoaded();
+	  SimpleUtils.assertOnFail("Controls Page: Scheduling Policies Section not Loaded.", isSchedulingPolicies, true);
+      
+      // Validate Controls Schedule Collaboration Section
+	  controlsNewUIPage.clickOnControlsConsoleMenu();
+      controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+	  boolean isScheduleCollaboration = controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+	  SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
+      
+      // Validate Controls Compliance Section
+	  controlsNewUIPage.clickOnControlsConsoleMenu();
+      controlsNewUIPage.clickOnControlsComplianceSection();
+	  boolean isCompliance = controlsNewUIPage.isControlsComplianceLoaded();
+	  SimpleUtils.assertOnFail("Controls Page: Compliance Section not Loaded.", isCompliance, true);
+      
+      // Validate Controls Users and Roles Section
+	  controlsNewUIPage.clickOnControlsConsoleMenu();
+      controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+	  boolean isUsersAndRoles = controlsNewUIPage.isControlsUsersAndRolesLoaded();
+	  SimpleUtils.assertOnFail("Controls Page: Users and Roles Section not Loaded.", isUsersAndRoles, true);
+      
+      // Validate Controls Tasks and Work Roles Section
+	  controlsNewUIPage.clickOnControlsConsoleMenu();
+      controlsNewUIPage.clickOnControlsTasksAndWorkRolesSection();
+	  boolean isTasksAndWorkRoles = controlsNewUIPage.isControlsTasksAndWorkRolesLoaded();
+	  SimpleUtils.assertOnFail("Controls Page: Tasks and Work Roles Section not Loaded.", isTasksAndWorkRoles, true);
+      
+      // Validate Working Hours Profile Section
+	  controlsNewUIPage.clickOnControlsConsoleMenu();
+      controlsNewUIPage.clickOnControlsWorkingHoursCard();
+	  boolean isWorkingHours = controlsNewUIPage.isControlsWorkingHoursLoaded();
+	  SimpleUtils.assertOnFail("Controls Page: Working Hours Section not Loaded.", isWorkingHours, true);
+  }
+  
 }

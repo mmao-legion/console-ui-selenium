@@ -505,7 +505,10 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		if(isElementLoaded(payPeriodBtn))
 		{
 			if(! payPeriodBtn.getAttribute("class").toLowerCase().contains(activeButtonClassKeyword))
+			{
 				click(payPeriodBtn);
+				SimpleUtils.pass("Timesheet duration type '"+payPeriodBtn.getText()+"' selected successfully.");
+			}
 		}
 		else
 			SimpleUtils.fail("Timesheet: Pay Period Button not loaded!", false);
@@ -518,8 +521,10 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		String activeButtonClassKeyword = "selected";
 		if(isElementLoaded(timeSheetDayViewBtn))
 		{
-			if(! timeSheetDayViewBtn.getAttribute("class").toLowerCase().contains(activeButtonClassKeyword))
+			if(! timeSheetDayViewBtn.getAttribute("class").toLowerCase().contains(activeButtonClassKeyword)) {
 				click(timeSheetDayViewBtn);
+				SimpleUtils.pass("Timesheet duration type '"+ timeSheetDayViewBtn.getText() +"' selected successfully.");
+			}
 		}
 		else
 			SimpleUtils.fail("Timesheet: Pay Period Button not loaded!", false);
@@ -1118,6 +1123,57 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	}
 	
 
+	@FindBy(css = "div.lg-timesheet-table")
+	private WebElement timeSheetDetailsTable;
 	
+	@Override
+	public boolean isTimeSheetDetailsTableLoaded() throws Exception
+	{
+		if(isElementLoaded(timeSheetDetailsTable, 20) && timeSheetDetailsTable.getText().trim().length() > 0)
+		{
+			SimpleUtils.pass("Timesheet loaded successfully for duration Type: '"+ getTimeSheetActiveDurationType() +"'.");			
+			return true;
+		}
+		return false;
+	}
 	
+	@FindBy(css = "div[ng-repeat=\"button in $ctrl.buttons\"]")
+	private List<WebElement> timeSheetDurationBtns;
+	
+	@Override
+	public void clickOnWeekView()
+	{
+		String weekViewLabel = "week";
+		if(timeSheetDurationBtns.size() > 0)
+		{
+			for(WebElement timeSheetDuration : timeSheetDurationBtns)
+			{
+				if(timeSheetDuration.getText().toLowerCase().contains(weekViewLabel.toLowerCase()))
+				{
+					click(timeSheetDuration);
+					SimpleUtils.pass("Timesheet duration type '"+ timeSheetDuration.getText() +"' selected successfully.");
+				}
+			}
+		}
+		else
+			SimpleUtils.fail("TimeSheet Duration Buttons not loaded.", false);
+	}
+	
+	@Override
+	public String getTimeSheetActiveDurationType()
+	{
+		String timeSheetActiveDurationType = "";
+		if(timeSheetDurationBtns.size() > 0)
+		{
+			for(WebElement timeSheetDuration : timeSheetDurationBtns)
+			{
+				if(timeSheetDuration.getAttribute("class").contains("selected"))
+					timeSheetActiveDurationType = timeSheetDuration.getText();
+			}
+		}
+		else
+			SimpleUtils.fail("TimeSheet Duration Buttons not loaded.", false);
+		
+		return timeSheetActiveDurationType;
+	}
 }
