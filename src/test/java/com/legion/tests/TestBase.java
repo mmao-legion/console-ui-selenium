@@ -26,6 +26,8 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -92,6 +94,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import com.legion.test.testrail.APIClient;
+import com.legion.test.testrail.APIException;
+
 import javax.imageio.ImageIO;
 
 import com.legion.tests.annotations.Enterprise;
@@ -102,12 +107,20 @@ import com.legion.tests.annotations.HasDependencies;
 import static com.legion.utils.MyThreadLocal.*;
 
 
+/**
+ * DataProvider for multiple browser combinations.
+ * Using SimpleUtils by default since we are not using any remote Selenium server
+ * @author Yanming Tang
+ *
+ */
+
 public abstract class TestBase {
 
     protected PageFactory pageFactory = null;
     protected MobilePageFactory mobilePageFactory = null;
-    public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json"); 
-    private static ExtentReports extent = ExtentReportManager.getInstance(); 
+    String TestID = null;
+    public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+    private static ExtentReports extent = ExtentReportManager.getInstance();
     public static AndroidDriver<MobileElement> driver;
 	public static String versionString;
 	public static int version;
@@ -118,6 +131,8 @@ public abstract class TestBase {
 	public static String apkpath=pth+"/Resources";
 	public static AppiumDriverLocalService service;
 	private static AppiumServiceBuilder builder;
+    public static final int TEST_CASE_PASSED_STATUS = 1;
+    public static final int TEST_CASE_FAILED_STATUS = 5;
 
     @Parameters({ "platform", "executionon", "runMode" })
     @BeforeSuite
@@ -130,7 +145,7 @@ public abstract class TestBase {
             Reporter.log("Script will be executing only for Web");
         }
     }
-      
+
  // Set the Desired Capabilities to launch the app in Andriod mobile
  	public static void launchMobileApp() throws Exception{
  		DesiredCapabilities caps = new DesiredCapabilities();
@@ -147,14 +162,14 @@ public abstract class TestBase {
  		Thread.sleep(10000);
  		ExtentTestManager.getTest().log(Status.PASS, "Launched Mobile Application Successfully!");
 	}
-    
+
     @BeforeClass
     protected void init () {
         ScreenshotManager.createScreenshotDirIfNotExist();
     }
     
     @BeforeMethod(alwaysRun = true)
-    protected void initTestFramework(Method method) throws AWTException, IOException {
+    protected void initTestFramework(Method method) throws AWTException, IOException, APIException, JSONException {
     	Date date=new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
     	String testName = ExtentTestManager.getTestName(method);
@@ -167,6 +182,9 @@ public abstract class TestBase {
 //        categories.add(enterpriseName);
         List<String> enterprises =  new ArrayList<String>();
         enterprises.add(enterpriseName);
+//        ExtentTestManager.createTest(getClass().getSimpleName() + " - "
+//                + " " + method.getName() + " : " + testName + ""
+//                + " [" + ownerName + "/" + automatedName + "]", "", categories);
         ExtentTestManager.createTest(getClass().getSimpleName() + " - "
             + " " + method.getName() + " : " + testName + ""
             + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
@@ -260,7 +278,7 @@ public abstract class TestBase {
     private PageFactory createPageFactory() {
         return new ConsoleWebPageFactory();
     }
-    
+
     private MobilePageFactory createMobilePageFactory() {
         return new MobileWebPageFactory();
     }
@@ -332,21 +350,22 @@ public abstract class TestBase {
     	LoginPage loginPage = pageFactory.createConsoleLoginPage();
     	loginPage.loginToLegionWithCredential(username, Password);
     	LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+    	//locationSelectorPage.changeLocation(location);
 	    boolean isLoginDone = loginPage.isLoginDone();
 	    loginPage.verifyLoginDone(isLoginDone, location);
     }
 
 	public abstract void firstTest(Method testMethod, Object[] params) throws Exception;
 		// TODO Auto-generated method stub
-	
-	
+
+
 	// Method for Start the appium server and arguments should be appium installation path upto node.exe and appium.js
 		public static void appiumServerStart(String appiumServerPath, String appiumJSPath){
 			service=AppiumDriverLocalService.buildService(new AppiumServiceBuilder()
 					.usingDriverExecutable(new File(appiumServerPath))
 					.withAppiumJS(new File(appiumJSPath)));
 		}
-		
+
 		//Start appium programatically
 		public static void startServer() {
 			DesiredCapabilities cap = new DesiredCapabilities();
@@ -362,7 +381,7 @@ public abstract class TestBase {
 			service = AppiumDriverLocalService.buildService(builder);
 			service.start();
 		}
-		
+
 		//Stop appium programatically
 		public void stopServer() {
 			Runtime runtime = Runtime.getRuntime();
@@ -372,5 +391,5 @@ public abstract class TestBase {
 				e.printStackTrace();
 			}
 		}
-	 
+
 }

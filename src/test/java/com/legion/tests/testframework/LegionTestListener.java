@@ -8,10 +8,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.testng.IAnnotationTransformer;
+import org.testng.IClass;
 import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
 import org.testng.ITestContext;
@@ -30,16 +32,12 @@ import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.aventstack.extentreports.reporter.configuration.ChartLocation;
 import com.aventstack.extentreports.reporter.configuration.Theme;
+import com.legion.test.testrail.APIException;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 //import com.legion.utils.ExtentManager;
-
-
-
-
-
 
 
 import com.legion.utils.JsonUtil;
@@ -62,13 +60,21 @@ import static com.legion.utils.MyThreadLocal.*;
 	
 		@Override
 		public void onTestSuccess(ITestResult result) {  
-	        	ExtentTestManager.getTest().log(Status.PASS, MarkupHelper.createLabel("Test case Passed:",ExtentColor.GREEN));	
+	        	ExtentTestManager.getTest().log(Status.PASS, MarkupHelper.createLabel("Test case Passed:",ExtentColor.GREEN));
+		        String TestID = Integer.toString(ExtentTestManager.getTestRailId(getCurrentMethod()));
+//	        	try {
+//					SimpleUtils.addTestResult("1", "1");
+//				} catch (IOException | APIException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 		}
 	
 		@Override
 		public void onTestFailure(ITestResult result) {
 			// TODO Auto-generated method stub
-				
+
+			    SimpleUtils.addTestResult(5, "Test case Failed.");
 				ExtentTestManager.getTest().log(Status.FAIL, MarkupHelper.createLabel("Test case Failed:",ExtentColor.RED));
 				String targetFile = ScreenshotManager.takeScreenShot();
 		        String screenshotLoc = propertyMap.get("Screenshot_Path") + File.separator + targetFile;

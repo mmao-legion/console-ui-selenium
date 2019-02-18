@@ -1,5 +1,6 @@
 package com.legion.pages.pagefactories;
 import com.legion.pages.AnalyticsPage;
+import com.legion.pages.ControlsNewUIPage;
 import com.legion.pages.ControlsPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.SchedulePage;
@@ -46,5 +47,7 @@ public interface PageFactory {
     TrafficForecastPage createTrafficForecastPage();
     
     TimeSheetPage createTimeSheetPage(); 
+    
+    ControlsNewUIPage createControlsNewUIPage(); 
    
 }

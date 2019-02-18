@@ -36,7 +36,7 @@ public class StaffingGuidanceTestKendraScott2 extends TestBase{
 	
 	@Automated(automated = "Automated")
 	@Owner(owner = "Naval")
-	@Enterprise(name = "Kendrascott2_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "LEG-2423: As a store manager, can view Staffing Guidance data for current week")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void staffingGuidanceDataAsStoreManagerTestKendraScott2(String username, String password, String browser, String location)
@@ -111,13 +111,15 @@ public class StaffingGuidanceTestKendraScott2 extends TestBase{
         SimpleUtils.assertOnFail( "Staffing Guidance Week View Hours Count is Zero!", (staffingGuidanceWeekViewHoursTotalCount != 0),true);
         staffingGuidancePage.clickOnStaffingGuidanceAnalyzeButton();
         List<HashMap<String, String>> analyzePopupStaffingGuidanceData = staffingGuidancePage.getAnalyzePopupStaffingGuidanceAndLatestVersionData();
+        SimpleUtils.report("Staffing Guidance Data Start..");
         for(HashMap<String, String> analyzePopupData : analyzePopupStaffingGuidanceData)
         {
         	for(Map.Entry<String, String> entry : analyzePopupData.entrySet())
             {
-            	System.out.println(entry.getKey() +" : "+entry.getValue());
+        		SimpleUtils.report(entry.getKey() +" : "+entry.getValue());
             }
         }
+        SimpleUtils.report("Staffing Guidance Data End..");
         
     }
 	

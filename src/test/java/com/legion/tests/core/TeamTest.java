@@ -89,8 +89,6 @@ public class TeamTest extends TestBase{
 	        teamPage.performSearchRoster(list);
 	        teamPage.coverage();
 	        teamPage.coverageViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.Six.getValue());
-		
-		
 	}
 	
  

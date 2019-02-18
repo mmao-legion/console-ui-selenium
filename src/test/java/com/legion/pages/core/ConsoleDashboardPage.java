@@ -2,10 +2,10 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.SchedulePage;
@@ -193,6 +193,45 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		// TODO Auto-generated method stub
 		navigateToDashboard();
     	isDashboardPageLoaded();
+	}
+
+	
+	@FindBy(css = "div.forecast.row-fx")
+	private List<WebElement> forecastDataElements;
+	@Override
+	public ArrayList<HashMap<String, Float>> getDashboardForeCastDataForAllLocation() {
+		waitForSeconds(4);
+		ArrayList<HashMap<String, Float>> forecastDataForAllLocations = new ArrayList<HashMap<String, Float>>();
+		if(forecastDataElements.size() != 0)
+		{
+			for(WebElement forecastData: forecastDataElements)
+			{
+				HashMap<String, Float> locationHours = new HashMap<String, Float>();
+				List<WebElement> forecastHours = forecastData.findElements(By.cssSelector("[ng-if=\"!forecastOnly\"]"));
+				if(forecastHours.size() != 0)
+				{
+					for(WebElement forecastHour : forecastHours)
+					{
+						String[] forecastHoursString = forecastHour.getText().replace("\n", " ").split("Hrs");
+						if(forecastHoursString.length > 1)
+						{
+							
+							float hours = Float.valueOf(forecastHoursString[0].trim());
+							String hoursType = forecastHoursString[1].trim();
+							locationHours.put(hoursType, hours);
+						}
+					}	
+					forecastDataForAllLocations.add(locationHours);
+				}
+				else {
+					SimpleUtils.fail("Dashboard Data Forecast Hours not loaded.", false);
+				}
+			}
+		}
+		else {
+			SimpleUtils.fail("Dashboard Data Forecast not loaded.", false);
+		}
+		return forecastDataForAllLocations;
 	}
 
 	

@@ -9,6 +9,7 @@ import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.MobilePlatform;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.annotations.UseAsTestRailId;
 
 public class ExtentTestManager {
 	
@@ -102,18 +103,32 @@ public class ExtentTestManager {
     }
     
     public synchronized static String getMobilePlatformName(Method testMethod) {
-		
+
         String platformName = "";
         // check if there is a Test annotation and get the test name
         MobilePlatform mobilePlatform = testMethod.getAnnotation(MobilePlatform.class);
         if (mobilePlatform != null && mobilePlatform.platform().length() > 0) {
         	platformName = mobilePlatform.platform();
         }
-       
+
         return platformName;
     }
-    
-   
+
+
+    public synchronized static int getTestRailId(Method testMethod) {
+
+        int testRailId = 0;
+        // check if there is a Test annotation and get the test name
+        UseAsTestRailId useAsTestRailId = testMethod.getAnnotation(UseAsTestRailId.class);
+        if(useAsTestRailId != null && useAsTestRailId.testRailId()> 0){
+        	testRailId = useAsTestRailId.testRailId();
+        }
+
+        return testRailId;
+    }
+
+
+
 
      
 }

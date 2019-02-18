@@ -43,17 +43,17 @@ public class MyThreadLocal {
 	public static void setCurrentTestMethodName(String value) { testMethodName.set(value); }
     public static String getCurrentTestMethodName() { return testMethodName.get(); }
     public static ThreadLocal<String> consoleName = new ThreadLocal<>();
-    public static final ThreadLocal<Integer> scheduleHoursStartTime = new ThreadLocal<>();
-    public static final ThreadLocal<Integer> scheduleHoursEndTime = new ThreadLocal<>();
+    public static final ThreadLocal<String> scheduleHoursStartTime = new ThreadLocal<>();
+    public static final ThreadLocal<String> scheduleHoursEndTime = new ThreadLocal<>();
 
-	public static void setScheduleHoursStartTime(Integer value) { scheduleHoursStartTime.set(value); }
+	public static void setScheduleHoursStartTime(String value) { scheduleHoursStartTime.set(value); }
 
-	public static Integer getScheduleHoursStartTime() { return scheduleHoursStartTime.get(); }
-	public static void setScheduleHoursEndTime(Integer value) { scheduleHoursEndTime.set(value); }
-	public static Integer getScheduleHoursEndTime() { return scheduleHoursEndTime.get(); }
-	public static final ThreadLocal<AndroidDriver<MobileElement>> android_driver = new ThreadLocal<>();
-	public static ThreadLocal<String> platformname = new ThreadLocal<>();
-	
+	public static String getScheduleHoursStartTime() { return scheduleHoursStartTime.get(); }
+	public static void setScheduleHoursEndTime(String value) { scheduleHoursEndTime.set(value); }
+	public static String getScheduleHoursEndTime() { return scheduleHoursEndTime.get(); }
+    public static final ThreadLocal<AndroidDriver<MobileElement>> android_driver = new ThreadLocal<>();
+    public static ThreadLocal<String> platformname = new ThreadLocal<>();
+		
 	public static void setTotalSuiteTestCases(Integer value) {
 		totalSuiteTestCases.set(value);
 	}
@@ -158,8 +158,8 @@ public class MyThreadLocal {
 	public static String getDriverType() {
 		return driver_type.get();
 	}
-	
-	
+
+
 	public static void setVerificationMap(HashMap<ITestResult, List<Throwable>> vMap) {
 		verificationFailuresMap.set(vMap);
 	}
@@ -195,7 +195,7 @@ public class MyThreadLocal {
 	public static EventFiringWebDriver getDriver() {
 		return driver.get();
 	}
-	
+
 	public static void setAndroidDriver(AndroidDriver<MobileElement> _driver) {
 		android_driver.set(_driver);
 	}
@@ -254,7 +254,7 @@ public class MyThreadLocal {
 	public static String getScreenshotConsoleName(){
 		return consoleName.get();
 	}
-	
+
 
 	//set screenshot Console name
 	public static void setPlatformName(String value){
@@ -266,6 +266,6 @@ public class MyThreadLocal {
 		return platformname.get();
 	}
 
-	
+
 
 }
