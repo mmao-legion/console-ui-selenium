@@ -21,6 +21,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.tests.testframework.LegionTestListener;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -621,5 +622,27 @@ public class SimpleUtils {
 	   }
 
 	   return scheduleHoursDifference;
+   }
+
+   public static int getDirectoryFilesCount(String directoryPath) {
+	   File directory = new File(directoryPath);
+	   File[] files = directory.listFiles();
+	   return files.length;
+   }
+   
+   public static File getLatestFileFromDirectory(String directoryPath) {
+	    File dir = new File(directoryPath);
+	    File[] files = dir.listFiles();
+	    if (files == null || files.length == 0) {
+	        return null;
+	    }
+
+	    File lastModifiedFile = files[0];
+	    for (int i = 1; i < files.length; i++) {
+	       if (lastModifiedFile.lastModified() < files[i].lastModified()) {
+	           lastModifiedFile = files[i];
+	       }
+	    }
+	    return lastModifiedFile;
    }
 }

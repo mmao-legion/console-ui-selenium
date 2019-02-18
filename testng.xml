@@ -43,11 +43,11 @@
     </test>
 
 -->
-     <test name="Schedule New UI Test">
+<!--      <test name="Schedule New UI Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleNewUITest">
       	        <methods>
-                    <!-- <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/>
+                    <include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/>
                     <include name="viewAndFilterScheduleWithGroupByAllInWeekViewAsStoreManager"/>
                     <include name="viewAndFilterScheduleWithGroupByWorkRoleInWeekViewAsStoreManager"/>
                     <include name="viewAndFilterScheduleWithGroupByTMsInWeekViewAsStoreManager"/>
@@ -76,12 +76,12 @@
                     <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>
                     <include name="validateScheduleSmartCardsAsStoreManager"/>
                     <include name="validateSchedulePublishFeatureAsStoreManager"/>
-                    <include name="validateScheduleUngenerateFeatureAsInternalAdmin"/> -->
+                    <include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>
                     <include name="validateDashboardTodaysForcastAsStoreManager"/>
                 </methods>
              </class>
         </classes>
-    </test> 
+    </test> --> 
 <!-- 
 
     <test name="Schedule Overview Test">
@@ -116,6 +116,18 @@
             </class>
         </classes>
     </test> -->
+    
+    
+    <test name="Analytics Test">
+        <classes>
+            <class name="com.legion.tests.core.AnalyticsTestKendraScott2">
+                <methods>
+                    <!-- <include name="verifyKPIReportExportFunctionalityAsStoreManager"/> -->
+                    <include name="validateKPIReportValuesAsStoreManager"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
   
 </suite> <!-- Suite -->
 

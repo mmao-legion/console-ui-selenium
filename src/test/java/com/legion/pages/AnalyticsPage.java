@@ -12,4 +12,14 @@ public interface AnalyticsPage {
 	public void navigateToNextWeek() throws Exception;
 
 	public String getAnalyticsActiveDuration();
+
+	public void clickOnAnalyticsSubTab(String subTabLabel) throws Exception;
+
+	public void exportKPIReportByTitle(String kpiTitle) throws Exception;
+
+	public void clickOnAnalyticsConsoleMenu() throws Exception;
+
+	public void selectAnalyticsCheckBoxByLabel(String label) throws Exception;
+
+	public HashMap<String, Float> getAnalyticsKPIHoursByLabel(String label) throws Exception;
 }

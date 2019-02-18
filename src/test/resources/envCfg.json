@@ -25,6 +25,6 @@
  "OS" : "WINDOW",
  "scheduleWeekCount" : "6",
  "WeekStartOn" : "MON",
- "isParallelBrowser" : "false"
-
+ "isParallelBrowser" : "false",
+ "Download_File_Default_Dir" : "/home/naval/Downloads"
 }

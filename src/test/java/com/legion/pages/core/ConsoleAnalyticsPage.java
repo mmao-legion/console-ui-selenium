@@ -14,7 +14,6 @@ import com.aventstack.extentreports.Status;
 import com.legion.pages.AnalyticsPage;
 import com.legion.pages.BasePage;
 import com.legion.tests.testframework.ExtentTestManager;
-import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.SimpleUtils;
 
 public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
@@ -81,7 +80,25 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	 
 	 @FindBy(css= "div.sch-calendar-day-dimension.sch-calendar-day")
 	 private List<WebElement> analyticsCalendarDays;
-
+	
+	 @FindBy(css = "div.sub-navigation-view-link")
+	 private List<WebElement> analyticsSubTabs;
+	
+	 @FindBy(css="div.sub-navigation-view-link.active")
+	 private WebElement analyticsActiveSubTab;
+	
+	 @FindBy(css = "tr[ng-repeat=\"kpi in kpiReports\"]")
+	 private List<WebElement> kpiReportRows;
+	
+	 @FindBy(css = "div.console-navigation-item-label.Analytics")
+	 private WebElement consoleNavigationAnalytics;
+	
+	 @FindBy(css = "div.lgnCheckBox")
+	 private List<WebElement> forecstAndScheduleCheckBoxes;
+	
+	 @FindBy(css = "div[aria-label=\"A tabular representation of the data in the chart.\"]")
+	 private List<WebElement> hidenTablesData;
+		
 
 	public ConsoleAnalyticsPage(){
 		PageFactory.initElements(getDriver(), this);
@@ -272,4 +289,98 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		return duration;
 	}
 
+	@Override
+	public void clickOnAnalyticsSubTab(String subTabLabel) throws Exception
+	{
+		if(analyticsSubTabs.size() > 0) {
+			for(WebElement analyticsSubTab : analyticsSubTabs) {
+				if(analyticsSubTab.getText().toLowerCase().contains(subTabLabel.toLowerCase()))
+					click(analyticsSubTab);
+			}
+			
+			if(isElementLoaded(analyticsActiveSubTab) && analyticsActiveSubTab.getText().toLowerCase().contains(subTabLabel.toLowerCase()))
+				SimpleUtils.pass("Analytics Page: sub tab '"+ subTabLabel +"' selected successfully.");
+			else
+				SimpleUtils.fail("Analytics Page: sub tab '"+ subTabLabel +"' not selected.", false);
+		}
+		else
+			SimpleUtils.fail("Analytics Page: Sub tabs not loaded.", false);
+	}
+
+	@Override
+	public void exportKPIReportByTitle(String kpiTitle) throws Exception
+	{
+		if(kpiReportRows.size() > 0) {
+			for(WebElement kpiReportRow : kpiReportRows) {
+				WebElement kpiTitleDiv = kpiReportRow.findElement(By.cssSelector("div.sch-kpi-title-text"));
+				if(kpiTitleDiv.getText().equalsIgnoreCase(kpiTitle.toLowerCase())) {
+					WebElement kpiReportExportBtn = kpiReportRow.findElement(By.cssSelector("div[ng-click=\"exportAction(kpi)\"]"));
+					if(isElementLoaded(kpiReportExportBtn)) {
+						click(kpiReportExportBtn);
+						break;
+					}
+					else
+						SimpleUtils.fail("Analytics Report Sub-Tab: Export button not loaded for '"+kpiTitle+"' KPI.", false);
+				}
+			}
+		}
+		else
+			SimpleUtils.fail("Analytics Page: KPI reports rows not loaded.", false);
+	}
+
+	@Override
+	public void clickOnAnalyticsConsoleMenu() throws Exception {
+		if(isElementLoaded(consoleNavigationAnalytics))
+			click(consoleNavigationAnalytics);
+		else
+			SimpleUtils.fail("Unable to click on 'Analytics' console menu.", false);
+	}
+	
+
+	@Override
+	public void selectAnalyticsCheckBoxByLabel(String label) throws Exception
+	{
+		if(forecstAndScheduleCheckBoxes.size() > 0)
+		{
+			for(WebElement analyticsCheckBox : forecstAndScheduleCheckBoxes)
+			{
+				WebElement parent = analyticsCheckBox.findElement(By.xpath(".."));
+				if(parent.getText().toLowerCase().contains(label.toLowerCase()) 
+						&& ! analyticsCheckBox.getAttribute("class").contains("checked")) {
+					click(analyticsCheckBox);
+					SimpleUtils.pass("Analytics Page: '"+label+"' checkbox selected successfully.");
+				}
+				else if(analyticsCheckBox.getAttribute("class").contains("checked")) {
+					SimpleUtils.pass("Analytics Page: '"+label+"' checkbox already selected.");
+				}
+			}
+		}
+		else
+			SimpleUtils.fail("Analytics Page: Unable to find '"+label+"' checkbox.",false);
+	}
+	
+	@Override
+	public HashMap<String, Float> getAnalyticsKPIHoursByLabel(String label) throws Exception
+	{
+		HashMap<String, Float> analyticsKPIHours = new HashMap<String, Float>();
+		for(WebElement TableData : hidenTablesData)
+		{
+			if(TableData.getAttribute("innerText").toLowerCase().contains(label.toLowerCase())) {
+				String[] dataTableRowsTexts = TableData.getAttribute("innerText").split("\n");
+				//System.out.println("innerText: \n"+TableData.getAttribute("innerText"));
+				for(String tableRow : dataTableRowsTexts) {
+					if(tableRow.toLowerCase().contains(label.toLowerCase())) {
+						String[] tableRowColumnData = tableRow.split("\t");
+						if(tableRowColumnData[0].equalsIgnoreCase(label)) {
+							analyticsKPIHours.put("hours", Float.valueOf(tableRowColumnData[1]));
+							if(tableRowColumnData.length == 3)
+								analyticsKPIHours.put("peakHours", Float.valueOf(tableRowColumnData[2]));
+							break;
+						}
+					}
+				}
+			}			
+		}
+		return analyticsKPIHours;
+	}
 }
