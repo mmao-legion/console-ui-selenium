@@ -333,6 +333,22 @@ public class SimpleUtils {
 		dateRangeDayPicker = listWeekActiveDate.get(0)+"-"+listWeekActiveDate.get(1);
 		return dateRangeDayPicker;
 
-
 	}
+	
+	
+	// method for mobile test cases incase of failure
+	
+	public static void fail(String message, boolean continueExecution, String platform) {
+        if (continueExecution) {
+            try {
+                assertTrue(false);
+            } catch (Throwable e) {
+                addVerificationFailure(e);
+                ExtentTestManager.getTest().log(Status.ERROR, message + " " + platform);      
+            }
+        } else {
+        	ExtentTestManager.getTest().log(Status.FAIL, message);
+            throw new AssertionError(message);
+        }
+    }
 }

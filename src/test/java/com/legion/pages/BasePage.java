@@ -41,6 +41,18 @@ public class BasePage {
         	ExtentTestManager.getTest().log(Status.WARNING,te);
         }
     }
+    
+    //click method for mobile app
+    
+    public void clickOnMobileElement(WebElement element, boolean... shouldWait) {
+    	try {
+            waitUntilElementIsVisibleOnMobile(element);
+            element.click();
+        } catch (TimeoutException te) {
+        	ExtentTestManager.getTest().log(Status.WARNING,te);
+        }
+    }
+    
 
     public int calcListLength(List<WebElement> listLength){
     	return listLength.size();
@@ -95,6 +107,23 @@ public class BasePage {
     	
     }
     
+    // method for mobile application
+    
+    public boolean isElementLoadedOnMobile(WebElement element) throws Exception
+    {
+    	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getAndroidDriver(), 30);
+    	 
+    	try {
+    	    tempWait.until(ExpectedConditions.visibilityOf(element)); 
+    	    return true;
+    	}
+    	catch (NoSuchElementException | TimeoutException te) {
+    		return false;	
+    	}
+    	
+    }
+    
+    
     
     public boolean isElementLoaded(WebElement element, long timeOutInSeconds) throws Exception
     {
@@ -114,6 +143,18 @@ public class BasePage {
         ExpectedCondition<Boolean> expectation = _driver -> element.isDisplayed();
 
         Wait<WebDriver> wait = new WebDriverWait(getDriver(), 60);
+        try {
+            wait.until(webDriver -> expectation);
+        } catch (Throwable ignored) {
+        }
+    }
+    
+    // method created for mobile app
+    
+    public static void waitUntilElementIsVisibleOnMobile(final WebElement element) {
+        ExpectedCondition<Boolean> expectation = _driver -> element.isDisplayed();
+
+        Wait<WebDriver> wait = new WebDriverWait(MyThreadLocal.getAndroidDriver(), 60);
         try {
             wait.until(webDriver -> expectation);
         } catch (Throwable ignored) {

@@ -1,5 +1,8 @@
 package com.legion.utils;
 
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -48,7 +51,9 @@ public class MyThreadLocal {
 	public static Integer getScheduleHoursStartTime() { return scheduleHoursStartTime.get(); }
 	public static void setScheduleHoursEndTime(Integer value) { scheduleHoursEndTime.set(value); }
 	public static Integer getScheduleHoursEndTime() { return scheduleHoursEndTime.get(); }
-		
+	public static final ThreadLocal<AndroidDriver<MobileElement>> android_driver = new ThreadLocal<>();
+	public static ThreadLocal<String> platformname = new ThreadLocal<>();
+	
 	public static void setTotalSuiteTestCases(Integer value) {
 		totalSuiteTestCases.set(value);
 	}
@@ -153,7 +158,8 @@ public class MyThreadLocal {
 	public static String getDriverType() {
 		return driver_type.get();
 	}
-
+	
+	
 	public static void setVerificationMap(HashMap<ITestResult, List<Throwable>> vMap) {
 		verificationFailuresMap.set(vMap);
 	}
@@ -188,6 +194,14 @@ public class MyThreadLocal {
 
 	public static EventFiringWebDriver getDriver() {
 		return driver.get();
+	}
+	
+	public static void setAndroidDriver(AndroidDriver<MobileElement> _driver) {
+		android_driver.set(_driver);
+	}
+
+	public static AndroidDriver<MobileElement> getAndroidDriver() {
+		return android_driver.get();
 	}
 
 	public static void setEnterprise(String _enterprise) {
@@ -239,6 +253,17 @@ public class MyThreadLocal {
 	//get screenshot Console name
 	public static String getScreenshotConsoleName(){
 		return consoleName.get();
+	}
+	
+
+	//set screenshot Console name
+	public static void setPlatformName(String value){
+		platformname.set(value);
+	}
+
+	//get screenshot Console name
+	public static String getPlatformName(){
+		return platformname.get();
 	}
 
 	

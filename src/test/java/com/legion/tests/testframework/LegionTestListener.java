@@ -68,7 +68,7 @@ import static com.legion.utils.MyThreadLocal.*;
 		@Override
 		public void onTestFailure(ITestResult result) {
 			// TODO Auto-generated method stub
-			
+				
 				ExtentTestManager.getTest().log(Status.FAIL, MarkupHelper.createLabel("Test case Failed:",ExtentColor.RED));
 				String targetFile = ScreenshotManager.takeScreenShot();
 		        String screenshotLoc = propertyMap.get("Screenshot_Path") + File.separator + targetFile;

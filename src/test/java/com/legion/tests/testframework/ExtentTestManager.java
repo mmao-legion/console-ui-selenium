@@ -6,6 +6,7 @@ import java.util.List;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.MobilePlatform;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 
@@ -93,12 +94,23 @@ public class ExtentTestManager {
         String automatedName = "";
         // check if there is a Test annotation and get the test name
         Automated automated = testMethod.getAnnotation(Automated.class);
-        Owner owner = testMethod.getAnnotation(Owner.class);
         if (automated != null && automated.automated().length() > 0) {
         	automatedName = automated.automated();
         }
        
         return automatedName;
+    }
+    
+    public synchronized static String getMobilePlatformName(Method testMethod) {
+		
+        String platformName = "";
+        // check if there is a Test annotation and get the test name
+        MobilePlatform mobilePlatform = testMethod.getAnnotation(MobilePlatform.class);
+        if (mobilePlatform != null && mobilePlatform.platform().length() > 0) {
+        	platformName = mobilePlatform.platform();
+        }
+       
+        return platformName;
     }
     
    
