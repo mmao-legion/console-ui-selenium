@@ -2,18 +2,19 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite verbose ="0" thread-count="10" name="LegionTest">
 	<parameter name="environment" value="QA"/>
-  	
+	<parameter name="platform" value="Android"/>
+	<parameter name="executionon" value="realdevice"/>
+	<parameter name="runMode" value="mobileAndWeb"/>
+	
     <listeners>
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
- 
   
   <test name="Schedule Page">
     <classes>
-       <class name="com.legion.tests.core.ScheduleNewUITest">
+       <class name="com.legion.test.core.mobile.LoginTest">
       	<methods>
-           <include name="disableWeekViewNavOutsideSchPlanningWindowStoreManager"/>
-
+           <include name="gotoLoginPageTest"/>
         </methods>
       </class>
     </classes>
