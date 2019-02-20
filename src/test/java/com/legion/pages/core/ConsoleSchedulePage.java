@@ -109,6 +109,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @FindBy(css = "[ng-click=\"goToSchedule()\"]")
     private WebElement checkOutTheScheduleButton;
 
+    @FindBy(xpath = "//button[contains(text(),'UPDATE')]")
+    private WebElement updateAndGenerateScheduleButton;
+
     @FindBy(className = "console-navigation-item")
     private List<WebElement> consoleNavigationMenuItems;
 
@@ -533,10 +536,22 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         if (isElementLoaded(generateSheduleButton)) {
             click(generateSheduleButton);
             waitForSeconds(4);
-            if (isElementLoaded(checkOutTheScheduleButton)) {
+            if(isElementLoaded(updateAndGenerateScheduleButton)){
+                click(updateAndGenerateScheduleButton);
+                SimpleUtils.pass("Schedule Update and Generate button clicked Successfully!");
+                if (isElementLoaded(checkOutTheScheduleButton)) {
+                    click(checkOutTheScheduleButton);
+                    SimpleUtils.pass("Schedule Generated Successfuly!");
+                }else{
+                    SimpleUtils.fail("Not able to generate Schedule Successfully!",false);
+                }
+            }else if(isElementLoaded(checkOutTheScheduleButton)) {
                 click(checkOutTheScheduleButton);
                 SimpleUtils.pass("Schedule Generated Successfuly!");
+            }else{
+                SimpleUtils.fail("Not able to generate Schedule Successfully!",false);
             }
+
         } else {
             SimpleUtils.assertOnFail("Schedule Already generated for active week!", false, true);
         }
@@ -819,7 +834,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         if (isElementLoaded(publishButton)) {
             click(publishButton);
             if (isElementLoaded(schedulePublishButton)) {
-                Thread.sleep(5000);
+                waitForSeconds(5);
                 click(schedulePublishButton);
                 if (isElementLoaded(successfullyPublishedOkOption)) {
                     click(successfullyPublishedOkOption);
@@ -1332,5 +1347,31 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         // TODO Auto-generated method stub
     }
 
+
+    @Override
+    public void generateOrUpdateAndGenerateSchedule() throws Exception {
+        if (isElementLoaded(generateSheduleButton)) {
+            click(generateSheduleButton);
+            waitForSeconds(4);
+            if(isElementLoaded(updateAndGenerateScheduleButton)){
+                click(updateAndGenerateScheduleButton);
+                SimpleUtils.pass("Schedule Update and Generate button clicked Successfully!");
+                if (isElementLoaded(checkOutTheScheduleButton)) {
+                    click(checkOutTheScheduleButton);
+                    SimpleUtils.pass("Schedule Generated Successfuly!");
+                }else{
+                    SimpleUtils.fail("Not able to generate Schedule Successfully!",false);
+                }
+            }else if(isElementLoaded(checkOutTheScheduleButton)) {
+                click(checkOutTheScheduleButton);
+                SimpleUtils.pass("Schedule Generated Successfuly!");
+            }else{
+                SimpleUtils.fail("Not able to generate Schedule Successfully!",false);
+            }
+
+        } else {
+            SimpleUtils.assertOnFail("Schedule Already generated for active week!", false, true);
+        }
+    }
 
 }

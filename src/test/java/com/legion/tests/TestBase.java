@@ -36,6 +36,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
+import static com.legion.utils.MyThreadLocal.setTestRailRunId;
 import static org.testng.AssertJUnit.assertTrue;
 
 import org.openqa.selenium.WebDriver;
@@ -177,6 +178,7 @@ public abstract class TestBase {
         String automatedName = ExtentTestManager.getAutomatedName(method);
         String enterpriseName =  SimpleUtils.getEnterprise(method);
         String platformName =  ExtentTestManager.getMobilePlatformName(method);
+        int sectionId = ExtentTestManager.getTestRailSectionId(method);
         List<String> categories =  new ArrayList<String>();
         categories.add(getClass().getSimpleName());
 //        categories.add(enterpriseName);
@@ -189,6 +191,9 @@ public abstract class TestBase {
             + " " + method.getName() + " : " + testName + ""
             + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
         extent.setSystemInfo(method.getName(), enterpriseName.toString());
+        setTestRailRunId(0);
+        int testCaseId = SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,sectionId);
+        setTestCaseId(testCaseId);
         setCurrentMethod(method);
         setBrowserNeeded(true);
         setCurrentTestMethodName(method.getName());

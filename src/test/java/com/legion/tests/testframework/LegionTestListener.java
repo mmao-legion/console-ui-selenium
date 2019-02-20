@@ -57,36 +57,32 @@ import static com.legion.utils.MyThreadLocal.*;
 			String testName = result.getMethod().getMethodName();
 			setLoc(testName);
 		}
-	
+
 		@Override
-		public void onTestSuccess(ITestResult result) {  
-	        	ExtentTestManager.getTest().log(Status.PASS, MarkupHelper.createLabel("Test case Passed:",ExtentColor.GREEN));
-		        String TestID = Integer.toString(ExtentTestManager.getTestRailId(getCurrentMethod()));
-//	        	try {
-//					SimpleUtils.addTestResult("1", "1");
-//				} catch (IOException | APIException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
+		public void onTestSuccess(ITestResult result) {
+			ExtentTestManager.getTest().log(Status.PASS, MarkupHelper.createLabel("Test case Passed:",ExtentColor.GREEN));
+//	        String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
+//	        int sectionId = ExtentTestManager.getTestRailSectionId(MyThreadLocal.getCurrentMethod());
+//	        SimpleUtils.addTestResultIntoTestRail(1,"Passed");
 		}
-	
+
 		@Override
 		public void onTestFailure(ITestResult result) {
 			// TODO Auto-generated method stub
 
-			    SimpleUtils.addTestResult(5, "Test case Failed.");
-				ExtentTestManager.getTest().log(Status.FAIL, MarkupHelper.createLabel("Test case Failed:",ExtentColor.RED));
-				String targetFile = ScreenshotManager.takeScreenShot();
-		        String screenshotLoc = propertyMap.get("Screenshot_Path") + File.separator + targetFile;
-				try {
-					ExtentTestManager.getTest().addScreenCaptureFromPath("<a href='"+screenshotLoc+ "'>" +"Screenshots"+"</a>");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}finally{
-					ExtentTestManager.getTest().fail(result.getThrowable());
-				}
-			
+			SimpleUtils.addTestResultIntoTestRail(5,result.getThrowable().toString());
+			ExtentTestManager.getTest().log(Status.FAIL, MarkupHelper.createLabel("Test case Failed:",ExtentColor.RED));
+			String targetFile = ScreenshotManager.takeScreenShot();
+			String screenshotLoc = propertyMap.get("Screenshot_Path") + File.separator + targetFile;
+			try {
+				ExtentTestManager.getTest().addScreenCaptureFromPath("<a href='"+screenshotLoc+ "'>" +"Screenshots"+"</a>");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally{
+				ExtentTestManager.getTest().fail(result.getThrowable());
+			}
+
 		}
 	
 		@Override

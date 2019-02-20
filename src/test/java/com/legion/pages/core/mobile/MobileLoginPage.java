@@ -16,6 +16,8 @@ import com.legion.tests.TestBase;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
+import java.util.List;
+
 public class MobileLoginPage extends BasePage implements LoginPageAndroid {
 	
 	 @FindBy(id="co.legion.client.staging:id/loginBTN")
@@ -35,7 +37,21 @@ public class MobileLoginPage extends BasePage implements LoginPageAndroid {
 	 
 	 @FindBy(id="co.legion.client.staging:id/login")
 	 private WebElement loginBtn;
-	
+
+	@FindBy(xpath="//android.widget.TextView[@text='Shift Offers']")
+	private WebElement shiftOffers;
+
+	@FindBy(id="co.legion.client.staging:id/subDayLayout")
+	private WebElement shiftOfferDay;
+
+	@FindBy(id="co.legion.client.staging:id/statTimeTV")
+	private WebElement shiftOfferStartTime;
+
+	@FindBy(id="co.legion.client.staging:id/endTimeTV")
+	private WebElement shiftOfferEndTime;
+
+
+
 	public MobileLoginPage() {
     	PageFactory.initElements(getAndroidDriver(), this);
     }
@@ -102,5 +118,14 @@ public class MobileLoginPage extends BasePage implements LoginPageAndroid {
     	
     	clickOnMobileElement(loginBtn);
     }
+
+
+    public void clickShiftOffers() throws Exception{
+		waitForSeconds(8);
+		getAndroidDriver().findElementByAndroidUIAutomator("new UiSelector().text(\"Shift Offers\")").click();
+		SimpleUtils.pass("Shift offer generated successfully!");
+//
+
+	}
 	
 }

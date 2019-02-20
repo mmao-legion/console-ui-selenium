@@ -45,12 +45,35 @@ public class MyThreadLocal {
     public static ThreadLocal<String> consoleName = new ThreadLocal<>();
     public static final ThreadLocal<String> scheduleHoursStartTime = new ThreadLocal<>();
     public static final ThreadLocal<String> scheduleHoursEndTime = new ThreadLocal<>();
+	public static ThreadLocal<Integer> testCaseId = new ThreadLocal<>();
+	public static ThreadLocal<Integer> testRailRunId = new ThreadLocal<>();
+	public static final ThreadLocal<String> teamMemberName = new ThreadLocal<>();
+
+	public static void setTeamMemberName(String value) { teamMemberName.set(value); }
+
+	public static String getTeamMemberName() { return teamMemberName.get(); }
 
 	public static void setScheduleHoursStartTime(String value) { scheduleHoursStartTime.set(value); }
 
 	public static String getScheduleHoursStartTime() { return scheduleHoursStartTime.get(); }
 	public static void setScheduleHoursEndTime(String value) { scheduleHoursEndTime.set(value); }
 	public static String getScheduleHoursEndTime() { return scheduleHoursEndTime.get(); }
+
+	public static void setTestCaseId(Integer value) {
+		testCaseId.set(value);
+	}
+
+	public static Integer getTestCaseId() {
+		return testCaseId.get();
+	}
+
+	public static void setTestRailRunId(Integer value) {
+		testRailRunId.set(value);
+	}
+
+	public static Integer getTestRailRunId() {
+		return testRailRunId.get();
+	}
     public static final ThreadLocal<AndroidDriver<MobileElement>> android_driver = new ThreadLocal<>();
     public static ThreadLocal<String> platformname = new ThreadLocal<>();
 		

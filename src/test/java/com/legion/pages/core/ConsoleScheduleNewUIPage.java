@@ -2,6 +2,7 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.setTeamMemberName;
 import static org.testng.Assert.fail;
 
 import com.legion.utils.JsonUtil;
@@ -142,7 +143,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(css="[ng-click=\"regenerateFromOverview()\"]")
 	private WebElement generateSheduleButton;
 	
-	@FindBy(css="lg-button[label=\"Publish\"]")
+	@FindBy(css="lg-button[label*=\"ublish\"]")
 	private WebElement publishSheduleButton;
 	
 	@FindBy(css="div.sch-view-dropdown-summary-content-item-heading.ng-binding")
@@ -279,11 +280,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(xpath="//span[contains(text(),'Best')]")
 	private List<WebElement> scheduleBestMatchStatus;
 
+	@FindBy(css="div.worker-edit-search-worker-name")
+	private List<WebElement> searchWorkerName;
+
+
 	@FindBy(css="td.table-field.action-field.tr>div")
 	private List<WebElement> radionBtnSelectTeamMembers;
 
 	@FindBy(css="button.tma-action.sch-save")
 	private WebElement btnOffer;
+
+	@FindBy(xpath = "//button[contains(text(),'UPDATE')]")
+	private WebElement updateAndGenerateScheduleButton;
 
 
 
@@ -1036,7 +1044,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@Override
 	public void clickOnSchedulePublishButton() throws Exception {
 		// TODO Auto-generated method stub
-		
+		if(isElementLoaded(publishSheduleButton)){
+			click(publishSheduleButton);
+			if(isElementLoaded(publishConfirmBtn))
+			{
+				click(publishConfirmBtn);
+				SimpleUtils.pass("Schedule published successfully for week: '"+ getActiveWeekText() +"'");
+				if(isElementLoaded(successfulPublishOkBtn))
+				{
+					click(successfulPublishOkBtn);
+				}
+			}
+		}
 	}
 	
 	//added by Nishant
@@ -1069,7 +1088,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		String textStartDay = null;
 		if(isElementLoaded(addNewShiftOnDayViewButton))
 		{
-			SimpleUtils.pass("User is allowed to add new shift for past week!");
+			SimpleUtils.pass("User is allowed to add new shift for current or future week!");
 			if(isElementLoaded(shiftStartday)){
 				String[] txtStartDay = shiftStartday.getText().split(" ");
 				textStartDay = txtStartDay[0];
@@ -1080,7 +1099,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		}
 		else
 		{
-			SimpleUtils.fail("User is allowed to add new shift for past week!",true);
+			SimpleUtils.fail("User is not allowed to add new shift for current or future week!",true);
 		}
 		return textStartDay;
 	}
@@ -2125,6 +2144,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	public boolean getScheduleStatus()throws Exception {
 		boolean ScheduleStatus = false;
+		waitForSeconds(5);
 		if(scheduleStatus.size()!=0 && radionBtnSelectTeamMembers.size() == scheduleStatus.size()){
 			for(int i=0; i<scheduleStatus.size();i++){
 				if(scheduleStatus.get(i).getText().contains("Available")
@@ -2143,13 +2163,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	public boolean getScheduleBestMatchStatus()throws Exception {
 		boolean ScheduleBestMatchStatus = false;
-		if(scheduleStatus.size()!=0 || scheduleBestMatchStatus.size()!=0 && radionBtnSelectTeamMembers.size() == scheduleStatus.size()){
+		if(scheduleStatus.size()!=0 || scheduleBestMatchStatus.size()!=0 && radionBtnSelectTeamMembers.size() == scheduleStatus.size() && searchWorkerName.size()!=0){
 			for(int i=0; i<scheduleBestMatchStatus.size();i++){
 				if(scheduleBestMatchStatus.get(i).getText().contains("Best")
-						|| scheduleStatus.get(i).getText().contains("Unknown")){
-					click(radionBtnSelectTeamMembers.get(i));
-					ScheduleBestMatchStatus = true;
-					break;
+						|| scheduleStatus.get(i).getText().contains("Unknown") || scheduleStatus.get(i).getText().contains("Available")){
+					if(searchWorkerName.get(i).getText().contains("Gordon.M") || searchWorkerName.get(i).getText().contains("Jayne.H")){
+						click(radionBtnSelectTeamMembers.get(i));
+						setTeamMemberName(searchWorkerName.get(i).getText());
+						ScheduleBestMatchStatus = true;
+						break;
+
+					}
 				}
 			}
 		}else{
@@ -2491,4 +2515,34 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 		return temperatureText;
 	}
+
+	@Override
+	public void generateOrUpdateAndGenerateSchedule() throws Exception {
+		if (isElementLoaded(generateSheduleButton)) {
+			click(generateSheduleButton);
+			waitForSeconds(4);
+			if(isElementLoaded(updateAndGenerateScheduleButton)){
+				click(updateAndGenerateScheduleButton);
+				SimpleUtils.pass("Schedule Update and Generate button clicked Successfully!");
+				waitForSeconds(10);
+				if (isElementLoaded(checkOutTheScheduleButton)) {
+					click(checkOutTheScheduleButton);
+					SimpleUtils.pass("Schedule Generated Successfuly!");
+					waitForSeconds(3);
+				}else{
+					SimpleUtils.fail("Not able to generate Schedule Successfully!",false);
+				}
+			}else if(isElementLoaded(checkOutTheScheduleButton)) {
+				click(checkOutTheScheduleButton);
+				SimpleUtils.pass("Schedule Generated Successfuly!");
+				waitForSeconds(3);
+			}else{
+				SimpleUtils.fail("Not able to generate Schedule Successfully!",false);
+			}
+
+		} else {
+			SimpleUtils.assertOnFail("Schedule Already generated for active week!", false, true);
+		}
+	}
+
 }

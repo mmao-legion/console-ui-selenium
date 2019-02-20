@@ -43,6 +43,9 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	@FindBy(css = "div.lgn-calendar.current-month")
 	private List<WebElement> overviewCalendarMonthsYears;
 
+	@FindBy(className = "left-banner")
+	private List<WebElement> weeklyScheduleDateElements;
+
 
 	public ConsoleScheduleOverviewPage()
 	{
@@ -311,6 +314,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
 	@Override
 	public List<WebElement> getOverviewScheduleWeeks() {
+		waitForSeconds(2);
 		return overviewScheduleWeekList;
 	}
 
@@ -321,7 +325,6 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 					overviewScheduleWeeksStatus.get(i).contains("Published") ||
 					overviewScheduleWeeksStatus.get(i).contains("Draft")&&
 					overviewScheduleWeeksStatus.get(i+1).contains("Guidance")){
-				System.out.println("pass ho gaya");
 			}
 
 		}
@@ -360,4 +363,17 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		}
 		return weekHours;
 	}
+
+
+	//added by Nishant
+
+	public void clickOnGuidanceBtnOnOverview(int index){
+		if(weeklyScheduleDateElements.size()!=0){
+			click(weeklyScheduleDateElements.get(index));
+			waitForSeconds(4);
+		}else{
+			SimpleUtils.fail("Click on Guidance On Schedule Overview Page",false);
+		}
+	}
+
 }

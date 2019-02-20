@@ -5,11 +5,7 @@ import java.util.List;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
-import com.legion.tests.annotations.Automated;
-import com.legion.tests.annotations.MobilePlatform;
-import com.legion.tests.annotations.Owner;
-import com.legion.tests.annotations.TestName;
-import com.legion.tests.annotations.UseAsTestRailId;
+import com.legion.tests.annotations.*;
 
 public class ExtentTestManager {
 	
@@ -127,7 +123,17 @@ public class ExtentTestManager {
         return testRailId;
     }
 
+    public synchronized static int getTestRailSectionId(Method testMethod) {
 
+        int testRailSectionId = 0;
+        // check if there is a Test annotation and get the test name
+        UseAsTestRailSectionId useAsTestRailSectionId = testMethod.getAnnotation(UseAsTestRailSectionId.class);
+        if(useAsTestRailSectionId != null && useAsTestRailSectionId.testRailSectionId()> 0){
+            testRailSectionId = useAsTestRailSectionId.testRailSectionId();
+        }
+
+        return testRailSectionId;
+    }
 
 
      
