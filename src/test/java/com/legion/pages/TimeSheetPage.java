@@ -94,4 +94,8 @@ public interface TimeSheetPage {
 
 	public String getTimeSheetActiveDurationType();
 
+	public void exportTimesheet() throws Exception;
+
+	public HashMap<String, Float> getTotalTimeSheetCarouselCardsHours() throws Exception;
+
 }

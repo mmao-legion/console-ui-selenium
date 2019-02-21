@@ -171,6 +171,15 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy(css = "div.lg-no-timeclock__block.lg-no-timeclock__block--add")
 	private WebElement addClockBtnOnDetailPopup;
 	
+	@FindBy(css= "lg-button[label=\"Export\"]")
+	private WebElement exportTimesheetBtn;
+	
+	@FindBy(css= "lg-button[label=\"Export Anyway\"]")
+	private WebElement exportAnywayTimesheetBtn;
+	
+	@FindBy(css = "div.card-carousel-fixed")
+	private WebElement timesheetCarouselCardHoursDiv;
+	
 	
 	String timeSheetHeaderLabel = "Timesheet";
 	public ConsoleTimeSheetPage(){
@@ -1175,5 +1184,42 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("TimeSheet Duration Buttons not loaded.", false);
 		
 		return timeSheetActiveDurationType;
+	}
+
+
+
+	@Override
+	public void exportTimesheet() throws Exception {
+		if(isElementLoaded(exportTimesheetBtn)) {
+			click(exportTimesheetBtn);
+			if(isElementLoaded(exportAnywayTimesheetBtn))
+				click(exportAnywayTimesheetBtn);
+		}
+		else
+			SimpleUtils.fail("Timesheet Page: Timesheet 'Export' button not loaded.", false);
+	}
+
+
+
+	@Override
+	public HashMap<String, Float> getTotalTimeSheetCarouselCardsHours() throws Exception {
+		HashMap<String, Float> timeSheetCarouselCardsHours = new HashMap<String, Float>();
+		if(isElementLoaded(timesheetCarouselCardHoursDiv)) {
+			String[] carouselCardText = timesheetCarouselCardHoursDiv.getAttribute("innerText").split("\n");
+			for(String carouselCardRow : carouselCardText) {
+				if(carouselCardRow.toLowerCase().contains("clocked")) {
+					String[] carouselCardRowCols = carouselCardRow.split("\t");
+					if(carouselCardRowCols.length > 3)
+					{
+						timeSheetCarouselCardsHours.put("regularHours", Float.valueOf(carouselCardRowCols[1]));
+						timeSheetCarouselCardsHours.put("overtimeHours", Float.valueOf(carouselCardRowCols[2]));
+						timeSheetCarouselCardsHours.put("doubleTimeHours", Float.valueOf(carouselCardRowCols[3]));
+					}
+				}
+			}
+		}
+		else
+			SimpleUtils.fail("TimeSheet Page: Hours Carousel Card not loaded.", false);
+		return timeSheetCarouselCardsHours;
 	}
 }

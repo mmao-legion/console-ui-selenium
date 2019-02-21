@@ -8,19 +8,20 @@
  	</listeners>
 
   
-    <!-- <test name="Controls New UI Test">
+    <test name="Controls New UI Test">
         <classes>
             <class name="com.legion.tests.core.ControlsNewUITest">
       	        <methods>
-                    <include name="updateUserLocationAsInternalAdmin"/>
+                    <!-- <include name="updateUserLocationAsInternalAdmin"/>
                     <include name="updateWorkingHoursAsInternalAdmin"/>
                     <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>
                     <include name="verifySchedulePlanningWindowAndAdditionalScheduleHoursAsInternalAdmin"/>
-                    <include name="updateControlsSectionLoadingAsStoreManager"/>
+                    <include name="updateControlsSectionLoadingAsStoreManager"/> -->
+                    <include name="updateAndValidateShiftIntervalTimeAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
-    </test>  -->
+    </test> 
 
     <!-- <test name="Traffic Forecast for New UI Test">
         <classes>
@@ -118,16 +119,27 @@
     </test> -->
     
     
-    <test name="Analytics Test">
+    <!-- <test name="Analytics Test">
         <classes>
             <class name="com.legion.tests.core.AnalyticsTestKendraScott2">
                 <methods>
-                    <!-- <include name="verifyKPIReportExportFunctionalityAsStoreManager"/> -->
+                    <include name="verifyKPIReportExportFunctionalityAsStoreManager"/>
                     <include name="validateKPIReportValuesAsStoreManager"/>
                 </methods>
             </class>
         </classes>
-    </test>
+    </test> -->
+    
+    
+   <!--  <test name="Timesheet Test">
+        <classes>
+            <class name="com.legion.tests.core.TimeSheetTest">
+                <methods>
+                    <include name="validateTimeSheetExportFeatureAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test> -->
   
 </suite> <!-- Suite -->
 

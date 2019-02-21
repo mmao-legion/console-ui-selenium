@@ -1357,5 +1357,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		return false;
 	}
 
+	@Override
+	public int getScheduleShiftIntervalCountInAnHour() throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 
 }

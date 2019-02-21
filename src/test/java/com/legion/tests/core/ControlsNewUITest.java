@@ -3,6 +3,8 @@ package com.legion.tests.core;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -17,6 +19,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.core.ScheduleNewUITest.SchedulePageSubTabText;
+import com.legion.tests.core.ScheduleNewUITest.overviewWeeksStatus;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -30,6 +33,16 @@ public class ControlsNewUITest extends TestBase{
 		  Previous("Previous");
 			private final String value;
 			dayWeekOrPayPeriodViewType(final String newValue) {
+	            value = newValue;
+	        }
+	        public String getValue() { return value; }
+	}
+	
+	public enum schedulingPoliciesShiftIntervalTime{
+		  FifteenMinutes("15 minutes"),
+		  ThirtyMinutes("30 minutes");
+			private final String value;
+			schedulingPoliciesShiftIntervalTime(final String newValue) {
 	            value = newValue;
 	        }
 	        public String getValue() { return value; }
@@ -251,7 +264,7 @@ public class ControlsNewUITest extends TestBase{
   @Automated(automated =  "Automated")
   @Owner(owner = "Naval")
   @Enterprise(name = "KendraScott2_Enterprise")
-  @TestName(description = "Onboarding - Check navigation to different section in controls tab[On click it should not logout].")
+  @TestName(description = "147: Onboarding - Check navigation to different section in controls tab[On click it should not logout].")
   @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
   public void updateControlsSectionLoadingAsStoreManager(String browser, String username, String password, String location)
   		throws Exception {
@@ -260,7 +273,7 @@ public class ControlsNewUITest extends TestBase{
       SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);      
       ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
       controlsNewUIPage.clickOnControlsConsoleMenu();
-      SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+      SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
       
       // Validate Controls Location Profile Section
       controlsNewUIPage.clickOnControlsLocationProfileSection();
@@ -302,6 +315,64 @@ public class ControlsNewUITest extends TestBase{
       controlsNewUIPage.clickOnControlsWorkingHoursCard();
 	  boolean isWorkingHours = controlsNewUIPage.isControlsWorkingHoursLoaded();
 	  SimpleUtils.assertOnFail("Controls Page: Working Hours Section not Loaded.", isWorkingHours, true);
+  }
+  
+  
+  @Automated(automated =  "Automated")
+  @Owner(owner = "Naval")
+  @Enterprise(name = "Coffee_Enterprise")
+  @TestName(description = "TP-154: Controls :- Shift Interval minutes for the enterprise should get updated successfully.")
+  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+  public void updateAndValidateShiftIntervalTimeAsInternalAdmin(String browser, String username, String password, String location)
+  		throws Exception {
+			
+      DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+      SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);      
+      ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+      controlsNewUIPage.clickOnControlsConsoleMenu();
+      SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+      controlsNewUIPage.clickOnControlsSchedulingPolicies();
+      controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+      controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue());
+      
+      Thread.sleep(1000);
+      SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+      schedulePage.clickOnScheduleConsoleMenuItem();
+  	  schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+  	  SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!"
+  			,schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+  	  ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+  	  BasePage basePase = new BasePage();
+  	  Thread.sleep(1000);
+      List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+      boolean isWeekFoundToGenerate = false;
+      int minutesInAnHours = 60;
+      for(WebElement overviewWeek : overviewWeeks)
+      {
+      	if(overviewWeek.getText().contains(overviewWeeksStatus.Guidance.getValue()))
+      	{
+      		isWeekFoundToGenerate = true;
+      		basePase.click(overviewWeek);
+      		schedulePage.generateSchedule();
+      		Thread.sleep(1000);
+      		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+      		if(isActiveWeekGenerated)
+      			SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' Generated Successfully.");
+      		else
+      			SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' not Generated.", false);
+      		schedulePage.clickOnDayView();
+      		int shiftIntervalCountInAnHour = schedulePage.getScheduleShiftIntervalCountInAnHour();
+      		if((minutesInAnHours /shiftIntervalCountInAnHour) == Integer.valueOf(schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue().split(" ")[0]))
+      			SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() 
+      				+"' Shift Interval Time matched as '"+ schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue() +"'.");
+      		else
+      			SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() 
+  					+"' Shift Interval Time not matched as '"+ schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue() +"'.", false);
+      		break;
+      	}
+      }
+      if(! isWeekFoundToGenerate)
+      	SimpleUtils.report("No 'Guidance' week found to Ungenerate Schedule.");
   }
   
 }

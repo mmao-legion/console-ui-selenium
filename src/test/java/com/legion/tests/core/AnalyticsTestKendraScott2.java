@@ -13,6 +13,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.legion.pages.AnalyticsPage;
+import com.legion.pages.ControlsNewUIPage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.ProjectedSalesPage;
 import com.legion.pages.ScheduleOverviewPage;
@@ -304,5 +305,4 @@ public class AnalyticsTestKendraScott2 extends TestBase{
 		   SimpleUtils.fail("KPI Report 'Published Schedule Hours (Peak)' not matched with Analytics 'Published Schedule Peak Hours' ('"
 				   +publishedSchedulePeakHours+"/"+publishedScheduleHours.get("peakHours")+"').", true);
 	}
-	
 }

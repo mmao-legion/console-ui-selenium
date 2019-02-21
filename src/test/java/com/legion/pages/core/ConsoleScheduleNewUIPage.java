@@ -391,6 +391,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(css = "img[ng-if=\"hasViolateCompliance(line, scheduleWeekDay)\"]")
 	private List<WebElement> complianceReviewDangerImgs;
 	
+	@FindBy(css = "lg-dropdown-base[ng-if=\"isAdmin\"]")
+	private WebElement scheduleAdminDropDownBtn;
+	
+	@FindBy(css = "div[ng-repeat=\"action in supportedAdminActions.actions\"]")
+	private List<WebElement> scheduleAdminDropDownOptions;
+	
+	@FindBy(css = "button[ng-click=\"yesClicked()\"]")
+	private WebElement unGenerateBtnOnPopup;
 	
     final static String consoleScheduleMenuItemText = "Schedule";
 
@@ -795,7 +803,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			 Thread.sleep(2000);
 			 if(isElementLoaded(generateScheduleBtn))
 				 click(generateScheduleBtn);
-			 Thread.sleep(2000);
+			 Thread.sleep(4000);
 			 if(isElementLoaded(checkOutTheScheduleButton))
 			 {
 				 click(checkOutTheScheduleButton);
@@ -2576,15 +2584,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		}
 		return false;
 	}
-
-	@FindBy(css = "lg-dropdown-base[ng-if=\"isAdmin\"]")
-	private WebElement scheduleAdminDropDownBtn;
-	
-	@FindBy(css = "div[ng-repeat=\"action in supportedAdminActions.actions\"]")
-	private List<WebElement> scheduleAdminDropDownOptions;
-	
-	@FindBy(css = "button[ng-click=\"yesClicked()\"]")
-	private WebElement unGenerateBtnOnPopup;
 	
 	@Override
 	public void unGenerateActiveScheduleScheduleWeek() throws Exception {
@@ -2620,5 +2619,28 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			SimpleUtils.fail("Schedule Page: Admin dropdown button not loaded to Ungenerate the Schedule for the Week : '"
 					+ getActiveWeekText() +"'.", false);
 			
+	}
+	
+	@Override
+	public int getScheduleShiftIntervalCountInAnHour() throws Exception
+	{
+		int schedulePageShiftIntervalMinutes = 0;
+		float totalHoursCountForShift = 0;
+		if(scheduleShiftsRows.size() > 0 )
+		{
+			for(WebElement scheduleShiftTimeHeaderCell : scheduleShiftTimeHeaderCells) {
+				if(scheduleShiftTimeHeaderCell.getText().trim().length() > 0)
+					totalHoursCountForShift ++;
+				else
+					totalHoursCountForShift = (float) (totalHoursCountForShift + 0.5);
+			}
+			List<WebElement> scheduleShiftRowCells = scheduleShiftsRows.get(0).findElements(By.cssSelector("div.sch-day-view-grid-cell"));
+			int shiftIntervalCounts = scheduleShiftRowCells.size();
+			schedulePageShiftIntervalMinutes = Math.round(shiftIntervalCounts / totalHoursCountForShift);
+		}
+		else
+			SimpleUtils.fail("Schedule Page: Shift Rows not loaded.", false);
+		
+		return schedulePageShiftIntervalMinutes;
 	}
 }

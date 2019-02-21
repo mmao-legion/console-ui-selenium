@@ -1,21 +1,19 @@
 package com.legion.tests.core;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.SimpleLayout;
 import org.json.simple.JSONObject;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.legion.pages.BasePage;
+import com.legion.pages.ControlsNewUIPage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.TimeSheetPage;
@@ -26,6 +24,7 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.annotations.UseAsTestRailId;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.CsvUtils;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.LegionRestAPI;
 import com.legion.utils.SimpleUtils;
@@ -801,5 +800,112 @@ public class TimeSheetTest extends TestBase{
         SimpleUtils.assertOnFail("TimeSheet Details Table not loaded for duration type '"+ timeSheetPage.getTimeSheetActiveDurationType() 
     	+"'.",timeSheetPage.isTimeSheetDetailsTableLoaded() , true);
 	}
+	
+	@Automated(automated ="Automated")
+	@Owner(owner = "Naval")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "TP-153 : Validate Export timesheet feature [Timesheet should get exported and it should not be blank].")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateTimeSheetExportFeatureAsInternalAdmin(String username, String password
+			, String browser, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	    SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);      
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	    controlsNewUIPage.clickOnControlsConsoleMenu();
+	    SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+	    controlsNewUIPage.clickOnControlsTimeAndAttendanceCard();
+	    controlsNewUIPage.clickOnGlobalLocationButton();
+	    controlsNewUIPage.clickOnControlsTimeAndAttendanceAdvanceBtn();
+	    controlsNewUIPage.selectTimeSheetExportFormatByLabel("Standard");
+	    
+	    TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+        timeSheetPage.clickOnWeekView();
+        SimpleUtils.assertOnFail("TimeSheet Details Table not loaded for duration type '"+ timeSheetPage.getTimeSheetActiveDurationType() 
+    	+"'.",timeSheetPage.isTimeSheetDetailsTableLoaded() , true);
+		// Exporting Timesheet
+	    String verifyFileExtention = "csv";
+	    //analyticsPage.clickOnAnalyticsSubTab(analyticsReportSubTabLabel);
+	    //String scheduleKPITitle = "Forecast, Schedule and Clock KPI Daily";
+	    String downloadDirPath = propertyMap.get("Download_File_Default_Dir");
+	    int fileCounts = SimpleUtils.getDirectoryFilesCount(downloadDirPath);	
+	    float clockRegularHours = 0;	
+	    float clockOvertimeHours = 0;
+	    float clockDoubleTimeHours = 0;
+
+	    timeSheetPage.exportTimesheet();
+	    Thread.sleep(2000);
+	    if(SimpleUtils.getDirectoryFilesCount(downloadDirPath) > fileCounts) {
+		    File latestFile = SimpleUtils.getLatestFileFromDirectory(downloadDirPath);
+		    String fileName = latestFile.getName();
+		    SimpleUtils.pass("Timesheet Exported successfully with name: '"+ fileName +"'.");
+		    String downloadedFileExtention = fileName.split("\\.")[1];
+		    if(downloadedFileExtention.equalsIgnoreCase(verifyFileExtention) 
+		    		|| downloadedFileExtention.toLowerCase().contains(verifyFileExtention))
+		    	SimpleUtils.pass("Timesheet Page: Export timesheet downloaded file extention('"
+		    		+ downloadedFileExtention +"') matched with '"+verifyFileExtention+"'.");
+		    else
+		    	SimpleUtils.fail("Timesheet Page: Export timesheet downloaded file extention('"
+			    		+ downloadedFileExtention +"') not matched with '"+verifyFileExtention+"'.", true);
+		    ArrayList<HashMap<String,String>> timeSheetExportResponse = CsvUtils.getDataFromCSVFileWithHeader(downloadDirPath+"/"+fileName);
+		    for(HashMap<String,String> timeSheetExportRow : timeSheetExportResponse)
+		    {
+		    	clockRegularHours += Float.valueOf(timeSheetExportRow.get("Regular Hours"));	
+			    clockOvertimeHours += Float.valueOf(timeSheetExportRow.get("Overtime Hours"));	
+			    clockDoubleTimeHours += Float.valueOf(timeSheetExportRow.get("Double Time Hours"));	
+		    }
+		
+		    // Get Timesheet hours data
+		    HashMap<String,Float> timeSheetCarouselCardsHours = timeSheetPage.getTotalTimeSheetCarouselCardsHours();
+		    
+		    // Validating TimeSheet regular hours with exported file regular hours
+		    if(clockRegularHours == timeSheetCarouselCardsHours.get("regularHours"))
+		    	SimpleUtils.pass("Analytics Carousel Card's Regular hours matched with Expoted TimeSheet Regular Hours ('"
+		    			+clockRegularHours+"/"+timeSheetCarouselCardsHours.get("regularHours")+"').");
+			else
+			    SimpleUtils.fail("Analytics Carousel Card's Regular hours not matched with Expoted TimeSheet Regular Hours ('"
+			    		+clockRegularHours+"/"+timeSheetCarouselCardsHours.get("regularHours")+"').", true);
+		    
+		 // Validating TimeSheet Overtime hours with exported file Overtime hours
+		    if(clockOvertimeHours == timeSheetCarouselCardsHours.get("overtimeHours"))
+		    	SimpleUtils.pass("Analytics Carousel Card's Overtime hours matched with Expoted TimeSheet Overtime Hours ('"
+		    			+clockOvertimeHours+"/"+timeSheetCarouselCardsHours.get("overtimeHours")+"').");
+			else
+			    SimpleUtils.fail("Analytics Carousel Card's Overtime hours not matched with Expoted TimeSheet Overtime Hours ('"
+			    		+clockOvertimeHours+"/"+timeSheetCarouselCardsHours.get("overtimeHours")+"').", true);
+		    
+		 // Validating TimeSheet regular hours with exported file regular hours
+		    if(clockDoubleTimeHours == timeSheetCarouselCardsHours.get("doubleTimeHours"))
+		    	SimpleUtils.pass("Analytics Carousel Card's DoubleTime hours matched with Expoted TimeSheet DoubleTime Hours ('"
+		    			+clockDoubleTimeHours+"/"+timeSheetCarouselCardsHours.get("doubleTimeHours")+"').");
+			else
+			    SimpleUtils.fail("Analytics Carousel Card's DoubleTime hours not matched with Expoted TimeSheet DoubleTime Hours ('"
+			    		+clockDoubleTimeHours+"/"+timeSheetCarouselCardsHours.get("doubleTimeHours")+"').", true);		 
+	    }
+	    else
+		    SimpleUtils.fail("Timesheet Not Exported.", false);
+	    
+	    
+
+	    // To Do
+	    /*List<WebElement> allWorkersRow = timeSheetPage.getTimeSheetWorkersRow();
+        for(WebElement workerRow: allWorkersRow)
+    	{
+    		String[] workerNameAndRole = timeSheetPage.getWorkerNameByWorkerRowElement(workerRow).split("\n");
+    		BasePage basePage = new BasePage();
+    		basePage.click(workerRow);
+    		SimpleUtils.pass("Editing timeclock for the Worker :'"+ workerNameAndRole[0] +"' and duration: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"'.");
+    		
+    		//List<WebElement> workerTimeClocks = timeSheetPage.getTimeSheetDisplayedWorkersDayRows();
+		    for(WebElement timeSheetRow : timeSheetPage.getTimeSheetDisplayedWorkersDayRows())
+		    {
+		    	System.out.println("\n****************************************************\n");
+		    	System.out.println(timeSheetRow.getText());
+		    }
+		    basePage.click(workerRow);
+    	}*/
+	}
+	
 	
 }

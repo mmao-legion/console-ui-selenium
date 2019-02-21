@@ -111,4 +111,5 @@ public interface SchedulePage {
 	public boolean isComlianceReviewRequiredForActiveWeek() throws Exception;
 	public void unGenerateActiveScheduleScheduleWeek() throws Exception;
 	public boolean isStoreClosedForActiveWeek() throws Exception;
+	public int getScheduleShiftIntervalCountInAnHour() throws Exception;
 }

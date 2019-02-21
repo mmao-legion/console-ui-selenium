@@ -158,6 +158,21 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "page-heading[page-title=\"Working Hours\"]")
 	private WebElement breadcrumbsWorkingHours;
 	
+	@FindBy(css = "lg-dashboard-card[title=\"Time and Attendance\"]")
+	private WebElement timeAndAttendanceCard;
+	
+	@FindBy(css = "div.lg-advanced-box__toggle")
+	private WebElement timeSheetAdvanceBtn;
+	
+	@FindBy(css = "question-input[question-title=\"Timesheet export format\"]")
+	private WebElement timeSheetExportFormatDiv;
+	
+	@FindBy(css = "form-section[form-title=\"Shifts\"]")
+	private WebElement schedulingPoliciesShiftFormSectionDiv;
+	
+	@FindBy(css = "question-input[question-title=\"Shift Interval minutes for the enterprise.\"]")
+	private WebElement schedulingPoliciesShiftIntervalDiv;
+	
 	String timeSheetHeaderLabel = "Controls";
 	
 	@Override
@@ -186,8 +201,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void clickOnGlobalLocationButton() throws Exception {
 		
-		if(isElementLoaded(globalLocationButton))
+		if(isElementLoaded(globalLocationButton)) {
 			click(globalLocationButton);
+			SimpleUtils.pass("Controls Page: 'Global Location' loaded successfully.");
+		}
 		else
 			SimpleUtils.fail("Controls Page: Global Location Button not Loaded!", false);
 	}
@@ -670,5 +687,122 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			return true;
 		}
 		return false;
+	}
+
+
+	@Override
+	public void clickOnControlsTimeAndAttendanceCard() throws Exception {
+		if(isElementLoaded(timeAndAttendanceCard)) {
+			click(timeAndAttendanceCard);
+			SimpleUtils.pass("Controls Page: 'Time and Attendance' tab selected successfully.");
+		}
+		else
+			SimpleUtils.fail("Controls Page: 'Time and Attendance' tab not loaded.", false);
+	}
+
+	@Override
+	public void clickOnControlsTimeAndAttendanceAdvanceBtn() throws Exception {
+		if(isElementLoaded(timeSheetAdvanceBtn) && !timeSheetAdvanceBtn.getAttribute("class").contains("--advanced"))
+			click(timeSheetAdvanceBtn);
+		else
+			SimpleUtils.fail("Controls - Time and Attendance section: 'Advance' button not loaded.", false);
+	}
+
+	@Override
+	public void selectTimeSheetExportFormatByLabel(String optionLabel) throws Exception {
+		if(isElementLoaded(timeSheetExportFormatDiv)) {
+			WebElement timeSheetFormatDropDown = timeSheetExportFormatDiv.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(timeSheetFormatDropDown)) {
+				Select dropdown= new Select(timeSheetFormatDropDown);
+				if(getTimeSheetExportFormatSelectedOption().contains(optionLabel)) {
+					SimpleUtils.pass("Time and Attendance: Timesheet export format '"+optionLabel+"' option already selected.");
+				}
+				else {
+					dropdown.selectByVisibleText(optionLabel);
+					Thread.sleep(1000);
+					if(getTimeSheetExportFormatSelectedOption().contains(optionLabel))
+						SimpleUtils.pass("Time and Attendance: Timesheet export format '"+optionLabel+"' option selected successfully.");
+					else
+						SimpleUtils.fail("Time and Attendance: Unable to select Timesheet export format '"+optionLabel+"' option.", false);
+				}
+			}
+			else
+				SimpleUtils.fail("Controls - Time and Attendance: Timesheet export format dropdown not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Controls Page: TimeSheet Export Format section not loaded.", false);
+	}
+	
+	public String getTimeSheetExportFormatSelectedOption() throws Exception {
+		String selectedOptionLabel = "";
+		if(isElementLoaded(timeSheetExportFormatDiv)) {
+			WebElement timeSheetFormatDropDown = timeSheetExportFormatDiv.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(timeSheetFormatDropDown)) {
+				Select dropdown= new Select(timeSheetFormatDropDown);
+				selectedOptionLabel = dropdown.getFirstSelectedOption().getText();
+			}
+			else
+				SimpleUtils.fail("Controls - Time and Attendance: timesheet export format dropdown not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Controls Page: TimeSheet Export Format section not loaded.", false);
+		return selectedOptionLabel;
+	}
+
+
+	@Override
+	public void clickOnSchedulingPoliciesShiftAdvanceBtn() throws Exception {
+		if(isElementLoaded(schedulingPoliciesShiftFormSectionDiv)) {
+			WebElement schedulingPoliciesShiftAdvanceBtn = schedulingPoliciesShiftFormSectionDiv.findElement(
+					By.cssSelector("div.lg-advanced-box__toggle"));
+			if(isElementLoaded(schedulingPoliciesShiftAdvanceBtn) && !schedulingPoliciesShiftAdvanceBtn.getAttribute("class")
+					.contains("--advanced")) {
+				click(schedulingPoliciesShiftAdvanceBtn);
+				SimpleUtils.pass("Controls Page: - Scheduling Policies 'Shift' section: 'Advance' button clicked.");
+			}
+			else
+				SimpleUtils.fail("Controls Page: - Scheduling Policies 'Shift' section: 'Advance' button not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Controls Page: - Scheduling Policies section: 'Shift' form section not loaded.", false);
+	}
+
+
+	@Override
+	public void selectSchedulingPoliciesShiftIntervalByLabel(String intervalTimeLabel) throws Exception {
+		if(isElementLoaded(schedulingPoliciesShiftIntervalDiv))
+		{
+			WebElement shiftIntervalDropDown = schedulingPoliciesShiftIntervalDiv.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(shiftIntervalDropDown)) {
+				Select dropdown= new Select(shiftIntervalDropDown);
+				if(getshiftIntervalDropDownSelectedOption().contains(intervalTimeLabel)) {
+					SimpleUtils.pass("Scheduling Policies: Shift Interval time '"+intervalTimeLabel+"' option already selected.");
+				}
+				else {
+					dropdown.selectByVisibleText(intervalTimeLabel);
+					Thread.sleep(1000);
+					if(getshiftIntervalDropDownSelectedOption().contains(intervalTimeLabel))
+						SimpleUtils.pass("Scheduling Policies: Shift Interval time '"+intervalTimeLabel+"' option selected successfully.");
+					else
+						SimpleUtils.fail("Scheduling Policies: Unable to select Shift Interval time '"+intervalTimeLabel+"' option.", false);
+				}
+			}
+		}
 	}	
+	
+	public String getshiftIntervalDropDownSelectedOption() throws Exception {
+		String selectedOptionLabel = "";
+		if(isElementLoaded(schedulingPoliciesShiftIntervalDiv)) {
+			WebElement shiftIntervalDropDown = schedulingPoliciesShiftIntervalDiv.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(shiftIntervalDropDown)) {
+				Select dropdown= new Select(shiftIntervalDropDown);
+				selectedOptionLabel = dropdown.getFirstSelectedOption().getText();
+			}
+			else
+				SimpleUtils.fail("Scheduling Policies: Shift Interval time dropdown not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Scheduling Policies: 'Shift' section not loaded.", false);
+		return selectedOptionLabel;
+	}
 }

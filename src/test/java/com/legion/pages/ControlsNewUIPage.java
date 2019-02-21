@@ -52,5 +52,16 @@ public interface ControlsNewUIPage {
 	public boolean isControlsSchedulingPoliciesLoaded() throws Exception;
 	public boolean isControlsWorkingHoursLoaded() throws Exception;
 
+	public void clickOnControlsTimeAndAttendanceCard() throws Exception;
+
+	public void clickOnControlsTimeAndAttendanceAdvanceBtn() throws Exception;
+
+	public void selectTimeSheetExportFormatByLabel(String optionLabel) throws Exception;
+
+	public void clickOnSchedulingPoliciesShiftAdvanceBtn() throws Exception;
+
+	public void selectSchedulingPoliciesShiftIntervalByLabel(String intervalTimeLabel) throws Exception;
+
+
 	
 }
