@@ -17,6 +17,8 @@ import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MobileLoginPage extends BasePage implements LoginPageAndroid {
 	
@@ -49,6 +51,9 @@ public class MobileLoginPage extends BasePage implements LoginPageAndroid {
 
 	@FindBy(id="co.legion.client.staging:id/endTimeTV")
 	private WebElement shiftOfferEndTime;
+
+	@FindBy(id="co.legion.client.staging:id/shiftTypeNameTV")
+	private WebElement shiftOfferAvail;
 
 
 
@@ -120,10 +125,16 @@ public class MobileLoginPage extends BasePage implements LoginPageAndroid {
     }
 
 
-    public void clickShiftOffers() throws Exception{
+    public void clickShiftOffers(String teamMember) throws Exception{
 		waitForSeconds(8);
 		getAndroidDriver().findElementByAndroidUIAutomator("new UiSelector().text(\"Shift Offers\")").click();
-		SimpleUtils.pass("Shift offer generated successfully!");
+		WebElement shiftOfferAvailable = getAndroidDriver().findElementByAndroidUIAutomator("new UiSelector().textStartsWith(\"OPEN SHIFTS\")");
+		if(isElementLoadedOnMobile(shiftOfferAvail)){
+			SimpleUtils.pass("Shift offer available for "+teamMember);
+		}else{
+			SimpleUtils.fail("Shift offer not available for "+teamMember,false);
+		}
+
 //
 
 	}

@@ -746,6 +746,9 @@ public class SimpleUtils {
 		int TestRailRunId = 0;
 		int count = 0;
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date =null;
+		String strDate = null;
 
 		if((getTestRailRunId()!=null && getTestRailRunId() > 0)){
 			String addResultString = "update_run/" + getTestRailRunId();
@@ -759,7 +762,16 @@ public class SimpleUtils {
 
 				Map<String, Object> data = new HashMap<String, Object>();
 				data.put("title", testName);
-				data.put("name", "Automation Suite Test Run"+timestamp);
+				try{
+					date = format.parse(timestamp.toString());
+					String[] arrDate = format.format(date).split(" ");
+					strDate = arrDate[1];
+					System.out.println(format.format(date));
+				}catch(ParseException e){
+					System.err.println(e.getMessage());
+				}
+
+				data.put("name", "Automation Suite Test Run"+"" +strDate);
 				data.put("suite_id", 10);
 				data.put("include_all", true);
 				data.put("case_ids", cases);
@@ -786,8 +798,15 @@ public class SimpleUtils {
 
 				Map<String, Object> data = new HashMap<String, Object>();
 				data.put("title", testName);
+				try{
+					date = format.parse(timestamp.toString());
+					String[] arrDate = format.format(date).split(" ");
+					strDate = arrDate[1];
+				}catch(ParseException e){
+					System.err.println(e.getMessage());
+				}
 				data.put("suite_id", 10);
-				data.put("name", "Automation Suite Test Run"+timestamp);
+				data.put("name", "Automation Smoke"+"" +strDate);
 				data.put("include_all", false);
 				data.put("case_ids", cases);
 				JSONObject c = (JSONObject) client.sendPost(addResultString, data);

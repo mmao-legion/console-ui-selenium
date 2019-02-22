@@ -2167,7 +2167,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			for(int i=0; i<scheduleBestMatchStatus.size();i++){
 				if(scheduleBestMatchStatus.get(i).getText().contains("Best")
 						|| scheduleStatus.get(i).getText().contains("Unknown") || scheduleStatus.get(i).getText().contains("Available")){
-					if(searchWorkerName.get(i).getText().contains("Gordon.M") || searchWorkerName.get(i).getText().contains("Jayne.H")){
+					if(searchWorkerName.get(i).getText().contains("Gordon.M")){
 						click(radionBtnSelectTeamMembers.get(i));
 						setTeamMemberName(searchWorkerName.get(i).getText());
 						ScheduleBestMatchStatus = true;
