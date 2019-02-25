@@ -375,4 +375,89 @@ public class ControlsNewUITest extends TestBase{
       	SimpleUtils.report("No 'Guidance' week found to Ungenerate Schedule.");
   }
   
+  @Automated(automated =  "Automated")
+  @Owner(owner = "Naval")
+  @Enterprise(name = "KendraScott2_Enterprise")
+  @TestName(description = "TP-155: Validate the schedule finalize functionality.")
+  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+  public void validateScheduleFinalizeFunctionalityAsInternalAdmin(String browser, String username, String password, String location)
+  		throws Exception {
+			
+      DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+      SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);  
+      
+      ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+      controlsNewUIPage.clickOnControlsConsoleMenu();
+      SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+      
+      controlsNewUIPage.clickOnControlsSchedulingPolicies();
+      Thread.sleep(2000);
+      String schedulePublishWindowWeeks = controlsNewUIPage.getSchedulePublishWindowWeeks();
+      int schedulePublishWindowWeeksCount = Integer.valueOf(schedulePublishWindowWeeks.split(" ")[0]);
+      SimpleUtils.report("Scheduling Policies : Advance Schedule can be 'Published' upto upcoming '"+schedulePublishWindowWeeks+"'.");
+      
+      controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
+      int advanceFinalizeScheduleDaysCount = controlsNewUIPage.getAdvanceScheduleDaysCountToBeFinalize();
+      int advanceWeekToFinalizeCount = (advanceFinalizeScheduleDaysCount / 7);
+      
+      // How many days in advance would you finalize schedule
+      SimpleUtils.report("Scheduling Policies : Advance Schedule can be 'Finalize' upto upcoming '"+advanceFinalizeScheduleDaysCount+"' Days.");
+      Thread.sleep(1000);
+      
+      SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+      schedulePage.clickOnScheduleConsoleMenuItem();
+  	  schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+  	  SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!"
+  			,schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+  	  
+  	  ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+  	  Thread.sleep(2000);
+  	  
+      List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+      SimpleUtils.assertOnFail("Schedule Overview Page: Unable to fetch Schedule weeks detail.", (overviewWeeks.size() > 0), false);
+      //div.left-banner
+      String pastDueText = "PAST DUE";
+      for(int index = 0; index < dayWeekOrPayPeriodCount.Five.getValue(); index ++)
+      {
+    	  String overviewWeekText = overviewWeeks.get(index).getText();
+    	  if(overviewWeekText.contains(overviewWeeksStatus.Finalized.getValue())) {
+    		  if(index <= advanceWeekToFinalizeCount)
+    			  SimpleUtils.pass("Overview Page: Week ('"+ scheduleOverviewPage.getOverviewWeekDuration(overviewWeeks.get(index))+"') is finalized.");
+    		  else
+    			  SimpleUtils.fail("Overview Page: Week ('"+ scheduleOverviewPage.getOverviewWeekDuration(overviewWeeks.get(index)) 
+    			  	+"') is finalized while week is out of finalize window ('"+ advanceWeekToFinalizeCount +" Weeks').", true);
+    	  }
+    	  else if(overviewWeekText.contains(overviewWeeksStatus.Published.getValue())){
+    		  SimpleUtils.pass("Overview Page: Week ('"+ scheduleOverviewPage.getOverviewWeekDuration(overviewWeeks.get(index))+"') is Published.");
+    		  if(index <= advanceWeekToFinalizeCount)
+    			  SimpleUtils.fail("Overview Page: Week ('"+ scheduleOverviewPage.getOverviewWeekDuration(overviewWeeks.get(index)) 
+    			  	+"') not 'Finalized' while Schedule can be finalized '"+ advanceFinalizeScheduleDaysCount +"' Days in Advance." , true);
+    		  
+    		  // Validate 'Past Due' Text
+    		  if(index <= schedulePublishWindowWeeksCount)
+    		  {
+    			  if(overviewWeekText.toLowerCase().contains(pastDueText.toLowerCase()))
+    				  SimpleUtils.pass("Overview Page: Non finalize Week ('"+ scheduleOverviewPage.getOverviewWeekDuration(overviewWeeks.get(index)) 
+    				  +"') displaying '" + pastDueText + "' Text while schedule is not 'Finalize' and it reaches the Publish window.");  
+    			  else
+    				  SimpleUtils.fail("Overview Page: Non finalize week ('"+ scheduleOverviewPage.getOverviewWeekDuration(overviewWeeks.get(index))
+    				  +"') not displaying '" + pastDueText + "' Text while schedule is not Finalised and it reaches the publish window.", true);
+    		  }
+    	  }
+    	  else {
+    		  // Validate 'Past Due' Text
+    		  if(index <= schedulePublishWindowWeeksCount)
+    		  {
+    			  if(overviewWeekText.toLowerCase().contains(pastDueText.toLowerCase()))
+    				  SimpleUtils.pass("Overview Page: Non finalize Week ('"+ scheduleOverviewPage.getOverviewWeekDuration(overviewWeeks.get(index))
+    				  +"') displaying '" + pastDueText + "' Text while schedule is not 'Finalize' and it reaches the Publish window.");  
+    			  else
+    				  SimpleUtils.fail("Overview Page: Non finalize week ('"+ scheduleOverviewPage.getOverviewWeekDuration(overviewWeeks.get(index))
+    				  +"') not displaying '" + pastDueText + "' Text while schedule is not Finalised and it reaches the publish window.", true);
+    		  }
+    	  }
+    	  
+      }
+  }
+  
 }

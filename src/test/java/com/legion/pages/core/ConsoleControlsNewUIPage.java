@@ -170,6 +170,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "form-section[form-title=\"Shifts\"]")
 	private WebElement schedulingPoliciesShiftFormSectionDiv;
 	
+	@FindBy(css = "form-section[form-title=\"Schedules\"]")
+	private WebElement schedulingPoliciesSchedulesFormSectionDiv;
+	
 	@FindBy(css = "question-input[question-title=\"Shift Interval minutes for the enterprise.\"]")
 	private WebElement schedulingPoliciesShiftIntervalDiv;
 	
@@ -804,5 +807,62 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		else
 			SimpleUtils.fail("Scheduling Policies: 'Shift' section not loaded.", false);
 		return selectedOptionLabel;
+	}
+	
+	@Override
+	public void clickOnSchedulingPoliciesSchedulesAdvanceBtn() throws Exception {
+		if(isElementLoaded(schedulingPoliciesSchedulesFormSectionDiv)) {
+			WebElement schedulingPoliciesShiftAdvanceBtn = schedulingPoliciesSchedulesFormSectionDiv.findElement(
+					By.cssSelector("div.lg-advanced-box__toggle"));
+			if(isElementLoaded(schedulingPoliciesShiftAdvanceBtn) && !schedulingPoliciesShiftAdvanceBtn.getAttribute("class")
+					.contains("--advanced")) {
+				click(schedulingPoliciesShiftAdvanceBtn);
+				SimpleUtils.pass("Controls Page: - Scheduling Policies 'Schedules' section: 'Advance' button clicked.");
+			}
+			else
+				SimpleUtils.fail("Controls Page: - Scheduling Policies 'Schedules' section: 'Advance' button not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Controls Page: - Scheduling Policies section: 'Schedules' form section not loaded.", false);
+	}
+
+
+	@FindBy(css = "question-input[question-title=\"How many weeks in advance would you typically publish schedules? (this is the <i>Schedule Publish Window</i>).\"]")
+	private WebElement schedulePublishWindowDiv;
+	
+	@FindBy(css = "question-input[question-title=\"How many days in advance would you finalize schedule?\"]")
+	private WebElement advanceFinalizeDaysDiv;
+	
+	@Override
+	public String getSchedulePublishWindowWeeks() throws Exception {
+		String selectedOptionLabel = "";
+		if(isElementLoaded(schedulePublishWindowDiv)) {
+			WebElement schedulePublishWindowDropDown = schedulePublishWindowDiv.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(schedulePublishWindowDropDown)) {
+				Select dropdown= new Select(schedulePublishWindowDropDown);
+				selectedOptionLabel = dropdown.getFirstSelectedOption().getText();
+			}
+			else
+				SimpleUtils.fail("Scheduling Policies: Advance Schedule weeks to be Finalize dropdown not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Scheduling Policies: Advance Schedule weeks to be Finalize section not loaded.", false);
+		return selectedOptionLabel;
+	}
+	
+	@Override
+	public int getAdvanceScheduleDaysCountToBeFinalize() throws Exception {
+		int finalizeScheduleDays = 0;
+		if(isElementLoaded(advanceFinalizeDaysDiv)) {
+			WebElement finalizeScheduleDaysField = advanceFinalizeDaysDiv.findElement(By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(finalizeScheduleDaysField)) {
+				finalizeScheduleDays = Integer.valueOf(finalizeScheduleDaysField.getAttribute("value"));
+			}
+			else
+				SimpleUtils.fail("Scheduling Policies: Advance Schedule days to be Finalize dropdown not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Scheduling Policies: Advance Schedule days to be Finalize section not loaded.", false);
+		return finalizeScheduleDays;
 	}
 }

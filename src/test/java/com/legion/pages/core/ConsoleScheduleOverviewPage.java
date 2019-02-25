@@ -389,4 +389,20 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		}
 		return (int) (scheduleWeekCountToBeCreated - 1);
 	}
+
+	
+	@Override
+	public String getOverviewWeekDuration(WebElement webElement) throws Exception {
+		String weekDurationText = "";
+		if(isElementLoaded(webElement)) {
+			WebElement weekdurationElement = webElement.findElement(By.cssSelector("div.left-banner"));
+			if(isElementLoaded(weekdurationElement))
+				weekDurationText = weekdurationElement.getText().replace("\n", " ");
+			else
+				SimpleUtils.fail("Overview Page: Unable to get Week Duration.", true);
+		}
+		else
+			SimpleUtils.fail("Overview Page: Unable to get Week Duration.", true);
+		return weekDurationText;
+	}
 }

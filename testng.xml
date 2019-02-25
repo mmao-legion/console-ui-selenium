@@ -17,7 +17,8 @@
                     <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>
                     <include name="verifySchedulePlanningWindowAndAdditionalScheduleHoursAsInternalAdmin"/>
                     <include name="updateControlsSectionLoadingAsStoreManager"/> -->
-                    <include name="updateAndValidateShiftIntervalTimeAsInternalAdmin"/>
+                    <!-- <include name="updateAndValidateShiftIntervalTimeAsInternalAdmin"/> -->
+                    <include name="validateScheduleFinalizeFunctionalityAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>

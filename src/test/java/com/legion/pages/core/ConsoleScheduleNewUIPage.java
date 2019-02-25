@@ -409,10 +409,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			WebElement consoleScheduleMenuElement = SimpleUtils.getSubTabElement(consoleNavigationMenuItems, consoleScheduleMenuItemText);
 			activeConsoleName = analyticsConsoleName.getText();
 			click(consoleScheduleMenuElement);
-			SimpleUtils.pass("Console Menu Loaded Successfully!");
+			SimpleUtils.pass("'Schedule' Console Menu Loaded Successfully!");
 		}
 		else {
-			SimpleUtils.fail("Console Menu Items Not Loaded Successfully!",false);
+			SimpleUtils.fail("'Schedule' Console Menu Items Not Loaded Successfully!",false);
 		}
 	}
 

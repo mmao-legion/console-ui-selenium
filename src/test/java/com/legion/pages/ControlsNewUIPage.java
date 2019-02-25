@@ -62,6 +62,12 @@ public interface ControlsNewUIPage {
 
 	public void selectSchedulingPoliciesShiftIntervalByLabel(String intervalTimeLabel) throws Exception;
 
+	public void clickOnSchedulingPoliciesSchedulesAdvanceBtn() throws Exception;
+
+	public String getSchedulePublishWindowWeeks() throws Exception;
+
+	public int getAdvanceScheduleDaysCountToBeFinalize() throws Exception;
+
 
 	
 }

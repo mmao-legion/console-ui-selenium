@@ -24,4 +24,5 @@ public interface ScheduleOverviewPage {
 	public ArrayList<String> getOverviewCalendarMonthsYears() throws Exception;
 	public LinkedHashMap<String, Float> getWeekHoursByWeekElement(WebElement overViewWeek);
 	public int getScheduleOverviewWeeksCountCanBeCreatInAdvance();
+	public String getOverviewWeekDuration(WebElement webElement) throws Exception;
 }
