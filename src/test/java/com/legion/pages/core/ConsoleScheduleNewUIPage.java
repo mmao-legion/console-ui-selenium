@@ -2643,4 +2643,149 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		
 		return schedulePageShiftIntervalMinutes;
 	}
+	
+	@Override
+	public void toggleSummaryView() throws Exception
+	{
+		String toggleSummaryViewOptionText = "Toggle Summary View";
+		if(isElementLoaded(scheduleAdminDropDownBtn, 10))
+		{
+			click(scheduleAdminDropDownBtn);
+			if(scheduleAdminDropDownOptions.size() > 0)
+			{
+				for(WebElement scheduleAdminDropDownOption : scheduleAdminDropDownOptions)
+				{
+					if(scheduleAdminDropDownOption.getText().toLowerCase().contains(toggleSummaryViewOptionText.toLowerCase()))
+					{
+						click(scheduleAdminDropDownOption);
+					}
+				}
+			}
+			else
+				SimpleUtils.fail("Schedule Page: Admin dropdown Options not loaded to Toggle Summary View for the Week : '"
+						+ getActiveWeekText() +"'.", false);
+		}
+		else
+			SimpleUtils.fail("Schedule Page: Admin dropdown not loaded to Toggle Summary View for the Week : '"
+					+ getActiveWeekText() +"'.", false);
+	}
+
+	@FindBy(css = "div[ng-if=\"showSummaryView\"]")
+	private WebElement summaryViewDiv;
+	
+	@Override
+	public boolean isSummaryViewLoaded() throws Exception {
+		if(isElementLoaded(summaryViewDiv))
+			return true;
+		return false;
+	}
+
+	@FindBy(css = "tr[ng-repeat=\"day in summary.workingHours\"]")
+	private List<WebElement> operatingHoursRows;
+	
+	@FindBy(css = "div.lgn-time-slider-notch-selector-start")
+	private WebElement scheduleOperatingStartHrsSlider;
+	
+	@FindBy(css = "div.lgn-time-slider-notch-selector-end")
+	private WebElement scheduleOperatingEndHrsSlider;
+	
+	@FindBy(css = "lg-button[label=\"Save\"]")
+	private WebElement operatingHoursSaveBtn;
+	
+	@FindBy(css = "lg-button[label=\"Cancel\"]")
+	private WebElement operatingHoursCancelBtn;
+	
+	public void updateScheduleOperatingHours(String day, String startTime, String endTime) throws Exception {
+		Thread.sleep(1000);
+		if(operatingHoursRows.size() > 0) {
+			for(WebElement operatingHoursRow : operatingHoursRows) {
+				if(operatingHoursRow.getText().toLowerCase().contains(day.toLowerCase())) {
+					WebElement editBtn = operatingHoursRow.findElement(By.cssSelector("span[ng-if=\"canEditWorkingHours\"]"));
+					if(isElementLoaded(editBtn)) {
+						click(editBtn);
+						if(scheduleOperatingStartHrsSlider.getText().toLowerCase().contains(startTime.toLowerCase())
+								&& scheduleOperatingEndHrsSlider.getText().toLowerCase().contains(endTime.toLowerCase())){
+							SimpleUtils.pass("Operating Hours already updated for the day '"+day+"' with Start time '"+startTime
+									+"' and End time '"+endTime+"'.");
+							if(isElementLoaded(operatingHoursCancelBtn)) {
+								click(operatingHoursCancelBtn);
+							}
+						}
+						else {	
+							dragRollerElementTillTextMatched(scheduleOperatingStartHrsSlider, startTime);
+							dragRollerElementTillTextMatched(scheduleOperatingEndHrsSlider, endTime);
+							if(isElementLoaded(operatingHoursSaveBtn)) {
+								click(operatingHoursSaveBtn);
+								SimpleUtils.pass("Operating Hours updated for the day '"+day+"' with Start time '"+startTime
+										+"' and End time '"+endTime+"'.");
+							}
+						}
+					}
+					else
+						SimpleUtils.fail("Operating Hours Table 'Edit' button not loaded.", false);
+				}
+			}
+		}
+		else
+			SimpleUtils.fail("Operating Hours Rows not loaded.", false);
+	}
+	
+	@Override
+	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch) throws Exception {
+
+		int hourOnSlider = Integer.valueOf(rollerElement.getText().split(":")[0]);
+		if(rollerElement.getText().toLowerCase().contains("pm"))
+			hourOnSlider = hourOnSlider + 12;
+		int openingHourOnJson = Integer.valueOf(textToMatch.split(":")[0]);
+		if(textToMatch.toLowerCase().contains("pm"))
+			openingHourOnJson = openingHourOnJson + 12;
+		int sliderOffSet = 5;
+		if(hourOnSlider > openingHourOnJson)
+			sliderOffSet = -5;
+		while(! rollerElement.getText().toLowerCase().contains(textToMatch.toLowerCase()))
+		{
+			Thread.sleep(500);
+			moveDayViewCards(rollerElement, sliderOffSet);
+		}
+	}
+	
+	@Override
+	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception
+	{
+		String scheduleShiftHeaderStartTime = "";
+		float hoursBeforeStartTime = 0;
+		String scheduleShiftHeaderEndTime = "";
+		float hoursAfterEndTime = 0;
+		if(scheduleShiftTimeHeaderCells.get(0).getText().trim().length() > 0)
+			scheduleShiftHeaderStartTime = scheduleShiftTimeHeaderCells.get(0).getText().split(" ")[0];
+		else {
+			hoursBeforeStartTime = (float) 0.5;
+			scheduleShiftHeaderStartTime = scheduleShiftTimeHeaderCells.get(1).getText().split(" ")[0];
+		}
+		//System.out.println("hoursBeforeStartTime : "+hoursBeforeStartTime);
+		
+		if(scheduleShiftTimeHeaderCells.get(scheduleShiftTimeHeaderCells.size() - 1).getText().trim().length() > 0)
+			scheduleShiftHeaderEndTime = scheduleShiftTimeHeaderCells.get(scheduleShiftTimeHeaderCells.size() - 1).getText().split(" ")[0];
+		else {
+			hoursAfterEndTime = (float) 0.5;
+			scheduleShiftHeaderEndTime = scheduleShiftTimeHeaderCells.get(scheduleShiftTimeHeaderCells.size() - 2).getText().split(" ")[0];
+		}
+		
+		//System.out.println("hoursAfterEndTime : "+hoursAfterEndTime);
+		
+		HashMap<String, Integer> scheduleBufferHours = getScheduleBufferHours();
+		for(Map.Entry<String, Integer> bufferHours : scheduleBufferHours.entrySet())
+		{
+			//System.out.println(bufferHours.getKey() +" : "+bufferHours.getValue());
+		}
+		
+		float startHours = Float.valueOf(scheduleShiftHeaderStartTime) + hoursBeforeStartTime + scheduleBufferHours.get("openingBufferHours");
+		System.out.println("startHours: "+startHours);
+		float endHours = Float.valueOf(scheduleShiftHeaderEndTime) - scheduleBufferHours.get("closingBufferHours") + 1;
+		System.out.println("scheduleShiftHeaderEndTime : "+endHours);
+		if(Integer.valueOf(startTime.split(":")[0]) == (int) startHours && Integer.valueOf(endTime.split(":")[0]) == (int) endHours)
+			return true;
+		
+		return false;
+	}
 }

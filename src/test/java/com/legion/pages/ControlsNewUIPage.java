@@ -2,6 +2,8 @@ package com.legion.pages;
 
 import java.util.HashMap;
 
+import org.openqa.selenium.WebElement;
+
 public interface ControlsNewUIPage {
 
 	void clickOnControlsConsoleMenu() throws Exception;
@@ -67,7 +69,6 @@ public interface ControlsNewUIPage {
 	public String getSchedulePublishWindowWeeks() throws Exception;
 
 	public int getAdvanceScheduleDaysCountToBeFinalize() throws Exception;
-
 
 	
 }

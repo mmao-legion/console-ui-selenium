@@ -1994,4 +1994,38 @@ public class ScheduleNewUITest extends TestBase{
  	        }	        
 	    }
 	    
+	    @Automated(automated =  "Automated")
+	    @Owner(owner = "Naval")
+	    @Enterprise(name = "KendraScott2_Enterprise")
+	    @TestName(description = "TP-156 : Schedule :- Verify whether schedule timing is getting reflected once user changes timing locally.")
+	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	    public void changeAndValidateOperatingHoursAsInternalAdmin(String browser, String username, String password, String location)
+	    		throws Exception {
+	    	DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        schedulePage = dashboardPage.goToTodayForNewUI();
+	        schedulePage.clickOnWeekView();
+	        if(!schedulePage.isWeekGenerated())
+	        	schedulePage.generateSchedule();
+	        
+	        schedulePage.clickOnDayView();
+	        System.out.println("Active Duration : "+schedulePage.getActiveWeekText());
+	        schedulePage.toggleSummaryView();
+	        if(schedulePage.isSummaryViewLoaded())
+	        {
+	        	String day = schedulePage.getActiveWeekText().split(" ")[0];
+	        	String startTime = "10:00am";
+	        	String endTime = "6:00pm";
+	        	schedulePage.updateScheduleOperatingHours(day, startTime, endTime);
+	        	schedulePage.toggleSummaryView();
+	        	boolean isOperatingHoursUpdated = schedulePage.isScheduleOperatingHoursUpdated(startTime, endTime);
+	        	if(isOperatingHoursUpdated)
+	        		SimpleUtils.pass("Updated Operating Hours Reflecting on Schedule page.");
+	        	else
+	        		SimpleUtils.fail("Updated Operating Hours not Reflecting on Schedule page.", false);
+	        }
+	        else
+	        	SimpleUtils.fail("Unable to load Summary view on the week '"+ schedulePage.getActiveWeekText() +"'.", false);
+	    }
+	    
     }

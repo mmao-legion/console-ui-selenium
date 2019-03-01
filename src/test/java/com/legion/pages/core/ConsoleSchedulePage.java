@@ -1363,5 +1363,35 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		return 0;
 	}
 
+	@Override
+	public void toggleSummaryView() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isSummaryViewLoaded() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void updateScheduleOperatingHours(String day, String startTime, String endTime) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 }

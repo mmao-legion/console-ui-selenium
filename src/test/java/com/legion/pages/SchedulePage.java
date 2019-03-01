@@ -112,4 +112,9 @@ public interface SchedulePage {
 	public void unGenerateActiveScheduleScheduleWeek() throws Exception;
 	public boolean isStoreClosedForActiveWeek() throws Exception;
 	public int getScheduleShiftIntervalCountInAnHour() throws Exception;
+	public void toggleSummaryView() throws Exception;
+	public boolean isSummaryViewLoaded() throws Exception;
+	public void updateScheduleOperatingHours(String day, String startTime, String endTime) throws Exception;
+	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch) throws Exception;
+	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception;
 }
