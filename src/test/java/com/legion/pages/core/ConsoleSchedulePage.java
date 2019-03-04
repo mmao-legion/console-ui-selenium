@@ -1480,5 +1480,10 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		return false;
 	}
 
+    @Override
+    public void generateOrUpdateAndGenerateSchedule() throws Exception {
+
+    }
+
 
 }
