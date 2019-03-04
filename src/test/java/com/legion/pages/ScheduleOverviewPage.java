@@ -24,4 +24,5 @@ public interface ScheduleOverviewPage {
 	public ArrayList<String> getOverviewCalendarMonthsYears() throws Exception;
 	public LinkedHashMap<String, Float> getWeekHoursByWeekElement(WebElement overViewWeek);
 	public void clickOnGuidanceBtnOnOverview(int index);
+	public boolean loadScheduleOverview() throws Exception;
 }

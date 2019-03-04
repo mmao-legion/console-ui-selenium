@@ -27,6 +27,9 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 	@FindBy(css = "div.sub-navigation-view-link.active")
 	private WebElement schedulePageSelectedSubTab;
 	
+	@FindBy (xpath = "//span[contains(text(),'Staffing Guidance')]")
+	private WebElement StaffingGuidanceSubMenu;
+	
 	@FindBy(css="[ng-click=\"selectDayWeekView($event, 'week')\"]")
 	private WebElement staffingGuidancePageWeekViewButton;
 	
@@ -83,6 +86,15 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 	
 	@FindBy(className="sch-schedule-analyze-dismiss")
 	private WebElement staffingGuidanceAnalyzePopupCloseButton;
+	
+	@FindBy (css = "div.console-navigation-item-label.Schedule")
+	private WebElement consoleSchedulePageTabElement;
+	
+	@FindBy (css = "div[ng-if*='guidance-week-chart'] div.sch-slot-detail")
+	private List<WebElement> staffingGuidanceWeekView;
+	
+	@FindBy (css = "div.day-chart-graph-container div[aria-label*='A']")
+	private WebElement staffingGuidanceDayViewGraph;
 
 	
 	@FindBy(className = "schedule-view")
@@ -457,6 +469,44 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 		}
 		SimpleUtils.report("Staffing Guidance Active Work Role filter '"+ selectedWorkRole +"'");
 		return selectedWorkRole;
+	}
+
+	//added by Gunjan
+	@Override
+	public boolean loadStaffingGuidance() throws Exception {
+		// TODO Auto-generated method stub
+		boolean flag=false;
+		if(isElementLoaded(StaffingGuidanceSubMenu)){
+			click(StaffingGuidanceSubMenu);
+			SimpleUtils.pass("Clicked on Staffing Guidance Sub Menu ");
+			if(isElementLoaded(projectedSalesPageDayViewButton)){
+				click(projectedSalesPageDayViewButton);
+				SimpleUtils.pass("Clicked on Staffing Guidance Day View");
+				if(isElementLoaded(staffingGuidanceDayViewGraph)){
+				flag = true;
+				SimpleUtils.pass("Staffing Guidance Loaded in DayView Successfully!");
+				}else{
+					SimpleUtils.fail("Staffing Guidance Not Loaded in DayView Successfully!", true);
+				}
+			}else{
+				SimpleUtils.pass("Day View button not found in Staffing Guidance");
+			}
+			if(isElementLoaded(staffingGuidancePageWeekViewButton)){
+				click(staffingGuidancePageWeekViewButton);
+				SimpleUtils.pass("Clicked on Staffing Guidance Week View");
+				if(staffingGuidanceWeekView.size()!=0){
+					flag = true;
+					SimpleUtils.pass("Staffing Guidance Loaded in Week View Successfully!");
+				}else{
+					SimpleUtils.fail("Staffing Guidance Not Loaded in Week View Successfully!", true);
+				}
+			}else{
+				SimpleUtils.pass("Week View button not found in Staffing Guidance");
+			}
+		}else{
+			SimpleUtils.fail("Staffing Guidance Sub Menu Tab Not Found", true);
+		}
+		return flag;
 	}
 	
 }

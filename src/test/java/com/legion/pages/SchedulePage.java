@@ -107,5 +107,6 @@ public interface SchedulePage {
 	public String getsmartCardTextByLabel(String cardLabel);
 	public String getWeatherTemperature() throws Exception;
 	public void validatingGenrateSchedule() throws Exception;
+	public boolean loadSchedule() throws Exception;
 	public void generateOrUpdateAndGenerateSchedule() throws Exception;
 }

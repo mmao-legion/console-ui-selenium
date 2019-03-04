@@ -21,6 +21,9 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 	@FindBy(className="sub-navigation-view")
 	private List<WebElement> scheduleSubNavigationViewTab;
 	
+	@FindBy (xpath = "//span[contains(text(),'Projected')]")
+	private WebElement ProjectedTrafficSubMenu;
+	
 	@FindBy(css = "div.sub-navigation-view-link.active")
 	private WebElement SchedulePageSelectedSubTab;
 	
@@ -49,6 +52,12 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 	
 	@FindBy(className="kpi")
 	private List<WebElement> salesForecastDataCards;
+	
+	@FindBy (css = "div[ng-if='!storeClosed()']")
+	private WebElement projectedTrafficGraphWeekView;
+	
+	@FindBy (css = "div.console-navigation-item-label.Schedule")
+	private WebElement consoleSchedulePageTabElement;
 	
 	public ConsoleSalesForecastPage(){
 		PageFactory.initElements(getDriver(), this);
@@ -269,6 +278,45 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 		}
 		
 		return salesForecastData;
+	}
+	
+	//added by Gunjan
+	
+	@Override
+	public boolean loadSalesForecast() throws Exception {
+		// TODO Auto-generated method stub
+		boolean flag=false;
+		if(isElementLoaded(ProjectedTrafficSubMenu)){
+			click(ProjectedTrafficSubMenu);
+			SimpleUtils.pass("Clicked on Projected Traffic Sub Menu");
+			if(isElementLoaded(salesForecastPageDayViewButton)){
+				click(salesForecastPageDayViewButton);
+				SimpleUtils.pass("Clicked on Projected Traffic Day View");
+				if(isElementLoaded(projectedTrafficGraphWeekView)){
+				flag = true;
+				SimpleUtils.pass("Projected Traffic Loaded in DayView Successfully!");
+				}else{
+					SimpleUtils.fail("Projected Traffic Not Loaded in DayView Successfully!", true);
+				}
+			}else{
+				SimpleUtils.pass("Day View button not found in Projected Traffic");
+			}
+			if(isElementLoaded(salesForecastPageWeekViewButton)){
+				click(salesForecastPageWeekViewButton);
+				SimpleUtils.pass("Clicked on Projected Traffic Week View");
+				if(isElementLoaded(projectedTrafficGraphWeekView)){
+				flag = true;
+				SimpleUtils.pass("Projected Traffic Loaded in Week View Successfully!");
+				}else{
+					SimpleUtils.fail("Projected Traffic Not Loaded in Week View Successfully!", true);
+				}
+			}else{
+				SimpleUtils.pass("Week View button not found in Projected Traffic");
+			}
+		}else{
+			SimpleUtils.fail("Projected Traffic Sub Menu Tab Not Found", true);
+		}
+		return flag;
 	}
 
 	

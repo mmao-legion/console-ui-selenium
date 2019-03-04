@@ -34,7 +34,7 @@ public class AnalyticsTest extends TestBase{
 	 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Naval")
-	@Enterprise(name = "Coffee2_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify Analytics flow")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void gotoAnalyticsPageTest(String username, String password, String browser, String location) throws Exception {

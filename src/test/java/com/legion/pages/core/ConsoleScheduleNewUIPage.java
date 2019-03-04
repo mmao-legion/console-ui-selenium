@@ -153,7 +153,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	@FindBy(css="lg-button[label*=\"ublish\"] span span")
 	private WebElement txtPublishSheduleButton;
-	
+
 	@FindBy(css="div.sch-view-dropdown-summary-content-item-heading.ng-binding")
 	private WebElement analyzePopupLatestVersionLabel;
 	
@@ -413,9 +413,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			WebElement consoleScheduleMenuElement = SimpleUtils.getSubTabElement(consoleNavigationMenuItems, consoleScheduleMenuItemText);
 			activeConsoleName = analyticsConsoleName.getText();
 			click(consoleScheduleMenuElement);
-//			SimpleUtils.pass("Console Menu Loaded Successfully!");
-			SimpleUtils.fail("Console Menu Items Not Loaded Successfully!",false);
-
+			SimpleUtils.pass("Console Menu Loaded Successfully!");
 		}
 		else {
 			SimpleUtils.fail("Console Menu Items Not Loaded Successfully!",false);
@@ -2602,4 +2600,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	}
 
+
+	@Override
+	public boolean loadSchedule() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
