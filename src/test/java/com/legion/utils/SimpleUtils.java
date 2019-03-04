@@ -290,7 +290,7 @@ public class SimpleUtils {
         }
 	    return combinedresult;
     } 
-
+	
 	public static int countDuplicates(ArrayList list)
 	   {
 	       int duplicates = 0;
@@ -333,28 +333,26 @@ public class SimpleUtils {
 		return date;
 	}
 
-	public static String dateWeekPickerDateComparision(String weekActiveDate){
-		int i=0;
-		List<String> listWeekActiveDate = new ArrayList();
-		String dateRangeDayPicker = null;
-		Pattern pattern = Pattern.compile("(\\d+)");
-		Matcher match = pattern.matcher(weekActiveDate);
-		String[] dateRange= weekActiveDate.split("-");
-		while(match.find())
-		{
-			if(Integer.parseInt(match.group(1))<10){
-				String padded = String.format("%02d" , Integer.parseInt(match.group(1)));
-				listWeekActiveDate.add(dateRange[i].replace(match.group(1), padded));
-			}else{
-				listWeekActiveDate.add(dateRange[i]);
-			}
-			i++;
-		}
-		dateRangeDayPicker = listWeekActiveDate.get(0)+"-"+listWeekActiveDate.get(1);
-		return dateRangeDayPicker;
+	public static String dateWeekPickerDateComparision(String weekActiveDate) {
+        int i = 0;
+        List<String> listWeekActiveDate = new ArrayList();
+        String dateRangeDayPicker = null;
+        Pattern pattern = Pattern.compile("(\\d+)");
+        Matcher match = pattern.matcher(weekActiveDate);
+        String[] dateRange = weekActiveDate.split("-");
+        while (match.find()) {
+            if (Integer.parseInt(match.group(1)) < 10) {
+                String padded = String.format("%02d", Integer.parseInt(match.group(1)));
+                listWeekActiveDate.add(dateRange[i].replace(match.group(1), padded));
+            } else {
+                listWeekActiveDate.add(dateRange[i]);
+            }
+            i++;
+        }
+        dateRangeDayPicker = listWeekActiveDate.get(0) + "-" + listWeekActiveDate.get(1);
+        return dateRangeDayPicker;
 
-	}
-
+    }
 
 	// method for mobile test cases incase of failure
 
@@ -427,10 +425,10 @@ public class SimpleUtils {
 				System.err.println(aPIException.getMessage());
 			}
 		}
-
+		
 	}
-
-
+	
+	
 	public static void addTestCase(String scenario, String summary, String testSteps, String expectedResult,
 			String actualResult, String testData, String preconditions, String testCaseType, String priority,
 			String isAutomated, String result, String actions, int sectionID)
@@ -844,5 +842,27 @@ public class SimpleUtils {
 //		String screenshotFinalLoc = "<a href='"+screenshotLoc+ "'>" +"Screenshots"+"</a>";
 		setScreenshotLocation(screenshotLoc);
 	}
+
+   public static int getDirectoryFilesCount(String directoryPath) {
+	   File directory = new File(directoryPath);
+	   File[] files = directory.listFiles();
+	   return files.length;
+   }
+
+   public static File getLatestFileFromDirectory(String directoryPath) {
+	    File dir = new File(directoryPath);
+	    File[] files = dir.listFiles();
+	    if (files == null || files.length == 0) {
+	        return null;
+	    }
+
+	    File lastModifiedFile = files[0];
+	    for (int i = 1; i < files.length; i++) {
+	       if (lastModifiedFile.lastModified() < files[i].lastModified()) {
+	           lastModifiedFile = files[i];
+	       }
+	    }
+	    return lastModifiedFile;
+   }
 
 }

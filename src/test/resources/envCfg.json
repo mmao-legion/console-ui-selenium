@@ -1,5 +1,5 @@
 {
-  "CHROME_DRIVER_PATH": "C:\\chromedriver.exe",
+  "CHROME_DRIVER_PATH": "C:\\Users\\nishant08\\Downloads\\chromedriver\\chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "D:\\geckodriver.exe",
  "DEVURL": "https://mobilestage.legion.work/",
  "QAURL": "https://staging-enterprise.dev.legion.work/",
@@ -17,6 +17,7 @@
  "TAKE_SCREENSHOTS" : "TRUE",
  "INTERNET_EXPLORER" : "Internet Explorer",
  "CHROME" : "Chrome",
+ "FIREFOX" : "Firefox",
  "console_logs" : "false",
  "close_browser" : "false",
  "show_report" : "false",
@@ -28,6 +29,7 @@
  "appiumJsPath" : "C:\\Users\\nishant08\\AppData\\Local\\Programs\\Appium\\resources\\app\\node_modules\\appium\\lib\\appium.js",
  "deviceName" : "Gunjan",
  "platformVersion" : "9.0",
- "isParallelBrowser" : "false"
-
+ "isParallelBrowser" : "false",
+ "isParallelBrowser" : "false",
+ "Download_File_Default_Dir" : "/home/naval/Downloads"
 }

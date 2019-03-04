@@ -39,7 +39,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @FindBy(css = "span[ng-if='canEditEstimatedHourlyWage(budget)']")
     private List<WebElement> scheduleDraftWages;
-    
+
     @FindBy (xpath = "//span[contains(text(),'Schedule')]")
 	private WebElement ScheduleSubMenu;
 
@@ -75,7 +75,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @FindBy(xpath = "//div[contains(text(),'Guidance')]")
     private WebElement guidance;
-    
+
     @FindBy(xpath = "//span[contains(text(),'Staffing Guidance')]")
     private WebElement goToStaffingGuidanceTab;
 
@@ -190,23 +190,23 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @FindBy(xpath = "//div[contains(@class,'card-carousel-card-sub-title')][contains(text(),'Hours')]")
     private WebElement budgetOnbudgetSmartCard;
-    
+
     @FindBy (css = "div.console-navigation-item-label.Schedule")
 	private WebElement consoleSchedulePageTabElement;
-    
+
     @FindBy (css = "div[ng-if*='guidance-week-shifts']")
     private WebElement scheduleTableWeekView;
-    
+
     @FindBy (css = "div.sch-day-view-grid")
     private WebElement scheduleTableDayView;
-    
-    
+
+
     @FindBy (css = "div.lg-button-group-first")
 	private WebElement scheduleDayView;
-    
+
     @FindBy (css = "div.lg-button-group-last")
     private WebElement scheduleWeekView;
-        
+
     @FindBy (css = "div.card-carousel-carousel")
     private WebElement smartcard;
 
@@ -1419,30 +1419,66 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	}
 
 
-    @Override
-    public void generateOrUpdateAndGenerateSchedule() throws Exception {
-        if (isElementLoaded(generateSheduleButton)) {
-            click(generateSheduleButton);
-            waitForSeconds(4);
-            if(isElementLoaded(updateAndGenerateScheduleButton)){
-                click(updateAndGenerateScheduleButton);
-                SimpleUtils.pass("Schedule Update and Generate button clicked Successfully!");
-                if (isElementLoaded(checkOutTheScheduleButton)) {
-                    click(checkOutTheScheduleButton);
-                    SimpleUtils.pass("Schedule Generated Successfuly!");
-                }else{
-                    SimpleUtils.fail("Not able to generate Schedule Successfully!",false);
-                }
-            }else if(isElementLoaded(checkOutTheScheduleButton)) {
-                click(checkOutTheScheduleButton);
-                SimpleUtils.pass("Schedule Generated Successfuly!");
-            }else{
-                SimpleUtils.fail("Not able to generate Schedule Successfully!",false);
-            }
+	@Override
+	public HashMap<String, Integer> getScheduleBufferHours() throws Exception {
+		return null;
+		// TODO Auto-generated method stub
 
-        } else {
-            SimpleUtils.assertOnFail("Schedule Already generated for active week!", false, true);
-        }
-    }
+	}
+
+	@Override
+	public boolean isComlianceReviewRequiredForActiveWeek() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void unGenerateActiveScheduleScheduleWeek() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isStoreClosedForActiveWeek() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int getScheduleShiftIntervalCountInAnHour() throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void toggleSummaryView() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isSummaryViewLoaded() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void updateScheduleOperatingHours(String day, String startTime, String endTime) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 }

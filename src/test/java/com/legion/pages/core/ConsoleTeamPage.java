@@ -13,6 +13,7 @@ import org.openqa.selenium.support.PageFactory;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.TeamPage;
+import com.legion.tests.core.TeamTestKendraScott2.timeOffRequestAction;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
@@ -231,9 +232,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
   					}
   				}
   			}
-  			
+
   		}
-  		
+
   		public boolean rosterTeamLoading() throws Exception{
   			boolean flag=false;
   			goToTeam();
@@ -245,9 +246,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				SimpleUtils.fail("Roster sub-tab of team tab not loaded successfully",true);
   			}
 			return flag;
-  			
+
   		}
-  		
+
   		public boolean coverageTeamLoading() throws Exception{
   			boolean flag=false;
   			if(isElementLoaded(goToCoverageTab))
@@ -261,12 +262,12 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
   				}else{
   					SimpleUtils.fail("Coverage Sub Tab of Team tab Not Loaded Successfully",true);
   				}
-  			
+
   			}else{
   				SimpleUtils.fail("Coverage tab not present on Team Tab",true);
   			}
 			return flag;
-  			
+
   		}
 
 		@Override
@@ -284,9 +285,180 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}
 			return flag;
 		}
-  		
-  		
-    
+
+
+
+  		@FindBy(css="input.search-input-box")
+  		private WebElement teamMemberSearchBox;
+
+  		@FindBy(css="span.name")
+  		private List<WebElement> teamMembersList;
+		@Override
+		public void searchAndSelectTeamMemberByName(String username) throws Exception {
+			boolean isteamMemberFound = false;
+			if(isElementLoaded(teamMemberSearchBox, 10)) {
+				teamMemberSearchBox.sendKeys(username);
+				Thread.sleep(1000);
+				if(teamMembersList.size() > 0) {
+					for(WebElement teamMember : teamMembersList) {
+						if(teamMember.getText().toLowerCase().contains(username.toLowerCase())) {
+							click(teamMember);
+							isteamMemberFound = true;
+							SimpleUtils.pass("Team Page: Team Member '"+username+"' selected Successfully.");;
+							break;
+						}
+					}
+				}
+			}
+			if(!isteamMemberFound)
+				SimpleUtils.fail("Team Page: Team Member '"+username+"' not found.", false);
+		}
+
+		@FindBy(css="div.timeoff-requests-request.row-fx")
+		private List<WebElement> timeOffRequestRows;
+
+		@FindBy(css="span.request-buttons-approve")
+		private WebElement timeOffApproveBtn;
+
+		@FindBy(css="button.lgn-action-button-success")
+		private WebElement timeOffRequestApprovalCOnfirmBtn;
+		@Override
+		public void approvePendingTimeOffRequest() throws Exception {
+			String pendingStatusLabel = "PENDING";
+			if(timeOffRequestRows.size() > 0) {
+				for(WebElement timeOffRequestRow : timeOffRequestRows) {
+					if(timeOffRequestRow.getText().toLowerCase().contains(pendingStatusLabel.toLowerCase())) {
+						click(timeOffRequestRow);
+						if(isElementLoaded(timeOffApproveBtn)) {
+							WebElement timeOffRequestDuration = timeOffRequestRow.findElement(By.cssSelector("div.request-date"));
+							click(timeOffApproveBtn);
+							if(isElementLoaded(timeOffRequestApprovalCOnfirmBtn))
+								click(timeOffRequestApprovalCOnfirmBtn);
+							SimpleUtils.pass("Team Page: Time Off Request for the duration '"
+									+timeOffRequestDuration.getText().replace("\n", "")+"' Approved.");
+						}
+					}
+				}
+			}
+			else
+				SimpleUtils.fail("Team Page: No Time off request found.", false);
+		}
+
+		@Override
+		public int getPendingTimeOffRequestCount() throws Exception {
+			String pendingStatusLabel = "PENDING";
+			int pendingRequestCount = 0;
+			if(timeOffRequestRows.size() > 0) {
+				for(WebElement timeOffRequestRow : timeOffRequestRows) {
+					if(timeOffRequestRow.getText().toLowerCase().contains(pendingStatusLabel.toLowerCase())) {
+						pendingRequestCount = pendingRequestCount + 1;
+					}
+				}
+			}
+			return pendingRequestCount;
+		}
+
+		@FindBy(css="div[ng-if=\"canShowTodos()\"]")
+		private WebElement toDoBtnToOpen;
+		@Override
+		public void openToDoPopupWindow() throws Exception {
+			if(isElementLoaded(toDoBtnToOpen)) {
+				click(toDoBtnToOpen);
+				Thread.sleep(1000);
+				if(isToDoWindowOpened())
+					SimpleUtils.pass("Team Page: 'ToDo' popup window loaded successfully.");
+				else
+					SimpleUtils.fail("Team Page: 'ToDo' popup window not loaded.", false);
+			}
+		}
+
+
+		@FindBy(css="div[ng-click=\"closeTodoPanelClick()\"]")
+		private WebElement toDoBtnToClose;
+		@Override
+		public void closeToDoPopupWindow() throws Exception {
+			if(isElementLoaded(toDoBtnToClose)) {
+				click(toDoBtnToClose);
+				Thread.sleep(1000);
+				if(! isToDoWindowOpened())
+					SimpleUtils.pass("Team Page: 'ToDo' popup window closed successfully.");
+				else
+					SimpleUtils.fail("Team Page: 'ToDo' popup window not closed.", false);
+			}
+		}
+
+		@FindBy(css="div[ng-show=\"show\"]")
+		private WebElement toDoPopUpWindow;
+		public boolean isToDoWindowOpened() throws Exception{
+			if(isElementLoaded(toDoPopUpWindow)) {
+				if(toDoPopUpWindow.getAttribute("class").contains("is-shown"))
+					return true;
+			}
+			return false;
+		}
+
+		@FindBy(css="todo-card[todo-type=\"todoType\"]")
+		private List<WebElement> todoCards;
+
+		@FindBy(css="a[ng-click=\"goRight()\"]")
+		private WebElement nextToDoCardArrow;
+
+		@FindBy(css="button.lgn-action-button-success")
+		private WebElement confirmTimeOffApprovalBtn;
+
+		@Override
+		public void approveOrRejectTimeOffRequestFromToDoList(String userName, String timeOffStartDuration, String timeOffEndDuration, String action) throws Exception{
+			boolean isTimeOffRequestToDoCardFound = false;
+			String timeOffRequestCardText = "TIME OFF REQUEST";
+			String timeOffStartDate = timeOffStartDuration.split(",")[0].split(" ")[1];
+			String timeOffStartMonth = timeOffStartDuration.split(",")[0].split(" ")[0];
+			String timeOffEndDate = timeOffEndDuration.split(",")[0].split(" ")[1];
+			String timeOffEndMonth = timeOffEndDuration.split(",")[0].split(" ")[0];
+			String startDurationMonthAndDate = timeOffStartMonth+" "+timeOffStartDate;
+			String endDurationMonthAndDate = timeOffEndMonth+" "+timeOffEndDate;
+			if(isElementLoaded(todoCards.get(0))) {
+				for(WebElement todoCard :todoCards) {
+					if(isElementLoaded(nextToDoCardArrow, 10) && !todoCard.isDisplayed())
+						click(nextToDoCardArrow);
+					if(todoCard.getText().toLowerCase().contains(timeOffRequestCardText.toLowerCase())) {
+						if(todoCard.getText().toLowerCase().contains(startDurationMonthAndDate.toLowerCase())
+								&& todoCard.getText().toLowerCase().contains(endDurationMonthAndDate.toLowerCase())) {
+							isTimeOffRequestToDoCardFound = true;
+							if(action.toLowerCase().contains(timeOffRequestAction.Approve.getValue().toLowerCase())) {
+								WebElement timeOffApproveButton = todoCard.findElement(By.cssSelector("a[ng-click=\"askConfirm('approve')\"]"));
+								if(isElementLoaded(timeOffApproveButton)) {
+									click(timeOffApproveButton);
+									if(isElementLoaded(confirmTimeOffApprovalBtn)) {
+										click(confirmTimeOffApprovalBtn);
+										SimpleUtils.pass("Team Page: Time Off Request 'Approved' successfully for ToDo list.");
+									}
+								}
+								else
+									SimpleUtils.fail("Team Page: ToDo list time off request 'Approve' button not found.", false);
+							}
+							else if(action.toLowerCase().contains(timeOffRequestAction.Reject.getValue().toLowerCase())) {
+								WebElement timeOffRejectButton = todoCard.findElement(By.cssSelector("a[ng-click=\"askConfirm('reject')\"]"));
+								if(isElementLoaded(timeOffRejectButton)) {
+									click(timeOffRejectButton);
+									WebElement confirmRejectRequestBtn = todoCard.findElement(By.cssSelector("a[ng-click=\"action('reject')\"]"));
+									if(isElementLoaded(confirmRejectRequestBtn)) {
+										click(confirmRejectRequestBtn);
+										SimpleUtils.pass("Team Page: Time Off Request 'Rejected' successfully for ToDo list.");
+									}
+								}
+								else
+									SimpleUtils.fail("Team Page: ToDo list time off request 'Reject' button not found.", false);
+							}
+						}
+					}
+				}
+				if(! isTimeOffRequestToDoCardFound)
+					SimpleUtils.fail("Team Page: ToDo list Time Off Request not found with given details.", false);
+			}
+			else
+				SimpleUtils.fail("Team Page: ToDo cards not loaded.", false);
+		}
+
 //    public boolean isTeam() throws Exception
 //	{
 //    	if(isElementLoaded(rosterBodyElement))

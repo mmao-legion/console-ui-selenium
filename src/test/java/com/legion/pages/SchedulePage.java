@@ -109,4 +109,14 @@ public interface SchedulePage {
 	public void validatingGenrateSchedule() throws Exception;
 	public boolean loadSchedule() throws Exception;
 	public void generateOrUpdateAndGenerateSchedule() throws Exception;
+	public HashMap<String, Integer> getScheduleBufferHours() throws Exception;
+	public boolean isComlianceReviewRequiredForActiveWeek() throws Exception;
+	public void unGenerateActiveScheduleScheduleWeek() throws Exception;
+	public boolean isStoreClosedForActiveWeek() throws Exception;
+	public int getScheduleShiftIntervalCountInAnHour() throws Exception;
+	public void toggleSummaryView() throws Exception;
+	public boolean isSummaryViewLoaded() throws Exception;
+	public void updateScheduleOperatingHours(String day, String startTime, String endTime) throws Exception;
+	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch) throws Exception;
+	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception;
 }

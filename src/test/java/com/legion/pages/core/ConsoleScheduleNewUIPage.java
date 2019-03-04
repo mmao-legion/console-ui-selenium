@@ -28,7 +28,6 @@ import org.openqa.selenium.support.ui.Wait;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -403,6 +402,23 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "input[ng-class='hoursFieldClass(budget)']")
     private List<WebElement> budgetEditHours;
 
+	@FindBy(css = "div.sch-shift-container")
+	private List<WebElement> scheduleShiftsRows;
+
+	@FindBy(css = "div.sch-day-view-grid-header.fill")
+	private List<WebElement> scheduleShiftTimeHeaderCells;
+
+	@FindBy(css = "img[ng-if=\"hasViolateCompliance(line, scheduleWeekDay)\"]")
+	private List<WebElement> complianceReviewDangerImgs;
+
+	@FindBy(css = "lg-dropdown-base[ng-if=\"isAdmin\"]")
+	private WebElement scheduleAdminDropDownBtn;
+
+	@FindBy(css = "div[ng-repeat=\"action in supportedAdminActions.actions\"]")
+	private List<WebElement> scheduleAdminDropDownOptions;
+
+	@FindBy(css = "button[ng-click=\"yesClicked()\"]")
+	private WebElement unGenerateBtnOnPopup;
 
     final static String consoleScheduleMenuItemText = "Schedule";
 
@@ -413,10 +429,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			WebElement consoleScheduleMenuElement = SimpleUtils.getSubTabElement(consoleNavigationMenuItems, consoleScheduleMenuItemText);
 			activeConsoleName = analyticsConsoleName.getText();
 			click(consoleScheduleMenuElement);
-			SimpleUtils.pass("Console Menu Loaded Successfully!");
+			SimpleUtils.pass("'Schedule' Console Menu Loaded Successfully!");
 		}
 		else {
-			SimpleUtils.fail("Console Menu Items Not Loaded Successfully!",false);
+			SimpleUtils.fail("'Schedule' Console Menu Items Not Loaded Successfully!",false);
 		}
 	}
 
@@ -807,7 +823,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			 Thread.sleep(2000);
 			 if(isElementLoaded(generateScheduleBtn))
 				 click(generateScheduleBtn);
-			 Thread.sleep(2000);
+			 Thread.sleep(4000);
 			 if(isElementLoaded(checkOutTheScheduleButton))
 			 {
 				 click(checkOutTheScheduleButton);
@@ -2042,18 +2058,33 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			for(WebElement carouselCard: carouselCards)
 			{
 				smartCardScrolleToLeft();
-				if(carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase()))
+				if(carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase())
+						&& isSmartcardContainText(carouselCard))
 					return true;
 				else if(! carouselCard.isDisplayed()) {
 					while(isSmartCardScrolledToRightActive() == true)
 					{
-						if(carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase()))
+						if(carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase())
+								&& isSmartcardContainText(carouselCard))
 							return true;
 					}
 				}
 			}
 		}
 		return false;
+	}
+
+	public boolean isSmartcardContainText(WebElement smartcardElement) throws Exception
+	{
+		if(smartcardElement.getText().trim().length() > 0)
+		{
+			return true;
+		}
+		else
+		{
+			SimpleUtils.fail("Schedule Page: Smartcard contains No Text or Spinning Icon on duration '"+getActiveWeekText()+"'.", true);
+			return false;
+		}
 	}
 
 
@@ -2446,6 +2477,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			SimpleUtils.pass("Navigated to Next day successfully!");
 	}
 
+	@Override
 	public boolean isStoreClosedForActiveWeek() throws Exception
 	{
 		if(isElementLoaded(holidayLogoContainer))
@@ -2604,6 +2636,275 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@Override
 	public boolean loadSchedule() throws Exception {
 		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public HashMap<String, Integer> getScheduleBufferHours() throws Exception
+	{
+		HashMap<String, Integer> schedulePageBufferHours = new HashMap<String, Integer>();
+		int gutterCellCount = 0;
+		int totalHoursCountForShift = scheduleShiftTimeHeaderCells.size();
+		int cellCountInAnHour = 2;
+		int openingBufferHours = 0;
+		int closingBufferHours = 0;
+		if(scheduleShiftsRows.size() > 0 )
+		{
+			for(WebElement scheduleShiftsRow : scheduleShiftsRows)
+			{
+				List<WebElement> scheduleShiftRowCells = scheduleShiftsRow.findElements(By.cssSelector("div.sch-day-view-grid-cell"));
+				String backgroundColorToVerify = "";
+				String[] styles = scheduleShiftRowCells.get(0).getAttribute("style").split(";");
+				for(String styleAttr : styles)
+				{
+					if(styleAttr.toLowerCase().contains("background-color"))
+						backgroundColorToVerify = styleAttr;
+				}
+				if(backgroundColorToVerify != "")
+				{
+					cellCountInAnHour = Integer.valueOf(scheduleShiftRowCells.size() / totalHoursCountForShift);
+					for(WebElement scheduleShiftRowCell : scheduleShiftRowCells)
+					{
+						if(scheduleShiftRowCell.getAttribute("style").contains(backgroundColorToVerify))
+							gutterCellCount++;
+						else {
+							if(openingBufferHours == 0)
+							{
+								openingBufferHours = gutterCellCount;
+								gutterCellCount = 0;
+							}
+
+						}
+					}
+					closingBufferHours += gutterCellCount;
+				}
+				else
+					SimpleUtils.fail("Schedule Page: Unable to fetch backgroung color of 'Gutter Area'.", false);
+
+				schedulePageBufferHours.put("closingBufferHours", (closingBufferHours/cellCountInAnHour));
+				schedulePageBufferHours.put("openingBufferHours", (openingBufferHours/cellCountInAnHour));
+				break;
+			}
+		}
+		else
+			SimpleUtils.fail("Schedule Page: Shift Rows not loaded.", false);
+
+		return schedulePageBufferHours;
+	}
+
+
+	@Override
+	public boolean isComlianceReviewRequiredForActiveWeek() throws Exception
+	{
+		if(complianceReviewDangerImgs.size() > 0)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void unGenerateActiveScheduleScheduleWeek() throws Exception {
+		String unGenerateScheduleOptionText = "Ungenerate Schedule";
+		if(isElementLoaded(scheduleAdminDropDownBtn, 10))
+		{
+			click(scheduleAdminDropDownBtn);
+			if(scheduleAdminDropDownOptions.size() > 0)
+			{
+				for(WebElement scheduleAdminDropDownOption : scheduleAdminDropDownOptions)
+				{
+					if(scheduleAdminDropDownOption.getText().toLowerCase().contains(unGenerateScheduleOptionText.toLowerCase()))
+					{
+						click(scheduleAdminDropDownOption);
+						if(isElementLoaded(unGenerateBtnOnPopup))
+						{
+							click(unGenerateBtnOnPopup);
+							SimpleUtils.pass("Schedule Page: Active Week ('" + getActiveWeekText() + "') Ungenerated Successfully.");
+						}
+						else
+							SimpleUtils.fail("Schedule Page: Ungenerate popup 'Ungenerate Button not loaded for the week: '"
+								+ getActiveWeekText() +"'.", false);
+						break;
+					}
+
+				}
+			}
+			else
+				SimpleUtils.fail("Schedule Page: Admin dropdown Options not loaded to Ungenerate the Schedule for the Week : '"
+						+ getActiveWeekText() +"'.", false);
+		}
+		else
+			SimpleUtils.fail("Schedule Page: Admin dropdown button not loaded to Ungenerate the Schedule for the Week : '"
+					+ getActiveWeekText() +"'.", false);
+
+	}
+
+	@Override
+	public int getScheduleShiftIntervalCountInAnHour() throws Exception
+	{
+		int schedulePageShiftIntervalMinutes = 0;
+		float totalHoursCountForShift = 0;
+		if(scheduleShiftsRows.size() > 0 )
+		{
+			for(WebElement scheduleShiftTimeHeaderCell : scheduleShiftTimeHeaderCells) {
+				if(scheduleShiftTimeHeaderCell.getText().trim().length() > 0)
+					totalHoursCountForShift ++;
+				else
+					totalHoursCountForShift = (float) (totalHoursCountForShift + 0.5);
+			}
+			List<WebElement> scheduleShiftRowCells = scheduleShiftsRows.get(0).findElements(By.cssSelector("div.sch-day-view-grid-cell"));
+			int shiftIntervalCounts = scheduleShiftRowCells.size();
+			schedulePageShiftIntervalMinutes = Math.round(shiftIntervalCounts / totalHoursCountForShift);
+		}
+		else
+			SimpleUtils.fail("Schedule Page: Shift Rows not loaded.", false);
+
+		return schedulePageShiftIntervalMinutes;
+	}
+
+	@Override
+	public void toggleSummaryView() throws Exception
+	{
+		String toggleSummaryViewOptionText = "Toggle Summary View";
+		if(isElementLoaded(scheduleAdminDropDownBtn, 10))
+		{
+			click(scheduleAdminDropDownBtn);
+			if(scheduleAdminDropDownOptions.size() > 0)
+			{
+				for(WebElement scheduleAdminDropDownOption : scheduleAdminDropDownOptions)
+				{
+					if(scheduleAdminDropDownOption.getText().toLowerCase().contains(toggleSummaryViewOptionText.toLowerCase()))
+					{
+						click(scheduleAdminDropDownOption);
+					}
+				}
+			}
+			else
+				SimpleUtils.fail("Schedule Page: Admin dropdown Options not loaded to Toggle Summary View for the Week : '"
+						+ getActiveWeekText() +"'.", false);
+		}
+		else
+			SimpleUtils.fail("Schedule Page: Admin dropdown not loaded to Toggle Summary View for the Week : '"
+					+ getActiveWeekText() +"'.", false);
+	}
+
+	@FindBy(css = "div[ng-if=\"showSummaryView\"]")
+	private WebElement summaryViewDiv;
+
+	@Override
+	public boolean isSummaryViewLoaded() throws Exception {
+		if(isElementLoaded(summaryViewDiv))
+			return true;
+		return false;
+	}
+
+	@FindBy(css = "tr[ng-repeat=\"day in summary.workingHours\"]")
+	private List<WebElement> operatingHoursRows;
+
+	@FindBy(css = "div.lgn-time-slider-notch-selector-start")
+	private WebElement scheduleOperatingStartHrsSlider;
+
+	@FindBy(css = "div.lgn-time-slider-notch-selector-end")
+	private WebElement scheduleOperatingEndHrsSlider;
+
+	@FindBy(css = "lg-button[label=\"Save\"]")
+	private WebElement operatingHoursSaveBtn;
+
+	@FindBy(css = "lg-button[label=\"Cancel\"]")
+	private WebElement operatingHoursCancelBtn;
+
+	public void updateScheduleOperatingHours(String day, String startTime, String endTime) throws Exception {
+		Thread.sleep(1000);
+		if(operatingHoursRows.size() > 0) {
+			for(WebElement operatingHoursRow : operatingHoursRows) {
+				if(operatingHoursRow.getText().toLowerCase().contains(day.toLowerCase())) {
+					WebElement editBtn = operatingHoursRow.findElement(By.cssSelector("span[ng-if=\"canEditWorkingHours\"]"));
+					if(isElementLoaded(editBtn)) {
+						click(editBtn);
+						if(scheduleOperatingStartHrsSlider.getText().toLowerCase().contains(startTime.toLowerCase())
+								&& scheduleOperatingEndHrsSlider.getText().toLowerCase().contains(endTime.toLowerCase())){
+							SimpleUtils.pass("Operating Hours already updated for the day '"+day+"' with Start time '"+startTime
+									+"' and End time '"+endTime+"'.");
+							if(isElementLoaded(operatingHoursCancelBtn)) {
+								click(operatingHoursCancelBtn);
+							}
+						}
+						else {
+							dragRollerElementTillTextMatched(scheduleOperatingStartHrsSlider, startTime);
+							dragRollerElementTillTextMatched(scheduleOperatingEndHrsSlider, endTime);
+							if(isElementLoaded(operatingHoursSaveBtn)) {
+								click(operatingHoursSaveBtn);
+								SimpleUtils.pass("Operating Hours updated for the day '"+day+"' with Start time '"+startTime
+										+"' and End time '"+endTime+"'.");
+							}
+						}
+					}
+					else
+						SimpleUtils.fail("Operating Hours Table 'Edit' button not loaded.", false);
+				}
+			}
+		}
+		else
+			SimpleUtils.fail("Operating Hours Rows not loaded.", false);
+	}
+
+	@Override
+	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch) throws Exception {
+
+		int hourOnSlider = Integer.valueOf(rollerElement.getText().split(":")[0]);
+		if(rollerElement.getText().toLowerCase().contains("pm"))
+			hourOnSlider = hourOnSlider + 12;
+		int openingHourOnJson = Integer.valueOf(textToMatch.split(":")[0]);
+		if(textToMatch.toLowerCase().contains("pm"))
+			openingHourOnJson = openingHourOnJson + 12;
+		int sliderOffSet = 5;
+		if(hourOnSlider > openingHourOnJson)
+			sliderOffSet = -5;
+		while(! rollerElement.getText().toLowerCase().contains(textToMatch.toLowerCase()))
+		{
+			Thread.sleep(500);
+			moveDayViewCards(rollerElement, sliderOffSet);
+		}
+	}
+
+	@Override
+	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception
+	{
+		String scheduleShiftHeaderStartTime = "";
+		float hoursBeforeStartTime = 0;
+		String scheduleShiftHeaderEndTime = "";
+		float hoursAfterEndTime = 0;
+		if(scheduleShiftTimeHeaderCells.get(0).getText().trim().length() > 0)
+			scheduleShiftHeaderStartTime = scheduleShiftTimeHeaderCells.get(0).getText().split(" ")[0];
+		else {
+			hoursBeforeStartTime = (float) 0.5;
+			scheduleShiftHeaderStartTime = scheduleShiftTimeHeaderCells.get(1).getText().split(" ")[0];
+		}
+		//System.out.println("hoursBeforeStartTime : "+hoursBeforeStartTime);
+
+		if(scheduleShiftTimeHeaderCells.get(scheduleShiftTimeHeaderCells.size() - 1).getText().trim().length() > 0)
+			scheduleShiftHeaderEndTime = scheduleShiftTimeHeaderCells.get(scheduleShiftTimeHeaderCells.size() - 1).getText().split(" ")[0];
+		else {
+			hoursAfterEndTime = (float) 0.5;
+			scheduleShiftHeaderEndTime = scheduleShiftTimeHeaderCells.get(scheduleShiftTimeHeaderCells.size() - 2).getText().split(" ")[0];
+		}
+
+		//System.out.println("hoursAfterEndTime : "+hoursAfterEndTime);
+
+		HashMap<String, Integer> scheduleBufferHours = getScheduleBufferHours();
+		for(Map.Entry<String, Integer> bufferHours : scheduleBufferHours.entrySet())
+		{
+			//System.out.println(bufferHours.getKey() +" : "+bufferHours.getValue());
+		}
+
+		float startHours = Float.valueOf(scheduleShiftHeaderStartTime) + hoursBeforeStartTime + scheduleBufferHours.get("openingBufferHours");
+		System.out.println("startHours: "+startHours);
+		float endHours = Float.valueOf(scheduleShiftHeaderEndTime) - scheduleBufferHours.get("closingBufferHours") + 1;
+		System.out.println("scheduleShiftHeaderEndTime : "+endHours);
+		if(Integer.valueOf(startTime.split(":")[0]) == (int) startHours && Integer.valueOf(endTime.split(":")[0]) == (int) endHours)
+			return true;
+
 		return false;
 	}
 }

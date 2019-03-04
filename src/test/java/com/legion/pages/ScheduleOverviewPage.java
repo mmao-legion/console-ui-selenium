@@ -25,4 +25,6 @@ public interface ScheduleOverviewPage {
 	public LinkedHashMap<String, Float> getWeekHoursByWeekElement(WebElement overViewWeek);
 	public void clickOnGuidanceBtnOnOverview(int index);
 	public boolean loadScheduleOverview() throws Exception;
+	public int getScheduleOverviewWeeksCountCanBeCreatInAdvance();
+	public String getOverviewWeekDuration(WebElement webElement) throws Exception;
 }

@@ -2,10 +2,10 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
@@ -37,6 +37,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	
 	@FindBy(css = "input[aria-label=\"Company Name\"]")
 	private WebElement locationCompanyNameField;
+	
+	@FindBy(css = "lg-dashboard-card[title=\"Scheduling Policies\"]")
+	private WebElement schedulingPoliciesCard;
+	
 	
 	@FindBy(css = "input[aria-label=\"Business Address\"]")
 	private WebElement locationBusinessAddressField;
@@ -102,6 +106,75 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "lg-button[ng-click=\"saveWorkdayHours()\"]")
 	private WebElement saveAllRegularHoursBtn;
 	
+	@FindBy(css = "form-section[form-title=\"Budget\"]")
+	private WebElement budgetFormSection;
+
+	@FindBy(css = "input-field[origin=\"schedulingWindow\"]")
+	private WebElement schedulingWindowAdvanceWeekCount;
+	
+	@FindBy(css = "div.lg-advanced-box")
+	private List<WebElement> controlsAdvanceButtons;
+	
+	@FindBy(css = "input-field[value=\"sp.weeklySchedulePreference.openingBufferHours\"]")
+	private WebElement openingBufferHours;
+	
+	@FindBy(css = "input-field[value=\"sp.weeklySchedulePreference.closingBufferHours\"]")
+	private WebElement closingBufferHours;
+	
+	
+	@FindBy(css = "lg-dashboard-card[title=\"Location Profile\"]")
+	private WebElement locationProfileSection;
+	
+	@FindBy(css = "lg-dashboard-card[title=\"Schedule Collaboration\"]")
+	private WebElement scheduleCollaborationSection;
+	
+	@FindBy(css = "lg-dashboard-card[title=\"Compliance\"]")
+	private WebElement complianceSection;
+	
+	@FindBy(css = "lg-dashboard-card[title=\"Users and Roles\"]")
+	private WebElement usersAndRolesSection;
+	
+	@FindBy(css = "lg-dashboard-card[title=\"Tasks and Work Roles\"]")
+	private WebElement tasksAndWorkRolesSection;
+
+	@FindBy(css = "page-heading[page-title=\"Location Details\"]")
+	private WebElement breadcrumbsLocationDetails;
+
+	@FindBy(css = "page-heading[page-title=\"Scheduling Policies\"]")
+	private WebElement breadcrumbsSchedulingPolicies;
+	
+	@FindBy(css = "page-heading[page-title=\"Schedule Collaboration\"]")
+	private WebElement breadcrumbsScheduleCollaboration;
+
+	@FindBy(css = "page-heading[page-title=\"Compliance\"]")
+	private WebElement breadcrumbsCompliance;
+	
+	@FindBy(css = "page-heading[page-title=\"Users and Roles\"]")
+	private WebElement breadcrumbsUsersAndRoles;
+	
+	@FindBy(css = "page-heading[page-title=\"Tasks and Work Roles\"]")
+	private WebElement breadcrumbsTasksAndWorkRoles;
+	
+	@FindBy(css = "page-heading[page-title=\"Working Hours\"]")
+	private WebElement breadcrumbsWorkingHours;
+	
+	@FindBy(css = "lg-dashboard-card[title=\"Time and Attendance\"]")
+	private WebElement timeAndAttendanceCard;
+	
+	@FindBy(css = "div.lg-advanced-box__toggle")
+	private WebElement timeSheetAdvanceBtn;
+	
+	@FindBy(css = "question-input[question-title=\"Timesheet export format\"]")
+	private WebElement timeSheetExportFormatDiv;
+	
+	@FindBy(css = "form-section[form-title=\"Shifts\"]")
+	private WebElement schedulingPoliciesShiftFormSectionDiv;
+	
+	@FindBy(css = "form-section[form-title=\"Schedules\"]")
+	private WebElement schedulingPoliciesSchedulesFormSectionDiv;
+	
+	@FindBy(css = "question-input[question-title=\"Shift Interval minutes for the enterprise.\"]")
+	private WebElement schedulingPoliciesShiftIntervalDiv;
 	
 	String timeSheetHeaderLabel = "Controls";
 	
@@ -131,8 +204,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void clickOnGlobalLocationButton() throws Exception {
 		
-		if(isElementLoaded(globalLocationButton))
+		if(isElementLoaded(globalLocationButton)) {
 			click(globalLocationButton);
+			SimpleUtils.pass("Controls Page: 'Global Location' loaded successfully.");
+		}
 		else
 			SimpleUtils.fail("Controls Page: Global Location Button not Loaded!", false);
 	}
@@ -410,5 +485,384 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}else {
 			SimpleUtils.fail("Controls Working Hours Section: Regular Hours 'Save' Button not loaded.", true);
 		}
+	}
+
+
+	@Override
+	public void clickOnControlsSchedulingPolicies() throws Exception {
+		if(isElementLoaded(schedulingPoliciesCard))
+			click(schedulingPoliciesCard);
+		else
+			SimpleUtils.fail("Controls Page: Schedule Policies Card not Loaded!", false);
+	}
+
+	
+	@Override
+	public void enableDisableBudgetSmartcard(boolean enable) throws Exception
+	{
+		WebElement enableBudgetYesBtn = budgetFormSection.findElement(By.cssSelector("div.lg-button-group-first"));
+		WebElement enableBudgetNoBtn = budgetFormSection.findElement(By.cssSelector("div.lg-button-group-last"));
+		if(enable && isBudgetSmartcardEnabled())
+			SimpleUtils.pass("Schedule Policies Budget card already enabled.");
+		else if(enable && ! isBudgetSmartcardEnabled())
+		{
+			click(enableBudgetYesBtn);
+			SimpleUtils.pass("Schedule Policies Budget card enabled successfully.");
+		}
+		else if(!enable && isBudgetSmartcardEnabled())
+		{
+			click(enableBudgetNoBtn);
+			SimpleUtils.pass("Schedule Policies Budget card disabled successfully.");
+		}
+		else
+			SimpleUtils.pass("Schedule Policies Budget card already disabled.");
+	}
+	
+	@Override
+	public boolean isBudgetSmartcardEnabled() throws Exception
+	{
+		if(isElementLoaded(budgetFormSection)) {
+			WebElement enableBudgetYesBtn = budgetFormSection.findElement(By.cssSelector("div.lg-button-group-first"));
+			if(isElementLoaded(enableBudgetYesBtn)) {
+				if(enableBudgetYesBtn.getAttribute("class").contains("selected"))
+					return true;
+			}
+			else
+				SimpleUtils.fail("Controls Page: Schedule Policies Budget form section 'Yes' button not loaded!", false);
+		}
+		else
+			SimpleUtils.fail("Controls Page: Schedule Policies Budget form section not loaded!", false);
+		return false;
+	}
+
+	
+	@Override
+	public String getAdvanceScheduleWeekCountToCreate() throws Exception {
+		String selectedWeek = "";
+		if(isElementLoaded(schedulingWindowAdvanceWeekCount))
+		{
+			WebElement advanceScheduleWeekSelectBox = schedulingWindowAdvanceWeekCount.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			Select drpScheduleWeek = new Select(advanceScheduleWeekSelectBox);
+			selectedWeek = drpScheduleWeek.getFirstSelectedOption().getText();
+		}
+		else
+			SimpleUtils.fail("Controls Page: Schedule Policies Advance Schedule weeks not loaded.", false);
+		
+		return selectedWeek;
+	}
+
+
+	@Override
+	public void updateAdvanceScheduleWeekCountToCreate(String scheduleWeekCoundToCreate) throws Exception {
+		if(getAdvanceScheduleWeekCountToCreate().toLowerCase().contains(scheduleWeekCoundToCreate.toLowerCase()))
+			SimpleUtils.pass("Controls Page: Schedule Policies Advance Schedule weeks value '"+scheduleWeekCoundToCreate+" weeks' already Updated.");
+		else {
+			WebElement advanceScheduleWeekSelectBox = schedulingWindowAdvanceWeekCount.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			Select drpScheduleWeek = new Select(advanceScheduleWeekSelectBox);
+			drpScheduleWeek.selectByVisibleText(scheduleWeekCoundToCreate);
+			if(getAdvanceScheduleWeekCountToCreate().toLowerCase().contains(scheduleWeekCoundToCreate.toLowerCase()))
+				SimpleUtils.pass("Controls Page: Schedule Policies Advance Schedule weeks value '"+scheduleWeekCoundToCreate+"' Updated successfully.");
+			else
+				SimpleUtils.fail("Controls Page: Unable to update Schedule Policies Advance Schedule weeks value.", false);
+		}
+	}
+	
+	@Override
+	public HashMap<String, Integer> getScheduleBufferHours() throws Exception
+	{
+		HashMap<String, Integer> bufferHours = new HashMap<String, Integer>();
+		Thread.sleep(2000);
+		if(controlsAdvanceButtons.size() > 0)
+		{
+			click(controlsAdvanceButtons.get(0));
+			bufferHours.put("openingBufferHours", Integer.valueOf(
+					openingBufferHours.findElement(By.cssSelector("input[type=\"number\"]")).getAttribute("value")));
+			bufferHours.put("closingBufferHours", Integer.valueOf(
+					closingBufferHours.findElement(By.cssSelector("input[type=\"number\"]")).getAttribute("value")));
+		}
+		return bufferHours;
+	}
+
+	
+	@Override
+	public void clickOnControlsLocationProfileSection() throws Exception {
+		if(isElementLoaded(locationProfileSection))
+			click(locationProfileSection);
+		else
+			SimpleUtils.fail("Controls Page: Location Profile Card not Loaded!", false);
+	}
+	
+	
+	@Override
+	public void clickOnControlsScheduleCollaborationSection() throws Exception {
+		if(isElementLoaded(scheduleCollaborationSection))
+			click(scheduleCollaborationSection);
+		else
+			SimpleUtils.fail("Controls Page: Schedule Collaboration Card not Loaded!", false);
+	}
+	
+	@Override
+	public void clickOnControlsComplianceSection() throws Exception {
+		if(isElementLoaded(complianceSection))
+			click(complianceSection);
+		else
+			SimpleUtils.fail("Controls Page: Compliance Card not Loaded!", false);
+	}
+	
+	@Override
+	public void clickOnControlsUsersAndRolesSection() throws Exception {
+		if(isElementLoaded(usersAndRolesSection))
+			click(usersAndRolesSection);
+		else
+			SimpleUtils.fail("Controls Page: Users and Roles Card not Loaded!", false);
+	}
+	
+	@Override
+	public void clickOnControlsTasksAndWorkRolesSection() throws Exception {
+		if(isElementLoaded(tasksAndWorkRolesSection))
+			click(tasksAndWorkRolesSection);
+		else
+			SimpleUtils.fail("Controls Page: tasksAndWorkRolesSection Card not Loaded!", false);
+	}
+
+
+	@Override
+	public boolean isControlsLocationProfileLoaded() throws Exception {
+		if(isElementLoaded(breadcrumbsLocationDetails)) {
+			SimpleUtils.pass("Controls Page: Location Profile Section Loaded Successfully.");
+			return true;
+		}
+		return false;
+	}
+
+
+	@Override
+	public boolean isControlsSchedulingPoliciesLoaded() throws Exception {
+		if(isElementLoaded(breadcrumbsSchedulingPolicies)) {
+			SimpleUtils.pass("Controls Page: Scheduling Policies Section Loaded Successfully.");
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean isControlsScheduleCollaborationLoaded() throws Exception {
+		if(isElementLoaded(breadcrumbsScheduleCollaboration)) {
+			SimpleUtils.pass("Controls Page: Schedule Collaboration Section Loaded Successfully.");
+			return true;
+		}
+		return false;
+	}
+
+
+	@Override
+	public boolean isControlsComplianceLoaded() throws Exception {
+		if(isElementLoaded(breadcrumbsCompliance)) {
+			SimpleUtils.pass("Controls Page: Compliance Section Loaded Successfully.");
+			return true;
+		}
+		return false;
+	}
+
+
+	@Override
+	public boolean isControlsUsersAndRolesLoaded() throws Exception {
+		if(isElementLoaded(breadcrumbsUsersAndRoles)) {
+			SimpleUtils.pass("Controls Page: Users and Roles Section Loaded Successfully.");
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean isControlsTasksAndWorkRolesLoaded() throws Exception {
+		if(isElementLoaded(breadcrumbsTasksAndWorkRoles)) {
+			SimpleUtils.pass("Controls Page: Tasks and Work Roles Section Loaded Successfully.");
+			return true;
+		}
+		return false;
+	}	
+	
+	@Override
+	public boolean isControlsWorkingHoursLoaded() throws Exception {
+		if(isElementLoaded(breadcrumbsWorkingHours)) {
+			SimpleUtils.pass("Controls Page: Working Hours Section Loaded Successfully.");
+			return true;
+		}
+		return false;
+	}
+
+
+	@Override
+	public void clickOnControlsTimeAndAttendanceCard() throws Exception {
+		if(isElementLoaded(timeAndAttendanceCard)) {
+			click(timeAndAttendanceCard);
+			SimpleUtils.pass("Controls Page: 'Time and Attendance' tab selected successfully.");
+		}
+		else
+			SimpleUtils.fail("Controls Page: 'Time and Attendance' tab not loaded.", false);
+	}
+
+	@Override
+	public void clickOnControlsTimeAndAttendanceAdvanceBtn() throws Exception {
+		if(isElementLoaded(timeSheetAdvanceBtn) && !timeSheetAdvanceBtn.getAttribute("class").contains("--advanced"))
+			click(timeSheetAdvanceBtn);
+		else
+			SimpleUtils.fail("Controls - Time and Attendance section: 'Advance' button not loaded.", false);
+	}
+
+	@Override
+	public void selectTimeSheetExportFormatByLabel(String optionLabel) throws Exception {
+		if(isElementLoaded(timeSheetExportFormatDiv)) {
+			WebElement timeSheetFormatDropDown = timeSheetExportFormatDiv.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(timeSheetFormatDropDown)) {
+				Select dropdown= new Select(timeSheetFormatDropDown);
+				if(getTimeSheetExportFormatSelectedOption().contains(optionLabel)) {
+					SimpleUtils.pass("Time and Attendance: Timesheet export format '"+optionLabel+"' option already selected.");
+				}
+				else {
+					dropdown.selectByVisibleText(optionLabel);
+					Thread.sleep(1000);
+					if(getTimeSheetExportFormatSelectedOption().contains(optionLabel))
+						SimpleUtils.pass("Time and Attendance: Timesheet export format '"+optionLabel+"' option selected successfully.");
+					else
+						SimpleUtils.fail("Time and Attendance: Unable to select Timesheet export format '"+optionLabel+"' option.", false);
+				}
+			}
+			else
+				SimpleUtils.fail("Controls - Time and Attendance: Timesheet export format dropdown not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Controls Page: TimeSheet Export Format section not loaded.", false);
+	}
+	
+	public String getTimeSheetExportFormatSelectedOption() throws Exception {
+		String selectedOptionLabel = "";
+		if(isElementLoaded(timeSheetExportFormatDiv)) {
+			WebElement timeSheetFormatDropDown = timeSheetExportFormatDiv.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(timeSheetFormatDropDown)) {
+				Select dropdown= new Select(timeSheetFormatDropDown);
+				selectedOptionLabel = dropdown.getFirstSelectedOption().getText();
+			}
+			else
+				SimpleUtils.fail("Controls - Time and Attendance: timesheet export format dropdown not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Controls Page: TimeSheet Export Format section not loaded.", false);
+		return selectedOptionLabel;
+	}
+
+
+	@Override
+	public void clickOnSchedulingPoliciesShiftAdvanceBtn() throws Exception {
+		if(isElementLoaded(schedulingPoliciesShiftFormSectionDiv)) {
+			WebElement schedulingPoliciesShiftAdvanceBtn = schedulingPoliciesShiftFormSectionDiv.findElement(
+					By.cssSelector("div.lg-advanced-box__toggle"));
+			if(isElementLoaded(schedulingPoliciesShiftAdvanceBtn) && !schedulingPoliciesShiftAdvanceBtn.getAttribute("class")
+					.contains("--advanced")) {
+				click(schedulingPoliciesShiftAdvanceBtn);
+				SimpleUtils.pass("Controls Page: - Scheduling Policies 'Shift' section: 'Advance' button clicked.");
+			}
+			else
+				SimpleUtils.fail("Controls Page: - Scheduling Policies 'Shift' section: 'Advance' button not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Controls Page: - Scheduling Policies section: 'Shift' form section not loaded.", false);
+	}
+
+
+	@Override
+	public void selectSchedulingPoliciesShiftIntervalByLabel(String intervalTimeLabel) throws Exception {
+		if(isElementLoaded(schedulingPoliciesShiftIntervalDiv))
+		{
+			WebElement shiftIntervalDropDown = schedulingPoliciesShiftIntervalDiv.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(shiftIntervalDropDown)) {
+				Select dropdown= new Select(shiftIntervalDropDown);
+				if(getshiftIntervalDropDownSelectedOption().contains(intervalTimeLabel)) {
+					SimpleUtils.pass("Scheduling Policies: Shift Interval time '"+intervalTimeLabel+"' option already selected.");
+				}
+				else {
+					dropdown.selectByVisibleText(intervalTimeLabel);
+					Thread.sleep(1000);
+					if(getshiftIntervalDropDownSelectedOption().contains(intervalTimeLabel))
+						SimpleUtils.pass("Scheduling Policies: Shift Interval time '"+intervalTimeLabel+"' option selected successfully.");
+					else
+						SimpleUtils.fail("Scheduling Policies: Unable to select Shift Interval time '"+intervalTimeLabel+"' option.", false);
+				}
+			}
+		}
+	}	
+	
+	public String getshiftIntervalDropDownSelectedOption() throws Exception {
+		String selectedOptionLabel = "";
+		if(isElementLoaded(schedulingPoliciesShiftIntervalDiv)) {
+			WebElement shiftIntervalDropDown = schedulingPoliciesShiftIntervalDiv.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(shiftIntervalDropDown)) {
+				Select dropdown= new Select(shiftIntervalDropDown);
+				selectedOptionLabel = dropdown.getFirstSelectedOption().getText();
+			}
+			else
+				SimpleUtils.fail("Scheduling Policies: Shift Interval time dropdown not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Scheduling Policies: 'Shift' section not loaded.", false);
+		return selectedOptionLabel;
+	}
+	
+	@Override
+	public void clickOnSchedulingPoliciesSchedulesAdvanceBtn() throws Exception {
+		if(isElementLoaded(schedulingPoliciesSchedulesFormSectionDiv)) {
+			WebElement schedulingPoliciesShiftAdvanceBtn = schedulingPoliciesSchedulesFormSectionDiv.findElement(
+					By.cssSelector("div.lg-advanced-box__toggle"));
+			if(isElementLoaded(schedulingPoliciesShiftAdvanceBtn) && !schedulingPoliciesShiftAdvanceBtn.getAttribute("class")
+					.contains("--advanced")) {
+				click(schedulingPoliciesShiftAdvanceBtn);
+				SimpleUtils.pass("Controls Page: - Scheduling Policies 'Schedules' section: 'Advance' button clicked.");
+			}
+			else
+				SimpleUtils.fail("Controls Page: - Scheduling Policies 'Schedules' section: 'Advance' button not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Controls Page: - Scheduling Policies section: 'Schedules' form section not loaded.", false);
+	}
+
+
+	@FindBy(css = "question-input[question-title=\"How many weeks in advance would you typically publish schedules? (this is the <i>Schedule Publish Window</i>).\"]")
+	private WebElement schedulePublishWindowDiv;
+	
+	@FindBy(css = "question-input[question-title=\"How many days in advance would you finalize schedule?\"]")
+	private WebElement advanceFinalizeDaysDiv;
+	
+	@Override
+	public String getSchedulePublishWindowWeeks() throws Exception {
+		String selectedOptionLabel = "";
+		if(isElementLoaded(schedulePublishWindowDiv)) {
+			WebElement schedulePublishWindowDropDown = schedulePublishWindowDiv.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(schedulePublishWindowDropDown)) {
+				Select dropdown= new Select(schedulePublishWindowDropDown);
+				selectedOptionLabel = dropdown.getFirstSelectedOption().getText();
+			}
+			else
+				SimpleUtils.fail("Scheduling Policies: Advance Schedule weeks to be Finalize dropdown not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Scheduling Policies: Advance Schedule weeks to be Finalize section not loaded.", false);
+		return selectedOptionLabel;
+	}
+	
+	@Override
+	public int getAdvanceScheduleDaysCountToBeFinalize() throws Exception {
+		int finalizeScheduleDays = 0;
+		if(isElementLoaded(advanceFinalizeDaysDiv)) {
+			WebElement finalizeScheduleDaysField = advanceFinalizeDaysDiv.findElement(By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(finalizeScheduleDaysField)) {
+				finalizeScheduleDays = Integer.valueOf(finalizeScheduleDaysField.getAttribute("value"));
+			}
+			else
+				SimpleUtils.fail("Scheduling Policies: Advance Schedule days to be Finalize dropdown not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Scheduling Policies: Advance Schedule days to be Finalize section not loaded.", false);
+		return finalizeScheduleDays;
 	}
 }

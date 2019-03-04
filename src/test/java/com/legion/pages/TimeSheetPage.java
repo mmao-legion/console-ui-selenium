@@ -88,4 +88,14 @@ public interface TimeSheetPage {
 
 	public void removeTimeClockEntryByLabel(String label) throws Exception;
 
+	public boolean isTimeSheetDetailsTableLoaded() throws Exception;
+
+	public void clickOnWeekView();
+
+	public String getTimeSheetActiveDurationType();
+
+	public void exportTimesheet() throws Exception;
+
+	public HashMap<String, Float> getTotalTimeSheetCarouselCardsHours() throws Exception;
+
 }

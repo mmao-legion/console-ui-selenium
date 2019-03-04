@@ -411,4 +411,49 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		}
 	}
 
+
+	@FindBy(css = "div.week")
+	private List<WebElement> calendarWeeks;
+
+	@Override
+	public int getScheduleOverviewWeeksCountCanBeCreatInAdvance()
+	{
+		boolean isPastWeek = true;
+		float scheduleWeekCountToBeCreated = 0;
+		for(WebElement week : calendarWeeks)
+		{
+			float currentWeekCount = 1;
+			if(week.getAttribute("class").contains("current-week"))
+				isPastWeek = false;
+			int weekDayCount = week.getText().split("\n").length;
+			if(weekDayCount < 7)
+				currentWeekCount = (float) 0.5;
+			boolean isCurrentWeekLocked = false;
+			if(week.getAttribute("class").contains("week-locked"))
+				isCurrentWeekLocked = true;
+
+			if(!isPastWeek && !isCurrentWeekLocked)
+			{
+				scheduleWeekCountToBeCreated = (scheduleWeekCountToBeCreated + currentWeekCount);
+			}
+
+		}
+		return (int) (scheduleWeekCountToBeCreated - 1);
+	}
+
+
+	@Override
+	public String getOverviewWeekDuration(WebElement webElement) throws Exception {
+		String weekDurationText = "";
+		if(isElementLoaded(webElement)) {
+			WebElement weekdurationElement = webElement.findElement(By.cssSelector("div.left-banner"));
+			if(isElementLoaded(weekdurationElement))
+				weekDurationText = weekdurationElement.getText().replace("\n", " ");
+			else
+				SimpleUtils.fail("Overview Page: Unable to get Week Duration.", true);
+		}
+		else
+			SimpleUtils.fail("Overview Page: Unable to get Week Duration.", true);
+		return weekDurationText;
+	}
 }
