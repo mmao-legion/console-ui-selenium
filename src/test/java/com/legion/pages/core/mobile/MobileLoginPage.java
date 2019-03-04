@@ -5,6 +5,7 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 import io.appium.java_client.MobileElement;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -15,10 +16,14 @@ import com.legion.pages.mobile.LoginPageAndroid;
 import com.legion.tests.TestBase;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.support.ui.Wait;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.openqa.selenium.support.ui.FluentWait;
 
 public class MobileLoginPage extends BasePage implements LoginPageAndroid {
 	
@@ -138,5 +143,8 @@ public class MobileLoginPage extends BasePage implements LoginPageAndroid {
 //
 
 	}
+
+
+
 	
 }

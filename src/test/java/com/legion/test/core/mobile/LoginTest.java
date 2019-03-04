@@ -4,18 +4,25 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import com.legion.pages.*;
 import com.legion.tests.annotations.*;
 import com.legion.tests.core.ScheduleNewUITest;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -133,13 +140,13 @@ public class LoginTest extends TestBase{
 		schedulePage.clickOnSchedulePublishButton();
 		//Schedule overview should show 5 week's schedule
 
-	   launchMobileApp();
-	   LoginPageAndroid loginPageAndroid = mobilePageFactory.createMobileLoginPage();
-	   loginPageAndroid.clickFirstLoginBtn();
-	   loginPageAndroid.verifyLoginTitle("LOGIN");
-	   loginPageAndroid.selectEnterpriseName();
-	   loginPageAndroid.loginToLegionWithCredentialOnMobile("Gordon.M", "Gordon.M");
-	   loginPageAndroid.clickShiftOffers("Gordon.M");
+//	   launchMobileApp();
+//	   LoginPageAndroid loginPageAndroid = mobilePageFactory.createMobileLoginPage();
+//	   loginPageAndroid.clickFirstLoginBtn();
+//	   loginPageAndroid.verifyLoginTitle("LOGIN");
+//	   loginPageAndroid.selectEnterpriseName();
+//	   loginPageAndroid.loginToLegionWithCredentialOnMobile("Gordon.M", "Gordon.M");
+//	   loginPageAndroid.clickShiftOffers("Gordon.M");
    }
 
 
@@ -205,5 +212,9 @@ public class LoginTest extends TestBase{
 		}
 		return bolDeleteShift;
 	}
+
+
+
+
 
 }

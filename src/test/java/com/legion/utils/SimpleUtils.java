@@ -1,10 +1,9 @@
 package com.legion.utils;
 
-import static com.legion.utils.MyThreadLocal.getTestRailRunId;
-import static com.legion.utils.MyThreadLocal.getVerificationMap;
-import static com.legion.utils.MyThreadLocal.setTestRailRunId;
+import static com.legion.utils.MyThreadLocal.*;
 import static org.testng.AssertJUnit.assertTrue;
 
+import com.legion.tests.testframework.ScreenshotManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.openqa.selenium.WebElement;
@@ -23,6 +22,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.tests.testframework.LegionTestListener;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
@@ -718,11 +718,21 @@ public class SimpleUtils {
 				client.setUser(testRailUser);
 				client.setPassword(testRailPassword);
 				JSONObject jSONObject = (JSONObject) client.sendGet("get_case/"+testCaseId);
+				if(statusID == 5){
+					Map<String, Object> data = new HashMap<String, Object>();
+					takeScreenshotPath();
+					data.put("status_id", statusID);
+					data.put("comment", "file:///D:/ZorangDevelopMobile/console-ui-selenium" +
+							"/Screenshots/Results/28_February_2019/Thu_Feb_28_20_00_36_IST_2019" +
+							"/gotoLoginPageTest/1/Thu_Feb_28_20_01_52_IST_2019.png");
+					client.sendPost(addResultString,data );
+				}else{
+					Map<String, Object> data = new HashMap<String, Object>();
+					data.put("status_id", statusID);
+					data.put("comment", comment);
+					client.sendPost(addResultString,data );
+				}
 
-				Map<String, Object> data = new HashMap<String, Object>();
-				data.put("status_id", statusID);
-				data.put("comment", comment);
-				client.sendPost(addResultString,data );
 
 			}catch(IOException ioException){
 				System.err.println(ioException.getMessage());
@@ -825,4 +835,14 @@ public class SimpleUtils {
 		return TestRailRunId;
 
 	}
+
+
+	//added by Nishant
+	public static void takeScreenshotPath(){
+		String targetFile = ScreenshotManager.takeScreenShot();
+		String screenshotLoc = parameterMap.get("Screenshot_Path") + File.separator + targetFile;
+//		String screenshotFinalLoc = "<a href='"+screenshotLoc+ "'>" +"Screenshots"+"</a>";
+		setScreenshotLocation(screenshotLoc);
+	}
+
 }

@@ -2,6 +2,7 @@ package com.legion.pages;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.time.Duration;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -212,6 +213,28 @@ public class BasePage {
     {
         Actions actions = new Actions(getDriver());
         actions.dragAndDrop(fromDestination, toDestination).build().perform();
+    }
+
+
+    //added by Nishant for Optimization of code
+
+    public boolean isElementEnabled(WebElement enabledElement){
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(
+                MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(60))
+                .pollingEvery(Duration.ofSeconds(5))
+                .ignoring(org.openqa.selenium.NoSuchElementException.class);
+        Boolean element = wait.until(new Function<WebDriver, Boolean>() {
+            @Override
+            public Boolean apply(WebDriver t) {
+                boolean display = false;
+                display = enabledElement.isEnabled();
+                if(display )
+                    return true;
+                else
+                    return false;
+            }
+        });
+        return element;
     }
    
 }

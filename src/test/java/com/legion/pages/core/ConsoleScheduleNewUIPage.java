@@ -9,6 +9,7 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
@@ -20,15 +21,19 @@ import com.legion.tests.core.ScheduleNewUITest.SchedulePageSubTabText;
 import com.legion.tests.core.ScheduleNewUITest.staffingOption;
 import com.legion.utils.SimpleUtils;
 
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.Wait;
 
 import java.lang.reflect.Method;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -145,6 +150,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	
 	@FindBy(css="lg-button[label*=\"ublish\"]")
 	private WebElement publishSheduleButton;
+
+	@FindBy(css="lg-button[label*=\"ublish\"] span span")
+	private WebElement txtPublishSheduleButton;
 	
 	@FindBy(css="div.sch-view-dropdown-summary-content-item-heading.ng-binding")
 	private WebElement analyzePopupLatestVersionLabel;
@@ -405,7 +413,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			WebElement consoleScheduleMenuElement = SimpleUtils.getSubTabElement(consoleNavigationMenuItems, consoleScheduleMenuItemText);
 			activeConsoleName = analyticsConsoleName.getText();
 			click(consoleScheduleMenuElement);
-			SimpleUtils.pass("Console Menu Loaded Successfully!");
+//			SimpleUtils.pass("Console Menu Loaded Successfully!");
+			SimpleUtils.fail("Console Menu Items Not Loaded Successfully!",false);
+
 		}
 		else {
 			SimpleUtils.fail("Console Menu Items Not Loaded Successfully!",false);
@@ -597,9 +607,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
 		HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
 		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("div.card-carousel-card.card-carousel-card-primary"));
-		if(isElementLoaded(budgetedScheduledLabelsDivElement))
+		if(isElementEnabled(budgetedScheduledLabelsDivElement))
 		{
-			Thread.sleep(2000);
+//			Thread.sleep(2000);
 			String scheduleWagesAndHoursCardText = budgetedScheduledLabelsDivElement.getText();
 			String[] scheduleWagesAndHours = scheduleWagesAndHoursCardText.split("\n");
 			for(String wagesAndHours: scheduleWagesAndHours)
@@ -888,14 +898,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	public void clickOnEditButton() throws Exception
 	{
-		if(isElementLoaded(edit))
+		if(isElementEnabled(edit))
 		{
 			click(edit);
-			if(isElementLoaded(editAnywayPopupButton))
-			{
-				click(editAnywayPopupButton);
-				SimpleUtils.pass("Schedule edit shift page loaded successfully!");
-			}
+			SimpleUtils.pass("Schedule edit shift page loaded successfully!");
+//			if(isElementLoaded(editAnywayPopupButton))
+//			{
+//				click(editAnywayPopupButton);
+//				SimpleUtils.pass("Schedule edit shift page loaded successfully!");
+//			}
 		}
 	}
 
@@ -1044,13 +1055,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@Override
 	public void clickOnSchedulePublishButton() throws Exception {
 		// TODO Auto-generated method stub
-		if(isElementLoaded(publishSheduleButton)){
+		if(isElementEnabled(publishSheduleButton)){
 			click(publishSheduleButton);
-			if(isElementLoaded(publishConfirmBtn))
+			if(isElementEnabled(publishConfirmBtn))
 			{
 				click(publishConfirmBtn);
 				SimpleUtils.pass("Schedule published successfully for week: '"+ getActiveWeekText() +"'");
-				if(isElementLoaded(successfulPublishOkBtn))
+				if(isElementEnabled(successfulPublishOkBtn))
 				{
 					click(successfulPublishOkBtn);
 				}
@@ -1086,10 +1097,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	public String clickNewDayViewShiftButtonLoaded() throws Exception
 	{
 		String textStartDay = null;
-		if(isElementLoaded(addNewShiftOnDayViewButton))
+		if(isElementEnabled(addNewShiftOnDayViewButton))
 		{
 			SimpleUtils.pass("User is allowed to add new shift for current or future week!");
-			if(isElementLoaded(shiftStartday)){
+			if(isElementEnabled(shiftStartday)){
 				String[] txtStartDay = shiftStartday.getText().split(" ");
 				textStartDay = txtStartDay[0];
 			}else{
@@ -1255,7 +1266,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		}
 
 		public void clickOnCreateOrNextBtn() throws Exception{
-			if(isElementLoaded(btnSave)){
+			if(isElementEnabled(btnSave)){
 				click(btnSave);
 				SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
 			}else{
@@ -2197,7 +2208,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	}
 
 	public void clickOnOfferOrAssignBtn() throws Exception{
-		if(isElementLoaded(btnOffer)){
+		if(isElementEnabled(btnOffer)){
 			click(btnOffer);
 		}else{
 			SimpleUtils.fail("Offer Or Assign Button is not clickable", false);
@@ -2516,26 +2527,45 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		return temperatureText;
 	}
 
+//	@Override
+//	public void generateOrUpdateAndGenerateSchedule() throws Exception {
+//		if (isElementLoaded(generateSheduleButton)) {
+//			click(generateSheduleButton);
+//			waitForSeconds(4);
+//			if(isElementLoaded(updateAndGenerateScheduleButton)){
+//				click(updateAndGenerateScheduleButton);
+//				SimpleUtils.pass("Schedule Update and Generate button clicked Successfully!");
+//				checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
+//			}else if(isElementLoaded(checkOutTheScheduleButton)) {
+//				checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
+//			}else{
+//				SimpleUtils.fail("Not able to generate Schedule Successfully!",false);
+//			}
+//
+//		} else {
+//			SimpleUtils.assertOnFail("Schedule Already generated for active week!", false, true);
+//		}
+//	}
+
+
 	@Override
 	public void generateOrUpdateAndGenerateSchedule() throws Exception {
-		if (isElementLoaded(generateSheduleButton)) {
+		if (isElementEnabled(generateSheduleButton)) {
 			click(generateSheduleButton);
-			waitForSeconds(4);
-			if(isElementLoaded(updateAndGenerateScheduleButton)){
+//			waitForSeconds(4);
+			if(isElementEnabled(updateAndGenerateScheduleButton)){
 				click(updateAndGenerateScheduleButton);
 				SimpleUtils.pass("Schedule Update and Generate button clicked Successfully!");
-				waitForSeconds(10);
-				if (isElementLoaded(checkOutTheScheduleButton)) {
+				if(isElementEnabled(checkOutTheScheduleButton)){
 					click(checkOutTheScheduleButton);
 					SimpleUtils.pass("Schedule Generated Successfuly!");
-					waitForSeconds(3);
 				}else{
 					SimpleUtils.fail("Not able to generate Schedule Successfully!",false);
 				}
-			}else if(isElementLoaded(checkOutTheScheduleButton)) {
-				click(checkOutTheScheduleButton);
+//				checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
+			}else if(isElementEnabled(checkOutTheScheduleButton)) {
+				checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
 				SimpleUtils.pass("Schedule Generated Successfuly!");
-				waitForSeconds(3);
 			}else{
 				SimpleUtils.fail("Not able to generate Schedule Successfully!",false);
 			}
@@ -2543,6 +2573,33 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		} else {
 			SimpleUtils.assertOnFail("Schedule Already generated for active week!", false, true);
 		}
+	}
+
+
+
+	public void checkOutGenerateScheduleBtn(WebElement checkOutTheScheduleButton){
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(
+				MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(60))
+				.pollingEvery(Duration.ofSeconds(5))
+				.ignoring(org.openqa.selenium.NoSuchElementException.class);
+		Boolean element = wait.until(new Function<WebDriver, Boolean>() {
+			@Override
+			public Boolean apply(WebDriver t) {
+				boolean display = false;
+				display = t.findElement(By.cssSelector("[ng-click=\"goToSchedule()\"]")).isEnabled();
+				if(display )
+					return true;
+				else
+					return false;
+			}
+		});
+		if(element){
+			click(checkOutTheScheduleButton);
+			SimpleUtils.pass("Schedule Generated Successfuly!");
+		}else{
+			SimpleUtils.fail("Not able to generate Schedule Successfully!",false);
+		}
+
 	}
 
 }
