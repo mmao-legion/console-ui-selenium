@@ -49,11 +49,14 @@ public class MyThreadLocal {
 	public static ThreadLocal<Integer> testRailRunId = new ThreadLocal<>();
 	public static final ThreadLocal<String> teamMemberName = new ThreadLocal<>();
 	public static final ThreadLocal<String> screenshotLoc = new ThreadLocal<>();
+	public static ThreadLocal<String> screenShotURL = new ThreadLocal<>();
 
 	public static void setScreenshotLocation(String value) { screenshotLoc.set(value); }
 
 	public static String getScreenshotLocation() { return screenshotLoc.get(); }
 
+	public static void setscreenShotURL(String value) { screenShotURL.set(value); }
+	public static String getscreenShotURL() { return screenShotURL.get(); }
 
 	public static void setTeamMemberName(String value) { teamMemberName.set(value); }
 

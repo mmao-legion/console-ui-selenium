@@ -716,21 +716,20 @@ public class SimpleUtils {
 				client.setUser(testRailUser);
 				client.setPassword(testRailPassword);
 				JSONObject jSONObject = (JSONObject) client.sendGet("get_case/"+testCaseId);
-				if(statusID == 5){
+				if(statusID == 5) {
 					Map<String, Object> data = new HashMap<String, Object>();
-					takeScreenshotPath();
+					takeScreenShotOnFailure();
+					String finalLink = getscreenShotURL();
 					data.put("status_id", statusID);
-					data.put("comment", "file:///D:/ZorangDevelopMobile/console-ui-selenium" +
-							"/Screenshots/Results/28_February_2019/Thu_Feb_28_20_00_36_IST_2019" +
-							"/gotoLoginPageTest/1/Thu_Feb_28_20_01_52_IST_2019.png");
-					client.sendPost(addResultString,data );
+					data.put("comment", comment +"\n" + "[Link To ScreenShot]" +"("+finalLink +")");
+//					data.put("screen_shot", getscreenShotURL());
+					client.sendPost(addResultString, data);
 				}else{
 					Map<String, Object> data = new HashMap<String, Object>();
 					data.put("status_id", statusID);
 					data.put("comment", comment);
-					client.sendPost(addResultString,data );
+					client.sendPost(addResultString, data);
 				}
-
 
 			}catch(IOException ioException){
 				System.err.println(ioException.getMessage());
@@ -835,12 +834,11 @@ public class SimpleUtils {
 	}
 
 
-	//added by Nishant
-	public static void takeScreenshotPath(){
+	public static void takeScreenShotOnFailure(){
 		String targetFile = ScreenshotManager.takeScreenShot();
 		String screenshotLoc = parameterMap.get("Screenshot_Path") + File.separator + targetFile;
-//		String screenshotFinalLoc = "<a href='"+screenshotLoc+ "'>" +"Screenshots"+"</a>";
-		setScreenshotLocation(screenshotLoc);
+		String screenShotURL = "file:///" + screenshotLoc;
+		setscreenShotURL(screenShotURL);
 	}
 
    public static int getDirectoryFilesCount(String directoryPath) {
