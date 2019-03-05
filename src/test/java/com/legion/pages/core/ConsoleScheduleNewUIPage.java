@@ -2707,7 +2707,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@Override
 	public void unGenerateActiveScheduleScheduleWeek() throws Exception {
 		String unGenerateScheduleOptionText = "Ungenerate Schedule";
-		if(isElementLoaded(scheduleAdminDropDownBtn, 10))
+		if(isElementEnabled(scheduleAdminDropDownBtn))
 		{
 			click(scheduleAdminDropDownBtn);
 			if(scheduleAdminDropDownOptions.size() > 0)
@@ -2717,7 +2717,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 					if(scheduleAdminDropDownOption.getText().toLowerCase().contains(unGenerateScheduleOptionText.toLowerCase()))
 					{
 						click(scheduleAdminDropDownOption);
-						if(isElementLoaded(unGenerateBtnOnPopup))
+						if(isElementEnabled(unGenerateBtnOnPopup))
 						{
 							click(unGenerateBtnOnPopup);
 							SimpleUtils.pass("Schedule Page: Active Week ('" + getActiveWeekText() + "') Ungenerated Successfully.");

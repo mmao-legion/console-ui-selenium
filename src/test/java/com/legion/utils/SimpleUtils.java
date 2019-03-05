@@ -74,7 +74,7 @@ public class SimpleUtils {
     }
     
     public static void fail(String message, boolean continueExecution, String... severity) {
-    	//SimpleUtils.addTestResult(5, message);
+		SimpleUtils.addTestResultIntoTestRail(5, message);
         if (continueExecution) {
             try {
                 assertTrue(false);
@@ -153,7 +153,6 @@ public class SimpleUtils {
 	}
 	
 	public static void assertOnFail(String message, boolean isAssert, Boolean isExecutionContinue) {
-		SimpleUtils.addTestResultIntoTestRail(5,message);
     	if (isExecutionContinue) {
             try {
                 assertTrue(isAssert);
@@ -550,9 +549,10 @@ public class SimpleUtils {
 	{
 		JSONArray testCasesList;
 		JSONObject jsonTestCase;
+        int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
 		int testCaseID = 0;
 		try {
-			testCasesList = (JSONArray) client.sendGet("get_cases/"+projectID+"/&suite_id=10&section_id="+sectionID);
+			testCasesList = (JSONArray) client.sendGet("get_cases/"+projectID+"/&suite_id="+suiteId+"&section_id="+sectionID);
 			for(Object testCase : testCasesList)
 			{
 
@@ -720,9 +720,7 @@ public class SimpleUtils {
 					Map<String, Object> data = new HashMap<String, Object>();
 					takeScreenshotPath();
 					data.put("status_id", statusID);
-					data.put("comment", "file:///D:/ZorangDevelopMobile/console-ui-selenium" +
-							"/Screenshots/Results/28_February_2019/Thu_Feb_28_20_00_36_IST_2019" +
-							"/gotoLoginPageTest/1/Thu_Feb_28_20_01_52_IST_2019.png");
+					data.put("comment", comment);
 					client.sendPost(addResultString,data );
 				}else{
 					Map<String, Object> data = new HashMap<String, Object>();
@@ -751,6 +749,8 @@ public class SimpleUtils {
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
 		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
+		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+
 		int TestRailRunId = 0;
 		int count = 0;
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -780,7 +780,7 @@ public class SimpleUtils {
 				}
 
 				data.put("name", "Automation Suite Test Run"+"" +strDate);
-				data.put("suite_id", 10);
+				data.put("suite_id", suiteId);
 				data.put("include_all", true);
 				data.put("case_ids", cases);
 				JSONObject c = (JSONObject) client.sendPost(addResultString, data);
@@ -813,7 +813,7 @@ public class SimpleUtils {
 				}catch(ParseException e){
 					System.err.println(e.getMessage());
 				}
-				data.put("suite_id", 10);
+				data.put("suite_id", suiteId);
 				data.put("name", "Automation Smoke"+"" +strDate);
 				data.put("include_all", false);
 				data.put("case_ids", cases);

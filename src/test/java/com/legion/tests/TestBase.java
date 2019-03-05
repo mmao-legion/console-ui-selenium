@@ -179,6 +179,7 @@ public abstract class TestBase {
         String enterpriseName =  SimpleUtils.getEnterprise(method);
         String platformName =  ExtentTestManager.getMobilePlatformName(method);
         int sectionId = ExtentTestManager.getTestRailSectionId(method);
+        String testRunPhaseName = ExtentTestManager.getTestRunPhase(method);
         List<String> categories =  new ArrayList<String>();
         categories.add(getClass().getSimpleName());
 //        categories.add(enterpriseName);
