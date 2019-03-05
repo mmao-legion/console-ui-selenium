@@ -126,7 +126,7 @@ public class ExtentTestManager {
     public synchronized static int getTestRailSectionId(Method testMethod) {
 
         int testRailSectionId = 0;
-        // check if there is a Test annotation and get the test name
+        // check if there is a Test annotation and get the test rail section id
         UseAsTestRailSectionId useAsTestRailSectionId = testMethod.getAnnotation(UseAsTestRailSectionId.class);
         if(useAsTestRailSectionId != null && useAsTestRailSectionId.testRailSectionId()> 0){
             testRailSectionId = useAsTestRailSectionId.testRailSectionId();
@@ -135,6 +135,17 @@ public class ExtentTestManager {
         return testRailSectionId;
     }
 
+    public synchronized static String getTestRunPhase(Method testMethod) {
+
+        String testRunPhaseName = "";
+        // check if there is a Test annotation and get the test run phase name
+        SanitySuite sanitySuite = testMethod.getAnnotation(SanitySuite.class);
+        if (sanitySuite != null && sanitySuite.sanity().length() > 0) {
+            testRunPhaseName = sanitySuite.sanity();
+        }
+
+        return testRunPhaseName;
+    }
 
      
 }
