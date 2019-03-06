@@ -619,10 +619,6 @@ public class ControlsNewUITest extends TestBase{
   		  fullTimeSalariedNonExemptHoursPerShiftMax,fullTimeSalariedNonExemptHoursPerShiftIdeal);
   	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(fullTimeSalariedNonExemptIsEmployeeCommittedAvailability,
   		  fullTimeSalariedNonExemptCommittedHoursWeeks);
-  	  /*controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerWeek(40, 40, 40);
-	  controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(3,5,5);
-	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerShift(5,8,8);
-	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(false, 6);*/
   	  
   	  
 	  controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(schedulingPolicyGroupsTabs.FullTimeHourlyNonExempt.getValue());
@@ -646,10 +642,6 @@ public class ControlsNewUITest extends TestBase{
 	  		  fullTimeHourlyNonExemptHoursPerShiftMax,fullTimeHourlyNonExemptHoursPerShiftIdeal);
 	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(fullTimeHourlyNonExemptIsEmployeeCommittedAvailability,
 	  		  fullTimeHourlyNonExemptCommittedHoursWeeks);
-	  /*controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerWeek(35, 45, 38);
-	  controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(3,5,5);
-	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerShift(5,8,8);
-	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(false, 6);*/
 	  
 	  controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(schedulingPolicyGroupsTabs.PartTimeHourlyNonExempt.getValue());
 	  
@@ -664,11 +656,7 @@ public class ControlsNewUITest extends TestBase{
 	  int partTimeHourlyNonExemptHoursPerShiftIdeal = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Hours_Per_Shift_Ideal"));
 	  boolean partTimeHourlyNonExemptIsEmployeeCommittedAvailability = Boolean.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Is_Employee_Committed_Availability"));
 	  int partTimeHourlyNonExemptCommittedHoursWeeks = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Committed_Hours_Weeks"));
-  	  /*controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerWeek(15, 35, 25);
-	  controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(3,5,3);
-	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerShift(5,8,5);
-	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(false, 6);*/
-	  
+  	  
 	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerWeek(partTimeHourlyNonExemptHoursPerWeekMin, 
 	  		  partTimeHourlyNonExemptHoursPerWeekMax, partTimeHourlyNonExemptHoursPerWeekIdeal);
 	  controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(partTimeHourlyNonExemptShiftsPerWeekMin,
