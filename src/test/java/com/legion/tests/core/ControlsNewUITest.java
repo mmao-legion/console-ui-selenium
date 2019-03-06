@@ -62,6 +62,18 @@ public class ControlsNewUITest extends TestBase{
       public int getValue() { return value; }
 	}
 	
+	public enum schedulingPolicyGroupsTabs{
+		  FullTimeSalariedExempt("Full Time Salaried Exempt"),
+		  FullTimeSalariedNonExempt("Full Time Salaried Non Exempt"),
+		  FullTimeHourlyNonExempt("Full Time Hourly Non Exempt"),
+          PartTimeHourlyNonExempt("Part Time Hourly Non Exempt");
+			private final String value;
+			schedulingPolicyGroupsTabs(final String newValue) {
+	            value = newValue;
+	        }
+	        public String getValue() { return value; }
+	}
+	
 	@Override
 	@BeforeMethod
 	public void firstTest(Method method, Object[] params) throws Exception {
@@ -264,7 +276,7 @@ public class ControlsNewUITest extends TestBase{
   @Automated(automated =  "Automated")
   @Owner(owner = "Naval")
   @Enterprise(name = "KendraScott2_Enterprise")
-  @TestName(description = "147: Onboarding - Check navigation to different section in controls tab[On click it should not logout].")
+  @TestName(description = "TP-147: Onboarding - Check navigation to different section in controls tab[On click it should not logout].")
   @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
   public void updateControlsSectionLoadingAsStoreManager(String browser, String username, String password, String location)
   		throws Exception {
@@ -458,6 +470,213 @@ public class ControlsNewUITest extends TestBase{
     	  }
     	  
       }
+  }
+  
+  
+  @Automated(automated =  "Automated")
+  @Owner(owner = "Naval")
+  @Enterprise(name = "KendraScott2_Enterprise")
+  @TestName(description = "TP-158: Controls:- data for Scheduling Policies should be saved and display the success message.")
+  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+  public void updateAndValidateSchedulingPoliciesAllFieldsAsInternalAdmin(String browser, String username, String password, String location)
+  		throws Exception {
+			
+      DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+      SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);  
+      
+      ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+      controlsNewUIPage.clickOnControlsConsoleMenu();
+      SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+      
+      controlsNewUIPage.clickOnControlsSchedulingPolicies();
+      Thread.sleep(2000);
+      String activeLocation = controlsNewUIPage.getSchedulingPoliciesActiveLocation();
+      SimpleUtils.report("Controls Page: Scheduling Policies Active Location '"+ activeLocation +"'.");
+  	  HashMap<String, String> schedulingPoliciesData = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SchedulingPoliciesData.json");
+
+  	  String publishWindowAdvanceWeeks = schedulingPoliciesData.get("Schedule_Publish_Window");
+  	  String planningWindowAdvanceWeeks = schedulingPoliciesData.get("Schedule_Planning_Window");
+  	  String firstDayOfWeek = schedulingPoliciesData.get("Schedule_Week_Begin_Day");
+  	  String openingTime = schedulingPoliciesData.get("Earliest_Opening_Time");
+  	  String closingTime = schedulingPoliciesData.get("Latest_Closing_Time");
+  	  String advanceDaysToFinalize = schedulingPoliciesData.get("Advance_Finalize_Schedule_Days");
+  	  String beforeBufferCount = schedulingPoliciesData.get("Additional_Schedule_Hours_Before");
+  	  String afterBufferCount = schedulingPoliciesData.get("Additional_Schedule_Hours_After");
+  	  String minShiftLengthHour = schedulingPoliciesData.get("Minimum_Shift_Length");
+  	  String maxShiftLengthHour = schedulingPoliciesData.get("Maximum_Shift_Length");
+  	  String maxWeekDaysToAutoScheduleLabel = schedulingPoliciesData.get("Maximum_Number_Of_Days_To_AutoSchedule");
+  	  String shiftBreakIcons = schedulingPoliciesData.get("Display_Shift_Break_Icons");
+  	  String intervalTimeLabel = schedulingPoliciesData.get("Shift_Interval_Minutes");
+  	  String isLaborBudgetToApply = schedulingPoliciesData.get("Labor_Budget_To_Apply");
+  	  String budgetType = schedulingPoliciesData.get("Budget_Type");
+  	  String availabilityLockModeLabel = schedulingPoliciesData.get("Availability_Lock_Mode");
+  	  String unavailableWorkersHour = schedulingPoliciesData.get("Unavailable_Workers_Hour");
+  	  String availabilityToleranceMinutes = schedulingPoliciesData.get("Availability_Tolerance_Minutes");
+  	  String canWorkerRequestTimeOffValue = schedulingPoliciesData.get("Can_Employees_Request_Time_Off");
+  	  String maxWorkersTimeOfPerDayCount = schedulingPoliciesData.get("Max_Workers_TimeOf_Per_Day_Count");
+  	  String noticePeriodToRequestTimeOff = schedulingPoliciesData.get("Notice_Period_To_Request_TimeOff");
+  	  String isShowTimeOffReasons = schedulingPoliciesData.get("Is_Show_TimeOff_Reasons");
+
+      //Updating Scheduling Policies 'Schedule' Section
+      controlsNewUIPage.updateSchedulePublishWindow(publishWindowAdvanceWeeks);
+      controlsNewUIPage.updateSchedulePlanningWindow(planningWindowAdvanceWeeks);
+      controlsNewUIPage.updateSchedulingPoliciesFirstDayOfWeek(firstDayOfWeek);
+      controlsNewUIPage.updateEarliestOpeningTime(openingTime);
+      controlsNewUIPage.updateLatestClosingTime(closingTime);
+      controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
+      controlsNewUIPage.updateAdvanceScheduleDaysToBeFinalize(advanceDaysToFinalize);
+      controlsNewUIPage.updateScheduleBufferHoursBefore(beforeBufferCount);
+      controlsNewUIPage.updateScheduleBufferHoursAfter(afterBufferCount);
+      controlsNewUIPage.updateMinimumShiftLengthHour(minShiftLengthHour);
+      controlsNewUIPage.updateMaximumShiftLengthHour(maxShiftLengthHour);
+      controlsNewUIPage.updateMaximumNumWeekDaysToAutoSchedule(maxWeekDaysToAutoScheduleLabel);
+      controlsNewUIPage.updateDisplayShiftBreakIcons(shiftBreakIcons);
+      controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+      controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(intervalTimeLabel);
+      controlsNewUIPage.updateApplyLaborBudgetToSchedules(isLaborBudgetToApply);
+      controlsNewUIPage.updateScheduleBudgetType(budgetType);
+      controlsNewUIPage.updateTeamAvailabilityLockMode(availabilityLockModeLabel);
+      controlsNewUIPage.updateScheduleUnavailableHourOfWorkers(unavailableWorkersHour);
+      controlsNewUIPage.updateAvailabilityToleranceField(availabilityToleranceMinutes);
+      controlsNewUIPage.updateCanWorkerRequestTimeOff(canWorkerRequestTimeOffValue);
+      controlsNewUIPage.updateMaxEmployeeCanRequestForTimeOffOnSameDay(maxWorkersTimeOfPerDayCount);
+      controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+      controlsNewUIPage.updateNoticePeriodToRequestTimeOff(noticePeriodToRequestTimeOff);
+      controlsNewUIPage.updateShowTimeOffReasons(isShowTimeOffReasons);
+      
+      // Selecting Global Location
+      controlsNewUIPage.clickOnGlobalLocationButton();
+      activeLocation = controlsNewUIPage.getSchedulingPoliciesActiveLocation();
+      SimpleUtils.report("Controls Page: Scheduling Policies Active Location '"+ activeLocation +"'.");
+      controlsNewUIPage.updateSchedulePublishWindow(publishWindowAdvanceWeeks);
+      controlsNewUIPage.updateSchedulePlanningWindow(planningWindowAdvanceWeeks);
+      controlsNewUIPage.updateSchedulingPoliciesFirstDayOfWeek(firstDayOfWeek);
+      controlsNewUIPage.updateEarliestOpeningTime(openingTime);
+      controlsNewUIPage.updateLatestClosingTime(closingTime);
+      controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
+      controlsNewUIPage.updateAdvanceScheduleDaysToBeFinalize(advanceDaysToFinalize);
+      controlsNewUIPage.updateScheduleBufferHoursBefore(beforeBufferCount);
+      controlsNewUIPage.updateScheduleBufferHoursAfter(afterBufferCount);
+      controlsNewUIPage.updateMinimumShiftLengthHour(minShiftLengthHour);
+      controlsNewUIPage.updateMaximumShiftLengthHour(maxShiftLengthHour);
+      controlsNewUIPage.updateMaximumNumWeekDaysToAutoSchedule(maxWeekDaysToAutoScheduleLabel);
+      controlsNewUIPage.updateDisplayShiftBreakIcons(shiftBreakIcons);
+      controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+      controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(intervalTimeLabel);
+      controlsNewUIPage.updateApplyLaborBudgetToSchedules(isLaborBudgetToApply);
+      controlsNewUIPage.updateScheduleBudgetType(budgetType);
+      controlsNewUIPage.updateTeamAvailabilityLockMode(availabilityLockModeLabel);
+      controlsNewUIPage.updateScheduleUnavailableHourOfWorkers(unavailableWorkersHour);
+      controlsNewUIPage.updateAvailabilityToleranceField(availabilityToleranceMinutes);
+      controlsNewUIPage.updateCanWorkerRequestTimeOff(canWorkerRequestTimeOffValue);
+      controlsNewUIPage.updateMaxEmployeeCanRequestForTimeOffOnSameDay(maxWorkersTimeOfPerDayCount);
+      controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+      controlsNewUIPage.updateNoticePeriodToRequestTimeOff(noticePeriodToRequestTimeOff);
+      controlsNewUIPage.updateShowTimeOffReasons(isShowTimeOffReasons);
+  	  controlsNewUIPage.clickOnGlobalLocationButton();
+
+  	  controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(schedulingPolicyGroupsTabs.FullTimeSalariedExempt.getValue());
+  	int fullTimeSalariedExemptHoursPerWeekMin  = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Hours_Per_Week_Min" ));
+  	int fullTimeSalariedExemptHoursPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Hours_Per_Week_Max"));
+  	int fullTimeSalariedExemptHoursPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Hours_Per_Week_Ideal"));
+  	int fullTimeSalariedExemptShiftsPerWeekMin = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Shifts_Per_Week_Min"));
+  	int fullTimeSalariedExemptShiftsPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Shifts_Per_Week_Max"));
+  	int fullTimeSalariedExemptShiftsPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Shifts_Per_Week_Ideal"));
+  	int fullTimeSalariedExemptHoursPerShiftMin = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Hours_Per_Shift_Min"));
+  	int fullTimeSalariedExemptHoursPerShiftMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Hours_Per_Shift_Max"));
+  	int fullTimeSalariedExemptHoursPerShiftIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Hours_Per_Shift_Ideal"));
+  	boolean fullTimeSalariedExemptIsEmployeeCommittedAvailability = Boolean.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Is_Employee_Committed_Availability"));
+  	int fullTimeSalariedExemptCommittedHoursWeeks = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Committed_Hours_Weeks"));
+  	
+  	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerWeek(fullTimeSalariedExemptHoursPerWeekMin, 
+  			  fullTimeSalariedExemptHoursPerWeekMax, fullTimeSalariedExemptHoursPerWeekIdeal);
+  	  controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(fullTimeSalariedExemptShiftsPerWeekMin,
+  			  fullTimeSalariedExemptShiftsPerWeekMax,fullTimeSalariedExemptShiftsPerWeekIdeal);
+  	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerShift(fullTimeSalariedExemptHoursPerShiftMin,
+  			  fullTimeSalariedExemptHoursPerShiftMax,fullTimeSalariedExemptHoursPerShiftIdeal);
+  	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(fullTimeSalariedExemptIsEmployeeCommittedAvailability,
+  			  fullTimeSalariedExemptCommittedHoursWeeks);
+  	  
+  	  controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(schedulingPolicyGroupsTabs.FullTimeSalariedNonExempt.getValue());
+  	  
+  	  int fullTimeSalariedNonExemptHoursPerWeekMin  = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Hours_Per_Week_Min" ));
+  	  int fullTimeSalariedNonExemptHoursPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Hours_Per_Week_Max"));
+  	  int fullTimeSalariedNonExemptHoursPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Hours_Per_Week_Ideal"));
+  	  int fullTimeSalariedNonExemptShiftsPerWeekMin = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Shifts_Per_Week_Min"));
+  	  int fullTimeSalariedNonExemptShiftsPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Shifts_Per_Week_Max"));
+  	  int fullTimeSalariedNonExemptShiftsPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Shifts_Per_Week_Ideal"));
+  	  int fullTimeSalariedNonExemptHoursPerShiftMin = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Hours_Per_Shift_Min"));
+  	  int fullTimeSalariedNonExemptHoursPerShiftMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Hours_Per_Shift_Max"));
+  	  int fullTimeSalariedNonExemptHoursPerShiftIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Hours_Per_Shift_Ideal"));
+  	  boolean fullTimeSalariedNonExemptIsEmployeeCommittedAvailability = Boolean.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Is_Employee_Committed_Availability"));
+  	  int fullTimeSalariedNonExemptCommittedHoursWeeks = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Committed_Hours_Weeks"));
+  	  
+  	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerWeek(fullTimeSalariedNonExemptHoursPerWeekMin, 
+  		  fullTimeSalariedNonExemptHoursPerWeekMax, fullTimeSalariedNonExemptHoursPerWeekIdeal);
+  	  controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(fullTimeSalariedNonExemptShiftsPerWeekMin,
+  		  fullTimeSalariedNonExemptShiftsPerWeekMax,fullTimeSalariedNonExemptShiftsPerWeekIdeal);
+  	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerShift(fullTimeSalariedNonExemptHoursPerShiftMin,
+  		  fullTimeSalariedNonExemptHoursPerShiftMax,fullTimeSalariedNonExemptHoursPerShiftIdeal);
+  	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(fullTimeSalariedNonExemptIsEmployeeCommittedAvailability,
+  		  fullTimeSalariedNonExemptCommittedHoursWeeks);
+  	  /*controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerWeek(40, 40, 40);
+	  controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(3,5,5);
+	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerShift(5,8,8);
+	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(false, 6);*/
+  	  
+  	  
+	  controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(schedulingPolicyGroupsTabs.FullTimeHourlyNonExempt.getValue());
+	  int fullTimeHourlyNonExemptHoursPerWeekMin  = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Hours_Per_Week_Min" ));
+	  int fullTimeHourlyNonExemptHoursPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Hours_Per_Week_Max"));
+	  int fullTimeHourlyNonExemptHoursPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Hours_Per_Week_Ideal"));
+	  int fullTimeHourlyNonExemptShiftsPerWeekMin = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Shifts_Per_Week_Min"));
+	  int fullTimeHourlyNonExemptShiftsPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Shifts_Per_Week_Max"));
+	  int fullTimeHourlyNonExemptShiftsPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Shifts_Per_Week_Ideal"));
+	  int fullTimeHourlyNonExemptHoursPerShiftMin = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Hours_Per_Shift_Min"));
+	  int fullTimeHourlyNonExemptHoursPerShiftMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Hours_Per_Shift_Max"));
+	  int fullTimeHourlyNonExemptHoursPerShiftIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Hours_Per_Shift_Ideal"));
+	  boolean fullTimeHourlyNonExemptIsEmployeeCommittedAvailability = Boolean.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Is_Employee_Committed_Availability"));
+	  int fullTimeHourlyNonExemptCommittedHoursWeeks = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Committed_Hours_Weeks"));
+  	  
+	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerWeek(fullTimeHourlyNonExemptHoursPerWeekMin, 
+	  		  fullTimeHourlyNonExemptHoursPerWeekMax, fullTimeHourlyNonExemptHoursPerWeekIdeal);
+	  controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(fullTimeHourlyNonExemptShiftsPerWeekMin,
+	  		  fullTimeHourlyNonExemptShiftsPerWeekMax,fullTimeHourlyNonExemptShiftsPerWeekIdeal);
+	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerShift(fullTimeHourlyNonExemptHoursPerShiftMin,
+	  		  fullTimeHourlyNonExemptHoursPerShiftMax,fullTimeHourlyNonExemptHoursPerShiftIdeal);
+	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(fullTimeHourlyNonExemptIsEmployeeCommittedAvailability,
+	  		  fullTimeHourlyNonExemptCommittedHoursWeeks);
+	  /*controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerWeek(35, 45, 38);
+	  controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(3,5,5);
+	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerShift(5,8,8);
+	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(false, 6);*/
+	  
+	  controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(schedulingPolicyGroupsTabs.PartTimeHourlyNonExempt.getValue());
+	  
+	  int partTimeHourlyNonExemptHoursPerWeekMin  = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Hours_Per_Week_Min" ));
+	  int partTimeHourlyNonExemptHoursPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Hours_Per_Week_Max"));
+	  int partTimeHourlyNonExemptHoursPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Hours_Per_Week_Ideal"));
+	  int partTimeHourlyNonExemptShiftsPerWeekMin = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Shifts_Per_Week_Min"));
+	  int partTimeHourlyNonExemptShiftsPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Shifts_Per_Week_Max"));
+	  int partTimeHourlyNonExemptShiftsPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Shifts_Per_Week_Ideal"));
+	  int partTimeHourlyNonExemptHoursPerShiftMin = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Hours_Per_Shift_Min"));
+	  int partTimeHourlyNonExemptHoursPerShiftMax = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Hours_Per_Shift_Max"));
+	  int partTimeHourlyNonExemptHoursPerShiftIdeal = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Hours_Per_Shift_Ideal"));
+	  boolean partTimeHourlyNonExemptIsEmployeeCommittedAvailability = Boolean.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Is_Employee_Committed_Availability"));
+	  int partTimeHourlyNonExemptCommittedHoursWeeks = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Committed_Hours_Weeks"));
+  	  /*controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerWeek(15, 35, 25);
+	  controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(3,5,3);
+	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerShift(5,8,5);
+	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(false, 6);*/
+	  
+	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerWeek(partTimeHourlyNonExemptHoursPerWeekMin, 
+	  		  partTimeHourlyNonExemptHoursPerWeekMax, partTimeHourlyNonExemptHoursPerWeekIdeal);
+	  controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(partTimeHourlyNonExemptShiftsPerWeekMin,
+	  		  partTimeHourlyNonExemptShiftsPerWeekMax,partTimeHourlyNonExemptShiftsPerWeekIdeal);
+	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerShift(partTimeHourlyNonExemptHoursPerShiftMin,
+	  		  partTimeHourlyNonExemptHoursPerShiftMax,partTimeHourlyNonExemptHoursPerShiftIdeal);
+	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(partTimeHourlyNonExemptIsEmployeeCommittedAvailability,
+	  		  partTimeHourlyNonExemptCommittedHoursWeeks);
   }
   
 }

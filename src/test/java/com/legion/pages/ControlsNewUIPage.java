@@ -70,5 +70,79 @@ public interface ControlsNewUIPage {
 
 	public int getAdvanceScheduleDaysCountToBeFinalize() throws Exception;
 
+	public String getSchedulingPoliciesActiveLocation() throws Exception;
+
+	public void updateSchedulePublishWindow(String publishWindowAdvanceWeeks) throws Exception;
+
+	public void updateSchedulePlanningWindow(String planningWindowAdvanceWeeks) throws Exception;
+
+	public String getSchedulePlanningWindowWeeks() throws Exception;
+
+	public void updateSchedulingPoliciesFirstDayOfWeek(String day) throws Exception;
+
+	public String getSchedulingPoliciesFirstDayOfWeek() throws Exception;
+
+	public void updateEarliestOpeningTime(String openingTime) throws Exception;
+
+	public String getEarliestOpeningTime() throws Exception;
+
+	public void updateLatestClosingTime(String closingTime) throws Exception;
+
+	public String getLatestClosingTime() throws Exception;
+
+	public void updateAdvanceScheduleDaysToBeFinalize(String advanceDays) throws Exception;
+
+	public void updateScheduleBufferHoursBefore(String beforeBufferCount) throws Exception;
+
+	public void updateScheduleBufferHoursAfter(String afterBufferCount) throws Exception;
+
+	public void updateMinimumShiftLengthHour(String shiftLengthHour) throws Exception;
+
+	public float getMinimumShiftLengthHour() throws Exception;
+
+	public void updateMaximumShiftLengthHour(String shiftLengthHour) throws Exception;
+
+	public float getMaximumShiftLengthHour() throws Exception;
+
+	public void updateMaximumNumWeekDaysToAutoSchedule(String maxDaysLabel) throws Exception;
+
+	public String getMaximumNumWeekDaysToAutoSchedule() throws Exception;
+
+	public void updateDisplayShiftBreakIcons(String shiftBreakIcons) throws Exception;
+
+	public String getDisplayShiftBreakIcons() throws Exception;
+
+	public void updateApplyLaborBudgetToSchedules(String isLaborBudgetToApply) throws Exception;
+
+	public void updateScheduleBudgetType(String budgetType) throws Exception;
+
+	public void updateTeamAvailabilityLockMode(String availabilityLockModeLabel) throws Exception;
+
+	public void updateScheduleUnavailableHourOfWorkers(String unavailableWorkersHour) throws Exception;
+
+	public void updateAvailabilityToleranceField(String availabilityToleranceMinutes) throws Exception;
+
+	public void updateCanWorkerRequestTimeOff(String canWorkerRequestTimeOffValue) throws Exception;
+
+	public void clickOnSchedulingPoliciesTimeOffAdvanceBtn() throws Exception;
+
+	public void updateMaxEmployeeCanRequestForTimeOffOnSameDay(String maxWorkersTimeOfPerDayCount) throws Exception;
+
+	public void updateNoticePeriodToRequestTimeOff(String noticePeriodToRequestTimeOff) throws Exception;
+
+	public void updateShowTimeOffReasons(String isShowTimeOffReasons) throws Exception;
+
+	public void updateSchedulingPolicyGroupsHoursPerWeek(int minHours, int maxHours, int idealHour) throws Exception;
+
+	public void updateSchedulingPolicyGroupsShiftsPerWeek(int minShifts, int maxShifts, int idealShifts) throws Exception;
+
+	public void updateSchedulingPolicyGroupsHoursPerShift(int minHoursPerShift, int maxHoursPerShift, int ideaHoursPerShift)
+			throws Exception;
+
+	public void updateEnforceNewEmployeeCommittedAvailabilityWeeks(boolean isEmployeeCommittedAvailabilityActive
+			, int committedHoursWeeks) throws Exception;
+
+	public void selectSchdulingPolicyGroupsTabByLabel(String tabLabel) throws Exception;
+
 	
 }
