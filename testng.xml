@@ -8,22 +8,22 @@
  	</listeners>
 
   
-    <test name="Controls New UI Test">
+   <!--  <test name="Controls New UI Test">
         <classes>
             <class name="com.legion.tests.core.ControlsNewUITest">
       	        <methods>
-                    <!-- <include name="updateUserLocationAsInternalAdmin"/>
+                    <include name="updateUserLocationAsInternalAdmin"/>
                     <include name="updateWorkingHoursAsInternalAdmin"/>
                     <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>
                     <include name="verifySchedulePlanningWindowAndAdditionalScheduleHoursAsInternalAdmin"/>
                     <include name="updateControlsSectionLoadingAsStoreManager"/>
                     <include name="updateAndValidateShiftIntervalTimeAsInternalAdmin"/>
-                    <include name="validateScheduleFinalizeFunctionalityAsInternalAdmin"/> -->
+                    <include name="validateScheduleFinalizeFunctionalityAsInternalAdmin"/>
                     <include name="updateAndValidateSchedulingPoliciesAllFieldsAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
-    </test>  
+    </test>   -->
 
     <!-- <test name="Traffic Forecast for New UI Test">
         <classes>
@@ -154,6 +154,17 @@
             </class>
         </classes>
     </test> -->
+    
+    
+    <test name="Team New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.ProfileNewUITest">
+                <methods>
+                    <include name="validateAllWebElementLoadedAsStoreManager"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
   
 </suite> <!-- Suite -->
 

@@ -225,6 +225,31 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css="lg-button[label=\"Preserve\"]")
 	private WebElement preserveSettingBtn;
 	
+	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.numHoursPerWeekMin\"]")
+	private List<WebElement> numHoursPerWeekMinInputFields;
+	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.numHoursPerWeek\"]")
+	private List<WebElement> numHoursPerWeekMaxInputFields;
+	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.numHoursPerWeekIdeal\"]")
+	private List<WebElement> numHoursPerWeekIdealInputFields;
+	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.numShiftsPerWeekMin\"]")
+	private List<WebElement> numShiftsPerWeekMinInputFields;
+	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.numShiftsPerWeek\"]")
+	private List<WebElement> numShiftsPerWeekMaxInputFields;
+	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.numShiftsIdeal\"]")
+	private List<WebElement> numShiftsPerWeekIdealInputFields;
+	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.shiftMinLength\"]")
+	private List<WebElement> minHoursPerShiftInputFields;
+	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.shiftMaxLength\"]")
+	private List<WebElement> maxHoursPerShiftInputFields;
+	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.shiftIdealLength\"]")
+	private List<WebElement> ideaHoursPerShiftInputFields;
+	@FindBy(css="form-section[form-title=\"Scheduling Policy Groups\"]")
+	private WebElement schedulePolicyGroupSection;
+	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.committedHoursPeriod\"]")
+	private List<WebElement> committedHoursPeriodFileds;
+	@FindBy(css="div[ng-click=\"$ctrl.select(tab)\"]")
+	private List<WebElement> schedulingPolicyGroupsTabs;
+	
 	String timeSheetHeaderLabel = "Controls";
 	
 	@Override
@@ -1830,16 +1855,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 	}
 	
-	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.numHoursPerWeekMin\"]")
-	private List<WebElement> numHoursPerWeekMinInputFields;
-	
-	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.numHoursPerWeek\"]")
-	private List<WebElement> numHoursPerWeekMaxInputFields;
-	
-	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.numHoursPerWeekIdeal\"]")
-	private List<WebElement> numHoursPerWeekIdealInputFields;
-	
-	
 	
 	@Override
 	public void updateSchedulingPolicyGroupsHoursPerWeek(int minHours, int maxHours, int idealHours) throws Exception
@@ -1921,15 +1936,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 	
 	
-	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.numShiftsPerWeekMin\"]")
-	private List<WebElement> numShiftsPerWeekMinInputFields;
-	
-	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.numShiftsPerWeek\"]")
-	private List<WebElement> numShiftsPerWeekMaxInputFields;
-	
-	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.numShiftsIdeal\"]")
-	private List<WebElement> numShiftsPerWeekIdealInputFields;
-	
 	@Override
 	public void updateSchedulingPolicyGroupsShiftsPerWeek(int minShifts, int maxShifts, int idealShifts) throws Exception
 	{
@@ -2009,14 +2015,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 	}
 	
-	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.shiftMinLength\"]")
-	private List<WebElement> minHoursPerShiftInputFields;
 
-	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.shiftMaxLength\"]")
-	private List<WebElement> maxHoursPerShiftInputFields;
-
-	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.shiftIdealLength\"]")
-	private List<WebElement> ideaHoursPerShiftInputFields;
 	@Override
 	public void updateSchedulingPolicyGroupsHoursPerShift(int minHoursPerShift, int maxHoursPerShift, int ideaHoursPerShift) throws Exception
 	{
@@ -2096,11 +2095,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 	}
 	
-	@FindBy(css="form-section[form-title=\"Scheduling Policy Groups\"]")
-	private WebElement schedulePolicyGroupSection;
-	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.committedHoursPeriod\"]")
-	private List<WebElement> committedHoursPeriodFileds;
-	
+
 	@Override
 	public void updateEnforceNewEmployeeCommittedAvailabilityWeeks(boolean isEmployeeCommittedAvailabilityActive, int committedHoursWeeks) throws Exception
 	{
@@ -2156,8 +2151,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 
-	@FindBy(css="div[ng-click=\"$ctrl.select(tab)\"]")
-	private List<WebElement> schedulingPolicyGroupsTabs;
 	@Override
 	public void selectSchdulingPolicyGroupsTabByLabel(String tabLabel) throws Exception
 	{
