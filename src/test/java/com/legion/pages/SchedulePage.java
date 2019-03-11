@@ -91,7 +91,7 @@ public interface SchedulePage {
 	public void disableNextWeekArrow() throws Exception;
 	public void clickScheduleDraftAndGuidanceStatus(List<String> overviewScheduleWeeksStatus);
 	public void editBudgetHours();
-
+	public void navigateScheduleDayWeekView(String nextWeekView, int weekCount);
 
 	public ArrayList<String> getActiveWeekCalendarDates() throws Exception;
 	public void refreshBrowserPage() throws Exception;

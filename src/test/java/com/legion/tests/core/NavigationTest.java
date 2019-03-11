@@ -2,6 +2,7 @@ package com.legion.tests.core;
 
 import static com.legion.utils.MyThreadLocal.setCurrentTestMethodName;
 
+import com.legion.tests.annotations.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.AssertJUnit;
@@ -29,10 +30,6 @@ import java.util.HashMap;
 
 import org.testng.annotations.*;
 
-import com.legion.tests.annotations.Automated;
-import com.legion.tests.annotations.Enterprise;
-import com.legion.tests.annotations.Owner;
-import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
 
@@ -93,27 +90,70 @@ public class NavigationTest extends TestBase {
     
     @Automated(automated = "Automated")
    	@Owner(owner = "Gunjan")
-       @Enterprise(name = "KendraScott2_Enterprise")
-       @TestName(description = "TP-144 : Validate navigation to below tabs and loading of data[No spinning icon]")
-       @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-       public void legionAppNavigationAllTabsStoreManager(String username, String password, String browser, String location) throws Exception {
-	       DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-	       dashboardPage.verifyDashboardPageLoadedProperly();
-    	   TeamPage teamPage = pageFactory.createConsoleTeamPage();
-    	   teamPage.loadTeamTab();
-           ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-           scheduleOverviewPage.loadScheduleOverview();
-           SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
-           salesForecastPage.loadSalesForecast();
-           StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
-           staffingGuidancePage.loadStaffingGuidance();
-           SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
-           schedulePage.loadSchedule();
-           AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
-    	   analyticsPage.loadAnalyticsTab();
-           
-       }
-    
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "TP-144 : Validate navigation to below tabs and loading of data[No spinning icon]")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void legionAppNavigationAllTabsStoreManager(String username, String password, String browser, String location) throws Exception {
+       DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+       dashboardPage.verifyDashboardPageLoadedProperly();
+       TeamPage teamPage = pageFactory.createConsoleTeamPage();
+       teamPage.loadTeamTab();
+       ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+       scheduleOverviewPage.loadScheduleOverview();
+       SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+       salesForecastPage.loadSalesForecast();
+       StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
+       staffingGuidancePage.loadStaffingGuidance();
+       SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+       schedulePage.loadSchedule();
+       AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+       analyticsPage.loadAnalyticsTab();
+
+    }
+
+    @SanitySuite(sanity =  "Sanity")
+    @UseAsTestRailSectionId(testRailSectionId = 96)
+    @Automated(automated = "Automated")
+    @Owner(owner = "Gunjan")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate navigation and data loading in Day/Week view for Schedule Tab[No Spinning icon or Blank screen]")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void scheduleSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
+        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+        scheduleOverviewPage.loadScheduleOverview();
+        SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+        schedulePage.navigateScheduleDayWeekView(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Three.getValue());
+
+    }
+
+    @SanitySuite(sanity =  "Sanity")
+    @UseAsTestRailSectionId(testRailSectionId = 96)
+    @Automated(automated = "Automated")
+    @Owner(owner = "Gunjan")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate navigation and data loading in Day/Week view for Projected Traffic Tab[No Spinning icon or Blank screen]")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void projectedTrafficSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
+        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+        scheduleOverviewPage.loadScheduleOverview();
+        SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+        salesForecastPage.loadSalesForecastforCurrentNFutureWeek(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Six.getValue());
+    }
+
+    @SanitySuite(sanity =  "Sanity")
+    @UseAsTestRailSectionId(testRailSectionId = 96)
+    @Automated(automated = "Automated")
+    @Owner(owner = "Gunjan")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate navigation and data loading in Day/Week view for Staffing Guidance Tab[No Spinning icon or Blank screen]")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void staffingGuidanceSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
+        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+        scheduleOverviewPage.loadScheduleOverview();
+        StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
+        staffingGuidancePage.navigateStaffingGuidance(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Three.getValue());
+    }
+
     
     @Automated(automated = "Manual")
     @Owner(owner = "Gunjan")

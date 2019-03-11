@@ -141,8 +141,8 @@ public class BasePage {
     	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), timeOutInSeconds);
     	 
     	try {
-    	    tempWait.until(ExpectedConditions.visibilityOf(element)); 
-    	    return true;
+    	    tempWait.until(ExpectedConditions.visibilityOf(element));
+            return true;
     	}
     	catch (NoSuchElementException | TimeoutException te) {
     		return false;	
@@ -297,5 +297,6 @@ public class BasePage {
         });
         return element;
     }
+
 
 }
