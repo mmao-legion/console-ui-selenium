@@ -3,6 +3,8 @@ package com.legion.pages.core;
 import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import com.legion.test.core.mobile.LoginTest;
+import com.legion.tests.core.ScheduleNewUITest;
 import com.legion.tests.core.ScheduleRoleBasedTest.scheduleHoursAndWagesData;
 import com.legion.tests.core.ScheduleTest.SchedulePageSubTabText;
 import com.legion.utils.MyThreadLocal;
@@ -63,6 +65,12 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @FindBy(css = "div[ng-click*='edit'] span.sch-control-button-label")
     private WebElement edit;
+
+    @FindBy(className="schedule-status-title")
+    private List<WebElement> scheduleOverviewWeeksStatus;
+
+    @FindBy(css = "div.fx-center.left-banner")
+    private List<WebElement> overviewPageScheduleWeekDurations;
 
     @FindBy(xpath = "//span[contains(text(),'Projected Sales')]")
     private WebElement goToProjectedSalesTab;
@@ -160,6 +168,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @FindBy(css = "div.day-week-picker-period-active")
     private WebElement daypicker;
 
+    @FindBy (css = "div.day-week-picker-period")
+    private List<WebElement> dayPickerAllDaysInDayView;
+
     @FindBy(css = ".day-week-picker-period fx-center ng-scope day-week-picker-period-active day-week-picker-period-week")
     private WebElement currentActiveWeeks;
 
@@ -186,7 +197,10 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     private List<WebElement> budgetEditHours;
 
     @FindBy(css = "table td:nth-child(2)")
-    private WebElement budgetDisplayOnScheduleSmartcard;
+    private List<WebElement> budgetDisplayOnScheduleSmartcard;
+
+    @FindBy (css = "table td:nth-child(3)")
+    private List<WebElement> scheduleDisplayOnScheduleSmartcard;
 
     @FindBy(xpath = "//div[contains(@class,'card-carousel-card-sub-title')][contains(text(),'Hours')]")
     private WebElement budgetOnbudgetSmartCard;
@@ -200,6 +214,8 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @FindBy (css = "div.sch-day-view-grid")
     private WebElement scheduleTableDayView;
 
+    @FindBy (css = "div.sch-day-view-shift-worker-detail")
+    private List<WebElement> scheduleTableWeekViewWorkerDetail;
 
     @FindBy (css = "div.lg-button-group-first")
 	private WebElement scheduleDayView;
@@ -209,6 +225,12 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @FindBy (css = "div.card-carousel-carousel")
     private WebElement smartcard;
+
+    @FindBy (css = "img.holiday-logo-image")
+    private WebElement storeClosed;
+
+    @FindBy (css = "div.day-week-picker-period-active")
+    private WebElement currentActiveDay;
 
     public ConsoleSchedulePage() {
         PageFactory.initElements(getDriver(), this);
@@ -1235,8 +1257,108 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     }
 
+    public void scheduleDayNavigation(String[] dayPickers) throws Exception{
+        if(isElementLoaded(scheduleDayView)){
+            click(scheduleDayView);
+            SimpleUtils.pass("Clicked on Day View for Week "+ dayPickers[1]);
+            for(int i=0; i<dayPickerAllDaysInDayView.size();i++) {
+                click(dayPickerAllDaysInDayView.get(i));
+                String[] currentDate = currentActiveDay.getText().split("\n");
+                if (isElementLoaded(smartcard,10)) {
+                    SimpleUtils.pass("Smartcard Section Loaded Successfully! for " + currentDate[1]);
+                } else {
+                    SimpleUtils.fail("Smartcard Section Not Loaded for " + currentDate[1], true);
+                }
+                if (isElementLoaded(scheduleTableDayView,10) && Float.parseFloat(budgetDisplayOnScheduleSmartcard.get(0).getText()) > 0 && Float.parseFloat(scheduleDisplayOnScheduleSmartcard.get(0).getText()) > 0) {
+                    SimpleUtils.pass("Schedule Successfully Loaded for  " + currentDate[1] + ", value for Budgeted Hour is " + budgetDisplayOnScheduleSmartcard.get(0).getText() + " Hours and Scheduled Hour is " + scheduleDisplayOnScheduleSmartcard.get(0).getText() + " Hours");
+                } else if (!isElementLoaded(scheduleTableDayView,3) && Float.parseFloat(budgetDisplayOnScheduleSmartcard.get(0).getText()) == 0 && Float.parseFloat(scheduleDisplayOnScheduleSmartcard.get(0).getText()) == 0 && isElementLoaded(storeClosed, 10)) {
+                    SimpleUtils.pass("Store Closed on  " + currentDate[1] + ", value for Budgeted Hour is " + budgetDisplayOnScheduleSmartcard.get(0).getText() + " Hours and Scheduled Hour is " + scheduleDisplayOnScheduleSmartcard.get(0).getText() + " Hours");
+                } else {
+                    SimpleUtils.fail("Schedule Not Loaded for  " + currentDate[1] + ", value for Budgeted Hour is " + budgetDisplayOnScheduleSmartcard.get(0).getText() + " Hours and Scheduled Hour is " + scheduleDisplayOnScheduleSmartcard.get(0).getText() + " Hours", true);
+                }
+            }
+        }else{
+            SimpleUtils.pass("Day View button not found in Schedule Sub Tab for Week " + dayPickers[1]);
+        }
 
-	@Override
+    }
+
+
+    public void scheduleDayWeekNavigation() throws Exception {
+        String[] daypickers = null;
+        if(areListElementVisible(scheduleTableWeekViewWorkerDetail)){
+            daypickers = daypicker.getText().split("\n");
+            if (isElementLoaded(smartcard,10)) {
+                SimpleUtils.pass("Smartcard Section Loaded Successfully! for Week " + daypickers[1]);
+            } else {
+                SimpleUtils.fail("Smartcard Section Not Loaded for Week " + daypickers[1], true);
+            }
+            if (isElementEnabled(scheduleTableWeekViewWorkerDetail.get(0)) && Float.parseFloat(budgetDisplayOnScheduleSmartcard.get(0).getText()) > 0 && Float.parseFloat(scheduleDisplayOnScheduleSmartcard.get(0).getText()) > 0) {
+                SimpleUtils.pass("Schedule Loaded Successfully! for Week " + daypickers[1] + " value for Budgeted Hour is " + budgetDisplayOnScheduleSmartcard.get(0).getText() + "Hours and Scheduled Hour is " + scheduleDisplayOnScheduleSmartcard.get(0).getText() + "Hours");
+            } else {
+                SimpleUtils.fail("Schedule Not Loaded for Week " + daypickers[1] + " value for Budgeted Hour is " + budgetDisplayOnScheduleSmartcard.get(0).getText() + "Hours and Scheduled Hour is " + scheduleDisplayOnScheduleSmartcard.get(0).getText() + "Hours", true);
+            }
+            scheduleDayNavigation(daypickers);
+        }else{
+            SimpleUtils.fail("Day picker Not Loaded for Week " + daypickers[1], false);
+        }
+
+    }
+
+//    public void scheduleDayWeekNavigation() throws Exception {
+//            waitForSeconds(4);
+//            String[] daypickers = daypicker.getText().split("\n");
+//            if (isElementLoaded(smartcard,10)) {
+//                SimpleUtils.pass("Smartcard Section Loaded Successfully! for Week " + daypickers[1]);
+//            } else {
+//                SimpleUtils.fail("Smartcard Section Not Loaded for Week " + daypickers[1], true);
+//            }
+//            if (isElementEnabled(scheduleTableWeekViewWorkerDetail.get(0)) && Float.parseFloat(budgetDisplayOnScheduleSmartcard.get(0).getText()) > 0 && Float.parseFloat(scheduleDisplayOnScheduleSmartcard.get(0).getText()) > 0) {
+//                SimpleUtils.pass("Schedule Loaded Successfully! for Week " + daypickers[1] + " value for Budgeted Hour is " + budgetDisplayOnScheduleSmartcard.get(0).getText() + "Hours and Scheduled Hour is " + scheduleDisplayOnScheduleSmartcard.get(0).getText() + "Hours");
+//            } else {
+//                SimpleUtils.fail("Schedule Not Loaded for Week " + daypickers[1] + " value for Budgeted Hour is " + budgetDisplayOnScheduleSmartcard.get(0).getText() + "Hours and Scheduled Hour is " + scheduleDisplayOnScheduleSmartcard.get(0).getText() + "Hours", true);
+//            }
+//            scheduleDayNavigation(daypickers);
+//
+//    }
+//    public void skipGuidanceWeek(){
+//        for(int i=0;i<scheduleOverviewWeeksStatus.size();i++){
+//            if(scheduleOverviewWeeksStatus.get(i).getText().equalsIgnoreCase("Guidance")){
+//                SimpleUtils.pass("Guidance week found "+ overviewPageScheduleWeekDurations.get(i).getText());
+//            }
+//        }
+//
+//    }
+
+
+    @Override
+    public void navigateScheduleDayWeekView(String nextWeekView, int weekCount) {
+        for(int i = 0; i < weekCount; i++)
+        {
+            if(nextWeekView.toLowerCase().contains("next") || nextWeekView.toLowerCase().contains("future"))
+            {
+                try {
+                    if (areListElementVisible(schedulesForWeekOnOverview)) {
+                        if(scheduleOverviewWeeksStatus.get(i).getText().equalsIgnoreCase("Guidance")){
+                            SimpleUtils.pass("Guidance week found "+ overviewPageScheduleWeekDurations.get(i).getText());
+                        }else {
+                            click(schedulesForWeekOnOverview.get(i));
+                            scheduleDayWeekNavigation();
+                        }
+                        checkElementVisibility(returnToOverviewTab);
+                        click(returnToOverviewTab);
+                    }
+                }catch (Exception e) {
+                        SimpleUtils.fail("!!!",true);
+                }
+            }
+
+
+        }
+    }
+
+
+    @Override
 	public void noBudgetDisplayWhenBudgetNotEntered(String nextWeekView, int weekCount) {
 		// TODO Auto-generated method stub
 
@@ -1319,7 +1441,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 							waitForSeconds(4);
 							String[] daypickers = daypicker.getText().split("\n");
 							String[] budgetDisplayOnSmartCard = budgetOnbudgetSmartCard.getText().split(" ");
-							String budgetOnScheduleSmartcard = budgetDisplayOnScheduleSmartcard.getText();
+							String budgetOnScheduleSmartcard = budgetDisplayOnScheduleSmartcard.get(0).getText();
 							if (budgetOnbudgetSmartCard.getText().equalsIgnoreCase("-- Hours")) {
 								SimpleUtils.pass(daypickers[1] + " week has no budget entered");
 								waitForSeconds(2);
@@ -1392,7 +1514,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 					SimpleUtils.fail("Schedule in Day View Not Loaded Successfully!", true);
 				}
 			}else{
-				SimpleUtils.pass("Day View button not found in Schedule Sub Tab");
+				SimpleUtils.fail("Day View button not found in Schedule Sub Tab",false);
 			}
 			if(isElementLoaded(scheduleWeekView)){
 				click(scheduleWeekView);
@@ -1407,13 +1529,13 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 					flag = true;
 					SimpleUtils.pass("Schedule in Week View Loaded Successfully!");
 				}else{
-					SimpleUtils.fail("Schedule in Week View Not Loaded Successfully!", true);
+					SimpleUtils.fail("Schedule in Week View Not Loaded Successfully!", false);
 				}
 			}else{
 				SimpleUtils.pass("Week View button not found in Schedule Sub Tab");
 			}
 		}else{
-			SimpleUtils.fail("Schedule Sub Menu Tab Not Found", true);
+			SimpleUtils.fail("Schedule Sub Menu Tab Not Found", false);
 		}
 		return flag;
 	}

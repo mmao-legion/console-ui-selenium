@@ -126,8 +126,8 @@ public class BasePage {
     	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), timeOutInSeconds);
     	 
     	try {
-    	    tempWait.until(ExpectedConditions.visibilityOf(element)); 
-    	    return true;
+    	    tempWait.until(ExpectedConditions.visibilityOf(element));
+            return true;
     	}
     	catch (NoSuchElementException | TimeoutException te) {
     		return false;	
@@ -237,5 +237,26 @@ public class BasePage {
         });
         return element;
     }
-   
+
+
+    public boolean areListElementVisible(List<WebElement> listElement){
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(
+                MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(60))
+                .pollingEvery(Duration.ofSeconds(5))
+                .ignoring(org.openqa.selenium.NoSuchElementException.class);
+        Boolean element = wait.until(new Function<WebDriver, Boolean>() {
+            @Override
+            public Boolean apply(WebDriver t) {
+                int size = 0;
+                size = listElement.size();
+                if(size > 0 )
+                    return true;
+                else
+                    return false;
+            }
+        });
+        return element;
+    }
+
+
 }

@@ -2309,7 +2309,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    public ArrayList<String> getActiveWeekCalendarDates() throws Exception
+	@Override
+	public void navigateScheduleDayWeekView(String nextWeekView, int weekCount) {
+
+	}
+
+	public ArrayList<String> getActiveWeekCalendarDates() throws Exception
     {
         ArrayList<String> scheduleWeekCalendarDates = new ArrayList<String>();
         String catendarWeekDatesAsText = "";
