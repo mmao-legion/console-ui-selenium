@@ -118,9 +118,24 @@ public class BasePage {
     	}
     	
     }
-    
-    
-    
+
+    public boolean isElementLoadedOnMobile(WebElement element, long timeOutInSeconds) throws Exception
+    {
+        WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getAndroidDriver(), timeOutInSeconds);
+
+        try {
+            tempWait.until(ExpectedConditions.visibilityOf(element));
+            return true;
+        }
+        catch (NoSuchElementException | TimeoutException te) {
+            return false;
+        }
+
+    }
+
+
+
+
     public boolean isElementLoaded(WebElement element, long timeOutInSeconds) throws Exception
     {
     	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), timeOutInSeconds);
@@ -237,5 +252,50 @@ public class BasePage {
         });
         return element;
     }
-   
+
+
+//    public boolean isElementPresent(WebElement displayElement){
+//        Wait<WebDriver> wait = new FluentWait<WebDriver>(
+//                MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(5))
+//                .pollingEvery(Duration.ofSeconds(5))
+//                .ignoring(org.openqa.selenium.NoSuchElementException.class);
+//        try{
+//            Boolean element = wait.until(new Function<WebDriver, Boolean>() {
+//                @Override
+//                public Boolean apply(WebDriver t) {
+//                    boolean display = false;
+//
+//                    display = displayElement.isDisplayed();
+//                    if(display )
+//                        return true;
+//                    else
+//                        return false;
+//                }
+//            });
+//        }catch()
+//
+//        return false;
+//    }
+
+
+
+    public boolean areListElementVisible(List<WebElement> listElement){
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(
+                MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(60))
+                .pollingEvery(Duration.ofSeconds(5))
+                .ignoring(org.openqa.selenium.NoSuchElementException.class);
+        Boolean element = wait.until(new Function<WebDriver, Boolean>() {
+            @Override
+            public Boolean apply(WebDriver t) {
+                int size = 0;
+                size = listElement.size();
+                if(size > 0 )
+                    return true;
+                else
+                    return false;
+            }
+        });
+        return element;
+    }
+
 }

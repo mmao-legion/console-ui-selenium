@@ -27,8 +27,8 @@
  "WeekStartOn" : "MON",
  "appiumServerPath" : "C:\\Program Files\\nodejs\\node.exe",
  "appiumJsPath" : "C:\\Users\\nishant08\\AppData\\Local\\Programs\\Appium\\resources\\app\\node_modules\\appium\\lib\\appium.js",
- "deviceName" : "Gunjan",
- "platformVersion" : "9.0",
+ "deviceName" : "Gionee X1",
+ "platformVersion" : "7.0",
  "isParallelBrowser" : "false",
  "isParallelBrowser" : "false",
  "Download_File_Default_Dir" : "C:\\Users\\nishant08\\Downloads"
