@@ -2,6 +2,8 @@ package com.legion.tests.core;
 
 import com.aventstack.extentreports.Status;
 import com.legion.pages.*;
+import com.legion.pages.mobile.LoginPageAndroid;
+import com.legion.test.core.mobile.LoginTest;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
 import com.legion.tests.data.CredentialDataProviderSource;
@@ -2359,18 +2361,139 @@ public class SanityTest extends TestBase{
 					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' not Generated.", false);
 				schedulePage.clickOnDayView();
 				int shiftIntervalCountInAnHour = schedulePage.getScheduleShiftIntervalCountInAnHour();
-				if((minutesInAnHours /shiftIntervalCountInAnHour) == Integer.valueOf(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue().split(" ")[0]))
+				if((minutesInAnHours /shiftIntervalCountInAnHour) == Integer.valueOf(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.FifteenMinutes.getValue().split(" ")[0]))
 					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText()
-							+"' Shift Interval Time matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue() +"'.");
+							+"' Shift Interval Time matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.FifteenMinutes.getValue() +"'.");
 				else
 					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText()
-							+"' Shift Interval Time not matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue() +"'.", false);
+							+"' Shift Interval Time not matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.FifteenMinutes.getValue() +"'.", false);
 				break;
 			}
 		}
 		if(! isWeekFoundToGenerate)
 			SimpleUtils.report("No 'Guidance' week found to Ungenerate Schedule.");
+
 	}
+
+
+	@SanitySuite(sanity =  "Sanity")
+	@UseAsTestRailSectionId(testRailSectionId = 96)
+	@Automated(automated = "Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate navigation and data loading in Day/Week view for Schedule Tab[No Spinning icon or Blank screen]")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void scheduleSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		scheduleOverviewPage.loadScheduleOverview();
+		SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+		schedulePage.navigateScheduleDayWeekView(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Three.getValue());
+
+	}
+
+	@SanitySuite(sanity =  "Sanity")
+	@UseAsTestRailSectionId(testRailSectionId = 96)
+	@Automated(automated = "Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate navigation and data loading in Day/Week view for Projected Traffic Tab[No Spinning icon or Blank screen]")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void projectedTrafficSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		scheduleOverviewPage.loadScheduleOverview();
+		SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+		salesForecastPage.loadSalesForecastforCurrentNFutureWeek(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Six.getValue());
+	}
+
+	@SanitySuite(sanity =  "Sanity")
+	@UseAsTestRailSectionId(testRailSectionId = 96)
+	@Automated(automated = "Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate navigation and data loading in Day/Week view for Staffing Guidance Tab[No Spinning icon or Blank screen]")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void staffingGuidanceSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		scheduleOverviewPage.loadScheduleOverview();
+		StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
+		staffingGuidancePage.navigateStaffingGuidance(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Three.getValue());
+	}
+
+
+
+	@MobilePlatform(platform = "Android")
+	@SanitySuite(sanity =  "Sanity")
+	@UseAsTestRailSectionId(testRailSectionId = 96)
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nishant")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate integration of Console UI with Mobile [Check only Open Schedule Offer is sent to the TM from Console UI and validate it is visible in Legion Mobile app for corresponding TM]")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void consoleAndMobileIntegrationForShiftOffers(String username, String password, String browser, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+		schedulePage.clickOnScheduleSubTab(LoginTest.SchedulePageSubTabText.Overview.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+		for(int i=0; i <overviewPageScheduledWeeks.size();i++)
+		{
+			if(overviewPageScheduledWeeks.get(i).getText().toLowerCase().contains(LoginTest.overviewWeeksStatus.Guidance.getValue().toLowerCase()))
+			{
+				scheduleOverviewPage.clickOnGuidanceBtnOnOverview(i);
+				if(schedulePage.isGenerateButtonLoaded())
+				{
+					SimpleUtils.pass("Guidance week found : '"+ schedulePage.getActiveWeekText() +"'");
+					schedulePage.generateOrUpdateAndGenerateSchedule();
+					schedulePage.clickOnSchedulePublishButton();
+					break;
+				}
+			}
+		}
+
+		schedulePage.clickOnDayView();
+		int previousGutterCount = schedulePage.getgutterSize();
+		scheduleNavigationTest(previousGutterCount);
+		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
+		Float scheduledHoursBeforeEditing = ScheduledHours.get("scheduledHours");
+		HashMap<List<String>,List<String>> teamCount = schedulePage.calculateTeamCount();
+		SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
+		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.compareCustomizeStartDay(textStartDay);
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.verifySelectTeamMembersOption();
+		schedulePage.clickOnOfferOrAssignBtn();
+		int updatedGutterCount = schedulePage.getgutterSize();
+		List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
+		List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
+		verifyTeamCount(previousTeamCount,currentTeamCount);
+		schedulePage.clickSaveBtn();
+		HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
+		Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
+		verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
+		schedulePage.clickOnSchedulePublishButton();
+		//Schedule overview should show 5 week's schedule
+
+		launchMobileApp();
+		LoginPageAndroid loginPageAndroid = mobilePageFactory.createMobileLoginPage();
+		loginPageAndroid.clickFirstLoginBtn();
+		loginPageAndroid.verifyLoginTitle("LOGIN");
+		loginPageAndroid.selectEnterpriseName();
+		loginPageAndroid.loginToLegionWithCredentialOnMobile("Gordon.M", "Gordon.M");
+		loginPageAndroid.clickShiftOffers("Gordon.M");
+	}
+
+
 
 
 }

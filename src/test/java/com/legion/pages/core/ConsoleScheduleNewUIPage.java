@@ -344,6 +344,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(xpath = "//span[contains(text(),'TMs')]")
     private WebElement selectRecommendedOption ;
 
+	@FindBy(css="div.tma-scroll-table tr")
+	private List<WebElement> recommendedScrollTable;
 
 	@FindBy(css="button.btn-success")
 	private WebElement upgradeAndGenerateScheduleBtn;
@@ -2154,23 +2156,25 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
   	public void verifySelectTeamMembersOption() throws Exception{
 //  		waitForSeconds(4);
-  		if(areListElementVisible(selectTeamMembersOption)){
-  			if(isElementEnabled(selectRecommendedOption)){
-  				String[] txtRecommendedOption = selectRecommendedOption.getText().replaceAll("\\p{P}","").split(" ");
-  				if(Integer.parseInt(txtRecommendedOption[2])==0){
-  					searchText(propertySearchTeamMember.get("AssignTeamMember"));
-  					SimpleUtils.pass(txtRecommendedOption[0]+" Option selected By default for Select Team member option");
-  				}else{
-  					getScheduleBestMatchStatus();
-  					SimpleUtils.pass(txtRecommendedOption[0]+" Option selected By default for Select Team member option");
-  				}
-
-			}else{
-				SimpleUtils.fail("Recommended option not available on page",false);
+  		if(areListElementVisible(recommendedScrollTable,5)) {
+			if (isElementEnabled(selectRecommendedOption)) {
+				String[] txtRecommendedOption = selectRecommendedOption.getText().replaceAll("\\p{P}", "").split(" ");
+				if (Integer.parseInt(txtRecommendedOption[2]) == 0) {
+					searchText(propertySearchTeamMember.get("AssignTeamMember"));
+					SimpleUtils.pass(txtRecommendedOption[0] + " Option selected By default for Select Team member option");
+				} else {
+					getScheduleBestMatchStatus();
+					SimpleUtils.pass(txtRecommendedOption[0] + " Option selected By default for Select Team member option");
+				}
+			} else {
+				SimpleUtils.fail("Recommended option not available on page", false);
 			}
+		}else if(isElementLoaded(textSearch,5)){
+				searchText(propertySearchTeamMember.get("AssignTeamMember"));
   		}else{
 			SimpleUtils.fail("Select Team member option and Recommended options are not available on page",false);
-		}
+			}
+
   	}
 
 	public void searchText(String searchInput) throws Exception {
@@ -2181,6 +2185,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 				click(searchIcon);
 				if(getScheduleStatus()){
 					break;
+				}else{
+					textSearch.clear();
 				}
 
 			}
@@ -2194,7 +2200,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	public boolean getScheduleStatus()throws Exception {
 		boolean ScheduleStatus = false;
 //		waitForSeconds(5);
-		if(areListElementVisible(scheduleStatus) && radionBtnSelectTeamMembers.size() == scheduleStatus.size()){
+		if(areListElementVisible(scheduleStatus,5) && radionBtnSelectTeamMembers.size() == scheduleStatus.size()){
 			for(int i=0; i<scheduleStatus.size();i++){
 				if(scheduleStatus.get(i).getText().contains("Available")
 						|| scheduleStatus.get(i).getText().contains("Unknown")){
