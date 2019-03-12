@@ -134,7 +134,7 @@ public class MobileLoginPage extends BasePage implements LoginPageAndroid {
 		waitForSeconds(8);
 		getAndroidDriver().findElementByAndroidUIAutomator("new UiSelector().text(\"Shift Offers\")").click();
 		WebElement shiftOfferAvailable = getAndroidDriver().findElementByAndroidUIAutomator("new UiSelector().textStartsWith(\"OPEN SHIFTS\")");
-		if(isElementLoadedOnMobile(shiftOfferAvail)){
+		if(isElementLoadedOnMobile(shiftOfferAvail,10)){
 			SimpleUtils.pass("Shift offer available for "+teamMember);
 		}else{
 			SimpleUtils.fail("Shift offer not available for "+teamMember,false);
