@@ -160,7 +160,8 @@
         <classes>
             <class name="com.legion.tests.core.ProfileNewUITest">
                 <methods>
-                    <include name="validateAllWebElementLoadedAsStoreManager"/>
+                    <!-- <include name="validateAllWebElementLoadedAsStoreManager"/> -->
+                    <include name="updateAndValidateProfileFunctionalityCoverageAsStoreManager"/>
                 </methods>
             </class>
         </classes>

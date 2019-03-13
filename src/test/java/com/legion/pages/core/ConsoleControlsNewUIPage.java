@@ -480,10 +480,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 						click(regularHoursEditBtn);
 
 						// Select Opening Hours
-						int openingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(0).getText().split(":")[0]);
+						int openingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(0).getText().split(":")[0].trim());
 						if(editRegularHoursSliders.get(0).getText().toLowerCase().contains("pm"))
 							openingHourOnSlider = openingHourOnSlider + 12;
-						int openingHourOnJson = Integer.valueOf(openingHours.split(":")[0]);
+						int openingHourOnJson = Integer.valueOf(openingHours.split(":")[0].trim());
 						if(openingHours.toLowerCase().contains("pm"))
 							openingHourOnJson = openingHourOnJson + 12;
 						int sliderOffSet = 5;
@@ -497,10 +497,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 						}
 						
 						// Select Closing Hours
-						int closingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(1).getText().split(":")[0]);
+						int closingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(1).getText().split(":")[0].trim());
 						if(editRegularHoursSliders.get(1).getText().toLowerCase().contains("pm"))
 							closingHourOnSlider = closingHourOnSlider + 12;
-						int closingHourOnJson = Integer.valueOf(closingHours.split(":")[0]);
+						int closingHourOnJson = Integer.valueOf(closingHours.split(":")[0].trim());
 						if(closingHours.toLowerCase().contains("pm"))
 							closingHourOnJson = closingHourOnJson + 12;
 						if(closingHourOnSlider > closingHourOnJson)

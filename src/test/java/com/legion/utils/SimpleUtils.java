@@ -645,4 +645,10 @@ public class SimpleUtils {
 	    }
 	    return lastModifiedFile;
    }
+   
+   public static boolean convertYesOrNoToTrueOrFalse(String yesOrNo) {
+	   if(yesOrNo.toLowerCase().contains("yes"))
+		   return true;
+	   return false;
+   }
 }
