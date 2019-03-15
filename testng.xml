@@ -107,45 +107,24 @@
     <!--</test>-->
 
 
-    <!--<test name="Sanity Test">-->
-        <!--<classes>-->
-            <!--<class name="com.legion.tests.core.SanityTest">-->
-                <!--<methods>-->
-                    <!--&lt;!&ndash;<include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifyKPIReportExportFunctionalityAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="validateScheduleSmartCardsAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="validateScheduleGenerationFunctionalityAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="validateChangeLocationAsStoreManager"/>&ndash;&gt;-->
-                    <!--<include name="validateGuidanceWeekAsStoreManager"/>-->
-                <!--</methods>-->
-            <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
-
-
-
     <test name="Sanity Test">
         <classes>
             <class name="com.legion.tests.core.SanityTest">
                 <methods>
-                    <!--<include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>-->
-                    <!--<include name="verifyKPIReportExportFunctionalityAsStoreManager"/>-->
-                    <!--<include name="validateScheduleSmartCardsAsStoreManager"/>-->
-                    <!--<include name="validateScheduleGenerationFunctionalityAsStoreManager"/>-->
-                    <!--<include name="validateChangeLocationAsStoreManager"/>-->
-                    <!--<include name="validateGuidanceWeekAsStoreManager"/>-->
-                    <!--<include name="validateScheduleGenerationAsStoreManager"/>-->
-                    <!--<include name="validateSchedulePublishAsStoreManager"/>-->
-                    <!--<include name="gotoLoginPageTest"/>-->
+                    <include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>
+                    <include name="validateScheduleSmartCardsAsStoreManager"/>
+                    <include name="validateScheduleGenerationFunctionalityAsStoreManager"/>
+                    <include name="validateChangeLocationAsStoreManager"/>
+                    <include name="validateGuidanceWeekAsStoreManager"/>
+                    <include name="consoleAndMobileIntegrationForShiftOffers"/>
                     <include name="updateControlsSectionLoadingAsInternalAdmin"/>
+                    <include name="scheduleSubTabNavigationStoreManager"/>
+                    <include name="projectedTrafficSubTabNavigationStoreManager"/>
+                    <include name="staffingGuidanceSubTabNavigationStoreManager"/>
                 </methods>
             </class>
         </classes>
     </test>
-
-
-
-
 
 
 </suite> <!-- Suite -->
