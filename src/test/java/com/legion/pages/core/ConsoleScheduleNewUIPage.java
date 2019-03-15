@@ -281,9 +281,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(css=".table-row")
 	private List<WebElement> tableRowCount;
 
-	@FindBy(css="div.tma-scroll-table tr")
-	private List<WebElement> recommendedScrollTable;
-
 	@FindBy(xpath="//div[@class='worker-edit-availability-status']//span[contains(text(),'Available')]")
 	private List<WebElement> availableStatus;
 
@@ -347,6 +344,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(xpath = "//span[contains(text(),'TMs')]")
     private WebElement selectRecommendedOption ;
 
+	@FindBy(css="div.tma-scroll-table tr")
+	private List<WebElement> recommendedScrollTable;
 
 	@FindBy(css="button.btn-success")
 	private WebElement upgradeAndGenerateScheduleBtn;
@@ -2157,23 +2156,25 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
   	public void verifySelectTeamMembersOption() throws Exception{
 //  		waitForSeconds(4);
-  		if(areListElementVisible(recommendedScrollTable) || isElementLoaded(textSearch,20)){
-  			if(isElementEnabled(selectRecommendedOption)){
-  				String[] txtRecommendedOption = selectRecommendedOption.getText().replaceAll("\\p{P}","").split(" ");
-  				if(Integer.parseInt(txtRecommendedOption[2])==0){
-  					searchText(propertySearchTeamMember.get("AssignTeamMember"));
-  					SimpleUtils.pass(txtRecommendedOption[0]+" Option selected By default for Select Team member option");
-  				}else{
-  					getScheduleBestMatchStatus();
-  					SimpleUtils.pass(txtRecommendedOption[0]+" Option selected By default for Select Team member option");
-  				}
-
-			}else{
-				SimpleUtils.fail("Recommended option not available on page",false);
+  		if(areListElementVisible(recommendedScrollTable,5)) {
+			if (isElementEnabled(selectRecommendedOption)) {
+				String[] txtRecommendedOption = selectRecommendedOption.getText().replaceAll("\\p{P}", "").split(" ");
+				if (Integer.parseInt(txtRecommendedOption[2]) == 0) {
+					searchText(propertySearchTeamMember.get("AssignTeamMember"));
+					SimpleUtils.pass(txtRecommendedOption[0] + " Option selected By default for Select Team member option");
+				} else {
+					getScheduleBestMatchStatus();
+					SimpleUtils.pass(txtRecommendedOption[0] + " Option selected By default for Select Team member option");
+				}
+			} else {
+				SimpleUtils.fail("Recommended option not available on page", false);
 			}
+		}else if(isElementLoaded(textSearch,5)){
+				searchText(propertySearchTeamMember.get("AssignTeamMember"));
   		}else{
 			SimpleUtils.fail("Select Team member option and Recommended options are not available on page",false);
-		}
+			}
+
   	}
 
 	public void searchText(String searchInput) throws Exception {
@@ -2184,6 +2185,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 				click(searchIcon);
 				if(getScheduleStatus()){
 					break;
+				}else{
+					textSearch.clear();
 				}
 
 			}
@@ -2197,7 +2200,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	public boolean getScheduleStatus()throws Exception {
 		boolean ScheduleStatus = false;
 //		waitForSeconds(5);
-		if(areListElementVisible(scheduleStatus) && radionBtnSelectTeamMembers.size() == scheduleStatus.size()){
+		if(areListElementVisible(scheduleStatus,5) && radionBtnSelectTeamMembers.size() == scheduleStatus.size()){
 			for(int i=0; i<scheduleStatus.size();i++){
 				if(scheduleStatus.get(i).getText().contains("Available")
 						|| scheduleStatus.get(i).getText().contains("Unknown")){
@@ -2215,11 +2218,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	public boolean getScheduleBestMatchStatus()throws Exception {
 		boolean ScheduleBestMatchStatus = false;
-		if(areListElementVisible(scheduleStatus) || scheduleBestMatchStatus.size()!=0 && radionBtnSelectTeamMembers.size() == scheduleStatus.size() && searchWorkerName.size()!=0){
+		if(areListElementVisible(scheduleBestMatchStatus) || scheduleBestMatchStatus.size()!=0 && radionBtnSelectTeamMembers.size() == scheduleStatus.size() && searchWorkerName.size()!=0){
 			for(int i=0; i<scheduleBestMatchStatus.size();i++){
 				if(scheduleBestMatchStatus.get(i).getText().contains("Best")
 						|| scheduleStatus.get(i).getText().contains("Unknown") || scheduleStatus.get(i).getText().contains("Available")){
-					if(searchWorkerName.get(i).getText().contains("Gordon.M")){
+					if(searchWorkerName.get(i).getText().contains("Gordon.M") || searchWorkerName.get(i).getText().contains("Jayne.H")){
 						click(radionBtnSelectTeamMembers.get(i));
 						setTeamMemberName(searchWorkerName.get(i).getText());
 						ScheduleBestMatchStatus = true;

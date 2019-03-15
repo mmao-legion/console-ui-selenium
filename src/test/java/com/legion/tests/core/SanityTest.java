@@ -2288,53 +2288,9 @@ public class SanityTest extends TestBase{
 		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 		controlsNewUIPage.clickOnControlsConsoleMenu();
 		SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
-
-		// Validate Controls Location Profile Section
-		controlsNewUIPage.clickOnControlsLocationProfileSection();
-		boolean isLocationProfile = controlsNewUIPage.isControlsLocationProfileLoaded();
-		SimpleUtils.assertOnFail("Controls Page: Location Profile Section not Loaded.", isLocationProfile, true);
-
-		// Validate Controls Scheduling Policies Section
-		controlsNewUIPage.clickOnControlsConsoleMenu();
-		controlsNewUIPage.clickOnControlsSchedulingPolicies();
-		boolean isSchedulingPolicies = controlsNewUIPage.isControlsSchedulingPoliciesLoaded();
-		SimpleUtils.assertOnFail("Controls Page: Scheduling Policies Section not Loaded.", isSchedulingPolicies, true);
-
-		// Validate Controls Schedule Collaboration Section
-		controlsNewUIPage.clickOnControlsConsoleMenu();
-		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-		boolean isScheduleCollaboration = controlsNewUIPage.isControlsScheduleCollaborationLoaded();
-		SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
-
-		// Validate Controls Compliance Section
-		controlsNewUIPage.clickOnControlsConsoleMenu();
-		controlsNewUIPage.clickOnControlsComplianceSection();
-		boolean isCompliance = controlsNewUIPage.isControlsComplianceLoaded();
-		SimpleUtils.assertOnFail("Controls Page: Compliance Section not Loaded.", isCompliance, true);
-
-		// Validate Controls Users and Roles Section
-		controlsNewUIPage.clickOnControlsConsoleMenu();
-		controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-		boolean isUsersAndRoles = controlsNewUIPage.isControlsUsersAndRolesLoaded();
-		SimpleUtils.assertOnFail("Controls Page: Users and Roles Section not Loaded.", isUsersAndRoles, true);
-
-		// Validate Controls Tasks and Work Roles Section
-		controlsNewUIPage.clickOnControlsConsoleMenu();
-		controlsNewUIPage.clickOnControlsTasksAndWorkRolesSection();
-		boolean isTasksAndWorkRoles = controlsNewUIPage.isControlsTasksAndWorkRolesLoaded();
-		SimpleUtils.assertOnFail("Controls Page: Tasks and Work Roles Section not Loaded.", isTasksAndWorkRoles, true);
-
-		// Validate Working Hours Profile Section
-		controlsNewUIPage.clickOnControlsConsoleMenu();
-		controlsNewUIPage.clickOnControlsWorkingHoursCard();
-		boolean isWorkingHours = controlsNewUIPage.isControlsWorkingHoursLoaded();
-		SimpleUtils.assertOnFail("Controls Page: Working Hours Section not Loaded.", isWorkingHours, true);
-
-		controlsNewUIPage.clickOnControlsConsoleMenu();
-		SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
 		controlsNewUIPage.clickOnControlsSchedulingPolicies();
 		controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
-		controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue());
+		controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.FifteenMinutes.getValue());
 		Thread.sleep(1000);
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.clickOnScheduleConsoleMenuItem();
@@ -2361,17 +2317,62 @@ public class SanityTest extends TestBase{
 					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' not Generated.", false);
 				schedulePage.clickOnDayView();
 				int shiftIntervalCountInAnHour = schedulePage.getScheduleShiftIntervalCountInAnHour();
-				if((minutesInAnHours /shiftIntervalCountInAnHour) == Integer.valueOf(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue().split(" ")[0]))
+				if((minutesInAnHours /shiftIntervalCountInAnHour) == Integer.valueOf(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.FifteenMinutes.getValue().split(" ")[0]))
 					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText()
-							+"' Shift Interval Time matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue() +"'.");
+							+"' Shift Interval Time matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.FifteenMinutes.getValue() +"'.");
 				else
 					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText()
-							+"' Shift Interval Time not matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue() +"'.", false);
+							+"' Shift Interval Time not matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.FifteenMinutes.getValue() +"'.", false);
 				break;
 			}
 		}
 		if(! isWeekFoundToGenerate)
 			SimpleUtils.report("No 'Guidance' week found to Ungenerate Schedule.");
+
+	}
+
+
+	@SanitySuite(sanity =  "Sanity")
+	@UseAsTestRailSectionId(testRailSectionId = 96)
+	@Automated(automated = "Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate navigation and data loading in Day/Week view for Schedule Tab[No Spinning icon or Blank screen]")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void scheduleSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		scheduleOverviewPage.loadScheduleOverview();
+		SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+		schedulePage.navigateScheduleDayWeekView(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Three.getValue());
+
+	}
+
+	@SanitySuite(sanity =  "Sanity")
+	@UseAsTestRailSectionId(testRailSectionId = 96)
+	@Automated(automated = "Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate navigation and data loading in Day/Week view for Projected Traffic Tab[No Spinning icon or Blank screen]")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void projectedTrafficSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		scheduleOverviewPage.loadScheduleOverview();
+		SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+		salesForecastPage.loadSalesForecastforCurrentNFutureWeek(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Six.getValue());
+	}
+
+	@SanitySuite(sanity =  "Sanity")
+	@UseAsTestRailSectionId(testRailSectionId = 96)
+	@Automated(automated = "Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate navigation and data loading in Day/Week view for Staffing Guidance Tab[No Spinning icon or Blank screen]")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void staffingGuidanceSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		scheduleOverviewPage.loadScheduleOverview();
+		StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
+		staffingGuidancePage.navigateStaffingGuidance(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Three.getValue());
 	}
 
 
@@ -2444,9 +2445,11 @@ public class SanityTest extends TestBase{
 		loginPageAndroid.clickFirstLoginBtn();
 		loginPageAndroid.verifyLoginTitle("LOGIN");
 		loginPageAndroid.selectEnterpriseName();
-		loginPageAndroid.loginToLegionWithCredentialOnMobile("Gordon.M", "Gordon.M");
-		loginPageAndroid.clickShiftOffers("Gordon.M");
+		loginPageAndroid.loginToLegionWithCredentialOnMobile("Jayne.H", "Jayne.H");
+		loginPageAndroid.clickShiftOffers("Jayne.H");
 	}
+
+
 
 
 }
