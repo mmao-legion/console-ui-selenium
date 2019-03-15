@@ -1,5 +1,6 @@
 package com.legion.tests;
 
+import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
 
 import com.aventstack.extentreports.ExtentReports;
@@ -142,8 +143,10 @@ public abstract class TestBase {
         if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice") && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){
             startServer();
             mobilePageFactory = createMobilePageFactory();
+//            setTestRailRunId(0);
         } else{
             Reporter.log("Script will be executing only for Web");
+//            setTestRailRunId(0);
         }
     }
 
@@ -170,7 +173,7 @@ public abstract class TestBase {
     }
     
     @BeforeMethod(alwaysRun = true)
-    protected void initTestFramework(Method method) throws AWTException, IOException, APIException, JSONException {
+    protected void initTestFramework(Method method, ITestContext context) throws AWTException, IOException, APIException, JSONException {
     	Date date=new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
     	String testName = ExtentTestManager.getTestName(method);
@@ -356,7 +359,7 @@ public abstract class TestBase {
     	LoginPage loginPage = pageFactory.createConsoleLoginPage();
     	loginPage.loginToLegionWithCredential(username, Password);
     	LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-    	locationSelectorPage.changeLocation(location);
+//    	locationSelectorPage.changeLocation(location);
 	    boolean isLoginDone = loginPage.isLoginDone();
 	    loginPage.verifyLoginDone(isLoginDone, location);
     }

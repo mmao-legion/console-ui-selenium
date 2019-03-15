@@ -8,6 +8,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.ITestContext;
 import org.testng.Reporter;
 import org.testng.util.Strings;
 
@@ -186,8 +187,7 @@ public class SimpleUtils {
 	}
 	    
 	    
-    public static HashMap<String, String> getDayMonthDateFormatForCurrentPastAndFutureWeek(int dayOfYear, int isoYear)
-	{
+    public static HashMap<String, String> getDayMonthDateFormatForCurrentPastAndFutureWeek(int dayOfYear, int isoYear) {
 		LocalDate dateBasedOnGivenParameter = Year.of(isoYear).atDay(dayOfYear);
 	    LocalDate pastWeekDate = dateBasedOnGivenParameter.minusWeeks(1);
 	    LocalDate futureWeekDate = dateBasedOnGivenParameter.plusWeeks(1);
@@ -745,7 +745,6 @@ public class SimpleUtils {
 
 	public static int addNUpdateTestCaseIntoTestRun(String testName, int sectionID, int testCaseId)
 	{
-
 		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
@@ -864,5 +863,8 @@ public class SimpleUtils {
 	    }
 	    return lastModifiedFile;
    }
+
+
+
 
 }

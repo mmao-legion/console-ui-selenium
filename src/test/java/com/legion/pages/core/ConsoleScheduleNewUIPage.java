@@ -2218,11 +2218,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	public boolean getScheduleBestMatchStatus()throws Exception {
 		boolean ScheduleBestMatchStatus = false;
-		if(areListElementVisible(scheduleStatus) || scheduleBestMatchStatus.size()!=0 && radionBtnSelectTeamMembers.size() == scheduleStatus.size() && searchWorkerName.size()!=0){
-			for(int i=0; i<scheduleBestMatchStatus.size();i++){
+		if(areListElementVisible(scheduleStatus,5) || scheduleBestMatchStatus.size()!=0 && radionBtnSelectTeamMembers.size() == scheduleStatus.size() && searchWorkerName.size()!=0){
+			for(int i=0; i<scheduleStatus.size();i++){
 				if(scheduleBestMatchStatus.get(i).getText().contains("Best")
 						|| scheduleStatus.get(i).getText().contains("Unknown") || scheduleStatus.get(i).getText().contains("Available")){
-					if(searchWorkerName.get(i).getText().contains("Gordon.M")){
+					if(searchWorkerName.get(i).getText().contains("Gordon.M") || searchWorkerName.get(i).getText().contains("Jayne.H")){
 						click(radionBtnSelectTeamMembers.get(i));
 						setTeamMemberName(searchWorkerName.get(i).getText());
 						ScheduleBestMatchStatus = true;
