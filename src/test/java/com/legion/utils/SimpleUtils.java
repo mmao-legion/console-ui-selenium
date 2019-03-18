@@ -643,7 +643,7 @@ public class SimpleUtils {
 
 	//added by Nishant
 
-	public static int addNUpdateTestCaseIntoTestRail(String testName, int sectionID)
+	public static int addNUpdateTestCaseIntoTestRail(String testName, int sectionID,ITestContext context)
 	{
 		int testCaseID = 0;
 
@@ -663,14 +663,16 @@ public class SimpleUtils {
 				client.setPassword(testRailPassword);
 				testCaseID = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client, sectionID);
 				if(testCaseID > 0){
-					addNUpdateTestCaseIntoTestRun(testName,sectionID,testCaseID);
+//					addNUpdateTestCaseIntoTestRun(testName,sectionID,testCaseID);
+					addNUpdateTestCaseIntoTestRun1(testName,sectionID,testCaseID,context);
 					return testCaseID;
 				}else{
 					Map<String, Object> data = new HashMap<String, Object>();
 					data.put("title", testName);
 					client.sendPost(addResultString,data );
 					testCaseID = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client, sectionID);
-					addNUpdateTestCaseIntoTestRun(testName,sectionID,testCaseID);
+//					addNUpdateTestCaseIntoTestRun(testName,sectionID,testCaseID);
+					addNUpdateTestCaseIntoTestRun1(testName,sectionID,testCaseID,context);
 					return testCaseID;
 				}
 
@@ -863,6 +865,105 @@ public class SimpleUtils {
 	    }
 	    return lastModifiedFile;
    }
+
+
+
+   //added by Nishant
+
+	public static int addNUpdateTestCaseIntoTestRun1(String testName, int sectionID, int testCaseId, ITestContext context)
+	{
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
+		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+
+		int TestRailRunId = 0;
+		int count = 0;
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date =null;
+		String strDate = null;
+
+		if((Integer) context.getAttribute("TestRailId")!=null){
+			int testRailId = (Integer) context.getAttribute("TestRailId");
+//			String addResultString = "update_run/" + getTestRailRunId();
+			String addResultString = "update_run/" + testRailId;
+			try {
+				// Make a connection with TestRail Server
+				APIClient client = new APIClient(testRailURL);
+				client.setUser(testRailUser);
+				client.setPassword(testRailPassword);
+				List cases = new ArrayList();
+				cases.add(new Integer(testCaseId));
+
+				Map<String, Object> data = new HashMap<String, Object>();
+				data.put("title", testName);
+//				try{
+//					date = format.parse(timestamp.toString());
+//					String[] arrDate = format.format(date).split(" ");
+//					strDate = arrDate[1];
+//					System.out.println(format.format(date));
+//				}catch(ParseException e){
+//					System.err.println(e.getMessage());
+//				}
+//
+//				data.put("name", "Automation Suite Test Run"+"" +strDate);
+				data.put("suite_id", suiteId);
+				data.put("include_all", false);
+				data.put("case_ids", cases);
+				JSONObject c = (JSONObject) client.sendPost(addResultString, data);
+//			JSONObject c = (JSONObject) client.sendGet("get_run/"+testCaseId);
+				long longTestRailRunId = (Long) c.get("id");
+				TestRailRunId = (int) longTestRailRunId;
+				System.out.println(TestRailRunId);
+				setTestRailRunId(TestRailRunId);
+			} catch (IOException ioException) {
+				System.err.println(ioException.getMessage());
+			} catch (APIException aPIException) {
+				System.err.println(aPIException.getMessage());
+			}
+		}else {
+			String addResultString = "add_run/" + testRailProjectID;
+			try {
+				// Make a connection with TestRail Server
+				APIClient client = new APIClient(testRailURL);
+				client.setUser(testRailUser);
+				client.setPassword(testRailPassword);
+				List cases = new ArrayList();
+				cases.add(new Integer(testCaseId));
+
+				Map<String, Object> data = new HashMap<String, Object>();
+				data.put("title", testName);
+				try{
+					date = format.parse(timestamp.toString());
+					String[] arrDate = format.format(date).split(" ");
+					strDate = arrDate[1];
+				}catch(ParseException e){
+					System.err.println(e.getMessage());
+				}
+				data.put("suite_id", suiteId);
+				data.put("name", "Automation Smoke"+"" +strDate);
+				data.put("include_all", false);
+				data.put("case_ids", cases);
+				JSONObject c = (JSONObject) client.sendPost(addResultString, data);
+//			JSONObject c = (JSONObject) client.sendGet("get_run/"+testCaseId);
+				long longTestRailRunId = (Long) c.get("id");
+				TestRailRunId = (int) longTestRailRunId;
+				System.out.println(TestRailRunId);
+				setTestRailRunId(TestRailRunId);
+				context.setAttribute("TestRailId", getTestRailRunId());
+			} catch (IOException ioException) {
+				System.err.println(ioException.getMessage());
+			} catch (APIException aPIException) {
+				System.err.println(aPIException.getMessage());
+			}
+		}
+
+		return TestRailRunId;
+
+	}
+
 
 
 

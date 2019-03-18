@@ -678,48 +678,48 @@ public class SanityTest extends TestBase{
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 		controlsNewUIPage.clickOnControlsConsoleMenu();
-		SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
-		context.setAttribute("TestRailId", getTestRailRunId());
-		controlsNewUIPage.clickOnControlsSchedulingPolicies();
-		controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
-		controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue());
-		Thread.sleep(1000);
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!"
-				,schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-		BasePage basePase = new BasePage();
-		Thread.sleep(1000);
-		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
-		boolean isWeekFoundToGenerate = false;
-		int minutesInAnHours = 60;
-		for(WebElement overviewWeek : overviewWeeks)
-		{
-			if(overviewWeek.getText().contains(ScheduleNewUITest.overviewWeeksStatus.Guidance.getValue()))
-			{
-				isWeekFoundToGenerate = true;
-				basePase.click(overviewWeek);
-				schedulePage.generateOrUpdateAndGenerateSchedule();
-				boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
-				if(isActiveWeekGenerated)
-					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' Generated Successfully.");
-				else
-					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' not Generated.", false);
-				schedulePage.clickOnDayView();
-				int shiftIntervalCountInAnHour = schedulePage.getScheduleShiftIntervalCountInAnHour();
-				if((minutesInAnHours /shiftIntervalCountInAnHour) == Integer.valueOf(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue().split(" ")[0]))
-					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText()
-							+"' Shift Interval Time matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue() +"'.");
-				else
-					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText()
-							+"' Shift Interval Time not matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue() +"'.", false);
-				break;
-			}
-		}
-		if(! isWeekFoundToGenerate)
-			SimpleUtils.report("No 'Guidance' week found to Ungenerate Schedule.");
+//		SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+//		context.setAttribute("TestRailId", getTestRailRunId());
+//		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+//		controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+//		controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue());
+//		Thread.sleep(1000);
+//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//		schedulePage.clickOnScheduleConsoleMenuItem();
+//		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+//		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!"
+//				,schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+//		BasePage basePase = new BasePage();
+//		Thread.sleep(1000);
+//		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+//		boolean isWeekFoundToGenerate = false;
+//		int minutesInAnHours = 60;
+//		for(WebElement overviewWeek : overviewWeeks)
+//		{
+//			if(overviewWeek.getText().contains(ScheduleNewUITest.overviewWeeksStatus.Guidance.getValue()))
+//			{
+//				isWeekFoundToGenerate = true;
+//				basePase.click(overviewWeek);
+//				schedulePage.generateOrUpdateAndGenerateSchedule();
+//				boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+//				if(isActiveWeekGenerated)
+//					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' Generated Successfully.");
+//				else
+//					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' not Generated.", false);
+//				schedulePage.clickOnDayView();
+//				int shiftIntervalCountInAnHour = schedulePage.getScheduleShiftIntervalCountInAnHour();
+//				if((minutesInAnHours /shiftIntervalCountInAnHour) == Integer.valueOf(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue().split(" ")[0]))
+//					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText()
+//							+"' Shift Interval Time matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue() +"'.");
+//				else
+//					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText()
+//							+"' Shift Interval Time not matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue() +"'.", false);
+//				break;
+//			}
+//		}
+//		if(! isWeekFoundToGenerate)
+//			SimpleUtils.report("No 'Guidance' week found to Ungenerate Schedule.");
 
 	}
 
@@ -734,10 +734,10 @@ public class SanityTest extends TestBase{
 	public void scheduleSubTabNavigationStoreManager(String username, String password, String browser, String location, ITestContext context) throws Exception {
 		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 		scheduleOverviewPage.loadScheduleOverview();
-		int testRailId = (Integer) context.getAttribute("TestRailId");
-		System.out.println("In Test1, Value stored in context is: "+testRailId);
-		SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
-		schedulePage.navigateScheduleDayWeekView(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Three.getValue());
+//		int testRailId = (Integer) context.getAttribute("TestRailId");
+//		System.out.println("In Test1, Value stored in context is: "+testRailId);
+//		SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+//		schedulePage.navigateScheduleDayWeekView(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Three.getValue());
 
 	}
 
