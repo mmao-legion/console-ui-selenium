@@ -27,6 +27,7 @@ public class ScreenshotManager {
 	
 	public static String takeScreenShot() {
 		File targetFile;
+		File screenshotFile;
 		File file = getScreenshotDir();
         String threadIdStr = String.valueOf(Thread.currentThread().getId());
         Date date = new Date();
@@ -39,7 +40,14 @@ public class ScreenshotManager {
                 File.separator + getCurrentTestMethodName() +
                 File.separator + threadIdStr + File.separator + getScreenshotConsoleName();
         targetFile = new File(screenshotFinalLocation, screenShotName);
-        File screenshotFile = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
+        if(MyThreadLocal.getPlatformName()!=null && MyThreadLocal.getPlatformName().equalsIgnoreCase("mobile")){
+        	screenshotFile = ((TakesScreenshot) getAndroidDriver()).getScreenshotAs(OutputType.FILE);
+        	MyThreadLocal.setPlatformName("");
+        }else{
+        	screenshotFile = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
+        }
+       
+//        File screenshotFile = ((TakesScreenshot) getAndroidDriver()).getScreenshotAs(OutputType.FILE);
         try {
             FileUtils.copyFile(screenshotFile, targetFile);
         } catch (IOException e) {

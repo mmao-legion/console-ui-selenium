@@ -15,4 +15,5 @@ public interface DashboardPage {
     public void navigateToDashboard() throws Exception;
     public void verifySuccessfulNavToDashboardnLoading() throws Exception;
 	public ArrayList<HashMap<String, Float>> getDashboardForeCastDataForAllLocation();
+	public HashMap<String, Float> getTodaysForcastData() throws Exception;
 }

@@ -1,5 +1,6 @@
 package com.legion.pages.core;
 
+import static com.legion.utils.MyThreadLocal.getAndroidDriver;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 import com.aventstack.extentreports.ExtentTest;
@@ -48,7 +49,6 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 
 
     public ConsoleLoginPage() {
-//    	super(driver);
     	PageFactory.initElements(getDriver(), this);
     }
 

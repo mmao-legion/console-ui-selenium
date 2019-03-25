@@ -5,10 +5,7 @@ import java.util.List;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
-import com.legion.tests.annotations.Automated;
-import com.legion.tests.annotations.Owner;
-import com.legion.tests.annotations.TestName;
-import com.legion.tests.annotations.UseAsTestRailId;
+import com.legion.tests.annotations.*;
 
 public class ExtentTestManager {
 	
@@ -101,21 +98,54 @@ public class ExtentTestManager {
         return automatedName;
     }
     
-    
+    public synchronized static String getMobilePlatformName(Method testMethod) {
+
+        String platformName = "";
+        // check if there is a Test annotation and get the test name
+        MobilePlatform mobilePlatform = testMethod.getAnnotation(MobilePlatform.class);
+        if (mobilePlatform != null && mobilePlatform.platform().length() > 0) {
+        	platformName = mobilePlatform.platform();
+        }
+
+        return platformName;
+    }
+
+
     public synchronized static int getTestRailId(Method testMethod) {
-		
+
         int testRailId = 0;
         // check if there is a Test annotation and get the test name
         UseAsTestRailId useAsTestRailId = testMethod.getAnnotation(UseAsTestRailId.class);
         if(useAsTestRailId != null && useAsTestRailId.testRailId()> 0){
         	testRailId = useAsTestRailId.testRailId();
         }
-       
+
         return testRailId;
     }
-    
-    
-   
+
+    public synchronized static int getTestRailSectionId(Method testMethod) {
+
+        int testRailSectionId = 0;
+        // check if there is a Test annotation and get the test rail section id
+        UseAsTestRailSectionId useAsTestRailSectionId = testMethod.getAnnotation(UseAsTestRailSectionId.class);
+        if(useAsTestRailSectionId != null && useAsTestRailSectionId.testRailSectionId()> 0){
+            testRailSectionId = useAsTestRailSectionId.testRailSectionId();
+        }
+
+        return testRailSectionId;
+    }
+
+    public synchronized static String getTestRunPhase(Method testMethod) {
+
+        String testRunPhaseName = "";
+        // check if there is a Test annotation and get the test run phase name
+        SanitySuite sanitySuite = testMethod.getAnnotation(SanitySuite.class);
+        if (sanitySuite != null && sanitySuite.sanity().length() > 0) {
+            testRunPhaseName = sanitySuite.sanity();
+        }
+
+        return testRunPhaseName;
+    }
 
      
 }

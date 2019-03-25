@@ -27,6 +27,9 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 	@FindBy(css = "div.sub-navigation-view-link.active")
 	private WebElement schedulePageSelectedSubTab;
 	
+	@FindBy (xpath = "//span[contains(text(),'Staffing Guidance')]")
+	private WebElement StaffingGuidanceSubMenu;
+	
 	@FindBy(css="[ng-click=\"selectDayWeekView($event, 'week')\"]")
 	private WebElement staffingGuidancePageWeekViewButton;
 	
@@ -74,6 +77,10 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 	
 	@FindBy(css="div.sch-control-kpi")
 	private List<WebElement> staffingGuidanceKPILabelsData;
+
+	@FindBy(css="span.sch-control-kpi-value.green")
+	private List<WebElement> staffingGuidanceKPIData;
+
 	
 	@FindBy(css="[ng-style=\"dropDownButtonStyle()\"]")
 	private WebElement staffingGuidanceWorkRoleFilterButton;
@@ -83,10 +90,37 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 	
 	@FindBy(className="sch-schedule-analyze-dismiss")
 	private WebElement staffingGuidanceAnalyzePopupCloseButton;
+	
+	@FindBy (css = "div.console-navigation-item-label.Schedule")
+	private WebElement consoleSchedulePageTabElement;
+	
+	@FindBy (css = "div[ng-if*='guidance-week-chart'] div.sch-slot-detail")
+	private List<WebElement> staffingGuidanceWeekView;
+	
+	@FindBy (css = "div.day-chart-graph-container div[aria-label*='A']")
+	private WebElement staffingGuidanceDayViewGraph;
 
 	
 	@FindBy(className = "schedule-view")
 	private WebElement staffingGuidancePageView;
+
+	@FindBy(css="[ng-click='gotoNextWeek($event)']")
+	private WebElement staffingGuidanceNextWeekArrow;
+
+	@FindBy(css = "div.sch-calendar-date-label")
+	private List<WebElement> staffingGuidanceWeekViewStart;
+
+	@FindBy (css = "div.sch-calendar-day-dimension.active-day")
+	private WebElement currentActiveDay;
+
+	@FindBy(css = "div.sch-calendar-day-dimension")
+	private List<WebElement> staffingGuidanceDayMonthDateLabels;
+
+	@FindBy (css="img.holiday-logo-image")
+	private WebElement storeClosedLogo;
+
+	@FindBy (css = "div.console-navigation-item-label.Dashboard")
+	private WebElement consoleDashboardTabElement;
 	
 	public ConsoleStaffingGuidancePage(){
 		PageFactory.initElements(getDriver(), this);
@@ -458,5 +492,98 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 		SimpleUtils.report("Staffing Guidance Active Work Role filter '"+ selectedWorkRole +"'");
 		return selectedWorkRole;
 	}
-	
+
+	//added by Gunjan
+	@Override
+	public boolean loadStaffingGuidance() throws Exception {
+		// TODO Auto-generated method stub
+		boolean flag=false;
+		if(isElementLoaded(StaffingGuidanceSubMenu)){
+			click(StaffingGuidanceSubMenu);
+			SimpleUtils.pass("Clicked on Staffing Guidance Sub Menu ");
+			if(isElementLoaded(projectedSalesPageDayViewButton)){
+				click(projectedSalesPageDayViewButton);
+				SimpleUtils.pass("Clicked on Staffing Guidance Day View");
+				if(isElementLoaded(staffingGuidanceDayViewGraph)){
+				flag = true;
+				SimpleUtils.pass("Staffing Guidance Loaded in DayView Successfully!");
+				}else{
+					SimpleUtils.fail("Staffing Guidance Not Loaded in DayView Successfully!", true);
+				}
+			}else{
+				SimpleUtils.pass("Day View button not found in Staffing Guidance");
+			}
+			if(isElementLoaded(staffingGuidancePageWeekViewButton)){
+				click(staffingGuidancePageWeekViewButton);
+				SimpleUtils.pass("Clicked on Staffing Guidance Week View");
+				if(staffingGuidanceWeekView.size()!=0){
+					flag = true;
+					SimpleUtils.pass("Staffing Guidance Loaded in Week View Successfully!");
+				}else{
+					SimpleUtils.fail("Staffing Guidance Not Loaded in Week View Successfully!", true);
+				}
+			}else{
+				SimpleUtils.pass("Week View button not found in Staffing Guidance");
+			}
+		}else{
+			SimpleUtils.fail("Staffing Guidance Sub Menu Tab Not Found", true);
+		}
+		return flag;
+	}
+
+	public void staffingGuidanceDayNavigation(String weekStarting) throws Exception{
+		if(isElementEnabled(projectedSalesPageDayViewButton)){
+			click(projectedSalesPageDayViewButton);
+			SimpleUtils.pass("Clicked on Staffing Guidance Day View of Week Starting " +weekStarting);
+			for(int i=0;i<staffingGuidanceDayMonthDateLabels.size();i++){
+				click(staffingGuidanceDayMonthDateLabels.get(i));
+				float guidanceHoursDayViewFinalValue = Float.parseFloat(staffingGuidanceKPIData.get(0).getText());
+				if(isElementLoaded(staffingGuidanceDayViewGraph,10) && guidanceHoursDayViewFinalValue>0){
+					SimpleUtils.pass("Staffing Guidance Successfully for " + currentActiveDay.getText()+ " and Guidance Value is " +staffingGuidanceKPILabelsData.get(0).getText());
+				}else if (!isElementLoaded(staffingGuidanceDayViewGraph,2) && isElementLoaded(storeClosedLogo, 10) && guidanceHoursDayViewFinalValue==0){
+					SimpleUtils.pass("Store Closed on " + currentActiveDay.getText()+ " and Guidance Value is " +staffingGuidanceKPILabelsData.get(0).getText());
+				}else{
+					SimpleUtils.fail("Staffing Guidance Not Loaded for " + currentActiveDay.getText()+ " and Guidance Value is " +staffingGuidanceKPILabelsData.get(0).getText(), true);
+				}
+			}
+		}else{
+			SimpleUtils.fail("Day View button not found in Staffing Guidance",false);
+		}
+
+	}
+
+
+	public void staffingGuidanceDayWeekNavigation() throws Exception{
+		if(isElementEnabled(staffingGuidancePageWeekViewButton)){
+			click(staffingGuidancePageWeekViewButton);
+			String weekStarting = staffingGuidanceWeekViewStart.get(0).getText();
+			SimpleUtils.pass("Clicked on Staffing Guidance Week View of Week Starting " +weekStarting);
+			float guidanceHoursFinalValue = Float.parseFloat(staffingGuidanceKPIData.get(0).getText());
+			if(isElementLoaded(staffingGuidanceWeekView.get(0),10) && guidanceHoursFinalValue>0){
+				//flag = true;
+				SimpleUtils.pass("Staffing Guidance Loaded Successfully! for week starting " +weekStarting+ " and Guidance value is  "+ staffingGuidanceKPILabelsData.get(0).getText());
+				staffingGuidanceDayNavigation(weekStarting);
+			}else{
+				SimpleUtils.fail("Staffing Guidance Not Loaded for week starting" +weekStarting+ " and Guidance value is  "+ staffingGuidanceKPILabelsData.get(0).getText(), true);
+			}
+		}else{
+			SimpleUtils.fail("Week View button not found in Staffing Guidance",false);
+		}
+	}
+
+	@Override
+	public void navigateStaffingGuidance(String nextWeekView, int weekCount) throws Exception{
+		if(isElementLoaded(StaffingGuidanceSubMenu)){
+			click(StaffingGuidanceSubMenu);
+			SimpleUtils.pass("Clicked on Staffing Guidance Sub Menu ");
+			for(int i = 0; i < weekCount; i++) {
+				if (nextWeekView.toLowerCase().contains("next") || nextWeekView.toLowerCase().contains("future")) {
+					staffingGuidanceDayWeekNavigation();
+					click(staffingGuidanceNextWeekArrow);
+				}
+			}
+		}else{
+			SimpleUtils.fail("Staffing Guidance Sub Menu Tab Not Found", false);
+		}
+	}
 }

@@ -8,6 +8,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.legion.test.core.mobile.LoginTest;
+import com.legion.tests.core.ScheduleNewUITest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -42,6 +44,21 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
 	@FindBy(css = "div.lgn-calendar.current-month")
 	private List<WebElement> overviewCalendarMonthsYears;
+
+	@FindBy(css = "div[ng-if='!loading']")
+    private WebElement scheduleTable;
+
+	@FindBy(className = "left-banner")
+	private List<WebElement> weeklyScheduleDateElements;
+
+    @FindBy(css = "div.calendar-week")
+    private WebElement calendar;
+
+    @FindBy (css = "div.console-navigation-item-label.Schedule")
+    private WebElement consoleSchedulePageTabElement;
+
+	@FindBy (xpath = "//span[contains(text(),'Overview')]")
+	private WebElement overviewTab;
 
 
 	public ConsoleScheduleOverviewPage()
@@ -311,6 +328,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
 	@Override
 	public List<WebElement> getOverviewScheduleWeeks() {
+		waitForSeconds(2);
 		return overviewScheduleWeekList;
 	}
 
@@ -321,7 +339,6 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 					overviewScheduleWeeksStatus.get(i).contains("Published") ||
 					overviewScheduleWeeksStatus.get(i).contains("Draft")&&
 					overviewScheduleWeeksStatus.get(i+1).contains("Guidance")){
-				System.out.println("pass ho gaya");
 			}
 
 		}
@@ -359,5 +376,98 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
 		}
 		return weekHours;
+	}
+
+	//added by Gunjan
+
+	@Override
+	public boolean loadScheduleOverview() throws Exception {
+		// TODO Auto-generated method stub
+		boolean flag=false;
+		if(isElementLoaded(consoleSchedulePageTabElement)){
+			consoleSchedulePageTabElement.click();
+			if(isElementLoaded(calendar)){
+				flag = true;
+				SimpleUtils.pass("Calendar on Schedule Overview Loaded Successfully!");
+			}else{
+				SimpleUtils.fail("Calendar on Schedule Overview Not Loaded Successfully!", true);
+			}
+			if(isElementLoaded(scheduleTable)){
+				flag = true;
+				SimpleUtils.pass("Schedule Table on Schedule Overview Loaded Successfully!");
+			}else{
+				SimpleUtils.fail("Schedule Table on Schedule Overview Not Loaded Successfully!", true);
+			}
+		}else{
+			SimpleUtils.fail("ScheduleTab left navigation menu not found", true);
+		}
+		return flag;
+	}
+
+
+	//added by Nishant
+
+	public void clickOnGuidanceBtnOnOverview(int index){
+		if(weeklyScheduleDateElements.size()!=0){
+			click(weeklyScheduleDateElements.get(index));
+			waitForSeconds(4);
+		}else{
+			SimpleUtils.fail("Click on Guidance On Schedule Overview Page",false);
+		}
+	}
+
+
+	@FindBy(css = "div.week")
+	private List<WebElement> calendarWeeks;
+
+	@Override
+	public int getScheduleOverviewWeeksCountCanBeCreatInAdvance()
+	{
+		boolean isPastWeek = true;
+		float scheduleWeekCountToBeCreated = 0;
+		for(WebElement week : calendarWeeks)
+		{
+			float currentWeekCount = 1;
+			if(week.getAttribute("class").contains("current-week"))
+				isPastWeek = false;
+			int weekDayCount = week.getText().split("\n").length;
+			if(weekDayCount < 7)
+				currentWeekCount = (float) 0.5;
+			boolean isCurrentWeekLocked = false;
+			if(week.getAttribute("class").contains("week-locked"))
+				isCurrentWeekLocked = true;
+
+			if(!isPastWeek && !isCurrentWeekLocked)
+			{
+				scheduleWeekCountToBeCreated = (scheduleWeekCountToBeCreated + currentWeekCount);
+			}
+
+		}
+		return (int) (scheduleWeekCountToBeCreated - 1);
+	}
+
+
+	@Override
+	public String getOverviewWeekDuration(WebElement webElement) throws Exception {
+		String weekDurationText = "";
+		if(isElementLoaded(webElement)) {
+			WebElement weekdurationElement = webElement.findElement(By.cssSelector("div.left-banner"));
+			if(isElementLoaded(weekdurationElement))
+				weekDurationText = weekdurationElement.getText().replace("\n", " ");
+			else
+				SimpleUtils.fail("Overview Page: Unable to get Week Duration.", true);
+		}
+		else
+			SimpleUtils.fail("Overview Page: Unable to get Week Duration.", true);
+		return weekDurationText;
+	}
+
+	public void clickOverviewTab(){
+		if(isElementEnabled(overviewTab)){
+			click(overviewTab);
+			SimpleUtils.pass("Clicked on Overview tab successfully");
+		}else{
+			SimpleUtils.fail("Not able to click on Overview tab successfully",false);
+		}
 	}
 }

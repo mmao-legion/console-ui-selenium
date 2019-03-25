@@ -14,4 +14,6 @@ public interface SalesForecastPage {
 	public void navigateToSalesForecastTabDayView() throws Exception;
 	public Boolean isSalesForecastTabDayViewActive() throws Exception;
 	public Boolean verifyCurrentUserWithUserJobTitle(HashMap<String, String> propertyMap, String jobTitle);
+	public boolean loadSalesForecast() throws Exception;
+	public void loadSalesForecastforCurrentNFutureWeek(String nextWeekView, int weekCount) throws Exception;
 }

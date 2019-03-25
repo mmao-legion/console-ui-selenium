@@ -4,6 +4,8 @@ import com.legion.pages.core.ConsoleAnalyticsPage;
 import com.legion.pages.core.ConsoleControlsNewUIPage;
 import com.legion.pages.core.ConsoleControlsPage;
 import com.legion.pages.core.ConsoleLoginPage;
+import com.legion.pages.core.ConsoleProfileNewUIPage;
+import com.legion.pages.core.ConsoleProjectedSalesPage;
 import com.legion.pages.core.ConsoleSchedulePage;
 import com.legion.pages.core.ConsoleStaffingGuidancePage;
 import com.legion.pages.core.ConsoleSalesForecastPage;
@@ -21,6 +23,8 @@ import com.legion.pages.ControlsPage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
+import com.legion.pages.ProfileNewUIPage;
+import com.legion.pages.ProjectedSalesPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.StaffingGuidancePage;
 import com.legion.pages.SalesForecastPage;
@@ -110,5 +114,15 @@ public class ConsoleWebPageFactory implements PageFactory {
 	@Override
 	public ControlsNewUIPage createControlsNewUIPage() {
 		return new ConsoleControlsNewUIPage();
+	}
+	
+	@Override
+	public ProjectedSalesPage createProjectedSalesPage() {
+		return new ConsoleProjectedSalesPage();
+	}
+
+	@Override
+	public ProfileNewUIPage createProfileNewUIPage() {
+		return new ConsoleProfileNewUIPage();
 	}
 }

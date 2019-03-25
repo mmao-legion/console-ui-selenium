@@ -71,6 +71,17 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy (css = ".center.ng-scope")
 	private WebElement controlsPage;
 
+	@FindBy (css = "div.col-sm-8.text-left")
+	private WebElement todaysForecast;
+	
+	@FindBy (css = "div.col-sm-4.text-left")
+	private WebElement startingSoon;
+	
+	@FindBy (css = "div.fx-center")
+	private WebElement welcomeText;
+	
+	
+	
     public ConsoleDashboardPage() {
     	PageFactory.initElements(getDriver(), this);
     }
@@ -85,7 +96,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     		return false;
     	}
     	if(isElementLoaded(dashboardTodaysForecastDiv)){
-    		SimpleUtils.pass("Today's Fore Cast Labels loaded Successfully on Dashboard!");
+    		SimpleUtils.pass("Today's ForeCast Labels loaded Successfully on Dashboard!");
     	}else{
     		return false;
     	}
@@ -122,7 +133,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	if(isElementLoaded(dashboardUpcomingShiftContainer))
     		SimpleUtils.pass("Dashboard Page 'Upcoming Shift Container' Section Loaded Successfully!");
     	else
-    		SimpleUtils.fail("Dashboard Page 'Upcoming Shift Container' Section Loaded Successfully!",true);
+    		SimpleUtils.fail("Dashboard Page 'Upcoming Shift Container' Section not Loaded Successfully!",true);
     	
     	/*
     	 *  Check whether 'Today's Forecast' Section appear or not on Dashboard.
@@ -130,7 +141,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	if(isElementLoaded(dashboardTodaysForecastSection))
     		SimpleUtils.pass("Dashboard Page 'Today's Forecast' Section Loaded Successfully!");
     	else
-    		SimpleUtils.fail("Dashboard Page 'Today's Forecast' Section Loaded Successfully!",true);
+    		SimpleUtils.fail("Dashboard Page 'Today's Forecast' Section not Loaded Successfully!",true);
     	
     	/*
     	 *  Check whether 'Projected Demand Graph' Section appear or not on Dashboard.
@@ -138,7 +149,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	if(isElementLoaded(dashboardProjectedDemandGraph))
     		SimpleUtils.pass("Dashboard Page 'Projected Demand Graph' Section Loaded Successfully!");
     	else
-    		SimpleUtils.fail("Dashboard Page 'Projected Demand Graph' Section Loaded Successfully!",true);
+    		SimpleUtils.fail("Dashboard Page 'Projected Demand Graph' Section not Loaded Successfully!",true);
 
     }
 
@@ -234,5 +245,44 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return forecastDataForAllLocations;
 	}
 
+	@FindBy(css = "div.forecast")
+	private WebElement todaysForecastDataDiv;
 	
+	@Override
+	public HashMap<String, Float> getTodaysForcastData() throws Exception
+	{
+		HashMap<String, Float> todaysForcastData = new HashMap<String, Float>();
+		String demandForecastLabel = "Demand Forecast";
+		String guidanceHoursLabel = "Guidance";
+		String scheduledHoursLabel = "Scheduled";
+		String otherHoursLabel = "Other";
+		if(isElementLoaded(todaysForecastDataDiv))
+		{
+			String[] todaysForecastString = todaysForecastDataDiv.getText().split("\n");
+			if(todaysForecastString[1].toLowerCase().contains(demandForecastLabel.toLowerCase())) 
+				todaysForcastData.put("demandForecast" , Float.valueOf(todaysForecastString[0].split(" ")[0]));
+			else
+				SimpleUtils.fail("Dashboard Page: Unable to fetch Demand Forecast data.", true);
+
+			if(todaysForecastString[3].toLowerCase().contains(guidanceHoursLabel.toLowerCase())) 
+				todaysForcastData.put("guidanceHours" , Float.valueOf(todaysForecastString[2].split(" ")[0]));
+			else
+				SimpleUtils.fail("Dashboard Page: Unable to fetch Guidance Hours.", true);
+
+			if(todaysForecastString[5].toLowerCase().contains(scheduledHoursLabel.toLowerCase())) 
+				todaysForcastData.put("scheduledHours" , Float.valueOf(todaysForecastString[4].split(" ")[0]));
+			else
+				SimpleUtils.fail("Dashboard Page: Unable to fetch schedule Hours.", true);
+
+			if(todaysForecastString[7].toLowerCase().contains(otherHoursLabel.toLowerCase())) 
+				todaysForcastData.put("otherHours" , Float.valueOf(todaysForecastString[6].split(" ")[0]));
+			else
+				SimpleUtils.fail("Dashboard Page: Unable to fetch Other Hours.", true);
+		}
+		else
+		{
+			SimpleUtils.fail("Dashboard Page: Today's Forecast not loaded.", false);
+		}
+		return todaysForcastData;
+	}
 }

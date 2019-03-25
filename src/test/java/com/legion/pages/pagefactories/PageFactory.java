@@ -3,6 +3,8 @@ import com.legion.pages.AnalyticsPage;
 import com.legion.pages.ControlsNewUIPage;
 import com.legion.pages.ControlsPage;
 import com.legion.pages.LoginPage;
+import com.legion.pages.ProfileNewUIPage;
+import com.legion.pages.ProjectedSalesPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.StaffingGuidancePage;
 import com.legion.pages.SalesForecastPage;
@@ -48,6 +50,10 @@ public interface PageFactory {
     
     TimeSheetPage createTimeSheetPage(); 
     
-    ControlsNewUIPage createControlsNewUIPage(); 
+    ControlsNewUIPage createControlsNewUIPage();
+
+	ProjectedSalesPage createProjectedSalesPage(); 
+	
+	ProfileNewUIPage createProfileNewUIPage();
    
 }

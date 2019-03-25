@@ -171,6 +171,15 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy(css = "div.lg-no-timeclock__block.lg-no-timeclock__block--add")
 	private WebElement addClockBtnOnDetailPopup;
 	
+	@FindBy(css= "lg-button[label=\"Export\"]")
+	private WebElement exportTimesheetBtn;
+	
+	@FindBy(css= "lg-button[label=\"Export Anyway\"]")
+	private WebElement exportAnywayTimesheetBtn;
+	
+	@FindBy(css = "div.card-carousel-fixed")
+	private WebElement timesheetCarouselCardHoursDiv;
+	
 	
 	String timeSheetHeaderLabel = "Timesheet";
 	public ConsoleTimeSheetPage(){
@@ -505,7 +514,10 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		if(isElementLoaded(payPeriodBtn))
 		{
 			if(! payPeriodBtn.getAttribute("class").toLowerCase().contains(activeButtonClassKeyword))
+			{
 				click(payPeriodBtn);
+				SimpleUtils.pass("Timesheet duration type '"+payPeriodBtn.getText()+"' selected successfully.");
+			}
 		}
 		else
 			SimpleUtils.fail("Timesheet: Pay Period Button not loaded!", false);
@@ -518,8 +530,10 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		String activeButtonClassKeyword = "selected";
 		if(isElementLoaded(timeSheetDayViewBtn))
 		{
-			if(! timeSheetDayViewBtn.getAttribute("class").toLowerCase().contains(activeButtonClassKeyword))
+			if(! timeSheetDayViewBtn.getAttribute("class").toLowerCase().contains(activeButtonClassKeyword)) {
 				click(timeSheetDayViewBtn);
+				SimpleUtils.pass("Timesheet duration type '"+ timeSheetDayViewBtn.getText() +"' selected successfully.");
+			}
 		}
 		else
 			SimpleUtils.fail("Timesheet: Pay Period Button not loaded!", false);
@@ -1118,6 +1132,94 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	}
 	
 
+	@FindBy(css = "div.lg-timesheet-table")
+	private WebElement timeSheetDetailsTable;
 	
+	@Override
+	public boolean isTimeSheetDetailsTableLoaded() throws Exception
+	{
+		if(isElementLoaded(timeSheetDetailsTable, 20) && timeSheetDetailsTable.getText().trim().length() > 0)
+		{
+			SimpleUtils.pass("Timesheet loaded successfully for duration Type: '"+ getTimeSheetActiveDurationType() +"'.");			
+			return true;
+		}
+		return false;
+	}
 	
+	@FindBy(css = "div[ng-repeat=\"button in $ctrl.buttons\"]")
+	private List<WebElement> timeSheetDurationBtns;
+	
+	@Override
+	public void clickOnWeekView()
+	{
+		String weekViewLabel = "week";
+		if(timeSheetDurationBtns.size() > 0)
+		{
+			for(WebElement timeSheetDuration : timeSheetDurationBtns)
+			{
+				if(timeSheetDuration.getText().toLowerCase().contains(weekViewLabel.toLowerCase()))
+				{
+					click(timeSheetDuration);
+					SimpleUtils.pass("Timesheet duration type '"+ timeSheetDuration.getText() +"' selected successfully.");
+				}
+			}
+		}
+		else
+			SimpleUtils.fail("TimeSheet Duration Buttons not loaded.", false);
+	}
+	
+	@Override
+	public String getTimeSheetActiveDurationType()
+	{
+		String timeSheetActiveDurationType = "";
+		if(timeSheetDurationBtns.size() > 0)
+		{
+			for(WebElement timeSheetDuration : timeSheetDurationBtns)
+			{
+				if(timeSheetDuration.getAttribute("class").contains("selected"))
+					timeSheetActiveDurationType = timeSheetDuration.getText();
+			}
+		}
+		else
+			SimpleUtils.fail("TimeSheet Duration Buttons not loaded.", false);
+		
+		return timeSheetActiveDurationType;
+	}
+
+
+
+	@Override
+	public void exportTimesheet() throws Exception {
+		if(isElementLoaded(exportTimesheetBtn)) {
+			click(exportTimesheetBtn);
+			if(isElementLoaded(exportAnywayTimesheetBtn))
+				click(exportAnywayTimesheetBtn);
+		}
+		else
+			SimpleUtils.fail("Timesheet Page: Timesheet 'Export' button not loaded.", false);
+	}
+
+
+
+	@Override
+	public HashMap<String, Float> getTotalTimeSheetCarouselCardsHours() throws Exception {
+		HashMap<String, Float> timeSheetCarouselCardsHours = new HashMap<String, Float>();
+		if(isElementLoaded(timesheetCarouselCardHoursDiv)) {
+			String[] carouselCardText = timesheetCarouselCardHoursDiv.getAttribute("innerText").split("\n");
+			for(String carouselCardRow : carouselCardText) {
+				if(carouselCardRow.toLowerCase().contains("clocked")) {
+					String[] carouselCardRowCols = carouselCardRow.split("\t");
+					if(carouselCardRowCols.length > 3)
+					{
+						timeSheetCarouselCardsHours.put("regularHours", Float.valueOf(carouselCardRowCols[1]));
+						timeSheetCarouselCardsHours.put("overtimeHours", Float.valueOf(carouselCardRowCols[2]));
+						timeSheetCarouselCardsHours.put("doubleTimeHours", Float.valueOf(carouselCardRowCols[3]));
+					}
+				}
+			}
+		}
+		else
+			SimpleUtils.fail("TimeSheet Page: Hours Carousel Card not loaded.", false);
+		return timeSheetCarouselCardsHours;
+	}
 }

@@ -1,5 +1,7 @@
 package com.legion.tests.testframework;
 
+import io.appium.java_client.events.api.general.AppiumWebDriverEventListener;
+
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
@@ -10,11 +12,9 @@ import org.openqa.selenium.support.events.WebDriverEventListener;
 import com.legion.pages.BasePage;
 import com.legion.tests.TestBase;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.getURL;
 import static com.legion.utils.MyThreadLocal.*;
 
-public class LegionWebDriverEventListener implements WebDriverEventListener {
+public class LegionWebDriverEventListener implements WebDriverEventListener, AppiumWebDriverEventListener {
 	
 	@Override
 	public void beforeAlertAccept(WebDriver driver) {
@@ -152,6 +152,18 @@ public class LegionWebDriverEventListener implements WebDriverEventListener {
 
 	@Override
 	public void onException(Throwable throwable, WebDriver driver) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void afterChangeValueOf(WebElement arg0, WebDriver arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void beforeChangeValueOf(WebElement arg0, WebDriver arg1) {
 		// TODO Auto-generated method stub
 		
 	}
