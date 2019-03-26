@@ -1,5 +1,6 @@
 package com.legion.pages;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.openqa.selenium.WebElement;
@@ -143,6 +144,47 @@ public interface ControlsNewUIPage {
 			, int committedHoursWeeks) throws Exception;
 
 	public void selectSchdulingPolicyGroupsTabByLabel(String tabLabel) throws Exception;
+
+	public HashMap<String, ArrayList<String>> getLocationInformationEditableOrNonEditableFields() throws Exception;
+
+	public boolean isControlsConsoleMenuAvailable() throws Exception;
+
+	public HashMap<String, ArrayList<String>> getSchedulingPoliciesSchedulesSectionEditableOrNonEditableFields() throws Exception;
+
+	public HashMap<String, ArrayList<String>> getSchedulingPoliciesShiftsSectionEditableOrNonEditableFields() throws Exception;
+
+	public HashMap<String, ArrayList<String>> getSchedulingPoliciesBudgetSectionEditableOrNonEditableFields() throws Exception;
+
+	public HashMap<String, ArrayList<String>> getSchedulingPoliciesTeamAvailabilityManagementSectionEditableOrNonEditableFields()
+			throws Exception;
+
+	public HashMap<String, ArrayList<String>> getSchedulingPoliciesTimeOffSectionEditableOrNonEditableFields() throws Exception;
+
+	public HashMap<String, ArrayList<String>> getSchedulingPoliciesSchedulingPolicyGroupsSectionEditableOrNonEditableFields()
+			throws Exception;
+
+	public HashMap<String, ArrayList<String>> getScheduleCollaborationEditableOrNonEditableFields() throws Exception;
+
+	public void clickOnScheduleCollaborationOpenShiftAdvanceBtn() throws Exception;
+
+	public HashMap<String, ArrayList<String>> getComplianceEditableOrNonEditableFields() throws Exception;
+
+	public void selectUsersAndRolesSubTabByLabel(String label) throws Exception;
+
+	public HashMap<String, ArrayList<String>> getUsersAndRolesAddNewUserPageEditableOrNonEditableFields() throws Exception;
+
+	public HashMap<String, ArrayList<String>> getUsersAndRolesEditUserPageEditableOrNonEditableFields(String userFirstName) throws Exception;
+
+	public HashMap<String, ArrayList<String>> getUsersAndRolesUpdateEmployeeJobTitleEditableOrNonEditableFields(
+			String employeeJobTitle) throws Exception;
+
+	public HashMap<String, ArrayList<String>> getUsersAndRolesCreateNewEmployeeJobTitleEditableOrNonEditableFields(
+			String employeeJobTitle, String newEmployeeJobTitleRole) throws Exception;
+
+	public HashMap<String, ArrayList<String>> getUsersAndRolesUpdateBadgesEditableOrNonEditableFields(String BadgesLabel)
+			throws Exception;
+
+	public HashMap<String, ArrayList<String>> getUsersAndRolesNewBadgeEditableOrNonEditableFields() throws Exception;
 
 	
 }

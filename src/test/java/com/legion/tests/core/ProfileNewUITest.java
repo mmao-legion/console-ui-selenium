@@ -331,4 +331,5 @@ public class ProfileNewUITest  extends TestBase{
           	SimpleUtils.report("Profile Page: New Time Off Request status is  not '"+ expectedRequestStatus
 	          			+"', status found '"+requestStatus+"'.");
 	}
+	
 }
