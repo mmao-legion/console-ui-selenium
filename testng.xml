@@ -108,11 +108,40 @@
     <!--</test>-->
 
 
+    <test name="Team Test">
+        <classes>
+            <class name="com.legion.tests.core.TeamTestKendraScott2">
+                <methods>
+                    <!--<include name="validateTeamTabAsStoreManager"/>-->
+                    <include name="VerifyWhetherManagerCanApproveTimeOffRequestAsTeamMember"/>
+                    <include name="VerifyWhetherManagerCanRejectTimeOffRequestAsTeamMember"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
     <!--<test name="Team Test">-->
         <!--<classes>-->
-            <!--<class name="com.legion.tests.core.TeamTestKendraScott2">-->
+            <!--<class name="com.legion.tests.core.TeamTest">-->
                 <!--<methods>-->
-                    <!--<include name="validateTeamTabAsStoreManager"/>-->
+                    <!--<include name="validateTeamTab"/>-->
+                <!--</methods>-->
+            <!--</class>-->
+        <!--</classes>-->
+    <!--</test>-->
+
+
+    <!--<test name="Sanity Test">-->
+        <!--<classes>-->
+            <!--<class name="com.legion.tests.core.SanityTest">-->
+                <!--<methods>-->
+                    <!--&lt;!&ndash;<include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="verifyKPIReportExportFunctionalityAsStoreManager"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="validateScheduleSmartCardsAsStoreManager"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="validateScheduleGenerationFunctionalityAsStoreManager"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="validateChangeLocationAsStoreManager"/>&ndash;&gt;-->
+                    <!--<include name="validateGuidanceWeekAsStoreManager"/>-->
                 <!--</methods>-->
             <!--</class>-->
         <!--</classes>-->
@@ -160,15 +189,40 @@
         <classes>
             <class name="com.legion.tests.core.SanityTest">
                 <methods>
-                    <include name="updateControlsSectionLoadingAsInternalAdmin"/>
-                    <include name="scheduleSubTabNavigationStoreManager"/>
-                    <include name="projectedTrafficSubTabNavigationStoreManager"/>
+                    <!--<include name="updateControlsSectionLoadingAsInternalAdmin"/>-->
+                    <!--<include name="scheduleSubTabNavigationStoreManager"/>-->
+                    <!--<include name="projectedTrafficSubTabNavigationStoreManager"/>-->
                     <include name="staffingGuidanceSubTabNavigationStoreManager"/>
-                    <include name="consoleAndMobileIntegrationForShiftOffers"/>
+                    <!--<include name="consoleAndMobileIntegrationForShiftOffers"/>-->
                 </methods>
             </class>
         </classes>
     </test>
+
+
+    <!--<test name="Sanity Test">-->
+        <!--<classes>-->
+            <!--<class name="com.legion.tests.core.SanityTest">-->
+                <!--<methods>-->
+                    <!--&lt;!&ndash;<include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="verifyKPIReportExportFunctionalityAsStoreManager"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="validateScheduleSmartCardsAsStoreManager"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="validateScheduleGenerationFunctionalityAsStoreManager"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="validateChangeLocationAsStoreManager"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="validateGuidanceWeekAsStoreManager"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="validateScheduleGenerationAsStoreManager"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="validateSchedulePublishAsStoreManager"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="gotoLoginPageTest"/>&ndash;&gt;-->
+                    <!--<include name="updateControlsSectionLoadingAsInternalAdmin"/>-->
+                <!--</methods>-->
+            <!--</class>-->
+        <!--</classes>-->
+    <!--</test>-->
+
+
+
+
+
 
 </suite> <!-- Suite -->
 
