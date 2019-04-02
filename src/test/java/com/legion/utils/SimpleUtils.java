@@ -643,7 +643,7 @@ public class SimpleUtils {
 
 	//added by Nishant
 
-	public static int addNUpdateTestCaseIntoTestRail(String testName, int sectionID,ITestContext context)
+	public static int addNUpdateTestCaseIntoTestRail(String testName, int sectionID)
 	{
 		int testCaseID = 0;
 
@@ -663,16 +663,16 @@ public class SimpleUtils {
 				client.setPassword(testRailPassword);
 				testCaseID = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client, sectionID);
 				if(testCaseID > 0){
-//					addNUpdateTestCaseIntoTestRun(testName,sectionID,testCaseID);
-					addNUpdateTestCaseIntoTestRun1(testName,sectionID,testCaseID,context);
+					addNUpdateTestCaseIntoTestRun(testName,sectionID,testCaseID);
+//					addNUpdateTestCaseIntoTestRun1(testName,sectionID,testCaseID,context);
 					return testCaseID;
 				}else{
 					Map<String, Object> data = new HashMap<String, Object>();
 					data.put("title", testName);
 					client.sendPost(addResultString,data );
 					testCaseID = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client, sectionID);
-//					addNUpdateTestCaseIntoTestRun(testName,sectionID,testCaseID);
-					addNUpdateTestCaseIntoTestRun1(testName,sectionID,testCaseID,context);
+					addNUpdateTestCaseIntoTestRun(testName,sectionID,testCaseID);
+//					addNUpdateTestCaseIntoTestRun1(testName,sectionID,testCaseID,context);
 					return testCaseID;
 				}
 
