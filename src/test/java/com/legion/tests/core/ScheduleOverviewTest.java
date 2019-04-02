@@ -24,9 +24,7 @@ import com.legion.utils.SimpleUtils;
 public class ScheduleOverviewTest extends TestBase{
 
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-
-
-
+    
 	@Override
 	  @BeforeMethod()
 	  public void firstTest(Method testMethod, Object[] params) throws Exception{

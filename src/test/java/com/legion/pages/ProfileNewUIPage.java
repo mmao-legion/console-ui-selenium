@@ -24,34 +24,4 @@ public interface ProfileNewUIPage {
 	public String getTimeOffRequestStatus(String timeOffReasonLabel, String timeOffExplanationText,
 			String timeOffStartDate, String timeOffEndDate) throws Exception;
 
-	public boolean isEditingProfileSectionLoaded() throws Exception;
-
-	public boolean isPersonalDetailsSectionLoaded() throws Exception;
-
-	public boolean isChangePasswordButtonLoaded() throws Exception;
-
-	public boolean isEngagementDetrailsSectionLoaded() throws Exception;
-
-	public boolean isProfileBadgesSectionLoaded() throws Exception;
-
-	public String getProfilePageActiveTabLabel() throws Exception;
-
-	public boolean isShiftPreferenceSectionLoaded() throws Exception;
-
-	public boolean isMyAvailabilitySectionLoaded() throws Exception;
-
-	public boolean isCreateTimeOffButtonLoaded() throws Exception;
-
-	public boolean isTimeOffPendingBlockLoaded() throws Exception;
-
-	public boolean isTimeOffApprovedBlockLoaded() throws Exception;
-
-	public boolean isTimeOffRejectedBlockLoaded() throws Exception;
-
-	public boolean isTimeOffRequestsSectionLoaded() throws Exception;
-
-	public String getProfilePageActiveLocation() throws Exception;
-
-	public int getAllTimeOffRequestCount();
-
 }

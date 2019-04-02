@@ -47,32 +47,17 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 	@FindBy(css="[ng-click=\"gotoPreviousWeek($event)\"]")
 	private WebElement salesForecastCalendarNavigationPreviousWeekArrow;
 	
-	@FindBy(css = "div.sch-calendar-day-dimension")
-	private List<WebElement> salesForecastWeekViewDayMonthDateLabels;
-
-	@FindBy(css = "div.sch-calendar-date-label")
-	private List<WebElement> salesForecastWeekViewStart;
+	@FindBy(className = "sch-calendar-day-dimension")
+	private List<WebElement>salesForecastWeekViewDayMonthDateLabels;
 	
 	@FindBy(className="kpi")
 	private List<WebElement> salesForecastDataCards;
-
+	
 	@FindBy (css = "div[ng-if='!storeClosed()']")
 	private WebElement projectedTrafficGraphWeekView;
 	
 	@FindBy (css = "div.console-navigation-item-label.Schedule")
 	private WebElement consoleSchedulePageTabElement;
-
-	@FindBy (css = "span.sch-control-kpi-value.blue")
-	private WebElement forecastShoppersValue;
-
-	@FindBy (xpath = "//span[contains(text(), 'Partially Solved')]")
-	private WebElement forecastGraphError;
-	
-	@FindBy (css = "div.sch-calendar-day-dimension.active-day")
-	private WebElement currentActiveDay;
-
-
-
 	
 	public ConsoleSalesForecastPage(){
 		PageFactory.initElements(getDriver(), this);
@@ -202,29 +187,29 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 		return false;
 	}
 	
-//	@Override
-//	public void navigateSalesForecastWeekViewPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount) throws Exception
-//	{
-//		if(isSalesForecastTabActive())
-//		{
-//			for(int i = 0; i < weekCount; i++)
-//			{
-//				if(nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future"))
-//				{
-//					salesForecastCalendarNavigationNextWeekArrow.click();
-//				}
-//				else
-//				{
-//					salesForecastCalendarNavigationPreviousWeekArrow.click();
-//				}
-//			}
-//		}
-//		else {
-//			SimpleUtils.fail("Projected Sales Tab not Active!", false);
-//		}
-//
-//	}
-//
+	@Override
+	public void navigateSalesForecastWeekViewTpPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount) throws Exception
+	{
+		if(isSalesForecastTabActive())
+		{
+			for(int i = 0; i < weekCount; i++)
+			{
+				if(nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future"))
+				{
+					salesForecastCalendarNavigationNextWeekArrow.click();
+				}
+				else
+				{
+					salesForecastCalendarNavigationPreviousWeekArrow.click();
+				}
+			}
+		}
+		else {
+			SimpleUtils.fail("Projected Sales Tab not Active!", false);
+		}
+		
+	}
+	
 	@Override
 	public Boolean validateWeekViewWithDateFormat(String legionDateFormat)
 	{
@@ -294,143 +279,45 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 		
 		return salesForecastData;
 	}
-
-	@Override
-	public void navigateSalesForecastWeekViewTpPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount) throws Exception {
-
-	}
-
+	
 	//added by Gunjan
-
-	public boolean loadSalesForecastForWeekView() throws Exception {
-		// TODO Auto-generated method stub
-		boolean flag=false;
-			if(isElementLoaded(salesForecastPageWeekViewButton,10)){
-				click(salesForecastPageWeekViewButton);
-				SimpleUtils.pass("Clicked on Projected Traffic Week View");
-				if(isElementLoaded(projectedTrafficGraphWeekView,10)){
-					flag = true;
-					SimpleUtils.pass("Projected Traffic Loaded in Week View Successfully!");
-				}else{
-					SimpleUtils.fail("Projected Traffic Not Loaded in Week View Successfully!", true);
-				}
-			}else{
-				SimpleUtils.fail("Week View button not found in Projected Traffic",true);
-			}
-		return flag;
-	}
-
-	public boolean loadSalesForecastForDayView() throws Exception {
-		// TODO Auto-generated method stub
-		boolean flag=false;
-			if(isElementLoaded(salesForecastPageDayViewButton,10)){
-				click(salesForecastPageDayViewButton);
-				SimpleUtils.pass("Clicked on Projected Traffic Day View");
-				if(isElementLoaded(projectedTrafficGraphWeekView,10)){
-					flag = true;
-					SimpleUtils.pass("Projected Traffic Loaded in DayView Successfully!");
-				}else{
-					SimpleUtils.fail("Projected Traffic Not Loaded in DayView Successfully!", true);
-				}
-			}else{
-				SimpleUtils.fail("Day View button not found in Projected Traffic",true);
-			}
-			return flag;
-	}
-
+	
 	@Override
 	public boolean loadSalesForecast() throws Exception {
 		// TODO Auto-generated method stub
 		boolean flag=false;
-		if(isElementLoaded(ProjectedTrafficSubMenu,10)){
+		if(isElementLoaded(ProjectedTrafficSubMenu)){
 			click(ProjectedTrafficSubMenu);
 			SimpleUtils.pass("Clicked on Projected Traffic Sub Menu");
-			if(isElementLoaded(salesForecastPageDayViewButton,10)){
+			if(isElementLoaded(salesForecastPageDayViewButton)){
 				click(salesForecastPageDayViewButton);
 				SimpleUtils.pass("Clicked on Projected Traffic Day View");
-				if(isElementLoaded(projectedTrafficGraphWeekView,10)){
+				if(isElementLoaded(projectedTrafficGraphWeekView)){
 				flag = true;
 				SimpleUtils.pass("Projected Traffic Loaded in DayView Successfully!");
 				}else{
-					SimpleUtils.fail("Projected Traffic Not Loaded in DayView ", true);
+					SimpleUtils.fail("Projected Traffic Not Loaded in DayView Successfully!", true);
 				}
 			}else{
-				SimpleUtils.fail("Day View button not found in Projected Traffic",true);
+				SimpleUtils.pass("Day View button not found in Projected Traffic");
 			}
-			if(isElementLoaded(salesForecastPageWeekViewButton,10)){
+			if(isElementLoaded(salesForecastPageWeekViewButton)){
 				click(salesForecastPageWeekViewButton);
 				SimpleUtils.pass("Clicked on Projected Traffic Week View");
-				if(isElementLoaded(projectedTrafficGraphWeekView,10)){
+				if(isElementLoaded(projectedTrafficGraphWeekView)){
 				flag = true;
 				SimpleUtils.pass("Projected Traffic Loaded in Week View Successfully!");
 				}else{
-					SimpleUtils.fail("Projected Traffic Not Loaded in Week View ", true);
+					SimpleUtils.fail("Projected Traffic Not Loaded in Week View Successfully!", true);
 				}
 			}else{
-				SimpleUtils.fail("Week View button not found in Projected Traffic",true);
+				SimpleUtils.pass("Week View button not found in Projected Traffic");
 			}
 		}else{
-			SimpleUtils.fail("Projected Traffic Sub Menu Tab Not Found", false);
+			SimpleUtils.fail("Projected Traffic Sub Menu Tab Not Found", true);
 		}
 		return flag;
 	}
 
-	public void dayNavigationProjectedTraffic(String weekStarting)throws Exception{
-		if(isElementEnabled(salesForecastPageDayViewButton)){
-			click(salesForecastPageDayViewButton);
-			SimpleUtils.pass("Clicked on Projected Traffic Day View of Week Staring " +weekStarting);
-			for(int i=0;i<salesForecastWeekViewDayMonthDateLabels.size();i++){
-				//int forecastShoppersValueFinal = Integer.parseInt(forecastShoppersValue.getText());
-				click(salesForecastWeekViewDayMonthDateLabels.get(i));
-				if(isElementLoaded(projectedTrafficGraphWeekView,10) && Integer.parseInt(forecastShoppersValue.getText())>0){
-					SimpleUtils.pass("Projected Traffic Loaded in DayView Successfully! for Day " + currentActiveDay.getText()+ " and Value for Forecast is " +forecastShoppersValue.getText());
-				}else if (isElementLoaded(projectedTrafficGraphWeekView,10) && Integer.parseInt(forecastShoppersValue.getText())==0 && !isElementLoaded(forecastGraphError,3)){
-					SimpleUtils.pass("Store Closed on " + currentActiveDay.getText()+ " and Value for Forecast is " +forecastShoppersValue.getText());
-				}else{
-					SimpleUtils.fail("Projected Traffic Not Loaded in DayView for Day " + currentActiveDay.getText()+ " and Value for Forecast is " +forecastShoppersValue.getText(), true);
-				}
-			}
-		}else{
-			SimpleUtils.fail("Day View button not found in Projected Traffic",false);
-		}
-	}
-
 	
-	public void projectedTrafficDayWeekNavigation() throws Exception{
-		if(isElementEnabled(salesForecastPageWeekViewButton)){
-			click(salesForecastPageWeekViewButton);
-			String weekStarting = salesForecastWeekViewStart.get(0).getText();
-			SimpleUtils.pass("Clicked on Projected Traffic Week View of Week Starting " +weekStarting);
-			int forecastShoppersValueFinal = Integer.parseInt(forecastShoppersValue.getText());
-			if(isElementLoaded(projectedTrafficGraphWeekView,10) && forecastShoppersValueFinal>0){
-				//flag = true;
-				SimpleUtils.pass("Projected Traffic Loaded in Week View Successfully! for week starting " +weekStarting+ " Number of Shoppers is "+ forecastShoppersValue.getText());
-				dayNavigationProjectedTraffic(weekStarting);
-			}else{
-				SimpleUtils.fail("Projected Traffic Not Loaded in Week View for week starting " +weekStarting+ " Number of Shoppers is "+ forecastShoppersValue.getText(), true);
-			}
-		}else{
-			SimpleUtils.fail("Week View button not found in Projected Traffic",false);
-		}
-
-	}
-
-	@Override
-	public void loadSalesForecastforCurrentNFutureWeek(String nextWeekView, int weekCount) throws Exception{
-		//boolean flag=false;
-			if(isElementLoaded(ProjectedTrafficSubMenu,10)){
-				click(ProjectedTrafficSubMenu);
-				SimpleUtils.pass("Clicked on Projected Traffic Sub Menu");
-				for(int i = 0; i < weekCount; i++) {
-					if (nextWeekView.toLowerCase().contains("next") || nextWeekView.toLowerCase().contains("future")) {
-						projectedTrafficDayWeekNavigation();
-						click(salesForecastCalendarNavigationNextWeekArrow);
-					}
-				}
-			}else{
-				SimpleUtils.fail("Projected Traffic Sub Menu Tab Not Found", false);
-			}
-		}
 }
-	
-

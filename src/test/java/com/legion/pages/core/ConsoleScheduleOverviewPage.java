@@ -8,8 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.legion.test.core.mobile.LoginTest;
-import com.legion.tests.core.ScheduleNewUITest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -56,9 +54,6 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
     @FindBy (css = "div.console-navigation-item-label.Schedule")
     private WebElement consoleSchedulePageTabElement;
-
-	@FindBy (xpath = "//span[contains(text(),'Overview')]")
-	private WebElement overviewTab;
 
 
 	public ConsoleScheduleOverviewPage()
@@ -460,14 +455,5 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		else
 			SimpleUtils.fail("Overview Page: Unable to get Week Duration.", true);
 		return weekDurationText;
-	}
-
-	public void clickOverviewTab(){
-		if(isElementEnabled(overviewTab)){
-			click(overviewTab);
-			SimpleUtils.pass("Clicked on Overview tab successfully");
-		}else{
-			SimpleUtils.fail("Not able to click on Overview tab successfully",false);
-		}
 	}
 }

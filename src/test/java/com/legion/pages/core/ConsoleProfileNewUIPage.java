@@ -23,54 +23,15 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@FindBy(className="console-navigation-item")
 	private List<WebElement>consoleNavigationMenuItems;
+	
 	@FindBy(css = "div.profile")
 	private WebElement profilePageSection;
+	
 	@FindBy(css="div.collapsible-title-text")
 	private List<WebElement> profilePageSubSections;
+	
 	@FindBy(css="a[ng-click=\"newTimeOff()\"]")
 	private WebElement newTimeOffBtn;
-	@FindBy(css = "div.reasons-reason ")
-	private List<WebElement> timeOffReasons;
-	@FindBy(css = "textarea[placeholder=\"Optional explanation\"]")
-	private WebElement timeOffExplanationtextArea;
-	@FindBy(css= "div.real-day")
-	private List<WebElement> calendarDates;
-	@FindBy(css="a.calendar-nav-left")
-	private WebElement timeOffCalendarLeftArrow;
-	@FindBy(css="a.calendar-nav-right")
-	private WebElement timeOffCalendarRightArrow;
-	@FindBy(css="ranged-calendar[range-start=\"rangeStart\"]")
-	private List<WebElement> timeOffCalendarMonths;
-	@FindBy(css="button[ng-click=\"apply($event)\"]")
-	private WebElement timeOffApplyBtn;
-	@FindBy(css="div[ng-if=\"!editing.profile\"]")
-	private List<WebElement> editingProfileSections;
-	@FindBy(css="div.quick-profile")
-	private WebElement quickProfileDiv;
-	@FindBy(css="lgn-action-button[ng-click=\"changePassword()\"]")
-	private WebElement changePasswordBtn;
-	@FindBy(css="div[ng-if=\"canViewWorkerEngagement()\"]")
-	private WebElement engagementDetrailsSection;
-	@FindBy(css="div.badge-section")
-	private WebElement badgeSection;
-	@FindBy(css="div.collapsible-title.collapsible-title-open")
-	private List<WebElement> collapsibleTabsTitle;
-	@FindBy(css="div[ng-if=\"!isPreferenceEdit()\"]")
-	private WebElement shiftPreferenceSection;
-	@FindBy(css="div[ng-if=\"!isPreferenceEdit()\"]")
-	private WebElement myAvailabilitySection;
-	@FindBy(css="div.count-block.count-block-pending")
-	private WebElement timeOffPendingBlock;
-	@FindBy(css="div.count-block.count-block-approved")
-	private WebElement timeOffApprovedBlock;
-	@FindBy(css="div.count-block.count-block-rejected")
-	private WebElement timeOffRejectedBlock;
-	@FindBy(css="div.timeoff-requests")
-	private WebElement timeOffRequestsSection;
-	@FindBy(css="div.location-selector-location-name-text")
-	private WebElement locationSelectorLocationName;
-	@FindBy(css="div.timeoff-requests-request.row-fx")
-	private List<WebElement> timeOffRequestRows;
 	
 	@Override
 	public void clickOnProfileConsoleMenu() throws Exception {
@@ -89,6 +50,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public boolean isProfilePageLoaded() throws Exception
 	{
 		if(isElementLoaded(profilePageSection)) {
+			SimpleUtils.pass("Profile Page loaded successfully.");
 			return true;
 		}
 		return false;
@@ -124,6 +86,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("Controls Page: 'Create Time Off' button not loaded.", false);
 	}
 	
+	@FindBy(css = "div.reasons-reason ")
+	private List<WebElement> timeOffReasons;
 	
 	@Override
 	public void selectTimeOffReason(String reasonLabel) throws Exception
@@ -145,6 +109,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("Controls Page: 'Time Off Reasons' not loaded.", false);
 	}
 	
+	@FindBy(css = "textarea[placeholder=\"Optional explanation\"]")
+	private WebElement timeOffExplanationtextArea;
 	
 	@Override
 	public void updateTimeOffExplanation(String explanationText) throws Exception
@@ -157,7 +123,20 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("Controls Page: 'Optional explanation' text Area not loaded.", false);
 	}
 	
-
+	@FindBy(css= "div.real-day")
+	private List<WebElement> calendarDates;
+	
+	@FindBy(css="a.calendar-nav-left")
+	private WebElement timeOffCalendarLeftArrow;
+	
+	@FindBy(css="a.calendar-nav-right")
+	private WebElement timeOffCalendarRightArrow;
+	
+	@FindBy(css="ranged-calendar[range-start=\"rangeStart\"]")
+	private List<WebElement> timeOffCalendarMonths;
+	
+	@FindBy(css="button[ng-click=\"apply($event)\"]")
+	private WebElement timeOffApplyBtn;
 	@Override
 	public void selectTimeOffDuration(String startDate, String endDate) throws Exception
 	{		
@@ -244,7 +223,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("Profile Page: Unable to save New Time Off Request.", false);
 			
 	}
-	
+	@FindBy(css="div.timeoff-requests-request.row-fx")
+	private List<WebElement> timeOffRequestRows;
 	
 	@Override
 	public void createNewTimeOffRequest(String timeOffReasonLabel, String timeOffExplanationText,
@@ -293,203 +273,4 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		
 		return requestStatusText;
 	}
-	
-
-	@Override
-	public boolean isEditingProfileSectionLoaded() throws Exception
-	{
-		if(editingProfileSections.size() > 0)
-		{
-			
-			WebElement profileSection = editingProfileSections.get(0);
-			if(profileSection.getText().length() > 0) {
-				SimpleUtils.pass("Profile Page: Editing Profile Section Loaded successfully.");
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public boolean isPersonalDetailsSectionLoaded() throws Exception
-	{
-		if(isElementLoaded(quickProfileDiv))
-		{
-			if(quickProfileDiv.getText().length() > 0) {
-				SimpleUtils.pass("Profile Page: Personal Details Section on 'About Me' tab Loaded successfully.");
-				return true;
-			}
-		}
-		return false;
-	}
-	
-
-	
-	@Override
-	public boolean isChangePasswordButtonLoaded() throws Exception
-	{
-		if(isElementLoaded(changePasswordBtn) && changePasswordBtn.isDisplayed())
-		{
-			SimpleUtils.pass("Profile Page: Change Password Button on 'About Me' tab Loaded successfully.");
-			return true;
-		}
-		return false;
-	}
-	
-
-	@Override
-	public boolean isEngagementDetrailsSectionLoaded() throws Exception
-	{
-		if(isElementLoaded(engagementDetrailsSection))
-		{
-			if(engagementDetrailsSection.getText().length() > 0) {
-				SimpleUtils.pass("Profile Page: Engagement Detrails Section on 'About Me' tab Loaded successfully.");
-				return true;
-			}
-		}
-		return false;
-	}
-	
-
-	@Override
-	public boolean isProfileBadgesSectionLoaded() throws Exception
-	{
-		if(isElementLoaded(badgeSection))
-		{
-			if(badgeSection.getText().length() > 0) {
-				SimpleUtils.pass("Profile Page: Badges Section on 'About Me' tab Loaded successfully.");
-				return true;
-			}
-		}
-		return false;
-	}
-	
-
-	@Override
-	public String getProfilePageActiveTabLabel() throws Exception
-	{
-		String activeTabLabel = "";
-		if(collapsibleTabsTitle.size() > 0) {
-			for(WebElement tabTitle: collapsibleTabsTitle) {
-				if(tabTitle.isDisplayed()) {
-					activeTabLabel = tabTitle.getText();
-					break;
-				}
-			}
-		}
-		else
-			SimpleUtils.fail("Profile Page: Tabs not loaded.", true);
-		return activeTabLabel;
-	}
-	
-
-	@Override
-	public boolean isShiftPreferenceSectionLoaded() throws Exception
-	{
-		String myShiftPreferencesTabTitle = "My Shift Preferences";
-		if(isElementLoaded(shiftPreferenceSection))
-		{
-			if(! shiftPreferenceSection.isDisplayed())
-				selectProfilePageSubSectionByLabel(myShiftPreferencesTabTitle);
-			if(shiftPreferenceSection.getText().length() > 0) {
-				SimpleUtils.pass("Profile Page: "+myShiftPreferencesTabTitle+" Section on 'My Work Preferences' tab Loaded successfully.");
-				return true;
-			}
-		}
-		return false;
-	}
-	
-
-	@Override
-	public boolean isMyAvailabilitySectionLoaded() throws Exception
-	{
-		String myAvailabilityTabTitle = "My Availability";
-		if(isElementLoaded(myAvailabilitySection))
-		{
-			if(! myAvailabilitySection.isDisplayed())
-				selectProfilePageSubSectionByLabel(myAvailabilityTabTitle);
-			if(myAvailabilitySection.getText().length() > 0) {
-				SimpleUtils.pass("Profile Page: "+myAvailabilityTabTitle+" Section on 'My Work Preferences' tab Loaded successfully.");
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	public boolean isCreateTimeOffButtonLoaded() throws Exception
-	{
-		if(isElementLoaded(newTimeOffBtn) && newTimeOffBtn.isDisplayed()) {
-			SimpleUtils.pass("Profile Page: Create Time off button on 'My Time Off' tab Loaded successfully.");
-				return true;
-		}
-		return false;
-	}
-	
-
-	@Override
-	public boolean isTimeOffPendingBlockLoaded() throws Exception
-	{
-		if(isElementLoaded(timeOffPendingBlock) && timeOffPendingBlock.isDisplayed() && timeOffPendingBlock.getText().length() > 0)
-		{
-				SimpleUtils.pass("Profile Page: 'Time Off Pending Block' Section on 'My Time Off' tab Loaded successfully.");
-				return true;
-		}
-		return false;
-	}
-	
-
-	@Override
-	public boolean isTimeOffApprovedBlockLoaded() throws Exception
-	{
-		if(isElementLoaded(timeOffApprovedBlock) && timeOffApprovedBlock.isDisplayed() && timeOffApprovedBlock.getText().length() > 0)
-		{
-				SimpleUtils.pass("Profile Page: 'Time Off Approved Block' Section on 'My Time Off' tab Loaded successfully.");
-				return true;
-		}
-		return false;
-	}
-	
-
-	@Override
-	public boolean isTimeOffRejectedBlockLoaded() throws Exception
-	{
-		if(isElementLoaded(timeOffRejectedBlock) && timeOffRejectedBlock.isDisplayed() && timeOffRejectedBlock.getText().length() > 0)
-		{
-				SimpleUtils.pass("Profile Page: 'Time Off Rejected Block' Section on 'My Time Off' tab Loaded successfully.");
-				return true;
-		}
-		return false;
-	}
-	
-
-	@Override
-	public boolean isTimeOffRequestsSectionLoaded() throws Exception
-	{
-		if(isElementLoaded(timeOffRequestsSection) && timeOffRequestsSection.isDisplayed() && timeOffRequestsSection.getText().length() > 0)
-		{
-				SimpleUtils.pass("Profile Page: 'Time Off Requests Section' Section on 'My Time Off' tab Loaded successfully.");
-				return true;
-		}
-		return false;
-	}
-	
-	
-	@Override
-	public String getProfilePageActiveLocation() throws Exception
-	{
-		String activeLocation = "";
-		if(isElementLoaded(locationSelectorLocationName) && locationSelectorLocationName.isDisplayed())
-		{
-			activeLocation = timeOffRequestsSection.getText();
-		}
-		return activeLocation;
-	}
-	
-	@Override
-	public int getAllTimeOffRequestCount() {
-		int timeOffRequestCount = timeOffRequestRows.size();
-		return timeOffRequestCount;
-	}
-	
 }

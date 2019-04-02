@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import com.legion.test.core.mobile.LoginTest;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -26,6 +28,8 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
 public class ScheduleTest extends TestBase{
+
+	  SchedulePage schedulePage = null;
 	  private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 	  @Override
 	  @BeforeMethod()
@@ -298,7 +302,7 @@ public class ScheduleTest extends TestBase{
 		@Enterprise(name = "KendraScott2_Enterprise")
 		@TestName(description = "FOR-596:Budget modal header should display the week instead of UNDEFINED")
 	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	    public void enterBudgetPopUpHeaderStoreManager(String username, String password, String browser, String location) throws Throwable {
+	    public void enterBudgetPopUpHeaderInternalAdmin(String username, String password, String browser, String location) throws Throwable {
 	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
 	    	schedulePage.clickOnScheduleConsoleMenuItem();
 	    	schedulePage.validateBudgetPopUpHeader(weekViewType.Next.getValue(), weekCount.Six.getValue());
@@ -310,7 +314,7 @@ public class ScheduleTest extends TestBase{
 		@Enterprise(name = "KendraScott2_Enterprise")
 		@TestName(description = "TP-100: FOR-620: Budget smartcard shows budget hrs when no budget was entered (if navigate from a week with budget)")
 	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	    public void noBudgetHourDisplayWhenBudgetNotEnteredStoreManager(String username, String password, String browser, String location) throws Throwable {
+	    public void noBudgetHourDisplayWhenBudgetNotEnteredInternalAdmin(String username, String password, String browser, String location) throws Throwable {
 	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
 	    	schedulePage.clickOnScheduleConsoleMenuItem();
 	    	schedulePage.noBudgetDisplayWhenBudgetNotEntered(weekViewType.Next.getValue(), weekCount.Six.getValue());
@@ -321,11 +325,12 @@ public class ScheduleTest extends TestBase{
   		@Enterprise(name = "KendraScott2_Enterprise")
   		@TestName(description = "TP-102: LEG 5500 : Budget Hours shown in budget modal (715 hrs) does not match the budgeted hours shown in schedule (1287 hrs)")
   	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-  	    public void budgetHourInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
+  	    public void budgetHourInScheduleNBudgetSmartCardInternalAdmin(String username, String password, String browser, String location) throws Throwable {
   	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
   	    	schedulePage.clickOnScheduleConsoleMenuItem();
   	    	schedulePage.budgetHourInScheduleNBudgetedSmartCard(weekViewType.Next.getValue(), weekCount.Six.getValue());
   	    }
+
 	    
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")

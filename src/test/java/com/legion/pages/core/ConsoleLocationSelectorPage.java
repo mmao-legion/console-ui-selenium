@@ -54,7 +54,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public Boolean isChangeLocationButtonLoaded() throws Exception
     {
-        if(isElementLoaded(locationSelectorButton,10)) {
+        if(isElementLoaded(locationSelectorButton)) {
             return true;
         }
         return false;
