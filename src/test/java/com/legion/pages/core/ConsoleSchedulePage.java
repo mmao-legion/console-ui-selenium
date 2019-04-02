@@ -1603,6 +1603,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	}
 
     @Override
+    public void validateComplianceFilterSmartCard() throws Exception {
+
+    }
+
+    @Override
     public void generateOrUpdateAndGenerateSchedule() throws Exception {
 
     }
