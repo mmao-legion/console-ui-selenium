@@ -119,4 +119,5 @@ public interface SchedulePage {
 	public void updateScheduleOperatingHours(String day, String startTime, String endTime) throws Exception;
 	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch) throws Exception;
 	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception;
+	public void validateComplianceFilterSmartCard() throws Exception;
 }

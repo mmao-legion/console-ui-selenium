@@ -2936,4 +2936,33 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 		return false;
 	}
+
+	@FindBy (css="card-carousel-card[ng-if='compliance'] div.card-carousel-card-smart-card-required")
+    private WebElement complianceSmartCard;
+
+	@FindBy (css="div.sch-shift-transpose-data-container")
+    private List<WebElement> shiftWeekView;
+
+	@FindBy (css = "div.card-carousel-card-smart-card-required h1")
+    private WebElement complianceShiftCount;
+
+	@FindBy (css = "span.card-carousel-link")
+    private WebElement viewShiftLink;
+
+
+
+
+
+
+
+    @Override
+    public void validateComplianceFilterSmartCard() throws Exception {
+        if(isElementLoaded(complianceSmartCard)){
+            String[] ShiftCount = complianceShiftCount.getText().split(" ");
+            viewShiftLink.click();
+
+        }else{
+            SimpleUtils.report("This week has no compliance");
+        }
+    }
 }
