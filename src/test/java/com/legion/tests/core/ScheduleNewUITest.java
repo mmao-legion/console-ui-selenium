@@ -1971,7 +1971,7 @@ public class ScheduleNewUITest extends TestBase{
 	    @Enterprise(name = "KendraScott2_Enterprise")
 	    @TestName(description = "TP-146 : Validate Today's Forecast should have a non-0 number[If zero, it should be for the day store is closed]")
 	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	    public void validateDashboardTodaysForcastAsInternalAdmin(String browser, String username, String password, String location)
+	    public void validateDashboardTodaysForcastAsStoreManager(String browser, String username, String password, String location)
 	    		throws Exception {
 	    	DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);

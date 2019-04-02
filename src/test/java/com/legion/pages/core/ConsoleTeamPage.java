@@ -115,6 +115,34 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	 @FindBy(css=".count.ng-binding")
 	 private WebElement teamTabSize;	
 	 
+	 @FindBy(css="input.search-input-box")
+    private WebElement teamMemberSearchBox;
+
+    @FindBy(css="span.name")
+    private List<WebElement> teamMembersList;
+    @FindBy(css="div.timeoff-requests-request.row-fx")
+    private List<WebElement> timeOffRequestRows;
+
+    @FindBy(css="span.request-buttons-approve")
+    private WebElement timeOffApproveBtn;
+
+    @FindBy(css="button.lgn-action-button-success")
+    private WebElement timeOffRequestApprovalCOnfirmBtn;
+    @FindBy(css="div[ng-if=\"canShowTodos()\"]")
+    private WebElement toDoBtnToOpen;
+    @FindBy(css="div[ng-click=\"closeTodoPanelClick()\"]")
+    private WebElement toDoBtnToClose;
+    @FindBy(css="div[ng-show=\"show\"]")
+    private WebElement toDoPopUpWindow;
+    @FindBy(css="todo-card[todo-type=\"todoType\"]")
+    private List<WebElement> todoCards;
+
+    @FindBy(css="a[ng-click=\"goRight()\"]")
+    private WebElement nextToDoCardArrow;
+
+    @FindBy(css="button.lgn-action-button-success")
+    private WebElement confirmTimeOffApprovalBtn;
+
 	 public ConsoleTeamPage() {
 		PageFactory.initElements(getDriver(), this);
     }
@@ -288,11 +316,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 
 
-  		@FindBy(css="input.search-input-box")
-  		private WebElement teamMemberSearchBox;
 
-  		@FindBy(css="span.name")
-  		private List<WebElement> teamMembersList;
 		@Override
 		public void searchAndSelectTeamMemberByName(String username) throws Exception {
 			boolean isteamMemberFound = false;
@@ -314,14 +338,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				SimpleUtils.fail("Team Page: Team Member '"+username+"' not found.", false);
 		}
 
-		@FindBy(css="div.timeoff-requests-request.row-fx")
-		private List<WebElement> timeOffRequestRows;
-
-		@FindBy(css="span.request-buttons-approve")
-		private WebElement timeOffApproveBtn;
-
-		@FindBy(css="button.lgn-action-button-success")
-		private WebElement timeOffRequestApprovalCOnfirmBtn;
 		@Override
 		public void approvePendingTimeOffRequest() throws Exception {
 			String pendingStatusLabel = "PENDING";
@@ -358,8 +374,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			return pendingRequestCount;
 		}
 
-		@FindBy(css="div[ng-if=\"canShowTodos()\"]")
-		private WebElement toDoBtnToOpen;
 		@Override
 		public void openToDoPopupWindow() throws Exception {
 			if(isElementLoaded(toDoBtnToOpen)) {
@@ -372,9 +386,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}
 		}
 
-
-		@FindBy(css="div[ng-click=\"closeTodoPanelClick()\"]")
-		private WebElement toDoBtnToClose;
 		@Override
 		public void closeToDoPopupWindow() throws Exception {
 			if(isElementLoaded(toDoBtnToClose)) {
@@ -387,8 +398,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}
 		}
 
-		@FindBy(css="div[ng-show=\"show\"]")
-		private WebElement toDoPopUpWindow;
 		public boolean isToDoWindowOpened() throws Exception{
 			if(isElementLoaded(toDoPopUpWindow)) {
 				if(toDoPopUpWindow.getAttribute("class").contains("is-shown"))
@@ -396,18 +405,11 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}
 			return false;
 		}
-
-		@FindBy(css="todo-card[todo-type=\"todoType\"]")
-		private List<WebElement> todoCards;
-
-		@FindBy(css="a[ng-click=\"goRight()\"]")
-		private WebElement nextToDoCardArrow;
-
-		@FindBy(css="button.lgn-action-button-success")
-		private WebElement confirmTimeOffApprovalBtn;
+		
 
 		@Override
-		public void approveOrRejectTimeOffRequestFromToDoList(String userName, String timeOffStartDuration, String timeOffEndDuration, String action) throws Exception{
+		public void approveOrRejectTimeOffRequestFromToDoList(String userName, String timeOffStartDuration,
+				String timeOffEndDuration, String action) throws Exception{
 			boolean isTimeOffRequestToDoCardFound = false;
 			String timeOffRequestCardText = "TIME OFF REQUEST";
 			String timeOffStartDate = timeOffStartDuration.split(",")[0].split(" ")[1];

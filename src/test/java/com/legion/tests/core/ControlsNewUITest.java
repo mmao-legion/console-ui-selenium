@@ -4,11 +4,13 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import com.legion.pages.DashboardPage;
+import com.legion.pages.LoginPage;
 import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.BasePage;
@@ -48,6 +50,17 @@ public class ControlsNewUITest extends TestBase{
 	        public String getValue() { return value; }
 	}
 	
+	public enum usersAndRolesSubTabs{
+		AllUsers("All Users"),
+		AccessByJobTitles("Access by Job Titles"),
+		Badges("Badges");
+		private final String value;
+		usersAndRolesSubTabs(final String newValue) {
+            value = newValue;
+        }
+        public String getValue() { return value; }
+	}
+	
 	public enum dayWeekOrPayPeriodCount{
 		Zero(0),
 		One(1),
@@ -60,6 +73,18 @@ public class ControlsNewUITest extends TestBase{
           value = newValue;
       }
       public int getValue() { return value; }
+	}
+	
+	public enum schedulingPolicyGroupsTabs{
+		  FullTimeSalariedExempt("Full Time Salaried Exempt"),
+		  FullTimeSalariedNonExempt("Full Time Salaried Non Exempt"),
+		  FullTimeHourlyNonExempt("Full Time Hourly Non Exempt"),
+          PartTimeHourlyNonExempt("Part Time Hourly Non Exempt");
+			private final String value;
+			schedulingPolicyGroupsTabs(final String newValue) {
+	            value = newValue;
+	        }
+	        public String getValue() { return value; }
 	}
 	
 	@Override
@@ -264,7 +289,7 @@ public class ControlsNewUITest extends TestBase{
   @Automated(automated =  "Automated")
   @Owner(owner = "Naval")
   @Enterprise(name = "KendraScott2_Enterprise")
-  @TestName(description = "147: Onboarding - Check navigation to different section in controls tab[On click it should not logout].")
+  @TestName(description = "TP-147: Onboarding - Check navigation to different section in controls tab[On click it should not logout].")
   @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
   public void updateControlsSectionLoadingAsStoreManager(String browser, String username, String password, String location)
   		throws Exception {
@@ -320,7 +345,7 @@ public class ControlsNewUITest extends TestBase{
   
   @Automated(automated =  "Automated")
   @Owner(owner = "Naval")
-  @Enterprise(name = "Coffee_Enterprise")
+  @Enterprise(name = "KendraScott2_Enterprise")
   @TestName(description = "TP-154: Controls :- Shift Interval minutes for the enterprise should get updated successfully.")
   @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
   public void updateAndValidateShiftIntervalTimeAsInternalAdmin(String browser, String username, String password, String location)
@@ -334,7 +359,6 @@ public class ControlsNewUITest extends TestBase{
       controlsNewUIPage.clickOnControlsSchedulingPolicies();
       controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
       controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue());
-      
       Thread.sleep(1000);
       SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
       schedulePage.clickOnScheduleConsoleMenuItem();
@@ -353,8 +377,7 @@ public class ControlsNewUITest extends TestBase{
       	{
       		isWeekFoundToGenerate = true;
       		basePase.click(overviewWeek);
-      		schedulePage.generateSchedule();
-      		Thread.sleep(1000);
+      		schedulePage.generateOrUpdateAndGenerateSchedule();
       		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
       		if(isActiveWeekGenerated)
       			SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' Generated Successfully.");
@@ -460,4 +483,718 @@ public class ControlsNewUITest extends TestBase{
       }
   }
   
+  
+  @Automated(automated =  "Automated")
+  @Owner(owner = "Naval")
+  @Enterprise(name = "KendraScott2_Enterprise")
+  @TestName(description = "TP-158: Controls:- data for Scheduling Policies should be saved and display the success message.")
+  @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+  public void updateAndValidateSchedulingPoliciesAllFieldsAsInternalAdmin(String browser, String username, String password, String location)
+  		throws Exception {
+			
+      DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+      SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);  
+      
+      ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+      controlsNewUIPage.clickOnControlsConsoleMenu();
+      SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+      
+      controlsNewUIPage.clickOnControlsSchedulingPolicies();
+      Thread.sleep(2000);
+      String activeLocation = controlsNewUIPage.getSchedulingPoliciesActiveLocation();
+      SimpleUtils.report("Controls Page: Scheduling Policies Active Location '"+ activeLocation +"'.");
+  	  HashMap<String, String> schedulingPoliciesData = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SchedulingPoliciesData.json");
+
+  	  String publishWindowAdvanceWeeks = schedulingPoliciesData.get("Schedule_Publish_Window");
+  	  String planningWindowAdvanceWeeks = schedulingPoliciesData.get("Schedule_Planning_Window");
+  	  String firstDayOfWeek = schedulingPoliciesData.get("Schedule_Week_Begin_Day");
+  	  String openingTime = schedulingPoliciesData.get("Earliest_Opening_Time");
+  	  String closingTime = schedulingPoliciesData.get("Latest_Closing_Time");
+  	  String advanceDaysToFinalize = schedulingPoliciesData.get("Advance_Finalize_Schedule_Days");
+  	  String beforeBufferCount = schedulingPoliciesData.get("Additional_Schedule_Hours_Before");
+  	  String afterBufferCount = schedulingPoliciesData.get("Additional_Schedule_Hours_After");
+  	  String minShiftLengthHour = schedulingPoliciesData.get("Minimum_Shift_Length");
+  	  String maxShiftLengthHour = schedulingPoliciesData.get("Maximum_Shift_Length");
+  	  String maxWeekDaysToAutoScheduleLabel = schedulingPoliciesData.get("Maximum_Number_Of_Days_To_AutoSchedule");
+  	  String shiftBreakIcons = schedulingPoliciesData.get("Display_Shift_Break_Icons");
+  	  String intervalTimeLabel = schedulingPoliciesData.get("Shift_Interval_Minutes");
+  	  String isLaborBudgetToApply = schedulingPoliciesData.get("Labor_Budget_To_Apply");
+  	  String budgetType = schedulingPoliciesData.get("Budget_Type");
+  	  String availabilityLockModeLabel = schedulingPoliciesData.get("Availability_Lock_Mode");
+  	  String unavailableWorkersHour = schedulingPoliciesData.get("Unavailable_Workers_Hour");
+  	  String availabilityToleranceMinutes = schedulingPoliciesData.get("Availability_Tolerance_Minutes");
+  	  String canWorkerRequestTimeOffValue = schedulingPoliciesData.get("Can_Employees_Request_Time_Off");
+  	  String maxWorkersTimeOfPerDayCount = schedulingPoliciesData.get("Max_Workers_TimeOf_Per_Day_Count");
+  	  String noticePeriodToRequestTimeOff = schedulingPoliciesData.get("Notice_Period_To_Request_TimeOff");
+  	  String isShowTimeOffReasons = schedulingPoliciesData.get("Is_Show_TimeOff_Reasons");
+
+      //Updating Scheduling Policies 'Schedule' Section
+      controlsNewUIPage.updateSchedulePublishWindow(publishWindowAdvanceWeeks);
+      controlsNewUIPage.updateSchedulePlanningWindow(planningWindowAdvanceWeeks);
+      controlsNewUIPage.updateSchedulingPoliciesFirstDayOfWeek(firstDayOfWeek);
+      controlsNewUIPage.updateEarliestOpeningTime(openingTime);
+      controlsNewUIPage.updateLatestClosingTime(closingTime);
+      controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
+      controlsNewUIPage.updateAdvanceScheduleDaysToBeFinalize(advanceDaysToFinalize);
+      controlsNewUIPage.updateScheduleBufferHoursBefore(beforeBufferCount);
+      controlsNewUIPage.updateScheduleBufferHoursAfter(afterBufferCount);
+      controlsNewUIPage.updateMinimumShiftLengthHour(minShiftLengthHour);
+      controlsNewUIPage.updateMaximumShiftLengthHour(maxShiftLengthHour);
+      controlsNewUIPage.updateMaximumNumWeekDaysToAutoSchedule(maxWeekDaysToAutoScheduleLabel);
+      controlsNewUIPage.updateDisplayShiftBreakIcons(shiftBreakIcons);
+      controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+      controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(intervalTimeLabel);
+      controlsNewUIPage.updateApplyLaborBudgetToSchedules(isLaborBudgetToApply);
+      controlsNewUIPage.updateScheduleBudgetType(budgetType);
+      controlsNewUIPage.updateTeamAvailabilityLockMode(availabilityLockModeLabel);
+      controlsNewUIPage.updateScheduleUnavailableHourOfWorkers(unavailableWorkersHour);
+      controlsNewUIPage.updateAvailabilityToleranceField(availabilityToleranceMinutes);
+      controlsNewUIPage.updateCanWorkerRequestTimeOff(canWorkerRequestTimeOffValue);
+      controlsNewUIPage.updateMaxEmployeeCanRequestForTimeOffOnSameDay(maxWorkersTimeOfPerDayCount);
+      controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+      controlsNewUIPage.updateNoticePeriodToRequestTimeOff(noticePeriodToRequestTimeOff);
+      controlsNewUIPage.updateShowTimeOffReasons(isShowTimeOffReasons);
+      
+      // Selecting Global Location
+      controlsNewUIPage.clickOnGlobalLocationButton();
+      activeLocation = controlsNewUIPage.getSchedulingPoliciesActiveLocation();
+      SimpleUtils.report("Controls Page: Scheduling Policies Active Location '"+ activeLocation +"'.");
+      controlsNewUIPage.updateSchedulePublishWindow(publishWindowAdvanceWeeks);
+      controlsNewUIPage.updateSchedulePlanningWindow(planningWindowAdvanceWeeks);
+      controlsNewUIPage.updateSchedulingPoliciesFirstDayOfWeek(firstDayOfWeek);
+      controlsNewUIPage.updateEarliestOpeningTime(openingTime);
+      controlsNewUIPage.updateLatestClosingTime(closingTime);
+      controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
+      controlsNewUIPage.updateAdvanceScheduleDaysToBeFinalize(advanceDaysToFinalize);
+      controlsNewUIPage.updateScheduleBufferHoursBefore(beforeBufferCount);
+      controlsNewUIPage.updateScheduleBufferHoursAfter(afterBufferCount);
+      controlsNewUIPage.updateMinimumShiftLengthHour(minShiftLengthHour);
+      controlsNewUIPage.updateMaximumShiftLengthHour(maxShiftLengthHour);
+      controlsNewUIPage.updateMaximumNumWeekDaysToAutoSchedule(maxWeekDaysToAutoScheduleLabel);
+      controlsNewUIPage.updateDisplayShiftBreakIcons(shiftBreakIcons);
+      controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+      controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(intervalTimeLabel);
+      controlsNewUIPage.updateApplyLaborBudgetToSchedules(isLaborBudgetToApply);
+      controlsNewUIPage.updateScheduleBudgetType(budgetType);
+      controlsNewUIPage.updateTeamAvailabilityLockMode(availabilityLockModeLabel);
+      controlsNewUIPage.updateScheduleUnavailableHourOfWorkers(unavailableWorkersHour);
+      controlsNewUIPage.updateAvailabilityToleranceField(availabilityToleranceMinutes);
+      controlsNewUIPage.updateCanWorkerRequestTimeOff(canWorkerRequestTimeOffValue);
+      controlsNewUIPage.updateMaxEmployeeCanRequestForTimeOffOnSameDay(maxWorkersTimeOfPerDayCount);
+      controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+      controlsNewUIPage.updateNoticePeriodToRequestTimeOff(noticePeriodToRequestTimeOff);
+      controlsNewUIPage.updateShowTimeOffReasons(isShowTimeOffReasons);
+  	  controlsNewUIPage.clickOnGlobalLocationButton();
+
+  	  controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(schedulingPolicyGroupsTabs.FullTimeSalariedExempt.getValue());
+  	int fullTimeSalariedExemptHoursPerWeekMin  = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Hours_Per_Week_Min" ));
+  	int fullTimeSalariedExemptHoursPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Hours_Per_Week_Max"));
+  	int fullTimeSalariedExemptHoursPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Hours_Per_Week_Ideal"));
+  	int fullTimeSalariedExemptShiftsPerWeekMin = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Shifts_Per_Week_Min"));
+  	int fullTimeSalariedExemptShiftsPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Shifts_Per_Week_Max"));
+  	int fullTimeSalariedExemptShiftsPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Shifts_Per_Week_Ideal"));
+  	int fullTimeSalariedExemptHoursPerShiftMin = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Hours_Per_Shift_Min"));
+  	int fullTimeSalariedExemptHoursPerShiftMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Hours_Per_Shift_Max"));
+  	int fullTimeSalariedExemptHoursPerShiftIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Hours_Per_Shift_Ideal"));
+  	boolean fullTimeSalariedExemptIsEmployeeCommittedAvailability = Boolean.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Is_Employee_Committed_Availability"));
+  	int fullTimeSalariedExemptCommittedHoursWeeks = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Exempt_Committed_Hours_Weeks"));
+  	
+  	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerWeek(fullTimeSalariedExemptHoursPerWeekMin, 
+  			  fullTimeSalariedExemptHoursPerWeekMax, fullTimeSalariedExemptHoursPerWeekIdeal);
+  	  controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(fullTimeSalariedExemptShiftsPerWeekMin,
+  			  fullTimeSalariedExemptShiftsPerWeekMax,fullTimeSalariedExemptShiftsPerWeekIdeal);
+  	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerShift(fullTimeSalariedExemptHoursPerShiftMin,
+  			  fullTimeSalariedExemptHoursPerShiftMax,fullTimeSalariedExemptHoursPerShiftIdeal);
+  	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(fullTimeSalariedExemptIsEmployeeCommittedAvailability,
+  			  fullTimeSalariedExemptCommittedHoursWeeks);
+  	  
+  	  controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(schedulingPolicyGroupsTabs.FullTimeSalariedNonExempt.getValue());
+  	  
+  	  int fullTimeSalariedNonExemptHoursPerWeekMin  = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Hours_Per_Week_Min" ));
+  	  int fullTimeSalariedNonExemptHoursPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Hours_Per_Week_Max"));
+  	  int fullTimeSalariedNonExemptHoursPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Hours_Per_Week_Ideal"));
+  	  int fullTimeSalariedNonExemptShiftsPerWeekMin = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Shifts_Per_Week_Min"));
+  	  int fullTimeSalariedNonExemptShiftsPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Shifts_Per_Week_Max"));
+  	  int fullTimeSalariedNonExemptShiftsPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Shifts_Per_Week_Ideal"));
+  	  int fullTimeSalariedNonExemptHoursPerShiftMin = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Hours_Per_Shift_Min"));
+  	  int fullTimeSalariedNonExemptHoursPerShiftMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Hours_Per_Shift_Max"));
+  	  int fullTimeSalariedNonExemptHoursPerShiftIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Hours_Per_Shift_Ideal"));
+  	  boolean fullTimeSalariedNonExemptIsEmployeeCommittedAvailability = Boolean.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Is_Employee_Committed_Availability"));
+  	  int fullTimeSalariedNonExemptCommittedHoursWeeks = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Salaried_Non_Exempt_Committed_Hours_Weeks"));
+  	  
+  	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerWeek(fullTimeSalariedNonExemptHoursPerWeekMin, 
+  		  fullTimeSalariedNonExemptHoursPerWeekMax, fullTimeSalariedNonExemptHoursPerWeekIdeal);
+  	  controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(fullTimeSalariedNonExemptShiftsPerWeekMin,
+  		  fullTimeSalariedNonExemptShiftsPerWeekMax,fullTimeSalariedNonExemptShiftsPerWeekIdeal);
+  	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerShift(fullTimeSalariedNonExemptHoursPerShiftMin,
+  		  fullTimeSalariedNonExemptHoursPerShiftMax,fullTimeSalariedNonExemptHoursPerShiftIdeal);
+  	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(fullTimeSalariedNonExemptIsEmployeeCommittedAvailability,
+  		  fullTimeSalariedNonExemptCommittedHoursWeeks);
+  	  
+  	  
+	  controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(schedulingPolicyGroupsTabs.FullTimeHourlyNonExempt.getValue());
+	  int fullTimeHourlyNonExemptHoursPerWeekMin  = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Hours_Per_Week_Min" ));
+	  int fullTimeHourlyNonExemptHoursPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Hours_Per_Week_Max"));
+	  int fullTimeHourlyNonExemptHoursPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Hours_Per_Week_Ideal"));
+	  int fullTimeHourlyNonExemptShiftsPerWeekMin = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Shifts_Per_Week_Min"));
+	  int fullTimeHourlyNonExemptShiftsPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Shifts_Per_Week_Max"));
+	  int fullTimeHourlyNonExemptShiftsPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Shifts_Per_Week_Ideal"));
+	  int fullTimeHourlyNonExemptHoursPerShiftMin = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Hours_Per_Shift_Min"));
+	  int fullTimeHourlyNonExemptHoursPerShiftMax = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Hours_Per_Shift_Max"));
+	  int fullTimeHourlyNonExemptHoursPerShiftIdeal = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Hours_Per_Shift_Ideal"));
+	  boolean fullTimeHourlyNonExemptIsEmployeeCommittedAvailability = Boolean.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Is_Employee_Committed_Availability"));
+	  int fullTimeHourlyNonExemptCommittedHoursWeeks = Integer.valueOf(schedulingPoliciesData.get("Full_Time_Hourly_Non_Exempt_Committed_Hours_Weeks"));
+  	  
+	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerWeek(fullTimeHourlyNonExemptHoursPerWeekMin, 
+	  		  fullTimeHourlyNonExemptHoursPerWeekMax, fullTimeHourlyNonExemptHoursPerWeekIdeal);
+	  controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(fullTimeHourlyNonExemptShiftsPerWeekMin,
+	  		  fullTimeHourlyNonExemptShiftsPerWeekMax,fullTimeHourlyNonExemptShiftsPerWeekIdeal);
+	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerShift(fullTimeHourlyNonExemptHoursPerShiftMin,
+	  		  fullTimeHourlyNonExemptHoursPerShiftMax,fullTimeHourlyNonExemptHoursPerShiftIdeal);
+	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(fullTimeHourlyNonExemptIsEmployeeCommittedAvailability,
+	  		  fullTimeHourlyNonExemptCommittedHoursWeeks);
+	  
+	  controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(schedulingPolicyGroupsTabs.PartTimeHourlyNonExempt.getValue());
+	  
+	  int partTimeHourlyNonExemptHoursPerWeekMin  = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Hours_Per_Week_Min" ));
+	  int partTimeHourlyNonExemptHoursPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Hours_Per_Week_Max"));
+	  int partTimeHourlyNonExemptHoursPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Hours_Per_Week_Ideal"));
+	  int partTimeHourlyNonExemptShiftsPerWeekMin = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Shifts_Per_Week_Min"));
+	  int partTimeHourlyNonExemptShiftsPerWeekMax = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Shifts_Per_Week_Max"));
+	  int partTimeHourlyNonExemptShiftsPerWeekIdeal = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Shifts_Per_Week_Ideal"));
+	  int partTimeHourlyNonExemptHoursPerShiftMin = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Hours_Per_Shift_Min"));
+	  int partTimeHourlyNonExemptHoursPerShiftMax = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Hours_Per_Shift_Max"));
+	  int partTimeHourlyNonExemptHoursPerShiftIdeal = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Hours_Per_Shift_Ideal"));
+	  boolean partTimeHourlyNonExemptIsEmployeeCommittedAvailability = Boolean.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Is_Employee_Committed_Availability"));
+	  int partTimeHourlyNonExemptCommittedHoursWeeks = Integer.valueOf(schedulingPoliciesData.get("Part_Time_Hourly_Non_Exempt_Committed_Hours_Weeks"));
+  	  
+	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerWeek(partTimeHourlyNonExemptHoursPerWeekMin, 
+	  		  partTimeHourlyNonExemptHoursPerWeekMax, partTimeHourlyNonExemptHoursPerWeekIdeal);
+	  controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(partTimeHourlyNonExemptShiftsPerWeekMin,
+	  		  partTimeHourlyNonExemptShiftsPerWeekMax,partTimeHourlyNonExemptShiftsPerWeekIdeal);
+	  controlsNewUIPage.updateSchedulingPolicyGroupsHoursPerShift(partTimeHourlyNonExemptHoursPerShiftMin,
+	  		  partTimeHourlyNonExemptHoursPerShiftMax,partTimeHourlyNonExemptHoursPerShiftIdeal);
+	  controlsNewUIPage.updateEnforceNewEmployeeCommittedAvailabilityWeeks(partTimeHourlyNonExemptIsEmployeeCommittedAvailability,
+	  		  partTimeHourlyNonExemptCommittedHoursWeeks);
+  }
+  
+  
+  
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "TP-161: Automate all the areas of controls  with Admin, Customer Admin and SM to validate"
+			+ " the fields enabled or disabled with corresponding work role access.")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateControlsAllFieldsEnabledOrDisabledAsInternalAdmin(String browser, String username, String password, String location)
+			throws Exception {
+		String fileName = "UsersCredentials.json";
+        fileName=SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamLeadCredentials = userCredentials.get("TeamLead");
+        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SimpleUtils.pass("<b>Legion Application User logged in as role 'Internal Admin'</b>.");
+		if(controlsNewUIPage.isControlsConsoleMenuAvailable()) {
+			/*verifyLocationInformationEditModeFieldsEditableOrNot();
+		
+			// verifying Scheduling Policies 'Schedules' section Fields
+	    	controlsNewUIPage.clickOnControlsConsoleMenu();
+		    SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , true);
+		    controlsNewUIPage.clickOnControlsSchedulingPolicies();*/
+		    
+			/*verifySchedulingPoliciesAllSectionsFieldsEditableOrNot();
+			controlsNewUIPage.clickOnGlobalLocationButton();
+			verifySchedulingPoliciesAllSectionsFieldsEditableOrNot();
+			
+			controlsNewUIPage.clickOnControlsConsoleMenu();
+			controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+			verifyingScheduleCollaborationFieldsEditableOrNot();
+			controlsNewUIPage.clickOnGlobalLocationButton();
+			verifyingScheduleCollaborationFieldsEditableOrNot();*/
+			
+			/*controlsNewUIPage.clickOnControlsConsoleMenu();
+			controlsNewUIPage.clickOnControlsComplianceSection();
+			if(controlsNewUIPage.isControlsComplianceLoaded()) {
+				verifyingComplianceFieldsEditableOrNot();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				verifyingComplianceFieldsEditableOrNot();
+			}*/
+			
+			controlsNewUIPage.clickOnControlsConsoleMenu();
+			controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+			if(controlsNewUIPage.isControlsUsersAndRolesLoaded()) {
+				/*controlsNewUIPage.selectUsersAndRolesSubTabByLabel(usersAndRolesSubTabs.AllUsers.getValue());
+				//verifyingUserAndRolesAddNewUserPageFieldsEditableOrNot();
+				String userFirstName = "David";
+				//verifyingUserAndRolesEditUserPageFieldsEditableOrNot(userFirstName);
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(usersAndRolesSubTabs.AccessByJobTitles.getValue());
+				String employeeJobTitle = "Retail Manager";
+				verifyingUserAndRolesUpdateEmployeeJobTitleEditableOrNonEditableFields(employeeJobTitle);
+				String newEmployeeJobTitle = "Sample Employee Job Title";
+				String newEmployeeJobTitleRole = "Store Manager";
+				verifyingUserAndRolesCreatNewEmployeeJobTitleEditableOrNonEditableFields(newEmployeeJobTitle, newEmployeeJobTitleRole);*/
+				String badgeLabel = "Employee From Mars";
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(usersAndRolesSubTabs.Badges.getValue());
+				verifyingUserAndRolesUpdateBadgesEditableOrNonEditableFields(badgeLabel);
+				verifyingUserAndRolesCreateNewBadgesEditableOrNonEditableFields();
+			}
+			
+		}
+		else
+			SimpleUtils.report("Controls Console Menu not loaded Successfully!.");
+	    
+//		loginPage.logOut();
+
+
+        /*
+         * Login as Store Manager
+         */
+//        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1]), 
+//        		String.valueOf(storeManagerCredentials[0][2]));
+//        SimpleUtils.pass("<b>Legion Application User logged in as role 'Store Manager'</b>.");
+//		verifyLocationInformationEditModeFieldsEditableOrNot();
+//		loginPage.logOut();
+		
+		 /*
+         * Login as Team Lead
+         */
+//        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamLeadCredentials[0][0]), String.valueOf(teamLeadCredentials[0][1]), 
+//        		String.valueOf(teamLeadCredentials[0][2]));
+//        SimpleUtils.pass("<b>Legion Application User logged in as role 'Team Lead'</b>.");
+//		verifyLocationInformationEditModeFieldsEditableOrNot();
+//		loginPage.logOut();
+		
+		 /*
+         * Login as Team Member
+         */
+//        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1]), 
+//        		String.valueOf(teamMemberCredentials[0][2]));
+//        SimpleUtils.pass("<b>Legion Application User logged in as role 'Team Member'</b>.");
+//		verifyLocationInformationEditModeFieldsEditableOrNot();
+	}
+
+
+	private void verifyLocationInformationEditModeFieldsEditableOrNot() throws Exception {
+		 DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	     SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);  
+	     
+	     ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	     if(controlsNewUIPage.isControlsConsoleMenuAvailable()) {
+	    	 // Validating Location Profile Section
+	    	 controlsNewUIPage.clickOnControlsConsoleMenu();
+		     SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , true);
+		     controlsNewUIPage.clickOnControlsLocationProfileSection();
+		     HashMap<String,ArrayList<String>> locationInfoEditableOrNonEditableFields = controlsNewUIPage
+		    		 .getLocationInformationEditableOrNonEditableFields();
+		     
+		     int valuesMaxCount = locationInfoEditableOrNonEditableFields.get("editableFields").size();
+		     if(locationInfoEditableOrNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+		    	 valuesMaxCount = locationInfoEditableOrNonEditableFields.get("nonEditableFields").size();
+		     if(valuesMaxCount > 0) {
+		    	 
+		    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(locationInfoEditableOrNonEditableFields);
+		    	 SimpleUtils.pass("Location Profile: Edit Location Information Input fields Editable or Non Editable details.<br>"
+		    			 +editableOrNonEditableFieldsValueTable);
+		    	 
+		    	 /*String editableOrNonEditableFieldsValueTable = "<table><tr><th> Editable Fields Label </th><th>Non Editable Fields Label</th></tr>";
+		    	 for(int index = 0; index < valuesMaxCount; index++) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "<tr><td>";
+			    	 if(locationInfoEditableOrNonEditableFields.get("editableFields").size() > index) {
+			    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+			    				 + locationInfoEditableOrNonEditableFields.get("editableFields").get(index);
+			    	 }
+			    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td><td>";
+			    	 if(locationInfoEditableOrNonEditableFields.get("nonEditableFields").size() > index) {
+			    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+			    				 + locationInfoEditableOrNonEditableFields.get("nonEditableFields").get(index);
+			    	 }
+			    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td></tr>";
+			     }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</table>";
+		    	 SimpleUtils.pass("Location Profile: Edit Location Information Input fields Editable or Non Editable details.<br>"
+		    			 +editableOrNonEditableFieldsValueTable);*/
+		     }
+	     }
+	     else
+	    	 SimpleUtils.report("Controls menu not available for active user.");
+	}
+	
+	private void verifySchedulingPoliciesAllSectionsFieldsEditableOrNot() throws Exception {
+		verifySchedulingPoliciesSchedulesSectionFieldsEditableOrNot();
+		verifySchedulingPoliciesShiftsSectionFieldsEditableOrNot();
+		verifySchedulingPoliciesBudgetSectionFieldsEditableOrNot();
+		verifySchedulingPoliciesTeamAvailabilityManagementSectionFieldsEditableOrNot();
+		verifySchedulingPoliciesTimeOffSectionFieldsEditableOrNot();
+		// Verifying Scheduling Policy Groups Fields
+		verifySchedulingPoliciesSchedulingPolicyGroupsFieldsEditableorNot(schedulingPolicyGroupsTabs.FullTimeSalariedExempt.getValue());
+		verifySchedulingPoliciesSchedulingPolicyGroupsFieldsEditableorNot(schedulingPolicyGroupsTabs.FullTimeSalariedNonExempt.getValue());
+		verifySchedulingPoliciesSchedulingPolicyGroupsFieldsEditableorNot(schedulingPolicyGroupsTabs.FullTimeHourlyNonExempt.getValue());
+		verifySchedulingPoliciesSchedulingPolicyGroupsFieldsEditableorNot(schedulingPolicyGroupsTabs.PartTimeHourlyNonExempt.getValue());
+	}
+	
+	private void verifySchedulingPoliciesSchedulesSectionFieldsEditableOrNot() throws Exception {
+		 ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	     controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
+	     Thread.sleep(2000);
+	     HashMap<String,ArrayList<String>> schedulingPoliciesSchedulesEditableNonEditableFields = controlsNewUIPage
+	    		 .getSchedulingPoliciesSchedulesSectionEditableOrNonEditableFields();
+	     
+	     int valuesMaxCount = schedulingPoliciesSchedulesEditableNonEditableFields.get("editableFields").size();
+	     if(schedulingPoliciesSchedulesEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = schedulingPoliciesSchedulesEditableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 
+	    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(schedulingPoliciesSchedulesEditableNonEditableFields);
+	    	 SimpleUtils.pass("Scheduling Policies: 'Schedules' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	    	 
+	    	 /*String editableOrNonEditableFieldsValueTable = "<table><tr><th> Editable Fields Title </th><th>Non Editable Fields Title</th></tr>";
+	    	 for(int index = 0; index < valuesMaxCount; index++) {
+	    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "<tr><td>";
+		    	 if(SchedulingPoliciesSchedulesEditableNonEditableFields.get("editableFields").size() > index) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+		    				 + SchedulingPoliciesSchedulesEditableNonEditableFields.get("editableFields").get(index);
+		    	 }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td><td>";
+		    	 if(SchedulingPoliciesSchedulesEditableNonEditableFields.get("nonEditableFields").size() > index) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+		    				 + SchedulingPoliciesSchedulesEditableNonEditableFields.get("nonEditableFields").get(index);
+		    	 }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td></tr>";
+		     }
+	    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</table>";
+	    	 SimpleUtils.pass("Scheduling Policies: 'Schedules' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);*/
+	     }
+	    
+	}
+	
+	private void verifySchedulingPoliciesShiftsSectionFieldsEditableOrNot() throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	    //if(controlsNewUIPage.isControlsConsoleMenuAvailable()) {
+	    	 //controlsNewUIPage.clickOnControlsConsoleMenu();
+		     //SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , true);
+		     //controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		     controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+		     Thread.sleep(2000);
+		     HashMap<String,ArrayList<String>> schedulingPoliciesShiftsEditableNonEditableFields = controlsNewUIPage
+		    		 .getSchedulingPoliciesShiftsSectionEditableOrNonEditableFields();
+		     
+		     int valuesMaxCount = schedulingPoliciesShiftsEditableNonEditableFields.get("editableFields").size();
+		     if(schedulingPoliciesShiftsEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+		    	 valuesMaxCount = schedulingPoliciesShiftsEditableNonEditableFields.get("nonEditableFields").size();
+		     if(valuesMaxCount > 0) {
+		    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(schedulingPoliciesShiftsEditableNonEditableFields);
+		    	 SimpleUtils.pass("Scheduling Policies: 'Shifts' Section Input fields Editable or Non Editable details.<br>"
+		    			 +editableOrNonEditableFieldsValueTable);
+		    	 /*String editableOrNonEditableFieldsValueTable = "<table><tr><th> Editable Fields Title </th><th>Non Editable Fields Title</th></tr>";
+		    	 for(int index = 0; index < valuesMaxCount; index++) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "<tr><td>";
+			    	 if(SchedulingPoliciesShiftsEditableNonEditableFields.get("editableFields").size() > index) {
+			    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+			    				 + SchedulingPoliciesShiftsEditableNonEditableFields.get("editableFields").get(index);
+			    	 }
+			    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td><td>";
+			    	 if(SchedulingPoliciesShiftsEditableNonEditableFields.get("nonEditableFields").size() > index) {
+			    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+			    				 + SchedulingPoliciesShiftsEditableNonEditableFields.get("nonEditableFields").get(index);
+			    	 }
+			    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td></tr>";
+			     }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</table>";
+		    	 SimpleUtils.pass("Scheduling Policies: 'Shifts' Section Input fields Editable or Non Editable details.<br>"
+		    			 +editableOrNonEditableFieldsValueTable);*/
+		     }
+	    //}
+	}
+	
+	private void verifySchedulingPoliciesBudgetSectionFieldsEditableOrNot() throws Exception {
+		 ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	     Thread.sleep(2000);
+	     HashMap<String,ArrayList<String>> schedulingPoliciesBudgetEditableNonEditableFields = controlsNewUIPage
+	    		 .getSchedulingPoliciesBudgetSectionEditableOrNonEditableFields();
+	     
+	     int valuesMaxCount = schedulingPoliciesBudgetEditableNonEditableFields.get("editableFields").size();
+	     if(schedulingPoliciesBudgetEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = schedulingPoliciesBudgetEditableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(schedulingPoliciesBudgetEditableNonEditableFields);
+	    	 SimpleUtils.pass("Scheduling Policies: 'Budget' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	    	 /*String editableOrNonEditableFieldsValueTable = "<table><tr><th> Editable Fields Title </th><th>Non Editable Fields Title</th></tr>";
+	    	 for(int index = 0; index < valuesMaxCount; index++) {
+	    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "<tr><td>";
+		    	 if(SchedulingPoliciesBudgetEditableNonEditableFields.get("editableFields").size() > index) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+		    				 + SchedulingPoliciesBudgetEditableNonEditableFields.get("editableFields").get(index);
+		    	 }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td><td>";
+		    	 if(SchedulingPoliciesBudgetEditableNonEditableFields.get("nonEditableFields").size() > index) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+		    				 + SchedulingPoliciesBudgetEditableNonEditableFields.get("nonEditableFields").get(index);
+		    	 }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td></tr>";
+		     }
+	    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</table>";
+	    	 SimpleUtils.pass("Scheduling Policies: 'Budget' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);*/
+	     }
+	}
+	
+	private void verifySchedulingPoliciesTeamAvailabilityManagementSectionFieldsEditableOrNot() throws Exception {
+		 ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	     Thread.sleep(2000);
+	     HashMap<String,ArrayList<String>> schedulingPoliciesTeamAvailabilityManagementEditableNonEditableFields = controlsNewUIPage
+	    		 .getSchedulingPoliciesTeamAvailabilityManagementSectionEditableOrNonEditableFields();
+	     
+	     int valuesMaxCount = schedulingPoliciesTeamAvailabilityManagementEditableNonEditableFields.get("editableFields").size();
+	     if(schedulingPoliciesTeamAvailabilityManagementEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = schedulingPoliciesTeamAvailabilityManagementEditableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(schedulingPoliciesTeamAvailabilityManagementEditableNonEditableFields);
+	    	 SimpleUtils.pass("Scheduling Policies: 'Team Availability Management' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	    	 /*String editableOrNonEditableFieldsValueTable = "<table><tr><th> Editable Fields Title </th><th>Non Editable Fields Title</th></tr>";
+	    	 for(int index = 0; index < valuesMaxCount; index++) {
+	    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "<tr><td>";
+		    	 if(SchedulingPoliciesTeamAvailabilityManagementEditableNonEditableFields.get("editableFields").size() > index) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+		    				 + SchedulingPoliciesTeamAvailabilityManagementEditableNonEditableFields.get("editableFields").get(index);
+		    	 }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td><td>";
+		    	 if(SchedulingPoliciesTeamAvailabilityManagementEditableNonEditableFields.get("nonEditableFields").size() > index) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+		    				 + SchedulingPoliciesTeamAvailabilityManagementEditableNonEditableFields.get("nonEditableFields").get(index);
+		    	 }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td></tr>";
+		     }
+	    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</table>";
+	    	 SimpleUtils.pass("Scheduling Policies: 'Team Availability Management' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);*/
+	     }
+	}
+	
+	private void verifySchedulingPoliciesTimeOffSectionFieldsEditableOrNot() throws Exception {
+		 ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	     Thread.sleep(2000);
+	     controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+	     HashMap<String,ArrayList<String>> schedulingPoliciesTimeOffEditableNonEditableFields = controlsNewUIPage
+	    		 .getSchedulingPoliciesTimeOffSectionEditableOrNonEditableFields();
+	     
+	     
+	     
+	     int valuesMaxCount = schedulingPoliciesTimeOffEditableNonEditableFields.get("editableFields").size();
+	     if(schedulingPoliciesTimeOffEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = schedulingPoliciesTimeOffEditableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(schedulingPoliciesTimeOffEditableNonEditableFields);
+	    	 SimpleUtils.pass("Scheduling Policies: 'Time Off' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	    	/* String editableOrNonEditableFieldsValueTable = "<table><tr><th> Editable Fields Title </th><th>Non Editable Fields Title</th></tr>";
+	    	 for(int index = 0; index < valuesMaxCount; index++) {
+	    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "<tr><td>";
+		    	 if(SchedulingPoliciesTimeOffEditableNonEditableFields.get("editableFields").size() > index) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+		    				 + SchedulingPoliciesTimeOffEditableNonEditableFields.get("editableFields").get(index);
+		    	 }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td><td>";
+		    	 if(SchedulingPoliciesTimeOffEditableNonEditableFields.get("nonEditableFields").size() > index) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+		    				 + SchedulingPoliciesTimeOffEditableNonEditableFields.get("nonEditableFields").get(index);
+		    	 }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td></tr>";
+		     }
+	    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</table>";
+	    	 SimpleUtils.pass("Scheduling Policies: 'Time Off' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);*/
+	     }
+	}
+	
+	private void verifySchedulingPoliciesSchedulingPolicyGroupsFieldsEditableorNot(String schedulingPolicyGroupsTabsLabel) throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(schedulingPolicyGroupsTabsLabel);
+	    HashMap<String,ArrayList<String>> schedulingPoliciesSchedulingPolicyGroupsEditableNonEditableFields = controlsNewUIPage
+	    		 .getSchedulingPoliciesSchedulingPolicyGroupsSectionEditableOrNonEditableFields();
+	     
+	     int valuesMaxCount = schedulingPoliciesSchedulingPolicyGroupsEditableNonEditableFields.get("editableFields").size();
+	     if(schedulingPoliciesSchedulingPolicyGroupsEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = schedulingPoliciesSchedulingPolicyGroupsEditableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(schedulingPoliciesSchedulingPolicyGroupsEditableNonEditableFields);
+	    	 SimpleUtils.pass("Scheduling Policies: 'Scheduling Policy Groups - "+schedulingPolicyGroupsTabsLabel
+	    			 +"' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	    	 /*String editableOrNonEditableFieldsValueTable = "<table><tr><th> Editable Fields Title </th><th>Non Editable Fields Title</th></tr>";
+	    	 for(int index = 0; index < valuesMaxCount; index++) {
+	    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "<tr><td>";
+		    	 if(SchedulingPoliciesSchedulingPolicyGroupsEditableNonEditableFields.get("editableFields").size() > index) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+		    				 + SchedulingPoliciesSchedulingPolicyGroupsEditableNonEditableFields.get("editableFields").get(index);
+		    	 }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td><td>";
+		    	 if(SchedulingPoliciesSchedulingPolicyGroupsEditableNonEditableFields.get("nonEditableFields").size() > index) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+		    				 + SchedulingPoliciesSchedulingPolicyGroupsEditableNonEditableFields.get("nonEditableFields").get(index);
+		    	 }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td></tr>";
+		     }
+	    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</table>";
+	    	 SimpleUtils.pass("Scheduling Policies: 'Scheduling Policy Groups - "+schedulingPolicyGroupsTabsLabel+"' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);*/
+	     }
+		
+	}
+	
+	private void verifyingScheduleCollaborationFieldsEditableOrNot() throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
+	    HashMap<String,ArrayList<String>> scheduleCollaborationEditableNonEditableFields = controlsNewUIPage
+	    		 .getScheduleCollaborationEditableOrNonEditableFields();
+	     
+	     int valuesMaxCount = scheduleCollaborationEditableNonEditableFields.get("editableFields").size();
+	     if(scheduleCollaborationEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = scheduleCollaborationEditableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(scheduleCollaborationEditableNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'Schedule Collaboration' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	    	/* String editableOrNonEditableFieldsValueTable = "<table><tr><th> Editable Fields Title </th><th>Non Editable Fields Title</th></tr>";
+	    	 for(int index = 0; index < valuesMaxCount; index++) {
+	    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "<tr><td>";
+		    	 if(scheduleCollaborationEditableNonEditableFields.get("editableFields").size() > index) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+		    				 + scheduleCollaborationEditableNonEditableFields.get("editableFields").get(index);
+		    	 }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td><td>";
+		    	 if(scheduleCollaborationEditableNonEditableFields.get("nonEditableFields").size() > index) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+		    				 + scheduleCollaborationEditableNonEditableFields.get("nonEditableFields").get(index);
+		    	 }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td></tr>";
+		     }
+	    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</table>";
+	    	 SimpleUtils.pass("Controls Page: 'Schedule Collaboration' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);*/
+	     }
+	}
+	
+	private void verifyingComplianceFieldsEditableOrNot() throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	    HashMap<String,ArrayList<String>> complianceEditableNonEditableFields = controlsNewUIPage
+	    		 .getComplianceEditableOrNonEditableFields();
+	     
+	     int valuesMaxCount = complianceEditableNonEditableFields.get("editableFields").size();
+	     if(complianceEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = complianceEditableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(complianceEditableNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'Compliance' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	    	 /*String editableOrNonEditableFieldsValueTable = "<table><tr><th> Editable Fields Title </th><th>Non Editable Fields Title</th></tr>";
+	    	 for(int index = 0; index < valuesMaxCount; index++) {
+	    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "<tr><td>";
+		    	 if(complianceEditableNonEditableFields.get("editableFields").size() > index) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+		    				 + complianceEditableNonEditableFields.get("editableFields").get(index);
+		    	 }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td><td>";
+		    	 if(complianceEditableNonEditableFields.get("nonEditableFields").size() > index) {
+		    		 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable 
+		    				 + complianceEditableNonEditableFields.get("nonEditableFields").get(index);
+		    	 }
+		    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</td></tr>";
+		     }
+	    	 editableOrNonEditableFieldsValueTable = editableOrNonEditableFieldsValueTable + "</table>";
+	    	 SimpleUtils.pass("Controls Page: 'Compliance' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);*/
+	     }
+	}
+	
+	private void verifyingUserAndRolesAddNewUserPageFieldsEditableOrNot() throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	    HashMap<String,ArrayList<String>> complianceEditableNonEditableFields = controlsNewUIPage
+	    		 .getUsersAndRolesAddNewUserPageEditableOrNonEditableFields();
+	     String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(complianceEditableNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'User and Roles' Section 'Add New User page' Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	}
+	
+	public String getEditableNonEditableFieldsAsHTMLTable(HashMap<String,ArrayList<String>> editableNonEditableFields)
+	{
+		 String result = "";
+		 int valuesMaxCount = editableNonEditableFields.get("editableFields").size();
+	     if(editableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = editableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 result = "<table><tr><th> Editable Fields Title </th><th>Non Editable Fields Title</th></tr>";
+	    	 for(int index = 0; index < valuesMaxCount; index++) {
+	    		 result = result + "<tr><td>";
+		    	 if(editableNonEditableFields.get("editableFields").size() > index) {
+		    		 result = result + editableNonEditableFields.get("editableFields").get(index);
+		    	 }
+		    	 result = result + "</td><td>";
+		    	 if(editableNonEditableFields.get("nonEditableFields").size() > index) {
+		    		 result = result + editableNonEditableFields.get("nonEditableFields").get(index);
+		    	 }
+		    	 result = result + "</td></tr>";
+		     }
+	    	 result = result + "</table>";
+	     }
+		return result;
+	}
+	
+	private void verifyingUserAndRolesEditUserPageFieldsEditableOrNot(String userFirstName) throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	    HashMap<String,ArrayList<String>> complianceEditableNonEditableFields = controlsNewUIPage
+	    		 .getUsersAndRolesEditUserPageEditableOrNonEditableFields(userFirstName);
+	     String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(complianceEditableNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'User and Roles' Section 'Add New User page' Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	}
+	
+	private void verifyingUserAndRolesUpdateEmployeeJobTitleEditableOrNonEditableFields(String employeeJobTitle) throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		HashMap<String, ArrayList<String>> employeeJobTitleEditableOrNonEditableFields = controlsNewUIPage
+				.getUsersAndRolesUpdateEmployeeJobTitleEditableOrNonEditableFields(employeeJobTitle);
+
+	     String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(employeeJobTitleEditableOrNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'User and Roles' Section 'Update Employee Job Title' Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	}
+	
+	private void verifyingUserAndRolesCreatNewEmployeeJobTitleEditableOrNonEditableFields(String employeeJobTitle, String newEmployeeJobTitleRole) throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		HashMap<String, ArrayList<String>> employeeJobTitleEditableOrNonEditableFields = controlsNewUIPage
+				.getUsersAndRolesCreateNewEmployeeJobTitleEditableOrNonEditableFields(employeeJobTitle, newEmployeeJobTitleRole);
+
+	     String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(employeeJobTitleEditableOrNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'User and Roles' Section 'New Employee Job Title' Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+		
+	}
+	
+	private void verifyingUserAndRolesUpdateBadgesEditableOrNonEditableFields(String badgeLabel) throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		HashMap<String, ArrayList<String>> updateBadgeEditableOrNonEditableFields = controlsNewUIPage
+				.getUsersAndRolesUpdateBadgesEditableOrNonEditableFields(badgeLabel);
+
+	     String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(updateBadgeEditableOrNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'User and Roles' Section 'Update Badges Popup' Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	}
+	
+	private void verifyingUserAndRolesCreateNewBadgesEditableOrNonEditableFields() throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		HashMap<String, ArrayList<String>> newBadgeEditableOrNonEditableFields = controlsNewUIPage
+				.getUsersAndRolesNewBadgeEditableOrNonEditableFields();
+
+	    String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(newBadgeEditableOrNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'User and Roles' Section 'New Badge Popup' Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	}
+
+
 }

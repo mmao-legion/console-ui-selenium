@@ -1,5 +1,9 @@
 package com.legion.tests;
 
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriverService;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
 
 import com.aventstack.extentreports.ExtentReports;
@@ -142,8 +146,10 @@ public abstract class TestBase {
         if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice") && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){
             startServer();
             mobilePageFactory = createMobilePageFactory();
+//            setTestRailRunId(0);
         } else{
             Reporter.log("Script will be executing only for Web");
+//            setTestRailRunId(0);
         }
     }
 
@@ -170,7 +176,7 @@ public abstract class TestBase {
     }
     
     @BeforeMethod(alwaysRun = true)
-    protected void initTestFramework(Method method) throws AWTException, IOException, APIException, JSONException {
+    protected void initTestFramework(Method method, ITestContext context) throws AWTException, IOException, APIException, JSONException {
     	Date date=new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
     	String testName = ExtentTestManager.getTestName(method);
@@ -264,6 +270,40 @@ public abstract class TestBase {
                 options.setProfile(profile);
                 setDriver(new FirefoxDriver(options));
             }
+
+            if (getDriverType().equalsIgnoreCase("Phantom")) {
+//                File file = new File("C:\\Users\\nishant08\\Downloads\\phantomjs-2.1.1-windows\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe");
+//                System.setProperty("phantomjs.binary.path", file.getAbsolutePath());
+//                DesiredCapabilities capabilitiesPhantom = new DesiredCapabilities();
+//                capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "C:\\Users\\nishant08\\Downloads\\phantomjs-2.1.1-windows\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe");
+
+                System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("disable-infobars");
+                options.addArguments("headless");
+                options.addArguments("window-size=1200x600");
+                options.addArguments("test-type", "new-window", "disable-extensions","start-maximized");
+                Map<String, Object> prefs = new HashMap<>();
+                prefs.put("credentials_enable_service", false);
+                prefs.put("password_manager_enabled", false);
+                options.setExperimentalOption("prefs", prefs);
+                options.addArguments("disable-logging", "silent", "ignore-certificate-errors");
+                options.setExperimentalOption("useAutomationExtension", false);
+                options.setExperimentalOption("excludeSwitches",
+                        Collections.singletonList("enable-automation"));
+                options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+                options.setCapability(ChromeOptions.CAPABILITY, options);
+                options.setCapability("chrome.switches", Arrays.asList("--disable-extensions", "--disable-logging",
+                        "--ignore-certificate-errors", "--log-level=0", "--silent"));
+                options.setCapability("silent", true);
+                System.setProperty("webdriver.chrome.silentOutput", "true");
+                setDriver(new ChromeDriver(options));
+
+//                setDriver(new PhantomJSDriver());
+//                setDriver(new HtmlUnitDriver());
+                System.out.println(getDriver());
+
+            }
             
             pageFactory = createPageFactory();
             LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
@@ -339,6 +379,7 @@ public abstract class TestBase {
     public static void loadURL() {
         try {
         	getDriver().get(getURL() + "legion/?enterprise=" + getEnterprise() + " ");
+            getDriver().manage().window().maximize();
         } catch (TimeoutException te) {
             try {
                 getDriver().navigate().refresh();
@@ -356,7 +397,7 @@ public abstract class TestBase {
     	LoginPage loginPage = pageFactory.createConsoleLoginPage();
     	loginPage.loginToLegionWithCredential(username, Password);
     	LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-    	//locationSelectorPage.changeLocation(location);
+//    	locationSelectorPage.changeLocation(location);
 	    boolean isLoginDone = loginPage.isLoginDone();
 	    loginPage.verifyLoginDone(isLoginDone, location);
     }

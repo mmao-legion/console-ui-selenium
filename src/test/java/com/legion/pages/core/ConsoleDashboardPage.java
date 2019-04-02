@@ -41,7 +41,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(className="upcoming-shift-container")
 	private WebElement dashboardUpcomingShiftContainer;
 	
-	@FindBy(css="div.forecast.row-fx.ng-scope")
+	@FindBy(css="[ng-if=\"daySummary($index) && weeklyScheduleData($index) && canViewGuidance()\"]")
 	private WebElement dashboardTodaysForecastSection;
 	
 	@FindBy(css="[ng-if=\"graphData($index)\"]")
@@ -264,7 +264,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			else
 				SimpleUtils.fail("Dashboard Page: Unable to fetch Demand Forecast data.", true);
 
-			if(todaysForecastString[3].toLowerCase().contains(guidanceHoursLabel.toLowerCase()))
+			if(todaysForecastString[3].toLowerCase().contains(guidanceHoursLabel.toLowerCase())) 
 				todaysForcastData.put("guidanceHours" , Float.valueOf(todaysForecastString[2].split(" ")[0]));
 			else
 				SimpleUtils.fail("Dashboard Page: Unable to fetch Guidance Hours.", true);

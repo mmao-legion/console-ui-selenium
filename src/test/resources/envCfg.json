@@ -1,9 +1,9 @@
 {
-  "CHROME_DRIVER_PATH": "C:\\chromedriver.exe",
+  "CHROME_DRIVER_PATH": "C:\\Users\\nishant08\\Downloads\\chromedriver\\chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "D:\\geckodriver.exe",
  "DEVURL": "https://mobilestage.legion.work/",
  "QAURL": "https://staging-enterprise.dev.legion.work/",
- "Screenshot_Path": "C:\\Mar05\\console-ui-selenium",
+ "Screenshot_Path": "D:\\DevelopZorang15March\\console-ui-selenium",
  "ENTERPRISE" : "LegionCoffee2",
  "Coffee_Enterprise" : "LegionCoffee",
  "LegionTech_Enterprise" : "LegionTech",
@@ -27,8 +27,8 @@
  "WeekStartOn" : "MON",
  "appiumServerPath" : "C:\\Program Files\\nodejs\\node.exe",
  "appiumJsPath" : "C:\\Users\\nishant08\\AppData\\Local\\Programs\\Appium\\resources\\app\\node_modules\\appium\\lib\\appium.js",
- "deviceName" : "Gunjan",
- "platformVersion" : "9.0",
+ "deviceName" : "Gionee X1",
+ "platformVersion" : "7.0",
  "isParallelBrowser" : "false",
  "isParallelBrowser" : "false",
  "Download_File_Default_Dir" : "C:\\Users\\nishant08\\Downloads"

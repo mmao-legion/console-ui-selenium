@@ -29,7 +29,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     
     /* Aug 03- Zorang Team- Variables declaration*/
     
-    @FindBy(css="[ng-model='username']")
+    @FindBy(css="input[placeholder='Username']")
     private WebElement userNameField;
     
     @FindBy(css="[ng-model='password']")
@@ -62,7 +62,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 		click(loginButton);
     }
     
-    public void loginToLegionWithCredential(String userName, String Password)
+    public void loginToLegionWithCredential(String userName, String Password) throws InterruptedException
     {
     	checkElementVisibility(userNameField);
     	getActiveConsoleName(loginButton);
@@ -115,6 +115,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 
     public void getActiveConsoleName(WebElement element){
     	activeConsoleName = element.getText();
+    	System.out.println(activeConsoleName);
     	setScreenshotConsoleName(activeConsoleName);
     }
 

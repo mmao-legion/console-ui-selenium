@@ -27,4 +27,5 @@ public interface ScheduleOverviewPage {
 	public boolean loadScheduleOverview() throws Exception;
 	public int getScheduleOverviewWeeksCountCanBeCreatInAdvance();
 	public String getOverviewWeekDuration(WebElement webElement) throws Exception;
+	public void clickOverviewTab();
 }
