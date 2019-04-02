@@ -375,7 +375,7 @@ public class SimpleUtils {
 	public static void addTestResult(int statusID, String comment)
 	{
 		/*
-		 * TestRail Status ID : Description
+		 * TestRail Status ID : Description 
 		 * 1 : Passed
 		 * 2 : Blocked
 		 * 4 : Retest
@@ -968,4 +968,10 @@ public class SimpleUtils {
 
 
 
+
+   public static boolean convertYesOrNoToTrueOrFalse(String yesOrNo) {
+	   if(yesOrNo.toLowerCase().contains("yes"))
+		   return true;
+	   return false;
+   }
 }
