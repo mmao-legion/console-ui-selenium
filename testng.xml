@@ -111,16 +111,20 @@
         <classes>
             <class name="com.legion.tests.core.SanityTest">
                 <methods>
-                    <!--<include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>-->
-                    <!--<include name="validateScheduleSmartCardsAsStoreManager"/>-->
-                    <!--<include name="validateScheduleGenerationFunctionalityAsStoreManager"/>-->
-                    <!--<include name="validateChangeLocationAsStoreManager"/>-->
-                    <!--<include name="validateGuidanceWeekAsStoreManager"/>-->
                     <!--<include name="consoleAndMobileIntegrationForShiftOffers"/>-->
+                    <include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>
                     <include name="updateControlsSectionLoadingAsInternalAdmin"/>
                     <include name="scheduleSubTabNavigationStoreManager"/>
-                    <!--<include name="projectedTrafficSubTabNavigationStoreManager"/>-->
-                    <!--<include name="staffingGuidanceSubTabNavigationStoreManager"/>-->
+                    <include name="projectedTrafficSubTabNavigationStoreManager"/>
+                    <include name="staffingGuidanceSubTabNavigationStoreManager"/>
+                    <include name="validateScheduleSmartCardsAsStoreManager"/>
+                    <!--<include name="validateScheduleGenerationFunctionalityAsStoreManager"/>-->
+                    <include name="validateChangeLocationAsStoreManager"/>
+                    <include name="validateGuidanceWeekAsStoreManager"/>
+                    <include name="validateScheduleGenerationAsStoreManager"/>
+                    <include name="validateSchedulePublishAsStoreManager"/>
+                    <include name="editManualShiftScheduleAsStoreManager"/>
+
                 </methods>
             </class>
         </classes>
