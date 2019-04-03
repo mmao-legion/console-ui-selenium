@@ -2,9 +2,9 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite verbose ="0" thread-count="10" name="LegionTest">
 	<parameter name="environment" value="QA"/>
-	<parameter name="platform" value="Android"/>
-	<parameter name="executionon" value="realdevice"/>
-	<parameter name="runMode" value="mobileAndWeb"/>
+	<parameter name="platform" value="Android1"/>
+	<parameter name="executionon" value="realdevice1"/>
+	<parameter name="runMode" value="mobileAndWeb1"/>
 
     <listeners>
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
