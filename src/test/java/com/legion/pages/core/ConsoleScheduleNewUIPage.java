@@ -621,6 +621,33 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		}
 	}
 
+
+	@FindBy(xpath = "//*[@class='shift-hover-seperator']/following-sibling::div[1]/div[1]")
+	private WebElement shiftSize;
+
+	@FindBy(css = "div.week-view-shift-hover-info-icon")
+	private List<WebElement> infoIcon;
+
+
+
+
+	public float calcTotalScheduledHourForDayInWeekView(){
+		float sumOfAllShiftsLength=0;
+		for(int i=0; i<infoIcon.size();i++){
+			if(isElementEnabled(infoIcon.get(i))){
+				click(infoIcon.get(i));
+				String[] TMShiftSize = shiftSize.getText().split(" ");
+				float shiftSizeInHour= Float.valueOf(TMShiftSize[0]);
+				sumOfAllShiftsLength = sumOfAllShiftsLength + shiftSizeInHour;
+
+			}else{
+				SimpleUtils.fail("Shift not loaded successfully in week view",false);
+			}
+		}
+		return(sumOfAllShiftsLength);
+
+	}
+
 	
 	@Override
 	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
@@ -659,7 +686,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	private HashMap<String, Float> updateScheduleHoursAndWages(HashMap<String, Float> scheduleHoursAndWages,
 			String hours, String hoursAndWagesKey) {
-		scheduleHoursAndWages.put(hoursAndWagesKey, Float.valueOf(hours));
+		scheduleHoursAndWages.put(hoursAndWagesKey, Float.valueOf(hours.replaceAll(",","")));
 		return scheduleHoursAndWages;
 	}
 
@@ -1648,12 +1675,19 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     weekDaysScheduleHours = (float) (weekDaysScheduleHours + Math.round(dayScheduleHours * 10.0) / 10.0) ;
                 }
             }
-            
-            if(weekDaysScheduleHours.equals(activeWeekScheduleHoursOnCard))
-            {
-                SimpleUtils.pass("Sum of Daily Schedule Hours equal to Week Schedule Hours! ('"+weekDaysScheduleHours+ "/"+activeWeekScheduleHoursOnCard+"')");
-                return true;
-            }
+            float totalShiftSizeForWeek = calcTotalScheduledHourForDayInWeekView();
+//            System.out.println("sum" + totalShiftSizeForWeek);
+            if(totalShiftSizeForWeek == activeWeekScheduleHoursOnCard){
+				SimpleUtils.pass("Sum of all the shifts in a week equal to Week Schedule Hours! ('"+totalShiftSizeForWeek+ "/"+activeWeekScheduleHoursOnCard+"')");
+				return true;
+			}else{
+				SimpleUtils.fail("Sum of all the shifts in an week is not equal to Week scheduled Hour!('"+totalShiftSizeForWeek+ "/"+activeWeekScheduleHoursOnCard+"')",false);
+			}
+//            if(weekDaysScheduleHours.equals(activeWeekScheduleHoursOnCard))
+//            {
+//                SimpleUtils.pass("Sum of Daily Schedule Hours equal to Week Schedule Hours! ('"+weekDaysScheduleHours+ "/"+activeWeekScheduleHoursOnCard+"')");
+//                return true;
+//            }
         } catch (Exception e) {
             SimpleUtils.fail("Unable to Verify Daily Schedule Hours with Week Schedule Hours!", true);
         }
@@ -2596,40 +2630,48 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //		}
 //	}
 
+    public void checkoutSchedule(){
+        click(checkOutTheScheduleButton);
+        SimpleUtils.pass("Schedule Generated Successfuly!");
+    }
+
+    public void updateAndGenerateSchedule(){
+        if(isElementEnabled(updateAndGenerateScheduleButton)) {
+            click(updateAndGenerateScheduleButton);
+            SimpleUtils.pass("Schedule Update and Generate button clicked Successfully!");
+            if (isElementEnabled(checkOutTheScheduleButton)) {
+                checkoutSchedule();
+            } else {
+                SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
+            }
+        }else{
+            SimpleUtils.fail("Not able to generate Schedule Successfully!",false);
+        }
+    }
 
 	@Override
 	public void generateOrUpdateAndGenerateSchedule() throws Exception {
 		if (isElementEnabled(generateSheduleButton)) {
-			click(generateSheduleButton);
-			if(isElementLoaded(generateSheduleForEnterBudgetBtn,5)){
-				click(generateSheduleForEnterBudgetBtn);
-				if (isElementEnabled(checkOutTheScheduleButton)) {
-					click(checkOutTheScheduleButton);
-					SimpleUtils.pass("Schedule Generated Successfuly!");
-				} else {
-					SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
-				}
-			}else if(isElementLoaded(updateAndGenerateScheduleButton,5)){
-						if(isElementEnabled(updateAndGenerateScheduleButton)) {
-							click(updateAndGenerateScheduleButton);
-							SimpleUtils.pass("Schedule Update and Generate button clicked Successfully!");
-							if (isElementEnabled(checkOutTheScheduleButton)) {
-								click(checkOutTheScheduleButton);
-								SimpleUtils.pass("Schedule Generated Successfuly!");
-							} else {
-								SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
-							}
-						}else{
-							SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
-						}
-			}else if(isElementEnabled(checkOutTheScheduleButton)) {
-				checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
-				SimpleUtils.pass("Schedule Generated Successfuly!");
-			}else{
-				SimpleUtils.fail("Not able to generate Schedule Successfully!",false);
-			}
+		    click(generateSheduleButton);
+            if(isElementLoaded(generateSheduleForEnterBudgetBtn,5)){
+                click(generateSheduleForEnterBudgetBtn);
+                if (isElementEnabled(checkOutTheScheduleButton,5)) {
+                    checkoutSchedule();
+                } else if(isElementLoaded(updateAndGenerateScheduleButton,5)){
+                    updateAndGenerateSchedule();
+                } else {
+                    SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
+                }
+            }else if(isElementLoaded(updateAndGenerateScheduleButton,5)){
+                    updateAndGenerateSchedule();
+            }else if(isElementEnabled(checkOutTheScheduleButton)) {
+                checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
+                SimpleUtils.pass("Schedule Generated Successfuly!");
+            }else{
+                SimpleUtils.fail("Not able to generate Schedule Successfully!",false);
+            }
 
-		} else {
+		}else {
 			SimpleUtils.assertOnFail("Schedule Already generated for active week!", false, true);
 		}
 	}
@@ -2936,4 +2978,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 		return false;
 	}
+
+	@Override
+	public void verifyScheduledHourNTMCountIsCorrect() throws Exception {
+		getHoursAndTeamMembersForEachDaysOfWeek();
+		verifyActiveWeekDailyScheduleHoursInWeekView();
+		verifyActiveWeekTeamMembersCountAvailableShiftCount();
+	}
+
 }

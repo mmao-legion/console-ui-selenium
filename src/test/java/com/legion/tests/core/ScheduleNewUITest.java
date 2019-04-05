@@ -24,6 +24,7 @@ import com.legion.pages.LoginPage;
 import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.StaffingGuidancePage;
+import com.legion.test.core.mobile.LoginTest;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -1122,6 +1123,71 @@ public class ScheduleNewUITest extends TestBase{
 			schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 		}
 	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Kendrascott2_Enterprise")
+	@TestName(description = "LEG-5232: Data for Schedule does not get loaded when user clicks on next day without waiting data for highlighted day gets loaded")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void generateScheduleAndCheckScheduleNTMSizeWeekView(String username, String password, String browser, String location)
+			throws Exception
+	{
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+		schedulePage.clickOnScheduleSubTab(LoginTest.SchedulePageSubTabText.Overview.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+		for(int i=0; i <overviewPageScheduledWeeks.size();i++)
+		{
+			if(overviewPageScheduledWeeks.get(i).getText().toLowerCase().contains(LoginTest.overviewWeeksStatus.Guidance.getValue().toLowerCase()))
+			{
+				scheduleOverviewPage.clickOnGuidanceBtnOnOverview(i);
+				if(schedulePage.isGenerateButtonLoaded())
+				{
+					SimpleUtils.pass("Guidance week found : '"+ schedulePage.getActiveWeekText() +"'");
+					schedulePage.generateOrUpdateAndGenerateSchedule();
+					schedulePage.verifyScheduledHourNTMCountIsCorrect();
+
+					break;
+				}
+			}
+		}
+
+//		schedulePage.clickOnDayView();
+//
+//		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
+//		Float scheduledHoursBeforeEditing = ScheduledHours.get("scheduledHours");
+//		HashMap<List<String>,List<String>> teamCount = schedulePage.calculateTeamCount();
+//		SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
+//		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
+//		schedulePage.customizeNewShiftPage();
+//		schedulePage.compareCustomizeStartDay(textStartDay);
+//		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+//		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+//		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
+//		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+//		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+//		schedulePage.clickOnCreateOrNextBtn();
+//		schedulePage.customizeNewShiftPage();
+//		schedulePage.verifySelectTeamMembersOption();
+//		schedulePage.clickOnOfferOrAssignBtn();
+//		int updatedGutterCount = schedulePage.getgutterSize();
+//		List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
+//		List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
+//		verifyTeamCount(previousTeamCount,currentTeamCount);
+//		schedulePage.clickSaveBtn();
+//		HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
+//		Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
+//		verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
+//		schedulePage.clickOnSchedulePublishButton();
+//		//Schedule overview should show 5 week's schedule
+	}
+
 
 
     @Automated(automated =  "Automated")
