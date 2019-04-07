@@ -25,16 +25,10 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 
-import java.lang.reflect.Method;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
@@ -625,7 +619,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(xpath = "//*[@class='shift-hover-seperator']/following-sibling::div[1]/div[1]")
 	private WebElement shiftSize;
 
-	@FindBy(css = "div.week-view-shift-hover-info-icon")
+	@FindBy(css = "img[ng-if*='hasViolateCompliance']")
 	private List<WebElement> infoIcon;
 
 
@@ -2985,5 +2979,106 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		verifyActiveWeekDailyScheduleHoursInWeekView();
 		verifyActiveWeekTeamMembersCountAvailableShiftCount();
 	}
+
+	@FindBy(css = "card-carousel-card[ng-if='compliance'] div.card-carousel-card-smart-card-required")
+	private WebElement complianceSmartCard;
+
+	@FindBy(css = "img[ng-if='hasViolateCompliance(line, scheduleWeekDay)'] ")
+	private List<WebElement> complianceInfoIcon;
+
+	@FindBy(css = "card-carousel-card[ng-if='compliance'] span")
+	private WebElement viewShift;
+
+	@FindBy (css = "div.sch-worker-display-name")
+	private List<WebElement> workerName;
+
+	@FindBy(xpath = "//*[contains(@class,'week-view-shift-hover-info-icon')]/preceding-sibling::div")
+	private List<WebElement> shiftDurationInWeekView;
+
+	@FindBy(xpath = "//*[contains(@class,'shift-hover-subheading')]/parent::div/div[1]")
+    private WebElement workerNameInPopUp;
+
+	@FindBy (xpath = "//*[@class='shift-hover-seperator']/preceding-sibling::div[1]/div[1]")
+    private WebElement shiftDurationInPopUp;
+
+	@FindBy (css = "card-carousel-card[ng-if='compliance'] h1")
+    private WebElement numberOfComplianceShift;
+
+	@FindBy (css = "div[ng-repeat*='getComplianceMessages'] span")
+    private WebElement complianceMessageInPopUp;
+
+
+	public boolean captureShiftDetails(){
+//	    HashMap<String, String> shiftDetailsWeekView = new HashMap<>();
+		HashMap<List<String>, List<String>> shiftWeekView = new HashMap<>();
+	    List<String> workerDetailsWeekView = new ArrayList<>();
+		List<String> shiftDurationWeekView = new ArrayList<>();
+		HashMap<List<String>, List<String>> shiftDetailsPopUpView = new HashMap<>();
+		List<String> workerDetailsPopUpView = new ArrayList<>();
+		List<String> shiftDurationPopUpView = new ArrayList<>();
+        boolean flag=true;
+        int counter=0;
+        if(areListElementVisible(infoIcon)) {
+            for (int i = 0; i < infoIcon.size(); i++) {
+                if (areListElementVisible(complianceInfoIcon)) {
+                	if(counter<complianceInfoIcon.size()) {
+						if (infoIcon.get(i).getAttribute("ng-if").equals(complianceInfoIcon.get(counter).getAttribute("ng-if"))) {
+							counter = counter + 1;
+							workerDetailsWeekView.add(workerName.get(i).getText().toLowerCase());
+							shiftDurationWeekView.add(shiftDurationInWeekView.get(i).getText());
+						}
+					}
+                } else {
+                    SimpleUtils.fail("Shift not loaded successfully in week view", true);
+                }
+            }
+			shiftWeekView.put(workerDetailsWeekView, shiftDurationWeekView);
+            if(isElementEnabled(viewShift,5)){
+                click(viewShift);
+                if(areListElementVisible(complianceInfoIcon)) {
+                    for (int i = 0; i < complianceInfoIcon.size(); i++) {
+                        click(complianceInfoIcon.get(i));
+                        workerDetailsPopUpView.add(workerNameInPopUp.getText().toLowerCase());
+                        shiftDurationPopUpView.add(shiftDurationInPopUp.getText());
+                    }
+					shiftDetailsPopUpView.put(workerDetailsPopUpView,shiftDurationPopUpView);
+                    System.out.println("Hello");
+                } else {
+                    SimpleUtils.fail("Shift not loaded successfully in week view", true);
+                }
+            }
+        }else{
+            SimpleUtils.fail("Shift not loaded successfully in week view",true);
+        }
+//        if(shiftDetailsWeekView.equals(shiftDetailsPopUpView))
+//        {
+//            flag=true;
+//        }else{
+//            flag=false;
+//        }
+        return flag;
+    }
+
+	@Override
+	public void complianceShiftSmartCard() throws Exception {
+	    if(isElementEnabled(complianceSmartCard)){
+	        String[] complianceShiftCountFromSmartCard = numberOfComplianceShift.getText().split(" ");
+	        int noOfcomplianceShiftFromSmartCard = Integer.valueOf(complianceShiftCountFromSmartCard[0]);
+            int noOfComplianceShiftInWeekScheduleTable = complianceInfoIcon.size();
+            if(captureShiftDetails() == true){
+                SimpleUtils.pass("Compliance filter works successfully, this week has "+numberOfComplianceShift.getText()+ " in compliance. Below are the shift details");
+                for (int i = 0; i < complianceInfoIcon.size(); i++) {
+                    click(complianceInfoIcon.get(i));
+                    SimpleUtils.pass(workerNameInPopUp.getText() + "'s working hour detail "+shiftSize +" has following compliance violation "+complianceMessageInPopUp);
+                }
+            }else{
+                SimpleUtils.fail("Compliance filter not working properly, compliance smartcard shows "+numberOfComplianceShift.getText()+ " in compliance, where as schedule table has "+ noOfComplianceShiftInWeekScheduleTable+" shifts in compliance", false);
+
+            }
+
+        }
+
+	}
+
 
 }
