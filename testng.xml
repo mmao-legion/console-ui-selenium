@@ -2,27 +2,20 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite verbose ="0" thread-count="10" name="LegionTest">
 	<parameter name="environment" value="QA"/>
-    <parameter name="platform" value="Android11"/>
-    <parameter name="executionon" value="realdevice"/>
-    <parameter name="runMode" value="mobileAndWeb"/>
+    <parameter name="platform" value="Android113"/>
+    <parameter name="executionon" value="realdevice3"/>
+    <parameter name="runMode" value="mobileAndWeb3"/>
 
 
     <listeners>
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
 
-  <test name="Controls New UI Test">
+  <test name="Schedule New UI Test">
         <classes>
-            <class name="com.legion.tests.core.ControlsNewUITest">
+            <class name="com.legion.tests.core.ScheduleNewUITest">
       	        <methods>
-                    <include name="updateUserLocationAsInternalAdmin"/>
-                    <include name="updateWorkingHoursAsInternalAdmin"/>
-                    <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>
-                    <include name="verifySchedulePlanningWindowAndAdditionalScheduleHoursAsInternalAdmin"/>
-                    <include name="updateControlsSectionLoadingAsStoreManager"/>
-                    <include name="updateAndValidateShiftIntervalTimeAsInternalAdmin"/>
-                    <include name="validateScheduleFinalizeFunctionalityAsInternalAdmin"/>
-                    <include name="updateAndValidateSchedulingPoliciesAllFieldsAsInternalAdmin"/>
+                    <include name="complianceSmartCard"/>
                 </methods>
             </class>
         </classes>
