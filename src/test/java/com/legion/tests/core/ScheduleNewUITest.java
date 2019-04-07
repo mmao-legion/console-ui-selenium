@@ -1158,34 +1158,22 @@ public class ScheduleNewUITest extends TestBase{
 			}
 		}
 
-//		schedulePage.clickOnDayView();
-//
-//		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
-//		Float scheduledHoursBeforeEditing = ScheduledHours.get("scheduledHours");
-//		HashMap<List<String>,List<String>> teamCount = schedulePage.calculateTeamCount();
-//		SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
-//		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
-//		schedulePage.customizeNewShiftPage();
-//		schedulePage.compareCustomizeStartDay(textStartDay);
-//		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-//		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-//		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
-//		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
-//		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-//		schedulePage.clickOnCreateOrNextBtn();
-//		schedulePage.customizeNewShiftPage();
-//		schedulePage.verifySelectTeamMembersOption();
-//		schedulePage.clickOnOfferOrAssignBtn();
-//		int updatedGutterCount = schedulePage.getgutterSize();
-//		List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
-//		List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
-//		verifyTeamCount(previousTeamCount,currentTeamCount);
-//		schedulePage.clickSaveBtn();
-//		HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
-//		Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
-//		verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
-//		schedulePage.clickOnSchedulePublishButton();
-//		//Schedule overview should show 5 week's schedule
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate functioning of compliance smartcard")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void complianceSmartCard(String username, String password, String browser, String location) throws Throwable {
+//        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	    schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		schedulePage.complianceShiftSmartCard();
 	}
 
 
