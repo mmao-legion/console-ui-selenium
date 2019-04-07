@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -35,6 +37,8 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class ScheduleNewUITest extends TestBase{
 	  private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
@@ -650,6 +654,8 @@ public class ScheduleNewUITest extends TestBase{
 	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 	        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
 	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			WebElement element = getDriver().findElement(By.tagName("script"));
+			String htmlCode = (String) ((JavascriptExecutor) getDriver()).executeScript("return arguments[0].innerHTML;", element);
 	        //The schedules that are already published should remain unchanged
 	        schedulePage.clickOnDayView();
 	        int previousGutterCount = schedulePage.getgutterSize();

@@ -2606,7 +2606,21 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 				if (isElementEnabled(checkOutTheScheduleButton)) {
 					click(checkOutTheScheduleButton);
 					SimpleUtils.pass("Schedule Generated Successfuly!");
-				} else {
+				} else if(isElementLoaded(updateAndGenerateScheduleButton,5)){
+					if(isElementEnabled(updateAndGenerateScheduleButton)) {
+						click(updateAndGenerateScheduleButton);
+						SimpleUtils.pass("Schedule Update and Generate button clicked Successfully!");
+						if (isElementEnabled(checkOutTheScheduleButton)) {
+							click(checkOutTheScheduleButton);
+							SimpleUtils.pass("Schedule Generated Successfuly!");
+						} else {
+							SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
+						}
+					}else{
+						SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
+					}
+				}
+				else {
 					SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
 				}
 			}else if(isElementLoaded(updateAndGenerateScheduleButton,5)){

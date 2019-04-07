@@ -412,19 +412,15 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				String timeOffEndDuration, String action) throws Exception{
 			boolean isTimeOffRequestToDoCardFound = false;
 			String timeOffRequestCardText = "TIME OFF REQUEST";
-			String timeOffStartDate = timeOffStartDuration.split(",")[0].split(" ")[1];
-			String timeOffStartMonth = timeOffStartDuration.split(",")[0].split(" ")[0];
-			String timeOffEndDate = timeOffEndDuration.split(",")[0].split(" ")[1];
-			String timeOffEndMonth = timeOffEndDuration.split(",")[0].split(" ")[0];
-			String startDurationMonthAndDate = timeOffStartMonth+" "+timeOffStartDate;
-			String endDurationMonthAndDate = timeOffEndMonth+" "+timeOffEndDate;
+			String timeOffStartDate = timeOffStartDuration.split(", ")[1];
+			String timeOffEndDate =  timeOffEndDuration.split(", ")[1];
 			if(isElementLoaded(todoCards.get(0))) {
 				for(WebElement todoCard :todoCards) {
 					if(isElementLoaded(nextToDoCardArrow, 10) && !todoCard.isDisplayed())
 						click(nextToDoCardArrow);
 					if(todoCard.getText().toLowerCase().contains(timeOffRequestCardText.toLowerCase())) {
-						if(todoCard.getText().toLowerCase().contains(startDurationMonthAndDate.toLowerCase())
-								&& todoCard.getText().toLowerCase().contains(endDurationMonthAndDate.toLowerCase())) {
+						if(todoCard.getText().toLowerCase().contains(timeOffStartDate.toLowerCase())
+								&& todoCard.getText().toLowerCase().contains(timeOffEndDate.toLowerCase())) {
 							isTimeOffRequestToDoCardFound = true;
 							if(action.toLowerCase().contains(timeOffRequestAction.Approve.getValue().toLowerCase())) {
 								WebElement timeOffApproveButton = todoCard.findElement(By.cssSelector("a[ng-click=\"askConfirm('approve')\"]"));

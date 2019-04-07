@@ -50,6 +50,8 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> teamMemberName = new ThreadLocal<>();
 	public static final ThreadLocal<String> screenshotLoc = new ThreadLocal<>();
 	public static ThreadLocal<String> screenShotURL = new ThreadLocal<>();
+	public static final ThreadLocal<String> timeOffStartTime = new ThreadLocal<>();
+	public static final ThreadLocal<String> timeOffEndTime = new ThreadLocal<>();
 
 	public static void setScreenshotLocation(String value) { screenshotLoc.set(value); }
 
@@ -61,6 +63,14 @@ public class MyThreadLocal {
 	public static void setTeamMemberName(String value) { teamMemberName.set(value); }
 
 	public static String getTeamMemberName() { return teamMemberName.get(); }
+
+	public static void setTimeOffStartTime(String value) { timeOffStartTime.set(value); }
+
+	public static String getTimeOffStartTime() { return timeOffStartTime.get(); }
+
+	public static void setTimeOffEndTime(String value) { timeOffEndTime.set(value); }
+
+	public static String getTimeOffEndTime() { return timeOffEndTime.get(); }
 
 	public static void setScheduleHoursStartTime(String value) { scheduleHoursStartTime.set(value); }
 

@@ -286,7 +286,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void clickOnGlobalLocationButton() throws Exception {
-		if(isElementLoaded(globalLocationButton)) {
+		if(isElementLoaded(globalLocationButton,5)) {
 			click(globalLocationButton);
 			SimpleUtils.pass("Controls Page: 'Global Location' loaded successfully.");
 		}
@@ -297,7 +297,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	
 	@Override
 	public void clickOnControlsCompanyProfileCard() throws Exception {
-		if(isElementLoaded(companyProfileCard))
+		if(isElementLoaded(companyProfileCard,5))
 			click(companyProfileCard);
 		else
 			SimpleUtils.fail("Controls Page: Company Profile Card not Loaded!", false);

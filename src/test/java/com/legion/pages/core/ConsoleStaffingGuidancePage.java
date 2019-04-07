@@ -134,7 +134,7 @@ public class ConsoleStaffingGuidancePage extends BasePage implements StaffingGui
 			staffingGuidanceElement.click();
 		}
 	}
-	
+
 	public Boolean isStaffingGuidanceTabActive() throws Exception
 	{
 		if(isElementLoaded(schedulePageSelectedSubTab) && schedulePageSelectedSubTab.getText().toLowerCase().contains(staffingGuidanceTabLabelText.toLowerCase()))
