@@ -1,5 +1,5 @@
 {
-  "CHROME_DRIVER_PATH": "C:\\Users\\gunja\\Downloads\\chromedriver_win32\\chromedriver.exe",
+  "CHROME_DRIVER_PATH": "C:\\Users\\nishant08\\Downloads\\chromedriver\\chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "D:\\geckodriver.exe",
  "DEVURL": "https://mobilestage.legion.work/",
  "QAURL": "https://staging-enterprise.dev.legion.work/",

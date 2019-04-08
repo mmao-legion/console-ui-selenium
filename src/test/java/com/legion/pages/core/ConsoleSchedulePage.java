@@ -1603,6 +1603,17 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	}
 
     @Override
+    public void verifyScheduledHourNTMCountIsCorrect() throws Exception {
+
+    }
+
+    @Override
+    public void complianceShiftSmartCard() throws Exception {
+
+    }
+
+
+    @Override
     public void generateOrUpdateAndGenerateSchedule() throws Exception {
 
     }

@@ -10,46 +10,7 @@
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
 
-  
-  <!--<test name="Controls New UI Test">-->
-        <!--<classes>-->
-            <!--<class name="com.legion.tests.core.ControlsNewUITest">-->
-      	        <!--<methods>-->
-                    <!--<include name="updateUserLocationAsInternalAdmin"/>-->
-                    <!--&lt;!&ndash;<include name="updateWorkingHoursAsInternalAdmin"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifySchedulePlanningWindowAndAdditionalScheduleHoursAsInternalAdmin"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="updateControlsSectionLoadingAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="updateAndValidateShiftIntervalTimeAsInternalAdmin"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="validateScheduleFinalizeFunctionalityAsInternalAdmin"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="updateAndValidateSchedulingPoliciesAllFieldsAsInternalAdmin"/>&ndash;&gt;-->
-                <!--</methods>-->
-            <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
-
-    <!-- <test name="Traffic Forecast for New UI Test">
-        <classes>
-            <class name="com.legion.tests.core.TrafficForecastTest">
-                <methods>
-                    <include name="trafficForecastDataAsStoreManagerTest"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Staffing Guidance for New UI Test">
-        <classes>
-            <class name="com.legion.tests.core.StaffingGuidanceTestKendraScott2">
-                <methods>
-                    <include name="staffingGuidanceDataAsStoreManagerTestKendraScott2"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-
--->
-    <test name="Schedule New UI Test">
+  <test name="Schedule New UI Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleNewUITest">
       	        <methods>
@@ -63,7 +24,7 @@
                     <!--<include name="verifyUnpublishedScheduleVisibilityForTMsAndTLsAsStoreManager"/>-->
                     <!--<include name="verifyAndPublishScheduleAsStoreManager"/>-->
                     <!--<include name="editPopUpScheduleShouldNotPresentAsStoreManager"/>-->
-                    <include name="editOpenShiftScheduleAsStoreManager"/>
+                    <!--<include name="editOpenShiftScheduleAsStoreManager"/>-->
                     <!--<include name="editManualShiftScheduleAsStoreManager"/>-->
                     <!--<include name="editAssignTeamScheduleAsStoreManager"/>-->
                     <!--<include name="navigateToCurrentAndOtherWeekAsStoreManager"/>-->
@@ -85,11 +46,13 @@
                     <!--<include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>-->
                     <!--<include name="validateDashboardTodaysForcastAsStoreManager"/>-->
                     <!--<include name="changeAndValidateOperatingHoursAsInternalAdmin"/>-->
+                    <include name="complianceSmartCard"/>
+
                 </methods>
              </class>
         </classes>
     </test>
-<!-- 
+<!--
 
     <test name="Schedule Overview Test">
         <classes>
@@ -113,7 +76,7 @@
             <!--</class>-->
         <!--</classes>-->
     <!--</test>-->
-    
+
     <!-- <test name="Team Test">
         <classes>
             <class name="com.legion.tests.core.TimeSheetTest">
@@ -123,8 +86,8 @@
             </class>
         </classes>
     </test> -->
-    
-    
+
+
     <!-- <test name="Analytics Test">
         <classes>
             <class name="com.legion.tests.core.AnalyticsTestKendraScott2">
@@ -135,8 +98,8 @@
             </class>
         </classes>
     </test> -->
-    
-    
+
+
    <!--  <test name="Timesheet Test">
         <classes>
             <class name="com.legion.tests.core.TimeSheetTest">
@@ -146,7 +109,7 @@
             </class>
         </classes>
     </test> -->
-    
+
   <!--<test name="Team New UI Test">-->
         <!--<classes>-->
             <!--<class name="com.legion.tests.core.TeamTestKendraScott2">-->
@@ -157,8 +120,8 @@
             <!--</class>-->
         <!--</classes>-->
     <!--</test>-->
-    
-    
+
+
     <!--<test name="Team New UI Test">-->
         <!--<classes>-->
             <!--<class name="com.legion.tests.core.ProfileNewUITest">-->
