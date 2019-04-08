@@ -355,7 +355,7 @@ public class ControlsNewUITest extends TestBase{
   
   @Automated(automated =  "Automated")
   @Owner(owner = "Naval")
-  @Enterprise(name = "Coffee_Enterprise")
+  @Enterprise(name = "KendraScott2_Enterprise")
   @TestName(description = "TP-154: Controls :- Shift Interval minutes for the enterprise should get updated successfully.")
   @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
   public void updateAndValidateShiftIntervalTimeAsInternalAdmin(String browser, String username, String password, String location)
@@ -369,7 +369,6 @@ public class ControlsNewUITest extends TestBase{
       controlsNewUIPage.clickOnControlsSchedulingPolicies();
       controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
       controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue());
-      
       Thread.sleep(1000);
       SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
       schedulePage.clickOnScheduleConsoleMenuItem();
@@ -388,8 +387,7 @@ public class ControlsNewUITest extends TestBase{
       	{
       		isWeekFoundToGenerate = true;
       		basePase.click(overviewWeek);
-      		schedulePage.generateSchedule();
-      		Thread.sleep(1000);
+      		schedulePage.generateOrUpdateAndGenerateSchedule();
       		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
       		if(isActiveWeekGenerated)
       			SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' Generated Successfully.");

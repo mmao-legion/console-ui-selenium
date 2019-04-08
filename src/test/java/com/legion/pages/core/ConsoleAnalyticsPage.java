@@ -80,25 +80,32 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	 
 	 @FindBy(css= "div.sch-calendar-day-dimension.sch-calendar-day")
 	 private List<WebElement> analyticsCalendarDays;
-	
+
+	 @FindBy(css= "div.sch.ng-scope")
+	 private WebElement alalyticsDivReportElement;
+
+	 @FindBy(xpath= "//span[contains(text(),'Reports')]")
+	 private WebElement analyticsReportTab;
+
+
 	 @FindBy(css = "div.sub-navigation-view-link")
 	 private List<WebElement> analyticsSubTabs;
-	
+
 	 @FindBy(css="div.sub-navigation-view-link.active")
 	 private WebElement analyticsActiveSubTab;
-	
+
 	 @FindBy(css = "tr[ng-repeat=\"kpi in kpiReports\"]")
 	 private List<WebElement> kpiReportRows;
-	
+
 	 @FindBy(css = "div.console-navigation-item-label.Analytics")
 	 private WebElement consoleNavigationAnalytics;
-	
+
 	 @FindBy(css = "div.lgnCheckBox")
 	 private List<WebElement> forecstAndScheduleCheckBoxes;
-	
+
 	 @FindBy(css = "div[aria-label=\"A tabular representation of the data in the chart.\"]")
 	 private List<WebElement> hidenTablesData;
-		
+
 
 	public ConsoleAnalyticsPage(){
 		PageFactory.initElements(getDriver(), this);
@@ -289,6 +296,78 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		return duration;
 	}
 
+
+	//added by Gunjan
+
+	public boolean loadAnalyticsSubTab() throws Exception{
+		boolean flag = true;
+		if(isElementLoaded(consoleAnalyticsPageTabElement)){
+			//activeConsoleName = analyticsConsoleName.getText();
+			click(consoleAnalyticsPageTabElement);
+			if(analyticsDivElements.size()!=0){
+				for(int i=0;i< analyticsDivElements.size();i++){
+					if(isElementLoaded(analyticsDivElements.get(i))){
+						SimpleUtils.pass("Analytics sub-tab element loaded successfully!");
+						flag = true;
+						return flag;
+					}else{
+						SimpleUtils.report("Analytics sub-tab element not Loaded Successfully for few !");
+					}
+				}
+
+			}else{
+				SimpleUtils.fail("Analytics sub-tab not Loaded Successfully!",true);
+				flag = false;
+				return flag;
+			}
+		}else{
+			SimpleUtils.fail("Analytics menu Tab not Loaded Successfully!",true);
+		}
+		return flag;
+
+	}
+
+	public boolean loadReportsSubTab() throws Exception{
+		boolean flag = true;
+		if(isElementLoaded(analyticsReportTab)){
+			//activeConsoleName = analyticsConsoleName.getText();
+			click(analyticsReportTab);
+			if(isElementLoaded(alalyticsDivReportElement)){
+				SimpleUtils.pass("Analytics Report Section Loaded Successfully!");
+				flag = true;
+				return flag;
+				}else{
+					SimpleUtils.fail("Analytics Report Section not Loaded Successfully for few !",true);
+					flag = false;
+					return flag;
+			}
+		}else{
+			SimpleUtils.fail("Reports Analytics sub-menu Tab not Loaded Successfully!",true);
+
+		}
+		return flag;
+
+	}
+
+	@Override
+	public boolean loadAnalyticsTab() throws Exception{
+		// TODO Auto-generated method stub
+		boolean flag=true;
+		boolean resultLoadAnalyticsSubTab=loadAnalyticsSubTab();
+		boolean resultLoadReportsSubTab=loadReportsSubTab();
+		if(resultLoadAnalyticsSubTab==true && resultLoadReportsSubTab==true){
+			SimpleUtils.pass("Analytics tab loaded successfully");
+			flag = true;
+			return flag;
+		}else if(resultLoadAnalyticsSubTab!=true || resultLoadReportsSubTab!=true){
+			SimpleUtils.fail("Analytics tab not loaded successfully",true);
+		}else {
+			SimpleUtils.fail("Analytics tab not loaded successfully",true);
+		}
+		return flag;
+	}
+
+
 	@Override
 	public void clickOnAnalyticsSubTab(String subTabLabel) throws Exception
 	{
@@ -297,7 +376,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 				if(analyticsSubTab.getText().toLowerCase().contains(subTabLabel.toLowerCase()))
 					click(analyticsSubTab);
 			}
-			
+
 			if(isElementLoaded(analyticsActiveSubTab) && analyticsActiveSubTab.getText().toLowerCase().contains(subTabLabel.toLowerCase()))
 				SimpleUtils.pass("Analytics Page: sub tab '"+ subTabLabel +"' selected successfully.");
 			else
@@ -335,7 +414,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		else
 			SimpleUtils.fail("Unable to click on 'Analytics' console menu.", false);
 	}
-	
+
 
 	@Override
 	public void selectAnalyticsCheckBoxByLabel(String label) throws Exception
@@ -345,7 +424,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 			for(WebElement analyticsCheckBox : forecstAndScheduleCheckBoxes)
 			{
 				WebElement parent = analyticsCheckBox.findElement(By.xpath(".."));
-				if(parent.getText().toLowerCase().contains(label.toLowerCase()) 
+				if(parent.getText().toLowerCase().contains(label.toLowerCase())
 						&& ! analyticsCheckBox.getAttribute("class").contains("checked")) {
 					click(analyticsCheckBox);
 					SimpleUtils.pass("Analytics Page: '"+label+"' checkbox selected successfully.");
@@ -358,7 +437,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		else
 			SimpleUtils.fail("Analytics Page: Unable to find '"+label+"' checkbox.",false);
 	}
-	
+
 	@Override
 	public HashMap<String, Float> getAnalyticsKPIHoursByLabel(String label) throws Exception
 	{
@@ -379,7 +458,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 						}
 					}
 				}
-			}			
+			}
 		}
 		return analyticsKPIHours;
 	}

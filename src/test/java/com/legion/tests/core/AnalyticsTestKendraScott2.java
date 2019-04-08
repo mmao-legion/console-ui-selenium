@@ -60,9 +60,9 @@ public class AnalyticsTestKendraScott2 extends TestBase{
 	@TestName(description = "Verify Analytics flow")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void gotoAnalyticsPageTest(String username, String password, String browser, String location) throws Exception {
-	   AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
-	   analyticsPage.gotoAnalyticsPage();			
-   }
+		AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+		analyticsPage.gotoAnalyticsPage();
+	}
 	
 	
 	@Automated(automated ="Automated")

@@ -20,8 +20,7 @@ public interface ProfileNewUIPage {
 
 	public void selectTimeOffReason(String reasonLabel) throws Exception;
 
-	public void createNewTimeOffRequest(String timeOffReasonLabel, String timeOffExplanationText,
-			String timeOffStartDate, String timeOffEndDate) throws Exception;
+	public void createNewTimeOffRequest(String timeOffReasonLabel, String timeOffExplanationText) throws Exception;
 
 	public void clickOnSaveTimeOffRequestBtn() throws Exception;
 

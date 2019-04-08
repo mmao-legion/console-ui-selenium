@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -24,6 +26,7 @@ import com.legion.pages.LoginPage;
 import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.StaffingGuidancePage;
+import com.legion.test.core.mobile.LoginTest;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -35,6 +38,8 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class ScheduleNewUITest extends TestBase{
 	  private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
@@ -650,6 +655,8 @@ public class ScheduleNewUITest extends TestBase{
 	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 	        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
 	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			WebElement element = getDriver().findElement(By.tagName("script"));
+			String htmlCode = (String) ((JavascriptExecutor) getDriver()).executeScript("return arguments[0].innerHTML;", element);
 	        //The schedules that are already published should remain unchanged
 	        schedulePage.clickOnDayView();
 	        int previousGutterCount = schedulePage.getgutterSize();
@@ -1122,6 +1129,59 @@ public class ScheduleNewUITest extends TestBase{
 			schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 		}
 	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Kendrascott2_Enterprise")
+	@TestName(description = "LEG-5232: Data for Schedule does not get loaded when user clicks on next day without waiting data for highlighted day gets loaded")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void generateScheduleAndCheckScheduleNTMSizeWeekView(String username, String password, String browser, String location)
+			throws Exception
+	{
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+		schedulePage.clickOnScheduleSubTab(LoginTest.SchedulePageSubTabText.Overview.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+		for(int i=0; i <overviewPageScheduledWeeks.size();i++)
+		{
+			if(overviewPageScheduledWeeks.get(i).getText().toLowerCase().contains(LoginTest.overviewWeeksStatus.Guidance.getValue().toLowerCase()))
+			{
+				scheduleOverviewPage.clickOnGuidanceBtnOnOverview(i);
+				if(schedulePage.isGenerateButtonLoaded())
+				{
+					SimpleUtils.pass("Guidance week found : '"+ schedulePage.getActiveWeekText() +"'");
+					schedulePage.generateOrUpdateAndGenerateSchedule();
+					schedulePage.verifyScheduledHourNTMCountIsCorrect();
+
+					break;
+				}
+			}
+		}
+
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate functioning of compliance smartcard")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void complianceSmartCard(String username, String password, String browser, String location) throws Throwable {
+//        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	    schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		schedulePage.complianceShiftSmartCard();
+	}
+
 
 
     @Automated(automated =  "Automated")

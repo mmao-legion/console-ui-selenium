@@ -2,7 +2,14 @@ package com.legion.pages;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -36,6 +43,18 @@ public class BasePage {
         	ExtentTestManager.getTest().log(Status.WARNING,te);
         }
     }
+    
+    //click method for mobile app
+    
+    public void clickOnMobileElement(WebElement element, boolean... shouldWait) {
+    	try {
+            waitUntilElementIsVisibleOnMobile(element);
+            element.click();
+        } catch (TimeoutException te) {
+        	ExtentTestManager.getTest().log(Status.WARNING,te);
+        }
+    }
+    
 
     public int calcListLength(List<WebElement> listLength){
     	return listLength.size();
@@ -90,10 +109,11 @@ public class BasePage {
     	
     }
     
+    // method for mobile application
     
-    public boolean isElementLoaded(WebElement element, long timeOutInSeconds) throws Exception
+    public boolean isElementLoadedOnMobile(WebElement element) throws Exception
     {
-    	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), timeOutInSeconds);
+    	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getAndroidDriver(), 30);
     	 
     	try {
     	    tempWait.until(ExpectedConditions.visibilityOf(element)); 
@@ -104,11 +124,55 @@ public class BasePage {
     	}
     	
     }
+
+    public boolean isElementLoadedOnMobile(WebElement element, long timeOutInSeconds) throws Exception
+    {
+        WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getAndroidDriver(), timeOutInSeconds);
+
+        try {
+            tempWait.until(ExpectedConditions.visibilityOf(element));
+            return true;
+        }
+        catch (NoSuchElementException | TimeoutException te) {
+            return false;
+        }
+
+    }
+
+
+
+
+    public boolean isElementLoaded(WebElement element, long timeOutInSeconds) throws Exception
+    {
+    	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), timeOutInSeconds);
+    	 
+    	try {
+    	    tempWait.until(ExpectedConditions.visibilityOf(element));
+            return true;
+    	}
+    	catch (NoSuchElementException | TimeoutException te) {
+    		return false;	
+    	}
+    	
+    }
+    
     
     public static void waitUntilElementIsVisible(final WebElement element) {
         ExpectedCondition<Boolean> expectation = _driver -> element.isDisplayed();
 
         Wait<WebDriver> wait = new WebDriverWait(getDriver(), 60);
+        try {
+            wait.until(webDriver -> expectation);
+        } catch (Throwable ignored) {
+        }
+    }
+    
+    // method created for mobile app
+    
+    public static void waitUntilElementIsVisibleOnMobile(final WebElement element) {
+        ExpectedCondition<Boolean> expectation = _driver -> element.isDisplayed();
+
+        Wait<WebDriver> wait = new WebDriverWait(MyThreadLocal.getAndroidDriver(), 60);
         try {
             wait.until(webDriver -> expectation);
         } catch (Throwable ignored) {
@@ -172,5 +236,191 @@ public class BasePage {
         Actions actions = new Actions(getDriver());
         actions.dragAndDrop(fromDestination, toDestination).build().perform();
     }
-   
+
+
+    //added by Nishant for Optimization of code
+
+    public boolean isElementEnabled(WebElement enabledElement){
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(
+                MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(60))
+                .pollingEvery(Duration.ofSeconds(5))
+                .ignoring(org.openqa.selenium.NoSuchElementException.class);
+        Boolean element =false;
+
+        try{
+            element = wait.until(new Function<WebDriver, Boolean>() {
+                @Override
+                public Boolean apply(WebDriver t) {
+                    boolean display = false;
+                    display = enabledElement.isEnabled();
+                    if(display )
+                        return true;
+                    else
+                        return false;
+                }
+            });
+        }catch(NoSuchElementException | TimeoutException te){
+            return element;
+        }
+        return element;
+    }
+
+    //added by Gunjan
+    public boolean isElementEnabled(WebElement enabledElement, long timeOutInSeconds){
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(
+                MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(timeOutInSeconds))
+                .pollingEvery(Duration.ofSeconds(2))
+                .ignoring(org.openqa.selenium.NoSuchElementException.class);
+        Boolean element =false;
+
+        try{
+            element = wait.until(new Function<WebDriver, Boolean>() {
+                @Override
+                public Boolean apply(WebDriver t) {
+                    boolean display = false;
+                    display = enabledElement.isEnabled();
+                    if(display )
+                        return true;
+                    else
+                        return false;
+                }
+            });
+        }catch(NoSuchElementException | TimeoutException te){
+            return element;
+        }
+        return element;
+    }
+
+
+
+
+
+//    public boolean isElementPresent(WebElement displayElement){
+//        Wait<WebDriver> wait = new FluentWait<WebDriver>(
+//                MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(5))
+//                .pollingEvery(Duration.ofSeconds(5))
+//                .ignoring(org.openqa.selenium.NoSuchElementException.class);
+//        try{
+//            Boolean element = wait.until(new Function<WebDriver, Boolean>() {
+//                @Override
+//                public Boolean apply(WebDriver t) {
+//                    boolean display = false;
+//
+//                    display = displayElement.isDisplayed();
+//                    if(display )
+//                        return true;
+//                    else
+//                        return false;
+//                }
+//            });
+//        }catch()
+//
+//        return false;
+//    }
+
+
+
+    public boolean areListElementVisible(List<WebElement> listElement){
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(
+                MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(60))
+                .pollingEvery(Duration.ofSeconds(5))
+                .ignoring(org.openqa.selenium.NoSuchElementException.class);
+        Boolean element =false;
+        try{
+            element = wait.until(new Function<WebDriver, Boolean>() {
+                @Override
+                public Boolean apply(WebDriver t) {
+                    int size = 0;
+                    size = listElement.size();
+                    if(size > 0 )
+                        return true;
+                    else
+                        return false;
+                }
+            });
+        }catch(NoSuchElementException | TimeoutException te){
+            return element;
+        }
+
+        return element;
+    }
+
+
+    public boolean areListElementVisible(List<WebElement> listElement, long timeOutInSeconds ){
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(
+                MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(timeOutInSeconds))
+                .pollingEvery(Duration.ofSeconds(5))
+                .ignoring(org.openqa.selenium.NoSuchElementException.class);
+        Boolean element =false;
+        try{
+            element = wait.until(new Function<WebDriver, Boolean>() {
+                @Override
+                public Boolean apply(WebDriver t) {
+                    int size = 0;
+                    size = listElement.size();
+                    if(size > 0 )
+                        return true;
+                    else
+                        return false;
+                }
+            });
+        }catch(NoSuchElementException | TimeoutException te){
+            return element;
+        }
+
+        return element;
+    }
+
+
+    public void selectDate(int daysFromToday) {
+        LocalDate now = LocalDate.now();
+        LocalDate wanted = LocalDate.now().plusDays(daysFromToday);
+        WebElement btnNextMonth = null;
+        int numClicks = wanted.getMonthValue() - now.getMonthValue();
+        if (numClicks < 0) {
+            numClicks = daysFromToday / 30;
+        }
+        if (numClicks >0){
+            try{
+                btnNextMonth = getDriver().findElement(By.cssSelector("span.icon.ion-chevron-right"));
+            }catch(Exception e){
+                SimpleUtils.fail("Not able to click Next month arrow",false);
+            }
+        }
+
+        for (int i = 0; i < numClicks; i++) {
+            click(btnNextMonth);
+        }
+
+        List<WebElement> mCalendarDates = getDriver().findElements(By.cssSelector("div.ranged-calendar__day.ng-binding.ng-scope.real-day"));
+        for (WebElement mDate : mCalendarDates) {
+            if (Integer.parseInt(mDate.getText()) == wanted.getDayOfMonth()) {
+                mDate.click();
+                return;
+            }
+        }
+    }
+
+
+    public HashMap<String,String> getTimeOffDate(int fromDate, int toDate) {
+        HashMap<String, String> timeOffDate = new HashMap<>();
+        String timeOffStartDate = getDateCalculation(fromDate);
+        String timeOffEndDate = getDateCalculation(toDate);
+        timeOffDate.put("startDateTimeOff", timeOffStartDate);
+        timeOffDate.put("endDateTimeOff", timeOffEndDate);
+        return timeOffDate;
+    }
+
+    public String getDateCalculation(int daysFromToday){
+
+        LocalDate now = LocalDate.now();
+        LocalDate wanted = LocalDate.now().plusDays(daysFromToday);
+        String dayOfWeek = wanted.getDayOfWeek().toString().substring(0,1) + wanted.getDayOfWeek().toString().substring(1,3).toLowerCase();
+        String monthName = wanted.getMonth().toString().substring(0,1) + wanted.getMonth().toString().substring(1,3).toLowerCase();
+        String timeOffDate = dayOfWeek + ", " + monthName + " " + wanted.getDayOfMonth();
+        return timeOffDate;
+    }
+
+
+
 }

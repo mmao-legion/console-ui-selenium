@@ -20,5 +20,7 @@ public interface StaffingGuidancePage {
 	public List<HashMap<String, String>> getStaffingGuidanceVersionHistory() throws Exception;
 	public List<HashMap<String, String>> getAnalyzePopupStaffingGuidanceAndLatestVersionData() throws Exception;
 	public String getActiveWorkRole() throws Exception;
+	public boolean loadStaffingGuidance() throws Exception;
+	public void navigateStaffingGuidance(String nextWeekViewOrPreviousWeekView, int weekCount) throws Exception;
 	
 }

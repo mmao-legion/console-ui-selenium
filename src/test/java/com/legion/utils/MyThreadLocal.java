@@ -1,5 +1,8 @@
 package com.legion.utils;
 
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -42,12 +45,56 @@ public class MyThreadLocal {
     public static ThreadLocal<String> consoleName = new ThreadLocal<>();
     public static final ThreadLocal<String> scheduleHoursStartTime = new ThreadLocal<>();
     public static final ThreadLocal<String> scheduleHoursEndTime = new ThreadLocal<>();
+	public static ThreadLocal<Integer> testCaseId = new ThreadLocal<>();
+	public static ThreadLocal<Integer> testRailRunId = new ThreadLocal<>();
+	public static final ThreadLocal<String> teamMemberName = new ThreadLocal<>();
+	public static final ThreadLocal<String> screenshotLoc = new ThreadLocal<>();
+	public static ThreadLocal<String> screenShotURL = new ThreadLocal<>();
+	public static final ThreadLocal<String> timeOffStartTime = new ThreadLocal<>();
+	public static final ThreadLocal<String> timeOffEndTime = new ThreadLocal<>();
+
+	public static void setScreenshotLocation(String value) { screenshotLoc.set(value); }
+
+	public static String getScreenshotLocation() { return screenshotLoc.get(); }
+
+	public static void setscreenShotURL(String value) { screenShotURL.set(value); }
+	public static String getscreenShotURL() { return screenShotURL.get(); }
+
+	public static void setTeamMemberName(String value) { teamMemberName.set(value); }
+
+	public static String getTeamMemberName() { return teamMemberName.get(); }
+
+	public static void setTimeOffStartTime(String value) { timeOffStartTime.set(value); }
+
+	public static String getTimeOffStartTime() { return timeOffStartTime.get(); }
+
+	public static void setTimeOffEndTime(String value) { timeOffEndTime.set(value); }
+
+	public static String getTimeOffEndTime() { return timeOffEndTime.get(); }
 
 	public static void setScheduleHoursStartTime(String value) { scheduleHoursStartTime.set(value); }
 
 	public static String getScheduleHoursStartTime() { return scheduleHoursStartTime.get(); }
 	public static void setScheduleHoursEndTime(String value) { scheduleHoursEndTime.set(value); }
 	public static String getScheduleHoursEndTime() { return scheduleHoursEndTime.get(); }
+
+	public static void setTestCaseId(Integer value) {
+		testCaseId.set(value);
+	}
+
+	public static Integer getTestCaseId() {
+		return testCaseId.get();
+	}
+
+	public static void setTestRailRunId(Integer value) {
+		testRailRunId.set(value);
+	}
+
+	public static Integer getTestRailRunId() {
+		return testRailRunId.get();
+	}
+    public static final ThreadLocal<AndroidDriver<MobileElement>> android_driver = new ThreadLocal<>();
+    public static ThreadLocal<String> platformname = new ThreadLocal<>();
 		
 	public static void setTotalSuiteTestCases(Integer value) {
 		totalSuiteTestCases.set(value);
@@ -154,6 +201,7 @@ public class MyThreadLocal {
 		return driver_type.get();
 	}
 
+
 	public static void setVerificationMap(HashMap<ITestResult, List<Throwable>> vMap) {
 		verificationFailuresMap.set(vMap);
 	}
@@ -188,6 +236,14 @@ public class MyThreadLocal {
 
 	public static EventFiringWebDriver getDriver() {
 		return driver.get();
+	}
+
+	public static void setAndroidDriver(AndroidDriver<MobileElement> _driver) {
+		android_driver.set(_driver);
+	}
+
+	public static AndroidDriver<MobileElement> getAndroidDriver() {
+		return android_driver.get();
 	}
 
 	public static void setEnterprise(String _enterprise) {
@@ -241,6 +297,17 @@ public class MyThreadLocal {
 		return consoleName.get();
 	}
 
-	
+
+	//set screenshot Console name
+	public static void setPlatformName(String value){
+		platformname.set(value);
+	}
+
+	//get screenshot Console name
+	public static String getPlatformName(){
+		return platformname.get();
+	}
+
+
 
 }

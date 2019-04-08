@@ -71,6 +71,17 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy (css = ".center.ng-scope")
 	private WebElement controlsPage;
 
+	@FindBy (css = "div.col-sm-8.text-left")
+	private WebElement todaysForecast;
+	
+	@FindBy (css = "div.col-sm-4.text-left")
+	private WebElement startingSoon;
+	
+	@FindBy (css = "div.fx-center")
+	private WebElement welcomeText;
+	
+	
+	
     public ConsoleDashboardPage() {
     	PageFactory.initElements(getDriver(), this);
     }
@@ -85,7 +96,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     		return false;
     	}
     	if(isElementLoaded(dashboardTodaysForecastDiv)){
-    		SimpleUtils.pass("Today's Fore Cast Labels loaded Successfully on Dashboard!");
+    		SimpleUtils.pass("Today's ForeCast Labels loaded Successfully on Dashboard!");
     	}else{
     		return false;
     	}
@@ -122,7 +133,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	if(isElementLoaded(dashboardUpcomingShiftContainer))
     		SimpleUtils.pass("Dashboard Page 'Upcoming Shift Container' Section Loaded Successfully!");
     	else
-    		SimpleUtils.fail("Dashboard Page 'Upcoming Shift Container' Section Loaded Successfully!",true);
+    		SimpleUtils.fail("Dashboard Page 'Upcoming Shift Container' Section not Loaded Successfully!",true);
     	
     	/*
     	 *  Check whether 'Today's Forecast' Section appear or not on Dashboard.
@@ -130,7 +141,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	if(isElementLoaded(dashboardTodaysForecastSection))
     		SimpleUtils.pass("Dashboard Page 'Today's Forecast' Section Loaded Successfully!");
     	else
-    		SimpleUtils.fail("Dashboard Page 'Today's Forecast' Section Loaded Successfully!",true);
+    		SimpleUtils.fail("Dashboard Page 'Today's Forecast' Section not Loaded Successfully!",true);
     	
     	/*
     	 *  Check whether 'Projected Demand Graph' Section appear or not on Dashboard.
@@ -138,7 +149,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	if(isElementLoaded(dashboardProjectedDemandGraph))
     		SimpleUtils.pass("Dashboard Page 'Projected Demand Graph' Section Loaded Successfully!");
     	else
-    		SimpleUtils.fail("Dashboard Page 'Projected Demand Graph' Section Loaded Successfully!",true);
+    		SimpleUtils.fail("Dashboard Page 'Projected Demand Graph' Section not Loaded Successfully!",true);
 
     }
 

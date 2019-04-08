@@ -13,6 +13,8 @@ public interface AnalyticsPage {
 
 	public String getAnalyticsActiveDuration();
 
+	public boolean loadAnalyticsTab() throws Exception;
+
 	public void clickOnAnalyticsSubTab(String subTabLabel) throws Exception;
 
 	public void exportKPIReportByTitle(String kpiTitle) throws Exception;

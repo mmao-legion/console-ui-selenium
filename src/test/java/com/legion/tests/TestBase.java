@@ -1,5 +1,9 @@
 package com.legion.tests;
 
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriverService;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
 
 import com.aventstack.extentreports.ExtentReports;
@@ -12,6 +16,8 @@ import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.pagefactories.ConsoleWebPageFactory;
 import com.legion.pages.pagefactories.PageFactory;
+import com.legion.pages.pagefactories.mobile.MobilePageFactory;
+import com.legion.pages.pagefactories.mobile.MobileWebPageFactory;
 import com.legion.tests.testframework.ExtentReportManager;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.tests.testframework.LegionTestListener;
@@ -20,6 +26,9 @@ import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecuteResultHandler;
+import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,12 +40,14 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
+import static com.legion.utils.MyThreadLocal.setTestRailRunId;
 import static org.testng.AssertJUnit.assertTrue;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -56,6 +67,13 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
+
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
+import io.appium.java_client.service.local.AppiumServiceBuilder;
+import io.appium.java_client.service.local.flags.GeneralServerFlag;
 
 import java.awt.AWTException;
 import java.awt.image.BufferedImage;
@@ -79,6 +97,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import com.legion.test.testrail.APIClient;
 import com.legion.test.testrail.APIException;
@@ -103,11 +122,53 @@ import static com.legion.utils.MyThreadLocal.*;
 public abstract class TestBase {
 
     protected PageFactory pageFactory = null;
+    protected MobilePageFactory mobilePageFactory = null;
     String TestID = null;
-    public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json"); 
+    public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     private static ExtentReports extent = ExtentReportManager.getInstance();
+    public static AndroidDriver<MobileElement> driver;
+	public static String versionString;
+	public static int version;
+	public static String pth=System.getProperty("user.dir");
+	public static String reportFilePath=pth+"/Reports/";
+	public static String screenshotFilePath=pth+"/screenshots/";
+	public static String excelData=pth+"/TestData/";
+	public static String apkpath=pth+"/Resources";
+	public static AppiumDriverLocalService service;
+	private static AppiumServiceBuilder builder;
     public static final int TEST_CASE_PASSED_STATUS = 1;
     public static final int TEST_CASE_FAILED_STATUS = 5;
+
+    @Parameters({ "platform", "executionon", "runMode" })
+    @BeforeSuite
+    public void startServer(@Optional String platform, @Optional String executionon,@Optional String runMode ) throws Exception {
+
+        if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice") && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){
+            startServer();
+            mobilePageFactory = createMobilePageFactory();
+//            setTestRailRunId(0);
+        } else{
+            Reporter.log("Script will be executing only for Web");
+//            setTestRailRunId(0);
+        }
+    }
+
+ // Set the Desired Capabilities to launch the app in Andriod mobile
+ 	public static void launchMobileApp() throws Exception{
+ 		DesiredCapabilities caps = new DesiredCapabilities();
+ 		caps.setCapability("deviceName", propertyMap.get("deviceName"));
+ 		caps.setCapability("platformName", "Android");
+ 		caps.setCapability("noReset",true);
+ 		caps.setCapability("platformVersion", propertyMap.get("platformVersion"));
+ 		caps.setCapability("autoAcceptAlerts", true);
+ 		caps.setCapability("appPackage", "co.legion.client.staging");
+ 		caps.setCapability("appActivity", "co.legion.client.activities.LegionSplashActivity");
+ 		caps.setCapability("newCommandTimeout", "360");
+ 		setAndroidDriver( new AndroidDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"), caps));
+ 		getAndroidDriver().manage().timeouts().implicitlyWait(80, TimeUnit.SECONDS);
+ 		Thread.sleep(10000);
+ 		ExtentTestManager.getTest().log(Status.PASS, "Launched Mobile Application Successfully!");
+	}
 
     @BeforeClass
     protected void init () {
@@ -115,22 +176,31 @@ public abstract class TestBase {
     }
     
     @BeforeMethod(alwaysRun = true)
-    protected void initTestFramework(Method method) throws AWTException, IOException, APIException, JSONException {
+    protected void initTestFramework(Method method, ITestContext context) throws AWTException, IOException, APIException, JSONException {
     	Date date=new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
     	String testName = ExtentTestManager.getTestName(method);
         String ownerName = ExtentTestManager.getOwnerName(method);
         String automatedName = ExtentTestManager.getAutomatedName(method);
         String enterpriseName =  SimpleUtils.getEnterprise(method);
+        String platformName =  ExtentTestManager.getMobilePlatformName(method);
+        int sectionId = ExtentTestManager.getTestRailSectionId(method);
+        String testRunPhaseName = ExtentTestManager.getTestRunPhase(method);
         List<String> categories =  new ArrayList<String>();
         categories.add(getClass().getSimpleName());
 //        categories.add(enterpriseName);
         List<String> enterprises =  new ArrayList<String>();
         enterprises.add(enterpriseName);
+//        ExtentTestManager.createTest(getClass().getSimpleName() + " - "
+//                + " " + method.getName() + " : " + testName + ""
+//                + " [" + ownerName + "/" + automatedName + "]", "", categories);
         ExtentTestManager.createTest(getClass().getSimpleName() + " - "
             + " " + method.getName() + " : " + testName + ""
-            + " [" + ownerName + "/" + automatedName + "]", "", categories);
+            + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
         extent.setSystemInfo(method.getName(), enterpriseName.toString());
+        setTestRailRunId(0);
+        int testCaseId = SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,sectionId);
+        setTestCaseId(testCaseId);
         setCurrentMethod(method);
         setBrowserNeeded(true);
         setCurrentTestMethodName(method.getName());
@@ -200,6 +270,40 @@ public abstract class TestBase {
                 options.setProfile(profile);
                 setDriver(new FirefoxDriver(options));
             }
+
+            if (getDriverType().equalsIgnoreCase("Phantom")) {
+//                File file = new File("C:\\Users\\nishant08\\Downloads\\phantomjs-2.1.1-windows\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe");
+//                System.setProperty("phantomjs.binary.path", file.getAbsolutePath());
+//                DesiredCapabilities capabilitiesPhantom = new DesiredCapabilities();
+//                capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "C:\\Users\\nishant08\\Downloads\\phantomjs-2.1.1-windows\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe");
+
+                System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("disable-infobars");
+                options.addArguments("headless");
+                options.addArguments("window-size=1200x600");
+                options.addArguments("test-type", "new-window", "disable-extensions","start-maximized");
+                Map<String, Object> prefs = new HashMap<>();
+                prefs.put("credentials_enable_service", false);
+                prefs.put("password_manager_enabled", false);
+                options.setExperimentalOption("prefs", prefs);
+                options.addArguments("disable-logging", "silent", "ignore-certificate-errors");
+                options.setExperimentalOption("useAutomationExtension", false);
+                options.setExperimentalOption("excludeSwitches",
+                        Collections.singletonList("enable-automation"));
+                options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+                options.setCapability(ChromeOptions.CAPABILITY, options);
+                options.setCapability("chrome.switches", Arrays.asList("--disable-extensions", "--disable-logging",
+                        "--ignore-certificate-errors", "--log-level=0", "--silent"));
+                options.setCapability("silent", true);
+                System.setProperty("webdriver.chrome.silentOutput", "true");
+                setDriver(new ChromeDriver(options));
+
+//                setDriver(new PhantomJSDriver());
+//                setDriver(new HtmlUnitDriver());
+                System.out.println(getDriver());
+
+            }
             
             pageFactory = createPageFactory();
             LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
@@ -221,6 +325,10 @@ public abstract class TestBase {
         return new ConsoleWebPageFactory();
     }
 
+    private MobilePageFactory createMobilePageFactory() {
+        return new MobileWebPageFactory();
+    }
+
 	@AfterMethod(alwaysRun = true)
     protected void tearDown(Method method,ITestResult result) throws IOException {
 		ExtentTestManager.getTest().info("tearDown started");
@@ -238,6 +346,7 @@ public abstract class TestBase {
         }
 		ExtentTestManager.getTest().info("tearDown finished");
 		extent.flush();
+		stopServer();
     }
 
 	
@@ -270,6 +379,7 @@ public abstract class TestBase {
     public static void loadURL() {
         try {
         	getDriver().get(getURL() + "legion/?enterprise=" + getEnterprise() + " ");
+            getDriver().manage().window().maximize();
         } catch (TimeoutException te) {
             try {
                 getDriver().navigate().refresh();
@@ -287,12 +397,49 @@ public abstract class TestBase {
     	LoginPage loginPage = pageFactory.createConsoleLoginPage();
     	loginPage.loginToLegionWithCredential(username, Password);
     	LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-    	//locationSelectorPage.changeLocation(location);
+//    	locationSelectorPage.changeLocation(location);
 	    boolean isLoginDone = loginPage.isLoginDone();
 	    loginPage.verifyLoginDone(isLoginDone, location);
     }
 
 	public abstract void firstTest(Method testMethod, Object[] params) throws Exception;
 		// TODO Auto-generated method stub
-	 
+
+
+	// Method for Start the appium server and arguments should be appium installation path upto node.exe and appium.js
+		public static void appiumServerStart(String appiumServerPath, String appiumJSPath){
+			service=AppiumDriverLocalService.buildService(new AppiumServiceBuilder()
+					.usingDriverExecutable(new File(appiumServerPath))
+					.withAppiumJS(new File(appiumJSPath)));
+		}
+
+		//Start appium programatically
+		public static void startServer() {
+			DesiredCapabilities cap = new DesiredCapabilities();
+			cap.setCapability("noReset", "false");
+			//Build the Appium service
+			builder = new AppiumServiceBuilder();
+			builder.withIPAddress("127.0.0.1");
+			builder.usingPort(4723);
+			builder.withCapabilities(cap);
+			builder.withArgument(GeneralServerFlag.SESSION_OVERRIDE);
+			builder.withArgument(GeneralServerFlag.LOG_LEVEL,"error");
+			//Start the server with the builder
+			service = AppiumDriverLocalService.buildService(builder);
+			service.start();
+		}
+
+		//Stop appium programatically
+		public void stopServer() {
+			Runtime runtime = Runtime.getRuntime();
+			try {
+				runtime.exec("taskkill /F /IM node.exe");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+
+
+
 }
