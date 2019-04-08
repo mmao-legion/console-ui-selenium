@@ -141,7 +141,7 @@ public abstract class TestBase {
 
     @Parameters({ "platform", "executionon", "runMode" })
     @BeforeSuite
-    public void startServer(@Optional String platform, @Optional String executionon,@Optional String runMode ) throws Exception {
+    public void startServer(@Optional String platform, @Optional String executionon, @Optional String runMode ) throws Exception {
 
         if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice") && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){
             startServer();
@@ -346,7 +346,7 @@ public abstract class TestBase {
         }
 		ExtentTestManager.getTest().info("tearDown finished");
 		extent.flush();
-		stopServer();
+		//stopServer();
     }
 
 	

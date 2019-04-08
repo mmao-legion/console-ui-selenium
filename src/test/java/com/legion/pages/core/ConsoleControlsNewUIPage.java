@@ -3369,10 +3369,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			if(isNewJobTitleRowEditModeActive()) 
 				SimpleUtils.pass("Users and Roles Section : 'Add New Title' button clicked successfully.");
 			else
-				SimpleUtils.fail("Users and Roles Section : Unable to click 'Add New Title' button.", false);
+				SimpleUtils.fail("Users and Roles Section : Unable to click 'Add New Title' button.", true);
 		}
 		else
-			SimpleUtils.fail("Users and Roles Section : 'Add New Title' button not loaded.", false);
+			SimpleUtils.report("Users and Roles Section : 'Add New Title' button not loaded.");
 	}
 	
 	@FindBy(css="tr[ng-if=\"$ctrl.addingTitle\"]")
@@ -3493,82 +3493,52 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		ArrayList<String> notLoadedFields = new ArrayList<String>();
 		searchBadgesByLabel(badgesLabel);
 		if(usersAndRolesBadgesRows.size() > 0) {
-			for(WebElement usersAndRolesBadgesRow : usersAndRolesBadgesRows) {				
-				WebElement openBadgeFormBtn = usersAndRolesBadgesRow.findElement(By.cssSelector("lg-button[ng-click=\"$ctrl.openBadge(badge)\"]"));
-				if(isElementLoaded(openBadgeFormBtn)) {
-					click(openBadgeFormBtn);
-					if(isEditBadgePopupModalLoaded()) {
-						List<WebElement> inputFields = editBadgePopUpModel.findElements(By.tagName("input-field"));
-						for(WebElement inputField : inputFields) {
-							if(inputField.isDisplayed()) {
-								WebElement inputBox = inputField.findElement(By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
-								if(isElementLoaded(inputBox)) {
-									String fieldType = "input";
-									String fieldLabel = inputField.findElement(By.cssSelector("label.input-label")).getText();
-									boolean isFieldEditable = isInputFieldEditable(inputBox, fieldType);
-									if(isFieldEditable)
-										editableFields.add(fieldLabel);
-									else
-										nonEditableFields.add(fieldLabel);
+			for(WebElement usersAndRolesBadgesRow : usersAndRolesBadgesRows) {	
+				try {
+					WebElement openBadgeFormBtn = usersAndRolesBadgesRow.findElement(By.cssSelector("lg-button[ng-click=\"$ctrl.openBadge(badge)\"]"));
+					if(isElementLoaded(openBadgeFormBtn)) {
+						click(openBadgeFormBtn);
+						if(isEditBadgePopupModalLoaded()) {
+							List<WebElement> inputFields = editBadgePopUpModel.findElements(By.tagName("input-field"));
+							for(WebElement inputField : inputFields) {
+								if(inputField.isDisplayed()) {
+									WebElement inputBox = inputField.findElement(By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+									if(isElementLoaded(inputBox)) {
+										String fieldType = "input";
+										String fieldLabel = inputField.findElement(By.cssSelector("label.input-label")).getText();
+										boolean isFieldEditable = isInputFieldEditable(inputBox, fieldType);
+										if(isFieldEditable)
+											editableFields.add(fieldLabel);
+										else
+											nonEditableFields.add(fieldLabel);
+									}
 								}
 							}
+							
+							boolean isBadgeIconEditable = isEditBadgePopupBadgeIconEditable();
+							String badgeIconLabel = badgesIconsSection.findElement(By.tagName("label")).getText();
+							if(isBadgeIconEditable)
+								editableFields.add(badgeIconLabel);
+							else
+								nonEditableFields.add(badgeIconLabel);
+		
+							boolean isBadgeColorEditable = isEditBadgePopupBadgeColorEditable();
+							String badgeColorLabel = badgesColorsSection.findElement(By.tagName("label")).getText();
+							if(isBadgeColorEditable)
+								editableFields.add(badgeColorLabel);
+							else
+								nonEditableFields.add(badgeColorLabel);
 						}
-						
-						boolean isBadgeIconEditable = isEditBadgePopupBadgeIconEditable();
-						String badgeIconLabel = badgesIconsSection.findElement(By.tagName("label")).getText();
-						if(isBadgeIconEditable)
-							editableFields.add(badgeIconLabel);
-						else
-							nonEditableFields.add(badgeIconLabel);
-						/*if(isElementLoaded(badgesIconsSection)){
-							List<WebElement> badgesIcons = badgesIconsSection.findElements(By.cssSelector("lg-badge-selector-item"));
-							if(badgesIcons.size() > 0) {
-								for(WebElement badgesIcon : badgesIcons) {
-									if(! badgesIcon.getAttribute("class").contains("selected")) {
-										click(badgesIcon);
-										if(badgesIcon.getAttribute("class").contains("selected"))
-											isBadgeIconEditable = true;
-										break;
-									}
-								}
-								String badgeIconLabel = badgesIconsSection.findElement(By.tagName("label")).getText();
-								if(isBadgeIconEditable)
-									editableFields.add(badgeIconLabel);
-								else
-									nonEditableFields.add(badgeIconLabel);
-							}
-						}*/
-	
-						boolean isBadgeColorEditable = isEditBadgePopupBadgeColorEditable();
-						String badgeColorLabel = badgesColorsSection.findElement(By.tagName("label")).getText();
-						if(isBadgeColorEditable)
-							editableFields.add(badgeColorLabel);
-						else
-							nonEditableFields.add(badgeColorLabel);
-						/*if(isElementLoaded(badgesColorsSection)) {
-							List<WebElement> badgesColors = badgesColorsSection.findElements(By.cssSelector("lg-badge-selector-item"));
-							if(badgesColors.size() > 0) {
-								for(WebElement badgesColor : badgesColors) {
-									if(! badgesColor.getAttribute("class").contains("selected")) {
-										click(badgesColor);
-										if(badgesColor.getAttribute("class").contains("selected"))
-											isBadgeColorEditable = true;
-										break;
-									}
-								}
-								String badgeColorLabel = badgesColorsSection.findElement(By.tagName("label")).getText();
-								if(isBadgeColorEditable)
-									editableFields.add(badgeColorLabel);
-								else
-									nonEditableFields.add(badgeColorLabel);
-							}
-						}*/
+						clickOnCancelBtn();
+						break;
 					}
-					break;
+				}
+				catch(Exception e) {
+					SimpleUtils.report("Users and Roles: Badges not editable for logged user.");
 				}
 			}
 		}
-		clickOnCancelBtn();
+		
 		editableOrNonEditableFields.put("editableFields", editableFields);
 		editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
 		editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
@@ -3638,7 +3608,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.pass("Cancel button clicked successfully.");
 		}
 		else
-			SimpleUtils.fail("Cancel Button not loaded.", false);
+			SimpleUtils.report("Cancel Button not loaded.");
 	}
 
 
@@ -3691,8 +3661,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				editableFields.add(badgeColorLabel);
 			else
 				nonEditableFields.add(badgeColorLabel);
+			clickOnCancelBtn();
 		}
-		clickOnCancelBtn();
+		
 		editableOrNonEditableFields.put("editableFields", editableFields);
 		editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
 		editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
@@ -4086,7 +4057,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.pass("Tasks and Work Roles: 'Work Roles' section 'Add Work Role' button clicked.");
 		}
 		else
-			SimpleUtils.fail("Tasks and Work Roles: 'Work Roles' section 'Add Work Role' button not loaded.", true);
+			SimpleUtils.report("Tasks and Work Roles: 'Work Roles' section 'Add Work Role' button not loaded.");
 	}
 	
 	@FindBy(css="div.setting-create-work-role-container")
@@ -4301,71 +4272,76 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		
 		if(regularHoursRows.size() > 0)
 		{
-			for(WebElement regularHoursRow : regularHoursRows)
-			{
-				String storeClosedLabel = "Store Closed Toggle";
-				WebElement isClosedToggle = regularHoursRow.findElement(By.cssSelector("div[ng-show=\"isEditMode\"]"));
-				boolean isStoreClosedEditable = isInputFieldEditable(isClosedToggle, "div");
-				if(isStoreClosedEditable)
-					editableFields.add(storeClosedLabel);
-				else
-					nonEditableFields.add(storeClosedLabel);
-				WebElement regularHoursEditBtn = regularHoursRow.findElement(By.cssSelector("lg-button[label=\"Edit\"]"));
-				if(isElementLoaded(regularHoursEditBtn))
+			try {
+				for(WebElement regularHoursRow : regularHoursRows)
 				{
-					Thread.sleep(1000);
-					click(regularHoursEditBtn);
-					// Select Opening Hours
-					int openingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(0).getText().split(":")[0].trim());
-					int sliderOffSet = 50;
-					String openingHoursBeforeUpdate = editRegularHoursSliders.get(0).getText();
-					moveDayViewCards(editRegularHoursSliders.get(0), sliderOffSet);
-					String openingHoursAfterUpdate = editRegularHoursSliders.get(0).getText();
-					sliderOffSet = -50;
-				
-					String openingHoursSliderLabel = "Opening Hours";
-					if(! openingHoursBeforeUpdate.equals(openingHoursAfterUpdate))
-						editableFields.add(openingHoursSliderLabel);
+					String storeClosedLabel = "Store Closed Toggle";
+					WebElement isClosedToggle = regularHoursRow.findElement(By.cssSelector("div[ng-show=\"isEditMode\"]"));
+					boolean isStoreClosedEditable = isInputFieldEditable(isClosedToggle, "div");
+					if(isStoreClosedEditable)
+						editableFields.add(storeClosedLabel);
 					else
-						nonEditableFields.add(openingHoursSliderLabel);
+						nonEditableFields.add(storeClosedLabel);
+					WebElement regularHoursEditBtn = regularHoursRow.findElement(By.cssSelector("lg-button[label=\"Edit\"]"));
+					if(isElementLoaded(regularHoursEditBtn))
+					{
+						Thread.sleep(1000);
+						click(regularHoursEditBtn);
+						// Select Opening Hours
+						int openingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(0).getText().split(":")[0].trim());
+						int sliderOffSet = 50;
+						String openingHoursBeforeUpdate = editRegularHoursSliders.get(0).getText();
+						moveDayViewCards(editRegularHoursSliders.get(0), sliderOffSet);
+						String openingHoursAfterUpdate = editRegularHoursSliders.get(0).getText();
+						sliderOffSet = -50;
 					
-					// Select Closing Hours
-					String closingHoursSliderLabel = "Closing Hours";
-					String closingHoursBeforeUpdate = editRegularHoursSliders.get(1).getText();
-					moveDayViewCards(editRegularHoursSliders.get(1), sliderOffSet);
-					String closingHoursAfterUpdate = editRegularHoursSliders.get(1).getText();
-					if(! closingHoursBeforeUpdate.equals(closingHoursAfterUpdate))
-						editableFields.add(closingHoursSliderLabel);
-					else
-						nonEditableFields.add(closingHoursSliderLabel);
-					
-					String applyHrToOtherDaysLabel = "Apply these hours to other days";
-					List<WebElement> weekdaysCheckBoxs = modalPopupDiv.findElements(By.cssSelector("input-field[type=\"checkbox\"]"));
-					if(weekdaysCheckBoxs.size() > 0) {
-						boolean isOtherWeekDaysCheckBoxEditable = true;
-						for(WebElement weekdaysCheckBox : weekdaysCheckBoxs) {
-							isOtherWeekDaysCheckBoxEditable = isOtherWeekDaysCheckBoxEditable && isInputFieldEditable(weekdaysCheckBox, "div");
-						}
-						if(isOtherWeekDaysCheckBoxEditable)
-							editableFields.add(applyHrToOtherDaysLabel);
+						String openingHoursSliderLabel = "Opening Hours";
+						if(! openingHoursBeforeUpdate.equals(openingHoursAfterUpdate))
+							editableFields.add(openingHoursSliderLabel);
 						else
-							nonEditableFields.add(applyHrToOtherDaysLabel);
+							nonEditableFields.add(openingHoursSliderLabel);
+						
+						// Select Closing Hours
+						String closingHoursSliderLabel = "Closing Hours";
+						String closingHoursBeforeUpdate = editRegularHoursSliders.get(1).getText();
+						moveDayViewCards(editRegularHoursSliders.get(1), sliderOffSet);
+						String closingHoursAfterUpdate = editRegularHoursSliders.get(1).getText();
+						if(! closingHoursBeforeUpdate.equals(closingHoursAfterUpdate))
+							editableFields.add(closingHoursSliderLabel);
+						else
+							nonEditableFields.add(closingHoursSliderLabel);
+						
+						String applyHrToOtherDaysLabel = "Apply these hours to other days";
+						List<WebElement> weekdaysCheckBoxs = modalPopupDiv.findElements(By.cssSelector("input-field[type=\"checkbox\"]"));
+						if(weekdaysCheckBoxs.size() > 0) {
+							boolean isOtherWeekDaysCheckBoxEditable = true;
+							for(WebElement weekdaysCheckBox : weekdaysCheckBoxs) {
+								isOtherWeekDaysCheckBoxEditable = isOtherWeekDaysCheckBoxEditable && isInputFieldEditable(weekdaysCheckBox, "div");
+							}
+							if(isOtherWeekDaysCheckBoxEditable)
+								editableFields.add(applyHrToOtherDaysLabel);
+							else
+								nonEditableFields.add(applyHrToOtherDaysLabel);
+						}
+						
+						// Click On Cancel Button
+						try {
+							WebElement cancelBtn = modalPopupDiv.findElement(By.cssSelector("lg-button[label=\"Cancel\"]"));
+							click(cancelBtn);
+							SimpleUtils.pass("Controls Working Hours Section: Regular Hours 'Edit' popup 'Cancel' button clicked.");
+						}
+						catch(Exception e) {
+							SimpleUtils.fail("Controls Working Hours Section: Regular Hours 'Edit' popup 'Cancel' button not clicked.", true);
+						}
 					}
-					
-					// Click On Cancel Button
-					try {
-						WebElement cancelBtn = modalPopupDiv.findElement(By.cssSelector("lg-button[label=\"Cancel\"]"));
-						click(cancelBtn);
-						SimpleUtils.pass("Controls Working Hours Section: Regular Hours 'Edit' popup 'Cancel' button clicked.");
+					else {
+						SimpleUtils.fail("Controls Working Hours Section: Regular Hours 'Edit' Button not loaded.", true);
 					}
-					catch(Exception e) {
-						SimpleUtils.fail("Controls Working Hours Section: Regular Hours 'Edit' popup 'Cancel' button not clicked.", true);
-					}
+					break;
 				}
-				else {
-					SimpleUtils.fail("Controls Working Hours Section: Regular Hours 'Edit' Button not loaded.", true);
-				}
-				break;
+			}
+			catch (Exception e) {
+				SimpleUtils.report("Controls Working Hours Section: Regular Hours not editable.");
 			}
 		}
 		else {
@@ -4394,71 +4370,76 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		
 		if(regularHoursRows.size() > 0)
 		{
-			for(WebElement holidayHoursRow : holidayHoursRows)
-			{
-				String storeClosedLabel = "Store Closed Toggle";
-				WebElement isClosedToggle = holidayHoursRow.findElement(By.cssSelector("div[ng-show=\"isEditMode\"]"));
-				boolean isStoreClosedEditable = isInputFieldEditable(isClosedToggle, "div");
-				if(isStoreClosedEditable)
-					editableFields.add(storeClosedLabel);
-				else
-					nonEditableFields.add(storeClosedLabel);
-				WebElement regularHoursEditBtn = holidayHoursRow.findElement(By.cssSelector("lg-button[label=\"Edit\"]"));
-				if(isElementLoaded(regularHoursEditBtn))
+			try {
+				for(WebElement holidayHoursRow : holidayHoursRows)
 				{
-					Thread.sleep(1000);
-					click(regularHoursEditBtn);
-					// Select Opening Hours
-					int openingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(0).getText().split(":")[0].trim());
-					int sliderOffSet = 50;
-					String openingHoursBeforeUpdate = editRegularHoursSliders.get(0).getText();
-					moveDayViewCards(editRegularHoursSliders.get(0), sliderOffSet);
-					String openingHoursAfterUpdate = editRegularHoursSliders.get(0).getText();
-					sliderOffSet = -50;
-				
-					String openingHoursSliderLabel = "Opening Hours";
-					if(! openingHoursBeforeUpdate.equals(openingHoursAfterUpdate))
-						editableFields.add(openingHoursSliderLabel);
+					String storeClosedLabel = "Store Closed Toggle";
+					WebElement isClosedToggle = holidayHoursRow.findElement(By.cssSelector("div[ng-show=\"isEditMode\"]"));
+					boolean isStoreClosedEditable = isInputFieldEditable(isClosedToggle, "div");
+					if(isStoreClosedEditable)
+						editableFields.add(storeClosedLabel);
 					else
-						nonEditableFields.add(openingHoursSliderLabel);
+						nonEditableFields.add(storeClosedLabel);
+					WebElement regularHoursEditBtn = holidayHoursRow.findElement(By.cssSelector("lg-button[label=\"Edit\"]"));
+					if(isElementLoaded(regularHoursEditBtn))
+					{
+						Thread.sleep(1000);
+						click(regularHoursEditBtn);
+						// Select Opening Hours
+						int openingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(0).getText().split(":")[0].trim());
+						int sliderOffSet = 50;
+						String openingHoursBeforeUpdate = editRegularHoursSliders.get(0).getText();
+						moveDayViewCards(editRegularHoursSliders.get(0), sliderOffSet);
+						String openingHoursAfterUpdate = editRegularHoursSliders.get(0).getText();
+						sliderOffSet = -50;
 					
-					// Select Closing Hours
-					String closingHoursSliderLabel = "Closing Hours";
-					String closingHoursBeforeUpdate = editRegularHoursSliders.get(1).getText();
-					moveDayViewCards(editRegularHoursSliders.get(1), sliderOffSet);
-					String closingHoursAfterUpdate = editRegularHoursSliders.get(1).getText();
-					if(! closingHoursBeforeUpdate.equals(closingHoursAfterUpdate))
-						editableFields.add(closingHoursSliderLabel);
-					else
-						nonEditableFields.add(closingHoursSliderLabel);
-					
-					String applyHrToOtherDaysLabel = "Apply these hours to other days";
-					List<WebElement> weekdaysCheckBoxs = modalPopupDiv.findElements(By.cssSelector("input-field[type=\"checkbox\"]"));
-					if(weekdaysCheckBoxs.size() > 0) {
-						boolean isOtherWeekDaysCheckBoxEditable = true;
-						for(WebElement weekdaysCheckBox : weekdaysCheckBoxs) {
-							isOtherWeekDaysCheckBoxEditable = isOtherWeekDaysCheckBoxEditable && isInputFieldEditable(weekdaysCheckBox, "div");
-						}
-						if(isOtherWeekDaysCheckBoxEditable)
-							editableFields.add(applyHrToOtherDaysLabel);
+						String openingHoursSliderLabel = "Opening Hours";
+						if(! openingHoursBeforeUpdate.equals(openingHoursAfterUpdate))
+							editableFields.add(openingHoursSliderLabel);
 						else
-							nonEditableFields.add(applyHrToOtherDaysLabel);
+							nonEditableFields.add(openingHoursSliderLabel);
+						
+						// Select Closing Hours
+						String closingHoursSliderLabel = "Closing Hours";
+						String closingHoursBeforeUpdate = editRegularHoursSliders.get(1).getText();
+						moveDayViewCards(editRegularHoursSliders.get(1), sliderOffSet);
+						String closingHoursAfterUpdate = editRegularHoursSliders.get(1).getText();
+						if(! closingHoursBeforeUpdate.equals(closingHoursAfterUpdate))
+							editableFields.add(closingHoursSliderLabel);
+						else
+							nonEditableFields.add(closingHoursSliderLabel);
+						
+						String applyHrToOtherDaysLabel = "Apply these hours to other days";
+						List<WebElement> weekdaysCheckBoxs = modalPopupDiv.findElements(By.cssSelector("input-field[type=\"checkbox\"]"));
+						if(weekdaysCheckBoxs.size() > 0) {
+							boolean isOtherWeekDaysCheckBoxEditable = true;
+							for(WebElement weekdaysCheckBox : weekdaysCheckBoxs) {
+								isOtherWeekDaysCheckBoxEditable = isOtherWeekDaysCheckBoxEditable && isInputFieldEditable(weekdaysCheckBox, "div");
+							}
+							if(isOtherWeekDaysCheckBoxEditable)
+								editableFields.add(applyHrToOtherDaysLabel);
+							else
+								nonEditableFields.add(applyHrToOtherDaysLabel);
+						}
+						
+						// Click On Cancel Button
+						try {
+							WebElement cancelBtn = modalPopupDiv.findElement(By.cssSelector("lg-button[label=\"Cancel\"]"));
+							click(cancelBtn);
+							SimpleUtils.pass("Controls Working Hours Section: Holiday Hours 'Edit' popup 'Cancel' button clicked.");
+						}
+						catch(Exception e) {
+							SimpleUtils.fail("Controls Working Hours Section: Holiday Hours 'Edit' popup 'Cancel' button not clicked.", true);
+						}
 					}
-					
-					// Click On Cancel Button
-					try {
-						WebElement cancelBtn = modalPopupDiv.findElement(By.cssSelector("lg-button[label=\"Cancel\"]"));
-						click(cancelBtn);
-						SimpleUtils.pass("Controls Working Hours Section: Holiday Hours 'Edit' popup 'Cancel' button clicked.");
+					else {
+						SimpleUtils.fail("Controls Working Hours Section: Holiday Hours 'Edit' Button not loaded.", true);
 					}
-					catch(Exception e) {
-						SimpleUtils.fail("Controls Working Hours Section: Holiday Hours 'Edit' popup 'Cancel' button not clicked.", true);
-					}
+					break;
 				}
-				else {
-					SimpleUtils.fail("Controls Working Hours Section: Holiday Hours 'Edit' Button not loaded.", true);
-				}
-				break;
+			}
+			catch(Exception e) {
+				SimpleUtils.report("Controls Working Hours Section: Holiday Hours not editable.");
 			}
 		}
 		else {
