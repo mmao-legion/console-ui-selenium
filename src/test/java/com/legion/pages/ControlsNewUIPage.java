@@ -2,6 +2,7 @@ package com.legion.pages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.openqa.selenium.WebElement;
 
@@ -185,6 +186,25 @@ public interface ControlsNewUIPage {
 			throws Exception;
 
 	public HashMap<String, ArrayList<String>> getUsersAndRolesNewBadgeEditableOrNonEditableFields() throws Exception;
+
+	public void selectTasksAndWorkRolesSubTabByLabel(String label) throws Exception;
+
+	public List<WebElement> getTasksAndWorkRolesSectionAllWorkRolesList() throws Exception;
+
+	public HashMap<String, ArrayList<String>> getTasksAndWorkRolesEditWorkRolePropertiesEditableOrNonEditableFields() throws Exception;
+
+	public boolean isWorkRoleDetailPageSubSectionsExpandFunctionalityWorking() throws Exception;
+
+	public boolean isLaborCalculationTabLoaded() throws Exception;
+
+	public HashMap<String, ArrayList<String>> getTasksAndWorkRolesLaborCalculatorTabEditableOrNonEditableFields() throws Exception;
+
+	public HashMap<String, ArrayList<String>> getTasksAndWorkRolesAddWorkRolePageEditableOrNonEditableFields()
+			throws Exception;
+
+	public HashMap<String, ArrayList<String>> verifyUpdateControlsRegularHoursPopupEditableOrNonEditableFields() throws Exception;
+
+	public HashMap<String, ArrayList<String>> verifyUpdateControlsHolidayHoursPopupEditableOrNonEditableFields() throws Exception;
 
 	
 }
