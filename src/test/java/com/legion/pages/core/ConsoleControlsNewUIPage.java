@@ -3308,22 +3308,26 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 						}
 					}
 				}
-				
-				WebElement cancelButton = employeeJobTitileRow.findElement(By.cssSelector("lg-button[label=\"Cancel\"]"));
-				WebElement saveButton = employeeJobTitileRow.findElement(By.cssSelector("lg-button[label=\"Save\"]"));
-				if(isElementLoaded(saveButton) && saveButton.isDisplayed() && saveButton.isEnabled()) {
-					editableFields.add(saveButton.getText());
+				try {
+					WebElement cancelButton = employeeJobTitileRow.findElement(By.cssSelector("lg-button[label=\"Cancel\"]"));
+					WebElement saveButton = employeeJobTitileRow.findElement(By.cssSelector("lg-button[label=\"Save\"]"));
+					if(isElementLoaded(saveButton) && saveButton.isDisplayed() && saveButton.isEnabled()) {
+						editableFields.add(saveButton.getText());
+					}
+					else {
+						nonEditableFields.add(saveButton.getText());
+					}
+					
+					if(isElementLoaded(cancelButton) && cancelButton.isDisplayed() && cancelButton.isEnabled()) {
+						editableFields.add(cancelButton.getText());
+						click(cancelButton);
+					}
+					else {
+						nonEditableFields.add(cancelButton.getText());
+					}
 				}
-				else {
-					nonEditableFields.add(saveButton.getText());
-				}
-				
-				if(isElementLoaded(cancelButton) && cancelButton.isDisplayed() && cancelButton.isEnabled()) {
-					editableFields.add(cancelButton.getText());
-					click(cancelButton);
-				}
-				else {
-					nonEditableFields.add(cancelButton.getText());
+				catch(Exception e) {
+					SimpleUtils.report("Users and Roles: Job Title '"+employeeJobTitle+"' not editable.");
 				}
 				
 				break;
