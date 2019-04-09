@@ -3007,8 +3007,19 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy (css = "div[ng-repeat*='getComplianceMessages'] span")
     private WebElement complianceMessageInPopUp;
 
+	public String timeFormatter(String formattedTime){
+		String UpdatedTime;
+		String returnValue = null;
+		if(formattedTime.contains(":00")){
+			UpdatedTime = formattedTime.replace(":00","");
+			returnValue = UpdatedTime;
+		}else{
+			returnValue = formattedTime;
+		}
+		return returnValue;
+	}
 
-	public boolean captureShiftDetails(){
+	public void captureShiftDetails(){
 //	    HashMap<String, String> shiftDetailsWeekView = new HashMap<>();
 		HashMap<List<String>, List<String>> shiftWeekView = new HashMap<>();
 	    List<String> workerDetailsWeekView = new ArrayList<>();
@@ -3016,7 +3027,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		HashMap<List<String>, List<String>> shiftDetailsPopUpView = new HashMap<>();
 		List<String> workerDetailsPopUpView = new ArrayList<>();
 		List<String> shiftDurationPopUpView = new ArrayList<>();
-        boolean flag=true;
+//        boolean flag=true;
         int counter=0;
         if(areListElementVisible(infoIcon)) {
             for (int i = 0; i < infoIcon.size(); i++) {
@@ -3025,7 +3036,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 						if (infoIcon.get(i).getAttribute("ng-if").equals(complianceInfoIcon.get(counter).getAttribute("ng-if"))) {
 							counter = counter + 1;
 							workerDetailsWeekView.add(workerName.get(i).getText().toLowerCase());
+//							String formattedTime = shiftDurationInWeekView.get(i).getText();
+//							timeFormatter(shiftDurationInWeekView.get(i).getText());
 							shiftDurationWeekView.add(shiftDurationInWeekView.get(i).getText());
+
 						}
 					}
                 } else {
@@ -3039,7 +3053,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     for (int i = 0; i < complianceInfoIcon.size(); i++) {
                         click(complianceInfoIcon.get(i));
                         workerDetailsPopUpView.add(workerNameInPopUp.getText().toLowerCase());
-                        shiftDurationPopUpView.add(shiftDurationInPopUp.getText());
+                        shiftDurationPopUpView.add(timeFormatter(shiftDurationInPopUp.getText()));
                     }
 					shiftDetailsPopUpView.put(workerDetailsPopUpView,shiftDurationPopUpView);
                     System.out.println("Hello");
@@ -3050,13 +3064,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else{
             SimpleUtils.fail("Shift not loaded successfully in week view",true);
         }
-//        if(shiftDetailsWeekView.equals(shiftDetailsPopUpView))
-//        {
-//            flag=true;
-//        }else{
-//            flag=false;
-//        }
-        return flag;
+		for(Map.Entry<List<String>, List<String>> entry : shiftWeekView.entrySet()) {
+			List<String> keysShiftWeekView = entry.getKey();
+			List<String> valuesShiftWeekView = entry.getValue();
+			System.out.println(shiftWeekView.keySet());
+			for (Map.Entry<List<String>, List<String>> entry1 : shiftDetailsPopUpView.entrySet()) {
+				List<String> keysShiftDetailsPopUpView = entry1.getKey();
+				List<String> valuesShiftDetailsPopUpView = entry1.getValue();
+				System.out.println(shiftDetailsPopUpView.keySet());
+				int index =0;
+				int count = 0;
+				for(int i=0; i<keysShiftWeekView.size();i++) {
+					for (int j=0; j<keysShiftDetailsPopUpView.size();j++) {
+						if(keysShiftWeekView.get(i).equals(keysShiftDetailsPopUpView.get(j))){
+							if(valuesShiftWeekView.get(i).replace(" ","").equals(valuesShiftDetailsPopUpView.get(j)))
+							System.out.println("key : " + keysShiftWeekView.get(i) + " value is : " + valuesShiftWeekView.get(i));
+						}
+					}
+				}
+			}
+		}
     }
 
 	@Override
@@ -3065,18 +3092,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	        String[] complianceShiftCountFromSmartCard = numberOfComplianceShift.getText().split(" ");
 	        int noOfcomplianceShiftFromSmartCard = Integer.valueOf(complianceShiftCountFromSmartCard[0]);
             int noOfComplianceShiftInWeekScheduleTable = complianceInfoIcon.size();
-            if(captureShiftDetails() == true){
-                SimpleUtils.pass("Compliance filter works successfully, this week has "+numberOfComplianceShift.getText()+ " in compliance. Below are the shift details");
-                for (int i = 0; i < complianceInfoIcon.size(); i++) {
-                    click(complianceInfoIcon.get(i));
-                    SimpleUtils.pass(workerNameInPopUp.getText() + "'s working hour detail "+shiftSize +" has following compliance violation "+complianceMessageInPopUp);
-                }
-            }else{
-                SimpleUtils.fail("Compliance filter not working properly, compliance smartcard shows "+numberOfComplianceShift.getText()+ " in compliance, where as schedule table has "+ noOfComplianceShiftInWeekScheduleTable+" shifts in compliance", false);
-
-            }
-
-        }
+            captureShiftDetails();        }
 
 	}
 
