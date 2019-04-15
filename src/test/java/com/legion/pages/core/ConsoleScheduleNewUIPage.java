@@ -3217,12 +3217,39 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	}
 
 	public void saveSchedule(){
-		isElementEnabled(scheduleSaveBtn);
-		click(scheduleSaveBtn);
-		isElementEnabled(saveOnSaveConfirmationPopup);
-		click(saveOnSaveConfirmationPopup);
-		isElementEnabled(okAfterSaveConfirmationPopup);
-		click(okAfterSaveConfirmationPopup);
+		if(isElementEnabled(scheduleSaveBtn)) {
+			click(scheduleSaveBtn);
+		}else{
+			SimpleUtils.fail("Schedule save button not found",false);
+		}
+		if(isElementEnabled(saveOnSaveConfirmationPopup)) {
+			click(saveOnSaveConfirmationPopup);
+		}else {
+			SimpleUtils.fail("Schedule save button not found",false);
+		}
+		if(isElementEnabled(okAfterSaveConfirmationPopup)) {
+			click(okAfterSaveConfirmationPopup);
+		}else {
+			SimpleUtils.fail("Schedule save button not found",false);
+		}
+	}
+
+	public void convertToOpen(int i){
+		if(areListElementVisible(imageSize,5)) {
+			click(imageSize.get(i));
+			if (isElementEnabled(convertOpen)) {
+				click(convertOpen);
+				if (isElementEnabled(openPopYesButton)) {
+					click(openPopYesButton);
+				} else {
+					SimpleUtils.fail("Open pop-up Yes button not found", false);
+				}
+			} else {
+				SimpleUtils.fail("Convert to open shift option not found", false);
+			}
+		}else {
+			SimpleUtils.fail("shift images not loaded successfully", false);
+		}
 	}
 
 	public void convertToOpenShift(){
@@ -3238,9 +3265,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 					TMName = workerNameInPopUp.getText();
 					TMWorkerRole = workerRole[1];
 					shiftDuration = shiftDurationInPopUp.getText();
-					click(imageSize.get(i));
-					click(convertOpen);
-					click(openPopYesButton);
+					convertToOpen(i);
 					saveSchedule();
 					counter = i;
 					break;
@@ -3248,8 +3273,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			}
 			verifyOpenShift(TMName, TMWorkerRole, shiftDuration,counter );
 
+		}else {
+			SimpleUtils.fail("shift images not loaded successfully", false);
 		}
 	}
-
 
 }
