@@ -661,6 +661,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
+    public void clickImmediateNextToCurrentActiveWeekInDayPicker() throws Exception {
+
+    }
+
     public Boolean isAddNewDayViewShiftButtonLoaded() throws Exception {
         if (isElementLoaded(addNewShiftOnDayViewButton)) {
             return true;
@@ -1612,11 +1617,39 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     }
 
+    @Override
+    public void viewProfile() {
+
+    }
+
+    @Override
+    public void changeWorkerRole() {
+
+    }
+
+    @Override
+    public void assignTeamMember() {
+
+    }
+
+    @Override
+    public void convertToOpenShift() {
+
+    }
+
+    @Override
+    public void beforeEdit() {
+
+    }
+
 
     @Override
     public void generateOrUpdateAndGenerateSchedule() throws Exception {
 
     }
 
+    public void clickWorkerImage(){
+
+    }
 
 }

@@ -9,9 +9,11 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -951,6 +953,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			SimpleUtils.pass("Schedule Edit button is not enabled Successfully!");
 		}
 	}
+
+	@FindBy (xpath = "//*[contains(@class,'day-week-picker-period-active')]/following-sibling::div[1]")
+	private WebElement immediateNextToCurrentActiveWeek;
+
+	public void clickImmediateNextToCurrentActiveWeekInDayPicker(){
+		if(isElementEnabled(immediateNextToCurrentActiveWeek,30)){
+			click(immediateNextToCurrentActiveWeek);
+		}else{
+			SimpleUtils.report("This is a last week in Day Week picker");
+		}
+	}
+
 
 	public Boolean isAddNewDayViewShiftButtonLoaded() throws Exception
 	{
@@ -2998,6 +3012,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(xpath = "//*[contains(@class,'shift-hover-subheading')]/parent::div/div[1]")
     private WebElement workerNameInPopUp;
 
+	@FindBy (xpath = "//*[contains(@class,'shift-hover-subheading')]/parent::div/div[2]")
+	private WebElement workerRoleDetailsFromPopUp;
+
 	@FindBy (xpath = "//*[@class='shift-hover-seperator']/preceding-sibling::div[1]/div[1]")
     private WebElement shiftDurationInPopUp;
 
@@ -3005,7 +3022,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement numberOfComplianceShift;
 
 	@FindBy (css = "div[ng-repeat*='getComplianceMessages'] span")
-    private WebElement complianceMessageInPopUp;
+    private List<WebElement> complianceMessageInPopUp;
+
 
 	public String timeFormatter(String formattedTime){
 		String UpdatedTime;
@@ -3027,6 +3045,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		HashMap<List<String>, List<String>> shiftDetailsPopUpView = new HashMap<>();
 		List<String> workerDetailsPopUpView = new ArrayList<>();
 		List<String> shiftDurationPopUpView = new ArrayList<>();
+		List<String> complianceMessage = new ArrayList<>();
+
 //        boolean flag=true;
         int counter=0;
         if(areListElementVisible(infoIcon)) {
@@ -3053,10 +3073,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     for (int i = 0; i < complianceInfoIcon.size(); i++) {
                         click(complianceInfoIcon.get(i));
                         workerDetailsPopUpView.add(workerNameInPopUp.getText().toLowerCase());
-                        shiftDurationPopUpView.add(timeFormatter(shiftDurationInPopUp.getText()));
+                        shiftDurationPopUpView.add(timeFormatter(shiftDurationInPopUp.getText()));;
+						String str = "";
+						String finalstr = "";
+                        for(int j=0; j<complianceMessageInPopUp.size();j++)
+						{
+						str = complianceMessageInPopUp.get(j).getText();
+						finalstr= finalstr+" " + j + "." +str;
+						}
+                        SimpleUtils.pass(workerNameInPopUp.getText()+ " has following voilations "+ finalstr);
                     }
 					shiftDetailsPopUpView.put(workerDetailsPopUpView,shiftDurationPopUpView);
-                    System.out.println("Hello");
                 } else {
                     SimpleUtils.fail("Shift not loaded successfully in week view", true);
                 }
@@ -3071,14 +3098,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			for (Map.Entry<List<String>, List<String>> entry1 : shiftDetailsPopUpView.entrySet()) {
 				List<String> keysShiftDetailsPopUpView = entry1.getKey();
 				List<String> valuesShiftDetailsPopUpView = entry1.getValue();
-				System.out.println(shiftDetailsPopUpView.keySet());
 				int index =0;
 				int count = 0;
 				for(int i=0; i<keysShiftWeekView.size();i++) {
 					for (int j=0; j<keysShiftDetailsPopUpView.size();j++) {
 						if(keysShiftWeekView.get(i).equals(keysShiftDetailsPopUpView.get(j))){
 							if(valuesShiftWeekView.get(i).replace(" ","").equals(valuesShiftDetailsPopUpView.get(j)))
-							System.out.println("key : " + keysShiftWeekView.get(i) + " value is : " + valuesShiftWeekView.get(i));
+							SimpleUtils.pass("TM " + keysShiftWeekView.get(i) + " has shift " + valuesShiftWeekView.get(i));
 						}
 					}
 				}
@@ -3092,8 +3118,137 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	        String[] complianceShiftCountFromSmartCard = numberOfComplianceShift.getText().split(" ");
 	        int noOfcomplianceShiftFromSmartCard = Integer.valueOf(complianceShiftCountFromSmartCard[0]);
             int noOfComplianceShiftInWeekScheduleTable = complianceInfoIcon.size();
-            captureShiftDetails();        }
+            captureShiftDetails();
+	    }
 
+	}
+
+		@FindBy(css="div.allow-pointer-events.ng-scope")
+		private List<WebElement> imageSize;
+		@FindBy(css="span.sch-worker-action-label")
+		private List<WebElement> viewProfile;
+		@FindBy(css="div[ng-class*='ChangeRole'] span")
+		private WebElement changeRole;
+		@FindBy (css = "div[ng-class*='ConvertToOpen'] span")
+		private WebElement convertOpen;
+
+		@FindBy (xpath = "//span[contains(text(),'YES')]")
+		private WebElement openPopYesButton;
+
+	public void beforeEdit(){
+		if(areListElementVisible(imageSize,5)){
+			click(imageSize.get(5));
+			WebElement element = getDriver().findElement(By.cssSelector("div.sch-worker-popover.allow-pointer-events.ng-scope"));
+			JavascriptExecutor jse = (JavascriptExecutor)getDriver();
+			String txt = jse.executeScript("return arguments[0].innerHTML;",element).toString();
+			System.out.println(txt);
+//		  	 	   		if(viewProfile.size()>0){
+//				   		   click(viewProfile.get(1));
+//			 	   		}
+
+		}
+	}
+
+	public void viewProfile(){
+		if(areListElementVisible(imageSize,5)){
+			click(imageSize.get(5));
+			click(changeRole);
+			WebElement element = getDriver().findElement(By.cssSelector("div.sch-worker-popover.allow-pointer-events.ng-scope"));
+			JavascriptExecutor jse = (JavascriptExecutor)getDriver();
+			String txt = jse.executeScript("return arguments[0].innerHTML;",element).toString();
+			System.out.println(txt);
+//		  	 	   		if(viewProfile.size()>0){
+//				   		   click(viewProfile.get(1));
+//			 	   		}
+
+		}
+	}
+
+	public void changeWorkerRole(){
+	 if(areListElementVisible(imageSize,5)){
+		 click(imageSize.get(5));
+		 click(changeRole);
+
+
+		  WebElement element = getDriver().findElement(By.cssSelector("div.sch-worker-popover.allow-pointer-events.ng-scope"));
+		  JavascriptExecutor jse = (JavascriptExecutor)getDriver();
+		  String txt = jse.executeScript("return arguments[0].innerHTML;",element).toString();
+		  System.out.println(txt);
+	//		  	 	   		if(viewProfile.size()>0){
+	//				   		   click(viewProfile.get(1));
+	//			 	   		}
+
+	 }
+	}
+
+	public void assignTeamMember(){
+		if(areListElementVisible(imageSize,5)){
+			click(imageSize.get(5));
+			click(changeRole);
+			WebElement element = getDriver().findElement(By.cssSelector("div.sch-worker-popover.allow-pointer-events.ng-scope"));
+			JavascriptExecutor jse = (JavascriptExecutor)getDriver();
+			String txt = jse.executeScript("return arguments[0].innerHTML;",element).toString();
+			System.out.println(txt);
+//		  	 	   		if(viewProfile.size()>0){
+//				   		   click(viewProfile.get(1));
+//			 	   		}
+
+		}
+	}
+
+	@FindBy (css = "div.week-view-shift-hover-info-icon")
+	private List<WebElement> scheduleInfoIcon;
+
+	@FindBy (css = "button[ng-click*='confirmSaveAction']")
+	private WebElement saveOnSaveConfirmationPopup;
+
+	@FindBy (css = "button[ng-click*='okAction']")
+	private WebElement okAfterSaveConfirmationPopup;
+
+	public void verifyOpenShift(String TMName, String workerRole, String shiftDuration, int counter ){
+		click(scheduleInfoIcon.get(counter));
+		String workerRoleOpenShift = workerRoleDetailsFromPopUp.getText();
+		String shiftDurationOpenShift = shiftDurationInPopUp.getText();
+		if(workerRoleOpenShift.equalsIgnoreCase(workerRole) && shiftDurationOpenShift.equalsIgnoreCase(shiftDuration) && workerName.get(counter).getText().equalsIgnoreCase("open")){
+			SimpleUtils.pass(TMName +"'s "+workerRole +" shift of duration " +shiftDuration +" got converted to open shift successfully");
+		}else{
+			SimpleUtils.fail(TMName +"'s "+workerRole +" shift of duration " +shiftDuration +" was not converted to open shift successfully",false);
+		}
+	}
+
+	public void saveSchedule(){
+		isElementEnabled(scheduleSaveBtn);
+		click(scheduleSaveBtn);
+		isElementEnabled(saveOnSaveConfirmationPopup);
+		click(saveOnSaveConfirmationPopup);
+		isElementEnabled(okAfterSaveConfirmationPopup);
+		click(okAfterSaveConfirmationPopup);
+	}
+
+	public void convertToOpenShift(){
+		String TMWorkerRole = null;
+		String shiftDuration = null;
+		String TMName = null;
+		int counter = 0;
+		if(areListElementVisible(imageSize,5)){
+			for(int i=0;i<imageSize.size();i++) {
+				if (!workerName.get(i).getText().equalsIgnoreCase("open")) {
+					click(scheduleInfoIcon.get(i));
+					String[] workerRole = workerRoleDetailsFromPopUp.getText().split("as ");
+					TMName = workerNameInPopUp.getText();
+					TMWorkerRole = workerRole[1];
+					shiftDuration = shiftDurationInPopUp.getText();
+					click(imageSize.get(i));
+					click(convertOpen);
+					click(openPopYesButton);
+					saveSchedule();
+					counter = i;
+					break;
+				}
+			}
+			verifyOpenShift(TMName, TMWorkerRole, shiftDuration,counter );
+
+		}
 	}
 
 

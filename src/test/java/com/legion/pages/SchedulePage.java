@@ -26,6 +26,7 @@ public interface SchedulePage {
 	public void generateSchedule() throws Exception;
 	public String getScheduleWeekStartDayMonthDate();
 	public void clickOnEditButton() throws Exception;
+	public void clickImmediateNextToCurrentActiveWeekInDayPicker() throws Exception;
 	public Boolean isAddNewDayViewShiftButtonLoaded() throws Exception;
 	public void clickOnCancelButtonOnEditMode() throws Exception;
 	public Boolean isGenerateButtonLoaded() throws Exception;
@@ -121,4 +122,9 @@ public interface SchedulePage {
 	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception;
 	public void verifyScheduledHourNTMCountIsCorrect() throws Exception;
 	public void complianceShiftSmartCard() throws Exception;
+	public void viewProfile();
+	public void changeWorkerRole();
+	public void assignTeamMember();
+	public void convertToOpenShift();
+	public void beforeEdit();
 }
