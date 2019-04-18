@@ -46,7 +46,9 @@
                     <!--<include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>-->
                     <!--<include name="validateDashboardTodaysForcastAsStoreManager"/>-->
                     <!--<include name="changeAndValidateOperatingHoursAsInternalAdmin"/>-->
-                    <include name="complianceSmartCard"/>
+                    <!--<include name="complianceSmartCard"/>-->
+                    <!--<include name="verifyOpenScheduleViewAsInternalAdmin"/>-->
+                    <include name="verifyScheduleOverlappingAsInternalAdmin"/>
 
                 </methods>
              </class>
@@ -115,7 +117,7 @@
             <!--<class name="com.legion.tests.core.TeamTestKendraScott2">-->
                 <!--<methods>-->
                     <!--<include name="VerifyWhetherManagerCanApproveTimeOffRequestAsTeamMember"/>-->
-                    <!--<include name="VerifyWhetherManagerCanRejectTimeOffRequestAsTeamMember"/>-->
+                    <!--&lt;!&ndash;<include name="VerifyWhetherManagerCanRejectTimeOffRequestAsTeamMember"/>&ndash;&gt;-->
                 <!--</methods>-->
             <!--</class>-->
         <!--</classes>-->
@@ -128,6 +130,26 @@
                 <!--<methods>-->
                     <!--&lt;!&ndash;<include name="validateAllWebElementLoadedAsStoreManager"/>&ndash;&gt;-->
                     <!--<include name="updateAndValidateProfileFunctionalityCoverageAsStoreManager"/>-->
+                <!--</methods>-->
+            <!--</class>-->
+        <!--</classes>-->
+    <!--</test>-->
+
+    <!--<test name="Sanity Test">-->
+        <!--<classes>-->
+            <!--<class name="com.legion.tests.core.SanityTest">-->
+                <!--<methods>-->
+                    <!--&lt;!&ndash;<include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>&ndash;&gt;-->
+                    <!--<include name="validateScheduleSmartCardsAsStoreManager"/>-->
+                    <!--&lt;!&ndash;<include name="validateScheduleGenerationFunctionalityAsStoreManager"/>&ndash;&gt;-->
+                    <!--<include name="validateChangeLocationAsStoreManager"/>-->
+                    <!--<include name="validateGuidanceWeekAsStoreManager"/>-->
+                    <!--<include name="validateSchedulePublishAsStoreManager"/>-->
+                    <!--<include name="editManualShiftScheduleAsStoreManager"/>-->
+                    <!--<include name="updateControlsSectionLoadingAsInternalAdmin"/>-->
+                    <!--<include name="scheduleSubTabNavigationStoreManager"/>-->
+                    <!--<include name="legionAppNavigationAllTabsStoreManager"/>-->
+
                 <!--</methods>-->
             <!--</class>-->
         <!--</classes>-->
