@@ -128,12 +128,14 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
     @FindBy(css="button.lgn-action-button-success")
     private WebElement timeOffRequestApprovalCOnfirmBtn;
-    @FindBy(css="div[ng-if=\"canShowTodos()\"]")
+    @FindBy(css="img[src*=\"img/legion/todos-none\"]")
     private WebElement toDoBtnToOpen;
     @FindBy(css="div[ng-click=\"closeTodoPanelClick()\"]")
     private WebElement toDoBtnToClose;
     @FindBy(css="div[ng-show=\"show\"]")
     private WebElement toDoPopUpWindow;
+	@FindBy(css="//div[@ng-show='show']//h1[contains(text(),'TEAM')]")
+	private WebElement toDoPopUpWindowLabel;
     @FindBy(css="todo-card[todo-type=\"todoType\"]")
     private List<WebElement> todoCards;
 
@@ -376,9 +378,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 		@Override
 		public void openToDoPopupWindow() throws Exception {
-			if(isElementLoaded(toDoBtnToOpen)) {
+		waitForSeconds(2);
+	 	if(isElementLoaded(toDoBtnToOpen,5)) {
 				click(toDoBtnToOpen);
-				Thread.sleep(1000);
+//				Thread.sleep(1000);
 				if(isToDoWindowOpened())
 					SimpleUtils.pass("Team Page: 'ToDo' popup window loaded successfully.");
 				else
@@ -399,7 +402,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		}
 
 		public boolean isToDoWindowOpened() throws Exception{
-			if(isElementLoaded(toDoPopUpWindow)) {
+			if(isElementLoaded(toDoPopUpWindow,5) && areListElementVisible(todoCards,5)) {
 				if(toDoPopUpWindow.getAttribute("class").contains("is-shown"))
 					return true;
 			}

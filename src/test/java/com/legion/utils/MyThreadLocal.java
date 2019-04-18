@@ -52,6 +52,7 @@ public class MyThreadLocal {
 	public static ThreadLocal<String> screenShotURL = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeOffStartTime = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeOffEndTime = new ThreadLocal<>();
+	public static final ThreadLocal<String> timeDuration = new ThreadLocal<>();
 
 	public static void setScreenshotLocation(String value) { screenshotLoc.set(value); }
 
@@ -77,6 +78,9 @@ public class MyThreadLocal {
 	public static String getScheduleHoursStartTime() { return scheduleHoursStartTime.get(); }
 	public static void setScheduleHoursEndTime(String value) { scheduleHoursEndTime.set(value); }
 	public static String getScheduleHoursEndTime() { return scheduleHoursEndTime.get(); }
+
+	public static void setScheduleHoursTimeDuration(String value) { timeDuration.set(value); }
+	public static String getScheduleHoursTimeDuration() { return timeDuration.get(); }
 
 	public static void setTestCaseId(Integer value) {
 		testCaseId.set(value);

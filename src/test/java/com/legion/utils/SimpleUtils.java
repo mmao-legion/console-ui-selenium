@@ -974,4 +974,17 @@ public class SimpleUtils {
 		   return true;
 	   return false;
    }
+
+
+   public static String convertTimeIntoHHColonMM(String timeDuration){
+    	if(timeDuration.contains(":")){
+			timeDuration = timeDuration;
+		}else{
+			String numericTimeValue = timeDuration.replaceAll("[^0-9]","");
+			String stringValue = timeDuration.replaceAll("[0-9]","");
+			timeDuration = numericTimeValue + ":00" + stringValue;
+		}
+		return timeDuration;
+   }
+
 }

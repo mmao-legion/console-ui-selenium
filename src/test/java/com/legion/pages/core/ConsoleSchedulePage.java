@@ -1618,5 +1618,28 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     }
 
+    public void clickWorkerImage(){
+
+    }
+
+    public void selectTeamMembersOptionForOverlappingSchedule(){
+
+    }
+
+    public boolean getScheduleOverlappingStatus()throws Exception{
+        return true;
+    }
+
+    public void searchWorkerName(String searchInput) throws Exception{
+
+    }
+
+    public void verifyScheduleStatusAsOpen() throws Exception{
+
+    }
+
+    public void verifyScheduleStatusAsTeamMember() throws Exception{
+
+    }
 
 }

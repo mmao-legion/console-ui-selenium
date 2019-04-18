@@ -121,4 +121,9 @@ public interface SchedulePage {
 	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception;
 	public void verifyScheduledHourNTMCountIsCorrect() throws Exception;
 	public void complianceShiftSmartCard() throws Exception;
+	public void selectTeamMembersOptionForOverlappingSchedule() throws Exception;
+	public boolean getScheduleOverlappingStatus()throws Exception;
+	public void searchWorkerName(String searchInput) throws Exception;
+	public void verifyScheduleStatusAsOpen() throws Exception;
+	public void verifyScheduleStatusAsTeamMember() throws Exception;
 }
