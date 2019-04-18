@@ -142,15 +142,17 @@ public abstract class TestBase {
     @Parameters({ "platform", "executionon", "runMode" })
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon, @Optional String runMode ) throws Exception {
-
-        if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice") && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){
-            startServer();
-            mobilePageFactory = createMobilePageFactory();
-//            setTestRailRunId(0);
-        } else{
+        if(platform!= null && executionon!= null && runMode!= null){
+            if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice") && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){
+                startServer();
+                mobilePageFactory = createMobilePageFactory();
+            } else{
+                Reporter.log("Script will be executing only for Web");
+            }
+        }else{
             Reporter.log("Script will be executing only for Web");
-//            setTestRailRunId(0);
         }
+
     }
 
  // Set the Desired Capabilities to launch the app in Andriod mobile
@@ -243,24 +245,14 @@ public abstract class TestBase {
             if (getDriverType().equalsIgnoreCase(propertyMap.get("CHROME"))) {
             	System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
             	ChromeOptions options = new ChromeOptions();
-        		options.addArguments("disable-infobars");
+            	if(propertyMap.get("isHeadlessBrowser").equalsIgnoreCase("true")){
+                    options.addArguments("headless");
+                    options.addArguments("window-size=1200x600");
+                    runScriptOnHeadlessOrBrowser(options);
+                }else{
+                    runScriptOnHeadlessOrBrowser(options);
+                }
 
-                options.addArguments("test-type", "new-window", "disable-extensions","start-maximized");
-                Map<String, Object> prefs = new HashMap<>();
-                prefs.put("credentials_enable_service", false);
-                prefs.put("password_manager_enabled", false);
-                options.setExperimentalOption("prefs", prefs);
-                options.addArguments("disable-logging", "silent", "ignore-certificate-errors");
-                options.setExperimentalOption("useAutomationExtension", false);
-                options.setExperimentalOption("excludeSwitches",
-                        Collections.singletonList("enable-automation"));
-                options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-                options.setCapability(ChromeOptions.CAPABILITY, options);
-                options.setCapability("chrome.switches", Arrays.asList("--disable-extensions", "--disable-logging",
-                        "--ignore-certificate-errors", "--log-level=0", "--silent"));
-                options.setCapability("silent", true);
-                System.setProperty("webdriver.chrome.silentOutput", "true");
-                setDriver(new ChromeDriver(options));
             }
             if (getDriverType().equalsIgnoreCase(propertyMap.get("FIREFOX"))) {
             	System.setProperty("webdriver.gecko.driver",propertyMap.get("FIREFOX_DRIVER_PATH"));
@@ -271,39 +263,30 @@ public abstract class TestBase {
                 setDriver(new FirefoxDriver(options));
             }
 
-            if (getDriverType().equalsIgnoreCase("Phantom")) {
-//                File file = new File("C:\\Users\\nishant08\\Downloads\\phantomjs-2.1.1-windows\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe");
-//                System.setProperty("phantomjs.binary.path", file.getAbsolutePath());
-//                DesiredCapabilities capabilitiesPhantom = new DesiredCapabilities();
-//                capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "C:\\Users\\nishant08\\Downloads\\phantomjs-2.1.1-windows\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe");
-
-                System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
-                ChromeOptions options = new ChromeOptions();
-                options.addArguments("disable-infobars");
-                options.addArguments("headless");
-                options.addArguments("window-size=1200x600");
-                options.addArguments("test-type", "new-window", "disable-extensions","start-maximized");
-                Map<String, Object> prefs = new HashMap<>();
-                prefs.put("credentials_enable_service", false);
-                prefs.put("password_manager_enabled", false);
-                options.setExperimentalOption("prefs", prefs);
-                options.addArguments("disable-logging", "silent", "ignore-certificate-errors");
-                options.setExperimentalOption("useAutomationExtension", false);
-                options.setExperimentalOption("excludeSwitches",
-                        Collections.singletonList("enable-automation"));
-                options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-                options.setCapability(ChromeOptions.CAPABILITY, options);
-                options.setCapability("chrome.switches", Arrays.asList("--disable-extensions", "--disable-logging",
-                        "--ignore-certificate-errors", "--log-level=0", "--silent"));
-                options.setCapability("silent", true);
-                System.setProperty("webdriver.chrome.silentOutput", "true");
-                setDriver(new ChromeDriver(options));
-
-//                setDriver(new PhantomJSDriver());
-//                setDriver(new HtmlUnitDriver());
-                System.out.println(getDriver());
-
-            }
+//            if (getDriverType().equalsIgnoreCase("Phantom")) {
+//                System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
+//                ChromeOptions options = new ChromeOptions();
+//                options.addArguments("disable-infobars");
+//                options.addArguments("headless");
+//                options.addArguments("window-size=1200x600");
+//                options.addArguments("test-type", "new-window", "disable-extensions","start-maximized");
+//                Map<String, Object> prefs = new HashMap<>();
+//                prefs.put("credentials_enable_service", false);
+//                prefs.put("password_manager_enabled", false);
+//                options.setExperimentalOption("prefs", prefs);
+//                options.addArguments("disable-logging", "silent", "ignore-certificate-errors");
+//                options.setExperimentalOption("useAutomationExtension", false);
+//                options.setExperimentalOption("excludeSwitches",
+//                        Collections.singletonList("enable-automation"));
+//                options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+//                options.setCapability(ChromeOptions.CAPABILITY, options);
+//                options.setCapability("chrome.switches", Arrays.asList("--disable-extensions", "--disable-logging",
+//                        "--ignore-certificate-errors", "--log-level=0", "--silent"));
+//                options.setCapability("silent", true);
+//                System.setProperty("webdriver.chrome.silentOutput", "true");
+//                setDriver(new ChromeDriver(options));
+//
+//            }
             
             pageFactory = createPageFactory();
             LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
@@ -438,6 +421,27 @@ public abstract class TestBase {
 				e.printStackTrace();
 			}
 		}
+
+
+		public void runScriptOnHeadlessOrBrowser(ChromeOptions options){
+            options.addArguments("disable-infobars");
+		    options.addArguments("test-type", "new-window", "disable-extensions","start-maximized");
+            Map<String, Object> prefs = new HashMap<>();
+            prefs.put("credentials_enable_service", false);
+            prefs.put("password_manager_enabled", false);
+            options.setExperimentalOption("prefs", prefs);
+            options.addArguments("disable-logging", "silent", "ignore-certificate-errors");
+            options.setExperimentalOption("useAutomationExtension", false);
+            options.setExperimentalOption("excludeSwitches",
+                    Collections.singletonList("enable-automation"));
+            options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+            options.setCapability(ChromeOptions.CAPABILITY, options);
+            options.setCapability("chrome.switches", Arrays.asList("--disable-extensions", "--disable-logging",
+                    "--ignore-certificate-errors", "--log-level=0", "--silent"));
+            options.setCapability("silent", true);
+            System.setProperty("webdriver.chrome.silentOutput", "true");
+            setDriver(new ChromeDriver(options));
+        }
 
 
 

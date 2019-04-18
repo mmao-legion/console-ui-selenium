@@ -36,7 +36,6 @@ public class SanityTest extends TestBase{
 	  @Override
 	  @BeforeMethod
 	  public void firstTest(Method method, Object[] params) throws Exception {
-//	  	  this.createDriver("Phantom", "68", "Linux");
 		  this.createDriver((String)params[0],"69","Window");
 	      visitPage(method);
 	      loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);

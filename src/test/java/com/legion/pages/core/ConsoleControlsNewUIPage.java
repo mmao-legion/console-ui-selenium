@@ -328,8 +328,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		drpCountry.selectByVisibleText(country);
 		
 		try {
-			Select drpStates = new Select(locationStateField);
-			drpStates.selectByVisibleText(state);			
+			if(isElementEnabled(locationStateField,5)){
+				Select drpStates = new Select(locationStateField);
+				drpStates.selectByVisibleText(state);
+			}
 		}catch (Exception e) {
 			Select drpStates = new Select(locationProvinceField);
 			drpStates.selectByVisibleText(state);
@@ -342,10 +344,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			locationPostalCodeField.clear();
 			locationPostalCodeField.sendKeys(zipCode);	
 		}
-		
-		
-		
-		
+
 		Select drpTimeZone = new Select(locationTimeZoneField);
 		drpTimeZone.selectByVisibleText(timeZone);
 
@@ -484,8 +483,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		boolean isRegularHoursSectionOpened = collapsibleHeader.getAttribute("class").contains("open");
 		if(! isRegularHoursSectionOpened)
 			click(regularHoursBlock);
-		
-		if(regularHoursRows.size() > 0)
+
+		if(areListElementVisible(regularHoursRows,10))
 		{
 			for(WebElement regularHoursRow : regularHoursRows)
 			{

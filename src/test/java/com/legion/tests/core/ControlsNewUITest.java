@@ -161,7 +161,7 @@ public class ControlsNewUITest extends TestBase{
       SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);      
       ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
       controlsNewUIPage.clickOnControlsConsoleMenu();
-      SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+      SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
       controlsNewUIPage.clickOnGlobalLocationButton();
       controlsNewUIPage.clickOnControlsWorkingHoursCard();
       for(HashMap<String, String> eachRegularHours : regularWorkingHours)

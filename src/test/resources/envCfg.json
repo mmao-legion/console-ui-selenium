@@ -1,5 +1,5 @@
 {
-  "CHROME_DRIVER_PATH": "/home/naval/Documents/chromedriver",
+  "CHROME_DRIVER_PATH": "C:\\Users\\nishant08\\Downloads\\chromedriver\\chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "D:\\geckodriver.exe",
  "DEVURL": "https://mobilestage.legion.work/",
  "QAURL": "https://staging-enterprise.dev.legion.work/",
@@ -30,6 +30,6 @@
  "deviceName" : "Gionee X1",
  "platformVersion" : "7.0",
  "isParallelBrowser" : "false",
- "isParallelBrowser" : "false",
- "Download_File_Default_Dir" : "C:\\Users\\nishant08\\Downloads"
+ "Download_File_Default_Dir" : "C:\\Users\\nishant08\\Downloads",
+ "isHeadlessBrowser" : "true"
 }
