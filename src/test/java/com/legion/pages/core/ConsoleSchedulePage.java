@@ -1603,9 +1603,43 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	}
 
     @Override
+    public void verifyScheduledHourNTMCountIsCorrect() throws Exception {
+
+    }
+
+    @Override
+    public void complianceShiftSmartCard() throws Exception {
+
+    }
+
+
+    @Override
     public void generateOrUpdateAndGenerateSchedule() throws Exception {
 
     }
 
+    public void clickWorkerImage(){
+
+    }
+
+    public void selectTeamMembersOptionForOverlappingSchedule(){
+
+    }
+
+    public boolean getScheduleOverlappingStatus()throws Exception{
+        return true;
+    }
+
+    public void searchWorkerName(String searchInput) throws Exception{
+
+    }
+
+    public void verifyScheduleStatusAsOpen() throws Exception{
+
+    }
+
+    public void verifyScheduleStatusAsTeamMember() throws Exception{
+
+    }
 
 }

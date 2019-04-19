@@ -36,7 +36,7 @@ public class SanityTest extends TestBase{
 	  @Override
 	  @BeforeMethod
 	  public void firstTest(Method method, Object[] params) throws Exception {
-	      this.createDriver((String) params[0], "68", "Linux");
+		  this.createDriver((String)params[0],"69","Window");
 	      visitPage(method);
 	      loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
 	    }
@@ -254,7 +254,7 @@ public class SanityTest extends TestBase{
 	@Owner(owner = "Naval")
 	@UseAsTestRailSectionId(testRailSectionId = 96)
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "TP-148 : Validate Schedule ungenerate feature.")
+	@TestName(description = "Validate Schedule ungenerate feature.")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void validateScheduleUngenerateFeatureAsInternalAdmin(String browser, String username, String password, String location)
 			throws Exception {
@@ -300,7 +300,7 @@ public class SanityTest extends TestBase{
 	@SanitySuite(sanity =  "Sanity")
 	@UseAsTestRailSectionId(testRailSectionId = 96)
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "TP-150 : Validate KPI report export works[Check by exporting any one report, and confirm it should not be blank].")
+	@TestName(description = "Validate KPI report export works[Check by exporting any one report, and confirm it should not be blank].")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyKPIReportExportFunctionalityAsStoreManager(String username, String password, String browser, String location) throws Exception {
 		AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
@@ -369,7 +369,7 @@ public class SanityTest extends TestBase{
 	@SanitySuite(sanity =  "Sanity")
 	@UseAsTestRailSectionId(testRailSectionId = 96)
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "TP-143 : Validate loading of smart card on Schedule tab[ No Spinning icon].")
+	@TestName(description = "Validate loading of smart card on Schedule tab[ No Spinning icon].")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void validateScheduleSmartCardsAsStoreManager(String browser, String username, String password, String location)
 			throws Exception {
@@ -544,40 +544,6 @@ public class SanityTest extends TestBase{
 	}
 
 
-
-	@Automated(automated =  "Automated")
-	@Owner(owner = "Nishant")
-	@SanitySuite(sanity =  "Sanity")
-	@UseAsTestRailSectionId(testRailSectionId = 96)
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Navigate to Schedule overview, open a week with Guidance status")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void validateScheduleGenerationAsStoreManager(String browser, String username, String password, String location)
-			throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!"
-				,schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
-
-		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-		BasePage basePase = new BasePage();
-		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
-		boolean isWeekFoundToUnGenerate = false;
-		for(int i=0; i< overviewWeeks.size();i++)
-		{
-			if(overviewWeeks.get(i).getText().contains(overviewWeeksStatus.Guidance.getValue()))
-			{
-				basePase.click(overviewWeeks.get(i));
-				schedulePage.generateOrUpdateAndGenerateSchedule();
-				scheduleOverviewPage.clickOverviewTab();
-			}
-		}
-	}
-
-
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Nishant")
 	@SanitySuite(sanity =  "Sanity")
@@ -679,7 +645,7 @@ public class SanityTest extends TestBase{
 		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 		controlsNewUIPage.clickOnControlsConsoleMenu();
 		SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
-		context.setAttribute("TestRailId", getTestRailRunId());
+//		context.setAttribute("TestRailId", getTestRailRunId());
 		controlsNewUIPage.clickOnControlsSchedulingPolicies();
 		controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
 		controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue());
@@ -734,26 +700,26 @@ public class SanityTest extends TestBase{
 	public void scheduleSubTabNavigationStoreManager(String username, String password, String browser, String location, ITestContext context) throws Exception {
 		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 		scheduleOverviewPage.loadScheduleOverview();
-		int testRailId = (Integer) context.getAttribute("TestRailId");
-		System.out.println("In Test1, Value stored in context is: "+testRailId);
+//		int testRailId = (Integer) context.getAttribute("TestRailId");
+//		System.out.println("In Test1, Value stored in context is: "+testRailId);
 		SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
 		schedulePage.navigateScheduleDayWeekView(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Three.getValue());
 
 	}
 
-	@SanitySuite(sanity =  "Sanity")
-	@UseAsTestRailSectionId(testRailSectionId = 96)
-	@Automated(automated = "Automated")
-	@Owner(owner = "Gunjan")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate navigation and data loading in Day/Week view for Projected Traffic Tab[No Spinning icon or Blank screen]")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void projectedTrafficSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
-		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-		scheduleOverviewPage.loadScheduleOverview();
-		SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
-		salesForecastPage.loadSalesForecastforCurrentNFutureWeek(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Six.getValue());
-	}
+//	@SanitySuite(sanity =  "Sanity")
+//	@UseAsTestRailSectionId(testRailSectionId = 96)
+//	@Automated(automated = "Automated")
+//	@Owner(owner = "Gunjan")
+//	@Enterprise(name = "KendraScott2_Enterprise")
+//	@TestName(description = "Validate navigation and data loading in Day/Week view for Projected Traffic Tab[No Spinning icon or Blank screen]")
+//	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+//	public void projectedTrafficSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
+//		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+//		scheduleOverviewPage.loadScheduleOverview();
+//		SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+//		salesForecastPage.loadSalesForecastforCurrentNFutureWeek(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Six.getValue());
+//	}
 
 	@SanitySuite(sanity =  "Sanity")
 	@UseAsTestRailSectionId(testRailSectionId = 96)
@@ -771,76 +737,103 @@ public class SanityTest extends TestBase{
 
 
 
+//	@MobilePlatform(platform = "Android")
+//	@SanitySuite(sanity =  "Sanity")
+//	@UseAsTestRailSectionId(testRailSectionId = 96)
+//	@Automated(automated ="Automated")
+//	@Owner(owner = "Nishant")
+//	@Enterprise(name = "KendraScott2_Enterprise")
+//	@TestName(description = "Validate integration of Console UI with Mobile [Check only Open Schedule Offer is sent to the TM from Console UI and validate it is visible in Legion Mobile app for corresponding TM]")
+//	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+//	public void consoleAndMobileIntegrationForShiftOffers(String username, String password, String browser, String location) throws Exception {
+//		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//		schedulePage.clickOnScheduleConsoleMenuItem();
+//		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+//		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+//		schedulePage.clickOnScheduleSubTab(LoginTest.SchedulePageSubTabText.Overview.getValue());
+//		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//		List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+//		for(int i=0; i <overviewPageScheduledWeeks.size();i++)
+//		{
+//			if(overviewPageScheduledWeeks.get(i).getText().toLowerCase().contains(LoginTest.overviewWeeksStatus.Guidance.getValue().toLowerCase()))
+//			{
+//				scheduleOverviewPage.clickOnGuidanceBtnOnOverview(i);
+//				if(schedulePage.isGenerateButtonLoaded())
+//				{
+//					SimpleUtils.pass("Guidance week found : '"+ schedulePage.getActiveWeekText() +"'");
+//					schedulePage.generateOrUpdateAndGenerateSchedule();
+//					schedulePage.clickOnSchedulePublishButton();
+//					break;
+//				}
+//			}
+//		}
+//
+//		schedulePage.clickOnDayView();
+//		int previousGutterCount = schedulePage.getgutterSize();
+//		scheduleNavigationTest(previousGutterCount);
+//		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
+//		Float scheduledHoursBeforeEditing = ScheduledHours.get("scheduledHours");
+//		HashMap<List<String>,List<String>> teamCount = schedulePage.calculateTeamCount();
+//		SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
+//		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
+//		schedulePage.customizeNewShiftPage();
+//		schedulePage.compareCustomizeStartDay(textStartDay);
+//		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+//		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+//		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
+//		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+//		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+//		schedulePage.clickOnCreateOrNextBtn();
+//		schedulePage.customizeNewShiftPage();
+//		schedulePage.verifySelectTeamMembersOption();
+//		schedulePage.clickOnOfferOrAssignBtn();
+//		int updatedGutterCount = schedulePage.getgutterSize();
+//		List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
+//		List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
+//		verifyTeamCount(previousTeamCount,currentTeamCount);
+//		schedulePage.clickSaveBtn();
+//		HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
+//		Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
+//		verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
+//		schedulePage.clickOnSchedulePublishButton();
+//		//Schedule overview should show 5 week's schedule
+//
+//		launchMobileApp();
+//		LoginPageAndroid loginPageAndroid = mobilePageFactory.createMobileLoginPage();
+//		loginPageAndroid.clickFirstLoginBtn();
+//		loginPageAndroid.verifyLoginTitle("LOGIN");
+//		loginPageAndroid.selectEnterpriseName();
+//		loginPageAndroid.loginToLegionWithCredentialOnMobile("Gordon.M", "Gordon.M");
+//		loginPageAndroid.clickShiftOffers("Gordon.M");
+//	}
+
+
 	@MobilePlatform(platform = "Android")
 	@SanitySuite(sanity =  "Sanity")
 	@UseAsTestRailSectionId(testRailSectionId = 96)
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nishant")
+	@Automated(automated = "Automated")
+	@Owner(owner = "Gunjan")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate integration of Console UI with Mobile [Check only Open Schedule Offer is sent to the TM from Console UI and validate it is visible in Legion Mobile app for corresponding TM]")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void consoleAndMobileIntegrationForShiftOffers(String username, String password, String browser, String location) throws Exception {
+	@TestName(description = "TP-144 : Validate navigation to below tabs and loading of data[No spinning icon]")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void legionAppNavigationAllTabsStoreManager(String username, String password, String browser, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.loadTeamTab();
 		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
-		schedulePage.clickOnScheduleSubTab(LoginTest.SchedulePageSubTabText.Overview.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-		List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
-		for(int i=0; i <overviewPageScheduledWeeks.size();i++)
-		{
-			if(overviewPageScheduledWeeks.get(i).getText().toLowerCase().contains(LoginTest.overviewWeeksStatus.Guidance.getValue().toLowerCase()))
-			{
-				scheduleOverviewPage.clickOnGuidanceBtnOnOverview(i);
-				if(schedulePage.isGenerateButtonLoaded())
-				{
-					SimpleUtils.pass("Guidance week found : '"+ schedulePage.getActiveWeekText() +"'");
-					schedulePage.generateOrUpdateAndGenerateSchedule();
-					schedulePage.clickOnSchedulePublishButton();
-					break;
-				}
-			}
-		}
+		scheduleOverviewPage.loadScheduleOverview();
+		SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+		salesForecastPage.loadSalesForecast();
+		StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
+		staffingGuidancePage.loadStaffingGuidance();
+		SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+		schedulePage.loadSchedule();
+		AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+		analyticsPage.loadAnalyticsTab();
 
-		schedulePage.clickOnDayView();
-		int previousGutterCount = schedulePage.getgutterSize();
-		scheduleNavigationTest(previousGutterCount);
-		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
-		Float scheduledHoursBeforeEditing = ScheduledHours.get("scheduledHours");
-		HashMap<List<String>,List<String>> teamCount = schedulePage.calculateTeamCount();
-		SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
-		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.compareCustomizeStartDay(textStartDay);
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.verifySelectTeamMembersOption();
-		schedulePage.clickOnOfferOrAssignBtn();
-		int updatedGutterCount = schedulePage.getgutterSize();
-		List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
-		List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
-		verifyTeamCount(previousTeamCount,currentTeamCount);
-		schedulePage.clickSaveBtn();
-		HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
-		Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
-		verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
-		schedulePage.clickOnSchedulePublishButton();
-		//Schedule overview should show 5 week's schedule
-
-		launchMobileApp();
-		LoginPageAndroid loginPageAndroid = mobilePageFactory.createMobileLoginPage();
-		loginPageAndroid.clickFirstLoginBtn();
-		loginPageAndroid.verifyLoginTitle("LOGIN");
-		loginPageAndroid.selectEnterpriseName();
-		loginPageAndroid.loginToLegionWithCredentialOnMobile("Jayne.H", "Jayne.H");
-		loginPageAndroid.clickShiftOffers("Jayne.H");
 	}
 
 

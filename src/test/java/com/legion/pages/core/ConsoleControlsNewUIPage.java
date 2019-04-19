@@ -2,21 +2,24 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ControlsNewUIPage;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
-
 
 
 public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIPage{
@@ -91,8 +94,15 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "collapsible[block-title=\"'Regular'\"]")
 	private WebElement regularHoursBlock;
 	
+	@FindBy(css = "collapsible[block-title=\"'Holiday'\"]")
+	private WebElement holidayHoursBlock;
+	
 	@FindBy(css = "day-working-hours[id=\"day.dayOfTheWeek\"]")
 	private List<WebElement> regularHoursRows;
+	
+	@FindBy(css = "day-working-hours[id=\"day.name\"]")
+	private List<WebElement> holidayHoursRows;
+	
 	
 	@FindBy(css = "input-field[type=\"checkbox\"]")
 	private List<WebElement> regularHoursDaysCheckboxs;
@@ -262,6 +272,14 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 
 	@Override
+	public boolean isControlsConsoleMenuAvailable() throws Exception {
+		if(isElementLoaded(controlsConsoleMenuDiv))
+			return true;
+		else
+			return false;
+	}
+	
+	@Override
 	public boolean isControlsPageLoaded() throws Exception {
 		if(isElementLoaded(controlsPageHeaderLabel))
 			if(controlsPageHeaderLabel.getText().toLowerCase().contains(timeSheetHeaderLabel.toLowerCase())) {
@@ -274,8 +292,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void clickOnGlobalLocationButton() throws Exception {
-		
-		if(isElementLoaded(globalLocationButton)) {
+		if(isElementLoaded(globalLocationButton,5)) {
 			click(globalLocationButton);
 			SimpleUtils.pass("Controls Page: 'Global Location' loaded successfully.");
 		}
@@ -286,7 +303,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	
 	@Override
 	public void clickOnControlsCompanyProfileCard() throws Exception {
-		if(isElementLoaded(companyProfileCard))
+		if(isElementLoaded(companyProfileCard,5))
 			click(companyProfileCard);
 		else
 			SimpleUtils.fail("Controls Page: Company Profile Card not Loaded!", false);
@@ -311,8 +328,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		drpCountry.selectByVisibleText(country);
 		
 		try {
-			Select drpStates = new Select(locationStateField);
-			drpStates.selectByVisibleText(state);			
+			if(isElementEnabled(locationStateField,5)){
+				Select drpStates = new Select(locationStateField);
+				drpStates.selectByVisibleText(state);
+			}
 		}catch (Exception e) {
 			Select drpStates = new Select(locationProvinceField);
 			drpStates.selectByVisibleText(state);
@@ -325,10 +344,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			locationPostalCodeField.clear();
 			locationPostalCodeField.sendKeys(zipCode);	
 		}
-		
-		
-		
-		
+
 		Select drpTimeZone = new Select(locationTimeZoneField);
 		drpTimeZone.selectByVisibleText(timeZone);
 
@@ -467,8 +483,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		boolean isRegularHoursSectionOpened = collapsibleHeader.getAttribute("class").contains("open");
 		if(! isRegularHoursSectionOpened)
 			click(regularHoursBlock);
-		
-		if(regularHoursRows.size() > 0)
+
+		if(areListElementVisible(regularHoursRows,10))
 		{
 			for(WebElement regularHoursRow : regularHoursRows)
 			{
@@ -480,10 +496,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 						click(regularHoursEditBtn);
 
 						// Select Opening Hours
-						int openingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(0).getText().split(":")[0]);
+						int openingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(0).getText().split(":")[0].trim());
 						if(editRegularHoursSliders.get(0).getText().toLowerCase().contains("pm"))
 							openingHourOnSlider = openingHourOnSlider + 12;
-						int openingHourOnJson = Integer.valueOf(openingHours.split(":")[0]);
+						int openingHourOnJson = Integer.valueOf(openingHours.split(":")[0].trim());
 						if(openingHours.toLowerCase().contains("pm"))
 							openingHourOnJson = openingHourOnJson + 12;
 						int sliderOffSet = 5;
@@ -497,10 +513,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 						}
 						
 						// Select Closing Hours
-						int closingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(1).getText().split(":")[0]);
+						int closingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(1).getText().split(":")[0].trim());
 						if(editRegularHoursSliders.get(1).getText().toLowerCase().contains("pm"))
 							closingHourOnSlider = closingHourOnSlider + 12;
-						int closingHourOnJson = Integer.valueOf(closingHours.split(":")[0]);
+						int closingHourOnJson = Integer.valueOf(closingHours.split(":")[0].trim());
 						if(closingHours.toLowerCase().contains("pm"))
 							closingHourOnJson = closingHourOnJson + 12;
 						if(closingHourOnSlider > closingHourOnJson)
@@ -2171,5 +2187,2266 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 		else
 			SimpleUtils.fail("Scheduling Policy Groups Tabs not loaded.", false);
+	}
+
+
+	@FindBy(css="form-section[form-title=\"Location information\"]")
+	private WebElement locationInformationFormSection;
+	/*@FindBy(css="input-field[disabled=\"!editing\"]")
+	private List<WebElement> locationInformationFields;*/
+	@Override
+	public HashMap<String, ArrayList<String>> getLocationInformationEditableOrNonEditableFields() throws Exception {
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		clickOnLocationProfileEditLocationBtn();
+		Thread.sleep(1000);
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		if(isLocationProfileEditLocationSectionLoaded() && isElementLoaded(locationInformationFormSection)) {
+			List<WebElement> locationInformationFields = locationInformationFormSection.findElements(
+					By.cssSelector("input-field[ng-attr-disabled=\"!editing\"]"));
+			if(locationInformationFields.size() > 0) {
+				String fieldLabel = "";
+				for(WebElement inputField: locationInformationFields) {
+					List<WebElement> inputFieldLabelElements = inputField.findElements(By.cssSelector("label.input-label"));
+					if(inputFieldLabelElements.size() > 0) {
+						fieldLabel = inputFieldLabelElements.get(0).getText();
+						List<WebElement> inputBoxFields = inputField.findElements(By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+						boolean isFieldEditable = false;
+						if(inputBoxFields.size() > 0) {
+							String fieldType = "input";
+							isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+							if(isFieldEditable)
+								editableFields.add(fieldLabel);
+							else
+								nonEditableFields.add(fieldLabel);
+						}
+						else {
+							inputBoxFields = inputField.findElements(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+							if(inputBoxFields.size() > 0) {
+								String fieldType = "select";
+								isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+								if(isFieldEditable)
+									editableFields.add(fieldLabel);
+								else
+									nonEditableFields.add(fieldLabel);
+							}
+							else {
+								notLoadedFields.add(fieldLabel);
+							}
+						}
+					}
+				}
+				editableOrNonEditableFields.put("editableFields", editableFields);
+				editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+				editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+			}
+			else
+				SimpleUtils.fail("Location Profile: 'Location Information' fields not loaded.", false);
+		}
+		clickOnLocationProfileEditCancelBtn();
+		return editableOrNonEditableFields;
+	}
+	
+	@FindBy(css="lg-button[label=\"Cancel\"]")
+	private List<WebElement> cancelButtons;
+	
+	private void clickOnLocationProfileEditCancelBtn() {
+		if(cancelButtons.size() > 0) {
+			click(cancelButtons.get(0));
+			SimpleUtils.pass("Location Profile: Edit location 'Cancel' button clicked successfully.");
+		}
+		else
+			SimpleUtils.fail("Location Profile: Edit location 'Cancel' button not loaded.", false);
+	}
+
+
+	private boolean isInputFieldEditable(WebElement webElement, String fieldType) throws Exception {
+		boolean isfieldEditable = false;
+		if(webElement.isDisplayed() && webElement.isEnabled()) {
+			if(fieldType.toLowerCase().contains("input")) {
+				try {
+				String originalInputBoxValue = webElement.getAttribute("value");
+				String fieldValueType = webElement.getAttribute("type");
+				String sampleText = "Sample Text";
+				if(fieldValueType.toLowerCase().contains("checkbox")) {
+					click(webElement);
+					Thread.sleep(1000);
+					click(webElement);
+					isfieldEditable = true;
+				}
+				else {
+					if(fieldValueType.toLowerCase().contains("number"))
+						sampleText = "2";
+					webElement.clear();
+					webElement.sendKeys(sampleText);
+					if(webElement.getAttribute("value").toLowerCase().contains(sampleText.toLowerCase()))
+						isfieldEditable = true;
+					webElement.clear();
+					webElement.sendKeys(originalInputBoxValue);
+					}
+				}
+				catch(Exception e) {
+					isfieldEditable = false;
+				}
+			}
+			else if(fieldType.toLowerCase().contains("select")) {
+				Select dropdownField = new Select(webElement);
+				String originalSelectBoxValue = dropdownField.getFirstSelectedOption().getText();
+				for(WebElement option : dropdownField.getOptions()) {
+					if(! option.getText().equalsIgnoreCase(originalSelectBoxValue)) {
+						click(option);
+						if(! dropdownField.getFirstSelectedOption().getText().equalsIgnoreCase(originalSelectBoxValue))
+							isfieldEditable = true;
+						else if(dropdownField.getOptions().size() < 2)
+							isfieldEditable = true;
+						break;
+					}
+				}
+				Thread.sleep(1000);
+				if(originalSelectBoxValue.trim().length() > 0)
+					dropdownField.selectByVisibleText(originalSelectBoxValue);
+			}
+			else if(fieldType.toLowerCase().contains("button")) {
+				List<WebElement> btns =  webElement.findElements(By.cssSelector("div.lg-button-group-selected"));
+				if(btns.size() > 0) {
+					try {
+						click(btns.get(0));
+						isfieldEditable = true; 
+					}
+					catch(Exception e) {
+						isfieldEditable = false;
+					}
+				}
+				else if(webElement.isDisplayed() && webElement.isEnabled())
+					isfieldEditable = true;
+			}
+			
+			else if(fieldType.toLowerCase().contains("div")) {
+				try {
+					click(webElement);
+					Thread.sleep(1000);
+					click(webElement);
+					isfieldEditable = true;
+				}
+				catch(Exception e){
+					isfieldEditable = false;
+				}
+			}
+		}
+		return isfieldEditable;
+	}
+	public static boolean isClickable(WebElement webe)      
+	{
+		try
+		{
+		   WebDriverWait wait = new WebDriverWait(getDriver(), 5);
+		   wait.until(ExpectedConditions.elementToBeClickable(webe));
+		   return true;
+		}
+		catch (Exception e)
+		{
+		  return false;
+		}
+	}
+
+	@FindBy(css="lg-button[label=\"Edit Location\"]")
+	private WebElement locationProfileEditLocationBtn;
+	public void clickOnLocationProfileEditLocationBtn() throws Exception
+	{
+		if(isElementLoaded(locationProfileEditLocationBtn)) {
+			if(locationProfileEditLocationBtn.isEnabled()) {
+				click(locationProfileEditLocationBtn);
+				SimpleUtils.pass("Controls page: Location Profile section 'Edit Location' button clicked successfully.");
+			}
+			else
+				SimpleUtils.report("Controls page: Location Profile section 'Edit Location' button not Enabled.");
+		}
+		else
+			SimpleUtils.fail("Controls page: Location Profile section 'Edit Location' button not loaded.", false);
+	}
+	
+	@FindBy(css="div.lg-general-form__top-buttons")
+	private WebElement locationProfileEditFormSaveCancelBtnsDiv;
+	
+	public boolean isLocationProfileEditLocationSectionLoaded() throws Exception
+	{
+		if(isElementLoaded(locationProfileEditFormSaveCancelBtnsDiv) 
+				&& locationProfileEditFormSaveCancelBtnsDiv.isDisplayed() && locationProfileEditFormSaveCancelBtnsDiv.isEnabled()) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public HashMap<String, ArrayList<String>> getSchedulingPoliciesSchedulesSectionEditableOrNonEditableFields() throws Exception 
+	{
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		if(isElementLoaded(schedulingPoliciesSchedulesFormSectionDiv)) {
+			List<WebElement> schedulesSectionFields = schedulingPoliciesSchedulesFormSectionDiv.findElements(
+					By.cssSelector("div.lg-question-input"));
+			for(WebElement schedulesSectionField : schedulesSectionFields) {
+				WebElement fieldLabelDiv = schedulesSectionField.findElement(By.cssSelector("h3.lg-question-input__text"));
+				String fieldTitle = fieldLabelDiv.getText();
+				List<WebElement> inputBoxFields = schedulesSectionField.findElements(
+						By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+				boolean isFieldEditable = false;
+				if(inputBoxFields.size() > 0) {
+					String fieldType = "input";
+					isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+					if(isFieldEditable)
+						editableFields.add(fieldTitle);
+					else
+						nonEditableFields.add(fieldTitle);
+				}
+				else {
+					inputBoxFields = schedulesSectionField.findElements(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+					if(inputBoxFields.size() > 0) {
+						String fieldType = "select";
+						isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+						if(isFieldEditable)
+							editableFields.add(fieldTitle);
+						else
+							nonEditableFields.add(fieldTitle);
+					}
+					else {
+						notLoadedFields.add(fieldTitle);
+					}
+				}
+			}
+			editableOrNonEditableFields.put("editableFields", editableFields);
+			editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+			editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		}
+		return editableOrNonEditableFields;
+	}
+	
+	@Override
+	public HashMap<String, ArrayList<String>> getSchedulingPoliciesShiftsSectionEditableOrNonEditableFields() throws Exception 
+	{
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		if(isElementLoaded(schedulingPoliciesShiftFormSectionDiv)) {
+			List<WebElement> ShiftsSectionFields = schedulingPoliciesShiftFormSectionDiv.findElements(
+					By.cssSelector("div.lg-question-input"));
+			for(WebElement ShiftsSectionField : ShiftsSectionFields) {
+				WebElement fieldLabelDiv = ShiftsSectionField.findElement(By.cssSelector("h3.lg-question-input__text"));
+				String fieldTitle = fieldLabelDiv.getText();
+				List<WebElement> inputBoxFields = ShiftsSectionField.findElements(
+						By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+				boolean isFieldEditable = false;
+				if(inputBoxFields.size() > 0) {
+					String fieldType = "input";
+					isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+					if(isFieldEditable)
+						editableFields.add(fieldTitle);
+					else
+						nonEditableFields.add(fieldTitle);
+				}
+				else {
+					inputBoxFields = ShiftsSectionField.findElements(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+					if(inputBoxFields.size() > 0) {
+						String fieldType = "select";
+						isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+						if(isFieldEditable)
+							editableFields.add(fieldTitle);
+						else
+							nonEditableFields.add(fieldTitle);
+					}
+					else
+						notLoadedFields.add(fieldTitle);
+				}
+			}
+			editableOrNonEditableFields.put("editableFields", editableFields);
+			editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+			editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		}
+		return editableOrNonEditableFields;
+	}
+	
+	@Override
+	public HashMap<String, ArrayList<String>> getSchedulingPoliciesBudgetSectionEditableOrNonEditableFields() throws Exception 
+	{
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		if(isElementLoaded(budgetFormSection)) {
+			List<WebElement> budgetSectionFields = budgetFormSection.findElements(
+					By.cssSelector("div.lg-question-input"));
+			for(WebElement budgetSectionField : budgetSectionFields) {
+				WebElement fieldLabelDiv = budgetSectionField.findElement(By.cssSelector("h3.lg-question-input__text"));
+				String fieldTitle = fieldLabelDiv.getText();
+				List<WebElement> inputBoxFields = budgetSectionField.findElements(
+						By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+				boolean isFieldEditable = false;
+				if(inputBoxFields.size() > 0) {
+					String fieldType = "input";
+					isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+					if(isFieldEditable)
+						editableFields.add(fieldTitle);
+					else
+						nonEditableFields.add(fieldTitle);
+				}
+				else {
+					inputBoxFields = budgetSectionField.findElements(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+					if(inputBoxFields.size() > 0) {
+						String fieldType = "select";
+						isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+						if(isFieldEditable)
+							editableFields.add(fieldTitle);
+						else
+							nonEditableFields.add(fieldTitle);
+					}
+					else {
+						inputBoxFields = budgetSectionField.findElements(By.cssSelector("lg-button-group[on-change=\"$ctrl.handleChange()\"]"));
+						if(inputBoxFields.size() > 0) {
+							String fieldType = "lg-button-group";
+							isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+							if(isFieldEditable)
+								editableFields.add(fieldTitle);
+							else
+								nonEditableFields.add(fieldTitle);
+						}
+						else
+							notLoadedFields.add(fieldTitle);
+					}
+				}
+			}
+			editableOrNonEditableFields.put("editableFields", editableFields);
+			editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+			editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		}
+		return editableOrNonEditableFields;
+	}
+	
+	@FindBy(css="form-section[form-title=\"Team availability management\"]")
+	private WebElement teamAvailabilityManagementFormSection;
+	@Override
+	public HashMap<String, ArrayList<String>> getSchedulingPoliciesTeamAvailabilityManagementSectionEditableOrNonEditableFields() throws Exception 
+	{
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		if(isElementLoaded(teamAvailabilityManagementFormSection)) {
+			List<WebElement> teamAvailabilityManagementSectionFields = teamAvailabilityManagementFormSection.findElements(
+					By.cssSelector("div.lg-question-input"));
+			String fieldTitle = "";
+			for(WebElement teamAvailabilityManagementSectionField : teamAvailabilityManagementSectionFields) {
+				Thread.sleep(5000);
+				try {
+					WebElement fieldLabelDiv = teamAvailabilityManagementSectionField.findElement(By.cssSelector("h3.lg-question-input__text"));
+					fieldTitle = fieldLabelDiv.getText();
+					List<WebElement> inputBoxFields = teamAvailabilityManagementSectionField.findElements(
+							By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+					boolean isFieldEditable = false;
+					if(inputBoxFields.size() > 0) {
+						String fieldType = "input";
+						isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+						if(isFieldEditable)
+							editableFields.add(fieldTitle);
+						else
+							nonEditableFields.add(fieldTitle);
+					}
+					else {
+						inputBoxFields = teamAvailabilityManagementSectionField.findElements(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+						if(inputBoxFields.size() > 0) {
+							String fieldType = "select";
+							isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+							if(isFieldEditable)
+								editableFields.add(fieldTitle);
+							else
+								nonEditableFields.add(fieldTitle);
+						}
+						else
+							notLoadedFields.add(fieldTitle);
+					}
+				}
+				catch(StaleElementReferenceException SERException) {
+					SimpleUtils.report("Scheduling Policies: 'Team Availability Management' Section Input field After '"+fieldTitle+"' not loaded.");
+				}
+			}
+			editableOrNonEditableFields.put("editableFields", editableFields);
+			editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+			editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		}
+		return editableOrNonEditableFields;
+	}
+
+
+	@Override
+	public HashMap<String, ArrayList<String>> getSchedulingPoliciesTimeOffSectionEditableOrNonEditableFields()
+			throws Exception {
+		//schedulingPoliciesTimeOffFormSectionDiv
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		if(isElementLoaded(schedulingPoliciesTimeOffFormSectionDiv)) {
+			List<WebElement> timeOffSectionFields = schedulingPoliciesTimeOffFormSectionDiv.findElements(
+					By.cssSelector("div.lg-question-input"));
+			for(WebElement timeOffSectionField : timeOffSectionFields) {
+				WebElement fieldLabelDiv = timeOffSectionField.findElement(By.cssSelector("h3.lg-question-input__text"));
+				String fieldTitle = fieldLabelDiv.getText();
+				List<WebElement> inputBoxFields = timeOffSectionField.findElements(
+						By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+				boolean isFieldEditable = false;
+				if(inputBoxFields.size() > 0) {
+					String fieldType = "input";
+					isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+					if(isFieldEditable)
+						editableFields.add(fieldTitle);
+					else
+						nonEditableFields.add(fieldTitle);
+				}
+				else {
+					inputBoxFields = timeOffSectionField.findElements(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+					if(inputBoxFields.size() > 0) {
+						String fieldType = "select";
+						isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+						if(isFieldEditable)
+							editableFields.add(fieldTitle);
+						else
+							nonEditableFields.add(fieldTitle);
+					}
+					else {
+						inputBoxFields = timeOffSectionField.findElements(By.cssSelector("lg-button-group[on-change=\"$ctrl.handleChange()\"]"));
+						if(inputBoxFields.size() > 0) {
+							String fieldType = "lg-button-group";
+							isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+							if(isFieldEditable)
+								editableFields.add(fieldTitle);
+							else
+								nonEditableFields.add(fieldTitle);
+						}
+						else
+							notLoadedFields.add(fieldTitle);
+					}
+				}
+			}
+			editableOrNonEditableFields.put("editableFields", editableFields);
+			editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+			editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		}
+		return editableOrNonEditableFields;
+	}
+
+
+	@Override
+	public HashMap<String, ArrayList<String>> getSchedulingPoliciesSchedulingPolicyGroupsSectionEditableOrNonEditableFields()
+			throws Exception {
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		
+		// Hours per Week Fields
+		String hoursPerWeekMinimumFieldTitle = "Hours per Week Minimum";
+		boolean isHoursPerWeekMinimumFieldEnable = isSchedulingPolicyGroupsFieldEnable(numHoursPerWeekMinInputFields);
+		if(isHoursPerWeekMinimumFieldEnable)
+			editableFields.add(hoursPerWeekMinimumFieldTitle);
+		else
+			nonEditableFields.add(hoursPerWeekMinimumFieldTitle);
+		
+		String hoursPerWeekMaximumFieldTitle = "Hours per Week Maximum";
+		boolean isHoursPerWeekMaximumFieldEnable = isSchedulingPolicyGroupsFieldEnable(numHoursPerWeekMaxInputFields);
+		if(isHoursPerWeekMaximumFieldEnable)
+			editableFields.add(hoursPerWeekMaximumFieldTitle);
+		else
+			nonEditableFields.add(hoursPerWeekMaximumFieldTitle);
+		
+		String hoursPerWeekIdealFieldTitle = "Hours per Week Ideal";
+		boolean isHoursPerWeekIdealFieldEnable = isSchedulingPolicyGroupsFieldEnable(numHoursPerWeekIdealInputFields);
+		if(isHoursPerWeekIdealFieldEnable)
+			editableFields.add(hoursPerWeekIdealFieldTitle);
+		else
+			nonEditableFields.add(hoursPerWeekIdealFieldTitle);
+		
+		// Shifts per Week Fields
+		String shiftsPerWeekMinimumFieldTitle = "Shifts per Week Minimum";
+		boolean isShiftsPerWeekMinimumFieldEnable = isSchedulingPolicyGroupsFieldEnable(numShiftsPerWeekMinInputFields);
+		if(isShiftsPerWeekMinimumFieldEnable)
+			editableFields.add(shiftsPerWeekMinimumFieldTitle);
+		else
+			nonEditableFields.add(shiftsPerWeekMinimumFieldTitle);
+		
+		String shiftsPerWeekMaximumFieldTitle = "Shifts per Week Maximum";
+		boolean isShiftsPerWeekMaximumFieldEnable = isSchedulingPolicyGroupsFieldEnable(numShiftsPerWeekMaxInputFields);
+		if(isShiftsPerWeekMaximumFieldEnable)
+			editableFields.add(shiftsPerWeekMaximumFieldTitle);
+		else
+			nonEditableFields.add(shiftsPerWeekMaximumFieldTitle);
+		
+		String shiftsPerWeekIdealFieldTitle = "Shifts per Week Ideal";
+		boolean isShiftsPerWeekIdealFieldEnable = isSchedulingPolicyGroupsFieldEnable(numShiftsPerWeekIdealInputFields);
+		if(isShiftsPerWeekIdealFieldEnable)
+			editableFields.add(shiftsPerWeekIdealFieldTitle);
+		else
+			nonEditableFields.add(shiftsPerWeekIdealFieldTitle);
+		
+		// Hours per Shift Fields
+		String hoursPerShiftMinimumFieldTitle = "Hours per Shift Minimum";
+		boolean isHoursPerShiftMinimumFieldEnable = isSchedulingPolicyGroupsFieldEnable(minHoursPerShiftInputFields);
+		if(isHoursPerShiftMinimumFieldEnable)
+			editableFields.add(hoursPerShiftMinimumFieldTitle);
+		else
+			nonEditableFields.add(hoursPerShiftMinimumFieldTitle);
+		
+		String hoursPerShiftMaximumFieldTitle = "Hours per Shift Maximum";
+		boolean isHoursPerShiftMaximumFieldEnable = isSchedulingPolicyGroupsFieldEnable(maxHoursPerShiftInputFields);
+		if(isHoursPerShiftMaximumFieldEnable)
+			editableFields.add(hoursPerShiftMaximumFieldTitle);
+		else
+			nonEditableFields.add(hoursPerShiftMaximumFieldTitle);
+		
+		String hoursPerShiftIdealFieldTitle = "Hours per Shift Ideal";
+		boolean isHoursPerShiftIdealFieldEnable = isSchedulingPolicyGroupsFieldEnable(ideaHoursPerShiftInputFields);
+		if(isHoursPerShiftIdealFieldEnable)
+			editableFields.add(hoursPerShiftIdealFieldTitle);
+		else
+			nonEditableFields.add(hoursPerShiftIdealFieldTitle);
+		
+		// Scheduling Policy Groups Enforce New Employee Committed Availability Toggle button
+		List<WebElement> employeeCommittedAvailabilitySwitchToggles = schedulePolicyGroupSection.findElements(
+				By.cssSelector("lg-switch.lg-question-input__toggle"));
+		String employeeCommittedAvailabilitySwitchToggleFieldTitle = "Enforce New Employee Committed Availability Toggle button";
+		for(WebElement employeeCommittedAvailabilitySwitchToggle : employeeCommittedAvailabilitySwitchToggles) {
+			if(employeeCommittedAvailabilitySwitchToggle.isDisplayed()) {
+				try {
+				click(employeeCommittedAvailabilitySwitchToggle);
+				editableFields.add(employeeCommittedAvailabilitySwitchToggleFieldTitle);
+				click(employeeCommittedAvailabilitySwitchToggle);
+				}
+				catch(Exception e) {
+					nonEditableFields.add(employeeCommittedAvailabilitySwitchToggleFieldTitle);
+				}
+				break;
+			}
+		}
+		
+		editableOrNonEditableFields.put("editableFields", editableFields);
+		editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+		editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		return editableOrNonEditableFields;
+	}
+	
+	public boolean isSchedulingPolicyGroupsFieldEnable(List<WebElement> inputFieldsList) throws Exception
+	{
+		for(int index = 0; index < inputFieldsList.size(); index++) {
+			if(inputFieldsList.get(index).isDisplayed()) {
+				WebElement inputBox = inputFieldsList.get(index).findElement(
+						By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+				if(isElementLoaded(inputBox)) {
+					String fieldType = "input";
+					boolean isFieldEditable = isInputFieldEditable(inputBox, fieldType);
+					if(isFieldEditable)
+						return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
+	@FindBy(css="div.lg-question-input")
+	private List<WebElement> pageFields;	
+	
+	@FindBy(css="page-heading[page-title=\"Schedule Collaboration\"]")
+	private WebElement scheduleCollaborationPageHeader;
+	@Override
+	public HashMap<String, ArrayList<String>> getScheduleCollaborationEditableOrNonEditableFields() throws Exception {
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		if(isElementLoaded(scheduleCollaborationPageHeader)) {
+			ArrayList<String> editableFields = new ArrayList<String>();
+			ArrayList<String> nonEditableFields = new ArrayList<String>();
+			ArrayList<String> notLoadedFields = new ArrayList<String>();
+			
+			if(pageFields.size() > 0) {
+				for(WebElement field : pageFields) {
+					WebElement fieldLabelDiv = field.findElement(By.cssSelector("h3.lg-question-input__text"));
+					String fieldTitle = fieldLabelDiv.getText();
+					List<WebElement> inputBoxFields = field.findElements(
+							By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+					boolean isFieldEditable = false;
+					if(inputBoxFields.size() > 0) {
+						String fieldType = "input";
+						isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+						if(isFieldEditable)
+							editableFields.add(fieldTitle);
+						else
+							nonEditableFields.add(fieldTitle);
+					}
+					else {
+						inputBoxFields = field.findElements(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+						if(inputBoxFields.size() > 0) {
+							String fieldType = "select";
+							isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+							if(isFieldEditable)
+								editableFields.add(fieldTitle);
+							else
+								nonEditableFields.add(fieldTitle);
+						}
+						else {
+							inputBoxFields = field.findElements(By.cssSelector("lg-button-group[on-change=\"$ctrl.handleChange()\"]"));
+							if(inputBoxFields.size() > 0) {
+								String fieldType = "lg-button-group";
+								isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+								if(isFieldEditable)
+									editableFields.add(fieldTitle);
+								else
+									nonEditableFields.add(fieldTitle);
+							}
+							else
+								notLoadedFields.add(fieldTitle);
+						}
+					}
+				}
+				editableOrNonEditableFields.put("editableFields", editableFields);
+				editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+				editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+			}
+		}
+		return editableOrNonEditableFields;
+	}
+
+
+	@FindBy(css="form-section[form-title=\"Open Shifts\"]")
+	private WebElement scheduleCollaborationOpenShiftFormSectionDiv;
+	@Override
+	public void clickOnScheduleCollaborationOpenShiftAdvanceBtn() throws Exception {
+		if(isElementLoaded(scheduleCollaborationOpenShiftFormSectionDiv)) {
+			WebElement schedulingPoliciesShiftAdvanceBtn = scheduleCollaborationOpenShiftFormSectionDiv.findElement(
+					By.cssSelector("div.lg-advanced-box__toggle"));
+			if(isElementLoaded(schedulingPoliciesShiftAdvanceBtn) && !schedulingPoliciesShiftAdvanceBtn.getAttribute("class")
+					.contains("--advanced")) {
+				click(schedulingPoliciesShiftAdvanceBtn);
+				SimpleUtils.pass("Controls Page: - Schedule Collaboration 'Open Shift' section: 'Advance' button clicked.");
+			}
+			else
+				SimpleUtils.fail("Controls Page: - Schedule Collaboration 'Open Shift' section: 'Advance' button not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Controls Page: - Schedule Collaboration section: 'Open Shift' form section not loaded.", false);
+	}
+	
+	@FindBy(css="input-field[value=\"cl.minorSchedulingPolicy.scheduleStartMin\"]")
+	private WebElement minorSchTimeLabelFromField;
+	
+	@FindBy(css="input-field[value=\"cl.minorSchedulingPolicy.scheduleEndMin\"]")
+	private WebElement minorSchTimeLabelToField;
+	
+	@FindBy(css="input-field[label=\"Mobile Policy URL\"]")
+	private WebElement mobilePolicyURLField;
+	
+	@Override
+	public HashMap<String, ArrayList<String>> getComplianceEditableOrNonEditableFields() throws Exception {
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		if(isControlsComplianceLoaded()) {
+			ArrayList<String> editableFields = new ArrayList<String>();
+			ArrayList<String> nonEditableFields = new ArrayList<String>();
+			ArrayList<String> notLoadedFields = new ArrayList<String>();
+			
+			if(pageFields.size() > 0) {
+				for(WebElement field : pageFields) {
+					WebElement fieldLabelDiv = field.findElement(By.cssSelector("h3.lg-question-input__text"));
+					String fieldTitle = fieldLabelDiv.getText();
+					List<WebElement> inputBoxFields = field.findElements(
+							By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+					List<WebElement> sliderFields = field.findElements(
+							By.cssSelector("label.switch"));
+					if(sliderFields.size() > 0) {
+						try {
+							WebElement sliderCheckBox = sliderFields.get(0).findElement(By.cssSelector("input[type=\"checkbox\"]"));
+							String classBeforeChange = sliderCheckBox.getAttribute("class");
+							click(sliderFields.get(0));
+							if(! classBeforeChange.equals(sliderCheckBox.getAttribute("class"))) {
+								click(sliderFields.get(0));
+								editableFields.add(fieldTitle);
+							}
+							else {
+								nonEditableFields.add(fieldTitle);
+							}
+						}
+						catch(Exception e) {
+							nonEditableFields.add(fieldTitle);
+						}
+					}
+					else {
+						boolean isFieldEditable = false;
+						if(inputBoxFields.size() > 0) {
+							String fieldType = "input";
+							isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+							if(isFieldEditable)
+								editableFields.add(fieldTitle);
+							else
+								nonEditableFields.add(fieldTitle);
+						}
+						else {
+							inputBoxFields = field.findElements(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+							if(inputBoxFields.size() > 0) {
+								String fieldType = "select";
+								isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+								if(isFieldEditable)
+									editableFields.add(fieldTitle);
+								else
+									nonEditableFields.add(fieldTitle);
+							}
+							else {
+								inputBoxFields = field.findElements(By.cssSelector("lg-button-group[on-change=\"$ctrl.handleChange()\"]"));
+								if(inputBoxFields.size() > 0) {
+									String fieldType = "lg-button-group";
+									isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+									if(isFieldEditable)
+										editableFields.add(fieldTitle);
+									else
+										nonEditableFields.add(fieldTitle);
+								}
+								else
+									notLoadedFields.add(fieldTitle);
+							}
+						}
+					}
+				}
+				
+				// 
+				
+				String minorScheduleTimeFromLabel = "Minor Schedule Time 'From' Input Field";
+				boolean isMinorScheduleTimeFromEditable = false;
+				if(isElementLoaded(minorSchTimeLabelFromField)) {
+					WebElement inputFiledDropDown = minorSchTimeLabelFromField.findElement(
+							By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+					String fieldType = "select";
+					isMinorScheduleTimeFromEditable = isInputFieldEditable(inputFiledDropDown, fieldType);
+					if(isMinorScheduleTimeFromEditable)
+						editableFields.add(minorScheduleTimeFromLabel);
+					else
+						nonEditableFields.add(minorScheduleTimeFromLabel);
+				}
+				
+				String minorScheduleTimeToLabel = "Minor Schedule Time 'To' Input Field";
+				boolean isMinorScheduleTimeToEditable = false;
+				if(isElementLoaded(minorSchTimeLabelToField)) {
+					WebElement inputFiledDropDown = minorSchTimeLabelFromField.findElement(
+							By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+					String fieldType = "select";
+					isMinorScheduleTimeToEditable = isInputFieldEditable(inputFiledDropDown, fieldType);
+					if(isMinorScheduleTimeToEditable)
+						editableFields.add(minorScheduleTimeToLabel);
+					else
+						nonEditableFields.add(minorScheduleTimeToLabel);
+				}
+				
+				// Mobile Policy URL Field
+				String mobilePolicyURLFieldLabel = "Mobile Policy URL";
+				boolean isMobilePolicyURLFieldEditable = false;
+				if(isElementLoaded(mobilePolicyURLField)) {
+					WebElement inputFiledDropDown = mobilePolicyURLField.findElement(
+							By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+					String fieldType = "input";
+					isMobilePolicyURLFieldEditable = isInputFieldEditable(inputFiledDropDown, fieldType);
+					if(isMobilePolicyURLFieldEditable)
+						editableFields.add(mobilePolicyURLFieldLabel);
+					else
+						nonEditableFields.add(mobilePolicyURLFieldLabel);
+				}
+				
+				editableOrNonEditableFields.put("editableFields", editableFields);
+				editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+				editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+			}
+		}
+		return editableOrNonEditableFields;
+	}
+	
+	@FindBy(css="div.lg-tabs__nav-item")
+	private List<WebElement> subTabs;
+	@Override
+	public void selectUsersAndRolesSubTabByLabel(String label) throws Exception
+	{
+		boolean isTabFound = false;
+		if(subTabs.size() > 0) {
+			for(WebElement subTab: subTabs) {
+				if(subTab.getText().toLowerCase().contains(label.toLowerCase())) {
+					click(subTab);
+					isTabFound = true;
+				}
+			}
+			if(isTabFound)
+				SimpleUtils.pass("Controls Page: Users and Roles section - '"+label+"' tab selected successfully.");
+			else
+				SimpleUtils.fail("Controls Page: Users and Roles section - '"+label+"' tab not found.", true);
+		}
+		else
+			SimpleUtils.fail("Controls Page: Users and Roles section - sub tabs not loaded.", false);
+	}
+	
+	@FindBy(css="lg-button[label=\"Add New User\"]")
+	private WebElement usersAndRolesAddNewUserButton;
+	@FindBy(css="form-section[on-action=\"editUser()\"]")
+	private WebElement addNewUsereditFormSection;
+	@FindBy(css="tr[ng-repeat=\"user in $ctrl.pagedUsers\"]")
+	private List<WebElement> usersAndRolesAllUsersRows;
+	
+	public void clickOnUsersAndRolesAddNewUserBtn() throws Exception
+	{
+		if(isElementLoaded(usersAndRolesAddNewUserButton)) {
+			if(usersAndRolesAddNewUserButton.isDisplayed() && usersAndRolesAddNewUserButton.isEnabled()) {
+				click(usersAndRolesAddNewUserButton);
+				SimpleUtils.pass("Controls Page: 'Users & Roles' section 'Add New User' button clicked successfully.");
+			}
+			else
+				SimpleUtils.report("Controls Page: 'Users & Roles' section 'Add New User' button not enabled.");
+		}
+		else
+			SimpleUtils.report("Controls Page: 'Users & Roles' section 'Add New User' button not loaded.");
+	}
+	
+	@FindBy(css="div.lg-single-calendar-body")
+	private WebElement calendarBody;
+	@Override
+	public HashMap<String, ArrayList<String>> getUsersAndRolesAddNewUserPageEditableOrNonEditableFields() throws Exception {
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		Thread.sleep(1000);
+		clickOnUsersAndRolesAddNewUserBtn();
+		Thread.sleep(1000);
+		if(isElementLoaded(addNewUsereditFormSection)) {
+			List<WebElement> newUserFormFields = addNewUsereditFormSection.findElements(By.tagName("input-field"));
+			if(newUserFormFields.size() > 0) {
+				String fieldTitle = "";
+				for(WebElement field : newUserFormFields) {
+					if(field.isDisplayed()) {
+						List<WebElement> fieldLabelDiv = field.findElements(By.cssSelector("label.input-label"));
+						if(fieldLabelDiv.size() > 0) {
+							fieldTitle = fieldLabelDiv.get(0).getText();
+						}
+						
+						List<WebElement> inputBoxFields = field.findElements(
+								By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+						boolean isFieldEditable = false;
+						if(inputBoxFields.size() > 0) {
+							if(fieldTitle.toLowerCase().contains("date hired")) {
+								click(field);
+								if(isElementLoaded(calendarBody)) {
+									editableFields.add(fieldTitle);
+									click(field);
+								}
+								else
+									nonEditableFields.add(fieldTitle);
+							}
+							else {
+								String fieldType = "input";
+								isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+								if(isFieldEditable)
+									editableFields.add(fieldTitle);
+								else
+									nonEditableFields.add(fieldTitle);
+							}
+						}
+						else {
+							inputBoxFields = field.findElements(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+							if(inputBoxFields.size() > 0) {
+								String fieldType = "select";
+								isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+								if(isFieldEditable)
+									editableFields.add(fieldTitle);
+								else
+									nonEditableFields.add(fieldTitle);
+							}
+							else {
+								inputBoxFields = field.findElements(By.cssSelector("lg-button-group[on-change=\"$ctrl.handleChange()\"]"));
+								if(inputBoxFields.size() > 0) {
+									String fieldType = "lg-button-group";
+									isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+									if(isFieldEditable)
+										editableFields.add(fieldTitle);
+									else
+										nonEditableFields.add(fieldTitle);
+								}
+								else
+									notLoadedFields.add(fieldTitle);
+							}
+						}
+					}
+				}
+				editableOrNonEditableFields.put("editableFields", editableFields);
+				editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+				editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+			}
+			clickOnUsersAndRolesNewUserEditPageCancelBtn();
+		}
+		return editableOrNonEditableFields;
+	}
+	
+	@FindBy(css="lg-button[label=\"Leave this page\"]")
+	private WebElement leaveThisPageBtn;
+	public void clickOnUsersAndRolesNewUserEditPageCancelBtn() throws Exception
+	{
+		if(cancelButtons.size() > 0) {
+			click(cancelButtons.get(0));
+			if(isElementLoaded(leaveThisPageBtn))
+				click(leaveThisPageBtn);
+			SimpleUtils.pass("Controls Page: Users and Roles Section 'New User edit page' Cancel button clicked successfully.");
+		}
+		else
+			SimpleUtils.fail("Controls Page: Users and Roles Section 'New User edit page' 'Cancel' button not loaded.", false);
+	}
+
+
+	@FindBy(css="lg-button[label=\"Edit User\"]")
+	private WebElement userAndRolesEditUserBtn;
+	
+	@FindBy(css="form-section[on-action=\"editUser()\"]")
+	private WebElement editUserPageFormSection;
+	
+	@FindBy(css="a[ng-click=\"$ctrl.back()\"]")
+	private WebElement backNavigator;
+	
+	@Override
+	public HashMap<String, ArrayList<String>> getUsersAndRolesEditUserPageEditableOrNonEditableFields(
+			String userFirstName) throws Exception {
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		
+		searchUserByFirstName(userFirstName);
+		Thread.sleep(2000);
+		if(usersAndRolesAllUsersRows.size() > 0) {
+			List<WebElement> userDetailsLinks = usersAndRolesAllUsersRows.get(0).findElements(By.cssSelector("button[type='button']"));
+			if(userDetailsLinks.size() > 0) {
+				click(userDetailsLinks.get(0));
+				if(isElementLoaded(userAndRolesEditUserBtn)) {
+					click(userAndRolesEditUserBtn);
+					if(isElementLoaded(editUserPageFormSection)) {
+						List<WebElement> newUserFormFields = addNewUsereditFormSection.findElements(By.tagName("input-field"));
+						if(newUserFormFields.size() > 0) {
+							String fieldTitle = "";
+							for(WebElement field : newUserFormFields) {
+								if(field.isDisplayed()) {
+									List<WebElement> fieldLabelDiv = field.findElements(By.cssSelector("label.input-label"));
+									if(fieldLabelDiv.size() > 0) {
+										fieldTitle = fieldLabelDiv.get(0).getText();
+									}
+									
+									List<WebElement> inputBoxFields = field.findElements(
+											By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+									boolean isFieldEditable = false;
+									if(inputBoxFields.size() > 0) {
+										if(fieldTitle.toLowerCase().contains("date hired")) {
+											click(field);
+											if(isElementLoaded(calendarBody)) {
+												editableFields.add(fieldTitle);
+												click(field);
+											}
+											else
+												nonEditableFields.add(fieldTitle);
+										}
+										else {
+											String fieldType = "input";
+											isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+											if(isFieldEditable)
+												editableFields.add(fieldTitle);
+											else
+												nonEditableFields.add(fieldTitle);
+										}
+									}
+									else {
+										inputBoxFields = field.findElements(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+										if(inputBoxFields.size() > 0) {
+											String fieldType = "select";
+											isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+											if(isFieldEditable)
+												editableFields.add(fieldTitle);
+											else
+												nonEditableFields.add(fieldTitle);
+										}
+										else {
+											inputBoxFields = field.findElements(By.cssSelector("lg-button-group[on-change=\"$ctrl.handleChange()\"]"));
+											if(inputBoxFields.size() > 0) {
+												String fieldType = "lg-button-group";
+												isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+												if(isFieldEditable)
+													editableFields.add(fieldTitle);
+												else
+													nonEditableFields.add(fieldTitle);
+											}
+											else
+												notLoadedFields.add(fieldTitle);
+										}
+									}
+								}
+							}
+							
+							// Verify Add a Badges enable or not
+							boolean isAddABadgesEnabled = isUsersAndRolesEditUserAddBadgesEnable();
+							if(isAddABadgesEnabled)
+								editableFields.add("Add a Badge");
+							else
+								nonEditableFields.add("Add a Badge");
+						}
+					}
+				}
+			}
+			clickOnUsersAndRolesNewUserEditPageCancelBtn();
+			if(isElementLoaded(backNavigator))
+				click(backNavigator);
+		}
+		
+		editableOrNonEditableFields.put("editableFields", editableFields);
+		editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+		editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		
+		return editableOrNonEditableFields;
+	}
+	
+	@FindBy(css="input[placeholder=\"You can search by name, job title, and status.\"]")
+	private WebElement usersAndRolesUserSearchBox;
+	
+	public void searchUserByFirstName(String userFirstName) throws Exception
+	{
+		if(isElementLoaded(usersAndRolesUserSearchBox)) {
+			if(usersAndRolesUserSearchBox.isDisplayed() && usersAndRolesUserSearchBox.isEnabled()) {
+				usersAndRolesUserSearchBox.clear();
+				usersAndRolesUserSearchBox.sendKeys(userFirstName);
+				Thread.sleep(2000);
+
+				SimpleUtils.pass("Users and Roles: '"+usersAndRolesAllUsersRows.size()+"' user(s) found with name '"
+							+ userFirstName +"'");
+			}
+		}
+	}
+	
+	
+	@FindBy(css="sub-content-box[box-title=\"Badges\"]")
+	private WebElement editUserPageManageBadgeSection;
+	@FindBy(css="button.lgn-action-button-success")
+	private WebElement addBadgeSaveBtn;
+	@FindBy(css="div[ng-click=\"callCancelCallback()\"]")
+	private WebElement addBadgeCancelBtn;
+	
+	@FindBy(css="div.lgn-tm-manage-badges")
+	private WebElement badgesModelPopupWindow;
+	public boolean isUsersAndRolesEditUserAddBadgesEnable() throws Exception {
+		if(isElementLoaded(editUserPageManageBadgeSection)) {
+			WebElement updateBadgesBtn;
+			List<WebElement> addBadgeBtn = editUserPageManageBadgeSection.findElements(By.cssSelector("lg-button[label=\"Add a badge\"]"));
+			if(addBadgeBtn.size() > 0)
+				updateBadgesBtn = addBadgeBtn.get(0);
+			else
+				updateBadgesBtn = editUserPageManageBadgeSection.findElements(By.cssSelector("lg-button[label=\"Manage\"]")).get(0);
+			click(updateBadgesBtn);
+			if(isElementLoaded(badgesModelPopupWindow)) {
+				List<WebElement> badgesRows = badgesModelPopupWindow.findElements(By.cssSelector("div.badge-row"));
+				if(badgesRows.size() > 0) {
+					for(WebElement badgesRow : badgesRows) {
+						WebElement badgesRowCheckBox = badgesRow.findElement(By.cssSelector("div.lgnCheckBox"));
+						if(isElementLoaded(badgesRowCheckBox) && ! badgesRowCheckBox.getAttribute("class").contains("checked")) {
+							click(badgesRowCheckBox);
+							if(badgesRowCheckBox.getAttribute("class").contains("checked")) {
+								if(isElementLoaded(addBadgeSaveBtn)) {
+									click(addBadgeSaveBtn);
+									return true;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		if(isElementLoaded(badgesModelPopupWindow, 2)) {
+			if(isElementLoaded(addBadgeCancelBtn))
+				click(addBadgeCancelBtn);
+		}
+		return false;
+	}
+	
+	
+	@FindBy(css="tr[ng-repeat=\"group in $ctrl.pagedGroups\"]")
+	private List<WebElement> usersAndRolesEmployeeJobTitileRows;
+	@Override
+	public HashMap<String, ArrayList<String>> getUsersAndRolesUpdateEmployeeJobTitleEditableOrNonEditableFields(String employeeJobTitle) throws Exception
+	{
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		searchEmployeeJobTitle(employeeJobTitle);
+		if(usersAndRolesEmployeeJobTitileRows.size() > 0) {
+			for(WebElement employeeJobTitileRow : usersAndRolesEmployeeJobTitileRows) {				
+				List<WebElement> newUserFormFields = employeeJobTitileRow.findElements(By.tagName("input-field"));
+				if(newUserFormFields.size() > 0) {
+					String fieldTitle = "";
+					for(WebElement field : newUserFormFields) {
+						if(field.isDisplayed()) {
+							List<WebElement> fieldLabelDiv = field.findElements(By.cssSelector("label.input-label"));
+							if(fieldLabelDiv.size() > 0) {
+								fieldTitle = fieldLabelDiv.get(0).getText();
+							}
+							
+							List<WebElement> inputBoxFields = field.findElements(
+									By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+							boolean isFieldEditable = false;
+							if(inputBoxFields.size() > 0) {
+								String fieldType = "input";
+								isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+								if(isFieldEditable)
+									editableFields.add(fieldTitle);
+								else
+									nonEditableFields.add(fieldTitle);
+							}
+						}
+					}
+				}
+				try {
+					WebElement cancelButton = employeeJobTitileRow.findElement(By.cssSelector("lg-button[label=\"Cancel\"]"));
+					WebElement saveButton = employeeJobTitileRow.findElement(By.cssSelector("lg-button[label=\"Save\"]"));
+					if(isElementLoaded(saveButton) && saveButton.isDisplayed() && saveButton.isEnabled()) {
+						editableFields.add(saveButton.getText());
+					}
+					else {
+						nonEditableFields.add(saveButton.getText());
+					}
+					
+					if(isElementLoaded(cancelButton) && cancelButton.isDisplayed() && cancelButton.isEnabled()) {
+						editableFields.add(cancelButton.getText());
+						click(cancelButton);
+					}
+					else {
+						nonEditableFields.add(cancelButton.getText());
+					}
+				}
+				catch(Exception e) {
+					SimpleUtils.report("Users and Roles: Job Title '"+employeeJobTitle+"' not editable.");
+				}
+				
+				break;
+			}
+		}
+		editableOrNonEditableFields.put("editableFields", editableFields);
+		editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+		editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		return editableOrNonEditableFields;
+	}
+	
+	@FindBy(css="input-field[placeholder=\"You can search by employee job title.\"]")
+	private WebElement usersAndRolesEmployeeJobTitleSearchBox;
+	public void searchEmployeeJobTitle(String employeeJobTitle) throws Exception
+	{
+		if(isElementLoaded(usersAndRolesEmployeeJobTitleSearchBox)) {
+			WebElement jobTitleTextBox = usersAndRolesEmployeeJobTitleSearchBox.findElement(By.cssSelector("input[type=\"text\"]"));
+			if(isElementLoaded(jobTitleTextBox)) {
+				if(jobTitleTextBox.isDisplayed() && jobTitleTextBox.isEnabled()) {
+					jobTitleTextBox.clear();
+					jobTitleTextBox.sendKeys(employeeJobTitle);
+					Thread.sleep(2000);
+					SimpleUtils.pass("Users and Roles: '"+usersAndRolesEmployeeJobTitileRows.size()+"' Employee Job Title(s) found with Title '"
+							+ employeeJobTitle +"'");
+				}				
+			}
+		}
+	}
+	
+
+
+	@FindBy(css="lg-button[label=\"Add Job Title\"]")
+	private WebElement usersAndRoleAddJobTitleBtn;
+	
+	public void clickOnAddJobTitleBtn() throws Exception
+	{
+		if(isElementLoaded(usersAndRoleAddJobTitleBtn)) {
+			click(usersAndRoleAddJobTitleBtn);
+			if(isNewJobTitleRowEditModeActive()) 
+				SimpleUtils.pass("Users and Roles Section : 'Add New Title' button clicked successfully.");
+			else
+				SimpleUtils.fail("Users and Roles Section : Unable to click 'Add New Title' button.", true);
+		}
+		else
+			SimpleUtils.report("Users and Roles Section : 'Add New Title' button not loaded.");
+	}
+	
+	@FindBy(css="tr[ng-if=\"$ctrl.addingTitle\"]")
+	private WebElement addJobTitleEditRow;
+	public boolean isNewJobTitleRowEditModeActive() throws Exception
+	{
+		if(isElementLoaded(addJobTitleEditRow))
+			return true;
+		return false;
+	}
+	@Override
+	public HashMap<String, ArrayList<String>> getUsersAndRolesCreateNewEmployeeJobTitleEditableOrNonEditableFields(
+			String employeeJobTitle, String newEmployeeJobTitleRole) throws Exception {
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		clickOnAddJobTitleBtn();
+		if(isNewJobTitleRowEditModeActive()) {
+			List<WebElement> newTitleFormFields = addJobTitleEditRow.findElements(By.tagName("input-field"));
+			if(newTitleFormFields.size() > 0) {
+				String fieldTitle = "";
+				for(WebElement field : newTitleFormFields) {
+					if(field.isDisplayed()) {
+						List<WebElement> fieldLabelDiv = field.findElements(By.cssSelector("label.input-label"));
+						if(fieldLabelDiv.size() > 0) {
+							fieldTitle = fieldLabelDiv.get(0).getText();
+						}
+						
+						List<WebElement> inputBoxFields = field.findElements(
+								By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+						String fieldValueType = inputBoxFields.get(0).getAttribute("type");
+						if(fieldValueType.equalsIgnoreCase("text")) {
+							inputBoxFields.get(0).sendKeys(employeeJobTitle);
+						}
+						boolean isFieldEditable = false;
+						if(inputBoxFields.size() > 0) {
+							String fieldType = "input";
+							isFieldEditable = isInputFieldEditable(inputBoxFields.get(0), fieldType);
+							if(isFieldEditable)
+								editableFields.add(fieldTitle);
+							else
+								nonEditableFields.add(fieldTitle);
+						}
+					}
+				}
+			}
+			
+			WebElement cancelButton = addJobTitleEditRow.findElement(By.cssSelector("lg-button[label=\"Cancel\"]"));
+			WebElement saveButton = addJobTitleEditRow.findElement(By.cssSelector("lg-button[label=\"Save\"]"));
+			if(isElementLoaded(saveButton) && saveButton.isDisplayed() && saveButton.isEnabled()) {
+				editableFields.add(saveButton.getText());
+			}
+			else {
+				nonEditableFields.add(saveButton.getText());
+			}
+			
+			if(isElementLoaded(cancelButton) && cancelButton.isDisplayed() && cancelButton.isEnabled()) {
+				editableFields.add(cancelButton.getText());
+				click(cancelButton);
+			}
+			else {
+				nonEditableFields.add(cancelButton.getText());
+			}
+		}
+		editableOrNonEditableFields.put("editableFields", editableFields);
+		editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+		editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		return editableOrNonEditableFields;
+	}
+	
+	@FindBy(css="input-field[placeholder=\"You can search by name and description.\"]")
+	private WebElement usersAndRolesBadgesSearchBox;
+	public void searchBadgesByLabel(String badgeLabel) throws Exception
+	{
+		if(isElementLoaded(usersAndRolesBadgesSearchBox)) {
+			WebElement badgesTextBox = usersAndRolesBadgesSearchBox.findElement(By.cssSelector("input[type=\"text\"]"));
+			if(isElementLoaded(badgesTextBox)) {
+				if(badgesTextBox.isDisplayed() && badgesTextBox.isEnabled()) {
+					badgesTextBox.clear();
+					badgesTextBox.sendKeys(badgeLabel);
+					Thread.sleep(2000);
+					SimpleUtils.pass("Users and Roles: '"+usersAndRolesEmployeeJobTitileRows.size()+"' Badges(s) found with Title '"
+							+ badgeLabel +"'");
+				}				
+			}
+		}
+	}
+	
+	@FindBy(css="tr[ng-repeat=\"badge in $ctrl.pagedBadges\"]")
+	private List<WebElement> usersAndRolesBadgesRows;
+	
+	@FindBy(css="input-field[value=\"$ctrl.badgeCopy.displayName\"]")
+	private WebElement badgeDisplayNameField;
+	
+	@FindBy(css="input-field[value=\"$ctrl.badgeCopy.description\"]")
+	private WebElement badgeDescriptionField;
+	
+	
+	@FindBy(css="lg-badge-icons[value=\"$ctrl.badgeCopy.iconName\"]")
+	private WebElement badgesIconsSection;
+	
+	@FindBy(css="lg-badge-colors[value=\"$ctrl.badgeCopy.hexColorCode\"]")
+	private WebElement badgesColorsSection;
+	/*
+	@FindBy(tagName="lg-badge-selector-item")
+	private List<WebElement> badgesIcons;
+	
+	@FindBy(tagName="lg-badge-selector-item")
+	private List<WebElement> badgesColors;
+	 */
+	@Override
+	public HashMap<String, ArrayList<String>> getUsersAndRolesUpdateBadgesEditableOrNonEditableFields(String badgesLabel) throws Exception
+	{
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		searchBadgesByLabel(badgesLabel);
+		if(usersAndRolesBadgesRows.size() > 0) {
+			for(WebElement usersAndRolesBadgesRow : usersAndRolesBadgesRows) {	
+				try {
+					WebElement openBadgeFormBtn = usersAndRolesBadgesRow.findElement(By.cssSelector("lg-button[ng-click=\"$ctrl.openBadge(badge)\"]"));
+					if(isElementLoaded(openBadgeFormBtn)) {
+						click(openBadgeFormBtn);
+						if(isEditBadgePopupModalLoaded()) {
+							List<WebElement> inputFields = editBadgePopUpModel.findElements(By.tagName("input-field"));
+							for(WebElement inputField : inputFields) {
+								if(inputField.isDisplayed()) {
+									WebElement inputBox = inputField.findElement(By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+									if(isElementLoaded(inputBox)) {
+										String fieldType = "input";
+										String fieldLabel = inputField.findElement(By.cssSelector("label.input-label")).getText();
+										boolean isFieldEditable = isInputFieldEditable(inputBox, fieldType);
+										if(isFieldEditable)
+											editableFields.add(fieldLabel);
+										else
+											nonEditableFields.add(fieldLabel);
+									}
+								}
+							}
+							
+							boolean isBadgeIconEditable = isEditBadgePopupBadgeIconEditable();
+							String badgeIconLabel = badgesIconsSection.findElement(By.tagName("label")).getText();
+							if(isBadgeIconEditable)
+								editableFields.add(badgeIconLabel);
+							else
+								nonEditableFields.add(badgeIconLabel);
+		
+							boolean isBadgeColorEditable = isEditBadgePopupBadgeColorEditable();
+							String badgeColorLabel = badgesColorsSection.findElement(By.tagName("label")).getText();
+							if(isBadgeColorEditable)
+								editableFields.add(badgeColorLabel);
+							else
+								nonEditableFields.add(badgeColorLabel);
+						}
+						clickOnCancelBtn();
+						break;
+					}
+				}
+				catch(Exception e) {
+					SimpleUtils.report("Users and Roles: Badges not editable for logged user.");
+				}
+			}
+		}
+		
+		editableOrNonEditableFields.put("editableFields", editableFields);
+		editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+		editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		return editableOrNonEditableFields;
+	}
+	
+	public boolean isEditBadgePopupBadgeIconEditable() throws Exception {
+		boolean isBadgeIconEditable = false;
+		if(isElementLoaded(badgesIconsSection)){
+			List<WebElement> badgesIcons = badgesIconsSection.findElements(By.cssSelector("lg-badge-selector-item"));
+			if(badgesIcons.size() > 0) {
+				for(WebElement badgesIcon : badgesIcons) {
+					if(! badgesIcon.getAttribute("class").contains("selected")) {
+						click(badgesIcon);
+						if(badgesIcon.getAttribute("class").contains("selected"))
+							isBadgeIconEditable = true;
+						break;
+					}
+				}
+			}
+		}
+		return isBadgeIconEditable;
+	}
+	
+	public boolean isEditBadgePopupBadgeColorEditable() throws Exception
+	{
+		boolean isBadgeColorEditable = false;
+		if(isElementLoaded(badgesColorsSection)) {
+			List<WebElement> badgesColors = badgesColorsSection.findElements(By.cssSelector("lg-badge-selector-item"));
+			if(badgesColors.size() > 0) {
+				for(WebElement badgesColor : badgesColors) {
+					if(! badgesColor.getAttribute("class").contains("selected")) {
+						click(badgesColor);
+						if(badgesColor.getAttribute("class").contains("selected"))
+							isBadgeColorEditable = true;
+						break;
+					}
+				}
+			}
+		}
+		return isBadgeColorEditable;
+	}
+	
+	@FindBy(css="modal[modal-title=\"Edit Badge\"]")
+	private WebElement editBadgePopUpModel;
+	public boolean isEditBadgePopupModalLoaded() throws Exception {
+		if(isElementLoaded(editBadgePopUpModel))
+			return true;
+		return false;
+	}
+	
+	
+	@FindBy(css="modal[modal-title=\"New Badge\"]")
+	private WebElement newBadgePopUpModel;
+	public boolean isNewBadgeEditPopupModalLoaded() throws Exception {
+		if(isElementLoaded(newBadgePopUpModel))
+			return true;
+		return false;
+	}
+	
+	@FindBy(css="lg-button[label=\"Cancel\"]")
+	private WebElement cancelBtn;
+	public void clickOnCancelBtn() throws Exception
+	{
+		if(isElementLoaded(cancelBtn)) {
+			click(cancelBtn);
+			SimpleUtils.pass("Cancel button clicked successfully.");
+		}
+		else
+			SimpleUtils.report("Cancel Button not loaded.");
+	}
+
+
+	@FindBy(css="lg-button[label=\"Add Badge\"]")
+	private WebElement addBadgeBtn;
+	public void clickOnAddBadgeButton() throws Exception
+	{
+		if(isElementLoaded(addBadgeBtn)) {
+			click(addBadgeBtn);
+			SimpleUtils.pass("Users and Roles: 'Add Badge' button clicked successfully.");
+		}
+		else
+			SimpleUtils.report("Users and Roles: 'Add Badge' button not loaded.");
+	}
+	@Override
+	public HashMap<String, ArrayList<String>> getUsersAndRolesNewBadgeEditableOrNonEditableFields() throws Exception {
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		clickOnAddBadgeButton();
+		if(isNewBadgeEditPopupModalLoaded()) {
+			
+			List<WebElement> inputFields = newBadgePopUpModel.findElements(By.tagName("input-field"));
+			for(WebElement inputField : inputFields) {
+				if(inputField.isDisplayed()) {
+					WebElement inputBox = inputField.findElement(By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
+					if(isElementLoaded(inputBox)) {
+						String fieldType = "input";
+						String fieldLabel = inputField.findElement(By.cssSelector("label.input-label")).getText();
+						boolean isFieldEditable = isInputFieldEditable(inputBox, fieldType);
+						if(isFieldEditable)
+							editableFields.add(fieldLabel);
+						else
+							nonEditableFields.add(fieldLabel);
+					}
+				}
+			}
+			
+			boolean isBadgeIconEditable = isEditBadgePopupBadgeIconEditable();
+			String badgeIconLabel = badgesIconsSection.findElement(By.tagName("label")).getText();
+			if(isBadgeIconEditable)
+				editableFields.add(badgeIconLabel);
+			else
+				nonEditableFields.add(badgeIconLabel);
+			
+			boolean isBadgeColorEditable = isEditBadgePopupBadgeColorEditable();
+			String badgeColorLabel = badgesColorsSection.findElement(By.tagName("label")).getText();
+			if(isBadgeColorEditable)
+				editableFields.add(badgeColorLabel);
+			else
+				nonEditableFields.add(badgeColorLabel);
+			clickOnCancelBtn();
+		}
+		
+		editableOrNonEditableFields.put("editableFields", editableFields);
+		editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+		editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		return editableOrNonEditableFields;
+	}
+	
+	
+	@Override
+	public void selectTasksAndWorkRolesSubTabByLabel(String label) throws Exception
+	{
+		boolean isTabFound = false;
+		if(subTabs.size() > 0) {
+			for(WebElement subTab: subTabs) {
+				if(subTab.getText().toLowerCase().contains(label.toLowerCase())) {
+					click(subTab);
+					isTabFound = true;
+				}
+			}
+			if(isTabFound)
+				SimpleUtils.pass("Controls Page: Tasks and Work Roles section - '"+label+"' tab selected successfully.");
+			else
+				SimpleUtils.fail("Controls Page: Tasks and Work Roles section - '"+label+"' tab not found.", true);
+		}
+		else
+			SimpleUtils.fail("Controls Page: Tasks and Work Roles section - sub tabs not loaded.", false);
+	}
+	
+	@FindBy(css="tr[ng-repeat=\"workRole in $ctrl.workRoles\"]")
+	private List<WebElement> workRolesRows;
+	@Override
+	public List<WebElement> getTasksAndWorkRolesSectionAllWorkRolesList() throws Exception
+	{
+		return workRolesRows;
+	}
+
+
+	@Override
+	public HashMap<String, ArrayList<String>> getTasksAndWorkRolesEditWorkRolePropertiesEditableOrNonEditableFields()
+			throws Exception {
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		List<WebElement> workRolesList = getTasksAndWorkRolesSectionAllWorkRolesList();
+		if(workRolesList.size() > 0) {
+			for(WebElement workRole: workRolesList) {
+				List<WebElement> workRoleInfoBtns = workRole.findElements(By.tagName("lg-button"));
+				if(workRoleInfoBtns.size() > 0) {
+					click(workRoleInfoBtns.get(0));
+					if(isRoleDetailsPageLoaded()) {
+						clickOnEditWorkRolePencilIcon();
+						if(isEditWorkRolePropertiesPopupLoaded()) {
+							WebElement workRoleTitleInputBox = editWorkRolePropertiesPopupBody.findElement(
+									By.cssSelector("input.setting-work-role-change-modal-title-input"));
+							if(isElementLoaded(workRoleTitleInputBox)) {
+								String workRoleTitleFieldType = "input";
+								String workRoleTitleFieldLabel = "Work Role Title";
+								boolean isworkRoleTitleEditable = isInputFieldEditable(workRoleTitleInputBox, workRoleTitleFieldType);
+								if(isworkRoleTitleEditable)
+									editableFields.add(workRoleTitleFieldLabel);
+								else
+									nonEditableFields.add(workRoleTitleFieldLabel);
+							}
+							
+							WebElement toggleDemandDrivenMode = editWorkRolePropertiesPopupBody.findElement(
+									By.cssSelector("div[ng-click=\"toggleDemandDrivenMode()\"]"));
+							if(isElementLoaded(toggleDemandDrivenMode)) {
+								String fieldLabel = toggleDemandDrivenMode.findElement(By.xpath("./..")).getText();
+								if(isInputFieldEditable(toggleDemandDrivenMode, "div"))
+									editableFields.add(fieldLabel);
+								else
+									nonEditableFields.add(fieldLabel);
+							}
+														
+							WebElement toggleBudgetMode = editWorkRolePropertiesPopupBody.findElement(
+									By.cssSelector("div[ng-click=\"toggleBudgetMode()\"]"));
+							if(isElementLoaded(toggleBudgetMode)) {
+								String fieldLabel = toggleBudgetMode.findElement(By.xpath("./..")).getText();
+								if(isInputFieldEditable(toggleBudgetMode, "div"))
+									editableFields.add(fieldLabel);
+								else
+									nonEditableFields.add(fieldLabel);
+							}
+							
+							WebElement toggleShiftOfferMode = editWorkRolePropertiesPopupBody.findElement(
+									By.cssSelector("div[ng-click=\"toggleShiftOfferMode()\"]"));
+							if(isElementLoaded(toggleShiftOfferMode)) {
+								String fieldLabel = toggleShiftOfferMode.findElement(By.xpath("./..")).getText();
+								if(isInputFieldEditable(toggleShiftOfferMode, "div"))
+									editableFields.add(fieldLabel);
+								else
+									nonEditableFields.add(fieldLabel);
+							}
+							
+							WebElement toggleShiftSwapMode = editWorkRolePropertiesPopupBody.findElement(
+									By.cssSelector("div[ng-click=\"toggleShiftSwapMode()\"]"));
+							if(isElementLoaded(toggleShiftSwapMode)) {
+								String fieldLabel = toggleShiftSwapMode.findElement(By.xpath("./..")).getText();
+								if(isInputFieldEditable(toggleShiftSwapMode, "div"))
+									editableFields.add(fieldLabel);
+								else
+									nonEditableFields.add(fieldLabel);
+							}
+							
+							WebElement staffingOrder = editWorkRolePropertiesPopupBody.findElement(
+									By.cssSelector("input[ng-model=\"staffingOrder\"]"));
+							if(isElementLoaded(staffingOrder)) {
+								String fieldLabel = staffingOrder.findElement(By.xpath("./../..")).getText();
+								if(isInputFieldEditable(staffingOrder, "input"))
+									editableFields.add(fieldLabel);
+								else
+									nonEditableFields.add(fieldLabel);
+							}
+							
+							WebElement hourlyWage = editWorkRolePropertiesPopupBody.findElement(
+									By.cssSelector("input[ng-model=\"hourlyWage\"]"));
+							if(isElementLoaded(hourlyWage)) {
+								String fieldLabel = hourlyWage.findElement(By.xpath("./../..")).getText();
+								if(isInputFieldEditable(hourlyWage, "input"))
+									editableFields.add(fieldLabel);
+								else
+									nonEditableFields.add(fieldLabel);
+							}
+							
+							WebElement minShiftLength = editWorkRolePropertiesPopupBody.findElement(
+									By.cssSelector("input[ng-model=\"shiftLength.minShiftLength\"]"));
+							if(isElementLoaded(minShiftLength)) {
+								String fieldLabel = "Shift Length (Minutes): From";//minShiftLength.findElement(By.xpath("./..")).getText();
+								if(isInputFieldEditable(minShiftLength, "input"))
+									editableFields.add(fieldLabel);
+								else
+									nonEditableFields.add(fieldLabel);
+							}
+							
+							WebElement maxShiftLength = editWorkRolePropertiesPopupBody.findElement(
+									By.cssSelector("input[ng-model=\"shiftLength.maxShiftLength\"]"));
+							if(isElementLoaded(maxShiftLength)) {
+								String fieldLabel = "Shift Length (Minutes): To";//maxShiftLength.findElement(By.xpath("./..")).getText();
+								if(isInputFieldEditable(maxShiftLength, "input"))
+									editableFields.add(fieldLabel);
+								else
+									nonEditableFields.add(fieldLabel);
+							}
+							
+							WebElement openingOffset = editWorkRolePropertiesPopupBody.findElement(
+									By.cssSelector("input[ng-model=\"offset.openingOffset\"]"));
+							if(isElementLoaded(openingOffset)) {
+								String fieldLabel = "Buffer (Minutes): Opening"; //openingOffset.findElement(By.xpath("./..")).getText();
+								if(isInputFieldEditable(openingOffset, "input"))
+									editableFields.add(fieldLabel);
+								else
+									nonEditableFields.add(fieldLabel);
+							}
+																					
+							WebElement closingOffset = editWorkRolePropertiesPopupBody.findElement(
+									By.cssSelector("input[ng-model=\"offset.closingOffset\"]"));
+							if(isElementLoaded(closingOffset)) {
+								String fieldLabel = "Buffer (Minutes): Closing";//closingOffset.findElement(By.xpath("./..")).getText();
+								if(isInputFieldEditable(closingOffset, "input"))
+									editableFields.add(fieldLabel);
+								else
+									nonEditableFields.add(fieldLabel);
+							}	
+							
+							WebElement consistency = editWorkRolePropertiesPopupBody.findElement(
+									By.cssSelector("select[ng-model=\"consistency\"]"));
+							if(isElementLoaded(consistency)) {
+								String fieldLabel = "Consistency";//consistency.findElement(By.xpath("./..")).getText();
+								if(isInputFieldEditable(consistency, "select"))
+									editableFields.add(fieldLabel);
+								else
+									nonEditableFields.add(fieldLabel);
+							}	
+							
+							WebElement tolerance = editWorkRolePropertiesPopupBody.findElement(
+									By.cssSelector("input[ng-model=\"tolerance\"]"));
+							if(isElementLoaded(tolerance)) {
+								String fieldLabel = tolerance.findElement(By.xpath("./../..")).getText();
+								if(isInputFieldEditable(tolerance, "input"))
+									editableFields.add(fieldLabel);
+								else
+									nonEditableFields.add(fieldLabel);
+							}	
+							
+							List<WebElement> workRoleColors = editWorkRolePropertiesPopupBody.findElements(
+									By.cssSelector("div[ng-repeat=\"color in colors\"]"));
+							String workRoleColorChooserLabel = "Work Role Color Chooser";
+							if(workRoleColors.size() > 0) {
+								for(WebElement workRoleColor: workRoleColors) {
+									try {
+										if(! workRoleColor.getAttribute("class").contains("selected")) {
+											click(workRoleColor);
+											if(workRoleColor.getAttribute("class").contains("selected"))
+												editableFields.add(workRoleColorChooserLabel);
+											break;
+										}
+									}
+									catch(Exception e) {
+										nonEditableFields.add(workRoleColorChooserLabel);
+										break;
+									}
+								}
+							}
+							
+							// Click on Cancel Button
+							WebElement parentDiv = editWorkRolePropertiesPopupBody.findElement(By.xpath("./../.."));
+							WebElement cancelBtn = parentDiv.findElement(By.cssSelector("button[ng-click=\"cancelClicked()\"]"));
+							if(isElementLoaded(cancelBtn))
+							{
+								click(cancelBtn);
+								SimpleUtils.pass("Tasks and Work Roles Section: 'Edit Work Role Properties Popup' Cancel button clicked successfully.");
+							}
+							else {
+								SimpleUtils.fail("Tasks and Work Roles Section: 'Edit Work Role Properties Popup' Cancel button not loaded.", true);
+							}
+						}
+						else
+							SimpleUtils.report("Tasks and Work Roles Section: 'Edit Work Role Properties Popup' not loaded.");
+					}
+					else
+						SimpleUtils.report("Tasks and Work Roles Section: 'Work Roles Details' page not loaded.");
+					break;
+				}
+			}
+		}
+		else {
+			SimpleUtils.report("Tasks and Work Roles Section: 'Work Roles' Tab No Work Role found.");
+		}
+		editableOrNonEditableFields.put("editableFields", editableFields);
+		editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+		editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		return editableOrNonEditableFields;
+	}
+	
+	@FindBy(css="page-heading[page-title=\"Work Role Details\"]")
+	private WebElement workRoleDetailsPageHeader;
+	public boolean isRoleDetailsPageLoaded() throws Exception
+	{
+		boolean isPageLoaded = false;
+		if(isElementLoaded(workRoleDetailsPageHeader)) {
+			isPageLoaded = true;
+			SimpleUtils.pass("Tasks and Work Roles Section: 'Work Roles Details' page loaded successfuly.");
+		}
+		return isPageLoaded;
+	}
+	
+	@FindBy(css="span[ng-click=\"editWorkRole()\"]")
+	private WebElement editWorkRolePencilIcon;
+	public void clickOnEditWorkRolePencilIcon() throws Exception
+	{
+		if(isElementLoaded(editWorkRolePencilIcon)) {
+			click(editWorkRolePencilIcon);
+		}
+		else
+			SimpleUtils.report("Tasks and Work Roles Section: 'Work Roles Details' page Edit Work Role icon not loaded.");
+	}
+	
+	@FindBy(css="div.setting-work-role-change-modal-body")
+	private WebElement editWorkRolePropertiesPopupBody;
+	public boolean isEditWorkRolePropertiesPopupLoaded() throws Exception
+	{
+		if(isElementLoaded(editWorkRolePropertiesPopupBody))
+			return true;
+		return false;
+	}
+	
+	@FindBy(css="div.settings-work-role-details-edit-title-container")
+	private List<WebElement> workRoleDetailsEditTitleContainers;
+	@Override
+	public boolean isWorkRoleDetailPageSubSectionsExpandFunctionalityWorking() throws Exception
+	{
+		boolean isExpandWorking = false;
+		if(isElementLoaded(workRoleDetailsPageHeader)) {
+			if(workRoleDetailsEditTitleContainers.size() > 0) {
+				boolean isValueTrue = true;
+				for(WebElement workRoleDetailsEditTitleContainer : workRoleDetailsEditTitleContainers) {
+					String subSectionClass = workRoleDetailsEditTitleContainer.getAttribute("class");
+					click(workRoleDetailsEditTitleContainer);
+					if(! subSectionClass.equals(workRoleDetailsEditTitleContainer.getAttribute("class")))
+						isValueTrue = isValueTrue && true;
+					else {
+						isValueTrue = isValueTrue && false;
+						SimpleUtils.report("Tasks and Work Roles Section: 'Work Roles Details' page details section '"
+								+workRoleDetailsEditTitleContainer.getText()+"' not Expending");
+					}
+				}
+				isExpandWorking = isValueTrue;
+			}
+			else
+				SimpleUtils.fail("Tasks and Work Roles Section: 'Work Roles Details' page No Details section found.", true);
+		}
+		return isExpandWorking;
+	}
+
+	@FindBy(css="div.labor-calculation")
+	private WebElement laborCalculationSectionDiv;
+	@Override
+	public boolean isLaborCalculationTabLoaded() throws Exception
+	{
+		if(isElementLoaded(laborCalculationSectionDiv)) {
+			SimpleUtils.pass("Tasks and Work Roles Section: 'Labor Calculation' Tab selected.");
+			return true;
+		}
+		return false;
+	}
+
+	
+	@Override
+	public HashMap<String, ArrayList<String>> getTasksAndWorkRolesLaborCalculatorTabEditableOrNonEditableFields()
+			throws Exception {
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		if(isLaborCalculationTabLoaded()) {
+			String setLocationDropDownLabel = "Select a location";
+			WebElement laborCalculatorSetLocationDropDown = laborCalculationSectionDiv.findElement(
+					By.cssSelector("lg-select[on-change=\"setLocation(value)\"]"));
+			boolean isSelectLocationButtonEditable = isTaskAndWorkRolesSelectLocationButtonEditable(laborCalculatorSetLocationDropDown);
+			if(isSelectLocationButtonEditable)
+				editableFields.add(setLocationDropDownLabel);
+			else
+				nonEditableFields.add(setLocationDropDownLabel);
+			
+			String categoriesItemsLabel = "Set item totals for categories";
+			Thread.sleep(1000);
+			List<WebElement> itemsForCategories = laborCalculationSectionDiv.findElements(
+					By.cssSelector("input[type='number']"));
+			boolean isCategoriesItemsEditable = true;
+			for(WebElement itemForCategories : itemsForCategories) {
+				if(itemForCategories.isDisplayed()) {
+					isCategoriesItemsEditable = isCategoriesItemsEditable && isInputFieldEditable(itemForCategories, "input");
+				}
+			}
+			if(itemsForCategories.size() > 0 && isCategoriesItemsEditable) 
+				editableFields.add(categoriesItemsLabel);
+			else
+				nonEditableFields.add(categoriesItemsLabel);
+			
+			String computeLaborHrBtnText = "Compute Labor Hours";
+			try {
+				WebElement laborCalculatorComputeLaborHrBtn = laborCalculationSectionDiv.findElement(
+						By.cssSelector("lg-button[ng-click=\"computeLabor($event)\"]"));
+				click(laborCalculatorComputeLaborHrBtn);
+				editableFields.add(computeLaborHrBtnText);
+			}
+			catch(Exception e) {
+				nonEditableFields.add(computeLaborHrBtnText);
+			}
+			
+		}
+
+		editableOrNonEditableFields.put("editableFields", editableFields);
+		editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+		editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		return editableOrNonEditableFields;
+	}
+	
+	@FindBy(css="div[ng-repeat=\"option in $ctrl.displayOptions\"]")
+	private List<WebElement> locationOptions;
+	public boolean isTaskAndWorkRolesSelectLocationButtonEditable(WebElement laborCalculatorSetLocationDropDown) throws Exception {
+		if(isElementLoaded(laborCalculatorSetLocationDropDown)) {
+			try {
+				click(laborCalculatorSetLocationDropDown);
+				if(locationOptions.size() > 0) {
+					for(WebElement locationOption : locationOptions) {
+						if(locationOption.isEnabled() && locationOption.isDisplayed()) {
+							if(!locationOption.getAttribute("class").contains("selected")) {
+								click(locationOption);
+								return true;
+							}
+						}
+					}
+				}
+								
+			}
+			catch(Exception e) {
+				return false;
+			}
+		}
+		return false;
+	}
+			
+	@FindBy(css="lg-button[label=\"Add Work Role\"]")
+	private WebElement taskAndWorkRolesAddWorkRoleBtn;
+	
+	public void clickOnTaskAndWorkRolesAddWorkRoleBtn() throws Exception
+	{
+		if(isElementLoaded(taskAndWorkRolesAddWorkRoleBtn)) {
+			click(taskAndWorkRolesAddWorkRoleBtn);
+			SimpleUtils.pass("Tasks and Work Roles: 'Work Roles' section 'Add Work Role' button clicked.");
+		}
+		else
+			SimpleUtils.report("Tasks and Work Roles: 'Work Roles' section 'Add Work Role' button not loaded.");
+	}
+	
+	@FindBy(css="div.setting-create-work-role-container")
+	private WebElement createWorkRoleContainerDiv;
+	public boolean isTaskAndWorkRolesAddWorkRolePageLoaded() throws Exception
+	{
+		if(isElementLoaded(createWorkRoleContainerDiv))
+			return true;
+		return false;
+	}
+
+
+	@FindBy(css="div[ng-click=\"editRoleColor()\"]")
+	private WebElement workRoleColorSelectorDiv;
+	@FindBy(css="span[ng-click=\"selectColor($index)\"]")
+	private List<WebElement> workRoleColors;
+	@FindBy(css="input.setting-work-role-name-title-input")
+	private WebElement workRoleNameInputBox;
+	@FindBy(css="div[ng-click=\"toggleDemandDrivenMode()\"]")
+	private WebElement workRoleDemandDrivenCheckBox;
+	@FindBy(css="div[ng-click=\"toggleShiftOfferMode()\"]")
+	private WebElement workRoleAllowShiftOfferCheckBox;
+	@FindBy(css="div[ng-click=\"toggleShiftSwapMode()\"]")
+	private WebElement workRoleAllowShiftSwapCheckBox;
+	@FindBy(css="input[ng-model=\"role.minShiftLength\"]")
+	private WebElement workRoleShiftLengthLimitsMin;
+	@FindBy(css="input[ng-model=\"role.maxShiftLength\"]")
+	private WebElement workRoleShiftLengthLimitsMax;
+	@FindBy(css="select.setting-work-role-shift-length-input")
+	private WebElement workRoleConsistencyDropDown;
+	@FindBy(css="div[ng-click=\"role.hasBudget = !role.hasBudget\"]")
+	private WebElement workRoleApplyBudgetCheckBox;
+	@FindBy(css="input[ng-model=\"role.hourlyWage\"]")
+	private WebElement workRoleHourlyRateField;
+	@FindBy(css="button.wrc-save-cancel-btn")
+	private WebElement workRoleCancelBtn;											
+															
+	@Override
+	public HashMap<String, ArrayList<String>> getTasksAndWorkRolesAddWorkRolePageEditableOrNonEditableFields()
+			throws Exception {
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		clickOnTaskAndWorkRolesAddWorkRoleBtn();
+		if(isTaskAndWorkRolesAddWorkRolePageLoaded()) {
+			
+			// Work Role Color Selector
+			String workRoleColorSelectorLabel = "SELECT A ROLE COLOR";
+			try{
+				click(workRoleColorSelectorDiv);
+				Thread.sleep(1000);
+				if(workRoleColors.size() > 0) {
+					click(workRoleColors.get(0));
+					editableFields.add(workRoleColorSelectorLabel);
+				}
+				else
+					nonEditableFields.add(workRoleColorSelectorLabel);
+			}
+			catch(Exception e) {
+				nonEditableFields.add(workRoleColorSelectorLabel);
+			}
+			
+			// Work Role Name Field
+			try{
+				boolean isWorkRoleNameFieldEditable = isInputFieldEditable(workRoleNameInputBox, "input");
+				if(isWorkRoleNameFieldEditable)
+					editableFields.add(workRoleColorSelectorLabel);
+				else
+					nonEditableFields.add(workRoleColorSelectorLabel);
+			}
+			catch(Exception e) {
+				nonEditableFields.add(workRoleColorSelectorLabel);
+			}
+			
+			// Work Role Demand-driven Check Box
+			String demandDrivenCheckBoxLabel = "Demand-driven";
+			try{
+				boolean isFieldEditable = isInputFieldEditable(workRoleDemandDrivenCheckBox, "div");
+				if(isFieldEditable)
+					editableFields.add(demandDrivenCheckBoxLabel);
+				else
+					nonEditableFields.add(demandDrivenCheckBoxLabel);
+			}
+			catch(Exception e) {
+				nonEditableFields.add(demandDrivenCheckBoxLabel);
+			}
+			
+			// Work Role Allow Shift Offer Check Box
+			String allowShiftOfferFieldLabel = "Allow Shift Offer";
+			try{
+				boolean isFieldEditable = isInputFieldEditable(workRoleAllowShiftOfferCheckBox, "div");
+				if(isFieldEditable)
+					editableFields.add(allowShiftOfferFieldLabel);
+				else
+					nonEditableFields.add(allowShiftOfferFieldLabel);
+			}
+			catch(Exception e) {
+				nonEditableFields.add(allowShiftOfferFieldLabel);
+			}
+			
+			// Work Role Allow Shift Swap Check Box
+			String allowShiftSwapFieldLabel = "Allow Shift Swap";
+			try{
+				boolean isFieldEditable = isInputFieldEditable(workRoleAllowShiftSwapCheckBox, "div");
+				if(isFieldEditable)
+					editableFields.add(allowShiftSwapFieldLabel);
+				else
+					nonEditableFields.add(allowShiftSwapFieldLabel);
+			}
+			catch(Exception e) {
+				nonEditableFields.add(allowShiftSwapFieldLabel);
+			}
+			
+			// Work Role Specify Shift Length Limits Min
+			String shiftLengthLimitsMinLabel = "Shift Length Limits Min";
+			try{
+				boolean isFieldEditable = isInputFieldEditable(workRoleShiftLengthLimitsMin, "input");
+				if(isFieldEditable)
+					editableFields.add(shiftLengthLimitsMinLabel);
+				else
+					nonEditableFields.add(shiftLengthLimitsMinLabel);
+			}
+			catch(Exception e) {
+				nonEditableFields.add(shiftLengthLimitsMinLabel);
+			}
+			
+			// Work Role Specify Shift Length Limits Max
+			String shiftLengthLimitsMaxLabel = "Shift Length Limits Max";
+			try{
+				boolean isFieldEditable = isInputFieldEditable(workRoleShiftLengthLimitsMax, "input");
+				if(isFieldEditable)
+					editableFields.add(shiftLengthLimitsMaxLabel);
+				else
+					nonEditableFields.add(shiftLengthLimitsMaxLabel);
+			}
+			catch(Exception e) {
+				nonEditableFields.add(shiftLengthLimitsMaxLabel);
+			}
+			
+			// Work Role Consistency DropDown
+			String consistencyLabel = "Consistency";
+			try{
+				boolean isFieldEditable = isInputFieldEditable(workRoleConsistencyDropDown, "select");
+				if(isFieldEditable)
+					editableFields.add(consistencyLabel);
+				else
+					nonEditableFields.add(consistencyLabel);
+			}
+			catch(Exception e) {
+				nonEditableFields.add(consistencyLabel);
+			}
+			
+			// Work Role Apply Budget Checkbox
+			String applyBudgetLabel = "Apply Budget";
+			try{
+				boolean isFieldEditable = isInputFieldEditable(workRoleApplyBudgetCheckBox, "div");
+				if(isFieldEditable)
+					editableFields.add(applyBudgetLabel);
+				else
+					nonEditableFields.add(applyBudgetLabel);
+				}
+			catch(Exception e) {
+				nonEditableFields.add(applyBudgetLabel);
+			}
+			
+			// Work ROle Color Selector
+			String hourlyRateLabel = "Hourly rate";
+			try{
+				boolean isFieldEditable = isInputFieldEditable(workRoleHourlyRateField, "input");
+				if(isFieldEditable)
+					editableFields.add(hourlyRateLabel);
+				else
+					nonEditableFields.add(hourlyRateLabel);
+			}
+			catch(Exception e) {
+				nonEditableFields.add(hourlyRateLabel);
+			}
+			
+			// Work Role Cancel Button
+			try{
+				click(workRoleCancelBtn);
+				SimpleUtils.pass("Tasks and Work Roles 'Add Work Role' page 'Cancel' button clicked successfuly.");
+			}
+			catch(Exception e) {
+				SimpleUtils.fail("Tasks and Work Roles 'Add Work Role' page 'Cancel' button not loaded.", true);
+			}
+		}
+
+		editableOrNonEditableFields.put("editableFields", editableFields);
+		editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+		editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		return editableOrNonEditableFields;
+	}
+
+
+	@FindBy(css="div.modal-content")
+	private WebElement modalPopupDiv;
+	@Override
+	public HashMap<String, ArrayList<String>> verifyUpdateControlsRegularHoursPopupEditableOrNonEditableFields()
+			throws Exception {
+		Thread.sleep(1000);
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		WebElement collapsibleHeader = regularHoursBlock.findElement(By.cssSelector("div.collapsible.row"));
+		boolean isRegularHoursSectionOpened = collapsibleHeader.getAttribute("class").contains("open");
+		
+		if(! isRegularHoursSectionOpened)
+			click(regularHoursBlock);
+		
+		if(regularHoursRows.size() > 0)
+		{
+			try {
+				for(WebElement regularHoursRow : regularHoursRows)
+				{
+					String storeClosedLabel = "Store Closed Toggle";
+					WebElement isClosedToggle = regularHoursRow.findElement(By.cssSelector("div[ng-show=\"isEditMode\"]"));
+					boolean isStoreClosedEditable = isInputFieldEditable(isClosedToggle, "div");
+					if(isStoreClosedEditable)
+						editableFields.add(storeClosedLabel);
+					else
+						nonEditableFields.add(storeClosedLabel);
+					WebElement regularHoursEditBtn = regularHoursRow.findElement(By.cssSelector("lg-button[label=\"Edit\"]"));
+					if(isElementLoaded(regularHoursEditBtn))
+					{
+						Thread.sleep(1000);
+						click(regularHoursEditBtn);
+						// Select Opening Hours
+						int openingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(0).getText().split(":")[0].trim());
+						int sliderOffSet = 50;
+						String openingHoursBeforeUpdate = editRegularHoursSliders.get(0).getText();
+						moveDayViewCards(editRegularHoursSliders.get(0), sliderOffSet);
+						String openingHoursAfterUpdate = editRegularHoursSliders.get(0).getText();
+						sliderOffSet = -50;
+					
+						String openingHoursSliderLabel = "Opening Hours";
+						if(! openingHoursBeforeUpdate.equals(openingHoursAfterUpdate))
+							editableFields.add(openingHoursSliderLabel);
+						else
+							nonEditableFields.add(openingHoursSliderLabel);
+						
+						// Select Closing Hours
+						String closingHoursSliderLabel = "Closing Hours";
+						String closingHoursBeforeUpdate = editRegularHoursSliders.get(1).getText();
+						moveDayViewCards(editRegularHoursSliders.get(1), sliderOffSet);
+						String closingHoursAfterUpdate = editRegularHoursSliders.get(1).getText();
+						if(! closingHoursBeforeUpdate.equals(closingHoursAfterUpdate))
+							editableFields.add(closingHoursSliderLabel);
+						else
+							nonEditableFields.add(closingHoursSliderLabel);
+						
+						String applyHrToOtherDaysLabel = "Apply these hours to other days";
+						List<WebElement> weekdaysCheckBoxs = modalPopupDiv.findElements(By.cssSelector("input-field[type=\"checkbox\"]"));
+						if(weekdaysCheckBoxs.size() > 0) {
+							boolean isOtherWeekDaysCheckBoxEditable = true;
+							for(WebElement weekdaysCheckBox : weekdaysCheckBoxs) {
+								isOtherWeekDaysCheckBoxEditable = isOtherWeekDaysCheckBoxEditable && isInputFieldEditable(weekdaysCheckBox, "div");
+							}
+							if(isOtherWeekDaysCheckBoxEditable)
+								editableFields.add(applyHrToOtherDaysLabel);
+							else
+								nonEditableFields.add(applyHrToOtherDaysLabel);
+						}
+						
+						// Click On Cancel Button
+						try {
+							WebElement cancelBtn = modalPopupDiv.findElement(By.cssSelector("lg-button[label=\"Cancel\"]"));
+							click(cancelBtn);
+							SimpleUtils.pass("Controls Working Hours Section: Regular Hours 'Edit' popup 'Cancel' button clicked.");
+						}
+						catch(Exception e) {
+							SimpleUtils.fail("Controls Working Hours Section: Regular Hours 'Edit' popup 'Cancel' button not clicked.", true);
+						}
+					}
+					else {
+						SimpleUtils.fail("Controls Working Hours Section: Regular Hours 'Edit' Button not loaded.", true);
+					}
+					break;
+				}
+			}
+			catch (Exception e) {
+				SimpleUtils.report("Controls Working Hours Section: Regular Hours not editable.");
+			}
+		}
+		else {
+			SimpleUtils.fail("Controls Working Hours Section: Regular Hours not loaded.", true);
+		}
+		editableOrNonEditableFields.put("editableFields", editableFields);
+		editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+		editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		return editableOrNonEditableFields;
+	}
+
+
+	@Override
+	public HashMap<String, ArrayList<String>> verifyUpdateControlsHolidayHoursPopupEditableOrNonEditableFields()
+			throws Exception {
+		Thread.sleep(1000);
+		HashMap<String, ArrayList<String>> editableOrNonEditableFields = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> editableFields = new ArrayList<String>();
+		ArrayList<String> nonEditableFields = new ArrayList<String>();
+		ArrayList<String> notLoadedFields = new ArrayList<String>();
+		WebElement collapsibleHeader = holidayHoursBlock.findElement(By.cssSelector("div.collapsible.row"));
+		boolean isHolidayHoursSectionOpened = collapsibleHeader.getAttribute("class").contains("open");
+		
+		if(! isHolidayHoursSectionOpened)
+			click(holidayHoursBlock);
+		
+		if(regularHoursRows.size() > 0)
+		{
+			try {
+				for(WebElement holidayHoursRow : holidayHoursRows)
+				{
+					String storeClosedLabel = "Store Closed Toggle";
+					WebElement isClosedToggle = holidayHoursRow.findElement(By.cssSelector("div[ng-show=\"isEditMode\"]"));
+					boolean isStoreClosedEditable = isInputFieldEditable(isClosedToggle, "div");
+					if(isStoreClosedEditable)
+						editableFields.add(storeClosedLabel);
+					else
+						nonEditableFields.add(storeClosedLabel);
+					WebElement regularHoursEditBtn = holidayHoursRow.findElement(By.cssSelector("lg-button[label=\"Edit\"]"));
+					if(isElementLoaded(regularHoursEditBtn))
+					{
+						Thread.sleep(1000);
+						click(regularHoursEditBtn);
+						// Select Opening Hours
+						int openingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(0).getText().split(":")[0].trim());
+						int sliderOffSet = 50;
+						String openingHoursBeforeUpdate = editRegularHoursSliders.get(0).getText();
+						moveDayViewCards(editRegularHoursSliders.get(0), sliderOffSet);
+						String openingHoursAfterUpdate = editRegularHoursSliders.get(0).getText();
+						sliderOffSet = -50;
+					
+						String openingHoursSliderLabel = "Opening Hours";
+						if(! openingHoursBeforeUpdate.equals(openingHoursAfterUpdate))
+							editableFields.add(openingHoursSliderLabel);
+						else
+							nonEditableFields.add(openingHoursSliderLabel);
+						
+						// Select Closing Hours
+						String closingHoursSliderLabel = "Closing Hours";
+						String closingHoursBeforeUpdate = editRegularHoursSliders.get(1).getText();
+						moveDayViewCards(editRegularHoursSliders.get(1), sliderOffSet);
+						String closingHoursAfterUpdate = editRegularHoursSliders.get(1).getText();
+						if(! closingHoursBeforeUpdate.equals(closingHoursAfterUpdate))
+							editableFields.add(closingHoursSliderLabel);
+						else
+							nonEditableFields.add(closingHoursSliderLabel);
+						
+						String applyHrToOtherDaysLabel = "Apply these hours to other days";
+						List<WebElement> weekdaysCheckBoxs = modalPopupDiv.findElements(By.cssSelector("input-field[type=\"checkbox\"]"));
+						if(weekdaysCheckBoxs.size() > 0) {
+							boolean isOtherWeekDaysCheckBoxEditable = true;
+							for(WebElement weekdaysCheckBox : weekdaysCheckBoxs) {
+								isOtherWeekDaysCheckBoxEditable = isOtherWeekDaysCheckBoxEditable && isInputFieldEditable(weekdaysCheckBox, "div");
+							}
+							if(isOtherWeekDaysCheckBoxEditable)
+								editableFields.add(applyHrToOtherDaysLabel);
+							else
+								nonEditableFields.add(applyHrToOtherDaysLabel);
+						}
+						
+						// Click On Cancel Button
+						try {
+							WebElement cancelBtn = modalPopupDiv.findElement(By.cssSelector("lg-button[label=\"Cancel\"]"));
+							click(cancelBtn);
+							SimpleUtils.pass("Controls Working Hours Section: Holiday Hours 'Edit' popup 'Cancel' button clicked.");
+						}
+						catch(Exception e) {
+							SimpleUtils.fail("Controls Working Hours Section: Holiday Hours 'Edit' popup 'Cancel' button not clicked.", true);
+						}
+					}
+					else {
+						SimpleUtils.fail("Controls Working Hours Section: Holiday Hours 'Edit' Button not loaded.", true);
+					}
+					break;
+				}
+			}
+			catch(Exception e) {
+				SimpleUtils.report("Controls Working Hours Section: Holiday Hours not editable.");
+			}
+		}
+		else {
+			SimpleUtils.fail("Controls Working Hours Section: Regular Hours not loaded.", true);
+		}
+		editableOrNonEditableFields.put("editableFields", editableFields);
+		editableOrNonEditableFields.put("nonEditableFields", nonEditableFields);
+		editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
+		return editableOrNonEditableFields;
 	}
 }

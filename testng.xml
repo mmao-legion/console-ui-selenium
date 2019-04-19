@@ -2,54 +2,18 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite verbose ="0" thread-count="10" name="LegionTest">
 	<parameter name="environment" value="QA"/>
-	<parameter name="platform" value="Android"/>
-	<parameter name="executionon" value="realdevice"/>
-	<parameter name="runMode" value="mobileAndWeb"/>
+	<parameter name="platform" value="Android1"/>
+	<parameter name="executionon" value="realdevice1"/>
+	<parameter name="runMode" value="mobileAndWeb1"/>
 
     <listeners>
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
 
-
-    <!--<test name="Controls New UI Test">-->
-        <!--<classes>-->
-            <!--<class name="com.legion.tests.core.ControlsNewUITest">-->
-      	        <!--<methods>-->
-                     <!--&lt;!&ndash;<include name="updateUserLocationAsInternalAdmin"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="updateWorkingHoursAsInternalAdmin"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="updateAndValidateShiftIntervalTimeAsInternalAdmin"/>&ndash;&gt;-->
-                    <!--<include name="updateControlsSectionLoadingAsStoreManager"/>-->
-                <!--</methods>-->
-            <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
-
-
-    <!--<test name="Traffic Forecast for New UI Test">-->
-        <!--<classes>-->
-            <!--<class name="com.legion.tests.core.TrafficForecastTest">-->
-                <!--<methods>-->
-                    <!--<include name="trafficForecastDataAsStoreManagerTest"/>-->
-                <!--</methods>-->
-            <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
-
-    <!--<test name="Staffing Guidance for New UI Test">-->
-        <!--<classes>-->
-            <!--<class name="com.legion.tests.core.StaffingGuidanceTestKendraScott2">-->
-                <!--<methods>-->
-                    <!--<include name="staffingGuidanceDataAsStoreManagerTestKendraScott2"/>-->
-                <!--</methods>-->
-            <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
-
-
-    <!--<test name="Schedule New UI Test">-->
-        <!--<classes>-->
-            <!--<class name="com.legion.tests.core.ScheduleNewUITest">-->
-      	        <!--<methods>-->
+  <test name="Schedule New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleNewUITest">
+      	        <methods>
                     <!--<include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/>-->
                     <!--<include name="viewAndFilterScheduleWithGroupByAllInWeekViewAsStoreManager"/>-->
                     <!--<include name="viewAndFilterScheduleWithGroupByWorkRoleInWeekViewAsStoreManager"/>-->
@@ -77,23 +41,32 @@
                     <!--<include name="verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager"/>-->
                     <!--<include name="validateScheduleGenerationFunctionalityAsStoreManager"/>-->
                     <!--<include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>-->
-                <!--</methods>-->
-             <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
+                    <!--<include name="validateScheduleSmartCardsAsStoreManager"/>-->
+                    <!--<include name="validateSchedulePublishFeatureAsStoreManager"/>-->
+                    <!--<include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>-->
+                    <!--<include name="validateDashboardTodaysForcastAsStoreManager"/>-->
+                    <!--<include name="changeAndValidateOperatingHoursAsInternalAdmin"/>-->
+                    <!--<include name="complianceSmartCard"/>-->
+                    <!--<include name="verifyOpenScheduleViewAsInternalAdmin"/>-->
+                    <include name="verifyScheduleOverlappingAsInternalAdmin"/>
 
+                </methods>
+             </class>
+        </classes>
+    </test>
+<!--
 
-    <!--<test name="Schedule Overview Test">-->
-        <!--<classes>-->
-            <!--<class name="com.legion.tests.core.ScheduleOverviewTest">-->
-                <!--<methods>-->
-                    <!--<include name="verifyCurrentWeekDateAndDayTest"/>-->
-                    <!--<include name="verifyDateAndDayForEachWeeksUntilNotAvailableTest"/>-->
-                    <!--<include name="verifyDayAndDateOnSchedulePageMatchesDayAndDateOnOverviewPageTest"/>-->
-                <!--</methods>-->
-            <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
+    <test name="Schedule Overview Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleOverviewTest">
+                <methods>
+                    <include name="verifyCurrentWeekDateAndDayTest"/>
+                    <include name="verifyDateAndDayForEachWeeksUntilNotAvailableTest"/>
+                    <include name="verifyDayAndDateOnSchedulePageMatchesDayAndDateOnOverviewPageTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test> -->
 
 
     <!--<test name="Team Test">-->
@@ -106,29 +79,84 @@
         <!--</classes>-->
     <!--</test>-->
 
-
-    <test name="Sanity Test">
+    <!-- <test name="Team Test">
         <classes>
-            <class name="com.legion.tests.core.SanityTest">
+            <class name="com.legion.tests.core.TimeSheetTest">
                 <methods>
-                    <include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>
-                    <include name="validateScheduleSmartCardsAsStoreManager"/>
-                    <include name="validateScheduleGenerationFunctionalityAsStoreManager"/>
-                    <include name="validateChangeLocationAsStoreManager"/>
-                    <include name="validateGuidanceWeekAsStoreManager"/>
-                    <include name="consoleAndMobileIntegrationForShiftOffers"/>
-                    <include name="updateControlsSectionLoadingAsInternalAdmin"/>
-                    <include name="scheduleSubTabNavigationStoreManager"/>
-                    <include name="projectedTrafficSubTabNavigationStoreManager"/>
-                    <include name="staffingGuidanceSubTabNavigationStoreManager"/>
+                    <include name="validateLoadingOfTimeSheetForEveryPeriodsAsStoreManager"/>
                 </methods>
             </class>
         </classes>
-    </test>
+    </test> -->
+
+
+    <!-- <test name="Analytics Test">
+        <classes>
+            <class name="com.legion.tests.core.AnalyticsTestKendraScott2">
+                <methods>
+                    <include name="verifyKPIReportExportFunctionalityAsStoreManager"/>
+                    <include name="validateKPIReportValuesAsStoreManager"/>
+                </methods>
+            </class>
+        </classes>
+    </test> -->
+
+
+   <!--  <test name="Timesheet Test">
+        <classes>
+            <class name="com.legion.tests.core.TimeSheetTest">
+                <methods>
+                    <include name="validateTimeSheetExportFeatureAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test> -->
+
+  <!--<test name="Team New UI Test">-->
+        <!--<classes>-->
+            <!--<class name="com.legion.tests.core.TeamTestKendraScott2">-->
+                <!--<methods>-->
+                    <!--<include name="VerifyWhetherManagerCanApproveTimeOffRequestAsTeamMember"/>-->
+                    <!--&lt;!&ndash;<include name="VerifyWhetherManagerCanRejectTimeOffRequestAsTeamMember"/>&ndash;&gt;-->
+                <!--</methods>-->
+            <!--</class>-->
+        <!--</classes>-->
+    <!--</test>-->
+
+
+    <!--<test name="Team New UI Test">-->
+        <!--<classes>-->
+            <!--<class name="com.legion.tests.core.ProfileNewUITest">-->
+                <!--<methods>-->
+                    <!--&lt;!&ndash;<include name="validateAllWebElementLoadedAsStoreManager"/>&ndash;&gt;-->
+                    <!--<include name="updateAndValidateProfileFunctionalityCoverageAsStoreManager"/>-->
+                <!--</methods>-->
+            <!--</class>-->
+        <!--</classes>-->
+    <!--</test>-->
+
+    <!--<test name="Sanity Test">-->
+        <!--<classes>-->
+            <!--<class name="com.legion.tests.core.SanityTest">-->
+                <!--<methods>-->
+                    <!--&lt;!&ndash;<include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>&ndash;&gt;-->
+                    <!--<include name="validateScheduleSmartCardsAsStoreManager"/>-->
+                    <!--&lt;!&ndash;<include name="validateScheduleGenerationFunctionalityAsStoreManager"/>&ndash;&gt;-->
+                    <!--<include name="validateChangeLocationAsStoreManager"/>-->
+                    <!--<include name="validateGuidanceWeekAsStoreManager"/>-->
+                    <!--<include name="validateSchedulePublishAsStoreManager"/>-->
+                    <!--<include name="editManualShiftScheduleAsStoreManager"/>-->
+                    <!--<include name="updateControlsSectionLoadingAsInternalAdmin"/>-->
+                    <!--<include name="scheduleSubTabNavigationStoreManager"/>-->
+                    <!--<include name="legionAppNavigationAllTabsStoreManager"/>-->
+
+                <!--</methods>-->
+            <!--</class>-->
+        <!--</classes>-->
+    <!--</test>-->
 
 
 </suite> <!-- Suite -->
-
 
 
 

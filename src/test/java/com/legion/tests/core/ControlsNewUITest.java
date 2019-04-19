@@ -4,11 +4,13 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import com.legion.pages.DashboardPage;
+import com.legion.pages.LoginPage;
 import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.BasePage;
@@ -46,6 +48,27 @@ public class ControlsNewUITest extends TestBase{
 	            value = newValue;
 	        }
 	        public String getValue() { return value; }
+	}
+	
+	public enum usersAndRolesSubTabs{
+		AllUsers("All Users"),
+		AccessByJobTitles("Access by Job Titles"),
+		Badges("Badges");
+		private final String value;
+		usersAndRolesSubTabs(final String newValue) {
+            value = newValue;
+        }
+        public String getValue() { return value; }
+	}
+	
+	public enum tasksAndWorkRolesSubTab{
+		WorkRoles("Work Roles"),
+		LaborCalculator("Labor Calculator");
+		private final String value;
+		tasksAndWorkRolesSubTab(final String newValue) {
+            value = newValue;
+        }
+        public String getValue() { return value; }
 	}
 	
 	public enum dayWeekOrPayPeriodCount{
@@ -138,7 +161,7 @@ public class ControlsNewUITest extends TestBase{
       SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);      
       ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
       controlsNewUIPage.clickOnControlsConsoleMenu();
-      SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+      SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
       controlsNewUIPage.clickOnGlobalLocationButton();
       controlsNewUIPage.clickOnControlsWorkingHoursCard();
       for(HashMap<String, String> eachRegularHours : regularWorkingHours)
@@ -665,4 +688,482 @@ public class ControlsNewUITest extends TestBase{
 	  		  partTimeHourlyNonExemptCommittedHoursWeeks);
   }
   
+  
+  
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Naval")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "TP-161: Automate all the areas of controls  with Admin, Customer Admin and SM to validate"
+			+ " the fields enabled or disabled with corresponding work role access.")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateControlsAllFieldsEnabledOrDisabledAsInternalAdmin(String browser, String username, String password, String location)
+			throws Exception {
+		String fileName = "UsersCredentials.json";
+        fileName=SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamLeadCredentials = userCredentials.get("TeamLead");
+        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SimpleUtils.pass("<b>Legion Application User logged in as role 'Internal Admin'</b>.");
+		if(controlsNewUIPage.isControlsConsoleMenuAvailable()) {
+			verifyControlsPageAllFieldsEditableOrNot();
+		}
+		else
+			SimpleUtils.report("Controls Console Menu not loaded Successfully!.");
+	    
+		loginPage.logOut();
+
+
+        /*
+         * Login as Store Manager
+         */
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1]), 
+        		String.valueOf(storeManagerCredentials[0][2]));
+        SimpleUtils.pass("<b>Legion Application User logged in as role 'Store Manager'</b>.");
+        if(controlsNewUIPage.isControlsConsoleMenuAvailable()) {
+			verifyControlsPageAllFieldsEditableOrNot();
+		}
+		else
+			SimpleUtils.report("Controls Console Menu not loaded Successfully!.");
+		loginPage.logOut();
+		
+		 /*
+         * Login as Team Lead
+         */
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamLeadCredentials[0][0]), String.valueOf(teamLeadCredentials[0][1]), 
+        		String.valueOf(teamLeadCredentials[0][2]));
+        SimpleUtils.pass("<b>Legion Application User logged in as role 'Team Lead'</b>.");
+        if(controlsNewUIPage.isControlsConsoleMenuAvailable()) {
+			verifyControlsPageAllFieldsEditableOrNot();
+		}
+		else
+			SimpleUtils.report("Controls Console Menu not loaded Successfully!.");
+		loginPage.logOut();
+		
+		 /*
+         * Login as Team Member
+         */
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1]), 
+        		String.valueOf(teamMemberCredentials[0][2]));
+        SimpleUtils.pass("<b>Legion Application User logged in as role 'Team Member'</b>.");
+        if(controlsNewUIPage.isControlsConsoleMenuAvailable()) {
+			verifyControlsPageAllFieldsEditableOrNot();
+		}
+		else
+			SimpleUtils.report("Controls Console Menu not loaded Successfully!.");
+	}
+
+
+
+	private void verifyControlsPageAllFieldsEditableOrNot() throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		Thread.sleep(1000);
+		verifyLocationInformationEditModeFieldsEditableOrNot();
+		
+		// verifying Scheduling Policies 'Schedules' section Fields
+    	controlsNewUIPage.clickOnControlsConsoleMenu();
+	    SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , true);
+	    controlsNewUIPage.clickOnControlsSchedulingPolicies();
+	    
+		verifySchedulingPoliciesAllSectionsFieldsEditableOrNot();
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		verifySchedulingPoliciesAllSectionsFieldsEditableOrNot();
+		
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+		verifyingScheduleCollaborationFieldsEditableOrNot();
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		verifyingScheduleCollaborationFieldsEditableOrNot();
+		
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		controlsNewUIPage.clickOnControlsComplianceSection();
+		if(controlsNewUIPage.isControlsComplianceLoaded()) {
+			verifyingComplianceFieldsEditableOrNot();
+			controlsNewUIPage.clickOnGlobalLocationButton();
+			verifyingComplianceFieldsEditableOrNot();
+		}
+		
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+		if(controlsNewUIPage.isControlsUsersAndRolesLoaded()) {
+			controlsNewUIPage.selectUsersAndRolesSubTabByLabel(usersAndRolesSubTabs.AllUsers.getValue());
+			verifyingUserAndRolesAddNewUserPageFieldsEditableOrNot();
+			String userFirstName = "David";
+			verifyingUserAndRolesEditUserPageFieldsEditableOrNot(userFirstName);
+			controlsNewUIPage.selectUsersAndRolesSubTabByLabel(usersAndRolesSubTabs.AccessByJobTitles.getValue());
+			String employeeJobTitle = "Retail Manager";
+			verifyingUserAndRolesUpdateEmployeeJobTitleEditableOrNonEditableFields(employeeJobTitle);
+			String newEmployeeJobTitle = "Sample Employee Job Title";
+			String newEmployeeJobTitleRole = "Store Manager";
+			verifyingUserAndRolesCreatNewEmployeeJobTitleEditableOrNonEditableFields(newEmployeeJobTitle, newEmployeeJobTitleRole);
+			String badgeLabel = "Employee From Mars";
+			controlsNewUIPage.selectUsersAndRolesSubTabByLabel(usersAndRolesSubTabs.Badges.getValue());
+			verifyingUserAndRolesUpdateBadgesEditableOrNonEditableFields(badgeLabel);
+			verifyingUserAndRolesCreateNewBadgesEditableOrNonEditableFields();
+		}
+		
+		// Tasks and Work Roles Section
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		controlsNewUIPage.clickOnControlsTasksAndWorkRolesSection();
+		if(controlsNewUIPage.isControlsTasksAndWorkRolesLoaded()) {
+			verifyingTasksAndWorkRolesSectionWorkRolesTabEditableOrNonEditableFields();
+		}
+		
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		controlsNewUIPage.clickOnControlsTasksAndWorkRolesSection();
+		if(controlsNewUIPage.isControlsTasksAndWorkRolesLoaded()) {
+			verifyingTasksAndWorkRolesSectionLaborCalculatorTabEditableOrNonEditableFields();
+		}
+		// Global Location
+	
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		controlsNewUIPage.clickOnControlsTasksAndWorkRolesSection();
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		if(controlsNewUIPage.isControlsTasksAndWorkRolesLoaded()) {
+			verifyingTasksAndWorkRolesAddWorkRolePageEditableOrNonEditableFields();
+			verifyingTasksAndWorkRolesSectionWorkRolesTabEditableOrNonEditableFields();
+		}
+		
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		controlsNewUIPage.clickOnControlsTasksAndWorkRolesSection();
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		if(controlsNewUIPage.isControlsTasksAndWorkRolesLoaded()) {
+			verifyingTasksAndWorkRolesSectionLaborCalculatorTabEditableOrNonEditableFields();
+		}
+		
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		controlsNewUIPage.clickOnControlsWorkingHoursCard();
+		verifyUpdateControlsRegularHoursPopupEditableOrNonEditableFields();
+		verifyUpdateControlsHolidayHoursPopupEditableOrNonEditableFields();
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		verifyUpdateControlsRegularHoursPopupEditableOrNonEditableFields();
+		verifyUpdateControlsHolidayHoursPopupEditableOrNonEditableFields();
+	}
+
+
+	private void verifyLocationInformationEditModeFieldsEditableOrNot() throws Exception {
+		 DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	     SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);  
+	     
+	     ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	     if(controlsNewUIPage.isControlsConsoleMenuAvailable()) {
+	    	 // Validating Location Profile Section
+	    	 controlsNewUIPage.clickOnControlsConsoleMenu();
+		     SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , true);
+		     controlsNewUIPage.clickOnControlsLocationProfileSection();
+		     HashMap<String,ArrayList<String>> locationInfoEditableOrNonEditableFields = controlsNewUIPage
+		    		 .getLocationInformationEditableOrNonEditableFields();
+		     
+		     int valuesMaxCount = locationInfoEditableOrNonEditableFields.get("editableFields").size();
+		     if(locationInfoEditableOrNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+		    	 valuesMaxCount = locationInfoEditableOrNonEditableFields.get("nonEditableFields").size();
+		     if(valuesMaxCount > 0) {
+		    	 
+		    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(locationInfoEditableOrNonEditableFields);
+		    	 SimpleUtils.pass("Location Profile: Edit Location Information Input fields Editable or Non Editable details.<br>"
+		    			 +editableOrNonEditableFieldsValueTable);
+		     }
+	     }
+	     else
+	    	 SimpleUtils.report("Controls menu not available for active user.");
+	}
+	
+	private void verifySchedulingPoliciesAllSectionsFieldsEditableOrNot() throws Exception {
+		verifySchedulingPoliciesSchedulesSectionFieldsEditableOrNot();
+		verifySchedulingPoliciesShiftsSectionFieldsEditableOrNot();
+		verifySchedulingPoliciesBudgetSectionFieldsEditableOrNot();
+		verifySchedulingPoliciesTeamAvailabilityManagementSectionFieldsEditableOrNot();
+		verifySchedulingPoliciesTimeOffSectionFieldsEditableOrNot();
+		// Verifying Scheduling Policy Groups Fields
+		verifySchedulingPoliciesSchedulingPolicyGroupsFieldsEditableorNot(schedulingPolicyGroupsTabs.FullTimeSalariedExempt.getValue());
+		verifySchedulingPoliciesSchedulingPolicyGroupsFieldsEditableorNot(schedulingPolicyGroupsTabs.FullTimeSalariedNonExempt.getValue());
+		verifySchedulingPoliciesSchedulingPolicyGroupsFieldsEditableorNot(schedulingPolicyGroupsTabs.FullTimeHourlyNonExempt.getValue());
+		verifySchedulingPoliciesSchedulingPolicyGroupsFieldsEditableorNot(schedulingPolicyGroupsTabs.PartTimeHourlyNonExempt.getValue());
+	}
+	
+	private void verifySchedulingPoliciesSchedulesSectionFieldsEditableOrNot() throws Exception {
+		 ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	     controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
+	     Thread.sleep(2000);
+	     HashMap<String,ArrayList<String>> schedulingPoliciesSchedulesEditableNonEditableFields = controlsNewUIPage
+	    		 .getSchedulingPoliciesSchedulesSectionEditableOrNonEditableFields();
+	     
+	     int valuesMaxCount = schedulingPoliciesSchedulesEditableNonEditableFields.get("editableFields").size();
+	     if(schedulingPoliciesSchedulesEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = schedulingPoliciesSchedulesEditableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 
+	    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(schedulingPoliciesSchedulesEditableNonEditableFields);
+	    	 SimpleUtils.pass("Scheduling Policies: 'Schedules' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	     }
+	    
+	}
+	
+	private void verifySchedulingPoliciesShiftsSectionFieldsEditableOrNot() throws Exception {
+		 ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	     controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+	     Thread.sleep(2000);
+	     HashMap<String,ArrayList<String>> schedulingPoliciesShiftsEditableNonEditableFields = controlsNewUIPage
+	    		 .getSchedulingPoliciesShiftsSectionEditableOrNonEditableFields();
+	     
+	     int valuesMaxCount = schedulingPoliciesShiftsEditableNonEditableFields.get("editableFields").size();
+	     if(schedulingPoliciesShiftsEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = schedulingPoliciesShiftsEditableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(schedulingPoliciesShiftsEditableNonEditableFields);
+	    	 SimpleUtils.pass("Scheduling Policies: 'Shifts' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	     }
+	}
+	
+	private void verifySchedulingPoliciesBudgetSectionFieldsEditableOrNot() throws Exception {
+		 ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	     Thread.sleep(2000);
+	     HashMap<String,ArrayList<String>> schedulingPoliciesBudgetEditableNonEditableFields = controlsNewUIPage
+	    		 .getSchedulingPoliciesBudgetSectionEditableOrNonEditableFields();
+	     
+	     int valuesMaxCount = schedulingPoliciesBudgetEditableNonEditableFields.get("editableFields").size();
+	     if(schedulingPoliciesBudgetEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = schedulingPoliciesBudgetEditableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(schedulingPoliciesBudgetEditableNonEditableFields);
+	    	 SimpleUtils.pass("Scheduling Policies: 'Budget' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	     }
+	}
+	
+	private void verifySchedulingPoliciesTeamAvailabilityManagementSectionFieldsEditableOrNot() throws Exception {
+		 ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	     Thread.sleep(2000);
+	     HashMap<String,ArrayList<String>> schedulingPoliciesTeamAvailabilityManagementEditableNonEditableFields = controlsNewUIPage
+	    		 .getSchedulingPoliciesTeamAvailabilityManagementSectionEditableOrNonEditableFields();
+	     
+	     int valuesMaxCount = schedulingPoliciesTeamAvailabilityManagementEditableNonEditableFields.get("editableFields").size();
+	     if(schedulingPoliciesTeamAvailabilityManagementEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = schedulingPoliciesTeamAvailabilityManagementEditableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(schedulingPoliciesTeamAvailabilityManagementEditableNonEditableFields);
+	    	 SimpleUtils.pass("Scheduling Policies: 'Team Availability Management' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	     }
+	}
+	
+	private void verifySchedulingPoliciesTimeOffSectionFieldsEditableOrNot() throws Exception {
+		 ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	     Thread.sleep(2000);
+	     controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+	     HashMap<String,ArrayList<String>> schedulingPoliciesTimeOffEditableNonEditableFields = controlsNewUIPage
+	    		 .getSchedulingPoliciesTimeOffSectionEditableOrNonEditableFields();
+	     
+	     
+	     
+	     int valuesMaxCount = schedulingPoliciesTimeOffEditableNonEditableFields.get("editableFields").size();
+	     if(schedulingPoliciesTimeOffEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = schedulingPoliciesTimeOffEditableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(schedulingPoliciesTimeOffEditableNonEditableFields);
+	    	 SimpleUtils.pass("Scheduling Policies: 'Time Off' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	     }
+	}
+	
+	private void verifySchedulingPoliciesSchedulingPolicyGroupsFieldsEditableorNot(String schedulingPolicyGroupsTabsLabel) throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(schedulingPolicyGroupsTabsLabel);
+	    HashMap<String,ArrayList<String>> schedulingPoliciesSchedulingPolicyGroupsEditableNonEditableFields = controlsNewUIPage
+	    		 .getSchedulingPoliciesSchedulingPolicyGroupsSectionEditableOrNonEditableFields();
+	     
+	     int valuesMaxCount = schedulingPoliciesSchedulingPolicyGroupsEditableNonEditableFields.get("editableFields").size();
+	     if(schedulingPoliciesSchedulingPolicyGroupsEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = schedulingPoliciesSchedulingPolicyGroupsEditableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(schedulingPoliciesSchedulingPolicyGroupsEditableNonEditableFields);
+	    	 SimpleUtils.pass("Scheduling Policies: 'Scheduling Policy Groups - "+schedulingPolicyGroupsTabsLabel
+	    			 +"' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	     }
+		
+	}
+	
+	private void verifyingScheduleCollaborationFieldsEditableOrNot() throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
+	    HashMap<String,ArrayList<String>> scheduleCollaborationEditableNonEditableFields = controlsNewUIPage
+	    		 .getScheduleCollaborationEditableOrNonEditableFields();
+	     
+	     int valuesMaxCount = scheduleCollaborationEditableNonEditableFields.get("editableFields").size();
+	     if(scheduleCollaborationEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = scheduleCollaborationEditableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(scheduleCollaborationEditableNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'Schedule Collaboration' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	     }
+	}
+	
+	private void verifyingComplianceFieldsEditableOrNot() throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	    HashMap<String,ArrayList<String>> complianceEditableNonEditableFields = controlsNewUIPage
+	    		 .getComplianceEditableOrNonEditableFields();
+	     
+	     int valuesMaxCount = complianceEditableNonEditableFields.get("editableFields").size();
+	     if(complianceEditableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = complianceEditableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(complianceEditableNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'Compliance' Section Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	     }
+	}
+	
+	private void verifyingUserAndRolesAddNewUserPageFieldsEditableOrNot() throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	    HashMap<String,ArrayList<String>> complianceEditableNonEditableFields = controlsNewUIPage
+	    		 .getUsersAndRolesAddNewUserPageEditableOrNonEditableFields();
+	     String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(complianceEditableNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'User and Roles' Section 'Add New User page' Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	}
+	
+	public String getEditableNonEditableFieldsAsHTMLTable(HashMap<String,ArrayList<String>> editableNonEditableFields)
+	{
+		 String result = "";
+		 int valuesMaxCount = editableNonEditableFields.get("editableFields").size();
+	     if(editableNonEditableFields.get("nonEditableFields").size() > valuesMaxCount)
+	    	 valuesMaxCount = editableNonEditableFields.get("nonEditableFields").size();
+	     if(valuesMaxCount > 0) {
+	    	 result = "<table><tr><th> Editable Fields Title </th><th>Non Editable Fields Title</th></tr>";
+	    	 for(int index = 0; index < valuesMaxCount; index++) {
+	    		 result = result + "<tr><td>";
+		    	 if(editableNonEditableFields.get("editableFields").size() > index) {
+		    		 result = result + editableNonEditableFields.get("editableFields").get(index);
+		    	 }
+		    	 result = result + "</td><td>";
+		    	 if(editableNonEditableFields.get("nonEditableFields").size() > index) {
+		    		 result = result + editableNonEditableFields.get("nonEditableFields").get(index);
+		    	 }
+		    	 result = result + "</td></tr>";
+		     }
+	    	 result = result + "</table>";
+	     }
+		return result;
+	}
+	
+	private void verifyingUserAndRolesEditUserPageFieldsEditableOrNot(String userFirstName) throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+	    HashMap<String,ArrayList<String>> complianceEditableNonEditableFields = controlsNewUIPage
+	    		 .getUsersAndRolesEditUserPageEditableOrNonEditableFields(userFirstName);
+	     String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(complianceEditableNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'User and Roles' Section 'Add New User page' Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	}
+	
+	private void verifyingUserAndRolesUpdateEmployeeJobTitleEditableOrNonEditableFields(String employeeJobTitle) throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		HashMap<String, ArrayList<String>> employeeJobTitleEditableOrNonEditableFields = controlsNewUIPage
+				.getUsersAndRolesUpdateEmployeeJobTitleEditableOrNonEditableFields(employeeJobTitle);
+
+	     String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(employeeJobTitleEditableOrNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'User and Roles' Section 'Update Employee Job Title' Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	}
+	
+	private void verifyingUserAndRolesCreatNewEmployeeJobTitleEditableOrNonEditableFields(String employeeJobTitle, String newEmployeeJobTitleRole) throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		HashMap<String, ArrayList<String>> employeeJobTitleEditableOrNonEditableFields = controlsNewUIPage
+				.getUsersAndRolesCreateNewEmployeeJobTitleEditableOrNonEditableFields(employeeJobTitle, newEmployeeJobTitleRole);
+
+	     String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(employeeJobTitleEditableOrNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'User and Roles' Section 'New Employee Job Title' Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+		
+	}
+	
+	private void verifyingUserAndRolesUpdateBadgesEditableOrNonEditableFields(String badgeLabel) throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		HashMap<String, ArrayList<String>> updateBadgeEditableOrNonEditableFields = controlsNewUIPage
+				.getUsersAndRolesUpdateBadgesEditableOrNonEditableFields(badgeLabel);
+
+	     String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(updateBadgeEditableOrNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'User and Roles' Section 'Update Badges Popup' Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	}
+	
+	private void verifyingUserAndRolesCreateNewBadgesEditableOrNonEditableFields() throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		HashMap<String, ArrayList<String>> newBadgeEditableOrNonEditableFields = controlsNewUIPage
+				.getUsersAndRolesNewBadgeEditableOrNonEditableFields();
+
+	    String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(newBadgeEditableOrNonEditableFields);
+	    	 SimpleUtils.pass("Controls Page: 'User and Roles' Section 'New Badge Popup' Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+	}
+	
+	private void verifyingTasksAndWorkRolesSectionWorkRolesTabEditableOrNonEditableFields()throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		Thread.sleep(1000);
+		controlsNewUIPage.selectTasksAndWorkRolesSubTabByLabel(tasksAndWorkRolesSubTab.WorkRoles.getValue());
+		List<WebElement> workRolesList = controlsNewUIPage.getTasksAndWorkRolesSectionAllWorkRolesList();
+		SimpleUtils.pass("Tasks and Work Roles Section: '"+workRolesList.size()+"' workroles loaded.");
+		if(workRolesList.size() > 0) {
+			HashMap<String, ArrayList<String>> editWorkRolePropertiesEditableOrNonEditableFields = controlsNewUIPage
+					.getTasksAndWorkRolesEditWorkRolePropertiesEditableOrNonEditableFields();
+			
+			String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(editWorkRolePropertiesEditableOrNonEditableFields);
+	    	SimpleUtils.pass("Controls Page: 'Tasks and Work Roles' Section 'Edit Work Role Properties' Input fields Editable or Non Editable details.<br>"
+	    			 +editableOrNonEditableFieldsValueTable);
+		}
+		boolean isWorkRoleDetailsSectionExapandebale = controlsNewUIPage.isWorkRoleDetailPageSubSectionsExpandFunctionalityWorking();
+		if(isWorkRoleDetailsSectionExapandebale)
+			SimpleUtils.pass("Tasks and Work Roles Section: 'Work Roles Details' Page Details Sections are Expending successfully");
+		
+	}
+	
+	private void verifyingTasksAndWorkRolesSectionLaborCalculatorTabEditableOrNonEditableFields() throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		Thread.sleep(2000);
+		controlsNewUIPage.selectTasksAndWorkRolesSubTabByLabel(tasksAndWorkRolesSubTab.LaborCalculator.getValue());
+		Thread.sleep(1000);
+		if(controlsNewUIPage.isLaborCalculationTabLoaded()) {
+				HashMap<String, ArrayList<String>> editWorkRolePropertiesEditableOrNonEditableFields = controlsNewUIPage
+						.getTasksAndWorkRolesLaborCalculatorTabEditableOrNonEditableFields();
+				
+				String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(editWorkRolePropertiesEditableOrNonEditableFields);
+		    	SimpleUtils.pass("Controls Page: 'Tasks and Work Roles' Section 'Edit Work Role Properties' Input fields Editable or Non Editable details.<br>"
+		    			 +editableOrNonEditableFieldsValueTable);
+		}
+		else
+			SimpleUtils.fail("Tasks and Work Roles Section: 'Labor Calculation' Tab not loaded.", true);
+	}
+	
+	private void verifyingTasksAndWorkRolesAddWorkRolePageEditableOrNonEditableFields() throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		Thread.sleep(2000);
+		HashMap<String, ArrayList<String>> tasksAndWorkRolesAddWorkRolePageEditableOrNonEditableFields = controlsNewUIPage
+				.getTasksAndWorkRolesAddWorkRolePageEditableOrNonEditableFields();
+		
+		String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(tasksAndWorkRolesAddWorkRolePageEditableOrNonEditableFields);
+    	SimpleUtils.pass("Controls Page: 'Tasks and Work Roles' Section 'Add Work Role' page Input fields Editable or Non Editable details.<br>"
+    			 +editableOrNonEditableFieldsValueTable);
+	}
+	
+	private void verifyUpdateControlsRegularHoursPopupEditableOrNonEditableFields() throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		HashMap<String, ArrayList<String>> regularHoursPopupEditableOrNonEditableFields = controlsNewUIPage.verifyUpdateControlsRegularHoursPopupEditableOrNonEditableFields();
+		String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(regularHoursPopupEditableOrNonEditableFields);
+    	SimpleUtils.pass("Controls Working Hours Section: Regular Hours 'Edit' popup Editable or Not Editable fields.<br>"
+    			 +editableOrNonEditableFieldsValueTable);
+	}
+	
+	private void verifyUpdateControlsHolidayHoursPopupEditableOrNonEditableFields() throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		HashMap<String, ArrayList<String>> holidayHoursPopupEditableOrNonEditableFields = controlsNewUIPage.verifyUpdateControlsHolidayHoursPopupEditableOrNonEditableFields();
+		String editableOrNonEditableFieldsValueTable = getEditableNonEditableFieldsAsHTMLTable(holidayHoursPopupEditableOrNonEditableFields);
+    	SimpleUtils.pass("Controls Working Hours Section: Holiday Hours 'Edit' popup Editable or Not Editable fields.<br>"
+    			 +editableOrNonEditableFieldsValueTable);
+	}
+	
 }
