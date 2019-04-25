@@ -1632,6 +1632,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     }
 
+
     @Override
     public void convertToOpenShift() {
 

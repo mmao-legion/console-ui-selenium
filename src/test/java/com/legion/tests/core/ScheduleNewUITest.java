@@ -2103,9 +2103,11 @@ public class ScheduleNewUITest extends TestBase{
 		schedulePage.clickImmediateNextToCurrentActiveWeekInDayPicker();
 		schedulePage.clickOnEditButton();
 //		schedulePage.viewProfile();
-//		schedulePage.changeWorkerRole();
-//		schedulePage.assignTeamMember();
-		schedulePage.convertToOpenShift();
+		schedulePage.changeWorkerRole();
+//		schedulePage.assignTeamMemberFlyout();
+//        schedulePage.verifySelectTeamMembersOption();
+//        schedulePage.clickOnOfferOrAssignBtn();
+//		schedulePage.convertToOpenShift();
 
 
 
