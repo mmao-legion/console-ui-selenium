@@ -1642,4 +1642,23 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     }
 
+    public String getActiveAndNextDay() throws Exception{
+        return "";
+    }
+
+    public HashMap<String, String> getOperatingHrsValue(String day) throws Exception {
+        return null;
+    }
+
+    public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception {
+
+    }
+
+    public void clickOnNextDaySchedule(String activeDay) throws Exception {
+
+    }
+
+    public void selectTeamMembersOptionForSchedule() throws Exception {
+
+    }
 }

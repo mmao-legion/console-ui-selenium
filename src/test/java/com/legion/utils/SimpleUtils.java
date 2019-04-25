@@ -966,6 +966,47 @@ public class SimpleUtils {
 
 
 
+	public void addAttachments(int statusID, String comment){
+
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
+		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+		String addResultString = "add_attachment_to_result_for_case/"+testCaseId+"";
+
+
+		try {
+			// Make a connection with Testrail Server
+			APIClient client = new APIClient(testRailURL);
+			client.setUser(testRailUser);
+			client.setPassword(testRailPassword);
+			JSONObject jSONObject = (JSONObject) client.sendGet("get_case/"+testCaseId);
+			if(statusID == 5) {
+				Map<String, Object> data = new HashMap<String, Object>();
+				takeScreenShotOnFailure();
+				String finalLink = getscreenShotURL();
+				data.put("status_id", statusID);
+				data.put("comment", comment +"\n" + "[Link To ScreenShot]" +"("+finalLink +")");
+//					data.put("screen_shot", getscreenShotURL());
+				client.sendPost(addResultString, data);
+			}else{
+				Map<String, Object> data = new HashMap<String, Object>();
+				data.put("status_id", statusID);
+				data.put("comment", comment);
+				client.sendPost(addResultString, data);
+			}
+
+		}catch(IOException ioException){
+			System.err.println(ioException.getMessage());
+		}
+		catch(APIException aPIException){
+			System.err.println(aPIException.getMessage());
+		}
+
+	}
+
+
 
 
 

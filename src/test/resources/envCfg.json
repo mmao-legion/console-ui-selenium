@@ -31,5 +31,5 @@
  "platformVersion" : "7.0",
  "isParallelBrowser" : "false",
  "Download_File_Default_Dir" : "C:\\Users\\nishant08\\Downloads",
- "isHeadlessBrowser" : "true"
+ "isHeadlessBrowser" : "false"
 }

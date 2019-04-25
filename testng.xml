@@ -47,6 +47,7 @@
                     <!--&lt;!&ndash;<include name="complianceSmartCard"/>&ndash;&gt;-->
                     <!--&lt;!&ndash;<include name="verifyOpenScheduleViewAsInternalAdmin"/>&ndash;&gt;-->
                     <!--&lt;!&ndash;<include name="verifyScheduleOverlappingAsInternalAdmin"/>&ndash;&gt;-->
+                    <!--<include name="verifyScheduleClopeningAsInternalAdmin"/>-->
 
                 <!--</methods>-->
              <!--</class>-->
@@ -99,17 +100,17 @@
         </classes>
     </test> -->
 
-    <test name="Controls New UI Test">
-        <classes>
-            <class name="com.legion.tests.core.ControlsNewUITest">
-                <methods>
-                    <!--<include name="updateUserLocationAsInternalAdmin"/>-->
-                    <!--<include name="updateWorkingHoursAsInternalAdmin"/>-->
-                    <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
+    <!--<test name="Controls New UI Test">-->
+        <!--<classes>-->
+            <!--<class name="com.legion.tests.core.ControlsNewUITest">-->
+                <!--<methods>-->
+                    <!--&lt;!&ndash;<include name="updateUserLocationAsInternalAdmin"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="updateWorkingHoursAsInternalAdmin"/>&ndash;&gt;-->
+                    <!--<include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>-->
+                <!--</methods>-->
+            <!--</class>-->
+        <!--</classes>-->
+    <!--</test>-->
 
   <!--<test name="Team New UI Test">-->
         <!--<classes>-->
@@ -134,25 +135,25 @@
         <!--</classes>-->
     <!--</test>-->
 
-    <!--<test name="Sanity Test">-->
-        <!--<classes>-->
-            <!--<class name="com.legion.tests.core.SanityTest">-->
-                <!--<methods>-->
-                    <!--&lt;!&ndash;<include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>&ndash;&gt;-->
+    <test name="Sanity Test">
+        <classes>
+            <class name="com.legion.tests.core.SanityTest">
+                <methods>
+                    <!--<include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>-->
                     <!--<include name="validateScheduleSmartCardsAsStoreManager"/>-->
-                    <!--&lt;!&ndash;<include name="validateScheduleGenerationFunctionalityAsStoreManager"/>&ndash;&gt;-->
+                    <!--<include name="validateScheduleGenerationFunctionalityAsStoreManager"/>-->
                     <!--<include name="validateChangeLocationAsStoreManager"/>-->
                     <!--<include name="validateGuidanceWeekAsStoreManager"/>-->
                     <!--<include name="validateSchedulePublishAsStoreManager"/>-->
                     <!--<include name="editManualShiftScheduleAsStoreManager"/>-->
                     <!--<include name="updateControlsSectionLoadingAsInternalAdmin"/>-->
-                    <!--<include name="scheduleSubTabNavigationStoreManager"/>-->
+                    <include name="scheduleSubTabNavigationStoreManager"/>
                     <!--<include name="legionAppNavigationAllTabsStoreManager"/>-->
 
-                <!--</methods>-->
-            <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
+                </methods>
+            </class>
+        </classes>
+    </test>
 
 
 

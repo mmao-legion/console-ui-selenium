@@ -126,4 +126,10 @@ public interface SchedulePage {
 	public void searchWorkerName(String searchInput) throws Exception;
 	public void verifyScheduleStatusAsOpen() throws Exception;
 	public void verifyScheduleStatusAsTeamMember() throws Exception;
+	public String getActiveAndNextDay() throws Exception;
+	public HashMap<String, String> getOperatingHrsValue(String day) throws Exception;
+	public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception;
+	public void clickOnNextDaySchedule(String activeDay) throws Exception;
+	public void selectTeamMembersOptionForSchedule() throws Exception;
+
 }

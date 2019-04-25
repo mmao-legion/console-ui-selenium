@@ -703,7 +703,7 @@ public class SanityTest extends TestBase{
 //		int testRailId = (Integer) context.getAttribute("TestRailId");
 //		System.out.println("In Test1, Value stored in context is: "+testRailId);
 		SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
-		schedulePage.navigateScheduleDayWeekView(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Three.getValue());
+		schedulePage.navigateScheduleDayWeekView(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.One.getValue());
 
 	}
 
