@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import com.legion.pages.DashboardPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.ProfileNewUIPage;
 import com.legion.pages.TeamPage;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -21,6 +23,10 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+
+import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.getTimeOffEndTime;
+import static com.legion.utils.MyThreadLocal.getTimeOffStartTime;
 
 public class TeamTestKendraScott2 extends TestBase{
 	
@@ -107,13 +113,11 @@ public class TeamTestKendraScott2 extends TestBase{
         String myTimeOffSectionLabel = "My Time Off";
         profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffSectionLabel);
         String expectedRequestStatus = "PENDING";
-        String timeOffStartDate = "Mar 18, 2019";
-        String timeOffEndDate = "Mar 19, 2019";
         String timeOffReasonLabel = "VACATION";
         String timeOffExplanationText = "Sample Explanation Text";
-        profileNewUIPage.createNewTimeOffRequest(timeOffReasonLabel, timeOffExplanationText, timeOffStartDate, timeOffEndDate);
+        profileNewUIPage.createNewTimeOffRequest(timeOffReasonLabel, timeOffExplanationText);
         String requestStatus = profileNewUIPage.getTimeOffRequestStatus(timeOffReasonLabel
-        	, timeOffExplanationText, timeOffStartDate, timeOffEndDate);
+        	, timeOffExplanationText, getTimeOffStartTime(), getTimeOffEndTime());
         if(requestStatus.toLowerCase().contains(expectedRequestStatus.toLowerCase()))
         	SimpleUtils.pass("Profile Page: New Time Off Request status is '"+requestStatus+"'.");
         else
@@ -134,13 +138,13 @@ public class TeamTestKendraScott2 extends TestBase{
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
 		teamPage.goToTeam();
 		teamPage.openToDoPopupWindow();
-		teamPage.approveOrRejectTimeOffRequestFromToDoList(username, timeOffStartDate, timeOffEndDate, timeOffRequestAction.Approve.getValue());
+		teamPage.approveOrRejectTimeOffRequestFromToDoList(username, getTimeOffStartTime(), getTimeOffEndTime(), timeOffRequestAction.Approve.getValue());
 		teamPage.closeToDoPopupWindow();
 		teamPage.searchAndSelectTeamMemberByName(username);
 		String TeamMemberProfileSubSectionLabel = "Time Off";
         profileNewUIPage.selectProfilePageSubSectionByLabel(TeamMemberProfileSubSectionLabel);
         requestStatus = profileNewUIPage.getTimeOffRequestStatus(timeOffReasonLabel, 
-        		timeOffExplanationText, timeOffStartDate, timeOffEndDate);
+        		timeOffExplanationText, getTimeOffStartTime(), getTimeOffEndTime());
         if(requestStatus.toLowerCase().contains(timeOffRequestStatus.Approved.getValue().toLowerCase()))
         	SimpleUtils.pass("Team Page: Time Off request Approved By Store Manager reflected on Team Page.");
         else
@@ -154,7 +158,9 @@ public class TeamTestKendraScott2 extends TestBase{
         SimpleUtils.assertOnFail("Profile Page not loaded.", profileNewUIPage.isProfilePageLoaded(), false);
         profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffSectionLabel);
         requestStatus = profileNewUIPage.getTimeOffRequestStatus(timeOffReasonLabel
-            	, timeOffExplanationText, timeOffStartDate, timeOffEndDate);
+            	, timeOffExplanationText, getTimeOffStartTime(), getTimeOffEndTime()
+
+		);
         if(requestStatus.toLowerCase().contains(timeOffRequestStatus.Approved.getValue().toLowerCase()))
          	SimpleUtils.pass("Profile Page: New Time Off Request status is '"+requestStatus
          			+"' after Store Manager Approved the request.");
@@ -180,13 +186,11 @@ public class TeamTestKendraScott2 extends TestBase{
         String myTimeOffSectionLabel = "My Time Off";
         profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffSectionLabel);
         String expectedRequestStatus = "PENDING";
-        String timeOffStartDate = "Mar 19, 2019";
-        String timeOffEndDate = "Mar 21, 2019";
         String timeOffReasonLabel = "VACATION";
         String timeOffExplanationText = "Sample Explanation Text";
-        profileNewUIPage.createNewTimeOffRequest(timeOffReasonLabel, timeOffExplanationText, timeOffStartDate, timeOffEndDate);
+        profileNewUIPage.createNewTimeOffRequest(timeOffReasonLabel, timeOffExplanationText);
         String requestStatus = profileNewUIPage.getTimeOffRequestStatus(timeOffReasonLabel
-        	, timeOffExplanationText, timeOffStartDate, timeOffEndDate);
+        	, timeOffExplanationText, getTimeOffStartTime(), getTimeOffEndTime());
         if(requestStatus.toLowerCase().contains(expectedRequestStatus.toLowerCase()))
         	SimpleUtils.pass("Profile Page: New Time Off Request status is '"+requestStatus+"'.");
         else
@@ -207,13 +211,13 @@ public class TeamTestKendraScott2 extends TestBase{
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
 		teamPage.goToTeam();
 		teamPage.openToDoPopupWindow();
-		teamPage.approveOrRejectTimeOffRequestFromToDoList(username, timeOffStartDate, timeOffEndDate, timeOffRequestAction.Reject.getValue());
+		teamPage.approveOrRejectTimeOffRequestFromToDoList(username, getTimeOffStartTime(), getTimeOffEndTime(), timeOffRequestAction.Reject.getValue());
 		teamPage.closeToDoPopupWindow();
 		teamPage.searchAndSelectTeamMemberByName(username);
 		String TeamMemberProfileSubSectionLabel = "Time Off";
         profileNewUIPage.selectProfilePageSubSectionByLabel(TeamMemberProfileSubSectionLabel);
         requestStatus = profileNewUIPage.getTimeOffRequestStatus(timeOffReasonLabel, 
-        		timeOffExplanationText, timeOffStartDate, timeOffEndDate);
+        		timeOffExplanationText, getTimeOffStartTime(), getTimeOffEndTime());
         if(requestStatus.toLowerCase().contains(timeOffRequestStatus.Rejected.getValue().toLowerCase()))
         	SimpleUtils.pass("Team Page: Time Off request Rejected By Store Manager reflected on Team Page.");
         else
@@ -227,7 +231,7 @@ public class TeamTestKendraScott2 extends TestBase{
         SimpleUtils.assertOnFail("Profile Page not loaded.", profileNewUIPage.isProfilePageLoaded(), false);
         profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffSectionLabel);
         requestStatus = profileNewUIPage.getTimeOffRequestStatus(timeOffReasonLabel
-            	, timeOffExplanationText, timeOffStartDate, timeOffEndDate);
+            	, timeOffExplanationText, getTimeOffStartTime(), getTimeOffEndTime());
         if(requestStatus.toLowerCase().contains(timeOffRequestStatus.Rejected.getValue().toLowerCase()))
          	SimpleUtils.pass("Profile Page: New Time Off Request status is '"+requestStatus
          			+"' after Store Manager Rejected the request.");
@@ -235,4 +239,7 @@ public class TeamTestKendraScott2 extends TestBase{
           	SimpleUtils.fail("Profile Page: New Time Off Request status is '"+requestStatus
           			+"' after Store Manager Rejected the request.", false);
 	}
+
+
+
 }

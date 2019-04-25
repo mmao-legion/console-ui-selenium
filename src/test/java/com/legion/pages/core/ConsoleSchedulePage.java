@@ -1653,4 +1653,43 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     }
 
+    public void selectTeamMembersOptionForOverlappingSchedule(){
+
+    }
+
+    public boolean getScheduleOverlappingStatus()throws Exception{
+        return true;
+    }
+
+    public void searchWorkerName(String searchInput) throws Exception{
+
+    }
+
+    public void verifyScheduleStatusAsOpen() throws Exception{
+
+    }
+
+    public void verifyScheduleStatusAsTeamMember() throws Exception{
+
+    }
+
+    public String getActiveAndNextDay() throws Exception{
+        return "";
+    }
+
+    public HashMap<String, String> getOperatingHrsValue(String day) throws Exception {
+        return null;
+    }
+
+    public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception {
+
+    }
+
+    public void clickOnNextDaySchedule(String activeDay) throws Exception {
+
+    }
+
+    public void selectTeamMembersOptionForSchedule() throws Exception {
+
+    }
 }

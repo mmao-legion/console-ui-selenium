@@ -128,12 +128,14 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
     @FindBy(css="button.lgn-action-button-success")
     private WebElement timeOffRequestApprovalCOnfirmBtn;
-    @FindBy(css="div[ng-if=\"canShowTodos()\"]")
+    @FindBy(css="img[src*=\"img/legion/todos-none\"]")
     private WebElement toDoBtnToOpen;
     @FindBy(css="div[ng-click=\"closeTodoPanelClick()\"]")
     private WebElement toDoBtnToClose;
     @FindBy(css="div[ng-show=\"show\"]")
     private WebElement toDoPopUpWindow;
+	@FindBy(css="//div[@ng-show='show']//h1[contains(text(),'TEAM')]")
+	private WebElement toDoPopUpWindowLabel;
     @FindBy(css="todo-card[todo-type=\"todoType\"]")
     private List<WebElement> todoCards;
 
@@ -376,9 +378,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 		@Override
 		public void openToDoPopupWindow() throws Exception {
-			if(isElementLoaded(toDoBtnToOpen)) {
+		waitForSeconds(2);
+	 	if(isElementLoaded(toDoBtnToOpen,5)) {
 				click(toDoBtnToOpen);
-				Thread.sleep(1000);
+//				Thread.sleep(1000);
 				if(isToDoWindowOpened())
 					SimpleUtils.pass("Team Page: 'ToDo' popup window loaded successfully.");
 				else
@@ -399,7 +402,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		}
 
 		public boolean isToDoWindowOpened() throws Exception{
-			if(isElementLoaded(toDoPopUpWindow)) {
+			if(isElementLoaded(toDoPopUpWindow,5) && areListElementVisible(todoCards,5)) {
 				if(toDoPopUpWindow.getAttribute("class").contains("is-shown"))
 					return true;
 			}
@@ -412,19 +415,15 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				String timeOffEndDuration, String action) throws Exception{
 			boolean isTimeOffRequestToDoCardFound = false;
 			String timeOffRequestCardText = "TIME OFF REQUEST";
-			String timeOffStartDate = timeOffStartDuration.split(",")[0].split(" ")[1];
-			String timeOffStartMonth = timeOffStartDuration.split(",")[0].split(" ")[0];
-			String timeOffEndDate = timeOffEndDuration.split(",")[0].split(" ")[1];
-			String timeOffEndMonth = timeOffEndDuration.split(",")[0].split(" ")[0];
-			String startDurationMonthAndDate = timeOffStartMonth+" "+timeOffStartDate;
-			String endDurationMonthAndDate = timeOffEndMonth+" "+timeOffEndDate;
+			String timeOffStartDate = timeOffStartDuration.split(", ")[1];
+			String timeOffEndDate =  timeOffEndDuration.split(", ")[1];
 			if(isElementLoaded(todoCards.get(0))) {
 				for(WebElement todoCard :todoCards) {
 					if(isElementLoaded(nextToDoCardArrow, 10) && !todoCard.isDisplayed())
 						click(nextToDoCardArrow);
 					if(todoCard.getText().toLowerCase().contains(timeOffRequestCardText.toLowerCase())) {
-						if(todoCard.getText().toLowerCase().contains(startDurationMonthAndDate.toLowerCase())
-								&& todoCard.getText().toLowerCase().contains(endDurationMonthAndDate.toLowerCase())) {
+						if(todoCard.getText().toLowerCase().contains(timeOffStartDate.toLowerCase())
+								&& todoCard.getText().toLowerCase().contains(timeOffEndDate.toLowerCase())) {
 							isTimeOffRequestToDoCardFound = true;
 							if(action.toLowerCase().contains(timeOffRequestAction.Approve.getValue().toLowerCase())) {
 								WebElement timeOffApproveButton = todoCard.findElement(By.cssSelector("a[ng-click=\"askConfirm('approve')\"]"));

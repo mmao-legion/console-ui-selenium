@@ -1,6 +1,8 @@
 package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.setTimeOffEndTime;
+import static com.legion.utils.MyThreadLocal.setTimeOffStartTime;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -200,6 +202,14 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement confirmTimeOffApprovalBtn;
 	@FindBy(css="span[ng-if=\"canCancel(r)\"]")
 	private WebElement timeOffRequestCancelBtn;
+	@FindBy(xpath="//div[contains(text(),'Starts')]/b")
+	private WebElement timeOffRequestStartDate;
+	@FindBy(xpath="//div[contains(text(),'End')]/b")
+	private WebElement timeOffRequestEndDate;
+	@FindBy(css="div.lgnCheckBox.checked")
+	private WebElement checkBoxAllDay;
+	@FindBy(css="span.all-day-label")
+	private WebElement txtAllDay;
 	
 	@Override
 	public void clickOnProfileConsoleMenu() throws Exception {
@@ -226,7 +236,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public void selectProfilePageSubSectionByLabel(String profilePageSubSectionLabel) throws Exception {
 		boolean isSubSectionSelected = false;
-		if(isElementLoaded(profilePageSubSections.get(0))) {
+		if(areListElementVisible(profilePageSubSections,10)) {
 			for(WebElement profilePageSubSection : profilePageSubSections) {
 				if(profilePageSubSection.getText().toLowerCase().contains(profilePageSubSectionLabel.toLowerCase())) {
 					click(profilePageSubSection);
@@ -376,14 +386,19 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	
 	
 	@Override
-	public void createNewTimeOffRequest(String timeOffReasonLabel, String timeOffExplanationText,
-			String timeOffStartDate, String timeOffEndDate) throws Exception {
+	public void createNewTimeOffRequest(String timeOffReasonLabel, String timeOffExplanationText) throws Exception {
 		final int timeOffRequestCount = timeOffRequestRows.size();
 		clickOnCreateTimeOffBtn();
 		Thread.sleep(1000);
 		selectTimeOffReason(timeOffReasonLabel);
         updateTimeOffExplanation(timeOffExplanationText);
-        selectTimeOffDuration(timeOffStartDate, timeOffEndDate);
+        selectDate(17);
+		selectDate(21);
+		HashMap<String, String> timeOffDate = getTimeOffDate(17, 21);
+		String timeOffStartDate = timeOffDate.get("startDateTimeOff");
+		String timeOffEndDate = timeOffDate.get("endDateTimeOff");
+		setTimeOffStartTime(timeOffStartDate);
+		setTimeOffEndTime(timeOffEndDate);
         clickOnSaveTimeOffRequestBtn();
         Thread.sleep(1000);
         if(timeOffRequestRows.size() > timeOffRequestCount) 
@@ -395,10 +410,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public String getTimeOffRequestStatus(String timeOffReasonLabel, String timeOffExplanationText,
 			String timeOffStartDuration, String timeOffEndDuration) throws Exception {
-		String timeOffStartDate = timeOffStartDuration.split(",")[0].split(" ")[1];
-		String timeOffStartMonth = timeOffStartDuration.split(",")[0].split(" ")[0];
-		String timeOffEndDate = timeOffEndDuration.split(",")[0].split(" ")[1];
-		String timeOffEndMonth = timeOffEndDuration.split(",")[0].split(" ")[0];
+		String timeOffStartDate = timeOffStartDuration.split(", ")[1].toUpperCase();
+//		String timeOffStartMonth = timeOffStartDuration.split(",")[0].split(" ")[0];
+		String timeOffEndDate = timeOffEndDuration.split(", ")[1].toUpperCase();
+//		String timeOffEndMonth = timeOffEndDuration.split(",")[0].split(" ")[0];
 		
 		String requestStatusText = "";
 		int timeOffRequestCount = timeOffRequestRows.size();
@@ -409,20 +424,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					WebElement requestDate = timeOffRequest.findElement(By.cssSelector("div.request-date"));
 					String[] requestDateText = requestDate.getText().replace("\n", "").split("-");
 					if(requestDateText.length > 1) {
-						if(requestDateText[0].toLowerCase().contains(timeOffStartMonth.toLowerCase()) 
-								&& requestDateText[0].toLowerCase().contains(timeOffStartDate.toLowerCase())
-								&& requestDateText[1].toLowerCase().contains(timeOffEndMonth.toLowerCase()) 
+						if(requestDateText[0].toLowerCase().contains(timeOffStartDate.toLowerCase())
 								&& requestDateText[1].toLowerCase().contains(timeOffEndDate.toLowerCase())) {
-							WebElement requestStatus = timeOffRequest.findElement(By.cssSelector("span.request-status"));
-							requestStatusText = requestStatus.getText();
-						}
-					}
-					else {
-						String requestDateText1 = requestDate.getText().replace("\n", "");
-						if(requestDateText1.toLowerCase().contains(timeOffStartMonth.toLowerCase()) 
-								&& requestDateText1.toLowerCase().contains(timeOffStartDate.toLowerCase())
-								&& requestDateText1.toLowerCase().contains(timeOffEndMonth.toLowerCase()) 
-								&& requestDateText1.toLowerCase().contains(timeOffEndDate.toLowerCase())) {
 							WebElement requestStatus = timeOffRequest.findElement(By.cssSelector("span.request-status"));
 							requestStatusText = requestStatus.getText();
 						}
@@ -864,14 +867,14 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	
 	@Override
 	public void userProfileInviteTeamMember() throws Exception {
-		if(isElementLoaded(userProfileInviteBtn, 2)) {
+		if(isElementLoaded(userProfileInviteBtn, 5)) {
 			click(userProfileInviteBtn);
 			SimpleUtils.pass("Profile Page: user profile 'Invite' button clicked successfully.");
 			
-			if(isElementLoaded(inviteTeamMemberPopUp)) {
+			if(isElementLoaded(inviteTeamMemberPopUp,5)) {
 				SimpleUtils.pass("Profile Page: user profile 'Invite Team Member' popup loaded successfully.");
 				
-				if(isElementLoaded(inviteTeamMemberPopUpPhoneField)) {
+				if(isElementLoaded(inviteTeamMemberPopUpPhoneField,5)) {
 					String inviteTeamMemberPopUpPhoneFieldValue = inviteTeamMemberPopUpPhoneField.getAttribute("value");
 					if(inviteTeamMemberPopUpPhoneFieldValue.length() > 0)
 						SimpleUtils.pass("'Invite Team Member' popup 'Phone' Input field loaded with value:'"+inviteTeamMemberPopUpPhoneFieldValue+"'.");
@@ -881,7 +884,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				else
 					SimpleUtils.fail("'Invite Team Member' popup 'Phone' Input field not loaded.", true);
 				
-				if(isElementLoaded(inviteTeamMemberPopUpEmailField)) {
+				if(isElementLoaded(inviteTeamMemberPopUpEmailField,5)) {
 					String inviteTeamMemberPopUpEmailFieldValue = inviteTeamMemberPopUpEmailField.getAttribute("value");
 					if(inviteTeamMemberPopUpEmailFieldValue.length() > 0)
 						SimpleUtils.pass("'Invite Team Member' popup 'Email' Input field loaded with value:'"+inviteTeamMemberPopUpEmailFieldValue+"'.");
@@ -891,7 +894,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				else
 					SimpleUtils.fail("'Invite Team Member' popup 'Email' Input field not loaded.", true);
 				
-				if(isElementLoaded(inviteTeamMemberPopUpMessageField)) {
+				if(isElementLoaded(inviteTeamMemberPopUpMessageField,5)) {
 					String inviteTeamMemberPopUpMessageFieldValue = inviteTeamMemberPopUpMessageField.getAttribute("value");
 					if(inviteTeamMemberPopUpMessageFieldValue.length() > 0)
 						SimpleUtils.pass("'Invite Team Member' popup 'Message' Input field loaded with value:'"+inviteTeamMemberPopUpMessageFieldValue+"'.");
@@ -901,13 +904,13 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				else
 					SimpleUtils.fail("'Invite Team Member' popup 'Message' Input field not loaded.", true);
 				
-				if(isElementLoaded(inviteTeamMemberPopUpSendBtn) && inviteTeamMemberPopUpSendBtn.isEnabled()) {
+				if(isElementLoaded(inviteTeamMemberPopUpSendBtn,5) && inviteTeamMemberPopUpSendBtn.isEnabled()) {
 					SimpleUtils.pass("'Invite Team Member' popup 'Send' Button not loaded successfully.");
 				}
 				else
 					SimpleUtils.fail("'Invite Team Member' popup 'Send' Button not loaded.", true);
 				
-				if(isElementLoaded(inviteTeamMemberPopUpCancelBtn) && inviteTeamMemberPopUpCancelBtn.isEnabled()) {
+				if(isElementLoaded(inviteTeamMemberPopUpCancelBtn,5) && inviteTeamMemberPopUpCancelBtn.isEnabled()) {
 					SimpleUtils.pass("'Invite Team Member' popup 'Cancel' Button not loaded successfully.");
 					click(inviteTeamMemberPopUpCancelBtn);
 					SimpleUtils.pass("'Invite Team Member' popup 'Cancel' Button clicked successfully.");
@@ -925,7 +928,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			
 	@Override
 	public void userProfileChangePassword(String oldPassword, String newPassword, String confirmPassword) throws Exception {
-		if(isElementLoaded(userProfileChangePasswordBtn, 2)) {
+		if(isElementLoaded(userProfileChangePasswordBtn, 5)) {
 			click(userProfileChangePasswordBtn);
 			SimpleUtils.pass("Profile Page: user profile 'Change Password' button clicked successfully.");
 			

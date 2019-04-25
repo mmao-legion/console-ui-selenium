@@ -305,9 +305,7 @@ public class ProfileNewUITest  extends TestBase{
 	      String timeOffEndDate = "Apr 6, 2019";
 	      String timeOffReasonLabel = "VACATION";
 	      String timeOffExplanationText = "Sample Explanation Text";
-	      profileNewUIPage.createNewTimeOffRequest(timeOffReasonLabel, timeOffExplanationText,
-	  			timeOffStartDate, timeOffEndDate);
-	      
+	      profileNewUIPage.createNewTimeOffRequest(timeOffReasonLabel, timeOffExplanationText);
 	      String expectedRequestStatus = "Pending";
 	      String requestStatus = profileNewUIPage.getTimeOffRequestStatus(timeOffReasonLabel,
 	    		  timeOffExplanationText, timeOffStartDate, timeOffEndDate);

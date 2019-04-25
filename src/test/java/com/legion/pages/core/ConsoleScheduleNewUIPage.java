@@ -1,10 +1,10 @@
 package com.legion.pages.core;
 
-import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
-import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.*;
 import static com.legion.utils.MyThreadLocal.setTeamMemberName;
 import static org.testng.Assert.fail;
 
+import com.legion.tests.core.ScheduleNewUITest;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 
@@ -27,10 +27,17 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 
+import java.lang.reflect.Method;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
@@ -292,24 +299,37 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(xpath = "//div[@class='worker-edit-availability-status']")
     private List<WebElement> scheduleStatus;
 
-    @FindBy(xpath = "//span[contains(text(),'Best')]")
-    private List<WebElement> scheduleBestMatchStatus;
+	@FindBy(xpath="//div[@class='tma-search-action']/following-sibling::div[1]//div[@class='worker-edit-availability-status']")
+	private List<WebElement> scheduleSearchTeamMemberStatus;
+
+	@FindBy(xpath="//div[@class='tab-label']/span[text()='Search Team Members']")
+	private WebElement btnSearchTeamMember;
+
+
+	@FindBy(xpath="//span[contains(text(),'Best')]")
+	private List<WebElement> scheduleBestMatchStatus;
 
     @FindBy(css = "div.worker-edit-search-worker-name")
     private List<WebElement> searchWorkerName;
 
+	@FindBy(xpath="//div[@class='tma-search-action']/following-sibling::div[1]//div[@class='worker-edit-search-worker-name']")
+	private List<WebElement> searchWorkerDisplayName;
 
     @FindBy(css = "td.table-field.action-field.tr>div")
     private List<WebElement> radionBtnSelectTeamMembers;
 
-    @FindBy(css = "button.tma-action.sch-save")
-    private WebElement btnOffer;
+	@FindBy(xpath="//div[@class='tma-search-action']/following-sibling::div[1]//div[@class='tma-staffing-option-outer-circle']")
+	private List<WebElement> radionBtnSearchTeamMembers;
+
+	@FindBy(css="button.tma-action.sch-save")
+	private WebElement btnOffer;
 
     @FindBy(xpath = "//button[contains(text(),'UPDATE')]")
     private WebElement updateAndGenerateScheduleButton;
 
 
-    //added by Naval
+
+	//added by Naval
 
     @FindBy(css = "ng-form.input-form.ng-pristine.ng-valid-minlength")
     private WebElement filterButton;
@@ -429,6 +449,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "button[ng-click=\"yesClicked()\"]")
     private WebElement unGenerateBtnOnPopup;
 
+	//added by Nishant
+
+	@FindBy(css = "div.lgn-alert-modal")
+	private WebElement popUpScheduleOverlap;
+
+	@FindBy(css = "button.lgn-action-button-success")
+	private WebElement btnAssignAnyway;
+
+	@FindBy(css = "div.lgn-alert-message")
+	private WebElement alertMessage;
+
     final static String consoleScheduleMenuItemText = "Schedule";
 
 
@@ -469,7 +500,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Finalized not displayed on the page", true);
         }
     }
-
+	
 
     @Override
     public boolean isSchedulePage() throws Exception {
@@ -520,10 +551,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         click(goToProjectedSalesTab);
         SimpleUtils.pass("ProjectedSales Page Loading..!");
 
-        if (isElementLoaded(salesGuidance)) {
-            SimpleUtils.pass("Sales Forecast is Displayed on the page");
-        } else {
-            SimpleUtils.fail("Sales Forecast not Displayed on the page", true);
+        if(isElementLoaded(salesGuidance)){
+        	SimpleUtils.pass("Sales Forecast is Displayed on the page");
+        }else{
+        	SimpleUtils.fail("Sales Forecast not Displayed on the page",true);
         }
 
         verifyRefreshBtnOnSalesForecast();
@@ -638,60 +669,68 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    @Override
-    public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
-        HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
-        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("div.card-carousel-card.card-carousel-card-primary"));
-        if (isElementEnabled(budgetedScheduledLabelsDivElement)) {
+	@Override
+	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
+		HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
+		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("div.card-carousel-card.card-carousel-card-primary"));
+		if(isElementEnabled(budgetedScheduledLabelsDivElement))
+		{
 //			Thread.sleep(2000);
-            String scheduleWagesAndHoursCardText = budgetedScheduledLabelsDivElement.getText();
-            String[] scheduleWagesAndHours = scheduleWagesAndHoursCardText.split("\n");
-            for (String wagesAndHours : scheduleWagesAndHours) {
-                if (wagesAndHours.toLowerCase().contains(scheduleHoursAndWagesData.hours.getValue().toLowerCase())) {
-                    scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, wagesAndHours.split(" ")[1],
-                            scheduleHoursAndWagesData.budgetedHours.getValue());
-                    scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, wagesAndHours.split(" ")[2],
-                            scheduleHoursAndWagesData.scheduledHours.getValue());
-                    scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, wagesAndHours.split(" ")[3],
-                            scheduleHoursAndWagesData.otherHours.getValue());
-                } else if (wagesAndHours.toLowerCase().contains(scheduleHoursAndWagesData.wages.getValue().toLowerCase())) {
-                    scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, wagesAndHours.split(" ")[1]
-                            .replace("$", ""), scheduleHoursAndWagesData.budgetedWages.getValue());
-                    scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, wagesAndHours.split(" ")[2]
-                            .replace("$", ""), scheduleHoursAndWagesData.scheduledWages.getValue());
-                    scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, wagesAndHours.split(" ")[3]
-                            .replace("$", ""), scheduleHoursAndWagesData.otherWages.getValue());
-                }
-            }
-        }
-        return scheduleHoursAndWages;
-    }
+			String scheduleWagesAndHoursCardText = budgetedScheduledLabelsDivElement.getText();
+			String[] scheduleWagesAndHours = scheduleWagesAndHoursCardText.split("\n");
+			for(String wagesAndHours: scheduleWagesAndHours)
+			{
+				if(wagesAndHours.toLowerCase().contains(scheduleHoursAndWagesData.hours.getValue().toLowerCase()))
+				{
+					scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[1],
+							scheduleHoursAndWagesData.budgetedHours.getValue());
+					scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[2],
+							scheduleHoursAndWagesData.scheduledHours.getValue());
+					scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[3],
+							scheduleHoursAndWagesData.otherHours.getValue());
+				}
+				else if(wagesAndHours.toLowerCase().contains(scheduleHoursAndWagesData.wages.getValue().toLowerCase()))
+				{
+					scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[1]
+							.replace("$", ""), scheduleHoursAndWagesData.budgetedWages.getValue());
+					scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[2]
+							.replace("$", ""), scheduleHoursAndWagesData.scheduledWages.getValue());
+					scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[3]
+							.replace("$", ""), scheduleHoursAndWagesData.otherWages.getValue());
+				}
+			}
+		}
+		return scheduleHoursAndWages;
+ 	}
 
 
-    private HashMap<String, Float> updateScheduleHoursAndWages(HashMap<String, Float> scheduleHoursAndWages,
-                                                               String hours, String hoursAndWagesKey) {
-        scheduleHoursAndWages.put(hoursAndWagesKey, Float.valueOf(hours.replaceAll(",", "")));
-        return scheduleHoursAndWages;
-    }
+	private HashMap<String, Float> updateScheduleHoursAndWages(HashMap<String, Float> scheduleHoursAndWages,
+			String hours, String hoursAndWagesKey) {
+		scheduleHoursAndWages.put(hoursAndWagesKey, Float.valueOf(hours.replaceAll(",","")));
+		return scheduleHoursAndWages;
+	}
 
-    @Override
-    public synchronized List<HashMap<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception {
-        List<HashMap<String, Float>> ScheduleLabelHoursAndWagesDataForDays = new ArrayList<HashMap<String, Float>>();
-        List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
-        if (isScheduleDayViewActive()) {
-            if (ScheduleCalendarDayLabels.size() != 0) {
-                for (WebElement ScheduleCalendarDayLabel : ScheduleCalendarDayLabels) {
-                    click(ScheduleCalendarDayLabel);
-                    ScheduleLabelHoursAndWagesDataForDays.add(getScheduleLabelHoursAndWages());
-                }
-            } else {
-                SimpleUtils.fail("Schedule Page Day View Calender not Loaded Successfully!", true);
-            }
-        } else {
-            SimpleUtils.fail("Schedule Page Day View Button not Active!", true);
-        }
-        return ScheduleLabelHoursAndWagesDataForDays;
-    }
+	@Override
+	public synchronized List<HashMap<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception {
+		List<HashMap<String, Float>> ScheduleLabelHoursAndWagesDataForDays = new ArrayList<HashMap<String, Float>>();
+		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+		if(isScheduleDayViewActive()) {
+			if(ScheduleCalendarDayLabels.size() != 0) {
+				for(WebElement ScheduleCalendarDayLabel: ScheduleCalendarDayLabels)
+				{
+					click(ScheduleCalendarDayLabel);
+					ScheduleLabelHoursAndWagesDataForDays.add(getScheduleLabelHoursAndWages());
+				}
+			}
+			else {
+				SimpleUtils.fail("Schedule Page Day View Calender not Loaded Successfully!", true);
+			}
+		}
+		else {
+			SimpleUtils.fail("Schedule Page Day View Button not Active!", true);
+		}
+		return ScheduleLabelHoursAndWagesDataForDays;
+	}
 
 
     @Override
@@ -793,6 +832,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
+	
 
     @Override
     public void generateSchedule() throws Exception {
@@ -1018,150 +1058,169 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
-    @Override
-    public void clickOnSchedulePublishButton() throws Exception {
-        // TODO Auto-generated method stub
-        if (isElementEnabled(publishSheduleButton)) {
-            click(publishSheduleButton);
-            if (isElementEnabled(publishConfirmBtn)) {
-                click(publishConfirmBtn);
-                SimpleUtils.pass("Schedule published successfully for week: '" + getActiveWeekText() + "'");
-                if (isElementEnabled(successfulPublishOkBtn)) {
-                    click(successfulPublishOkBtn);
-                }
-            }
-        }
-    }
-
-    //added by Nishant
-
-    public void navigateDayViewToPast(String PreviousWeekView, int dayCount) {
-        String currentWeekStartingDay = "NA";
-        List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
-        for (int i = 0; i < dayCount; i++) {
-
-            try {
-                click(ScheduleCalendarDayLabels.get(i));
-                clickOnEditButton();
-                clickOnCancelButtonOnEditMode();
-            } catch (Exception e) {
-                SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable", true);
-            }
-
-
-        }
-    }
-
-
-    //added by Nishant
-
-
-    public String clickNewDayViewShiftButtonLoaded() throws Exception {
-        String textStartDay = null;
-        if (isElementEnabled(addNewShiftOnDayViewButton)) {
-            SimpleUtils.pass("User is allowed to add new shift for current or future week!");
-            if (isElementEnabled(shiftStartday)) {
-                String[] txtStartDay = shiftStartday.getText().split(" ");
-                textStartDay = txtStartDay[0];
-            } else {
-                SimpleUtils.fail("Shift Start day not getting Loaded!", true);
-            }
-            click(addNewShiftOnDayViewButton);
-        } else {
-            SimpleUtils.fail("User is not allowed to add new shift for current or future week!", true);
-        }
-        return textStartDay;
-    }
-
-    public void customizeNewShiftPage() throws Exception {
-        if (isElementLoaded(customizeNewShift, 10)) {
-            SimpleUtils.pass("Customize New Shift Page loaded Successfully!");
-        } else {
-            SimpleUtils.fail("Customize New Shift Page not loaded Successfully!", false);
-        }
-    }
-
-
-    public void compareCustomizeStartDay(String textStartDay) throws Exception {
-        if (isElementLoaded(customizeShiftStartdayLabel, 10)) {
-            String[] actualTextStartDay = customizeShiftStartdayLabel.getText().split(":");
-            if (actualTextStartDay[0].equals(textStartDay)) {
-                SimpleUtils.pass("Start time on Custimize New shift page " + actualTextStartDay[0] + " is same as " + textStartDay);
-            } else {
-                SimpleUtils.fail("Start time on Custimize New shift page " + actualTextStartDay[0] + " is not same as " + textStartDay, true);
-            }
-        } else {
-            SimpleUtils.fail("Customize New Shift Page not loaded Successfully!", false);
-        }
-
-    }
-
-
-    public void clickOnStartDay(String textStartDay) throws Exception {
-        if (isElementLoaded(customizeShiftStartdayLabel)) {
-            String[] actualTextStartDay = customizeShiftStartdayLabel.getText().split(":");
-            if (actualTextStartDay[0].equals(textStartDay)) {
-                SimpleUtils.pass("Start time on Customize New shift page " + actualTextStartDay[0] + " is same as " + textStartDay);
-            } else {
-                SimpleUtils.fail("Start time on Customize New shift page " + actualTextStartDay[0] + " is not same as " + textStartDay, true);
-            }
-        } else {
-            SimpleUtils.fail("Customize New Shift Page not loaded Successfully!", false);
-        }
-
-    }
-
-
-    public void moveSliderAtSomePoint(String shiftTime, int shiftStartingCount, String startingPoint) throws Exception {
-        if (startingPoint.equalsIgnoreCase("End")) {
-            if (isElementLoaded(sliderNotchEnd, 10) && sliderDroppableCount.size() > 0) {
-                SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
-                for (int i = shiftStartingCount; i <= sliderDroppableCount.size(); i++) {
-                    if (i == (shiftStartingCount + Integer.parseInt(shiftTime))) {
-                        WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child(" + (i + Integer.parseInt(shiftTime)) + ")"));
-                        mouseHoverDragandDrop(sliderNotchEnd, element);
-                        MyThreadLocal.setScheduleHoursEndTime(customizeShiftEnddayLabel.getText());
-                        break;
-                    }
-                }
-
-            } else {
-                SimpleUtils.fail("Shift timings with Sliders not loading on page Successfully", false);
-            }
-        } else if (startingPoint.equalsIgnoreCase("Start")) {
-            if (isElementLoaded(sliderNotchStart, 10) && sliderDroppableCount.size() > 0) {
-                SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for Starting point");
-                for (int i = shiftStartingCount; i <= sliderDroppableCount.size(); i++) {
-                    if (i == (shiftStartingCount + Integer.parseInt(shiftTime))) {
-                        WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child(" + (i + Integer.parseInt(shiftTime)) + ")"));
-                        mouseHoverDragandDrop(sliderNotchStart, element);
-                        MyThreadLocal.setScheduleHoursStartTime(customizeShiftStartdayLabel.getText());
-                        break;
-                    }
-                }
-
-            } else {
-                SimpleUtils.fail("Shift timings with Sliders not loading on page Successfully", false);
-            }
-        }
-    }
-
-    public HashMap<String, String> calculateHourDifference() throws Exception {
-        Float scheduleHoursDifference = 0.0f;
-        HashMap<String, String> shiftTimeSchedule = new HashMap<String, String>();
-        if (isElementLoaded(sliderNotchStart, 10) && sliderDroppableCount.size() > 0) {
-            String scheduledHoursStartTime = MyThreadLocal.getScheduleHoursStartTime();
-            String scheduledHoursEndTime = MyThreadLocal.getScheduleHoursEndTime();
-            scheduleHoursDifference = SimpleUtils.convertDateIntotTwentyFourHrFormat(scheduledHoursStartTime, scheduledHoursEndTime);
-            String[] customizeStartTimeLabel = customizeShiftStartdayLabel.getText().split(":");
-            String[] customizeEndTimeLabel = customizeShiftEnddayLabel.getText().split(":");
-            SimpleUtils.pass("Schedule hour difference is " + scheduleHoursDifference);
-            shiftTimeSchedule.put("ScheduleHrDifference", Float.toString(scheduleHoursDifference));
-            shiftTimeSchedule.put("CustomizeStartTimeLabel", customizeStartTimeLabel[0]);
-            shiftTimeSchedule.put("CustomizeEndTimeLabel", customizeEndTimeLabel[0]);
-        }
-        return shiftTimeSchedule;
-    }
+	@Override
+	public void clickOnSchedulePublishButton() throws Exception {
+		// TODO Auto-generated method stub
+		if(isElementEnabled(publishSheduleButton)){
+			click(publishSheduleButton);
+			if(isElementEnabled(publishConfirmBtn))
+			{
+				click(publishConfirmBtn);
+				SimpleUtils.pass("Schedule published successfully for week: '"+ getActiveWeekText() +"'");
+				if(isElementEnabled(successfulPublishOkBtn))
+				{
+					click(successfulPublishOkBtn);
+				}
+			}
+		}
+	}
+	
+	//added by Nishant
+	
+	public void navigateDayViewToPast(String PreviousWeekView, int dayCount)
+	{
+		String currentWeekStartingDay = "NA";
+		List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+		for(int i = 0; i < dayCount; i++)
+		{
+		
+			try {
+				click(ScheduleCalendarDayLabels.get(i));
+				clickOnEditButton();
+				clickOnCancelButtonOnEditMode();
+				} catch (Exception e) {
+					SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable", true);
+				}
+				
+			
+		}
+	}
+	
+	
+	//added by Nishant
+	
+	
+	public String clickNewDayViewShiftButtonLoaded() throws Exception
+	{
+		String textStartDay = null;
+		if(isElementEnabled(addNewShiftOnDayViewButton,5))
+		{
+			SimpleUtils.pass("User is allowed to add new shift for current or future week!");
+			if(isElementEnabled(shiftStartday)){
+				String[] txtStartDay = shiftStartday.getText().split(" ");
+				textStartDay = txtStartDay[0];
+			}else{
+				SimpleUtils.fail("Shift Start day not getting Loaded!",true);
+			}
+			click(addNewShiftOnDayViewButton);
+		}
+		else
+		{
+			SimpleUtils.fail("User is not allowed to add new shift for current or future week!",true);
+		}
+		return textStartDay;
+	}
+	
+	public void customizeNewShiftPage() throws Exception
+	{
+		if(isElementLoaded(customizeNewShift,10))
+		{
+			SimpleUtils.pass("Customize New Shift Page loaded Successfully!");
+		}
+		else
+		{
+			SimpleUtils.fail("Customize New Shift Page not loaded Successfully!",false);
+		}
+	}
+	
+	
+	public void compareCustomizeStartDay(String textStartDay) throws Exception
+	{
+		if(isElementLoaded(customizeShiftStartdayLabel,10))
+		{
+			String[] actualTextStartDay = customizeShiftStartdayLabel.getText().split(":");
+			if(actualTextStartDay[0].equals(textStartDay)){
+				SimpleUtils.pass("Start time on Custimize New shift page "+actualTextStartDay[0]+" is same as "+textStartDay);
+			}else{
+				SimpleUtils.fail("Start time on Custimize New shift page "+actualTextStartDay[0]+" is not same as "+textStartDay,true);
+			}
+		}else
+		{
+			SimpleUtils.fail("Customize New Shift Page not loaded Successfully!",false);
+		}
+			
+	}
+	
+	
+	public void clickOnStartDay(String textStartDay) throws Exception
+	{
+		if(isElementLoaded(customizeShiftStartdayLabel))
+		{
+			String[] actualTextStartDay = customizeShiftStartdayLabel.getText().split(":");
+			if(actualTextStartDay[0].equals(textStartDay)){
+				SimpleUtils.pass("Start time on Customize New shift page "+actualTextStartDay[0]+" is same as "+textStartDay);
+			}else{
+				SimpleUtils.fail("Start time on Customize New shift page "+actualTextStartDay[0]+" is not same as "+textStartDay,true);
+			}
+		}else
+		{
+			SimpleUtils.fail("Customize New Shift Page not loaded Successfully!",false);
+		}
+			
+	}
+	
+	
+	public void moveSliderAtSomePoint(String shiftTime, int shiftStartingCount, String startingPoint) throws Exception
+	{
+		if(startingPoint.equalsIgnoreCase("End")){
+			if(isElementLoaded(sliderNotchEnd,10) && sliderDroppableCount.size()>0){
+				SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
+				for(int i= shiftStartingCount; i<= sliderDroppableCount.size();i++){
+					if(i == (shiftStartingCount + Integer.parseInt(shiftTime))){
+						WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child("+(i+Integer.parseInt(shiftTime))+")"));
+						mouseHoverDragandDrop(sliderNotchEnd,element);
+						MyThreadLocal.setScheduleHoursEndTime(customizeShiftEnddayLabel.getText());
+						break;
+					}
+				}
+				
+			}else{
+				SimpleUtils.fail("Shift timings with Sliders not loading on page Successfully", false);
+			}
+		}else if(startingPoint.equalsIgnoreCase("Start")){
+			if(isElementLoaded(sliderNotchStart,10) && sliderDroppableCount.size()>0){
+				SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for Starting point");
+				for(int i= shiftStartingCount; i<= sliderDroppableCount.size();i++){
+					if(i == (shiftStartingCount + Integer.parseInt(shiftTime))){
+						WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child("+(i+Integer.parseInt(shiftTime))+")"));
+						mouseHoverDragandDrop(sliderNotchStart,element);
+						MyThreadLocal.setScheduleHoursStartTime(customizeShiftStartdayLabel.getText());
+						break;
+					}
+				}
+				
+			}else{
+				SimpleUtils.fail("Shift timings with Sliders not loading on page Successfully", false);
+			}
+		}		
+	}
+	
+	public HashMap<String, String> calculateHourDifference() throws Exception {
+		Float scheduleHoursDifference = 0.0f;
+		HashMap<String, String> shiftTimeSchedule = new HashMap<String, String>();
+		if(isElementLoaded(sliderNotchStart,10) && sliderDroppableCount.size()>0){
+			String scheduledHoursStartTime = MyThreadLocal.getScheduleHoursStartTime();
+			String scheduledHoursEndTime = MyThreadLocal.getScheduleHoursEndTime();
+			scheduleHoursDifference =  SimpleUtils.convertDateIntotTwentyFourHrFormat(scheduledHoursStartTime , scheduledHoursEndTime);
+			String[] customizeStartTimeLabel = customizeShiftStartdayLabel.getText().split(":");
+			String[] customizeEndTimeLabel = customizeShiftEnddayLabel.getText().split(":");
+			SimpleUtils.pass("Schedule hour difference is "+scheduleHoursDifference);
+			shiftTimeSchedule.put("ScheduleHrDifference",Float.toString(scheduleHoursDifference));
+			shiftTimeSchedule.put("CustomizeStartTimeLabel",customizeStartTimeLabel[0]);
+			shiftTimeSchedule.put("CustomizeEndTimeLabel",customizeEndTimeLabel[0]);
+		}
+		return shiftTimeSchedule;
+	}
 
     public void selectWorkRole(String workRoles) throws Exception {
         if (isElementLoaded(btnWorkRole, 10)) {
@@ -2020,111 +2079,112 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public boolean getScheduleStatus() throws Exception {
         boolean ScheduleStatus = false;
 //		waitForSeconds(5);
-        if (areListElementVisible(scheduleStatus, 5) && radionBtnSelectTeamMembers.size() == scheduleStatus.size()) {
-            for (int i = 0; i < scheduleStatus.size(); i++) {
-                if (scheduleStatus.get(i).getText().contains("Available")
-                        || scheduleStatus.get(i).getText().contains("Unknown")) {
-                    click(radionBtnSelectTeamMembers.get(i));
-                    ScheduleStatus = true;
-                    break;
-                }
-            }
-        } else {
-            SimpleUtils.fail("Not able to found Available status in SearchResult", false);
-        }
+		if(areListElementVisible(scheduleSearchTeamMemberStatus,5) && radionBtnSearchTeamMembers.size() == scheduleSearchTeamMemberStatus.size()){
+			for(int i=0; i<scheduleSearchTeamMemberStatus.size();i++){
+				if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Available")
+						|| scheduleSearchTeamMemberStatus.get(i).getText().contains("Unknown")){
+					click(radionBtnSearchTeamMembers.get(i));
+					setTeamMemberName(searchWorkerName.get(i).getText());
+					ScheduleStatus = true;
+					break;
+				}
+			}
+		}else{
+			SimpleUtils.fail("Not able to found Available status in SearchResult", false);
+		}
 
         return ScheduleStatus;
     }
 
-    public boolean getScheduleBestMatchStatus() throws Exception {
-        boolean ScheduleBestMatchStatus = false;
-        if (areListElementVisible(scheduleStatus, 5) || scheduleBestMatchStatus.size() != 0 && radionBtnSelectTeamMembers.size() == scheduleStatus.size() && searchWorkerName.size() != 0) {
-            for (int i = 0; i < scheduleStatus.size(); i++) {
-                if (scheduleBestMatchStatus.get(i).getText().contains("Best")
-                        || scheduleStatus.get(i).getText().contains("Unknown") || scheduleStatus.get(i).getText().contains("Available")) {
-                    if (searchWorkerName.get(i).getText().contains("Gordon.M") || searchWorkerName.get(i).getText().contains("Jayne.H")) {
-                        click(radionBtnSelectTeamMembers.get(i));
-                        setTeamMemberName(searchWorkerName.get(i).getText());
-                        ScheduleBestMatchStatus = true;
-                        break;
-                    }
-                }
-            }
-        } else {
-            SimpleUtils.fail("Not able to found Available status in SearchResult", false);
-        }
+	public boolean getScheduleBestMatchStatus()throws Exception {
+		boolean ScheduleBestMatchStatus = false;
+		if(areListElementVisible(scheduleStatus,5) || scheduleBestMatchStatus.size()!=0 && radionBtnSelectTeamMembers.size() == scheduleStatus.size() && searchWorkerName.size()!=0){
+			for(int i=0; i<scheduleStatus.size();i++){
+				if(scheduleBestMatchStatus.get(i).getText().contains("Best")
+						|| scheduleStatus.get(i).getText().contains("Unknown") || scheduleStatus.get(i).getText().contains("Available")){
+					if(searchWorkerName.get(i).getText().contains("Gordon.M") || searchWorkerName.get(i).getText().contains("Jayne.H")){
+						click(radionBtnSelectTeamMembers.get(i));
+						setTeamMemberName(searchWorkerName.get(i).getText());
+						ScheduleBestMatchStatus = true;
+						break;
+					}
+				}
+			}
+		}else{
+			SimpleUtils.fail("Not able to found Available status in SearchResult", false);
+		}
 
-        return ScheduleBestMatchStatus;
-    }
+		return ScheduleBestMatchStatus;
+	}
 
-    public void getAvailableStatus() throws Exception {
-        if (areListElementVisible(scheduleStatus) && availableStatus.size() != 0 && radionBtnSelectTeamMembers.size() == scheduleStatus.size()) {
-            for (int i = 0; i < scheduleStatus.size(); i++) {
-                if (scheduleStatus.get(i).getText().contains(availableStatus.get(i).getText())) {
-                    click(radionBtnSelectTeamMembers.get(i));
-                    break;
-                }
-            }
-        } else {
-            SimpleUtils.fail("Not able to found Available status in SearchResult", false);
-        }
-    }
+	public void getAvailableStatus()throws Exception {
+		if(areListElementVisible(scheduleStatus) && availableStatus.size()!=0 && radionBtnSelectTeamMembers.size() == scheduleStatus.size()){
+			for(int i=0; i<scheduleStatus.size();i++){
+				if(scheduleStatus.get(i).getText().contains(availableStatus.get(i).getText())){
+					click(radionBtnSelectTeamMembers.get(i));
+					break;
+				}
+			}
+		}else{
+			SimpleUtils.fail("Not able to found Available status in SearchResult", false);
+		}
+	}
 
-    public void clickOnOfferOrAssignBtn() throws Exception {
-        if (isElementEnabled(btnOffer)) {
-            click(btnOffer);
-        } else {
-            SimpleUtils.fail("Offer Or Assign Button is not clickable", false);
-        }
-    }
+	public void clickOnOfferOrAssignBtn() throws Exception{
+		if(isElementEnabled(btnOffer)){
+			click(btnOffer);
+		}else{
+			SimpleUtils.fail("Offer Or Assign Button is not clickable", false);
+		}
+	}
 
-    public void clickOnShiftContainer(int index) throws Exception {
-        int guttercount = getgutterSize();
-        waitForSeconds(2);
-        if (shiftContainer.size() != 0 && index <= shiftContainer.size() && isElementLoaded(shiftContainer.get(0))) {
-            for (int i = 0; i < index; i++) {
-                mouseHover(shiftContainer.get(i));
-                waitForSeconds(2);
+	public void clickOnShiftContainer(int index) throws Exception{
+		int guttercount = getgutterSize();
+		waitForSeconds(2);
+		if(shiftContainer.size()!=0 && index<=shiftContainer.size() && isElementLoaded(shiftContainer.get(0))){
+			for(int i=0;i<index;i++){
+				mouseHover(shiftContainer.get(i));
+				waitForSeconds(2);
 //				click(shiftContainer.get(i));
-                deleteShift();
-                waitForSeconds(2);
-            }
+				deleteShift();
+				waitForSeconds(2);
+			}
 
-        } else {
-            SimpleUtils.report("Shift container does not any gutter text");
-        }
-    }
-
-
-    public void deleteShift() {
-        if (shiftDeleteBtn.size() != 0) {
-            for (int i = 0; i < shiftDeleteBtn.size(); i++) {
-                click(shiftDeleteBtn.get(i));
-            }
-        } else {
-            SimpleUtils.fail("Delete button is not available on Shift container", false);
-        }
-    }
+		}else{
+			SimpleUtils.report("Shift container does not any gutter text");
+		}
+	}
 
 
-    public void deleteShiftGutterText() {
-        if (shiftDeleteGutterText.size() != 0) {
-            for (int i = 0; i < shiftDeleteGutterText.size(); i++) {
-                if (shiftDeleteGutterText.get(i).equals("Delete")) {
-                    SimpleUtils.pass(shiftDeleteGutterText.get(i) + " Option as gutter is present on shift container");
-                }
+	public void deleteShift(){
+		if(shiftDeleteBtn.size()!=0){
+			for(int i=0;i<shiftDeleteBtn.size();i++){
+				click(shiftDeleteBtn.get(i));
+			}
+		}else{
+			SimpleUtils.fail("Delete button is not available on Shift container",false);
+		}
+	}
 
-            }
-        } else {
-            SimpleUtils.fail("Delete text is not present on Shift container gutter", true);
-        }
-    }
 
-    public void disableNextWeekArrow() throws Exception {
-        if (!calendarNavigationNextWeekArrow.isDisplayed()) {
+	public void deleteShiftGutterText(){
+		if(shiftDeleteGutterText.size()!=0){
+			for(int i=0;i<shiftDeleteGutterText.size();i++){
+				if(shiftDeleteGutterText.get(i).equals("Delete")){
+					SimpleUtils.pass(shiftDeleteGutterText.get(i)+" Option as gutter is present on shift container");
+				}
+
+			}
+		}else{
+			SimpleUtils.fail("Delete text is not present on Shift container gutter",true);
+		}
+	}
+
+    public void disableNextWeekArrow() throws Exception{
+        if(!calendarNavigationNextWeekArrow.isDisplayed()){
             SimpleUtils.pass("Next week arrow is disabled");
-        } else {
-            SimpleUtils.fail("Next week arrow is not disabled", false);
+        }else{
+            SimpleUtils.fail("Next week arrow is not disabled",false);
         }
     }
 
@@ -2135,39 +2195,41 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
-    public void editBudgetHours() {
-        if (budgetEditHours.size() > 0) {
-            for (int i = 0; i < budgetEditHours.size(); i++) {
+    public void editBudgetHours(){
+        if(budgetEditHours.size()>0){
+            for(int i=0; i< budgetEditHours.size();i++){
                 System.out.println(budgetEditHours.get(i).getText());
             }
         }
     }
 
-    @Override
-    public void navigateScheduleDayWeekView(String nextWeekView, int weekCount) {
+	@Override
+	public void navigateScheduleDayWeekView(String nextWeekView, int weekCount) {
 
-    }
+	}
 
-    public ArrayList<String> getActiveWeekCalendarDates() throws Exception {
+	public ArrayList<String> getActiveWeekCalendarDates() throws Exception
+    {
         ArrayList<String> scheduleWeekCalendarDates = new ArrayList<String>();
         String catendarWeekDatesAsText = "";
-        for (WebElement ScheduleWeekCalendarDate : ScheduleWeekCalendarDates) {
+        for(WebElement ScheduleWeekCalendarDate : ScheduleWeekCalendarDates)
+        {
             scheduleWeekCalendarDates.add(ScheduleWeekCalendarDate.getText().replace("\n", " "));
-            if (catendarWeekDatesAsText == "")
+            if(catendarWeekDatesAsText == "")
                 catendarWeekDatesAsText = ScheduleWeekCalendarDate.getText().replace("\n", " ");
             else
-                catendarWeekDatesAsText = catendarWeekDatesAsText + " | " + ScheduleWeekCalendarDate.getText().replace("\n", " ");
+                catendarWeekDatesAsText = catendarWeekDatesAsText+ " | " +ScheduleWeekCalendarDate.getText().replace("\n", " ");
         }
         SimpleUtils.report("Active Week Calendar Dates: '" + catendarWeekDatesAsText + "'");
         return scheduleWeekCalendarDates;
     }
 
 
-    @Override
-    public void refreshBrowserPage() throws Exception {
-        MyThreadLocal.getDriver().navigate().refresh();
-        Thread.sleep(5000);
-        SimpleUtils.pass("Browser Refreshed Successfully for the Week/Day: '" + getActiveWeekText() + "'!");
+	@Override
+	public void refreshBrowserPage() throws Exception {
+		MyThreadLocal.getDriver().navigate().refresh();
+		Thread.sleep(5000);
+		SimpleUtils.pass("Browser Refreshed Successfully for the Week/Day: '"+ getActiveWeekText() +"'!");
 
     }
 
@@ -2215,7 +2277,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Unable to convert UnAssigned Shift to Open Shift as 'Schedule' tab not active.", false);
         }
 
-    }
+	}
 
     public void convertUnAssignedShiftToOpenShift(WebElement unAssignedShift) throws Exception {
         By isUnAssignedShift = By.cssSelector("[ng-if=\"isUnassignedShift()\"]");
@@ -2451,14 +2513,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
         }
 
-    }
+	}
 
 
-    @Override
-    public boolean loadSchedule() throws Exception {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	@Override
+	public boolean loadSchedule() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 
     @Override
@@ -2489,11 +2551,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                                 gutterCellCount = 0;
                             }
 
-                        }
-                    }
-                    closingBufferHours += gutterCellCount;
-                } else
-                    SimpleUtils.fail("Schedule Page: Unable to fetch backgroung color of 'Gutter Area'.", false);
+						}
+					}
+					closingBufferHours += gutterCellCount;
+				}
+				else
+					SimpleUtils.fail("Schedule Page: Unable to fetch backgroung color of 'Gutter Area'.", false);
 
                 schedulePageBufferHours.put("closingBufferHours", (closingBufferHours / cellCountInAnHour));
                 schedulePageBufferHours.put("openingBufferHours", (openingBufferHours / cellCountInAnHour));
@@ -2677,7 +2740,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             scheduleShiftHeaderEndTime = scheduleShiftTimeHeaderCells.get(scheduleShiftTimeHeaderCells.size() - 2).getText().split(" ")[0];
         }
 
-        //System.out.println("hoursAfterEndTime : "+hoursAfterEndTime);
+		//System.out.println("hoursAfterEndTime : "+hoursAfterEndTime);
 
         HashMap<String, Integer> scheduleBufferHours = getScheduleBufferHours();
         for (Map.Entry<String, Integer> bufferHours : scheduleBufferHours.entrySet()) {
@@ -2709,6 +2772,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(css = "card-carousel-card[ng-if='compliance'] span")
     private WebElement viewShift;
+	@FindBy(css = "img[ng-if='hasViolateCompliance(shift)']")
+	private List<WebElement> complianceInfoIconDayView;
 
     @FindBy(css = "div.sch-worker-display-name")
     private List<WebElement> workerName;
@@ -2730,6 +2795,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(css = "div[ng-repeat*='getComplianceMessages'] span")
     private List<WebElement> complianceMessageInPopUp;
+
+    @FindBy (css = "div.sch-day-view-shift-worker-name")
+    private List<WebElement> workerStatus;
 
 
     public String timeFormatter(String formattedTime) {
@@ -3115,5 +3183,291 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //        }
 //    }
 
+
+	public void selectTeamMembersOptionForOverlappingSchedule() throws Exception{
+		if(isElementEnabled(btnSearchTeamMember,5)){
+			click(btnSearchTeamMember);
+			if(isElementLoaded(textSearch,5)) {
+				searchWorkerName(propertySearchTeamMember.get("AssignTeamMember"));
+			}
+		}else{
+			SimpleUtils.fail("Select Team member option not available on page",false);
+		}
+
+	}
+
+
+	public boolean getScheduleOverlappingStatus()throws Exception {
+		boolean ScheduleStatus = false;
+		if(areListElementVisible(scheduleSearchTeamMemberStatus,5)){
+			for(int i=0; i<scheduleSearchTeamMemberStatus.size();i++){
+				if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Scheduled")){
+					click(radionBtnSearchTeamMembers.get(i));
+					String workerDisplayFirstNameText =(searchWorkerDisplayName.get(i).getText().replace(" ","").split("\n"))[0];
+					String workerDisplayLastNameText =(searchWorkerDisplayName.get(i).getText().replace(" ","").split("\n"))[1];
+					setTeamMemberName(workerDisplayFirstNameText + workerDisplayLastNameText);
+					boolean flag = displayAlertPopUp();
+					if (flag) {
+						ScheduleStatus = true;
+						break;
+					}
+				}
+			}
+		}else{
+			SimpleUtils.fail("Not able to found Scheduled status in SearchResult", false);
+		}
+
+		return ScheduleStatus;
+	}
+
+
+	public void searchWorkerName(String searchInput) throws Exception {
+		String[] searchAssignTeamMember = searchInput.split(",");
+		if(isElementLoaded(textSearch,10) && isElementLoaded(searchIcon,10)){
+			for(int i=0; i<searchAssignTeamMember.length;i++){
+				textSearch.sendKeys(searchAssignTeamMember[i]);
+				click(searchIcon);
+				if(getScheduleOverlappingStatus()){
+					break;
+				}else{
+					textSearch.clear();
+				}
+			}
+		}else{
+			SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+		}
+
+	}
+
+
+	public boolean displayAlertPopUp() throws Exception{
+		boolean flag = true;
+		String msgAlert = null;
+		if(isElementLoaded(popUpScheduleOverlap,5)){
+			if(isElementLoaded(alertMessage,5)){
+				msgAlert = alertMessage.getText();
+				if(isElementLoaded(btnAssignAnyway,5)){
+					if(btnAssignAnyway.getText().toLowerCase().equals("OK".toLowerCase())){
+						click(btnAssignAnyway);
+						flag = false;
+					}else{
+						String startTime = ((msgAlert.split(": "))[1].split(" - "))[0];
+						String startTimeFinal = SimpleUtils.convertTimeIntoHHColonMM(startTime);
+						String endTime = (((msgAlert.split(": "))[1].split(" - "))[1].split(" "))[0];
+						String endTimeFinal = SimpleUtils.convertTimeIntoHHColonMM(endTime);
+						String timeDuration = startTimeFinal + "-" + endTimeFinal;
+						setScheduleHoursTimeDuration(timeDuration);
+						click(btnAssignAnyway);
+						flag= true;
+					}
+
+				}else{
+					SimpleUtils.fail("Schedule Overlap Assign Anyway button not displayed on the page",false);
+				}
+			}else{
+				SimpleUtils.fail("Schedule Overlap alert message not displayed",false);
+			}
+		}else{
+			SimpleUtils.fail("Schedule Overlap pop up not displayed",false);
+		}
+		return flag;
+	}
+
+
+	public void verifyScheduleStatusAsOpen() throws Exception {
+	    boolean flag = true;
+	    if(areListElementVisible(infoIcon)){
+	        for(int i=0; i<infoIcon.size();i++){
+                if(areListElementVisible(workerStatus,5)){
+                    if(workerStatus.get(i).getText().toLowerCase().contains("Open".toLowerCase())){
+                        click(infoIcon.get(i));
+                        flag = verifyShiftDurationInComplianceImageIconPopUp(true);
+						if(flag){
+							SimpleUtils.pass("Worker status " +workerStatus.get(i).getText() + " matches with the expected result");
+							break;
+						}
+                    }else{
+                        flag = false;
+                    }
+                }else{
+                    SimpleUtils.fail("Worker status not available on the page",true);
+                }
+            }
+        }else{
+            SimpleUtils.fail("There is no image icon available on the page",false);
+        }
+
+        if(!flag) {
+			SimpleUtils.report("Worker status does not match with the expected result");
+		}
+
+    }
+
+
+    public boolean verifyShiftDurationInComplianceImageIconPopUp(boolean openStatus) throws Exception{
+	    boolean flag = true;
+	    if(openStatus){
+			shiftDurationVerification(getScheduleHoursTimeDuration());
+		}else{
+			String scheduledHoursStartTime = MyThreadLocal.getScheduleHoursStartTime();
+			String scheduledHoursEndTime = MyThreadLocal.getScheduleHoursEndTime();
+			String scheduleTimeDuration = scheduledHoursStartTime + "-" + scheduledHoursEndTime;
+			shiftDurationVerification(scheduleTimeDuration);
+		}
+
+        return flag;
+    }
+
+
+
+	public void verifyScheduleStatusAsTeamMember() throws Exception {
+		boolean flag = true;
+		if(areListElementVisible(infoIcon)){
+			for(int i=0; i<infoIcon.size();i++){
+				if(areListElementVisible(workerStatus,5)){
+					if(workerStatus.get(i).getText().replace(" ","").toLowerCase().contains(getTeamMemberName().toLowerCase())){
+						click(infoIcon.get(i));
+						flag = verifyShiftDurationInComplianceImageIconPopUp(false);
+						if(flag){
+							SimpleUtils.pass("Worker status " +workerStatus.get(i).getText() + " matches with the expected result");
+							break;
+						}
+					}else{
+						flag = false;
+					}
+				}else{
+					SimpleUtils.fail("Worker status not available on the page",true);
+				}
+			}
+		}else{
+			SimpleUtils.fail("There is no image icon available on the page",false);
+		}
+
+		if(!flag) {
+			SimpleUtils.report("Worker status does not match with the expected result");
+		}
+
+	}
+
+
+	public void shiftDurationVerification(String scheduleHourTimeDuration) throws Exception{
+		if (isElementLoaded(shiftDurationInPopUp,5)){
+			if(shiftDurationInPopUp.getText().toLowerCase().equals(scheduleHourTimeDuration.toLowerCase())){
+				SimpleUtils.pass("Shift Time Duration " + shiftDurationInPopUp.getText().toLowerCase() + " matches with "+getScheduleHoursTimeDuration().toLowerCase());
+			}else{
+				SimpleUtils.report("Shift Time Duration value is " + shiftDurationInPopUp.getText().toLowerCase());
+			}
+		}else{
+			SimpleUtils.fail("Compliance Image icon Pop up was unable to open Successfully",false);
+		}
+	}
+
+
+	//added by Nishant
+
+	public String getActiveAndNextDay() throws Exception{
+		WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
+		String activeDay = "";
+		if(isElementLoaded(activeWeek)){
+			activeDay = activeWeek.getText().replace("\n", " ").substring(0,3);
+		}
+		return activeDay;
+	}
+
+	@FindBy(css = "tr[ng-repeat='day in summary.workingHours'] td:nth-child(1)")
+	private List<WebElement> operatingHoursScheduleDay;
+
+	@FindBy(css = "tr[ng-repeat='day in summary.workingHours'] td.text-right.ng-binding")
+	private List<WebElement> scheduleOperatingHrsTimeDuration;
+
+
+	public HashMap<String, String> getOperatingHrsValue(String day) throws Exception {
+		String currentDay = null;
+		String nextDay = null;
+		String finalDay = null;
+		HashMap<String, String>  activeDayAndOperatingHrs = new HashMap<>();
+
+		if(areListElementVisible(operatingHoursRows,5) &&
+				areListElementVisible(operatingHoursScheduleDay,5) &&
+				areListElementVisible(scheduleOperatingHrsTimeDuration,5)){
+			for(int i =0; i<operatingHoursRows.size();i++){
+				if(i == operatingHoursRows.size()-1){
+					if(operatingHoursScheduleDay.get(i).getText().substring(0,3).equalsIgnoreCase(day)){
+						currentDay = day;
+						nextDay = operatingHoursScheduleDay.get(0).getText().substring(0,3);
+						activeDayAndOperatingHrs.put("ScheduleOperatingHrs" , currentDay + "-" + scheduleOperatingHrsTimeDuration.get(i).getText());
+						SimpleUtils.pass("Current day in Schedule " + day + " matches" +
+								" with Operation hours Table " + operatingHoursScheduleDay.get(i).getText().substring(0,3));
+						break;
+					}else{
+						SimpleUtils.fail("Current day in Schedule " + day + " does not match" +
+								" with Operation hours Table " + operatingHoursScheduleDay.get(i).getText().substring(0,3),false);
+					}
+				}else if(operatingHoursScheduleDay.get(i).getText().substring(0,3).equalsIgnoreCase(day)){
+					currentDay = day;
+					nextDay = operatingHoursScheduleDay.get(i+1).getText().substring(0,3);
+					activeDayAndOperatingHrs.put("ScheduleOperatingHrs" , currentDay + "-" + scheduleOperatingHrsTimeDuration.get(i).getText());
+					SimpleUtils.pass("Current day in Schedule " + day + " matches" +
+							" with Operation hours Table " + operatingHoursScheduleDay.get(i).getText().substring(0,3));
+					break;
+				}
+
+			}
+		}else{
+			SimpleUtils.fail("Operating hours table not loaded Successfully",false);
+		}
+		return activeDayAndOperatingHrs;
+	}
+
+
+	public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception {
+		if(startingPoint.equalsIgnoreCase("End")){
+			if(isElementLoaded(sliderNotchEnd,10) && sliderDroppableCount.size()>0){
+				SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
+				WebElement element = getDriver().findElement(By.xpath("//div[contains(@class,'lgn-time-slider-notch-label ng-binding ng-scope PM')][text()="+Integer.parseInt(shiftTime)+"]"));
+				mouseHoverDragandDrop(sliderNotchEnd,element);
+			} else{
+				SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
+			}
+		}else if(startingPoint.equalsIgnoreCase("Start")){
+			if(isElementLoaded(sliderNotchStart,10) && sliderDroppableCount.size()>0){
+				SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
+				WebElement element = getDriver().findElement(By.xpath("//div[contains(@class,'lgn-time-slider-notch-label ng-binding ng-scope AM')][text()="+Integer.parseInt(shiftTime)+"]"));
+				mouseHoverDragandDrop(sliderNotchStart,element);
+			} else{
+				SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
+			}
+		}
+	}
+
+
+	public void clickOnNextDaySchedule(String activeDay) throws Exception {
+		List<WebElement> activeWeek = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+		for(int i=0; i<activeWeek.size();i++){
+			String currentDay = activeWeek.get(i).getText().replace("\n", " ").substring(0,3);
+			if(currentDay.equalsIgnoreCase(activeDay)){
+				if(i== activeWeek.size()-1){
+				navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(),
+						ScheduleNewUITest.weekCount.One.getValue());
+				waitForSeconds(3);
+				}else{
+					click(activeWeek.get(i+1));
+				}
+			}
+		}
+
+	}
+
+	public void selectTeamMembersOptionForSchedule() throws Exception {
+		if(isElementEnabled(btnSearchTeamMember,5)){
+			click(btnSearchTeamMember);
+			if(isElementLoaded(textSearch,5)) {
+				searchText(propertySearchTeamMember.get("AssignTeamMember"));
+			}
+		}else{
+			SimpleUtils.fail("Select Team member option not available on page",false);
+		}
+
+	}
 
 }

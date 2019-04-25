@@ -2,8 +2,14 @@ package com.legion.pages;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -364,6 +370,57 @@ public class BasePage {
 
         return element;
     }
+
+
+    public void selectDate(int daysFromToday) {
+        LocalDate now = LocalDate.now();
+        LocalDate wanted = LocalDate.now().plusDays(daysFromToday);
+        WebElement btnNextMonth = null;
+        int numClicks = wanted.getMonthValue() - now.getMonthValue();
+        if (numClicks < 0) {
+            numClicks = daysFromToday / 30;
+        }
+        if (numClicks >0){
+            try{
+                btnNextMonth = getDriver().findElement(By.cssSelector("span.icon.ion-chevron-right"));
+            }catch(Exception e){
+                SimpleUtils.fail("Not able to click Next month arrow",false);
+            }
+        }
+
+        for (int i = 0; i < numClicks; i++) {
+            click(btnNextMonth);
+        }
+
+        List<WebElement> mCalendarDates = getDriver().findElements(By.cssSelector("div.ranged-calendar__day.ng-binding.ng-scope.real-day"));
+        for (WebElement mDate : mCalendarDates) {
+            if (Integer.parseInt(mDate.getText()) == wanted.getDayOfMonth()) {
+                mDate.click();
+                return;
+            }
+        }
+    }
+
+
+    public HashMap<String,String> getTimeOffDate(int fromDate, int toDate) {
+        HashMap<String, String> timeOffDate = new HashMap<>();
+        String timeOffStartDate = getDateCalculation(fromDate);
+        String timeOffEndDate = getDateCalculation(toDate);
+        timeOffDate.put("startDateTimeOff", timeOffStartDate);
+        timeOffDate.put("endDateTimeOff", timeOffEndDate);
+        return timeOffDate;
+    }
+
+    public String getDateCalculation(int daysFromToday){
+
+        LocalDate now = LocalDate.now();
+        LocalDate wanted = LocalDate.now().plusDays(daysFromToday);
+        String dayOfWeek = wanted.getDayOfWeek().toString().substring(0,1) + wanted.getDayOfWeek().toString().substring(1,3).toLowerCase();
+        String monthName = wanted.getMonth().toString().substring(0,1) + wanted.getMonth().toString().substring(1,3).toLowerCase();
+        String timeOffDate = dayOfWeek + ", " + monthName + " " + wanted.getDayOfMonth();
+        return timeOffDate;
+    }
+
 
 
 }
