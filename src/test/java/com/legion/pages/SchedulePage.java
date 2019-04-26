@@ -123,8 +123,8 @@ public interface SchedulePage {
 	public void verifyScheduledHourNTMCountIsCorrect() throws Exception;
 	public void complianceShiftSmartCard() throws Exception;
 	public void viewProfile();
-	public void changeWorkerRole();
-	public void assignTeamMember();
+	public void changeWorkerRole() throws Exception;
+	public void assignTeamMember() throws Exception;
 	public void convertToOpenShift();
 	public void beforeEdit();
 	public void selectTeamMembersOptionForOverlappingSchedule() throws Exception;
