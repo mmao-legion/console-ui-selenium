@@ -41,7 +41,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(className="upcoming-shift-container")
 	private WebElement dashboardUpcomingShiftContainer;
 	
-	@FindBy(css="[ng-if=\"daySummary($index) && weeklyScheduleData($index) && canViewGuidance()\"]")
+	@FindBy(css="div[ng-if*='daySummary($index)) && weeklyScheduleData($index) && canViewGuidance()']")
 	private WebElement dashboardTodaysForecastSection;
 	
 	@FindBy(css="[ng-if=\"graphData($index)\"]")

@@ -74,9 +74,9 @@ public interface ControlsNewUIPage {
 
 	public String getSchedulingPoliciesActiveLocation() throws Exception;
 
-	public void updateSchedulePublishWindow(String publishWindowAdvanceWeeks) throws Exception;
+	public void updateSchedulePublishWindow(String publishWindowAdvanceWeeks, boolean preserveSetting, boolean overwriteSetting) throws Exception;
 
-	public void updateSchedulePlanningWindow(String planningWindowAdvanceWeeks) throws Exception;
+	public void updateSchedulePlanningWindow(String planningWindowAdvanceWeeks , boolean preserveSetting, boolean overwriteSetting) throws Exception;
 
 	public String getSchedulePlanningWindowWeeks() throws Exception;
 
@@ -206,5 +206,24 @@ public interface ControlsNewUIPage {
 
 	public HashMap<String, ArrayList<String>> verifyUpdateControlsHolidayHoursPopupEditableOrNonEditableFields() throws Exception;
 
-	
+	public void verifyAllLocations(String txt) throws Exception;
+    public void verifySearchLocations(String searchText) throws Exception;
+	public boolean isControlsCompanyProfileCard() throws Exception;
+	public boolean isControlsSchedulingPoliciesCard() throws Exception;
+	public boolean isControlsSchedulingCollaborationCard() throws Exception;
+	public boolean isControlsComplianceCard() throws Exception;
+	public boolean isControlsUsersAndRolesCard() throws Exception;
+	public boolean isControlsTaskAndWorkRolesCard() throws Exception;
+	public boolean isControlsWorkingHoursCard() throws Exception;
+	public boolean isControlsLocationsCard() throws Exception;
+	public void verifySchedulePublishWindow(String publishWindowAdvanceWeeks, String publishWindowQuestion, String userCredential) throws Exception ;
+	public void getSchedulePublishWindowWeeksDropDownValues() throws Exception;
+	public List<String> getSchedulePublishWindowValueAtDifferentLocations(boolean schedulePublishWindowWeeks) throws Exception;
+	public void getSchedulePlanningWindowWeeksDropDownValues() throws Exception;
+	public void verifySchedulePublishWindowUpdationValues(String publishWindowAdvanceWeeks, List<String>
+			selectionOptionLabelAfterUpdation) throws Exception;
+	public void verifySchedulePlanningWindow(String planningWindowAdvanceWeeks,
+											 String planningWindowQuestion, String userCredential) throws Exception;
+	public void verifySchedulePlanningWindowUpdationValues(String planningWindowAdvanceWeeks, List<String> selectionOptionLabelAfterUpdation)
+			throws Exception;
 }
