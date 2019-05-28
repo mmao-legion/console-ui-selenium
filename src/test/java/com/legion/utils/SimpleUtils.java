@@ -76,17 +76,17 @@ public class SimpleUtils {
     
     public static void fail(String message, boolean continueExecution, String... severity) {
 		SimpleUtils.addTestResultIntoTestRail(5, message);
-        if (continueExecution) {
-            try {
-                assertTrue(false);
-            } catch (Throwable e) {
-                addVerificationFailure(e);
-                ExtentTestManager.getTest().log(Status.ERROR, message);      
-            }
-        } else {
-        	ExtentTestManager.getTest().log(Status.FAIL, message);
-            throw new AssertionError(message);
-        }
+		if (continueExecution) {
+			try {
+				assertTrue(false);
+			} catch (Throwable e) {
+				addVerificationFailure(e);
+				ExtentTestManager.getTest().log(Status.ERROR, message);
+			}
+		} else {
+			ExtentTestManager.getTest().log(Status.FAIL, message);
+			throw new AssertionError(message);
+		}
     }
     
     private static void addVerificationFailure(Throwable e) {
