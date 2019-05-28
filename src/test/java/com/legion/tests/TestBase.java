@@ -201,8 +201,9 @@ public abstract class TestBase {
             + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
         extent.setSystemInfo(method.getName(), enterpriseName.toString());
         setTestRailRunId(0);
-        int testCaseId = SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,sectionId);
-        setTestCaseId(testCaseId);
+//        int testCaseId = SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,sectionId);
+////        SimpleUtils.addNUpdateTestCaseIntoTestRun(testName,sectionId,);
+//        setTestCaseId(testCaseId);
         setCurrentMethod(method);
         setBrowserNeeded(true);
         setCurrentTestMethodName(method.getName());
@@ -355,70 +356,68 @@ public abstract class TestBase {
     	LoginPage loginPage = pageFactory.createConsoleLoginPage();
     	loginPage.loginToLegionWithCredential(username, Password);
     	LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-//    	locationSelectorPage.changeLocation(location);
+    	locationSelectorPage.changeLocation(location);
 	    boolean isLoginDone = loginPage.isLoginDone();
 	    loginPage.verifyLoginDone(isLoginDone, location);
     }
 
 	public abstract void firstTest(Method testMethod, Object[] params) throws Exception;
-		// TODO Auto-generated method stub
+    // TODO Auto-generated method stub
 
 
-	// Method for Start the appium server and arguments should be appium installation path upto node.exe and appium.js
-		public static void appiumServerStart(String appiumServerPath, String appiumJSPath){
-			service=AppiumDriverLocalService.buildService(new AppiumServiceBuilder()
-					.usingDriverExecutable(new File(appiumServerPath))
-					.withAppiumJS(new File(appiumJSPath)));
-		}
+    // Method for Start the appium server and arguments should be appium installation path upto node.exe and appium.js
+    public static void appiumServerStart(String appiumServerPath, String appiumJSPath){
+        service=AppiumDriverLocalService.buildService(new AppiumServiceBuilder()
+                .usingDriverExecutable(new File(appiumServerPath))
+                .withAppiumJS(new File(appiumJSPath)));
+    }
 
 		//Start appium programatically
-		public static void startServer() {
-			DesiredCapabilities cap = new DesiredCapabilities();
-			cap.setCapability("noReset", "false");
-			//Build the Appium service
-			builder = new AppiumServiceBuilder();
-			builder.withIPAddress("127.0.0.1");
-			builder.usingPort(4723);
-			builder.withCapabilities(cap);
-			builder.withArgument(GeneralServerFlag.SESSION_OVERRIDE);
-			builder.withArgument(GeneralServerFlag.LOG_LEVEL,"error");
-			//Start the server with the builder
-			service = AppiumDriverLocalService.buildService(builder);
-			service.start();
-		}
+    public static void startServer() {
+        DesiredCapabilities cap = new DesiredCapabilities();
+        cap.setCapability("noReset", "false");
+        //Build the Appium service
+        builder = new AppiumServiceBuilder();
+        builder.withIPAddress("127.0.0.1");
+        builder.usingPort(4723);
+        builder.withCapabilities(cap);
+        builder.withArgument(GeneralServerFlag.SESSION_OVERRIDE);
+        builder.withArgument(GeneralServerFlag.LOG_LEVEL,"error");
+        //Start the server with the builder
+        service = AppiumDriverLocalService.buildService(builder);
+        service.start();
+    }
 
 		//Stop appium programatically
-		public void stopServer() {
-			Runtime runtime = Runtime.getRuntime();
-			try {
-				runtime.exec("taskkill /F /IM node.exe");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-
-		public void runScriptOnHeadlessOrBrowser(ChromeOptions options){
-            options.addArguments("disable-infobars");
-		    options.addArguments("test-type", "new-window", "disable-extensions","start-maximized");
-            Map<String, Object> prefs = new HashMap<>();
-            prefs.put("credentials_enable_service", false);
-            prefs.put("password_manager_enabled", false);
-            options.setExperimentalOption("prefs", prefs);
-            options.addArguments("disable-logging", "silent", "ignore-certificate-errors");
-            options.setExperimentalOption("useAutomationExtension", false);
-            options.setExperimentalOption("excludeSwitches",
-                    Collections.singletonList("enable-automation"));
-            options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-            options.setCapability(ChromeOptions.CAPABILITY, options);
-            options.setCapability("chrome.switches", Arrays.asList("--disable-extensions", "--disable-logging",
-                    "--ignore-certificate-errors", "--log-level=0", "--silent"));
-            options.setCapability("silent", true);
-            System.setProperty("webdriver.chrome.silentOutput", "true");
-            setDriver(new ChromeDriver(options));
+    public void stopServer() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            runtime.exec("taskkill /F /IM node.exe");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
 
+    public void runScriptOnHeadlessOrBrowser(ChromeOptions options){
+        options.addArguments("disable-infobars");
+        options.addArguments("test-type", "new-window", "disable-extensions","start-maximized");
+        Map<String, Object> prefs = new HashMap<>();
+        prefs.put("credentials_enable_service", false);
+        prefs.put("password_manager_enabled", false);
+        options.setExperimentalOption("prefs", prefs);
+        options.addArguments("disable-logging", "silent", "ignore-certificate-errors");
+        options.setExperimentalOption("useAutomationExtension", false);
+        options.setExperimentalOption("excludeSwitches",
+                Collections.singletonList("enable-automation"));
+        options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+        options.setCapability(ChromeOptions.CAPABILITY, options);
+        options.setCapability("chrome.switches", Arrays.asList("--disable-extensions", "--disable-logging",
+                "--ignore-certificate-errors", "--log-level=0", "--silent"));
+        options.setCapability("silent", true);
+        System.setProperty("webdriver.chrome.silentOutput", "true");
+        setDriver(new ChromeDriver(options));
+    }
 
 
 }

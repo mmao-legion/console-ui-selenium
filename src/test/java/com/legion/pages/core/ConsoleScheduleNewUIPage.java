@@ -331,7 +331,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	//added by Naval
 
-    @FindBy(css = "ng-form.input-form.ng-pristine.ng-valid-minlength")
+    @FindBy(css = "input-field[placeholder='None'] ng-form.input-form.ng-pristine.ng-valid-minlength")
     private WebElement filterButton;
 
     @FindBy(css = "[ng-repeat=\"(key, opts) in $ctrl.displayFilters\"]")
@@ -810,7 +810,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public Boolean isWeekPublished() throws Exception {
-        if (isElementLoaded(publishSheduleButton)) {
+        if (isElementLoaded(publishSheduleButton,5)) {
             if (publishSheduleButton.isEnabled()) {
                 return false;
             } else {
@@ -916,7 +916,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public void clickOnEditButton() throws Exception {
-        if (isElementEnabled(edit)) {
+        if (isElementEnabled(edit,2)) {
             click(edit);
             if (isElementLoaded(editAnywayPopupButton, 2)) {
                 click(editAnywayPopupButton);
@@ -1548,7 +1548,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void unCheckFilters(ArrayList<WebElement> filterElements) {
         if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
             click(filterButton);
-
+        waitForSeconds(2);
         for (WebElement filterElement : filterElements) {
             WebElement filterCheckBox = filterElement.findElement(By.cssSelector("input[type=\"checkbox\"]"));
             String elementClasses = filterCheckBox.getAttribute("class").toLowerCase();
@@ -1599,7 +1599,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             float totalShiftSizeForWeek = calcTotalScheduledHourForDayInWeekView();
 //            System.out.println("sum" + totalShiftSizeForWeek);
             if (totalShiftSizeForWeek == activeWeekScheduleHoursOnCard) {
-                SimpleUtils.pass("Sum of all the shifts in a week equal to Week Schedule Hours! ('" + totalShiftSizeForWeek + "/" + activeWeekScheduleHoursOnCard + "')");
+                SimpleUtils.pass("Sum of all the shifts in a week equal to Week Schedule Hours!('" + totalShiftSizeForWeek + "/" + activeWeekScheduleHoursOnCard + "')");
                 return true;
             } else {
                 SimpleUtils.fail("Sum of all the shifts in an week is not equal to Week scheduled Hour!('" + totalShiftSizeForWeek + "/" + activeWeekScheduleHoursOnCard + "')", false);
@@ -2079,7 +2079,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public boolean getScheduleStatus() throws Exception {
         boolean ScheduleStatus = false;
 //		waitForSeconds(5);
-		if(areListElementVisible(scheduleSearchTeamMemberStatus,5) && radionBtnSearchTeamMembers.size() == scheduleSearchTeamMemberStatus.size()){
+		if(areListElementVisible(scheduleSearchTeamMemberStatus,5)){
 			for(int i=0; i<scheduleSearchTeamMemberStatus.size();i++){
 				if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Available")
 						|| scheduleSearchTeamMemberStatus.get(i).getText().contains("Unknown")){

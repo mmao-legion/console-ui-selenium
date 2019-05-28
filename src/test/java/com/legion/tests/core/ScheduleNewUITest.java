@@ -2124,7 +2124,6 @@ public class ScheduleNewUITest extends TestBase {
 			throws Exception {
 		String day = null;
 		int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
-//	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -2169,7 +2168,7 @@ public class ScheduleNewUITest extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Schedule Overlapping")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyScheduleAsManagerOrSystemGeneartedAsInternalAdmin(String browser, String username, String password, String location)
+	public void verifyScheduleAsManagerOrSystemGeneratedAsInternalAdmin(String browser, String username, String password, String location)
 			throws Exception {
 		String day = null;
 		int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
@@ -2210,7 +2209,6 @@ public class ScheduleNewUITest extends TestBase {
 		schedulePage.moveSliderAtCertainPoint(shiftStartTime, shiftSliderDroppable.StartPoint.getValue());
 		validateAssignTeamMemberPageAndSaveSchedule();
 	}
-
 
 	public void validateAssignTeamMemberPageAndSaveSchedule() throws Exception{
 		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));

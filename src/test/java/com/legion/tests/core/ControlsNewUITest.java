@@ -106,7 +106,7 @@ public class ControlsNewUITest extends TestBase{
 	}
 	
 	private static HashMap<String, String> controlsLocationDetail = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ControlsPageLocationDetail.json");
-	
+	private static HashMap<String, String> schedulingPoliciesData = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SchedulingPoliciesData.json");
 	//
 	
 	
@@ -539,8 +539,8 @@ public class ControlsNewUITest extends TestBase{
   	  String isShowTimeOffReasons = schedulingPoliciesData.get("Is_Show_TimeOff_Reasons");
 
       //Updating Scheduling Policies 'Schedule' Section
-      controlsNewUIPage.updateSchedulePublishWindow(publishWindowAdvanceWeeks);
-      controlsNewUIPage.updateSchedulePlanningWindow(planningWindowAdvanceWeeks);
+      controlsNewUIPage.updateSchedulePublishWindow(publishWindowAdvanceWeeks,true,true);
+      controlsNewUIPage.updateSchedulePlanningWindow(planningWindowAdvanceWeeks, false, false);
       controlsNewUIPage.updateSchedulingPoliciesFirstDayOfWeek(firstDayOfWeek);
       controlsNewUIPage.updateEarliestOpeningTime(openingTime);
       controlsNewUIPage.updateLatestClosingTime(closingTime);
@@ -569,8 +569,8 @@ public class ControlsNewUITest extends TestBase{
       controlsNewUIPage.clickOnGlobalLocationButton();
       activeLocation = controlsNewUIPage.getSchedulingPoliciesActiveLocation();
       SimpleUtils.report("Controls Page: Scheduling Policies Active Location '"+ activeLocation +"'.");
-      controlsNewUIPage.updateSchedulePublishWindow(publishWindowAdvanceWeeks);
-      controlsNewUIPage.updateSchedulePlanningWindow(planningWindowAdvanceWeeks);
+      controlsNewUIPage.updateSchedulePublishWindow(publishWindowAdvanceWeeks,true,true);
+      controlsNewUIPage.updateSchedulePlanningWindow(planningWindowAdvanceWeeks,true, false);
       controlsNewUIPage.updateSchedulingPoliciesFirstDayOfWeek(firstDayOfWeek);
       controlsNewUIPage.updateEarliestOpeningTime(openingTime);
       controlsNewUIPage.updateLatestClosingTime(closingTime);
@@ -985,7 +985,7 @@ public class ControlsNewUITest extends TestBase{
 	    			 +"' Section Input fields Editable or Non Editable details.<br>"
 	    			 +editableOrNonEditableFieldsValueTable);
 	     }
-		
+
 	}
 	
 	private void verifyingScheduleCollaborationFieldsEditableOrNot() throws Exception {
@@ -1138,7 +1138,7 @@ public class ControlsNewUITest extends TestBase{
 		else
 			SimpleUtils.fail("Tasks and Work Roles Section: 'Labor Calculation' Tab not loaded.", true);
 	}
-	
+
 	private void verifyingTasksAndWorkRolesAddWorkRolePageEditableOrNonEditableFields() throws Exception {
 		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 		Thread.sleep(2000);
@@ -1165,5 +1165,241 @@ public class ControlsNewUITest extends TestBase{
     	SimpleUtils.pass("Controls Working Hours Section: Holiday Hours 'Edit' popup Editable or Not Editable fields.<br>"
     			 +editableOrNonEditableFieldsValueTable);
 	}
+
+
+	//added by Nishant
+
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Nishant")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the breadcrumb on controls tab")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyControlsBreadcrumbAsInternalAdmin(String browser, String username, String password, String location)
+			throws Exception {
+
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		//navigateToControlsSchedulingPolicies(controlsNewUIPage);
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		SimpleUtils.assertOnFail("Control Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		controlsNewUIPage.verifyAllLocations(schedulingPoliciesData.get("ALL_LOCATIONS"));
+		controlsNewUIPage.verifySearchLocations(schedulingPoliciesData.get("SEARCH_LOCATION_TEXT"));
+	}
+
+
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Nishant")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the options available when Global selected")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyOptionWhenGlobalSelectedAsInternalAdmin(String browser, String username, String password, String location)
+			throws Exception {
+
+		String fileName = "UsersCredentials.json";
+		fileName=SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+		Object[][] teamLeadCredentials = userCredentials.get("TeamLead");
+		Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+		Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		SimpleUtils.pass("<b>Legion Application User logged in as role 'Internal Admin'</b>.");
+		SimpleUtils.assertOnFail("Control Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		// Validate Controls Company Profile Section
+		boolean isCompanyProfileSection = controlsNewUIPage.isControlsCompanyProfileCard();
+		SimpleUtils.assertOnFail("Controls Page: Company Profile Section not Loaded.", isCompanyProfileSection, true);
+		verifyControlsAllSection();
+		loginPage.logOut();
+
+		/*
+		 * Login as Store Manager
+		 */
+		loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1]),
+				String.valueOf(storeManagerCredentials[0][2]));
+		SimpleUtils.pass("<b>Legion Application User logged in as role 'Store Manager'</b>.");
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		SimpleUtils.assertOnFail("Control Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		verifyControlsAllSection();
+	}
+
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Nishant")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate functioning of Controls option available")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateSchedulingPoliciesControlOptionAsInternalAdmin(String browser, String username, String password, String location)
+			throws Exception {
+
+		String fileName = "UsersCredentials.json";
+		fileName=SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+		Object[][] teamLeadCredentials = userCredentials.get("TeamLead");
+		Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+		Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		verifyControlBreadcrumbForSchedulingPolicies();
+		loginPage.logOut();
+
+		/*
+		 * Login as Store Manager
+		 */
+		loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1]),
+				String.valueOf(storeManagerCredentials[0][2]));
+		SimpleUtils.pass("<b>Legion Application User logged in as role 'Store Manager'</b>.");
+		verifyControlBreadcrumbForSchedulingPolicies();
+	}
+
+
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Nishant")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the Schedule Publish Window")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateSchedulePublishWindowAsInternalAdmin(String browser, String username, String password, String location)
+			throws Exception {
+
+		String fileName = "UsersCredentials.json";
+		fileName=SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+		Object[][] teamLeadCredentials = userCredentials.get("TeamLead");
+		Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+		Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		String publishWindowAdvanceWeeks = schedulingPoliciesData.get("Schedule_Publish_Window");
+		String publishWindowQuestion = schedulingPoliciesData.get("Schedule_Publish_Window_Question");
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		SimpleUtils.assertOnFail("Control Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		boolean isSchedulingPolicies = controlsNewUIPage.isControlsSchedulingPoliciesLoaded();
+		SimpleUtils.assertOnFail("Controls Page: Scheduling Policies Section not Loaded.", isSchedulingPolicies, true);
+		controlsNewUIPage.verifySchedulePublishWindow(publishWindowAdvanceWeeks, publishWindowQuestion,"InternalAdmin");
+		String selectedOptionLabel = controlsNewUIPage.getSchedulePublishWindowWeeks();
+		controlsNewUIPage.getSchedulePublishWindowWeeksDropDownValues();
+		controlsNewUIPage.updateSchedulePublishWindow(publishWindowAdvanceWeeks,false,false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		controlsNewUIPage.verifySchedulePublishWindow(publishWindowAdvanceWeeks, publishWindowQuestion,"InternalAdmin");
+		controlsNewUIPage.updateSchedulePublishWindow(publishWindowAdvanceWeeks,true,false);
+		List<String> selectionOptionLabelAfterUpdation = controlsNewUIPage.getSchedulePublishWindowValueAtDifferentLocations(true);
+		controlsNewUIPage.verifySchedulePublishWindowUpdationValues(publishWindowAdvanceWeeks, selectionOptionLabelAfterUpdation);
+		loginPage.logOut();
+
+		/*
+		 * Login as Store Manager
+		 */
+		loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1]),
+				String.valueOf(storeManagerCredentials[0][2]));
+		SimpleUtils.pass("<b>Legion Application User logged in as role 'Store Manager'</b>.");
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		SimpleUtils.assertOnFail("Control Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		boolean isSchedulingPolicies1 = controlsNewUIPage.isControlsSchedulingPoliciesLoaded();
+		SimpleUtils.assertOnFail("Controls Page: Scheduling Policies Section not Loaded.", isSchedulingPolicies1, true);
+		controlsNewUIPage.verifySchedulePublishWindow(publishWindowAdvanceWeeks, publishWindowQuestion,"StoreManager");
+	}
+
+
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Nishant")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the Schedule Publish Window")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateSchedulePlanningWindowAsInternalAdmin(String browser, String username, String password, String location)
+			throws Exception {
+
+		String fileName = "UsersCredentials.json";
+		fileName=SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+		Object[][] teamLeadCredentials = userCredentials.get("TeamLead");
+		Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+		Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		String planningWindowAdvanceWeeks = schedulingPoliciesData.get("Schedule_Planning_Window");
+		String planningWindowQuestion = schedulingPoliciesData.get("Schedule_Planning_Window_Question");
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		SimpleUtils.assertOnFail("Control Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		boolean isSchedulingPolicies = controlsNewUIPage.isControlsSchedulingPoliciesLoaded();
+		SimpleUtils.assertOnFail("Controls Page: Scheduling Policies Section not Loaded.", isSchedulingPolicies, true);
+		controlsNewUIPage.verifySchedulePlanningWindow(planningWindowAdvanceWeeks, planningWindowQuestion,"InternalAdmin");
+		String selectedOptionLabel = controlsNewUIPage.getSchedulePlanningWindowWeeks();
+		controlsNewUIPage.getSchedulePlanningWindowWeeksDropDownValues();
+		controlsNewUIPage.updateSchedulePlanningWindow(planningWindowAdvanceWeeks,false,false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		controlsNewUIPage.verifySchedulePlanningWindow(planningWindowAdvanceWeeks, planningWindowQuestion,"InternalAdmin");
+		controlsNewUIPage.updateSchedulePlanningWindow(planningWindowAdvanceWeeks,false,true);
+		List<String> selectionOptionLabelAfterUpdation = controlsNewUIPage.getSchedulePublishWindowValueAtDifferentLocations(false);
+		controlsNewUIPage.verifySchedulePlanningWindowUpdationValues(planningWindowAdvanceWeeks, selectionOptionLabelAfterUpdation);
+//		loginPage.logOut();
+//
+//		/*
+//		 * Login as Store Manager
+//		 */
+//		loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1]),
+//				String.valueOf(storeManagerCredentials[0][2]));
+//		SimpleUtils.pass("<b>Legion Application User logged in as role 'Store Manager'</b>.");
+//		controlsNewUIPage.clickOnControlsConsoleMenu();
+//		SimpleUtils.assertOnFail("Control Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+//		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+//		boolean isSchedulingPolicies1 = controlsNewUIPage.isControlsSchedulingPoliciesLoaded();
+//		SimpleUtils.assertOnFail("Controls Page: Scheduling Policies Section not Loaded.", isSchedulingPolicies1, true);
+//		controlsNewUIPage.verifySchedulePlanningWindow(planningWindowAdvanceWeeks, planningWindowAdvanceWeeks,"StoreManager");
+	}
+
+
+
+	public void verifyControlBreadcrumbForSchedulingPolicies() throws Exception {
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		boolean isSchedulingPolicies = controlsNewUIPage.isControlsSchedulingPoliciesLoaded();
+		SimpleUtils.assertOnFail("Controls Page: Scheduling Policies Section not Loaded.", isSchedulingPolicies, true);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		controlsNewUIPage.verifyAllLocations(schedulingPoliciesData.get("ALL_LOCATIONS"));
+		controlsNewUIPage.verifySearchLocations(schedulingPoliciesData.get("SEARCH_LOCATION_TEXT"));
+	}
+
+
+
+	public void verifyControlsAllSection() throws Exception{
+		// Validate Controls Scheduling Profile Section
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		boolean isSchedulingPoliciesSection = controlsNewUIPage.isControlsSchedulingPoliciesCard();
+		SimpleUtils.assertOnFail("Controls Page: Scheduling Profile Section not Loaded.", isSchedulingPoliciesSection, true);
+
+		// Validate Controls Scheduling Collaboration Section
+		boolean isSchedulingCollaborationSection = controlsNewUIPage.isControlsSchedulingCollaborationCard();
+		SimpleUtils.assertOnFail("Controls Page: Scheduling Collaboration Section not Loaded.", isSchedulingCollaborationSection, true);
+
+		// Validate Controls Compliance Section
+		boolean isControlsComplianceCardSection = controlsNewUIPage.isControlsComplianceCard();
+		SimpleUtils.assertOnFail("Controls Page: Compliance Section not Loaded.", isControlsComplianceCardSection, true);
+
+		// Validate Controls User And Role Section
+		boolean isUsersAndRolesSection = controlsNewUIPage.isControlsUsersAndRolesCard();
+		SimpleUtils.assertOnFail("Controls Page: User And Role Section not Loaded.", isUsersAndRolesSection, true);
+
+		// Validate Controls Task And Work Roles Section
+		boolean isTaskAndWorkRolesSection = controlsNewUIPage.isControlsTaskAndWorkRolesCard();
+		SimpleUtils.assertOnFail("Controls Page: Task And Work Roles Section not Loaded.", isTaskAndWorkRolesSection, true);
+
+		// Validate Controls Company Profile Section
+		boolean isWorkingHoursSection = controlsNewUIPage.isControlsWorkingHoursCard();
+		SimpleUtils.assertOnFail("Controls Page: Working Hours Section not Loaded.", isWorkingHoursSection, true);
+
+		// Validate Controls Location Section
+		boolean isLocationSection = controlsNewUIPage.isControlsLocationsCard();
+		SimpleUtils.assertOnFail("Controls Page: Location Section not Loaded.", isLocationSection, true);
+	}
+
+
+
 	
 }
