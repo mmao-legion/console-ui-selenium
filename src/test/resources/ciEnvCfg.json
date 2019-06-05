@@ -3,7 +3,7 @@
   "FIREFOX_DRIVER_PATH": "/home/circleci/project/geckodriver/geckodriver",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://staging-enterprise.dev.legion.work/",
-  "Screenshot_Path": "/home/circleci/project/screenshot",
+  "Screenshot_Path": "/home/circleci/project/screenshots",
   "ENTERPRISE" : "LegionCoffee2",
   "Coffee_Enterprise" : "LegionCoffee",
   "LegionTech_Enterprise" : "LegionTech",
