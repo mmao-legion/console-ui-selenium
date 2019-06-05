@@ -1,25 +1,7 @@
 package com.legion.tests.core;
 
-import java.lang.reflect.Method;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
-import com.legion.pages.ControlsNewUIPage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
@@ -33,18 +15,22 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.annotations.UseAsTestRailId;
-import com.legion.tests.core.ScheduleNewUITest.SchedulePageSubTabText;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
-
-import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.getTeamMemberName;
-import static com.legion.utils.MyThreadLocal.setTeamMemberName;
+import java.lang.reflect.Method;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.openqa.selenium.WebElement;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 public class ScheduleNewUITest extends TestBase {
-	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
 	private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
 	private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
 	private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");

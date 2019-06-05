@@ -3,6 +3,7 @@ package com.legion.tests.core;
 import static com.legion.utils.MyThreadLocal.setCurrentTestMethodName;
 
 import com.legion.tests.annotations.*;
+import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.AssertJUnit;
@@ -41,7 +42,7 @@ import static com.legion.utils.MyThreadLocal.*;
  */
 
 public class NavigationTest extends TestBase {
-    private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+    private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
 
     @Override
 	@BeforeMethod()

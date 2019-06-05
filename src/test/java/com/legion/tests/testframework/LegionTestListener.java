@@ -49,7 +49,7 @@ import static com.legion.utils.MyThreadLocal.*;
 		
 		public static ExtentTest test ;
 		private static ExtentReports extent = ExtentReportManager.getInstance();
-		private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+		private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
 	
 		
 		@Override

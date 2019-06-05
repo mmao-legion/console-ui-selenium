@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -26,7 +27,7 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
 public class ScheduleTest extends TestBase{
-	  private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	  private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
 	  @Override
 	  @BeforeMethod()
 	  public void firstTest(Method testMethod, Object[] params) throws Exception{

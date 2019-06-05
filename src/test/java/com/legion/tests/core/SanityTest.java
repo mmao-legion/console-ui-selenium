@@ -11,6 +11,7 @@ import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.CsvUtils;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import java.util.Map;
 import org.openqa.selenium.WebElement;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeMethod;
@@ -27,10 +28,10 @@ import static com.legion.utils.MyThreadLocal.getTestRailRunId;
 import static com.legion.utils.MyThreadLocal.setTestRailRunId;
 
 public class SanityTest extends TestBase{
-	  private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-	  private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
-	  private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
-	  private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
+	  private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
+	  private static Map<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
+	  private static Map<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
+	  private static Map<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
 	  SchedulePage schedulePage = null;
 
 	  @Override

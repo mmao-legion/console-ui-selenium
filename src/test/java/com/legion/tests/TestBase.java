@@ -124,7 +124,7 @@ public abstract class TestBase {
     protected PageFactory pageFactory = null;
     protected MobilePageFactory mobilePageFactory = null;
     String TestID = null;
-    public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+    public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
     private static ExtentReports extent = ExtentReportManager.getInstance();
     public static AndroidDriver<MobileElement> driver;
 	public static String versionString;
