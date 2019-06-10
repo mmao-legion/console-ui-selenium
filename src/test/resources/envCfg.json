@@ -19,7 +19,7 @@
  "CHROME" : "Chrome",
  "FIREFOX" : "Firefox",
  "console_logs" : "false",
- "close_browser" : "false",
+ "close_browser" : "true",
  "show_report" : "false",
  "VERSION" : "68",
  "OS" : "WINDOW",
@@ -31,5 +31,5 @@
  "platformVersion" : "7.0",
  "isParallelBrowser" : "false",
  "Download_File_Default_Dir" : "C:\\Users\\nishant08\\Downloads",
- "isHeadlessBrowser" : "true"
+ "isHeadlessBrowser" : "false"
 }

@@ -661,6 +661,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
+    public void clickImmediateNextToCurrentActiveWeekInDayPicker() throws Exception {
+
+    }
+
     public Boolean isAddNewDayViewShiftButtonLoaded() throws Exception {
         if (isElementLoaded(addNewShiftOnDayViewButton)) {
             return true;
@@ -1293,7 +1298,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
             } else {
                 SimpleUtils.fail("Smartcard Section Not Loaded for Week " + daypickers[1], true);
             }
-            if (isElementEnabled(scheduleTableWeekViewWorkerDetail.get(0)) && Float.parseFloat(budgetDisplayOnScheduleSmartcard.get(0).getText()) > 0 && Float.parseFloat(scheduleDisplayOnScheduleSmartcard.get(0).getText()) > 0) {
+            if (isElementEnabled(scheduleTableWeekViewWorkerDetail.get(0)) && Float.parseFloat(budgetDisplayOnScheduleSmartcard.get(0).getText()) > 0 && Float.parseFloat(scheduleDisplayOnScheduleSmartcard.get(0).getText().replaceAll(",","")) > 0) {
                 SimpleUtils.pass("Schedule Loaded Successfully! for Week " + daypickers[1] + " value for Budgeted Hour is " + budgetDisplayOnScheduleSmartcard.get(0).getText() + "Hours and Scheduled Hour is " + scheduleDisplayOnScheduleSmartcard.get(0).getText() + "Hours");
             } else {
                 SimpleUtils.fail("Schedule Not Loaded for Week " + daypickers[1] + " value for Budgeted Hour is " + budgetDisplayOnScheduleSmartcard.get(0).getText() + "Hours and Scheduled Hour is " + scheduleDisplayOnScheduleSmartcard.get(0).getText() + "Hours", true);
@@ -1612,6 +1617,32 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     }
 
+    @Override
+    public void viewProfile() {
+
+    }
+
+    @Override
+    public void changeWorkerRole() {
+
+    }
+
+    @Override
+    public void assignTeamMember() {
+
+    }
+
+
+    @Override
+    public void convertToOpenShift() {
+
+    }
+
+    @Override
+    public void beforeEdit() {
+
+    }
+
 
     @Override
     public void generateOrUpdateAndGenerateSchedule() throws Exception {
@@ -1642,4 +1673,26 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     }
 
+    public String getActiveAndNextDay() throws Exception{
+        return "";
+    }
+
+    public HashMap<String, String> getOperatingHrsValue(String day) throws Exception {
+        return null;
+    }
+
+    public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception {
+
+    }
+
+    public void clickOnNextDaySchedule(String activeDay) throws Exception {
+
+    }
+
+    public void selectTeamMembersOptionForSchedule() throws Exception {
+
+    }
+    public void verifyActiveScheduleType() throws Exception{
+
+    }
 }

@@ -3,5 +3,7 @@
   "TEST_RAIL_USER": "nishant.prakash@zorang.com",
   "TEST_RAIL_PASSWORD": "Prashant21#",
   "TEST_RAIL_PROJECT_ID" : "7",
-  "TEST_RAIL_SUITE_ID" : "14"
+  "TEST_CASE_SUITE_ID" : "18",
+  "TEST_RAIL_SUITE_ID" : "19",
+  "TEST_RUN_SUITE_NAME" : "CORE 05.27.2019"
 }
