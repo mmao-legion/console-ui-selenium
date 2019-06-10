@@ -1,13 +1,10 @@
 version: 2
 jobs:
   build:
-    docker:
-      - image: circleci/python:3.7.3
+    machine:
+      - image: circleci/classic:latest
     steps:
       - checkout
-      - setup_remote_docker
-          docker_layer_caching: true
-      - run: sudo pip install awscli
       - run: aws configure set default.region $REGION
       - run: eval $(aws ecr get-login --region $REGION --no-include-email | sed 's|https://||')
       - run:
