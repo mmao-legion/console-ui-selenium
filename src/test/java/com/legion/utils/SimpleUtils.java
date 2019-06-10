@@ -75,7 +75,7 @@ public class SimpleUtils {
     }
     
     public static void fail(String message, boolean continueExecution, String... severity) {
-//		SimpleUtils.addTestResultIntoTestRail(5, message);
+		SimpleUtils.addTestResultIntoTestRail(5, message);
         if (continueExecution) {
             try {
                 assertTrue(false);
@@ -224,13 +224,14 @@ public class SimpleUtils {
     	
     	ExtentTestManager.getTest().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
                 + "</div>");
-//		SimpleUtils.addTestResultIntoTestRail(1, message);
+		SimpleUtils.addTestResultIntoTestRail(1, message);
     }
     
     public static void report(String message) {
     	
     	ExtentTestManager.getTest().log(Status.INFO,"<div class=\"row\" style=\"background-color:#0000FF; color:white; padding: 7px 5px;\">" + message
                 + "</div>");
+		SimpleUtils.addTestResultIntoTestRail(6, message);
     }
 	     
   
@@ -862,6 +863,7 @@ public class SimpleUtils {
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
 		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
+		String testRailSuiteName = testRailConfig.get("TEST_RUN_SUITE_NAME");
 		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
 
 		int TestRailRunId = 0;
@@ -892,7 +894,7 @@ public class SimpleUtils {
 					System.err.println(e.getMessage());
 				}
 
-				data.put("name", "Automation Suite Test Run"+"" +strDate);
+				data.put("name", testRailSuiteName +"" +strDate);
 				data.put("suite_id", suiteId);
 				data.put("include_all", true);
 				data.put("case_ids", cases);
@@ -927,7 +929,7 @@ public class SimpleUtils {
 					System.err.println(e.getMessage());
 				}
 				data.put("suite_id", suiteId);
-				data.put("name", "Automation Smoke"+"" +strDate);
+				data.put("name", testRailSuiteName +" " +strDate);
 				data.put("include_all", false);
 				data.put("case_ids", cases);
 				JSONObject jSONObject = (JSONObject) client.sendPost(addResultString, data);

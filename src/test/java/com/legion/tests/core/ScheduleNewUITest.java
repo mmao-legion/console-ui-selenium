@@ -1152,7 +1152,6 @@ public class ScheduleNewUITest extends TestBase {
 					SimpleUtils.pass("Guidance week found : '" + schedulePage.getActiveWeekText() + "'");
 					schedulePage.generateOrUpdateAndGenerateSchedule();
 					schedulePage.verifyScheduledHourNTMCountIsCorrect();
-
 					break;
 				}
 			}
@@ -2069,12 +2068,11 @@ public class ScheduleNewUITest extends TestBase {
 			schedulePage.clickImmediateNextToCurrentActiveWeekInDayPicker();
 			schedulePage.clickOnEditButton();
 	//		schedulePage.viewProfile();
-			schedulePage.changeWorkerRole();
-	//		schedulePage.assignTeamMemberFlyout();
-	//        schedulePage.verifySelectTeamMembersOption();
-	//        schedulePage.clickOnOfferOrAssignBtn();
-	//		schedulePage.convertToOpenShift();
-
+//			schedulePage.changeWorkerRole();
+//			schedulePage.assignTeamMemberFlyout();
+//	        schedulePage.verifySelectTeamMembersOption();
+//	        schedulePage.clickOnOfferOrAssignBtn();
+			schedulePage.convertToOpenShift();
 		}
 
 

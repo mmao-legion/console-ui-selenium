@@ -8,155 +8,35 @@
  		<listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
  	</listeners>
 
-  <!--<test name="Schedule New UI Test">-->
-        <!--<classes>-->
-            <!--<class name="com.legion.tests.core.ScheduleNewUITest">-->
-      	        <!--<methods>-->
-                    <!--&lt;!&ndash;<include name="reviewPastGenerateCurrentAndFutureWeekScheduleAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="viewAndFilterScheduleWithGroupByAllInWeekViewAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="viewAndFilterScheduleWithGroupByWorkRoleInWeekViewAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="viewAndFilterScheduleWithGroupByTMsInWeekViewAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="viewAndFilterScheduleWithGroupByAllDayViewAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="viewAndFilterScheduleWithGroupByWorkRoleDayViewAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="viewAndFilterScheduleWithGroupByTMsDayViewAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifyUnpublishedScheduleVisibilityForTMsAndTLsAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifyAndPublishScheduleAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="editPopUpScheduleShouldNotPresentAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="editOpenShiftScheduleAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="editManualShiftScheduleAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="editAssignTeamScheduleAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="navigateToCurrentAndOtherWeekAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifyRequiredActionToConsoleMessageAfterRefreshAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifyComplianceSmartcardAfterExdendingAShiftToOTAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="disableWeekViewNavOutsideSchPlanningWindowStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifyFutureScheduleWeekDateAfteRefreshBrowserAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifyTMCanViewNewScheduleAndOffersAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifySmartCardPanelForTMAndTLAsTeamLead"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifyWorkRoleFilterPreserveSelectionOnScheduleGeneratePageAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifyScheduleOverviewPageCalendarMonthsAndYearsAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifyUnAssignedAndComplianceSmartCardAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="validatingGenerateScheduleStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="validateScheduleGenerationFunctionalityAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="validateScheduleSmartCardsAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="validateSchedulePublishFeatureAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="validateDashboardTodaysForcastAsStoreManager"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="changeAndValidateOperatingHoursAsInternalAdmin"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="complianceSmartCard"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifyOpenScheduleViewAsInternalAdmin"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="verifyScheduleOverlappingAsInternalAdmin"/>&ndash;&gt;-->
-                    <!--<include name="verifyScheduleClopeningAsInternalAdmin"/>-->
-
-                <!--</methods>-->
-             <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
-<!--
-
-    <test name="Schedule Overview Test">
+    <test name="Regression Test">
         <classes>
-            <class name="com.legion.tests.core.ScheduleOverviewTest">
+            <class name="com.legion.tests.core.RegressionTest">
                 <methods>
-                    <include name="verifyCurrentWeekDateAndDayTest"/>
-                    <include name="verifyDateAndDayForEachWeeksUntilNotAvailableTest"/>
-                    <include name="verifyDayAndDateOnSchedulePageMatchesDayAndDateOnOverviewPageTest"/>
-                </methods>
-            </class>
-        </classes>
-    </test> -->
-
-
-    <!--<test name="Team Test">-->
-        <!--<classes>-->
-            <!--<class name="com.legion.tests.core.TeamTestKendraScott2">-->
-                <!--<methods>-->
-                    <!--<include name="validateTeamTabAsStoreManager"/>-->
-                <!--</methods>-->
-            <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
-
-    <!-- <test name="Team Test">
-        <classes>
-            <class name="com.legion.tests.core.TimeSheetTest">
-                <methods>
-                    <include name="validateLoadingOfTimeSheetForEveryPeriodsAsStoreManager"/>
-                </methods>
-            </class>
-        </classes>
-    </test> -->
-
-
-    <!-- <test name="Analytics Test">
-        <classes>
-            <class name="com.legion.tests.core.AnalyticsTestKendraScott2">
-                <methods>
-                    <include name="verifyKPIReportExportFunctionalityAsStoreManager"/>
-                    <include name="validateKPIReportValuesAsStoreManager"/>
-                </methods>
-            </class>
-        </classes>
-    </test> -->
-
-    <!--<test name="Controls New UI Test">-->
-        <!--<classes>-->
-            <!--<class name="com.legion.tests.core.ControlsNewUITest">-->
-                <!--<methods>-->
-                    <!--&lt;!&ndash;<include name="updateUserLocationAsInternalAdmin"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="updateWorkingHoursAsInternalAdmin"/>&ndash;&gt;-->
-                    <!--<include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>-->
-                <!--</methods>-->
-            <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
-
-  <!--<test name="Team New UI Test">-->
-        <!--<classes>-->
-            <!--<class name="com.legion.tests.core.TeamTestKendraScott2">-->
-                <!--<methods>-->
-                    <!--<include name="VerifyWhetherManagerCanApproveTimeOffRequestAsTeamMember"/>-->
-                    <!--&lt;!&ndash;<include name="VerifyWhetherManagerCanRejectTimeOffRequestAsTeamMember"/>&ndash;&gt;-->
-                <!--</methods>-->
-            <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
-
-
-    <!--<test name="Team New UI Test">-->
-        <!--<classes>-->
-            <!--<class name="com.legion.tests.core.ProfileNewUITest">-->
-                <!--<methods>-->
-                    <!--&lt;!&ndash;<include name="validateAllWebElementLoadedAsStoreManager"/>&ndash;&gt;-->
-                    <!--<include name="updateAndValidateProfileFunctionalityCoverageAsStoreManager"/>-->
-                <!--</methods>-->
-            <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
-
-    <test name="Sanity Test">
-        <classes>
-            <class name="com.legion.tests.core.SanityTest">
-                <methods>
-                    <!--<include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>-->
-                    <!--<include name="validateScheduleSmartCardsAsStoreManager"/>-->
-                    <!--<include name="validateScheduleGenerationFunctionalityAsStoreManager"/>-->
-                    <!--<include name="validateChangeLocationAsStoreManager"/>-->
-                    <!--<include name="validateGuidanceWeekAsStoreManager"/>-->
-                    <!--<include name="validateSchedulePublishAsStoreManager"/>-->
-                    <!--<include name="editManualShiftScheduleAsStoreManager"/>-->
-                    <!--<include name="updateControlsSectionLoadingAsInternalAdmin"/>-->
+                    <include name="validateScheduleGenerationFunctionalityAsStoreManager"/>
+                    <include name="validateChangeLocationAsStoreManager"/>
+                    <include name="validateGuidanceWeekAsStoreManager"/>
+                    <include name="validateSchedulePublishAsStoreManager"/>
+                    <include name="editManualShiftScheduleAsStoreManager"/>
+                    <include name="editAssignTeamScheduleAsStoreManager"/>
                     <include name="scheduleSubTabNavigationStoreManager"/>
-                    <!--<include name="legionAppNavigationAllTabsStoreManager"/>-->
-
+                    <include name="legionAppNavigationAllTabsStoreManager"/>
+                    <include name="verifyOpenScheduleViewAsInternalAdmin"/>
+                    <include name="verifyControlsBreadcrumbAsInternalAdmin"/>
+                    <include name="verifyOptionWhenGlobalSelectedAsInternalAdmin"/>
+                    <include name="validateSchedulingPoliciesControlOptionAsInternalAdmin"/>
+                    <include name="validateSchedulePublishWindowAsInternalAdmin"/>
+                    <include name="validateSchedulePlanningWindowAsInternalAdmin"/>
+                    <include name="viewAndFilterScheduleWithGroupByAllDayViewAsStoreManager"/>
+                    <include name="viewAndFilterScheduleWithGroupByWorkRoleDayViewAsStoreManager"/>
+                    <include name="viewAndFilterScheduleWithGroupByTMsDayViewAsStoreManager"/>
+                    <include name="validateDashboardTodaysForcastAsStoreManager"/>
+                    <include name="validateTeamTabAsStoreManager"/>
+                    <include name="VerifyWhetherManagerCanApproveTimeOffRequestAsTeamMember"/>
+                    <include name="validateScheduleSmartCardsAsStoreManager"/>
                 </methods>
             </class>
         </classes>
     </test>
-
-
-
 
 
 </suite> <!-- Suite -->

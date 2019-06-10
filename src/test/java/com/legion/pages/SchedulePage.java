@@ -124,7 +124,7 @@ public interface SchedulePage {
 	public void complianceShiftSmartCard() throws Exception;
 	public void viewProfile();
 	public void changeWorkerRole();
-	public void assignTeamMember();
+	public void assignTeamMember() throws Exception;
 	public void convertToOpenShift();
 	public void beforeEdit();
 	public void selectTeamMembersOptionForOverlappingSchedule() throws Exception;
@@ -137,5 +137,6 @@ public interface SchedulePage {
 	public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception;
 	public void clickOnNextDaySchedule(String activeDay) throws Exception;
 	public void selectTeamMembersOptionForSchedule() throws Exception;
+	public void verifyActiveScheduleType() throws Exception;
 
 }

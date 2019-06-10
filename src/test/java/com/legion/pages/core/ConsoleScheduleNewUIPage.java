@@ -460,6 +460,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(css = "div.lgn-alert-message")
 	private WebElement alertMessage;
 
+    @FindBy(css = "div.schedule-filter-label")
+    private WebElement scheduleType;
+
+    @FindBy(css = "lg-button-group[buttons='scheduleTypeOptions'] div.lg-button-group-first")
+    private WebElement scheduleTypeSystem;
+
+    @FindBy(css = "lg-button-group[buttons='scheduleTypeOptions'] div.lg-button-group-last")
+    private WebElement scheduleTypeManager;
+
+    @FindBy(css = "lg-button-group[buttons='scheduleTypeOptions'] div.lg-button-group-selected")
+    private WebElement activScheduleType;
+
     final static String consoleScheduleMenuItemText = "Schedule";
 
 
@@ -2468,7 +2480,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(generateSheduleButton);
             if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
-                if (isElementEnabled(checkOutTheScheduleButton, 5)) {
+                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
                     checkoutSchedule();
                 } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                     updateAndGenerateSchedule();
@@ -2477,7 +2489,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                 updateAndGenerateSchedule();
-            } else if (isElementEnabled(checkOutTheScheduleButton)) {
+            } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
                 checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
                 SimpleUtils.pass("Schedule Generated Successfuly!");
             } else {
@@ -2962,7 +2974,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public void saveSchedule() {
-        if (isElementEnabled(scheduleSaveBtn)) {
+        if (isElementEnabled(scheduleSaveBtn,10)) {
             click(scheduleSaveBtn);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
@@ -3011,6 +3023,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     TMWorkerRole = workerRole[1];
                     shiftDuration = shiftDurationInPopUp.getText();
                     convertToOpen(i);
+                    waitForSeconds(3);
                     saveSchedule();
                     counter = i;
                     break;
@@ -3081,7 +3094,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String shiftDuration = null;
         String TMName = null;
         int counter = 0;
-        if (areListElementVisible(imageSize, 5)) {
+        if (areListElementVisible(imageSize, 20)) {
             for (int i = 0; i < imageSize.size(); i++) {
                 if (!workerName.get(i).getText().equalsIgnoreCase("open")) {
                     click(scheduleInfoIcon.get(i));
@@ -3102,19 +3115,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    @Override
-    public void assignTeamMember() {
 
+    public void assignTM(int i) {
+        if (areListElementVisible(imageSize, 5)) {
+            click(imageSize.get(i));
+            if (isElementEnabled(assignTM)) {
+                click(assignTM);
+            }
+        }
     }
-
-//    public void assignTM(int i) {
-//        if (areListElementVisible(imageSize, 5)) {
-//            click(imageSize.get(i));
-//            if (isElementEnabled(assignTM)) {
-//                click(assignTM);
-//            }
-//        }
-//    }
 
 //    public void searchOrRecommendTM(){
 //        if (areListElementVisible(recommendedScrollTable, 5)) {
@@ -3137,31 +3146,31 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //        }
 //    }
 
-//    public void assignTeamMember() {
-//        String TMWorkerRole = null;
-//        String shiftDuration = null;
-//        String TMName = null;
-//        int counter = 0;
-//        if (areListElementVisible(imageSize, 5)) {
-//            for (int i = 0; i < imageSize.size(); i++) {
-//                if (!workerName.get(i).getText().equalsIgnoreCase("open")) {
-//                    click(scheduleInfoIcon.get(i));
-//                    String[] workerRole = workerRoleDetailsFromPopUp.getText().split("as ");
-//                    TMName = workerNameInPopUp.getText();
-//                    TMWorkerRole = workerRole[1];
-//                    shiftDuration = shiftDurationInPopUp.getText();
-////                    assignTM(i);
-////                    verifySelectTeamMembersOption();
-//                    saveSchedule();
-//                    counter = i;
-//                    break;
-//                }
-//            }
-//            verifyChangedRoleShift(TMName, TMWorkerRole, shiftDuration,counter );
-//
-//        }else {
-//            SimpleUtils.fail("shift images not loaded successfully", false);
-//        }
+    public void assignTeamMember() throws Exception{
+        String TMWorkerRole = null;
+        String shiftDuration = null;
+        String TMName = null;
+        int counter = 0;
+        if (areListElementVisible(imageSize, 5)) {
+            for (int i = 0; i < imageSize.size(); i++) {
+                if (!workerName.get(i).getText().equalsIgnoreCase("open")) {
+                    click(scheduleInfoIcon.get(i));
+                    String[] workerRole = workerRoleDetailsFromPopUp.getText().split("as ");
+                    TMName = workerNameInPopUp.getText();
+                    TMWorkerRole = workerRole[1];
+                    shiftDuration = shiftDurationInPopUp.getText();
+                    assignTM(i);
+                    verifySelectTeamMembersOption();
+                    saveSchedule();
+                    counter = i;
+                    break;
+                }
+            }
+            verifyChangedRoleShift(TMName, TMWorkerRole, shiftDuration,counter );
+
+        }else {
+            SimpleUtils.fail("shift images not loaded successfully", false);
+        }
 //        if (areListElementVisible(imageSize, 5)) {
 //            click(imageSize.get(5));
 //            click(changeRole);
@@ -3170,7 +3179,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //            String txt = jse.executeScript("return arguments[0].innerHTML;", element).toString();
 //            System.out.println(txt);
 //        }
-//    }
+    }
 
 //    public void assignTeamMember() {
 //        if (areListElementVisible(imageSize, 5)) {
@@ -3469,5 +3478,29 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		}
 
 	}
+
+
+	public void verifyActiveScheduleType() throws Exception{
+	    if(isElementLoaded(scheduleType, 5)){
+            if(scheduleType.getText().equalsIgnoreCase("SCHEDULE TYPE")){
+                SimpleUtils.pass("Schedule Type Label is displaying Successfully on page!");
+                getActiveScheduleType();
+            }else{
+                SimpleUtils.fail("Schedule Type Label not displaying on page Successfully!",false);
+            }
+        }
+    }
+
+    public void getActiveScheduleType(){
+	    if(isElementEnabled(activScheduleType,5)){
+	        if(activScheduleType.getText().equalsIgnoreCase("Manager")){
+                SimpleUtils.pass("Schedule Type " + activScheduleType.getText() + " is enabled on page");
+            }else{
+                SimpleUtils.fail("Schedule Type " + activScheduleType.getText() + " is disabled",false);
+            }
+        }else{
+            SimpleUtils.fail("Schedule Type " + scheduleTypeManager.getText() + " is disabled",false);
+        }
+    }
 
 }

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.legion.utils.MyThreadLocal;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.testng.IAnnotationTransformer;
@@ -61,17 +62,18 @@ import static com.legion.utils.MyThreadLocal.*;
 		@Override
 		public void onTestSuccess(ITestResult result) {
 			ExtentTestManager.getTest().log(Status.PASS, MarkupHelper.createLabel("Test case Passed:",ExtentColor.GREEN));
-//	        String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
-//	        int sectionId = ExtentTestManager.getTestRailSectionId(MyThreadLocal.getCurrentMethod());
-//	        SimpleUtils.addTestResultWithTestCaseLinkIntoTestRail(1,"Passed");
+	        String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
+	        int sectionId = ExtentTestManager.getTestRailSectionId(MyThreadLocal.getCurrentMethod());
+	        SimpleUtils.addTestResultWithTestCaseLinkIntoTestRail(1,"Passed");
 		}
-
 		@Override
 		public void onTestFailure(ITestResult result) {
 			// TODO Auto-generated method stub
-
 //			SimpleUtils.addTestResultIntoTestRail(5,result.getThrowable().toString());
 			ExtentTestManager.getTest().log(Status.FAIL, MarkupHelper.createLabel("Test case Failed:",ExtentColor.RED));
+			String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
+			int sectionId = ExtentTestManager.getTestRailSectionId(MyThreadLocal.getCurrentMethod());
+			SimpleUtils.addTestResultWithTestCaseLinkIntoTestRail(5,"Failed");
 			String targetFile = ScreenshotManager.takeScreenShot();
 			String screenshotLoc = propertyMap.get("Screenshot_Path") + File.separator + targetFile;
 			try {
@@ -125,13 +127,13 @@ import static com.legion.utils.MyThreadLocal.*;
 			}	
 			
 			if(!getVerificationMap().isEmpty() && testResult.getStatus() == ITestResult.SUCCESS){
-			            ITestContext testContext = Reporter.getCurrentTestResult().getTestContext();
-			            testContext.getPassedTests().addResult(testResult, Reporter.getCurrentTestResult().getMethod());
-			            testContext.getPassedTests().getAllMethods().remove(Reporter.getCurrentTestResult().getMethod());
-			            Reporter.getCurrentTestResult().setStatus(ITestResult.FAILURE);
-			            Reporter.getCurrentTestResult().setThrowable(new Exception("Found none-fatal error(s) at page level running test steps!"));
-			            testContext.getFailedTests().addResult(testResult, Reporter.getCurrentTestResult().getMethod());
-		        }		
+				ITestContext testContext = Reporter.getCurrentTestResult().getTestContext();
+				testContext.getPassedTests().addResult(testResult, Reporter.getCurrentTestResult().getMethod());
+				testContext.getPassedTests().getAllMethods().remove(Reporter.getCurrentTestResult().getMethod());
+				Reporter.getCurrentTestResult().setStatus(ITestResult.FAILURE);
+				Reporter.getCurrentTestResult().setThrowable(new Exception("Found none-fatal error(s) at page level running test steps!"));
+				testContext.getFailedTests().addResult(testResult, Reporter.getCurrentTestResult().getMethod());
+			}
 		}
 		
 		

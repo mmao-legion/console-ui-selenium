@@ -20,7 +20,7 @@
  "FIREFOX" : "Firefox",
  "console_logs" : "false",
  "close_browser" : "true",
- "show_report" : "true",
+ "show_report" : "false",
  "VERSION" : "68",
  "OS" : "WINDOW",
  "scheduleWeekCount" : "6",
