@@ -3229,7 +3229,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		return ScheduleStatus;
 	}
 
-
 	public void searchWorkerName(String searchInput) throws Exception {
 		String[] searchAssignTeamMember = searchInput.split(",");
 		if(isElementLoaded(textSearch,10) && isElementLoaded(searchIcon,10)){

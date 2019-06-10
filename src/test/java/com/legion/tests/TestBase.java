@@ -262,7 +262,7 @@ public abstract class TestBase {
                 options.setProfile(profile);
                 setDriver(new FirefoxDriver(options));
             }
-            
+
             pageFactory = createPageFactory();
             LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
             getDriver().register(webDriverEventListener);
