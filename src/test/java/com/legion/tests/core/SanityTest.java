@@ -1,36 +1,47 @@
 package com.legion.tests.core;
 
-import com.aventstack.extentreports.Status;
-import com.legion.pages.*;
-import com.legion.pages.mobile.LoginPageAndroid;
-import com.legion.test.core.mobile.LoginTest;
+import static com.legion.utils.MyThreadLocal.getModuleName;
+import static com.legion.utils.MyThreadLocal.getSectionID;
+
+import com.legion.pages.AnalyticsPage;
+import com.legion.pages.BasePage;
+import com.legion.pages.ControlsNewUIPage;
+import com.legion.pages.DashboardPage;
+import com.legion.pages.ProjectedSalesPage;
+import com.legion.pages.SalesForecastPage;
+import com.legion.pages.ScheduleOverviewPage;
+import com.legion.pages.SchedulePage;
+import com.legion.pages.StaffingGuidancePage;
+import com.legion.pages.TeamPage;
 import com.legion.tests.TestBase;
-import com.legion.tests.annotations.*;
+import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.Enterprise;
+import com.legion.tests.annotations.MobilePlatform;
+import com.legion.tests.annotations.Owner;
+import com.legion.tests.annotations.SanitySuite;
+import com.legion.tests.annotations.TestName;
+import com.legion.tests.annotations.UseAsTestRailSectionId;
 import com.legion.tests.data.CredentialDataProviderSource;
-import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.CsvUtils;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import com.legion.utils.SpreadSheetUtils;
+import java.io.File;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.openqa.selenium.WebElement;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.lang.reflect.Method;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import static com.legion.utils.MyThreadLocal.*;
-
 public class SanityTest extends TestBase{
-	  private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-	  private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
-	  private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
-	  private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
+	  private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
+	  private static Map<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
+	  private static Map<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
+	  private static Map<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
 	  SchedulePage schedulePage = null;
 
 	  @Override

@@ -26,7 +26,7 @@ import com.legion.utils.SimpleUtils;
 
 public class StaffingGuidanceTest extends TestBase{
 	
-	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
 	SalesForecastPage schedulePage = null;
 	
 	@Override

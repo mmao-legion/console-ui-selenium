@@ -6,12 +6,14 @@ import static com.legion.utils.MyThreadLocal.getEnterprise;
 import static com.legion.utils.MyThreadLocal.getSessionTimestamp;
 import static com.legion.utils.MyThreadLocal.getURL;
 
+import com.legion.utils.SimpleUtils;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -23,7 +25,7 @@ import static com.legion.utils.MyThreadLocal.*;
 
 public class ScreenshotManager {
 	
-	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
 	
 	public static String takeScreenShot() {
 		File targetFile;

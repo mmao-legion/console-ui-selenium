@@ -11,6 +11,7 @@ import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
+import java.util.Map;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -20,7 +21,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 public class StoreManagerScheduleNavigationTestKendraScott2 extends TestBase {
-    private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+    private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
 
 //    @BeforeClass
 //    public void setUp () {

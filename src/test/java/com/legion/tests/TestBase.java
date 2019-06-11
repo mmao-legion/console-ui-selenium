@@ -124,7 +124,7 @@ public abstract class TestBase {
     protected PageFactory pageFactory = null;
     protected MobilePageFactory mobilePageFactory = null;
     String TestID = null;
-    public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+    public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
     private static ExtentReports extent = ExtentReportManager.getInstance();
     public static AndroidDriver<MobileElement> driver;
 	public static String versionString;
@@ -246,7 +246,8 @@ public abstract class TestBase {
             	System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
             	ChromeOptions options = new ChromeOptions();
             	if(propertyMap.get("isHeadlessBrowser").equalsIgnoreCase("true")){
-                    options.addArguments("headless");
+                    options.setHeadless(true);
+                    options.addArguments("remote-debugging-port=9222");
                     options.addArguments("window-size=1200x600");
                     runScriptOnHeadlessOrBrowser(options);
                 }else{
