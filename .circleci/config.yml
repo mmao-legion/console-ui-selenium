@@ -2,7 +2,16 @@ version: 2
 jobs:
   build:
     machine:
-      - image: circleci/classic:latest
+      image: circleci/classic:latest
+    steps:
+      - checkout
+      - run:
+          name: docker build
+          command: |
+            docker build .
+  build_and_push_to_ecr:
+    machine:
+      image: circleci/classic:latest
     steps:
       - checkout
       - run: aws configure set default.region $REGION
@@ -19,9 +28,14 @@ jobs:
             docker push $AWS_ECR_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/console-ui-selenium:latest
 workflows:
   version: 2
-  build_to_docker:
+  docker_build:
     jobs:
       - build:
+          filters:
+            branches:
+              ignore:
+                - master
+      - build_and_push_to_ecr:
           filters:
             branches:
               only:
