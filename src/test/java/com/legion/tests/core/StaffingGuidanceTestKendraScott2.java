@@ -176,7 +176,6 @@ public class StaffingGuidanceTestKendraScott2 extends TestBase{
     public void staffingGuidanceShouldNotBeBlankOnRefresh(String username, String password, String browser, String location)
             throws Exception
     {
-
 		SimpleUtils.pass("Login to reverted environement Successfully");
 		SimpleUtils.pass("Successfully opened the Schedule app");
 		SimpleUtils.pass("Open a Staffing Guidance of any Week (Not necessarily the current week) in Week view ");

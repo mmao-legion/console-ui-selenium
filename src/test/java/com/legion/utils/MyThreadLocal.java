@@ -53,6 +53,8 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> timeOffStartTime = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeOffEndTime = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeDuration = new ThreadLocal<>();
+	public static final ThreadLocal<String> moduleName = new ThreadLocal<>();
+	public static final ThreadLocal<Integer> sectionID = new ThreadLocal<>();
 
 	public static void setScreenshotLocation(String value) { screenshotLoc.set(value); }
 
@@ -68,6 +70,10 @@ public class MyThreadLocal {
 	public static void setTimeOffStartTime(String value) { timeOffStartTime.set(value); }
 
 	public static String getTimeOffStartTime() { return timeOffStartTime.get(); }
+
+	public static void setModuleName(String value) { moduleName.set(value); }
+
+	public static String getModuleName() { return moduleName.get(); }
 
 	public static void setTimeOffEndTime(String value) { timeOffEndTime.set(value); }
 
@@ -88,6 +94,14 @@ public class MyThreadLocal {
 
 	public static Integer getTestCaseId() {
 		return testCaseId.get();
+	}
+
+	public static void setSectionID(Integer value) {
+		sectionID.set(value);
+	}
+
+	public static Integer getSectionID() {
+		return sectionID.get();
 	}
 
 	public static void setTestRailRunId(Integer value) {
