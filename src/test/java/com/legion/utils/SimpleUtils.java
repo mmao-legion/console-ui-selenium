@@ -3,8 +3,11 @@ package com.legion.utils;
 import static com.legion.utils.MyThreadLocal.getTestRailRunId;
 import static com.legion.utils.MyThreadLocal.getVerificationMap;
 import static com.legion.utils.MyThreadLocal.getscreenShotURL;
+import static com.legion.utils.MyThreadLocal.setModuleName;
+import static com.legion.utils.MyThreadLocal.setSectionID;
 import static com.legion.utils.MyThreadLocal.setTestRailRunId;
 import static com.legion.utils.MyThreadLocal.setscreenShotURL;
+import static com.legion.utils.MyThreadLocal.testCaseId;
 import static org.testng.AssertJUnit.assertTrue;
 
 import com.aventstack.extentreports.Status;
