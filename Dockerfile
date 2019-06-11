@@ -1,5 +1,7 @@
 FROM circleci/openjdk:8-browsers
 
+RUN sudo apt-get install openvpn
+
 RUN cd ~ && \
     mkdir project && \
     cd project && \
