@@ -14,7 +14,6 @@
                 <methods>
                     <include name="validateScheduleGenerationFunctionalityAsStoreManager"/>
                     <include name="validateChangeLocationAsStoreManager"/>
-                    <include name="validateGuidanceWeekAsStoreManager"/>
                     <include name="validateSchedulePublishAsStoreManager"/>
                     <include name="editManualShiftScheduleAsStoreManager"/>
                     <include name="editAssignTeamScheduleAsStoreManager"/>
