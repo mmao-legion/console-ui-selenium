@@ -147,6 +147,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "lg-dashboard-card[title=\"Tasks and Work Roles\"]")
 	private WebElement tasksAndWorkRolesSection;
 
+	@FindBy(css = "lg-dashboard-card[title=\"Locations\"]")
+	private WebElement locationsSection;
+
 	@FindBy(css = "page-heading[page-title=\"Location Details\"]")
 	private WebElement breadcrumbsLocationDetails;
 
@@ -234,6 +237,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement showTimeOffReasonsBtnGroup;
 	@FindBy(css="lg-button[label=\"Preserve\"]")
 	private WebElement preserveSettingBtn;
+	@FindBy(css="lg-button[label=\"Overwrite\"]")
+	private WebElement overwriteSettingBtn;
 	
 	@FindBy(css="input-field[value=\"$ctrl.engagementGroup.numHoursPerWeekMin\"]")
 	private List<WebElement> numHoursPerWeekMinInputFields;
@@ -259,6 +264,23 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private List<WebElement> committedHoursPeriodFileds;
 	@FindBy(css="div[ng-click=\"$ctrl.select(tab)\"]")
 	private List<WebElement> schedulingPolicyGroupsTabs;
+
+	//added by Nishant
+
+	@FindBy(css="input[placeholder*='Select']")
+	private WebElement linkAllLocations;
+
+	@FindBy(xpath="//div[text()='All Locations']")
+	private WebElement allLocations;
+
+	@FindBy(css="input[placeholder='Search Location']")
+	private WebElement searchLocation;
+
+	@FindBy(css="div.lg-search-options__thumbnail")
+	private List<WebElement> imageIcon;
+
+	@FindBy(css="div.lg-search-options__option")
+	private List<WebElement> locationName;
 	
 	String timeSheetHeaderLabel = "Controls";
 	
@@ -583,23 +605,29 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Controls Page: Schedule Policies Card not Loaded!", false);
 	}
 
-	
+
+	@FindBy(css = "div.lg-toast")
+	private WebElement successMsg;
 	@Override
 	public void enableDisableBudgetSmartcard(boolean enable) throws Exception
 	{
 		WebElement enableBudgetYesBtn = budgetFormSection.findElement(By.cssSelector("div.lg-button-group-first"));
 		WebElement enableBudgetNoBtn = budgetFormSection.findElement(By.cssSelector("div.lg-button-group-last"));
+
+
 		if(enable && isBudgetSmartcardEnabled())
 			SimpleUtils.pass("Schedule Policies Budget card already enabled.");
 		else if(enable && ! isBudgetSmartcardEnabled())
 		{
 			click(enableBudgetYesBtn);
 			SimpleUtils.pass("Schedule Policies Budget card enabled successfully.");
+			displaySuccessMessage();
 		}
 		else if(!enable && isBudgetSmartcardEnabled())
 		{
 			click(enableBudgetNoBtn);
 			SimpleUtils.pass("Schedule Policies Budget card disabled successfully.");
+			displaySuccessMessage();
 		}
 		else
 			SimpleUtils.pass("Schedule Policies Budget card already disabled.");
@@ -961,16 +989,22 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 
 	@Override
-	public void updateSchedulePublishWindow(String publishWindowAdvanceWeeks) throws Exception {
-		if(isElementLoaded(schedulePublishWindowDiv)) {
+	public void updateSchedulePublishWindow(String publishWindowAdvanceWeeks, boolean preserveSetting, boolean overwriteSetting) throws Exception {
+		if(isElementLoaded(schedulePublishWindowDiv,5)) {
 			WebElement schedulePublishWindowDropDown = schedulePublishWindowDiv.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
-			if(isElementLoaded(schedulePublishWindowDropDown)) {
+			if(isElementLoaded(schedulePublishWindowDropDown,5)) {
 				Select dropdown = new Select(schedulePublishWindowDropDown);
 				List<WebElement> dropdownOptions = dropdown.getOptions();
 				for(WebElement dropdownOption : dropdownOptions) {
 					if(dropdownOption.getText().toLowerCase().contains(publishWindowAdvanceWeeks.toLowerCase())) {
 						click(dropdownOption);
-						preserveTheSetting();
+						if(preserveSetting){
+							preserveTheSetting();
+						}else if(overwriteSetting){
+							overwriteTheSetting();
+						}else{
+							displaySuccessMessage();
+						}
 					}
 				}
 				if(getSchedulePublishWindowWeeks().toLowerCase().contains(publishWindowAdvanceWeeks.toLowerCase()))
@@ -988,7 +1022,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 
 	@Override
-	public void updateSchedulePlanningWindow(String planningWindowAdvanceWeeks) throws Exception {
+	public void updateSchedulePlanningWindow(String planningWindowAdvanceWeeks, boolean preserveSetting, boolean overwriteSetting) throws Exception {
 		if(isElementLoaded(schedulingWindow)) {
 			WebElement schedulePlanningWindowDropDown = schedulingWindow.findElement(
 					By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
@@ -998,7 +1032,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				for(WebElement dropdownOption : dropdownOptions) {
 					if(dropdownOption.getText().toLowerCase().contains(planningWindowAdvanceWeeks.toLowerCase())) {
 						click(dropdownOption);
-						preserveTheSetting();
+						if(preserveSetting){
+							preserveTheSetting();
+						}else if(overwriteSetting){
+							overwriteTheSetting();
+						}else{
+							displaySuccessMessage();
+						}
 					}
 				}
 				if(getSchedulePlanningWindowWeeks().toLowerCase().contains(planningWindowAdvanceWeeks.toLowerCase()))
@@ -1865,9 +1905,19 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	
 	public void preserveTheSetting() throws Exception
 	{
-		if(isElementLoaded(preserveSettingBtn, 10))
+		if(isElementLoaded(preserveSettingBtn, 5))
 		{
 			click(preserveSettingBtn);
+			displaySuccessMessage();
+		}
+	}
+
+	public void overwriteTheSetting() throws Exception
+	{
+		if(isElementLoaded(overwriteSettingBtn, 5))
+		{
+			click(overwriteSettingBtn);
+			displaySuccessMessage();
 		}
 	}
 	
@@ -2390,7 +2440,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			List<WebElement> schedulesSectionFields = schedulingPoliciesSchedulesFormSectionDiv.findElements(
 					By.cssSelector("div.lg-question-input"));
 			for(WebElement schedulesSectionField : schedulesSectionFields) {
-				WebElement fieldLabelDiv = schedulesSectionField.findElement(By.cssSelector("h3.lg-question-input__text"));
+				WebElement fieldLabelDiv = schedulesSectionField.findElement(By.cssSelector(" "));
 				String fieldTitle = fieldLabelDiv.getText();
 				List<WebElement> inputBoxFields = schedulesSectionField.findElements(
 						By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
@@ -4449,4 +4499,390 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		editableOrNonEditableFields.put("notLoadedFields", notLoadedFields);
 		return editableOrNonEditableFields;
 	}
+
+
+	public void displaySuccessMessage() throws Exception{
+		if(isElementLoaded(successMsg,5)){
+			SimpleUtils.pass("Success pop up displayed successfully.");
+			if(successMsg.getText().contains("Success!")){
+				SimpleUtils.pass("Success message displayed successfully." +successMsg.getText());
+				waitForSeconds(2);
+			}else{
+				SimpleUtils.fail("Success message not displayed successfully.",true);
+			}
+		}else{
+			SimpleUtils.report("Success pop up not displayed successfully.");
+			waitForSeconds(3);
+		}
+	}
+
+
+	public void verifyAllLocations(String txt) throws Exception {
+        if (isElementEnabled(linkAllLocations,5)){
+			if(linkAllLocations.getAttribute("value").equalsIgnoreCase(txt)){
+				SimpleUtils.pass("On click over Global in breadcrumb it should display " + linkAllLocations.getAttribute("value") + " in breadcrumb");
+			}else{
+				SimpleUtils.fail("On click over Global, in breadcrumb " + txt + " not matched with " + linkAllLocations.getAttribute("value"),true);
+			}
+        }else{
+			SimpleUtils.fail("On click over Global, All Locations not displayed successfully.",true);
+		}
+    }
+
+
+	public void verifySearchLocations(String searchText) throws Exception {
+		if(isElementEnabled(allLocations,5)){
+			click(allLocations);
+			if (isElementEnabled(searchLocation,5)){
+				SimpleUtils.pass("On click over All Locations in breadcrumb it should display flyout with search text box");
+				verifyImageAndLocationExistance();
+				enterTextOnSearchLocation(searchText);
+			}else{
+				SimpleUtils.fail("On click over All Locations in breadcrumb flyout with search text box does not get displayed",true);
+			}
+		}else{
+			SimpleUtils.fail("All Locations link is not clickable",true);
+		}
+	}
+
+
+
+	public void verifyImageAndLocationExistance() throws Exception {
+		if(areListElementVisible(imageIcon,5) && areListElementVisible(locationName,5)){
+			for(int i=0; i<locationName.size();i++){
+				if(imageIcon.get(0).getAttribute("style")!= ""){
+					SimpleUtils.pass("Image icon and Location are visible on page for " + locationName.get(i).getText());
+				}
+			}
+		}else{
+			SimpleUtils.fail("Image icon and location not visible on page ",true);
+		}
+	}
+
+	public void enterTextOnSearchLocation(String searchText) throws Exception{
+		searchLocation.sendKeys(searchText);
+		if(areListElementVisible(imageIcon,5) && areListElementVisible(locationName,5)) {
+			for(int i=0;i<locationName.size();i++){
+				if(locationName.get(i).getText().toLowerCase().contains(searchText.toLowerCase())){
+					SimpleUtils.pass("Location name is " + locationName.get(i).getText() + " which matches with Search box text " + searchText);
+					click(locationName.get(i));
+					break;
+				}else{
+					SimpleUtils.fail("Location name " + locationName.get(i).getText() + " not mathcing with Search box text " + searchText,true);
+				}
+			}
+
+		}else{
+			SimpleUtils.fail("Image icon and location not visible on page ",true);
+		}
+	}
+
+
+	public boolean isControlsCompanyProfileCard() throws Exception {
+		boolean flag = false;
+		if(isElementLoaded(companyProfileCard,5)){
+			SimpleUtils.pass("Controls Page: Company Profile Card Loaded Successfully!");
+			flag= true;
+		}else{
+			SimpleUtils.fail("Controls Page: Company Profile Card not Loaded!", false);
+		}
+		return flag;
+	}
+
+	public boolean isControlsSchedulingPoliciesCard() throws Exception {
+		boolean flag = false;
+		if(isElementLoaded(schedulingPoliciesCard,5)){
+			SimpleUtils.pass("Controls Page: Scheduling Policies Card Loaded Successfully!");
+			flag= true;
+		}else{
+			SimpleUtils.fail("Controls Page: Scheduling Policies Card not Loaded!", false);
+		}
+		return flag;
+	}
+
+	public boolean isControlsSchedulingCollaborationCard() throws Exception {
+		boolean flag = false;
+		if(isElementLoaded(scheduleCollaborationSection,5)){
+			SimpleUtils.pass("Controls Page: Scheduling Collaboration Section Loaded Successfully!");
+			flag= true;
+		}else{
+			SimpleUtils.fail("Controls Page: Scheduling Collaboration Card not Loaded!", false);
+		}
+		return flag;
+	}
+
+	public boolean isControlsComplianceCard() throws Exception {
+		boolean flag = false;
+		if(isElementLoaded(complianceSection,5)){
+			SimpleUtils.pass("Controls Page: Compliance Section Loaded Successfully!");
+			flag= true;
+		}else{
+			SimpleUtils.fail("Controls Page: Compliance Section not Loaded!", false);
+		}
+		return flag;
+	}
+
+	public boolean isControlsUsersAndRolesCard() throws Exception {
+		boolean flag = false;
+		if(isElementLoaded(usersAndRolesSection,5)){
+			SimpleUtils.pass("Controls Page: User and Roles Section Loaded Successfully!");
+			flag= true;
+		}else{
+			SimpleUtils.fail("Controls Page: User and Roles Section not Loaded!", false);
+		}
+		return flag;
+	}
+
+	public boolean isControlsTaskAndWorkRolesCard() throws Exception {
+		boolean flag = false;
+		if(isElementLoaded(tasksAndWorkRolesSection,5)){
+			SimpleUtils.pass("Controls Page: Task And Work Roles Section Loaded Successfully!");
+			flag= true;
+		}else{
+			SimpleUtils.fail("Controls Page: Task And Work Roles not Loaded!", false);
+		}
+		return flag;
+	}
+
+	public boolean isControlsWorkingHoursCard() throws Exception {
+		boolean flag = false;
+		if(isElementLoaded(workingHoursCard,5)){
+			SimpleUtils.pass("Controls Page: Working Hours Section Loaded Successfully!");
+			flag= true;
+		}else{
+			SimpleUtils.fail("Controls Page: Working Hours Card not Loaded!", false);
+		}
+		return flag;
+	}
+
+	public boolean isControlsLocationsCard() throws Exception {
+		boolean flag = false;
+		if(isElementLoaded(locationsSection,5)){
+			SimpleUtils.pass("Controls Page: Location Section Loaded Successfully!");
+			flag= true;
+		}else{
+			SimpleUtils.fail("Controls Page: Locations Card not Loaded!", false);
+		}
+		return flag;
+	}
+
+
+	@FindBy(xpath = "//h3[contains(text(),'publish schedules')]")
+	private WebElement schedulePublishWindowText;
+
+	public void verifySchedulePublishWindow(String publishWindowAdvanceWeeks, String publishWindowQuestion, String userCredential) throws Exception {
+		String fieldType = "select";
+
+		if(isElementLoaded(schedulingPoliciesSchedulesFormSectionDiv,5)){
+			if(isElementLoaded(schedulePublishWindowText,5)){
+				if(schedulePublishWindowText.getText().equalsIgnoreCase(publishWindowQuestion)){
+					SimpleUtils.pass("Scheduling Policies: Schedule Publish Window question matches with expected value " + publishWindowQuestion);
+				}else{
+					SimpleUtils.fail("Scheduling Policies: Schedule Publish Window question not matched with expected value " + schedulePublishWindowText.getText(),true);
+				}
+				if(isElementLoaded(schedulePublishWindowDiv,5)) {
+					WebElement schedulePublishWindowDropDown = schedulePublishWindowDiv.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+					if(isElementLoaded(schedulePublishWindowDropDown,5)) {
+						boolean isFieldEditable = isInputFieldEditable(schedulePublishWindowDropDown, fieldType);
+						isFieldEditableBasedOnAccess(userCredential, isFieldEditable);
+					}
+					else
+						SimpleUtils.fail("Scheduling Policies: Schedule weeks to be published dropdown not loaded.", false);
+				}
+				else
+					SimpleUtils.fail("Scheduling Policies: Advance Schedule weeks to be Finalize section not loaded.", false);
+			}else{
+				SimpleUtils.fail("Controls Page: - Scheduling Policies : Schedule publish window Question section not loaded.", false);
+			}
+
+		}else{
+			SimpleUtils.fail("Controls Page: - Scheduling Policies section: 'Schedules' form section not loaded.", false);
+		}
+
+	}
+
+
+	public void isFieldEditableBasedOnAccess(String access, boolean isFieldEditable) throws Exception{
+		if(isFieldEditable && access.equalsIgnoreCase("InternalAdmin")){
+			SimpleUtils.pass("Scheduling Policies: Fields are editable for " + access);
+		}else if(!isFieldEditable && access.equalsIgnoreCase("StoreManager")){
+			SimpleUtils.pass("Scheduling Policies: Fields are not editable for " + access);
+		}else{
+			SimpleUtils.fail("Scheduling Policies: Fields are not editable", true);
+		}
+	}
+
+
+	public void getSchedulePublishWindowWeeksDropDownValues() throws Exception {
+		String selectedOptionLabel = "";
+		if(isElementLoaded(schedulePublishWindowDiv,5)) {
+			WebElement schedulePublishWindowDropDown = schedulePublishWindowDiv.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(schedulePublishWindowDropDown,5)) {
+				Select dropdown= new Select(schedulePublishWindowDropDown);
+				selectedOptionLabel = dropdown.getFirstSelectedOption().getText();
+				for(WebElement option : dropdown.getOptions()) {
+					SimpleUtils.pass("It should be a dropdown field with values " + option.getText());
+				}
+			}
+			else
+				SimpleUtils.fail("Scheduling Policies: Advance Schedule weeks to be Finalize dropdown not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Scheduling Policies: Advance Schedule weeks to be Finalize section not loaded.", false);
+
+	}
+
+	@FindBy(xpath = "//lg-location-chooser//lg-select[2]/div//div/input-field/ng-form/div")
+	private WebElement differentLocations;
+
+	public List<String> getSchedulePublishWindowValueAtDifferentLocations(
+			boolean schedulePublishWindowWeeks) throws Exception{
+		List<String> selectionOptionLabel = new ArrayList<>();
+		if(isElementEnabled(differentLocations,5)){
+			click(differentLocations);
+			if (isElementEnabled(searchLocation,5)){
+				SimpleUtils.pass("On click over All Locations in breadcrumb it should display flyout with search text box");
+				if(areListElementVisible(locationName,5)){
+					if(locationName.size()!= 1){
+						for(int i=0; i<locationName.size()-1;i++){
+							click(locationName.get(i+1));
+							waitForSeconds(1);
+							click(differentLocations);
+							if(schedulePublishWindowWeeks){
+								selectionOptionLabel.add(getSchedulePublishWindowWeeks());
+							}else{
+								selectionOptionLabel.add(getSchedulePlanningWindowWeeks());
+							}
+
+						}
+						click(locationName.get(0));
+					}else{
+						if(schedulePublishWindowWeeks){
+							selectionOptionLabel.add(getSchedulePublishWindowWeeks());
+						}else{
+							selectionOptionLabel.add(getSchedulePlanningWindowWeeks());
+						}
+					}
+				}else{
+					SimpleUtils.fail("Locations are not Visible",true);
+				}
+
+			}else{
+				SimpleUtils.fail("On click over different Locations in breadcrumb flyout with search text box does not get displayed",true);
+			}
+		}else{
+			SimpleUtils.fail("Different Locations link is not clickable",true);
+		}
+		return selectionOptionLabel;
+	}
+
+
+	public void verifySchedulePublishWindowUpdationValues(String publishWindowAdvanceWeeks, List<String> selectionOptionLabelAfterUpdation)
+			throws Exception {
+		if(isElementLoaded(schedulingPoliciesSchedulesFormSectionDiv,5)){
+				if(isElementLoaded(schedulePublishWindowDiv,5)) {
+					WebElement schedulePublishWindowDropDown = schedulePublishWindowDiv.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+					if(isElementLoaded(schedulePublishWindowDropDown,5)) {
+						for(int i=0;i<selectionOptionLabelAfterUpdation.size();i++){
+							if(selectionOptionLabelAfterUpdation.get(i).equalsIgnoreCase(getSchedulePublishWindowWeeks())){
+								SimpleUtils.pass("publish window values " + selectionOptionLabelAfterUpdation.get(i) + " are matching after updation with previous values " + publishWindowAdvanceWeeks);
+							}else{
+								SimpleUtils.fail("publish window values " + selectionOptionLabelAfterUpdation.get(i) + " are not matching after updation with previous values " + publishWindowAdvanceWeeks,true);
+							}
+						}
+					}
+					else
+						SimpleUtils.fail("Scheduling Policies: Schedule weeks to be published dropdown not loaded.", false);
+				}
+				else
+					SimpleUtils.fail("Scheduling Policies: Schedule weeks to be published section not loaded.", false);
+		}else{
+			SimpleUtils.fail("Controls Page: - Scheduling Policies section: 'Schedules' form section not loaded.", false);
+		}
+
+	}
+
+
+	public void getSchedulePlanningWindowWeeksDropDownValues() throws Exception {
+		String selectedOptionLabel = "";
+		if(isElementLoaded(schedulingWindow,5)) {
+			WebElement schedulePlanningWindowDropDown = schedulingWindow.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(schedulePlanningWindowDropDown,5)) {
+				Select dropdown= new Select(schedulePlanningWindowDropDown);
+				selectedOptionLabel = dropdown.getFirstSelectedOption().getText();
+				for(WebElement option : dropdown.getOptions()) {
+					SimpleUtils.pass("It should be a dropdown field with values " + option.getText());
+				}
+			}
+			else
+				SimpleUtils.fail("Scheduling Policies: Schedule Planning window dropdown not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Scheduling Policies: Schedule Planning window dropdown section not loaded.", false);
+
+	}
+
+
+	@FindBy(xpath = "//h3[contains(text(),'schedule be created')]")
+	private WebElement schedulePlanningWindowText;
+	public void verifySchedulePlanningWindow(String planningWindowAdvanceWeeks, String planningWindowQuestion, String userCredential) throws Exception {
+		String fieldType = "select";
+		if(isElementLoaded(schedulingPoliciesSchedulesFormSectionDiv,5)){
+			if(isElementLoaded(schedulePlanningWindowText,5)){
+				if(schedulePlanningWindowText.getText().equalsIgnoreCase(planningWindowQuestion)){
+					SimpleUtils.pass("Scheduling Policies: Schedule Planning Window question matches with expected value " + planningWindowQuestion);
+				}else{
+					SimpleUtils.fail("Scheduling Policies: Schedule Planning Window question not matched with expected value " + schedulePublishWindowText.getText(),true);
+				}
+				if(isElementLoaded(schedulingWindow,5)) {
+					WebElement schedulePlanningWindowDropDown = schedulingWindow.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+					if(isElementLoaded(schedulePlanningWindowDropDown,5)) {
+						boolean isFieldEditable = isInputFieldEditable(schedulePlanningWindowDropDown, fieldType);
+						isFieldEditableBasedOnAccess(userCredential, isFieldEditable);
+					}
+					else
+						SimpleUtils.fail("Scheduling Policies: Schedule planning weeks dropdown not loaded.", false);
+				}
+				else
+					SimpleUtils.fail("Scheduling Policies: Advance Schedule weeks to be Finalize section not loaded.", false);
+			}else{
+				SimpleUtils.fail("Controls Page: - Scheduling Policies : Schedule planning window Question section not loaded.", false);
+			}
+
+		}else{
+			SimpleUtils.fail("Controls Page: - Scheduling Policies section: 'Schedules' form section not loaded.", false);
+		}
+
+	}
+
+
+	public void verifySchedulePlanningWindowUpdationValues(String planningWindowAdvanceWeeks, List<String> selectionOptionLabelAfterUpdation)
+			throws Exception {
+		if(isElementLoaded(schedulingPoliciesSchedulesFormSectionDiv,5)){
+			if(isElementLoaded(schedulingWindow,5)) {
+				WebElement schedulePlanningWindowDropDown = schedulingWindow.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+				if(isElementLoaded(schedulePlanningWindowDropDown,5)) {
+					for(int i=0;i<selectionOptionLabelAfterUpdation.size();i++){
+						if(selectionOptionLabelAfterUpdation.get(i).equalsIgnoreCase(getSchedulePlanningWindowWeeks())){
+							SimpleUtils.pass("planning window values " + selectionOptionLabelAfterUpdation.get(i) + " are matching after updation with previous values " + planningWindowAdvanceWeeks);
+						}else{
+							SimpleUtils.fail("planning window values " + selectionOptionLabelAfterUpdation.get(i) + " are not matching after updation with previous values " + planningWindowAdvanceWeeks,true);
+						}
+					}
+				}
+				else
+					SimpleUtils.fail("Scheduling Policies: Schedule weeks to be published dropdown not loaded.", false);
+			}
+			else
+				SimpleUtils.fail("Scheduling Policies: Schedule weeks to be published section not loaded.", false);
+		}else{
+			SimpleUtils.fail("Controls Page: - Scheduling Policies section: 'Schedules' form section not loaded.", false);
+		}
+
+	}
+
+
+
+
+
 }

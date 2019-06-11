@@ -15,30 +15,30 @@ import com.legion.utils.SimpleUtils;
 
 public class ConsoleLocationSelectorPage extends BasePage implements LocationSelectorPage {
 
-    @FindBy(className = "location-selector-location-bullet-container")
+    @FindBy(css = "lg-select[search-hint='Search Location'] div.input-faked")
     private WebElement locationSelectorButton;
-    
+
     @FindBy(css = "div.console-navigation-item")
     private List<WebElement> consoleMenuItems;
-    
+
     @FindBy(css = "div.console-navigation-item.active")
     private WebElement activeConsoleMenuItem;
-    
+
     @FindBy(css = "div.lg-search-options")
     private WebElement locationDropDownButton;
-    
+
     @FindBy(className = "location-selector-dropdown-menu-items")
     private List<WebElement> locationDropDownItems;
-    
+
     @FindBy(css = "div.lg-search-options__option")
     private List<WebElement> availableLocationCardsName;
-    
+
     @FindBy(className = "location-selector-location-name-text")
     private WebElement dashboardSelectedLocationText;
-    
+
     @FindBy (className = "location-selection-action-cancel")
     private WebElement dashboardLocationsPopupCancelButton;
-    
+
     @FindBy (css = "div.console-navigation-item-label.Dashboard")
     private WebElement dashboardConsoleName;
 
@@ -63,6 +63,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public void changeLocation(String locationName)
     {
+        waitForSeconds(2);
         try {
             Boolean isLocationMatched = false;
             activeConsoleName = activeConsoleMenuItem.getText();
@@ -113,7 +114,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     {
     	try {
     		if(isChangeLocationButtonLoaded()) {
-                if(dashboardSelectedLocationText.getText().contains(locationName)) {
+                if(locationSelectorButton.getText().contains(locationName)) {
                     return true;
                 }
             }

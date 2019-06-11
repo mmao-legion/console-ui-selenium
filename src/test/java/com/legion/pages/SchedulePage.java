@@ -26,6 +26,7 @@ public interface SchedulePage {
 	public void generateSchedule() throws Exception;
 	public String getScheduleWeekStartDayMonthDate();
 	public void clickOnEditButton() throws Exception;
+	public void clickImmediateNextToCurrentActiveWeekInDayPicker() throws Exception;
 	public Boolean isAddNewDayViewShiftButtonLoaded() throws Exception;
 	public void clickOnCancelButtonOnEditMode() throws Exception;
 	public Boolean isGenerateButtonLoaded() throws Exception;
@@ -121,9 +122,21 @@ public interface SchedulePage {
 	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception;
 	public void verifyScheduledHourNTMCountIsCorrect() throws Exception;
 	public void complianceShiftSmartCard() throws Exception;
+	public void viewProfile();
+	public void changeWorkerRole();
+	public void assignTeamMember() throws Exception;
+	public void convertToOpenShift();
+	public void beforeEdit();
 	public void selectTeamMembersOptionForOverlappingSchedule() throws Exception;
 	public boolean getScheduleOverlappingStatus()throws Exception;
 	public void searchWorkerName(String searchInput) throws Exception;
 	public void verifyScheduleStatusAsOpen() throws Exception;
 	public void verifyScheduleStatusAsTeamMember() throws Exception;
+	public String getActiveAndNextDay() throws Exception;
+	public HashMap<String, String> getOperatingHrsValue(String day) throws Exception;
+	public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception;
+	public void clickOnNextDaySchedule(String activeDay) throws Exception;
+	public void selectTeamMembersOptionForSchedule() throws Exception;
+	public void verifyActiveScheduleType() throws Exception;
+
 }

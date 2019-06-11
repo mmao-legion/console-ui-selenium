@@ -11,7 +11,7 @@ import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.CsvUtils;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
-import java.util.Map;
+import com.legion.utils.SpreadSheetUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeMethod;
@@ -23,9 +23,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static com.legion.utils.MyThreadLocal.getTestRailRunId;
-import static com.legion.utils.MyThreadLocal.setTestRailRunId;
+import static com.legion.utils.MyThreadLocal.*;
 
 public class SanityTest extends TestBase{
 	  private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
@@ -253,7 +253,7 @@ public class SanityTest extends TestBase{
 	@Automated(automated =  "Automated")
 	@SanitySuite(sanity =  "Sanity")
 	@Owner(owner = "Naval")
-	@UseAsTestRailSectionId(testRailSectionId = 96)
+	@UseAsTestRailSectionId(testRailSectionId = 110)
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate Schedule ungenerate feature.")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
@@ -499,7 +499,42 @@ public class SanityTest extends TestBase{
 	public void validateChangeLocationAsStoreManager(String browser, String username, String password, String location)
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/TestCasesLegionScheduleCollaboration.xlsx", "Schedule Collaboration");
+		for(HashMap<String, String> spreadSheetRow : spreadSheetData)
+		{
+			String defaultAction = "";
+			String module = spreadSheetRow.get("Module");
+			String scenario = spreadSheetRow.get("Scenario");
+			String summary = spreadSheetRow.get("Summary");
+			String testSteps = spreadSheetRow.get("Test Steps");
+			String expectedResult = spreadSheetRow.get("Expected Result");
+//			String actualResult = spreadSheetRow.get("Actual Result");
+			String testData = spreadSheetRow.get("Test Data");
+			String preconditions = spreadSheetRow.get("Preconditions");
+			String testCaseType = spreadSheetRow.get("Test Case Type");
+			String priority = spreadSheetRow.get("Priority/Severifty");
+			String isAutomated = spreadSheetRow.get("Automated (Y/N)");
+			String result = spreadSheetRow.get("Result (Pass/Fail)");
+			String action = spreadSheetRow.get("Action");
+			int sectionID = 230;
+
+			if(action != null && action.trim().length() > 0)
+				defaultAction = action.toLowerCase();
+
+			if(summary == null || summary.trim().length() == 0)
+				summary = "Title is missing on SpreadSheet";
+
+			if(getModuleName()!=null && getModuleName().equalsIgnoreCase(module.replace("\n",""))){
+					SimpleUtils.addTestCase(module, scenario , summary, testSteps, expectedResult, testData,
+							preconditions, testCaseType, priority, isAutomated, result, action, getSectionID());
+				}else{
+					SimpleUtils.addSectionId(module);
+					SimpleUtils.addTestCase(module, scenario , summary, testSteps, expectedResult, testData,
+							preconditions, testCaseType, priority, isAutomated, result, action, getSectionID());
+			}
+
+		}
+//		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
 	}
 
@@ -704,8 +739,7 @@ public class SanityTest extends TestBase{
 //		int testRailId = (Integer) context.getAttribute("TestRailId");
 //		System.out.println("In Test1, Value stored in context is: "+testRailId);
 		SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
-		schedulePage.navigateScheduleDayWeekView(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Three.getValue());
-
+		schedulePage.navigateScheduleDayWeekView(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.One.getValue());
 	}
 
 //	@SanitySuite(sanity =  "Sanity")

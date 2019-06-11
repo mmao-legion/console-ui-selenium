@@ -230,6 +230,12 @@ public class BasePage {
         actions.moveToElement(element,10,15).click().build().perform();
     }
 
+    public void mouseHoverClick(WebElement element)
+    {
+        Actions actions = new Actions(getDriver());
+        actions.click().build().perform();
+    }
+
     
     public void mouseHoverDragandDrop(WebElement fromDestination, WebElement toDestination)
     {
@@ -419,6 +425,17 @@ public class BasePage {
         String monthName = wanted.getMonth().toString().substring(0,1) + wanted.getMonth().toString().substring(1,3).toLowerCase();
         String timeOffDate = dayOfWeek + ", " + monthName + " " + wanted.getDayOfMonth();
         return timeOffDate;
+    }
+
+
+    public static boolean isClickable(WebElement element, long timeOutInSeconds ) {
+        try {
+            WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(), timeOutInSeconds);
+            wait.until(ExpectedConditions.elementToBeClickable(element));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 
