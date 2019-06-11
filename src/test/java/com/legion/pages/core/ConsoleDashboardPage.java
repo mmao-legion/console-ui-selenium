@@ -253,7 +253,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	{
 		HashMap<String, Float> todaysForcastData = new HashMap<String, Float>();
 		String demandForecastLabel = "Demand Forecast";
-		String guidanceHoursLabel = "Guidance";
+		String guidanceHoursLabelGuidance = "Guidance";
+		String guidanceHoursLabelBudget = "Budget";
 		String scheduledHoursLabel = "Scheduled";
 		String otherHoursLabel = "Other";
 		if(isElementLoaded(todaysForecastDataDiv))
@@ -264,7 +265,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			else
 				SimpleUtils.fail("Dashboard Page: Unable to fetch Demand Forecast data.", true);
 
-			if(todaysForecastString[3].toLowerCase().contains(guidanceHoursLabel.toLowerCase())) 
+			if(todaysForecastString[3].toLowerCase().contains(guidanceHoursLabelGuidance.toLowerCase()) || todaysForecastString[3].toLowerCase().contains(guidanceHoursLabelBudget.toLowerCase()))
 				todaysForcastData.put("guidanceHours" , Float.valueOf(todaysForecastString[2].split(" ")[0]));
 			else
 				SimpleUtils.fail("Dashboard Page: Unable to fetch Guidance Hours.", true);
