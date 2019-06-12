@@ -353,12 +353,16 @@ public abstract class TestBase {
      */
     public synchronized void loginToLegionAndVerifyIsLoginDone(String username, String Password, String location) throws Exception
     {
-    	LoginPage loginPage = pageFactory.createConsoleLoginPage();
-    	loginPage.loginToLegionWithCredential(username, Password);
-    	LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-    	locationSelectorPage.changeLocation(location);
-	    boolean isLoginDone = loginPage.isLoginDone();
-	    loginPage.verifyLoginDone(isLoginDone, location);
+        try {
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.loginToLegionWithCredential(username, Password);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeLocation(location);
+            boolean isLoginDone = loginPage.isLoginDone();
+            loginPage.verifyLoginDone(isLoginDone, location);
+        } catch (Exception e) {
+            Reporter.log("Exception on login: " + e, true);
+        }
     }
 
 	public abstract void firstTest(Method testMethod, Object[] params) throws Exception;
