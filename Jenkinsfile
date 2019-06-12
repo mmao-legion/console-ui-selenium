@@ -8,7 +8,7 @@ node {
     }
     stage('Run test') {
         testImage.inside {
-            sh 'mvn test -X -P dev'
+            sh 'mvn test -X'
         }
     }
 }
