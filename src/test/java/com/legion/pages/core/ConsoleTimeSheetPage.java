@@ -1,8 +1,9 @@
 package com.legion.pages.core;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,6 +19,8 @@ import com.legion.pages.BasePage;
 import com.legion.pages.TimeSheetPage;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+
+import static com.legion.utils.MyThreadLocal.*;
 
 public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
@@ -80,7 +83,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy(css="input[aria-label=\"Shift End\"]")
 	private WebElement addTCShiftEndTimeTextField;
 	
-	@FindBy(css="input[aria-label=\"Add Note\"]")
+	@FindBy(css="input[placeholder='Enter Comment (Optional)']")
 	private WebElement addTCAddNotesTextField;
 	
 	@FindBy(css="lg-button[label=\"Add\"]")
@@ -179,8 +182,14 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	
 	@FindBy(css = "div.card-carousel-fixed")
 	private WebElement timesheetCarouselCardHoursDiv;
-	
-	
+
+	@FindBy(css = "div.lg-toast")
+	private WebElement successMsg;
+
+//	@FindBy(css = "div.card-carousel-fixed")
+//	private WebElement timesheetCarouselCardHoursDiv;
+
+
 	String timeSheetHeaderLabel = "Timesheet";
 	public ConsoleTimeSheetPage(){
 		PageFactory.initElements(getDriver(), this);
@@ -354,99 +363,126 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	}
 
 
-	
-	@Override
-	public void addNewTimeClock(String location, String timeClockDate, String employee, String workRole, String startTime, String endTime, String notes) throws Exception {
-		if(isElementLoaded(addTimeClockBtn)) {
+	private static final SimpleDateFormat sdf =
+			new SimpleDateFormat("yyyy-MM-dd");
+
+	private static final SimpleDateFormat sdfNew =
+			new SimpleDateFormat("MMM d, yyyy");
+
+	public String formatDateForTimesheet() {
+		String finalDate = null;
+		try {
+			String dateToCompare = selectDateForTimesheet(7);
+			Date date = sdf.parse(dateToCompare);
+			finalDate = sdfNew.format(date);
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return finalDate;
+	}
+
+		@Override
+	public void addNewTimeClock(String location, String employee, String workRole, String startTime, String endTime, String notes) throws Exception {
+		if(isElementLoaded(addTimeClockBtn,5)) {
 			click(addTimeClockBtn);
-			
-			// Select Location
-			click(addTCLocationField);
-			List<WebElement> locationTextButtons = addTCLocationField.findElements(By.cssSelector("input[type=\"text\"]"));
-			WebElement searchButton = locationTextButtons.get(1);
-			searchButton.sendKeys(location);
-			Thread.sleep(2000);
-			if(dropdownOptions.size() != 0) {
-				click(dropdownOptions.get(0));
-			}
-			if(! locatioOrDatePickerPopup.getAttribute("class").contains("ng-hide"))
+			if (isElementEnabled(addTimeClockSaveBtn, 10)) {
+				// Select Location
 				click(addTCLocationField);
-			
-			// Select Date Month & Year
-			click(addTCDateField);
-			String date = timeClockDate.split(",")[0].split(" ")[1];
-			String month = timeClockDate.split(",")[0].split(" ")[0];
-			int year = Integer.valueOf(timeClockDate.split(",")[1].trim());
-			WebElement changeMonthArrow = timeClockNextMonthArrow;
-			while(year != Integer.valueOf(timeClockCalendarLabel.getText().split(" ")[1])
-					|| ! timeClockCalendarLabel.getText().toLowerCase().contains(month.toLowerCase()))
-			{
-				if(timeClockCalendarLabel.getText().toLowerCase().contains(month.toLowerCase())) {
-					if(year > Integer.valueOf(timeClockCalendarLabel.getText().split(" ")[1]))
-						changeMonthArrow = timeClockNextMonthArrow;
-					else
-						changeMonthArrow = timeClockPreviousMonthArrow;
+				List<WebElement> locationTextButtons = addTCLocationField.findElements(By.cssSelector("input[type=\"text\"]"));
+				WebElement searchButton = locationTextButtons.get(1);
+				searchButton.sendKeys(location);
+				Thread.sleep(2000);
+				if (dropdownOptions.size() != 0) {
+					click(dropdownOptions.get(0));
 				}
-				click(changeMonthArrow);
-			}
-			
-			// Select Date
-			for(WebElement catenderdate : calenderDates) {
-				if(catenderdate.getText().contains(date)) {
-					click(catenderdate);
-				}
-			}
-			
-			if( calendarInputWidget.isDisplayed())
+				if (!locatioOrDatePickerPopup.getAttribute("class").contains("ng-hide"))
+					click(addTCLocationField);
+
+				// Select Date Month & Year
 				click(addTCDateField);
-			
-			// Select Employee
-			boolean isEmployeeFound = false;
-			List<WebElement> timeCLockEmployeeTextBox = addTCEmployeeField.findElements(By.cssSelector("input[type=\"text\"]"));
-			click(timeCLockEmployeeTextBox.get(0));
-			timeCLockEmployeeTextBox.get(0).sendKeys(employee.split(" ")[0]);
-			timeCLockEmployeeTextBox.get(0).sendKeys(Keys.TAB);
-			Thread.sleep(2000);
-			for(WebElement employeeOption : dropdownOptions)
-			{
-				if(employeeOption.getText().toLowerCase().contains(employee.toLowerCase())) {
-					click(employeeOption);
-					isEmployeeFound = true;
+				selectDateForTimesheet(7);
+
+//			String date = timeClockDate.split(",")[0].split(" ")[1];
+//			String month = timeClockDate.split(",")[0].split(" ")[0];
+//			int year = Integer.valueOf(timeClockDate.split(",")[1].trim());
+//			WebElement changeMonthArrow = timeClockNextMonthArrow;
+//			while(year != Integer.valueOf(timeClockCalendarLabel.getText().split(" ")[1])
+//					|| ! timeClockCalendarLabel.getText().toLowerCase().contains(month.toLowerCase()))
+//			{
+//				if(timeClockCalendarLabel.getText().toLowerCase().contains(month.toLowerCase())) {
+//					if(year > Integer.valueOf(timeClockCalendarLabel.getText().split(" ")[1]))
+//						changeMonthArrow = timeClockNextMonthArrow;
+//					else
+//						changeMonthArrow = timeClockPreviousMonthArrow;
+//				}
+//				click(changeMonthArrow);
+//			}
+//
+//			// Select Date
+//			for(WebElement catenderdate : calenderDates) {
+//				if(catenderdate.getText().contains(date)) {
+//					click(catenderdate);
+//				}
+//			}
+//
+//			if( calendarInputWidget.isDisplayed())
+//				click(addTCDateField);
+//
+				// Select Employee
+				boolean isEmployeeFound = false;
+				List<WebElement> timeCLockEmployeeTextBox = addTCEmployeeField.findElements(By.cssSelector("input[type=\"text\"]"));
+				click(timeCLockEmployeeTextBox.get(0));
+				timeCLockEmployeeTextBox.get(0).sendKeys(employee.split(" ")[0]);
+				timeCLockEmployeeTextBox.get(0).sendKeys(Keys.TAB);
+				Thread.sleep(2000);
+				for (WebElement employeeOption : dropdownOptions) {
+					if (employeeOption.getText().toLowerCase().contains(employee.toLowerCase())) {
+						click(employeeOption);
+						isEmployeeFound = true;
+						break;
+					}
 				}
+				SimpleUtils.assertOnFail("The employee '" + employee + "' not found while adding a Time Clock.", isEmployeeFound, false);
+
+				// Select Work Role
+				Select workRoleDropDown = new Select(addTCWorkRoleDropDown);
+				workRoleDropDown.selectByVisibleText(workRole);
+
+
+				// Shift Start Field
+				addTCShiftStartTimeTextField.clear();
+				addTCShiftStartTimeTextField.sendKeys(startTime);
+
+				// Shift End Field
+				addTCShiftEndTimeTextField.clear();
+				addTCShiftEndTimeTextField.sendKeys(endTime);
+
+				// Add Notes Field
+				addTCAddNotesTextField.clear();
+				addTCAddNotesTextField.sendKeys(notes);
+
+				// Save
+				click(addTimeClockSaveBtn);
+
+				if(isElementLoaded(successMsg, 5)){
+					SimpleUtils.pass("Clock Saved Successfully");
+				}else{
+					SimpleUtils.fail("Unable to save clock",false);
+				}
+
+
+//				if (isElementLoaded(addClockPopup, 1))
+//					SimpleUtils.fail("Unable to Save Time Clock!", false);
+//				else
+//					SimpleUtils.pass("Time Clock Saved Successfully!");
 			}
-			SimpleUtils.assertOnFail("The employee '"+employee+"' not found while adding a Time Clock.", isEmployeeFound, false);
-			
-			// Select Work Role
-			Select workRoleDropDown= new Select (addTCWorkRoleDropDown);
-			workRoleDropDown.selectByVisibleText(workRole);
-			
-			
-
-			// Shift Start Field
-			addTCShiftStartTimeTextField.clear();
-			addTCShiftStartTimeTextField.sendKeys(startTime);
-			
-			// Shift End Field
-			addTCShiftEndTimeTextField.clear();
-			addTCShiftEndTimeTextField.sendKeys(endTime);
-			
-			// Add Notes Field
-			addTCAddNotesTextField.clear();
-			addTCAddNotesTextField.sendKeys(notes);
-			
-			// Save
-			click(addTimeClockSaveBtn);
-
-			if(isElementLoaded(addClockPopup, 1))
-				SimpleUtils.fail("Unable to Save Time Clock!", false);
-			else
-				SimpleUtils.pass("Time Clock Saved Successfully!");
 		}
 	}
 	
 	
 	@Override
-	public void valiadteTimeClock(String location, String timeClockDate, String employee, String workRole, 
+	public void valiadteTimeClock(String location, String employee, String workRole,
 			String startTime, String endTime, String notes) throws Exception 
 	{
 		if(startTime.startsWith("0"))
@@ -457,12 +493,12 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		boolean isShiftEndMatched = false;
 		clickOnTimeSheetConsoleMenu();
 		clickOnPayPeriodDuration();
-		
+		String timesheetDateToCompare = formatDateForTimesheet();
 		if(seachAndSelectWorkerByName(employee))
 		{
 			for(WebElement WorkersDayRow : getTimeSheetDisplayedWorkersDayRows())
 			{
-				if(WorkersDayRow.getText().toLowerCase().contains(timeClockDate.toLowerCase().split(",")[0]))
+				if(WorkersDayRow.getText().toLowerCase().contains(timesheetDateToCompare.toLowerCase().split(",")[0]))
 				{
 					WebElement activeRowPopUpLink = WorkersDayRow.findElement(By.cssSelector("lg-button[action-link]"));
 					if(isElementLoaded(activeRowPopUpLink))

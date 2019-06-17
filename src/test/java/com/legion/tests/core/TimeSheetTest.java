@@ -112,10 +112,10 @@ public class TimeSheetTest extends TestBase{
 	
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Naval")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "DgStage_Enterprise")
     @TestName(description = "TP-112 : Automation TA module : As a Manager or Payroll admin I can add a new Timesheet entry for a TM.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyNewTimesheetEntryAddedAsStoreManager(String browser, String username, String password, String location)
+    public void verifyNewTimesheetEntryAddedAsInternalAdmin(String browser, String username, String password, String location)
     		throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -134,8 +134,8 @@ public class TimeSheetTest extends TestBase{
         String timeClockEndTime = addTimeClockDetails.get("Shift_End");
         String timeClockAddNote = addTimeClockDetails.get("Add_Note");
         
-        timeSheetPage.addNewTimeClock(timeClockLocation, timeClockDate, timeClockEmployee,timeClockWorkRole, timeClockStartTime, timeClockEndTime, timeClockAddNote);
-        timeSheetPage.valiadteTimeClock(timeClockLocation, timeClockDate, timeClockEmployee, timeClockWorkRole, timeClockStartTime, timeClockEndTime, timeClockAddNote);
+        timeSheetPage.addNewTimeClock(timeClockLocation, timeClockEmployee,timeClockWorkRole, timeClockStartTime, timeClockEndTime, timeClockAddNote);
+        timeSheetPage.valiadteTimeClock(timeClockLocation,timeClockEmployee, timeClockWorkRole, timeClockStartTime, timeClockEndTime, timeClockAddNote);
         timeSheetPage.closeTimeSheetDetailPopUp();
 	}
 	
@@ -164,7 +164,7 @@ public class TimeSheetTest extends TestBase{
         String timeClockEndTime = "07:00pm";
         String timeClockAddNote = addTimeClockDetails.get("Add_Note");
         
-        timeSheetPage.addNewTimeClock(timeClockLocation, timeClockDate, timeClockEmployee,timeClockWorkRole, timeClockStartTime, timeClockEndTime, timeClockAddNote);
+//        timeSheetPage.addNewTimeClock(timeClockLocation, timeClockDate, timeClockEmployee,timeClockWorkRole, timeClockStartTime, timeClockEndTime, timeClockAddNote);
         HashMap<String, Float> allHours = timeSheetPage.getTimeClockHoursByDate(timeClockDate, timeClockEmployee);
 		float regHours = allHours.get("regHours");
 		float totalHours = allHours.get("totalHours");
@@ -399,8 +399,8 @@ public class TimeSheetTest extends TestBase{
     	String endTime = addTimeClockDetails.get("Shift_End");
     	String notes = addTimeClockDetails.get("Add_Note");
     	
-        timeSheetPage.addNewTimeClock(location, date, timeClockEmployee, workRole, startTime, endTime, notes);
-        timeSheetPage.valiadteTimeClock(location, date, timeClockEmployee, workRole, startTime, endTime, notes);
+//        timeSheetPage.addNewTimeClock(location, date, timeClockEmployee, workRole, startTime, endTime, notes);
+//        timeSheetPage.valiadteTimeClock(location, date, timeClockEmployee, workRole, startTime, endTime, notes);
         
         SimpleUtils.assertOnFail("Time Clock: approve button not active for '"+ timeClockEmployee 
 					+"' and duration: '"+timeClockEmployee +"'.", timeSheetPage.isTimeSheetPopupApproveButtonActive(), false);

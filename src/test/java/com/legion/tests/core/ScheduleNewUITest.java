@@ -1131,7 +1131,7 @@ public class ScheduleNewUITest extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Gunjan")
-	@Enterprise(name = "Kendrascott2_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "LEG-5232: Data for Schedule does not get loaded when user clicks on next day without waiting data for highlighted day gets loaded")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void generateScheduleAndCheckScheduleNTMSizeWeekView(String username, String password, String browser, String location)
@@ -2199,7 +2199,7 @@ public class ScheduleNewUITest extends TestBase {
     }
 
     @Automated(automated = "Automated")
-    @Owner(owner = "Nishant")
+    @Owner(owner = "Gunjan")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "TP-18: As a store manager, should be able to review past week's schedule and generate this week or next week's schedule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -2218,6 +2218,7 @@ public class ScheduleNewUITest extends TestBase {
         schedulePage.clickImmediateNextToCurrentActiveWeekInDayPicker();
         schedulePage.clickOnEditButton();
 //		schedulePage.viewProfile();
+//		schedulePage.convertToOpenShift();
         schedulePage.changeWorkerRole();
 //		schedulePage.assignTeamMember();
 

@@ -3365,6 +3365,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(imageSize.get(i));
             if (isElementEnabled(changeRole)) {
                 click(changeRole);
+                
                 for (int j = 0; j < changeRoleValues.size(); j++) {
                     if (changeRoleValues.get(j).getText().equalsIgnoreCase(propertyWorkRole.get("changeWorkRole"))) {
                         click(changeRoleValues.get(j));

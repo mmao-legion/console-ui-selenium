@@ -22,10 +22,10 @@ public interface TimeSheetPage {
 	
 	public ArrayList<String> hoverOnClockIconAndGetInfo() throws Exception;
 
-	public void addNewTimeClock(String location, String date, String employee, String workRole, 
+	public void addNewTimeClock(String location, String employee, String workRole,
 			String startTime, String endTime, String notes) throws Exception;
 
-	public void valiadteTimeClock(String location, String timeClockDate, String employee, String workRole, String startTime,
+	public void valiadteTimeClock(String location, String employee, String workRole, String startTime,
 			String endTime, String notes) throws Exception;
 
 	public void clickOnPayPeriodDuration() throws Exception;

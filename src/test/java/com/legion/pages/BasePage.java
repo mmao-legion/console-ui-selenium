@@ -407,6 +407,38 @@ public class BasePage {
         }
     }
 
+    public String selectDateForTimesheet(int daysFromToday) {
+        LocalDate now = LocalDate.now();
+        LocalDate wanted = LocalDate.now().minusDays(daysFromToday);
+        String dateWanted = wanted.toString();
+//        LocalDate wanted1 = LocalDate.now().minusDays()
+        WebElement btnPreviousMonth = null;
+        int numClicks = now.getMonthValue() - wanted.getMonthValue();
+        if (numClicks < 0) {
+            numClicks = daysFromToday / 30;
+        }
+        if (numClicks >0){
+            try{
+                btnPreviousMonth = getDriver().findElement(By.cssSelector("a[ng-click='$ctrl.changeMonth(-1)']"));
+            }catch(Exception e){
+                SimpleUtils.fail("Not able to click Next month arrow",false);
+            }
+        }
+
+        for (int i = 0; i < numClicks; i++) {
+            click(btnPreviousMonth);
+        }
+
+        List<WebElement> mCalendarDates = getDriver().findElements(By.cssSelector("div[class='lg-single-calendar-date ng-scope']"));
+        for (WebElement mDate : mCalendarDates) {
+            if (Integer.parseInt(mDate.getText()) == wanted.getDayOfMonth()) {
+                mDate.click();
+                break;
+            }
+        }
+        return dateWanted;
+    }
+
 
     public HashMap<String,String> getTimeOffDate(int fromDate, int toDate) {
         HashMap<String, String> timeOffDate = new HashMap<>();
