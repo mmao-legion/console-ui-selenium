@@ -137,5 +137,6 @@ public interface SchedulePage {
 	public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception;
 	public void clickOnNextDaySchedule(String activeDay) throws Exception;
 	public void selectTeamMembersOptionForSchedule() throws Exception;
+	public void verifyActiveScheduleType() throws Exception;
 
 }

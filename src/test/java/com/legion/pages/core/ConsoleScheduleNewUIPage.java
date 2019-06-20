@@ -460,6 +460,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(css = "div.lgn-alert-message")
 	private WebElement alertMessage;
 
+    @FindBy(css = "div.schedule-filter-label")
+    private WebElement scheduleType;
+
+    @FindBy(css = "lg-button-group[buttons='scheduleTypeOptions'] div.lg-button-group-first")
+    private WebElement scheduleTypeSystem;
+
+    @FindBy(css = "lg-button-group[buttons='scheduleTypeOptions'] div.lg-button-group-last")
+    private WebElement scheduleTypeManager;
+
+    @FindBy(css = "lg-button-group[buttons='scheduleTypeOptions'] div.lg-button-group-selected")
+    private WebElement activScheduleType;
+
     final static String consoleScheduleMenuItemText = "Schedule";
 
 
@@ -2468,7 +2480,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(generateSheduleButton);
             if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
-                if (isElementEnabled(checkOutTheScheduleButton, 5)) {
+                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
                     checkoutSchedule();
                 } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                     updateAndGenerateSchedule();
@@ -2477,7 +2489,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                 updateAndGenerateSchedule();
-            } else if (isElementEnabled(checkOutTheScheduleButton)) {
+            } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
                 checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
                 SimpleUtils.pass("Schedule Generated Successfuly!");
             } else {
@@ -2964,7 +2976,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		return ScheduleStatus;
 	}
 
-
 	public void searchWorkerName(String searchInput) throws Exception {
 		String[] searchAssignTeamMember = searchInput.split(",");
 		if(isElementLoaded(textSearch,10) && isElementLoaded(searchIcon,10)){
@@ -3365,7 +3376,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(imageSize.get(i));
             if (isElementEnabled(changeRole)) {
                 click(changeRole);
-                
+
                 for (int j = 0; j < changeRoleValues.size(); j++) {
                     if (changeRoleValues.get(j).getText().equalsIgnoreCase(propertyWorkRole.get("changeWorkRole"))) {
                         click(changeRoleValues.get(j));
@@ -3450,4 +3461,28 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("shift images not loaded successfully", false);
         }
     }
+
+	public void verifyActiveScheduleType() throws Exception{
+	    if(isElementLoaded(scheduleType, 5)){
+            if(scheduleType.getText().equalsIgnoreCase("SCHEDULE TYPE")){
+                SimpleUtils.pass("Schedule Type Label is displaying Successfully on page!");
+                getActiveScheduleType();
+            }else{
+                SimpleUtils.fail("Schedule Type Label not displaying on page Successfully!",false);
+            }
+        }
+    }
+
+    public void getActiveScheduleType(){
+	    if(isElementEnabled(activScheduleType,5)){
+	        if(activScheduleType.getText().equalsIgnoreCase("Manager")){
+                SimpleUtils.pass("Schedule Type " + activScheduleType.getText() + " is enabled on page");
+            }else{
+                SimpleUtils.fail("Schedule Type " + activScheduleType.getText() + " is disabled",false);
+            }
+        }else{
+            SimpleUtils.fail("Schedule Type " + scheduleTypeManager.getText() + " is disabled",false);
+        }
+    }
+
 }

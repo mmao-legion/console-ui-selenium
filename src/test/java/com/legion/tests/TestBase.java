@@ -201,9 +201,8 @@ public abstract class TestBase {
             + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
         extent.setSystemInfo(method.getName(), enterpriseName.toString());
         setTestRailRunId(0);
-//        int testCaseId = SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,sectionId);
-////        SimpleUtils.addNUpdateTestCaseIntoTestRun(testName,sectionId,);
-//        setTestCaseId(testCaseId);
+        int testCaseId = SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,sectionId,context);
+        setTestCaseId(testCaseId);
         setCurrentMethod(method);
         setBrowserNeeded(true);
         setCurrentTestMethodName(method.getName());
@@ -263,7 +262,7 @@ public abstract class TestBase {
                 options.setProfile(profile);
                 setDriver(new FirefoxDriver(options));
             }
-            
+
             pageFactory = createPageFactory();
             LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
             getDriver().register(webDriverEventListener);
