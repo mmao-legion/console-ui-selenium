@@ -383,7 +383,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	}
 
 		@Override
-	public void addNewTimeClock(String location, String employee, String workRole, String startTime, String endTime, String notes) throws Exception {
+	public void addNewTimeClock(String location, String employee, String workRole, String startTime, String endTime, String notes, String DaysFromTodayInPast ) throws Exception {
 		if(isElementLoaded(addTimeClockBtn,5)) {
 			click(addTimeClockBtn);
 			if (isElementEnabled(addTimeClockSaveBtn, 10)) {
@@ -401,7 +401,8 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 				// Select Date Month & Year
 				click(addTCDateField);
-				selectDateForTimesheet(7);
+				int DaysFromToday = Integer.parseInt(DaysFromTodayInPast);
+				selectDateForTimesheet(DaysFromToday);
 
 //			String date = timeClockDate.split(",")[0].split(" ")[1];
 //			String month = timeClockDate.split(",")[0].split(" ")[0];
@@ -445,7 +446,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				}
 				SimpleUtils.assertOnFail("The employee '" + employee + "' not found while adding a Time Clock.", isEmployeeFound, false);
 
-				// Select Work Role
+//				 Select Work Role
 				Select workRoleDropDown = new Select(addTCWorkRoleDropDown);
 				workRoleDropDown.selectByVisibleText(workRole);
 
@@ -458,7 +459,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				addTCShiftEndTimeTextField.clear();
 				addTCShiftEndTimeTextField.sendKeys(endTime);
 
-				// Add Notes Field
+//				 Add Notes Field
 				addTCAddNotesTextField.clear();
 				addTCAddNotesTextField.sendKeys(notes);
 
@@ -512,8 +513,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 								String elementText = clockInOut.getText().replace("\n", " ").toLowerCase();
 								if(elementText.contains("shift start"))
 								{
-									if(elementText.contains(location.toLowerCase()) && elementText.contains(workRole.toLowerCase())
-											&& elementText.contains(startTime.toLowerCase()))
+									if(elementText.contains(location.toLowerCase()) && elementText.contains(workRole.toLowerCase()) && elementText.replaceAll(" ","").contains(startTime.toLowerCase()))
 									{
 										isShiftStartMatched = true;
 									}
@@ -521,7 +521,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 								else if(elementText.contains("shift end"))
 								{
 									if(elementText.contains(location.toLowerCase()) && elementText.contains(location.toLowerCase())
-											&& elementText.contains(endTime.toLowerCase()))
+											&& elementText.replaceAll(" ","").contains(endTime.toLowerCase()))
 									{
 										isShiftEndMatched = true;
 									}

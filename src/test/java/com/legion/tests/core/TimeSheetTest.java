@@ -112,7 +112,7 @@ public class TimeSheetTest extends TestBase{
 	
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Naval")
-    @Enterprise(name = "DgStage_Enterprise")
+    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "TP-112 : Automation TA module : As a Manager or Payroll admin I can add a new Timesheet entry for a TM.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNewTimesheetEntryAddedAsInternalAdmin(String browser, String username, String password, String location)
@@ -133,8 +133,9 @@ public class TimeSheetTest extends TestBase{
         String timeClockStartTime = addTimeClockDetails.get("Shift_Start");
         String timeClockEndTime = addTimeClockDetails.get("Shift_End");
         String timeClockAddNote = addTimeClockDetails.get("Add_Note");
+        String DaysInPast = addTimeClockDetails.get("DaysFromTodayInPast");
         
-        timeSheetPage.addNewTimeClock(timeClockLocation, timeClockEmployee,timeClockWorkRole, timeClockStartTime, timeClockEndTime, timeClockAddNote);
+        timeSheetPage.addNewTimeClock(timeClockLocation, timeClockEmployee,timeClockWorkRole, timeClockStartTime, timeClockEndTime, timeClockAddNote, DaysInPast);
         timeSheetPage.valiadteTimeClock(timeClockLocation,timeClockEmployee, timeClockWorkRole, timeClockStartTime, timeClockEndTime, timeClockAddNote);
         timeSheetPage.closeTimeSheetDetailPopUp();
 	}

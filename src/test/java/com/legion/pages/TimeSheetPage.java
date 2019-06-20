@@ -23,7 +23,7 @@ public interface TimeSheetPage {
 	public ArrayList<String> hoverOnClockIconAndGetInfo() throws Exception;
 
 	public void addNewTimeClock(String location, String employee, String workRole,
-			String startTime, String endTime, String notes) throws Exception;
+			String startTime, String endTime, String notes , String DaysFromTodayInPast) throws Exception;
 
 	public void valiadteTimeClock(String location, String employee, String workRole, String startTime,
 			String endTime, String notes) throws Exception;
