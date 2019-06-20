@@ -201,7 +201,7 @@ public abstract class TestBase {
             + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
         extent.setSystemInfo(method.getName(), enterpriseName.toString());
         setTestRailRunId(0);
-        int testCaseId = SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,sectionId);
+        int testCaseId = SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,sectionId,context);
         setTestCaseId(testCaseId);
         setCurrentMethod(method);
         setBrowserNeeded(true);

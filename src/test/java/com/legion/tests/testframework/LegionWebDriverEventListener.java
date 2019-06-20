@@ -115,7 +115,7 @@ public class LegionWebDriverEventListener implements WebDriverEventListener, App
 			setScreenshotConsoleName(BasePage.activeConsoleName);
 			ScreenshotManager.takeScreenShot();
 		}
-	
+
 	}
 
 	@Override

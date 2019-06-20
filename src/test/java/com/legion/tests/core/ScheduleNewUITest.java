@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.legion.tests.annotations.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -29,11 +30,6 @@ import com.legion.pages.SchedulePage;
 import com.legion.pages.StaffingGuidancePage;
 import com.legion.test.core.mobile.LoginTest;
 import com.legion.tests.TestBase;
-import com.legion.tests.annotations.Automated;
-import com.legion.tests.annotations.Enterprise;
-import com.legion.tests.annotations.Owner;
-import com.legion.tests.annotations.TestName;
-import com.legion.tests.annotations.UseAsTestRailId;
 import com.legion.tests.core.ScheduleNewUITest.SchedulePageSubTabText;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
@@ -1831,12 +1827,16 @@ public class ScheduleNewUITest extends TestBase {
 
 	        schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
 	    }
-	    
-	    
-	    @Automated(automated =  "Automated")
-	    @Owner(owner = "Naval")
-	    @Enterprise(name = "KendraScott2_Enterprise")
-	    @TestName(description = "TP-143 : Validate loading of smart card on Schedule tab[ No Spinning icon].")
+
+
+		@MobilePlatform(platform = "Android")
+		@UseAsTestRailSectionId(testRailSectionId = 824)
+		@UseAsTestCaseSectionId(testCaseSectionId = 367)
+		@Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+		@SanitySuite(sanity =  "Sanity")
+		@Enterprise(name = "KendraScott2_Enterprise")
+		@TestName(description = "Validate loading of smart card on Schedule tab[ No Spinning icon].")
 	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	    public void validateScheduleSmartCardsAsStoreManager(String browser, String username, String password, String location)
 	    		throws Exception {
