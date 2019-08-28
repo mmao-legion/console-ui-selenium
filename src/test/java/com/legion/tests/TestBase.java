@@ -186,7 +186,7 @@ public abstract class TestBase {
         String automatedName = ExtentTestManager.getAutomatedName(method);
         String enterpriseName =  SimpleUtils.getEnterprise(method);
         String platformName =  ExtentTestManager.getMobilePlatformName(method);
-        int sectionId = ExtentTestManager.getTestRailSectionId(method);
+//        int sectionId = ExtentTestManager.getTestRailSectionId(method);
         String testRunPhaseName = ExtentTestManager.getTestRunPhase(method);
         List<String> categories =  new ArrayList<String>();
         categories.add(getClass().getSimpleName());
@@ -201,8 +201,9 @@ public abstract class TestBase {
             + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
         extent.setSystemInfo(method.getName(), enterpriseName.toString());
         setTestRailRunId(0);
-        int testCaseId = SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,sectionId,context);
-        setTestCaseId(testCaseId);
+//        SimpleUtils.getSectionIDFromTitle(sectionId);
+        SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
+//        setTestCaseId(testCaseId);
         setCurrentMethod(method);
         setBrowserNeeded(true);
         setCurrentTestMethodName(method.getName());

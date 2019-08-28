@@ -23,20 +23,30 @@ public interface TimeSheetPage {
 	public ArrayList<String> hoverOnClockIconAndGetInfo() throws Exception;
 
 	public void addNewTimeClock(String location, String employee, String workRole,
-			String startTime, String endTime, String notes , String DaysFromTodayInPast) throws Exception;
+			String startTime, String endTime, String breakStartTime, String breakEndTime, String notes , String DaysFromTodayInPast) throws Exception;
 
 	public void valiadteTimeClock(String location, String employee, String workRole, String startTime,
-			String endTime, String notes) throws Exception;
+			String endTime,String breakStartTime, String breakEndTime, String notes, String DaysFromTodayInPast) throws Exception;
+
+	public void updateTimeClock(String location, String employee, String startTime,
+								  String endTime, String notes, String DaysFromTodayInPast) throws Exception;
+
+	public void timesheetAutoApproval(String location, String employee, String startTime,
+									  String endTime, String notes)throws Exception;
 
 	public void clickOnPayPeriodDuration() throws Exception;
 
-	public HashMap<String, Float> getTimeClockHoursByDate(String timeClockDate, String timeClockEmployee) throws Exception;
+	public void clickOnWeekDuration() throws Exception;
+
+	public HashMap<String, Float> getTimeClockHoursByDate(String DaysFromTodayInPast, String timeClockEmployee) throws Exception;
 
 	public String getActiveDayWeekOrPayPeriod() throws Exception;
 	
 	public void navigateDayWeekOrPayPeriodToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount);
 	
 	public void clickOnDayView() throws Exception;
+
+	public void timesheetSmartCard() throws Exception;
 
 	public void openFirstPendingTimeSheet() throws Exception;
 

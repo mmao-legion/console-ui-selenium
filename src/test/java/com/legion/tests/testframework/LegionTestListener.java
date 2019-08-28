@@ -107,12 +107,14 @@ import static com.legion.utils.MyThreadLocal.*;
 			// TODO Auto-generated method stub
 		
 		}
-	
+
 		@Override
 		public void onFinish(ITestContext context) {
-			// TODO Auto-generated method stub	
+			// TODO Auto-generated method stub
+			SimpleUtils.addNUpdateTestCaseIntoTestRun();
+			SimpleUtils.addTestResultIntoTestRailN(1,5,context);
 		}
-	
+
 		@Override
 		public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
 			// TODO Auto-generated method stub

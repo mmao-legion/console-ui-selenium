@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.legion.tests.annotations.*;
 import org.json.simple.JSONObject;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
@@ -18,11 +19,6 @@ import com.legion.pages.DashboardPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.TimeSheetPage;
 import com.legion.tests.TestBase;
-import com.legion.tests.annotations.Automated;
-import com.legion.tests.annotations.Enterprise;
-import com.legion.tests.annotations.Owner;
-import com.legion.tests.annotations.TestName;
-import com.legion.tests.annotations.UseAsTestRailId;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.CsvUtils;
 import com.legion.utils.JsonUtil;
@@ -37,6 +33,7 @@ import static com.legion.utils.MyThreadLocal.setSectionID;
 public class TimeSheetTest extends TestBase{
 	
 	private static HashMap<String, String> addTimeClockDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddTimeClock.json");
+	private static HashMap<String, String> updateTimeClockDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/UpdateTimeClock.json");
 
 
 	public enum dayWeekOrPayPeriodViewType{
@@ -112,12 +109,13 @@ public class TimeSheetTest extends TestBase{
         timeSheetPage.closeTimeSheetDetailPopUp();
         
     }
-	
-	
+
+	//Updated by Gunjan
+	@MobilePlatform(platform = "Android")
 	@Automated(automated =  "Automated")
-	@Owner(owner = "Naval")
+	@Owner(owner = "Gunjan")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "TP-112 : Automation TA module : As a Manager or Payroll admin I can add a new Timesheet entry for a TM.")
+    @TestName(description = "Validate functioning of Add Time Clock button")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNewTimesheetEntryAddedAsInternalAdmin(String browser, String username, String password, String location)
     		throws Exception {
@@ -126,7 +124,7 @@ public class TimeSheetTest extends TestBase{
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.changeLocation(location);
         TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
-        
+
         // Click on "Timesheet" option menu.
         timeSheetPage.clickOnTimeSheetConsoleMenu();
         SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
@@ -136,12 +134,90 @@ public class TimeSheetTest extends TestBase{
         String timeClockWorkRole = addTimeClockDetails.get("Work_Role");
         String timeClockStartTime = addTimeClockDetails.get("Shift_Start");
         String timeClockEndTime = addTimeClockDetails.get("Shift_End");
+		String breakStartTime = addTimeClockDetails.get("Break_Start");
+		String breakEndTime = addTimeClockDetails.get("Break_End");
         String timeClockAddNote = addTimeClockDetails.get("Add_Note");
         String DaysInPast = addTimeClockDetails.get("DaysFromTodayInPast");
-        
-        timeSheetPage.addNewTimeClock(timeClockLocation, timeClockEmployee,timeClockWorkRole, timeClockStartTime, timeClockEndTime, timeClockAddNote, DaysInPast);
-        timeSheetPage.valiadteTimeClock(timeClockLocation,timeClockEmployee, timeClockWorkRole, timeClockStartTime, timeClockEndTime, timeClockAddNote);
+        timeSheetPage.addNewTimeClock(timeClockLocation, timeClockEmployee,timeClockWorkRole, timeClockStartTime, timeClockEndTime, breakStartTime, breakEndTime, timeClockAddNote, DaysInPast);
+        timeSheetPage.valiadteTimeClock(timeClockLocation,timeClockEmployee, timeClockWorkRole, timeClockStartTime, timeClockEndTime, breakStartTime, breakEndTime, timeClockAddNote, DaysInPast);
         timeSheetPage.closeTimeSheetDetailPopUp();
+	}
+
+	//Updated by Gunjan
+	@MobilePlatform(platform = "Android")
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "Validate the correctness of values getting displayed in Timesheet smartcard")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyValuesInTimesheetSmartCardAsStoreManager(String browser, String username, String password, String location)
+			throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+		locationSelectorPage.changeLocation(location);
+		TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+
+		// Click on "Timesheet" option menu.
+		timeSheetPage.clickOnTimeSheetConsoleMenu();
+		SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+		timeSheetPage.timesheetSmartCard();
+	}
+
+	//Updated by Gunjan
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "Validate functioning of editing existing time clock entry")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void updateExistingTimesheetEntryAsStoreManager(String browser, String username, String password, String location)
+			throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+		locationSelectorPage.changeLocation(location);
+		TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+
+		// Click on "Timesheet" option menu.
+		timeSheetPage.clickOnTimeSheetConsoleMenu();
+		SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+		String timeClockLocation = updateTimeClockDetails.get("Location");
+		String timeClockEmployee = updateTimeClockDetails.get("Employee");
+		String timeClockStartTime = updateTimeClockDetails.get("Shift_Start");
+		String timeClockEndTime = updateTimeClockDetails.get("Shift_End");
+		String timeClockAddNote = updateTimeClockDetails.get("Add_Note");
+		String DaysInPast = updateTimeClockDetails.get("DaysFromTodayInPast");
+
+		timeSheetPage.updateTimeClock(timeClockLocation,timeClockEmployee, timeClockStartTime, timeClockEndTime, timeClockAddNote, DaysInPast);
+		timeSheetPage.closeTimeSheetDetailPopUp();
+	}
+
+	//Added by Gunjan
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "Validate functionality of TimeSheet auto approval")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void timesheetAutoApprovalAsStoreManager(String browser, String username, String password, String location)
+			throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+		locationSelectorPage.changeLocation(location);
+		TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+
+		// Click on "Timesheet" option menu.
+		timeSheetPage.clickOnTimeSheetConsoleMenu();
+		SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+		String timeClockLocation = updateTimeClockDetails.get("Location");
+		String timeClockEmployee = updateTimeClockDetails.get("Employee");
+		String timeClockStartTime = updateTimeClockDetails.get("Shift_Start");
+		String timeClockEndTime = updateTimeClockDetails.get("Shift_End");
+		String timeClockAddNote = updateTimeClockDetails.get("Add_Note");
+		String DaysInPast = updateTimeClockDetails.get("DaysFromTodayInPast");
+
+		timeSheetPage.timesheetAutoApproval(timeClockLocation,timeClockEmployee, timeClockStartTime, timeClockEndTime, timeClockAddNote);
+		timeSheetPage.closeTimeSheetDetailPopUp();
 	}
 	
 	
@@ -168,9 +244,10 @@ public class TimeSheetTest extends TestBase{
         String timeClockStartTime = "09:00AM";
         String timeClockEndTime = "07:00pm";
         String timeClockAddNote = addTimeClockDetails.get("Add_Note");
+		String DaysInPast = addTimeClockDetails.get("DaysFromTodayInPast");
         
 //        timeSheetPage.addNewTimeClock(timeClockLocation, timeClockDate, timeClockEmployee,timeClockWorkRole, timeClockStartTime, timeClockEndTime, timeClockAddNote);
-        HashMap<String, Float> allHours = timeSheetPage.getTimeClockHoursByDate(timeClockDate, timeClockEmployee);
+        HashMap<String, Float> allHours = timeSheetPage.getTimeClockHoursByDate(DaysInPast, timeClockEmployee);
 		float regHours = allHours.get("regHours");
 		float totalHours = allHours.get("totalHours");
 		float dTHours = allHours.get("dTHours");

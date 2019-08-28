@@ -1,10 +1,12 @@
 {
-	"Location" : "Carmel Club",
+	"Location" : "Palo Alto",
 	"Date" : "Dec 29, 2018",
 	"Employee" : "Rodolfo Wolff",
 	"Work_Role" : "MOD",
 	"Shift_Start" : "09:00AM",
 	"Shift_End" : "05:00PM",
+	"Break_Start" : "01:00PM",
+	"Break_End" : "01:30PM",
 	"Add_Note" : "abcd",
-	"DaysFromTodayInPast" : "7"
+	"DaysFromTodayInPast" : "4"
 }
