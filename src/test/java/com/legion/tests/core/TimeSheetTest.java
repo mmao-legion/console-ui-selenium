@@ -121,8 +121,6 @@ public class TimeSheetTest extends TestBase{
     		throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeLocation(location);
         TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
 
         // Click on "Timesheet" option menu.
@@ -990,6 +988,35 @@ public class TimeSheetTest extends TestBase{
 		    basePage.click(workerRow);
     	}*/
 	}
-	
-	
+
+
+	//added by Nishant
+
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Nishany")
+	@SanitySuite(sanity =  "Sanity")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "Validate Location filter functionality works fine")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateLocationFilterAsInternalAdmin(String browser, String username, String password, String location)
+			throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+		timeSheetPage.clickOnTimeSheetConsoleMenu();
+		String locationFilterAllLocations = addTimeClockDetails.get("Location_Filter_All_Locations");
+		String locationFilterDefaultLocations = addTimeClockDetails.get("Location_Filter_Default_Locations");
+		String locationFilterSpecificLocations = addTimeClockDetails.get("Location_Filter_Specific_Location");
+		SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+		timeSheetPage.clickOnWeekDuration();
+		timeSheetPage.clickImmediatePastToCurrentActiveWeekInDayPicker();
+		timeSheetPage.validateLocationFilterIfDefaultLocationSelected(locationFilterDefaultLocations);
+		timeSheetPage.validateLocationFilterIfNoLocationSelected(locationFilterAllLocations);
+		timeSheetPage.verifyTimesheetTableIfNoLocationSelected();
+		timeSheetPage.validateLocationFilterIfSpecificLocationSelected(locationFilterSpecificLocations);
+		List<WebElement> allWorkersRow = timeSheetPage.getTimeSheetWorkersRow();
+		timeSheetPage.clickWorkerRow(allWorkersRow, locationFilterSpecificLocations);
+
+	}
+
 }

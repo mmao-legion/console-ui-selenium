@@ -62,18 +62,12 @@ import static com.legion.utils.MyThreadLocal.*;
 		@Override
 		public void onTestSuccess(ITestResult result) {
 			ExtentTestManager.getTest().log(Status.PASS, MarkupHelper.createLabel("Test case Passed:",ExtentColor.GREEN));
-//	        String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
-//	        int sectionId = ExtentTestManager.getTestRailSectionId(MyThreadLocal.getCurrentMethod());
-//	        SimpleUtils.addTestResultWithTestCaseLinkIntoTestRail(1,"Passed");
 		}
 		@Override
 		public void onTestFailure(ITestResult result) {
 			// TODO Auto-generated method stub
 //			SimpleUtils.addTestResultIntoTestRail(5,result.getThrowable().toString());
 			ExtentTestManager.getTest().log(Status.FAIL, MarkupHelper.createLabel("Test case Failed:",ExtentColor.RED));
-//			String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
-//			int sectionId = ExtentTestManager.getTestRailSectionId(MyThreadLocal.getCurrentMethod());
-//			SimpleUtils.addTestResultWithTestCaseLinkIntoTestRail(5,"Failed");
 			String targetFile = ScreenshotManager.takeScreenShot();
 			String screenshotLoc = propertyMap.get("Screenshot_Path") + File.separator + targetFile;
 			try {

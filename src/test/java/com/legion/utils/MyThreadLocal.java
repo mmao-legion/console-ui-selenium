@@ -48,6 +48,9 @@ public class MyThreadLocal {
 	public static ThreadLocal<Integer> testCaseId = new ThreadLocal<>();
 	public static ThreadLocal<Integer> testRailRunId = new ThreadLocal<>();
 	public static ThreadLocal<List<String>> testName = new ThreadLocal<>();
+	public static ThreadLocal<List<String>> commentSection = new ThreadLocal<>();
+	public static ThreadLocal<String> comment = new ThreadLocal<>();
+	public static ThreadLocal<List<String>> failedComment = new ThreadLocal<>();
 	public static ThreadLocal<List<Integer>> testRailRun = new ThreadLocal<>();
 	public static final ThreadLocal<String> teamMemberName = new ThreadLocal<>();
 	public static final ThreadLocal<String> screenshotLoc = new ThreadLocal<>();
@@ -120,6 +123,29 @@ public class MyThreadLocal {
 
 	public static List<String> getTestName() {
 		return testName.get();
+	}
+
+	public static void setCommentSection(List<String> value) {
+		commentSection.set(value);
+	}
+
+	public static List<String> getCommentSection() {
+		return commentSection.get();
+	}
+	public static void setComment(String value) {
+		comment.set(value);
+	}
+
+	public static String getComment() {
+		return comment.get();
+	}
+
+	public static void setFailedComment(List<String> value) {
+		failedComment.set(value);
+	}
+
+	public static List<String> getFailedComment() {
+		return failedComment.get();
 	}
 
 	public static void setTestRailRun(List<Integer> value) {

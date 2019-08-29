@@ -227,8 +227,35 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy (xpath = "//div[contains(@class,'timesheet-details-modal__footer-span')][contains(text(),'Clocked:')]")
 	private WebElement clockedHourValue;
 
+	//added by Nishant
+
+	@FindBy(xpath = "//div[@class='timesheet__dropdown']/lg-filter[@label='Location']/div/input-field")
+	private WebElement locationFilter;
+	@FindBy(xpath = "//div[@class='timesheet__dropdown']/lg-filter[@label='Location']/div/input-field//input")
+	private WebElement txtLocationFilter;
+	@FindBy(css = "div.lg-timesheet-table__placeholder")
+	private WebElement timesheetTableForNoLocationSelected;
+	@FindBy(xpath = "//lg-filter[@label='Location']//div[contains(@class,'lg-filter__category-items')]//input-field/ng-form")
+	private List<WebElement> locationCheckbox;
+	@FindBy(xpath = "//lg-filter[@label='Location']//div[contains(@class,'lg-filter__category-items')]//input-field/label")
+	private List<WebElement> locationCheckboxLabel;
+	@FindBy(xpath = "//div[contains(@class,'day-week-picker-period-active')]/preceding-sibling::div[contains(@class,'day-week-picker-period')]")
+	private WebElement immediatePastToCurrentActiveWeek;
+	@FindBy(css = "div.lg-timesheet-table div.lg-timesheet-table__grid-row")
+	private List<WebElement> timesheetTableRow;
+	@FindBy(css = "div.day-week-picker-arrow-left")
+	private WebElement previousDayArrow;
+	@FindBy(css = "div.lg-timesheet-table__grid-row.lg-timesheet-table__worker-day lg-button")
+	private List<WebElement> workersDayRows;
+	@FindBy(css = "div.timesheet-details-modal__title-span-sub--home")
+	private WebElement TSPopupDetailsLocationName;
+	@FindBy(css = "div.timesheet-details-modal__title-span")
+	private WebElement TSPopupDetailsWorkerNameAndShiftDay;
+
 
 	String timeSheetHeaderLabel = "Timesheet";
+	String locationFilterSpecificLocations = null;
+	List<String> locationName = new ArrayList<>();
 	public ConsoleTimeSheetPage(){
 		PageFactory.initElements(getDriver(), this);
 	}
@@ -509,9 +536,6 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy (css = "div.day-week-picker-arrow-left")
 	private WebElement leftArrowDayPicker;
 
-	@FindBy(css = "div.day-week-picker-arrow-left")
-	private WebElement previousDayArrow;
-
 	@FindBy(css = "div.day-week-picker-period")
 	private WebElement timeSheetWeekPeriod;
 
@@ -689,14 +713,12 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		}
 	}
 
-	@FindBy(xpath = "//div[contains(@class,'day-week-picker-period-active')]/preceding-sibling::div[contains(@class,'day-week-picker-period')]")
-	private WebElement immediatePastToCurrentActiveWeek;
-
-
-
 	public void clickImmediatePastToCurrentActiveWeekInDayPicker() {
 		if (isElementEnabled(immediatePastToCurrentActiveWeek, 30)) {
 			click(immediatePastToCurrentActiveWeek);
+			if(areListElementVisible(timesheetTableRow,15,1)){
+				SimpleUtils.pass("Timesheet Grid loaded Successfully");
+			}
 		} else {
 			SimpleUtils.report("No week found");
 		}
@@ -841,10 +863,6 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				WebElement activeRowPopUpLink = WorkersDayRow.findElement(By.cssSelector("lg-button[action-link]"));
 				if (isElementLoaded(activeRowPopUpLink)) {
 					click(activeRowPopUpLink);
-					if(isElementLoaded(scheduleChangeAlertPanel, 3) && !isElementLoaded(editButtonScheduleChange,2)){
-						click(scheduleChangeManagerInitiated);
-						click(saveSelectionScheduleChangeButton);
-					}
 					if (isElementLoaded(noClockDisplayPanel, 3)) {
 						detailsOfModifiedTimesheer = activePopUpDetails.getText().split("\n");
 						scheduleHourDetails = scheduleDetails.getText().replaceAll(" ", "").split("-");
@@ -860,37 +878,42 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 							enterClockDetails(scheduledEndTime);
 							click(saveClockBtn);
 						}
+						SimpleUtils.pass("Clocks got added successfully");
+						if(isElementLoaded(scheduleChangeAlertPanel, 3) && !isElementLoaded(editButtonScheduleChange,2)){
+							click(scheduleChangeManagerInitiated);
+							click(saveSelectionScheduleChangeButton);
+						}
+						int calcscheduledHour = calcDurationOfShiftBasedOnClockValues(createString(scheduleHourDetails[0], " ", 4), createString(scheduleHourDetails[1], " ", 4));
+						String shiftStart = shiftStartTimeInPopUp.getText();
+						String shiftEnd = shiftEndTimeInPopUp.getText();
+						int calcClockedHour = calcDurationOfShiftBasedOnClockValues(shiftStart,shiftEnd);
+						String clockedHour[] = clockedHourValue.getText().split(" ");
+						int clockedHourValueRetrieved = Integer.parseInt(clockedHour[1]);
+						String scheduledhour[] = scheduledHourValue.getText().split(" ");
+						int scheduledhourValueRetrieved = Integer.parseInt(scheduledhour[1]);
+						String differenceHour[] = differenceHourValue.getText().split(" ");
+						int differencehourValueRetrieved = Integer.parseInt(differenceHour[1]);
+						int calcDifferenceHour = calcClockedHour - calcscheduledHour;
+						if(calcscheduledHour == scheduledhourValueRetrieved && calcClockedHour == clockedHourValueRetrieved && calcDifferenceHour == calcDifferenceHour) {
+							SimpleUtils.pass("Calculation of Clocked, Scheduled & Difference Hour is working fine");
+							SimpleUtils.pass("Scheduled Hour =" + scheduleDetails.getText() + ", duration calculated = " + scheduledhourValueRetrieved);
+							SimpleUtils.pass("Clocked Hour =" + shiftStart + "-"+shiftEnd + ", duration calculated = " + clockedHourValueRetrieved);
+							SimpleUtils.pass("Difference in clocked & scheduled Hour calculated =" + calcDifferenceHour + ", retrived value = " + differencehourValueRetrieved);
+						}
+						if (calcDifferenceHour == 0 && isElementLoaded(approvedStatusIcon, 2)){
+							displayTimeClockHistory();
+							int approvalCountForTimesheet = approverList.size();
+							if(approverList.get(approvalCountForTimesheet-1).getText().toLowerCase().contains("legion")){
+								SimpleUtils.pass("Timesheet for " + detailsOfModifiedTimesheer[0] + " got auto approved successfully");
+							}else{
+								SimpleUtils.fail("Auto approval of Timesheet for " + detailsOfModifiedTimesheer[0] + " is not successful", false);
+							}
+						}
+						break;
 					}else{
 						closeTimeSheetDetailPopUp();
 					}
-					SimpleUtils.pass("Clocks got added successfully");
-					int calcscheduledHour = calcDurationOfShiftBasedOnClockValues(createString(scheduleHourDetails[0], " ", 4), createString(scheduleHourDetails[1], " ", 4));
-					String shiftStart = shiftStartTimeInPopUp.getText();
-					String shiftEnd = shiftEndTimeInPopUp.getText();
-					int calcClockedHour = calcDurationOfShiftBasedOnClockValues(shiftStart,shiftEnd);
-					String clockedHour[] = clockedHourValue.getText().split(" ");
-					int clockedHourValueRetrieved = Integer.parseInt(clockedHour[1]);
-					String scheduledhour[] = scheduledHourValue.getText().split(" ");
-					int scheduledhourValueRetrieved = Integer.parseInt(scheduledhour[1]);
-					String differenceHour[] = differenceHourValue.getText().split(" ");
-					int differencehourValueRetrieved = Integer.parseInt(differenceHour[1]);
-					int calcDifferenceHour = calcClockedHour - calcscheduledHour;
-					if(calcscheduledHour == scheduledhourValueRetrieved && calcClockedHour == clockedHourValueRetrieved && calcDifferenceHour == calcDifferenceHour) {
-						SimpleUtils.pass("Calculation of Clocked, Scheduled & Difference Hour is working fine");
-						SimpleUtils.pass("Scheduled Hour =" + scheduleDetails.getText() + ", duration calculated = " + scheduledhourValueRetrieved);
-						SimpleUtils.pass("Clocked Hour =" + shiftStart + "-"+shiftEnd + ", duration calculated = " + clockedHourValueRetrieved);
-						SimpleUtils.pass("Difference in clocked & scheduled Hour calculated =" + calcDifferenceHour + ", retrived value = " + differencehourValueRetrieved);
-					}
-					if (calcDifferenceHour == 0 && isElementLoaded(approvedStatusIcon, 2)){
-						displayTimeClockHistory();
-						int approvalCountForTimesheet = approverList.size();
-						if(approverList.get(approvalCountForTimesheet-1).getText().toLowerCase().contains("legion")){
-							SimpleUtils.pass("Timesheet for " + detailsOfModifiedTimesheer[0] + " got auto approved successfully");
-						}else{
-							SimpleUtils.fail("Auto approval of Timesheet for " + detailsOfModifiedTimesheer[0] + " is not successful", false);
-						}
-					}
-					break;
+
 				}
 			}
 		}
@@ -908,6 +931,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			{
 				click(payPeriodBtn);
 				SimpleUtils.pass("Timesheet duration type '"+payPeriodBtn.getText()+"' selected successfully.");
+
 			}
 		}
 		else
@@ -1006,7 +1030,6 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		float totalDTHour = 0.0f;
 		float totalDiffHour=0.0f;
 		clickOnPayPeriodDuration();
-		System.out.println("Hello");
 		clickImmediatePastToCurrentActiveWeekInDayPicker();
 		String paginationValue[] = pagination.getText().split("f ");
 		for(int j=0; j<Integer.parseInt(paginationValue[1]); j++) {
@@ -1025,7 +1048,6 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				if(workerDiffHour.startsWith("(")){
 					String diffValue1 = workerDiffHour.replace("(", "");
 					String diffValue2 = diffValue1.replace(")", "");
-					System.out.println("Hello");
 					totalDiffHour = totalDiffHour  + (-Float.parseFloat(diffValue2));
 				}else{
 					totalDiffHour = totalDiffHour + Float.parseFloat(workerDiffHour);
@@ -1769,4 +1791,141 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("TimeSheet Page: Hours Carousel Card not loaded.", false);
 		return timeSheetCarouselCardsHours;
 	}
+
+	// added by Nishant
+
+	public void validateLocationFilterIfNoLocationSelected(String locationFilterAllLocations) throws Exception{
+		if(isElementLoaded(locationFilter,5) && isElementLoaded(txtLocationFilter,5)){
+			if(txtLocationFilter.getAttribute("value").contains("All") || txtLocationFilter.getAttribute("value").contains("Location")){
+				click(locationFilter);
+				clickOnLocationFilterCheckBox(locationFilterAllLocations);
+			}else{
+				SimpleUtils.fail("Location Filter label "
+						+txtLocationFilter.getAttribute("value")+ " not matching with " + locationFilterAllLocations,true);
+			}
+		}else{
+			SimpleUtils.fail("Location Filter not displayed on page",false);
+		}
+	}
+
+	public void validateLocationFilterIfDefaultLocationSelected(String locationFilterDefaultLocations) throws Exception{
+		if(isElementLoaded(locationFilter,5) && isElementLoaded(txtLocationFilter,5)){
+			if(txtLocationFilter.getAttribute("value").equalsIgnoreCase(locationFilterDefaultLocations)){
+				if(areListElementVisible(timesheetTableRow,15,1)){
+					SimpleUtils.pass("Timesheet data available for specified period");
+				}else{
+					SimpleUtils.fail("No date found in timesheet table for specific period",true);
+				}
+			}else{
+				SimpleUtils.fail("Location Filter label "
+						+txtLocationFilter.getAttribute("value")+ " not matching with " + locationFilterDefaultLocations,true);
+			}
+		}else{
+			SimpleUtils.fail("Location Filter not displayed on page",false);
+		}
+	}
+
+
+	public void clickOnLocationFilterCheckBox(String locationFilterAllLocations) throws Exception{
+		if (areListElementVisible(locationCheckbox,5) &&
+				areListElementVisible(locationCheckboxLabel,5)){
+			for(WebElement locationCheckboxLabels : locationCheckboxLabel){
+				if(locationCheckboxLabels.getText().equalsIgnoreCase(locationFilterAllLocations)){
+					click(locationCheckboxLabels);
+					click(locationFilter);
+					SimpleUtils.pass("User should be able to click on Location Filter checkbox Successfully");
+					break;
+				}else{
+					SimpleUtils.fail("Location Filter checkbox label "
+							+locationCheckboxLabels.getText()+ " not matching with " + locationFilterAllLocations,true);
+				}
+			}
+		}else{
+			SimpleUtils.fail("Location Filter checkbox is not clickable",false);
+		}
+	}
+
+
+	public void verifyTimesheetTableIfNoLocationSelected() throws  Exception{
+		if(isElementLoaded(timesheetTableForNoLocationSelected,10)){
+			SimpleUtils.pass("User should not be able to see any data in timesheet table if None of the value for location selected in Location filter");
+		}else{
+			SimpleUtils.fail("User is able to see Timesheet table data which is not correct",false);
+		}
+	}
+
+	public void validateLocationFilterIfSpecificLocationSelected(String locationFilterSpecificLocations) throws Exception{
+		if(isElementLoaded(locationFilter,5)){
+			click(locationFilter);
+			clickOnLocationFilterCheckBoxForSpecificLocation(locationFilterSpecificLocations);
+			if(areListElementVisible(timesheetTableRow,15,1)){
+				SimpleUtils.pass("User is able to see data in timesheet table");
+			}else{
+				SimpleUtils.fail("No date found in timesheet table",true);
+			}
+		}else{
+			SimpleUtils.fail("Location Filter not displayed on page",false);
+		}
+	}
+
+
+	public void clickOnLocationFilterCheckBoxForSpecificLocation(String locationFilterSpecificLocations) throws Exception{
+		if (areListElementVisible(locationCheckbox,5) &&
+				areListElementVisible(locationCheckboxLabel,5)){
+			for(int i=0; i<locationCheckboxLabel.size(); i++){
+				if(locationCheckboxLabel.get(i).getText().toLowerCase().contains(locationFilterSpecificLocations.toLowerCase())){
+					click(locationCheckboxLabel.get(i));
+					SimpleUtils.pass("User should be able to select " + locationCheckboxLabel.get(i).getText() + " checkbox Successfully");
+					click(locationFilter);
+					break;
+				}
+			}
+		}else{
+			SimpleUtils.fail("Location Filter checkbox is not clickable",false);
+		}
+	}
+
+	public void clickWorkerRow(List<WebElement> allWorkersRow, String locationFilterSpecificLocations) throws Exception{
+		boolean flag= false;
+		for(WebElement allWorkersRows : allWorkersRow){
+			click(allWorkersRows);
+			for(WebElement workersDayRow : workersDayRows){
+				click(workersDayRow);
+				String[] timesheetPopupDetailsWorkerNameAndShiftDay = openTimesheetModelPop();
+				if(locationName.get(0).contains(locationFilterSpecificLocations)){
+					flag = true;
+					SimpleUtils.pass("Home Location " + locationName.get(0) + " for " +  timesheetPopupDetailsWorkerNameAndShiftDay[0] + "" +
+							" for " + timesheetPopupDetailsWorkerNameAndShiftDay[1] + " matching with selected filter value " + locationFilterSpecificLocations);
+					locationName.clear();
+				}else{
+					SimpleUtils.fail("Home Location " + locationName.get(0) + " for " +  timesheetPopupDetailsWorkerNameAndShiftDay[0] + "" +
+							" for " + timesheetPopupDetailsWorkerNameAndShiftDay[1] + " doesn't" +
+							" match with selected filter value " + locationFilterSpecificLocations, true);
+				}
+				locationName.clear();
+			}
+			click(allWorkersRows);
+			break;
+		}
+	}
+
+	public String[] openTimesheetModelPop() throws Exception{
+		String[] timesheetPopupDetailsWorkerNameAndShiftDay = null;
+		if(isElementEnabled(TSPopupDetailsModel,10)){
+			if(isElementEnabled(TSPopupDetailsLocationName,5)){
+				String textLocation = TSPopupDetailsLocationName.getText();
+				locationName.add(textLocation);
+				if (isElementLoaded(TSPopupDetailsWorkerNameAndShiftDay, 2)) {
+					timesheetPopupDetailsWorkerNameAndShiftDay =
+							(TSPopupDetailsWorkerNameAndShiftDay.getText().split("\n"))[0].split(" - ");
+				}
+				closeTimeSheetDetailPopUp();
+			}
+		}else{
+			SimpleUtils.fail("Timesheet detail pop up not loaded Successfullly",false);
+		}
+		return timesheetPopupDetailsWorkerNameAndShiftDay;
+	}
+
+
 }

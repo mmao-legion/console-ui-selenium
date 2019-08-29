@@ -108,4 +108,20 @@ public interface TimeSheetPage {
 
 	public HashMap<String, Float> getTotalTimeSheetCarouselCardsHours() throws Exception;
 
+	public void validateLocationFilterIfNoLocationSelected(String locationFilterAllLocations) throws Exception;
+
+	public void verifyTimesheetTableIfNoLocationSelected() throws  Exception;
+
+	public void clickImmediatePastToCurrentActiveWeekInDayPicker();
+
+	public void validateLocationFilterIfDefaultLocationSelected(String locationFilterDefaultLocations) throws Exception;
+
+	public void validateLocationFilterIfSpecificLocationSelected(String locationFilterSpecificLocations) throws Exception;
+
+	public void clickWorkerRow(List<WebElement> allWorkersRow, String locationFilterSpecificLocations) throws Exception;
+
+	public String getWeekStartingDay() throws Exception;
+
+	public void clickPreviousDayArrow(int previousArrowCount) throws Exception;
+
 }
