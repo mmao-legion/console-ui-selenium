@@ -63,7 +63,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public void changeLocation(String locationName)
     {
-        waitForSeconds(2);
+        waitForSeconds(4);
         try {
             Boolean isLocationMatched = false;
             activeConsoleName = activeConsoleMenuItem.getText();

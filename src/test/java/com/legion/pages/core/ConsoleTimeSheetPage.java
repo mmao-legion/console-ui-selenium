@@ -438,7 +438,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		String finalDate = null;
 		try {
 			int DaysFromToday = Integer.parseInt(DaysFromTodayInPast);
-			String dateToCompare = selectDateForTimesheet(DaysFromToday);
+			String dateToCompare = searchDateForTimesheet(DaysFromToday);
 			Date date = sdf.parse(dateToCompare);
 			finalDate = sdfNew.format(date);
 
@@ -583,12 +583,16 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	}
 
 	public void navigateToDesiredWeek(String Date) throws Exception{
-		LocalDate timesheetdate = LocalDate.parse(Date);
+		String dayOfWeek = null;
+	    LocalDate timesheetdate = LocalDate.parse(Date);
 		String weekStartingDay = getWeekStartingDay();
 		String[] arrWeekStartingDay = weekStartingDay.split("\n");
 		String monthVal = getMonthValue((arrWeekStartingDay[1].split(" "))[0]);
 		LocalDate now = LocalDate.now();
-		String startingDayOfCurrentWeek = String.valueOf(now.getYear()) + "-" + monthVal + "-" + (arrWeekStartingDay[1].split(" "))[1];
+		if((arrWeekStartingDay[1].split(" "))[1].length() == 1){
+            dayOfWeek =  "0" + (arrWeekStartingDay[1].split(" "))[1];
+        }
+		String startingDayOfCurrentWeek = String.valueOf(now.getYear()) + "-" + monthVal + "-" + dayOfWeek;
 		LocalDate startingDayOfCurrentWeekDate = LocalDate.parse(startingDayOfCurrentWeek);
 		if(startingDayOfCurrentWeekDate.getMonthValue() - timesheetdate.getMonthValue() == 0){
 			if(startingDayOfCurrentWeekDate.getDayOfMonth() - timesheetdate.getDayOfMonth() == 0 ||
@@ -647,7 +651,8 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
         boolean isBreakEndMatched = false;
 		boolean isShiftEndMatched = false;
 		clickOnTimeSheetConsoleMenu();
-		String timesheetDateToCompare = selectDateForTimesheet(Integer.parseInt(DaysFromTodayInPast));
+//		String timesheetDateToCompare = selectDateForTimesheet(Integer.parseInt(DaysFromTodayInPast));
+		String timesheetDateToCompare = searchDateForTimesheet(Integer.parseInt(DaysFromTodayInPast));
         navigateToDesiredWeek(timesheetDateToCompare);
         String dateOnWhichTimesheetAdded[] = formatDateForTimesheet(DaysFromTodayInPast).split(",");
         clickOnSelectedDate(dateOnWhichTimesheetAdded[0]);
@@ -749,14 +754,14 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		return output;
 	}
 
-	public int calcDurationOfShiftBasedOnClockValues(String shiftStart, String shiftEnd) throws Exception{
+	public Float calcDurationOfShiftBasedOnClockValues(String shiftStart, String shiftEnd) throws Exception{
 		String shiftStartTime = convertTo24HourFormat(shiftStart);
 		String splitValueForShiftStart[] = shiftStartTime.split(":");
-		int shiftStartInMinutes =((Integer.parseInt(splitValueForShiftStart[0]))*60 + (Integer.parseInt(splitValueForShiftStart[1])));
+		Float shiftStartInMinutes =((Float.parseFloat(splitValueForShiftStart[0]))*60 + (Float.parseFloat(splitValueForShiftStart[1])));
 		String shiftEndTime = convertTo24HourFormat(shiftEnd);
 		String splitValueForShiftEnd[] = shiftEndTime.split(":");
-		int shiftEndInMinutes = ((Integer.parseInt(splitValueForShiftEnd[0]))*60 + (Integer.parseInt(splitValueForShiftEnd[1])));
-		int calcDuration = (shiftEndInMinutes - shiftStartInMinutes)/60;
+		Float shiftEndInMinutes = ((Float.parseFloat(splitValueForShiftEnd[0]))*60 + (Float.parseFloat(splitValueForShiftEnd[1])));
+		Float calcDuration = (shiftEndInMinutes - shiftStartInMinutes)/60;
 		return calcDuration;
 
 	}
@@ -790,7 +795,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 							String shiftStart = shiftStartTimeInPopUp.getText();
 							String shiftEnd = shiftEndTimeInPopUp.getText();
 							SimpleUtils.pass("Successfully modified timesheet of " + detailsOfModifiedTimesheer[0] + " having workrole " + detailsOfModifiedTimesheer[1] + " for location " +detailsOfModifiedTimesheer[2]);
-							int calcClockedDuration = calcDurationOfShiftBasedOnClockValues(shiftStart,shiftEnd );
+							Float calcClockedDuration = calcDurationOfShiftBasedOnClockValues(shiftStart,shiftEnd );
 							String clockedHour[] = clockedHourValue.getText().split(" ");
 							int clockedHourValueRetrieved = Integer.parseInt(clockedHour[1]);
 							if(calcClockedDuration  == clockedHourValueRetrieved){
@@ -871,9 +876,10 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 						click(addClockIn);
 						enterClockDetails(scheduledStartTime);
 						click(saveClockBtn);
-						if (isElementLoaded(editBtnAddClockOut, 10)) {
+						if (isElementEnabled(editBtnAddClockOut, 10)) {
 							scheduledEndTime = createString(scheduleHourDetails[1], ":", 4);
 							click(editBtnAddClockOut);
+							waitForSeconds(2);
 							click(addClockIn);
 							enterClockDetails(scheduledEndTime);
 							click(saveClockBtn);
@@ -883,17 +889,18 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 							click(scheduleChangeManagerInitiated);
 							click(saveSelectionScheduleChangeButton);
 						}
-						int calcscheduledHour = calcDurationOfShiftBasedOnClockValues(createString(scheduleHourDetails[0], " ", 4), createString(scheduleHourDetails[1], " ", 4));
+						Float calcscheduledHour = calcDurationOfShiftBasedOnClockValues(createString(scheduleHourDetails[0], " ", 4), createString(scheduleHourDetails[1], " ", 4));
 						String shiftStart = shiftStartTimeInPopUp.getText();
+
 						String shiftEnd = shiftEndTimeInPopUp.getText();
-						int calcClockedHour = calcDurationOfShiftBasedOnClockValues(shiftStart,shiftEnd);
+						Float calcClockedHour = calcDurationOfShiftBasedOnClockValues(shiftStart,shiftEnd);
 						String clockedHour[] = clockedHourValue.getText().split(" ");
-						int clockedHourValueRetrieved = Integer.parseInt(clockedHour[1]);
+						Float clockedHourValueRetrieved = Float.parseFloat(clockedHour[1]);
 						String scheduledhour[] = scheduledHourValue.getText().split(" ");
-						int scheduledhourValueRetrieved = Integer.parseInt(scheduledhour[1]);
+						Float scheduledhourValueRetrieved = Float.parseFloat(scheduledhour[1]);
 						String differenceHour[] = differenceHourValue.getText().split(" ");
-						int differencehourValueRetrieved = Integer.parseInt(differenceHour[1]);
-						int calcDifferenceHour = calcClockedHour - calcscheduledHour;
+						Float differencehourValueRetrieved = Float.parseFloat(differenceHour[1]);
+						Float calcDifferenceHour = calcClockedHour - calcscheduledHour;
 						if(calcscheduledHour == scheduledhourValueRetrieved && calcClockedHour == clockedHourValueRetrieved && calcDifferenceHour == calcDifferenceHour) {
 							SimpleUtils.pass("Calculation of Clocked, Scheduled & Difference Hour is working fine");
 							SimpleUtils.pass("Scheduled Hour =" + scheduleDetails.getText() + ", duration calculated = " + scheduledhourValueRetrieved);

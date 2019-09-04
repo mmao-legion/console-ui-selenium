@@ -495,6 +495,15 @@ public class BasePage {
         }
     }
 
+    //added by Nishant
+
+    public String searchDateForTimesheet(int daysFromToday) {
+        LocalDate now = LocalDate.now();
+        LocalDate wanted = LocalDate.now().minusDays(daysFromToday);
+        String dateWanted = wanted.toString();
+        return dateWanted;
+    }
+
 
 
 }

@@ -3485,4 +3485,292 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+
+    //added by Nishant for DM Test cases
+
+    @FindBy(css = "div.analytics-new-table-group-row")
+    private List<WebElement> DMtableRowCount;
+
+    @FindBy(xpath = "//div[contains(@class,'analytics-new-table-group-row')]//span/img/following-sibling::span")
+    private List<WebElement> locationName;
+
+    @FindBy(xpath = "//div[contains(@class,'analytics-new-table-group-row')]//div[@class='ng-scope col-fx-1']")
+    private List<WebElement> DMHours;
+
+    public List<Float> validateScheduleAndBudgetedHours() throws Exception {
+        HashMap<String,List<String>> budgetHours = new HashMap<>();
+        HashMap<String,List<String>> publishHours = new HashMap<>();
+        HashMap<String,List<String>> clockHours = new HashMap<>();
+        List<Float> totalHoursFromSchTbl = new ArrayList<>();
+
+        List<String> budgetHrs = new ArrayList<>();
+        List<String> publishedHrs = new ArrayList<>();
+        List<String> clockedHrs = new ArrayList<>();
+        int counter = 0;
+        if(areListElementVisible(DMtableRowCount,10) && DMtableRowCount.size()!=0){
+            for(int i=0; i<DMtableRowCount.size();i++){
+                if(areListElementVisible(DMHours,10) && DMHours.size()!=0){
+//                    SimpleUtils.report("Budget Hours for " + locationName.get(i).getText() + " is : " + DMHours.get(counter).getText());
+//                    SimpleUtils.report("Publish Hours for " + locationName.get(i).getText() + " is : " + DMHours.get(counter+1).getText());
+//                    SimpleUtils.report("Clocked Hours for " + locationName.get(i).getText() + " is : " + DMHours.get(counter+2).getText());
+                    budgetHrs.add(DMHours.get(counter+1).getText());
+                    publishedHrs.add(DMHours.get(counter+2).getText());
+                    clockedHrs.add(DMHours.get(counter+3).getText());
+                    budgetHours.put("Budgeted Hours",budgetHrs);
+                    publishHours.put("Published Hours",publishedHrs);
+                    clockHours.put("Clocked Hours",clockedHrs);
+                    counter = (i + 1) * 3;
+                }
+            }
+            Float totalBudgetHoursFromSchTbl = calculateTotalHoursFromScheduleTable(budgetHours);
+            Float totalPublishedHoursFromSchTbl = calculateTotalHoursFromScheduleTable(publishHours);
+            Float totalClockedHoursFromSchTbl = calculateTotalHoursFromScheduleTable(clockHours);
+            totalHoursFromSchTbl.add(totalBudgetHoursFromSchTbl);
+            totalHoursFromSchTbl.add(totalPublishedHoursFromSchTbl);
+            totalHoursFromSchTbl.add(totalClockedHoursFromSchTbl);
+
+        }else{
+            SimpleUtils.fail("No data available on Schedule table in DM view",false);
+        }
+
+        return totalHoursFromSchTbl;
+    }
+
+
+    public Float calculateTotalHoursFromScheduleTable(HashMap<String,List<String>> hoursCalulationFromSchTbl){
+        Float totalActualHours = 0.0f;
+        Float totalActualHoursFromSchTbl = 0.0f;
+        for (Map.Entry<String, List<String>> entry : hoursCalulationFromSchTbl.entrySet()) {
+            String key = entry.getKey();
+
+            List<String> value = entry.getValue();
+            for(String aString : value){
+                totalActualHours = Float.parseFloat(aString);
+                totalActualHoursFromSchTbl = totalActualHoursFromSchTbl + totalActualHours;
+            }
+        }
+
+        return totalActualHoursFromSchTbl;
+    }
+
+    @FindBy(css = "span.dms-box-item-number-small")
+    private List<WebElement> hoursOnDashboardPage;
+    @FindBy(css = "div.dms-box-item-title")
+    private List<WebElement> titleOnDashboardPage;
+    @FindBy(xpath = "//*[name()='svg']//*[name()='text' and @text-anchor='middle']")
+    private List<WebElement> locationSummaryOnSchedule;
+    @FindBy(xpath = "//*[name()='svg']//*[name()='text' and @text-anchor='end']")
+    private List<WebElement> projectedOverBudget;
+    @FindBy(xpath = "//*[name()='svg']//*[name()='text' and @text-anchor='start']")
+    private List<WebElement> projectedUnderBudget;
+    @FindBy(css = "span.dms-box-item-unit-trend")
+    private WebElement projectedWithinOrOverBudget;
+    @FindBy(css = "div.dashboard-time div.text-right")
+    private WebElement dateOnDashboard;
+    @FindBy(css = "ng-include[src*=LocationSummary] div.dms-box-title")
+    private WebElement locationsSummaryTitleOnDashboard;
+    @FindBy(css = "div.card-carousel-card-title")
+    private WebElement locationsSummaryTitleOnSchedule;
+    @FindBy(css = "span.dms-box-item-title.dms-box-item-title-color-dark")
+    private List<WebElement> locationsSummarySmartCardOnDashboard;
+    @FindBy(css = "div.day-week-picker-period-active")
+    private WebElement dateOnSchedule;
+    @FindBy(css = "div.published-clocked-cols-summary-title")
+    private List<WebElement> locationsSummarySmartCardOnSchedule;
+
+
+
+    public void compareHoursFromScheduleAndDashboardPage(List<Float> totalHoursFromSchTbl) throws Exception{
+
+        List<Float> totalHoursFromDashboardTbl = new ArrayList<>();
+        if(areListElementVisible(hoursOnDashboardPage,10) && hoursOnDashboardPage.size()!=0){
+            for(int i =0; i < hoursOnDashboardPage.size();i++){
+                totalHoursFromDashboardTbl.add(Float.parseFloat(hoursOnDashboardPage.get(i).getText()));
+            }
+            for(int j=0; j < totalHoursFromSchTbl.size();j++){
+                if(totalHoursFromSchTbl.get(j).equals(totalHoursFromDashboardTbl.get(j))){
+                    SimpleUtils.pass(titleOnDashboardPage.get(j).getText() +
+                            " Hours from Dashboard page " + totalHoursFromDashboardTbl.get(j)
+                            + " matching with the hours present on Schedule Page " + totalHoursFromSchTbl.get(j));
+                }
+            }
+        }else{
+            SimpleUtils.fail("No data available for Hours on Dashboard page in DM view",false);
+        }
+    }
+
+
+    public List<Float> getHoursOnLocationSummarySmartCard() throws Exception{
+        List<Float> totalHoursFromDashboardTbl = new ArrayList<>();
+        if(areListElementVisible(locationSummaryOnSchedule,10) && locationSummaryOnSchedule.size()!=0){
+            totalHoursFromDashboardTbl.add(Float.parseFloat(locationSummaryOnSchedule.get(0).getText()));
+            totalHoursFromDashboardTbl.add(Float.parseFloat(locationSummaryOnSchedule.get(2).getText()));
+            totalHoursFromDashboardTbl.add(Float.parseFloat(locationSummaryOnSchedule.get(6).getText()));
+        }else{
+            SimpleUtils.fail("No data available on Location Summary section Smart Card in DM view",false);
+        }
+        return totalHoursFromDashboardTbl;
+    }
+
+
+    public void compareHoursFromScheduleSmartCardAndDashboardSmartCard(List<Float> totalHoursFromSchTbl) throws Exception{
+
+        List<Float> totalHoursFromDashboardTbl = new ArrayList<>();
+        if(areListElementVisible(hoursOnDashboardPage,10) && hoursOnDashboardPage.size()!=0){
+            for(int i =0; i < hoursOnDashboardPage.size();i++){
+                totalHoursFromDashboardTbl.add(Float.parseFloat(hoursOnDashboardPage.get(i).getText()));
+            }
+            for(int j=0; j < totalHoursFromSchTbl.size();j++){
+                if(totalHoursFromSchTbl.get(j).equals(totalHoursFromDashboardTbl.get(j))){
+                    SimpleUtils.pass(titleOnDashboardPage.get(j).getText() +
+                            " Hours from Dashboard page " + totalHoursFromDashboardTbl.get(j)
+                            + " matching with the hours present on Schedule Page " + totalHoursFromSchTbl.get(j));
+                }
+            }
+        }else{
+            SimpleUtils.fail("No data available for Hours on Dashboard page in DM view",false);
+        }
+    }
+
+
+    public int getProjectedUnderBudget(){
+        int totalCountProjectedUnderBudget = 0;
+        if(areListElementVisible(projectedUnderBudget,10) && projectedUnderBudget.size()!=0){
+            for(int i=0;i<projectedUnderBudget.size();i++){
+                int countProjectedUnderBudget = Integer.parseInt(projectedUnderBudget.get(i).getText());
+                totalCountProjectedUnderBudget = totalCountProjectedUnderBudget + countProjectedUnderBudget;
+            }
+        }else{
+            SimpleUtils.fail("No data available for Projected Under Budget section on location specific date in DM view",false);
+        }
+        return totalCountProjectedUnderBudget;
+    }
+
+
+    public int getProjectedOverBudget(){
+        int totalCountProjectedOverBudget = 0;
+        if(areListElementVisible(projectedOverBudget,10) && projectedOverBudget.size()!=0){
+            for(int i=0;i<projectedOverBudget.size();i++){
+                int countProjectedOverBudget = Integer.parseInt(projectedOverBudget.get(i).getText());
+                totalCountProjectedOverBudget = totalCountProjectedOverBudget + countProjectedOverBudget;
+            }
+        }else{
+            SimpleUtils.fail("No data available for Projected Over Budget section on location specific date in DM view",false);
+        }
+        return totalCountProjectedOverBudget;
+    }
+
+    public void compareProjectedWithinBudget(int totalCountProjectedOverBudget) throws Exception{
+        if(isElementLoaded(projectedWithinOrOverBudget,10)){
+            String ProjectedWithinOrOverBudget = (projectedWithinOrOverBudget.getText().split(" "))[0];
+            if(totalCountProjectedOverBudget == Integer.parseInt(ProjectedWithinOrOverBudget)){
+                SimpleUtils.pass("Count of Projected Over/Under Budget on Dashboard page" +
+                        " " + Integer.parseInt(ProjectedWithinOrOverBudget) + " is same as Schedule page " + totalCountProjectedOverBudget);
+            }else{
+                SimpleUtils.fail("Count of Projected Over/Under Budget on Dashboard page" +
+                        " " + Integer.parseInt(ProjectedWithinOrOverBudget) + " not matching with Schedule page " + totalCountProjectedOverBudget,false);
+            }
+        }else{
+            SimpleUtils.fail("No data available for Projected Over/Under Budget section on Dashboard in DM view",false);
+        }
+
+    }
+
+    public String getDateFromDashboard() throws Exception {
+        String DateOnDashboard = null;
+        if(isElementLoaded(dateOnDashboard,10)){
+            DateOnDashboard = dateOnDashboard.getText().substring(8);
+        }else{
+            SimpleUtils.fail("Week Date not available on Dashboard in DM view",false);
+        }
+
+        return DateOnDashboard;
+    }
+
+    public void compareDashboardAndScheduleWeekDate(String DateOnSchdeule, String DateOnDashboard) throws Exception {
+        String splitFirstDate = null;
+        String splitSecondDate = null;
+        String strDateOnSchedule = DateOnSchdeule.substring(9).trim();
+        String[] splitDateOnSchedule = strDateOnSchedule.split(" ");
+        if(splitDateOnSchedule[1].length()>1){
+            splitFirstDate = splitDateOnSchedule[1];
+        }else{
+            splitFirstDate = "0" + splitDateOnSchedule[1];
+        }
+        if(splitDateOnSchedule[4].length()>1){
+            splitSecondDate = splitDateOnSchedule[4];
+        }else{
+            splitSecondDate = "0" + splitDateOnSchedule[4];
+        }
+
+        String actualDateOnSchedule = splitDateOnSchedule[0] + " " + splitFirstDate
+                + " " + splitDateOnSchedule[2] + " " + splitDateOnSchedule[3] + " " + splitSecondDate;
+
+        if(actualDateOnSchedule.equals(DateOnDashboard)){
+            SimpleUtils.pass("Week Date on Dashboard " + DateOnDashboard + " matching with Schedule date " + actualDateOnSchedule);
+        }else{
+            SimpleUtils.fail("Week Date on Dashboard " + DateOnDashboard + " not matching with Schedule date " + actualDateOnSchedule,true);
+        }
+
+    }
+
+
+    public List<String> getLocationSummaryDataFromDashBoard() throws Exception{
+        String locationSummaryTitleOnDashboard = null;
+        List<String> ListLocationSummaryOnDashboard = new ArrayList<>();
+        if(isElementLoaded(locationsSummaryTitleOnDashboard, 10)){
+            locationSummaryTitleOnDashboard = locationsSummaryTitleOnDashboard.getText();
+            ListLocationSummaryOnDashboard.add(locationSummaryTitleOnDashboard);
+        }else{
+            SimpleUtils.fail("Location Summary Title not available on Dashboard Page", true);
+        }
+
+        if(areListElementVisible(locationsSummarySmartCardOnDashboard,10) && locationsSummarySmartCardOnDashboard.size()!=0){
+            for(int i =0; i< locationsSummarySmartCardOnDashboard.size();i++){
+                ListLocationSummaryOnDashboard.add(locationsSummarySmartCardOnDashboard.get(i).getText());
+            }
+        }else{
+            SimpleUtils.fail("Location Summary Smart Card not available on Dashboard Page", true);
+        }
+
+        return ListLocationSummaryOnDashboard;
+    }
+
+
+    public List<String> getLocationSummaryDataFromSchedulePage() throws Exception{
+        String locationSummaryTitleOnSchedule = null;
+        List<String> ListLocationSummaryOnSchedule = new ArrayList<>();
+        if(isElementLoaded(locationsSummaryTitleOnSchedule, 10)){
+            locationSummaryTitleOnSchedule = locationsSummaryTitleOnSchedule.getText();
+            ListLocationSummaryOnSchedule.add(locationSummaryTitleOnSchedule);
+        }else{
+            SimpleUtils.fail("Location Summary Title not available on Dashboard Page", true);
+        }
+
+        if(areListElementVisible(locationsSummarySmartCardOnSchedule,10) && locationsSummarySmartCardOnSchedule.size()!=0){
+            for(int i =0; i< locationsSummarySmartCardOnSchedule.size();i++){
+                ListLocationSummaryOnSchedule.add(locationsSummarySmartCardOnSchedule.get(i).getText());
+            }
+        }else{
+            SimpleUtils.fail("Location Summary Smart Card not available on Dashboard Page", true);
+        }
+
+        return ListLocationSummaryOnSchedule;
+    }
+
+
+    public void compareLocationSummaryFromDashboardAndSchedule(List<String> ListLocationSummaryOnDashboard, List<String> ListLocationSummaryOnSchedule){
+        for(int i=0; i<ListLocationSummaryOnDashboard.size();i++){
+            if(ListLocationSummaryOnDashboard.get(i).equalsIgnoreCase(ListLocationSummaryOnSchedule.get(i))){
+                SimpleUtils.pass("Location Summary on Dashboard "
+                        + ListLocationSummaryOnDashboard.get(i) + " matches with location" +
+                        " summary on Schedule page " +ListLocationSummaryOnSchedule.get(i));
+            }else{
+                SimpleUtils.fail("Location Summary on Dashboard "
+                        + ListLocationSummaryOnDashboard.get(i) + " matches with location" +
+                        " summary on Schedule page " +ListLocationSummaryOnSchedule.get(i),true);
+            }
+        }
+    }
+
 }

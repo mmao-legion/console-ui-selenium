@@ -1695,4 +1695,43 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void verifyActiveScheduleType() throws Exception{
 
     }
+
+    public List<Float> validateScheduleAndBudgetedHours() throws Exception {
+        return null;
+    }
+
+    public void compareHoursFromScheduleAndDashboardPage(List<Float> totalHoursFromSchTbl) throws Exception{
+
+    }
+
+    public void compareHoursFromScheduleSmartCardAndDashboardSmartCard(List<Float> totalHoursFromSchTbl) throws Exception{
+
+    }
+    public List<Float> getHoursOnLocationSummarySmartCard() throws Exception{
+        return null;
+    }
+
+    public void compareProjectedWithinBudget(int totalCountProjectedOverBudget) throws Exception {
+
+    }
+
+    public int getProjectedOverBudget() {
+        return 0;
+    }
+
+    public String getDateFromDashboard() throws Exception{
+        return null;
+    }
+    public void compareDashboardAndScheduleWeekDate(String DateOnSchdeule, String DateOnDashboard) throws Exception{
+
+    }
+    public List<String> getLocationSummaryDataFromDashBoard() throws Exception{
+        return null;
+    }
+    public List<String> getLocationSummaryDataFromSchedulePage() throws Exception{
+        return null;
+    }
+    public void compareLocationSummaryFromDashboardAndSchedule(List<String> ListLocationSummaryOnDashboard, List<String> ListLocationSummaryOnSchedule){
+
+    }
 }

@@ -8,7 +8,7 @@
 	"Break_Start" : "01:00PM",
 	"Break_End" : "01:30PM",
 	"Add_Note" : "abcd",
-	"DaysFromTodayInPast" : "4",
+	"DaysFromTodayInPast" : "1",
 	"Location_Filter_All_Locations" : "All Locations",
 	"Location_Filter_Specific_Locations" : "Carmel Club,Palo Alto",
 	"Location_Filter_Default_Locations" : "All",

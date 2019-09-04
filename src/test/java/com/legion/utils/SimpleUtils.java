@@ -979,7 +979,7 @@ public class SimpleUtils {
 				List<String> listComments = new ArrayList<>();
 				List<String> listCommentSection = new ArrayList<>();
 				for(int j=0; j<getCommentSection().size(); j++){
-					if(getCommentSection().get(j).contains(testNameList.get(i))){
+					if(getCommentSection().get(j).contains(testNameList.get(i).trim())){
 						for(int k=j+1; k< getCommentSection().size();k++){
 							if(getCommentSection().get(k).contains("Start")){
 								break;
