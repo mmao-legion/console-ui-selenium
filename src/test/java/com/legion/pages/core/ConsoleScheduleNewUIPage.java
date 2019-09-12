@@ -3494,7 +3494,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(xpath = "//div[contains(@class,'analytics-new-table-group-row')]//span/img/following-sibling::span")
     private List<WebElement> locationName;
 
-    @FindBy(xpath = "//div[contains(@class,'analytics-new-table-group-row')]//div[@class='ng-scope col-fx-1']")
+    @FindBy(xpath = "/div[contains(@class,'analytics-new-table-group-row')]//div[@class='ng-scope col-fx-1']")
     private List<WebElement> DMHours;
 
     public List<Float> validateScheduleAndBudgetedHours() throws Exception {
@@ -3519,7 +3519,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     budgetHours.put("Budgeted Hours",budgetHrs);
                     publishHours.put("Published Hours",publishedHrs);
                     clockHours.put("Clocked Hours",clockedHrs);
-                    counter = (i + 1) * 3;
+                    counter = (i + 1) * 4;
                 }
             }
             Float totalBudgetHoursFromSchTbl = calculateTotalHoursFromScheduleTable(budgetHours);
@@ -3592,6 +3592,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     SimpleUtils.pass(titleOnDashboardPage.get(j).getText() +
                             " Hours from Dashboard page " + totalHoursFromDashboardTbl.get(j)
                             + " matching with the hours present on Schedule Page " + totalHoursFromSchTbl.get(j));
+                }else{
+                    SimpleUtils.fail(titleOnDashboardPage.get(j).getText() +
+                            " Hours from Dashboard page " + totalHoursFromDashboardTbl.get(j)
+                            + " not matching with the hours present on Schedule Page " + totalHoursFromSchTbl.get(j),true);
                 }
             }
         }else{
