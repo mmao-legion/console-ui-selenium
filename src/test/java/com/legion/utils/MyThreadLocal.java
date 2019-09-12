@@ -16,7 +16,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.legion.tests.TestBase;
 
 public class MyThreadLocal {
-	
+
 	public static final ThreadLocal<EventFiringWebDriver> driver = new ThreadLocal<>();
 	public static final ThreadLocal<File> file = new ThreadLocal<>();
 	public static final ThreadLocal<String> loc = new ThreadLocal<>();
@@ -41,12 +41,17 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> os = new ThreadLocal<>();
 	public static final ThreadLocal<String> testMethodName = new ThreadLocal<>();
 	public static void setCurrentTestMethodName(String value) { testMethodName.set(value); }
-    public static String getCurrentTestMethodName() { return testMethodName.get(); }
-    public static ThreadLocal<String> consoleName = new ThreadLocal<>();
-    public static final ThreadLocal<String> scheduleHoursStartTime = new ThreadLocal<>();
-    public static final ThreadLocal<String> scheduleHoursEndTime = new ThreadLocal<>();
+	public static String getCurrentTestMethodName() { return testMethodName.get(); }
+	public static ThreadLocal<String> consoleName = new ThreadLocal<>();
+	public static final ThreadLocal<String> scheduleHoursStartTime = new ThreadLocal<>();
+	public static final ThreadLocal<String> scheduleHoursEndTime = new ThreadLocal<>();
 	public static ThreadLocal<Integer> testCaseId = new ThreadLocal<>();
 	public static ThreadLocal<Integer> testRailRunId = new ThreadLocal<>();
+	public static ThreadLocal<List<String>> testName = new ThreadLocal<>();
+	public static ThreadLocal<List<String>> commentSection = new ThreadLocal<>();
+	public static ThreadLocal<String> comment = new ThreadLocal<>();
+	public static ThreadLocal<List<String>> failedComment = new ThreadLocal<>();
+	public static ThreadLocal<List<Integer>> testRailRun = new ThreadLocal<>();
 	public static final ThreadLocal<String> teamMemberName = new ThreadLocal<>();
 	public static final ThreadLocal<String> screenshotLoc = new ThreadLocal<>();
 	public static ThreadLocal<String> screenShotURL = new ThreadLocal<>();
@@ -111,9 +116,48 @@ public class MyThreadLocal {
 	public static Integer getTestRailRunId() {
 		return testRailRunId.get();
 	}
-    public static final ThreadLocal<AndroidDriver<MobileElement>> android_driver = new ThreadLocal<>();
-    public static ThreadLocal<String> platformname = new ThreadLocal<>();
-		
+
+	public static void setTestName(List<String> value) {
+		testName.set(value);
+	}
+
+	public static List<String> getTestName() {
+		return testName.get();
+	}
+
+	public static void setCommentSection(List<String> value) {
+		commentSection.set(value);
+	}
+
+	public static List<String> getCommentSection() {
+		return commentSection.get();
+	}
+	public static void setComment(String value) {
+		comment.set(value);
+	}
+
+	public static String getComment() {
+		return comment.get();
+	}
+
+	public static void setFailedComment(List<String> value) {
+		failedComment.set(value);
+	}
+
+	public static List<String> getFailedComment() {
+		return failedComment.get();
+	}
+
+	public static void setTestRailRun(List<Integer> value) {
+		testRailRun.set(value);
+	}
+
+	public static List<Integer> getTestRailRun() {
+		return testRailRun.get();
+	}
+	public static final ThreadLocal<AndroidDriver<MobileElement>> android_driver = new ThreadLocal<>();
+	public static ThreadLocal<String> platformname = new ThreadLocal<>();
+
 	public static void setTotalSuiteTestCases(Integer value) {
 		totalSuiteTestCases.set(value);
 	}
@@ -201,7 +245,7 @@ public class MyThreadLocal {
 	public static String getURL() {
 		return url.get();
 	}
-	
+
 	public static void setLoc(String _loc) {
 		loc.set(_loc);
 	}
@@ -271,7 +315,7 @@ public class MyThreadLocal {
 	public static String getEnterprise() {
 		return enterprise.get();
 	}
-	
+
 	public static void setSessionID(String _sessionID) {
 		sessionID.set(_sessionID);
 	}
@@ -279,7 +323,7 @@ public class MyThreadLocal {
 	public static String getSessionID() {
 		return sessionID.get();
 	}
-	
+
 	public static void setSessionTimestamp(String _sessionTimestamp) {
 		sessionTimestamp.set(_sessionTimestamp);
 	}
@@ -287,7 +331,7 @@ public class MyThreadLocal {
 	public static String getSessionTimestamp() {
 		return sessionTimestamp.get();
 	}
-	
+
 	public static void setVersion(String _version) {
 		version.set(_version);
 	}
@@ -295,7 +339,7 @@ public class MyThreadLocal {
 	public static String getVersion() {
 		return version.get();
 	}
-	
+
 	public static void setOS(String _os) {
 		os.set(_os);
 	}
@@ -303,8 +347,8 @@ public class MyThreadLocal {
 	public static String getOS() {
 		return os.get();
 	}
-	
-	
+
+
 	//set screenshot Console name
 	public static void setScreenshotConsoleName(String screenshotFolder){
 		consoleName.set(screenshotFolder);

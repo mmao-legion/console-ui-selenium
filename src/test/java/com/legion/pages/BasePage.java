@@ -377,6 +377,31 @@ public class BasePage {
         return element;
     }
 
+    public boolean areListElementVisible(List<WebElement> listElement, long timeOutInSeconds, int listSize ){
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(
+                MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(timeOutInSeconds))
+                .pollingEvery(Duration.ofSeconds(5))
+                .ignoring(org.openqa.selenium.NoSuchElementException.class);
+        Boolean element =false;
+        try{
+            element = wait.until(new Function<WebDriver, Boolean>() {
+                @Override
+                public Boolean apply(WebDriver t) {
+                    int size = 0;
+                    size = listElement.size();
+                    if(size > listSize )
+                        return true;
+                    else
+                        return false;
+                }
+            });
+        }catch(NoSuchElementException | TimeoutException te){
+            return element;
+        }
+
+        return element;
+    }
+
 
     public void selectDate(int daysFromToday) {
         LocalDate now = LocalDate.now();
@@ -405,6 +430,38 @@ public class BasePage {
                 return;
             }
         }
+    }
+
+    public String selectDateForTimesheet(int daysFromToday) {
+        LocalDate now = LocalDate.now();
+        LocalDate wanted = LocalDate.now().minusDays(daysFromToday);
+        String dateWanted = wanted.toString();
+//        LocalDate wanted1 = LocalDate.now().minusDays()
+        WebElement btnPreviousMonth = null;
+        int numClicks = now.getMonthValue() - wanted.getMonthValue();
+        if (numClicks < 0) {
+            numClicks = daysFromToday / 30;
+        }
+        if (numClicks >0){
+            try{
+                btnPreviousMonth = getDriver().findElement(By.cssSelector("a[ng-click='$ctrl.changeMonth(-1)']"));
+            }catch(Exception e){
+                SimpleUtils.fail("Not able to click Next month arrow",false);
+            }
+        }
+
+        for (int i = 0; i < numClicks; i++) {
+            click(btnPreviousMonth);
+        }
+
+        List<WebElement> mCalendarDates = getDriver().findElements(By.cssSelector("div[class='lg-single-calendar-date ng-scope']"));
+        for (WebElement mDate : mCalendarDates) {
+            if (Integer.parseInt(mDate.getText()) == wanted.getDayOfMonth()) {
+                mDate.click();
+                break;
+            }
+        }
+        return dateWanted;
     }
 
 
@@ -436,6 +493,15 @@ public class BasePage {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    //added by Nishant
+
+    public String searchDateForTimesheet(int daysFromToday) {
+        LocalDate now = LocalDate.now();
+        LocalDate wanted = LocalDate.now().minusDays(daysFromToday);
+        String dateWanted = wanted.toString();
+        return dateWanted;
     }
 
 

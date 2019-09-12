@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.legion.tests.annotations.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -29,11 +30,6 @@ import com.legion.pages.SchedulePage;
 import com.legion.pages.StaffingGuidancePage;
 import com.legion.test.core.mobile.LoginTest;
 import com.legion.tests.TestBase;
-import com.legion.tests.annotations.Automated;
-import com.legion.tests.annotations.Enterprise;
-import com.legion.tests.annotations.Owner;
-import com.legion.tests.annotations.TestName;
-import com.legion.tests.annotations.UseAsTestRailId;
 import com.legion.tests.core.ScheduleNewUITest.SchedulePageSubTabText;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
@@ -1131,7 +1127,7 @@ public class ScheduleNewUITest extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Gunjan")
-	@Enterprise(name = "Kendrascott2_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "LEG-5232: Data for Schedule does not get loaded when user clicks on next day without waiting data for highlighted day gets loaded")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void generateScheduleAndCheckScheduleNTMSizeWeekView(String username, String password, String browser, String location)
@@ -1831,12 +1827,16 @@ public class ScheduleNewUITest extends TestBase {
 
 	        schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
 	    }
-	    
-	    
-	    @Automated(automated =  "Automated")
-	    @Owner(owner = "Naval")
-	    @Enterprise(name = "KendraScott2_Enterprise")
-	    @TestName(description = "TP-143 : Validate loading of smart card on Schedule tab[ No Spinning icon].")
+
+
+		@MobilePlatform(platform = "Android")
+		@UseAsTestRailSectionId(testRailSectionId = 824)
+		@UseAsTestCaseSectionId(testCaseSectionId = 367)
+		@Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+		@SanitySuite(sanity =  "Sanity")
+		@Enterprise(name = "KendraScott2_Enterprise")
+		@TestName(description = "Validate loading of smart card on Schedule tab[ No Spinning icon].")
 	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	    public void validateScheduleSmartCardsAsStoreManager(String browser, String username, String password, String location)
 	    		throws Exception {
@@ -2113,51 +2113,117 @@ public class ScheduleNewUITest extends TestBase {
 
 
 
-	@Automated(automated = "Automated")
-	@Owner(owner = "Nishant")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Schedule Overlapping")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyScheduleClopeningAsInternalAdmin(String browser, String username, String password, String location)
-			throws Exception {
-		String day = null;
-		int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
-		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-		schedulePage.clickOnDayView();
-		String activeDay = schedulePage.getActiveAndNextDay();
-		schedulePage.toggleSummaryView();
-		if (schedulePage.isSummaryViewLoaded()) {
-			day = schedulePage.getActiveWeekText().split(" ")[0];
-		}else{
-			SimpleUtils.fail("Unable to load Summary view on the week '" + schedulePage.getActiveWeekText() + "'.", false);
-		}
-		HashMap<String, String> activeDayAndOperatingHrs = schedulePage.getOperatingHrsValue(day);
-		String shiftStartTime = (activeDayAndOperatingHrs.get("ScheduleOperatingHrs").split("-"))[1].replaceAll("[^0-9]","");
-		String shiftEndTime = (activeDayAndOperatingHrs.get("ScheduleOperatingHrs").split("-"))[2].replaceAll("[^0-9]","");
-		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
-		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-		int previousGutterCount = schedulePage.getgutterSize();
-		scheduleNavigationTest(previousGutterCount);
-		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.moveSliderAtCertainPoint(shiftEndTime, shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.moveSliderAtCertainPoint(propertyCustomizeMap.get("INCREASE_START_TIME_CLOPENING"), shiftSliderDroppable.StartPoint.getValue());
-		validateAssignTeamMemberPageAndSaveSchedule();
-		schedulePage.clickOnNextDaySchedule(activeDay);
-		int previousGutterCountNextDay = schedulePage.getgutterSize();
-		scheduleNavigationTest(previousGutterCountNextDay);
-		schedulePage.clickNewDayViewShiftButtonLoaded();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.moveSliderAtCertainPoint(propertyCustomizeMap.get("INCREASE_END_TIME_CLOPENING"), shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.moveSliderAtCertainPoint(shiftStartTime, shiftSliderDroppable.StartPoint.getValue());
-		validateAssignTeamMemberPageAndSaveSchedule();
-	}
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nishant")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Schedule Overlapping")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScheduleClopeningAsInternalAdmin(String browser, String username, String password, String location)
+            throws Exception {
+        String day = null;
+        int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
+//	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
+        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+        schedulePage.clickOnDayView();
+        String activeDay = schedulePage.getActiveAndNextDay();
+        schedulePage.toggleSummaryView();
+        if (schedulePage.isSummaryViewLoaded()) {
+            day = schedulePage.getActiveWeekText().split(" ")[0];
+        }else{
+            SimpleUtils.fail("Unable to load Summary view on the week '" + schedulePage.getActiveWeekText() + "'.", false);
+        }
+        HashMap<String, String> activeDayAndOperatingHrs = schedulePage.getOperatingHrsValue(day);
+        String shiftStartTime = (activeDayAndOperatingHrs.get("ScheduleOperatingHrs").split("-"))[1].replaceAll("[^0-9]","");
+        String shiftEndTime = (activeDayAndOperatingHrs.get("ScheduleOperatingHrs").split("-"))[2].replaceAll("[^0-9]","");
+        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+        int previousGutterCount = schedulePage.getgutterSize();
+        scheduleNavigationTest(previousGutterCount);
+        String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.moveSliderAtCertainPoint(shiftEndTime, shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtCertainPoint(propertyCustomizeMap.get("INCREASE_START_TIME_CLOPENING"), shiftSliderDroppable.StartPoint.getValue());
+        validateAssignTeamMemberPageAndSaveSchedule();
+        schedulePage.clickOnNextDaySchedule(activeDay);
+        int previousGutterCountNextDay = schedulePage.getgutterSize();
+        scheduleNavigationTest(previousGutterCountNextDay);
+        schedulePage.clickNewDayViewShiftButtonLoaded();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.moveSliderAtCertainPoint(propertyCustomizeMap.get("INCREASE_END_TIME_CLOPENING"), shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtCertainPoint(shiftStartTime, shiftSliderDroppable.StartPoint.getValue());
+        validateAssignTeamMemberPageAndSaveSchedule();
+    }
+
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nishant")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Schedule Overlapping")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScheduleAsManagerOrSystemGeneartedAsInternalAdmin(String browser, String username, String password, String location)
+            throws Exception {
+        String day = null;
+        int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
+//	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
+        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+        schedulePage.clickOnDayView();
+        String activeDay = schedulePage.getActiveAndNextDay();
+        schedulePage.toggleSummaryView();
+        if (schedulePage.isSummaryViewLoaded()) {
+            day = schedulePage.getActiveWeekText().split(" ")[0];
+        }else{
+            SimpleUtils.fail("Unable to load Summary view on the week '" + schedulePage.getActiveWeekText() + "'.", false);
+        }
+        HashMap<String, String> activeDayAndOperatingHrs = schedulePage.getOperatingHrsValue(day);
+        String shiftStartTime = (activeDayAndOperatingHrs.get("ScheduleOperatingHrs").split("-"))[1].replaceAll("[^0-9]","");
+        String shiftEndTime = (activeDayAndOperatingHrs.get("ScheduleOperatingHrs").split("-"))[2].replaceAll("[^0-9]","");
+        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+        int previousGutterCount = schedulePage.getgutterSize();
+        scheduleNavigationTest(previousGutterCount);
+        String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.moveSliderAtCertainPoint(shiftEndTime, shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtCertainPoint(propertyCustomizeMap.get("INCREASE_START_TIME_CLOPENING"), shiftSliderDroppable.StartPoint.getValue());
+        validateAssignTeamMemberPageAndSaveSchedule();
+        schedulePage.clickOnNextDaySchedule(activeDay);
+        int previousGutterCountNextDay = schedulePage.getgutterSize();
+        scheduleNavigationTest(previousGutterCountNextDay);
+        schedulePage.clickNewDayViewShiftButtonLoaded();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.moveSliderAtCertainPoint(propertyCustomizeMap.get("INCREASE_END_TIME_CLOPENING"), shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtCertainPoint(shiftStartTime, shiftSliderDroppable.StartPoint.getValue());
+        validateAssignTeamMemberPageAndSaveSchedule();
+    }
+
+
+
+
+
+
+    public void validateAssignTeamMemberPageAndSaveSchedule() throws Exception{
+        schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+        schedulePage.clickRadioBtnStaffingOption(staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.selectTeamMembersOptionForSchedule();
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.clickSaveBtn();
+    }
+
 
 
 
@@ -2207,16 +2273,5 @@ public class ScheduleNewUITest extends TestBase {
 		schedulePage.moveSliderAtCertainPoint(shiftStartTime, shiftSliderDroppable.StartPoint.getValue());
 		validateAssignTeamMemberPageAndSaveSchedule();
 	}
-
-	public void validateAssignTeamMemberPageAndSaveSchedule() throws Exception{
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
-		schedulePage.clickRadioBtnStaffingOption(staffingOption.AssignTeamMemberShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.selectTeamMembersOptionForSchedule();
-		schedulePage.clickOnOfferOrAssignBtn();
-		schedulePage.clickSaveBtn();
-	}
-
 
 }

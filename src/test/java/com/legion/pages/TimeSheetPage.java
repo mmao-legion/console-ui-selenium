@@ -22,21 +22,31 @@ public interface TimeSheetPage {
 	
 	public ArrayList<String> hoverOnClockIconAndGetInfo() throws Exception;
 
-	public void addNewTimeClock(String location, String date, String employee, String workRole, 
-			String startTime, String endTime, String notes) throws Exception;
+	public void addNewTimeClock(String location, String employee, String workRole,
+			String startTime, String endTime, String breakStartTime, String breakEndTime, String notes , String DaysFromTodayInPast) throws Exception;
 
-	public void valiadteTimeClock(String location, String timeClockDate, String employee, String workRole, String startTime,
-			String endTime, String notes) throws Exception;
+	public void valiadteTimeClock(String location, String employee, String workRole, String startTime,
+			String endTime,String breakStartTime, String breakEndTime, String notes, String DaysFromTodayInPast) throws Exception;
+
+	public void updateTimeClock(String location, String employee, String startTime,
+								  String endTime, String notes, String DaysFromTodayInPast) throws Exception;
+
+	public void timesheetAutoApproval(String location, String employee, String startTime,
+									  String endTime, String notes)throws Exception;
 
 	public void clickOnPayPeriodDuration() throws Exception;
 
-	public HashMap<String, Float> getTimeClockHoursByDate(String timeClockDate, String timeClockEmployee) throws Exception;
+	public void clickOnWeekDuration() throws Exception;
+
+	public HashMap<String, Float> getTimeClockHoursByDate(String DaysFromTodayInPast, String timeClockEmployee) throws Exception;
 
 	public String getActiveDayWeekOrPayPeriod() throws Exception;
 	
 	public void navigateDayWeekOrPayPeriodToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount);
 	
 	public void clickOnDayView() throws Exception;
+
+	public void timesheetSmartCard() throws Exception;
 
 	public void openFirstPendingTimeSheet() throws Exception;
 
@@ -97,5 +107,21 @@ public interface TimeSheetPage {
 	public void exportTimesheet() throws Exception;
 
 	public HashMap<String, Float> getTotalTimeSheetCarouselCardsHours() throws Exception;
+
+	public void validateLocationFilterIfNoLocationSelected(String locationFilterAllLocations) throws Exception;
+
+	public void verifyTimesheetTableIfNoLocationSelected() throws  Exception;
+
+	public void clickImmediatePastToCurrentActiveWeekInDayPicker();
+
+	public void validateLocationFilterIfDefaultLocationSelected(String locationFilterDefaultLocations) throws Exception;
+
+	public void validateLocationFilterIfSpecificLocationSelected(String locationFilterSpecificLocations) throws Exception;
+
+	public void clickWorkerRow(List<WebElement> allWorkersRow, String locationFilterSpecificLocations) throws Exception;
+
+	public String getWeekStartingDay() throws Exception;
+
+	public void clickPreviousDayArrow(int previousArrowCount) throws Exception;
 
 }

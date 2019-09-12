@@ -50,7 +50,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			    value = newValue;
 			}
 			public String getValue() { return value; }
-		}
+	}
 	
 	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 	private static HashMap<String, String> searchDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/searchDetails.json");

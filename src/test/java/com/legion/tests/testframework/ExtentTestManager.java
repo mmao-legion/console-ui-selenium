@@ -150,12 +150,12 @@ public class ExtentTestManager {
 
     public synchronized static int getTestCaseSectionId(Method testMethod) {
 
-        int testCaseSectionId = 0;
-        // check if there is a Test annotation and get the test rail section id
-        UseAsTestCaseSectionId useAsTestCaseSectionId = testMethod.getAnnotation(UseAsTestCaseSectionId.class);
-        if(useAsTestCaseSectionId != null && useAsTestCaseSectionId.testCaseSectionId()> 0){
-            testCaseSectionId = useAsTestCaseSectionId.testCaseSectionId();
-        }
+            int testCaseSectionId = 0;
+            // check if there is a Test annotation and get the test rail section id
+            UseAsTestCaseSectionId useAsTestCaseSectionId = testMethod.getAnnotation(UseAsTestCaseSectionId.class);
+            if(useAsTestCaseSectionId != null && useAsTestCaseSectionId.testCaseSectionId()> 0){
+                testCaseSectionId = useAsTestCaseSectionId.testCaseSectionId();
+            }
 
         return testCaseSectionId;
     }

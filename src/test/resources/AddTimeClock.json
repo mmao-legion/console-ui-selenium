@@ -1,9 +1,16 @@
 {
-	"Location" : "Carmel Club",
+	"Location" : "Palo Alto",
 	"Date" : "Dec 29, 2018",
-	"Employee" : "Harvey Sawayn",
-	"Work_Role" : "Barista",
+	"Employee" : "Rodolfo Wolff",
+	"Work_Role" : "MOD",
 	"Shift_Start" : "09:00AM",
 	"Shift_End" : "05:00PM",
-	"Add_Note" : ""
+	"Break_Start" : "01:00PM",
+	"Break_End" : "01:30PM",
+	"Add_Note" : "abcd",
+	"DaysFromTodayInPast" : "1",
+	"Location_Filter_All_Locations" : "All Locations",
+	"Location_Filter_Specific_Locations" : "Carmel Club,Palo Alto",
+	"Location_Filter_Default_Locations" : "All",
+	"Location_Filter_Specific_Location" : "Carmel Club"
 }

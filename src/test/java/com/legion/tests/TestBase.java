@@ -127,15 +127,15 @@ public abstract class TestBase {
     public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     private static ExtentReports extent = ExtentReportManager.getInstance();
     public static AndroidDriver<MobileElement> driver;
-	public static String versionString;
-	public static int version;
-	public static String pth=System.getProperty("user.dir");
-	public static String reportFilePath=pth+"/Reports/";
-	public static String screenshotFilePath=pth+"/screenshots/";
-	public static String excelData=pth+"/TestData/";
-	public static String apkpath=pth+"/Resources";
-	public static AppiumDriverLocalService service;
-	private static AppiumServiceBuilder builder;
+    public static String versionString;
+    public static int version;
+    public static String pth=System.getProperty("user.dir");
+    public static String reportFilePath=pth+"/Reports/";
+    public static String screenshotFilePath=pth+"/screenshots/";
+    public static String excelData=pth+"/TestData/";
+    public static String apkpath=pth+"/Resources";
+    public static AppiumDriverLocalService service;
+    private static AppiumServiceBuilder builder;
     public static final int TEST_CASE_PASSED_STATUS = 1;
     public static final int TEST_CASE_FAILED_STATUS = 5;
 
@@ -155,54 +155,52 @@ public abstract class TestBase {
 
     }
 
- // Set the Desired Capabilities to launch the app in Andriod mobile
- 	public static void launchMobileApp() throws Exception{
- 		DesiredCapabilities caps = new DesiredCapabilities();
- 		caps.setCapability("deviceName", propertyMap.get("deviceName"));
- 		caps.setCapability("platformName", "Android");
- 		caps.setCapability("noReset",true);
- 		caps.setCapability("platformVersion", propertyMap.get("platformVersion"));
- 		caps.setCapability("autoAcceptAlerts", true);
- 		caps.setCapability("appPackage", "co.legion.client.staging");
- 		caps.setCapability("appActivity", "co.legion.client.activities.LegionSplashActivity");
- 		caps.setCapability("newCommandTimeout", "360");
- 		setAndroidDriver( new AndroidDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"), caps));
- 		getAndroidDriver().manage().timeouts().implicitlyWait(80, TimeUnit.SECONDS);
- 		Thread.sleep(10000);
- 		ExtentTestManager.getTest().log(Status.PASS, "Launched Mobile Application Successfully!");
-	}
+    // Set the Desired Capabilities to launch the app in Andriod mobile
+    public static void launchMobileApp() throws Exception{
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setCapability("deviceName", propertyMap.get("deviceName"));
+        caps.setCapability("platformName", "Android");
+        caps.setCapability("noReset",true);
+        caps.setCapability("platformVersion", propertyMap.get("platformVersion"));
+        caps.setCapability("autoAcceptAlerts", true);
+        caps.setCapability("appPackage", "co.legion.client.staging");
+        caps.setCapability("appActivity", "co.legion.client.activities.LegionSplashActivity");
+        caps.setCapability("newCommandTimeout", "360");
+        setAndroidDriver( new AndroidDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"), caps));
+        getAndroidDriver().manage().timeouts().implicitlyWait(80, TimeUnit.SECONDS);
+        Thread.sleep(10000);
+        ExtentTestManager.getTest().log(Status.PASS, "Launched Mobile Application Successfully!");
+    }
 
     @BeforeClass
     protected void init () {
         ScreenshotManager.createScreenshotDirIfNotExist();
     }
-    
+
     @BeforeMethod(alwaysRun = true)
     protected void initTestFramework(Method method, ITestContext context) throws AWTException, IOException, APIException, JSONException {
-    	Date date=new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
-    	String testName = ExtentTestManager.getTestName(method);
+        Date date=new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
+        String testName = ExtentTestManager.getTestName(method);
         String ownerName = ExtentTestManager.getOwnerName(method);
         String automatedName = ExtentTestManager.getAutomatedName(method);
         String enterpriseName =  SimpleUtils.getEnterprise(method);
         String platformName =  ExtentTestManager.getMobilePlatformName(method);
-        int sectionId = ExtentTestManager.getTestRailSectionId(method);
+//        int sectionId = ExtentTestManager.getTestRailSectionId(method);
         String testRunPhaseName = ExtentTestManager.getTestRunPhase(method);
         List<String> categories =  new ArrayList<String>();
         categories.add(getClass().getSimpleName());
 //        categories.add(enterpriseName);
         List<String> enterprises =  new ArrayList<String>();
         enterprises.add(enterpriseName);
-//        ExtentTestManager.createTest(getClass().getSimpleName() + " - "
-//                + " " + method.getName() + " : " + testName + ""
-//                + " [" + ownerName + "/" + automatedName + "]", "", categories);
         ExtentTestManager.createTest(getClass().getSimpleName() + " - "
-            + " " + method.getName() + " : " + testName + ""
-            + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
+                + " " + method.getName() + " : " + testName + ""
+                + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
         extent.setSystemInfo(method.getName(), enterpriseName.toString());
         setTestRailRunId(0);
-        int testCaseId = SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,sectionId);
-        setTestCaseId(testCaseId);
+        List<Integer> testRailId =  new ArrayList<Integer>();
+        setTestRailRun(testRailId);
+        SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
         setCurrentMethod(method);
         setBrowserNeeded(true);
         setCurrentTestMethodName(method.getName());
@@ -227,12 +225,12 @@ public abstract class TestBase {
         //todo replace Chrome driver initializaton with what Manideep has
         DesiredCapabilities capabilities = null;
         String url = "";
-        
+
         capabilities = SimpleUtils.initCapabilities(getDriverType(), getVersion(), getOS());
         url = SimpleUtils.getURL();
         // Initialize browser
         if (url == null) {
-        	if (getDriverType().equalsIgnoreCase(propertyMap.get("INTERNET_EXPLORER"))) {
+            if (getDriverType().equalsIgnoreCase(propertyMap.get("INTERNET_EXPLORER"))) {
                 InternetExplorerOptions options = new InternetExplorerOptions()
                         .requireWindowFocus()
                         .ignoreZoomSettings()
@@ -240,12 +238,12 @@ public abstract class TestBase {
                 options.setCapability("silent", true);
                 options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
                 setDriver(new InternetExplorerDriver(options));
-                
+
             }
             if (getDriverType().equalsIgnoreCase(propertyMap.get("CHROME"))) {
-            	System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
-            	ChromeOptions options = new ChromeOptions();
-            	if(propertyMap.get("isHeadlessBrowser").equalsIgnoreCase("true")){
+                System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
+                ChromeOptions options = new ChromeOptions();
+                if(propertyMap.get("isHeadlessBrowser").equalsIgnoreCase("true")){
                     options.addArguments("headless");
                     options.addArguments("window-size=1200x600");
                     runScriptOnHeadlessOrBrowser(options);
@@ -255,8 +253,8 @@ public abstract class TestBase {
 
             }
             if (getDriverType().equalsIgnoreCase(propertyMap.get("FIREFOX"))) {
-            	System.setProperty("webdriver.gecko.driver",propertyMap.get("FIREFOX_DRIVER_PATH"));
-            	FirefoxProfile profile = new FirefoxProfile();
+                System.setProperty("webdriver.gecko.driver",propertyMap.get("FIREFOX_DRIVER_PATH"));
+                FirefoxProfile profile = new FirefoxProfile();
                 profile.setAcceptUntrustedCertificates(true);
                 FirefoxOptions options = new FirefoxOptions();
                 options.setProfile(profile);
@@ -270,12 +268,12 @@ public abstract class TestBase {
         }
         else {
             // Launch remote browser and set it as the current thread
-        	setDriver(new RemoteWebDriver(
+            setDriver(new RemoteWebDriver(
                     new URL(url),
                     capabilities));
         }
 
-       
+
     }
 
 
@@ -287,10 +285,10 @@ public abstract class TestBase {
         return new MobileWebPageFactory();
     }
 
-	@AfterMethod(alwaysRun = true)
+    @AfterMethod(alwaysRun = true)
     protected void tearDown(Method method,ITestResult result) throws IOException {
-		ExtentTestManager.getTest().info("tearDown started");
-		if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
+        ExtentTestManager.getTest().info("tearDown started");
+        if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
             try {
                 getDriver().manage().deleteAllCookies();
                 getDriver().quit();
@@ -298,18 +296,18 @@ public abstract class TestBase {
                 Reporter.log("Error closing browser");
             }
         }
-		
-		if (getVerificationMap() != null) {
+
+        if (getVerificationMap() != null) {
             getVerificationMap().clear();
         }
-		ExtentTestManager.getTest().info("tearDown finished");
-		extent.flush();
-		//stopServer();
+        ExtentTestManager.getTest().info("tearDown finished");
+        extent.flush();
+        //stopServer();
     }
 
-	
-	public static void visitPage(Method testMethod){
-		setEnvironment(propertyMap.get("ENVIRONMENT"));
+
+    public static void visitPage(Method testMethod){
+        setEnvironment(propertyMap.get("ENVIRONMENT"));
         Enterprise e = testMethod.getAnnotation(Enterprise.class);
         String enterpriseName = null;
         if (e != null ) {
@@ -319,24 +317,24 @@ public abstract class TestBase {
             enterpriseName = SimpleUtils.getDefaultEnterprise();
         }
         setEnterprise(enterpriseName);
-		switch (getEnvironment()){
-			case "QA":
-					setURL(propertyMap.get("QAURL"));
-					loadURL();
-					break;
-			case "DEV":
-					setURL(propertyMap.get("DEVURL"));
-					loadURL();
-					break;
-			default:
-				ExtentTestManager.getTest().log(Status.FAIL,"Unable to set the URL");
-			}
-	}
+        switch (getEnvironment()){
+            case "QA":
+                setURL(propertyMap.get("QAURL"));
+                loadURL();
+                break;
+            case "DEV":
+                setURL(propertyMap.get("DEVURL"));
+                loadURL();
+                break;
+            default:
+                ExtentTestManager.getTest().log(Status.FAIL,"Unable to set the URL");
+        }
+    }
 
-   
+
     public static void loadURL() {
         try {
-        	getDriver().get(getURL() + "legion/?enterprise=" + getEnterprise() + " ");
+            getDriver().get(getURL() + "legion/?enterprise=" + getEnterprise() + " ");
             getDriver().manage().window().maximize();
         } catch (TimeoutException te) {
             try {
@@ -352,15 +350,15 @@ public abstract class TestBase {
      */
     public synchronized void loginToLegionAndVerifyIsLoginDone(String username, String Password, String location) throws Exception
     {
-    	LoginPage loginPage = pageFactory.createConsoleLoginPage();
-    	loginPage.loginToLegionWithCredential(username, Password);
-    	LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-    	locationSelectorPage.changeLocation(location);
-	    boolean isLoginDone = loginPage.isLoginDone();
-	    loginPage.verifyLoginDone(isLoginDone, location);
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.loginToLegionWithCredential(username, Password);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeLocation(location);
+        boolean isLoginDone = loginPage.isLoginDone();
+        loginPage.verifyLoginDone(isLoginDone, location);
     }
 
-	public abstract void firstTest(Method testMethod, Object[] params) throws Exception;
+    public abstract void firstTest(Method testMethod, Object[] params) throws Exception;
     // TODO Auto-generated method stub
 
 
@@ -371,7 +369,7 @@ public abstract class TestBase {
                 .withAppiumJS(new File(appiumJSPath)));
     }
 
-		//Start appium programatically
+    //Start appium programatically
     public static void startServer() {
         DesiredCapabilities cap = new DesiredCapabilities();
         cap.setCapability("noReset", "false");
@@ -387,7 +385,7 @@ public abstract class TestBase {
         service.start();
     }
 
-		//Stop appium programatically
+    //Stop appium programatically
     public void stopServer() {
         Runtime runtime = Runtime.getRuntime();
         try {
