@@ -44,13 +44,23 @@ import org.json.simple.JSONValue;
  */
 public class SimpleUtils {
 
-	static HashMap<String,String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-
+//	static HashMap<String,String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
 	static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
 
 	static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
 
 	private static HashMap< String,Object[][]> userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/legionUsers.json");
+
+	private static Map<String, String> getPropertiesFromJsonFileWithOverrides(String pathname) {
+		String envFileLocation = System.getenv().getOrDefault("ENVCFG_FILE_LOCATION", pathname);
+		Map<String, String> propMap = JsonUtil.getPropertiesFromJsonFile(envFileLocation);
+		return propMap;
+	}
+
+	public static Map<String, String> getParameterMap() {
+		return parameterMap;
+	}
 
 	public static DesiredCapabilities initCapabilities(String browser, String version, String os) {
 		DesiredCapabilities caps = new DesiredCapabilities();
