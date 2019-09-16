@@ -2,8 +2,11 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.utils.MyThreadLocal.*;
+
+import java.util.HashMap;
 import java.util.List;
 
+import com.legion.utils.JsonUtil;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -44,7 +47,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
 
 
     String dashboardConsoleMenuText = "Dashboard";
-
+    private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
     
     public ConsoleLocationSelectorPage(){
@@ -63,7 +66,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public void changeLocation(String locationName)
     {
-        waitForSeconds(2);
+        waitForSeconds(4);
         try {
             Boolean isLocationMatched = false;
             activeConsoleName = activeConsoleMenuItem.getText();

@@ -2912,12 +2912,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(css = "div.allow-pointer-events.ng-scope")
     private List<WebElement> imageSize;
-    @FindBy(css = "span.sch-worker-action-label")
-    private List<WebElement> viewProfile;
+//    @FindBy(css = "span.sch-worker-action-label")
+//    private List<WebElement> viewProfile;
     @FindBy(css = "div[ng-class*='ChangeRole'] span")
     private WebElement changeRole;
     @FindBy(css = "div[ng-class*='ConvertToOpen'] span")
     private WebElement convertOpen;
+    @FindBy(css = "div[ng-class*='ViewProfile'] span")
+    private WebElement viewProfile;
     @FindBy(css = "div[ng-class*='AssignTM'] span")
     private WebElement assignTM;
     @FindBy(xpath = "//span[contains(text(),'YES')]")
@@ -2936,261 +2938,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
         }
     }
-
-    public void viewProfile() {
-        if (areListElementVisible(imageSize, 5)) {
-            click(imageSize.get(5));
-            click(changeRole);
-            WebElement element = getDriver().findElement(By.cssSelector("div.sch-worker-popover.allow-pointer-events.ng-scope"));
-            JavascriptExecutor jse = (JavascriptExecutor) getDriver();
-            String txt = jse.executeScript("return arguments[0].innerHTML;", element).toString();
-            System.out.println(txt);
-//		  	 	   		if(viewProfile.size()>0){
-//				   		   click(viewProfile.get(1));
-//			 	   		}
-
-        }
-    }
-
-
-    @FindBy(css = "div.week-view-shift-hover-info-icon")
-    private List<WebElement> scheduleInfoIcon;
-
-    @FindBy(css = "button[ng-click*='confirmSaveAction']")
-    private WebElement saveOnSaveConfirmationPopup;
-
-    @FindBy(css = "button[ng-click*='okAction']")
-    private WebElement okAfterSaveConfirmationPopup;
-
-    public void verifyOpenShift(String TMName, String workerRole, String shiftDuration, int counter) {
-        click(scheduleInfoIcon.get(counter));
-        String workerRoleOpenShift = workerRoleDetailsFromPopUp.getText();
-        String shiftDurationOpenShift = shiftDurationInPopUp.getText();
-        if (workerRoleOpenShift.equalsIgnoreCase(workerRole) && shiftDurationOpenShift.equalsIgnoreCase(shiftDuration) && workerName.get(counter).getText().equalsIgnoreCase("open")) {
-            SimpleUtils.pass(TMName + "'s " + workerRole + " shift of duration " + shiftDuration + " got converted to open shift successfully");
-        } else {
-            SimpleUtils.fail(TMName + "'s " + workerRole + " shift of duration " + shiftDuration + " was not converted to open shift successfully", false);
-        }
-    }
-
-    public void saveSchedule() {
-        if (isElementEnabled(scheduleSaveBtn,10)) {
-            click(scheduleSaveBtn);
-        } else {
-            SimpleUtils.fail("Schedule save button not found", false);
-        }
-        if (isElementEnabled(saveOnSaveConfirmationPopup)) {
-            click(saveOnSaveConfirmationPopup);
-        } else {
-            SimpleUtils.fail("Schedule save button not found", false);
-        }
-        if (isElementEnabled(okAfterSaveConfirmationPopup)) {
-            click(okAfterSaveConfirmationPopup);
-        } else {
-            SimpleUtils.fail("Schedule save button not found", false);
-        }
-    }
-
-    public void convertToOpen(int i) {
-        if (areListElementVisible(imageSize, 5)) {
-            click(imageSize.get(i));
-            if (isElementEnabled(convertOpen)) {
-                click(convertOpen);
-                if (isElementEnabled(openPopYesButton)) {
-                    click(openPopYesButton);
-                } else {
-                    SimpleUtils.fail("Open pop-up Yes button not found", false);
-                }
-            } else {
-                SimpleUtils.fail("Convert to open shift option not found", false);
-            }
-        } else {
-            SimpleUtils.fail("shift images not loaded successfully", false);
-        }
-    }
-
-    public void convertToOpenShift() {
-        String TMWorkerRole = null;
-        String shiftDuration = null;
-        String TMName = null;
-        int counter = 0;
-        if (areListElementVisible(imageSize, 5)) {
-            for (int i = 0; i < imageSize.size(); i++) {
-                if (!workerName.get(i).getText().equalsIgnoreCase("open")) {
-                    click(scheduleInfoIcon.get(i));
-                    String[] workerRole = workerRoleDetailsFromPopUp.getText().split("as ");
-                    TMName = workerNameInPopUp.getText();
-                    TMWorkerRole = workerRole[1];
-                    shiftDuration = shiftDurationInPopUp.getText();
-                    convertToOpen(i);
-                    waitForSeconds(3);
-                    saveSchedule();
-                    counter = i;
-                    break;
-                }
-            }
-            verifyOpenShift(TMName, TMWorkerRole, shiftDuration, counter);
-
-        } else {
-            SimpleUtils.fail("shift images not loaded successfully", false);
-        }
-    }
-
-
-
-
-    @FindBy (css= "div[ng-style*='roleChangeStyle'] span")
-    private List<WebElement> changeRoleValues;
-
-    @FindBy (css = "div[ng-click*='changeRoleMoveRight'] i")
-    private WebElement rightarrow;
-
-    @FindBy (css = "button.sch-save")
-    private WebElement ApplybuttonChangeRole;
-
-
-    public void verifyChangedRoleShift(String TMName, String workerRole, String shiftDuration, int counter){
-        for(int i=counter;i<imageSize.size(); i+=7){
-            click(scheduleInfoIcon.get(i));
-            String workerName = workerNameInPopUp.getText();
-            String workerRoleShift = workerRoleDetailsFromPopUp.getText();
-            String shiftDurationShift = shiftDurationInPopUp.getText();
-            if (workerRoleShift.equalsIgnoreCase(propertyWorkRole.get("changeWorkRole")) && shiftDurationShift.equalsIgnoreCase(shiftDuration) && workerName.equalsIgnoreCase(TMName)) {
-                SimpleUtils.pass(TMName + "'s shift work role changed from" + workerRole + " to " + workerRoleShift + " for shift duration " + shiftDuration +"  successfully");
-                break;
-            } else {
-                SimpleUtils.fail(TMName + "'s shift work role not got changed from" + workerRole + " to " + workerRoleShift + " for shift duration " + shiftDuration +"  successfully", false);
-            }
-        }
-    }
-
-    public void changeRole(int i) {
-        if (areListElementVisible(imageSize, 5)) {
-            click(imageSize.get(i));
-            if (isElementEnabled(changeRole)) {
-                click(changeRole);
-                for (int j = 0; j < changeRoleValues.size(); j++) {
-                    if (changeRoleValues.get(j).getText().equalsIgnoreCase(propertyWorkRole.get("changeWorkRole"))) {
-                        click(changeRoleValues.get(j));
-                        break;
-                    } else {
-                        if (j == changeRoleValues.size() - 1) {
-                            click(rightarrow);
-                            j = 0;
-                        }
-                    }
-                }
-                if (isElementEnabled(ApplybuttonChangeRole)) {
-                    click(ApplybuttonChangeRole);
-                } else {
-                    SimpleUtils.fail("Apply button on change role flyout not found", false);
-                }
-            }
-        }
-    }
-
-    public void changeWorkerRole(){
-        String TMWorkerRole = null;
-        String shiftDuration = null;
-        String TMName = null;
-        int counter = 0;
-        if (areListElementVisible(imageSize, 20)) {
-            for (int i = 0; i < imageSize.size(); i++) {
-                if (!workerName.get(i).getText().equalsIgnoreCase("open")) {
-                    click(scheduleInfoIcon.get(i));
-                    String[] workerRole = workerRoleDetailsFromPopUp.getText().split("as ");
-                    TMName = workerNameInPopUp.getText();
-                    TMWorkerRole = workerRole[1];
-                    shiftDuration = shiftDurationInPopUp.getText();
-                    changeRole(i);
-                    saveSchedule();
-                    counter = i;
-                    break;
-                }
-            }
-            verifyChangedRoleShift(TMName, TMWorkerRole, shiftDuration,counter );
-
-        }else {
-            SimpleUtils.fail("shift images not loaded successfully", false);
-        }
-    }
-
-
-    public void assignTM(int i) {
-        if (areListElementVisible(imageSize, 5)) {
-            click(imageSize.get(i));
-            if (isElementEnabled(assignTM)) {
-                click(assignTM);
-            }
-        }
-    }
-
-//    public void searchOrRecommendTM(){
-//        if (areListElementVisible(recommendedScrollTable, 5)) {
-//            if (isElementEnabled(selectRecommendedOption)) {
-//                String[] txtRecommendedOption = selectRecommendedOption.getText().replaceAll("\\p{P}", "").split(" ");
-//                if (Integer.parseInt(txtRecommendedOption[2]) == 0) {
-//                    searchText(propertySearchTeamMember.get("AssignTeamMember"));
-//                    SimpleUtils.pass(txtRecommendedOption[0] + " Option selected By default for Select Team member option");
-//                } else {
-//                    getScheduleBestMatchStatus();
-//                    SimpleUtils.pass(txtRecommendedOption[0] + " Option selected By default for Select Team member option");
-//                }
-//            } else {
-//                SimpleUtils.fail("Recommended option not available on page", false);
-//            }
-//        } else if (isElementLoaded(textSearch, 5)) {
-//            searchText(propertySearchTeamMember.get("AssignTeamMember"));
-//        } else {
-//            SimpleUtils.fail("Select Team member option and Recommended options are not available on page", false);
-//        }
-//    }
-
-    public void assignTeamMember() throws Exception{
-        String TMWorkerRole = null;
-        String shiftDuration = null;
-        String TMName = null;
-        int counter = 0;
-        if (areListElementVisible(imageSize, 5)) {
-            for (int i = 0; i < imageSize.size(); i++) {
-                if (!workerName.get(i).getText().equalsIgnoreCase("open")) {
-                    click(scheduleInfoIcon.get(i));
-                    String[] workerRole = workerRoleDetailsFromPopUp.getText().split("as ");
-                    TMName = workerNameInPopUp.getText();
-                    TMWorkerRole = workerRole[1];
-                    shiftDuration = shiftDurationInPopUp.getText();
-                    assignTM(i);
-                    verifySelectTeamMembersOption();
-                    saveSchedule();
-                    counter = i;
-                    break;
-                }
-            }
-            verifyChangedRoleShift(TMName, TMWorkerRole, shiftDuration,counter );
-
-        }else {
-            SimpleUtils.fail("shift images not loaded successfully", false);
-        }
-//        if (areListElementVisible(imageSize, 5)) {
-//            click(imageSize.get(5));
-//            click(changeRole);
-//            WebElement element = getDriver().findElement(By.cssSelector("div.sch-worker-popover.allow-pointer-events.ng-scope"));
-//            JavascriptExecutor jse = (JavascriptExecutor) getDriver();
-//            String txt = jse.executeScript("return arguments[0].innerHTML;", element).toString();
-//            System.out.println(txt);
-//        }
-    }
-
-//    public void assignTeamMember() {
-//        if (areListElementVisible(imageSize, 5)) {
-//            click(imageSize.get(5));
-//            click(changeRole);
-//            WebElement element = getDriver().findElement(By.cssSelector("div.sch-worker-popover.allow-pointer-events.ng-scope"));
-//            JavascriptExecutor jse = (JavascriptExecutor) getDriver();
-//            String txt = jse.executeScript("return arguments[0].innerHTML;", element).toString();
-//            System.out.println(txt);
-//        }
-//    }
 
 
 	public void selectTeamMembersOptionForOverlappingSchedule() throws Exception{
@@ -3478,6 +3225,242 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	}
 
+    @FindBy(css = "div.week-view-shift-hover-info-icon")
+    private List<WebElement> scheduleInfoIcon;
+
+    @FindBy(css = "button[ng-click*='confirmSaveAction']")
+    private WebElement saveOnSaveConfirmationPopup;
+
+    @FindBy(css = "button[ng-click*='okAction']")
+    private WebElement okAfterSaveConfirmationPopup;
+
+    public void clickViewProfile(int i) {
+        if (areListElementVisible(imageSize, 5)) {
+            click(imageSize.get(i));
+            if (isElementEnabled(viewProfile)) {
+                click(viewProfile);
+            }
+        }
+    }
+
+    public void viewProfile() {
+        int counter = 0;
+        if (areListElementVisible(imageSize, 5)) {
+            for (int i = 0; i < imageSize.size(); i++) {
+                if (!workerName.get(i).getText().equalsIgnoreCase("open")) {
+                    clickViewProfile(i);
+                    saveSchedule();
+                    counter = i;
+                    break;
+                }
+            }
+        }
+        if (areListElementVisible(imageSize, 5)) {
+            click(imageSize.get(5));
+            click(viewProfile);
+            WebElement element = getDriver().findElement(By.cssSelector("div.sch-worker-popover.allow-pointer-events.ng-scope"));
+            JavascriptExecutor jse = (JavascriptExecutor) getDriver();
+            String txt = jse.executeScript("return arguments[0].innerHTML;", element).toString();
+            System.out.println(txt);
+//		  	 	   		if(viewProfile.size()>0){
+//				   		   click(viewProfile.get(1));
+//			 	   		}
+
+        }
+    }
+
+    public void verifyOpenShift(String TMName, String workerRole, String shiftDuration, int counter) {
+        click(scheduleInfoIcon.get(counter));
+        String workerRoleOpenShift = workerRoleDetailsFromPopUp.getText();
+        String shiftDurationOpenShift = shiftDurationInPopUp.getText();
+        if (workerRoleOpenShift.equalsIgnoreCase(workerRole) && shiftDurationOpenShift.equalsIgnoreCase(shiftDuration) && workerName.get(counter).getText().equalsIgnoreCase("open")) {
+            SimpleUtils.pass(TMName + "'s " + workerRole + " shift of duration " + shiftDuration + " got converted to open shift successfully");
+        } else {
+            SimpleUtils.fail(TMName + "'s " + workerRole + " shift of duration " + shiftDuration + " was not converted to open shift successfully", false);
+        }
+    }
+
+    public void saveSchedule() {
+        if (isElementEnabled(scheduleSaveBtn)) {
+            click(scheduleSaveBtn);
+        } else {
+            SimpleUtils.fail("Schedule save button not found", false);
+        }
+        if (isElementEnabled(saveOnSaveConfirmationPopup)) {
+            click(saveOnSaveConfirmationPopup);
+        } else {
+            SimpleUtils.fail("Schedule save button not found", false);
+        }
+        if (isElementEnabled(okAfterSaveConfirmationPopup)) {
+            click(okAfterSaveConfirmationPopup);
+        } else {
+            SimpleUtils.fail("Schedule save button not found", false);
+        }
+    }
+
+    public void convertToOpen(int i) {
+        if (areListElementVisible(imageSize, 5)) {
+            click(imageSize.get(i));
+            if (isElementEnabled(convertOpen)) {
+                click(convertOpen);
+                if (isElementEnabled(openPopYesButton)) {
+                    click(openPopYesButton);
+                } else {
+                    SimpleUtils.fail("Open pop-up Yes button not found", false);
+                }
+            } else {
+                SimpleUtils.fail("Convert to open shift option not found", false);
+            }
+        } else {
+            SimpleUtils.fail("shift images not loaded successfully", false);
+        }
+    }
+
+    public void convertToOpenShift() {
+        String TMWorkerRole = null;
+        String shiftDuration = null;
+        String TMName = null;
+        int counter = 0;
+        if (areListElementVisible(imageSize, 5)) {
+            for (int i = 0; i < imageSize.size(); i++) {
+                if (!workerName.get(i).getText().equalsIgnoreCase("open")) {
+                    click(scheduleInfoIcon.get(i));
+                    String[] workerRole = workerRoleDetailsFromPopUp.getText().split("as ");
+                    TMName = workerNameInPopUp.getText();
+                    TMWorkerRole = workerRole[1];
+                    shiftDuration = shiftDurationInPopUp.getText();
+                    convertToOpen(i);
+                    saveSchedule();
+                    counter = i;
+                    break;
+                }
+            }
+            verifyOpenShift(TMName, TMWorkerRole, shiftDuration, counter);
+
+        } else {
+            SimpleUtils.fail("shift images not loaded successfully", false);
+        }
+    }
+
+
+
+
+    @FindBy (css= "div[ng-style*='roleChangeStyle'] span")
+    private List<WebElement> changeRoleValues;
+
+    @FindBy (css = "div[ng-click*='changeRoleMoveRight'] i")
+    private WebElement rightarrow;
+
+    @FindBy (css = "button.sch-save")
+    private WebElement ApplybuttonChangeRole;
+
+
+    public void verifyChangedRoleShift(String TMName, String workerRole, String shiftDuration, int counter) throws Exception {
+//        selectWorkRoleFilterByText("FOOT", true);
+        for(int i=counter;i<imageSize.size(); i+=7){
+            click(scheduleInfoIcon.get(i));
+            String workerName = workerNameInPopUp.getText();
+            String[] workerRoleShift = workerRoleDetailsFromPopUp.getText().split("as ");
+            String shiftDurationShift = shiftDurationInPopUp.getText();
+            if (workerRoleShift[1].equalsIgnoreCase(propertyWorkRole.get("changeWorkRole")) && shiftDurationShift.equalsIgnoreCase(shiftDuration) && workerName.equalsIgnoreCase(TMName)) {
+                SimpleUtils.pass(TMName + "'s shift work role changed from" + workerRole + " to " + workerRoleShift[1] + " for shift duration " + shiftDuration +"  successfully");
+                break;
+            } else {
+                SimpleUtils.fail(TMName + "'s shift work role not got changed from" + workerRole + " to " + workerRoleShift[1] + " for shift duration " + shiftDuration +"  successfully", false);
+            }
+        }
+    }
+
+    public void changeRole(int i) {
+        if (areListElementVisible(imageSize, 5)) {
+            click(imageSize.get(i));
+            if (isElementEnabled(changeRole)) {
+                click(changeRole);
+
+                for (int j = 0; j < changeRoleValues.size(); j++) {
+                    if (changeRoleValues.get(j).getText().equalsIgnoreCase(propertyWorkRole.get("changeWorkRole"))) {
+                        click(changeRoleValues.get(j));
+                        break;
+                    } else {
+                        if (j == changeRoleValues.size() - 1) {
+                            click(rightarrow);
+                            j = 0;
+                        }
+
+                 }
+                }
+                if (isElementEnabled(ApplybuttonChangeRole)) {
+                    click(ApplybuttonChangeRole);
+                } else {
+                    SimpleUtils.fail("Apply button on change role flyout not found", false);
+                }
+            }
+        }
+    }
+
+    public void changeWorkerRole() throws Exception{
+        String TMWorkerRole = null;
+        String shiftDuration = null;
+        String TMName = null;
+        int counter = 0;
+        if (areListElementVisible(imageSize, 5)) {
+            for (int i = 0; i < imageSize.size(); i++) {
+                if (!workerName.get(i).getText().equalsIgnoreCase("open")) {
+                    click(scheduleInfoIcon.get(i));
+                    String[] workerRole = workerRoleDetailsFromPopUp.getText().split("as ");
+                    TMName = workerNameInPopUp.getText();
+                    TMWorkerRole = workerRole[1];
+                    shiftDuration = shiftDurationInPopUp.getText();
+                    changeRole(i);
+                    saveSchedule();
+                    counter = i;
+                    break;
+                }
+            }
+            verifyChangedRoleShift(TMName, TMWorkerRole, shiftDuration,counter );
+
+        }else {
+            SimpleUtils.fail("shift images not loaded successfully", false);
+        }
+    }
+
+    public void assignTM(int i) {
+        if (areListElementVisible(imageSize, 5)) {
+            click(imageSize.get(i));
+            if (isElementEnabled(assignTM)) {
+                click(assignTM);
+            }
+        }
+    }
+
+
+    public void assignTeamMember() throws Exception{
+        String TMWorkerRole = null;
+        String shiftDuration = null;
+        String TMName = null;
+        int counter = 0;
+        if (areListElementVisible(imageSize, 5)) {
+            for (int i = 0; i < imageSize.size(); i++) {
+                if (!workerName.get(i).getText().equalsIgnoreCase("open")) {
+                    click(scheduleInfoIcon.get(i));
+                    String[] workerRole = workerRoleDetailsFromPopUp.getText().split("as ");
+                    TMName = workerNameInPopUp.getText();
+                    TMWorkerRole = workerRole[1];
+                    shiftDuration = shiftDurationInPopUp.getText();
+                    assignTM(i);
+                    verifySelectTeamMembersOption();
+                    clickOnOfferOrAssignBtn();
+                    saveSchedule();
+                    counter = i;
+                    break;
+                }
+            }
+//            verifyChangedRoleShift(TMName, TMWorkerRole, shiftDuration,counter );
+
+        }else {
+            SimpleUtils.fail("shift images not loaded successfully", false);
+        }
+    }
 
 	public void verifyActiveScheduleType() throws Exception{
 	    if(isElementLoaded(scheduleType, 5)){
@@ -3499,6 +3482,298 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }else{
             SimpleUtils.fail("Schedule Type " + scheduleTypeManager.getText() + " is disabled",false);
+        }
+    }
+
+
+    //added by Nishant for DM Test cases
+
+    @FindBy(css = "div.analytics-new-table-group-row")
+    private List<WebElement> DMtableRowCount;
+
+    @FindBy(xpath = "//div[contains(@class,'analytics-new-table-group-row')]//span/img/following-sibling::span")
+    private List<WebElement> locationName;
+
+    @FindBy(xpath = "/div[contains(@class,'analytics-new-table-group-row')]//div[@class='ng-scope col-fx-1']")
+    private List<WebElement> DMHours;
+
+    public List<Float> validateScheduleAndBudgetedHours() throws Exception {
+        HashMap<String,List<String>> budgetHours = new HashMap<>();
+        HashMap<String,List<String>> publishHours = new HashMap<>();
+        HashMap<String,List<String>> clockHours = new HashMap<>();
+        List<Float> totalHoursFromSchTbl = new ArrayList<>();
+
+        List<String> budgetHrs = new ArrayList<>();
+        List<String> publishedHrs = new ArrayList<>();
+        List<String> clockedHrs = new ArrayList<>();
+        int counter = 0;
+        if(areListElementVisible(DMtableRowCount,10) && DMtableRowCount.size()!=0){
+            for(int i=0; i<DMtableRowCount.size();i++){
+                if(areListElementVisible(DMHours,10) && DMHours.size()!=0){
+//                    SimpleUtils.report("Budget Hours for " + locationName.get(i).getText() + " is : " + DMHours.get(counter).getText());
+//                    SimpleUtils.report("Publish Hours for " + locationName.get(i).getText() + " is : " + DMHours.get(counter+1).getText());
+//                    SimpleUtils.report("Clocked Hours for " + locationName.get(i).getText() + " is : " + DMHours.get(counter+2).getText());
+                    budgetHrs.add(DMHours.get(counter+1).getText());
+                    publishedHrs.add(DMHours.get(counter+2).getText());
+                    clockedHrs.add(DMHours.get(counter+3).getText());
+                    budgetHours.put("Budgeted Hours",budgetHrs);
+                    publishHours.put("Published Hours",publishedHrs);
+                    clockHours.put("Clocked Hours",clockedHrs);
+                    counter = (i + 1) * 4;
+                }
+            }
+            Float totalBudgetHoursFromSchTbl = calculateTotalHoursFromScheduleTable(budgetHours);
+            Float totalPublishedHoursFromSchTbl = calculateTotalHoursFromScheduleTable(publishHours);
+            Float totalClockedHoursFromSchTbl = calculateTotalHoursFromScheduleTable(clockHours);
+            totalHoursFromSchTbl.add(totalBudgetHoursFromSchTbl);
+            totalHoursFromSchTbl.add(totalPublishedHoursFromSchTbl);
+            totalHoursFromSchTbl.add(totalClockedHoursFromSchTbl);
+
+        }else{
+            SimpleUtils.fail("No data available on Schedule table in DM view",false);
+        }
+
+        return totalHoursFromSchTbl;
+    }
+
+
+    public Float calculateTotalHoursFromScheduleTable(HashMap<String,List<String>> hoursCalulationFromSchTbl){
+        Float totalActualHours = 0.0f;
+        Float totalActualHoursFromSchTbl = 0.0f;
+        for (Map.Entry<String, List<String>> entry : hoursCalulationFromSchTbl.entrySet()) {
+            String key = entry.getKey();
+
+            List<String> value = entry.getValue();
+            for(String aString : value){
+                totalActualHours = Float.parseFloat(aString);
+                totalActualHoursFromSchTbl = totalActualHoursFromSchTbl + totalActualHours;
+            }
+        }
+
+        return totalActualHoursFromSchTbl;
+    }
+
+    @FindBy(css = "span.dms-box-item-number-small")
+    private List<WebElement> hoursOnDashboardPage;
+    @FindBy(css = "div.dms-box-item-title")
+    private List<WebElement> titleOnDashboardPage;
+    @FindBy(xpath = "//*[name()='svg']//*[name()='text' and @text-anchor='middle']")
+    private List<WebElement> locationSummaryOnSchedule;
+    @FindBy(xpath = "//*[name()='svg']//*[name()='text' and @text-anchor='end']")
+    private List<WebElement> projectedOverBudget;
+    @FindBy(xpath = "//*[name()='svg']//*[name()='text' and @text-anchor='start']")
+    private List<WebElement> projectedUnderBudget;
+    @FindBy(css = "span.dms-box-item-unit-trend")
+    private WebElement projectedWithinOrOverBudget;
+    @FindBy(css = "div.dashboard-time div.text-right")
+    private WebElement dateOnDashboard;
+    @FindBy(css = "ng-include[src*=LocationSummary] div.dms-box-title")
+    private WebElement locationsSummaryTitleOnDashboard;
+    @FindBy(css = "div.card-carousel-card-title")
+    private WebElement locationsSummaryTitleOnSchedule;
+    @FindBy(css = "span.dms-box-item-title.dms-box-item-title-color-dark")
+    private List<WebElement> locationsSummarySmartCardOnDashboard;
+    @FindBy(css = "div.day-week-picker-period-active")
+    private WebElement dateOnSchedule;
+    @FindBy(css = "div.published-clocked-cols-summary-title")
+    private List<WebElement> locationsSummarySmartCardOnSchedule;
+
+
+
+    public void compareHoursFromScheduleAndDashboardPage(List<Float> totalHoursFromSchTbl) throws Exception{
+
+        List<Float> totalHoursFromDashboardTbl = new ArrayList<>();
+        if(areListElementVisible(hoursOnDashboardPage,10) && hoursOnDashboardPage.size()!=0){
+            for(int i =0; i < hoursOnDashboardPage.size();i++){
+                totalHoursFromDashboardTbl.add(Float.parseFloat(hoursOnDashboardPage.get(i).getText()));
+            }
+            for(int j=0; j < totalHoursFromSchTbl.size();j++){
+                if(totalHoursFromSchTbl.get(j).equals(totalHoursFromDashboardTbl.get(j))){
+                    SimpleUtils.pass(titleOnDashboardPage.get(j).getText() +
+                            " Hours from Dashboard page " + totalHoursFromDashboardTbl.get(j)
+                            + " matching with the hours present on Schedule Page " + totalHoursFromSchTbl.get(j));
+                }else{
+                    SimpleUtils.fail(titleOnDashboardPage.get(j).getText() +
+                            " Hours from Dashboard page " + totalHoursFromDashboardTbl.get(j)
+                            + " not matching with the hours present on Schedule Page " + totalHoursFromSchTbl.get(j),true);
+                }
+            }
+        }else{
+            SimpleUtils.fail("No data available for Hours on Dashboard page in DM view",false);
+        }
+    }
+
+
+    public List<Float> getHoursOnLocationSummarySmartCard() throws Exception{
+        List<Float> totalHoursFromDashboardTbl = new ArrayList<>();
+        if(areListElementVisible(locationSummaryOnSchedule,10) && locationSummaryOnSchedule.size()!=0){
+            totalHoursFromDashboardTbl.add(Float.parseFloat(locationSummaryOnSchedule.get(0).getText()));
+            totalHoursFromDashboardTbl.add(Float.parseFloat(locationSummaryOnSchedule.get(2).getText()));
+            totalHoursFromDashboardTbl.add(Float.parseFloat(locationSummaryOnSchedule.get(6).getText()));
+        }else{
+            SimpleUtils.fail("No data available on Location Summary section Smart Card in DM view",false);
+        }
+        return totalHoursFromDashboardTbl;
+    }
+
+
+    public void compareHoursFromScheduleSmartCardAndDashboardSmartCard(List<Float> totalHoursFromSchTbl) throws Exception{
+
+        List<Float> totalHoursFromDashboardTbl = new ArrayList<>();
+        if(areListElementVisible(hoursOnDashboardPage,10) && hoursOnDashboardPage.size()!=0){
+            for(int i =0; i < hoursOnDashboardPage.size();i++){
+                totalHoursFromDashboardTbl.add(Float.parseFloat(hoursOnDashboardPage.get(i).getText()));
+            }
+            for(int j=0; j < totalHoursFromSchTbl.size();j++){
+                if(totalHoursFromSchTbl.get(j).equals(totalHoursFromDashboardTbl.get(j))){
+                    SimpleUtils.pass(titleOnDashboardPage.get(j).getText() +
+                            " Hours from Dashboard page " + totalHoursFromDashboardTbl.get(j)
+                            + " matching with the hours present on Schedule Page " + totalHoursFromSchTbl.get(j));
+                }
+            }
+        }else{
+            SimpleUtils.fail("No data available for Hours on Dashboard page in DM view",false);
+        }
+    }
+
+
+    public int getProjectedUnderBudget(){
+        int totalCountProjectedUnderBudget = 0;
+        if(areListElementVisible(projectedUnderBudget,10) && projectedUnderBudget.size()!=0){
+            for(int i=0;i<projectedUnderBudget.size();i++){
+                int countProjectedUnderBudget = Integer.parseInt(projectedUnderBudget.get(i).getText());
+                totalCountProjectedUnderBudget = totalCountProjectedUnderBudget + countProjectedUnderBudget;
+            }
+        }else{
+            SimpleUtils.fail("No data available for Projected Under Budget section on location specific date in DM view",false);
+        }
+        return totalCountProjectedUnderBudget;
+    }
+
+
+    public int getProjectedOverBudget(){
+        int totalCountProjectedOverBudget = 0;
+        if(areListElementVisible(projectedOverBudget,10) && projectedOverBudget.size()!=0){
+            for(int i=0;i<projectedOverBudget.size();i++){
+                int countProjectedOverBudget = Integer.parseInt(projectedOverBudget.get(i).getText());
+                totalCountProjectedOverBudget = totalCountProjectedOverBudget + countProjectedOverBudget;
+            }
+        }else{
+            SimpleUtils.fail("No data available for Projected Over Budget section on location specific date in DM view",false);
+        }
+        return totalCountProjectedOverBudget;
+    }
+
+    public void compareProjectedWithinBudget(int totalCountProjectedOverBudget) throws Exception{
+        if(isElementLoaded(projectedWithinOrOverBudget,10)){
+            String ProjectedWithinOrOverBudget = (projectedWithinOrOverBudget.getText().split(" "))[0];
+            if(totalCountProjectedOverBudget == Integer.parseInt(ProjectedWithinOrOverBudget)){
+                SimpleUtils.pass("Count of Projected Over/Under Budget on Dashboard page" +
+                        " " + Integer.parseInt(ProjectedWithinOrOverBudget) + " is same as Schedule page " + totalCountProjectedOverBudget);
+            }else{
+                SimpleUtils.fail("Count of Projected Over/Under Budget on Dashboard page" +
+                        " " + Integer.parseInt(ProjectedWithinOrOverBudget) + " not matching with Schedule page " + totalCountProjectedOverBudget,false);
+            }
+        }else{
+            SimpleUtils.fail("No data available for Projected Over/Under Budget section on Dashboard in DM view",false);
+        }
+
+    }
+
+    public String getDateFromDashboard() throws Exception {
+        String DateOnDashboard = null;
+        if(isElementLoaded(dateOnDashboard,10)){
+            DateOnDashboard = dateOnDashboard.getText().substring(8);
+        }else{
+            SimpleUtils.fail("Week Date not available on Dashboard in DM view",false);
+        }
+
+        return DateOnDashboard;
+    }
+
+    public void compareDashboardAndScheduleWeekDate(String DateOnSchdeule, String DateOnDashboard) throws Exception {
+        String splitFirstDate = null;
+        String splitSecondDate = null;
+        String strDateOnSchedule = DateOnSchdeule.substring(9).trim();
+        String[] splitDateOnSchedule = strDateOnSchedule.split(" ");
+        if(splitDateOnSchedule[1].length()>1){
+            splitFirstDate = splitDateOnSchedule[1];
+        }else{
+            splitFirstDate = "0" + splitDateOnSchedule[1];
+        }
+        if(splitDateOnSchedule[4].length()>1){
+            splitSecondDate = splitDateOnSchedule[4];
+        }else{
+            splitSecondDate = "0" + splitDateOnSchedule[4];
+        }
+
+        String actualDateOnSchedule = splitDateOnSchedule[0] + " " + splitFirstDate
+                + " " + splitDateOnSchedule[2] + " " + splitDateOnSchedule[3] + " " + splitSecondDate;
+
+        if(actualDateOnSchedule.equals(DateOnDashboard)){
+            SimpleUtils.pass("Week Date on Dashboard " + DateOnDashboard + " matching with Schedule date " + actualDateOnSchedule);
+        }else{
+            SimpleUtils.fail("Week Date on Dashboard " + DateOnDashboard + " not matching with Schedule date " + actualDateOnSchedule,true);
+        }
+
+    }
+
+
+    public List<String> getLocationSummaryDataFromDashBoard() throws Exception{
+        String locationSummaryTitleOnDashboard = null;
+        List<String> ListLocationSummaryOnDashboard = new ArrayList<>();
+        if(isElementLoaded(locationsSummaryTitleOnDashboard, 10)){
+            locationSummaryTitleOnDashboard = locationsSummaryTitleOnDashboard.getText();
+            ListLocationSummaryOnDashboard.add(locationSummaryTitleOnDashboard);
+        }else{
+            SimpleUtils.fail("Location Summary Title not available on Dashboard Page", true);
+        }
+
+        if(areListElementVisible(locationsSummarySmartCardOnDashboard,10) && locationsSummarySmartCardOnDashboard.size()!=0){
+            for(int i =0; i< locationsSummarySmartCardOnDashboard.size();i++){
+                ListLocationSummaryOnDashboard.add(locationsSummarySmartCardOnDashboard.get(i).getText());
+            }
+        }else{
+            SimpleUtils.fail("Location Summary Smart Card not available on Dashboard Page", true);
+        }
+
+        return ListLocationSummaryOnDashboard;
+    }
+
+
+    public List<String> getLocationSummaryDataFromSchedulePage() throws Exception{
+        String locationSummaryTitleOnSchedule = null;
+        List<String> ListLocationSummaryOnSchedule = new ArrayList<>();
+        if(isElementLoaded(locationsSummaryTitleOnSchedule, 10)){
+            locationSummaryTitleOnSchedule = locationsSummaryTitleOnSchedule.getText();
+            ListLocationSummaryOnSchedule.add(locationSummaryTitleOnSchedule);
+        }else{
+            SimpleUtils.fail("Location Summary Title not available on Dashboard Page", true);
+        }
+
+        if(areListElementVisible(locationsSummarySmartCardOnSchedule,10) && locationsSummarySmartCardOnSchedule.size()!=0){
+            for(int i =0; i< locationsSummarySmartCardOnSchedule.size();i++){
+                ListLocationSummaryOnSchedule.add(locationsSummarySmartCardOnSchedule.get(i).getText());
+            }
+        }else{
+            SimpleUtils.fail("Location Summary Smart Card not available on Dashboard Page", true);
+        }
+
+        return ListLocationSummaryOnSchedule;
+    }
+
+
+    public void compareLocationSummaryFromDashboardAndSchedule(List<String> ListLocationSummaryOnDashboard, List<String> ListLocationSummaryOnSchedule){
+        for(int i=0; i<ListLocationSummaryOnDashboard.size();i++){
+            if(ListLocationSummaryOnDashboard.get(i).equalsIgnoreCase(ListLocationSummaryOnSchedule.get(i))){
+                SimpleUtils.pass("Location Summary on Dashboard "
+                        + ListLocationSummaryOnDashboard.get(i) + " matches with location" +
+                        " summary on Schedule page " +ListLocationSummaryOnSchedule.get(i));
+            }else{
+                SimpleUtils.fail("Location Summary on Dashboard "
+                        + ListLocationSummaryOnDashboard.get(i) + " matches with location" +
+                        " summary on Schedule page " +ListLocationSummaryOnSchedule.get(i),true);
+            }
         }
     }
 

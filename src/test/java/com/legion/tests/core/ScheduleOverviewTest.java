@@ -101,10 +101,7 @@ public class ScheduleOverviewTest extends TestBase{
 			}
 			index = index + 1;
 		}
-		
-		
-		
-		
+
     }
 	
    

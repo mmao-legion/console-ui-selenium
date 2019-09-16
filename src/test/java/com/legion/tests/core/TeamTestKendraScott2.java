@@ -51,7 +51,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			    value = newValue;
 			}
 			public String getValue() { return value; }
-		}
+	}
 	
 	private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
 	private static Map<String, String> searchDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/searchDetails.json");

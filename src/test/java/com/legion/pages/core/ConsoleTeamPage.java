@@ -129,14 +129,19 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
     @FindBy(css="button.lgn-action-button-success")
     private WebElement timeOffRequestApprovalCOnfirmBtn;
+
     @FindBy(css="img[src*=\"img/legion/todos-none\"]")
     private WebElement toDoBtnToOpen;
+
     @FindBy(css="div[ng-click=\"closeTodoPanelClick()\"]")
     private WebElement toDoBtnToClose;
+
     @FindBy(css="div[ng-show=\"show\"]")
     private WebElement toDoPopUpWindow;
-	@FindBy(css="//div[@ng-show='show']//h1[contains(text(),'TEAM')]")
+
+    @FindBy(css="//div[@ng-show='show']//h1[contains(text(),'TEAM')]")
 	private WebElement toDoPopUpWindowLabel;
+
     @FindBy(css="todo-card[todo-type=\"todoType\"]")
     private List<WebElement> todoCards;
 
@@ -222,28 +227,28 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
   	}
   	
   	
-  	@Override
-  	public void coverage() {
-  		// TODO Auto-generated method stub
-  		try {
-  			if(isElementLoaded(goToCoverageTab))
-  			{
-  				SimpleUtils.pass("Coverage tab present on Team Page");
-  				goToCoverageTab.click();
-  				if(isElementLoaded(coverageLoading)){
-  					SimpleUtils.pass("Coverage Loaded Successfully for current week "+coverageTitle.getText());
-  				}else{
-  					SimpleUtils.fail("Coverage not-loaded for "+coverageTitle.getText(),false);
-  				}
-  			
-  			}else{
-  				SimpleUtils.fail("Coverage tab not present on Team Tab",false);
-  			}
-  		}catch (Exception e) {
-  			// TODO Auto-generated catch block
-  			e.printStackTrace();
-  		}
-  	}
+		@Override
+		public void coverage() {
+			// TODO Auto-generated method stub
+			try {
+				if(isElementLoaded(goToCoverageTab))
+				{
+					SimpleUtils.pass("Coverage tab present on Team Page");
+					goToCoverageTab.click();
+					if(isElementLoaded(coverageLoading)){
+						SimpleUtils.pass("Coverage Loaded Successfully for current week "+coverageTitle.getText());
+					}else{
+						SimpleUtils.fail("Coverage not-loaded for "+coverageTitle.getText(),false);
+					}
+
+				}else{
+					SimpleUtils.fail("Coverage tab not present on Team Tab",false);
+				}
+			}catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
   		
   		@Override
   		public void coverageViewToPastOrFuture(String nextWeekView, int weekCount)
