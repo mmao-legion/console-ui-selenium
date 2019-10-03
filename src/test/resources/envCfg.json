@@ -1,8 +1,8 @@
 {
-  "CHROME_DRIVER_PATH": "C:\\Users\\nishant08\\Downloads\\chromedriver\\chromedriver.exe",
+  "CHROME_DRIVER_PATH": "C:\\chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "D:\\geckodriver.exe",
  "DEVURL": "https://mobilestage.legion.work/",
- "QAURL": "https://rc-enterprise.dev.legion.work/",
+ "QAURL": "https://staging-enterprise.dev.legion.work/",
  "Screenshot_Path": "D:\\DevelopZorang15March\\console-ui-selenium",
  "ENTERPRISE" : "LegionCoffee2",
  "Coffee_Enterprise" : "LegionCoffee",

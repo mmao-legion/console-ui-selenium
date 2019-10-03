@@ -1,20 +1,6 @@
 package com.legion.pages.pagefactories;
-import com.legion.pages.AnalyticsPage;
-import com.legion.pages.ControlsNewUIPage;
-import com.legion.pages.ControlsPage;
-import com.legion.pages.LoginPage;
-import com.legion.pages.ProfileNewUIPage;
-import com.legion.pages.ProjectedSalesPage;
-import com.legion.pages.SchedulePage;
-import com.legion.pages.StaffingGuidancePage;
-import com.legion.pages.SalesForecastPage;
-import com.legion.pages.ScheduleOverviewPage;
-import com.legion.pages.TeamPage;
-import com.legion.pages.TimeSheetPage;
-import com.legion.pages.TrafficForecastPage;
-import com.legion.pages.UserAuthorizationPage;
-import com.legion.pages.DashboardPage;
-import com.legion.pages.LocationSelectorPage;
+import com.legion.pages.*;
+
 /**
  * Yanming
  */
@@ -55,5 +41,7 @@ public interface PageFactory {
 	ProjectedSalesPage createProjectedSalesPage(); 
 	
 	ProfileNewUIPage createProfileNewUIPage();
+
+    ForecastPage createForecastPage();
    
 }
