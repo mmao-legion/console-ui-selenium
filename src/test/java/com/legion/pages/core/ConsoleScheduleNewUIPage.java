@@ -43,6 +43,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
     private static HashMap<String, String> propertyWorkRole = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
+    private static HashMap<String, String> propertyBudgetValue = JsonUtil.getPropertiesFromJsonFile("src/test/resources/Budget.json");
+
 
     public enum scheduleHoursAndWagesData {
         scheduledHours("scheduledHours"),
