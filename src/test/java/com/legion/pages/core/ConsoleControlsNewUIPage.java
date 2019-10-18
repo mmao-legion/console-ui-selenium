@@ -270,7 +270,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css="input[placeholder*='Select']")
 	private WebElement linkAllLocations;
 
-	@FindBy(xpath="//div[text()='All Locations']")
+	@FindBy(xpath="//div[contains(text(),'All Locations')]")
 	private WebElement allLocations;
 
 	@FindBy(css="input[placeholder='Search Location']")
@@ -2440,7 +2440,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			List<WebElement> schedulesSectionFields = schedulingPoliciesSchedulesFormSectionDiv.findElements(
 					By.cssSelector("div.lg-question-input"));
 			for(WebElement schedulesSectionField : schedulesSectionFields) {
-				WebElement fieldLabelDiv = schedulesSectionField.findElement(By.cssSelector(" "));
+				WebElement fieldLabelDiv = schedulesSectionField.findElement(By.cssSelector("h3.lg-question-input__text"));
 				String fieldTitle = fieldLabelDiv.getText();
 				List<WebElement> inputBoxFields = schedulesSectionField.findElements(
 						By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));

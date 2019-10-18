@@ -163,8 +163,8 @@ public abstract class TestBase {
         caps.setCapability("noReset",true);
         caps.setCapability("platformVersion", propertyMap.get("platformVersion"));
         caps.setCapability("autoAcceptAlerts", true);
-        caps.setCapability("appPackage", "co.legion.client.staging");
-        caps.setCapability("appActivity", "co.legion.client.activities.LegionSplashActivity");
+        caps.setCapability("appPackage", "co.legion.client");
+        caps.setCapability("appActivity", "activities.LegionSplashActivity");
         caps.setCapability("newCommandTimeout", "360");
         setAndroidDriver( new AndroidDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"), caps));
         getAndroidDriver().manage().timeouts().implicitlyWait(80, TimeUnit.SECONDS);
@@ -302,7 +302,7 @@ public abstract class TestBase {
         }
         ExtentTestManager.getTest().info("tearDown finished");
         extent.flush();
-        //stopServer();
+        stopServer();
     }
 
 
@@ -373,6 +373,7 @@ public abstract class TestBase {
     public static void startServer() {
         DesiredCapabilities cap = new DesiredCapabilities();
         cap.setCapability("noReset", "false");
+        cap.setCapability("autoGrantPermissions", true);
         //Build the Appium service
         builder = new AppiumServiceBuilder();
         builder.withIPAddress("127.0.0.1");

@@ -149,5 +149,5 @@ public interface SchedulePage {
 	public List<String> getLocationSummaryDataFromDashBoard() throws Exception;
 	public List<String> getLocationSummaryDataFromSchedulePage() throws Exception;
 	public void compareLocationSummaryFromDashboardAndSchedule(List<String> ListLocationSummaryOnDashboard, List<String> ListLocationSummaryOnSchedule);
-
+	public void openBudgetPopUpGenerateSchedule() throws Exception;
 }

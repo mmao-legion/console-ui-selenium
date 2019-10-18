@@ -168,6 +168,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "lg-button[label*=\"ublish\"] span span")
     private WebElement txtPublishSheduleButton;
 
+    @FindBy(css = "div.edit-budget span.header-text")
+    private WebElement popUpGenerateScheduleTitleTxt;
+
+    @FindBy(css = "span.ok-action-text")
+    private WebElement btnGenerateBudgetPopUP;
+
+    @FindBy(css = "div[ng-if='canEditHours(budget)']")
+    private List<WebElement> editBudgetHrs;
+
+    @FindBy(css = "span[ng-if='canEditWages(budget)']")
+    private List<WebElement> editWagesHrs;
+
     @FindBy(css = "div.sch-view-dropdown-summary-content-item-heading.ng-binding")
     private WebElement analyzePopupLatestVersionLabel;
 
@@ -266,7 +278,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.sch-day-view-grid-header.fill span")
     private List<WebElement> gridHeaderDayHour;
 
-    @FindBy(xpath = "//div[contains(@class,'sch-day-view-grid-header tm-count ng-scope')]")
+    @FindBy(xpath = "//div[contains(@class,'sch-day-view-grid-header fill')]/following-sibling::div//div[@data-tootik='TMs in Schedule']/parent::div")
     private List<WebElement> gridHeaderTeamCount;
 
     @FindBy(xpath = "//span[contains(text(),'Save')]")
@@ -286,6 +298,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(css = ".tma-search-field-input-text")
     private WebElement textSearch;
+
+    @FindBy(css = "div.tab-label")
+    private List<WebElement> btnSearchteamMember;
 
     @FindBy(css = ".sch-search")
     private WebElement searchIcon;
@@ -309,11 +324,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@FindBy(xpath="//span[contains(text(),'Best')]")
 	private List<WebElement> scheduleBestMatchStatus;
 
+    @FindBy(css="div.tma-empty-search-results")
+    private WebElement scheduleNoAvailableMatchStatus;
+
     @FindBy(css = "div.worker-edit-search-worker-name")
     private List<WebElement> searchWorkerName;
 
 	@FindBy(xpath="//div[@class='tma-search-action']/following-sibling::div[1]//div[@class='worker-edit-search-worker-name']")
 	private List<WebElement> searchWorkerDisplayName;
+
+    @FindBy(xpath="//div[@class='tma-search-action']/following-sibling::div[1]//div[@class='worker-edit-search-worker-name']/following-sibling::div")
+    private List<WebElement> searchWorkerRole;
+
+    @FindBy(xpath="//div[@class='tma-search-action']/following-sibling::div[1]//div[@class='worker-edit-search-worker-name']/following-sibling::div[2]")
+    private List<WebElement> searchWorkerLocation;
+
+    @FindBy(xpath="//div[@class='sch-day-view-shift ng-scope']//div[contains(@class,'sch-day-view-shift-time')]")
+    private WebElement searchWorkerSchShiftTime;
+
+    @FindBy(xpath="//div[@class='sch-day-view-shift ng-scope']//div[contains(@class,'sch-day-view-worker-time')]")
+    private WebElement searchWorkerSchShiftDuration;
 
     @FindBy(css = "td.table-field.action-field.tr>div")
     private List<WebElement> radionBtnSelectTeamMembers;
@@ -331,7 +361,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	//added by Naval
 
-    @FindBy(css = "input-field[placeholder='None'] ng-form.input-form.ng-pristine.ng-valid-minlength")
+    @FindBy(css = "input-field[placeholder='None'] ng-form.input-form.ng-pristine.ng-valid-pattern")
     private WebElement filterButton;
 
     @FindBy(css = "[ng-repeat=\"(key, opts) in $ctrl.displayFilters\"]")
@@ -382,6 +412,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(className = "sch-publish-confirm-btn")
     private WebElement publishConfirmBtn;
+
+    @FindBy(css = "span.wm-close-link")
+    private WebElement closeLegionPopUp;
 
     @FindBy(className = "successful-publish-message-btn-ok")
     private WebElement successfulPublishOkBtn;
@@ -684,7 +717,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@Override
 	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
 		HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
-		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("div.card-carousel-card.card-carousel-card-primary"));
+		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class='card-carousel-card card-carousel-card-primary card-carousel-card-table']"));
 		if(isElementEnabled(budgetedScheduledLabelsDivElement))
 		{
 //			Thread.sleep(2000);
@@ -1077,7 +1110,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			click(publishSheduleButton);
 			if(isElementEnabled(publishConfirmBtn))
 			{
-				click(publishConfirmBtn);
+//                WebElement switchIframe = getDriver().findElement(By.xpath("//iframe[@id='walkme-proxy-iframe']"));
+//			    getDriver().switchTo().frame(switchIframe);
+//			    if(isElementEnabled(closeLegionPopUp)){
+//			        click(closeLegionPopUp);
+//                }
+//                getDriver().switchTo().defaultContent();
+			    click(publishConfirmBtn);
+//			    if(isElementLoaded(closeLegionPopUp)){
+//			        click(closeLegionPopUp);
+//                }
 				SimpleUtils.pass("Schedule published successfully for week: '"+ getActiveWeekText() +"'");
 				if(isElementEnabled(successfulPublishOkBtn))
 				{
@@ -1392,7 +1434,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public HashMap<String, ArrayList<WebElement>> getAvailableFilters() {
         HashMap<String, ArrayList<WebElement>> scheduleFilters = new HashMap<String, ArrayList<WebElement>>();
         try {
-            if (isElementLoaded(filterButton)) {
+            if (isElementLoaded(filterButton,5)) {
                 if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
                     click(filterButton);
                 for (WebElement scheduleFilterElement : scheduleFilterElements) {
@@ -1604,7 +1646,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             activeWeekScheduleHoursOnCard = getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.scheduledHours.getValue());
             if (weekDaySummeryHoursAndTeamMembers.size() != 0) {
                 for (WebElement weekDayHoursAndTMs : weekDaySummeryHoursAndTeamMembers) {
-                    float dayScheduleHours = Float.parseFloat(weekDayHoursAndTMs.getText().split(" HRs")[0]);
+                    float dayScheduleHours = Float.parseFloat(weekDayHoursAndTMs.getText().split("HRs")[0]);
                     weekDaysScheduleHours = (float) (weekDaysScheduleHours + Math.round(dayScheduleHours * 10.0) / 10.0);
                 }
             }
@@ -1633,7 +1675,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         try {
             if (weekDaySummeryHoursAndTeamMembers.size() != 0) {
                 for (WebElement weekDayHoursAndTMs : weekDaySummeryHoursAndTeamMembers) {
-                    String TeamMembersCount = weekDayHoursAndTMs.getText().split(" HRs")[1].replace("TMs", "").trim();
+                    String TeamMembersCount = weekDayHoursAndTMs.getText().split("HRs")[1].replace("TMs", "").trim();
                     weekDaysTMsCount = weekDaysTMsCount + Integer.parseInt(TeamMembersCount);
                 }
             }
@@ -2017,7 +2059,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public HashMap<String, Float> getScheduleLabelHours() throws Exception {
         HashMap<String, Float> scheduleHours = new HashMap<String, Float>();
-        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("div.card-carousel-card.card-carousel-card-primary"));
+        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class='card-carousel-card card-carousel-card-primary card-carousel-card-table']"));
         if (isElementLoaded(budgetedScheduledLabelsDivElement)) {
             String scheduleWagesAndHoursCardText = budgetedScheduledLabelsDivElement.getText();
             String[] scheduleWagesAndHours = scheduleWagesAndHoursCardText.split("\n");
@@ -2054,8 +2096,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     searchText(propertySearchTeamMember.get("AssignTeamMember"));
                     SimpleUtils.pass(txtRecommendedOption[0] + " Option selected By default for Select Team member option");
                 } else {
-                    getScheduleBestMatchStatus();
-                    SimpleUtils.pass(txtRecommendedOption[0] + " Option selected By default for Select Team member option");
+                    boolean  scheduleBestMatchStatus = getScheduleBestMatchStatus();
+                    if(scheduleBestMatchStatus){
+                        SimpleUtils.pass(txtRecommendedOption[0] + " Option selected By default for Select Team member option");
+                    }else{
+                        if(areListElementVisible(btnSearchteamMember,5)){
+                            click(btnSearchteamMember.get(1));
+                            searchText(propertySearchTeamMember.get("AssignTeamMember"));
+                        }
+
+                    }
+
                 }
             } else {
                 SimpleUtils.fail("Recommended option not available on page", false);
@@ -2072,14 +2123,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String[] searchAssignTeamMember = searchInput.split(",");
         if (isElementLoaded(textSearch, 10) && isElementLoaded(searchIcon, 10)) {
             for (int i = 0; i < searchAssignTeamMember.length; i++) {
-                textSearch.sendKeys(searchAssignTeamMember[i]);
+                String[] searchTM = searchAssignTeamMember[i].split("\\.");
+                textSearch.sendKeys(searchTM[0]);
                 click(searchIcon);
                 if (getScheduleStatus()) {
+                    setTeamMemberName(searchAssignTeamMember[i]);
                     break;
                 } else {
                     textSearch.clear();
                 }
-
             }
 
         } else {
@@ -2091,12 +2143,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public boolean getScheduleStatus() throws Exception {
         boolean ScheduleStatus = false;
 //		waitForSeconds(5);
-		if(areListElementVisible(scheduleSearchTeamMemberStatus,5)){
+		if(areListElementVisible(scheduleSearchTeamMemberStatus,5) || isElementLoaded(scheduleNoAvailableMatchStatus,5)){
 			for(int i=0; i<scheduleSearchTeamMemberStatus.size();i++){
 				if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Available")
 						|| scheduleSearchTeamMemberStatus.get(i).getText().contains("Unknown")){
-					click(radionBtnSearchTeamMembers.get(i));
-					setTeamMemberName(searchWorkerName.get(i).getText());
+					click(radionBtnSearchTeamMembers.get(i+1));
+					setWorkerRole(searchWorkerRole.get(i).getText());
+					setWorkerLocation(searchWorkerLocation.get(i).getText());
+					setWorkerShiftTime(searchWorkerSchShiftTime.getText());
+					setWorkerShiftDuration(searchWorkerSchShiftDuration.getText());
 					ScheduleStatus = true;
 					break;
 				}
@@ -2478,6 +2533,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void generateOrUpdateAndGenerateSchedule() throws Exception {
         if (isElementEnabled(generateSheduleButton)) {
             click(generateSheduleButton);
+            openBudgetPopUpGenerateSchedule();
             if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
                 if (isElementEnabled(checkOutTheScheduleButton, 20)) {
@@ -3303,8 +3359,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(imageSize.get(i));
             if (isElementEnabled(convertOpen)) {
                 click(convertOpen);
-                if (isElementEnabled(openPopYesButton)) {
+                if (isElementEnabled(openPopYesButton,5)) {
                     click(openPopYesButton);
+                    waitForSeconds(3);
                 } else {
                     SimpleUtils.fail("Open pop-up Yes button not found", false);
                 }
@@ -3494,7 +3551,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(xpath = "//div[contains(@class,'analytics-new-table-group-row')]//span/img/following-sibling::span")
     private List<WebElement> locationName;
 
-    @FindBy(xpath = "/div[contains(@class,'analytics-new-table-group-row')]//div[@class='ng-scope col-fx-1']")
+    @FindBy(xpath = "//div[contains(@class,'analytics-new-table-group-row')]//div[@class='ng-scope col-fx-1']")
     private List<WebElement> DMHours;
 
     public List<Float> validateScheduleAndBudgetedHours() throws Exception {
@@ -3502,7 +3559,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         HashMap<String,List<String>> publishHours = new HashMap<>();
         HashMap<String,List<String>> clockHours = new HashMap<>();
         List<Float> totalHoursFromSchTbl = new ArrayList<>();
-
         List<String> budgetHrs = new ArrayList<>();
         List<String> publishedHrs = new ArrayList<>();
         List<String> clockedHrs = new ArrayList<>();
@@ -3773,6 +3829,40 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 SimpleUtils.fail("Location Summary on Dashboard "
                         + ListLocationSummaryOnDashboard.get(i) + " matches with location" +
                         " summary on Schedule page " +ListLocationSummaryOnSchedule.get(i),true);
+            }
+        }
+    }
+
+    @FindBy(css = "div.edit-budget span.header-text")
+    private List<WebElement> tblBudgetRow;
+    @FindBy(css = "span[ng-if='canEditWages(budget)'] span")
+    private List<WebElement> editListWagesHrs;
+
+    public void openBudgetPopUpGenerateSchedule() throws Exception{
+        if(isElementLoaded(popUpGenerateScheduleTitleTxt,5)){
+            if(isElementEnabled(btnGenerateBudgetPopUP,5)){
+               click(btnGenerateBudgetPopUP);
+            }else{
+                SimpleUtils.fail("Generate btn not clickable on Budget pop up", false);
+            }
+        }
+    }
+
+    public void openBudgetPopUp() throws Exception{
+        if(isElementLoaded(popUpGenerateScheduleTitleTxt,5)){
+            if(areListElementVisible(editBudgetHrs,5)){
+                fillBudgetValues(editBudgetHrs);
+            }else if(areListElementVisible(editWagesHrs,5)){
+                fillBudgetValues(editWagesHrs);
+            }
+        }
+    }
+
+
+    public void fillBudgetValues(List<WebElement> element) throws Exception {
+        if(areListElementVisible(tblBudgetRow,5)){
+            for(int i=0; i<tblBudgetRow.size();i++){
+                editListWagesHrs.get(i).sendKeys("1");
             }
         }
     }

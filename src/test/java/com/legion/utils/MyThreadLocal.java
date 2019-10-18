@@ -53,6 +53,10 @@ public class MyThreadLocal {
 	public static ThreadLocal<List<String>> failedComment = new ThreadLocal<>();
 	public static ThreadLocal<List<Integer>> testRailRun = new ThreadLocal<>();
 	public static final ThreadLocal<String> teamMemberName = new ThreadLocal<>();
+	public static final ThreadLocal<String> workerRole = new ThreadLocal<>();
+	public static final ThreadLocal<String> workerLocation = new ThreadLocal<>();
+	public static final ThreadLocal<String> workerShiftTime = new ThreadLocal<>();
+	public static final ThreadLocal<String> workerShiftDuration = new ThreadLocal<>();
 	public static final ThreadLocal<String> screenshotLoc = new ThreadLocal<>();
 	public static ThreadLocal<String> screenShotURL = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeOffStartTime = new ThreadLocal<>();
@@ -71,6 +75,22 @@ public class MyThreadLocal {
 	public static void setTeamMemberName(String value) { teamMemberName.set(value); }
 
 	public static String getTeamMemberName() { return teamMemberName.get(); }
+
+	public static void setWorkerRole(String value) { workerRole.set(value); }
+
+	public static String getWorkerRole() { return workerRole.get(); }
+
+	public static void setWorkerLocation(String value) { workerLocation.set(value); }
+
+	public static String getWorkerLocation() { return workerLocation.get(); }
+
+	public static void setWorkerShiftTime(String value) { workerShiftTime.set(value); }
+
+	public static String getWorkerShiftTime() { return workerShiftTime.get(); }
+
+	public static void setWorkerShiftDuration(String value) { workerShiftDuration.set(value); }
+
+	public static String getWorkerShiftDuration() { return workerShiftDuration.get(); }
 
 	public static void setTimeOffStartTime(String value) { timeOffStartTime.set(value); }
 

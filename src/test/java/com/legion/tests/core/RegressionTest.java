@@ -30,10 +30,11 @@ public class RegressionTest extends TestBase{
 	  private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
 	  private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
 	  private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
-	private static HashMap<String, String> searchDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/searchDetails.json");
+	  private static HashMap<String, String> searchDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/searchDetails.json");
 	  SchedulePage schedulePage = null;
-	private static HashMap<String, String> controlsLocationDetail = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ControlsPageLocationDetail.json");
-	private static HashMap<String, String> schedulingPoliciesData = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SchedulingPoliciesData.json");
+	  private static HashMap<String, String> controlsLocationDetail = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ControlsPageLocationDetail.json");
+	  private static HashMap<String, String> schedulingPoliciesData = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SchedulingPoliciesData.json");
+	private static HashMap<String, String> usersAndRolesData = JsonUtil.getPropertiesFromJsonFile("src/test/resources/UserAndRoles.json");
 
 	  @Override
 	  @BeforeMethod
@@ -313,56 +314,56 @@ public class RegressionTest extends TestBase{
 	public void validateScheduleSmartCardsAsStoreManager(String browser, String username, String password, String location)
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-//		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = dashboardPage.goToTodayForNewUI();
-//		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
-//				schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
-//
-//		String budgetSmartCardText = "Budget Hours";
-//		String scheduleSmartCardText = "SCHEDULE V";
-//		String holidaySmartCardText = "holiday";
-//		String complianceSmartCardText = "require compliance review";
-//		String unassignedSmartCardText = "unassigned";
-//		String weatherSmartCardText = "WEATHER";
-//
-//		int weeksToValidate = 6;
-//		schedulePage.clickOnWeekView();
-//		// Validation Start with Past week
-//		schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
-//		for(int index = 0; index < weeksToValidate; index++)
-//		{
-//			if(index != 0)
-//				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
-//			boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
-//			if(!isActiveWeekGenerated)
-//				schedulePage.generateOrUpdateAndGenerateSchedule();
-//			boolean isBudgetSmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(budgetSmartCardText);
-//			boolean isScheduleSmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(scheduleSmartCardText);
-//			boolean isHolidaySmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(holidaySmartCardText);
-//			boolean isComplianceSmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(complianceSmartCardText);
-//			boolean isUnassignedSmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(unassignedSmartCardText);
-//			boolean isWeatherSmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(weatherSmartCardText);
-//
-//			if(isBudgetSmartCardLoaded)
-//				SimpleUtils.report("Schedule Page: Budget Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
-//
-//			if(isScheduleSmartCardLoaded)
-//				SimpleUtils.report("Schedule Page: Scheduled Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
-//
-//			if(isHolidaySmartCardLoaded)
-//				SimpleUtils.report("Schedule Page: Holiday Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
-//
-//			if(isComplianceSmartCardLoaded && schedulePage.isComlianceReviewRequiredForActiveWeek())
-//				SimpleUtils.report("Schedule Page: Compliance Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
-//			else if(! isComplianceSmartCardLoaded && schedulePage.isComlianceReviewRequiredForActiveWeek())
-//				SimpleUtils.fail("Schedule Page: Compliance Smartcard not loaded even compliance review required for Active week ('"
-//						+ schedulePage.getActiveWeekText() +"').", true);
-//			if(isUnassignedSmartCardLoaded)
-//				SimpleUtils.report("Schedule Page: Unassigned Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
-//
-//			if(isWeatherSmartCardLoaded)
-//				SimpleUtils.report("Schedule Page: Weather Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
-//		}
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		schedulePage = dashboardPage.goToTodayForNewUI();
+		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+
+		String budgetSmartCardText = "Budget Hours";
+		String scheduleSmartCardText = "SCHEDULE V";
+		String holidaySmartCardText = "holiday";
+		String complianceSmartCardText = "require compliance review";
+		String unassignedSmartCardText = "unassigned";
+		String weatherSmartCardText = "WEATHER";
+
+		int weeksToValidate = 6;
+		schedulePage.clickOnWeekView();
+		// Validation Start with Past week
+		schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
+		for(int index = 0; index < weeksToValidate; index++)
+		{
+			if(index != 0)
+				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+			boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+			if(!isActiveWeekGenerated)
+				schedulePage.generateOrUpdateAndGenerateSchedule();
+			boolean isBudgetSmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(budgetSmartCardText);
+			boolean isScheduleSmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(scheduleSmartCardText);
+			boolean isHolidaySmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(holidaySmartCardText);
+			boolean isComplianceSmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(complianceSmartCardText);
+			boolean isUnassignedSmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(unassignedSmartCardText);
+			boolean isWeatherSmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(weatherSmartCardText);
+
+			if(isBudgetSmartCardLoaded)
+				SimpleUtils.report("Schedule Page: Budget Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
+
+			if(isScheduleSmartCardLoaded)
+				SimpleUtils.report("Schedule Page: Scheduled Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
+
+			if(isHolidaySmartCardLoaded)
+				SimpleUtils.report("Schedule Page: Holiday Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
+
+			if(isComplianceSmartCardLoaded && schedulePage.isComlianceReviewRequiredForActiveWeek())
+				SimpleUtils.report("Schedule Page: Compliance Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
+			else if(! isComplianceSmartCardLoaded && schedulePage.isComlianceReviewRequiredForActiveWeek())
+				SimpleUtils.fail("Schedule Page: Compliance Smartcard not loaded even compliance review required for Active week ('"
+						+ schedulePage.getActiveWeekText() +"').", true);
+			if(isUnassignedSmartCardLoaded)
+				SimpleUtils.report("Schedule Page: Unassigned Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
+
+			if(isWeatherSmartCardLoaded)
+				SimpleUtils.report("Schedule Page: Weather Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
+		}
 	}
 
 	@MobilePlatform(platform = "Android")
@@ -412,14 +413,14 @@ public class RegressionTest extends TestBase{
 				SimpleUtils.assertOnFail("Schedule Page: 'Generate' Button Displaying on after Generating Schedule on :'"+schedulePage.getActiveWeekText() +"'",
 						(! schedulePage.isGenerateButtonLoaded()) , false);
 
-				ArrayList<Float> versionHistory = schedulePage.getAllVesionLabels();
-				float scheduleInitialVersion = (float) 0.0;
-
-				SimpleUtils.assertOnFail("Schedule Page: Version History Displaying more then one versions after Generating Schedule on :'"+schedulePage.getActiveWeekText() +"'",
-						(1 == versionHistory.size()) , false);
-
-				SimpleUtils.assertOnFail("Schedule Page: Version History not starting with '0.0' after Generating Schedule on :'"+schedulePage.getActiveWeekText() +"'",
-						(versionHistory.get(0).equals(scheduleInitialVersion)) , false);
+//				ArrayList<Float> versionHistory = schedulePage.getAllVesionLabels();
+//				float scheduleInitialVersion = (float) 0.0;
+//
+//				SimpleUtils.assertOnFail("Schedule Page: Version History Displaying more then one versions after Generating Schedule on :'"+schedulePage.getActiveWeekText() +"'",
+//						(1 == versionHistory.size()) , false);
+//
+//				SimpleUtils.assertOnFail("Schedule Page: Version History not starting with '0.0' after Generating Schedule on :'"+schedulePage.getActiveWeekText() +"'",
+//						(versionHistory.get(0).equals(scheduleInitialVersion)) , false);
 
 				SimpleUtils.pass("Schedule Generation functionality working fine.");
 				break;
@@ -483,7 +484,6 @@ public class RegressionTest extends TestBase{
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Nishant")
 	@SanitySuite(sanity =  "Sanity")
-	@UseAsTestRailSectionId(testRailSectionId = 96)
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Navigate to Schedule overview, open a week with Guidance status")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
@@ -530,26 +530,27 @@ public class RegressionTest extends TestBase{
 	public void validateSchedulePublishAsStoreManager(String browser, String username, String password, String location)
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-//		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-//		schedulePage.clickOnScheduleConsoleMenuItem();
-//		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
-//		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!"
-//				,schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
-//
-//		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-//		BasePage basePase = new BasePage();
-//		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
-//		boolean isWeekFoundToUnGenerate = false;
-//		for(int i=0; i< overviewWeeks.size();i++)
-//		{
-//			if(!overviewWeeks.get(i).getText().contains(overviewWeeksStatus.Guidance.getValue()))
-//			{
-//				basePase.click(overviewWeeks.get(i));
-//				schedulePage.clickOnSchedulePublishButton();
-//				break;
-//			}
-//		}
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!"
+				,schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		BasePage basePase = new BasePage();
+		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+		boolean isWeekFoundToUnGenerate = false;
+		for(int i=0; i< overviewWeeks.size();i++)
+		{
+			if(!overviewWeeks.get(i).getText().contains(overviewWeeksStatus.Guidance.getValue()) &&
+					(!overviewWeeks.get(i).getText().contains(overviewWeeksStatus.Finalized.getValue())) &&
+					!overviewWeeks.get(i).getText().contains(overviewWeeksStatus.Published.getValue())) {
+				basePase.click(overviewWeeks.get(i));
+				schedulePage.clickOnSchedulePublishButton();
+				break;
+			}
+		}
 	}
 
 
@@ -626,7 +627,6 @@ public class RegressionTest extends TestBase{
 		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 		controlsNewUIPage.clickOnControlsConsoleMenu();
 		SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
-//		context.setAttribute("TestRailId", getTestRailRunId());
 		controlsNewUIPage.clickOnControlsSchedulingPolicies();
 		controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
 		controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue());
@@ -671,31 +671,25 @@ public class RegressionTest extends TestBase{
 	}
 
 	@MobilePlatform(platform = "Android")
-	@UseAsTestRailSectionId(testRailSectionId = 385)
-	@UseAsTestCaseSectionId(testCaseSectionId = 384)
 	@SanitySuite(sanity =  "Sanity")
 	@Automated(automated = "Automated")
 	@Owner(owner = "Gunjan")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate navigation and data loading in Day/Week view for Schedule Tab[No Spinning icon or Blank screen]")
+	@TestName(description = "Validate navigation and data loading in Day/Week view for Schedule Tab No Spinning icon or Blank screen")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void scheduleSubTabNavigationStoreManager(String username, String password, String browser, String location, ITestContext context) throws Exception {
 		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 		scheduleOverviewPage.loadScheduleOverview();
-//		int testRailId = (Integer) context.getAttribute("TestRailId");
-//		System.out.println("In Test1, Value stored in context is: "+testRailId);
 		SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
-		schedulePage.navigateScheduleDayWeekView(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.One.getValue());
+		schedulePage.navigateScheduleDayWeekView(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Two.getValue());
 	}
 
 	@MobilePlatform(platform = "Android")
-	@UseAsTestRailSectionId(testRailSectionId = 387)
-	@UseAsTestCaseSectionId(testCaseSectionId = 386)
 	@SanitySuite(sanity =  "Sanity")
 	@Automated(automated = "Automated")
 	@Owner(owner = "Gunjan")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate loading of data for Schedule in week view[No spinning icon]")
+	@TestName(description = "Validate loading of data for Schedule in week view. No spinning icon.")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void legionAppNavigationAllTabsStoreManager(String username, String password, String browser, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -717,8 +711,6 @@ public class RegressionTest extends TestBase{
 
 	@MobilePlatform(platform = "Android")
 	@SanitySuite(sanity =  "Sanity")
-	@UseAsTestRailSectionId(testRailSectionId = 336)
-	@UseAsTestCaseSectionId(testCaseSectionId = 287)
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Nishant")
 	@Enterprise(name = "KendraScott2_Enterprise")
@@ -735,53 +727,6 @@ public class RegressionTest extends TestBase{
 		controlsNewUIPage.clickOnGlobalLocationButton();
 		controlsNewUIPage.verifyAllLocations(schedulingPoliciesData.get("ALL_LOCATIONS"));
 		controlsNewUIPage.verifySearchLocations(schedulingPoliciesData.get("SEARCH_LOCATION_TEXT"));
-	}
-
-
-	@Automated(automated = "Automated")
-	@Owner(owner = "Manideep")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "FOR-679: Cannot generate schedule when directly go to unscheduled week from overview")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void validatingGenerateScheduleStoreManager(String browser, String username, String password, String location)
-			throws Exception {
-		int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
-		//	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		schedulePage.validatingGenrateSchedule();
-		// Verify UnAssigned Shift SmartCard
-		String SmartCardLabelForUnassignedShift = "unassigned shift";
-		if (schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForUnassignedShift)) {
-			SimpleUtils.report("UnAssigned Shift SmartCard found for the Week: '" + schedulePage.getActiveWeekText() + "'");
-			schedulePage.convertAllUnAssignedShiftToOpenShift();
-			SimpleUtils.assertOnFail("Unassigned smartcard not disappeared After Converting UnAssigned Shift to Open Shift for: '"
-					+ schedulePage.getActiveWeekText() + "'", (!schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForUnassignedShift)), true);
-
-			if (!schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForUnassignedShift))
-				SimpleUtils.pass("UnAssigned Shift SmartCard disappear after converting unassigned shift to open shift.");
-		}
-
-		// Verify compliance review Shift SmartCard
-		String SmartCardLabelForComplianceReview = "compliance review";
-		if (schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForComplianceReview)) {
-			SimpleUtils.report("UnAssigned Shift SmartCard found for the Week: '" + schedulePage.getActiveWeekText() + "'");
-			String shiftTypeFilterText = "Compliance Review";
-			schedulePage.selectShiftTypeFilterByText(shiftTypeFilterText);
-			schedulePage.clickOnDayView();
-			schedulePage.reduceOvertimeHoursOfActiveWeekShifts();
-
-			SimpleUtils.assertOnFail("Compliance Review smartcard not disappeared After reducing Overtime of Shift(s) for: '"
-					+ schedulePage.getActiveWeekText() + "'", (!schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForComplianceReview)), true);
-
-			if (!schedulePage.isSmartCardAvailableByLabel(SmartCardLabelForComplianceReview))
-				SimpleUtils.pass("Compliance Review smartcard disappeared After reducing Overtime of Shift(s) for: '"
-						+ schedulePage.getActiveWeekText() + "'");
-
-			schedulePage.selectShiftTypeFilterByText("Clearing All Shift Type Filters");
-		}
 	}
 
 
@@ -1006,8 +951,6 @@ public class RegressionTest extends TestBase{
 	}
 
 	@MobilePlatform(platform = "Android")
-	@UseAsTestRailSectionId(testRailSectionId = 401)
-	@UseAsTestCaseSectionId(testCaseSectionId = 400)
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Naval")
 	@Enterprise(name = "KendraScott2_Enterprise")
@@ -1071,8 +1014,6 @@ public class RegressionTest extends TestBase{
 	}
 
 	@MobilePlatform(platform = "Android")
-	@UseAsTestRailSectionId(testRailSectionId = 399)
-	@UseAsTestCaseSectionId(testCaseSectionId = 398)
 	@Automated(automated = "Automated")
 	@Owner(owner = "Gunjan")
 	@Enterprise(name = "KendraScott2_Enterprise")
@@ -1400,7 +1341,6 @@ public class RegressionTest extends TestBase{
 				,schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
 		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 		BasePage basePase = new BasePage();
-		Thread.sleep(1000);
 		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
 		boolean isWeekFoundToGenerate = false;
 		int minutesInAnHours = 60;
@@ -1509,17 +1449,15 @@ public class RegressionTest extends TestBase{
 		//To Do Should be separate Test from Schedule test
 		//loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
 		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-//		teamPage.goToTeam();
-//		String key= searchDetails.get("jobTitle");
-//		List<String> list = new ArrayList<String>(Arrays.asList(key.split(",")));
-//		teamPage.performSearchRoster(list);
-//		teamPage.coverage();
-//		teamPage.coverageViewToPastOrFuture(TeamTest.weekViewType.Next.getValue(), TeamTest.weekCount.Six.getValue());
+		teamPage.goToTeam();
+		String key= searchDetails.get("jobTitle");
+		List<String> list = new ArrayList<String>(Arrays.asList(key.split(",")));
+		teamPage.performSearchRoster(list);
+		teamPage.coverage();
+		teamPage.coverageViewToPastOrFuture(TeamTest.weekViewType.Next.getValue(), TeamTest.weekCount.Six.getValue());
 	}
 
 	@MobilePlatform(platform = "Android")
-	@UseAsTestRailSectionId(testRailSectionId = 404)
-	@UseAsTestCaseSectionId(testCaseSectionId = 328)
 	@Automated(automated = "Automated")
 	@Owner(owner = "Naval")
 	@Enterprise(name = "KendraScott2_Enterprise")
@@ -1532,8 +1470,10 @@ public class RegressionTest extends TestBase{
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-		profileNewUIPage.clickOnProfileConsoleMenu();
-		SimpleUtils.assertOnFail("Profile Page not loaded.", profileNewUIPage.isProfilePageLoaded(), false);
+		dashboardPage.clickOnProfileIconOnDashboard();
+		dashboardPage.clickOnTimeOffLink();
+//		profileNewUIPage.clickOnProfileConsoleMenu();
+//		SimpleUtils.assertOnFail("Profile Page not loaded.", profileNewUIPage.isProfilePageLoaded(), false);
 		String myTimeOffSectionLabel = "My Time Off";
 		profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffSectionLabel);
 		String expectedRequestStatus = "PENDING";
@@ -1578,8 +1518,8 @@ public class RegressionTest extends TestBase{
 
 		// Login as Team Member Again
 		loginToLegionAndVerifyIsLoginDone(username, password, location);
-		profileNewUIPage.clickOnProfileConsoleMenu();
-		SimpleUtils.assertOnFail("Profile Page not loaded.", profileNewUIPage.isProfilePageLoaded(), false);
+		dashboardPage.clickOnProfileIconOnDashboard();
+		dashboardPage.clickOnTimeOffLink();
 		profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffSectionLabel);
 		requestStatus = profileNewUIPage.getTimeOffRequestStatus(timeOffReasonLabel
 				, timeOffExplanationText, getTimeOffStartTime(), getTimeOffEndTime()
@@ -1628,17 +1568,18 @@ public class RegressionTest extends TestBase{
 		if(controlsNewUIPage.isControlsUsersAndRolesLoaded()) {
 			controlsNewUIPage.selectUsersAndRolesSubTabByLabel(ControlsNewUITest.usersAndRolesSubTabs.AllUsers.getValue());
 			verifyingUserAndRolesAddNewUserPageFieldsEditableOrNot();
-			String userFirstName = "David";
-			verifyingUserAndRolesEditUserPageFieldsEditableOrNot(userFirstName);
+//			String userFirstName = "Fedrico";
+			verifyingUserAndRolesEditUserPageFieldsEditableOrNot(usersAndRolesData.get("USER_FIRST_NAME"));
 			controlsNewUIPage.selectUsersAndRolesSubTabByLabel(ControlsNewUITest.usersAndRolesSubTabs.AccessByJobTitles.getValue());
-			String employeeJobTitle = "Retail Manager";
-			verifyingUserAndRolesUpdateEmployeeJobTitleEditableOrNonEditableFields(employeeJobTitle);
-			String newEmployeeJobTitle = "Sample Employee Job Title";
-			String newEmployeeJobTitleRole = "Store Manager";
-			verifyingUserAndRolesCreatNewEmployeeJobTitleEditableOrNonEditableFields(newEmployeeJobTitle, newEmployeeJobTitleRole);
-			String badgeLabel = "Employee From Mars";
+//			String employeeJobTitle = "Retail Manager";
+			verifyingUserAndRolesUpdateEmployeeJobTitleEditableOrNonEditableFields(usersAndRolesData.get("PREVIOUS_EMPLOYEE_JOB_TITLE"));
+//			String newEmployeeJobTitle = "Sample Employee Job Title";
+//			String newEmployeeJobTitleRole = "Store Manager";
+			verifyingUserAndRolesCreatNewEmployeeJobTitleEditableOrNonEditableFields(
+					usersAndRolesData.get("NEW_EMPLOYEE_JOB_TITLE"), usersAndRolesData.get("NEW_EMPLOYEE_JOB_TITLE_ROLE"));
+//			String badgeLabel = "Employee From Mars";
 			controlsNewUIPage.selectUsersAndRolesSubTabByLabel(ControlsNewUITest.usersAndRolesSubTabs.Badges.getValue());
-			verifyingUserAndRolesUpdateBadgesEditableOrNonEditableFields(badgeLabel);
+			verifyingUserAndRolesUpdateBadgesEditableOrNonEditableFields(usersAndRolesData.get("BADGE_LABEL"));
 			verifyingUserAndRolesCreateNewBadgesEditableOrNonEditableFields();
 		}
 
@@ -2049,8 +1990,6 @@ public class RegressionTest extends TestBase{
 	}
 
 	@MobilePlatform(platform = "Android")
-	@UseAsTestRailSectionId(testRailSectionId = 376)
-	@UseAsTestCaseSectionId(testCaseSectionId = 291)
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Nishant")
 	@Enterprise(name = "KendraScott2_Enterprise")
@@ -2205,7 +2144,6 @@ public class RegressionTest extends TestBase{
 					SimpleUtils.pass("Guidance week found : '" + schedulePage.getActiveWeekText() + "'");
 					schedulePage.generateOrUpdateAndGenerateSchedule();
 					schedulePage.verifyScheduledHourNTMCountIsCorrect();
-
 					break;
 				}
 			}
@@ -2264,8 +2202,6 @@ public class RegressionTest extends TestBase{
 	}
 
 	@MobilePlatform(platform = "Android")
-	@UseAsTestRailSectionId(testRailSectionId = 393)
-	@UseAsTestCaseSectionId(testCaseSectionId = 392)
 	@UseAsTestRailId(testRailId = 32)
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Naval")
@@ -2294,8 +2230,6 @@ public class RegressionTest extends TestBase{
 	}
 
 	@MobilePlatform(platform = "Android")
-	@UseAsTestRailSectionId(testRailSectionId = 396)
-	@UseAsTestCaseSectionId(testCaseSectionId = 394)
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Naval")
 	@Enterprise(name = "KendraScott2_Enterprise")
@@ -2321,8 +2255,6 @@ public class RegressionTest extends TestBase{
 	}
 
 	@MobilePlatform(platform = "Android")
-	@UseAsTestRailSectionId(testRailSectionId = 397)
-	@UseAsTestCaseSectionId(testCaseSectionId = 395)
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Naval")
 	@Enterprise(name = "KendraScott2_Enterprise")

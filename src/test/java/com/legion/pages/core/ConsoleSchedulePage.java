@@ -208,7 +208,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @FindBy (css = "div.console-navigation-item-label.Schedule")
 	private WebElement consoleSchedulePageTabElement;
 
-    @FindBy (css = "div[ng-if*='guidance-week-shifts']")
+    @FindBy (css = "week-view-detail[weekly-schedule-data='weeklyScheduleData']")
     private WebElement scheduleTableWeekView;
 
     @FindBy (css = "div.sch-day-view-grid")
@@ -1521,16 +1521,16 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 			}else{
 				SimpleUtils.fail("Day View button not found in Schedule Sub Tab",false);
 			}
-			if(isElementLoaded(scheduleWeekView)){
+			if(isElementLoaded(scheduleWeekView,10)){
 				click(scheduleWeekView);
 				SimpleUtils.pass("Clicked on Week View of Schedule Tab");
-				if(isElementLoaded(smartcard)){
+				if(isElementLoaded(smartcard,10)){
 					flag = true;
 					SimpleUtils.pass("Smartcard Section in Week View Loaded Successfully!");
 				}else{
 					SimpleUtils.fail("Smartcard Section in Week View Not Loaded Successfully!", true);
 				}
-				if(isElementLoaded(scheduleTableWeekView)){
+				if(isElementLoaded(scheduleTableWeekView,10)){
 					flag = true;
 					SimpleUtils.pass("Schedule in Week View Loaded Successfully!");
 				}else{
@@ -1732,6 +1732,10 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         return null;
     }
     public void compareLocationSummaryFromDashboardAndSchedule(List<String> ListLocationSummaryOnDashboard, List<String> ListLocationSummaryOnSchedule){
+
+    }
+
+    public void openBudgetPopUpGenerateSchedule() throws Exception{
 
     }
 }

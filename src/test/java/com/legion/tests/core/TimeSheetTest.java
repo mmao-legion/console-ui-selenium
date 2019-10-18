@@ -63,13 +63,12 @@ public class TimeSheetTest extends TestBase{
 	@Override
 	@BeforeMethod
 	public void firstTest(Method method, Object[] params) throws Exception {
-		this.createDriver((String) params[0], "68", "Linux");
-	      visitPage(method);
-	      loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+//		  this.createDriver((String) params[0], "68", "Linux");
+//	      visitPage(method);
+//	      loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
 	}
 	
-	
-	
+
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Naval")
     @Enterprise(name = "Coffee_Enterprise")
@@ -740,10 +739,10 @@ public class TimeSheetTest extends TestBase{
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void addTestRailTestCaseAsStoreManager(String browser, String username, String password, String location)
     		throws Exception {
-		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/TAConsoleTCs.xlsx", "Sadhvi");
+		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/MobileTCs.xlsx", "MOBILE");
 		for(HashMap<String, String> spreadSheetRow : spreadSheetData)
 		{
-			String defaultAction = "";
+			 String defaultAction = "";
 			 String scenario = spreadSheetRow.get("Scenario/Module");
 			 String summary = spreadSheetRow.get("Summary");
 			 String testSteps = spreadSheetRow.get("Test Steps");

@@ -31,14 +31,18 @@ public class SanityTest extends TestBase{
 	  private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
 	  private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
 	  private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
+	private static HashMap<String, String> mobileCredentials = JsonUtil.getPropertiesFromJsonFile("src/test/resources/MobileCredentials.json");
 	  SchedulePage schedulePage = null;
 
 	  @Override
 	  @BeforeMethod
 	  public void firstTest(Method method, Object[] params) throws Exception {
-		  this.createDriver((String)params[0],"69","Window");
-	      visitPage(method);
-	      loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+          this.createDriver((String)params[0],"69","Window");
+	      if(propertyMap.get("RUN_ON_MOBILE").equalsIgnoreCase("No")){
+              visitPage(method);
+//	      loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+          }
+
 	    }
 	  
 
@@ -189,13 +193,13 @@ public class SanityTest extends TestBase{
 	  			Float scheduledHoursBeforeEditing, Float scheduledHoursAfterEditing) throws Exception{
 	  			Float scheduledHoursExpectedValueEditing = 0.0f;
             // If meal break is applicable
-//	  		if(Float.parseFloat(shiftTimeSchedule) >= 6){
-//	  			scheduledHoursExpectedValueEditing = (float) (scheduledHoursBeforeEditing + (Float.parseFloat(shiftTimeSchedule) - 0.5));
-//	  		}else{
-//	  			scheduledHoursExpectedValueEditing = (float)(scheduledHoursBeforeEditing + Float.parseFloat(shiftTimeSchedule));
-//	  		}
+	  		if(Float.parseFloat(shiftTimeSchedule) >= 6){
+	  			scheduledHoursExpectedValueEditing = (float) (scheduledHoursBeforeEditing + (Float.parseFloat(shiftTimeSchedule) - 0.5));
+	  		}else{
+	  			scheduledHoursExpectedValueEditing = (float)(scheduledHoursBeforeEditing + Float.parseFloat(shiftTimeSchedule));
+	  		}
            // If meal break is not applicable
-            scheduledHoursExpectedValueEditing = (float)(scheduledHoursBeforeEditing + Float.parseFloat(shiftTimeSchedule));
+//            scheduledHoursExpectedValueEditing = (float)(scheduledHoursBeforeEditing + Float.parseFloat(shiftTimeSchedule));
 	  		if(scheduledHoursExpectedValueEditing.equals(scheduledHoursAfterEditing)){
 	  			SimpleUtils.pass("Scheduled Hours Expected value "+scheduledHoursExpectedValueEditing+" matches with Scheduled Hours Actual value "+scheduledHoursAfterEditing);
 	  		}else{
@@ -771,24 +775,23 @@ public class SanityTest extends TestBase{
 
 
 
-//	@MobilePlatform(platform = "Android")
-//	@SanitySuite(sanity =  "Sanity")
-//	@UseAsTestRailSectionId(testRailSectionId = 96)
-//	@Automated(automated ="Automated")
-//	@Owner(owner = "Nishant")
-//	@Enterprise(name = "KendraScott2_Enterprise")
-//	@TestName(description = "Validate integration of Console UI with Mobile [Check only Open Schedule Offer is sent to the TM from Console UI and validate it is visible in Legion Mobile app for corresponding TM]")
-//	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-//	public void consoleAndMobileIntegrationForShiftOffers(String username, String password, String browser, String location) throws Exception {
-//		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-//		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-//		schedulePage.clickOnScheduleConsoleMenuItem();
-//		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-//		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
-//		schedulePage.clickOnScheduleSubTab(LoginTest.SchedulePageSubTabText.Overview.getValue());
-//		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-//		List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+	@MobilePlatform(platform = "Android")
+	@SanitySuite(sanity =  "Sanity")
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nishant")
+	@Enterprise(name = "ChezAldo_Enterprise")
+	@TestName(description = "Validate the Create An Account button on Legion Application")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void consoleAndMobileIntegrationForShiftOffers(String username, String password, String browser, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+		schedulePage.clickOnScheduleSubTab(LoginTest.SchedulePageSubTabText.Overview.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
 //		for(int i=0; i <overviewPageScheduledWeeks.size();i++)
 //		{
 //			if(overviewPageScheduledWeeks.get(i).getText().toLowerCase().contains(LoginTest.overviewWeeksStatus.Guidance.getValue().toLowerCase()))
@@ -803,45 +806,43 @@ public class SanityTest extends TestBase{
 //				}
 //			}
 //		}
-//
-//		schedulePage.clickOnDayView();
-//		int previousGutterCount = schedulePage.getgutterSize();
-//		scheduleNavigationTest(previousGutterCount);
-//		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
-//		Float scheduledHoursBeforeEditing = ScheduledHours.get("scheduledHours");
-//		HashMap<List<String>,List<String>> teamCount = schedulePage.calculateTeamCount();
-//		SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
-//		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
-//		schedulePage.customizeNewShiftPage();
-//		schedulePage.compareCustomizeStartDay(textStartDay);
-//		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-//		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-//		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
-//		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
-//		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-//		schedulePage.clickOnCreateOrNextBtn();
-//		schedulePage.customizeNewShiftPage();
-//		schedulePage.verifySelectTeamMembersOption();
-//		schedulePage.clickOnOfferOrAssignBtn();
-//		int updatedGutterCount = schedulePage.getgutterSize();
-//		List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
-//		List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
-//		verifyTeamCount(previousTeamCount,currentTeamCount);
-//		schedulePage.clickSaveBtn();
-//		HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
-//		Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
-//		verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
-//		schedulePage.clickOnSchedulePublishButton();
-//		//Schedule overview should show 5 week's schedule
-//
-//		launchMobileApp();
-//		LoginPageAndroid loginPageAndroid = mobilePageFactory.createMobileLoginPage();
-//		loginPageAndroid.clickFirstLoginBtn();
-//		loginPageAndroid.verifyLoginTitle("LOGIN");
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		schedulePage.clickOnDayView();
+		int previousGutterCount = schedulePage.getgutterSize();
+		scheduleNavigationTest(previousGutterCount);
+		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
+		Float scheduledHoursBeforeEditing = ScheduledHours.get("scheduledHours");
+		SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
+		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.compareCustomizeStartDay(textStartDay);
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.verifySelectTeamMembersOption();
+		schedulePage.clickOnOfferOrAssignBtn();
+		int updatedGutterCount = schedulePage.getgutterSize();
+		schedulePage.clickSaveBtn();
+		HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
+		Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
+		verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
+		schedulePage.clickOnSchedulePublishButton();
+		//Schedule overview should show 5 week's schedule
+
+		launchMobileApp();
+		LoginPageAndroid loginPageAndroid = mobilePageFactory.createMobileLoginPage();
+		loginPageAndroid.clickFirstLoginBtn();
+		loginPageAndroid.verifyLoginTitle("LOGIN");
 //		loginPageAndroid.selectEnterpriseName();
-//		loginPageAndroid.loginToLegionWithCredentialOnMobile("Gordon.M", "Gordon.M");
-//		loginPageAndroid.clickShiftOffers("Gordon.M");
-//	}
+		loginPageAndroid.loginToLegionWithCredentialOnMobile(getTeamMemberName(), propertyMap.get("MOBILE_PASSWORD"));
+		loginPageAndroid.clickShiftOffers(getTeamMemberName());
+
+
+	}
 
 
 	@MobilePlatform(platform = "Android")
@@ -871,6 +872,99 @@ public class SanityTest extends TestBase{
 	}
 
 
+	@MobilePlatform(platform = "Android")
+	@SanitySuite(sanity =  "Sanity")
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nishant")
+	@Enterprise(name = "ChezAldo_Enterprise")
+	@TestName(description = "Validate Shift offers functionality for Open, Swap and Cover")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateShiftOffers(String username, String password, String browser, String location) throws Exception {
+	  	launchMobileApp();
+	  	//Swap Request
+		LoginPageAndroid loginPageAndroid = mobilePageFactory.createMobileLoginPage();
+		loginPageAndroid.clickFirstLoginBtn();
+		loginPageAndroid.loginToLegionWithCredentialOnMobile("robbie.h", "kcanys2019");
+		loginPageAndroid.clickOnScheduleTab();
+		loginPageAndroid.clickTeamMemberWorkingForShift();
+		List<String> swapRequestorAndReceiverInfo = loginPageAndroid.getSwapRequestorAndReceiverInfo();
+		loginPageAndroid.clickSubmitBtn();
+		loginPageAndroid.navigateToReturntoHomePage();
+		loginPageAndroid.clickLogoutBtn();
+		loginPageAndroid.clickFirstLoginBtn();
+		loginPageAndroid.loginToLegionWithCredentialOnMobile("albert.f", mobileCredentials.get("MOBILE_PASSWORD"));
+		loginPageAndroid.clickShiftOffers("albert.f");
+		loginPageAndroid.clickOnSwapLink();
+		List<String> requestReceiverInfo = loginPageAndroid.getRequestorAndReceiverInfoOnSwapTab();
+		validateSwapRequestInfo(requestReceiverInfo, swapRequestorAndReceiverInfo);
+		loginPageAndroid.clickOnSwapShiftGrid();
+		loginPageAndroid.clickOnClaimBtn();
+		loginPageAndroid.clickOnTooBar();
+		loginPageAndroid.clickLogoutBtn();
+//	    Cover Request
+		loginPageAndroid.clickFirstLoginBtn();
+		loginPageAndroid.loginToLegionWithCredentialOnMobile("albert.f", mobileCredentials.get("MOBILE_PASSWORD"));
+		loginPageAndroid.clickOnScheduleTab();
+		loginPageAndroid.clickTeamMemberWorkingForShiftCover();
+		List<String> coverRequestorInfo = loginPageAndroid.getCoverRequestorInfo();
+		loginPageAndroid.clickSubmitBtn();
+		loginPageAndroid.clickSubmitBtn();
+		loginPageAndroid.navigateToReturntoHomePage();
+		loginPageAndroid.clickLogoutBtn();
+		loginPageAndroid.clickFirstLoginBtn();
+		loginPageAndroid.loginToLegionWithCredentialOnMobile("merritt.c", mobileCredentials.get("MOBILE_PASSWORD"));
+		loginPageAndroid.clickShiftOffers("merritt.c");
+		List<String> coverInfo = loginPageAndroid.getCoverRequestorInfoOnClaim();
+		validateSwapRequestInfo(coverInfo, coverRequestorInfo);
+		loginPageAndroid.clickOnClaimBtn();
+		loginPageAndroid.clickOnTooBar();
+		loginPageAndroid.clickLogoutBtn();
+		//Open Shift Request
+		loginPageAndroid.clickFirstLoginBtn();
+		loginPageAndroid.loginToLegionWithCredentialOnMobile(mobileCredentials.get("OPENSHIFT_USERNAME"), mobileCredentials.get("OPENSHIFT_PASSWORD"));
+		loginPageAndroid.clickOpenShiftOffers(mobileCredentials.get("OPENSHIFT_USERNAME"));
+		loginPageAndroid.clickOnClaimBtn();
+	}
+
+	@MobilePlatform(platform = "Android")
+	@SanitySuite(sanity =  "Sanity")
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nishant")
+	@Enterprise(name = "ChezAldo_Enterprise")
+	@TestName(description = "Validate the Create An Account button on Legion Application")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateCoverRequest(String username, String password, String browser, String location) throws Exception {
+		launchMobileApp();
+		LoginPageAndroid loginPageAndroid = mobilePageFactory.createMobileLoginPage();
+		loginPageAndroid.clickFirstLoginBtn();
+		loginPageAndroid.loginToLegionWithCredentialOnMobile(mobileCredentials.get("MOBILE_USERNAME"), mobileCredentials.get("MOBILE_PASSWORD"));
+		loginPageAndroid.clickOnScheduleTab();
+		loginPageAndroid.clickTeamMemberWorkingForShiftCover();
+		List<String> coverRequestorInfo = loginPageAndroid.getCoverRequestorInfo();
+		loginPageAndroid.clickSubmitBtn();
+		loginPageAndroid.clickSubmitBtn();
+		loginPageAndroid.navigateToReturntoHomePage();
+		loginPageAndroid.clickLogoutBtn();
+		loginPageAndroid.clickFirstLoginBtn();
+		loginPageAndroid.loginToLegionWithCredentialOnMobile("Carley.r", mobileCredentials.get("MOBILE_PASSWORD"));
+		loginPageAndroid.clickShiftOffers("Carley.r");
+		List<String> coverInfo = loginPageAndroid.getCoverRequestorInfoOnClaim();
+		validateSwapRequestInfo(coverInfo, coverRequestorInfo);
+		loginPageAndroid.clickOnClaimBtn();
+	}
+
+
+	public void validateSwapRequestInfo(List<String> requestReceiverInfoOnClaim, List<String> requestorAndReceiverInfoOnRequest){
+		for(int i=0; i<requestReceiverInfoOnClaim.size();i++){
+			if(requestReceiverInfoOnClaim.get(i).equals(requestorAndReceiverInfoOnRequest.get(i))){
+				SimpleUtils.pass("Requested info " + requestorAndReceiverInfoOnRequest.get(i)
+						+ " matches with the data displayed for Claim offer " + requestReceiverInfoOnClaim.get(i));
+			}else{
+				SimpleUtils.fail("Requested info " + requestorAndReceiverInfoOnRequest.get(i)
+						+ " not matching with the data displayed for Claim offer " + requestReceiverInfoOnClaim.get(i),true);
+			}
+		}
+	}
 
 
 }

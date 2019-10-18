@@ -329,7 +329,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			boolean isteamMemberFound = false;
 			if(isElementLoaded(teamMemberSearchBox, 10)) {
 				teamMemberSearchBox.sendKeys(username);
-				Thread.sleep(1000);
+				waitForSeconds(2);
 				if(teamMembersList.size() > 0) {
 					for(WebElement teamMember : teamMembersList) {
 						if(teamMember.getText().toLowerCase().contains(username.toLowerCase())) {

@@ -51,8 +51,8 @@ public class ControlsNewUITest extends TestBase{
 	}
 	
 	public enum usersAndRolesSubTabs{
-		AllUsers("All Users"),
-		AccessByJobTitles("Access by Job Titles"),
+		AllUsers("Users"),
+		AccessByJobTitles("Access Roles"),
 		Badges("Badges");
 		private final String value;
 		usersAndRolesSubTabs(final String newValue) {
