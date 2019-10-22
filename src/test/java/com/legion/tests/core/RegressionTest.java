@@ -36,14 +36,14 @@ public class RegressionTest extends TestBase{
 	  private static HashMap<String, String> schedulingPoliciesData = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SchedulingPoliciesData.json");
 	private static HashMap<String, String> usersAndRolesData = JsonUtil.getPropertiesFromJsonFile("src/test/resources/UserAndRoles.json");
 
-	  @Override
-	  @BeforeMethod
-	  public void firstTest(Method method, Object[] params) throws Exception {
-		  this.createDriver((String)params[0],"69","Window");
-	      visitPage(method);
-	      loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
-	    }
-	  
+	@Override
+	@BeforeMethod
+	public void firstTest(Method method, Object[] params) throws Exception {
+		this.createDriver((String)params[0],"69","Window");
+		visitPage(method);
+		loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+	}
+
 
 	public enum weekCount{
 			Zero(0),
@@ -387,7 +387,7 @@ public class RegressionTest extends TestBase{
 		for(int index = 0; index < scheduleWeekCount; index++)
 		{
 			if(index != 0)
-				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.One.getValue());
+				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.Two.getValue());
 
 			if(schedulePage.isGenerateButtonLoaded())
 			{

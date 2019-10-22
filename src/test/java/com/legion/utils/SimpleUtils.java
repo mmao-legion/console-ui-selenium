@@ -1681,10 +1681,15 @@ public class SimpleUtils {
 				System.err.println(e.getMessage());
 			}
 		}
-
-
-
 	}
 
+
+	//added by Nishant
+
+	public static int generateRandomNumbers(){
+		Random rand = new Random();
+		int rand_int = rand.nextInt(1000);
+		return rand_int;
+	}
 
 }

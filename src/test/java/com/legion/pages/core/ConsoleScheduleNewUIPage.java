@@ -4,6 +4,7 @@ import static com.legion.utils.MyThreadLocal.*;
 import static com.legion.utils.MyThreadLocal.setTeamMemberName;
 import static org.testng.Assert.fail;
 
+import com.gargoylesoftware.htmlunit.html.Keyboard;
 import com.legion.tests.core.ScheduleNewUITest;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
@@ -27,6 +28,7 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 
+import java.awt.*;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -2200,7 +2202,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	}
 
 	public void clickOnOfferOrAssignBtn() throws Exception{
-		if(isElementEnabled(btnOffer)){
+		if(isElementEnabled(btnOffer,5)){
 			click(btnOffer);
 		}else{
 			SimpleUtils.fail("Offer Or Assign Button is not clickable", false);
@@ -2535,6 +2537,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void generateOrUpdateAndGenerateSchedule() throws Exception {
         if (isElementEnabled(generateSheduleButton)) {
             click(generateSheduleButton);
+            openBudgetPopUp();
             openBudgetPopUpGenerateSchedule();
             if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
@@ -3027,8 +3030,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 					}
 				}
 			}
-		}else{
-			SimpleUtils.fail("Not able to found Scheduled status in SearchResult", false);
 		}
 
 		return ScheduleStatus;
@@ -3044,6 +3045,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 					break;
 				}else{
 					textSearch.clear();
+					if(i== searchAssignTeamMember.length-1){
+                        SimpleUtils.fail("There is no data found for given team member. Please provide some other input", false);
+                    }
 				}
 			}
 		}else{
@@ -3097,6 +3101,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         flag = verifyShiftDurationInComplianceImageIconPopUp(true);
 						if(flag){
 							SimpleUtils.pass("Worker status " +workerStatus.get(i).getText() + " matches with the expected result");
+                            click(infoIcon.get(i));
 							break;
 						}
                     }else{
@@ -3841,12 +3846,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> editListWagesHrs;
 
     public void openBudgetPopUpGenerateSchedule() throws Exception{
-        if(isElementLoaded(popUpGenerateScheduleTitleTxt,5)){
-            if(isElementEnabled(btnGenerateBudgetPopUP,5)){
-               click(btnGenerateBudgetPopUP);
-            }else{
-                SimpleUtils.fail("Generate btn not clickable on Budget pop up", false);
-            }
+        if(isElementEnabled(btnGenerateBudgetPopUP,5)){
+           click(btnGenerateBudgetPopUP);
+        }else{
+            SimpleUtils.fail("Generate btn not clickable on Budget pop up", false);
         }
     }
 
@@ -3860,12 +3863,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @FindBy(css = "input[ng-class='hoursFieldClass(budget)']")
+    private List<WebElement> inputHrs;
+    @FindBy(css = "tr.table-row.ng-scope")
+    private List<WebElement> budgetTableRow;
 
     public void fillBudgetValues(List<WebElement> element) throws Exception {
-        if(areListElementVisible(tblBudgetRow,5)){
-            for(int i=0; i<tblBudgetRow.size();i++){
-                editListWagesHrs.get(i).sendKeys("1");
+        if(areListElementVisible(budgetTableRow,5)){
+            for(int i=0; i<budgetTableRow.size()-1;i++){
+                click(editBudgetHrs.get(i));
+                int fillBudgetInNumbers = SimpleUtils.generateRandomNumbers();
+                inputHrs.get(i).sendKeys(String.valueOf(fillBudgetInNumbers));
             }
+        }else{
+            SimpleUtils.fail("Not able to see Budget table row for filling up the data",false);
         }
     }
 
