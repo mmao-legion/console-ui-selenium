@@ -326,26 +326,26 @@ public class ScheduleTest extends TestBase{
   		@Enterprise(name = "KendraScott2_Enterprise")
   		@TestName(description = "TP-102: LEG 5500 : Budget Hours shown in budget modal 715 hrs does not match the budgeted hours shown in schedule 1287 hrs")
   	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-  	    public void budgetHourInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
+  	    public void budgetInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
   	    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
   	    	schedulePage.clickOnScheduleConsoleMenuItem();
 			List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
-  	    	schedulePage.budgetHourInScheduleNBudgetedSmartCard(weekViewType.Next.getValue(), weekCount.Two.getValue());
+  	    	schedulePage.budgetInScheduleNBudgetSmartCard(weekViewType.Next.getValue(), weekCount.Two.getValue());
   	    }
 
-	@Automated(automated ="Automated")
-	@Owner(owner = "Gunjan")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "TP-102: LEG 5500 : Budget Wages shown in budget modal 715 hrs does not match the budgeted hours shown in schedule 1287 hrs")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void budgetWagesInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
-		schedulePage.budgetHourByWagesInScheduleNBudgetedSmartCard(weekViewType.Next.getValue(), weekCount.Two.getValue());
-	}
+//	@Automated(automated ="Automated")
+//	@Owner(owner = "Gunjan")
+//	@Enterprise(name = "KendraScott2_Enterprise")
+//	@TestName(description = "TP-102: LEG 5500 : Budget Wages shown in budget modal 715 hrs does not match the budgeted hours shown in schedule 1287 hrs")
+//	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+//	public void budgetWagesInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
+//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+//		schedulePage.clickOnScheduleConsoleMenuItem();
+//		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+//		schedulePage.budgetHourByWagesInScheduleNBudgetedSmartCard(weekViewType.Next.getValue(), weekCount.Two.getValue());
+//	}
 	    
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")

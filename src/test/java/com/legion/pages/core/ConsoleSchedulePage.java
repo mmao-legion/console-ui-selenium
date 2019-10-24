@@ -1412,7 +1412,12 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 		
 	}
 
-	@Override
+    @Override
+    public void budgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount) {
+
+    }
+
+    @Override
 	public String getsmartCardTextByLabel(String cardLabel) {
 		// TODO Auto-generated method stub
 		return null;
@@ -1432,129 +1437,134 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 //
 //	}
 
-	@Override
-	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView,int weekCount) {
-		waitForSeconds(3);
-		for(int i = 0; i < weekCount; i++)
-			{
-				float totalBudgetedHourForSmartCard=0.0f;
-				float totalScheduledHourIfBudgetEntered=0.0f;
-				if(nextWeekView.toLowerCase().contains("next") || nextWeekView.toLowerCase().contains("future"))
-				{
-					try {
-						if(isElementLoaded(schedulesForWeekOnOverview.get(0))) {
-							waitForSeconds(3);
-							click(schedulesForWeekOnOverview.get(i));
-							waitForSeconds(4);
-							String[] daypickers = daypicker.getText().split("\n");
-							String[] budgetDisplayOnSmartCard = budgetOnbudgetSmartCard.getText().split(" ");
-							String budgetOnScheduleSmartcard = budgetDisplayOnScheduleSmartcard.get(0).getText();
-							if (budgetOnbudgetSmartCard.getText().equalsIgnoreCase("-- Hours")) {
-								SimpleUtils.pass(daypickers[1] + " week has no budget entered");
-								waitForSeconds(2);
-								checkElementVisibility(returnToOverviewTab);
-								click(returnToOverviewTab);
-							} else {
-								click(enterBudgetLink);
-								waitForSeconds(3);
-								for (int j = 1; j < guidanceHour.size(); j++) {
-									totalBudgetedHourForSmartCard = totalBudgetedHourForSmartCard + Float.parseFloat(budgetEditHours.get(j - 1).getAttribute("value"));
-									if (((Float.parseFloat(budgetEditHours.get(j - 1).getAttribute("value"))) == 0)) {
-										totalScheduledHourIfBudgetEntered = totalScheduledHourIfBudgetEntered + Float.parseFloat(guidanceHour.get(j - 1).getText());
+//	@Override
+//	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView,int weekCount) {
+//		waitForSeconds(3);
+//		for(int i = 0; i < weekCount; i++)
+//			{
+//				float totalBudgetedHourForSmartCard=0.0f;
+//				float totalScheduledHourIfBudgetEntered=0.0f;
+//				if(nextWeekView.toLowerCase().contains("next") || nextWeekView.toLowerCase().contains("future"))
+//				{
+//					try {
+//						if(isElementLoaded(schedulesForWeekOnOverview.get(0))) {
+//							waitForSeconds(3);
+//							click(schedulesForWeekOnOverview.get(i));
+//							waitForSeconds(4);
+//							String[] daypickers = daypicker.getText().split("\n");
+//							String[] budgetDisplayOnSmartCard = budgetOnbudgetSmartCard.getText().split(" ");
+//							String budgetOnScheduleSmartcard = budgetDisplayOnScheduleSmartcard.get(0).getText();
+//							if (budgetOnbudgetSmartCard.getText().equalsIgnoreCase("-- Hours")) {
+//								SimpleUtils.pass(daypickers[1] + " week has no budget entered");
+//								waitForSeconds(2);
+//								checkElementVisibility(returnToOverviewTab);
+//								click(returnToOverviewTab);
+//							} else {
+//								click(enterBudgetLink);
+//								waitForSeconds(3);
+//								for (int j = 1; j < guidanceHour.size(); j++) {
+//									totalBudgetedHourForSmartCard = totalBudgetedHourForSmartCard + Float.parseFloat(budgetEditHours.get(j - 1).getAttribute("value"));
+//									if (((Float.parseFloat(budgetEditHours.get(j - 1).getAttribute("value"))) == 0)) {
+//										totalScheduledHourIfBudgetEntered = totalScheduledHourIfBudgetEntered + Float.parseFloat(guidanceHour.get(j - 1).getText());
+//
+//									} else {
+//										totalScheduledHourIfBudgetEntered = totalScheduledHourIfBudgetEntered + Float.parseFloat(budgetEditHours.get(j - 1).getAttribute("value"));
+//									}
+//								}
+//                                if (totalBudgetedHourForSmartCard == (Float.parseFloat(budgetDisplayOnSmartCard[0]))) {
+//									SimpleUtils.pass("Budget " + (Float.parseFloat(budgetDisplayOnSmartCard[0])) +" for week " +daypickers[1] + " on budget smartcard matches the budget entered " + totalBudgetedHourForSmartCard);
+//								} else {
+//									SimpleUtils.fail("Budget " + (Float.parseFloat(budgetDisplayOnSmartCard[0]))  +" for week " +daypickers[1] + " on budget smartcard doesn't match the budget entered " + totalBudgetedHourForSmartCard, false);
+//								}
+//
+//                                float finaltotalScheduledHourIfBudgetEntered = (float) (Math.round(totalScheduledHourIfBudgetEntered * 10) / 10.0);;
+//								if (finaltotalScheduledHourIfBudgetEntered == (Float.parseFloat(budgetOnScheduleSmartcard))) {
+//									SimpleUtils.pass("Budget " + (Float.parseFloat(budgetOnScheduleSmartcard))  +" for week " +daypickers[1] + " on schedule smartcard matches the budget entered " + finaltotalScheduledHourIfBudgetEntered);
+//								} else {
+//									SimpleUtils.fail("Budget " + (Float.parseFloat(budgetOnScheduleSmartcard))  +" for week " +daypickers[1] + " on schedule smartcard doesn't match the budget entered " + finaltotalScheduledHourIfBudgetEntered, false);
+//								}
+//								checkElementVisibility(enterBudgetCancelButton);
+//								click(enterBudgetCancelButton);
+//								checkElementVisibility(returnToOverviewTab);
+//								click(returnToOverviewTab);
+//							}
+//						}
+//					}
+//
+//					catch (Exception e) {
+//					SimpleUtils.fail("Budget pop-up not opening ",false);
+//					}
+//				}
+//			}
+//	}
+//
+//    public void budgetHourByWagesInScheduleNBudgetedSmartCard(String nextWeekView,int weekCount) {
+//        waitForSeconds(3);
+//        for(int i = 0; i < weekCount; i++)
+//        {
+//            float totalBudgetedWagesForSmartCard=0.0f;
+//            float totalScheduledWagesIfBudgetEntered=0.0f;
+//            if(nextWeekView.toLowerCase().contains("next") || nextWeekView.toLowerCase().contains("future"))
+//            {
+//                try {
+//                    if (isElementLoaded(schedulesForWeekOnOverview.get(0))) {
+//                        waitForSeconds(3);
+//                        click(schedulesForWeekOnOverview.get(i));
+//                        waitForSeconds(4);
+//                        String[] daypickers = daypicker.getText().split("\n");
+//                        String[] budgetDisplayOnSmartCard = budgetOnbudgetSmartCard.getText().split(" ");
+//                        String budgetOnScheduleSmartcard = budgetDisplayOnScheduleSmartcard.get(0).getText();
+//                        if (budgetOnbudgetSmartCard.getText().equalsIgnoreCase("-- Hours")) {
+//                            SimpleUtils.pass(daypickers[1] + " week has no budget entered");
+//                            waitForSeconds(2);
+//                            checkElementVisibility(returnToOverviewTab);
+//                            click(returnToOverviewTab);
+//                        } else {
+//                            click(enterBudgetLink);
+//                            waitForSeconds(3);
+//                            for (int j = 1; j < guidanceHour.size(); j++) {
+//                                totalBudgetedWagesForSmartCard = totalBudgetedWagesForSmartCard + Float.parseFloat(budgetEditHours.get(j - 1).getAttribute("value"));
+//                                if (((Float.parseFloat(budgetEditHours.get(j - 1).getAttribute("value"))) == 0)) {
+//                                    totalScheduledWagesIfBudgetEntered = totalScheduledWagesIfBudgetEntered + Float.parseFloat(guidanceHour.get(j - 1).getText());
+//
+//                                } else {
+//                                    totalScheduledWagesIfBudgetEntered = totalScheduledWagesIfBudgetEntered + Float.parseFloat(budgetEditHours.get(j - 1).getAttribute("value"));
+//                                }
+//                            }
+//                            if (totalBudgetedWagesForSmartCard == (Float.parseFloat(budgetDisplayOnSmartCard[0]))) {
+//                                SimpleUtils.pass("Budget " + (Float.parseFloat(budgetDisplayOnSmartCard[0])) + " for week " + daypickers[1] + " on budget smartcard matches the budget entered " + totalBudgetedWagesForSmartCard);
+//                            } else {
+//                                SimpleUtils.fail("Budget " + (Float.parseFloat(budgetDisplayOnSmartCard[0])) + " for week " + daypickers[1] + " on budget smartcard doesn't match the budget entered " + totalBudgetedWagesForSmartCard, false);
+//                            }
+//
+//                            float finaltotalScheduledHourIfBudgetEntered = (float) (Math.round(totalScheduledWagesIfBudgetEntered * 10) / 10.0);
+//                            ;
+//                            if (finaltotalScheduledHourIfBudgetEntered == (Float.parseFloat(budgetOnScheduleSmartcard))) {
+//                                SimpleUtils.pass("Budget " + (Float.parseFloat(budgetOnScheduleSmartcard)) + " for week " + daypickers[1] + " on schedule smartcard matches the budget entered " + finaltotalScheduledHourIfBudgetEntered);
+//                            } else {
+//                                SimpleUtils.fail("Budget " + (Float.parseFloat(budgetOnScheduleSmartcard)) + " for week " + daypickers[1] + " on schedule smartcard doesn't match the budget entered " + finaltotalScheduledHourIfBudgetEntered, false);
+//                            }
+//                            checkElementVisibility(enterBudgetCancelButton);
+//                            click(enterBudgetCancelButton);
+//                            checkElementVisibility(returnToOverviewTab);
+//                            click(returnToOverviewTab);
+//                        }
+//                    }
+//                }
+//                catch (Exception e) {
+//                    SimpleUtils.fail("Budget pop-up not opening ",false);
+//                }
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void budgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount) {
+//
+//    }
 
-									} else {
-										totalScheduledHourIfBudgetEntered = totalScheduledHourIfBudgetEntered + Float.parseFloat(budgetEditHours.get(j - 1).getAttribute("value"));
-									}
-								}
-                                if (totalBudgetedHourForSmartCard == (Float.parseFloat(budgetDisplayOnSmartCard[0]))) {
-									SimpleUtils.pass("Budget " + (Float.parseFloat(budgetDisplayOnSmartCard[0])) +" for week " +daypickers[1] + " on budget smartcard matches the budget entered " + totalBudgetedHourForSmartCard);
-								} else {
-									SimpleUtils.fail("Budget " + (Float.parseFloat(budgetDisplayOnSmartCard[0]))  +" for week " +daypickers[1] + " on budget smartcard doesn't match the budget entered " + totalBudgetedHourForSmartCard, false);
-								}
 
-                                float finaltotalScheduledHourIfBudgetEntered = (float) (Math.round(totalScheduledHourIfBudgetEntered * 10) / 10.0);;
-								if (finaltotalScheduledHourIfBudgetEntered == (Float.parseFloat(budgetOnScheduleSmartcard))) {
-									SimpleUtils.pass("Budget " + (Float.parseFloat(budgetOnScheduleSmartcard))  +" for week " +daypickers[1] + " on schedule smartcard matches the budget entered " + finaltotalScheduledHourIfBudgetEntered);
-								} else {
-									SimpleUtils.fail("Budget " + (Float.parseFloat(budgetOnScheduleSmartcard))  +" for week " +daypickers[1] + " on schedule smartcard doesn't match the budget entered " + finaltotalScheduledHourIfBudgetEntered, false);
-								}
-								checkElementVisibility(enterBudgetCancelButton);
-								click(enterBudgetCancelButton);
-								checkElementVisibility(returnToOverviewTab);
-								click(returnToOverviewTab);
-							}
-						}
-					}
-
-					catch (Exception e) {
-					SimpleUtils.fail("Budget pop-up not opening ",false);
-					}
-				}
-			}
-	}
-
-    public void budgetHourByWagesInScheduleNBudgetedSmartCard(String nextWeekView,int weekCount) {
-        waitForSeconds(3);
-        for(int i = 0; i < weekCount; i++)
-        {
-            float totalBudgetedWagesForSmartCard=0.0f;
-            float totalScheduledWagesIfBudgetEntered=0.0f;
-            if(nextWeekView.toLowerCase().contains("next") || nextWeekView.toLowerCase().contains("future"))
-            {
-                try {
-                    if (isElementLoaded(schedulesForWeekOnOverview.get(0))) {
-                        waitForSeconds(3);
-                        click(schedulesForWeekOnOverview.get(i));
-                        waitForSeconds(4);
-                        String[] daypickers = daypicker.getText().split("\n");
-                        String[] budgetDisplayOnSmartCard = budgetOnbudgetSmartCard.getText().split(" ");
-                        String budgetOnScheduleSmartcard = budgetDisplayOnScheduleSmartcard.get(0).getText();
-                        if (budgetOnbudgetSmartCard.getText().equalsIgnoreCase("-- Hours")) {
-                            SimpleUtils.pass(daypickers[1] + " week has no budget entered");
-                            waitForSeconds(2);
-                            checkElementVisibility(returnToOverviewTab);
-                            click(returnToOverviewTab);
-                        } else {
-                            click(enterBudgetLink);
-                            waitForSeconds(3);
-                            for (int j = 1; j < guidanceHour.size(); j++) {
-                                totalBudgetedWagesForSmartCard = totalBudgetedWagesForSmartCard + Float.parseFloat(budgetEditHours.get(j - 1).getAttribute("value"));
-                                if (((Float.parseFloat(budgetEditHours.get(j - 1).getAttribute("value"))) == 0)) {
-                                    totalScheduledWagesIfBudgetEntered = totalScheduledWagesIfBudgetEntered + Float.parseFloat(guidanceHour.get(j - 1).getText());
-
-                                } else {
-                                    totalScheduledWagesIfBudgetEntered = totalScheduledWagesIfBudgetEntered + Float.parseFloat(budgetEditHours.get(j - 1).getAttribute("value"));
-                                }
-                            }
-                            if (totalBudgetedWagesForSmartCard == (Float.parseFloat(budgetDisplayOnSmartCard[0]))) {
-                                SimpleUtils.pass("Budget " + (Float.parseFloat(budgetDisplayOnSmartCard[0])) + " for week " + daypickers[1] + " on budget smartcard matches the budget entered " + totalBudgetedWagesForSmartCard);
-                            } else {
-                                SimpleUtils.fail("Budget " + (Float.parseFloat(budgetDisplayOnSmartCard[0])) + " for week " + daypickers[1] + " on budget smartcard doesn't match the budget entered " + totalBudgetedWagesForSmartCard, false);
-                            }
-
-                            float finaltotalScheduledHourIfBudgetEntered = (float) (Math.round(totalScheduledWagesIfBudgetEntered * 10) / 10.0);
-                            ;
-                            if (finaltotalScheduledHourIfBudgetEntered == (Float.parseFloat(budgetOnScheduleSmartcard))) {
-                                SimpleUtils.pass("Budget " + (Float.parseFloat(budgetOnScheduleSmartcard)) + " for week " + daypickers[1] + " on schedule smartcard matches the budget entered " + finaltotalScheduledHourIfBudgetEntered);
-                            } else {
-                                SimpleUtils.fail("Budget " + (Float.parseFloat(budgetOnScheduleSmartcard)) + " for week " + daypickers[1] + " on schedule smartcard doesn't match the budget entered " + finaltotalScheduledHourIfBudgetEntered, false);
-                            }
-                            checkElementVisibility(enterBudgetCancelButton);
-                            click(enterBudgetCancelButton);
-                            checkElementVisibility(returnToOverviewTab);
-                            click(returnToOverviewTab);
-                        }
-                    }
-                }
-                catch (Exception e) {
-                    SimpleUtils.fail("Budget pop-up not opening ",false);
-                }
-            }
-        }
-    }
-
-
-	@Override
+    @Override
 	public void validatingGenrateSchedule() throws Exception {
         // TODO Auto-generated method stub
     }

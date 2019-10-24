@@ -88,8 +88,9 @@ public interface SchedulePage {
 	public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception;
 	public void validateBudgetPopUpHeader(String nextWeekView, int weekCount);
 	public void noBudgetDisplayWhenBudgetNotEntered(String nextWeekView, int weekCount);
-	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView, int weekCount);
-	public void budgetHourByWagesInScheduleNBudgetedSmartCard(String nextWeekView,int weekCount);
+//	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView, int weekCount);
+//	public void budgetHourByWagesInScheduleNBudgetedSmartCard(String nextWeekView,int weekCount);
+	public void budgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount);
 	public void disableNextWeekArrow() throws Exception;
 	public void clickScheduleDraftAndGuidanceStatus(List<String> overviewScheduleWeeksStatus);
 	public void editBudgetHours();
