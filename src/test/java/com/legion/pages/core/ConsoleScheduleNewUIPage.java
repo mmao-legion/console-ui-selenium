@@ -4,6 +4,7 @@ import static com.legion.utils.MyThreadLocal.*;
 import static com.legion.utils.MyThreadLocal.setTeamMemberName;
 import static org.testng.Assert.fail;
 
+import com.gargoylesoftware.htmlunit.html.Keyboard;
 import com.legion.tests.core.ScheduleNewUITest;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
@@ -2597,7 +2598,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void noBudgetDisplayWhenBudgetNotEntered(String nextWeekView, int weekCount) {
+    public void noBudgetDisplayWhenBudgetNotEntered(String nextWeekView,
+                                                    int weekCount) {
         // TODO Auto-generated method stub
         String valueWhenBudgetNotEntered = "-- Hours";
 
@@ -4272,7 +4274,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public void openBudgetPopUpGenerateSchedule() throws Exception{
         if(isElementEnabled(btnGenerateBudgetPopUP,5)){
-           click(btnGenerateBudgetPopUP);
+            click(btnGenerateBudgetPopUP);
         }else{
             SimpleUtils.fail("Generate btn not clickable on Budget pop up", false);
         }
