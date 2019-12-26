@@ -169,6 +169,13 @@ public class MyThreadLocal {
 		return comment.get();
 	}
 
+	public static void setBudgetTolerance(Integer value) {
+		budgetTolerance.set(value);
+	}
+	public static Integer getBudgetTolerance() {
+		return budgetTolerance.get();
+	}
+
 	public static void setFailedComment(List<String> value) {
 		failedComment.set(value);
 	}

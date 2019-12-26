@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -325,7 +324,7 @@ public class ScheduleTest extends TestBase{
 	    @Automated(automated ="Automated")
   		@Owner(owner = "Gunjan")
   		@Enterprise(name = "KendraScott2_Enterprise")
-  		@TestName(description = "TP-102: LEG 5500 : Budget Hours shown in budget modal 715 hrs does not match the budgeted hours shown in schedule 1287 hrs")
+  		@TestName(description = "Validate calculation of budget values for budget and schedule smartcard when budget is by hours or wages")
   	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
   	    public void budgetInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
   	    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -349,6 +348,20 @@ public class ScheduleTest extends TestBase{
 		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
 		schedulePage.budgetInScheduleNBudgetSmartCard(weekViewType.Next.getValue(), weekCount.Two.getValue(), tolerance);
 	}
+
+
+//	@Automated(automated ="Automated")
+//	@Owner(owner = "Gunjan")
+//	@Enterprise(name = "KendraScott2_Enterprise")
+//	@TestName(description = "Validate the budget calculation when budget is modified for any schedule week")
+//	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+//	public void updateBudgetInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
+//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+//		schedulePage.clickOnScheduleConsoleMenuItem();
+//		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+//		schedulePage.updatebudgetInScheduleNBudgetSmartCard(weekViewType.Next.getValue(), weekCount.One.getValue());
+//	}
 
 //	@Automated(automated ="Automated")
 //	@Owner(owner = "Gunjan")

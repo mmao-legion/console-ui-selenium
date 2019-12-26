@@ -1076,4 +1076,43 @@ public class TimeSheetTest extends TestBase{
 
 	}
 
+    @Automated(automated =  "Automated")
+    @Owner(owner = "Nishant")
+    @SanitySuite(sanity =  "Sanity")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Validate Due Date SmartCard for Manager and PayrollAdmin")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void validateDueDateSmartCardAsStoreManager(String browser, String username, String password, String location)
+            throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+        controlsNewUIPage.clickOnControlsTimeAndAttendanceCard();
+        controlsNewUIPage.clickOnGlobalLocationButton();
+		String timesheetApprovalVal = controlsNewUIPage.getTimeSheetApprovalSelectedOption(true);
+		LocalDate now = LocalDate.now();
+		timeSheetPage.clickOnTimeSheetConsoleMenu();
+        SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+		timeSheetPage.clickOnPPWeeklyDuration();
+		String activeDay = timeSheetPage.getActiveDayWeekOrPayPeriod();
+		String endOfPayPeriod = activeDay.substring(activeDay.length()-2).trim();
+		String timesheetDueDate = timeSheetPage.verifyTimesheetDueHeader();
+		LocalDate wanted = LocalDate.now().plusDays(Integer.parseInt(timesheetDueDate));
+		String dateWanted = String.valueOf(wanted.getDayOfMonth());
+		String dueDate = timeSheetPage.verifyTimesheetSmartCard();
+		validateDueDate(dueDate, dateWanted, timesheetApprovalVal, endOfPayPeriod);
+    }
+
+    public static void validateDueDate(String dueDate, String dateWanted, String timesheetApprovalVal, String endOfPayPeriod){
+		if(dueDate.contains(dateWanted)){
+			SimpleUtils.pass("Timesheet Due Date value is " + timesheetApprovalVal + " days after the end of the " + endOfPayPeriod + " which is " + dueDate);
+		}else{
+			SimpleUtils.fail("Timesheet Due Date value is not " + timesheetApprovalVal + " days after the end of the pay period which is incorrect behavior",false);
+		}
+	}
+
+
 }

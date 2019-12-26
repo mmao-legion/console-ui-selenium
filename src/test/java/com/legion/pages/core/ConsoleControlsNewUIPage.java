@@ -179,7 +179,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	
 	@FindBy(css = "question-input[question-title=\"Timesheet export format\"]")
 	private WebElement timeSheetExportFormatDiv;
-	
+
+	@FindBy(css = "question-input[question-title*=\"Timesheet approval is due for Manager\"]")
+	private WebElement timeSheetApprovalDueForManagerDiv;
+
+	@FindBy(css = "question-input[question-title*=\"Timesheet approval is due for Payroll\"]")
+	private WebElement timeSheetApprovalDueForPayrollAdminDiv;
+
 	@FindBy(css = "form-section[form-title=\"Shifts\"]")
 	private WebElement schedulingPoliciesShiftFormSectionDiv;
 	
@@ -283,11 +289,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private List<WebElement> locationName;
 	
 	String timeSheetHeaderLabel = "Controls";
-
-	@FindBy(css = "question-input[question-title*=\"Timesheet approval is due for Manager\"]")
-	private WebElement timeSheetApprovalDueForManagerDiv;
-	@FindBy(css = "question-input[question-title*=\"Timesheet approval is due for Payroll\"]")
-	private WebElement timeSheetApprovalDueForPayrollAdminDiv;
 	
 	@Override
 	public void clickOnControlsConsoleMenu() throws Exception {
@@ -4886,7 +4887,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	}
 
-	//added by Nishant
+  //added by Nishant
+
 	public String getTimeSheetApprovalSelectedOption(boolean byManager) throws Exception {
 		String selectedOptionLabel = "";
 		if(byManager){
@@ -4896,6 +4898,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 		return selectedOptionLabel;
 	}
+
 	public String getSelectionOptionValue(WebElement timesheetDueDateAccess) throws Exception{
 		String selectedOptionLabel = "";
 		if(isElementLoaded(timesheetDueDateAccess)) {
@@ -4911,7 +4914,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Controls Page: TimeSheet Approval section loaded.", false);
 		return selectedOptionLabel;
 	}
-
 
 
 }

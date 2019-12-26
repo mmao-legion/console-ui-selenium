@@ -1812,4 +1812,20 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void openBudgetPopUpGenerateSchedule() throws Exception{
 
     }
+
+    public void updatebudgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount) {
+
+    }
+
+    public void selectTeamMembersOptionForScheduleForClopening() throws Exception{
+
+    }
+
+    public void verifyClopeningHrs() throws Exception {
+
+    }
+
+    public void clickOnPreviousDaySchedule(String activeDay) throws Exception {
+
+    }
 }

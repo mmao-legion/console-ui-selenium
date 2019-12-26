@@ -226,8 +226,5 @@ public interface ControlsNewUIPage {
 											 String planningWindowQuestion, String userCredential) throws Exception;
 	public void verifySchedulePlanningWindowUpdationValues(String planningWindowAdvanceWeeks, List<String> selectionOptionLabelAfterUpdation)
 			throws Exception;
-
 	public String getTimeSheetApprovalSelectedOption(boolean byManager) throws Exception;
-
-
 }
