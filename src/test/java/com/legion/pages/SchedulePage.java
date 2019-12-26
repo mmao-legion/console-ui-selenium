@@ -139,6 +139,9 @@ public interface SchedulePage {
 	public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception;
 	public void clickOnNextDaySchedule(String activeDay) throws Exception;
 	public void selectTeamMembersOptionForSchedule() throws Exception;
+	public void selectTeamMembersOptionForScheduleForClopening() throws Exception;
+	public void verifyClopeningHrs() throws Exception;
+	public void clickOnPreviousDaySchedule(String activeDay) throws Exception;
 	public void verifyActiveScheduleType() throws Exception;
 	public List<Float> validateScheduleAndBudgetedHours() throws Exception;
 	public void compareHoursFromScheduleAndDashboardPage(List<Float> totalHoursFromSchTbl) throws Exception;
@@ -152,4 +155,5 @@ public interface SchedulePage {
 	public List<String> getLocationSummaryDataFromSchedulePage() throws Exception;
 	public void compareLocationSummaryFromDashboardAndSchedule(List<String> ListLocationSummaryOnDashboard, List<String> ListLocationSummaryOnSchedule);
 	public void openBudgetPopUpGenerateSchedule() throws Exception;
+	public void updatebudgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount);
 }

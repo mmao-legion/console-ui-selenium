@@ -906,10 +906,11 @@ public class SimpleUtils {
 					if(getFailedComment()== null){
 						failedCommentSection.add(comment);
 						setFailedComment(failedCommentSection);
-					}else{
-						getFailedComment().add(comment);
-						setFailedComment(getFailedComment());
 					}
+//					else{
+//						getFailedComment().add(comment);
+//						setFailedComment(getFailedComment());
+//					}
 				}
 			}
 			String responseReq = JSONValue.toJSONString(data);
@@ -998,7 +999,8 @@ public class SimpleUtils {
 					}
 				}
 
-				if(TestRunPassStatus >0){
+//				if(TestRunPassStatus >0){
+				if(commentSectionIndex.isEmpty()){
 					Map<String, Object> data = new HashMap<String, Object>();
 					data.put("results",cases);
 					for ( int testId : testIds ) {
@@ -1015,10 +1017,14 @@ public class SimpleUtils {
 				}else{
 					Map<String, Object> data = new HashMap<String, Object>();
 					data.put("results",cases);
+					listCommentSection.add("Failed");
 					for ( int testId : testIds ) {
 						for( int j=0; j<listCommentSection.size();j++) {
 							for(int k=0; k<commentSectionIndex.size();k++){
 								if(j == Integer.parseInt(commentSectionIndex.get(k).toString())){
+									statusId = statusFailID;
+									break;
+								}else if(j==listCommentSection.size()-1){
 									statusId = statusFailID;
 									break;
 								}else{
@@ -1030,6 +1036,7 @@ public class SimpleUtils {
 							singleCase.put("status_id", statusId);
 							singleCase.put("comment", listCommentSection.get(j));
 							cases.add(singleCase);
+
 						}
 					}
 					String responseReq = JSONValue.toJSONString(data);

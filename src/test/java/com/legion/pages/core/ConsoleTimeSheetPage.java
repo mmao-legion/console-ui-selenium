@@ -119,6 +119,9 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy(xpath = "//div[@ng-show='!forbidModeChange']//span[text()='Week']")
 	private WebElement weekViewButton;
 
+	@FindBy(xpath = "//div[@ng-show='!forbidModeChange']//span[text()='PP Weekly']")
+	private WebElement ppweeklyViewButton;
+
 	@FindBy(css="div.lg-button-group-last")
 	private WebElement payPeriodBtn;
 	
@@ -252,6 +255,19 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy(css = "div.timesheet-details-modal__title-span")
 	private WebElement TSPopupDetailsWorkerNameAndShiftDay;
 
+	//added by Nishant
+
+	@FindBy(css = "lg-smart-card[heading='Due Date'] content-box")
+	private WebElement dueDateSmartCard;
+
+	@FindBy(css = "lg-smart-card[heading='Due Date'] div[ng-if='$ctrl.heading']")
+	private WebElement dueDateHeader;
+
+	@FindBy(css = "lg-smart-card[heading='Due Date'] div[ng-if='$ctrl.main']")
+	private WebElement dueDateValue;
+
+	@FindBy(css = "lg-smart-card[heading='Due Date'] div[ng-if='$ctrl.note']")
+	private WebElement dueDateTimesheetNote;
 
 	String timeSheetHeaderLabel = "Timesheet";
 	String locationFilterSpecificLocations = null;
@@ -961,12 +977,24 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("Timesheet: WeekView Button not loaded!", false);
 	}
 
+   //added by Nishant
 
-	
+	public void clickOnPPWeeklyDuration() throws Exception {
+		String activeButtonClassKeyword = "selected";
+		if(isElementLoaded(ppweeklyViewButton))
+		{
+			if(! ppweeklyViewButton.getAttribute("class").toLowerCase().contains(activeButtonClassKeyword))
+			{
+				click(ppweeklyViewButton);
+				SimpleUtils.pass("Timesheet duration type '"+ppweeklyViewButton.getText()+"' selected successfully.");
+			}
+		}
+		else
+			SimpleUtils.fail("Timesheet: PPWeeklyView Button not loaded!", false);
+	}
 
 	@Override
-	public void clickOnDayView() throws Exception
-	{
+	public void clickOnDayView() throws Exception {
 		String activeButtonClassKeyword = "selected";
 		if(isElementLoaded(timeSheetDayViewBtn))
 		{
@@ -1932,6 +1960,51 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("Timesheet detail pop up not loaded Successfullly",false);
 		}
 		return timesheetPopupDetailsWorkerNameAndShiftDay;
+	}
+
+	//added by Nishant
+
+	public String verifyTimesheetSmartCard() throws Exception {
+		String valDueDate ="";
+        String finalDueDate ="";
+	    if(isElementEnabled(dueDateSmartCard,5)){
+			SimpleUtils.pass("Timesheet Due Date smart card loaded Successfullly");
+            verifyDueDateheader();
+            if(isElementLoaded(dueDateValue,5)){
+                valDueDate = dueDateValue.getText();
+                String[] arrValDueDate = valDueDate.split(" ");
+                finalDueDate = arrValDueDate[1];
+            }
+		}else{
+			SimpleUtils.fail("Timesheet Due Date smart card not loaded Successfullly",false);
+		}
+	    return valDueDate;
+	}
+
+	public void verifyDueDateheader() throws Exception {
+        if(isElementLoaded(dueDateHeader,5)){
+            if(dueDateHeader.getText().equalsIgnoreCase("DUE DATE")){
+                SimpleUtils.pass("Timesheet Due Date smart card header is " + dueDateHeader.getText() );
+            }
+        }else{
+            SimpleUtils.fail("Timesheet Due Date smart card Header loaded Successfullly",true);
+        }
+    }
+
+	public String verifyTimesheetDueHeader() throws Exception {
+		String timesheetDueDate ="";
+		String timesheetDueDateValue ="";
+		LocalDate now = LocalDate.now();
+		if(isElementEnabled(dueDateSmartCard,5)){
+			if(isElementLoaded(dueDateTimesheetNote,5)){
+				timesheetDueDate = dueDateTimesheetNote.getText();
+				timesheetDueDateValue= timesheetDueDate.replaceAll("[^0-9]", "");
+				SimpleUtils.pass("Timesheet Due Date is shown in Smart card as " + dueDateTimesheetNote);
+			}
+		}else{
+			SimpleUtils.fail("Timesheet Due Date smart card not loaded Successfullly",false);
+		}
+		return timesheetDueDateValue;
 	}
 
 

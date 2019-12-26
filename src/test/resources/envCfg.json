@@ -1,8 +1,8 @@
 {
-  "CHROME_DRIVER_PATH": "C:\\Users\\nishant08\\Downloads\\chromedriver\\chromedriver.exe",
+  "CHROME_DRIVER_PATH": "D:\\LegionAutomation\\console-ui-selenium\\chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "D:\\geckodriver.exe",
  "DEVURL": "https://mobilestage.legion.work/",
- "QAURL": "https://staging-enterprise.dev.legion.work/",
+ "QAURL": "https://rc-enterprise.dev.legion.work/",
  "Screenshot_Path": "D:\\DevelopZorang15March\\console-ui-selenium",
  "ENTERPRISE" : "LegionCoffee2",
  "Coffee_Enterprise" : "LegionCoffee",
@@ -33,10 +33,10 @@
  "scheduleWeekCount" : "6",
  "WeekStartOn" : "MON",
  "appiumServerPath" : "C:\\Program Files\\nodejs\\node.exe",
- "appiumJsPath" : "C:\\Users\\nishant08\\AppData\\Local\\Programs\\Appium\\resources\\app\\node_modules\\appium\\lib\\appium.js",
+ "appiumJsPath" : "C:\\Users\\nishant08\\AppData\\Local\\Programs\\Appium\\resources1\\app\\node_modules\\appium\\lib\\appium.js",
  "deviceName" : "OnePlus 6T",
  "platformVersion" : "9",
  "isParallelBrowser" : "false",
- "Download_File_Default_Dir" : "C:\\Users\\nishant08\\Downloads",
+ "Download_File_Default_Dir" : "C:\\Users\\Lenovo\\Downloads",
  "isHeadlessBrowser" : "false"
 }

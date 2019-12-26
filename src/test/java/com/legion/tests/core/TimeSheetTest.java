@@ -2,6 +2,7 @@ package com.legion.tests.core;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,9 +64,9 @@ public class TimeSheetTest extends TestBase{
 	@Override
 	@BeforeMethod
 	public void firstTest(Method method, Object[] params) throws Exception {
-//		  this.createDriver((String) params[0], "68", "Linux");
-//	      visitPage(method);
-//	      loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+		  this.createDriver((String) params[0], "68", "Linux");
+	      visitPage(method);
+	      loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
 	}
 	
 
@@ -883,9 +884,9 @@ public class TimeSheetTest extends TestBase{
 	}
 	
 	@Automated(automated ="Automated")
-	@Owner(owner = "Naval")
+	@Owner(owner = "Gunjan")
 	@Enterprise(name = "Coffee_Enterprise")
-	@TestName(description = "TP-153 : Validate Export timesheet feature [Timesheet should get exported and it should not be blank].")
+	@TestName(description = "Validate Export timesheet feature")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void validateTimeSheetExportFeatureAsInternalAdmin(String username, String password
 			, String browser, String location) throws Exception {
@@ -992,7 +993,7 @@ public class TimeSheetTest extends TestBase{
 	//added by Nishant
 
 	@Automated(automated =  "Automated")
-	@Owner(owner = "Nishany")
+	@Owner(owner = "Nishant")
 	@SanitySuite(sanity =  "Sanity")
 	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Validate Location filter functionality works fine")
@@ -1017,5 +1018,44 @@ public class TimeSheetTest extends TestBase{
 		timeSheetPage.clickWorkerRow(allWorkersRow, locationFilterSpecificLocations);
 
 	}
+
+    @Automated(automated =  "Automated")
+    @Owner(owner = "Nishant")
+    @SanitySuite(sanity =  "Sanity")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Validate Due Date SmartCard for Manager and PayrollAdmin")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void validateDueDateSmartCardAsStoreManager(String browser, String username, String password, String location)
+            throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+        controlsNewUIPage.clickOnControlsTimeAndAttendanceCard();
+        controlsNewUIPage.clickOnGlobalLocationButton();
+		String timesheetApprovalVal = controlsNewUIPage.getTimeSheetApprovalSelectedOption(true);
+		LocalDate now = LocalDate.now();
+		timeSheetPage.clickOnTimeSheetConsoleMenu();
+        SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+		timeSheetPage.clickOnPPWeeklyDuration();
+		String activeDay = timeSheetPage.getActiveDayWeekOrPayPeriod();
+		String endOfPayPeriod = activeDay.substring(activeDay.length()-2).trim();
+		String timesheetDueDate = timeSheetPage.verifyTimesheetDueHeader();
+		LocalDate wanted = LocalDate.now().plusDays(Integer.parseInt(timesheetDueDate));
+		String dateWanted = String.valueOf(wanted.getDayOfMonth());
+		String dueDate = timeSheetPage.verifyTimesheetSmartCard();
+		validateDueDate(dueDate, dateWanted, timesheetApprovalVal, endOfPayPeriod);
+    }
+
+    public static void validateDueDate(String dueDate, String dateWanted, String timesheetApprovalVal, String endOfPayPeriod){
+		if(dueDate.contains(dateWanted)){
+			SimpleUtils.pass("Timesheet Due Date value is " + timesheetApprovalVal + " days after the end of the " + endOfPayPeriod + " which is " + dueDate);
+		}else{
+			SimpleUtils.fail("Timesheet Due Date value is not " + timesheetApprovalVal + " days after the end of the pay period which is incorrect behavior",false);
+		}
+	}
+
 
 }

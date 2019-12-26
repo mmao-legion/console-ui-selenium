@@ -303,10 +303,8 @@ public class RegressionTest extends TestBase{
 
 
 	@MobilePlatform(platform = "Android")
-	@UseAsTestRailSectionId(testRailSectionId = 824)
-	@UseAsTestCaseSectionId(testCaseSectionId = 367)
 	@Automated(automated =  "Automated")
-	@Owner(owner = "Naval")
+	@Owner(owner = "Nishant")
 	@SanitySuite(sanity =  "Sanity")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate loading of smart card on Schedule tab[ No Spinning icon].")
@@ -367,10 +365,8 @@ public class RegressionTest extends TestBase{
 	}
 
 	@MobilePlatform(platform = "Android")
-	@UseAsTestRailSectionId(testRailSectionId = 369)
-	@UseAsTestCaseSectionId(testCaseSectionId = 370)
 	@Automated(automated =  "Automated")
-	@Owner(owner = "Naval")
+	@Owner(owner = "Nishant")
 	@SanitySuite(sanity =  "Sanity")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate Schedule generation functionality works fine.")
@@ -387,7 +383,7 @@ public class RegressionTest extends TestBase{
 		for(int index = 0; index < scheduleWeekCount; index++)
 		{
 			if(index != 0)
-				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.Two.getValue());
+				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.One.getValue());
 
 			if(schedulePage.isGenerateButtonLoaded())
 			{
@@ -436,7 +432,7 @@ public class RegressionTest extends TestBase{
 	@Owner(owner = "Naval")
 	@SanitySuite(sanity =  "Sanity")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate Change Location functionality[On changing location, information related to changed location should show up]")
+	@TestName(description = "On changing location, information related to changed location should show up")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void validateChangeLocationAsStoreManager(String browser, String username, String password, String location)
 			throws Exception {
@@ -555,8 +551,6 @@ public class RegressionTest extends TestBase{
 
 
 	@MobilePlatform(platform = "Android")
-	@UseAsTestRailSectionId(testRailSectionId = 381)
-	@UseAsTestCaseSectionId(testCaseSectionId = 380)
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Nishant")
 	@SanitySuite(sanity =  "Sanity")
@@ -610,14 +604,12 @@ public class RegressionTest extends TestBase{
 		verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
 	}
 
-
-
 	@Automated(automated =  "Automated")
-	@Owner(owner = "Naval")
+	@Owner(owner = "Nishant")
 	@SanitySuite(sanity =  "Sanity")
 	@UseAsTestRailSectionId(testRailSectionId = 96)
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Check navigation to different section in controls tab[On click it should not logout]")
+	@TestName(description = "Validate the impact of Shift Interval minutes on Schedule page")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void updateControlsSectionLoadingAsInternalAdmin(String browser, String username, String password, String location,ITestContext context)
 			throws Exception {
@@ -655,6 +647,7 @@ public class RegressionTest extends TestBase{
 				else
 					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' not Generated.", false);
 				schedulePage.clickOnDayView();
+				schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
 				int shiftIntervalCountInAnHour = schedulePage.getScheduleShiftIntervalCountInAnHour();
 				if((minutesInAnHours /shiftIntervalCountInAnHour) == Integer.valueOf(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue().split(" ")[0]))
 					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText()
@@ -1125,6 +1118,11 @@ public class RegressionTest extends TestBase{
 		schedulePage.moveSliderAtCertainPoint(propertyCustomizeMap.get("INCREASE_END_TIME_CLOPENING"), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
 		schedulePage.moveSliderAtCertainPoint(shiftStartTime, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
 		validateAssignTeamMemberPageAndSaveSchedule();
+		schedulePage.verifyClopeningHrs();
+		schedulePage.clickOnPreviousDaySchedule(activeDay);
+		schedulePage.verifyClopeningHrs();
+
+
 	}
 
 
@@ -2281,7 +2279,61 @@ public class RegressionTest extends TestBase{
 	}
 
 
-
+	@MobilePlatform(platform = "Android")
+	@UseAsTestRailSectionId(testRailSectionId = 381)
+	@UseAsTestCaseSectionId(testCaseSectionId = 380)
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Nishant")
+	@SanitySuite(sanity =  "Sanity")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate edit schedule functionality")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void editScheduleHoursAsStoreManager(String browser, String username, String password, String location)
+			throws Exception {
+		int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
+//	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+		if(!isActiveWeekGenerated){
+			schedulePage.generateOrUpdateAndGenerateSchedule();
+		}
+		//The schedules that are already published should remain unchanged
+		schedulePage.clickOnDayView();
+		boolean isStoreClosed = false;
+		schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
+		int previousGutterCount = schedulePage.getgutterSize();
+		scheduleNavigationTest(previousGutterCount);
+		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
+		Float scheduledHoursBeforeEditing = ScheduledHours.get("scheduledHours");
+		HashMap<List<String>,List<String>> teamCount = schedulePage.calculateTeamCount();
+		SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
+//		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
+//		schedulePage.customizeNewShiftPage();
+//		schedulePage.compareCustomizeStartDay(textStartDay);
+//		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+//		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+//		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
+//		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+//		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+//		schedulePage.clickOnCreateOrNextBtn();
+//		schedulePage.customizeNewShiftPage();
+//		schedulePage.verifySelectTeamMembersOption();
+//		schedulePage.clickOnOfferOrAssignBtn();
+//		int updatedGutterCount = schedulePage.getgutterSize();
+//		List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
+//		List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
+//		verifyTeamCount(previousTeamCount,currentTeamCount);
+//		schedulePage.clickSaveBtn();
+//		HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
+//		Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
+//		verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
+	}
 
 
 
@@ -2348,7 +2400,7 @@ public class RegressionTest extends TestBase{
 		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 		schedulePage.clickOnCreateOrNextBtn();
 		schedulePage.customizeNewShiftPage();
-		schedulePage.selectTeamMembersOptionForSchedule();
+		schedulePage.selectTeamMembersOptionForScheduleForClopening();
 		schedulePage.clickOnOfferOrAssignBtn();
 		schedulePage.clickSaveBtn();
 	}

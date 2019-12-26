@@ -64,6 +64,7 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> timeDuration = new ThreadLocal<>();
 	public static final ThreadLocal<String> moduleName = new ThreadLocal<>();
 	public static final ThreadLocal<Integer> sectionID = new ThreadLocal<>();
+	public static final ThreadLocal<Integer> budgetTolerance = new ThreadLocal<>();
 
 	public static void setScreenshotLocation(String value) { screenshotLoc.set(value); }
 
@@ -158,6 +159,13 @@ public class MyThreadLocal {
 
 	public static String getComment() {
 		return comment.get();
+	}
+
+	public static void setBudgetTolerance(Integer value) {
+		budgetTolerance.set(value);
+	}
+	public static Integer getBudgetTolerance() {
+		return budgetTolerance.get();
 	}
 
 	public static void setFailedComment(List<String> value) {

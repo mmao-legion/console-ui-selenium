@@ -124,4 +124,8 @@ public interface TimeSheetPage {
 
 	public void clickPreviousDayArrow(int previousArrowCount) throws Exception;
 
+	public void clickOnPPWeeklyDuration() throws Exception;
+    public String verifyTimesheetSmartCard() throws Exception;
+	public String verifyTimesheetDueHeader() throws Exception;
+
 }
