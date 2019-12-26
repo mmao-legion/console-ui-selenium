@@ -283,6 +283,11 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private List<WebElement> locationName;
 	
 	String timeSheetHeaderLabel = "Controls";
+
+	@FindBy(css = "question-input[question-title*=\"Timesheet approval is due for Manager\"]")
+	private WebElement timeSheetApprovalDueForManagerDiv;
+	@FindBy(css = "question-input[question-title*=\"Timesheet approval is due for Payroll\"]")
+	private WebElement timeSheetApprovalDueForPayrollAdminDiv;
 	
 	@Override
 	public void clickOnControlsConsoleMenu() throws Exception {
@@ -4881,7 +4886,31 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	}
 
-
+	//added by Nishant
+	public String getTimeSheetApprovalSelectedOption(boolean byManager) throws Exception {
+		String selectedOptionLabel = "";
+		if(byManager){
+			selectedOptionLabel = getSelectionOptionValue(timeSheetApprovalDueForManagerDiv);
+		}else{
+			selectedOptionLabel = getSelectionOptionValue(timeSheetApprovalDueForPayrollAdminDiv);
+		}
+		return selectedOptionLabel;
+	}
+	public String getSelectionOptionValue(WebElement timesheetDueDateAccess) throws Exception{
+		String selectedOptionLabel = "";
+		if(isElementLoaded(timesheetDueDateAccess)) {
+			WebElement timeSheetFormatDropDown = timesheetDueDateAccess.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(timeSheetFormatDropDown)) {
+				Select dropdown= new Select(timeSheetFormatDropDown);
+				selectedOptionLabel = dropdown.getFirstSelectedOption().getText();
+			}
+			else
+				SimpleUtils.fail("Controls - Time and Attendance: timesheet Approval for Manager/Payroll Admin dropdown not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Controls Page: TimeSheet Approval section loaded.", false);
+		return selectedOptionLabel;
+	}
 
 
 

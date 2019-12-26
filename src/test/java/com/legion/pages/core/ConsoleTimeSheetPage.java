@@ -252,6 +252,19 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy(css = "div.timesheet-details-modal__title-span")
 	private WebElement TSPopupDetailsWorkerNameAndShiftDay;
 
+    //added by Nishant
+    @FindBy(css = "lg-smart-card[heading='Due Date'] content-box")
+    private WebElement dueDateSmartCard;
+    @FindBy(css = "lg-smart-card[heading='Due Date'] div[ng-if='$ctrl.heading']")
+    private WebElement dueDateHeader;
+    @FindBy(css = "lg-smart-card[heading='Due Date'] div[ng-if='$ctrl.main']")
+    private WebElement dueDateValue;
+    @FindBy(css = "lg-smart-card[heading='Due Date'] div[ng-if='$ctrl.note']")
+    private WebElement dueDateTimesheetNote;
+
+    @FindBy(xpath = "//div[@ng-show='!forbidModeChange']//span[text()='PP Weekly']")
+    private WebElement ppweeklyViewButton;
+
 
 	String timeSheetHeaderLabel = "Timesheet";
 	String locationFilterSpecificLocations = null;
@@ -997,6 +1010,27 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy (xpath = "//div[contains(@class,'lg-timesheet-table__worker-row')]//div[10]//span")
 	private List<WebElement> DTHourGridTable;
 
+	@FindBy (xpath = "//div[contains(@class,'lg-timesheet-table__worker-row')]//div[3]")
+	private List<WebElement> numberOfTimesheetEnteriesForTM;
+
+	@FindBy (xpath = "//div[contains(@class,\"lg-timesheet-table__worker-day\")]//div[5]//span")
+	private List<WebElement> schedHourDayWise;
+
+	@FindBy (xpath = "//div[contains(@class,\"lg-timesheet-table__worker-day\")]//div[6]//span")
+	private List<WebElement> clockHourDayWise;
+
+	@FindBy (xpath = "//div[contains(@class,\"lg-timesheet-table__worker-day\")]//div[7]//span")
+	private List<WebElement> diffHourDayWise;
+
+	@FindBy (xpath = "//div[contains(@class,\"lg-timesheet-table__worker-day\")]//div[8]//span")
+	private List<WebElement> regHourDayWise;
+
+	@FindBy (xpath = "//div[contains(@class,\"lg-timesheet-table__worker-day\")]//div[9]//span")
+	private List<WebElement> OTHourDayWise;
+
+	@FindBy (xpath = "//div[contains(@class,\"lg-timesheet-table__worker-day\")]//div[10]//span")
+	private List<WebElement> DTHourDayWise;
+
 	@FindBy (css = "div.lg-pagination__pages")
 	private WebElement pagination;
 
@@ -1025,6 +1059,15 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	@FindBy (xpath = "//div[contains(@class,'lg-smart-card__content')]//td[contains(text(),'Difference')]//parent::tr")
 	private WebElement smartcardDifferenceValues;
+
+	@FindBy (xpath = "//div[contains(@class,'lg-timesheet-table__worker-row')]")
+	private List<WebElement> workerRow;
+
+	@FindBy (css = "div.lg-timesheet-table__grid-row.lg-timesheet-table__worker-day")
+	private List<WebElement> workerDayRow;
+
+	@FindBy (css = "div.lg-timesheet-table__name")
+	private List<WebElement> tMNameFromGroupView;
 
 
 
@@ -1108,6 +1151,124 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		}else{
 			SimpleUtils.fail("Value for total of Difference hour i.e sum of Reg+OT+DT getting displayed in smartcard = "+totalDifferenceHour+" is not equal to sum of Difference hour for all the timesheets from gridview i.e = " +totalDiffHour,true);
 		}
+	}
+
+	//Coverting -- to 0
+	public String covertDashTo0(String textPicked){
+        String updatedTextPicked = textPicked;
+        if(textPicked.equalsIgnoreCase("--")){
+	        updatedTextPicked = "0";
+        }
+	    return updatedTextPicked;
+    }
+
+    public String dayDifferenceHour(String workerDayDiffHour, String workerDayScheduleHour){
+		if(workerDayDiffHour.equalsIgnoreCase("--")){
+			workerDayDiffHour = "(" + workerDayScheduleHour + ")";
+		}
+		return workerDayDiffHour;
+	}
+
+	@Override
+	public void verifyTMsRecordInTimesheetTab() throws Exception{
+		clickOnPayPeriodDuration();
+		clickImmediatePastToCurrentActiveWeekInDayPicker();
+		for (int i = 0; i <5; i++) {
+			double groupViewTMDiffHour;
+			String[] timesheetEnteriesForTM = numberOfTimesheetEnteriesForTM.get(i).getText().split(" ");
+			String workerScheduleHour = ScheduleHourGridTable.get(i).getText();
+			double groupViewTMSchedHour = Double.parseDouble(workerScheduleHour);
+			String workerClockedHour = ClockedHourGridTable.get(i).getText();
+			double groupViewTMClockedHour = Double.parseDouble(workerClockedHour);
+			String workerRegHour = RegHourGridTable.get(i).getText();
+			double groupViewTMRegHour = Double.parseDouble(workerRegHour);
+			String workerOTHour = OTHourGridTable.get(i).getText();
+			double groupViewTMOTHour = Double.parseDouble(workerOTHour);
+			String workerDTHour = DTHourGridTable.get(i).getText();
+			double groupViewTMDTHour = Double.parseDouble(workerDTHour);
+			String workerDiffHour = diffHourGridTable.get(i).getText();
+			if (workerDiffHour.startsWith("(")) {
+				String diffValue1 = workerDiffHour.replace("(", "");
+				String diffValue2 = diffValue1.replace(")", "");
+				groupViewTMDiffHour = (-Double.parseDouble(diffValue2));
+			} else {
+				groupViewTMDiffHour = Double.parseDouble(workerDiffHour);
+			}
+			workerRow.get(i).click();
+			Double totalSchedHourForTM = 0.0;
+			Double totalClockedHourForTM = 0.0;
+			Double totalRegHourForTM = 0.0;
+			Double totalOTHourForTM = 0.0;
+			Double totalDTHourForTM = 0.0;
+			Double totalDiffHourForTM = 0.0;
+			int noOfTimesheetEnteriesForTM = workerDayRow.size();
+			for (int j = 0; j <  workerDayRow.size(); j++) {
+				String workerDayScheduleHour = schedHourDayWise.get(j).getText();
+                String updatedWorkerDayScheduleHour = covertDashTo0(workerDayScheduleHour);
+				totalSchedHourForTM = totalSchedHourForTM + Double.parseDouble(updatedWorkerDayScheduleHour);
+				String workerDayClockedHour = clockHourDayWise.get(j).getText();
+                String updatedworkerDayClockedHour = covertDashTo0(workerDayClockedHour);
+				totalClockedHourForTM = totalClockedHourForTM + Double.parseDouble(updatedworkerDayClockedHour);
+				String workerDayRegHour = regHourDayWise.get(j).getText();
+                String updatedworkerDayRegHour = covertDashTo0(workerDayRegHour);
+				totalRegHourForTM = totalRegHourForTM + Double.parseDouble(updatedworkerDayRegHour);
+				String workerDayOTHour = OTHourDayWise.get(j).getText();
+                String updatedworkerDayOTHour = covertDashTo0(workerDayOTHour);
+				totalOTHourForTM = totalOTHourForTM + Double.parseDouble(updatedworkerDayOTHour);
+				String workerDayDTHour = DTHourDayWise.get(j).getText();
+                String updatedworkerDayDTHour = covertDashTo0(workerDayDTHour);
+				totalDTHourForTM = totalDTHourForTM + Double.parseDouble(updatedworkerDayDTHour);
+				String workerDayDiffHour = diffHourDayWise.get(j).getText();
+                String updatedworkerDayDiffHour = dayDifferenceHour(workerDayDiffHour, workerDayScheduleHour);
+				if (updatedworkerDayDiffHour.startsWith("(")) {
+					String diffValue1 = updatedworkerDayDiffHour.replace("(", "");
+					String diffValue2 = diffValue1.replace(")", "");
+					totalDiffHourForTM = totalDiffHourForTM + (-Double.parseDouble(diffValue2));
+				} else {
+					totalDiffHourForTM = totalDiffHourForTM + Double.parseDouble(updatedworkerDayDiffHour);
+				}
+			}
+			workerRow.get(i).click();
+			//Comparision of displayed value and calculated value
+			String[] TMNAme = tMNameFromGroupView.get(i).getText().split("\n");
+			SimpleUtils.report("=====================================Below are the timesheet details for " + TMNAme[0] + "=======================================");
+			if(Integer.parseInt(timesheetEnteriesForTM[0]) == noOfTimesheetEnteriesForTM){
+				SimpleUtils.pass("Number of timesheet enteries showing up for the TM in grouped view is = " + numberOfTimesheetEnteriesForTM.get(i).getText() + " is equal to number of timesheet records = " + noOfTimesheetEnteriesForTM);
+			} else {
+				SimpleUtils.fail("Number of timesheet enteries showing up for the TM in grouped view is = " + numberOfTimesheetEnteriesForTM.get(i).getText() + " is not equal to number of timesheet records = " + noOfTimesheetEnteriesForTM, true);
+			}
+			if (groupViewTMSchedHour == totalSchedHourForTM) {
+				SimpleUtils.pass("Schedule hour getting displayed at group level is  = " + groupViewTMSchedHour + " is equal to sum of schedule hour for all the timesheets records =" + totalSchedHourForTM);
+			} else {
+				SimpleUtils.fail("Schedule hour getting displayed at group level is  = " + groupViewTMSchedHour + " is not equal to sum of schedule hour for all the timesheets records =" + totalSchedHourForTM, true);
+			}
+			if (groupViewTMClockedHour == totalClockedHourForTM) {
+				SimpleUtils.pass("Clocked hour getting displayed at group level is  = " + groupViewTMClockedHour + " is equal to sum of clocked hour for all the timesheets records =" + totalClockedHourForTM);
+			} else {
+				SimpleUtils.fail("Clocked hour getting displayed at group level is  = " + groupViewTMClockedHour + " is not equal to sum of clocked hour for all the timesheets records =" + totalClockedHourForTM, true);
+			}
+			if (groupViewTMRegHour == totalRegHourForTM) {
+				SimpleUtils.pass("Regular hour getting displayed at group level is  = " + groupViewTMRegHour + " is equal to sum of Regular hour for all the timesheets records =" + totalRegHourForTM);
+			} else {
+				SimpleUtils.fail("Regular hour getting displayed at group level is  = " + groupViewTMRegHour + " is not equal to sum of Regular hour for all the timesheets records =" + totalRegHourForTM, true);
+			}
+			if (groupViewTMOTHour == totalOTHourForTM) {
+				SimpleUtils.pass("OT hour getting displayed at group level is  = " + groupViewTMOTHour + " is equal to sum of OT hour for all the timesheets records =" + totalOTHourForTM);
+			} else {
+				SimpleUtils.fail("OT hour getting displayed at group level is  = " + groupViewTMOTHour + " is not equal to sum of OT hour for all the timesheets records =" + totalOTHourForTM, true);
+			}
+			if (groupViewTMDTHour == totalDTHourForTM) {
+				SimpleUtils.pass("DT hour getting displayed at group level is  = " + groupViewTMDTHour + " is equal to sum of DT hour for all the timesheets records =" + totalDTHourForTM);
+			} else {
+				SimpleUtils.fail("DT hour getting displayed at group level is  = " + groupViewTMDTHour + " is not equal to sum of DT hour for all the timesheets records =" + totalDTHourForTM, true);
+			}
+			if (groupViewTMDiffHour == totalDiffHourForTM) {
+				SimpleUtils.pass("Difference hour getting displayed at group level is  = " + groupViewTMDiffHour + " is equal to sum of Difference hour for all the timesheets records =" + totalDiffHourForTM);
+			} else {
+				SimpleUtils.fail("Difference hour getting displayed at group level is  = " + groupViewTMDiffHour + " is equal to sum of Difference hour for all the timesheets records =" + totalDiffHourForTM, true);
+			}
+		}
+
 	}
 
 
@@ -1713,9 +1874,10 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@Override
 	public boolean isTimeSheetDetailsTableLoaded() throws Exception
 	{
+		String activeDay = getActiveDayWeekOrPayPeriod();
 		if(isElementLoaded(timeSheetDetailsTable, 20) && timeSheetDetailsTable.getText().trim().length() > 0)
 		{
-			SimpleUtils.pass("Timesheet loaded successfully for duration Type: '"+ getTimeSheetActiveDurationType() +"'.");			
+			SimpleUtils.pass("Timesheet loaded successfully for duration Type: '"+ getTimeSheetActiveDurationType() +"' for pay period duration " + activeDay.substring(10));
 			return true;
 		}
 		return false;
@@ -1840,7 +2002,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				if(locationCheckboxLabels.getText().equalsIgnoreCase(locationFilterAllLocations)){
 					click(locationCheckboxLabels);
 					click(locationFilter);
-					SimpleUtils.pass("User should be able to click on Location Filter checkbox Successfully");
+					SimpleUtils.pass("Location Filter checkbox clicked Successfully");
 					break;
 				}else{
 					SimpleUtils.fail("Location Filter checkbox label "
@@ -1855,7 +2017,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	public void verifyTimesheetTableIfNoLocationSelected() throws  Exception{
 		if(isElementLoaded(timesheetTableForNoLocationSelected,10)){
-			SimpleUtils.pass("User should not be able to see any data in timesheet table if None of the value for location selected in Location filter");
+			SimpleUtils.pass("No data visible in timesheet data table as  None selected in Location filter");
 		}else{
 			SimpleUtils.fail("User is able to see Timesheet table data which is not correct",false);
 		}
@@ -1882,7 +2044,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			for(int i=0; i<locationCheckboxLabel.size(); i++){
 				if(locationCheckboxLabel.get(i).getText().toLowerCase().contains(locationFilterSpecificLocations.toLowerCase())){
 					click(locationCheckboxLabel.get(i));
-					SimpleUtils.pass("User should be able to select " + locationCheckboxLabel.get(i).getText() + " checkbox Successfully");
+					SimpleUtils.pass(locationCheckboxLabel.get(i).getText() + " checkbox selected Successfully");
 					click(locationFilter);
 					break;
 				}
@@ -1916,6 +2078,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		}
 	}
 
+
 	public String[] openTimesheetModelPop() throws Exception{
 		String[] timesheetPopupDetailsWorkerNameAndShiftDay = null;
 		if(isElementEnabled(TSPopupDetailsModel,10)){
@@ -1934,5 +2097,62 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		return timesheetPopupDetailsWorkerNameAndShiftDay;
 	}
 
+
+
+    //added by Nishant
+    public void clickOnPPWeeklyDuration() throws Exception {
+        String activeButtonClassKeyword = "selected";
+        if(isElementLoaded(ppweeklyViewButton))
+        {
+            if(! ppweeklyViewButton.getAttribute("class").toLowerCase().contains(activeButtonClassKeyword))
+            {
+                click(ppweeklyViewButton);
+                SimpleUtils.pass("Timesheet duration type '"+ppweeklyViewButton.getText()+"' selected successfully.");
+            }
+        }
+        else
+            SimpleUtils.fail("Timesheet: PPWeeklyView Button not loaded!", false);
+    }
+
+    public String verifyTimesheetSmartCard() throws Exception {
+        String valDueDate ="";
+        String finalDueDate ="";
+        if(isElementEnabled(dueDateSmartCard,5)){
+            SimpleUtils.pass("Timesheet Due Date smart card loaded Successfullly");
+            verifyDueDateheader();
+            if(isElementLoaded(dueDateValue,5)){
+                valDueDate = dueDateValue.getText();
+                String[] arrValDueDate = valDueDate.split(" ");
+                finalDueDate = arrValDueDate[1];
+            }
+        }else{
+            SimpleUtils.fail("Timesheet Due Date smart card not loaded Successfullly",false);
+        }
+        return valDueDate;
+    }
+    public void verifyDueDateheader() throws Exception {
+        if(isElementLoaded(dueDateHeader,5)){
+            if(dueDateHeader.getText().equalsIgnoreCase("DUE DATE")){
+                SimpleUtils.pass("Timesheet Due Date smart card header is " + dueDateHeader.getText() );
+            }
+        }else{
+            SimpleUtils.fail("Timesheet Due Date smart card Header loaded Successfullly",true);
+        }
+    }
+    public String verifyTimesheetDueHeader() throws Exception {
+        String timesheetDueDate ="";
+        String timesheetDueDateValue ="";
+        LocalDate now = LocalDate.now();
+        if(isElementEnabled(dueDateSmartCard,5)){
+            if(isElementLoaded(dueDateTimesheetNote,5)){
+                timesheetDueDate = dueDateTimesheetNote.getText();
+                timesheetDueDateValue= timesheetDueDate.replaceAll("[^0-9]", "");
+                SimpleUtils.pass(dueDateTimesheetNote.getText() + " from current date i.e " +now );
+            }
+        }else{
+            SimpleUtils.fail("Timesheet Due Date smart card not loaded Successfullly",false);
+        }
+        return timesheetDueDateValue;
+    }
 
 }

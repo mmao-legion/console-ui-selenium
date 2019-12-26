@@ -28,6 +28,7 @@ import com.legion.utils.SimpleUtils;
 
 public class ScheduleTest extends TestBase{
 	  private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	  private static HashMap<String, String> propertyBudgetValue = JsonUtil.getPropertiesFromJsonFile("src/test/resources/Budget.json");
 	  @Override
 	  @BeforeMethod()
 	  public void firstTest(Method testMethod, Object[] params) throws Exception{
@@ -330,9 +331,24 @@ public class ScheduleTest extends TestBase{
   	    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
   	    	schedulePage.clickOnScheduleConsoleMenuItem();
+  	    	int tolerance = Integer.parseInt(propertyBudgetValue.get("Tolerance"));
 			List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
-  	    	schedulePage.budgetInScheduleNBudgetSmartCard(weekViewType.Next.getValue(), weekCount.Two.getValue());
+			schedulePage.budgetInScheduleNBudgetSmartCard(weekViewType.Next.getValue(), weekCount.Two.getValue(), tolerance);
   	    }
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "TP-102: LEG 5500 : Budget Hours shown in budget modal 715 hrs does not match the budgeted hours shown in schedule 1287 hrs")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void budgetIntScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		int tolerance = Integer.parseInt(propertyBudgetValue.get("Tolerance"));
+		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+		schedulePage.budgetInScheduleNBudgetSmartCard(weekViewType.Next.getValue(), weekCount.Two.getValue(), tolerance);
+	}
 
 //	@Automated(automated ="Automated")
 //	@Owner(owner = "Gunjan")

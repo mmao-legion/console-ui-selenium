@@ -310,6 +310,26 @@ public class DMScheduleTest extends TestBase{
         schedulePage.compareLocationSummaryFromDashboardAndSchedule(ListLocationSummaryOnDashboard,ListLocationSummaryOnSchedule);
     }
 
+    @Automated(automated =  "Automated")
+    @Owner(owner = "Gunjan")
+    @SanitySuite(sanity =  "Sanity")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Validate the to and fro navigation of DM to SM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void validateDMtoSMNavigationNViceVersaAsInternalAdmin(String browser, String username, String password, String location)
+            throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        dashboardPage.navigateToDashboard();
+        String DateOnDashboard = schedulePage.getDateFromDashboard();
+        List<String> ListLocationSummaryOnDashboard = schedulePage.getLocationSummaryDataFromDashBoard();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        String dateOnSchdeule = schedulePage.getActiveWeekText();
+        schedulePage.compareDashboardAndScheduleWeekDate(dateOnSchdeule, DateOnDashboard);
+        List<String> ListLocationSummaryOnSchedule = schedulePage.getLocationSummaryDataFromSchedulePage();
+        schedulePage.compareLocationSummaryFromDashboardAndSchedule(ListLocationSummaryOnDashboard,ListLocationSummaryOnSchedule);
+    }
 
 }
 

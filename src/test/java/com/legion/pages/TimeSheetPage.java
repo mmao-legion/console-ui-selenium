@@ -120,8 +120,14 @@ public interface TimeSheetPage {
 
 	public void clickWorkerRow(List<WebElement> allWorkersRow, String locationFilterSpecificLocations) throws Exception;
 
+	public void verifyTMsRecordInTimesheetTab() throws Exception;
+
 	public String getWeekStartingDay() throws Exception;
 
 	public void clickPreviousDayArrow(int previousArrowCount) throws Exception;
+
+    public void clickOnPPWeeklyDuration() throws Exception;
+    public String verifyTimesheetSmartCard() throws Exception;
+    public String verifyTimesheetDueHeader() throws Exception;
 
 }

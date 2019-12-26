@@ -27,7 +27,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy(css = "div.console-navigation-item.active")
     private WebElement activeConsoleMenuItem;
 
-    @FindBy(css = "div.lg-search-options")
+    @FindBy(xpath = "//i[contains(@class,'lg-location-chooser__arrow')]//following-sibling::div[2]//div[@class='lg-search-options']")
     private WebElement locationDropDownButton;
 
     @FindBy(className = "location-selector-dropdown-menu-items")

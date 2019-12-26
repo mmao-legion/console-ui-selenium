@@ -166,7 +166,7 @@ public abstract class TestBase {
         caps.setCapability("appPackage", "co.legion.client");
         caps.setCapability("appActivity", "activities.LegionSplashActivity");
         caps.setCapability("newCommandTimeout", "360");
-        setAndroidDriver( new AndroidDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"), caps));
+        setAndroidDriver( new AndroidDriver<MobileElement>(new URL("https://127.0.0.1:4723/wd/hub"), caps));
         getAndroidDriver().manage().timeouts().implicitlyWait(80, TimeUnit.SECONDS);
         Thread.sleep(10000);
         ExtentTestManager.getTest().log(Status.PASS, "Launched Mobile Application Successfully!");
@@ -372,7 +372,7 @@ public abstract class TestBase {
     //Start appium programatically
     public static void startServer() {
         DesiredCapabilities cap = new DesiredCapabilities();
-        cap.setCapability("noReset", "false");
+        cap.setCapability("noReset", "true");
         cap.setCapability("autoGrantPermissions", true);
         //Build the Appium service
         builder = new AppiumServiceBuilder();

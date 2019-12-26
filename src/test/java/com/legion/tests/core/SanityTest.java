@@ -37,7 +37,7 @@ public class SanityTest extends TestBase{
 	  @Override
 	  @BeforeMethod
 	  public void firstTest(Method method, Object[] params) throws Exception {
-          this.createDriver((String)params[0],"69","Window");
+//          this.createDriver((String)params[0],"69","Window");
 	      if(propertyMap.get("RUN_ON_MOBILE").equalsIgnoreCase("No")){
               visitPage(method);
 //	      loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
@@ -783,15 +783,15 @@ public class SanityTest extends TestBase{
 	@TestName(description = "Validate the Create An Account button on Legion Application")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void consoleAndMobileIntegrationForShiftOffers(String username, String password, String browser, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
-		schedulePage.clickOnScheduleSubTab(LoginTest.SchedulePageSubTabText.Overview.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-		List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+//		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//		schedulePage.clickOnScheduleConsoleMenuItem();
+//		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+//		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+//		schedulePage.clickOnScheduleSubTab(LoginTest.SchedulePageSubTabText.Overview.getValue());
+//		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//		List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
 //		for(int i=0; i <overviewPageScheduledWeeks.size();i++)
 //		{
 //			if(overviewPageScheduledWeeks.get(i).getText().toLowerCase().contains(LoginTest.overviewWeeksStatus.Guidance.getValue().toLowerCase()))
@@ -806,31 +806,31 @@ public class SanityTest extends TestBase{
 //				}
 //			}
 //		}
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		schedulePage.clickOnDayView();
-		int previousGutterCount = schedulePage.getgutterSize();
-		scheduleNavigationTest(previousGutterCount);
-		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
-		Float scheduledHoursBeforeEditing = ScheduledHours.get("scheduledHours");
-		SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
-		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.compareCustomizeStartDay(textStartDay);
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.verifySelectTeamMembersOption();
-		schedulePage.clickOnOfferOrAssignBtn();
-		int updatedGutterCount = schedulePage.getgutterSize();
-		schedulePage.clickSaveBtn();
-		HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
-		Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
-		verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
-		schedulePage.clickOnSchedulePublishButton();
+//		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+//		schedulePage.clickOnDayView();
+//		int previousGutterCount = schedulePage.getgutterSize();
+//		scheduleNavigationTest(previousGutterCount);
+//		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
+//		Float scheduledHoursBeforeEditing = ScheduledHours.get("scheduledHours");
+//		SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
+//		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
+//		schedulePage.customizeNewShiftPage();
+//		schedulePage.compareCustomizeStartDay(textStartDay);
+//		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+//		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+//		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
+//		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+//		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+//		schedulePage.clickOnCreateOrNextBtn();
+//		schedulePage.customizeNewShiftPage();
+//		schedulePage.verifySelectTeamMembersOption();
+//		schedulePage.clickOnOfferOrAssignBtn();
+//		int updatedGutterCount = schedulePage.getgutterSize();
+//		schedulePage.clickSaveBtn();
+//		HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
+//		Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
+//		verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
+//		schedulePage.clickOnSchedulePublishButton();
 		//Schedule overview should show 5 week's schedule
 
 		launchMobileApp();
