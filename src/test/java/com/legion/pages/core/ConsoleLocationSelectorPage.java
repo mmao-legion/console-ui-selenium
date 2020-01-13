@@ -140,4 +140,78 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     	}
     	return selectedLocation;
     }
+
+    //added by Gunjan
+    @FindBy(css = "lg-select[search-hint='Search District'] div.input-faked")
+    private WebElement districtSelectorButton;
+    @FindBy(css = "[search-hint=\"Search District\"] div.lg-search-options")
+    private WebElement districtDropDownButton;
+    @Override
+    public Boolean isChangeDistrictButtonLoaded() throws Exception
+    {
+        if(isElementLoaded(districtSelectorButton,10)) {
+            return true;
+        }
+        return false;
+    }
+    @Override
+    public Boolean isDistrictSelected(String districtName)
+    {
+        try {
+            if(isChangeDistrictButtonLoaded()) {
+                if(districtSelectorButton.getText().contains(districtName)) {
+                    return true;
+                }
+            }
+        }
+        catch(Exception e) {
+            SimpleUtils.fail("Change District Button not loaded!", true);
+        }
+        return false;
+    }
+    @Override
+    public void changeDistrict(String districtName) {
+        waitForSeconds(4);
+        try {
+            Boolean isDistrictMatched = false;
+            activeConsoleName = activeConsoleMenuItem.getText();
+            setScreenshotConsoleName(activeConsoleName);
+            if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
+                if (isChangeDistrictButtonLoaded()) {
+                    if (isDistrictSelected(districtName)) {
+                        SimpleUtils.pass("Given District '" + districtName + "' already selected!");
+                    } else {
+                        click(districtSelectorButton);
+                        if (isElementLoaded(districtDropDownButton)) {
+                            if (availableLocationCardsName.size() != 0) {
+                                for (WebElement locationCardName : availableLocationCardsName) {
+                                    if (locationCardName.getText().contains(districtName)) {
+                                        isDistrictMatched = true;
+                                        click(locationCardName);
+                                        SimpleUtils.pass("District changed successfully to '" + districtName + "'");
+                                        break;
+                                    }
+                                }
+                                if (!isDistrictMatched) {
+                                    if (isElementLoaded(dashboardLocationsPopupCancelButton)) {
+                                        click(dashboardLocationsPopupCancelButton);
+                                    }
+                                    SimpleUtils.fail("District does matched with '" + districtName + "'", true);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                WebElement dashboardConsoleMenu = SimpleUtils.getSubTabElement(consoleMenuItems, dashboardConsoleMenuText);
+                if (isElementLoaded(dashboardConsoleMenu)) {
+                    click(dashboardConsoleMenu);
+                    changeDistrict(districtName);
+                }
+            }
+        }
+        catch(Exception e) {
+            SimpleUtils.fail("Unable to change District!", true);
+        }
+    }
 }

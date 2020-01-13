@@ -29,7 +29,8 @@ public class DMScheduleTest extends TestBase{
     SchedulePage schedulePage = null;
     private static HashMap<String, String> controlsLocationDetail = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ControlsPageLocationDetail.json");
     private static HashMap<String, String> schedulingPoliciesData = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SchedulingPoliciesData.json");
-
+    private static HashMap<String, String> propertySelectLocation = JsonUtil.getPropertiesFromJsonFile("src/test/resources/LocationSelector.json");
+    private static HashMap<String, String> dmViewTestData = JsonUtil.getPropertiesFromJsonFile("src/test/resources/DMViewTestData.json");
     @Override
     @BeforeMethod
     public void firstTest(Method method, Object[] params) throws Exception {
@@ -308,6 +309,148 @@ public class DMScheduleTest extends TestBase{
         schedulePage.compareDashboardAndScheduleWeekDate(dateOnSchdeule, DateOnDashboard);
         List<String> ListLocationSummaryOnSchedule = schedulePage.getLocationSummaryDataFromSchedulePage();
         schedulePage.compareLocationSummaryFromDashboardAndSchedule(ListLocationSummaryOnDashboard,ListLocationSummaryOnSchedule);
+    }
+
+    // Added by Nishant
+
+    @Automated(automated =  "Automated")
+    @Owner(owner = "Nishant")
+    @SanitySuite(sanity =  "Sanity")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verification of values from DM view of Unplanned clock smartcard and detail smartcard with SM view")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void validateDMViewDataWithSMViewAsInternalAdmin(String browser, String username, String password, String location)
+            throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        BasePage basePage = new BasePage();
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeDistrict("Demo District");
+        dashboardPage.navigateToDashboard();
+        String DateOnDashboard = schedulePage.getDateFromDashboard();
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        String dateOnTimesheet = basePage.getActiveWeekText();
+        schedulePage.compareDashboardAndScheduleWeekDate(dateOnTimesheet, DateOnDashboard);
+        timeSheetPage.validateLoadingOfTimeSheetSmartCard();
+//        List<String> listTotalUnplannedHrsText = timeSheetPage.getUnplannedClocksValueNtext();
+//        List<String> listDetailUnplannedHrsText = timeSheetPage.getUnplannedClocksDetailSummaryValue();
+        List<String> listLocationName = timeSheetPage.getLocationName();
+        int totalUnplannedClocksOnDMView = timeSheetPage.getUnplannedClocksOnDMView();
+        int totalTimesheetsOnDMView = timeSheetPage.getTotalTimesheetsOnDMView();
+        timeSheetPage.goToSMView(listLocationName, dateOnTimesheet,
+                Integer.parseInt(propertySelectLocation.get("LOCATION_COUNT")), totalUnplannedClocksOnDMView, totalTimesheetsOnDMView);
+
+    }
+
+    @Automated(automated =  "Automated")
+    @Owner(owner = "Nishant")
+    @SanitySuite(sanity =  "Sanity")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verification of Unplanned clocks, total timesheet columns from table view")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void validateDMViewUnplannedClockAndTimesheetCountAsInternalAdmin(String browser, String username, String password, String location)
+            throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        BasePage basePage = new BasePage();
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeDistrict("Demo District");
+        dashboardPage.navigateToDashboard();
+        String DateOnDashboard = schedulePage.getDateFromDashboard();
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        String dateOnTimesheet = basePage.getActiveWeekText();
+        schedulePage.compareDashboardAndScheduleWeekDate(dateOnTimesheet, DateOnDashboard);
+        timeSheetPage.validateLoadingOfTimeSheetSmartCard();
+        int totalUnplannedClockSmartCardValOnDMView = timeSheetPage.getUnplannedClockSmartCardOnDMView();
+        int totalUnplannedClocksOnDMViewSmartCardDetailSummary = timeSheetPage.getUnplannedClocksDetailSummaryValue();
+        int totalUnplannedClocksOnTblView = timeSheetPage.getUnplannedClocksOnDMView();
+        int totalTimesheetsOnTblView = timeSheetPage.getTotalTimesheetsOnDMView();
+        int totalTimesheetOnDMViewSmartCard = timeSheetPage.getTotalTimesheetFromSmartCardOnDMView();
+        verifyUnplannedClockOnDMView(totalUnplannedClockSmartCardValOnDMView, totalUnplannedClocksOnDMViewSmartCardDetailSummary,
+                totalUnplannedClocksOnTblView);
+        verifyTimesheetOnDMView(totalTimesheetOnDMViewSmartCard, totalTimesheetsOnTblView);
+    }
+
+    public void verifyUnplannedClockOnDMView(int totalUnplannedClockSmartCardValOnDMView,
+                                                                         int totalUnplannedClocksOnDMViewSmartCardDetailSummary,
+                                             int totalUnplannedClocksOnTblView){
+        if(totalUnplannedClockSmartCardValOnDMView == totalUnplannedClocksOnDMViewSmartCardDetailSummary){
+            SimpleUtils.pass("Unplanned Clock from Smart Card " + totalUnplannedClockSmartCardValOnDMView + " matches " +
+                    "with Unplanned Clock in Details Summary Card " + totalUnplannedClocksOnDMViewSmartCardDetailSummary + " on DM View");
+        }else{
+            SimpleUtils.fail("Unplanned Clock from Smart Card " + totalUnplannedClockSmartCardValOnDMView + " do not match " +
+                    "with Unplanned Clock in Details Summary Card " + totalUnplannedClocksOnDMViewSmartCardDetailSummary + " on DM View",true);
+        }
+        if(totalUnplannedClockSmartCardValOnDMView == totalUnplannedClocksOnTblView){
+            SimpleUtils.pass("Unplanned Clock from Smart Card " + totalUnplannedClockSmartCardValOnDMView + " matches " +
+                    "with sum of Unplanned Clock per location in Timesheet table " + totalUnplannedClocksOnTblView + " on DM View");
+        }else{
+            SimpleUtils.fail("Unplanned Clock from Smart Card " + totalUnplannedClockSmartCardValOnDMView + " do not match " +
+                    "with sum of Unplanned Clock per location in Timesheet table " + totalUnplannedClocksOnTblView + " on DM View",true);
+        }
+    }
+
+    //added by Gunjan
+
+    @Automated(automated =  "Automated")
+    @Owner(owner = "Gunjan")
+    @SanitySuite(sanity =  "Sanity")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "To and fro navigation from DM to SM view and DM view dashboard to respective tabs")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void validateDMtoSMNavigationNViceVersaAsInternalAdmin(String browser, String username, String password, String location)
+            throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        String locationToSelectFromDMViewSchedule = dmViewTestData.get("Location");
+        locationSelectorPage.changeDistrict(dmViewTestData.get("District"));
+        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        dashboardPage.navigateToDashboard();
+        String DateOnDashboard = schedulePage.getDateFromDashboard();
+        schedulePage.clickOnViewScheduleLocationSummaryDMViewDashboard();
+        String dateOnScheduleOnNavigatingFromLocSummary = schedulePage.getActiveWeekText();
+        schedulePage.compareDashboardAndScheduleWeekDate(dateOnScheduleOnNavigatingFromLocSummary, DateOnDashboard);
+        schedulePage.toNFroNavigationFromDMToSMSchedule(dateOnScheduleOnNavigatingFromLocSummary, locationToSelectFromDMViewSchedule, dmViewTestData.get("District"), weekViewType.Next.getValue());
+//        dashboardPage.navigateToDashboard();
+//        schedulePage.clickOnViewSchedulePayrollProjectionDMViewDashboard();
+//        String dateOnSchdeuleOnNavigatingFromPayroleProjection = schedulePage.getActiveWeekText();
+//        schedulePage.compareDashboardAndScheduleWeekDate(dateOnSchdeuleOnNavigatingFromPayroleProjection, DateOnDashboard);
+//        schedulePage.toNFroNavigationFromDMDashboardToDMSchedule(dateOnSchdeuleOnNavigatingFromPayroleProjection);
+//        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+//        timeSheetPage.clickOnTimeSheetConsoleMenu();
+//        timeSheetPage.validateLoadingOfTimeSheetSmartCard();
+//        timeSheetPage.goToSMView();
+//        dashboardPage.navigateToDashboard();
+//        schedulePage.districtSelectionSMView(dmViewTestData.get("District"));
+//        timeSheetPage.clickOnTimeSheetConsoleMenu();
+//        timeSheetPage.validateLoadingOfTimeSheetSmartCard(weekViewType.Previous.getValue());
+//        timeSheetPage.goToSMView();
+//        dashboardPage.navigateToDashboard();
+//        schedulePage.districtSelectionSMView(dmViewTestData.get("District"));
+//        timeSheetPage.clickOnComplianceConsoleMenu();
+//        timeSheetPage.validateLoadingOfComplianceOnDMView(weekViewType.Previous.getValue(),true);
+//        timeSheetPage.validateLoadingOfComplianceOnDMView(weekViewType.Previous.getValue(),false);
+//        dashboardPage.navigateToDashboard();
+//        timeSheetPage.clickOnComplianceViolationSectionOnDashboard();
+
+    }
+
+
+    public void verifyTimesheetOnDMView(int totalTimesheetOnDMViewSmartCard,
+                                                                        int totalTimesheetsOnTblView){
+        if(totalTimesheetOnDMViewSmartCard == totalTimesheetsOnTblView){
+            SimpleUtils.pass("Total Timesheet Count from Smart Card " + totalTimesheetOnDMViewSmartCard + " matches " +
+                    "with sum of Timesheet entries per location in Timesheet table " + totalTimesheetsOnTblView + " on DM View");
+        }else{
+            SimpleUtils.fail("Total Timesheet Count from Smart Card " + totalTimesheetOnDMViewSmartCard + " do not match " +
+                    "with sum of Timesheet entries per location in Timesheet table  " + totalTimesheetsOnTblView + " on DM View",true);
+        }
+
     }
 
 

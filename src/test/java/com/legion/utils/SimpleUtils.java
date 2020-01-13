@@ -1699,4 +1699,49 @@ public class SimpleUtils {
 		return rand_int;
 	}
 
+	//added by Nishant for getSpecificTestRailId
+
+	public static void getTestRailId() {
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
+		String testRailSuiteName = testRailConfig.get("TEST_RUN_SUITE_NAME");
+		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+		String addResultString = "get_runs/" + testRailProjectID;
+        JSONObject jsonTestRailName;
+        List<Integer> testCaseIDList = new ArrayList<>();
+//        JSONArray testRailIdList;
+
+		try {
+			// Make a connection with TestRail Server
+			APIClient client = new APIClient(testRailURL);
+			client.setUser(testRailUser);
+			client.setPassword(testRailPassword);
+            JSONArray testRailList= (JSONArray) client.sendGet(addResultString);
+            for(Object testRailId : testRailList)
+            {
+
+                jsonTestRailName = (JSONObject) testRailId;
+                if(jsonTestRailName.get("name").toString().contains("CORE"))
+                {
+                    long longTestRailID = (Long) jsonTestRailName.get("id");
+                    int testRailID = (int)longTestRailID;
+                    testCaseIDList.add(testRailID);
+                    }
+
+                }
+
+			System.out.println("Print Test Rail Id");
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+
+        deleteTestRail(testCaseIDList);
+//		return testCaseIDList;
+
+	}
+
+
+
 }

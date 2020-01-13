@@ -127,5 +127,21 @@ public interface TimeSheetPage {
 	public void clickOnPPWeeklyDuration() throws Exception;
     public String verifyTimesheetSmartCard() throws Exception;
 	public String verifyTimesheetDueHeader() throws Exception;
+	public void validateLoadingOfTimeSheetSmartCard() throws Exception;
+	public int getUnplannedClocksValueNtext() throws Exception;
+	public int getUnplannedClocksDetailSummaryValue() throws Exception;
+	public void goToSMView(List<String> searchLocation, String datePickerTxtDMView,
+						   int locationCount, int totalUnplannedClocksOnDMView, int totalTimesheetsOnDMView) throws Exception;
+	public List<String> getLocationName() throws Exception;
+	public int getUnplannedClocksOnDMView() throws Exception;
+	public int getTotalTimesheetsOnDMView() throws Exception;
+	public int getUnplannedClockSmartCardOnDMView() throws Exception;
+	public int getTotalTimesheetFromSmartCardOnDMView() throws Exception;
+	public void validateLoadingOfTimeSheetSmartCard(String nextWeekViewOrPreviousWeekView) throws Exception;
+	public void goToSMView() throws Exception;
+	public void validateLoadingOfComplianceOnDMView(String nextWeekViewOrPreviousWeekView, boolean currentWeek) throws Exception;
+	public void clickOnComplianceConsoleMenu() throws Exception;
+	public void toNFroNavigationFromDMDashboardToDMCompliance(String CurrentWeek) throws Exception;
+	public void clickOnComplianceViolationSectionOnDashboard() throws Exception;
 
 }

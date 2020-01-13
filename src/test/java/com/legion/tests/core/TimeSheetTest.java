@@ -66,7 +66,7 @@ public class TimeSheetTest extends TestBase{
 	public void firstTest(Method method, Object[] params) throws Exception {
 		  this.createDriver((String) params[0], "68", "Linux");
 	      visitPage(method);
-	      loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+//	      loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
 	}
 	
 
@@ -1055,6 +1055,18 @@ public class TimeSheetTest extends TestBase{
 		}else{
 			SimpleUtils.fail("Timesheet Due Date value is not " + timesheetApprovalVal + " days after the end of the pay period which is incorrect behavior",false);
 		}
+	}
+
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Nishant")
+	@SanitySuite(sanity =  "Sanity")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "Test Rail Id")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void getTestRailAsStoreManager(String browser, String username, String password, String location)
+			throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.getTestRailId();
 	}
 
 

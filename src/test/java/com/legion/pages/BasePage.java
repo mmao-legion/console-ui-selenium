@@ -674,5 +674,26 @@ public class BasePage {
         }
     }
 
+    //added by Nishant
+    public String getActiveWeekText() throws Exception {
+        WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
+        if (isElementLoaded(activeWeek))
+            return activeWeek.getText().replace("\n", " ");
+        return "";
+    }
+
+    public boolean compareDMAndSMViewDatePickerText(String datePickerTxtDMView) throws Exception{
+        String datePickerTxtSMView = getActiveWeekText();
+        boolean result = false;
+        if(datePickerTxtDMView.equals(datePickerTxtSMView)){
+            result = true;
+            SimpleUtils.pass("Date Picker Text from" +
+                    " DM View " + datePickerTxtDMView + " matches with Date picker text from SM View " + datePickerTxtSMView);
+        }else{
+            SimpleUtils.fail("Date Picker Text from" +
+                    " DM View " + datePickerTxtDMView + " not matches with Date picker text from SM View " + datePickerTxtSMView,true);
+        }
+        return result;
+    }
 
 }

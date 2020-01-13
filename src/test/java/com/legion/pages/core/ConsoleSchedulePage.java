@@ -1827,4 +1827,21 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void clickOnPreviousDaySchedule(String activeDay) throws Exception {
 
     }
+
+    public void toNFroNavigationFromDMToSMSchedule(String CurrentWeek, String locationToSelectFromDMViewSchedule, String districtName, String nextWeekViewOrPreviousWeekView) throws Exception {
+
+    }
+    public void toNFroNavigationFromDMDashboardToDMSchedule(String CurrentWeek) throws Exception{
+
+    }
+    public void clickOnViewScheduleLocationSummaryDMViewDashboard(){
+
+    }
+    public void clickOnViewSchedulePayrollProjectionDMViewDashboard(){
+
+    }
+    public void loadingOfDMViewSchedulePage(String SelectedWeek) throws Exception{
+
+    }
+    public void districtSelectionSMView(String districtName) throws Exception{}
 }

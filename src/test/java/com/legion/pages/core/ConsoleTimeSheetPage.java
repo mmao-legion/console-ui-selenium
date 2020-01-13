@@ -5,11 +5,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
+import com.legion.utils.JsonUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -31,6 +29,9 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	@FindBy(css = "div.console-navigation-item-label.Timesheet")
 	private WebElement timeSheetConsoleMenuDiv;
+
+	@FindBy(css = "div.console-navigation-item-label.Compliance")
+	private WebElement complianceConsoleMenuDiv;
 	
 	@FindBy(css = "div.header-navigation-label")
 	private WebElement timeSheetPageHeaderLabel;
@@ -269,14 +270,75 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy(css = "lg-smart-card[heading='Due Date'] div[ng-if='$ctrl.note']")
 	private WebElement dueDateTimesheetNote;
 
+    @FindBy(css = "div.card-carousel-card.card-carousel-card-primary")
+    private WebElement timesheetApprovalSmartCard;
+
+    @FindBy(css = "div.card-carousel-card.card-carousel-card-analytics-card-color-yellow")
+    private WebElement totalUnplannedClocksSmartCard;
+
+    @FindBy(css = "div.card-carousel-card.card-carousel-card-card-carousel-card-yellow-top")
+    private WebElement SummaryOfUnplannedClocksSmartCard;
+
+		@FindBy(css = "div.analytics-new-table-group")
+    private List<WebElement> timesheetTblRow;
+
+	@FindBy(css = "div.card-carousel-card.card-carousel-card-analytics-card-color-yellow div")
+	private List<WebElement> totalUnplannedClocksSmartCardValueNTxt;
+
+	@FindBy(css = "div.analytics-card-color-text-1")
+	private WebElement totalUnplannedClocksSmartCardValueOnDMView;
+
+	@FindBy(css = "div.analytics-card-color-text-4")
+	private WebElement totalTimesheetSmartCardValueOnDMView;
+
+	@FindBy(css = "div[ng-repeat*='smartCardData.Timesheet.UnplannedClocks']")
+	private List<WebElement> detailSummaryUnplannedClocksVal;
+
+	@FindBy(css = "div.analytics-new-table-group-row-open div.analytics-new-table-group-row-action")
+	private List<WebElement> goToSMViewArrow;
+
+	@FindBy(css = "input-field[placeholder='Search']")
+	private List<WebElement> searchTxt;
+
+	@FindBy(xpath = "//lg-smart-card[@heading='Due Date']/content-box | //lg-smart-card[@heading='Approval']/content-box")
+	private WebElement dueDateOrApprovalSmartCard;
+
+	@FindBy(css = "div.lg-smart-card.ng-scope.lg-smart-card--is-primary")
+	private WebElement primarySmartCardTimesheet;
+
+	@FindBy(css = "lg-smart-card[heading='Alerts'] content-box")
+	private WebElement alertSmartCardTimesheet;
+
+	@FindBy(css = "a.lg-filter__clear-active")
+	private WebElement clearLocationFilter;
+
+	@FindBy(css = "div.lg-timesheet-carousel__table div")
+	private List<WebElement> alertsSmartCardValue;
+
+	@FindBy(css = "div.lg-timesheet-table__grid-column--left.ng-binding")
+	private List<WebElement> totalTimesheetsOnSMView;
+
+	@FindBy(xpath = "//div[contains(@class,'analytics-new-table-group-row-open')]//img[@ng-if='isLocation(el)']/following-sibling::span")
+	private List<WebElement> listLocations;
+
+	@FindBy(css = "div.analytics-new-table-group-row-open div:nth-child(2)")
+	private List<WebElement> unplannedClocksTblView;
+
+	@FindBy(css = "div.analytics-new-table-group-row-open div:nth-child(3)")
+	private List<WebElement> totalTimesheetsTblView;
+
+	@FindBy(css ="div.card-carousel-card.card-carousel-card-primary.card-carousel-card-primary-small")
+	private WebElement totalViolationHoursSmartCard;
+
+	@FindBy(css ="div.card-carousel-card.card-carousel-card-analytics-card-color-red")
+	private WebElement locationWithViolationSmartCard;
+
 	String timeSheetHeaderLabel = "Timesheet";
 	String locationFilterSpecificLocations = null;
 	List<String> locationName = new ArrayList<>();
 	public ConsoleTimeSheetPage(){
 		PageFactory.initElements(getDriver(), this);
 	}
-	
-	
 
 	@Override
 	public void clickOnTimeSheetConsoleMenu() throws Exception {
@@ -284,6 +346,13 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			click(timeSheetConsoleMenuDiv);
 		else
 			SimpleUtils.fail("Timesheet Console Menu not loaded Successfully!", false);
+	}
+
+	public void clickOnComplianceConsoleMenu() throws Exception {
+		if(isElementLoaded(complianceConsoleMenuDiv))
+			click(complianceConsoleMenuDiv);
+		else
+			SimpleUtils.fail("Compliance Console Menu not loaded Successfully!", false);
 	}
 	
 	@Override
@@ -1093,7 +1162,6 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				break;
 			}else{
 				click(footerRightNavigation);
-				System.out.println("hello");
 			}
 		}
 		//Values from smartcard
@@ -1907,6 +1975,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	public void clickOnLocationFilterCheckBoxForSpecificLocation(String locationFilterSpecificLocations) throws Exception{
 		if (areListElementVisible(locationCheckbox,5) &&
 				areListElementVisible(locationCheckboxLabel,5)){
+			locationCheckboxLabel.get(0);
 			for(int i=0; i<locationCheckboxLabel.size(); i++){
 				if(locationCheckboxLabel.get(i).getText().toLowerCase().contains(locationFilterSpecificLocations.toLowerCase())){
 					click(locationCheckboxLabel.get(i));
@@ -2007,5 +2076,364 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		return timesheetDueDateValue;
 	}
 
+    public void validateLoadingOfTimeSheetSmartCard() throws Exception {
+		if(isElementEnabled(timesheetApprovalSmartCard,5)){
+			SimpleUtils.pass("Timesheet Approval Smart Card loaded Successfully!!");
+		}else{
+			SimpleUtils.fail("Timesheet Approval Smart Card not loaded Successfully!!",true);
+		}
+		if(isElementEnabled(totalUnplannedClocksSmartCard,5)){
+			SimpleUtils.pass("Total Unplanned Smart Card loaded Successfully!!");
+		}else{
+			SimpleUtils.fail("Total Unplanned Smart Card not loaded Successfully!!",true);
+		}
+		if(isElementEnabled(SummaryOfUnplannedClocksSmartCard,5)){
+			SimpleUtils.pass("Unplanned Clocks Detail Summary Smart Card loaded Successfully!!");
+		}else{
+			SimpleUtils.fail("Unplanned Clocks Detail Summary Smart Card not loaded Successfully!!",true);
+		}
+		if(areListElementVisible(timesheetTblRow,5)){
+			SimpleUtils.pass("Rows of Timesheet table loaded Successfully on page!!");
+		}else{
+			SimpleUtils.fail("Rows of Timesheet table not loaded Successfully on page!!",false);
+		}
 
+	}
+
+//	@FindBy(xpath = "//*[contains(@class,'day-week-picker-period-active')]/preceding-sibling::div[1]")
+//	private WebElement immediatePastToCurrentActiveWeek;
+
+
+
+//	public void clickImmediatePastToCurrentActiveWeekInDayPicker() {
+//		if (isElementEnabled(immediatePastToCurrentActiveWeek, 30)) {
+//			click(immediatePastToCurrentActiveWeek);
+//		} else {
+//			SimpleUtils.report("This is a last week in Day Week picker");
+//		}
+//	}
+	@FindBy(css = "div.day-week-picker-period-active")
+	private WebElement daypicker;
+
+	public void validateLoadingOfTimeSheetSmartCard(String nextWeekViewOrPreviousWeekView) throws Exception {
+		String weekSelected = null;
+		clickImmediatePastToCurrentActiveWeekInDayPicker();
+			weekSelected = daypicker.getText().replace("\n", " ");
+
+		if(isElementEnabled(timesheetApprovalSmartCard,5)){
+			SimpleUtils.pass("Timesheet Approval Smart Card loaded Successfully for week " + weekSelected);
+		}else{
+			SimpleUtils.fail("Timesheet Approval Smart Card not loaded Successfully for week " + weekSelected,true);
+		}
+		if(isElementEnabled(totalUnplannedClocksSmartCard,5)){
+			SimpleUtils.pass("Total Unplanned Smart Card loaded Successfully for week " + weekSelected);
+		}else{
+			SimpleUtils.fail("Total Unplanned Smart Card not loaded Successfully for week " + weekSelected,true);
+		}
+		if(isElementEnabled(SummaryOfUnplannedClocksSmartCard,5)){
+			SimpleUtils.pass("Unplanned Clocks Detail Summary Smart Card loaded Successfully for week " + weekSelected);
+		}else{
+			SimpleUtils.fail("Unplanned Clocks Detail Summary Smart Card not loaded Successfully for week " + weekSelected,true);
+		}
+		if(areListElementVisible(timesheetTblRow,5)){
+			SimpleUtils.pass("Rows of Timesheet table loaded Successfully for week " + weekSelected + " on page!!");
+		}else{
+			SimpleUtils.fail("Rows of Timesheet table not loaded Successfully or week " + weekSelected + " on page!!",false);
+		}
+
+	}
+
+    public int getUnplannedClocksValueNtext() throws Exception {
+		int totalUnplannedClocksOnDMViewSmartCard = 0;
+		if(areListElementVisible(totalUnplannedClocksSmartCardValueNTxt,1)){
+			for(int i=0;i<totalUnplannedClocksSmartCardValueNTxt.size();i++){
+//				listTotalUnplannedHrsText.add(totalUnplannedClocksSmartCardValueNTxt.get(i).getText());
+				totalUnplannedClocksOnDMViewSmartCard  = totalUnplannedClocksOnDMViewSmartCard +
+						Integer.parseInt((totalUnplannedClocksSmartCardValueNTxt.get(i).getText().split("\n"))[0]);
+			}
+		}else{
+			SimpleUtils.fail("Total Unplanned Smart Card Text not loaded Successfully!!",true);
+		}
+		return totalUnplannedClocksOnDMViewSmartCard;
+	}
+
+	public int getUnplannedClocksDetailSummaryValue() throws Exception {
+		int totalUnplannedClocksOnDMViewSmartCardDetailSummary = 0;
+		if(areListElementVisible(detailSummaryUnplannedClocksVal,1)){
+			for(int i=0;i<detailSummaryUnplannedClocksVal.size();i++){
+				totalUnplannedClocksOnDMViewSmartCardDetailSummary  = totalUnplannedClocksOnDMViewSmartCardDetailSummary +
+						Integer.parseInt((detailSummaryUnplannedClocksVal.get(i).getText().split("\n"))[0]);
+			}
+		}else{
+			SimpleUtils.fail("Detail Summary of Unplanned Smart Card Text not loaded Successfully!!",true);
+		}
+		return totalUnplannedClocksOnDMViewSmartCardDetailSummary;
+	}
+
+	public void goToSMView(List<String> searchLocation, String datePickerTxtDMView,
+						   int locationCount, int totalUnplannedClocksOnDMView, int totalTimesheetsOnDMView) throws Exception {
+		if(areListElementVisible(timesheetTblRow,2) && !searchLocation.isEmpty()
+			&& areListElementVisible(goToSMViewArrow,2)){
+			for(int j=0; j<timesheetTblRow.size();j++) {
+				if (j == locationCount) {
+					break;
+				}
+				click(goToSMViewArrow.get(j));
+				validateLoadingOfTimeSheetSmartCardSMView();
+				compareDMAndSMViewDatePickerText(datePickerTxtDMView);
+				clickOnLocationFilter(searchLocation);
+				int totalUnplannedClocksOnSMView = getAlertsSmartCardValue();
+				int totalTimehseetOnSMView = getAllTimesheetValOnSMView();
+				compareDMAndSMViewUnplannedClocksCount(totalUnplannedClocksOnDMView, totalUnplannedClocksOnSMView);
+				compareDMAndSMViewTimesheetCount(totalTimesheetsOnDMView, totalTimehseetOnSMView);
+			}
+		}else{
+			SimpleUtils.fail("Rows of Timesheet table not loaded Successfully on page!!",false);
+		}
+	}
+
+	public void validateLoadingOfTimeSheetSmartCardSMView() throws Exception {
+		String activeWeek = getActiveWeekText();
+		if(isElementEnabled(primarySmartCardTimesheet,5)){
+			SimpleUtils.pass("Timesheet Primary Smart Card on SM View loaded Successfully for week " + activeWeek);
+		}else{
+			SimpleUtils.fail("Timesheet Primary Smart Card on SM View not loaded Successfully for week " + activeWeek,true);
+		}
+		if(isElementEnabled(dueDateOrApprovalSmartCard,5)){
+			SimpleUtils.pass("Due Date OR Approval Smart Card loaded Successfully for week " + activeWeek);
+		}else{
+			SimpleUtils.fail("Due Date OR Approval Smart Card not loaded Successfully for week " + activeWeek,true);
+		}
+		if(isElementEnabled(alertSmartCardTimesheet,5)){
+			SimpleUtils.pass("Alert Smart Card loaded Successfully for week " + activeWeek);
+		}else{
+			SimpleUtils.fail("Alert Smart Card not loaded Successfully for week " + activeWeek,true);
+		}
+		if(areListElementVisible(timesheetTableRow,5) && timesheetTableRow.size()>1){
+			SimpleUtils.pass("Rows of Timesheet table loaded Successfully for week " + activeWeek + " on page!!");
+		}else{
+			SimpleUtils.fail("Rows of Timesheet table not loaded Successfully or week " + activeWeek + " on page!!",false);
+		}
+
+	}
+
+	public void clickOnLocationFilter(List<String> locationFilterAllLocations) throws Exception{
+		if(isElementLoaded(locationFilter,5)){
+			click(locationFilter);
+			clickOnLocationFilterOnSMView(locationFilterAllLocations);
+			if(areListElementVisible(timesheetTableRow,15,1)){
+				SimpleUtils.pass("User is able to see data in timesheet table");
+			}else{
+				SimpleUtils.fail("No date found in timesheet table",true);
+			}
+		}else{
+			SimpleUtils.fail("Location Filter not displayed on page",false);
+		}
+	}
+
+	public void clickOnLocationFilterOnSMView(List<String> locationFilterSpecificLocations) throws Exception{
+		if (areListElementVisible(locationCheckbox,5) &&
+				areListElementVisible(locationCheckboxLabel,5) && isElementEnabled(clearLocationFilter,2)){
+			click(clearLocationFilter);
+			for(int i=0; i<locationCheckboxLabel.size(); i++){
+				for(int j=0; j<locationFilterSpecificLocations.size();j++){
+					if(locationCheckboxLabel.get(i).getText().toLowerCase().contains(locationFilterSpecificLocations.get(j).toLowerCase())){
+						click(locationCheckboxLabel.get(i));
+					}
+				}
+			}
+		}else{
+			SimpleUtils.fail("Location Filter checkbox is not clickable",false);
+		}
+		click(locationFilter);
+	}
+
+	public int getAlertsSmartCardValue() throws Exception {
+		int totalUnplannedClocksOnSMView = 0;
+		if(areListElementVisible(alertsSmartCardValue,2)){
+			for(int i=0; i< alertsSmartCardValue.size();i++){
+				totalUnplannedClocksOnSMView  = totalUnplannedClocksOnSMView + Integer.parseInt((alertsSmartCardValue.get(i).getText().split("\n"))[0]);
+			}
+		}else{
+			SimpleUtils.fail("Alert Smart Card not displayed on page",true);
+		}
+		return totalUnplannedClocksOnSMView;
+	}
+
+	public int getAllTimesheetValOnSMView() throws Exception {
+		int totalTimehseetOnSMView = 0;
+		if(areListElementVisible(timesheetTableRow,2,1)
+		    && areListElementVisible(totalTimesheetsOnSMView,1,1)){
+			String paginationValue[] = pagination.getText().split("f ");
+			for(int j=0; j<Integer.parseInt(paginationValue[1]); j++) {
+				if(areListElementVisible(timesheetTableRow,10,1)){
+					for (int i = 0; i < totalTimesheetsOnSMView.size(); i++) {
+						totalTimehseetOnSMView = totalTimehseetOnSMView + Integer.parseInt((totalTimesheetsOnSMView.get(i).getText().split(" "))[0]);
+					}
+					if (isElementLoaded(footerRightNavigationDisabled, 2)) {
+						break;
+					} else {
+						click(footerRightNavigation);
+					}
+				}
+			}
+		}else{
+			SimpleUtils.fail("No date found in timesheet table",true);
+		}
+		return totalTimehseetOnSMView;
+	}
+
+	public List<String> getLocationName() throws Exception {
+		List<String> listLocationName = new ArrayList<>();
+		if(areListElementVisible(listLocations,1)){
+			for(int i=0; i<listLocations.size();i++){
+				listLocationName.add(listLocations.get(i).getText());
+			}
+		}else{
+			SimpleUtils.fail("Location not displayed on DM view of Timesheet table",true);
+		}
+		return listLocationName;
+	}
+
+	public int getUnplannedClocksOnDMView() throws Exception {
+		int totalUnplannedClocksOnDMView = 0;
+		if(areListElementVisible(unplannedClocksTblView,2)){
+			for(int i=0; i< unplannedClocksTblView.size();i++){
+				totalUnplannedClocksOnDMView  = totalUnplannedClocksOnDMView + Integer.parseInt((unplannedClocksTblView.get(i).getText()));
+			}
+		}else{
+			SimpleUtils.fail("Unplanned Clocks data not displayed on DM view of Timesheet table",true);
+		}
+		return totalUnplannedClocksOnDMView;
+	}
+
+    public int getTotalTimesheetsOnDMView() throws Exception {
+        int totalTimesheetsOnDMView = 0;
+        if(areListElementVisible(totalTimesheetsTblView,2)){
+            for(int i=0; i< totalTimesheetsTblView.size();i++){
+                totalTimesheetsOnDMView  = totalTimesheetsOnDMView + Integer.parseInt((totalTimesheetsTblView.get(i).getText()));
+            }
+        }else{
+			SimpleUtils.fail("Total Timesheet data not displayed on DM view of Timesheet table",true);
+		}
+        return totalTimesheetsOnDMView;
+    }
+
+    public void compareDMAndSMViewTimesheetCount(int totalTimesheetsOnDMView, int totalTimehseetOnSMView){
+		if(totalTimesheetsOnDMView== totalTimehseetOnSMView){
+			SimpleUtils.pass("Timesheet Count on DM View " + totalTimesheetsOnDMView + " " +
+					" matches with Timesheet Count on SM View " + totalTimehseetOnSMView);
+		}else{
+			SimpleUtils.fail("Timesheet Count on DM View " + totalTimesheetsOnDMView + " " +
+					" do not match with Timesheet Count on SM View " + totalTimehseetOnSMView,true);
+		}
+	}
+
+	public void compareDMAndSMViewUnplannedClocksCount(int totalUnplannedClocksOnDMView, int totalUnplannedClocksOnSMView){
+		if(totalUnplannedClocksOnDMView== totalUnplannedClocksOnSMView){
+			SimpleUtils.pass("Unplanned Clocks Count on DM View " + totalUnplannedClocksOnDMView + " " +
+					" matches with Unplanned Clocks Count on SM View " + totalUnplannedClocksOnSMView);
+		}else{
+			SimpleUtils.fail("Unplanned Clocks Count on DM View " + totalUnplannedClocksOnDMView + " " +
+					" do not match with Unplanned Clocks Count on SM View " + totalUnplannedClocksOnSMView,true);
+		}
+	}
+
+	public int getUnplannedClockSmartCardOnDMView() throws Exception {
+		int totalUnplannedClockSmartCardValOnDMView = 0;
+		if(isElementEnabled(totalUnplannedClocksSmartCardValueOnDMView,2)){
+			totalUnplannedClockSmartCardValOnDMView = Integer.parseInt(totalUnplannedClocksSmartCardValueOnDMView.getText());
+		}
+		return totalUnplannedClockSmartCardValOnDMView;
+	}
+
+	public int getTotalTimesheetFromSmartCardOnDMView() throws Exception {
+		int totalTimesheetOnDMViewSmartCard = 0;
+		if(isElementEnabled(totalTimesheetSmartCardValueOnDMView,2)){
+			totalTimesheetOnDMViewSmartCard = Integer.parseInt((totalTimesheetSmartCardValueOnDMView.getText().split(" "))[0]);
+		}
+		return totalTimesheetOnDMViewSmartCard;
+	}
+
+	public void goToSMView() throws Exception {
+		String activeWeekOnDMView = getActiveWeekText();
+		if(areListElementVisible(timesheetTblRow,2) && areListElementVisible(goToSMViewArrow,2)){
+			for(int j=0; j<timesheetTblRow.size();j++) {
+				if (j == 1) {
+					break;
+				}
+				click(goToSMViewArrow.get(j));
+				validateLoadingOfTimeSheetSmartCardSMView(activeWeekOnDMView);
+			}
+		}else{
+			SimpleUtils.fail("Rows of Timesheet table not loaded Successfully on page!!",false);
+		}
+	}
+
+	public void validateLoadingOfTimeSheetSmartCardSMView(String activeWeekOnDMView) throws Exception {
+		waitForSeconds(2);
+		compareDMAndSMViewDatePickerText(activeWeekOnDMView);
+		if(isElementEnabled(primarySmartCardTimesheet,5)){
+			SimpleUtils.pass("Timesheet Primary Smart Card on SM View loaded Successfully for week " + activeWeekOnDMView);
+		}else{
+			SimpleUtils.fail("Timesheet Primary Smart Card on SM View not loaded Successfully for week " + activeWeekOnDMView,true);
+		}
+		if(isElementEnabled(dueDateOrApprovalSmartCard,5)){
+			SimpleUtils.pass("Due Date OR Approval Smart Card loaded Successfully for week " + activeWeekOnDMView);
+		}else{
+			SimpleUtils.fail("Due Date OR Approval Smart Card not loaded Successfully for week " + activeWeekOnDMView,true);
+		}
+		if(isElementEnabled(alertSmartCardTimesheet,5)){
+			SimpleUtils.pass("Alert Smart Card loaded Successfully for week " + activeWeekOnDMView);
+		}else{
+			SimpleUtils.fail("Alert Smart Card not loaded Successfully for week " + activeWeekOnDMView,true);
+		}
+		if(areListElementVisible(timesheetTableRow,5) && timesheetTableRow.size()>1){
+			SimpleUtils.pass("Rows of Timesheet table loaded Successfully for week " + activeWeekOnDMView + " on page!!");
+		}else{
+			SimpleUtils.fail("Rows of Timesheet table not loaded Successfully or week " + activeWeekOnDMView + " on page!!",false);
+		}
+
+	}
+
+	public void validateLoadingOfComplianceOnDMView(String nextWeekViewOrPreviousWeekView, boolean currentWeek) throws Exception {
+		String weekSelected = null;
+		if(!currentWeek){
+			clickImmediatePastToCurrentActiveWeekInDayPicker();
+		}
+		weekSelected = daypicker.getText().replace("\n", " ");
+		if(isElementEnabled(totalViolationHoursSmartCard,5)){
+			SimpleUtils.pass("Compliance Violations Smart Card loaded Successfully for week " + weekSelected);
+		}else{
+			SimpleUtils.fail("Compliance Violations Smart Card not loaded Successfully for week " + weekSelected,true);
+		}
+		if(isElementEnabled(locationWithViolationSmartCard,5)){
+			SimpleUtils.pass("Location with  Compliance Violation Smart Card loaded Successfully for week " + weekSelected);
+		}else{
+			SimpleUtils.fail("Location with  Compliance Violation Smart Card ot  Successfully for week " + weekSelected,true);
+		}
+		if(areListElementVisible(timesheetTblRow,5)){
+			SimpleUtils.pass("Rows of Compliance table loaded Successfully for week " + weekSelected + " on page!!");
+		}else{
+			SimpleUtils.fail("Rows of Compliance table not loaded Successfully or week " + weekSelected + " on page!!",false);
+		}
+
+	}
+
+	public void toNFroNavigationFromDMDashboardToDMCompliance(String CurrentWeek) throws Exception{
+		String weekSelected = null;
+		validateLoadingOfComplianceOnDMView("nextWeekViewOrPreviousWeekView", true);
+	}
+
+	@FindBy(css = "div[ng-click='viewCompliance()']")
+	private WebElement viewViolationOnDashboard;
+
+	public void clickOnComplianceViolationSectionOnDashboard() throws Exception {
+		if(isElementLoaded(viewViolationOnDashboard,5)){
+			click(viewViolationOnDashboard);
+			SimpleUtils.pass("View Violation link on Dashboard clicked Successfully!!");
+		}else{
+			SimpleUtils.fail("View Violation link on Dashboard not clicked Successfully!!",false);
+		}
+	}
 }

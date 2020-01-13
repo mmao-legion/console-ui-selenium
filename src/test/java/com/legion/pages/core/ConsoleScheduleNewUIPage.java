@@ -1108,9 +1108,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(xpath = "//*[contains(@class,'day-week-picker-period-active')]/following-sibling::div[1]")
     private WebElement immediateNextToCurrentActiveWeek;
 
+    @FindBy(xpath = "//*[contains(@class,'day-week-picker-period-active')]/preceding-sibling::div[1]")
+    private WebElement immediatePastToCurrentActiveWeek;
+
     public void clickImmediateNextToCurrentActiveWeekInDayPicker() {
         if (isElementEnabled(immediateNextToCurrentActiveWeek, 30)) {
             click(immediateNextToCurrentActiveWeek);
+        } else {
+            SimpleUtils.report("This is a last week in Day Week picker");
+        }
+    }
+
+    public void clickImmediatePastToCurrentActiveWeekInDayPicker() {
+        if (isElementEnabled(immediatePastToCurrentActiveWeek, 30)) {
+            click(immediatePastToCurrentActiveWeek);
         } else {
             SimpleUtils.report("This is a last week in Day Week picker");
         }
@@ -4002,7 +4013,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     //added by Nishant for DM Test cases
 
-    @FindBy(css = "div.analytics-new-table-group-row")
+    @FindBy(css = "div.analytics-new-table-group")
     private List<WebElement> DMtableRowCount;
 
     @FindBy(xpath = "//div[contains(@class,'analytics-new-table-group-row')]//span/img/following-sibling::span")
@@ -4090,6 +4101,158 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement dateOnSchedule;
     @FindBy(css = "div.published-clocked-cols-summary-title")
     private List<WebElement> locationsSummarySmartCardOnSchedule;
+
+    //added by Gunjan
+    @FindBy(xpath = "//div[contains(@class,'dms-row1')]//div[contains(text(),'View Schedule')]")
+    private WebElement viewScheduleLinkInlocationsSummarySmartCardDashboard;
+    @FindBy(xpath = "//div[contains(@class,'dms-row2')]//div[contains(text(),'View Schedule')]")
+    private WebElement viewScheduleLinkInPayRollProjectionSmartCardDashboard;
+    @FindBy(css = "div.card-carousel-card.card-carousel-card-primary")
+    private WebElement locationSummarySmartCardOnSchedule;
+    @FindBy(css = "div.analytics-new-table-group-row-open div.analytics-new-table-group-row-action")
+    private List<WebElement> DMtoSMNavigationArrow;
+    @FindBy(css = "lg-select[search-hint='Search District'] input-field[class='picker-input ng-isolate-scope'] div.input-faked")
+    private WebElement selectedDistrictSMView;
+    @FindBy(css="lg-select[search-hint='Search Location']  input-field[class='picker-input ng-isolate-scope']  div.input-faked")
+    private WebElement selectedLocationSMView;
+    @FindBy(css = "[search-hint=\"Search District\"] div.lg-search-options")
+    private WebElement districtDropDownButton;
+    @FindBy(css = "div.lg-search-options__option")
+    private List<WebElement> availableLocationCardsName;
+
+
+    public void districtSelectionSMView(String districtName) throws Exception {
+        waitForSeconds(4);
+        try {
+            Boolean isDistrictMatched = false;
+            if (isElementLoaded(selectedDistrictSMView)) {
+                click(selectedDistrictSMView);
+                if (isElementLoaded(districtDropDownButton)) {
+                    if (availableLocationCardsName.size() != 0) {
+                        for (WebElement locationCardName : availableLocationCardsName) {
+                            if (locationCardName.getText().contains(districtName)) {
+                                isDistrictMatched = true;
+                                click(locationCardName);
+                                SimpleUtils.pass("District '" + districtName + " selected successfully");
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+    public void clickOnViewScheduleLocationSummaryDMViewDashboard() {
+        if (isElementEnabled(viewScheduleLinkInlocationsSummarySmartCardDashboard, 2)) {
+            click(viewScheduleLinkInlocationsSummarySmartCardDashboard);
+            SimpleUtils.pass("'View Schedule' link in location summary smartcard Loaded Successfully!");
+        } else {
+            SimpleUtils.fail("'View Schedule' link in location summary smartcard not Loaded!", false);
+        }
+    }
+
+    public void clickOnViewSchedulePayrollProjectionDMViewDashboard() {
+        if (isElementEnabled(viewScheduleLinkInPayRollProjectionSmartCardDashboard, 2)) {
+            click(viewScheduleLinkInPayRollProjectionSmartCardDashboard);
+            SimpleUtils.pass("'View Schedule' link in PayRoll Projection smartcard Loaded Successfully!");
+        } else {
+            SimpleUtils.fail("'View Schedule' link in PayRoll Projection smartcard not Loaded!", false);
+        }
+    }
+
+
+    public void loadingOfDMViewSchedulePage(String SelectedWeek) throws Exception {
+        if(isElementLoaded(locationSummarySmartCardOnSchedule, 2)){
+            SimpleUtils.pass("'Location Summary' smartcard on DM View Schedule Page Loaded Successfully! for week "+ SelectedWeek);
+        } else {
+            SimpleUtils.fail("'Location Summary' smartcard on DM View Schedule Page not Loaded! for week "  + SelectedWeek, true);
+        }
+
+        if(DMtableRowCount.size()>0){
+            SimpleUtils.pass("Locations Table on DM View Schedule Page Loaded Successfully! for week " +SelectedWeek );
+        } else {
+            SimpleUtils.fail("Location Table on DM View Schedule Page not Loaded! for week " + SelectedWeek, true);
+        }
+    }
+
+    public void validateCorrectnessOfDMToSMNavigation(String locationToSelect, String districtName, String selectedWeek, String selectedDistrict, String selectedLocation, String activeWeekSMView) throws Exception {
+        if(selectedDistrict.equalsIgnoreCase(districtName) && selectedLocation.equalsIgnoreCase(locationToSelect)){
+            SimpleUtils.pass("Navigation from DM to SM View Works fine. " + "\n"
+                    + "Expected selection of District from DM view i.e. " + districtName + " matches the selection in SM View i.e. " + selectedDistrict + ". \n"
+                    + "Expected selection of Location from DM view i.e. " + locationToSelect + " matches the selection in SM View i.e. " + selectedLocation + ".");
+            if(compareDMAndSMViewDatePickerText(selectedWeek) == true) {
+                if (areListElementVisible(carouselCards,10,1)) {
+                    SimpleUtils.pass("Smartcard in SM Schedule loaded successfully! for selected week i.e " + selectedWeek);
+                } else {
+                    SimpleUtils.fail("Smartcard in SM Schedule not loaded successfully! for selected week i.e " + selectedWeek, true);
+                }
+                if (areListElementVisible(shiftsOnScheduleView,10,1)) {
+                    SimpleUtils.pass("SM Schedule table loaded successfully! for selected week i.e " + selectedWeek);
+                } else {
+                    SimpleUtils.fail("SM Schedule table not loaded successfully! for selected week i.e " + selectedWeek, true);
+                }
+            }else{
+                SimpleUtils.fail("Wrong week selected in SM View, expected week is " +selectedWeek + " and selected week is "+activeWeekSMView, true);
+            }
+        }else{
+            SimpleUtils.fail("Navigation from DM to SM View is not correct. " + " \n"
+                    + "Expected selection of District from DM view i.e. " + districtName + " doesn't match the selection in SM View i.e. " + selectedDistrict + ". \n"
+                    + "Expected selection of Location from DM view i.e. " + locationToSelect + " doesn't match the selection in SM View i.e. " + selectedLocation + ". ", true);
+        }
+    }
+
+
+    public void checkNavDMtoSMScheduleNSMScheduleLoading(String locationToSelect, String districtName, String selectedWeek) throws Exception {
+        String selectedDistrict = null;
+        String selectedLocation = null;
+        String activeWeekSMView = null;
+        if (areListElementVisible(DMtableRowCount, 3) && DMtableRowCount.size() != 0) {
+            for (int i = 0; i < DMtableRowCount.size(); i++) {
+                if (DMtableRowCount.get(i).getText().contains(locationToSelect)) {
+                    DMtoSMNavigationArrow.get(i).click();
+                    selectedDistrict = selectedDistrictSMView.getText();
+                    selectedLocation = selectedLocationSMView.getText();
+                    activeWeekSMView = getActiveWeekText();
+                    validateCorrectnessOfDMToSMNavigation(locationToSelect, districtName, selectedWeek, selectedDistrict, selectedLocation, activeWeekSMView);
+//                    selectedDistrictSMView.click();
+                    districtSelectionSMView(districtName);
+                    if(compareDMAndSMViewDatePickerText(activeWeekSMView) == true){
+                        SimpleUtils.pass("Backward navigation from SM to DM view is working fine, week selected in SM View " + activeWeekSMView + " , active week in DM view on backward navigation is " + daypicker.getText().replace("\n"," "));
+                    }else{
+                        SimpleUtils.fail("Backward navigation from SM to DM view is not correct, week selected in SM View is " + activeWeekSMView + " , active week in DM view on backward navigation is " + daypicker.getText().replace("\n"," "), true);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void toNFroNavigationFromDMToSMSchedule(String CurrentWeek, String locationToSelectFromDMViewSchedule, String districtName, String nextWeekViewOrPreviousWeekView) throws Exception {
+        String weekSelected = null;
+        loadingOfDMViewSchedulePage(CurrentWeek);
+        checkNavDMtoSMScheduleNSMScheduleLoading(locationToSelectFromDMViewSchedule, districtName, CurrentWeek);
+        if (nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future")) {
+            clickImmediateNextToCurrentActiveWeekInDayPicker();
+            weekSelected = daypicker.getText().replace("\n", " ");
+            checkNavDMtoSMScheduleNSMScheduleLoading(locationToSelectFromDMViewSchedule, districtName, weekSelected);
+        } else {
+            clickImmediatePastToCurrentActiveWeekInDayPicker();
+            weekSelected = daypicker.getText().replace("\n", " ");
+            checkNavDMtoSMScheduleNSMScheduleLoading(locationToSelectFromDMViewSchedule, districtName, weekSelected);
+        }
+
+    }
+
+    public void toNFroNavigationFromDMDashboardToDMSchedule(String CurrentWeek) throws Exception{
+        String weekSelected = null;
+        loadingOfDMViewSchedulePage(CurrentWeek);
+    }
 
 
 
@@ -4203,8 +4366,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
         return DateOnDashboard;
     }
-
+    @FindBy(css = "div.console-navigation-item.active")
+    private WebElement activeConsoleMenuItem;
     public void compareDashboardAndScheduleWeekDate(String DateOnSchdeule, String DateOnDashboard) throws Exception {
+        activeConsoleName = activeConsoleMenuItem.getText();
         String splitFirstDate = null;
         String splitSecondDate = null;
         String strDateOnSchedule = DateOnSchdeule.substring(9).trim();
@@ -4224,7 +4389,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 + " " + splitDateOnSchedule[2] + " " + splitDateOnSchedule[3] + " " + splitSecondDate;
 
         if(actualDateOnSchedule.equals(DateOnDashboard)){
-            SimpleUtils.pass("Week Date on Dashboard " + DateOnDashboard + " matching with Schedule date " + actualDateOnSchedule);
+            SimpleUtils.pass("Week Date on Dashboard " + DateOnDashboard + " matching with DM view of " + activeConsoleName + " date " + actualDateOnSchedule);
         }else{
             SimpleUtils.fail("Week Date on Dashboard " + DateOnDashboard + " not matching with Schedule date " + actualDateOnSchedule,true);
         }
