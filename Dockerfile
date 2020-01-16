@@ -1,6 +1,4 @@
-FROM circleci/openjdk:8-browsers
-
-RUN sudo apt-get install openvpn
+FROM circleci/openjdk:8u232-jdk-node-browsers
 
 RUN cd ~ && \
     mkdir project && \
@@ -23,4 +21,4 @@ RUN mkdir /tmp/.X11-unix && \
 
 WORKDIR /home/circleci/project
 
-CMD ["mvn", "test"]
+CMD ["mvn", "-e", "test"]
