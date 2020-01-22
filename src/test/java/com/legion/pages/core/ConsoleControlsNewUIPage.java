@@ -185,7 +185,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@FindBy(css = "question-input[question-title*=\"Timesheet approval is due for Payroll\"]")
 	private WebElement timeSheetApprovalDueForPayrollAdminDiv;
-	
+
 	@FindBy(css = "form-section[form-title=\"Shifts\"]")
 	private WebElement schedulingPoliciesShiftFormSectionDiv;
 	

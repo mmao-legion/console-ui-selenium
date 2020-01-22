@@ -1413,9 +1413,10 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	}
 
     @Override
-    public void budgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount) {
+    public void budgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount, int tolerance) {
 
     }
+
 
     @Override
 	public String getsmartCardTextByLabel(String cardLabel) {

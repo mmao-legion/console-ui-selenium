@@ -37,7 +37,7 @@ public class SanityTest extends TestBase{
 	  @Override
 	  @BeforeMethod
 	  public void firstTest(Method method, Object[] params) throws Exception {
-          this.createDriver((String)params[0],"69","Window");
+//          this.createDriver((String)params[0],"69","Window");
 	      if(propertyMap.get("RUN_ON_MOBILE").equalsIgnoreCase("No")){
               visitPage(method);
 //	      loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);

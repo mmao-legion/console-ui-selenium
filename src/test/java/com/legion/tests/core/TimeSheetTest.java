@@ -117,7 +117,7 @@ public class TimeSheetTest extends TestBase{
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Validate functioning of Add Time Clock button")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyNewTimesheetEntryAddedAsInternalAdmin(String browser, String username, String password, String location)
+    public void verifyNewTimesheetEntryAddedAsStoreManager(String browser, String username, String password, String location)
     		throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -217,7 +217,27 @@ public class TimeSheetTest extends TestBase{
 		timeSheetPage.timesheetAutoApproval(timeClockLocation,timeClockEmployee, timeClockStartTime, timeClockEndTime, timeClockAddNote);
 		timeSheetPage.closeTimeSheetDetailPopUp();
 	}
-	
+
+	//Added by Gunjan
+	@MobilePlatform(platform = "Android")
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "Validate the details of TMs records in timesheet tab")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyDetailsOfTMsRecordInTimeSheetAsStoreManager(String browser, String username, String password, String location)
+			throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+		locationSelectorPage.changeLocation(location);
+		TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+
+		// Click on "Timesheet" option menu.
+		timeSheetPage.clickOnTimeSheetConsoleMenu();
+		SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+		timeSheetPage.verifyTMsRecordInTimesheetTab();
+	}
 	
 	@Automated(automated =  "Automated")
 	@Owner(owner = "Naval")
@@ -891,7 +911,7 @@ public class TimeSheetTest extends TestBase{
 	public void validateTimeSheetExportFeatureAsInternalAdmin(String username, String password
 			, String browser, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-	    SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);      
+	    SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 	    controlsNewUIPage.clickOnControlsConsoleMenu();
 	    SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
@@ -899,7 +919,6 @@ public class TimeSheetTest extends TestBase{
 	    controlsNewUIPage.clickOnGlobalLocationButton();
 	    controlsNewUIPage.clickOnControlsTimeAndAttendanceAdvanceBtn();
 	    controlsNewUIPage.selectTimeSheetExportFormatByLabel("Standard");
-	    
 	    TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
         timeSheetPage.clickOnTimeSheetConsoleMenu();
         SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
@@ -915,13 +934,13 @@ public class TimeSheetTest extends TestBase{
 	    float clockRegularHours = 0;	
 	    float clockOvertimeHours = 0;
 	    float clockDoubleTimeHours = 0;
-
+		String activeDay = timeSheetPage.getActiveDayWeekOrPayPeriod();
 	    timeSheetPage.exportTimesheet();
 	    Thread.sleep(2000);
 	    if(SimpleUtils.getDirectoryFilesCount(downloadDirPath) > fileCounts) {
 		    File latestFile = SimpleUtils.getLatestFileFromDirectory(downloadDirPath);
 		    String fileName = latestFile.getName();
-		    SimpleUtils.pass("Timesheet Exported successfully with name: '"+ fileName +"'.");
+		    SimpleUtils.pass("Timesheet Exported successfully with name: '"+ fileName +"' for pay period " + activeDay.substring(10));
 		    String downloadedFileExtention = fileName.split("\\.")[1];
 		    if(downloadedFileExtention.equalsIgnoreCase(verifyFileExtention) 
 		    		|| downloadedFileExtention.toLowerCase().contains(verifyFileExtention))
@@ -988,6 +1007,44 @@ public class TimeSheetTest extends TestBase{
 		    basePage.click(workerRow);
     	}*/
 	}
+
+
+//    @Automated(automated =  "Automated")
+//    @Owner(owner = "Nishant")
+//    @SanitySuite(sanity =  "Sanity")
+//    @Enterprise(name = "Coffee_Enterprise")
+//    @TestName(description = "Validate Due Date SmartCard for Manager and PayrollAdmin")
+//    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+//    public void validateDueDateSmartCardAsStoreManager(String browser, String username, String password, String location)
+//            throws Exception {
+//        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+//        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+//        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+//        controlsNewUIPage.clickOnControlsConsoleMenu();
+//        SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+//        controlsNewUIPage.clickOnControlsTimeAndAttendanceCard();
+//        controlsNewUIPage.clickOnGlobalLocationButton();
+//        String timesheetApprovalVal = controlsNewUIPage.getTimeSheetApprovalSelectedOption(false);
+//        LocalDate now = LocalDate.now();
+//        timeSheetPage.clickOnTimeSheetConsoleMenu();
+//        SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+//        timeSheetPage.clickOnPPWeeklyDuration();
+//        String activeDay = timeSheetPage.getActiveDayWeekOrPayPeriod();
+//        String endOfPayPeriod = activeDay.substring(activeDay.length()-2).trim();
+//        String timesheetDueDate = timeSheetPage.verifyTimesheetDueHeader();
+//        LocalDate wanted = LocalDate.now().plusDays(Integer.parseInt(timesheetDueDate));
+//        String dateWanted = String.valueOf(wanted.getDayOfMonth());
+//        String dueDate = timeSheetPage.verifyTimesheetSmartCard();
+//        validateDueDate(dueDate, dateWanted, timesheetApprovalVal, activeDay);
+//    }
+//    public static void validateDueDate(String dueDate, String dateWanted, String timesheetApprovalVal, String activeDay){
+//        if(dueDate.contains(dateWanted)){
+//            SimpleUtils.pass("Timesheet Due Date value is " + timesheetApprovalVal + " after the end of pay period " + activeDay.substring(10) + " which is " + dueDate);
+//		}else{
+//            SimpleUtils.fail("Timesheet Due Date value is " + timesheetApprovalVal + " after the end of the " + activeDay.substring(10) + " which is " + dueDate,false);
+//        }
+//    }
 
 
 	//added by Nishant

@@ -2700,7 +2700,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    public void calculateBudgetValueForScheduleAndBudgetSmartCardWhenBudgetByWages(String weekDuration, String budgetDisplayOnSmartCardWhenByWages,String budgetedWagesOnScheduleSmartcard, String budgetOnScheduleSmartcard){
+    public void calculateBudgetValueForScheduleAndBudgetSmartCardWhenBudgetByWages(String weekDuration, String budgetDisplayOnSmartCardWhenByWages,String budgetedWagesOnScheduleSmartcard, String budgetOnScheduleSmartcard, int tolerance){
         float totalBudgetedWagesForBudgetSmartCard=0.0f;
         float totalScheduledHourIfBudgetEntered=0.0f;
         float totalScheduledWagesIfBudgetEntered=0.0f;
@@ -2730,10 +2730,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         int finaltotalScheduledWagesIfBudgetEntered = (int) (Math.round(totalScheduledWagesIfBudgetEntered * 10) / 10.0);
         int differenceBetweenBugInSCnCalcBudg = (Integer.parseInt(budgetedWagesOnScheduleSmartcard)) - finaltotalScheduledWagesIfBudgetEntered;
-        if (finaltotalScheduledWagesIfBudgetEntered == (Integer.parseInt(budgetedWagesOnScheduleSmartcard)) || (differenceBetweenBugInSCnCalcBudg <= Integer.parseInt(propertyBudgetValue.get("Tolerance_Value")))){
-            SimpleUtils.pass("Budgeted Wages " + (Float.parseFloat(budgetedWagesOnScheduleSmartcard))  +" for week " +weekDuration + " on schedule smartcard matches the budget wages calculated " + finaltotalScheduledWagesIfBudgetEntered);
-            setBudgetTolerance(0);
-        }else{
+        if (finaltotalScheduledWagesIfBudgetEntered == (Integer.parseInt(budgetedWagesOnScheduleSmartcard)) || (differenceBetweenBugInSCnCalcBudg <= tolerance)) {
+            SimpleUtils.pass("Budgeted Wages " + (Float.parseFloat(budgetedWagesOnScheduleSmartcard))  +" for week " +weekDuration + " on" +
+                    " schedule smartcard matches the budget wages calculated " + finaltotalScheduledWagesIfBudgetEntered);
+            setBudgetTolerance(1);
+        } else {
             SimpleUtils.fail("Budget Wages" + (Float.parseFloat(budgetedWagesOnScheduleSmartcard))  +" for week " +weekDuration + " on schedule smartcard doesn't match the budget wages calculated " + finaltotalScheduledWagesIfBudgetEntered, true);
         }
         checkElementVisibility(enterBudgetCancelButton);
@@ -2744,7 +2745,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     @Override
-    public void budgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount) {
+    public void budgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount, int tolerance) {
         // TODO Auto-generated method stub
         waitForSeconds(3);
         for(int i = 0; i < weekCount; i++)
@@ -2766,8 +2767,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         String budgetDisplayOnSmartCardWhenByWages = budgetOnbudgetSmartCard.getText().substring(1);
                         String budgetDisplayOnBudgetSmartCardByHours = budgetDisplayOnBudgetSmartcard[0];
                         String budgetOnScheduleSmartcard = budgetDisplayOnScheduleSmartcard.get(0).getText();
-                        String budgetedWagesOnScheduleSmartcard = budgetDisplayOnScheduleSmartcard.get(1).getText()
-                                .substring(1).replace(",","");
+                        String budgetedWagesOnScheduleSmartcard = budgetDisplayOnScheduleSmartcard.get(1).getText().substring(1).replace(",","");
                         String weekDuration = daypickers[1];
                         if (verifyNoBudgetAvailableForWeek(valueOfBudgetSmartcardWhenNoBudgetEntered, weekDuration) == false) {
                             click(enterBudgetLink);
@@ -2775,7 +2775,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             if(areListElementVisible(editBudgetHrs,5)){
                                 calculateBudgetValueForScheduleAndBudgetSmartCardWhenBudgetByHour(weekDuration, budgetDisplayOnBudgetSmartCardByHours, budgetOnScheduleSmartcard);
                                 }else if(areListElementVisible(editWagesHrs,5)){
-                                    calculateBudgetValueForScheduleAndBudgetSmartCardWhenBudgetByWages(weekDuration, budgetDisplayOnSmartCardWhenByWages, budgetedWagesOnScheduleSmartcard, budgetOnScheduleSmartcard);
+                                    calculateBudgetValueForScheduleAndBudgetSmartCardWhenBudgetByWages(weekDuration, budgetDisplayOnSmartCardWhenByWages, budgetedWagesOnScheduleSmartcard, budgetOnScheduleSmartcard, tolerance);
                                 }
 
                         }

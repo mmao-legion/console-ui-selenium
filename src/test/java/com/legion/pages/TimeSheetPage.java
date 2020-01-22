@@ -120,6 +120,8 @@ public interface TimeSheetPage {
 
 	public void clickWorkerRow(List<WebElement> allWorkersRow, String locationFilterSpecificLocations) throws Exception;
 
+	public void verifyTMsRecordInTimesheetTab() throws Exception;
+
 	public String getWeekStartingDay() throws Exception;
 
 	public void clickPreviousDayArrow(int previousArrowCount) throws Exception;
@@ -143,5 +145,6 @@ public interface TimeSheetPage {
 	public void clickOnComplianceConsoleMenu() throws Exception;
 	public void toNFroNavigationFromDMDashboardToDMCompliance(String CurrentWeek) throws Exception;
 	public void clickOnComplianceViolationSectionOnDashboard() throws Exception;
+    public String verifyTimesheetDueHeader() throws Exception;
 
 }
