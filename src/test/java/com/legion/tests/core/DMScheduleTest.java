@@ -348,7 +348,7 @@ public class DMScheduleTest extends TestBase{
     @Owner(owner = "Nishant")
     @SanitySuite(sanity =  "Sanity")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Verification of Unplanned clocks, total timesheet columns from table view")
+    @TestName(description = "Verification of Unplanned clocks and total timesheet columns from table view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void validateDMViewUnplannedClockAndTimesheetCountAsInternalAdmin(String browser, String username, String password, String location)
             throws Exception {
@@ -416,27 +416,27 @@ public class DMScheduleTest extends TestBase{
         String dateOnScheduleOnNavigatingFromLocSummary = schedulePage.getActiveWeekText();
         schedulePage.compareDashboardAndScheduleWeekDate(dateOnScheduleOnNavigatingFromLocSummary, DateOnDashboard);
         schedulePage.toNFroNavigationFromDMToSMSchedule(dateOnScheduleOnNavigatingFromLocSummary, locationToSelectFromDMViewSchedule, dmViewTestData.get("District"), weekViewType.Next.getValue());
-//        dashboardPage.navigateToDashboard();
-//        schedulePage.clickOnViewSchedulePayrollProjectionDMViewDashboard();
-//        String dateOnSchdeuleOnNavigatingFromPayroleProjection = schedulePage.getActiveWeekText();
-//        schedulePage.compareDashboardAndScheduleWeekDate(dateOnSchdeuleOnNavigatingFromPayroleProjection, DateOnDashboard);
-//        schedulePage.toNFroNavigationFromDMDashboardToDMSchedule(dateOnSchdeuleOnNavigatingFromPayroleProjection);
-//        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
-//        timeSheetPage.clickOnTimeSheetConsoleMenu();
-//        timeSheetPage.validateLoadingOfTimeSheetSmartCard();
-//        timeSheetPage.goToSMView();
-//        dashboardPage.navigateToDashboard();
-//        schedulePage.districtSelectionSMView(dmViewTestData.get("District"));
-//        timeSheetPage.clickOnTimeSheetConsoleMenu();
-//        timeSheetPage.validateLoadingOfTimeSheetSmartCard(weekViewType.Previous.getValue());
-//        timeSheetPage.goToSMView();
-//        dashboardPage.navigateToDashboard();
-//        schedulePage.districtSelectionSMView(dmViewTestData.get("District"));
-//        timeSheetPage.clickOnComplianceConsoleMenu();
-//        timeSheetPage.validateLoadingOfComplianceOnDMView(weekViewType.Previous.getValue(),true);
-//        timeSheetPage.validateLoadingOfComplianceOnDMView(weekViewType.Previous.getValue(),false);
-//        dashboardPage.navigateToDashboard();
-//        timeSheetPage.clickOnComplianceViolationSectionOnDashboard();
+        dashboardPage.navigateToDashboard();
+        schedulePage.clickOnViewSchedulePayrollProjectionDMViewDashboard();
+        String dateOnSchdeuleOnNavigatingFromPayroleProjection = schedulePage.getActiveWeekText();
+        schedulePage.compareDashboardAndScheduleWeekDate(dateOnSchdeuleOnNavigatingFromPayroleProjection, DateOnDashboard);
+        schedulePage.toNFroNavigationFromDMDashboardToDMSchedule(dateOnSchdeuleOnNavigatingFromPayroleProjection);
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        timeSheetPage.validateLoadingOfTimeSheetSmartCard();
+        timeSheetPage.goToSMView();
+        dashboardPage.navigateToDashboard();
+        schedulePage.districtSelectionSMView(dmViewTestData.get("District"));
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        timeSheetPage.validateLoadingOfTimeSheetSmartCard(weekViewType.Previous.getValue());
+        timeSheetPage.goToSMView();
+        dashboardPage.navigateToDashboard();
+        schedulePage.districtSelectionSMView(dmViewTestData.get("District"));
+        timeSheetPage.clickOnComplianceConsoleMenu();
+        timeSheetPage.validateLoadingOfComplianceOnDMView(weekViewType.Previous.getValue(),true);
+        timeSheetPage.validateLoadingOfComplianceOnDMView(weekViewType.Previous.getValue(),false);
+        dashboardPage.navigateToDashboard();
+        timeSheetPage.clickOnComplianceViolationSectionOnDashboard();
 
     }
 
