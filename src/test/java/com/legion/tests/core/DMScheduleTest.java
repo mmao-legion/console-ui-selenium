@@ -317,7 +317,7 @@ public class DMScheduleTest extends TestBase{
     @Owner(owner = "Nishant")
     @SanitySuite(sanity =  "Sanity")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Verification of values from DM view of Unplanned clock smartcard and detail smartcard with SM view")
+    @TestName(description = "Verification of values from DM vie of Unplanned clock smartcard and detail smartcard with SM view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void validateDMViewDataWithSMViewAsInternalAdmin(String browser, String username, String password, String location)
             throws Exception {
