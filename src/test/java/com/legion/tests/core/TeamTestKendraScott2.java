@@ -11,6 +11,7 @@ import com.legion.pages.DashboardPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.ProfileNewUIPage;
 import com.legion.pages.TeamPage;
+import java.util.Map;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -52,8 +53,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			public String getValue() { return value; }
 	}
 	
-	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-	private static HashMap<String, String> searchDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/searchDetails.json");
+	private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
+	private static Map<String, String> searchDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/searchDetails.json");
 	@Override
 	  @BeforeMethod()
 	  public void firstTest(Method testMethod, Object[] params) throws Exception{

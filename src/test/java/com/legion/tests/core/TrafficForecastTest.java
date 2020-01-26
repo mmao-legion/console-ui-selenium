@@ -46,7 +46,7 @@ public class TrafficForecastTest extends TestBase{
 	}
 	String projectedType = "TRAFFIC";
 	
-	//private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	//private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
 	private static HashMap<String, String> salesForecastCategoriesOptions = JsonUtil.getPropertiesFromJsonFile("src/test/resources/salesForecastCategoriesOptions.json");
 	@Override
 	  @BeforeMethod()

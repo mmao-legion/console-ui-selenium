@@ -5,6 +5,7 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 import java.util.HashMap;
 import java.util.List;
 
+import java.util.Map;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -19,7 +20,7 @@ import com.legion.utils.SimpleUtils;
 
 public class ConsoleTeamPage extends BasePage implements TeamPage{
 	
-	private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
 	private static HashMap<String, String> searchDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/searchDetails.json");
 	int teamMemberRecordsCount=0;
 	
