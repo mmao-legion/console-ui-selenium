@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import org.openqa.selenium.WebElement;
 
 import java.util.Map;
 import org.testng.annotations.BeforeMethod;
@@ -27,7 +28,8 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
 public class ScheduleTest extends TestBase{
-	  private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
+	  private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	  private static HashMap<String, String> propertyBudgetValue = JsonUtil.getPropertiesFromJsonFile("src/test/resources/Budget.json");
 	  @Override
 	  @BeforeMethod()
 	  public void firstTest(Method testMethod, Object[] params) throws Exception{
@@ -301,32 +303,80 @@ public class ScheduleTest extends TestBase{
 	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	    public void enterBudgetPopUpHeaderStoreManager(String username, String password, String browser, String location) throws Throwable {
 	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 	    	schedulePage.clickOnScheduleConsoleMenuItem();
-	    	schedulePage.validateBudgetPopUpHeader(weekViewType.Next.getValue(), weekCount.Six.getValue());
+			List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+	    	schedulePage.validateBudgetPopUpHeader(weekViewType.Next.getValue(), weekCount.Two.getValue());
 	    }
 	    
 
 	    @Automated(automated ="Automated")
 		@Owner(owner = "Gunjan")
 		@Enterprise(name = "KendraScott2_Enterprise")
-		@TestName(description = "TP-100: FOR-620: Budget smartcard shows budget hrs when no budget was entered (if navigate from a week with budget)")
+		@TestName(description = "TP-100: FOR-620: Budget smartcard shows budget hrs when no budget was entered ,if navigate from a week with budget")
 	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	    public void noBudgetHourDisplayWhenBudgetNotEnteredStoreManager(String username, String password, String browser, String location) throws Throwable {
 	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 	    	schedulePage.clickOnScheduleConsoleMenuItem();
-	    	schedulePage.noBudgetDisplayWhenBudgetNotEntered(weekViewType.Next.getValue(), weekCount.Six.getValue());
+			List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+	    	schedulePage.noBudgetDisplayWhenBudgetNotEntered(weekViewType.Next.getValue(), weekCount.Two.getValue());
 	    }
 	    
 	    @Automated(automated ="Automated")
   		@Owner(owner = "Gunjan")
   		@Enterprise(name = "KendraScott2_Enterprise")
-  		@TestName(description = "TP-102: LEG 5500 : Budget Hours shown in budget modal (715 hrs) does not match the budgeted hours shown in schedule (1287 hrs)")
+  		@TestName(description = "Validate calculation of budget values for budget and schedule smartcard when budget is by hours or wages")
   	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-  	    public void budgetHourInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
-  	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+  	    public void budgetInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
+  	    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
   	    	schedulePage.clickOnScheduleConsoleMenuItem();
-  	    	schedulePage.budgetHourInScheduleNBudgetedSmartCard(weekViewType.Next.getValue(), weekCount.Six.getValue());
+  	    	int tolerance = Integer.parseInt(propertyBudgetValue.get("Tolerance"));
+			List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+			schedulePage.budgetInScheduleNBudgetSmartCard(weekViewType.Next.getValue(), weekCount.Two.getValue(), tolerance);
   	    }
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "TP-102: LEG 5500 : Budget Hours shown in budget modal 715 hrs does not match the budgeted hours shown in schedule 1287 hrs")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void budgetIntScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		int tolerance = Integer.parseInt(propertyBudgetValue.get("Tolerance"));
+		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+		schedulePage.budgetInScheduleNBudgetSmartCard(weekViewType.Next.getValue(), weekCount.Two.getValue(), tolerance);
+	}
+
+
+//	@Automated(automated ="Automated")
+//	@Owner(owner = "Gunjan")
+//	@Enterprise(name = "KendraScott2_Enterprise")
+//	@TestName(description = "Validate the budget calculation when budget is modified for any schedule week")
+//	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+//	public void updateBudgetInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
+//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+//		schedulePage.clickOnScheduleConsoleMenuItem();
+//		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+//		schedulePage.updatebudgetInScheduleNBudgetSmartCard(weekViewType.Next.getValue(), weekCount.One.getValue());
+//	}
+
+//	@Automated(automated ="Automated")
+//	@Owner(owner = "Gunjan")
+//	@Enterprise(name = "KendraScott2_Enterprise")
+//	@TestName(description = "TP-102: LEG 5500 : Budget Wages shown in budget modal 715 hrs does not match the budgeted hours shown in schedule 1287 hrs")
+//	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+//	public void budgetWagesInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
+//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+//		schedulePage.clickOnScheduleConsoleMenuItem();
+//		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+//		schedulePage.budgetHourByWagesInScheduleNBudgetedSmartCard(weekViewType.Next.getValue(), weekCount.Two.getValue());
+//	}
 	    
 	    @Automated(automated = "Manual")
 		@Owner(owner = "Gunjan")

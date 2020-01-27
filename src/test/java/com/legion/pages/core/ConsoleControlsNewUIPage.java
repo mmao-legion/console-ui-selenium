@@ -179,7 +179,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	
 	@FindBy(css = "question-input[question-title=\"Timesheet export format\"]")
 	private WebElement timeSheetExportFormatDiv;
-	
+
+	@FindBy(css = "question-input[question-title*=\"Timesheet approval is due for Manager\"]")
+	private WebElement timeSheetApprovalDueForManagerDiv;
+
+	@FindBy(css = "question-input[question-title*=\"Timesheet approval is due for Payroll\"]")
+	private WebElement timeSheetApprovalDueForPayrollAdminDiv;
+
 	@FindBy(css = "form-section[form-title=\"Shifts\"]")
 	private WebElement schedulingPoliciesShiftFormSectionDiv;
 	
@@ -270,7 +276,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css="input[placeholder*='Select']")
 	private WebElement linkAllLocations;
 
-	@FindBy(xpath="//div[text()='All Locations']")
+	@FindBy(xpath="//div[contains(text(),'All Locations')]")
 	private WebElement allLocations;
 
 	@FindBy(css="input[placeholder='Search Location']")
@@ -2440,7 +2446,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			List<WebElement> schedulesSectionFields = schedulingPoliciesSchedulesFormSectionDiv.findElements(
 					By.cssSelector("div.lg-question-input"));
 			for(WebElement schedulesSectionField : schedulesSectionFields) {
-				WebElement fieldLabelDiv = schedulesSectionField.findElement(By.cssSelector(" "));
+				WebElement fieldLabelDiv = schedulesSectionField.findElement(By.cssSelector("h3.lg-question-input__text"));
 				String fieldTitle = fieldLabelDiv.getText();
 				List<WebElement> inputBoxFields = schedulesSectionField.findElements(
 						By.cssSelector("input[ng-change=\"$ctrl.handleChange()\"]"));
@@ -4881,8 +4887,33 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	}
 
+  //added by Nishant
 
+	public String getTimeSheetApprovalSelectedOption(boolean byManager) throws Exception {
+		String selectedOptionLabel = "";
+		if(byManager){
+			selectedOptionLabel = getSelectionOptionValue(timeSheetApprovalDueForManagerDiv);
+		}else{
+			selectedOptionLabel = getSelectionOptionValue(timeSheetApprovalDueForPayrollAdminDiv);
+		}
+		return selectedOptionLabel;
+	}
 
+	public String getSelectionOptionValue(WebElement timesheetDueDateAccess) throws Exception{
+		String selectedOptionLabel = "";
+		if(isElementLoaded(timesheetDueDateAccess)) {
+			WebElement timeSheetFormatDropDown = timesheetDueDateAccess.findElement(By.cssSelector("select[ng-change=\"$ctrl.handleChange()\"]"));
+			if(isElementLoaded(timeSheetFormatDropDown)) {
+				Select dropdown= new Select(timeSheetFormatDropDown);
+				selectedOptionLabel = dropdown.getFirstSelectedOption().getText();
+			}
+			else
+				SimpleUtils.fail("Controls - Time and Attendance: timesheet Approval for Manager/Payroll Admin dropdown not loaded.", false);
+		}
+		else
+			SimpleUtils.fail("Controls Page: TimeSheet Approval section loaded.", false);
+		return selectedOptionLabel;
+	}
 
 
 }

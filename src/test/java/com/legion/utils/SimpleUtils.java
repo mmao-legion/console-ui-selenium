@@ -916,10 +916,11 @@ public class SimpleUtils {
 					if(getFailedComment()== null){
 						failedCommentSection.add(comment);
 						setFailedComment(failedCommentSection);
-					}else{
-						getFailedComment().add(comment);
-						setFailedComment(getFailedComment());
 					}
+//					else{
+//						getFailedComment().add(comment);
+//						setFailedComment(getFailedComment());
+//					}
 				}
 			}
 			String responseReq = JSONValue.toJSONString(data);
@@ -1008,7 +1009,8 @@ public class SimpleUtils {
 					}
 				}
 
-				if(TestRunPassStatus >0){
+//				if(TestRunPassStatus >0){
+				if(commentSectionIndex.isEmpty()){
 					Map<String, Object> data = new HashMap<String, Object>();
 					data.put("results",cases);
 					for ( int testId : testIds ) {
@@ -1025,10 +1027,14 @@ public class SimpleUtils {
 				}else{
 					Map<String, Object> data = new HashMap<String, Object>();
 					data.put("results",cases);
+					listCommentSection.add("Failed");
 					for ( int testId : testIds ) {
 						for( int j=0; j<listCommentSection.size();j++) {
 							for(int k=0; k<commentSectionIndex.size();k++){
 								if(j == Integer.parseInt(commentSectionIndex.get(k).toString())){
+									statusId = statusFailID;
+									break;
+								}else if(j==listCommentSection.size()-1){
 									statusId = statusFailID;
 									break;
 								}else{
@@ -1040,6 +1046,7 @@ public class SimpleUtils {
 							singleCase.put("status_id", statusId);
 							singleCase.put("comment", listCommentSection.get(j));
 							cases.add(singleCase);
+
 						}
 					}
 					String responseReq = JSONValue.toJSONString(data);
@@ -1691,10 +1698,60 @@ public class SimpleUtils {
 				System.err.println(e.getMessage());
 			}
 		}
+	}
 
 
+	//added by Nishant
+
+	public static int generateRandomNumbers(){
+		Random rand = new Random();
+		int rand_int = rand.nextInt(1000);
+		return rand_int;
+	}
+
+	//added by Nishant for getSpecificTestRailId
+
+	public static void getTestRailId() {
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
+		String testRailSuiteName = testRailConfig.get("TEST_RUN_SUITE_NAME");
+		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+		String addResultString = "get_runs/" + testRailProjectID;
+        JSONObject jsonTestRailName;
+        List<Integer> testCaseIDList = new ArrayList<>();
+//        JSONArray testRailIdList;
+
+		try {
+			// Make a connection with TestRail Server
+			APIClient client = new APIClient(testRailURL);
+			client.setUser(testRailUser);
+			client.setPassword(testRailPassword);
+            JSONArray testRailList= (JSONArray) client.sendGet(addResultString);
+            for(Object testRailId : testRailList)
+            {
+
+                jsonTestRailName = (JSONObject) testRailId;
+                if(jsonTestRailName.get("name").toString().contains("CORE"))
+                {
+                    long longTestRailID = (Long) jsonTestRailName.get("id");
+                    int testRailID = (int)longTestRailID;
+                    testCaseIDList.add(testRailID);
+                    }
+
+                }
+
+			System.out.println("Print Test Rail Id");
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+
+        deleteTestRail(testCaseIDList);
+//		return testCaseIDList;
 
 	}
+
 
 
 }

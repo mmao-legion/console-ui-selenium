@@ -53,6 +53,10 @@ public class MyThreadLocal {
 	public static ThreadLocal<List<String>> failedComment = new ThreadLocal<>();
 	public static ThreadLocal<List<Integer>> testRailRun = new ThreadLocal<>();
 	public static final ThreadLocal<String> teamMemberName = new ThreadLocal<>();
+	public static final ThreadLocal<String> workerRole = new ThreadLocal<>();
+	public static final ThreadLocal<String> workerLocation = new ThreadLocal<>();
+	public static final ThreadLocal<String> workerShiftTime = new ThreadLocal<>();
+	public static final ThreadLocal<String> workerShiftDuration = new ThreadLocal<>();
 	public static final ThreadLocal<String> screenshotLoc = new ThreadLocal<>();
 	public static ThreadLocal<String> screenShotURL = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeOffStartTime = new ThreadLocal<>();
@@ -60,6 +64,7 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> timeDuration = new ThreadLocal<>();
 	public static final ThreadLocal<String> moduleName = new ThreadLocal<>();
 	public static final ThreadLocal<Integer> sectionID = new ThreadLocal<>();
+	public static final ThreadLocal<Integer> budgetTolerance = new ThreadLocal<>();
 
 	public static void setScreenshotLocation(String value) { screenshotLoc.set(value); }
 
@@ -71,6 +76,22 @@ public class MyThreadLocal {
 	public static void setTeamMemberName(String value) { teamMemberName.set(value); }
 
 	public static String getTeamMemberName() { return teamMemberName.get(); }
+
+	public static void setWorkerRole(String value) { workerRole.set(value); }
+
+	public static String getWorkerRole() { return workerRole.get(); }
+
+	public static void setWorkerLocation(String value) { workerLocation.set(value); }
+
+	public static String getWorkerLocation() { return workerLocation.get(); }
+
+	public static void setWorkerShiftTime(String value) { workerShiftTime.set(value); }
+
+	public static String getWorkerShiftTime() { return workerShiftTime.get(); }
+
+	public static void setWorkerShiftDuration(String value) { workerShiftDuration.set(value); }
+
+	public static String getWorkerShiftDuration() { return workerShiftDuration.get(); }
 
 	public static void setTimeOffStartTime(String value) { timeOffStartTime.set(value); }
 
@@ -101,6 +122,7 @@ public class MyThreadLocal {
 		return testCaseId.get();
 	}
 
+
 	public static void setSectionID(Integer value) {
 		sectionID.set(value);
 	}
@@ -109,6 +131,13 @@ public class MyThreadLocal {
 		return sectionID.get();
 	}
 
+	public static void setBudgetTolerance(Integer value) {
+		budgetTolerance.set(value);
+	}
+
+	public static Integer getBudgetTolerance() {
+		return budgetTolerance.get();
+	}
 	public static void setTestRailRunId(Integer value) {
 		testRailRunId.set(value);
 	}

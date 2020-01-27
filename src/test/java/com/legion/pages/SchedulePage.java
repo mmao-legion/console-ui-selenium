@@ -88,7 +88,9 @@ public interface SchedulePage {
 	public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception;
 	public void validateBudgetPopUpHeader(String nextWeekView, int weekCount);
 	public void noBudgetDisplayWhenBudgetNotEntered(String nextWeekView, int weekCount);
-	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView, int weekCount);
+//	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView, int weekCount);
+//	public void budgetHourByWagesInScheduleNBudgetedSmartCard(String nextWeekView,int weekCount);
+	public void budgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount, int tolerance);
 	public void disableNextWeekArrow() throws Exception;
 	public void clickScheduleDraftAndGuidanceStatus(List<String> overviewScheduleWeeksStatus);
 	public void editBudgetHours();
@@ -137,6 +139,9 @@ public interface SchedulePage {
 	public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception;
 	public void clickOnNextDaySchedule(String activeDay) throws Exception;
 	public void selectTeamMembersOptionForSchedule() throws Exception;
+	public void selectTeamMembersOptionForScheduleForClopening() throws Exception;
+	public void verifyClopeningHrs() throws Exception;
+	public void clickOnPreviousDaySchedule(String activeDay) throws Exception;
 	public void verifyActiveScheduleType() throws Exception;
 	public List<Float> validateScheduleAndBudgetedHours() throws Exception;
 	public void compareHoursFromScheduleAndDashboardPage(List<Float> totalHoursFromSchTbl) throws Exception;
@@ -149,5 +154,12 @@ public interface SchedulePage {
 	public List<String> getLocationSummaryDataFromDashBoard() throws Exception;
 	public List<String> getLocationSummaryDataFromSchedulePage() throws Exception;
 	public void compareLocationSummaryFromDashboardAndSchedule(List<String> ListLocationSummaryOnDashboard, List<String> ListLocationSummaryOnSchedule);
-
+	public void openBudgetPopUpGenerateSchedule() throws Exception;
+	public void updatebudgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount);
+	public void toNFroNavigationFromDMToSMSchedule(String CurrentWeek, String locationToSelectFromDMViewSchedule, String districtName, String nextWeekViewOrPreviousWeekView) throws Exception;
+	public void toNFroNavigationFromDMDashboardToDMSchedule(String CurrentWeek) throws Exception;
+	public void clickOnViewScheduleLocationSummaryDMViewDashboard();
+	public void clickOnViewSchedulePayrollProjectionDMViewDashboard();
+	public void loadingOfDMViewSchedulePage(String SelectedWeek) throws Exception;
+	public void districtSelectionSMView(String districtName) throws Exception;
 }

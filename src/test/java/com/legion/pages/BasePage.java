@@ -1,20 +1,25 @@
 package com.legion.pages;
 
+import static com.legion.utils.MyThreadLocal.getAndroidDriver;
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static io.appium.java_client.touch.WaitOptions.waitOptions;
+import static io.appium.java_client.touch.offset.ElementOption.element;
+import static io.appium.java_client.touch.offset.PointOption.point;
+import static java.time.Duration.ofSeconds;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.TouchAction;
 import org.openqa.selenium.*;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -63,7 +68,7 @@ public class BasePage {
     public void waitForElement(String element) {
   
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(
-                 MyThreadLocal.getDriver()).withTimeout(java.time.Duration.ofSeconds(60))
+                 MyThreadLocal.getDriver()).withTimeout(ofSeconds(60))
                  .pollingEvery(5, TimeUnit.SECONDS)
                  .ignoring(NoSuchElementException.class);
          wait.until(new Function<WebDriver, WebElement>() {
@@ -111,7 +116,7 @@ public class BasePage {
     
     // method for mobile application
     
-    public boolean isElementLoadedOnMobile(WebElement element) throws Exception
+    public boolean isElementLoadedOnMobile(MobileElement element) throws Exception
     {
     	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getAndroidDriver(), 30);
     	 
@@ -119,13 +124,13 @@ public class BasePage {
     	    tempWait.until(ExpectedConditions.visibilityOf(element)); 
     	    return true;
     	}
-    	catch (NoSuchElementException | TimeoutException te) {
+    	catch (NoSuchElementException | StaleElementReferenceException | TimeoutException te ) {
     		return false;	
     	}
     	
     }
 
-    public boolean isElementLoadedOnMobile(WebElement element, long timeOutInSeconds) throws Exception
+    public boolean isElementLoadedOnMobile(MobileElement element, long timeOutInSeconds) throws Exception
     {
         WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getAndroidDriver(), timeOutInSeconds);
 
@@ -133,12 +138,62 @@ public class BasePage {
             tempWait.until(ExpectedConditions.visibilityOf(element));
             return true;
         }
-        catch (NoSuchElementException | TimeoutException te) {
+        catch (NoSuchElementException | StaleElementReferenceException | TimeoutException te ) {
             return false;
         }
 
     }
 
+    public boolean areListElementVisibleOnMobile(List<MobileElement> listElement, long timeOutInSeconds ){
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(
+                MyThreadLocal.getAndroidDriver()).withTimeout(ofSeconds(timeOutInSeconds))
+                .pollingEvery(ofSeconds(1))
+                .ignoring(org.openqa.selenium.NoSuchElementException.class);
+        Boolean element =false;
+        try{
+            element = wait.until(new Function<WebDriver, Boolean>() {
+                @Override
+                public Boolean apply(WebDriver t) {
+                    int size = 0;
+                    size = listElement.size();
+                    if(size > 0 )
+                        return true;
+                    else
+                        return false;
+                }
+            });
+        }catch(NoSuchElementException | TimeoutException te){
+            return element;
+        }
+
+        return element;
+    }
+
+
+    public boolean isElementEnabledOnMobile(WebElement enabledElement, long timeOutInSeconds){
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(
+                MyThreadLocal.getAndroidDriver()).withTimeout(ofSeconds(timeOutInSeconds))
+                .pollingEvery(ofSeconds(2))
+                .ignoring(org.openqa.selenium.NoSuchElementException.class);
+        Boolean element =false;
+
+        try{
+            element = wait.until(new Function<WebDriver, Boolean>() {
+                @Override
+                public Boolean apply(WebDriver t) {
+                    boolean display = false;
+                    display = enabledElement.isEnabled();
+                    if(display )
+                        return true;
+                    else
+                        return false;
+                }
+            });
+        }catch(NoSuchElementException | TimeoutException te){
+            return element;
+        }
+        return element;
+    }
 
 
 
@@ -205,7 +260,7 @@ public class BasePage {
     
     public WebElement waitForElementPresence(String element) {
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(
-                MyThreadLocal.getDriver()).withTimeout(java.time.Duration.ofSeconds(60))
+                MyThreadLocal.getDriver()).withTimeout(ofSeconds(60))
                 .ignoring(NoSuchElementException.class);
         WebElement elementPresent = wait.until(new Function<WebDriver, WebElement>() {
             @Override
@@ -248,8 +303,8 @@ public class BasePage {
 
     public boolean isElementEnabled(WebElement enabledElement){
         Wait<WebDriver> wait = new FluentWait<WebDriver>(
-                MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(60))
-                .pollingEvery(Duration.ofSeconds(5))
+                MyThreadLocal.getDriver()).withTimeout(ofSeconds(60))
+                .pollingEvery(ofSeconds(5))
                 .ignoring(org.openqa.selenium.NoSuchElementException.class);
         Boolean element =false;
 
@@ -274,8 +329,8 @@ public class BasePage {
     //added by Gunjan
     public boolean isElementEnabled(WebElement enabledElement, long timeOutInSeconds){
         Wait<WebDriver> wait = new FluentWait<WebDriver>(
-                MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(timeOutInSeconds))
-                .pollingEvery(Duration.ofSeconds(2))
+                MyThreadLocal.getDriver()).withTimeout(ofSeconds(timeOutInSeconds))
+                .pollingEvery(ofSeconds(2))
                 .ignoring(org.openqa.selenium.NoSuchElementException.class);
         Boolean element =false;
 
@@ -328,8 +383,8 @@ public class BasePage {
 
     public boolean areListElementVisible(List<WebElement> listElement){
         Wait<WebDriver> wait = new FluentWait<WebDriver>(
-                MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(60))
-                .pollingEvery(Duration.ofSeconds(5))
+                MyThreadLocal.getDriver()).withTimeout(ofSeconds(60))
+                .pollingEvery(ofSeconds(5))
                 .ignoring(org.openqa.selenium.NoSuchElementException.class);
         Boolean element =false;
         try{
@@ -354,8 +409,8 @@ public class BasePage {
 
     public boolean areListElementVisible(List<WebElement> listElement, long timeOutInSeconds ){
         Wait<WebDriver> wait = new FluentWait<WebDriver>(
-                MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(timeOutInSeconds))
-                .pollingEvery(Duration.ofSeconds(5))
+                MyThreadLocal.getDriver()).withTimeout(ofSeconds(timeOutInSeconds))
+                .pollingEvery(ofSeconds(5))
                 .ignoring(org.openqa.selenium.NoSuchElementException.class);
         Boolean element =false;
         try{
@@ -379,8 +434,8 @@ public class BasePage {
 
     public boolean areListElementVisible(List<WebElement> listElement, long timeOutInSeconds, int listSize ){
         Wait<WebDriver> wait = new FluentWait<WebDriver>(
-                MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(timeOutInSeconds))
-                .pollingEvery(Duration.ofSeconds(5))
+                MyThreadLocal.getDriver()).withTimeout(ofSeconds(timeOutInSeconds))
+                .pollingEvery(ofSeconds(5))
                 .ignoring(org.openqa.selenium.NoSuchElementException.class);
         Boolean element =false;
         try{
@@ -407,20 +462,28 @@ public class BasePage {
         LocalDate now = LocalDate.now();
         LocalDate wanted = LocalDate.now().plusDays(daysFromToday);
         WebElement btnNextMonth = null;
+        List<String> listMonthText = new ArrayList<>();
         int numClicks = wanted.getMonthValue() - now.getMonthValue();
         if (numClicks < 0) {
             numClicks = daysFromToday / 30;
         }
         if (numClicks >0){
             try{
-                btnNextMonth = getDriver().findElement(By.cssSelector("span.icon.ion-chevron-right"));
+                btnNextMonth = getDriver().findElement(By.cssSelector("span.fa.fa-chevron-right"));
+                List<WebElement> textMonthVal = getDriver().findElements(By.cssSelector("div.ranged-calendar__month-name"));
+                for(int i =0;i<textMonthVal.size();i++){
+                    String[] textMonthArr = textMonthVal.get(i).getText().split(" ");
+                    listMonthText.add(textMonthArr[0]);
+                }
             }catch(Exception e){
                 SimpleUtils.fail("Not able to click Next month arrow",false);
             }
         }
 
         for (int i = 0; i < numClicks; i++) {
-            click(btnNextMonth);
+            if(!listMonthText.get(0).equalsIgnoreCase(wanted.getMonth().toString())){
+                click(btnNextMonth);
+            }
         }
 
         List<WebElement> mCalendarDates = getDriver().findElements(By.cssSelector("div.ranged-calendar__day.ng-binding.ng-scope.real-day"));
@@ -504,6 +567,133 @@ public class BasePage {
         return dateWanted;
     }
 
+    //added by Nishant
 
+    public void pressByElement (MobileElement element, long seconds) {
+        new TouchAction(getAndroidDriver())
+                .press(element(element))
+                .waitAction(waitOptions(ofSeconds(seconds)))
+                .release()
+                .perform();
+    }
+
+    public void verticalSwipeByPercentages(double startPercentage, double endPercentage, double anchorPercentage, long seconds) {
+        Dimension size = getAndroidDriver().manage().window().getSize();
+        int anchor = (int) (size.width * anchorPercentage);
+        int startPoint = (int) (size.height * startPercentage);
+        int endPoint = (int) (size.height * endPercentage);
+
+        new TouchAction(getAndroidDriver())
+                .press(point(anchor, startPoint))
+                .waitAction(waitOptions(ofSeconds(seconds)))
+                .moveTo(point(anchor, endPoint))
+                .release().perform();
+    }
+
+    public void longPressByElement (MobileElement element, MobileElement element1,long seconds) {
+        new TouchAction(getAndroidDriver())
+                .longPress(element).moveTo(element1.getCenter().x,element1.getCenter().y)
+                .waitAction(waitOptions(ofSeconds(seconds)))
+                .release()
+                .perform();
+    }
+
+    public void swipeByElements (MobileElement startElement, MobileElement endElement, long seconds) {
+        int startX = startElement.getLocation().getX() + (startElement.getSize().getWidth() / 2);
+        int startY = startElement.getLocation().getY() + (startElement.getSize().getHeight() / 2);
+
+        int endX = endElement.getLocation().getX() + (endElement.getSize().getWidth() / 2);
+        int endY = endElement.getLocation().getY() + (endElement.getSize().getHeight() / 2);
+
+        new TouchAction(getAndroidDriver())
+                .press(point(startX,startY))
+                .waitAction(waitOptions(ofSeconds(seconds)))
+                .moveTo(point(endX, endY))
+                .release().perform();
+    }
+
+    public void swipeLeftByElement(MobileElement element, long seconds){
+        int screenWidth = (int) getAndroidDriver().manage().window().getSize().width;
+        int elementLocation = element.getLocation().getY();
+        int screenWidth90 = (int) (.9 * screenWidth);
+        int screenWidth65 = (int) (.65 * screenWidth);
+        int screenWidth40 = (int) (.4 * screenWidth);
+
+        TouchAction touchAction = new TouchAction(getAndroidDriver());
+        touchAction.press(screenWidth90, elementLocation)
+                .moveTo(screenWidth65, elementLocation)
+                .waitAction(waitOptions(ofSeconds(seconds)))
+                .moveTo(screenWidth40, elementLocation)
+                .release()
+                .perform();
+    }
+
+
+    public void swipeLeftByElement(long seconds){
+        TouchAction act=new TouchAction(getAndroidDriver());
+        Dimension size = getAndroidDriver().manage().window().getSize();
+        int anchor = (int) (size.height * 0.5);
+        int startPoint = (int) (size.width * 0.9);
+        int endPoint = (int) (size.width * 0.01);
+//        new TouchAction(driver).press(startPoint, anchor).waitAction(duration).moveTo(endPoint, anchor).release().perform();
+        act.press(startPoint, anchor).waitAction(waitOptions(ofSeconds(seconds))).moveTo(endPoint, anchor).release().perform();
+    }
+
+    public void scrollUsingTouchActions_ByElements(MobileElement startElement, MobileElement endElement) {
+        TouchAction actions = new TouchAction(getAndroidDriver());
+        actions.press(startElement).waitAction(Duration.ofSeconds(2)).moveTo(endElement).release().perform();
+    }
+
+    public void swipeHorizontalByElement(MobileElement startElement, long seconds){
+        Point point = startElement.getLocation();
+        int startY = point.y;
+        int endY = point.y;
+
+        int startX = (int) ((getAndroidDriver().manage().window().getSize().getWidth()) * 0.80);
+        int endX = (int) ((getAndroidDriver().manage().window().getSize().getWidth()) * 0.20);
+
+        TouchAction actions = new TouchAction(getAndroidDriver());
+        actions.press(startX, startY).waitAction(Duration.ofSeconds(seconds)).moveTo(endX, endY).release().perform();
+    }
+
+
+    public void swipeUp(int howManySwipes,long seconds) {
+        Dimension size = getAndroidDriver().manage().window().getSize();
+        // calculate coordinates for vertical swipe
+        int startVerticalY = (int) (size.height * 0.8);
+        int endVerticalY = (int) (size.height * 0.21);
+        int startVerticalX = (int) (size.width / 2.1);
+        try {
+            for (int i = 1; i <= howManySwipes; i++) {
+                new TouchAction<>(getAndroidDriver()).press(point(startVerticalX, startVerticalY))
+                        .waitAction(waitOptions(ofSeconds(seconds))).moveTo(point(startVerticalX, endVerticalY)).release()
+                        .perform();
+            }
+        } catch (Exception e) {
+            //print error or something
+        }
+    }
+
+    //added by Nishant
+    public String getActiveWeekText() throws Exception {
+        WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
+        if (isElementLoaded(activeWeek))
+            return activeWeek.getText().replace("\n", " ");
+        return "";
+    }
+
+    public boolean compareDMAndSMViewDatePickerText(String datePickerTxtDMView) throws Exception{
+        String datePickerTxtSMView = getActiveWeekText();
+        boolean result = false;
+        if(datePickerTxtDMView.equals(datePickerTxtSMView)){
+            result = true;
+            SimpleUtils.pass("Date Picker Text from" +
+                    " DM View " + datePickerTxtDMView + " matches with Date picker text from SM View " + datePickerTxtSMView);
+        }else{
+            SimpleUtils.fail("Date Picker Text from" +
+                    " DM View " + datePickerTxtDMView + " not matches with Date picker text from SM View " + datePickerTxtSMView,true);
+        }
+        return result;
+    }
 
 }

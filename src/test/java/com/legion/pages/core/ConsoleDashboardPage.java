@@ -76,12 +76,16 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	
 	@FindBy (css = "div.col-sm-4.text-left")
 	private WebElement startingSoon;
-	
-	@FindBy (css = "div.fx-center")
-	private WebElement welcomeText;
-	
-	
-	
+
+	@FindBy (css = "div.header-avatar")
+	private WebElement iconProfile;
+
+	@FindBy (css = "li[ng-if='canShowTimeoffs']")
+	private WebElement timeOffLink;
+
+	@FindBy (css = "div.header-company-icon")
+	private WebElement iconImage;
+
     public ConsoleDashboardPage() {
     	PageFactory.initElements(getDriver(), this);
     }
@@ -260,7 +264,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		if(isElementLoaded(todaysForecastDataDiv))
 		{
 			String[] todaysForecastString = todaysForecastDataDiv.getText().split("\n");
-			if(todaysForecastString[1].toLowerCase().contains(demandForecastLabel.toLowerCase())) 
+			if(todaysForecastString[1].toLowerCase().contains(demandForecastLabel.toLowerCase()))
 				todaysForcastData.put("demandForecast" , Float.valueOf(todaysForecastString[0].split(" ")[0]));
 			else
 				SimpleUtils.fail("Dashboard Page: Unable to fetch Demand Forecast data.", true);
@@ -286,4 +290,28 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 		return todaysForcastData;
 	}
+
+	//added by Nishant
+
+	public void clickOnProfileIconOnDashboard() throws Exception {
+		if(isElementEnabled(iconProfile,5)){
+			click(iconProfile);
+			SimpleUtils.pass("Able to click on profile icon Successfully!!");
+		}else{
+			SimpleUtils.fail("Profile icon is not clickable",false);
+		}
+	}
+
+	public void clickOnTimeOffLink() throws Exception {
+		if(isElementEnabled(timeOffLink,5)){
+			click(timeOffLink);
+			SimpleUtils.pass("Able to click on time off link Successfully!!");
+			if(isElementEnabled(iconImage,5)){
+				click(iconImage);
+			}
+		}else{
+			SimpleUtils.fail("Time Off is not clickable",false);
+		}
+	}
+
 }
