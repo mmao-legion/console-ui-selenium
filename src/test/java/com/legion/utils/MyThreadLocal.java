@@ -2,18 +2,14 @@ package com.legion.utils;
 
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.testng.ITestResult;
 
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
-
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
-import org.testng.ITestResult;
-
-import com.aventstack.extentreports.ExtentTest;
-import com.legion.tests.TestBase;
 
 public class MyThreadLocal {
 
@@ -65,10 +61,15 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> moduleName = new ThreadLocal<>();
 	public static final ThreadLocal<Integer> sectionID = new ThreadLocal<>();
 	public static final ThreadLocal<Integer> budgetTolerance = new ThreadLocal<>();
+	public static final ThreadLocal<String> testRailReporting = new ThreadLocal<>();
 
 	public static void setScreenshotLocation(String value) { screenshotLoc.set(value); }
 
 	public static String getScreenshotLocation() { return screenshotLoc.get(); }
+
+	public static void setTestRailReporting(String value) { testRailReporting.set(value); }
+
+	public static String getTestRailReporting() { return testRailReporting.get(); }
 
 	public static void setscreenShotURL(String value) { screenShotURL.set(value); }
 	public static String getscreenShotURL() { return screenShotURL.get(); }

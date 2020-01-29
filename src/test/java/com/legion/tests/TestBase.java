@@ -1,53 +1,28 @@
 package com.legion.tests;
 
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
-import org.testng.ITestContext;
-import org.testng.annotations.AfterMethod;
-
 import com.aventstack.extentreports.ExtentReports;
-import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
-import com.aventstack.extentreports.markuputils.Markup;
-import com.aventstack.extentreports.markuputils.MarkupHelper;
-import com.legion.pages.BasePage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.pagefactories.ConsoleWebPageFactory;
 import com.legion.pages.pagefactories.PageFactory;
 import com.legion.pages.pagefactories.mobile.MobilePageFactory;
 import com.legion.pages.pagefactories.mobile.MobileWebPageFactory;
+import com.legion.test.testrail.APIException;
+import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.testframework.ExtentReportManager;
 import com.legion.tests.testframework.ExtentTestManager;
-import com.legion.tests.testframework.LegionTestListener;
 import com.legion.tests.testframework.LegionWebDriverEventListener;
 import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
-
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecuteResultHandler;
-import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.io.FileUtils;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
+import io.appium.java_client.service.local.AppiumServiceBuilder;
+import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.junit.Assert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebElement;
-
-import static com.legion.utils.MyThreadLocal.setTestRailRunId;
-import static org.testng.AssertJUnit.assertTrue;
-
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -55,29 +30,16 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
-import org.openqa.selenium.logging.LogEntries;
-import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.Reporter;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileElement;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.service.local.AppiumDriverLocalService;
-import io.appium.java_client.service.local.AppiumServiceBuilder;
-import io.appium.java_client.service.local.flags.GeneralServerFlag;
-
-import java.awt.AWTException;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -85,31 +47,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.UnexpectedException;
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.Year;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import com.legion.test.testrail.APIClient;
-import com.legion.test.testrail.APIException;
-
-import javax.imageio.ImageIO;
-
-import com.legion.tests.annotations.Enterprise;
+import static com.legion.utils.MyThreadLocal.*;
 
 //import org.apache.log4j.Logger;
-import com.legion.tests.annotations.HasDependencies;
-
-import static com.legion.utils.MyThreadLocal.*;
 
 
 /**
@@ -139,11 +83,13 @@ public abstract class TestBase {
     public static final int TEST_CASE_PASSED_STATUS = 1;
     public static final int TEST_CASE_FAILED_STATUS = 5;
 
-    @Parameters({ "platform", "executionon", "runMode" })
+    @Parameters({ "platform", "executionon", "runMode","testRail"})
     @BeforeSuite
-    public void startServer(@Optional String platform, @Optional String executionon, @Optional String runMode ) throws Exception {
+    public void startServer(@Optional String platform, @Optional String executionon,
+                            @Optional String runMode, @Optional String testRail) throws Exception {
         if(platform!= null && executionon!= null && runMode!= null){
-            if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice") && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){
+            if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice")
+                    && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){
                 startServer();
                 mobilePageFactory = createMobilePageFactory();
             } else{
@@ -151,6 +97,10 @@ public abstract class TestBase {
             }
         }else{
             Reporter.log("Script will be executing only for Web");
+        }
+        if(testRail!=null && testRail.equalsIgnoreCase("yes")){
+            setTestRailReporting("Y");
+            System.out.println("hi");
         }
 
     }
@@ -200,7 +150,9 @@ public abstract class TestBase {
         setTestRailRunId(0);
         List<Integer> testRailId =  new ArrayList<Integer>();
         setTestRailRun(testRailId);
-        SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
+        if(getTestRailReporting()!=null){
+            SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
+        }
         setCurrentMethod(method);
         setBrowserNeeded(true);
         setCurrentTestMethodName(method.getName());
@@ -302,7 +254,7 @@ public abstract class TestBase {
         }
         ExtentTestManager.getTest().info("tearDown finished");
         extent.flush();
-        stopServer();
+//        stopServer();
     }
 
 
