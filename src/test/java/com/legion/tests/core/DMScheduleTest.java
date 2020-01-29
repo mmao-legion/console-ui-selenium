@@ -1,24 +1,17 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
-import com.legion.test.core.mobile.LoginTest;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
-import com.legion.utils.SpreadSheetUtils;
-import org.openqa.selenium.WebElement;
-import org.testng.ITestContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import static com.legion.utils.MyThreadLocal.*;
 
 public class DMScheduleTest extends TestBase{
     private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
@@ -317,7 +310,7 @@ public class DMScheduleTest extends TestBase{
     @Owner(owner = "Nishant")
     @SanitySuite(sanity =  "Sanity")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Verification of values from DM vie of Unplanned clock smartcard and detail smartcard with SM view")
+    @TestName(description = "Verification of values from DM view of Unplanned clock smartcard and detail smartcard with SM view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void validateDMViewDataWithSMViewAsInternalAdmin(String browser, String username, String password, String location)
             throws Exception {
