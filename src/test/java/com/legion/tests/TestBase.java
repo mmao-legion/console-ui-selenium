@@ -100,7 +100,6 @@ public abstract class TestBase {
         }
         if(testRail!=null && testRail.equalsIgnoreCase("yes")){
             setTestRailReporting("Y");
-            System.out.println("hi");
         }
 
     }
