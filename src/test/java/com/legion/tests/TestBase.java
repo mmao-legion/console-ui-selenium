@@ -101,7 +101,6 @@ public abstract class TestBase {
         if(testRail!=null && testRail.equalsIgnoreCase("yes")){
             setTestRailReporting("Y");
         }
-
     }
 
     // Set the Desired Capabilities to launch the app in Andriod mobile
