@@ -27,7 +27,7 @@ public class CucumberExtentReport extends CucumberEventListener {
 
     @Override
     public void handleTestCaseStarted(TestCaseStarted event) {
-        System.out.println("TESTCASE " + event.testCase.getName() + " STARTED IN THREAD:" + Thread.currentThread().getId());
+        //System.out.println("TESTCASE " + event.testCase.getName() + " STARTED IN THREAD:" + Thread.currentThread().getId());
         handleStartOfFeature(event.testCase);
         handleScenarioOutline(event.testCase);
         ExtentCucumberHelper.createScenarioOutlineOrStandard(event.testCase.getName(), event.testCase.getScenarioDesignation(), event.testCase.getTags());
@@ -37,7 +37,7 @@ public class CucumberExtentReport extends CucumberEventListener {
     public void handleTestStepStarted(TestStepStarted event) {
 
         if (event.testStep instanceof PickleStepTestStep) {
-            System.out.println("TEST STEP STARTED IN THREAD :" + Thread.currentThread().getId());
+            //System.out.println("TEST STEP STARTED IN THREAD :" + Thread.currentThread().getId());
             ExtentCucumberHelper.addCucumberStep((PickleStepTestStep) event.testStep);
         }
 
@@ -46,7 +46,7 @@ public class CucumberExtentReport extends CucumberEventListener {
     @Override
     public void handleTestStepFinished(TestStepFinished event) {
         if (event.testStep instanceof PickleStepTestStep) {
-            System.out.println("TEST STEP FINISHED IN THREAD :" + Thread.currentThread().getId());
+           // System.out.println("TEST STEP FINISHED IN THREAD :" + Thread.currentThread().getId());
             PickleStepTestStep pickleStepTestStep = ExtentCucumberHelper.pollCucumberStep();
             String keyword = getStepKeyword(pickleStepTestStep);
             ExtentCucumberHelper.matchCucumberStep(keyword, pickleStepTestStep.getStepText());
@@ -66,7 +66,7 @@ public class CucumberExtentReport extends CucumberEventListener {
 
     @Override
     public void finishReport() {
-        System.out.println("TEST STEP FINISHED IN THREAD:" + Thread.currentThread().getId());
+      //  System.out.println("TEST STEP FINISHED IN THREAD:" + Thread.currentThread().getId());
         ExtentCucumberHelper.flush();
 
     }

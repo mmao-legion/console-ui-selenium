@@ -4,12 +4,6 @@
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="no"/>
 
-    <!--<test name="Cucumber" annotations="JDK" preserve-order="true">
-        <classes>
-                <class name="com.legion.tests.bdd.BddRunner"/>
-        </classes>
-    </test>-->
-
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>

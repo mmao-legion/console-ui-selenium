@@ -44,7 +44,7 @@ public class ExtentCucumberHelper {
 
     private static Logger logger4j = Logger.getLogger(ExtentCucumberHelper.class);
 
-    private static String reportPath = "target".concat(File.separator).concat(PropertyMap.get("legion_cucumber_extent_report_name"));
+    private static String reportPath = "target".concat(File.separator).concat(PropertyMap.get("legion.cucumber.extent.report.name"));
 
     private static ExtentHtmlReporter getExtentHtmlReport() {
         if (htmlReporter != null) {
@@ -52,21 +52,21 @@ public class ExtentCucumberHelper {
         }
 
         File file = new File(reportPath.concat(File.separator)
-                .concat(PropertyMap.get("legion_cucumber_extent_report_name"))
+                .concat(PropertyMap.get("legion.cucumber.extent.report.name"))
                 .concat(".html"));
         if (!file.exists()) {
             file.getParentFile().mkdirs();
         }
         htmlReporter = new ExtentHtmlReporter(file);
-        logger4j.info("#####Extent xml configuration : " + System.getProperty("user.dir").concat(File.separator).concat("extent-config.xml"));
-        htmlReporter.loadConfig(System.getProperty("user.dir").concat(File.separator).concat("extent-config.xml"));
+        //logger4j.info("#####Extent xml configuration : " + System.getProperty("user.dir").concat(File.separator).concat("extent-config.xml"));
+        //htmlReporter.loadConfig(System.getProperty("user.dir").concat(File.separator).concat("extent-config.xml"));
         return htmlReporter;
     }
 
     private static void htmlReporSetup() {
         // htmlReporter.config().setChartVisibilityOnOpen(true);
         // report title
-        if (PropertyMap.get("legion_cucumber_extent_report_title") != null) {
+        if (PropertyMap.get("legion.cucumber.extent.report.title") != null) {
             htmlReporter.config().setDocumentTitle(PropertyMap.get("legion.cucumber.extent.report.title"));
         }
         // encoding, default = UTF-8
@@ -78,12 +78,12 @@ public class ExtentCucumberHelper {
             htmlReporter.config().setProtocol(Protocol.valueOf(PropertyMap.get("legion.cucumber.extent.report.protocol")));
         }
         // report or build name
-        if (PropertyMap.get("legion_cucumber_extent_report_name")!= null) {
+        if (PropertyMap.get("legion.cucumber.extent.report.name")!= null) {
             htmlReporter.config().setReportName(PropertyMap.get("legion.cucumber.extent.report.name"));
         }
         // theme - standard, dark
-        if (PropertyMap.get("legion_cucumber_extent_report_theme") != null) {
-            htmlReporter.config().setTheme(Theme.valueOf(PropertyMap.get("legion_cucumber_extent_report_theme").toUpperCase()));
+        if (PropertyMap.get("legion.cucumber.extent.report.theme") != null) {
+            htmlReporter.config().setTheme(Theme.valueOf(PropertyMap.get("legion.cucumber.extent.report.theme").toUpperCase()));
         }
 
         // set timeStamp format

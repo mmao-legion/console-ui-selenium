@@ -19,6 +19,27 @@
         <gherkin.version>5.1.0</gherkin.version>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>Testng</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <legion.testng.file>testng.xml</legion.testng.file>
+            </properties>
+        </profile>
+        <profile>
+            <id>Cucumber</id>
+            <activation>
+
+            </activation>
+            <properties>
+                <legion.testng.file>testngCucumber.xml</legion.testng.file>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -211,7 +232,7 @@
                 <configuration>
                     <parallel>classes</parallel>
                     <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                        <suiteXmlFile>${legion.testng.file}</suiteXmlFile>
                     </suiteXmlFiles>
                     <forkCount>5</forkCount>
                     <reuseForks>true</reuseForks>

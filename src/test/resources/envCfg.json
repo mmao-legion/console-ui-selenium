@@ -39,8 +39,8 @@
  "isParallelBrowser" : "false",
  "Download_File_Default_Dir" : "C:\\Users\\Lenovo\\Downloads",
  "isHeadlessBrowser" : "false",
- "legion_cucumber_extent_report_name" : "TA_Report",
- "legion_cucumber_extent_report_path" : "legion_bdd_report",
- "legion_cucumber_extent_report_theme" : "dark",
- "legion_cucumber_extent_report_title" : "Legion Cucumber Report"
+ "legion.cucumber.extent.report.name" : "TA_Report",
+ "legion.cucumber.extent.report.path" : "legion_bdd_report",
+ "legion.cucumber.extent.report.theme" : "dark",
+ "legion.cucumber.extent.report.title" : "Legion Cucumber Report"
 }
