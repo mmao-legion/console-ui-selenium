@@ -1,13 +1,10 @@
 package com.legion.tests.core;
 
-import com.aventstack.extentreports.Status;
 import com.legion.pages.*;
 import com.legion.pages.mobile.LoginPageAndroid;
-import com.legion.test.core.mobile.LoginTest;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
 import com.legion.tests.data.CredentialDataProviderSource;
-import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.CsvUtils;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -19,7 +16,6 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

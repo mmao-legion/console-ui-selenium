@@ -1,50 +1,20 @@
 package com.legion.tests.testframework;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.legion.utils.MyThreadLocal;
-import org.apache.commons.io.FileUtils;
-import org.junit.Assert;
-import org.testng.IAnnotationTransformer;
-import org.testng.IClass;
-import org.testng.IInvokedMethod;
-import org.testng.IInvokedMethodListener;
-import org.testng.ITestContext;
-import org.testng.ITestListener;
-import org.testng.ITestNGMethod;
-import org.testng.ITestResult;
-import org.testng.Reporter;
-import org.testng.annotations.ITestAnnotation;
-import org.testng.annotations.Test;
-
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.markuputils.ExtentColor;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
-import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
-import com.aventstack.extentreports.reporter.configuration.ChartLocation;
-import com.aventstack.extentreports.reporter.configuration.Theme;
-import com.legion.test.testrail.APIException;
-import com.legion.tests.TestBase;
-import com.legion.tests.annotations.Automated;
-import com.legion.tests.annotations.Owner;
-import com.legion.tests.annotations.TestName;
-//import com.legion.utils.ExtentManager;
-
-
-import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import org.testng.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 import static com.legion.utils.MyThreadLocal.*;
+
+//import com.legion.utils.ExtentManager;
 
 	public class LegionTestListener implements ITestListener,IInvokedMethodListener {
 		
@@ -105,8 +75,10 @@ import static com.legion.utils.MyThreadLocal.*;
 		@Override
 		public void onFinish(ITestContext context) {
 			// TODO Auto-generated method stub
-			SimpleUtils.addNUpdateTestCaseIntoTestRun();
-			SimpleUtils.addTestResultIntoTestRailN(1,5,context);
+			if(getTestRailReporting()!=null){
+				SimpleUtils.addNUpdateTestCaseIntoTestRun();
+				SimpleUtils.addTestResultIntoTestRailN(1,5,context);
+			}
 		}
 
 		@Override

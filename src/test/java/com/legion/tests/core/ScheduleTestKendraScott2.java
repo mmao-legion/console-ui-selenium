@@ -1,26 +1,16 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.aventstack.extentreports.Status;
-import com.legion.pages.DashboardPage;
-import com.legion.pages.LoginPage;
-import com.legion.pages.ScheduleOverviewPage;
-import com.legion.pages.SchedulePage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
-import com.legion.tests.testframework.ExtentTestManager;
-import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
 public class ScheduleTestKendraScott2 extends TestBase{

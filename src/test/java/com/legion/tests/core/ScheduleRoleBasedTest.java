@@ -2,10 +2,8 @@ package com.legion.tests.core;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -18,7 +16,6 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
-import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 

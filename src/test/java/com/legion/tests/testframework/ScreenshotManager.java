@@ -2,23 +2,19 @@ package com.legion.tests.testframework;
 
 import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
 import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.getEnterprise;
 import static com.legion.utils.MyThreadLocal.getSessionTimestamp;
-import static com.legion.utils.MyThreadLocal.getURL;
 
 import com.legion.utils.SimpleUtils;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 
-import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 
 import static com.legion.utils.MyThreadLocal.*;

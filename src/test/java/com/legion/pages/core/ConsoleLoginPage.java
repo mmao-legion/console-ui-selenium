@@ -1,19 +1,13 @@
 package com.legion.pages.core;
 
-import static com.legion.utils.MyThreadLocal.getAndroidDriver;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
-import com.aventstack.extentreports.ExtentTest;
+import com.google.inject.Inject;
 import com.legion.pages.BasePage;
-import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
-import com.legion.tests.TestBase;
-import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.SimpleUtils;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;

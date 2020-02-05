@@ -1,28 +1,19 @@
 package com.legion.utils;
 
-import static com.legion.utils.MyThreadLocal.*;
-import static com.legion.utils.MyThreadLocal.getFailedComment;
-import static org.testng.AssertJUnit.assertTrue;
-
+import com.aventstack.extentreports.Status;
+import com.legion.test.testrail.APIClient;
+import com.legion.test.testrail.APIException;
+import com.legion.tests.annotations.Enterprise;
+import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.tests.testframework.ScreenshotManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.ITestContext;
 import org.testng.Reporter;
 import org.testng.util.Strings;
-
-import com.aventstack.extentreports.Status;
-import com.legion.test.testrail.APIClient;
-import com.legion.test.testrail.APIException;
-import com.legion.tests.TestBase;
-import com.legion.tests.annotations.Automated;
-import com.legion.tests.annotations.Enterprise;
-import com.legion.tests.annotations.Owner;
-import com.legion.tests.annotations.TestName;
-import com.legion.tests.testframework.ExtentTestManager;
-import com.legion.tests.testframework.LegionTestListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,8 +28,9 @@ import java.time.Year;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
-import org.json.simple.JSONValue;
+
+import static com.legion.utils.MyThreadLocal.*;
+import static org.testng.AssertJUnit.assertTrue;
 /**
  * Yanming
  */
@@ -80,7 +72,9 @@ public class SimpleUtils {
 
 	public static void fail(String message, boolean continueExecution, String... severity) {
 //		SimpleUtils.addTestResultIntoTestRail(5, message);
-		SimpleUtils.addTestResultIntoTestRailN(5, message);
+		if(getTestRailReporting()!=null){
+			SimpleUtils.addTestResultIntoTestRailN(5, message);
+		}
 		if (continueExecution) {
 			try {
 				assertTrue(false);
@@ -229,14 +223,19 @@ public class SimpleUtils {
 
 		ExtentTestManager.getTest().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
 				+ "</div>");
-		SimpleUtils.addTestResultIntoTestRailN(1, message);
+		if(getTestRailReporting()!=null){
+			SimpleUtils.addTestResultIntoTestRailN(1, message);
+		}
+
 	}
 
 	public static void report(String message) {
 
 		ExtentTestManager.getTest().log(Status.INFO,"<div class=\"row\" style=\"background-color:#0000FF; color:white; padding: 7px 5px;\">" + message
 				+ "</div>");
-		SimpleUtils.addTestResultIntoTestRailN(6, message);
+		if(getTestRailReporting()!=null){
+			SimpleUtils.addTestResultIntoTestRailN(6, message);
+		}
 	}
 
 
