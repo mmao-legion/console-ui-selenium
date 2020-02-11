@@ -19,6 +19,19 @@
        </classes>
    </test>
 
+    <test name="Dashboard Test">
+        <classes>
+            <class name="com.legion.tests.core.DashboardTestKendraScott2">
+                <methods>
+                    <include name="verifyTheDisplayLocationWithSelectedLocation" />
+                    <include name="verifyTheClickActionOnChangeLocationButton" />
+                    <include name="verifyTheContentDisplayedInChangeLocationLayout" />
+                    <include name="verifyTheFunctionOfSearchTextBox" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 
 </suite> <!-- Suite -->
 
