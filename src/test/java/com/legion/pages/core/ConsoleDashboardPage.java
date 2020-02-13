@@ -340,6 +340,18 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 	}
 
+	@FindBy (css = "div.col-sm-6.text-left")
+	private WebElement currentDate;
+
+	@Override
+	public String getCurrentDateFromDashboard() throws Exception {
+		if (isElementLoaded(currentDate)){
+			return currentDate.getText();
+		}else{
+			return null;
+		}
+	}
+
 	private String getTimePeriod(String date) throws Exception {
 		String timePeriod = "";
 		int pmHour = 12;

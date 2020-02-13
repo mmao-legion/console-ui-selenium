@@ -114,4 +114,18 @@ public class DashboardTestKendraScott2 extends TestBase{
 		String nickName = profileNewUIPage.getNickNameFromProfile();
 		dashboardPage.verifyTheWelcomeMessage(nickName);
 	}
+
+	@Automated(automated ="Manual")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "View Today’s schedule button is working and navigating to the schedule page[Current date in day view]")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheFunctionOfViewTodaySchedule(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		String date = dashboardPage.getCurrentDateFromDashboard();
+		SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , true);
+		schedulePage.isScheduleForCurrentDayInDayView(date);
+	}
 }

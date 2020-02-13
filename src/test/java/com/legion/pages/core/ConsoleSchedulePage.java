@@ -1845,4 +1845,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     }
     public void districtSelectionSMView(String districtName) throws Exception{}
+
+    @Override
+    public void isScheduleForCurrentDayInDayView(String dateFromDashboard) throws Exception {
+
+    }
 }

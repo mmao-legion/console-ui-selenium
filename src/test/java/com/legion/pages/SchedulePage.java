@@ -162,4 +162,5 @@ public interface SchedulePage {
 	public void clickOnViewSchedulePayrollProjectionDMViewDashboard();
 	public void loadingOfDMViewSchedulePage(String SelectedWeek) throws Exception;
 	public void districtSelectionSMView(String districtName) throws Exception;
+	public void isScheduleForCurrentDayInDayView(String dateFromDashboard) throws Exception;
 }

@@ -4146,6 +4146,33 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
+    // Added by Nora
+    @FindBy (css = "lg-button-group[buttons*=\"custom\"] div.lg-button-group-first")
+    private WebElement scheduleDayViewButton;
+    @FindBy (className = "period-name")
+    private WebElement periodName;
+
+    @Override
+    public void isScheduleForCurrentDayInDayView(String dateFromDashboard) throws Exception {
+        String tagName = "span";
+        if (isElementLoaded(scheduleDayViewButton) && isElementLoaded(periodName)) {
+            if (scheduleDayViewButton.getAttribute("class").contains("lg-button-group-selected")){
+                SimpleUtils.pass("The Schedule Day View Button is selected!");
+            }else{
+                SimpleUtils.fail("The Schedule Day View Button isn't selected!", true);
+            }
+            /*
+             * @periodName format "Schedule for Wednesday, February 12"
+             */
+            if (periodName.getText().contains(dateFromDashboard)) {
+                SimpleUtils.pass("The Schedule is for current day!");
+            }else{
+                SimpleUtils.fail("The Schedule isn't for current day!", true);
+            }
+        }else{
+            SimpleUtils.fail("The Schedule Day View Button isn't loaded!",true);
+        }
+    }
 
 
     public void clickOnViewScheduleLocationSummaryDMViewDashboard() {

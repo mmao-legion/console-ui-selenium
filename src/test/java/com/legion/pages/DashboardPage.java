@@ -19,4 +19,5 @@ public interface DashboardPage {
     public void clickOnProfileIconOnDashboard() throws Exception;
     public void clickOnTimeOffLink() throws Exception;
     public void verifyTheWelcomeMessage(String userName) throws Exception;
+    public String getCurrentDateFromDashboard() throws Exception;
 }

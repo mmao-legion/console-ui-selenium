@@ -28,6 +28,7 @@
                     <include name="verifyTheContentDisplayedInChangeLocationLayout" />
                     <include name="verifyTheFunctionOfSearchTextBox" />
                     <include name="verifyTheWelcomeMessage" />
+                    <include name="verifyTheFunctionOfViewTodaySchedule" />
                 </methods>
             </class>
         </classes>
