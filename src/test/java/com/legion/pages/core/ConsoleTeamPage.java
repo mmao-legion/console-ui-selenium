@@ -471,6 +471,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement teamTabLoadingIcon;
 	@FindBy(css="div.row-container div.row.ng-scope")
 	private List<WebElement> teamMembers;
+	@FindBy (className = "lgnToggleIconButton")
+	private WebElement addNewMemberButton;
+	@FindBy (className = "col-sm-6")
+	private List<WebElement> sectionsOnAddNewTeamMemberTab;
 
 	@Override
 	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception {
@@ -514,6 +518,44 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					searchTextBox.clear();
 				}
 			}
+		}
+	}
+
+	@Override
+	public void verifyTheFunctionOfAddNewTeamMemberButton() throws Exception{
+		final String personalDetails = "Personal Details";
+		final String engagementDetails = "Engagement Details";
+		final String titleClassName = "header-label";
+		verifyTheVisibilityAndClickableOfPlusIcon();
+		click(addNewMemberButton);
+		if (areListElementVisible(sectionsOnAddNewTeamMemberTab, 10)){
+			if (sectionsOnAddNewTeamMemberTab.size() == 2){
+				SimpleUtils.pass("Two sections on Add New Team Member Tab loaded successfully!");
+				WebElement personalElement = sectionsOnAddNewTeamMemberTab.get(0).findElement(By.className(titleClassName));
+				WebElement engagementElement = sectionsOnAddNewTeamMemberTab.get(1).findElement(By.className(titleClassName));
+				if (personalElement != null && engagementElement != null){
+					if (personalDetails.equals(personalElement.getText()) && engagementDetails.equals(engagementElement.getText())){
+						SimpleUtils.pass("Personal Details and Engagement Details sections loaded!");
+					}else{
+						SimpleUtils.fail("Personal Details and Engagement Details sections failed to load", true);
+					}
+				}
+			}else{
+				SimpleUtils.fail("Two sections on Add New Team Member Tab failed to load", false);
+			}
+		}
+	}
+
+	private void verifyTheVisibilityAndClickableOfPlusIcon() throws Exception {
+		if (isElementLoaded(addNewMemberButton)){
+			SimpleUtils.pass("\"+\" icon is visible on team tab!");
+			if (isClickable(addNewMemberButton, 10)){
+				SimpleUtils.pass("\"+\" icon is clickable on team tab!");
+			}else{
+				SimpleUtils.fail("\"+\" icon isn't clickable on team tab!", true);
+			}
+		}else{
+			SimpleUtils.fail("\"+\" icon is visible on team tab!", false);
 		}
 	}
 

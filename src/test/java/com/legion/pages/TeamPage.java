@@ -21,4 +21,5 @@ public interface TeamPage {
 	public void closeToDoPopupWindow() throws Exception;
 	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception;
 	public void verifyTheFunctionOfSearchTMBar(List<String> testStrings) throws Exception;
+	public void verifyTheFunctionOfAddNewTeamMemberButton() throws Exception;
 }

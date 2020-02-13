@@ -40,6 +40,7 @@
            <class name="com.legion.tests.core.TeamTestKendraScott2">
                <methods>
                    <include name="verifyTheFunctionOfSearchTMBar"/>
+                   <include name="verifyTheFunctionOfPlusIcon" />
                </methods>
            </class>
        </classes>
