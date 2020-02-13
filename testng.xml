@@ -27,6 +27,7 @@
                     <include name="verifyTheClickActionOnChangeLocationButton" />
                     <include name="verifyTheContentDisplayedInChangeLocationLayout" />
                     <include name="verifyTheFunctionOfSearchTextBox" />
+                    <include name="verifyTheWelcomeMessage" />
                 </methods>
             </class>
         </classes>

@@ -101,4 +101,17 @@ public class DashboardTestKendraScott2 extends TestBase{
 		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 		locationSelectorPage.verifyTheFunctionOfSearchTextBox(testStrings);
 	}
+
+	@Automated(automated ="Manual")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the Welcome Message")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheWelcomeMessage(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String nickName = profileNewUIPage.getNickNameFromProfile();
+		dashboardPage.verifyTheWelcomeMessage(nickName);
+	}
 }

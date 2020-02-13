@@ -2,7 +2,9 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -85,6 +87,12 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@FindBy (css = "div.header-company-icon")
 	private WebElement iconImage;
+
+	@FindBy (css = ".col-sm-6.text-right")
+	private WebElement currentTime;
+
+	@FindBy (css = "div.fx-center.welcome-text h1")
+	private WebElement detailWelcomeText;
 
     public ConsoleDashboardPage() {
     	PageFactory.initElements(getDriver(), this);
@@ -314,4 +322,51 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 	}
 
+	@Override
+	public void verifyTheWelcomeMessage(String userName) throws Exception {
+		String greetingTime = getTimePeriod(currentTime.getText());
+		String expectedText = "Good " + greetingTime + ", " + userName + "." + "\n" + "Welcome to Legion" + "\n" + "Your Complete Workforce Engagement Solution";
+		String actualText = "";
+		if(isElementLoaded(detailWelcomeText)){
+			actualText = detailWelcomeText.getText();
+			if(actualText.equals(expectedText)){
+				SimpleUtils.pass("Verified Welcome Text is as expected!");
+			}else{
+				SimpleUtils.fail("Verify Welcome Text failed! Expected is: " + expectedText + "\n" + "Actual is: " + actualText, true);
+			}
+		}
+		else{
+			SimpleUtils.fail("Welcome Text Section doesn't Load successfully!", true);
+		}
+	}
+
+	private String getTimePeriod(String date) throws Exception {
+		String timePeriod = "";
+		int pmHour = 12;
+		final String pm = "pm";
+		final String am = "am";
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+			Date now = format.parse(date);
+			int hour = now.getHours();
+			if (date.endsWith(pm) && hour != pmHour) {
+				hour += pmHour;
+			}
+			if (date.endsWith(am) && hour == pmHour){
+				hour -= pmHour;
+			}
+			if (hour >= 5 && hour <= 11) {
+				timePeriod = "morning";
+			} else if (hour >= 12 && hour < 19) {
+				timePeriod = "afternoon";
+			} else if (hour >= 19 && hour < 22) {
+				timePeriod = "evening";
+			} else {
+				timePeriod = "night";
+			}
+		}catch(Exception e) {
+			SimpleUtils.fail("Get Time Period failed!", true);
+		}
+		return timePeriod;
+	}
 }

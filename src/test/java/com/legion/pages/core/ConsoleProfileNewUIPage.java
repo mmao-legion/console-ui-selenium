@@ -210,6 +210,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement checkBoxAllDay;
 	@FindBy(css="span.all-day-label")
 	private WebElement txtAllDay;
+	@FindBy(css="div.header-avatar > img")
+	private WebElement userProfileImage;
+	@FindBy(css=".header-user-switch-menu-item-main")
+	private WebElement userNickName;
 	
 	@Override
 	public void clickOnProfileConsoleMenu() throws Exception {
@@ -1601,5 +1605,27 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 		else
 			SimpleUtils.fail("Profile Page: No Time off request found.", false);
+	}
+
+	@Override
+	public String getNickNameFromProfile() throws Exception {
+		String nickName = "";
+		try{
+			if(isElementLoaded(userProfileImage)){
+				click(userProfileImage);
+				waitUntilElementIsVisible(userNickName);
+				nickName = userNickName.getText();
+				if(nickName != null && !nickName.isEmpty()){
+					SimpleUtils.pass("Get User's NickName: " + nickName + "Successfully");
+				}else{
+					SimpleUtils.fail("The NickName is null!", true);
+				}
+			}else{
+				SimpleUtils.fail("User Profile Image doesn't Load Successfully!", true);
+			}
+		}catch (Exception e){
+			SimpleUtils.fail("Get NickName of the logged in user failed", true);
+		}
+		return nickName;
 	}
 }
