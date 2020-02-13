@@ -35,6 +35,15 @@
         </classes>
     </test>
 
+    <test name="TeamTab Test">
+       <classes>
+           <class name="com.legion.tests.core.TeamTestKendraScott2">
+               <methods>
+                   <include name="verifyTheFunctionOfSearchTMBar"/>
+               </methods>
+           </class>
+       </classes>
+   </test>
 
 </suite> <!-- Suite -->
 

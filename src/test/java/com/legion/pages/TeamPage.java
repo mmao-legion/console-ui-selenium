@@ -19,4 +19,6 @@ public interface TeamPage {
 	public void openToDoPopupWindow() throws Exception;
 	public void approveOrRejectTimeOffRequestFromToDoList(String userName, String timeOffStartDuration, String timeOffEndDuration, String action) throws Exception;
 	public void closeToDoPopupWindow() throws Exception;
+	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception;
+	public void verifyTheFunctionOfSearchTMBar(List<String> testStrings) throws Exception;
 }

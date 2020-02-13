@@ -466,6 +466,57 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				SimpleUtils.fail("Team Page: ToDo cards not loaded.", false);
 		}
 
+	//Added by Nora
+	@FindBy (className = "loading-icon")
+	private WebElement teamTabLoadingIcon;
+	@FindBy(css="div.row-container div.row.ng-scope")
+	private List<WebElement> teamMembers;
+
+	@Override
+	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception {
+		waitUntilElementIsInVisible(teamTabLoadingIcon);
+		if(areListElementVisible(teamMembers, 60)){
+			SimpleUtils.pass("Team Page is Loaded Successfully!");
+		}else{
+			SimpleUtils.fail("Team Page isn't Loaded Successfully", true);
+		}
+	}
+
+	@Override
+	public void verifyTheFunctionOfSearchTMBar(List<String> testStrings) throws Exception {
+		if (isElementLoaded(searchTextBox)){
+			if (testStrings.size() > 0){
+				for (String testString : testStrings){
+					searchTextBox.sendKeys(testString);
+					if (teamMembers.size() > 0){
+						for (WebElement teamMember : teamMembers){
+							WebElement tr = teamMember.findElement(By.className("tr"));
+							if (tr != null) {
+								List<WebElement> respectiveElements = tr.findElements(By.tagName("div"));
+								/*
+								 * It will get the respective elements of Team Member, they are Image, Name, Job Title, Status, Badges and Actions.
+								 */
+								if (respectiveElements != null && respectiveElements.size() == 6) {
+									String nameJobTitleStatus = respectiveElements.get(1).getText() + respectiveElements.get(2).getText()
+											+ respectiveElements.get(3).getText();
+									if (nameJobTitleStatus.toLowerCase().contains(testString)) {
+										SimpleUtils.pass("Verified " + teamMember.getText() + " contains test string: " + testString);
+									} else {
+										SimpleUtils.fail("Team member: " + teamMember.getText() + " doesn't contain the test String: "
+												+ testString, true);
+									}
+								}
+							}
+						}
+					}else{
+						SimpleUtils.fail("Team members failed to load!", true);
+					}
+					searchTextBox.clear();
+				}
+			}
+		}
+	}
+
 //    public boolean isTeam() throws Exception
 //	{
 //    	if(isElementLoaded(rosterBodyElement))

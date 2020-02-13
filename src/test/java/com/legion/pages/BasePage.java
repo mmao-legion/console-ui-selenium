@@ -233,6 +233,17 @@ public class BasePage {
         } catch (Throwable ignored) {
         }
     }
+
+    public static void waitUntilElementIsInVisible(final WebElement element) {
+        ExpectedCondition<Boolean> expectation = _driver -> !element.isDisplayed();
+
+        Wait<WebDriver> wait = new WebDriverWait(getDriver(), 60);
+        try {
+            wait.until(webDriver -> expectation);
+        } catch (Throwable ignored) {
+
+        }
+    }
     
     public void waitForPageLoaded(WebDriver driver) {
         try {

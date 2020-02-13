@@ -242,6 +242,19 @@ public class TeamTestKendraScott2 extends TestBase{
           			+"' after Store Manager Rejected the request.", false);
 	}
 
-
+	@Automated(automated ="Manual")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828041: Search Team Members is working correctly")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheFunctionOfSearchTMBar(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		List<String> testStrings = new ArrayList<>(Arrays.asList("jam", "boris", "h"));
+		teamPage.verifyTheFunctionOfSearchTMBar(testStrings);
+	}
 
 }
