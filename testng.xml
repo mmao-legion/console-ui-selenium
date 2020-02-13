@@ -29,6 +29,7 @@
                     <include name="verifyTheFunctionOfSearchTextBox" />
                     <include name="verifyTheWelcomeMessage" />
                     <include name="verifyTheFunctionOfViewTodaySchedule" />
+                    <include name="verifyTheDataSourceForBudgetScheduledOther" />
                 </methods>
             </class>
         </classes>

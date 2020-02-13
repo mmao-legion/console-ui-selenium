@@ -342,6 +342,12 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@FindBy (css = "div.col-sm-6.text-left")
 	private WebElement currentDate;
+	@FindBy (css = "div.forecast>div:nth-child(2)")
+	private WebElement budgetSection;
+	@FindBy (css = "div.forecast>div:nth-child(3)")
+	private WebElement scheduledSection;
+	@FindBy (css = "div.forecast>div:nth-child(4)")
+	private WebElement otherSection;
 
 	@Override
 	public String getCurrentDateFromDashboard() throws Exception {
@@ -350,6 +356,29 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}else{
 			return null;
 		}
+	}
+
+	@Override
+	public HashMap<String, String> getHoursFromDashboardPage() throws Exception {
+		HashMap<String, String> scheduledHours = new HashMap<>();
+		if (isElementLoaded(budgetSection) && isElementLoaded(scheduledSection) && isElementLoaded(otherSection)) {
+			List<WebElement> guidanceElements = budgetSection.findElements(By.tagName("span"));
+			List<WebElement> scheduledElements = scheduledSection.findElements(By.tagName("span"));
+			List<WebElement> otherElements = otherSection.findElements(By.tagName("span"));
+			if (guidanceElements != null && scheduledElements != null && otherElements != null) {
+				if (guidanceElements.size() == 3 && scheduledElements.size() == 3 && otherElements.size() == 3) {
+					scheduledHours.put(guidanceElements.get(2).getText(), guidanceElements.get(0).getText());
+					scheduledHours.put(scheduledElements.get(2).getText(), scheduledElements.get(0).getText());
+					scheduledHours.put(otherElements.get(2).getText(), otherElements.get(0).getText());
+					SimpleUtils.pass("Get Budget, Scheduled, Other hours Successfully!");
+				} else {
+					SimpleUtils.fail("Element size is incorrect!", true);
+				}
+			}
+		}else {
+			SimpleUtils.fail("Failed to find the elements!", true);
+		}
+		return scheduledHours;
 	}
 
 	private String getTimePeriod(String date) throws Exception {

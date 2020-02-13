@@ -128,4 +128,33 @@ public class DashboardTestKendraScott2 extends TestBase{
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , true);
 		schedulePage.isScheduleForCurrentDayInDayView(date);
 	}
+
+	@Automated(automated ="Manual")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828037: Today’s forecast section>Budget,scheduled and other hours are matching with the " +
+			"Schedule smartcard of Schedule page.")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheDataSourceForBudgetScheduledOther(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		String dateFromDashboard = dashboardPage.getCurrentDateFromDashboard();
+		HashMap<String, String> hoursOnDashboard = dashboardPage.getHoursFromDashboardPage();
+		SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(
+				ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , true);
+		schedulePage.isScheduleForCurrentDayInDayView(dateFromDashboard);
+		HashMap<String, String> hoursOnSchedule = schedulePage.getHoursFromSchedulePage();
+
+		if(hoursOnDashboard != null && hoursOnSchedule != null){
+			if(hoursOnDashboard.equals(hoursOnSchedule)){
+				SimpleUtils.pass("Data Source for Budget, Scheduled and Other are consistent with the data on schedule page!");
+			}else{
+				SimpleUtils.fail("Data Source for Budget, Scheduled and Other are inconsistent with the data " +
+						"on schedule page!", true);
+			}
+		}else{
+			SimpleUtils.fail("Failed to get the hours!", true);
+		}
+	}
 }

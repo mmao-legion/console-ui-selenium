@@ -1850,4 +1850,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void isScheduleForCurrentDayInDayView(String dateFromDashboard) throws Exception {
 
     }
+
+    @Override
+    public HashMap<String, String> getHoursFromSchedulePage() throws Exception {
+        return null;
+    }
 }

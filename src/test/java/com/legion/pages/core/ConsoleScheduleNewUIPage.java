@@ -4151,6 +4151,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement scheduleDayViewButton;
     @FindBy (className = "period-name")
     private WebElement periodName;
+    @FindBy (className = "card-carousel-container")
+    private WebElement cardCarousel;
+    @FindBy(css = "table tr:nth-child(1)")
+    private WebElement scheduleTableTitle;
+    @FindBy(css = "table tr:nth-child(2)")
+    private WebElement scheduleTableHours;
 
     @Override
     public void isScheduleForCurrentDayInDayView(String dateFromDashboard) throws Exception {
@@ -4172,6 +4178,31 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else{
             SimpleUtils.fail("The Schedule Day View Button isn't loaded!",true);
         }
+    }
+
+    @Override
+    public HashMap<String, String> getHoursFromSchedulePage() throws Exception {
+        // Wait for the hours to load
+        waitForSeconds(5);
+        HashMap<String, String> scheduleHours = new HashMap<>();
+            if (isElementLoaded(scheduleTableTitle) && isElementLoaded(scheduleTableHours)) {
+                List<WebElement> titles = scheduleTableTitle.findElements(By.tagName("th"));
+                List<WebElement> hours = scheduleTableHours.findElements(By.tagName("td"));
+                if (titles != null && hours != null) {
+                    if (titles.size() == 4 && hours.size() == 4) {
+                        for (int i = 1; i < titles.size(); i++) {
+                            scheduleHours.put(titles.get(i).getText(), hours.get(i).getText());
+                            SimpleUtils.pass("Get Title: " + titles.get(i).getText() + " and related Hours: " +
+                                    hours.get(i).getText());
+                        }
+                    }
+                } else {
+                    SimpleUtils.fail("Failed to find the Schedule table elementes!", true);
+                }
+            }else {
+                SimpleUtils.fail("Elements are not Loaded!", true);
+            }
+        return scheduleHours;
     }
 
 
