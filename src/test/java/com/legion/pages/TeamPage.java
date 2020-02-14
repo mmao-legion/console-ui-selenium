@@ -25,4 +25,5 @@ public interface TeamPage {
 	public void verifyTheMonthAndCurrentDayOnCalendar(String currentDateForSelectedLocation) throws Exception;
 	public void	selectATodoCardToTransfer() throws Exception;
 	public void verifyHomeLocationCanBeSelected() throws Exception;
+	public void verifyClickOnTemporaryTransferButton() throws Exception;
 }

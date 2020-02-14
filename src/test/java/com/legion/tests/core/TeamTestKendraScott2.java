@@ -316,4 +316,20 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.selectATodoCardToTransfer();
 		teamPage.verifyHomeLocationCanBeSelected();
 	}
+
+	@Automated(automated ="Manual")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828050: Temp transfer button is working")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheFunctionOfTemporaryTransferButton(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.openToDoPopupWindow();
+		teamPage.selectATodoCardToTransfer();
+		teamPage.verifyClickOnTemporaryTransferButton();
+	}
 }

@@ -488,6 +488,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private List<WebElement> locationCards;
 	@FindBy (className = "location-card-image-box")
 	private List<WebElement> locationImages;
+	@FindBy (className = "lgnCheckBox")
+	private WebElement temporaryTransferButton;
+	@FindBy (className = "check-image")
+	private WebElement checkImage;
 
 	@Override
 	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception {
@@ -637,6 +641,20 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}
 		}else{
 			SimpleUtils.fail("Location Cards Failed to load!", true);
+		}
+	}
+
+	@Override
+	public void verifyClickOnTemporaryTransferButton() throws Exception {
+		if (isElementLoaded(temporaryTransferButton)) {
+			click(temporaryTransferButton);
+			if (isElementLoaded(checkImage)){
+				SimpleUtils.pass("Temporary Transfer button is checked!");
+			}else{
+				SimpleUtils.fail("Temporary Transfer button isn't checked", true);
+			}
+		}else{
+			SimpleUtils.fail("Temporary Transfer button doesn't load!", true);
 		}
 	}
 

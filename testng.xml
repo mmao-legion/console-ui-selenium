@@ -43,6 +43,7 @@
                    <include name="verifyTheFunctionOfPlusIcon" />
                    <include name="verifyTheCalendarLoadForCurrentDayAndColor" />
                    <include name="verifyNewHomeLocationCanBeSelectedOnTransfer" />
+                   <include name="verifyTheFunctionOfTemporaryTransferButton" />
                </methods>
            </class>
        </classes>
