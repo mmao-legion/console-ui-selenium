@@ -300,4 +300,20 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
 		teamPage.verifyTheMonthAndCurrentDayOnCalendar(currentDate);
 	}
+
+	@Automated(automated ="Manual")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828049: any new home location can be selected")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyNewHomeLocationCanBeSelectedOnTransfer(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.openToDoPopupWindow();
+		teamPage.selectATodoCardToTransfer();
+		teamPage.verifyHomeLocationCanBeSelected();
+	}
 }

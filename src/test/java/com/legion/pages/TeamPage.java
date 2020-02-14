@@ -23,4 +23,6 @@ public interface TeamPage {
 	public void verifyTheFunctionOfSearchTMBar(List<String> testStrings) throws Exception;
 	public void verifyTheFunctionOfAddNewTeamMemberButton() throws Exception;
 	public void verifyTheMonthAndCurrentDayOnCalendar(String currentDateForSelectedLocation) throws Exception;
+	public void	selectATodoCardToTransfer() throws Exception;
+	public void verifyHomeLocationCanBeSelected() throws Exception;
 }

@@ -42,6 +42,7 @@
                    <include name="verifyTheFunctionOfSearchTMBar"/>
                    <include name="verifyTheFunctionOfPlusIcon" />
                    <include name="verifyTheCalendarLoadForCurrentDayAndColor" />
+                   <include name="verifyNewHomeLocationCanBeSelectedOnTransfer" />
                </methods>
            </class>
        </classes>

@@ -2,10 +2,9 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
-import java.util.HashMap;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.*;
 
-import java.util.Map;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -483,6 +482,12 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement currentMonthYear;
 	@FindBy (css = "div.is-today")
 	private WebElement todayHighlighted;
+	@FindBy (css = "lgn-action-button.change-location-button button")
+	private WebElement transferButton;
+	@FindBy (className = "location-card-image-name-container")
+	private List<WebElement> locationCards;
+	@FindBy (className = "location-card-image-box")
+	private List<WebElement> locationImages;
 
 	@Override
 	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception {
@@ -594,6 +599,44 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 							+ currentDateForSelectedLocation + ", but calendar displayed day is: " + currentDateOnCalendar, true);
 				}
 			}
+		}
+	}
+
+	@Override
+	public void	selectATodoCardToTransfer() throws Exception {
+		String transfer = "TRANSFER";
+		if (areListElementVisible(todoCards)){
+			for(WebElement todoCard : todoCards) {
+				click(todoCard);
+				if (isElementLoaded(transferButton)) {
+					if (transfer.equals(transferButton.getText())){
+						SimpleUtils.pass("Find a Todo card that can be transferred!");
+						click(transferButton);
+						break;
+					}else{
+						continue;
+					}
+				}
+			}
+		}else{
+			SimpleUtils.fail("Todo Cards didn't load successfully!", false);
+		}
+	}
+
+	@Override
+	public void verifyHomeLocationCanBeSelected() throws Exception {
+		String attribute = "style";
+		if (areListElementVisible(locationImages)){
+			for (WebElement locationCard : locationCards){
+				click(locationCard);
+				if (locationCard.getAttribute(attribute) != null && !locationCard.getAttribute(attribute).isEmpty()){
+					SimpleUtils.pass("Select one Location successfully!");
+				}else{
+					SimpleUtils.fail("Failed to select the Location!", true);
+				}
+			}
+		}else{
+			SimpleUtils.fail("Location Cards Failed to load!", true);
 		}
 	}
 
