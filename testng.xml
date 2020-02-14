@@ -41,6 +41,7 @@
                <methods>
                    <include name="verifyTheFunctionOfSearchTMBar"/>
                    <include name="verifyTheFunctionOfPlusIcon" />
+                   <include name="verifyTheCalendarLoadForCurrentDayAndColor" />
                </methods>
            </class>
        </classes>

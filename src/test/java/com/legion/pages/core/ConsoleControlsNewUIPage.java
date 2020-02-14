@@ -4915,5 +4915,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		return selectedOptionLabel;
 	}
 
+    //Added by Nora
+	@FindBy (css = "select[aria-label=\"Time Zone\"] option[selected=\"selected\"]")
+	private WebElement timeZoneSelected;
 
+	@Override
+    public String getTimeZoneFromLocationDetailsPage() throws Exception {
+		waitUntilElementIsVisible(timeZoneSelected);
+		return timeZoneSelected.getText();
+	}
 }

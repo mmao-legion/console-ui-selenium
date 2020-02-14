@@ -22,4 +22,5 @@ public interface TeamPage {
 	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception;
 	public void verifyTheFunctionOfSearchTMBar(List<String> testStrings) throws Exception;
 	public void verifyTheFunctionOfAddNewTeamMemberButton() throws Exception;
+	public void verifyTheMonthAndCurrentDayOnCalendar(String currentDateForSelectedLocation) throws Exception;
 }

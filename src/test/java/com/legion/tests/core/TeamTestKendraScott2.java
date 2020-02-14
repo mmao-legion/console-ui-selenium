@@ -7,11 +7,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import com.legion.pages.DashboardPage;
-import com.legion.pages.LoginPage;
-import com.legion.pages.ProfileNewUIPage;
-import com.legion.pages.TeamPage;
+import com.legion.pages.*;
+
 import java.util.Map;
+
+import org.apache.poi.ss.formula.ptg.ControlPtg;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -269,5 +269,35 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.goToTeam();
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+	}
+
+	@Automated(automated ="Manual")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828047: add TM(+) > Date Hired calendar is open for current month only and current date" +
+			" should be in Red color.")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheCalendarLoadForCurrentDayAndColor(String browser, String username, String password, String location) throws Exception {
+		String timeZone = null;
+		String currentDate = null;
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		if (controlsNewUIPage.isControlsPageLoaded()){
+			controlsNewUIPage.clickOnControlsLocationProfileSection();
+			if (controlsNewUIPage.isControlsLocationProfileLoaded()){
+				timeZone = controlsNewUIPage.getTimeZoneFromLocationDetailsPage();
+				if (timeZone != null && !timeZone.isEmpty()){
+					currentDate = SimpleUtils.getCurrentDateMonthYearWithTimeZone(timeZone);
+				}
+			}
+		}
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+		teamPage.verifyTheMonthAndCurrentDayOnCalendar(currentDate);
 	}
 }

@@ -475,6 +475,14 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement addNewMemberButton;
 	@FindBy (className = "col-sm-6")
 	private List<WebElement> sectionsOnAddNewTeamMemberTab;
+	@FindBy (css = "label[for=\"dateHired\"] img")
+	private WebElement calendarImage;
+	@FindBy (css = "div.single-calendar-picker.ng-scope")
+	private WebElement calendar;
+	@FindBy (className = "ranged-calendar__month-name")
+	private WebElement currentMonthYear;
+	@FindBy (css = "div.is-today")
+	private WebElement todayHighlighted;
 
 	@Override
 	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception {
@@ -557,6 +565,75 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		}else{
 			SimpleUtils.fail("\"+\" icon is visible on team tab!", false);
 		}
+	}
+
+	@Override
+	public void verifyTheMonthAndCurrentDayOnCalendar(String currentDateForSelectedLocation) throws Exception{
+		String colorOnWeb = "#fb7800";
+		if (isClickOnCalendarImageSuccessfully()){
+			if (isElementLoaded(currentMonthYear) && isElementLoaded(todayHighlighted)){
+				String currentDateOnCalendar = currentMonthYear.getText() + " " + todayHighlighted.getText();
+				String color = todayHighlighted.getCssValue("color");
+				/*
+				 * color css value format: rgba(251, 120, 0, 1), need to convert it to Hex format
+				 */
+				if (color.contains("(") && color.contains(")") && color.contains(",")){
+					String[] rgba = color.substring(color.indexOf("(") + 1, color.indexOf(")")).split(",");
+					String colorHex = awtColorToWeb(rgba);
+					if (colorHex.equals(colorOnWeb)){
+						SimpleUtils.pass("Verified the color of current day is correct!");
+					}else{
+						SimpleUtils.fail("Failed to verify the color, expected is: " + colorOnWeb + " actual is: "
+						+ colorHex, true);
+					}
+				}
+				if (currentDateForSelectedLocation.equals(currentDateOnCalendar)){
+					SimpleUtils.pass("It displays the calendar for current month and current day!");
+				}else{
+					SimpleUtils.fail("It doesn't display the calendar for current month and current day, current day is: "
+							+ currentDateForSelectedLocation + ", but calendar displayed day is: " + currentDateOnCalendar, true);
+				}
+			}
+		}
+	}
+
+	private String convertIntToHexString(int value){
+		String hexString = Integer.toHexString(value);
+		return hexString.length()== 1 ? "0"+ hexString : hexString;
+	}
+
+	private String awtColorToWeb(String[] rgba) {
+		StringBuilder builder = new StringBuilder();
+		try {
+			if (rgba.length == 4) {
+				builder.append("#");
+				/*
+				 * Need to convert the r, g, b.
+				 */
+				for (int i = 0; i < 3; i++) {
+					builder.append(convertIntToHexString(Integer.parseInt(rgba[i].trim())));
+				}
+			}
+		}catch (Exception e){
+			SimpleUtils.fail("Convert failed!", false);
+		}
+		return builder.toString();
+	}
+
+	private boolean isClickOnCalendarImageSuccessfully() throws Exception {
+		boolean isSuccess = false;
+		if (isElementLoaded(calendarImage)){
+			click(calendarImage);
+			if (isElementLoaded(calendar)){
+				isSuccess = true;
+				SimpleUtils.pass("Click on Calendar Image, Calendar shows successfully!");
+			}else{
+				SimpleUtils.fail("Failed to show the Calendar", true);
+			}
+		}else{
+			SimpleUtils.fail("Calendar Image failed to show.", true);
+		}
+		return isSuccess;
 	}
 
 //    public boolean isTeam() throws Exception

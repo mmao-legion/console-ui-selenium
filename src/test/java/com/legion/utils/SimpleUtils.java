@@ -331,7 +331,7 @@ public class SimpleUtils {
 	public static String getCurrentDateMonthYearWithTimeZone(String timeZone)
 	{
 		String date = "";
-		SimpleDateFormat dateTimeInGMT = new SimpleDateFormat("yyyy-MMM-dd");
+		SimpleDateFormat dateTimeInGMT = new SimpleDateFormat("MMMM yyyy dd");
 		dateTimeInGMT.setTimeZone(TimeZone.getTimeZone(timeZone));
 		date = dateTimeInGMT.format(new Date());
 		return date;
