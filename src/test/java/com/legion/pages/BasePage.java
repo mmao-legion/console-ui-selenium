@@ -1,7 +1,6 @@
 package com.legion.pages;
 
-import static com.legion.utils.MyThreadLocal.getAndroidDriver;
-import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.*;
 import static io.appium.java_client.touch.WaitOptions.waitOptions;
 import static io.appium.java_client.touch.offset.ElementOption.element;
 import static io.appium.java_client.touch.offset.PointOption.point;
@@ -48,7 +47,17 @@ public class BasePage {
         	ExtentTestManager.getTest().log(Status.WARNING,te);
         }
     }
-    
+
+    public void moveToElementAndClick(WebElement element, boolean... shouldWait) {
+        try {
+            waitUntilElementIsVisible(element);
+            Actions actions = new Actions(getDriver());
+            actions.moveToElement(element).click().perform();
+        } catch (TimeoutException te) {
+            ExtentTestManager.getTest().log(Status.WARNING,te);
+        }
+    }
+
     //click method for mobile app
     
     public void clickOnMobileElement(WebElement element, boolean... shouldWait) {

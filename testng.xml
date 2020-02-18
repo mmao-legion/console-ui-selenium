@@ -44,6 +44,13 @@
                    <include name="verifyTheCalendarLoadForCurrentDayAndColor" />
                    <include name="verifyNewHomeLocationCanBeSelectedOnTransfer" />
                    <include name="verifyTheFunctionOfTemporaryTransferButton" />
+                   <include name="verifyTwoCalendarsAreShownAfterClickTemp" />
+                   <include name="verifyTheFunctionOfAddTMCalendar" />
+                   <include name="verifyTheCurrentDateAndSelectOtherDateOnTransfer" />
+                   <include name="verifyTransferToANewLocation" />
+                   <include name="verifyConfirmTransferButtonWorking" />
+                   <include name="verifyCancelButtonOnPopupWindowWorking" />
+                   <include name="verifyHomeLocationNotUpdateAndGivenInformation" />
                </methods>
            </class>
        </classes>

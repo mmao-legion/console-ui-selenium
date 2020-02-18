@@ -337,6 +337,16 @@ public class SimpleUtils {
 		return date;
 	}
 
+	public static boolean isDateFormatCorrect(String date, SimpleDateFormat format) {
+		boolean convertSuccess = true;
+		try {
+			format.parse(date);
+		}catch (ParseException e){
+			convertSuccess = false;
+		}
+		return convertSuccess;
+	}
+
 	public static String dateWeekPickerDateComparision(String weekActiveDate) {
 		int i = 0;
 		List<String> listWeekActiveDate = new ArrayList();

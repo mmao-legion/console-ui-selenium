@@ -23,7 +23,17 @@ public interface TeamPage {
 	public void verifyTheFunctionOfSearchTMBar(List<String> testStrings) throws Exception;
 	public void verifyTheFunctionOfAddNewTeamMemberButton() throws Exception;
 	public void verifyTheMonthAndCurrentDayOnCalendar(String currentDateForSelectedLocation) throws Exception;
-	public void	selectATodoCardToTransfer() throws Exception;
-	public void verifyHomeLocationCanBeSelected() throws Exception;
+	public String selectATeamMemberToTransfer() throws Exception;
+	public String verifyHomeLocationCanBeSelected() throws Exception;
 	public void verifyClickOnTemporaryTransferButton() throws Exception;
+	public void verifyTwoCalendarsForCurrentMonthAreShown(String currentDate) throws Exception;
+	public void verifyTheCalendarCanNavToPreviousAndFuture() throws Exception;
+	public void verifyTheCurrentDateAndSelectOtherDateOnTransfer() throws Exception;
+	public void verifyDateCanBeSelectedOnTransfer() throws Exception;
+	public boolean isApplyButtonEnabled() throws Exception;
+	public void verifyClickOnApplyButtonOnTransfer() throws Exception;
+	public void verifyTheMessageOnPopupWindow(String currentLocation, String selectedLocation, String teamMemberName) throws Exception;
+	public void verifyTheFunctionOfConfirmTransferButton() throws Exception;
+	public void	verifyTheFunctionOfCancelTransferButton() throws Exception;
+	public void verifyTheHomeStoreLocationOnProfilePage(String homeLocation, String selectedLocation) throws Exception;
 }
