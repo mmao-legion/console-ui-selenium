@@ -162,4 +162,14 @@ public interface SchedulePage {
 	public void clickOnViewSchedulePayrollProjectionDMViewDashboard();
 	public void loadingOfDMViewSchedulePage(String SelectedWeek) throws Exception;
 	public void districtSelectionSMView(String districtName) throws Exception;
+	public void printButtonIsClickable() throws Exception;
+	public void todoButtonIsClickable()throws Exception;
+	public void closeButtonIsClickable();
+	public void legionButtonIsClickableAndHasNoEditButton() throws Exception;;
+	public void clickOnSuggestedButton() throws Exception;
+	public void legionIsDisplayingTheSchedul() throws Exception;
+
+	public void CurrentWeekIsGettingOpenByDefault() throws Exception;
+
+	public void goToScheduleNewUI();
 }

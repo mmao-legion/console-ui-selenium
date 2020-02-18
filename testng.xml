@@ -11,9 +11,10 @@
 
     <test name="Timesheet Test">
        <classes>
-           <class name="com.legion.tests.core.DMScheduleTest">
+           <class name="com.legion.tests.core.DashboardTestKendraScott2">
                <methods>
-                   <include name="validateDMViewDataWithSMViewAsInternalAdmin"/>
+<!--                   <include name="validateDMViewDataWithSMViewAsInternalAdmin"/>-->
+                   <include name="navigateToDashboardFromGlobalSetting"/>
                </methods>
            </class>
        </classes>
@@ -31,7 +32,21 @@
             </class>
         </classes>
     </test>
+        <test name="Schedule Test">
+            <classes>
+                <class name="com.legion.tests.core.ScheduleTestKendraScott2">
+                    <methods>
+                        <include name="printButtonIsClickable" />
+                        <include name="todoButtonIsClickable" />
+                        <include name="closeButtonIsClickable" />
+                        <include name="legionIsDisplayingTheScheduleWhichIsGeneratedByTheSystemAtTheVeryFirstTime" />
+                        <include name="legionButtonIsClickableAndHasNoEditButton" />
+                        <include name="CurrentWeekIsGettingOpenByDefault" />
 
+                    </methods>
+                </class>
+            </classes>
+        </test>
 
 </suite> <!-- Suite -->
 

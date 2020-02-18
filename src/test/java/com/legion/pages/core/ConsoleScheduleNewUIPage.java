@@ -27,6 +27,7 @@ import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
+import org.testng.Assert;
 
 import java.awt.*;
 import java.lang.reflect.Method;
@@ -100,7 +101,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         PageFactory.initElements(getDriver(), this);
     }
 
-    @FindBy(xpath = "//*[@id='legion-app']/div/div[2]/div/div/div/div[1]/navigation/div/div[4]")
+    @FindBy(xpath = "//*[@id='legion-app']/div/div[2]/div/div/div/div[1]/navigation/div/div[6]")
     private WebElement goToScheduleButton;
 
     @FindBy(css = "div[helper-text*='Work in progress Schedule'] span.legend-label")
@@ -627,8 +628,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = "div.day-week-picker-period-active")
     private WebElement currentActiveDay;
 
+    @FindBy (css = "div.day-week-picker-period-week.day-week-picker-period-active")
+    private WebElement currentActiveWeek;
+
     @FindBy (css = "div.sch-shift-transpose-second-row")
     private List<WebElement> scheduleWeekViewGrid;
+
+    @FindBy (css = "[on-change=\"updateGroupBy(value)\"]")
+    private WebElement groupByAllIcon;
+
+    @FindBy(css = "[ng-click=\"printAction($event)\"]")
+    private WebElement printButton;
+
+    @FindBy(css = "[ng-click=\"showTodos($event)\"]")
+    private WebElement todoButton;
+
+    @FindBy (css = ".horizontal.is-shown")
+    private WebElement todoSmartCard;
+
+    @FindBy(css = "[label=\"Print\"]")
+    private WebElement printButtonInPrintLayout;
 
     List<String> scheduleWeekDate = new ArrayList<String>();
     List<String> scheduleWeekStatus = new ArrayList<String>();
@@ -1102,6 +1121,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         } else {
             SimpleUtils.pass("Schedule Edit button is not enabled Successfully!");
+        }
+    }
+
+    public void clickOnSuggestedButton() throws Exception {
+        if (isElementEnabled(scheduleTypeSystem, 5)) {
+            click(scheduleTypeSystem);
+            SimpleUtils.pass("legion button is clickable");
+        }else {
+            SimpleUtils.fail("the schedule is not generated, generated schedule firstly",false);
         }
     }
 
@@ -2130,6 +2158,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public List<WebElement> getAvailableShiftsInDayView() {
 
+//        String availableShiftsInDayView =
         return dayViewAvailableShifts;
     }
 
@@ -2607,7 +2636,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void validatingGenrateSchedule() throws Exception {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -4146,6 +4174,46 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
+    @Override
+    public void printButtonIsClickable() throws Exception {
+        if (isElementLoaded(printButton)){
+            scrollToTop();
+            waitForSeconds(3);
+            click(printButton);
+            waitForSeconds(2);
+            if(isElementLoaded(printButtonInPrintLayout)) {
+                SimpleUtils.pass("Print button is  clickable");
+            }
+        }
+    }
+
+    @Override
+    public void todoButtonIsClickable() throws Exception {
+        if(isElementLoaded(todoButton)) {
+            scrollToTop();
+            waitForSeconds(3);
+            click(todoButton);
+            waitForSeconds(2);
+            if(isElementLoaded(todoSmartCard)) {
+                SimpleUtils.pass("Todo button is  clickable");
+            }
+        }
+    }
+
+    @Override
+    public void closeButtonIsClickable() {
+        getDriver().close();
+        SimpleUtils.pass("close button is clickable");
+    }
+
+    @Override
+    public void legionButtonIsClickableAndHasNoEditButton() throws Exception {
+        clickOnSuggestedButton();
+        waitForSeconds(4);
+        if(!isElementLoaded(edit)){
+            SimpleUtils.pass("Legion schedule has no edit button");
+        }
+    }
 
 
     public void clickOnViewScheduleLocationSummaryDMViewDashboard() {
@@ -4732,5 +4800,30 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
+    public void legionIsDisplayingTheSchedul() throws Exception {
+        waitForSeconds(8);
+        if(isElementLoaded(groupByAllIcon)){
+         SimpleUtils.pass("Legion schedule is displaying");
+        }
+    }
 
+
+    public void CurrentWeekIsGettingOpenByDefault() throws Exception {
+       String currentTime =  SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT+5:00");
+        System.out.println("current time is " + currentTime);
+        String activeWeekText = getActiveWeekText();
+        System.out.println("activeWeekText" + activeWeekText);
+        if(activeWeekText.contains(currentTime)){
+            SimpleUtils.pass("Current week is getting open by default");
+        }
+    }
+
+    public void goToScheduleNewUI(){
+        click(goToScheduleButton);
+        waitForSeconds(5);
+//        waitUntilElementIsVisible(activatedSubTabElement);
+        click(ScheduleSubMenu);
+        waitUntilElementIsVisible(todoButton);
+
+    }
 }
