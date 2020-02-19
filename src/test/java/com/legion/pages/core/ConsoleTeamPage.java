@@ -652,8 +652,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		if (areListElementVisible(teamMemberNames)){
 			Random random = new Random();
 			int randomIndex = random.nextInt(teamMemberNames.size() - 1);
-			teamMember = teamMemberNames.get(0).getText();
-			click(teamMemberNames.get(0));
+			teamMember = teamMemberNames.get(randomIndex).getText();
+			click(teamMemberNames.get(randomIndex));
 			if (isElementLoaded(transferButton)) {
 				if (transfer.equals(transferButton.getText())) {
 					SimpleUtils.pass("Find a Team Member that can be transferred!");
