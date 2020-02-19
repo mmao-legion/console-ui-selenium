@@ -172,4 +172,12 @@ public interface SchedulePage {
 	public void CurrentWeekIsGettingOpenByDefault() throws Exception;
 
 	public void goToScheduleNewUI();
+
+	public void DayWeekPickerSectionNavigatingCorrectly() throws Exception;
+
+	public void LandscapePortraitModeShowWellInWeekView() throws Exception;
+
+	public void LandscapeModeWorkWellInWeekView() throws Exception;
+
+	public void PortraitModeWorkWellInWeekView()throws Exception;
 }

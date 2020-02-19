@@ -41,7 +41,11 @@
                         <include name="closeButtonIsClickable" />
                         <include name="legionIsDisplayingTheScheduleWhichIsGeneratedByTheSystemAtTheVeryFirstTime" />
                         <include name="legionButtonIsClickableAndHasNoEditButton" />
-                        <include name="CurrentWeekIsGettingOpenByDefault" />
+<!--                        <include name="CurrentWeekIsGettingOpenByDefault" />-->
+                        <include name="DayWeekPickerSectionNavigatingCorrectly" />
+                        <include name="LandscapePortraitModeShowAndWorkWellInWeekView" />
+
+
 
                     </methods>
                 </class>

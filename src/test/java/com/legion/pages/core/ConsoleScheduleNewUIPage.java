@@ -6,6 +6,7 @@ import static org.testng.Assert.fail;
 
 import com.gargoylesoftware.htmlunit.html.Keyboard;
 import com.legion.tests.core.ScheduleNewUITest;
+import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 
@@ -31,6 +32,8 @@ import org.testng.Assert;
 
 import java.awt.*;
 import java.lang.reflect.Method;
+import java.sql.Driver;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -555,6 +558,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.day-week-picker-period-active")
     private WebElement daypicker;
 
+    @FindBy(xpath = "//*[text()=\"Day\"]")
+    private WebElement daypButton;
+
+    @FindBy(xpath = "//*[text()=\"Week\"]")
+    private WebElement weekButton;
+
     @FindBy (css = "div.day-week-picker-period")
     private List<WebElement> dayPickerAllDaysInDayView;
 
@@ -640,6 +649,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "[ng-click=\"printAction($event)\"]")
     private WebElement printButton;
 
+    @FindBy(xpath ="//*[text()=\"Portrait\"]")
+    private WebElement PortraitButton;
+
+    @FindBy(xpath ="//*[text()=\"Landscape\"]")
+    private WebElement LandscapeButton;
+
     @FindBy(css = "[ng-click=\"showTodos($event)\"]")
     private WebElement todoButton;
 
@@ -648,6 +663,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(css = "[label=\"Print\"]")
     private WebElement printButtonInPrintLayout;
+
+    @FindBy(css = "[label=\"Cancel\"]")
+    private WebElement cannelButtonInPrintLayout;
 
     List<String> scheduleWeekDate = new ArrayList<String>();
     List<String> scheduleWeekStatus = new ArrayList<String>();
@@ -1251,7 +1269,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public String getActiveWeekText() throws Exception {
         WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
         if (isElementLoaded(activeWeek))
-            return activeWeek.getText().replace("\n", " ");
+            return activeWeek.getText();
         return "";
     }
 
@@ -4812,7 +4830,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
        String currentTime =  SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT+5:00");
         System.out.println("current time is " + currentTime);
         String activeWeekText = getActiveWeekText();
-        System.out.println("activeWeekText" + activeWeekText);
+        System.out.println("activeWeekText" + activeWeekText.split(" "));
         if(activeWeekText.contains(currentTime)){
             SimpleUtils.pass("Current week is getting open by default");
         }
@@ -4826,4 +4844,78 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         waitUntilElementIsVisible(todoButton);
 
     }
+
+
+    public void DayWeekPickerSectionNavigatingCorrectly()  throws Exception{
+
+
+        String weekIcon = "Mon - Sun";
+        String activeWeekText = getActiveWeekText();
+        System.out.println("activeWeekText is :" + activeWeekText);
+        if(activeWeekText.contains(weekIcon)){
+            SimpleUtils.pass("Week pick show correctly");
+        }
+        waitForSeconds(3);
+        click(daypButton);
+        if(isElementLoaded(daypicker)){
+            SimpleUtils.pass("Day pick show correctly");
+        }
+
+    }
+
+
+    public void LandscapePortraitModeShowWellInWeekView() throws Exception {
+        click(printButton);
+        waitForSeconds(3);
+        if(isElementLoaded(LandscapeButton)&isElementLoaded(PortraitButton)){
+            SimpleUtils.pass("Landscape and Portrait mode show well");
+        }
+        click(PortraitButton);
+        waitForSeconds(2);
+        click(LandscapeButton);
+        waitForSeconds(2);
+        SimpleUtils.pass("In Week view should be able to change the mode between Landscape and Portrait ");
+        click(cannelButtonInPrintLayout);
+    }
+
+    public void LandscapeModeWorkWellInWeekView() throws Exception {
+
+        String currentWindow =getDriver().getWindowHandle();
+        System.out.println("currentWindow is :"+currentWindow);
+        waitUntilElementIsVisible(printButton);
+        click(printButton);
+//        waitUntilElementIsVisible(LandscapeButton);
+        waitForSeconds(5);
+        click(LandscapeButton);
+        click(printButtonInPrintLayout);
+        waitForSeconds(5);
+//        getDriver().switchTo().window(currentWindow);
+        if(!isElementLoaded(LandscapeButton)){
+            waitForSeconds(10);
+            String downloadPath = "C:\\Users\\DMF\\Downloads";
+            Assert.assertTrue(FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekViewSchedulePdf"), "print successfully");
+            SimpleUtils.pass("Landscape print work well");
+        }
+
+    }
+
+    public void PortraitModeWorkWellInWeekView() throws Exception {
+        String currentWindow =getDriver().getWindowHandle();
+        System.out.println("currentWindow is :"+currentWindow);
+        waitUntilElementIsVisible(printButton);
+        click(printButton);
+        waitForSeconds(3);
+//        waitUntilElementIsVisible(PortraitButton);
+        click(PortraitButton);
+        click(printButtonInPrintLayout);
+        waitForSeconds(5);
+        getDriver().switchTo().window(currentWindow);
+        if(!isElementLoaded(PortraitButton)){
+            waitForSeconds(10);
+            String downloadPath = "C:\\Users\\DMF\\Downloads";
+            Assert.assertTrue(FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekViewSchedulePdf"), "print successfully");
+            SimpleUtils.pass("Portrait print work well");
+        }
+    }
+
 }

@@ -348,20 +348,45 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Manual")
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "Kendrascott2_Enterprise")
-	@TestName(description = "T1828204 & T1828206:Legion button is clickable")
+	@TestName(description = "T1828186:Current week is getting open by default")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void CurrentWeekIsGettingOpenByDefault(String username, String password, String browser, String location)
 			throws Exception {
-//		SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
-
-//		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-//		dashboardPage.goToTodayForNewUI();
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.goToScheduleNewUI();
 		SimpleUtils.pass("Schedule new UI page load successfully");
 		schedulePage.CurrentWeekIsGettingOpenByDefault();
 
 	}
+
+		@Automated(automated = "Manual")
+		@Owner(owner = "Estelle")
+		@Enterprise(name = "Kendrascott2_Enterprise")
+		@TestName(description = "T1828187:Day-week picker section navigating correctly")
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+		public void DayWeekPickerSectionNavigatingCorrectly(String username, String password, String browser, String location)
+				throws Exception {
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.goToScheduleNewUI();
+			SimpleUtils.pass("Schedule new UI page load successfully");
+			schedulePage.DayWeekPickerSectionNavigatingCorrectly();
+
+		}
+
+		@Automated(automated = "Manual")
+		@Owner(owner = "Estelle")
+		@Enterprise(name = "Kendrascott2_Enterprise")
+		@TestName(description = "T1828190&T1828191:In week View > Clicking on Print button, it should give option to print in both: Landscape or Portrait mode. Both should work. &should be able to change the mode between Landscape and Portrait")
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+		public void LandscapePortraitModeShowAndWorkWellInWeekView(String username, String password, String browser, String location)
+				throws Exception {
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.goToScheduleNewUI();
+			SimpleUtils.pass("Schedule new UI page load successfully");
+			schedulePage.LandscapePortraitModeShowWellInWeekView();
+			schedulePage.LandscapeModeWorkWellInWeekView();
+			schedulePage.PortraitModeWorkWellInWeekView();
+		}
 
 }
 

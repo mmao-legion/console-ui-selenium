@@ -1897,4 +1897,24 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void goToScheduleNewUI() {
 
     }
+
+    @Override
+    public void DayWeekPickerSectionNavigatingCorrectly() throws Exception {
+
+    }
+
+    @Override
+    public void LandscapePortraitModeShowWellInWeekView() throws Exception {
+
+    }
+
+    @Override
+    public void LandscapeModeWorkWellInWeekView() throws Exception {
+
+    }
+
+    @Override
+    public void PortraitModeWorkWellInWeekView() throws Exception {
+
+    }
 }
