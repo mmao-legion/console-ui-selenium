@@ -246,7 +246,7 @@ public class BasePage {
     public static void waitUntilElementIsInVisible(final WebElement element) {
         ExpectedCondition<Boolean> expectation = _driver -> !element.isDisplayed();
 
-        Wait<WebDriver> wait = new WebDriverWait(getDriver(), 60);
+        Wait<WebDriver> wait = new WebDriverWait(getDriver(), 20);
         try {
             wait.until(webDriver -> expectation);
         } catch (Throwable ignored) {

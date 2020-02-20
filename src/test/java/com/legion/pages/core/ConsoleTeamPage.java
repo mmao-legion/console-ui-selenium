@@ -544,7 +544,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void verifyTheFunctionOfSearchTMBar(List<String> testStrings) throws Exception {
-		if (isElementLoaded(searchTextBox)){
+		if (isElementLoaded(searchTextBox, 5)){
 			if (testStrings.size() > 0){
 				for (String testString : testStrings){
 					searchTextBox.sendKeys(testString);
@@ -603,7 +603,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 	private void verifyTheVisibilityAndClickableOfPlusIcon() throws Exception {
-		if (isElementLoaded(addNewMemberButton)){
+		if (isElementLoaded(addNewMemberButton, 10)){
 			SimpleUtils.pass("\"+\" icon is visible on team tab!");
 			if (isClickable(addNewMemberButton, 10)){
 				SimpleUtils.pass("\"+\" icon is clickable on team tab!");
@@ -619,7 +619,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	public void verifyTheMonthAndCurrentDayOnCalendar(String currentDateForSelectedLocation) throws Exception{
 		String colorOnWeb = "#fb7800";
 		if (isClickOnCalendarImageSuccessfully()){
-			if (isElementLoaded(currentMonthYear) && isElementLoaded(todayHighlighted)){
+			if (isElementLoaded(currentMonthYear, 5) && isElementLoaded(todayHighlighted, 5)){
 				String currentDateOnCalendar = currentMonthYear.getText() + " " + todayHighlighted.getText();
 				String color = todayHighlighted.getCssValue("color");
 				/*
@@ -649,12 +649,12 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	public String selectATeamMemberToTransfer() throws Exception {
 		String transfer = "TRANSFER";
 		String teamMember = null;
-		if (areListElementVisible(teamMemberNames)){
+		if (areListElementVisible(teamMemberNames, 30)){
 			Random random = new Random();
 			int randomIndex = random.nextInt(teamMemberNames.size() - 1);
 			teamMember = teamMemberNames.get(randomIndex).getText();
 			click(teamMemberNames.get(randomIndex));
-			if (isElementLoaded(transferButton)) {
+			if (isElementLoaded(transferButton, 5)) {
 				if (transfer.equals(transferButton.getText())) {
 					SimpleUtils.pass("Find a Team Member that can be transferred!");
 					moveToElementAndClick(transferButton);
@@ -677,12 +677,11 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		boolean isSuccess = false;
 		String cancelTransfer = "CANCEL TRANSFER";
 		String transfer = "TRANSFER";
-		if (isElementLoaded(transferButton) && transferButton.getText().equals(cancelTransfer)) {
+		if (isElementLoaded(transferButton, 5) && transferButton.getText().equals(cancelTransfer)) {
 			click(transferButton);
-			waitUntilElementIsVisible(popupMessage);
-			if (isElementLoaded(confirmButton)) {
+			if (isElementLoaded(confirmButton, 10)) {
 				click(confirmButton);
-				if (isElementLoaded(transferButton)){
+				if (isElementLoaded(transferButton, 10)){
 					if (transferButton.getText().equals(transfer)) {
 						isSuccess = true;
 						SimpleUtils.pass("Cancel Transfer Successfully!");
@@ -705,7 +704,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	public String verifyHomeLocationCanBeSelected() throws Exception {
 		String selectedLocation = null;
 		String attribute = "style";
-		if (areListElementVisible(locationImages) && areListElementVisible(locationCards)) {
+		if (areListElementVisible(locationImages, 30) && areListElementVisible(locationCards, 30)) {
 			Random random = new Random();
 			int index = random.nextInt(locationCards.size() - 1);
 			WebElement locationCard = locationCards.get(index);
@@ -724,9 +723,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void verifyClickOnTemporaryTransferButton() throws Exception {
-		if (isElementLoaded(temporaryTransferButton)) {
+		if (isElementLoaded(temporaryTransferButton, 5)) {
 			click(temporaryTransferButton);
-			if (isElementLoaded(checkImage)){
+			if (isElementLoaded(checkImage, 5)){
 				SimpleUtils.pass("Temporary Transfer button is checked!");
 			}else{
 				SimpleUtils.fail("Temporary Transfer button isn't checked", true);
@@ -740,7 +739,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	public void verifyTwoCalendarsForCurrentMonthAreShown(String currentDate) throws Exception {
 		String className = "month-header";
 		verifyClickOnTemporaryTransferButton();
-		if (areListElementVisible(transferTitles) && areListElementVisible(transferCalendars)){
+		if (areListElementVisible(transferTitles, 10) && areListElementVisible(transferCalendars, 10)){
 			if (transferTitles.size() == 2 && transferCalendars.size() == 2){
 				String monthYearLeft = transferCalendars.get(0).findElement(By.className(className)).getText().toLowerCase();
 				String monthYearRight = transferCalendars.get(1).findElement(By.className(className)).getText().toLowerCase();
@@ -762,7 +761,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		String monthAndYear = null;
 		String attribute = "value";
 		if (isClickOnCalendarImageSuccessfully()){
-			if (isElementLoaded(backArrow) && isElementLoaded(forwardArrow)){
+			if (isElementLoaded(backArrow, 5) && isElementLoaded(forwardArrow, 5)){
 				navigateToPreviousAndFutureDate(backArrow);
 				navigateToPreviousAndFutureDate(forwardArrow);
 				navigateToPreviousAndFutureDate(forwardArrow);
@@ -795,7 +794,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void verifyTheCurrentDateAndSelectOtherDateOnTransfer() throws Exception {
 		String colorOnWeb = "#fb7800";
-		if (areListElementVisible(transferCalendars) && isElementLoaded(currentDay)) {
+		if (areListElementVisible(transferCalendars, 10) && isElementLoaded(currentDay, 10)) {
 			String color = currentDay.getCssValue("color");
 			/*
 			 * color css value format: rgba(251, 120, 0, 1), need to convert it to Hex format
@@ -821,7 +820,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		int nextDayIndex = 0;
 		int maxIndex = 0;
 		Random random = new Random();
-		if (areListElementVisible(daysOnCalendar)) {
+		if (areListElementVisible(daysOnCalendar, 10)) {
 			/*
 			 * Select a future date to transfer.
 			 */
@@ -865,7 +864,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			teamMemberName = teamMemberName.split(" ")[0];
 		}
 		String expectedShiftMessage = "from this date onwards will be converted to Open Shifts.";
-		if (isElementLoaded(confirmPopupWindow) && areListElementVisible(alertMessages)) {
+		if (isElementLoaded(confirmPopupWindow, 10) && areListElementVisible(alertMessages, 10)) {
 			if (alertMessages.size() == 2) {
 				String transferMessage = alertMessages.get(0).getText();
 				String shiftMessage = alertMessages.get(1).getText();
@@ -885,12 +884,12 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	public void verifyTheFunctionOfConfirmTransferButton() throws Exception {
 		String successfulMessage = "Successfully transferred the Team Member";
 		String cancelTransfer = "CANCEL TRANSFER";
-		if (isElementLoaded(confirmPopupWindow) && isElementLoaded(confirmButton)) {
+		if (isElementLoaded(confirmPopupWindow, 10) && isElementLoaded(confirmButton, 10)) {
 			click(confirmButton);
-			if (isElementLoaded(popupMessage)) {
+			if (isElementLoaded(popupMessage, 10)) {
 				String message = popupMessage.getText();
 				if (message.equals(successfulMessage)) {
-					if (isElementLoaded(transferButton)){
+					if (isElementLoaded(transferButton, 10)){
 						if (transferButton.getText().equals(cancelTransfer)) {
 							SimpleUtils.pass("Transfer Successfully!");
 						}else {
@@ -907,9 +906,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void	verifyTheFunctionOfCancelTransferButton() throws Exception {
 		String transfer = "TRANSFER";
-		if (isElementLoaded(confirmPopupWindow) && isElementLoaded(cancelButton)) {
+		if (isElementLoaded(confirmPopupWindow, 10) && isElementLoaded(cancelButton, 10)) {
 			click(cancelButton);
-			if (isElementLoaded(transferButton)){
+			if (isElementLoaded(transferButton, 10)){
 				if (transferButton.getText().equals(transfer)) {
 					SimpleUtils.pass("Cancel Transfer Successfully!");
 				}else {
@@ -927,7 +926,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		String date = null;
 		boolean isCorrectFormat = false;
 		SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy");
-		if (isElementLoaded(homeStoreLocation) && isElementLoaded(changeLocationMsg)) {
+		if (isElementLoaded(homeStoreLocation, 10) && isElementLoaded(changeLocationMsg, 10)) {
 			if (homeStoreLocation.getText().contains(location)){
 				SimpleUtils.pass("Home Store Location is not updating!");
 			}else {
@@ -959,7 +958,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	private int getSpecificDayIndex(WebElement specificDay) {
 		int index = 0;
-		if (areListElementVisible(daysOnCalendar)){
+		if (areListElementVisible(daysOnCalendar, 10)){
 			for (int i = 0; i < daysOnCalendar.size(); i++) {
 				String day = daysOnCalendar.get(i).getText();
 				if (day.equals(specificDay.getText())){
@@ -1008,9 +1007,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	private boolean isClickOnCalendarImageSuccessfully() throws Exception {
 		boolean isSuccess = false;
-		if (isElementLoaded(calendarImage)){
+		if (isElementLoaded(calendarImage, 5)){
 			click(calendarImage);
-			if (isElementLoaded(calendar)){
+			if (isElementLoaded(calendar, 5)){
 				isSuccess = true;
 				SimpleUtils.pass("Click on Calendar Image, Calendar shows successfully!");
 			}else{

@@ -4921,11 +4921,16 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
     public String getTimeZoneFromLocationDetailsPage() throws Exception {
-		waitUntilElementIsVisible(timeZoneSelected);
-		/*
-		 * Wait for the data to be loaded
-		 */
-		waitForSeconds(3);
-		return timeZoneSelected.getText();
+		String timeZone = null;
+		if (isElementLoaded(timeZoneSelected, 5)) {
+			/*
+			 * Wait for the data to be loaded
+			 */
+			waitForSeconds(3);
+			timeZone = timeZoneSelected.getText();
+		} else {
+			SimpleUtils.fail("Time Zone Select failed to load!", true);
+		}
+		return timeZone;
 	}
 }

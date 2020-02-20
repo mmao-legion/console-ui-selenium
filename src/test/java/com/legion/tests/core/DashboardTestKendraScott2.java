@@ -53,10 +53,10 @@ public class DashboardTestKendraScott2 extends TestBase{
     	SimpleUtils.fail("assert Today's Forecast and Projected Demand Graph should not be present for Team lead and Team member",false);	
     }
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate the Store/Company Location")
+	@TestName(description = "Validate the Store Company Location")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheDisplayLocationWithSelectedLocation(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -65,7 +65,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 		locationSelectorPage.verifyTheDisplayLocationWithSelectedLocationConsistent();
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate the functionality of Change Location button on click")
@@ -77,7 +77,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 		locationSelectorPage.verifyClickChangeLocationButton();
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate the content getting displayed in the Change Location flyout")
@@ -89,7 +89,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 		locationSelectorPage.verifyTheContentOfDetailLocations();
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate the functionality of Search textbox in Change Location flyout")
@@ -102,7 +102,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 		locationSelectorPage.verifyTheFunctionOfSearchTextBox(testStrings);
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate the Welcome Message")
@@ -115,10 +115,10 @@ public class DashboardTestKendraScott2 extends TestBase{
 		dashboardPage.verifyTheWelcomeMessage(nickName);
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "View Today’s schedule button is working and navigating to the schedule page[Current date in day view]")
+	@TestName(description = "View Todays schedule button is working and navigating to the schedule page Current date in day view")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheFunctionOfViewTodaySchedule(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -129,11 +129,11 @@ public class DashboardTestKendraScott2 extends TestBase{
 		schedulePage.isScheduleForCurrentDayInDayView(date);
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828037: Today’s forecast section>Budget,scheduled and other hours are matching with the " +
-			"Schedule smartcard of Schedule page.")
+	@TestName(description = "T1828037 Todays forecast section Budget scheduled and other hours are matching with the " +
+			"Schedule smartcard of Schedule page")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheDataSourceForBudgetScheduledOther(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

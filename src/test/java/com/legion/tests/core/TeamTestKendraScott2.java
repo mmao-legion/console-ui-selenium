@@ -240,10 +240,10 @@ public class TeamTestKendraScott2 extends TestBase{
           			+"' after Store Manager Rejected the request.", false);
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828041: Search Team Members is working correctly")
+	@TestName(description = "T1828041 Search Team Members is working correctly")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheFunctionOfSearchTMBar(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -255,10 +255,10 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.verifyTheFunctionOfSearchTMBar(testStrings);
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828042: ’+’ button to add ™ is working")
+	@TestName(description = "T1828042 plus button to add TM is working")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheFunctionOfPlusIcon(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -269,11 +269,11 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828047: add TM(+) > Date Hired calendar is open for current month only and current date" +
-			" should be in Red color.")
+	@TestName(description = "T1828047 add TM Date Hired calendar is open for current month only and current date" +
+			" should be in Red color")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheCalendarLoadForCurrentDayAndColor(String browser, String username, String password, String location) throws Exception {
 		String timeZone = null;
@@ -299,10 +299,10 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.verifyTheMonthAndCurrentDayOnCalendar(currentDate);
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828049: any new home location can be selected")
+	@TestName(description = "T1828049 any new home location can be selected")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyNewHomeLocationCanBeSelectedOnTransfer(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -314,10 +314,10 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.verifyHomeLocationCanBeSelected();
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828050: Temp transfer button is working")
+	@TestName(description = "T1828050 Temp transfer button is working")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheFunctionOfTemporaryTransferButton(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -329,10 +329,10 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.verifyClickOnTemporaryTransferButton();
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828051: when click on temp Transfer button,Start date and End date calendar is opening")
+	@TestName(description = "T1828051 when click on temp Transfer button,Start date and End date calendar is opening")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTwoCalendarsAreShownAfterClickTemp(String browser, String username, String password, String location) throws Exception {
 		String timeZone = null;
@@ -358,10 +358,10 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.verifyTwoCalendarsForCurrentMonthAreShown(currentDate);
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828048: add TM(+) > Calendar can be Navigate to Previous/future")
+	@TestName(description = "T1828048 add TM Calendar can be Navigate to Previous future")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheFunctionOfAddTMCalendar(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -373,10 +373,10 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.verifyTheCalendarCanNavToPreviousAndFuture();
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828052: current date is by default selected, Other Dates can be selected")
+	@TestName(description = "T1828052 current date is by default selected Other Dates can be selected")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheCurrentDateAndSelectOtherDateOnTransfer(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -388,10 +388,10 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.verifyTheCurrentDateAndSelectOtherDateOnTransfer();
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828053: while transferring to a new location, old location shift is converting into open shift")
+	@TestName(description = "T1828053 while transferring to a new location old location shift is converting into open shift")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTransferToANewLocation(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -407,10 +407,10 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.verifyTheMessageOnPopupWindow(location, selectedLocation, teamMember);
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828054: Confirm/ cancel button is working")
+	@TestName(description = "T1828054 Confirm cancel button is working")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyConfirmButtonOnPopupWindowWorking(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -426,10 +426,10 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.verifyTheFunctionOfConfirmTransferButton();
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828054: Confirm/ cancel button is working")
+	@TestName(description = "T1828054 Confirm cancel button is working")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyCancelButtonOnPopupWindowWorking(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -445,10 +445,10 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.verifyTheFunctionOfCancelTransferButton();
 	}
 
-	@Automated(automated ="Manual")
+	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828055: home location is not updating to new location but It is giving information like New Location-07/04/2019 and Back to Home store-07/05/2019")
+	@TestName(description = "T1828055 home location is not updating to new location but It is giving information like New Location 07042019 and Back to Home store 07052019")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyHomeLocationNotUpdateAndGivenInformation(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

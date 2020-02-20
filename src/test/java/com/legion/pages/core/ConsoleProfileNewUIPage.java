@@ -1611,10 +1611,11 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public String getNickNameFromProfile() throws Exception {
 		String nickName = "";
 		try{
-			if(isElementLoaded(userProfileImage)){
+			if(isElementLoaded(userProfileImage, 5)){
 				click(userProfileImage);
-				waitUntilElementIsVisible(userNickName);
-				nickName = userNickName.getText();
+				if (isElementLoaded(userNickName, 5)) {
+					nickName = userNickName.getText();
+				}
 				if(nickName != null && !nickName.isEmpty()){
 					SimpleUtils.pass("Get User's NickName: " + nickName + "Successfully");
 				}else{

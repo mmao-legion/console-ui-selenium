@@ -327,7 +327,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		String greetingTime = getTimePeriod(currentTime.getText());
 		String expectedText = "Good " + greetingTime + ", " + userName + "." + "\n" + "Welcome to Legion" + "\n" + "Your Complete Workforce Engagement Solution";
 		String actualText = "";
-		if(isElementLoaded(detailWelcomeText)){
+		if(isElementLoaded(detailWelcomeText, 5)){
 			actualText = detailWelcomeText.getText();
 			if(actualText.equals(expectedText)){
 				SimpleUtils.pass("Verified Welcome Text is as expected!");
@@ -351,7 +351,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public String getCurrentDateFromDashboard() throws Exception {
-		if (isElementLoaded(currentDate)){
+		if (isElementLoaded(currentDate, 5)){
 			return currentDate.getText();
 		}else{
 			return null;
@@ -361,7 +361,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public HashMap<String, String> getHoursFromDashboardPage() throws Exception {
 		HashMap<String, String> scheduledHours = new HashMap<>();
-		if (isElementLoaded(budgetSection) && isElementLoaded(scheduledSection) && isElementLoaded(otherSection)) {
+		if (isElementLoaded(budgetSection, 5) && isElementLoaded(scheduledSection, 5)
+				&& isElementLoaded(otherSection, 5)) {
 			List<WebElement> guidanceElements = budgetSection.findElements(By.tagName("span"));
 			List<WebElement> scheduledElements = scheduledSection.findElements(By.tagName("span"));
 			List<WebElement> otherElements = otherSection.findElements(By.tagName("span"));

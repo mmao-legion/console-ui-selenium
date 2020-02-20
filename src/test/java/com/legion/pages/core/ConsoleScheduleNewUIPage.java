@@ -4161,7 +4161,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void isScheduleForCurrentDayInDayView(String dateFromDashboard) throws Exception {
         String tagName = "span";
-        if (isElementLoaded(scheduleDayViewButton) && isElementLoaded(periodName)) {
+        if (isElementLoaded(scheduleDayViewButton, 5) && isElementLoaded(periodName, 5)) {
             if (scheduleDayViewButton.getAttribute("class").contains("lg-button-group-selected")){
                 SimpleUtils.pass("The Schedule Day View Button is selected!");
             }else{
@@ -4185,7 +4185,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         // Wait for the hours to load
         waitForSeconds(5);
         HashMap<String, String> scheduleHours = new HashMap<>();
-            if (isElementLoaded(scheduleTableTitle) && isElementLoaded(scheduleTableHours)) {
+            if (isElementLoaded(scheduleTableTitle, 5) && isElementLoaded(scheduleTableHours, 5)) {
                 List<WebElement> titles = scheduleTableTitle.findElements(By.tagName("th"));
                 List<WebElement> hours = scheduleTableHours.findElements(By.tagName("td"));
                 if (titles != null && hours != null) {
