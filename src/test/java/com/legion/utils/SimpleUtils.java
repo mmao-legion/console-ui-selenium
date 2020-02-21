@@ -6,6 +6,7 @@ import com.legion.test.testrail.APIException;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.tests.testframework.ScreenshotManager;
+import javafx.beans.binding.Bindings;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -331,7 +332,7 @@ public class SimpleUtils {
 	public static String getCurrentDateMonthYearWithTimeZone(String timeZone)
 	{
 		String date = "";
-		SimpleDateFormat dateTimeInGMT = new SimpleDateFormat("MMMM yyyy dd");
+		SimpleDateFormat dateTimeInGMT = new SimpleDateFormat("yyyy-MMM-dd");
 		dateTimeInGMT.setTimeZone(TimeZone.getTimeZone(timeZone));
 		date = dateTimeInGMT.format(new Date());
 		return date;
@@ -1761,6 +1762,22 @@ public class SimpleUtils {
 
 	}
 
+	public static String getThisWeekTimeInterval(Date  date) {
 
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		int dayWeek = cal.get(Calendar.DAY_OF_WEEK);
+		if (1 == dayWeek) {
+			cal.add(Calendar.DAY_OF_MONTH, -1);
+		}
+		cal.setFirstDayOfWeek(Calendar.MONDAY);
+		int day = cal.get(Calendar.DAY_OF_WEEK);
+		cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);
 
+		String imptimeBegin = sdf.format(cal.getTime());
+		cal.add(Calendar.DATE, 6);
+		String imptimeEnd = sdf.format(cal.getTime());
+		return imptimeBegin + "," + imptimeEnd;
+	}
 }

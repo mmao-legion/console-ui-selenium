@@ -1,28 +1,19 @@
 package com.legion.pages.core;
 
-import static com.legion.utils.MyThreadLocal.getAndroidDriver;
-import static com.legion.utils.MyThreadLocal.getDriver;
-
-import com.aventstack.extentreports.ExtentTest;
 import com.legion.pages.BasePage;
-import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
-import com.legion.tests.TestBase;
-import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.SimpleUtils;
-
-import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import static com.legion.utils.MyThreadLocal.*;
-
 import java.util.HashMap;
+
+import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.setScreenshotConsoleName;
 
 public class ConsoleLoginPage extends BasePage implements LoginPage {
     //todo Manideep to replace it with Legion Console-UI login page he has
