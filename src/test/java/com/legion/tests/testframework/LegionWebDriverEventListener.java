@@ -2,15 +2,12 @@ package com.legion.tests.testframework;
 
 import io.appium.java_client.events.api.general.AppiumWebDriverEventListener;
 
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.events.WebDriverEventListener;
 
 import com.legion.pages.BasePage;
-import com.legion.tests.TestBase;
 
 import static com.legion.utils.MyThreadLocal.*;
 

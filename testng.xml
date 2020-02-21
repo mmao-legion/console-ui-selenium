@@ -4,7 +4,6 @@
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="no"/>
 
-
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>

@@ -7,9 +7,6 @@ import static io.appium.java_client.touch.offset.ElementOption.element;
 import static io.appium.java_client.touch.offset.PointOption.point;
 import static java.time.Duration.ofSeconds;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
@@ -29,7 +26,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.aventstack.extentreports.Status;
 import com.legion.tests.testframework.ExtentTestManager;
-import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
