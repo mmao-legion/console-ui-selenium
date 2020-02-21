@@ -196,10 +196,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     public void verifyClickChangeLocationButton() throws Exception {
         if (isElementLoaded(changeLocationButton, 10)){
             click(changeLocationButton);
-            waitForSeconds(4);
-            if (isElementLoaded(locationDropDownList)){
+            if (isElementLoaded(locationDropDownList, 10)){
                 SimpleUtils.pass("The layout shows!");
-                if (isElementLoaded(searchTextbox) && isElementLoaded(locationItems)){
+                if (isElementLoaded(searchTextbox, 5) && isElementLoaded(locationItems, 5)){
                     SimpleUtils.pass("List of locations and search textbox show.");
                 }
                 else{

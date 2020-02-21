@@ -331,10 +331,20 @@ public class SimpleUtils {
 	public static String getCurrentDateMonthYearWithTimeZone(String timeZone)
 	{
 		String date = "";
-		SimpleDateFormat dateTimeInGMT = new SimpleDateFormat("yyyy-MMM-dd");
+		SimpleDateFormat dateTimeInGMT = new SimpleDateFormat("MMMM yyyy dd");
 		dateTimeInGMT.setTimeZone(TimeZone.getTimeZone(timeZone));
 		date = dateTimeInGMT.format(new Date());
 		return date;
+	}
+
+	public static boolean isDateFormatCorrect(String date, SimpleDateFormat format) {
+		boolean convertSuccess = true;
+		try {
+			format.parse(date);
+		}catch (ParseException e){
+			convertSuccess = false;
+		}
+		return convertSuccess;
 	}
 
 	public static String dateWeekPickerDateComparision(String weekActiveDate) {

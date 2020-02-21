@@ -7,11 +7,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import com.legion.pages.DashboardPage;
-import com.legion.pages.LoginPage;
-import com.legion.pages.ProfileNewUIPage;
-import com.legion.pages.TeamPage;
+import com.legion.pages.*;
+
 import java.util.Map;
+
+import org.apache.poi.ss.formula.ptg.ControlPtg;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -25,9 +25,7 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.getTimeOffEndTime;
-import static com.legion.utils.MyThreadLocal.getTimeOffStartTime;
+import static com.legion.utils.MyThreadLocal.*;
 
 public class TeamTestKendraScott2 extends TestBase{
 	
@@ -242,6 +240,228 @@ public class TeamTestKendraScott2 extends TestBase{
           			+"' after Store Manager Rejected the request.", false);
 	}
 
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828041 Search Team Members is working correctly")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheFunctionOfSearchTMBar(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		List<String> testStrings = new ArrayList<>(Arrays.asList("jam", "boris", "h"));
+		teamPage.verifyTheFunctionOfSearchTMBar(testStrings);
+	}
 
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828042 plus button to add TM is working")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheFunctionOfPlusIcon(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+	}
 
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828047 add TM Date Hired calendar is open for current month only and current date" +
+			" should be in Red color")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheCalendarLoadForCurrentDayAndColor(String browser, String username, String password, String location) throws Exception {
+		String timeZone = null;
+		String currentDate = null;
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		if (controlsNewUIPage.isControlsPageLoaded()){
+			controlsNewUIPage.clickOnControlsLocationProfileSection();
+			if (controlsNewUIPage.isControlsLocationProfileLoaded()){
+				timeZone = controlsNewUIPage.getTimeZoneFromLocationDetailsPage();
+				if (timeZone != null && !timeZone.isEmpty()){
+					currentDate = SimpleUtils.getCurrentDateMonthYearWithTimeZone(timeZone);
+				}
+			}
+		}
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+		teamPage.verifyTheMonthAndCurrentDayOnCalendar(currentDate);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828049 any new home location can be selected")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyNewHomeLocationCanBeSelectedOnTransfer(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.selectATeamMemberToTransfer();
+		teamPage.verifyHomeLocationCanBeSelected();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828050 Temp transfer button is working")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheFunctionOfTemporaryTransferButton(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.selectATeamMemberToTransfer();
+		teamPage.verifyClickOnTemporaryTransferButton();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828051 when click on temp Transfer button,Start date and End date calendar is opening")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTwoCalendarsAreShownAfterClickTemp(String browser, String username, String password, String location) throws Exception {
+		String timeZone = null;
+		String currentDate = null;
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		if (controlsNewUIPage.isControlsPageLoaded()){
+			controlsNewUIPage.clickOnControlsLocationProfileSection();
+			if (controlsNewUIPage.isControlsLocationProfileLoaded()){
+				timeZone = controlsNewUIPage.getTimeZoneFromLocationDetailsPage();
+				if (timeZone != null && !timeZone.isEmpty()){
+					currentDate = SimpleUtils.getCurrentDateMonthYearWithTimeZone(timeZone);
+				}
+			}
+		}
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.selectATeamMemberToTransfer();
+		teamPage.verifyTwoCalendarsForCurrentMonthAreShown(currentDate);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828048 add TM Calendar can be Navigate to Previous future")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheFunctionOfAddTMCalendar(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+		teamPage.verifyTheCalendarCanNavToPreviousAndFuture();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828052 current date is by default selected Other Dates can be selected")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheCurrentDateAndSelectOtherDateOnTransfer(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.selectATeamMemberToTransfer();
+		teamPage.verifyTheCurrentDateAndSelectOtherDateOnTransfer();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828053 while transferring to a new location old location shift is converting into open shift")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTransferToANewLocation(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		String teamMember = teamPage.selectATeamMemberToTransfer();
+		String selectedLocation = teamPage.verifyHomeLocationCanBeSelected();
+		teamPage.verifyDateCanBeSelectedOnTransfer();
+		teamPage.isApplyButtonEnabled();
+		teamPage.verifyClickOnApplyButtonOnTransfer();
+		teamPage.verifyTheMessageOnPopupWindow(location, selectedLocation, teamMember);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828054 Confirm cancel button is working")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyConfirmButtonOnPopupWindowWorking(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.selectATeamMemberToTransfer();
+		teamPage.verifyHomeLocationCanBeSelected();
+		teamPage.verifyDateCanBeSelectedOnTransfer();
+		teamPage.isApplyButtonEnabled();
+		teamPage.verifyClickOnApplyButtonOnTransfer();
+		teamPage.verifyTheFunctionOfConfirmTransferButton();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828054 Confirm cancel button is working")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyCancelButtonOnPopupWindowWorking(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.selectATeamMemberToTransfer();
+		teamPage.verifyHomeLocationCanBeSelected();
+		teamPage.verifyDateCanBeSelectedOnTransfer();
+		teamPage.isApplyButtonEnabled();
+		teamPage.verifyClickOnApplyButtonOnTransfer();
+		teamPage.verifyTheFunctionOfCancelTransferButton();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828055 home location is not updating to new location but It is giving information like New Location 07042019 and Back to Home store 07052019")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyHomeLocationNotUpdateAndGivenInformation(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.selectATeamMemberToTransfer();
+		String selectedLocation = teamPage.verifyHomeLocationCanBeSelected();
+		teamPage.verifyDateCanBeSelectedOnTransfer();
+		teamPage.isApplyButtonEnabled();
+		teamPage.verifyClickOnApplyButtonOnTransfer();
+		teamPage.verifyTheFunctionOfConfirmTransferButton();
+		teamPage.verifyTheHomeStoreLocationOnProfilePage(location, selectedLocation);
+	}
 }

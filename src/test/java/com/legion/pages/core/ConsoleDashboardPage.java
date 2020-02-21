@@ -2,7 +2,9 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -85,6 +87,12 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@FindBy (css = "div.header-company-icon")
 	private WebElement iconImage;
+
+	@FindBy (css = ".col-sm-6.text-right")
+	private WebElement currentTime;
+
+	@FindBy (css = "div.fx-center.welcome-text h1")
+	private WebElement detailWelcomeText;
 
     public ConsoleDashboardPage() {
     	PageFactory.initElements(getDriver(), this);
@@ -314,4 +322,93 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 	}
 
+	@Override
+	public void verifyTheWelcomeMessage(String userName) throws Exception {
+		String greetingTime = getTimePeriod(currentTime.getText());
+		String expectedText = "Good " + greetingTime + ", " + userName + "." + "\n" + "Welcome to Legion" + "\n" + "Your Complete Workforce Engagement Solution";
+		String actualText = "";
+		if(isElementLoaded(detailWelcomeText, 5)){
+			actualText = detailWelcomeText.getText();
+			if(actualText.equals(expectedText)){
+				SimpleUtils.pass("Verified Welcome Text is as expected!");
+			}else{
+				SimpleUtils.fail("Verify Welcome Text failed! Expected is: " + expectedText + "\n" + "Actual is: " + actualText, true);
+			}
+		}
+		else{
+			SimpleUtils.fail("Welcome Text Section doesn't Load successfully!", true);
+		}
+	}
+
+	@FindBy (css = "div.col-sm-6.text-left")
+	private WebElement currentDate;
+	@FindBy (css = "div.forecast>div:nth-child(2)")
+	private WebElement budgetSection;
+	@FindBy (css = "div.forecast>div:nth-child(3)")
+	private WebElement scheduledSection;
+	@FindBy (css = "div.forecast>div:nth-child(4)")
+	private WebElement otherSection;
+
+	@Override
+	public String getCurrentDateFromDashboard() throws Exception {
+		if (isElementLoaded(currentDate, 5)){
+			return currentDate.getText();
+		}else{
+			return null;
+		}
+	}
+
+	@Override
+	public HashMap<String, String> getHoursFromDashboardPage() throws Exception {
+		HashMap<String, String> scheduledHours = new HashMap<>();
+		if (isElementLoaded(budgetSection, 5) && isElementLoaded(scheduledSection, 5)
+				&& isElementLoaded(otherSection, 5)) {
+			List<WebElement> guidanceElements = budgetSection.findElements(By.tagName("span"));
+			List<WebElement> scheduledElements = scheduledSection.findElements(By.tagName("span"));
+			List<WebElement> otherElements = otherSection.findElements(By.tagName("span"));
+			if (guidanceElements != null && scheduledElements != null && otherElements != null) {
+				if (guidanceElements.size() == 3 && scheduledElements.size() == 3 && otherElements.size() == 3) {
+					scheduledHours.put(guidanceElements.get(2).getText(), guidanceElements.get(0).getText());
+					scheduledHours.put(scheduledElements.get(2).getText(), scheduledElements.get(0).getText());
+					scheduledHours.put(otherElements.get(2).getText(), otherElements.get(0).getText());
+					SimpleUtils.pass("Get Budget, Scheduled, Other hours Successfully!");
+				} else {
+					SimpleUtils.fail("Element size is incorrect!", true);
+				}
+			}
+		}else {
+			SimpleUtils.fail("Failed to find the elements!", true);
+		}
+		return scheduledHours;
+	}
+
+	private String getTimePeriod(String date) throws Exception {
+		String timePeriod = "";
+		int pmHour = 12;
+		final String pm = "pm";
+		final String am = "am";
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+			Date now = format.parse(date);
+			int hour = now.getHours();
+			if (date.endsWith(pm) && hour != pmHour) {
+				hour += pmHour;
+			}
+			if (date.endsWith(am) && hour == pmHour){
+				hour -= pmHour;
+			}
+			if (hour >= 5 && hour <= 11) {
+				timePeriod = "morning";
+			} else if (hour >= 12 && hour < 19) {
+				timePeriod = "afternoon";
+			} else if (hour >= 19 && hour < 22) {
+				timePeriod = "evening";
+			} else {
+				timePeriod = "night";
+			}
+		}catch(Exception e) {
+			SimpleUtils.fail("Get Time Period failed!", true);
+		}
+		return timePeriod;
+	}
 }
