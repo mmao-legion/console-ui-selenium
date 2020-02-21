@@ -169,15 +169,15 @@ public interface SchedulePage {
 	public void clickOnSuggestedButton() throws Exception;
 	public void legionIsDisplayingTheSchedul() throws Exception;
 
-	public void CurrentWeekIsGettingOpenByDefault() throws Exception;
+	public void currentWeekIsGettingOpenByDefault() throws Exception;
 
-	public void goToScheduleNewUI();
+	public void goToScheduleNewUI() throws Exception;
 
-	public void DayWeekPickerSectionNavigatingCorrectly() throws Exception;
+	public void dayWeekPickerSectionNavigatingCorrectly() throws Exception;
 
-	public void LandscapePortraitModeShowWellInWeekView() throws Exception;
+	public void landscapePortraitModeShowWellInWeekView() throws Exception;
 
-	public void LandscapeModeWorkWellInWeekView() throws Exception;
+	public void landscapeModeWorkWellInWeekView() throws Exception;
 
-	public void PortraitModeWorkWellInWeekView()throws Exception;
+	public void portraitModeWorkWellInWeekView()throws Exception;
 }

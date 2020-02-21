@@ -4195,7 +4195,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void printButtonIsClickable() throws Exception {
-        if (isElementLoaded(printButton,5)){
+        if (isElementLoaded(printButton,10)){
             scrollToTop();
             click(printButton);
             if(isElementLoaded(printButtonInPrintLayout)) {
@@ -4210,7 +4210,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void todoButtonIsClickable() throws Exception {
-        if(isElementLoaded(todoButton,5)) {
+        if(isElementLoaded(todoButton,10)) {
             scrollToTop();
             click(todoButton);
             if(isElementLoaded(todoSmartCard,5)) {
