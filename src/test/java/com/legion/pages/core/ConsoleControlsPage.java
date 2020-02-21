@@ -29,9 +29,9 @@ public class ConsoleControlsPage extends BasePage implements ControlsPage{
 		// TODO Auto-generated method stub
 		if(isElementLoaded(controlsConsoleName)){
 			controlsConsoleName.click();
-			SimpleUtils.fail("Control not Loaded1", true);
+			//SimpleUtils.fail("Control not Loaded1", true);
 			checkElementVisibility(globalIconControls);
-			SimpleUtils.fail("Control not Loaded2", true);
+			//SimpleUtils.fail("Control not Loaded2", true);
 			SimpleUtils.pass("Controls loaded successfully and Global icon present");
 		}else{
 			SimpleUtils.fail("Control not Loaded", false);

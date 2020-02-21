@@ -1,14 +1,12 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.*;
 
-import java.util.Map;
+import com.legion.pages.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.legion.pages.AnalyticsPage;
-import com.legion.pages.LoginPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -54,5 +52,109 @@ public class DashboardTestKendraScott2 extends TestBase{
     	SimpleUtils.pass("Navigate to Dashboard Page Successfully!");
     	SimpleUtils.fail("assert Today's Forecast and Projected Demand Graph should not be present for Team lead and Team member",false);	
     }
-    
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the Store Company Location")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheDisplayLocationWithSelectedLocation(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+		locationSelectorPage.verifyTheDisplayLocationWithSelectedLocationConsistent();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the functionality of Change Location button on click")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheClickActionOnChangeLocationButton(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+		locationSelectorPage.verifyClickChangeLocationButton();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the content getting displayed in the Change Location flyout")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheContentDisplayedInChangeLocationLayout(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+		locationSelectorPage.verifyTheContentOfDetailLocations();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the functionality of Search textbox in Change Location flyout")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheFunctionOfSearchTextBox(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		List<String> testStrings = new ArrayList<>(Arrays.asList("s", "h", "W"));
+		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+		locationSelectorPage.verifyTheFunctionOfSearchTextBox(testStrings);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the Welcome Message")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheWelcomeMessage(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String nickName = profileNewUIPage.getNickNameFromProfile();
+		dashboardPage.verifyTheWelcomeMessage(nickName);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "View Todays schedule button is working and navigating to the schedule page Current date in day view")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheFunctionOfViewTodaySchedule(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		String date = dashboardPage.getCurrentDateFromDashboard();
+		SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , true);
+		schedulePage.isScheduleForCurrentDayInDayView(date);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828037 Todays forecast section Budget scheduled and other hours are matching with the " +
+			"Schedule smartcard of Schedule page")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheDataSourceForBudgetScheduledOther(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		String dateFromDashboard = dashboardPage.getCurrentDateFromDashboard();
+		HashMap<String, String> hoursOnDashboard = dashboardPage.getHoursFromDashboardPage();
+		SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(
+				ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , true);
+		schedulePage.isScheduleForCurrentDayInDayView(dateFromDashboard);
+		HashMap<String, String> hoursOnSchedule = schedulePage.getHoursFromSchedulePage();
+
+		if(hoursOnDashboard != null && hoursOnSchedule != null){
+			if(hoursOnDashboard.equals(hoursOnSchedule)){
+				SimpleUtils.pass("Data Source for Budget, Scheduled and Other are consistent with the data on schedule page!");
+			}else{
+				SimpleUtils.fail("Data Source for Budget, Scheduled and Other are inconsistent with the data " +
+						"on schedule page!", true);
+			}
+		}else{
+			SimpleUtils.fail("Failed to get the hours!", true);
+		}
+	}
 }

@@ -227,4 +227,6 @@ public interface ControlsNewUIPage {
 	public void verifySchedulePlanningWindowUpdationValues(String planningWindowAdvanceWeeks, List<String> selectionOptionLabelAfterUpdation)
 			throws Exception;
 	public String getTimeSheetApprovalSelectedOption(boolean byManager) throws Exception;
+
+	public String getTimeZoneFromLocationDetailsPage() throws Exception;
 }

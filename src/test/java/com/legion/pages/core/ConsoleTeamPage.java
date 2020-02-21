@@ -1,11 +1,15 @@
 package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.teamMemberName;
 
-import java.util.HashMap;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.net.SocketImpl;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-import java.util.Map;
+import freemarker.template.SimpleDate;
+import net.sourceforge.htmlunit.corejs.javascript.EcmaError;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -465,6 +469,557 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			else
 				SimpleUtils.fail("Team Page: ToDo cards not loaded.", false);
 		}
+
+	//Added by Nora
+	@FindBy (className = "loading-icon")
+	private WebElement teamTabLoadingIcon;
+	@FindBy(css="div.row-container div.row.ng-scope")
+	private List<WebElement> teamMembers;
+	@FindBy (className = "lgnToggleIconButton")
+	private WebElement addNewMemberButton;
+	@FindBy (className = "col-sm-6")
+	private List<WebElement> sectionsOnAddNewTeamMemberTab;
+	@FindBy (css = "label[for=\"dateHired\"] img")
+	private WebElement calendarImage;
+	@FindBy (css = "div.single-calendar-picker.ng-scope")
+	private WebElement calendar;
+	@FindBy (className = "ranged-calendar__month-name")
+	private WebElement currentMonthYear;
+	@FindBy (css = "div.is-today")
+	private WebElement todayHighlighted;
+	@FindBy (css = "lgn-action-button.change-location-button button")
+	private WebElement transferButton;
+	@FindBy (className = "location-card-image-name-container")
+	private List<WebElement> locationCards;
+	@FindBy (className = "location-card-image-box")
+	private List<WebElement> locationImages;
+	@FindBy (className = "lgnCheckBox")
+	private WebElement temporaryTransferButton;
+	@FindBy (className = "check-image")
+	private WebElement checkImage;
+	@FindBy (css="div.row-container span.name")
+	private List<WebElement> teamMemberNames;
+	@FindBy (className = "transfer-heading")
+	private List<WebElement> transferTitles;
+	@FindBy (className = "lgncalendar")
+	private List<WebElement> transferCalendars;
+	@FindBy (css = "a.pull-left")
+	private WebElement backArrow;
+	@FindBy (css = "a.pull-right")
+	private WebElement forwardArrow;
+	@FindBy (css = "div.real-day")
+	private List<WebElement> realDays;
+	@FindBy (id = "dateHired")
+	private WebElement dateHiredInput;
+	@FindBy (className = "current-day")
+	private WebElement currentDay;
+	@FindBy (css = "div.day")
+	private List<WebElement> daysOnCalendar;
+	@FindBy (css = "button.save-btn.pull-right")
+	private WebElement applyOnTransfer;
+	@FindBy (className = "lgn-alert-modal")
+	private WebElement confirmPopupWindow;
+	@FindBy (className = "lgn-action-button-success")
+	private WebElement confirmButton;
+	@FindBy (className = "lgn-action-button-default")
+	private WebElement cancelButton;
+	@FindBy (css = "span.lgn-alert-message")
+	private List<WebElement> alertMessages;
+	@FindBy (css = "div.lgn-alert-message")
+	private WebElement popupMessage;
+	@FindBy (css = "div:nth-child(7) > div.value")
+	private WebElement homeStoreLocation;
+	@FindBy (css = "pre.change-location-msg")
+	private WebElement changeLocationMsg;
+
+	@Override
+	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception {
+		waitUntilElementIsInVisible(teamTabLoadingIcon);
+		if(areListElementVisible(teamMembers, 60)){
+			SimpleUtils.pass("Team Page is Loaded Successfully!");
+		}else{
+			SimpleUtils.fail("Team Page isn't Loaded Successfully", true);
+		}
+	}
+
+	@Override
+	public void verifyTheFunctionOfSearchTMBar(List<String> testStrings) throws Exception {
+		if (isElementLoaded(searchTextBox, 5)){
+			if (testStrings.size() > 0){
+				for (String testString : testStrings){
+					searchTextBox.sendKeys(testString);
+					if (teamMembers.size() > 0){
+						for (WebElement teamMember : teamMembers){
+							WebElement tr = teamMember.findElement(By.className("tr"));
+							if (tr != null) {
+								List<WebElement> respectiveElements = tr.findElements(By.tagName("div"));
+								/*
+								 * It will get the respective elements of Team Member, they are Image, Name, Job Title, Status, Badges and Actions.
+								 */
+								if (respectiveElements != null && respectiveElements.size() == 6) {
+									String nameJobTitleStatus = respectiveElements.get(1).getText() + respectiveElements.get(2).getText()
+											+ respectiveElements.get(3).getText();
+									if (nameJobTitleStatus.toLowerCase().contains(testString)) {
+										SimpleUtils.pass("Verified " + teamMember.getText() + " contains test string: " + testString);
+									} else {
+										SimpleUtils.fail("Team member: " + teamMember.getText() + " doesn't contain the test String: "
+												+ testString, true);
+									}
+								}
+							}
+						}
+					}else{
+						SimpleUtils.fail("Team members failed to load!", true);
+					}
+					searchTextBox.clear();
+				}
+			}
+		}
+	}
+
+	@Override
+	public void verifyTheFunctionOfAddNewTeamMemberButton() throws Exception{
+		final String personalDetails = "Personal Details";
+		final String engagementDetails = "Engagement Details";
+		final String titleClassName = "header-label";
+		verifyTheVisibilityAndClickableOfPlusIcon();
+		click(addNewMemberButton);
+		if (areListElementVisible(sectionsOnAddNewTeamMemberTab, 10)){
+			if (sectionsOnAddNewTeamMemberTab.size() == 2){
+				SimpleUtils.pass("Two sections on Add New Team Member Tab loaded successfully!");
+				WebElement personalElement = sectionsOnAddNewTeamMemberTab.get(0).findElement(By.className(titleClassName));
+				WebElement engagementElement = sectionsOnAddNewTeamMemberTab.get(1).findElement(By.className(titleClassName));
+				if (personalElement != null && engagementElement != null){
+					if (personalDetails.equals(personalElement.getText()) && engagementDetails.equals(engagementElement.getText())){
+						SimpleUtils.pass("Personal Details and Engagement Details sections loaded!");
+					}else{
+						SimpleUtils.fail("Personal Details and Engagement Details sections failed to load", true);
+					}
+				}
+			}else{
+				SimpleUtils.fail("Two sections on Add New Team Member Tab failed to load", false);
+			}
+		}
+	}
+
+	private void verifyTheVisibilityAndClickableOfPlusIcon() throws Exception {
+		if (isElementLoaded(addNewMemberButton, 10)){
+			SimpleUtils.pass("\"+\" icon is visible on team tab!");
+			if (isClickable(addNewMemberButton, 10)){
+				SimpleUtils.pass("\"+\" icon is clickable on team tab!");
+			}else{
+				SimpleUtils.fail("\"+\" icon isn't clickable on team tab!", true);
+			}
+		}else{
+			SimpleUtils.fail("\"+\" icon is visible on team tab!", false);
+		}
+	}
+
+	@Override
+	public void verifyTheMonthAndCurrentDayOnCalendar(String currentDateForSelectedLocation) throws Exception{
+		String colorOnWeb = "#fb7800";
+		if (isClickOnCalendarImageSuccessfully()){
+			if (isElementLoaded(currentMonthYear, 5) && isElementLoaded(todayHighlighted, 5)){
+				String currentDateOnCalendar = currentMonthYear.getText() + " " + todayHighlighted.getText();
+				String color = todayHighlighted.getCssValue("color");
+				/*
+				 * color css value format: rgba(251, 120, 0, 1), need to convert it to Hex format
+				 */
+				if (color.contains("(") && color.contains(")") && color.contains(",")){
+					String[] rgba = color.substring(color.indexOf("(") + 1, color.indexOf(")")).split(",");
+					String colorHex = awtColorToWeb(rgba);
+					if (colorHex.equals(colorOnWeb)){
+						SimpleUtils.pass("Verified the color of current day is correct!");
+					}else{
+						SimpleUtils.fail("Failed to verify the color, expected is: " + colorOnWeb + " actual is: "
+						+ colorHex, true);
+					}
+				}
+				if (currentDateForSelectedLocation.equals(currentDateOnCalendar)){
+					SimpleUtils.pass("It displays the calendar for current month and current day!");
+				}else{
+					SimpleUtils.fail("It doesn't display the calendar for current month and current day, current day is: "
+							+ currentDateForSelectedLocation + ", but calendar displayed day is: " + currentDateOnCalendar, true);
+				}
+			}
+		}
+	}
+
+	@Override
+	public String selectATeamMemberToTransfer() throws Exception {
+		String transfer = "TRANSFER";
+		String teamMember = null;
+		if (areListElementVisible(teamMemberNames, 30)){
+			Random random = new Random();
+			int randomIndex = random.nextInt(teamMemberNames.size() - 1);
+			teamMember = teamMemberNames.get(randomIndex).getText();
+			click(teamMemberNames.get(randomIndex));
+			if (isElementLoaded(transferButton, 5)) {
+				if (transfer.equals(transferButton.getText())) {
+					SimpleUtils.pass("Find a Team Member that can be transferred!");
+					moveToElementAndClick(transferButton);
+				} else {
+					/*
+					 * If the user already transferred, cancel transfer it.
+					 */
+					if (isCancelTransferSuccess()) {
+						click(transferButton);
+					}
+				}
+			}
+		}else{
+			SimpleUtils.fail("Team Members didn't load successfully!", false);
+		}
+		return teamMember;
+	}
+
+	private boolean isCancelTransferSuccess() throws Exception {
+		boolean isSuccess = false;
+		String cancelTransfer = "CANCEL TRANSFER";
+		String transfer = "TRANSFER";
+		if (isElementLoaded(transferButton, 5) && transferButton.getText().equals(cancelTransfer)) {
+			click(transferButton);
+			if (isElementLoaded(confirmButton, 10)) {
+				click(confirmButton);
+				if (isElementLoaded(transferButton, 10)){
+					if (transferButton.getText().equals(transfer)) {
+						isSuccess = true;
+						SimpleUtils.pass("Cancel Transfer Successfully!");
+					}else {
+						SimpleUtils.fail("CANCEL TRANSFER button doesn't change to TRANSFER", true);
+					}
+				}else {
+					SimpleUtils.fail("Cancel Transfer failed!", true);
+				}
+			}else {
+				SimpleUtils.fail("A pop-up window doesn't show!", true);
+			}
+		}else {
+			SimpleUtils.fail("Cancel Transfer button doesn't Load!", true);
+		}
+		return isSuccess;
+	}
+
+	@Override
+	public String verifyHomeLocationCanBeSelected() throws Exception {
+		String selectedLocation = null;
+		String attribute = "style";
+		if (areListElementVisible(locationImages, 30) && areListElementVisible(locationCards, 30)) {
+			Random random = new Random();
+			int index = random.nextInt(locationCards.size() - 1);
+			WebElement locationCard = locationCards.get(index);
+			selectedLocation = locationCard.findElement(By.className("location-card-name-text")).getText();
+			click(locationCard);
+			if (locationCard.getAttribute(attribute) != null && !locationCard.getAttribute(attribute).isEmpty()){
+				SimpleUtils.pass("Select one Location successfully!");
+			}else{
+				SimpleUtils.fail("Failed to select the Location!", true);
+			}
+		}else{
+			SimpleUtils.fail("Location Cards Failed to load!", true);
+		}
+		return selectedLocation;
+	}
+
+	@Override
+	public void verifyClickOnTemporaryTransferButton() throws Exception {
+		if (isElementLoaded(temporaryTransferButton, 5)) {
+			click(temporaryTransferButton);
+			if (isElementLoaded(checkImage, 5)){
+				SimpleUtils.pass("Temporary Transfer button is checked!");
+			}else{
+				SimpleUtils.fail("Temporary Transfer button isn't checked", true);
+			}
+		}else{
+			SimpleUtils.fail("Temporary Transfer button doesn't load!", true);
+		}
+	}
+
+	@Override
+	public void verifyTwoCalendarsForCurrentMonthAreShown(String currentDate) throws Exception {
+		String className = "month-header";
+		verifyClickOnTemporaryTransferButton();
+		if (areListElementVisible(transferTitles, 10) && areListElementVisible(transferCalendars, 10)){
+			if (transferTitles.size() == 2 && transferCalendars.size() == 2){
+				String monthYearLeft = transferCalendars.get(0).findElement(By.className(className)).getText().toLowerCase();
+				String monthYearRight = transferCalendars.get(1).findElement(By.className(className)).getText().toLowerCase();
+				if (currentDate.toLowerCase().contains(monthYearLeft) && currentDate.toLowerCase().contains(monthYearRight)) {
+					SimpleUtils.pass("Two Calendars for current month are shown!");
+				}else{
+					SimpleUtils.fail("Two Calendars are not for current month!", true);
+				}
+			}else {
+				SimpleUtils.fail("Calendar counts are incorrect!", true);
+			}
+		}else {
+			SimpleUtils.fail("Calendars are failed to loade!", true);
+		}
+	}
+
+	@Override
+	public void verifyTheCalendarCanNavToPreviousAndFuture() throws Exception {
+		String monthAndYear = null;
+		String attribute = "value";
+		if (isClickOnCalendarImageSuccessfully()){
+			if (isElementLoaded(backArrow, 5) && isElementLoaded(forwardArrow, 5)){
+				navigateToPreviousAndFutureDate(backArrow);
+				navigateToPreviousAndFutureDate(forwardArrow);
+				navigateToPreviousAndFutureDate(forwardArrow);
+				monthAndYear = currentMonthYear.getText();
+				if (areListElementVisible(realDays)){
+					/*
+					 * Generate a random to select a day!
+					 */
+					Random random = new Random();
+					WebElement realDay = realDays.get(random.nextInt(realDays.size()));
+					String day = realDay.getText();
+					String expectedDate = monthAndYear.substring(0,3) + " " + day + ", "
+							+ monthAndYear.substring(monthAndYear.length() - 4);
+					click(realDay);
+					String selectedDate = dateHiredInput.getAttribute(attribute);
+					if (expectedDate.equals(selectedDate)) {
+						SimpleUtils.pass("Selected a day successfully!");
+					}else {
+						SimpleUtils.fail("Selected day is inconsistent with the date shown in Date Hired!", true);
+					}
+				}
+			}else {
+				SimpleUtils.fail("Back and Forward arrows are failed to load!", true);
+			}
+		}else {
+			SimpleUtils.fail("Click on Calendar image failed!", true);
+		}
+	}
+
+	@Override
+	public void verifyTheCurrentDateAndSelectOtherDateOnTransfer() throws Exception {
+		String colorOnWeb = "#fb7800";
+		if (areListElementVisible(transferCalendars, 10) && isElementLoaded(currentDay, 10)) {
+			String color = currentDay.getCssValue("color");
+			/*
+			 * color css value format: rgba(251, 120, 0, 1), need to convert it to Hex format
+			 */
+			if (color.contains("(") && color.contains(")") && color.contains(",")){
+				String[] rgba = color.substring(color.indexOf("(") + 1, color.indexOf(")")).split(",");
+				String colorHex = awtColorToWeb(rgba);
+				if (colorHex.equals(colorOnWeb)){
+					SimpleUtils.pass("Current Day is Highlighted!");
+				}else{
+					SimpleUtils.fail("Current day isn't highlighted!", true);
+				}
+			}
+			verifyDateCanBeSelectedOnTransfer();
+		}else {
+			SimpleUtils.fail("Calendar failed to load!", true);
+		}
+	}
+
+	@Override
+	public void verifyDateCanBeSelectedOnTransfer() throws Exception {
+		String className = "selected-day";
+		int nextDayIndex = 0;
+		int maxIndex = 0;
+		Random random = new Random();
+		if (areListElementVisible(daysOnCalendar, 10)) {
+			/*
+			 * Select a future date to transfer.
+			 */
+			nextDayIndex = getSpecificDayIndex(currentDay) + 1;
+			maxIndex = daysOnCalendar.size() - 1;
+			int randomIndex = nextDayIndex + random.nextInt(maxIndex - nextDayIndex);
+			WebElement randomElement = daysOnCalendar.get(randomIndex);
+			click(randomElement);
+			if (randomElement.getAttribute("class").contains(className)) {
+				SimpleUtils.pass("Select a date successfully!");
+			} else {
+				SimpleUtils.fail("Failed to select a date!", true);
+			}
+		}else {
+			SimpleUtils.fail("Days on calendar failed to load!", true);
+		}
+	}
+
+	@Override
+	public boolean isApplyButtonEnabled() throws Exception {
+		boolean isEnabled = false;
+		isEnabled = isElementEnabled(applyOnTransfer, 3);
+		return isEnabled;
+	}
+
+	@Override
+	public void verifyClickOnApplyButtonOnTransfer() throws Exception {
+		if (isApplyButtonEnabled()) {
+			SimpleUtils.pass("Apply Button on Transfer page is enabled!");
+			click(applyOnTransfer);
+		}else{
+			SimpleUtils.fail("Apply Button on Transfer Page is still disabled!", true);
+		}
+	}
+
+	@Override
+	public void verifyTheMessageOnPopupWindow(String currentLocation, String selectedLocation, String teamMemberName) throws Exception {
+		if (teamMemberName.contains("“") && teamMemberName.contains("”")){
+			teamMemberName = teamMemberName.substring(teamMemberName.indexOf("“") + 1, teamMemberName.indexOf("”"));
+		}else if (teamMemberName.contains(" ")){
+			teamMemberName = teamMemberName.split(" ")[0];
+		}
+		String expectedShiftMessage = "from this date onwards will be converted to Open Shifts.";
+		if (isElementLoaded(confirmPopupWindow, 10) && areListElementVisible(alertMessages, 10)) {
+			if (alertMessages.size() == 2) {
+				String transferMessage = alertMessages.get(0).getText();
+				String shiftMessage = alertMessages.get(1).getText();
+				if (transferMessage.contains(currentLocation) && transferMessage.contains(selectedLocation) &&
+				shiftMessage.contains(teamMemberName) && shiftMessage.contains(expectedShiftMessage)){
+					SimpleUtils.pass("Message on pop-up window shows correctly!");
+				}else{
+					SimpleUtils.fail("Message on pop-up window shows incorrectly", true);
+				}
+			}
+		}else{
+			SimpleUtils.fail("Pop-up window failed to show!", true);
+		}
+	}
+
+	@Override
+	public void verifyTheFunctionOfConfirmTransferButton() throws Exception {
+		String successfulMessage = "Successfully transferred the Team Member";
+		String cancelTransfer = "CANCEL TRANSFER";
+		if (isElementLoaded(confirmPopupWindow, 10) && isElementLoaded(confirmButton, 10)) {
+			click(confirmButton);
+			if (isElementLoaded(popupMessage, 10)) {
+				String message = popupMessage.getText();
+				if (message.equals(successfulMessage)) {
+					if (isElementLoaded(transferButton, 10)){
+						if (transferButton.getText().equals(cancelTransfer)) {
+							SimpleUtils.pass("Transfer Successfully!");
+						}else {
+							SimpleUtils.fail("Button doesn't change to CANCEL TRANSFER!", true);
+						}
+					}
+				}else {
+					SimpleUtils.fail("The pop-up message is incorrect!", true);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void	verifyTheFunctionOfCancelTransferButton() throws Exception {
+		String transfer = "TRANSFER";
+		if (isElementLoaded(confirmPopupWindow, 10) && isElementLoaded(cancelButton, 10)) {
+			click(cancelButton);
+			if (isElementLoaded(transferButton, 10)){
+				if (transferButton.getText().equals(transfer)) {
+					SimpleUtils.pass("Cancel Transfer Successfully!");
+				}else {
+					SimpleUtils.fail("Button doesn't remain TRANSFER!", true);
+				}
+			}
+		}else {
+			SimpleUtils.fail("Cancel button doesn't show on pop-up Window!", true);
+		}
+	}
+
+	@Override
+	public void verifyTheHomeStoreLocationOnProfilePage(String location, String selectedLocation) throws Exception {
+		String actualLocationMessage = null;
+		String date = null;
+		boolean isCorrectFormat = false;
+		SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy");
+		if (isElementLoaded(homeStoreLocation, 10) && isElementLoaded(changeLocationMsg, 10)) {
+			if (homeStoreLocation.getText().contains(location)){
+				SimpleUtils.pass("Home Store Location is not updating!");
+			}else {
+				SimpleUtils.fail("Home Store Location is changed!", true);
+			}
+			actualLocationMessage = changeLocationMsg.getText();
+			if (actualLocationMessage.contains("-")) {
+				String[] values = actualLocationMessage.split("-");
+				if (values.length == 2) {
+					date = values[1].trim();
+					/*
+					 * Check whether the date format is correct, eg: 02/20/2020
+					 */
+					isCorrectFormat = SimpleUtils.isDateFormatCorrect(date, format);
+				}
+			}
+			/*
+			 * Since some string has two blank spaces, so remove the blank space.
+			 */
+			selectedLocation = selectedLocation.replaceAll("\\s*", "");
+			actualLocationMessage = actualLocationMessage.replaceAll("\\s*", "");
+			if (actualLocationMessage.contains(selectedLocation) && isCorrectFormat) {
+				SimpleUtils.pass("Change Location Message is correct!");
+			}else {
+				SimpleUtils.fail("Change Location Message is incorrect!", true);
+			}
+		}
+	}
+
+	private int getSpecificDayIndex(WebElement specificDay) {
+		int index = 0;
+		if (areListElementVisible(daysOnCalendar, 10)){
+			for (int i = 0; i < daysOnCalendar.size(); i++) {
+				String day = daysOnCalendar.get(i).getText();
+				if (day.equals(specificDay.getText())){
+					index = i;
+					SimpleUtils.pass("Get current day's index successfully");
+				}
+			}
+		}else {
+			SimpleUtils.fail("Days on calendar failed to load!", true);
+		}
+		return index;
+	}
+
+	private void navigateToPreviousAndFutureDate(WebElement element) {
+		SimpleDateFormat format = new SimpleDateFormat("MMMM yyyy");
+		click(element);
+		if (SimpleUtils.isDateFormatCorrect(currentMonthYear.getText(), format)){
+			SimpleUtils.pass("Navigate to previous/future date successfully and date format is correct!");
+		}else {
+			SimpleUtils.fail("Date format is incorrect!", true);
+		}
+	}
+
+	private String convertIntToHexString(int value){
+		String hexString = Integer.toHexString(value);
+		return hexString.length()== 1 ? "0"+ hexString : hexString;
+	}
+
+	private String awtColorToWeb(String[] rgba) {
+		StringBuilder builder = new StringBuilder();
+		try {
+			if (rgba.length == 4) {
+				builder.append("#");
+				/*
+				 * Need to convert the r, g, b.
+				 */
+				for (int i = 0; i < 3; i++) {
+					builder.append(convertIntToHexString(Integer.parseInt(rgba[i].trim())));
+				}
+			}
+		}catch (Exception e){
+			SimpleUtils.fail("Convert failed!", false);
+		}
+		return builder.toString();
+	}
+
+	private boolean isClickOnCalendarImageSuccessfully() throws Exception {
+		boolean isSuccess = false;
+		if (isElementLoaded(calendarImage, 5)){
+			click(calendarImage);
+			if (isElementLoaded(calendar, 5)){
+				isSuccess = true;
+				SimpleUtils.pass("Click on Calendar Image, Calendar shows successfully!");
+			}else{
+				SimpleUtils.fail("Failed to show the Calendar", true);
+			}
+		}else{
+			SimpleUtils.fail("Calendar Image failed to show.", true);
+		}
+		return isSuccess;
+	}
 
 //    public boolean isTeam() throws Exception
 //	{

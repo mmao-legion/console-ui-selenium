@@ -18,6 +18,42 @@
        </classes>
    </test>
 
+    <test name="Dashboard Test">
+        <classes>
+            <class name="com.legion.tests.core.DashboardTestKendraScott2">
+                <methods>
+                    <include name="verifyTheDisplayLocationWithSelectedLocation" />
+                    <include name="verifyTheClickActionOnChangeLocationButton" />
+                    <include name="verifyTheContentDisplayedInChangeLocationLayout" />
+                    <include name="verifyTheFunctionOfSearchTextBox" />
+                    <include name="verifyTheWelcomeMessage" />
+                    <include name="verifyTheFunctionOfViewTodaySchedule" />
+                    <include name="verifyTheDataSourceForBudgetScheduledOther" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="TeamTab Test">
+       <classes>
+           <class name="com.legion.tests.core.TeamTestKendraScott2">
+               <methods>
+                   <include name="verifyTheFunctionOfSearchTMBar"/>
+                   <include name="verifyTheFunctionOfPlusIcon" />
+                   <include name="verifyTheCalendarLoadForCurrentDayAndColor" />
+                   <include name="verifyNewHomeLocationCanBeSelectedOnTransfer" />
+                   <include name="verifyTheFunctionOfTemporaryTransferButton" />
+                   <include name="verifyTwoCalendarsAreShownAfterClickTemp" />
+                   <include name="verifyTheFunctionOfAddTMCalendar" />
+                   <include name="verifyTheCurrentDateAndSelectOtherDateOnTransfer" />
+                   <include name="verifyTransferToANewLocation" />
+                   <include name="verifyConfirmButtonOnPopupWindowWorking" />
+                   <include name="verifyCancelButtonOnPopupWindowWorking" />
+                   <include name="verifyHomeLocationNotUpdateAndGivenInformation" />
+               </methods>
+           </class>
+       </classes>
+   </test>
 
 </suite> <!-- Suite -->
 
