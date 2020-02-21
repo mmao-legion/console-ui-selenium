@@ -35,7 +35,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     String dayWeekPicker;
 
-    @FindBy(xpath = "//*[@id='legion-app']/div/div[2]/div/div/div/div[1]/navigation/div/div[4]")
+    @FindBy(xpath = "//*[@id='legion-app']/div/div[2]/div/div/div/div[1]/navigation/div/div[6]")
     private WebElement goToScheduleButton;
 
     @FindBy(css = "div[helper-text*='Work in progress Schedule'] span.legend-label")
@@ -145,6 +145,21 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @FindBy(className = "left-banner")
     private List<WebElement> weeklyScheduleDateElements;
+
+
+//    @FindBy(css = "[ng-click=\"printAction($event)\"]")
+//    private WebElement printButton;
+//
+//    @FindBy(css = "[ng-click=\"showTodos($event)\"]")
+//    private WebElement todoButton;
+//
+//    @FindBy (css = ".horizontal.is-shown")
+//    private WebElement todoSmartCard;
+
+
+
+    @FindBy(css = "[label=\"Print\"]")
+    private WebElement printButtonInPrintLayout;
 
     @FindBy(css = "[ng-click=\"controlPanel.fns.publishConfirmation($event, false)\"]")
     private WebElement publishButton;
@@ -1854,5 +1869,62 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @Override
     public HashMap<String, String> getHoursFromSchedulePage() throws Exception {
         return null;
+    }
+
+    public void printButtonIsClickable() throws Exception {
+
+    }
+    public void todoButtonIsClickable() throws Exception {
+
+    }
+
+    @Override
+    public void closeButtonIsClickable() {
+
+    }
+
+    @Override
+    public void legionButtonIsClickableAndHasNoEditButton() {
+
+    }
+
+    @Override
+    public void clickOnSuggestedButton() throws Exception {
+
+    }
+
+    @Override
+    public void legionIsDisplayingTheSchedul() throws Exception {
+
+    }
+
+    @Override
+    public void currentWeekIsGettingOpenByDefault() {
+
+    }
+
+    @Override
+    public void goToScheduleNewUI() {
+
+    }
+
+    @Override
+    public void dayWeekPickerSectionNavigatingCorrectly() throws Exception {
+
+    }
+
+    @Override
+    public void landscapePortraitModeShowWellInWeekView() throws Exception {
+
+    }
+
+    @Override
+    public void landscapeModeWorkWellInWeekView() throws Exception {
+
+    }
+
+    @Override
+    public void portraitModeWorkWellInWeekView() throws Exception {
+
     }
 }

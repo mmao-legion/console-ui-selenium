@@ -164,4 +164,22 @@ public interface SchedulePage {
 	public void districtSelectionSMView(String districtName) throws Exception;
 	public void isScheduleForCurrentDayInDayView(String dateFromDashboard) throws Exception;
 	public HashMap<String, String> getHoursFromSchedulePage() throws Exception;
+	public void printButtonIsClickable() throws Exception;
+	public void todoButtonIsClickable()throws Exception;
+	public void closeButtonIsClickable();
+	public void legionButtonIsClickableAndHasNoEditButton() throws Exception;;
+	public void clickOnSuggestedButton() throws Exception;
+	public void legionIsDisplayingTheSchedul() throws Exception;
+
+	public void currentWeekIsGettingOpenByDefault() throws Exception;
+
+	public void goToScheduleNewUI() throws Exception;
+
+	public void dayWeekPickerSectionNavigatingCorrectly() throws Exception;
+
+	public void landscapePortraitModeShowWellInWeekView() throws Exception;
+
+	public void landscapeModeWorkWellInWeekView() throws Exception;
+
+	public void portraitModeWorkWellInWeekView()throws Exception;
 }

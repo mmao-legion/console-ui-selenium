@@ -1,6 +1,7 @@
 package com.legion.pages;
 
-import static com.legion.utils.MyThreadLocal.*;
+import static com.legion.utils.MyThreadLocal.getAndroidDriver;
+import static com.legion.utils.MyThreadLocal.getDriver;
 import static io.appium.java_client.touch.WaitOptions.waitOptions;
 import static io.appium.java_client.touch.offset.ElementOption.element;
 import static io.appium.java_client.touch.offset.PointOption.point;
@@ -14,6 +15,7 @@ import java.util.function.Function;
 
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
+import org.apache.poi.ss.formula.functions.T;
 import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.interactions.Actions;
@@ -35,12 +37,16 @@ public class BasePage {
 
     public static String activeConsoleName;
 
+    protected T currentPage;
+
+    protected Map<String,BasePage> resultList;
+
     public void click(WebElement element, boolean... shouldWait) {
-    	try {
+        try {
             waitUntilElementIsVisible(element);
             element.click();
         } catch (TimeoutException te) {
-        	ExtentTestManager.getTest().log(Status.WARNING,te);
+            ExtentTestManager.getTest().log(Status.WARNING,te);
         }
     }
 
@@ -53,6 +59,23 @@ public class BasePage {
             ExtentTestManager.getTest().log(Status.WARNING,te);
         }
     }
+
+
+    public void scrollToTop() {
+        ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(document.body.scrollHeight,0)");
+
+    }
+
+    public void scrollToBottom(WebElement element, boolean... shouldWait) {
+        ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(0,document.body.scrollHeight)");
+    }
+
+    //get current date by specific zoon
+    public Date getCurrentTime(){
+        TimeZone zone = TimeZone.getTimeZone("GMT+5:00");
+        Calendar cal = Calendar.getInstance(zone);
+        return cal.getTime();
+        }
 
     //click method for mobile app
     
@@ -249,7 +272,7 @@ public class BasePage {
 
         }
     }
-    
+
     public void waitForPageLoaded(WebDriver driver) {
         try {
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -711,5 +734,31 @@ public class BasePage {
         }
         return result;
     }
-
+//
+//
+//     public void assertIsDisplay(Map<String,String> map){
+//        Map<String,BasePage> elementMap = currentPage.getUniqueKeyElementsMap();
+//        driver = driverConfig.getDriver();
+//         for (String key : map.keySet():
+//              ) {
+//             if (!key.equals ("element name")) {
+//                 System.out.println("get element:" + key);
+//                 elementMap.get(key).waitElement(driver,20);
+//                 Assert.assertTrue("the element is not display:" +key,elementMap.get(key).isDispaly);
+//             }
+//
+//         }
+//     }
+//
+//     public Map<String,BasePage> getUniqueKeyElementsMap(){
+//        if(resultList == null){
+//            resultList = new HashMap<>();
+//            for (GherkinId gherkinId : gherkinIdList) {
+//                if (StringUtils.isNotBlank(gherkinId.name()) ){
+//                    resultList.put(gherkinId.name),getElementByGherkinId(gherkinId);
+//                }
+//            }
+//        }
+//        return  resultList;
+//     }
 }

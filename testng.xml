@@ -33,6 +33,23 @@
             </class>
         </classes>
     </test>
+        <test name="Schedule Test">
+            <classes>
+                <class name="com.legion.tests.core.ScheduleTestKendraScott2">
+                    <methods>
+                        <include name="printButtonIsClickable" />
+                        <include name="todoButtonIsClickable" />
+                        <include name="closeButtonIsClickable" />
+                        <include name="legionIsDisplayingTheScheduleWhichIsGeneratedByTheSystemAtTheVeryFirstTime" />
+                        <include name="legionButtonIsClickableAndHasNoEditButton" />
+                        <include name="CurrentWeekIsGettingOpenByDefault" />
+                        <include name="DayWeekPickerSectionNavigatingCorrectly" />
+                        <include name="LandscapePortraitModeShowAndWorkWellInWeekView" />
+                    </methods>
+                </class>
+            </classes>
+        </test>
+
 
     <test name="TeamTab Test">
        <classes>

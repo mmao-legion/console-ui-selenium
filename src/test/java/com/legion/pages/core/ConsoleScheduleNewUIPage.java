@@ -6,9 +6,11 @@ import static org.testng.Assert.fail;
 
 import com.gargoylesoftware.htmlunit.html.Keyboard;
 import com.legion.tests.core.ScheduleNewUITest;
+import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 
+import org.apache.http.impl.execchain.TunnelRefusedException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -27,9 +29,12 @@ import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
+import org.testng.Assert;
 
 import java.awt.*;
 import java.lang.reflect.Method;
+import java.sql.Driver;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,8 +51,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
     private static HashMap<String, String> propertyWorkRole = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
     private static HashMap<String, String> propertyBudgetValue = JsonUtil.getPropertiesFromJsonFile("src/test/resources/Budget.json");
-
-
+    private static HashMap<String, String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+    private static HashMap<String, String> parametersMap2 = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ControlsPageLocationDetail.json");
     public enum scheduleHoursAndWagesData {
         scheduledHours("scheduledHours"),
         budgetedHours("budgetedHours"),
@@ -100,7 +105,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         PageFactory.initElements(getDriver(), this);
     }
 
-    @FindBy(xpath = "//*[@id='legion-app']/div/div[2]/div/div/div/div[1]/navigation/div/div[4]")
+    @FindBy(xpath = "//*[@id='legion-app']/div/div[2]/div/div/div/div[1]/navigation/div/div[6]")
     private WebElement goToScheduleButton;
 
     @FindBy(css = "div[helper-text*='Work in progress Schedule'] span.legend-label")
@@ -554,6 +559,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.day-week-picker-period-active")
     private WebElement daypicker;
 
+    @FindBy(xpath = "//*[text()=\"Day\"]")
+    private WebElement daypButton;
+
+    @FindBy(xpath = "//*[text()=\"Week\"]")
+    private WebElement weekButton;
+
     @FindBy (css = "div.day-week-picker-period")
     private List<WebElement> dayPickerAllDaysInDayView;
 
@@ -627,8 +638,35 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = "div.day-week-picker-period-active")
     private WebElement currentActiveDay;
 
+    @FindBy (css = "div.day-week-picker-period-week.day-week-picker-period-active")
+    private WebElement currentActiveWeek;
+
     @FindBy (css = "div.sch-shift-transpose-second-row")
     private List<WebElement> scheduleWeekViewGrid;
+
+    @FindBy (css = "[on-change=\"updateGroupBy(value)\"]")
+    private WebElement groupByAllIcon;
+
+    @FindBy(css = "[ng-click=\"printAction($event)\"]")
+    private WebElement printButton;
+
+    @FindBy(xpath ="//*[text()=\"Portrait\"]")
+    private WebElement PortraitButton;
+
+    @FindBy(xpath ="//*[text()=\"Landscape\"]")
+    private WebElement LandscapeButton;
+
+    @FindBy(css = "[ng-click=\"showTodos($event)\"]")
+    private WebElement todoButton;
+
+    @FindBy (css = ".horizontal.is-shown")
+    private WebElement todoSmartCard;
+
+    @FindBy(css = "[label=\"Print\"]")
+    private WebElement printButtonInPrintLayout;
+
+    @FindBy(css = "[label=\"Cancel\"]")
+    private WebElement cannelButtonInPrintLayout;
 
     List<String> scheduleWeekDate = new ArrayList<String>();
     List<String> scheduleWeekStatus = new ArrayList<String>();
@@ -1102,6 +1140,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         } else {
             SimpleUtils.pass("Schedule Edit button is not enabled Successfully!");
+        }
+    }
+
+    public void clickOnSuggestedButton() throws Exception {
+        if (isElementEnabled(scheduleTypeSystem, 5)) {
+            click(scheduleTypeSystem);
+            SimpleUtils.pass("legion button is clickable");
+        }else {
+            SimpleUtils.fail("the schedule is not generated, generated schedule firstly",true);
         }
     }
 
@@ -2129,7 +2176,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     public List<WebElement> getAvailableShiftsInDayView() {
-
         return dayViewAvailableShifts;
     }
 
@@ -2607,7 +2653,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void validatingGenrateSchedule() throws Exception {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -4204,6 +4249,51 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         return scheduleHours;
     }
+    @Override
+    public void printButtonIsClickable() throws Exception {
+        if (isElementLoaded(printButton,10)){
+            scrollToTop();
+            click(printButton);
+            if(isElementLoaded(printButtonInPrintLayout)) {
+                SimpleUtils.pass("Print button is  clickable");
+            }else {
+                SimpleUtils.fail("Print button is not  clickable",true);
+            }
+        }else{
+            SimpleUtils.fail("there is no print button",true);
+        }
+    }
+
+    @Override
+    public void todoButtonIsClickable() throws Exception {
+        if(isElementLoaded(todoButton,10)) {
+            scrollToTop();
+            click(todoButton);
+            if(isElementLoaded(todoSmartCard,5)) {
+                SimpleUtils.pass("Todo button is  clickable");
+            }else {
+                SimpleUtils.fail("click todo button failed",true);
+            }
+        }else {
+            SimpleUtils.fail("there is no todo button", true);
+        }
+    }
+
+    @Override
+    public void closeButtonIsClickable() {
+        getDriver().close();
+        SimpleUtils.pass("close button is clickable");
+    }
+
+    @Override
+    public void legionButtonIsClickableAndHasNoEditButton() throws Exception {
+        clickOnSuggestedButton();
+        if(!isElementLoaded(edit,5)){
+            SimpleUtils.pass("Legion schedule has no edit button");
+        }else{
+            SimpleUtils.fail("it's not in legion schedule page", true);
+        }
+    }
 
 
     public void clickOnViewScheduleLocationSummaryDMViewDashboard() {
@@ -4790,5 +4880,132 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
+    public void legionIsDisplayingTheSchedul() throws Exception {
+        if(isElementLoaded(groupByAllIcon,10)){
+         SimpleUtils.pass("Legion schedule is displaying");
+        }else {
+            SimpleUtils.fail("Legion Schedule load failed", true);
+        }
+    }
+
+
+    public void currentWeekIsGettingOpenByDefault() throws Exception {
+        String jsonTimeZoon = parametersMap2.get("Time_Zone");
+        TimeZone timeZone = TimeZone.getTimeZone(jsonTimeZoon);
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+        dfs.setTimeZone(timeZone);
+        String currentTime =  dfs.format(new Date());
+        Date currentDate = dfs.parse(currentTime);
+        String weekBeginEndByCurrentDate = SimpleUtils.getThisWeekTimeInterval(currentDate);
+        String weekBeginEndByCurrentDate2 = weekBeginEndByCurrentDate.replace("-","").replace(",","");
+        String weekBeginBYCurrentDate = weekBeginEndByCurrentDate2.substring(6,8);
+        String weekEndBYCurrentDate = weekBeginEndByCurrentDate2.substring(weekBeginEndByCurrentDate2.length()-2);
+        SimpleUtils.report("weekBeginBYCurrentDate is : "+ weekBeginBYCurrentDate);
+        SimpleUtils.report("weekEndBYCurrentDate is : "+ weekEndBYCurrentDate);
+        String activeWeekText =getActiveWeekText();
+        String weekDefaultBegin = activeWeekText.substring(14,17);
+        SimpleUtils.report("weekDefaultBegin is :"+weekDefaultBegin);
+        String weekDefaultEnd = activeWeekText.substring(activeWeekText.length()-2);
+        SimpleUtils.report("weekDefaultEnd is :"+weekDefaultEnd);
+        if(weekBeginBYCurrentDate.trim().equals(weekDefaultBegin.trim()) && weekEndBYCurrentDate.trim().equals(weekDefaultEnd.trim())){
+            SimpleUtils.pass("Current week is getting open by default");
+        }
+        else {
+            SimpleUtils.fail("Current week is not getting open by default",true);
+        }
+    }
+
+    public void goToScheduleNewUI() throws Exception {
+
+        if (isElementLoaded(goToScheduleButton,5)) {
+            click(goToScheduleButton);
+            click(ScheduleSubMenu);
+            if (isElementLoaded(todoButton,5)) {
+                SimpleUtils.pass("Schedule New UI load successfully");
+            }else{
+                SimpleUtils.fail("Schedule New UI load failed", true);
+            }
+
+        }
+
+    }
+
+
+    public void dayWeekPickerSectionNavigatingCorrectly()  throws Exception{
+        String weekIcon = "Mon - Sun";
+        String activeWeekText = getActiveWeekText();
+        if(activeWeekText.contains(weekIcon)){
+            SimpleUtils.pass("Week pick show correctly");
+        }else {
+            SimpleUtils.fail("it's not week mode", true);
+        }
+        click(daypButton);
+        if(isElementLoaded(daypicker,3)){
+            SimpleUtils.pass("Day pick show correctly");
+        }else {
+            SimpleUtils.fail("change to day pick failed", true);
+        }
+
+    }
+
+
+    public void landscapePortraitModeShowWellInWeekView() throws Exception {
+        if (isElementLoaded(printButton,10)) {
+            click(printButton);
+            if(isElementLoaded(LandscapeButton)&isElementLoaded(PortraitButton)){
+                SimpleUtils.pass("Landscape and Portrait mode show well");
+            }else {
+                SimpleUtils.fail("Landscape and Portrait load failed", true);
+            }
+            click(PortraitButton);
+            click(LandscapeButton);
+            SimpleUtils.pass("In Week view should be able to change the mode between Landscape and Portrait ");
+            click(cannelButtonInPrintLayout);
+        } else {
+            SimpleUtils.fail("Print button can not work", true);
+        }
+    }
+
+    public void landscapeModeWorkWellInWeekView() throws Exception {
+        String currentWindow =getDriver().getWindowHandle();
+        if (isElementLoaded(printButton,5)) {
+
+            click(printButton);
+            click(LandscapeButton);
+            click(printButtonInPrintLayout);
+            if(!isElementLoaded(LandscapeButton,6)){
+                String downloadPath = parameterMap.get("Download_File_Default_Dir");
+                Assert.assertTrue(FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekViewSchedulePdf"), "print successfully");
+                SimpleUtils.pass("Landscape print work well");
+            }else{
+                SimpleUtils.fail("Can not print by Landscape", true);
+            }
+            getDriver().switchTo().window(currentWindow);
+        } else {
+            SimpleUtils.fail("Print button is not clickable", true);
+        }
+
+    }
+
+    public void portraitModeWorkWellInWeekView() throws Exception {
+        String currentWindow =getDriver().getWindowHandle();
+
+        if (isElementLoaded(printButton,3)) {
+            click(printButton);
+            click(PortraitButton);
+            click(printButtonInPrintLayout);
+            if(!isElementLoaded(PortraitButton,6)){
+                String downloadPath = parameterMap.get("Download_File_Default_Dir");
+                Assert.assertTrue(FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekViewSchedulePdf"), "print successfully");
+                SimpleUtils.pass("Portrait print work well");
+            }else{
+                SimpleUtils.fail("Can not print by portrait", true);
+            }
+            getDriver().switchTo().window(currentWindow);
+        } else {
+            SimpleUtils.fail("Print button is not clickable", true);
+        }
+
+    }
 
 }
