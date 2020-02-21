@@ -1889,7 +1889,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void CurrentWeekIsGettingOpenByDefault() {
+    public void currentWeekIsGettingOpenByDefault() {
 
     }
 
@@ -1899,22 +1899,22 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void DayWeekPickerSectionNavigatingCorrectly() throws Exception {
+    public void dayWeekPickerSectionNavigatingCorrectly() throws Exception {
 
     }
 
     @Override
-    public void LandscapePortraitModeShowWellInWeekView() throws Exception {
+    public void landscapePortraitModeShowWellInWeekView() throws Exception {
 
     }
 
     @Override
-    public void LandscapeModeWorkWellInWeekView() throws Exception {
+    public void landscapeModeWorkWellInWeekView() throws Exception {
 
     }
 
     @Override
-    public void PortraitModeWorkWellInWeekView() throws Exception {
+    public void portraitModeWorkWellInWeekView() throws Exception {
 
     }
 }
