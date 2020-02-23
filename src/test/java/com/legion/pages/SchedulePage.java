@@ -180,4 +180,10 @@ public interface SchedulePage {
 	public void landscapeModeWorkWellInWeekView() throws Exception;
 
 	public void portraitModeWorkWellInWeekView()throws Exception;
+
+	public void landscapeModeOnlyInDayView() throws Exception;
+
+	public void weatherWeekSmartCardIsDisplayedForAWeek() throws Exception;
+
+	public void scheduleUpdateAccordingToSelectWeek() throws Exception;
 }

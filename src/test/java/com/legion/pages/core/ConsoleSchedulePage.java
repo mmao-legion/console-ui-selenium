@@ -1917,4 +1917,19 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void portraitModeWorkWellInWeekView() throws Exception {
 
     }
+
+    @Override
+    public void landscapeModeOnlyInDayView() throws Exception {
+
+    }
+
+    @Override
+    public void weatherWeekSmartCardIsDisplayedForAWeek() throws Exception {
+
+    }
+
+    @Override
+    public void scheduleUpdateAccordingToSelectWeek() throws Exception {
+
+    }
 }

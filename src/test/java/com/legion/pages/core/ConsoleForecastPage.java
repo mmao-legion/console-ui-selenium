@@ -2,16 +2,14 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ForecastPage;
-import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.util.HashMap;
+import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -67,6 +65,18 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@ng-if='hasBudget()']")
 	private WebElement laborSmartCardBudget;
+
+	@FindBy(xpath = "//div[contains(text(),'Holidays')]")
+	private WebElement holidaysSmartcardHeader;
+
+	@FindBy(xpath = "//span[contains(text(),'View All')]")
+	private WebElement viewALLBtnInHolidays;
+
+	@FindBy(css = ".lg-modal__title-icon.ng-binding")
+	private WebElement holidayDetailsTitle;
+
+	@FindBy(css = "[label=\"Close\"]")
+	private WebElement closeBtnInHoliday;
 
 	public ConsoleForecastPage() {
 		PageFactory.initElements(getDriver(), this);
@@ -245,4 +255,38 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			SimpleUtils.fail("Forecast Sub Menu Tab Not Found", false);
 		}
 	}
+
+	@Override
+	public void holidaySmartCardIsDisplayedForCurrentAWeek() throws Exception {
+		if (isElementLoaded(forecastTab, 5)) {
+			click(forecastTab);
+			SimpleUtils.pass("Clicked on Forecast Sub Tab");
+			if (true ==isHolidaySmartcardDispaly()){
+				click(viewALLBtnInHolidays);
+				SimpleUtils.pass("View all button is clickable");
+				if (isElementLoaded(holidayDetailsTitle,5)) {
+					SimpleUtils.pass("current holiday is showing");
+					click(closeBtnInHoliday);
+					SimpleUtils.pass("Close button is clickable in holidays window");
+				}
+			}else {
+				SimpleUtils.fail("this week has no holiday",true);
+			}
+		} else {
+			SimpleUtils.fail("Forecast Sub Menu Tab Not Found", false);
+		}
+	}
+
+	private boolean isHolidaySmartcardDispaly() throws Exception {
+		if (isElementLoaded(holidaysSmartcardHeader,15)) {
+			SimpleUtils.pass("Current week's Holidays are showing");
+			return true;
+		}else {
+			SimpleUtils.fail("There is no holiday in current week",false);
+			return false;
+		}
+
+	}
+
+
 }

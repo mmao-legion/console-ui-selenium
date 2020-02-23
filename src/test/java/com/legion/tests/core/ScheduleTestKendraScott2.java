@@ -385,5 +385,47 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.portraitModeWorkWellInWeekView();
 		}
 
+
+		@Automated(automated = "Auto")
+		@Owner(owner = "Estelle")
+		@Enterprise(name = "Kendrascott2_Enterprise")
+		@TestName(description = "T1828208 In Day view  Clicking on Print button it should give option to print in Landscape mode only")
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+		public void landscapeModeOnlyInDayView(String username, String password, String browser, String location)
+				throws Exception {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			dashboardPage.goToTodayForNewUI();
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.landscapeModeOnlyInDayView();
+		}
+
+		@Automated(automated = "Auto")
+		@Owner(owner = "Estelle")
+		@Enterprise(name = "Kendrascott2_Enterprise")
+		@TestName(description = "T1828197 Weather week smartcard is displayed correctly-Current week Sun-Sat")
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+		public void weatherWeekSmartCardIsDisplayedForAWeek(String username, String password, String browser, String location)
+				throws Exception {
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.goToScheduleNewUI();
+			schedulePage.weatherWeekSmartCardIsDisplayedForAWeek();
+
+		}
+
+		@Automated(automated = "Auto")
+		@Owner(owner = "Estelle")
+		@Enterprise(name = "Kendrascott2_Enterprise")
+		@TestName(description = "T1828188 If selecting one week then data is getting updating on Schedule page according to corresponding week")
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+		public void scheduleUpdateAccordingToSelectWeek(String username, String password, String browser, String location)
+				throws Exception {
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.goToScheduleNewUI();
+			schedulePage.scheduleUpdateAccordingToSelectWeek();
+
+		}
+
+
+
 }
 

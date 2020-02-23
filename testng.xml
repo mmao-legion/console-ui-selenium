@@ -31,7 +31,7 @@
             </class>
         </classes>
     </test>
-        <test name="Schedule Test">
+        <test name="Schedule New UI Test">
             <classes>
                 <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                     <methods>
@@ -43,6 +43,20 @@
                         <include name="CurrentWeekIsGettingOpenByDefault" />
                         <include name="DayWeekPickerSectionNavigatingCorrectly" />
                         <include name="LandscapePortraitModeShowAndWorkWellInWeekView" />
+                        <include name="landscapeModeOnlyInDayView" />
+                        <include name="weatherWeekSmartCardIsDisplayedForAWeek" />
+                        <include name="scheduleUpdateAccordingToSelectWeek" />
+                    </methods>
+                </class>
+            </classes>
+        </test>
+
+        <test name="Forcast Test">
+            <classes>
+                <class name="com.legion.tests.core.ForecastTest">
+                    <methods>
+                        <include name="holidaySmartCardIsDisplayedForCurrentAWeek" />
+
                     </methods>
                 </class>
             </classes>

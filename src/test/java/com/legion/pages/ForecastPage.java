@@ -9,4 +9,6 @@ public interface ForecastPage {
 	public void loadShoppersForecastforPastWeek(String nextWeekView, int weekCount) throws Exception;
 	public void loadLaborForecastforCurrentNFutureWeek(String nextWeekView, int weekCount) throws Exception;
 	public void loadLaborForecastforPastWeek(String nextWeekView, int weekCount) throws Exception;
+
+	public void holidaySmartCardIsDisplayedForCurrentAWeek() throws Exception;
 }

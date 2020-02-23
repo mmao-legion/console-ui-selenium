@@ -10,6 +10,7 @@ import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 
+import jdk.internal.org.objectweb.asm.ByteVector;
 import org.apache.http.impl.execchain.TunnelRefusedException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -164,6 +165,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(className = "day-week-picker-arrow-left")
     private WebElement calendarNavigationPreviousWeekArrow;
+
+    @FindBy(xpath= "//day-week-picker/div/div/div[3]")
+    private WebElement calendarNavigationPreviousWeek;
 
     @FindBy(css = "[ng-click=\"regenerateFromOverview()\"]")
     private WebElement generateSheduleButton;
@@ -470,6 +474,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "span.weather-forecast-temperature")
     private List<WebElement> weatherTemperatures;
 
+    @FindBy(css = ".weather-forecast-day-name")
+    private List<WebElement> weatherDaysOfWeek;
+
+    @FindBy(xpath = "//*[contains(text(),'Weather - Week of')]")
+    private WebElement weatherWeekSmartCardHeader;
+
     @FindBy(css = "input[ng-class='hoursFieldClass(budget)']")
     private List<WebElement> budgetEditHours;
 
@@ -478,6 +488,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(css = "div.sch-day-view-grid-header.fill")
     private List<WebElement> scheduleShiftTimeHeaderCells;
+
+
+    @FindBy(css = "div.sch-calendar-date-label")
+    private List<WebElement> projectedScheduleDatePeriod;
 
     @FindBy(css = "img[ng-if=\"hasViolateCompliance(line, scheduleWeekDay)\"]")
     private List<WebElement> complianceReviewDangerImgs;
@@ -668,6 +682,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "[label=\"Cancel\"]")
     private WebElement cannelButtonInPrintLayout;
 
+    @FindBy(css = "div.sch-calendar-date-label>span")
+    private List<WebElement> schCalendarDateLabel;
+
     List<String> scheduleWeekDate = new ArrayList<String>();
     List<String> scheduleWeekStatus = new ArrayList<String>();
 
@@ -684,7 +701,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(consoleScheduleMenuElement);
             SimpleUtils.pass("'Schedule' Console Menu Loaded Successfully!");
         } else {
-            SimpleUtils.fail("'Schedule' Console Menu Items Not Loaded Successfully!", false);
+            SimpleUtils.fail("'Schedule' Console Menu Items Not Loaded Successfully!", true);
         }
     }
 
@@ -875,7 +892,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 sumOfAllShiftsLength = sumOfAllShiftsLength + shiftSizeInHour;
 
             } else {
-                SimpleUtils.fail("Shift not loaded successfully in week view", false);
+                SimpleUtils.fail("Shift not loaded successfully in week view", true);
             }
         }
         return (sumOfAllShiftsLength);
@@ -2943,6 +2960,29 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return temperatureText;
     }
 
+
+    public String getWeatherDayOfWeek() throws Exception {
+        String daysText = "";
+        if (weatherDaysOfWeek.size() != 0)
+            for (WebElement weatherDay : weatherDaysOfWeek) {
+                if (weatherDay.isDisplayed()) {
+                    if (daysText == "")
+                        daysText = weatherDay.getText();
+                    else
+                        daysText = daysText + " | " + weatherDay.getText();
+                } else if (!weatherDay.isDisplayed()) {
+                    while (isSmartCardScrolledToRightActive() == true) {
+                        if (daysText == "")
+                            daysText = weatherDay.getText();
+                        else
+                            daysText = daysText + " | " + weatherDay.getText();
+                    }
+                }
+            }
+
+        return daysText;
+    }
+
 //	@Override
 //	public void generateOrUpdateAndGenerateSchedule() throws Exception {
 //		if (isElementLoaded(generateSheduleButton)) {
@@ -4950,6 +4990,105 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Print button is not clickable", true);
         }
 
+    }
+
+    public void landscapeModeOnlyInDayView() throws Exception {
+        if (isElementLoaded(printButton,10)) {
+            scrollToTop();
+            waitForSeconds(5);
+            click(printButton);
+            if(isClickable(LandscapeButton,5)){
+
+            }else {
+                SimpleUtils.pass("print in Landscape mode only.");
+            }
+        }else {
+            SimpleUtils.fail("print button is not clickable",false);
+        }
+    }
+
+    public enum DayOfWeek {
+        Mon,
+        Tue,
+        Wed,
+        Thu,
+        Fri,
+        Sat,
+        Sun;
+    }
+
+        public void weatherWeekSmartCardIsDisplayedForAWeek() throws Exception {
+            String jsonTimeZoon = parametersMap2.get("Time_Zone");
+            TimeZone timeZone = TimeZone.getTimeZone(jsonTimeZoon);
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+            dfs.setTimeZone(timeZone);
+            String currentTime =  dfs.format(new Date());
+            int currentDay = Integer.valueOf(currentTime.substring(currentTime.length()-2));
+            String firstDayInWeatherSmtCad2 = getDriver().findElement(By.xpath("//*[contains(text(),'Weather - Week of')]")).getText();
+            int firstDayInWeatherSmtCad = Integer.valueOf(firstDayInWeatherSmtCad2.substring(firstDayInWeatherSmtCad2.length()-2));
+            System.out.println("firstDayInWeatherSmtCad"+firstDayInWeatherSmtCad);
+            if((firstDayInWeatherSmtCad+7)>currentDay){
+                SimpleUtils.pass("The week smartcard is current week");
+                if (areListElementVisible(weatherTemperatures,8)) {
+                    String weatherWeekTest = getWeatherDayOfWeek();
+
+                    System.out.println("weatherWeekTest"+weatherWeekTest);
+                    for (DayOfWeek e : DayOfWeek.values()) {
+                        if (weatherWeekTest.contains(e.toString())) {
+                            SimpleUtils.pass("Weather smartcard include one week weather");
+                        } else {
+                            SimpleUtils.fail("Weather Smart card is not one whole week",false);
+                        }
+                    }
+
+                }else {
+                    SimpleUtils.fail("there is no week weather smartcard",false);
+                }
+
+            }else {
+                SimpleUtils.fail("This is not current week weather smartcard ",false);
+            }
+
+        }
+
+
+    public String getScheduleDayRange() throws Exception {
+        String dayRangeText = "";
+        if (schCalendarDateLabel.size() != 0)
+            for (WebElement scheCalDay : schCalendarDateLabel) {
+                if (scheCalDay.isDisplayed()) {
+                    if (dayRangeText == "")
+                        dayRangeText = scheCalDay.getText();
+                    else
+                        dayRangeText = dayRangeText + " | " + scheCalDay.getText();
+                } else if (!scheCalDay.isDisplayed()) {
+                    while (isSmartCardScrolledToRightActive() == true) {
+                        if (dayRangeText == "")
+                            dayRangeText = scheCalDay.getText();
+                        else
+                            dayRangeText = dayRangeText + " | " + scheCalDay.getText();
+                    }
+                }
+            }
+
+        return dayRangeText;
+    }
+
+    public void scheduleUpdateAccordingToSelectWeek() throws Exception {
+        if (isElementLoaded(calendarNavigationPreviousWeek,5) ) {
+            String preWeekText = calendarNavigationPreviousWeek.getText().replace("\n","").replace("-","");
+            String preWeekText2 = preWeekText.trim().substring(preWeekText.length()-2);
+            click(calendarNavigationPreviousWeek);
+            String scheCalDay = getScheduleDayRange().trim();
+            System.out.println("scheCalDay==========="+ scheCalDay) ;
+            if (areListElementVisible(schCalendarDateLabel,10) && scheCalDay.trim().contains(preWeekText2.trim())) {
+                SimpleUtils.pass("data is getting updating on Schedule page according to corresponding week");
+            }else {
+                SimpleUtils.fail("schedule canlendar is not updating according to corresponding week",true);
+            }
+        }else {
+            SimpleUtils.fail("no next week calendar",true);
+        }
     }
 
 }
