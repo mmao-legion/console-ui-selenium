@@ -1861,6 +1861,16 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
     public void districtSelectionSMView(String districtName) throws Exception{}
 
+    @Override
+    public void isScheduleForCurrentDayInDayView(String dateFromDashboard) throws Exception {
+
+    }
+
+    @Override
+    public HashMap<String, String> getHoursFromSchedulePage() throws Exception {
+        return null;
+    }
+
     public void printButtonIsClickable() throws Exception {
 
     }

@@ -95,4 +95,5 @@ public interface ProfileNewUIPage {
 	public void approveOrRejectTimeOffRequestFromToDoList(String timeOffReasonLabel, String timeOffStartDuration,
 			String timeOffEndDuration, String action) throws Exception;
 
+	public String getNickNameFromProfile() throws Exception;
 }

@@ -18,4 +18,7 @@ public interface DashboardPage {
 	public HashMap<String, Float> getTodaysForcastData() throws Exception;
     public void clickOnProfileIconOnDashboard() throws Exception;
     public void clickOnTimeOffLink() throws Exception;
+    public void verifyTheWelcomeMessage(String userName) throws Exception;
+    public String getCurrentDateFromDashboard() throws Exception;
+    public HashMap<String, String> getHoursFromDashboardPage() throws Exception;
 }

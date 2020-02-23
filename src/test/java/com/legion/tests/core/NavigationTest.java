@@ -1,18 +1,12 @@
 package com.legion.tests.core;
 
-import static com.legion.utils.MyThreadLocal.setCurrentTestMethodName;
-
 import com.legion.tests.annotations.*;
 import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.testng.AssertJUnit;
-import org.testng.AssertJUnit;
-import org.testng.Reporter;
 
 import com.aventstack.extentreports.Status;
 import com.legion.pages.AnalyticsPage;
-import com.legion.pages.LoginPage;
 import com.legion.pages.SalesForecastPage;
 import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
@@ -20,21 +14,12 @@ import com.legion.pages.StaffingGuidancePage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.DashboardPage;
 import com.legion.tests.TestBase;
-import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
-import org.openqa.selenium.InvalidElementStateException;
-import org.openqa.selenium.WebDriver;
-
 import java.lang.reflect.Method;
-import java.util.HashMap;
-
-import org.testng.annotations.*;
 
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
-
-import static com.legion.utils.MyThreadLocal.*;
 
 
 /**

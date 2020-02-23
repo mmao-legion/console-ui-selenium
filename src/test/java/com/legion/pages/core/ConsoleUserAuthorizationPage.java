@@ -4,8 +4,6 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -13,7 +11,6 @@ import org.openqa.selenium.support.PageFactory;
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
 import com.legion.pages.UserAuthorizationPage;
-import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
 
 public class ConsoleUserAuthorizationPage extends BasePage implements UserAuthorizationPage {

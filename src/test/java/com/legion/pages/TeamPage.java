@@ -19,4 +19,21 @@ public interface TeamPage {
 	public void openToDoPopupWindow() throws Exception;
 	public void approveOrRejectTimeOffRequestFromToDoList(String userName, String timeOffStartDuration, String timeOffEndDuration, String action) throws Exception;
 	public void closeToDoPopupWindow() throws Exception;
+	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception;
+	public void verifyTheFunctionOfSearchTMBar(List<String> testStrings) throws Exception;
+	public void verifyTheFunctionOfAddNewTeamMemberButton() throws Exception;
+	public void verifyTheMonthAndCurrentDayOnCalendar(String currentDateForSelectedLocation) throws Exception;
+	public String selectATeamMemberToTransfer() throws Exception;
+	public String verifyHomeLocationCanBeSelected() throws Exception;
+	public void verifyClickOnTemporaryTransferButton() throws Exception;
+	public void verifyTwoCalendarsForCurrentMonthAreShown(String currentDate) throws Exception;
+	public void verifyTheCalendarCanNavToPreviousAndFuture() throws Exception;
+	public void verifyTheCurrentDateAndSelectOtherDateOnTransfer() throws Exception;
+	public void verifyDateCanBeSelectedOnTransfer() throws Exception;
+	public boolean isApplyButtonEnabled() throws Exception;
+	public void verifyClickOnApplyButtonOnTransfer() throws Exception;
+	public void verifyTheMessageOnPopupWindow(String currentLocation, String selectedLocation, String teamMemberName) throws Exception;
+	public void verifyTheFunctionOfConfirmTransferButton() throws Exception;
+	public void	verifyTheFunctionOfCancelTransferButton() throws Exception;
+	public void verifyTheHomeStoreLocationOnProfilePage(String homeLocation, String selectedLocation) throws Exception;
 }

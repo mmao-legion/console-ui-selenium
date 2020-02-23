@@ -16,8 +16,6 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
-import com.legion.tests.testframework.ExtentTestManager;
-import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
 public class ScheduleTestKendraScott2 extends TestBase {

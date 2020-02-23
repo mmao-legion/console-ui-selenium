@@ -8,17 +8,14 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
-import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
 import java.util.Map;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 
 public class StoreManagerScheduleNavigationTest extends TestBase {
     private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();

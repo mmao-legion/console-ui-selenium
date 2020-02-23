@@ -14,7 +14,6 @@ import org.openqa.selenium.support.PageFactory;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.LocationSelectorPage;
-import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.SimpleUtils;
 
 public class ConsoleLocationSelectorPage extends BasePage implements LocationSelectorPage {
@@ -196,10 +195,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     public void verifyClickChangeLocationButton() throws Exception {
         if (isElementLoaded(changeLocationButton, 10)){
             click(changeLocationButton);
-            waitForSeconds(4);
-            if (isElementLoaded(locationDropDownList)){
+            if (isElementLoaded(locationDropDownList, 10)){
                 SimpleUtils.pass("The layout shows!");
-                if (isElementLoaded(searchTextbox) && isElementLoaded(locationItems)){
+                if (isElementLoaded(searchTextbox, 5) && isElementLoaded(locationItems, 5)){
                     SimpleUtils.pass("List of locations and search textbox show.");
                 }
                 else{

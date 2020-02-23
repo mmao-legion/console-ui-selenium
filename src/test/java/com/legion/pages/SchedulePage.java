@@ -162,6 +162,8 @@ public interface SchedulePage {
 	public void clickOnViewSchedulePayrollProjectionDMViewDashboard();
 	public void loadingOfDMViewSchedulePage(String SelectedWeek) throws Exception;
 	public void districtSelectionSMView(String districtName) throws Exception;
+	public void isScheduleForCurrentDayInDayView(String dateFromDashboard) throws Exception;
+	public HashMap<String, String> getHoursFromSchedulePage() throws Exception;
 	public void printButtonIsClickable() throws Exception;
 	public void todoButtonIsClickable()throws Exception;
 	public void closeButtonIsClickable();

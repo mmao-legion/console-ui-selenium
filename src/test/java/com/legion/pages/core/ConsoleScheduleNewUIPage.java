@@ -1287,7 +1287,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public String getActiveWeekText() throws Exception {
         WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
         if (isElementLoaded(activeWeek))
-            return activeWeek.getText();
+            return activeWeek.getText().replace("\n", " ");
         return "";
     }
 
@@ -2193,8 +2193,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     public List<WebElement> getAvailableShiftsInDayView() {
-
-//        String availableShiftsInDayView =
         return dayViewAvailableShifts;
     }
 
@@ -4233,6 +4231,64 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
+    // Added by Nora
+    @FindBy (css = "lg-button-group[buttons*=\"custom\"] div.lg-button-group-first")
+    private WebElement scheduleDayViewButton;
+    @FindBy (className = "period-name")
+    private WebElement periodName;
+    @FindBy (className = "card-carousel-container")
+    private WebElement cardCarousel;
+    @FindBy(css = "table tr:nth-child(1)")
+    private WebElement scheduleTableTitle;
+    @FindBy(css = "table tr:nth-child(2)")
+    private WebElement scheduleTableHours;
+
+    @Override
+    public void isScheduleForCurrentDayInDayView(String dateFromDashboard) throws Exception {
+        String tagName = "span";
+        if (isElementLoaded(scheduleDayViewButton, 5) && isElementLoaded(periodName, 5)) {
+            if (scheduleDayViewButton.getAttribute("class").contains("lg-button-group-selected")){
+                SimpleUtils.pass("The Schedule Day View Button is selected!");
+            }else{
+                SimpleUtils.fail("The Schedule Day View Button isn't selected!", true);
+            }
+            /*
+             * @periodName format "Schedule for Wednesday, February 12"
+             */
+            if (periodName.getText().contains(dateFromDashboard)) {
+                SimpleUtils.pass("The Schedule is for current day!");
+            }else{
+                SimpleUtils.fail("The Schedule isn't for current day!", true);
+            }
+        }else{
+            SimpleUtils.fail("The Schedule Day View Button isn't loaded!",true);
+        }
+    }
+
+    @Override
+    public HashMap<String, String> getHoursFromSchedulePage() throws Exception {
+        // Wait for the hours to load
+        waitForSeconds(5);
+        HashMap<String, String> scheduleHours = new HashMap<>();
+            if (isElementLoaded(scheduleTableTitle, 5) && isElementLoaded(scheduleTableHours, 5)) {
+                List<WebElement> titles = scheduleTableTitle.findElements(By.tagName("th"));
+                List<WebElement> hours = scheduleTableHours.findElements(By.tagName("td"));
+                if (titles != null && hours != null) {
+                    if (titles.size() == 4 && hours.size() == 4) {
+                        for (int i = 1; i < titles.size(); i++) {
+                            scheduleHours.put(titles.get(i).getText(), hours.get(i).getText());
+                            SimpleUtils.pass("Get Title: " + titles.get(i).getText() + " and related Hours: " +
+                                    hours.get(i).getText());
+                        }
+                    }
+                } else {
+                    SimpleUtils.fail("Failed to find the Schedule table elementes!", true);
+                }
+            }else {
+                SimpleUtils.fail("Elements are not Loaded!", true);
+            }
+        return scheduleHours;
+    }
     @Override
     public void printButtonIsClickable() throws Exception {
         if (isElementLoaded(printButton,10)){

@@ -1,6 +1,7 @@
 package com.legion.pages;
 
-import static com.legion.utils.MyThreadLocal.*;
+import static com.legion.utils.MyThreadLocal.getAndroidDriver;
+import static com.legion.utils.MyThreadLocal.getDriver;
 import static io.appium.java_client.touch.WaitOptions.waitOptions;
 import static io.appium.java_client.touch.offset.ElementOption.element;
 import static io.appium.java_client.touch.offset.PointOption.point;
@@ -49,6 +50,17 @@ public class BasePage {
         }
     }
 
+    public void moveToElementAndClick(WebElement element, boolean... shouldWait) {
+        try {
+            waitUntilElementIsVisible(element);
+            Actions actions = new Actions(getDriver());
+            actions.moveToElement(element).click().perform();
+        } catch (TimeoutException te) {
+            ExtentTestManager.getTest().log(Status.WARNING,te);
+        }
+    }
+
+
     public void scrollToTop() {
         ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(document.body.scrollHeight,0)");
 
@@ -64,7 +76,7 @@ public class BasePage {
         Calendar cal = Calendar.getInstance(zone);
         return cal.getTime();
         }
-    
+
     //click method for mobile app
     
     public void clickOnMobileElement(WebElement element, boolean... shouldWait) {
@@ -249,7 +261,18 @@ public class BasePage {
         } catch (Throwable ignored) {
         }
     }
-    
+
+    public static void waitUntilElementIsInVisible(final WebElement element) {
+        ExpectedCondition<Boolean> expectation = _driver -> !element.isDisplayed();
+
+        Wait<WebDriver> wait = new WebDriverWait(getDriver(), 20);
+        try {
+            wait.until(webDriver -> expectation);
+        } catch (Throwable ignored) {
+
+        }
+    }
+
     public void waitForPageLoaded(WebDriver driver) {
         try {
             WebDriverWait wait = new WebDriverWait(driver, 10);
