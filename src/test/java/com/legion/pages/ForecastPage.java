@@ -11,4 +11,6 @@ public interface ForecastPage {
 	public void loadLaborForecastforPastWeek(String nextWeekView, int weekCount) throws Exception;
 
 	public void holidaySmartCardIsDisplayedForCurrentAWeek() throws Exception;
+	public void clickForecast()  throws Exception;
+	public void verifyNextPreviousBtnCorrectOrNot() throws Exception;
 }

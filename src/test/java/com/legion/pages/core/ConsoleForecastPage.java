@@ -27,6 +27,9 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(css = "div.day-week-picker-arrow-right")
 	private WebElement forecastCalendarNavigationNextWeekArrow;
 
+	@FindBy(css = "div.day-week-picker-arrow-left")
+	private WebElement forecastCalendarNavigationPreviousWeekArrow;
+
 	@FindBy(xpath = "//span[contains(@class,'buttonLabel')][contains(text(),'Week')]")
 	private WebElement weekViewButton;
 
@@ -77,6 +80,10 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 	@FindBy(css = "[label=\"Close\"]")
 	private WebElement closeBtnInHoliday;
+
+	//use this to get the text of weeks which displayed,
+	@FindBy(css = "div.day-week-picker-period-week")
+	private WebElement currentWeekPeriod;
 
 	public ConsoleForecastPage() {
 		PageFactory.initElements(getDriver(), this);
@@ -274,6 +281,51 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			}
 		} else {
 			SimpleUtils.fail("Forecast Sub Menu Tab Not Found", false);
+		}
+	}
+
+
+	public void clickForecast() throws Exception {
+		if (isElementLoaded(forecastTab, 5)) {
+			click(forecastTab);
+			SimpleUtils.pass("Clicked on Forecast Sub Tab");
+		} else {
+			SimpleUtils.fail("Forecast Sub Menu Tab Not Found", false);
+		}
+	}
+
+	@Override
+	public void verifyNextPreviousBtnCorrectOrNot() throws Exception {
+		if (isElementLoaded(forecastCalendarNavigationNextWeekArrow,3) ||isElementLoaded(forecastCalendarNavigationPreviousWeekArrow,3) ) {
+			navigateToPreviousAndFutureWeek(forecastCalendarNavigationNextWeekArrow);
+//			navigateToPreviousAndFutureWeek(forecastCalendarNavigationNextWeekArrow);
+			String currentWeekPeriodText = currentWeekPeriod.getText().trim().replace("\n","").replace(" ","").replace("-","");
+			System.out.println("currentWeekPeriodText======" + currentWeekPeriodText);
+			navigateToPreviousAndFutureWeek(forecastCalendarNavigationPreviousWeekArrow);
+			String WeekPeriodTextAftBack = currentWeekPeriod.getText().trim().replace("\n","").replace(" ","").replace("-","");
+			System.out.println("WeekPeriodTextAftBack======" + WeekPeriodTextAftBack);
+			if (WeekPeriodTextAftBack.trim().equals(currentWeekPeriodText.trim())) {
+				SimpleUtils.fail(" Foreword and Back buttons are not working",true);
+			}else {
+				SimpleUtils.pass(" Foreword and Back buttons are working normally");
+
+			}
+		}else {
+			SimpleUtils.fail("Foreword and Back buttons is not displayed", false);
+		}
+
+
+
+	}
+
+	private void navigateToPreviousAndFutureWeek(WebElement element) throws Exception {
+
+   		if(isElementLoaded(element,5)) {
+			click(element);
+			SimpleUtils.pass("can navigate to next or previous week");
+
+		}else {
+			SimpleUtils.fail("element is not displayed", true);
 		}
 	}
 

@@ -42,9 +42,9 @@
                         <include name="closeButtonIsClickable" />
                         <include name="legionIsDisplayingTheScheduleWhichIsGeneratedByTheSystemAtTheVeryFirstTime" />
                         <include name="legionButtonIsClickableAndHasNoEditButton" />
-                        <include name="CurrentWeekIsGettingOpenByDefault" />
-                        <include name="DayWeekPickerSectionNavigatingCorrectly" />
-                        <include name="LandscapePortraitModeShowAndWorkWellInWeekView" />
+                        <include name="currentWeekIsGettingOpenByDefault" />
+                        <include name="dayWeekPickerSectionNavigatingCorrectly" />
+                        <include name="landscapePortraitModeShowAndWorkWellInWeekView" />
                         <include name="landscapeModeOnlyInDayView" />
                         <include name="weatherWeekSmartCardIsDisplayedForAWeek" />
                         <include name="scheduleUpdateAccordingToSelectWeek" />
@@ -58,7 +58,7 @@
                 <class name="com.legion.tests.core.ForecastTest">
                     <methods>
                         <include name="holidaySmartCardIsDisplayedForCurrentAWeek" />
-
+                        <include name="preNxtArrowAreWorkingAfterNavigateTo2FutureWeek" />
                     </methods>
                 </class>
             </classes>

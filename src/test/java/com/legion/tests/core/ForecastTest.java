@@ -77,4 +77,18 @@ public class ForecastTest extends TestBase{
 
 		}
 
+		@Automated(automated = "Automated")
+		@Owner(owner = "Estelle")
+		@Enterprise(name = "Kendrascott2_Enterprise")
+		@TestName(description = "T1828169 Navigate to 2 future week, < and > buttons are working")
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+		public void preNxtArrowAreWorkingAfterNavigateTo2FutureWeek(String username, String password, String browser, String location)
+				throws Exception {
+			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+			scheduleOverviewPage.loadScheduleOverview();
+			ForecastPage ForecastPage  = pageFactory.createForecastPage();
+			ForecastPage.clickForecast();
+			ForecastPage.verifyNextPreviousBtnCorrectOrNot();
+		}
+
 }
