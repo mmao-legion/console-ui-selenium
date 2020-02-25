@@ -1,6 +1,7 @@
 package com.legion.pages;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TeamPage {
 	public void goToTeam() throws Exception;
@@ -36,4 +37,28 @@ public interface TeamPage {
 	public void verifyTheFunctionOfConfirmTransferButton() throws Exception;
 	public void	verifyTheFunctionOfCancelTransferButton() throws Exception;
 	public void verifyTheHomeStoreLocationOnProfilePage(String homeLocation, String selectedLocation) throws Exception;
+	public String selectATeamMemberToViewProfile() throws Exception;
+	public void selectATeamMemberToCancelTransfer() throws Exception;
+	public boolean verifyCancelTransferWindowPopup() throws Exception;
+	public boolean verifyTransferButtonEnabledAfterCancelingTransfer() throws Exception;
+	public void verifyHomeLocationAfterCancelingTransfer(String homeLocation) throws Exception;
+	public boolean isProfilePageLoaded() throws Exception;
+	public void verifyTheFunctionOfEditBadges() throws Exception;
+	public void verifyTheVisibleOfBadgesOnTeamRoster() throws Exception;
+	public void selectATeamMemberToInvite() throws Exception;
+	public boolean isInviteTeamMemberWindowLoaded() throws Exception;
+	public void verifyTheEmailFormatOnInviteWindow(List<String> testEmails) throws Exception;
+	public boolean isSendAndCancelLoadedAndEnabledOnInvite() throws Exception;
+	public boolean addANewTeamMember(Map<String, String> newTMDetails) throws Exception;
+	public void checkAddATMMandatoryFieldsAreLoaded() throws Exception;
+	public void inviteTheNewCreatedTeamMember(String firstName) throws Exception;
+	public void verifyThereSectionsAreLoadedOnInviteWindow() throws Exception;
+	public void fillInMandatoryFieldsOnNewTMPage(Map<String, String> newTMDetails) throws Exception;
+	public boolean isSaveButtonOnNewTMPageEnabled() throws Exception;
+	public void verifyContactNumberFormatOnNewTMPage(List<String> contactNumbers) throws Exception;
+	public void verifyTMCountIsCorrectOnRoster() throws Exception;
+	public void verifyCancelButtonOnAddTMAndClick() throws Exception;
+	public void verifyTheMandatoryFieldsCannotEmpty() throws Exception;
+	public void verifyTMIsVisibleAndInvitedOnTODO(String name) throws Exception;
+	public void	selectAInvitedOrNotInvitedTeamMemberToView() throws Exception;
 }

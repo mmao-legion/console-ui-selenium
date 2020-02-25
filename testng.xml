@@ -67,6 +67,22 @@
                    <include name="verifyConfirmButtonOnPopupWindowWorking" />
                    <include name="verifyCancelButtonOnPopupWindowWorking" />
                    <include name="verifyHomeLocationNotUpdateAndGivenInformation" />
+                   <include name="verifyPopupIsShownAfterClickingCancelTransfer" />
+                   <include name="verifyTransferButtonEnabledAfterCancelingTransfer" />
+                   <include name="verifyHomeLocationAfterCancelingTransfer" />
+                   <include name="verifyTheFunctionOfBadges" />
+                   <include name="verifyTheVisibleOfBadgesOnTeamRoster" />
+                   <include name="verifyTheEmailDomainOnInvite" />
+                   <include name="verifyInviteTeamMemberPageLoaded" />
+                   <include name="verifySendAndCancelEnabledOnInvite" />
+                   <include name="verifyThreeTitlesDisplayedOnInvite" />
+                   <include name="verifySaveButtonEnableOnNewTMPage" />
+                   <include name="verifyTMContactNumberInNumericOnly" />
+                   <include name="verifyTMCountIsCorrectFromRoster" />
+                   <include name="verifyCancelButtonEnabledOnAddTM" />
+                   <include name="verifyMandatoryFieldsOnAddTM" />
+                   <include name="verifyTMIsInvitedAndVisibleOnTODO" />
+                   <include name="verifyInviteAndReInviteAreAvailable" />
                </methods>
            </class>
        </classes>

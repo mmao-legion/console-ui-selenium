@@ -19,11 +19,7 @@ import org.apache.poi.ss.formula.functions.T;
 import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
 
 import com.aventstack.extentreports.Status;
 import com.legion.tests.testframework.ExtentTestManager;
@@ -496,6 +492,25 @@ public class BasePage {
         return element;
     }
 
+    public void selectByVisibleText(WebElement element, String text) throws Exception {
+        click(element);
+        Select select = new Select(element);
+        List<WebElement> options = select.getOptions();
+        List<String> optionTexts = new ArrayList<>();
+        if (options.size() > 0) {
+            for (WebElement option : options) {
+                optionTexts.add(option.getText());
+            }
+            if (optionTexts.contains(text)){
+                select.selectByVisibleText(text);
+                SimpleUtils.pass("Select:" + text + " Successfully!");
+            } else {
+                SimpleUtils.fail(text + " doesn't exist in options!", true);
+            }
+        } else {
+            SimpleUtils.fail("Select options are empty!", true);
+        }
+    }
 
     public void selectDate(int daysFromToday) {
         LocalDate now = LocalDate.now();
