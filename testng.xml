@@ -48,6 +48,10 @@
                         <include name="landscapeModeOnlyInDayView" />
                         <include name="weatherWeekSmartCardIsDisplayedForAWeek" />
                         <include name="scheduleUpdateAccordingToSelectWeek" />
+                        <include name="verifyComplianceShiftsShowing" />
+                        <include name="verifyRedFlagIsVisible" />
+                        <include name="viewShiftIsWorkingAndComplianceFilterAppliedAutomatically" />
+
                     </methods>
                 </class>
             </classes>
@@ -59,6 +63,12 @@
                     <methods>
                         <include name="holidaySmartCardIsDisplayedForCurrentAWeek" />
                         <include name="preNxtArrowAreWorkingAfterNavigateTo2FutureWeek" />
+                        <include name="verifyDisplayOfActualLineSelectedByDefaultInOrangeColor" />
+                        <include name="selectedRecentTrendAndLastYearLineToVerifyColor" />
+<!--                        <include name="verifyForecastColor" />-->
+
+
+
                     </methods>
                 </class>
             </classes>

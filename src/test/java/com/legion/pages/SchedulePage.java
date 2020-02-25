@@ -188,4 +188,12 @@ public interface SchedulePage {
 	public void weatherWeekSmartCardIsDisplayedForAWeek() throws Exception;
 
 	public void scheduleUpdateAccordingToSelectWeek() throws Exception;
+
+	public boolean verifyRedFlagIsVisible() throws Exception;
+
+	public void verifyComplianceShiftsShowing() throws Exception;
+
+	public boolean clickViewShift() throws Exception;
+
+	public void verifyComplianceFilterIsSelectedAftClickingViewShift() throws Exception;
 }

@@ -106,7 +106,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         PageFactory.initElements(getDriver(), this);
     }
 
-    @FindBy(xpath = "//*[@id='legion-app']/div/div[2]/div/div/div/div[1]/navigation/div/div[6]")
+    @FindBy(css = "div.console-navigation-item-label.Schedule")
     private WebElement goToScheduleButton;
 
     @FindBy(css = "div[helper-text*='Work in progress Schedule'] span.legend-label")
@@ -684,6 +684,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(css = "div.sch-calendar-date-label>span")
     private List<WebElement> schCalendarDateLabel;
+
+
+    //compliance elements
+    @FindBy(css = "[ng-if=\"compliance\"]")
+    private WebElement complianceSmartcardHeader;
+
+    @FindBy(css = ".fa-flag.sch-red")
+    private WebElement redFlagInCompliance;
+
+    @FindBy(css = "[ng-click=\"smartCardShiftFilter('Compliance Review')\"]")
+    private WebElement viewShiftBtn;
+
+    @FindBy(css = "[src=\"img/legion/schedule/shift-info-danger.png\"]")
+    private List<WebElement> complianceShitShowIcon;
 
     List<String> scheduleWeekDate = new ArrayList<String>();
     List<String> scheduleWeekStatus = new ArrayList<String>();
@@ -4962,10 +4976,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(ScheduleSubMenu);
             if (isElementLoaded(todoButton,5)) {
                 SimpleUtils.pass("Schedule New UI load successfully");
-            }else{
-                SimpleUtils.fail("Schedule New UI load failed", true);
             }
-
+        }else{
+            SimpleUtils.fail("Schedule New UI load failed", true);
         }
 
     }
@@ -5144,6 +5157,55 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }else {
             SimpleUtils.fail("no next week calendar",true);
+        }
+    }
+
+
+
+    @Override
+    public boolean verifyRedFlagIsVisible() throws Exception {
+        if (isElementLoaded(redFlagInCompliance, 20)) {
+            SimpleUtils.report("red flag is visible ");
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void verifyComplianceShiftsShowing() throws Exception {
+        if (isElementLoaded(complianceSmartcardHeader,15)) {
+
+            if (complianceShitShowIcon.size() > 0) {
+                SimpleUtils.report("Compliance smartcard is visible ");
+            } else {
+                SimpleUtils.report("there is no compliance this week");
+            }
+        }
+    }
+
+    @Override
+    public boolean clickViewShift() throws Exception {
+        if (isElementLoaded(viewShiftBtn, 15)) {
+            click(viewShiftBtn);
+            SimpleUtils.report("View shift button is visible ");
+            return true;
+        }
+        SimpleUtils.report("No view shift button");
+        return false;
+
+    }
+
+    @Override
+    public void verifyComplianceFilterIsSelectedAftClickingViewShift() throws Exception {
+        String filterTextDefault =" Compliance Review\n" +
+                "    ";
+        if (clickViewShift() == true) {
+            String filterText = getDriver().findElement(By.cssSelector("lg-filter > div > input-field > ng-form > div")).getText();
+            if (filterText.equals(filterTextDefault)) {
+                SimpleUtils.report("Compliance filter is selected after clicking view shift button");
+            }
+        }else {
+            SimpleUtils.fail("there is no view shift button",false);
         }
     }
 

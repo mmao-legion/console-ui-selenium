@@ -1942,4 +1942,24 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void scheduleUpdateAccordingToSelectWeek() throws Exception {
 
     }
+
+    @Override
+    public boolean verifyRedFlagIsVisible() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyComplianceShiftsShowing() throws Exception {
+
+    }
+
+    @Override
+    public boolean clickViewShift() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyComplianceFilterIsSelectedAftClickingViewShift() throws Exception {
+
+    }
 }

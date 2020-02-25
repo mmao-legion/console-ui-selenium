@@ -3,15 +3,15 @@ package com.legion.pages.core;
 import com.legion.pages.BasePage;
 import com.legion.pages.ForecastPage;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.*;
 
 public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
@@ -81,9 +81,42 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(css = "[label=\"Close\"]")
 	private WebElement closeBtnInHoliday;
 
+	@FindBy(css = ".forecast-prediction-picker-text")
+	private WebElement displayDropDownBtnInProjected;
+
+
 	//use this to get the text of weeks which displayed,
 	@FindBy(css = "div.day-week-picker-period-week")
 	private WebElement currentWeekPeriod;
+
+	@FindBy(css = "div > label:nth-child(1)")
+	private WebElement checkBoxOfRecentTrendLine;
+
+	@FindBy(css = "div > label:nth-child(2)")
+	private WebElement checkBoxOfActualLine;
+
+	@FindBy(css = "div > label:nth-child(3)")
+	private WebElement checkBoxOfLstYearLine;
+
+	@FindBy(css = "[stroke=\"#f49342\"]")
+	private WebElement actualLine;
+
+	@FindBy(css = "[stroke=\"#795548\"]")
+	private WebElement recentTrendLine;
+
+	@FindBy(css = "[stroke=\"#9c6ade\"]")
+	private WebElement lastYearLine;
+
+	@FindBy(css = ".ng-valid-parse.ng-touched.ng-not-empty")
+	private List<WebElement> checkBoxSelected;
+
+
+
+
+
+
+
+
 
 	public ConsoleForecastPage() {
 		PageFactory.initElements(getDriver(), this);
@@ -317,6 +350,72 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 
 	}
+
+	@Override
+	public void verifyDisplayOfActualLineSelectedByDefaultInOrangeColor() throws Exception {
+
+		if(isElementLoaded(displayDropDownBtnInProjected,20)){
+			click(displayDropDownBtnInProjected);
+			if (isElementLoaded(actualLine,5)) {
+				click(checkBoxOfActualLine);
+				if (checkBoxSelected.size()==0) {
+					SimpleUtils.pass(" Display of Actual line should be selected bydefault and in Orange color");
+				}
+
+			}else {
+				SimpleUtils.fail("Actual is not selected by default",true);
+			}
+		}else {
+			SimpleUtils.fail("Display dropdown list load failed",true);
+		}
+	}
+
+	@Override
+	public void verifyRecentTrendLineIsSelectedAndColorInBrown() throws Exception {
+		if(isElementLoaded(displayDropDownBtnInProjected,20)){
+			click(displayDropDownBtnInProjected);
+				click(checkBoxOfRecentTrendLine);
+				if (isElementLoaded(recentTrendLine, 5)) {
+					SimpleUtils.pass(" Display of RecentTrend line should be selected  and in Brown color");
+				} else {
+					SimpleUtils.fail("RecentTrend line selected failed", false);
+				}
+
+			click(displayDropDownBtnInProjected);
+		}else {
+
+			SimpleUtils.fail("Display dropdown list load failed",false);
+		}
+	}
+
+	@Override
+	public void verifyLastYearLineIsSelectedAndColorInPurple() throws Exception {
+		if(isElementLoaded(displayDropDownBtnInProjected,20)){
+			click(displayDropDownBtnInProjected);
+				click(checkBoxOfLstYearLine);
+				if (isElementLoaded(lastYearLine, 5)) {
+					SimpleUtils.pass(" Display of LastYear line should be selected  and in purple color");
+				} else {
+					SimpleUtils.fail("RecentTrend line selected failed", false);
+				}
+			}
+			click(displayDropDownBtnInProjected);
+
+	}
+
+	@Override
+	public void verifyForecastColourIsBlue() {
+//		for (WebElement e:forecastGraph
+//			 ) {
+//			String colorOfForecast = e.getAttribute("color");
+//			System.out.println("colorOfForecast======="+colorOfForecast);
+//		}
+//		System.out.println(getDriver().findElement(By.cssSelector(".forecast-prediction-rect.forecast-prediction-rect-baseline")).getAttribute("color"));
+
+	}
+
+
+
 
 	private void navigateToPreviousAndFutureWeek(WebElement element) throws Exception {
 
