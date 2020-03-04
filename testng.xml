@@ -22,7 +22,7 @@
         <classes>
             <class name="com.legion.tests.core.RegressionTest">
                 <methods>
-<!--                    <include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>-->
+                    <include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>
 <!--                    <include name="validateScheduleSmartCardsAsStoreManager"/>-->
 <!--                    <include name="validateScheduleGenerationFunctionalityAsStoreManager"/>-->
 <!--                    <include name="validateGuidanceWeekAsStoreManager"/>-->
@@ -40,7 +40,7 @@
 <!--                    <include name="changeAndValidateOperatingHoursAsInternalAdmin"/>-->
 <!--                    <include name="verifyScheduleOverlappingAsInternalAdmin"/>-->
 <!--                    <include name="updateWorkingHoursAsInternalAdmin"/>-->
-                    <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>
+<!--                    <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>-->
 <!--                    <include name="updateControlsSectionLoadingAsStoreManager"/>-->
 <!--                    <include name="updateWorkingHoursAsInternalAdmin"/>-->
 <!--                    <include name="updateWorkingHoursAsInternalAdmin"/>-->
