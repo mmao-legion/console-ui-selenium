@@ -229,4 +229,8 @@ public interface ControlsNewUIPage {
 	public String getTimeSheetApprovalSelectedOption(boolean byManager) throws Exception;
 
 	public String getTimeZoneFromLocationDetailsPage() throws Exception;
+
+	public String getOnBoardOptionFromScheduleCollaboration() throws Exception;
+
+	public void setOnBoardOptionAsEmailWhileInviting() throws Exception;
 }

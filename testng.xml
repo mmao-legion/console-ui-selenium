@@ -29,6 +29,9 @@
                     <include name="verifyTheWelcomeMessage" />
                     <include name="verifyTheFunctionOfViewTodaySchedule" />
                     <include name="verifyTheDataSourceForBudgetScheduledOther" />
+                    <include name="verifyTheProjectedDemandGraphIsShown" />
+                    <include name="verifyStartingSoonNScheduledHourNotShowWhenGuidanceOrDraft" />
+                    <include name="verifyStartingSoonSection" />
                 </methods>
             </class>
         </classes>
@@ -83,6 +86,14 @@
                    <include name="verifyMandatoryFieldsOnAddTM" />
                    <include name="verifyTMIsInvitedAndVisibleOnTODO" />
                    <include name="verifyInviteAndReInviteAreAvailable" />
+                   <include name="verifyOnBoardedDateAndButtonsWhileActivating" />
+                   <include name="verifyTeamMemberStatusAfterActivating" />
+                   <include name="verifyInvitationCodeIsSent" />
+                   <include name="verifyInvitationCodeIsAvailableOnEmailID" />
+                   <include name="verifyUpdateInfoIsPresentWhenPendingForContactOrEmail" />
+                   <include name="verifyTheFunctionOfTerminateButton" />
+                   <include name="verifyTheFunctionOfCancelTerminateButton" />
+                   <include name="verifyShiftCanAssignToTMAfterActivating" />
                </methods>
            </class>
        </classes>

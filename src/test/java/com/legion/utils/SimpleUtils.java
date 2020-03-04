@@ -1779,4 +1779,38 @@ public class SimpleUtils {
 		String imptimeEnd = sdf.format(cal.getTime());
 		return imptimeBegin + "," + imptimeEnd;
 	}
+
+	public static boolean compareHashMapByEntrySet(HashMap<String,List<String>> map1, HashMap<String, List<String>> map2){
+		if(map1.size()!=map2.size()){
+			return false;
+		}
+		List<String> tmp1;
+		List<String> tmp2;
+		boolean isSame = false;
+		for(Map.Entry<String, List<String>> entry : map1.entrySet()){
+			if(map2.containsKey(entry.getKey())){
+				tmp1 = entry.getValue();
+				tmp2 = map2.get(entry.getKey());
+				if(tmp1 != null && tmp2 != null){
+					if(tmp1.containsAll(tmp2) && tmp2.containsAll(tmp1)){
+						isSame = true;
+						continue;
+					}else{
+						isSame = false;
+						break;
+					}
+				}else if(tmp1 == null && tmp2 == null){
+					isSame = true;
+					continue;
+				}else{
+					isSame = false;
+					break;
+				}
+			}else{
+				isSame = false;
+				break;
+			}
+		}
+		return isSame;
+	}
 }

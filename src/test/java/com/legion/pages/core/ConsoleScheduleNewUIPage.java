@@ -10,7 +10,9 @@ import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 
+import cucumber.api.java.hu.Ha;
 import org.apache.http.impl.execchain.TunnelRefusedException;
+import org.apache.xpath.axes.HasPositionalPredChecker;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -33,6 +35,7 @@ import org.testng.Assert;
 
 import java.awt.*;
 import java.lang.reflect.Method;
+import java.net.SocketImpl;
 import java.sql.Driver;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -105,7 +108,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         PageFactory.initElements(getDriver(), this);
     }
 
-    @FindBy(xpath = "//*[@id='legion-app']/div/div[2]/div/div/div/div[1]/navigation/div/div[6]")
+    @FindBy(xpath = "//*[@id='legion-app']/div/div[2]/div/div/div/div[1]/navigation/div/div[7]")
     private WebElement goToScheduleButton;
 
     @FindBy(css = "div[helper-text*='Work in progress Schedule'] span.legend-label")
@@ -129,7 +132,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "lg-button[label=\"Analyze\"]")
     private WebElement analyze;
 
-    @FindBy(css = "lg-button[label=\"Edit\"]")
+    @FindBy(css = "lg-button[data-tootik=\"Edit Schedule\"]")
     private WebElement edit;
 
     @FindBy(xpath = "//span[contains(text(),'Projected Sales')]")
@@ -1046,7 +1049,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
-	
+
 
     @Override
     public void generateSchedule() throws Exception {
@@ -4202,6 +4205,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement scheduleTableTitle;
     @FindBy(css = "table tr:nth-child(2)")
     private WebElement scheduleTableHours;
+    @FindBy(className = "week-day-multi-picker-day")
+    private List<WebElement> weekDays;
+    @FindBy(css = "div[ng-if=\"!searchLoading\"] [ng-class*=\"selectActionClass\"]")
+    private WebElement selectButton;
+    @FindBy(css = "img[src*=\"added-shift\"]")
+    private List<WebElement> addedShiftIcons;
+    @FindBy (css = "[label=\"Create New Shift\"]")
+    private WebElement createNewShiftWeekView;
 
     @Override
     public void isScheduleForCurrentDayInDayView(String dateFromDashboard) throws Exception {
@@ -4249,6 +4260,166 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         return scheduleHours;
     }
+
+    @Override
+    public HashMap<String, List<String>> getFourUpComingShifts(boolean isStartTomorrow) throws Exception {
+        HashMap<String, List<String>> fourShifts = new HashMap<>();
+        String activeDay = null;
+        if (isStartTomorrow) {
+            activeDay = getActiveAndNextDay();
+            clickOnNextDaySchedule(activeDay);
+        }
+        fourShifts = getAvailableShiftsForDayView(fourShifts);
+        while (fourShifts.size() < 4) {
+            activeDay = getActiveAndNextDay();
+            clickOnNextDaySchedule(activeDay);
+            fourShifts = getAvailableShiftsForDayView(fourShifts);
+        }
+        if (fourShifts.size() == 4) {
+            SimpleUtils.pass("Get four shifts successfully!");
+        }else {
+            SimpleUtils.fail("Failed to get four shifts!", false);
+        }
+        return fourShifts;
+    }
+
+    @Override
+    public void selectDaysFromCurrentDay(String currentDay) throws Exception {
+        int index = 7;
+        String[] items = currentDay.split(" ");
+        if (items.length == 3) {
+            currentDay = items[0].substring(0, 3) + items[1].substring(0, 3) + (items[2].length() == 1 ? "0"+items[2] : items[2]);
+        }
+        if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+            // De-select the first Day since it is selected by default
+            if (weekDays.get(0).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
+                click(weekDays.get(0));
+            }
+            for (int i = 0; i < weekDays.size(); i++) {
+                String weekDay = weekDays.get(i).getText().replaceAll("\\s*", "");
+                if (weekDay.equalsIgnoreCase(currentDay)) {
+                    index = i;
+                }
+                if (i >= index) {
+                    click(weekDays.get(i));
+                    SimpleUtils.pass("Select the day: " + weekDays.get(i).getText() + " successfully!");
+                }
+            }
+        }else{
+            SimpleUtils.fail("Weeks Days failed to load!", true);
+        }
+    }
+
+    @Override
+    public void searchTeamMemberByName(String name) throws Exception {
+        if(areListElementVisible(btnSearchteamMember,5)) {
+            if (btnSearchteamMember.size() == 2) {
+                click(btnSearchteamMember.get(1));
+                if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {
+                    textSearch.sendKeys(name);
+                    click(searchIcon);
+                    if (isElementLoaded(selectButton, 5) && isElementEnabled(selectButton, 5)) {
+                        click(selectButton);
+                    }else {
+                        SimpleUtils.fail("Failed to find the team member!", false);
+                    }
+                }else {
+                    SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+                }
+            }else {
+                SimpleUtils.fail("Search team member should have two tabs, failed to load!", false);
+            }
+        }
+    }
+
+    @Override
+    public void verifyNewShiftsAreShownOnSchedule(String name) throws Exception {
+        if (areListElementVisible(addedShiftIcons, 5)) {
+            for (WebElement addedShiftIcon : addedShiftIcons) {
+                WebElement parent = addedShiftIcon.findElement(By.xpath("./../../../.."));
+                if (parent != null) {
+                    WebElement teamMemberName = parent.findElement(By.className("week-schedule-worker-name"));
+                    if (teamMemberName != null && teamMemberName.getText().contains(name)) {
+                        SimpleUtils.pass("Added a New shift for: " + name + " is successful!");
+                    }else {
+                        SimpleUtils.fail("Cannot find the new shift for team member: " + name, false);
+                    }
+                }else {
+                    SimpleUtils.fail("Failed to find the parrent element for adding icon!", false);
+                }
+            }
+        }else {
+            SimpleUtils.fail("Failed to find the new added shift icons!", false);
+        }
+    }
+
+    public HashMap<String, List<String>> getAvailableShiftsForDayView(HashMap<String, List<String>> fourShifts) throws Exception {
+        String name = null;
+        String role = null;
+        String timePeriod = null;
+        List<String> roleAndTime = null;
+        if (areListElementVisible(dayViewAvailableShifts, 15)) {
+            for (WebElement dayViewAvailableShift : dayViewAvailableShifts) {
+                name = dayViewAvailableShift.findElement(By.className("sch-day-view-shift-worker-name")).getText();
+                if (name.contains("(")) {
+                    name = name.substring(0, name.indexOf("(") - 1);
+                }
+                if (!name.contains("Open") && !name.contains("Unassigned")) {
+                    role = dayViewAvailableShift.findElement(By.className("sch-day-view-shift-worker-title-role")).getText();
+                    timePeriod = dayViewAvailableShift.findElement(By.className("sch-day-view-shift-time")).getText();
+                    roleAndTime = new ArrayList<>();
+                    roleAndTime.add(role);
+                    roleAndTime.add(timePeriod);
+                    if (fourShifts.size() < 4) {
+                        fourShifts.put(name, roleAndTime);
+                    }else {
+                        break;
+                    }
+                }
+            }
+        }else {
+            SimpleUtils.fail("Day View Available shifts failed to load!", true);
+        }
+        return fourShifts;
+    }
+
+    @Override
+    public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, List<String>> dashboardShifts, HashMap<String, List<String>> scheduleShifts) throws Exception {
+        boolean isConsistent = SimpleUtils.compareHashMapByEntrySet(dashboardShifts, scheduleShifts);
+        if (isConsistent) {
+            SimpleUtils.pass("Up coming shifts from dashboard is consistent with the shifts in schedule!");
+        }else {
+            SimpleUtils.fail("Up coming shifts from dashboard isn't consistent with the shifts in schedule!", true);
+        }
+    }
+
+    @Override
+    public void clickOnCreateNewShiftWeekView() throws Exception {
+        if (isElementLoaded(createNewShiftWeekView, 5)) {
+            click(createNewShiftWeekView);
+            SimpleUtils.pass("Click on Create New Shift button successfully!");
+        }else {
+            SimpleUtils.fail("Create New Shift button failed to load on Week View!", false);
+        }
+    }
+
+    @Override
+    public void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception {
+        if (previousTeamCount.size() == currentTeamCount.size()) {
+            for (int i = 0; i < currentTeamCount.size(); i++) {
+                String currentCount = currentTeamCount.get(i);
+                String previousCount = previousTeamCount.get(i);
+                if (Integer.parseInt(currentCount) == Integer.parseInt(previousCount) + 1) {
+                    SimpleUtils.pass("Current Team Count is greater than Previous Team Count");
+                } else {
+                    SimpleUtils.fail("Current Team Count is not greater than Previous Team Count", true);
+                }
+            }
+        } else {
+            SimpleUtils.fail("Size of Current Team Count should be equal to Previous Team Count", false);
+        }
+    }
+
     @Override
     public void printButtonIsClickable() throws Exception {
         if (isElementLoaded(printButton,10)){

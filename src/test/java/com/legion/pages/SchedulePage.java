@@ -182,4 +182,12 @@ public interface SchedulePage {
 	public void landscapeModeWorkWellInWeekView() throws Exception;
 
 	public void portraitModeWorkWellInWeekView()throws Exception;
+
+	public HashMap<String, List<String>> getFourUpComingShifts(boolean isStartTomorrow) throws Exception;
+	public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, List<String>> dashboardShifts, HashMap<String, List<String>> scheduleShifts) throws Exception;
+	public void clickOnCreateNewShiftWeekView() throws Exception;
+	public void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception;
+	public void selectDaysFromCurrentDay(String currentDay) throws Exception;
+	public void searchTeamMemberByName(String name) throws Exception;
+	public void verifyNewShiftsAreShownOnSchedule(String name) throws Exception;
 }

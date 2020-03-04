@@ -1,8 +1,5 @@
 package com.legion.pages.core;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.teamMemberName;
-
 import java.lang.reflect.Array;
 import java.net.SocketImpl;
 import java.nio.file.WatchEvent;
@@ -24,6 +21,8 @@ import com.legion.tests.core.TeamTestKendraScott2.timeOffRequestAction;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.support.ui.Select;
+
+import static com.legion.utils.MyThreadLocal.*;
 
 public class ConsoleTeamPage extends BasePage implements TeamPage{
 	
@@ -596,6 +595,40 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private List<WebElement> invitationStatus;
 	@FindBy (css = "lgn-action-button.invite-button button")
 	private WebElement inviteButton;
+	@FindBy (css = "button[ng-switch-when=\"activate\"]")
+	private List<WebElement> activateButtons;
+	@FindBy (css = "profile-management div.collapsible-title")
+	private WebElement profileTab;
+	@FindBy (css = "lgn-action-button[label=\"'ACTIVATE'\"] button")
+	private WebElement activateButton;
+	@FindBy (css = "div.activate")
+	private WebElement activateWindow;
+	@FindBy (css = "button.save-btn.pull-right")
+	private WebElement applyButton;
+	@FindBy (css = "lgn-action-button[label=\"'DEACTIVATE'\"] button")
+	private WebElement deactivateButton;
+	@FindBy (css = "lgn-action-button[label=\"'TERMINATE'\"] button")
+	private WebElement terminateButton;
+	@FindBy (css = "lgn-action-button[label=\"'CANCEL TERMINATE'\"] button")
+	private WebElement cancelTerminateButton;
+	@FindBy (css = "div.legion-status div.invitation-status")
+	private WebElement onBoardedDate;
+	@FindBy (css = "div.legion-status>div:nth-child(2)")
+	private WebElement tmStatus;
+	@FindBy (css = "lgn-action-button[label=\"'CANCEL ACTIVATE'\"] button")
+	private WebElement cancelActivateButton;
+	@FindBy (className = "modal-content")
+	private WebElement deactivateWindow;
+	@FindBy (css = "button[ng-switch-when=\"update\"]")
+	private List<WebElement> updateInfoButtons;
+	@FindBy (className = "location-date-selector")
+	private WebElement removeWindow;
+	@FindBy (css = "lgn-tm-engagement-quick div:nth-child(5)>div")
+	private WebElement employeeID;
+	@FindBy (css = "i.next-month")
+	private WebElement nextMonthArrow;
+	@FindBy (css = "lgn-action-button[label=\"'MANUAL ONBOARD'\"] button")
+	private WebElement manualOnBoardButton;
 
 	@Override
 	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception {
@@ -1245,19 +1278,18 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 	@Override
-	public boolean addANewTeamMember(Map<String, String> newTMDetails) throws Exception {
-		boolean isSuccess = false;
+	public String addANewTeamMemberToInvite(Map<String, String> newTMDetails) throws Exception {
+		String firstName = null;
 		String successfulMsg = "The team member has been added.";
-		checkAddATMMandatoryFieldsAreLoaded();
-		fillInMandatoryFieldsOnNewTMPage(newTMDetails);
-		isElementLoadedAndPrintTheMessage(phoneInput, "PHONE Input");
-		phoneInput.sendKeys(newTMDetails.get("PHONE"));
+		String email = "Email";
+		String phoneNumber = "Phone Number";
+		firstName = checkAndFillInTheFieldsToCreateInviteTM(newTMDetails);
 		if (isElementEnabled(saveTMButton, 5)) {
 			SimpleUtils.pass("Save button on new TM page is enabled!");
+			scrollToBottom();
 			click(saveTMButton);
 			if (isElementLoaded(popupMessage, 5)) {
 				if (popupMessage.getText().equals(successfulMsg)) {
-					isSuccess = true;
 					SimpleUtils.pass("The New Team member is added successfully");
 				}else {
 					SimpleUtils.fail("The message is incorrect!", true);
@@ -1268,30 +1300,63 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		} else {
 			SimpleUtils.fail("Save Button is not enabled!", true);
 		}
-		return isSuccess;
+		return firstName;
 	}
 
 	@Override
-	public void fillInMandatoryFieldsOnNewTMPage(Map<String, String> newTMDetails) throws Exception {
-		String employeeID = "abc";
-		firstNameInput.sendKeys(newTMDetails.get("FIRST_NAME"));
+	public void saveTheNewTeamMember() throws Exception {
+		String successfulMsg = "The team member has been added.";
+		if (isSaveButtonOnNewTMPageEnabled()) {
+			scrollToBottom();
+			click(saveTMButton);
+			if (isElementLoaded(popupMessage, 5)) {
+				if (popupMessage.getText().equals(successfulMsg)) {
+					SimpleUtils.pass("The New Team member is added successfully");
+				}else {
+					SimpleUtils.fail("The message is incorrect!", true);
+				}
+			}else {
+				SimpleUtils.fail("Successful message doesn't show!", true);
+			}
+		}
+	}
+
+	@Override
+	public String fillInMandatoryFieldsOnNewTMPage(Map<String, String> newTMDetails, String mandatoryField) throws Exception {
+		String email = "Email";
+		String phoneNumber = "Phone Number";
+		String firstName = newTMDetails.get("FIRST_NAME") + new Random().nextInt(200) + new Random().nextInt(200);
+		firstNameInput.sendKeys(firstName);
 		lastNameInput.sendKeys(newTMDetails.get("LAST_NAME"));
-		emailInputTM.sendKeys(newTMDetails.get("EMAIL"));
+		if (mandatoryField.equals(email)) {
+			emailInputTM.sendKeys(newTMDetails.get("EMAIL"));
+		}
+		if (mandatoryField.equals(phoneNumber)) {
+			phoneInput.sendKeys(newTMDetails.get("PHONE"));
+		}
 		dateHiredInput.click();
 		selectDate(0);
-		employeeIDInput.sendKeys(employeeID + new Random().nextInt(100) + new Random().nextInt(100));
+		employeeIDInput.sendKeys( "E" + new Random().nextInt(200) + new Random().nextInt(200) + new Random().nextInt(200));
 		selectByVisibleText(jobTitleSelect, newTMDetails.get("JOB_TITLE"));
 		selectByVisibleText(engagementStatusSelect, newTMDetails.get("ENGAGEMENT_STATUS"));
 		selectByVisibleText(hourlySelect, newTMDetails.get("HOURLY"));
 		selectByVisibleText(salariedSelect, newTMDetails.get("SALARIED"));
 		selectByVisibleText(exemptSelect, newTMDetails.get("EXEMPT"));
+		return firstName;
 	}
 
 	@Override
-	public void checkAddATMMandatoryFieldsAreLoaded() throws Exception {
+	public void checkAddATMMandatoryFieldsAreLoaded(String mandatoryField) throws Exception {
+		String email = "Email";
+		String phoneNumber = "Phone Number";
 		isElementLoadedAndPrintTheMessage(firstNameInput, "FIRST NAME Input");
 		isElementLoadedAndPrintTheMessage(lastNameInput, "LAST NAME Input");
-		isElementLoadedAndPrintTheMessage(emailInputTM, "EMAIL Input");
+		if (mandatoryField.equals(email)) {
+			isElementLoadedAndPrintTheMessage(emailInputTM, "EMAIL Input");
+		}
+		if (mandatoryField.equals(phoneNumber)) {
+			isElementLoadedAndPrintTheMessage(phoneInput, "PHONE Input");
+		}
 		isElementLoadedAndPrintTheMessage(dateHiredInput, "DATE HIRED Input");
 		isElementLoadedAndPrintTheMessage(employeeIDInput, "EMPLOYEE ID Input");
 		isElementLoadedAndPrintTheMessage(jobTitleSelect, "JOB TITLE SELECT");
@@ -1300,6 +1365,35 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		isElementLoadedAndPrintTheMessage(salariedSelect, "SALARIED SELECT");
 		isElementLoadedAndPrintTheMessage(exemptSelect, "EXEMPT SELECT");
 		isElementLoadedAndPrintTheMessage(homeStoreLabel, "HOME STORE LOCATION");
+	}
+
+	private String checkAndFillInTheFieldsToCreateInviteTM(Map<String, String> newTMDetails) throws Exception {
+		String firstName = newTMDetails.get("FIRST_NAME") + new Random().nextInt(200) + new Random().nextInt(200);
+		isElementLoadedAndPrintTheMessage(firstNameInput, "FIRST NAME Input");
+		isElementLoadedAndPrintTheMessage(lastNameInput, "LAST NAME Input");
+		isElementLoadedAndPrintTheMessage(emailInputTM, "EMAIL Input");
+		isElementLoadedAndPrintTheMessage(phoneInput, "PHONE Input");
+		isElementLoadedAndPrintTheMessage(dateHiredInput, "DATE HIRED Input");
+		isElementLoadedAndPrintTheMessage(employeeIDInput, "EMPLOYEE ID Input");
+		isElementLoadedAndPrintTheMessage(jobTitleSelect, "JOB TITLE SELECT");
+		isElementLoadedAndPrintTheMessage(engagementStatusSelect, "ENGAGEMENT STATUS SELECT");
+		isElementLoadedAndPrintTheMessage(hourlySelect, "HOURLY SELECT");
+		isElementLoadedAndPrintTheMessage(salariedSelect, "SALARIED SELECT");
+		isElementLoadedAndPrintTheMessage(exemptSelect, "EXEMPT SELECT");
+		isElementLoadedAndPrintTheMessage(homeStoreLabel, "HOME STORE LOCATION");
+		firstNameInput.sendKeys(firstName);
+		lastNameInput.sendKeys(newTMDetails.get("LAST_NAME"));
+		emailInputTM.sendKeys(newTMDetails.get("EMAIL"));
+		phoneInput.sendKeys(newTMDetails.get("PHONE"));
+		dateHiredInput.click();
+		selectDate(0);
+		employeeIDInput.sendKeys( "E" + new Random().nextInt(200) + new Random().nextInt(200) + new Random().nextInt(200));
+		selectByVisibleText(jobTitleSelect, newTMDetails.get("JOB_TITLE"));
+		selectByVisibleText(engagementStatusSelect, newTMDetails.get("ENGAGEMENT_STATUS"));
+		selectByVisibleText(hourlySelect, newTMDetails.get("HOURLY"));
+		selectByVisibleText(salariedSelect, newTMDetails.get("SALARIED"));
+		selectByVisibleText(exemptSelect, newTMDetails.get("EXEMPT"));
+		return firstName;
 	}
 
 	@Override
@@ -1559,6 +1653,483 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		}
 		if (!isAvailable) {
 			SimpleUtils.fail("INVITE/REINVITE button is unavailable!", true);
+		}
+	}
+
+	@Override
+	public int selectATeamMemberToActivate() throws Exception {
+		int activateCount = 0;
+		if (areListElementVisible(activateButtons, 15)) {
+			activateCount = activateButtons.size();
+			Random random = new Random();
+			int index = random.nextInt(activateButtons.size());
+			click(activateButtons.get(index));
+		}
+		return activateCount;
+	}
+
+	@Override
+	public boolean isProfilePageSelected() throws Exception {
+		boolean isProfile = false;
+		String titleOpen = "collapsible-title-open";
+		scrollToTop();
+		if (isElementLoaded(profileTab, 10)) {
+			String className = profileTab.getAttribute("class");
+			if (className.contains(titleOpen)) {
+				SimpleUtils.pass("Profile Tab is open!");
+				isProfile = true;
+			}
+		} else {
+			SimpleUtils.fail("Profile tab failed to load!", false);
+		}
+		return isProfile;
+	}
+
+	@Override
+	public void navigateToProfileTab() throws Exception {
+		if (isElementLoaded(profileTab, 10)) {
+			click(profileTab);
+			if (isProfilePageSelected()) {
+				SimpleUtils.pass("Navigate to profile tab successfully!");
+			} else {
+				SimpleUtils.fail("Failed to navigate to the profile tab.", false);
+			}
+		} else {
+			SimpleUtils.fail("Profile tab failed to load!", false);
+		}
+	}
+
+	@Override
+	public void clickOnActivateButton() throws Exception {
+		if (isElementLoaded(activateButton, 10)) {
+			click(activateButton);
+		} else {
+			SimpleUtils.fail("Activate button failed to load on Profile Tab!", false);
+		}
+	}
+
+	@Override
+	public void isActivateWindowLoaded() throws Exception {
+		if (isElementLoaded(activateWindow, 10)) {
+			SimpleUtils.pass("Activate window loaded successfully!");
+		} else {
+			SimpleUtils.fail("Activate window failed to load!", false);
+		}
+	}
+
+	@Override
+	public void selectADateOnCalendarAndActivate() throws Exception {
+		String successfulMsg = "Successfully scheduled activation of Team Member.";
+		String actualMsg = null;
+		if (isElementLoaded(currentDay, 10)) {
+			click(currentDay);
+			if (isElementEnabled(applyButton, 10)) {
+				click(applyButton);
+				if (isElementLoaded(popupMessage, 10)) {
+					actualMsg = popupMessage.getText();
+					if (actualMsg.equals(successfulMsg)) {
+						SimpleUtils.pass("Activate the Team Member successfully!");
+					} else {
+						SimpleUtils.fail("Failed to activate the Team member", false);
+					}
+				} else {
+					SimpleUtils.fail("Pop up message failed to show!", false);
+				}
+			}else {
+				SimpleUtils.fail("Activate button on activate window is disabled!", false);
+			}
+		}else {
+			SimpleUtils.fail("Calendar failed to load!", false);
+		}
+	}
+
+	@Override
+	public void verifyDeactivateAndTerminateEnabled() throws Exception {
+		if (isElementLoaded(deactivateButton, 10) && isElementLoaded(terminateButton, 10)) {
+			if (isElementEnabled(deactivateButton, 5) && isElementEnabled(terminateButton, 5)) {
+				SimpleUtils.pass("DEACTIVATE and TERMINATE button are enabled!");
+			}else {
+				SimpleUtils.fail("DEACTIVATE and TERMINATE button are not enabled!", false);
+			}
+		}else {
+			SimpleUtils.fail("DEACTIVATE and TERMINATE button are not loaded!", false);
+		}
+	}
+
+	@Override
+	public String getOnBoardedDate() throws Exception {
+		if (isElementLoaded(onBoardedDate, 10)) {
+			return onBoardedDate.getText();
+		}else {
+			return null;
+		}
+	}
+
+	@Override
+	public void isOnBoardedDateUpdated(String previousDate) throws Exception {
+		if (isElementLoaded(onBoardedDate, 10)) {
+			if (!onBoardedDate.getText().equals(previousDate)) {
+				SimpleUtils.pass("On Boarded Date is updated!");
+			}else {
+				SimpleUtils.fail("On Boarded Date is not updated!", true);
+			}
+		}else {
+			SimpleUtils.fail("On boarded date failed to load!", false);
+		}
+	}
+
+	@Override
+	public void verifyTheStatusOfTeamMember() throws Exception {
+		String expectedStatus = "Active";
+		if (isElementLoaded(tmStatus, 10)) {
+			if (expectedStatus.equals(tmStatus.getText())) {
+				SimpleUtils.pass("Team member's status is correct!");
+			}else {
+				SimpleUtils.fail("Team member's status is incorrect!", true);
+			}
+		}else {
+			SimpleUtils.fail("Status Element failed to load!", true);
+		}
+	}
+
+	@Override
+	public boolean isActivateButtonLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(activateButton, 10)) {
+			isLoaded = true;
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void cancelActivateOrDeactivateTeamMember() throws Exception {
+		boolean isActivateLoaded = false;
+		if (isElementLoaded(deactivateButton, 10)) {
+			click(deactivateButton);
+			isDeactivateWindowLoaded();
+			selectADateOnCalendarAndApplyDeactivate();
+			if (isElementLoaded(popupMessage, 10)) {
+				if (isElementLoaded(activateButton, 10) && isElementEnabled(activateButton, 10)) {
+					isActivateLoaded = true;
+				}
+			}
+		}
+		if (isElementLoaded(cancelActivateButton, 10)) {
+			click(cancelActivateButton);
+			if (isElementLoaded(confirmPopupWindow, 10)) {
+				if (isElementLoaded(confirmButton)) {
+					click(confirmButton);
+					if (isElementLoaded(popupMessage, 10)) {
+						if (isElementLoaded(activateButton, 10) && isElementEnabled(activateButton, 10)) {
+							isActivateLoaded = true;
+						}
+					}
+				}else {
+					SimpleUtils.fail("Confirm Button failed to load!", false);
+				}
+			}else {
+				SimpleUtils.fail("Confirm pop up window failed to load!", false);
+			}
+		}
+		if (!isActivateLoaded) {
+			SimpleUtils.fail("Activate Button is not enabled!", false);
+		}
+	}
+
+	@Override
+	public void searchForTeamMemberByStatus(String status) throws Exception {
+		if (isElementEnabled(searchTextBox, 10)) {
+			searchTextBox.sendKeys(status);
+			// wait for the team members to updated according to the keyword
+			waitForSeconds(1);
+		}else {
+			SimpleUtils.fail("Search Textbox failed to load!", false);
+		}
+	}
+
+	@Override
+	public void sendTheInviteViaEmail() throws Exception {
+		if (isSendAndCancelLoadedAndEnabledOnInvite()) {
+			click(sendInviteButton);
+			waitUntilElementIsInVisible(inviteTMWindow);
+		} else {
+			SimpleUtils.fail("Send Invitation Button failed to load!", false);
+		}
+	}
+
+	@Override
+	public void searchTheNewTMAndUpdateInfo(String firstName) throws Exception {
+		if (isElementLoaded(searchTextBox, 5)) {
+			searchTextBox.sendKeys(firstName);
+			waitForSeconds(2);
+			if (areListElementVisible(updateInfoButtons, 5)){
+				if (updateInfoButtons.size() > 0) {
+					// The newly created team member is at the last.
+					click(updateInfoButtons.get(updateInfoButtons.size() - 1));
+				} else {
+					SimpleUtils.fail("Can't find the new team member!", false);
+				}
+			}else {
+				SimpleUtils.fail("There is no Update Info Button loaded!", true);
+			}
+		}else {
+			SimpleUtils.fail("Search textBox failed to load!", false);
+		}
+	}
+
+	@Override
+	public boolean isEmailOrPhoneNumberEmptyAndUpdate(Map<String, String> newTMDetails, String mandatoryField) throws Exception {
+		boolean isEmpty = false;
+		String email = "Email";
+		String phone = "Phone Number";
+		String emailValue = null;
+		String phoneValue = null;
+		if (isElementLoaded(phoneInput, 10) && isElementLoaded(emailInputTM, 10)) {
+			emailValue = emailInputTM.getText();
+			phoneValue = phoneInput.getText();
+			if (email.equals(mandatoryField) && (phoneValue == null || (phoneValue != null && phoneValue.isEmpty()))) {
+				isEmpty = true;
+				SimpleUtils.pass("Email is a mandatory field, and phone number is empty, waiting for updated");
+				phoneInput.sendKeys(newTMDetails.get("PHONE"));
+			}
+			if (phone.equals(mandatoryField) && (emailValue == null || (emailValue != null && emailValue.isEmpty()))) {
+				isEmpty = true;
+				SimpleUtils.pass("Phone Number is a mandatory field, and email is empty, waiting for updated");
+				emailInputTM.sendKeys(newTMDetails.get("EMAIL"));
+			}
+		} else {
+			SimpleUtils.fail("Phone and Email inputs failed to load!", true);
+		}
+		if (isEmpty) {
+			scrollToBottom();
+			click(saveTMButton);
+			waitUntilElementIsInVisible(saveTMButton);
+		}else {
+			SimpleUtils.fail("Update Info button shows when email or phone is empty, but they are not empty!", false);
+		}
+		return isEmpty;
+	}
+
+	@Override
+	public void searchTheTMAndCheckUpdateInfoNotShow(String firstName) throws Exception {
+		if (isElementLoaded(searchTextBox, 5)) {
+			searchTextBox.sendKeys(firstName);
+			waitForSeconds(2);
+			if (areListElementVisible(updateInfoButtons, 10)) {
+				SimpleUtils.fail("Update Info button still shows after updating the info!", false);
+			} else {
+				SimpleUtils.pass("Update Info Button doesn't show after updating the info!");
+			}
+		}else {
+			SimpleUtils.fail("Search textBox failed to load!", false);
+		}
+	}
+
+	@Override
+	public boolean isTerminateButtonLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(terminateButton, 10)) {
+			SimpleUtils.pass("Terminate Button is Loaded!");
+			isLoaded = true;
+		}else {
+			SimpleUtils.fail("Terminate Button failed to load!", false);
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public boolean isCancelTerminateButtonLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(cancelTerminateButton, 10)) {
+			SimpleUtils.pass("Cancel Terminate Button is Loaded!");
+			isLoaded = true;
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void terminateTheTeamMember(boolean isCurrentDay) throws Exception {
+		String removeMsg = "Successfully scheduled removal of Team Member from Roster.";
+		String actualMsg = "";
+		scrollToBottom();
+		click(terminateButton);
+		isTerminateWindowLoaded();
+		if (isElementLoaded(currentDay, 10) && isElementLoaded(applyButton)) {
+			if (isCurrentDay) {
+				click(currentDay);
+			}else {
+				selectAFutureDateFromCalendar();
+			}
+			click(applyButton);
+			if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
+				click(confirmButton);
+				if (isElementLoaded(popupMessage, 15))
+				{
+					actualMsg = popupMessage.getText();
+					if (removeMsg.equals(actualMsg)) {
+						SimpleUtils.pass("Terminate the team member successfully!");
+					}else {
+						SimpleUtils.fail("The pop up message is incorrect!", false);
+					}
+				}else {
+					SimpleUtils.fail("Pop up message doesn't show!", false);
+				}
+			} else {
+				SimpleUtils.fail("Confirm window doesn't show!", false);
+			}
+		}else {
+			SimpleUtils.fail("Current day and apply button doesn't show!", false);
+		}
+	}
+
+	@Override
+	public String getEmployeeIDFromProfilePage() throws Exception {
+		String employeeIDText = null;
+		if (isElementLoaded(employeeID, 10)) {
+			employeeIDText = employeeID.getText();
+		}else {
+			SimpleUtils.fail("EMPLOYEE ID failed to load!", false);
+		}
+		return employeeIDText;
+	}
+
+	@Override
+	public void searchTheTeamMemberByEmployeeIDFromRoster(String employeeID, boolean isTerminated) throws Exception {
+		if (isElementLoaded(searchTextBox, 5)) {
+			searchTextBox.sendKeys(employeeID);
+			waitForSeconds(2);
+			if (isTerminated) {
+				if (areListElementVisible(teamMemberNames, 10)) {
+					SimpleUtils.fail("Team Member still shows after terminating it!", false);
+				} else {
+					SimpleUtils.pass("Team member can't be found from Roster after terminating it!");
+				}
+			}else {
+				if (areListElementVisible(teamMemberNames, 10)) {
+					SimpleUtils.pass("Team Member shows after cancel terminating it!");
+				} else {
+					SimpleUtils.fail("Team member should be found from Roster after cancel terminating it!", false);
+				}
+			}
+		}else {
+			SimpleUtils.fail("Search textBox failed to load!", false);
+		}
+	}
+
+	@Override
+	public void verifyTheFunctionOfCancelTerminate() throws Exception {
+		String cancelMsg = "Successfully cancelled removal of Team Member from Roster.";
+		String actualMsg = "";
+		isCancelTerminateButtonLoaded();
+		click(cancelTerminateButton);
+		if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
+			click(confirmButton);
+			if (isElementLoaded(popupMessage, 15)) {
+				actualMsg = popupMessage.getText();
+				if (cancelMsg.equals(actualMsg)) {
+					SimpleUtils.pass("Cancelled Terminated successfully!");
+				}else {
+					SimpleUtils.fail("Failed to cancel the termination!", false);
+				}
+			}else{
+				SimpleUtils.fail("Pop up message failed to load!", false);
+			}
+		}else{
+			SimpleUtils.fail("Confirm pop up window failed to load!", false);
+		}
+	}
+
+	@Override
+	public boolean isManualOnBoardButtonLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(manualOnBoardButton, 15)) {
+			isLoaded = true;
+			SimpleUtils.pass("Manual Onboard Button Loaded Successfully!");
+		}else{
+			SimpleUtils.fail("Manual Onboard Button failed to load!", false);
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void manualOnBoardTeamMember() throws Exception {
+		String successfulMsg = "Team member successfully On-boarded.";
+		String actualMsg = "";
+		click(manualOnBoardButton);
+		if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
+			click(confirmButton);
+			if (isElementLoaded(popupMessage, 15)) {
+				actualMsg = popupMessage.getText();
+				if (successfulMsg.equals(actualMsg)) {
+					SimpleUtils.pass("Manual OnBoard the team member successfully!");
+				}else {
+					SimpleUtils.fail("Manual OnBoard message is incorrect! " + actualMsg, false);
+				}
+			}else {
+				SimpleUtils.fail("Pop up message failed to load!", false);
+			}
+		}else {
+			SimpleUtils.fail("Manual OnBoard Pop up window doesn't show!", false);
+		}
+	}
+
+	private void selectAFutureDateFromCalendar() throws Exception {
+		if (isElementLoaded(nextMonthArrow, 5)){
+			click(nextMonthArrow);
+			if (areListElementVisible(daysOnCalendar, 15)){
+				/*
+				 * Generate a random to select a day!
+				 */
+				Random random = new Random();
+				WebElement realDay = daysOnCalendar.get(random.nextInt(daysOnCalendar.size()));
+				click(realDay);
+			}else {
+				SimpleUtils.fail("Days on calendar failed to load!", false);
+			}
+		}else {
+			SimpleUtils.fail("Back and Forward arrows are failed to load!", true);
+		}
+	}
+
+	private boolean isTerminateWindowLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(removeWindow)) {
+			SimpleUtils.pass("Terminate window loaded successfully!");
+			isLoaded = true;
+		}else {
+			SimpleUtils.fail("Terminate window failed to load!", false);
+		}
+		return isLoaded;
+	}
+
+	private void isDeactivateWindowLoaded() throws Exception {
+		if (isElementLoaded(deactivateWindow, 10)) {
+			SimpleUtils.pass("Deactivate window loaded successfully!");
+		} else {
+			SimpleUtils.fail("Deactivate window failed to load!", false);
+		}
+	}
+
+	private void selectADateOnCalendarAndApplyDeactivate() throws Exception {
+		if (isElementLoaded(currentDay, 10)) {
+			click(currentDay);
+			// Apply Deactivate button is the same css as applyOnActivate
+			if (isElementEnabled(applyButton, 10)) {
+				click(applyButton);
+				if (isElementLoaded(confirmPopupWindow, 10)) {
+					if (isElementLoaded(confirmButton)) {
+						click(confirmButton);
+					}else {
+						SimpleUtils.fail("Confirm Button failed to load!", false);
+					}
+				}else {
+					SimpleUtils.fail("Confirm pop up window failed to load!", false);
+				}
+			}else {
+				SimpleUtils.fail("Apply button failed to load!", false);
+			}
+		}else {
+			SimpleUtils.fail("Calendar failed to load!", false);
 		}
 	}
 

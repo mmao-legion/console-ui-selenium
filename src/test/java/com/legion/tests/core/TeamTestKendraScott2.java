@@ -11,6 +11,8 @@ import com.legion.pages.*;
 
 import java.util.Map;
 
+import com.legion.pages.core.ConsoleGmailPage;
+import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import org.apache.poi.ss.formula.ptg.ControlPtg;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
@@ -54,6 +56,8 @@ public class TeamTestKendraScott2 extends TestBase{
 	private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
 	private static Map<String, String> searchDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/searchDetails.json");
 	private static Map<String, String> newTMDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember.json");
+	private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
+	private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
 
 	@Override
 	  @BeforeMethod()
@@ -552,6 +556,13 @@ public class TeamTestKendraScott2 extends TestBase{
 	public void verifyTheEmailDomainOnInvite(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		dashboardPage.verifyDashboardPageLoadedProperly();
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.isControlsPageLoaded();
+		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+		controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+		controlsNewUIPage.setOnBoardOptionAsEmailWhileInviting();
 		TeamPage teamPage = pageFactory.createConsoleTeamPage();
 		teamPage.goToTeam();
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
@@ -588,8 +599,8 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.goToTeam();
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-		teamPage.addANewTeamMember(newTMDetails);
-		teamPage.inviteTheNewCreatedTeamMember(newTMDetails.get("FIRST_NAME"));
+		String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
+		teamPage.inviteTheNewCreatedTeamMember(firstName);
 		teamPage.isInviteTeamMemberWindowLoaded();
 		teamPage.verifyThereSectionsAreLoadedOnInviteWindow();
 	}
@@ -618,12 +629,19 @@ public class TeamTestKendraScott2 extends TestBase{
 	public void verifySaveButtonEnableOnNewTMPage(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		dashboardPage.verifyDashboardPageLoadedProperly();
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.isControlsPageLoaded();
+		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+		controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+		String mandatoryField = controlsNewUIPage.getOnBoardOptionFromScheduleCollaboration();
 		TeamPage teamPage = pageFactory.createConsoleTeamPage();
 		teamPage.goToTeam();
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-		teamPage.checkAddATMMandatoryFieldsAreLoaded();
-		teamPage.fillInMandatoryFieldsOnNewTMPage(newTMDetails);
+		teamPage.checkAddATMMandatoryFieldsAreLoaded(mandatoryField);
+		teamPage.fillInMandatoryFieldsOnNewTMPage(newTMDetails, mandatoryField);
 		teamPage.isSaveButtonOnNewTMPageEnabled();
 	}
 
@@ -681,11 +699,18 @@ public class TeamTestKendraScott2 extends TestBase{
 	public void verifyMandatoryFieldsOnAddTM(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		dashboardPage.verifyDashboardPageLoadedProperly();
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.isControlsPageLoaded();
+		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+		controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+		String mandatoryField = controlsNewUIPage.getOnBoardOptionFromScheduleCollaboration();
 		TeamPage teamPage = pageFactory.createConsoleTeamPage();
 		teamPage.goToTeam();
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-		teamPage.checkAddATMMandatoryFieldsAreLoaded();
+		teamPage.checkAddATMMandatoryFieldsAreLoaded(mandatoryField);
 		teamPage.verifyTheMandatoryFieldsCannotEmpty();
 	}
 
@@ -701,9 +726,9 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.goToTeam();
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-		teamPage.addANewTeamMember(newTMDetails);
+		String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
 		teamPage.openToDoPopupWindow();
-		teamPage.verifyTMIsVisibleAndInvitedOnTODO(newTMDetails.get("FIRST_NAME"));
+		teamPage.verifyTMIsVisibleAndInvitedOnTODO(firstName);
 	}
 
 	@Automated(automated ="Automated")
@@ -718,5 +743,250 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.goToTeam();
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 		teamPage.selectAInvitedOrNotInvitedTeamMemberToView();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828058 While activating team Member On boarded date is updating to new one and Deactivate terminate button is enabled")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyOnBoardedDateAndButtonsWhileActivating(String browser, String username, String password, String location) throws Exception {
+		String onBoardedDate = null;
+		String active = "Active";
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		if (teamPage.selectATeamMemberToActivate() != 0) {
+			if (!teamPage.isProfilePageSelected()) {
+				teamPage.navigateToProfileTab();
+			}
+		}else {
+			teamPage.searchForTeamMemberByStatus(active);
+			teamPage.selectATeamMemberToViewProfile();
+			teamPage.isProfilePageLoaded();
+			if (!teamPage.isActivateButtonLoaded()) {
+				teamPage.cancelActivateOrDeactivateTeamMember();
+			}
+		}
+		onBoardedDate = teamPage.getOnBoardedDate();
+		teamPage.clickOnActivateButton();
+		teamPage.isActivateWindowLoaded();
+		teamPage.selectADateOnCalendarAndActivate();
+		teamPage.verifyDeactivateAndTerminateEnabled();
+		teamPage.isOnBoardedDateUpdated(onBoardedDate);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828060 Status will change into Activate status according to date")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTeamMemberStatusAfterActivating(String browser, String username, String password, String location) throws Exception {
+		String active = "Active";
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchForTeamMemberByStatus(active);
+		teamPage.selectATeamMemberToViewProfile();
+		teamPage.isProfilePageLoaded();
+		if (!teamPage.isActivateButtonLoaded()) {
+			teamPage.cancelActivateOrDeactivateTeamMember();
+		}
+		teamPage.clickOnActivateButton();
+		teamPage.isActivateWindowLoaded();
+		teamPage.selectADateOnCalendarAndActivate();
+		teamPage.verifyTheStatusOfTeamMember();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828073 After Click on Invite Re-invite button invitation code should be sent to Email id")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyInvitationCodeIsSent(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.isControlsPageLoaded();
+		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+		controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+		controlsNewUIPage.setOnBoardOptionAsEmailWhileInviting();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+		String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
+		teamPage.inviteTheNewCreatedTeamMember(firstName);
+		teamPage.isInviteTeamMemberWindowLoaded();
+		teamPage.sendTheInviteViaEmail();
+		GmailPage gmailPage = pageFactory.createConsoleGmailPage();
+		gmailPage.loginToGmailWithCredential();
+		gmailPage.waitUntilInvitationEmailLoaded();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828074 Invitation code should be available on Email id")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyInvitationCodeIsAvailableOnEmailID(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.isControlsPageLoaded();
+		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+		controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+		controlsNewUIPage.setOnBoardOptionAsEmailWhileInviting();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+		String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
+		teamPage.inviteTheNewCreatedTeamMember(firstName);
+		teamPage.isInviteTeamMemberWindowLoaded();
+		teamPage.sendTheInviteViaEmail();
+		GmailPage gmailPage = pageFactory.createConsoleGmailPage();
+		gmailPage.loginToGmailWithCredential();
+		gmailPage.waitUntilInvitationEmailLoaded();
+		gmailPage.verifyInvitationCodeIsAvailableOnEmailID();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828066 It is present when any information is pending for TM Contact number email id")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyUpdateInfoIsPresentWhenPendingForContactOrEmail(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.isControlsPageLoaded();
+		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+		controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+		String mandatoryField = controlsNewUIPage.getOnBoardOptionFromScheduleCollaboration();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+		teamPage.checkAddATMMandatoryFieldsAreLoaded(mandatoryField);
+		String firstName = teamPage.fillInMandatoryFieldsOnNewTMPage(newTMDetails, mandatoryField);
+		teamPage.isSaveButtonOnNewTMPageEnabled();
+		teamPage.saveTheNewTeamMember();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchTheNewTMAndUpdateInfo(firstName);
+		teamPage.isProfilePageLoaded();
+		teamPage.isEmailOrPhoneNumberEmptyAndUpdate(newTMDetails, mandatoryField);
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchTheTMAndCheckUpdateInfoNotShow(firstName);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828063 While Clicking on Terminate button particular TM is able to removed from Team roster on the set date")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheFunctionOfTerminateButton(String browser, String username, String password, String location) throws Exception {
+		String status = "New";
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchForTeamMemberByStatus(status);
+		teamPage.selectATeamMemberToViewProfile();
+		teamPage.isProfilePageLoaded();
+		teamPage.isTerminateButtonLoaded();
+		teamPage.terminateTheTeamMember(true);
+		/*
+		 * Since employeeID is distinct, so if searching from roster, it shouldn't find the team member if it has been terminated.
+		 */
+		String employeeID = teamPage.getEmployeeIDFromProfilePage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchTheTeamMemberByEmployeeIDFromRoster(employeeID, true);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828065 Cancel Termination button is working TM will not removed from Roster after click on this button")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheFunctionOfCancelTerminateButton(String browser, String username, String password, String location) throws Exception {
+		String status = "New";
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchForTeamMemberByStatus(status);
+		teamPage.selectATeamMemberToViewProfile();
+		teamPage.isProfilePageLoaded();
+		boolean isCancel = teamPage.isCancelTerminateButtonLoaded();
+		if (!isCancel) {
+			teamPage.terminateTheTeamMember(false);
+		}
+		teamPage.verifyTheFunctionOfCancelTerminate();
+		String employeeID = teamPage.getEmployeeIDFromProfilePage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchTheTeamMemberByEmployeeIDFromRoster(employeeID, false);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828059 Shifts will go to Auto Scheduling  after Activating any TM TM will start being auto scheduled the Week of x date")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyShiftCanAssignToTMAfterActivating(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		String currentDay = dashboardPage.getCurrentDateFromDashboard();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+		teamPage.isProfilePageLoaded();
+		String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(firstName);
+		teamPage.isProfilePageLoaded();
+		teamPage.isManualOnBoardButtonLoaded();
+        teamPage.manualOnBoardTeamMember();
+        teamPage.isActivateButtonLoaded();
+        teamPage.clickOnActivateButton();
+        teamPage.isActivateWindowLoaded();
+        teamPage.selectADateOnCalendarAndActivate();
+        teamPage.verifyTheStatusOfTeamMember();
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.goToSchedulePage();
+        schedulePage.isSchedulePage();
+        schedulePage.goToSchedule();
+        schedulePage.isSchedule();
+        if (!schedulePage.isWeekGenerated()) {
+        	// TODO: wait for Nishant generating the code for "Generate Schedule"
+		}
+        schedulePage.clickOnEditButton();
+        schedulePage.clickOnCreateNewShiftWeekView();
+        schedulePage.customizeNewShiftPage();
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		schedulePage.selectDaysFromCurrentDay(currentDay);
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.searchTeamMemberByName(firstName);
+		schedulePage.clickOnOfferOrAssignBtn();
+		schedulePage.verifyNewShiftsAreShownOnSchedule(firstName);
 	}
 }
