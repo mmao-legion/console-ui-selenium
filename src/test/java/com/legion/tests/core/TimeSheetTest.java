@@ -754,7 +754,7 @@ public class TimeSheetTest extends TestBase{
 	
 	@UseAsTestRailId(testRailId = 4)
 	@Automated(automated =  "Automated")
-	@Owner(owner = "Naval")
+	@Owner(owner = "Nishant")
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "TestRail API: Add Test Cases.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
