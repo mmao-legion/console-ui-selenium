@@ -6,7 +6,6 @@ import com.legion.test.testrail.APIException;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.tests.testframework.ScreenshotManager;
-import javafx.beans.binding.Bindings;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
