@@ -1929,12 +1929,12 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public HashMap<String, List<String>> getFourUpComingShifts(boolean isStartTomorrow) throws Exception {
+    public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow) throws Exception {
         return null;
     }
 
     @Override
-    public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, List<String>> dashboardShifts, HashMap<String, List<String>> scheduleShifts) throws Exception {
+    public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception {
 
     }
 
@@ -1961,5 +1961,15 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @Override
     public void verifyNewShiftsAreShownOnSchedule(String name) throws Exception {
 
+    }
+
+    @Override
+    public void verifyShiftsChangeToOpenAfterTerminating(List<Integer> indexes, String name, String currentTime) throws Exception {
+
+    }
+
+    @Override
+    public List<Integer> getAddedShiftIndexes(String name) throws Exception {
+        return null;
     }
 }

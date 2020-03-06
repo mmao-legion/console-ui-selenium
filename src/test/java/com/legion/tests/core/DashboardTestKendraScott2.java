@@ -195,8 +195,8 @@ public class DashboardTestKendraScott2 extends TestBase{
 	@TestName(description = "T1828036 starting soon section")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyStartingSoonSection(String browser, String username, String password, String location) throws Exception {
-		HashMap<String, List<String>> upComingShifts = new HashMap<>();
-		HashMap<String, List<String>> fourShifts = new HashMap<>();
+		HashMap<String, String> upComingShifts = new HashMap<>();
+		HashMap<String, String> fourShifts = new HashMap<>();
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SchedulePage schedulePage = null;
 		dashboardPage.verifyDashboardPageLoadedProperly();

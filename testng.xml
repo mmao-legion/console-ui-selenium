@@ -94,6 +94,7 @@
                    <include name="verifyTheFunctionOfTerminateButton" />
                    <include name="verifyTheFunctionOfCancelTerminateButton" />
                    <include name="verifyShiftCanAssignToTMAfterActivating" />
+                   <include name="verifyShiftIsOpenAfterTerminating" />
                </methods>
            </class>
        </classes>

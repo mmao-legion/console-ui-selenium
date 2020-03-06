@@ -11,6 +11,7 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 
 import cucumber.api.java.hu.Ha;
+import cucumber.api.java.sl.In;
 import org.apache.http.impl.execchain.TunnelRefusedException;
 import org.apache.xpath.axes.HasPositionalPredChecker;
 import org.openqa.selenium.By;
@@ -293,7 +294,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(xpath = "//div[contains(@class,'sch-day-view-grid-header fill')]/following-sibling::div//div[@data-tootik='TMs in Schedule']/parent::div")
     private List<WebElement> gridHeaderTeamCount;
 
-    @FindBy(xpath = "//span[contains(text(),'Save')]")
+    @FindBy(css = "lg-button[data-tootik=\"Save changes\"]")
     private WebElement scheduleSaveBtn;
 
     @FindBy(xpath = "//div[contains(@ng-if,'PostSave')]")
@@ -4211,8 +4212,77 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement selectButton;
     @FindBy(css = "img[src*=\"added-shift\"]")
     private List<WebElement> addedShiftIcons;
-    @FindBy (css = "[label=\"Create New Shift\"]")
+    @FindBy(css = "[label=\"Create New Shift\"]")
     private WebElement createNewShiftWeekView;
+    @FindBy(className = "week-schedule-shift-wrapper")
+    private List<WebElement> shiftsWeekView;
+
+    @Override
+    public void verifyShiftsChangeToOpenAfterTerminating(List<Integer> indexes, String name, String currentTime) throws Exception {
+        String open = "Open";
+        String unAssigned = "Unassigned";
+        String shiftTime = null;
+        if (indexes.size() > 0 && areListElementVisible(shiftsWeekView, 5)) {
+            for (int index : indexes) {
+                WebElement workerName = shiftsWeekView.get(index).findElement(By.className("week-schedule-worker-name"));
+                if (workerName != null) {
+                    if (workerName.getText().contains(name)) {
+                        shiftTime = shiftsWeekView.get(index).findElement(By.className("week-schedule-shift-time")).getText();
+                        boolean isConvertToOpen = compareShiftTimeWithCurrentTime(shiftTime, currentTime);
+                        SimpleUtils.report("IsConvertToOpen: " + isConvertToOpen + " index is: " + index);
+                        if (!isConvertToOpen) {
+                            SimpleUtils.pass("Shift isn't change to open or unassigned since the current is earlier than the shift end time!");
+                        }else {
+                            SimpleUtils.fail("Shift doesn't change to open or unassigned, worker name is: " + workerName.getText(), true);
+                        }
+                    }else if (workerName.getText().equalsIgnoreCase(open) || workerName.getText().equalsIgnoreCase(unAssigned)) {
+                        SimpleUtils.report("Index is: " + index);
+                        SimpleUtils.pass("Shift is changed to open or unassigned!");
+                    }else {
+                        SimpleUtils.fail("Shift doesn't change to open or unassigned, worker name is: " + workerName.getText(), true);
+                    }
+                }else {
+                    SimpleUtils.fail("Failed to find the worker name element!", true);
+                }
+            }
+        }else {
+            SimpleUtils.fail("Shifts on week view failed to load!", false);
+        }
+    }
+
+    public boolean compareShiftTimeWithCurrentTime(String shiftTime, String currentTime) {
+        boolean isConvertToOpen = false;
+        int shiftStartMinutes = 0;
+        int currentMinutes = 0;
+        String[] startAndEndTime = shiftTime.split("-");
+        if (startAndEndTime.length == 2) {
+            String startTime = startAndEndTime[0].trim();
+            shiftStartMinutes = getMinutesFromTime(startTime);
+            currentMinutes = getMinutesFromTime(currentTime);
+            SimpleUtils.report(startTime);
+            SimpleUtils.report("Convert start time to Minute: " + shiftStartMinutes);
+            SimpleUtils.report(currentTime);
+            SimpleUtils.report("Convert current time to Minute: " + currentMinutes);
+        }
+        if (currentMinutes < shiftStartMinutes) {
+            isConvertToOpen = true;
+        }
+        return false;
+    }
+
+    public int getMinutesFromTime(String time) {
+        int minutes = 0;
+        if (time.contains(":")) {
+            String minute = time.split(":")[1].substring(0, time.split(":")[1].length()-2).trim();
+            minutes = (Integer.parseInt(time.split(":")[0].trim())) * 60 + Integer.parseInt(minute);
+        }else {
+            minutes = Integer.parseInt(time.substring(0, time.length()-2)) * 60;
+        }
+        if (time.toLowerCase().endsWith("pm")) {
+            minutes += 12 * 60;
+        }
+        return minutes;
+    }
 
     @Override
     public void isScheduleForCurrentDayInDayView(String dateFromDashboard) throws Exception {
@@ -4262,8 +4332,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public HashMap<String, List<String>> getFourUpComingShifts(boolean isStartTomorrow) throws Exception {
-        HashMap<String, List<String>> fourShifts = new HashMap<>();
+    public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow) throws Exception {
+        HashMap<String, String> fourShifts = new HashMap<>();
         String activeDay = null;
         if (isStartTomorrow) {
             activeDay = getActiveAndNextDay();
@@ -4291,7 +4361,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             currentDay = items[0].substring(0, 3) + items[1].substring(0, 3) + (items[2].length() == 1 ? "0"+items[2] : items[2]);
         }
         if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
-            // De-select the first Day since it is selected by default
+            // TODO: De-select the first Day since it is selected by default, it is an issue.
             if (weekDays.get(0).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
                 click(weekDays.get(0));
             }
@@ -4334,30 +4404,53 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyNewShiftsAreShownOnSchedule(String name) throws Exception {
+        boolean isFound = false;
         if (areListElementVisible(addedShiftIcons, 5)) {
             for (WebElement addedShiftIcon : addedShiftIcons) {
                 WebElement parent = addedShiftIcon.findElement(By.xpath("./../../../.."));
                 if (parent != null) {
                     WebElement teamMemberName = parent.findElement(By.className("week-schedule-worker-name"));
                     if (teamMemberName != null && teamMemberName.getText().contains(name)) {
+                        isFound = true;
                         SimpleUtils.pass("Added a New shift for: " + name + " is successful!");
-                    }else {
-                        SimpleUtils.fail("Cannot find the new shift for team member: " + name, false);
                     }
                 }else {
-                    SimpleUtils.fail("Failed to find the parrent element for adding icon!", false);
+                    SimpleUtils.fail("Failed to find the parent element for adding icon!", false);
                 }
             }
         }else {
             SimpleUtils.fail("Failed to find the new added shift icons!", false);
         }
+        if (!isFound) {
+            SimpleUtils.fail("Cannot find the new shift for team member: " + name, true);
+        }
     }
 
-    public HashMap<String, List<String>> getAvailableShiftsForDayView(HashMap<String, List<String>> fourShifts) throws Exception {
+    @Override
+    public List<Integer> getAddedShiftIndexes(String name) throws Exception {
+        // Wait for the shifts to be loaded
+        waitForSeconds(3);
+        List<Integer> indexes = new ArrayList<>();
+        if (areListElementVisible(shiftsWeekView, 5)) {
+            for (int i = 0; i < shiftsWeekView.size(); i++) {
+                WebElement workerName = shiftsWeekView.get(i).findElement(By.className("week-schedule-worker-name"));
+                if (workerName != null) {
+                    if (workerName.getText().contains(name)) {
+                        indexes.add(i);
+                        SimpleUtils.pass("Get the index: " + i + " successfully!");
+                    }
+                }
+            }
+        }
+        if (indexes.size() == 0) {
+            SimpleUtils.fail("Failed to get the index of the newly added shifts!", true);
+        }
+        return indexes;
+    }
+
+    public HashMap<String, String> getAvailableShiftsForDayView(HashMap<String, String> fourShifts) throws Exception {
         String name = null;
         String role = null;
-        String timePeriod = null;
-        List<String> roleAndTime = null;
         if (areListElementVisible(dayViewAvailableShifts, 15)) {
             for (WebElement dayViewAvailableShift : dayViewAvailableShifts) {
                 name = dayViewAvailableShift.findElement(By.className("sch-day-view-shift-worker-name")).getText();
@@ -4366,12 +4459,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
                 if (!name.contains("Open") && !name.contains("Unassigned")) {
                     role = dayViewAvailableShift.findElement(By.className("sch-day-view-shift-worker-title-role")).getText();
-                    timePeriod = dayViewAvailableShift.findElement(By.className("sch-day-view-shift-time")).getText();
-                    roleAndTime = new ArrayList<>();
-                    roleAndTime.add(role);
-                    roleAndTime.add(timePeriod);
                     if (fourShifts.size() < 4) {
-                        fourShifts.put(name, roleAndTime);
+                        fourShifts.put(name, role);
                     }else {
                         break;
                     }
@@ -4384,7 +4473,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, List<String>> dashboardShifts, HashMap<String, List<String>> scheduleShifts) throws Exception {
+    public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception {
         boolean isConsistent = SimpleUtils.compareHashMapByEntrySet(dashboardShifts, scheduleShifts);
         if (isConsistent) {
             SimpleUtils.pass("Up coming shifts from dashboard is consistent with the shifts in schedule!");

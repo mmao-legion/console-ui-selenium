@@ -1334,8 +1334,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		if (mandatoryField.equals(phoneNumber)) {
 			phoneInput.sendKeys(newTMDetails.get("PHONE"));
 		}
-		dateHiredInput.click();
-		selectDate(0);
+		click(dateHiredInput);
+		if (areListElementVisible(realDays, 5) && isElementLoaded(todayHighlighted, 5)) {
+			click(todayHighlighted);
+		}
 		employeeIDInput.sendKeys( "E" + new Random().nextInt(200) + new Random().nextInt(200) + new Random().nextInt(200));
 		selectByVisibleText(jobTitleSelect, newTMDetails.get("JOB_TITLE"));
 		selectByVisibleText(engagementStatusSelect, newTMDetails.get("ENGAGEMENT_STATUS"));
@@ -1385,8 +1387,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		lastNameInput.sendKeys(newTMDetails.get("LAST_NAME"));
 		emailInputTM.sendKeys(newTMDetails.get("EMAIL"));
 		phoneInput.sendKeys(newTMDetails.get("PHONE"));
-		dateHiredInput.click();
-		selectDate(0);
+		click(dateHiredInput);
+		if (areListElementVisible(realDays, 5) && isElementLoaded(todayHighlighted, 5)) {
+			click(todayHighlighted);
+		}
 		employeeIDInput.sendKeys( "E" + new Random().nextInt(200) + new Random().nextInt(200) + new Random().nextInt(200));
 		selectByVisibleText(jobTitleSelect, newTMDetails.get("JOB_TITLE"));
 		selectByVisibleText(engagementStatusSelect, newTMDetails.get("ENGAGEMENT_STATUS"));

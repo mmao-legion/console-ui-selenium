@@ -989,4 +989,75 @@ public class TeamTestKendraScott2 extends TestBase{
 		schedulePage.clickOnOfferOrAssignBtn();
 		schedulePage.verifyNewShiftsAreShownOnSchedule(firstName);
 	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828064 TMs assigned shift is converting to open shift")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyShiftIsOpenAfterTerminating(String browser, String username, String password, String location) throws Exception {
+		String timeZone = null;
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		String currentDay = dashboardPage.getCurrentDateFromDashboard();
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		if (controlsNewUIPage.isControlsPageLoaded()) {
+			controlsNewUIPage.clickOnControlsLocationProfileSection();
+			if (controlsNewUIPage.isControlsLocationProfileLoaded()) {
+				timeZone = controlsNewUIPage.getTimeZoneFromLocationDetailsPage();
+			}
+		}
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+		teamPage.isProfilePageLoaded();
+		String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(firstName);
+		teamPage.isProfilePageLoaded();
+		teamPage.isManualOnBoardButtonLoaded();
+		teamPage.manualOnBoardTeamMember();
+		teamPage.isActivateButtonLoaded();
+		teamPage.clickOnActivateButton();
+		teamPage.isActivateWindowLoaded();
+		teamPage.selectADateOnCalendarAndActivate();
+		teamPage.verifyTheStatusOfTeamMember();
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.goToSchedulePage();
+		schedulePage.isSchedulePage();
+		schedulePage.goToSchedule();
+		schedulePage.isSchedule();
+		if (!schedulePage.isWeekGenerated()) {
+			// TODO: wait for Nishant generating the code for "Generate Schedule"
+		}
+		schedulePage.clickOnEditButton();
+		schedulePage.clickOnCreateNewShiftWeekView();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		schedulePage.selectDaysFromCurrentDay(currentDay);
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.searchTeamMemberByName(firstName);
+		schedulePage.clickOnOfferOrAssignBtn();
+		schedulePage.verifyNewShiftsAreShownOnSchedule(firstName);
+		schedulePage.clickSaveBtn();
+		List<Integer> indexes = schedulePage.getAddedShiftIndexes(firstName);
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(firstName);
+		teamPage.isProfilePageLoaded();
+		teamPage.isTerminateButtonLoaded();
+		teamPage.terminateTheTeamMember(true);
+		String currentTime = SimpleUtils.getCurrentTimeWithTimeZone(timeZone);
+		schedulePage.goToSchedulePage();
+		schedulePage.isSchedulePage();
+		schedulePage.goToSchedule();
+		schedulePage.isSchedule();
+		schedulePage.verifyShiftsChangeToOpenAfterTerminating(indexes, firstName, currentTime);
+	}
 }

@@ -437,30 +437,15 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	@Override
-	public HashMap<String, List<String>> getUpComingShifts() throws Exception {
-		HashMap<String, List<String>> shifts = new HashMap<>();
+	public HashMap<String, String> getUpComingShifts() throws Exception {
+		HashMap<String, String> shifts = new HashMap<>();
 		String name = null;
 		String role = null;
-		String timePeriod = null;
-		List<String> roleAndTime = null;
 		if (areListElementVisible(upComingShifts, 15)) {
 			for (WebElement upComingShift : upComingShifts) {
-				timePeriod = upComingShift.getText();
-				if (timePeriod.contains("\n")) {
-					String[] items = timePeriod.split("\n");
-					if (items.length == 2) {
-						timePeriod = items[0].replaceAll("\\s*", "");
-					}
-					if (items.length == 3) {
-						timePeriod = items[1].replaceAll("\\s*", "");
-					}
-				}
 				name = upComingShift.findElement(By.cssSelector("span.name-muted")).getText();
 				role = upComingShift.findElement(By.cssSelector("span.role-name")).getText();
-				roleAndTime = new ArrayList<>();
-				roleAndTime.add(role);
-				roleAndTime.add(timePeriod);
-				shifts.put(name, roleAndTime);
+				shifts.put(name, role);
 			}
 		}else {
 			SimpleUtils.fail("Up Coming shifts failed to load!", true);

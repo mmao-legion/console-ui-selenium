@@ -26,6 +26,6 @@ public interface DashboardPage {
     public boolean isStartingSoonLoaded() throws Exception;
     public void verifyStartingSoonNScheduledHourWhenGuidanceOrDraft(boolean isStartingSoonLoaded, String scheduledHour)
         throws Exception;
-    public HashMap<String, List<String>> getUpComingShifts() throws Exception;
+    public HashMap<String, String> getUpComingShifts() throws Exception;
     public boolean isStartingTomorrow() throws Exception;
 }
