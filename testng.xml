@@ -19,6 +19,16 @@
    </test>
 
     <test name="Dashboard Test">
+       <classes>
+           <class name="com.legion.tests.core.DashboardTest">
+               <methods>
+                   <include name="verifyStartingSoonSection"/>
+               </methods>
+           </class>
+       </classes>
+   </test>
+
+    <test name="Dashboard Test KendraScott2">
         <classes>
             <class name="com.legion.tests.core.DashboardTestKendraScott2">
                 <methods>
@@ -31,7 +41,6 @@
                     <include name="verifyTheDataSourceForBudgetScheduledOther" />
                     <include name="verifyTheProjectedDemandGraphIsShown" />
                     <include name="verifyStartingSoonNScheduledHourNotShowWhenGuidanceOrDraft" />
-                    <include name="verifyStartingSoonSection" />
                 </methods>
             </class>
         </classes>
@@ -54,7 +63,7 @@
         </test>
 
 
-    <test name="TeamTab Test">
+    <test name="TeamTab Test KendraScott2">
        <classes>
            <class name="com.legion.tests.core.TeamTestKendraScott2">
                <methods>
@@ -93,12 +102,20 @@
                    <include name="verifyUpdateInfoIsPresentWhenPendingForContactOrEmail" />
                    <include name="verifyTheFunctionOfTerminateButton" />
                    <include name="verifyTheFunctionOfCancelTerminateButton" />
-                   <include name="verifyShiftCanAssignToTMAfterActivating" />
-                   <include name="verifyShiftIsOpenAfterTerminating" />
                </methods>
            </class>
        </classes>
    </test>
+    <test name="TeamTab Test">
+        <classes>
+            <class name="com.legion.tests.core.TeamTest">
+                <methods>
+                    <include name="verifyShiftCanAssignToTMAfterActivating"/>
+                    <include name="verifyShiftIsOpenAfterTerminating" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 
 </suite> <!-- Suite -->
 

@@ -188,28 +188,4 @@ public class DashboardTestKendraScott2 extends TestBase{
 		HashMap<String, String> hours = dashboardPage.getHoursFromDashboardPage();
 		dashboardPage.verifyStartingSoonNScheduledHourWhenGuidanceOrDraft(startingSoonLoaded, hours.get("Scheduled"));
 	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828036 starting soon section")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyStartingSoonSection(String browser, String username, String password, String location) throws Exception {
-		HashMap<String, String> upComingShifts = new HashMap<>();
-		HashMap<String, String> fourShifts = new HashMap<>();
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SchedulePage schedulePage = null;
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		boolean startingSoonLoaded = dashboardPage.isStartingSoonLoaded();
-		boolean isStartingTomorrow = dashboardPage.isStartingTomorrow();
-		if (startingSoonLoaded) {
-			upComingShifts = dashboardPage.getUpComingShifts();
-			schedulePage = dashboardPage.goToTodayForNewUI();
-			schedulePage.isSchedule();
-			fourShifts = schedulePage.getFourUpComingShifts(isStartingTomorrow);
-			schedulePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
-		}else {
-			// TODO: wait for Nishant generating the code for "Generate Schedule"
-		}
-	}
 }

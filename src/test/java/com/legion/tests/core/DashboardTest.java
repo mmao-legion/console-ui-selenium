@@ -4,13 +4,11 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import java.util.Map;
+
+import com.legion.pages.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.legion.pages.AnalyticsPage;
-import com.legion.pages.ControlsPage;
-import com.legion.pages.DashboardPage;
-import com.legion.pages.LoginPage;
 import com.legion.pages.core.ConsoleControlsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -58,4 +56,38 @@ public class DashboardTest extends TestBase{
     	SimpleUtils.pass("Navigate to Dashboard Page Successfully!");
     	SimpleUtils.pass("assert Today's Forecast and Projected Demand Graph should not be present for Team lead and Team member");	
     }
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "T1828036 starting soon section")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyStartingSoonSection(String browser, String username, String password, String location) throws Exception {
+		HashMap<String, String> upComingShifts = new HashMap<>();
+		HashMap<String, String> fourShifts = new HashMap<>();
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SchedulePage schedulePage = null;
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		boolean startingSoonLoaded = dashboardPage.isStartingSoonLoaded();
+		boolean isStartingTomorrow = dashboardPage.isStartingTomorrow();
+		if (startingSoonLoaded) {
+			upComingShifts = dashboardPage.getUpComingShifts();
+			schedulePage = dashboardPage.goToTodayForNewUI();
+			schedulePage.isSchedule();
+			fourShifts = schedulePage.getFourUpComingShifts(isStartingTomorrow);
+		}else {
+			schedulePage = dashboardPage.goToTodayForNewUI();
+			schedulePage.isSchedule();
+			if (!schedulePage.isPublishButtonLoaded()) {
+				schedulePage.generateOrUpdateAndGenerateSchedule();
+			}
+			schedulePage.publishActiveSchedule();
+			schedulePage.clickOnDayView();
+			fourShifts = schedulePage.getFourUpComingShifts(isStartingTomorrow);
+			dashboardPage.navigateToDashboard();
+			dashboardPage.verifyDashboardPageLoadedProperly();
+			upComingShifts = dashboardPage.getUpComingShifts();
+		}
+		schedulePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
+	}
 }

@@ -133,8 +133,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "lg-button[label=\"Analyze\"]")
     private WebElement analyze;
 
-    @FindBy(css = "lg-button[data-tootik=\"Edit Schedule\"]")
+    @FindBy(css = "lg-button[label=\"Edit\"]")
     private WebElement edit;
+
+    @FindBy(css = "lg-button[data-tootik=\"Edit Schedule\"]")
+    private WebElement newEdit;
 
     @FindBy(xpath = "//span[contains(text(),'Projected Sales')]")
     private WebElement goToProjectedSalesTab;
@@ -294,8 +297,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(xpath = "//div[contains(@class,'sch-day-view-grid-header fill')]/following-sibling::div//div[@data-tootik='TMs in Schedule']/parent::div")
     private List<WebElement> gridHeaderTeamCount;
 
-    @FindBy(css = "lg-button[data-tootik=\"Save changes\"]")
+    @FindBy(xpath = "//span[contains(text(),'Save')]")
     private WebElement scheduleSaveBtn;
+
+    @FindBy(css = "lg-button[data-tootik=\"Save changes\"]")
+    private WebElement newScheduleSaveButton;
 
     @FindBy(xpath = "//div[contains(@ng-if,'PostSave')]")
     private WebElement popUpPostSave;
@@ -750,15 +756,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         click(goToScheduleTab);
         SimpleUtils.pass("Schedule Page Loading..!");
 
-        if (isElementLoaded(analyze)) {
-            SimpleUtils.pass("Analyze is Displayed on Schdule page");
-        } else {
-            SimpleUtils.fail("Analyze not Displayed on Schedule page", true);
-        }
-        if (isElementLoaded(edit)) {
-            SimpleUtils.pass("Edit is Displayed on Schedule page");
-        } else {
-            SimpleUtils.fail("Edit not Displayed on Schedule page", true);
+        if (isWeekGenerated()) {
+            if (isElementLoaded(analyze)) {
+                SimpleUtils.pass("Analyze is Displayed on Schdule page");
+            } else {
+                SimpleUtils.fail("Analyze not Displayed on Schedule page", true);
+            }
+            if (isElementLoaded(edit)) {
+                SimpleUtils.pass("Edit is Displayed on Schedule page");
+            } else {
+                SimpleUtils.fail("Edit not Displayed on Schedule page", true);
+            }
         }
     }
 
@@ -1296,6 +1304,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
+    // Added by Nora
+    @FindBy (css = "span.wm-close-link")
+    private WebElement closeButton;
+
 	@Override
 	public void clickOnSchedulePublishButton() throws Exception {
 		// TODO Auto-generated method stub
@@ -1314,6 +1326,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //			        click(closeLegionPopUp);
 //                }
 				SimpleUtils.pass("Schedule published successfully for week: '"+ getActiveWeekText() +"'");
+				// It will pop up a window: Welcome to Legion!
+				if (isElementLoaded(closeButton, 5)) {
+				    click(closeButton);
+                }
 				if(isElementEnabled(successfulPublishOkBtn))
 				{
 					click(successfulPublishOkBtn);
@@ -1987,8 +2003,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (isElementLoaded(publishConfirmBtn)) {
                     click(publishConfirmBtn);
                     SimpleUtils.pass("Schedule published successfully for week: '" + getActiveWeekText() + "'");
+                    // It will pop up a window: Welcome to Legion!
+                    if (isElementLoaded(closeButton, 5)) {
+                        click(closeButton);
+                    }
                     if (isElementLoaded(successfulPublishOkBtn)) {
                         click(successfulPublishOkBtn);
+                    }
+                    if (isElementLoaded(publishSheduleButton, 5)) {
+                        // Wait for the Publish button to disappear.
+                        waitForSeconds(5);
                     }
                 }
             }
@@ -4361,18 +4385,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             currentDay = items[0].substring(0, 3) + items[1].substring(0, 3) + (items[2].length() == 1 ? "0"+items[2] : items[2]);
         }
         if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
-            // TODO: De-select the first Day since it is selected by default, it is an issue.
-            if (weekDays.get(0).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
-                click(weekDays.get(0));
-            }
             for (int i = 0; i < weekDays.size(); i++) {
                 String weekDay = weekDays.get(i).getText().replaceAll("\\s*", "");
                 if (weekDay.equalsIgnoreCase(currentDay)) {
                     index = i;
                 }
                 if (i >= index) {
-                    click(weekDays.get(i));
-                    SimpleUtils.pass("Select the day: " + weekDays.get(i).getText() + " successfully!");
+                    if (!weekDays.get(i).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
+                        click(weekDays.get(i));
+                        SimpleUtils.pass("Select the day: " + weekDays.get(i).getText() + " successfully!");
+                    }
                 }
             }
         }else{
