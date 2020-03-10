@@ -66,19 +66,23 @@ public class BasePage {
 
     }
 
-    public void scrollToBottom(WebElement element, boolean... shouldWait) {
+    public void scrollToBottom() {
+        ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(0,document.body.scrollHeight)");
+    }
+
+    public void scrollToElement(WebElement element) {
         ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(0,document.body.scrollHeight)");
     }
 
     //get current date by specific zoon
-    public Date getCurrentTime(){
-        TimeZone zone = TimeZone.getTimeZone("GMT+5:00");
+    public Date getCurrentTimeby(String timeZone){
+        TimeZone zone = TimeZone.getTimeZone(timeZone);
         Calendar cal = Calendar.getInstance(zone);
         return cal.getTime();
         }
 
     //click method for mobile app
-    
+
     public void clickOnMobileElement(WebElement element, boolean... shouldWait) {
     	try {
             waitUntilElementIsVisibleOnMobile(element);
@@ -87,14 +91,14 @@ public class BasePage {
         	ExtentTestManager.getTest().log(Status.WARNING,te);
         }
     }
-    
+
 
     public int calcListLength(List<WebElement> listLength){
     	return listLength.size();
     }
-    
+
     public void waitForElement(String element) {
-  
+
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(
                  MyThreadLocal.getDriver()).withTimeout(ofSeconds(60))
                  .pollingEvery(5, TimeUnit.SECONDS)
@@ -106,14 +110,14 @@ public class BasePage {
                          .cssSelector(element));
              }
          });
-    	
+
     }
 
     public static String getText(WebElement element) {
     	waitUntilElementIsVisible(element);
         return element.getText();
     }
-    
+
     public void checkElementVisibility(WebElement element)
     {
         WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(), 30);
@@ -126,36 +130,36 @@ public class BasePage {
 //            fail("Element is not present");
         }
     }
-    
-   
+
+
     public boolean isElementLoaded(WebElement element) throws Exception
     {
     	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), 30);
-    	 
+
     	try {
-    	    tempWait.until(ExpectedConditions.visibilityOf(element)); 
+    	    tempWait.until(ExpectedConditions.visibilityOf(element));
     	    return true;
     	}
     	catch (NoSuchElementException | TimeoutException te) {
-    		return false;	
+    		return false;
     	}
-    	
+
     }
-    
+
     // method for mobile application
-    
+
     public boolean isElementLoadedOnMobile(MobileElement element) throws Exception
     {
     	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getAndroidDriver(), 30);
-    	 
+
     	try {
-    	    tempWait.until(ExpectedConditions.visibilityOf(element)); 
+    	    tempWait.until(ExpectedConditions.visibilityOf(element));
     	    return true;
     	}
     	catch (NoSuchElementException | StaleElementReferenceException | TimeoutException te ) {
-    		return false;	
+    		return false;
     	}
-    	
+
     }
 
     public boolean isElementLoadedOnMobile(MobileElement element, long timeOutInSeconds) throws Exception
@@ -228,18 +232,18 @@ public class BasePage {
     public boolean isElementLoaded(WebElement element, long timeOutInSeconds) throws Exception
     {
     	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), timeOutInSeconds);
-    	 
+
     	try {
     	    tempWait.until(ExpectedConditions.visibilityOf(element));
             return true;
     	}
     	catch (NoSuchElementException | TimeoutException te) {
-    		return false;	
+    		return false;
     	}
-    	
+
     }
-    
-    
+
+
     public static void waitUntilElementIsVisible(final WebElement element) {
         ExpectedCondition<Boolean> expectation = _driver -> element.isDisplayed();
 
@@ -249,9 +253,9 @@ public class BasePage {
         } catch (Throwable ignored) {
         }
     }
-    
+
     // method created for mobile app
-    
+
     public static void waitUntilElementIsVisibleOnMobile(final WebElement element) {
         ExpectedCondition<Boolean> expectation = _driver -> element.isDisplayed();
 
@@ -282,7 +286,7 @@ public class BasePage {
                 getDriver().navigate().refresh();
             } catch (TimeoutException ignored) {
             }
-            
+
         }
     }
 
@@ -296,7 +300,7 @@ public class BasePage {
             secCounter = (newTime.getTimeInMillis()) - (currentTimeMillis);
         }
     }
-    
+
     public WebElement waitForElementPresence(String element) {
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(
                 MyThreadLocal.getDriver()).withTimeout(ofSeconds(60))
@@ -310,14 +314,14 @@ public class BasePage {
         });
         return elementPresent;
     }
-    
+
     public static String displayCurrentURL()
     {
         JavascriptExecutor executor = (JavascriptExecutor) getDriver();
         return (String) executor.executeScript("return document.location.href");
-      
+
     }
-    
+
     public void mouseHover(WebElement element)
     {
         Actions actions = new Actions(getDriver());
@@ -329,8 +333,11 @@ public class BasePage {
         Actions actions = new Actions(getDriver());
         actions.click().build().perform();
     }
+    public void mouseToElement(WebElement element){
+        Actions actions = new Actions(getDriver());
+        actions.moveToElement(element).perform();
+    }
 
-    
     public void mouseHoverDragandDrop(WebElement fromDestination, WebElement toDestination)
     {
         Actions actions = new Actions(getDriver());
@@ -761,4 +768,7 @@ public class BasePage {
 //        }
 //        return  resultList;
 //     }
+
+
+
 }

@@ -191,9 +191,24 @@ public interface SchedulePage {
 
 	public boolean verifyRedFlagIsVisible() throws Exception;
 
-	public void verifyComplianceShiftsShowing() throws Exception;
+	public void verifyComplianceShiftsSmartCardShowing() throws Exception;
 
 	public boolean clickViewShift() throws Exception;
 
 	public void verifyComplianceFilterIsSelectedAftClickingViewShift() throws Exception;
+
+	public void verifyComplianceShiftsShowingInGrid() throws Exception;
+
+	public void verifyClearFilterFunction() throws Exception;
+
+	public void clickOnFilterBtn() throws Exception;
+
+
+
+	public void  verifyShiftSwapCoverRequestedIsDisplayInTo();
+
+	public void verifyAnalyzeBtnFunctionAndScheduleHistoryScroll() throws Exception;
+
+	public HashMap<String, Float> getScheduleBudgetedHoursInScheduleSmartCard() throws Exception;
+
 }

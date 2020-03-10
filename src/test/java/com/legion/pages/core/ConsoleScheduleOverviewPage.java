@@ -465,7 +465,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	}
 
 	public void clickOverviewTab(){
-		if(isElementEnabled(overviewTab)){
+		if(isElementEnabled(overviewTab,5)){
 			click(overviewTab);
 			SimpleUtils.pass("Clicked on Overview tab successfully");
 		}else{
