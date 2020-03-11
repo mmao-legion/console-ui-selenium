@@ -8,69 +8,103 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-    <test name="Timesheet Test">
-       <classes>
-           <class name="com.legion.tests.core.DMScheduleTest">
-               <methods>
-                   <include name="validateDMViewDataWithSMViewAsInternalAdmin"/>
-               </methods>
-           </class>
-       </classes>
-   </test>
+<!--    <test name="Timesheet Test">-->
+<!--       <classes>-->
+<!--           <class name="com.legion.tests.core.DMScheduleTest">-->
+<!--               <methods>-->
+<!--                   <include name="validateDMViewDataWithSMViewAsInternalAdmin"/>-->
+<!--               </methods>-->
+<!--           </class>-->
+<!--       </classes>-->
+<!--   </test>-->
 
-    <test name="Dashboard Test">
+    <test name="Schedule Test">
         <classes>
-            <class name="com.legion.tests.core.DashboardTestKendraScott2">
+            <class name="com.legion.tests.core.RegressionTest">
                 <methods>
-                    <include name="verifyTheDisplayLocationWithSelectedLocation" />
-                    <include name="verifyTheClickActionOnChangeLocationButton" />
-                    <include name="verifyTheContentDisplayedInChangeLocationLayout" />
-                    <include name="verifyTheFunctionOfSearchTextBox" />
-                    <include name="verifyTheWelcomeMessage" />
-                    <include name="verifyTheFunctionOfViewTodaySchedule" />
-                    <include name="verifyTheDataSourceForBudgetScheduledOther" />
+                    <include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>
+<!--                    <include name="validateScheduleSmartCardsAsStoreManager"/>-->
+<!--                    <include name="validateScheduleGenerationFunctionalityAsStoreManager"/>-->
+<!--                    <include name="validateGuidanceWeekAsStoreManager"/>-->
+<!--                    <include name="validateSchedulePublishAsStoreManager"/>-->
+<!--                    <include name="editManualShiftScheduleAsStoreManager"/>-->
+<!--                    <include name="updateControlsSectionLoadingAsInternalAdmin"/>-->
+<!--                    <include name="scheduleSubTabNavigationStoreManager"/>-->
+<!--                    <include name="legionAppNavigationAllTabsStoreManager"/>-->
+<!--                    <include name="verifyControlsBreadcrumbAsInternalAdmin"/>-->
+<!--                    <include name="verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager"/>-->
+<!--                    <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>-->
+<!--                    <include name="validateGuidanceScheduleAndOtherHoursOnDashBoardForAllLocationAsStoreManager"/>-->
+<!--                    <include name="validateWeatherForecastOnSchedulePageAsStoreManager"/>-->
+<!--                    <include name="validateSchedulePublishFeatureAsStoreManager"/>-->
+<!--                    <include name="changeAndValidateOperatingHoursAsInternalAdmin"/>-->
+<!--                    <include name="verifyScheduleOverlappingAsInternalAdmin"/>-->
+<!--                    <include name="updateWorkingHoursAsInternalAdmin"/>-->
+<!--                    <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>-->
+<!--                    <include name="updateControlsSectionLoadingAsStoreManager"/>-->
+<!--                    <include name="updateWorkingHoursAsInternalAdmin"/>-->
+<!--                    <include name="updateWorkingHoursAsInternalAdmin"/>-->
+
+
                 </methods>
             </class>
         </classes>
     </test>
-        <test name="Schedule Test">
-            <classes>
-                <class name="com.legion.tests.core.ScheduleTestKendraScott2">
-                    <methods>
-                        <include name="printButtonIsClickable" />
-                        <include name="todoButtonIsClickable" />
-                        <include name="closeButtonIsClickable" />
-                        <include name="legionIsDisplayingTheScheduleWhichIsGeneratedByTheSystemAtTheVeryFirstTime" />
-                        <include name="legionButtonIsClickableAndHasNoEditButton" />
-                        <include name="CurrentWeekIsGettingOpenByDefault" />
-                        <include name="DayWeekPickerSectionNavigatingCorrectly" />
-                        <include name="LandscapePortraitModeShowAndWorkWellInWeekView" />
-                    </methods>
-                </class>
-            </classes>
-        </test>
+
+<!--    <test name="Dashboard Test">-->
+<!--        <classes>-->
+<!--            <class name="com.legion.tests.core.DashboardTestKendraScott2">-->
+<!--                <methods>-->
+<!--                    <include name="verifyTheDisplayLocationWithSelectedLocation" />-->
+<!--                    <include name="verifyTheClickActionOnChangeLocationButton" />-->
+<!--                    <include name="verifyTheContentDisplayedInChangeLocationLayout" />-->
+<!--                    <include name="verifyTheFunctionOfSearchTextBox" />-->
+<!--                    <include name="verifyTheWelcomeMessage" />-->
+<!--                    <include name="verifyTheFunctionOfViewTodaySchedule" />-->
+<!--                    <include name="verifyTheDataSourceForBudgetScheduledOther" />-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
+
+<!--    <test name="Schedule Test">-->
+<!--            <classes>-->
+<!--                <class name="com.legion.tests.core.ScheduleTestKendraScott2">-->
+<!--                    <methods>-->
+<!--                        <include name="printButtonIsClickable" />-->
+<!--                        <include name="todoButtonIsClickable" />-->
+<!--                        <include name="closeButtonIsClickable" />-->
+<!--                        <include name="legionIsDisplayingTheScheduleWhichIsGeneratedByTheSystemAtTheVeryFirstTime" />-->
+<!--                        <include name="legionButtonIsClickableAndHasNoEditButton" />-->
+<!--                        <include name="CurrentWeekIsGettingOpenByDefault" />-->
+<!--                        <include name="DayWeekPickerSectionNavigatingCorrectly" />-->
+<!--                        <include name="LandscapePortraitModeShowAndWorkWellInWeekView" />-->
+<!--                    </methods>-->
+<!--                </class>-->
+<!--            </classes>-->
+<!--    </test>-->
 
 
-    <test name="TeamTab Test">
-       <classes>
-           <class name="com.legion.tests.core.TeamTestKendraScott2">
-               <methods>
-                   <include name="verifyTheFunctionOfSearchTMBar"/>
-                   <include name="verifyTheFunctionOfPlusIcon" />
-                   <include name="verifyTheCalendarLoadForCurrentDayAndColor" />
-                   <include name="verifyNewHomeLocationCanBeSelectedOnTransfer" />
-                   <include name="verifyTheFunctionOfTemporaryTransferButton" />
-                   <include name="verifyTwoCalendarsAreShownAfterClickTemp" />
-                   <include name="verifyTheFunctionOfAddTMCalendar" />
-                   <include name="verifyTheCurrentDateAndSelectOtherDateOnTransfer" />
-                   <include name="verifyTransferToANewLocation" />
-                   <include name="verifyConfirmButtonOnPopupWindowWorking" />
-                   <include name="verifyCancelButtonOnPopupWindowWorking" />
-                   <include name="verifyHomeLocationNotUpdateAndGivenInformation" />
-               </methods>
-           </class>
-       </classes>
-   </test>
+<!--    <test name="TeamTab Test">-->
+<!--       <classes>-->
+<!--           <class name="com.legion.tests.core.TeamTestKendraScott2">-->
+<!--               <methods>-->
+<!--                   <include name="verifyTheFunctionOfSearchTMBar"/>-->
+<!--                   <include name="verifyTheFunctionOfPlusIcon" />-->
+<!--                   <include name="verifyTheCalendarLoadForCurrentDayAndColor" />-->
+<!--                   <include name="verifyNewHomeLocationCanBeSelectedOnTransfer" />-->
+<!--                   <include name="verifyTheFunctionOfTemporaryTransferButton" />-->
+<!--                   <include name="verifyTwoCalendarsAreShownAfterClickTemp" />-->
+<!--                   <include name="verifyTheFunctionOfAddTMCalendar" />-->
+<!--                   <include name="verifyTheCurrentDateAndSelectOtherDateOnTransfer" />-->
+<!--                   <include name="verifyTransferToANewLocation" />-->
+<!--                   <include name="verifyConfirmButtonOnPopupWindowWorking" />-->
+<!--                   <include name="verifyCancelButtonOnPopupWindowWorking" />-->
+<!--                   <include name="verifyHomeLocationNotUpdateAndGivenInformation" />-->
+<!--               </methods>-->
+<!--           </class>-->
+<!--       </classes>-->
+<!--   </test>-->
 
 </suite> <!-- Suite -->
 
