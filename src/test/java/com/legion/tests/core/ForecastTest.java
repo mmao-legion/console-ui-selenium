@@ -63,6 +63,32 @@ public class ForecastTest extends TestBase{
 		ForecastPage.loadLaborForecastforCurrentNFutureWeek(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Two.getValue());
 	}
 
+		@Automated(automated = "Automated")
+		@Owner(owner = "Estelle")
+		@Enterprise(name = "Kendrascott2_Enterprise")
+		@TestName(description = "T1828164 T1828165 In Holiday smartcard View All button is clickable and Current weeks Holidays are showing Close button is clickable")
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+		public void holidaySmartCardIsDisplayedForCurrentAWeek(String username, String password, String browser, String location)
+				throws Exception {
+			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+			scheduleOverviewPage.loadScheduleOverview();
+			ForecastPage ForecastPage  = pageFactory.createForecastPage();
+			ForecastPage.holidaySmartCardIsDisplayedForCurrentAWeek();
 
+		}
+
+		@Automated(automated = "Automated")
+		@Owner(owner = "Estelle")
+		@Enterprise(name = "Kendrascott2_Enterprise")
+		@TestName(description = "T1828169 Navigate to 2 future week, < and > buttons are working")
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+		public void preNxtArrowAreWorkingAfterNavigateTo2FutureWeek(String username, String password, String browser, String location)
+				throws Exception {
+			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+			scheduleOverviewPage.loadScheduleOverview();
+			ForecastPage ForecastPage  = pageFactory.createForecastPage();
+			ForecastPage.clickForecast();
+			ForecastPage.verifyNextPreviousBtnCorrectOrNot();
+		}
 
 }

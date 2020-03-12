@@ -1972,4 +1972,75 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public List<Integer> getAddedShiftIndexes(String name) throws Exception {
         return null;
     }
+
+    @Override
+    public void landscapeModeOnlyInDayView() throws Exception {
+
+    }
+
+    @Override
+    public void weatherWeekSmartCardIsDisplayedForAWeek() throws Exception {
+
+    }
+
+    @Override
+    public void scheduleUpdateAccordingToSelectWeek() throws Exception {
+
+    }
+
+    @Override
+    public boolean verifyRedFlagIsVisible() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyComplianceShiftsSmartCardShowing() throws Exception {
+
+    }
+
+
+
+    @Override
+    public boolean clickViewShift() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyComplianceFilterIsSelectedAftClickingViewShift() throws Exception {
+
+    }
+
+    @Override
+    public void verifyComplianceShiftsShowingInGrid() throws Exception {
+
+    }
+
+    @Override
+    public void verifyClearFilterFunction() throws Exception {
+
+    }
+
+    @Override
+    public void clickOnFilterBtn() throws Exception {
+
+    }
+
+
+    @Override
+    public void verifyShiftSwapCoverRequestedIsDisplayInTo() {
+
+    }
+
+    @Override
+    public void verifyAnalyzeBtnFunctionAndScheduleHistoryScroll() throws Exception {
+
+    }
+
+    @Override
+    public HashMap<String, Float> getScheduleBudgetedHoursInScheduleSmartCard() throws Exception {
+
+        return null;
+    }
+
+
 }

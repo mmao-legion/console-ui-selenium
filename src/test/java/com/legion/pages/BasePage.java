@@ -82,15 +82,19 @@ public class BasePage {
         ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(0,document.body.scrollHeight)");
     }
 
+    public void scrollToElement(WebElement element) {
+        ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(0,document.body.scrollHeight)");
+    }
+
     //get current date by specific zoon
-    public Date getCurrentTime(){
-        TimeZone zone = TimeZone.getTimeZone("GMT+5:00");
+    public Date getCurrentTimeby(String timeZone){
+        TimeZone zone = TimeZone.getTimeZone(timeZone);
         Calendar cal = Calendar.getInstance(zone);
         return cal.getTime();
         }
 
     //click method for mobile app
-    
+
     public void clickOnMobileElement(WebElement element, boolean... shouldWait) {
     	try {
             waitUntilElementIsVisibleOnMobile(element);
@@ -145,7 +149,7 @@ public class BasePage {
     	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), 30);
     	 
     	try {
-    	    tempWait.until(ExpectedConditions.visibilityOf(element)); 
+    	    tempWait.until(ExpectedConditions.visibilityOf(element));
     	    return true;
     	}
     	catch (NoSuchElementException | TimeoutException te) {
@@ -341,8 +345,11 @@ public class BasePage {
         Actions actions = new Actions(getDriver());
         actions.click().build().perform();
     }
+    public void mouseToElement(WebElement element){
+        Actions actions = new Actions(getDriver());
+        actions.moveToElement(element).perform();
+    }
 
-    
     public void mouseHoverDragandDrop(WebElement fromDestination, WebElement toDestination)
     {
         Actions actions = new Actions(getDriver());

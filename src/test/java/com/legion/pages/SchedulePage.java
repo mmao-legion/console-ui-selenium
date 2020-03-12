@@ -183,6 +183,35 @@ public interface SchedulePage {
 
 	public void portraitModeWorkWellInWeekView()throws Exception;
 
+	public void landscapeModeOnlyInDayView() throws Exception;
+
+	public void weatherWeekSmartCardIsDisplayedForAWeek() throws Exception;
+
+	public void scheduleUpdateAccordingToSelectWeek() throws Exception;
+
+	public boolean verifyRedFlagIsVisible() throws Exception;
+
+	public void verifyComplianceShiftsSmartCardShowing() throws Exception;
+
+	public boolean clickViewShift() throws Exception;
+
+	public void verifyComplianceFilterIsSelectedAftClickingViewShift() throws Exception;
+
+	public void verifyComplianceShiftsShowingInGrid() throws Exception;
+
+	public void verifyClearFilterFunction() throws Exception;
+
+	public void clickOnFilterBtn() throws Exception;
+
+
+
+	public void  verifyShiftSwapCoverRequestedIsDisplayInTo();
+
+	public void verifyAnalyzeBtnFunctionAndScheduleHistoryScroll() throws Exception;
+
+	public HashMap<String, Float> getScheduleBudgetedHoursInScheduleSmartCard() throws Exception;
+
+
 	public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow) throws Exception;
 	public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception;
 	public void clickOnCreateNewShiftWeekView() throws Exception;

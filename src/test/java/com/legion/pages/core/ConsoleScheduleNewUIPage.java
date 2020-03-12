@@ -51,6 +51,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
+    private  ConsoleScheduleOverviewPage overviewPage;
 
     private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
     private static HashMap<String, String> propertyWorkRole = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
@@ -109,7 +110,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         PageFactory.initElements(getDriver(), this);
     }
 
-    @FindBy(xpath = "//*[@id='legion-app']/div/div[2]/div/div/div/div[1]/navigation/div/div[7]")
+
+    @FindBy(css = "div.console-navigation-item-label.Schedule")
     private WebElement goToScheduleButton;
 
     @FindBy(css = "div[helper-text*='Work in progress Schedule'] span.legend-label")
@@ -132,6 +134,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(css = "lg-button[label=\"Analyze\"]")
     private WebElement analyze;
+
+    @FindBy(xpath = "//*[@class=\"version-label-container\"]/div")
+    private List<WebElement> scheduleHistoryListInAnalyzePopUp;
 
     @FindBy(css = "lg-button[label=\"Edit\"]")
     private WebElement edit;
@@ -157,6 +162,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(xpath = "//div[contains(text(),'Guidance')]")
     private WebElement guidance;
 
+    @FindBy(xpath = "//div[contains(text(),'Schedule History')]")
+    private WebElement scheduleHistoryInAnalyzePopUp;
+
+    @FindBy(xpath = "//div[contains(text(),'Details')]")
+    private WebElement versionDetailsInAnalyzePopUp;
+
+    @FindBy(css = "[ng-repeat=\"role in guidanceRoleDetails\"]")
+    private List<WebElement> guidanceRoleDetails;
+
+    @FindBy(css = "[ng-repeat=\"role in versionedRoleDetails\"]")
+    private List<WebElement> versionRoleDetails;
+
     @FindBy(xpath = "//span[contains(text(),'Staffing Guidance')]")
     private WebElement goToStaffingGuidanceTab;
 
@@ -171,6 +188,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(className = "day-week-picker-arrow-left")
     private WebElement calendarNavigationPreviousWeekArrow;
+
+    @FindBy(xpath= "//day-week-picker/div/div/div[3]")
+    private WebElement calendarNavigationPreviousWeek;
 
     @FindBy(css = "[ng-click=\"regenerateFromOverview()\"]")
     private WebElement generateSheduleButton;
@@ -380,7 +400,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	//added by Naval
 
-    @FindBy(css = "input-field[placeholder='None'] ng-form.input-form.ng-pristine.ng-valid-pattern")
+//    @FindBy(css = "input-field[placeholder='None'] ng-form.input-form.ng-pristine.ng-valid-pattern")
+//    private WebElement filterButton;
+
+    @FindBy(css = "[label=\"Filter\"]")
     private WebElement filterButton;
 
     @FindBy(css = "[ng-repeat=\"(key, opts) in $ctrl.displayFilters\"]")
@@ -480,6 +503,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "span.weather-forecast-temperature")
     private List<WebElement> weatherTemperatures;
 
+    @FindBy(css = ".weather-forecast-day-name")
+    private List<WebElement> weatherDaysOfWeek;
+
+    @FindBy(xpath = "//*[contains(text(),'Weather - Week of')]")
+    private WebElement weatherWeekSmartCardHeader;
+
     @FindBy(css = "input[ng-class='hoursFieldClass(budget)']")
     private List<WebElement> budgetEditHours;
 
@@ -488,6 +517,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(css = "div.sch-day-view-grid-header.fill")
     private List<WebElement> scheduleShiftTimeHeaderCells;
+
+
+    @FindBy(css = "div.sch-calendar-date-label")
+    private List<WebElement> projectedScheduleDatePeriod;
 
     @FindBy(css = "img[ng-if=\"hasViolateCompliance(line, scheduleWeekDay)\"]")
     private List<WebElement> complianceReviewDangerImgs;
@@ -581,6 +614,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = ".day-week-picker-period fx-center ng-scope day-week-picker-period-active day-week-picker-period-week")
     private WebElement currentActiveWeeks;
 
+    @FindBy(css = "day-week-picker > div > div > div:nth-child(3)>span")
+    private WebElement postWeekNextToCurrentWeek;
+
+    @FindBy(css = "day-week-picker > div > div > div:nth-child(5)>span")
+    private WebElement futureWeekNextToCurrentWeek;
 
     @FindBy(css = "div.row-fx.schedule-table-row.ng-scope")
     private List<WebElement> schedulesForWeekOnOverview;
@@ -611,6 +649,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy (css = "table td:nth-child(3)")
     private List<WebElement> scheduleDisplayOnScheduleSmartcard;
+
+    //add by Estelle to get Schedule smart card elements
+    @FindBy(xpath = "//table[@class=\"ng-scope\"]")
+    private WebElement scheduleSmartCard;
+
+    @FindBy(xpath = "//table[@class=\"ng-scope\"]/tbody/tr[2]")
+    private WebElement hoursColumn;
+
+    @FindBy(xpath = "//table[@class=\"ng-scope\"]/tbody/tr[3]")
+    private WebElement wagesColumn;
 
 //    @FindBy(xpath = "ng-include[ng-repeat='c in cards']")
 //    private WebElement budgetOnbudgetSmartCardWhenNoBudgetEntered;
@@ -672,11 +720,34 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = ".horizontal.is-shown")
     private WebElement todoSmartCard;
 
+    @FindBy (css = "[ng-click=\"askConfirm('approve')\"]")
+    private List<WebElement> toDosInTodoSmartCard;
+
     @FindBy(css = "[label=\"Print\"]")
     private WebElement printButtonInPrintLayout;
 
     @FindBy(css = "[label=\"Cancel\"]")
     private WebElement cannelButtonInPrintLayout;
+
+    @FindBy(css = "div.sch-calendar-date-label>span")
+    private List<WebElement> schCalendarDateLabel;
+
+
+    //compliance elements
+    @FindBy(css = "[ng-if=\"compliance\"]")
+    private WebElement complianceSmartcardHeader;
+
+    @FindBy(css = ".fa-flag.sch-red")
+    private WebElement redFlagInCompliance;
+
+    @FindBy(css = "[ng-click=\"smartCardShiftFilter('Compliance Review')\"]")
+    private WebElement viewShiftBtn;
+
+    @FindBy(css = "[ng-click=\"smartCardShiftFilter('Compliance Review')\"]")
+    private WebElement clearShiftBtn;
+
+    @FindBy(css = "[src=\"img/legion/schedule/shift-info-danger.png\"]")
+    private List<WebElement> complianceShitShowIcon;
 
     List<String> scheduleWeekDate = new ArrayList<String>();
     List<String> scheduleWeekStatus = new ArrayList<String>();
@@ -930,7 +1001,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
  	}
 
 
-	private HashMap<String, Float> updateScheduleHoursAndWages(HashMap<String, Float> scheduleHoursAndWages,
+	public static HashMap<String, Float> updateScheduleHoursAndWages(HashMap<String, Float> scheduleHoursAndWages,
 			String hours, String hoursAndWagesKey) {
 		scheduleHoursAndWages.put(hoursAndWagesKey, Float.valueOf(hours.replaceAll(",","")));
 		return scheduleHoursAndWages;
@@ -1110,6 +1181,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void clickOnScheduleAnalyzeButton() throws Exception {
         if (isElementLoaded(analyze)) {
             click(analyze);
+            if (isElementLoaded(scheduleHistoryInAnalyzePopUp,5)) {
+                SimpleUtils.pass("Analyze button is clickable and pop up page displayed");
+            }
         } else {
             SimpleUtils.fail("Schedule Analyze Button not loaded successfully!", false);
         }
@@ -1486,7 +1560,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	}
 
     public void selectWorkRole(String workRoles) throws Exception {
-        if (isElementLoaded(btnWorkRole, 10)) {
+        if (isElementLoaded(weatherWeekSmartCardHeader, 20)) {
             click(btnWorkRole);
             SimpleUtils.pass("Work Role button clicked Successfully");
         } else {
@@ -1643,7 +1717,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public HashMap<String, ArrayList<WebElement>> getAvailableFilters() {
         HashMap<String, ArrayList<WebElement>> scheduleFilters = new HashMap<String, ArrayList<WebElement>>();
         try {
-            if (isElementLoaded(filterButton,5)) {
+            if (isElementLoaded(filterButton,10)) {
                 if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
                     click(filterButton);
                 for (WebElement scheduleFilterElement : scheduleFilterElements) {
@@ -1660,7 +1734,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 SimpleUtils.fail("Filters button not found on Schedule page!", false);
             }
         } catch (Exception e) {
-            SimpleUtils.fail("Filters button not loaded successfully on Schedule page!", false);
+            SimpleUtils.fail("Filters button not loaded successfully on Schedule page!", true);
         }
         return scheduleFilters;
     }
@@ -2967,6 +3041,29 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
 
         return temperatureText;
+    }
+
+
+    public String getWeatherDayOfWeek() throws Exception {
+        String daysText = "";
+        if (weatherDaysOfWeek.size() != 0)
+            for (WebElement weatherDay : weatherDaysOfWeek) {
+                if (weatherDay.isDisplayed()) {
+                    if (daysText == "")
+                        daysText = weatherDay.getText();
+                    else
+                        daysText = daysText + " | " + weatherDay.getText();
+                } else if (!weatherDay.isDisplayed()) {
+                    while (isSmartCardScrolledToRightActive() == true) {
+                        if (daysText == "")
+                            daysText = weatherDay.getText();
+                        else
+                            daysText = daysText + " | " + weatherDay.getText();
+                    }
+                }
+            }
+
+        return daysText;
     }
 
 //	@Override
@@ -5204,10 +5301,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(ScheduleSubMenu);
             if (isElementLoaded(todoButton,5)) {
                 SimpleUtils.pass("Schedule New UI load successfully");
-            }else{
-                SimpleUtils.fail("Schedule New UI load failed", true);
             }
-
+        }else{
+            SimpleUtils.fail("Schedule New UI load failed", true);
         }
 
     }
@@ -5288,6 +5384,288 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Print button is not clickable", true);
         }
 
+    }
+
+    public void landscapeModeOnlyInDayView() throws Exception {
+        if (isElementLoaded(printButton,10)) {
+            scrollToTop();
+            waitForSeconds(5);
+            click(printButton);
+            if(isClickable(LandscapeButton,5)){
+
+            }else {
+                SimpleUtils.pass("print in Landscape mode only.");
+            }
+        }else {
+            SimpleUtils.fail("print button is not clickable",false);
+        }
+    }
+
+    public enum DayOfWeek {
+        Mon,
+        Tue,
+        Wed,
+        Thu,
+        Fri,
+        Sat,
+        Sun;
+    }
+
+        public void weatherWeekSmartCardIsDisplayedForAWeek() throws Exception {
+            String jsonTimeZoon = parametersMap2.get("Time_Zone");
+            TimeZone timeZone = TimeZone.getTimeZone(jsonTimeZoon);
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+            dfs.setTimeZone(timeZone);
+            String currentTime =  dfs.format(new Date());
+            int currentDay = Integer.valueOf(currentTime.substring(currentTime.length()-2));
+            String firstDayInWeatherSmtCad2 = getDriver().findElement(By.xpath("//*[contains(text(),'Weather - Week of')]")).getText();
+            int firstDayInWeatherSmtCad = Integer.valueOf(firstDayInWeatherSmtCad2.substring(firstDayInWeatherSmtCad2.length()-2));
+            SimpleUtils.report("firstDayInWeatherSmtCad"+firstDayInWeatherSmtCad);
+            if((firstDayInWeatherSmtCad+7)>currentDay){
+                SimpleUtils.pass("The week smartcard is current week");
+                if (areListElementVisible(weatherTemperatures,8)) {
+                    String weatherWeekTest = getWeatherDayOfWeek();
+
+                    System.out.println("weatherWeekTest"+weatherWeekTest);
+                    for (DayOfWeek e : DayOfWeek.values()) {
+                        if (weatherWeekTest.contains(e.toString())) {
+                            SimpleUtils.pass("Weather smartcard include one week weather");
+                        } else {
+                            SimpleUtils.fail("Weather Smart card is not one whole week",false);
+                        }
+                    }
+
+                }else {
+                    SimpleUtils.fail("there is no week weather smartcard",false);
+                }
+
+            }else {
+                SimpleUtils.fail("This is not current week weather smartcard ",false);
+            }
+
+        }
+
+
+    public String getScheduleDayRange() throws Exception {
+        String dayRangeText = "";
+        if (schCalendarDateLabel.size() != 0)
+            for (WebElement scheCalDay : schCalendarDateLabel) {
+                if (scheCalDay.isDisplayed()) {
+                    if (dayRangeText == "")
+                        dayRangeText = scheCalDay.getText();
+                    else
+                        dayRangeText = dayRangeText + " | " + scheCalDay.getText();
+                } else if (!scheCalDay.isDisplayed()) {
+                    while (isSmartCardScrolledToRightActive() == true) {
+                        if (dayRangeText == "")
+                            dayRangeText = scheCalDay.getText();
+                        else
+                            dayRangeText = dayRangeText + " | " + scheCalDay.getText();
+                    }
+                }
+            }
+
+        return dayRangeText;
+    }
+
+    public void scheduleUpdateAccordingToSelectWeek() throws Exception {
+        if (isElementLoaded(calendarNavigationPreviousWeek,5) ) {
+            String preWeekText = calendarNavigationPreviousWeek.getText().replace("\n","").replace("-","");
+            String preWeekText2 = preWeekText.trim().substring(preWeekText.length()-2);
+            click(calendarNavigationPreviousWeek);
+            String scheCalDay = getScheduleDayRange().trim();
+            System.out.println("scheCalDay==========="+ scheCalDay) ;
+            if (areListElementVisible(schCalendarDateLabel,10) && scheCalDay.trim().contains(preWeekText2.trim())) {
+                SimpleUtils.pass("data is getting updating on Schedule page according to corresponding week");
+            }else {
+                SimpleUtils.fail("schedule canlendar is not updating according to corresponding week",true);
+            }
+        }else {
+            SimpleUtils.fail("no next week calendar",true);
+        }
+    }
+
+
+
+    @Override
+    public boolean verifyRedFlagIsVisible() throws Exception {
+        if (isElementLoaded(redFlagInCompliance, 20)) {
+            SimpleUtils.report("red flag is visible ");
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void verifyComplianceShiftsSmartCardShowing() throws Exception {
+        if (complianceShitShowIcon.size() > 0) {
+
+            if (isElementLoaded(complianceSmartcardHeader,15)) {
+                SimpleUtils.report("Compliance smartcard is visible ");
+            } else {
+                SimpleUtils.report("there is no compliance smartcard this week");
+            }
+        }
+    }
+
+    @Override
+    public void verifyComplianceShiftsShowingInGrid() throws Exception {
+        if (isElementLoaded(complianceSmartcardHeader,15)) {
+            if (complianceShitShowIcon.size() > 0) {
+                SimpleUtils.pass("Compliance shift is showing in grid");
+            }else {
+                SimpleUtils.fail("compliance shifts display failed",false);
+            }
+        }else {
+            SimpleUtils.fail("there is no compliance smartcard in current week",false);
+        }
+
+    }
+
+    @Override
+    public void verifyClearFilterFunction() throws Exception {
+        String clearFilterBtnTextDefault = "Clear Filter";
+
+        if (isElementLoaded(complianceSmartcardHeader,10) & clickViewShift()) {
+            SimpleUtils.pass("view shift button is clickable");
+            String clearFilterTxt =viewShift.getText();
+            System.out.println("clear filter is==" + clearFilterTxt);
+            if (clearFilterBtnTextDefault.equals(clearFilterTxt)) {
+                click(viewShift);
+                SimpleUtils.pass("clear filter button is clickable");
+                String filterText = getDriver().findElement(By.cssSelector("lg-filter > div > input-field > ng-form > div")).getText();
+                System.out.println("filterText====="+ filterText);
+                if (filterText.equals("")) {
+                    SimpleUtils.pass("filter 'Compliance shifts' will be unselected after clicking clear filter");
+                }
+            }else {
+                SimpleUtils.fail("clear filter  button can't clickable",true);
+            }
+
+        }else {
+            SimpleUtils.report("there is no compliance shift this week");
+        }
+
+    }
+
+    @Override
+    public void clickOnFilterBtn() throws Exception {
+        if (isElementLoaded(filterButton,10)) {
+            click(filterButton);
+            SimpleUtils.pass("filter button is clickable");
+        } else {
+            SimpleUtils.fail("filter button is not Loaded Successfully!", true);
+        }
+    }
+
+
+    @Override
+    public void verifyShiftSwapCoverRequestedIsDisplayInTo() {
+//        if () {
+//
+//        }
+    }
+
+    @Override
+    public void verifyAnalyzeBtnFunctionAndScheduleHistoryScroll() throws Exception {
+        clickOnScheduleAnalyzeButton();
+        for (WebElement e:scheduleHistoryListInAnalyzePopUp
+             ) {
+            if(verifyScrollBarWorkingInAnalyzePopUP(e)){
+                SimpleUtils.report("Staffing Guidance Schedule History-Scrollbar is working correctly version x details");
+
+            }else {
+                SimpleUtils.fail("Staffing Guidance Schedule History-Scrollbar is not working correctly version x details",true);
+            }
+        }
+
+    }
+
+    @Override
+    public HashMap<String, Float> getScheduleBudgetedHoursInScheduleSmartCard() throws Exception {
+
+        if (isElementLoaded(scheduleSmartCard,10) ){
+            /*
+            wait schedule smart card data load
+            */
+            waitForSeconds(10);
+            HashMap<String, Float> hoursWagesText = getScheduleLabelHoursAndWages();
+            return hoursWagesText;
+        }
+        return null;
+    }
+
+    public boolean verifyScrollBarWorkingInAnalyzePopUP(WebElement element) throws Exception {
+        if (areListElementVisible(scheduleHistoryListInAnalyzePopUp,10)&scheduleHistoryListInAnalyzePopUp.size()>4) {
+           SimpleUtils.report("versions are more enough and there is a scroll bar to check details");
+            scrollToElement(element);
+            click(element);
+            String versionNubScrollToText = versionDetailsInAnalyzePopUp.getText().trim().split(" ")[1];
+            if (versionNubScrollToText.equals(element.getText().trim().split(" ")[1])) {
+                SimpleUtils.pass("scroll bar can work normally");
+                return  true;
+            }else {
+                SimpleUtils.fail("scroll bar can not  work normally",true);
+            }
+        }else if(scheduleHistoryListInAnalyzePopUp.size()<=4){
+
+                SimpleUtils.report("there are some versions,but not scroll bar");
+                click(element);
+            String versionNubScrollToText = versionDetailsInAnalyzePopUp.getText().trim().split(" ")[1];
+            if (versionNubScrollToText.equals(element.getText().trim().split(" ")[1])) {
+                SimpleUtils.pass("schedule version work well");
+                return  true;
+            }else {
+                SimpleUtils.fail("schedule version doesn't work well",true);
+            }
+
+        }
+            return  false;
+
+
+    }
+    private void goToPostWeekNextToCurrentWeek() throws Exception {
+        if (isElementLoaded(postWeekNextToCurrentWeek,5)) {
+            click(postWeekNextToCurrentWeek);
+            SimpleUtils.pass("navigate to post week successfully");
+        }else {
+            SimpleUtils.fail("post week tab load failed",true);
+        }
+    }
+
+    private void goToFutureWeekNextToCurrentWeek() throws Exception {
+        if (isElementLoaded(futureWeekNextToCurrentWeek,5)) {
+            click(futureWeekNextToCurrentWeek);
+            SimpleUtils.pass("navigate to future week successfully");
+        }else {
+            SimpleUtils.fail("future week tab load failed",true);
+        }
+    }
+
+    @Override
+    public boolean clickViewShift() throws Exception {
+        if (isElementLoaded(viewShiftBtn, 15)) {
+            click(viewShiftBtn);
+            SimpleUtils.report("View shift button is visible ");
+            return true;
+        }
+        SimpleUtils.report("No view shift button");
+        return false;
+
+    }
+
+    @Override
+    public void verifyComplianceFilterIsSelectedAftClickingViewShift() throws Exception {
+        String filterTextDefault =" Compliance Review\n" +
+                "    ";
+        if (clickViewShift() == true) {
+            String filterText = getDriver().findElement(By.cssSelector("lg-filter > div > input-field > ng-form > div")).getText();
+            if (filterText.equals(filterTextDefault)) {
+                SimpleUtils.report("Compliance filter is selected after clicking view shift button");
+            }
+        }else {
+            SimpleUtils.fail("there is no view shift button",false);
+        }
     }
 
 }

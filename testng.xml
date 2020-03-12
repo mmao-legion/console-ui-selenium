@@ -77,7 +77,7 @@
             </class>
         </classes>
     </test>
-        <test name="Schedule Test">
+        <test name="Schedule New UI Test">
             <classes>
                 <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                     <methods>
@@ -86,9 +86,48 @@
                         <include name="closeButtonIsClickable" />
                         <include name="legionIsDisplayingTheScheduleWhichIsGeneratedByTheSystemAtTheVeryFirstTime" />
                         <include name="legionButtonIsClickableAndHasNoEditButton" />
-                        <include name="CurrentWeekIsGettingOpenByDefault" />
-                        <include name="DayWeekPickerSectionNavigatingCorrectly" />
-                        <include name="LandscapePortraitModeShowAndWorkWellInWeekView" />
+                        <include name="currentWeekIsGettingOpenByDefault" />
+                        <include name="dayWeekPickerSectionNavigatingCorrectly" />
+                        <include name="landscapePortraitModeShowAndWorkWellInWeekView" />
+                        <include name="landscapeModeOnlyInDayView" />
+                        <include name="weatherWeekSmartCardIsDisplayedForAWeek" />
+                        <include name="scheduleUpdateAccordingToSelectWeek" />
+                        <include name="verifyComplianceShiftsShowing" />
+                        <include name="verifyRedFlagIsVisible" />
+                        <include name="viewShiftIsWorkingAndComplianceFilterAppliedAutomatically" />
+                        <include name="complianceShiftWillDisplay"/>
+                        <include name="verifyClearFilterFunction"/>
+                        <include name="verifyAnalyzeBtnFunctionAndScheduleHistoryScroll"/>
+                        <include name="verifyScheduleBudgetedHoursInScheduleSmartCard"/>
+                        <include name="verifyFilterFunctionForShiftTypeAndWorkRole"/>
+                    </methods>
+                </class>
+            </classes>
+        </test>
+
+        <test name="Forecast Test">
+            <classes>
+                <class name="com.legion.tests.core.ForecastTest">
+                    <methods>
+                        <include name="holidaySmartCardIsDisplayedForCurrentAWeek" />
+                        <include name="preNxtArrowAreWorkingAfterNavigateTo2FutureWeek" />
+                        <include name="verifyDisplayOfActualLineSelectedByDefaultInOrangeColor" />
+                        <include name="selectedRecentTrendAndLastYearLineToVerifyColor" />
+                        <include name="verifyForecastColor" />
+                        <include name="verifyWorkRoleIsSelectedAftSwitchToPastFutureWeek"/>
+                        <include name="weatherWeekSmartCardIsDisplayedForAWeek"/>
+                        <include name="verifyWeatherWeekSmartCardNavigation"/>
+                        <include name="verifyWorkRoleSelection"/>
+                        <include name="verifyBudgetedHoursInLaborSummaryWhileSelectDifferentWorkRole"/>
+                        <include name="verifyRefreshBtnInLaborWeekView"/>
+                        <include name="verifyRefreshBtnInShopperWeekView"/>
+                        <include name="verifySmartcardAreAvailableInShoppers"/>
+                        <include name="validateWeatherSmartCardOnForecastPage"/>
+                        <include name="dataValidationIfStoreClosed"/>
+                        <include name="verifyPeakShopperPeakDayData"/>
+                        <include name="verifyActualDataForPastWeek"/>
+                        <include name="verifyFilterFunctionInForecast"/>
+                        <include name="verifyForecastColor"/>
                     </methods>
                 </class>
             </classes>
@@ -148,6 +187,7 @@
             </class>
         </classes>
     </test>
+
 
 </suite> <!-- Suite -->
 
