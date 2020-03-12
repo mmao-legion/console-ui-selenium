@@ -38,7 +38,7 @@
 <!--                    <include name="validateWeatherForecastOnSchedulePageAsStoreManager"/>-->
 <!--                    <include name="validateSchedulePublishFeatureAsStoreManager"/>-->
 <!--                    <include name="changeAndValidateOperatingHoursAsInternalAdmin"/>-->
-<!--                    <include name="verifyScheduleOverlappingAsInternalAdmin"/>-->
+                    <include name="verifyScheduleOverlappingAsInternalAdmin"/>
 <!--                    <include name="updateWorkingHoursAsInternalAdmin"/>-->
 <!--                    <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>-->
 <!--                    <include name="updateControlsSectionLoadingAsStoreManager"/>-->
