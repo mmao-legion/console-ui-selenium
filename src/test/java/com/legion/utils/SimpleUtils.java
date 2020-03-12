@@ -338,6 +338,15 @@ public class SimpleUtils {
 		return date;
 	}
 
+	public static String getCurrentTimeWithTimeZone(String timeZone)
+	{
+		String date = "";
+		SimpleDateFormat dateTimeInGMT = new SimpleDateFormat("hh:mm a");
+		dateTimeInGMT.setTimeZone(TimeZone.getTimeZone(timeZone));
+		date = dateTimeInGMT.format(new Date());
+		return date;
+	}
+
 	public static boolean isDateFormatCorrect(String date, SimpleDateFormat format) {
 		boolean convertSuccess = true;
 		try {
@@ -1779,5 +1788,39 @@ public class SimpleUtils {
 		cal.add(Calendar.DATE, 6);
 		String imptimeEnd = sdf.format(cal.getTime());
 		return imptimeBegin + "," + imptimeEnd;
+	}
+
+	public static boolean compareHashMapByEntrySet(HashMap<String,String> map1, HashMap<String, String> map2){
+		if(map1.size()!=map2.size()){
+			return false;
+		}
+		String tmp1;
+		String tmp2;
+		boolean isSame = false;
+		for(Map.Entry<String, String> entry : map1.entrySet()){
+			if(map2.containsKey(entry.getKey())){
+				tmp1 = entry.getValue();
+				tmp2 = map2.get(entry.getKey());
+				if(tmp1 != null && tmp2 != null){
+					if(tmp1.equals(tmp2)){
+						isSame = true;
+						continue;
+					}else{
+						isSame = false;
+						break;
+					}
+				}else if(tmp1 == null && tmp2 == null){
+					isSame = true;
+					continue;
+				}else{
+					isSame = false;
+					break;
+				}
+			}else{
+				isSame = false;
+				break;
+			}
+		}
+		return isSame;
 	}
 }

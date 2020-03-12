@@ -157,4 +157,35 @@ public class DashboardTestKendraScott2 extends TestBase{
 			SimpleUtils.fail("Failed to get the hours!", true);
 		}
 	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828038 Todays forecast section Projected Demand graph is present")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheProjectedDemandGraphIsShown(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		dashboardPage.isProjectedDemandGraphShown();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "T1828071 Verify that Starting soon shifts and Scheduled hours are not showing when current weeks schedule is in Guidance or Draft")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyStartingSoonNScheduledHourNotShowWhenGuidanceOrDraft(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.verifyDashboardPageLoadedProperly();
+		SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+		schedulePage.isSchedule();
+		if (!schedulePage.isGenerateButtonLoaded()) {
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+			schedulePage.isGenerateButtonLoaded();
+		}
+		dashboardPage.navigateToDashboard();
+		boolean startingSoonLoaded = dashboardPage.isStartingSoonLoaded();
+		HashMap<String, String> hours = dashboardPage.getHoursFromDashboardPage();
+		dashboardPage.verifyStartingSoonNScheduledHourWhenGuidanceOrDraft(startingSoonLoaded, hours.get("Scheduled"));
+	}
 }

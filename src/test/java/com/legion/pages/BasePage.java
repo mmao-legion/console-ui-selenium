@@ -1,7 +1,6 @@
 package com.legion.pages;
 
-import static com.legion.utils.MyThreadLocal.getAndroidDriver;
-import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.*;
 import static io.appium.java_client.touch.WaitOptions.waitOptions;
 import static io.appium.java_client.touch.offset.ElementOption.element;
 import static io.appium.java_client.touch.offset.PointOption.point;
@@ -19,11 +18,7 @@ import org.apache.poi.ss.formula.functions.T;
 import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
 
 import com.aventstack.extentreports.Status;
 import com.legion.tests.testframework.ExtentTestManager;
@@ -60,13 +55,30 @@ public class BasePage {
         }
     }
 
+    public void openNewURLOnNewTab(String url) {
+        String currentHandle = getDriver().getWindowHandle();
+        ((JavascriptExecutor) getDriver()).executeScript("window.open(arguments[0]),\'_blank\'", url);
+        Set<String> handles = getDriver().getWindowHandles();
+        if (handles.size() > 1) {
+            for (String handle : handles) {
+                if (!handle.equals(currentHandle)) {
+                    getDriver().switchTo().window(handle);
+                    if (handle.equals(getDriver().getWindowHandle())) {
+                        SimpleUtils.pass("Navigate to the New Tab successfully!");
+                    }
+                }
+            }
+        }else {
+            SimpleUtils.fail("New window doesn't open!", false);
+        }
+    }
 
     public void scrollToTop() {
         ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(document.body.scrollHeight,0)");
 
     }
 
-    public void scrollToBottom(WebElement element, boolean... shouldWait) {
+    public void scrollToBottom() {
         ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(0,document.body.scrollHeight)");
     }
 
@@ -496,6 +508,38 @@ public class BasePage {
         return element;
     }
 
+    public void waitForElementLoaded(String css, long timeOutInSeconds) {
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(
+                MyThreadLocal.getDriver()).withTimeout(ofSeconds(timeOutInSeconds))
+                .pollingEvery(ofSeconds(10))
+                .ignoring(org.openqa.selenium.NoSuchElementException.class);
+        wait.until(new Function<WebDriver, WebElement>() {
+            @Override
+            public WebElement apply(WebDriver t) {
+                return t.findElement(By.cssSelector(css));
+            }
+        });
+    }
+
+    public void selectByVisibleText(WebElement element, String text) throws Exception {
+        click(element);
+        Select select = new Select(element);
+        List<WebElement> options = select.getOptions();
+        List<String> optionTexts = new ArrayList<>();
+        if (options.size() > 0) {
+            for (WebElement option : options) {
+                optionTexts.add(option.getText());
+            }
+            if (optionTexts.contains(text)){
+                select.selectByVisibleText(text);
+                SimpleUtils.pass("Select:" + text + " Successfully!");
+            } else {
+                SimpleUtils.fail(text + " doesn't exist in options!", true);
+            }
+        } else {
+            SimpleUtils.fail("Select options are empty!", true);
+        }
+    }
 
     public void selectDate(int daysFromToday) {
         LocalDate now = LocalDate.now();

@@ -4918,6 +4918,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
     //Added by Nora
 	@FindBy (css = "select[aria-label=\"Time Zone\"] option[selected=\"selected\"]")
 	private WebElement timeZoneSelected;
+	@FindBy (css = "input-field[value*=\"teamPreference\"] option[selected=\"selected\"]")
+	private WebElement onBoardOption;
+	@FindBy (css = "input-field[value*=\"teamPreference\"] select")
+	private WebElement inviteOnBoardSelect;
 
 	@Override
     public String getTimeZoneFromLocationDetailsPage() throws Exception {
@@ -4932,5 +4936,28 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Time Zone Select failed to load!", true);
 		}
 		return timeZone;
+	}
+
+	@Override
+	public String getOnBoardOptionFromScheduleCollaboration() throws Exception {
+		String emailOrPhone = null;
+		if (isElementLoaded(onBoardOption, 15)) {
+			// Wait for the data to be loaded
+			waitForSeconds(3);
+			emailOrPhone = onBoardOption.getText();
+		}else {
+			SimpleUtils.fail("On board option failed to load!", true);
+		}
+		return emailOrPhone;
+	}
+
+	@Override
+	public void setOnBoardOptionAsEmailWhileInviting() throws Exception {
+		String email = "Email";
+		if (isElementLoaded(inviteOnBoardSelect, 15)) {
+			selectByVisibleText(inviteOnBoardSelect, email);
+		}else{
+			SimpleUtils.fail("On board option failed to load!", true);
+		}
 	}
 }

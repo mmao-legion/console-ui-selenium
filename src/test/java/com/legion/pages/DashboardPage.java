@@ -2,6 +2,7 @@ package com.legion.pages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Yanming
@@ -21,4 +22,10 @@ public interface DashboardPage {
     public void verifyTheWelcomeMessage(String userName) throws Exception;
     public String getCurrentDateFromDashboard() throws Exception;
     public HashMap<String, String> getHoursFromDashboardPage() throws Exception;
+    public boolean isProjectedDemandGraphShown() throws Exception;
+    public boolean isStartingSoonLoaded() throws Exception;
+    public void verifyStartingSoonNScheduledHourWhenGuidanceOrDraft(boolean isStartingSoonLoaded, String scheduledHour)
+        throws Exception;
+    public HashMap<String, String> getUpComingShifts() throws Exception;
+    public boolean isStartingTomorrow() throws Exception;
 }

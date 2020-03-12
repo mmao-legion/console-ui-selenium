@@ -1927,4 +1927,49 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void portraitModeWorkWellInWeekView() throws Exception {
 
     }
+
+    @Override
+    public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception {
+
+    }
+
+    @Override
+    public void clickOnCreateNewShiftWeekView() throws Exception {
+
+    }
+
+    @Override
+    public void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception {
+
+    }
+
+    @Override
+    public void selectDaysFromCurrentDay(String currentDay) throws Exception {
+
+    }
+
+    @Override
+    public void searchTeamMemberByName(String name) throws Exception {
+
+    }
+
+    @Override
+    public void verifyNewShiftsAreShownOnSchedule(String name) throws Exception {
+
+    }
+
+    @Override
+    public void verifyShiftsChangeToOpenAfterTerminating(List<Integer> indexes, String name, String currentTime) throws Exception {
+
+    }
+
+    @Override
+    public List<Integer> getAddedShiftIndexes(String name) throws Exception {
+        return null;
+    }
 }

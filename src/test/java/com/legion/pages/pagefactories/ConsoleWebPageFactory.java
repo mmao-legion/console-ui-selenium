@@ -99,4 +99,7 @@ public class ConsoleWebPageFactory implements PageFactory {
 	public ForecastPage createForecastPage() {
 		return new ConsoleForecastPage();
 	}
+
+	@Override
+	public GmailPage createConsoleGmailPage() { return new ConsoleGmailPage(); }
 }

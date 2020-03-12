@@ -1,6 +1,7 @@
 package com.legion.pages;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TeamPage {
 	public void goToTeam() throws Exception;
@@ -36,4 +37,54 @@ public interface TeamPage {
 	public void verifyTheFunctionOfConfirmTransferButton() throws Exception;
 	public void	verifyTheFunctionOfCancelTransferButton() throws Exception;
 	public void verifyTheHomeStoreLocationOnProfilePage(String homeLocation, String selectedLocation) throws Exception;
+	public String selectATeamMemberToViewProfile() throws Exception;
+	public void selectATeamMemberToCancelTransfer() throws Exception;
+	public boolean verifyCancelTransferWindowPopup() throws Exception;
+	public boolean verifyTransferButtonEnabledAfterCancelingTransfer() throws Exception;
+	public void verifyHomeLocationAfterCancelingTransfer(String homeLocation) throws Exception;
+	public boolean isProfilePageLoaded() throws Exception;
+	public void verifyTheFunctionOfEditBadges() throws Exception;
+	public void verifyTheVisibleOfBadgesOnTeamRoster() throws Exception;
+	public void selectATeamMemberToInvite() throws Exception;
+	public boolean isInviteTeamMemberWindowLoaded() throws Exception;
+	public void verifyTheEmailFormatOnInviteWindow(List<String> testEmails) throws Exception;
+	public boolean isSendAndCancelLoadedAndEnabledOnInvite() throws Exception;
+	public String addANewTeamMemberToInvite(Map<String, String> newTMDetails) throws Exception;
+	public void checkAddATMMandatoryFieldsAreLoaded(String mandatoryField) throws Exception;
+	public void inviteTheNewCreatedTeamMember(String firstName) throws Exception;
+	public void verifyThereSectionsAreLoadedOnInviteWindow() throws Exception;
+	public String fillInMandatoryFieldsOnNewTMPage(Map<String, String> newTMDetails, String mandatoryField) throws Exception;
+	public boolean isSaveButtonOnNewTMPageEnabled() throws Exception;
+	public void verifyContactNumberFormatOnNewTMPage(List<String> contactNumbers) throws Exception;
+	public void verifyTMCountIsCorrectOnRoster() throws Exception;
+	public void verifyCancelButtonOnAddTMAndClick() throws Exception;
+	public void verifyTheMandatoryFieldsCannotEmpty() throws Exception;
+	public void verifyTMIsVisibleAndInvitedOnTODO(String name) throws Exception;
+	public void	selectAInvitedOrNotInvitedTeamMemberToView() throws Exception;
+	public int selectATeamMemberToActivate() throws Exception;
+	public boolean isProfilePageSelected() throws Exception;
+	public void navigateToProfileTab() throws Exception;
+	public void clickOnActivateButton() throws Exception;
+	public void isActivateWindowLoaded() throws Exception;
+	public void selectADateOnCalendarAndActivate() throws Exception;
+    public void verifyDeactivateAndTerminateEnabled() throws Exception;
+    public String getOnBoardedDate() throws Exception;
+    public void isOnBoardedDateUpdated(String previousDate) throws Exception;
+    public void verifyTheStatusOfTeamMember() throws Exception;
+    public boolean isActivateButtonLoaded() throws Exception;
+    public void cancelActivateOrDeactivateTeamMember() throws Exception;
+    public void searchForTeamMemberByStatus(String status) throws Exception;
+    public void sendTheInviteViaEmail() throws Exception;
+    public void saveTheNewTeamMember() throws Exception;
+    public void searchTheNewTMAndUpdateInfo(String firstName) throws Exception;
+    public boolean isEmailOrPhoneNumberEmptyAndUpdate(Map<String, String> newTMDetails, String mandatoryField) throws Exception;
+    public void searchTheTMAndCheckUpdateInfoNotShow(String firstName) throws Exception;
+    public boolean isTerminateButtonLoaded() throws Exception;
+    public boolean isCancelTerminateButtonLoaded() throws Exception;
+    public void terminateTheTeamMember(boolean isCurrentDay) throws Exception;
+    public String getEmployeeIDFromProfilePage() throws Exception;
+    public void searchTheTeamMemberByEmployeeIDFromRoster(String employeeID, boolean isTerminated) throws Exception;
+    public void verifyTheFunctionOfCancelTerminate() throws Exception;
+    public boolean isManualOnBoardButtonLoaded() throws Exception;
+    public void manualOnBoardTeamMember() throws Exception;
 }
