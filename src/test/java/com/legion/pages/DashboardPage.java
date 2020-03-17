@@ -21,6 +21,7 @@ public interface DashboardPage {
     public void clickOnTimeOffLink() throws Exception;
     public void verifyTheWelcomeMessage(String userName) throws Exception;
     public String getCurrentDateFromDashboard() throws Exception;
+    public String getCurrentTimeFromDashboard() throws Exception;
     public HashMap<String, String> getHoursFromDashboardPage() throws Exception;
     public boolean isProjectedDemandGraphShown() throws Exception;
     public boolean isStartingSoonLoaded() throws Exception;

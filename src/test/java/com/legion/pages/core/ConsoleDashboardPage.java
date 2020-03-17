@@ -368,6 +368,15 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	@Override
+	public String getCurrentTimeFromDashboard() throws Exception {
+		if (isElementLoaded(currentTime, 5)){
+			return currentTime.getText();
+		}else{
+			return null;
+		}
+	}
+
+	@Override
 	public HashMap<String, String> getHoursFromDashboardPage() throws Exception {
 		HashMap<String, String> scheduledHours = new HashMap<>();
 		if (isElementLoaded(budgetSection, 5) && isElementLoaded(scheduledSection, 5)
@@ -404,7 +413,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				SimpleUtils.fail("Projected Demand Graph failed to show!", false);
 			}
 		}else {
-			SimpleUtils.fail("Project Demand section failed to show!", false);
+			SimpleUtils.fail("Project Demand section failed to show!", true);
 		}
 		return isShown;
 	}
@@ -443,8 +452,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		String role = null;
 		if (areListElementVisible(upComingShifts, 15)) {
 			for (WebElement upComingShift : upComingShifts) {
-				name = upComingShift.findElement(By.cssSelector("span.name-muted")).getText();
-				role = upComingShift.findElement(By.cssSelector("span.role-name")).getText();
+				name = upComingShift.findElement(By.cssSelector("span.name-muted")).getText().toLowerCase();
+				role = upComingShift.findElement(By.cssSelector("span.role-name")).getText().toLowerCase();
 				shifts.put(name, role);
 			}
 		}else {

@@ -4955,6 +4955,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	public void setOnBoardOptionAsEmailWhileInviting() throws Exception {
 		String email = "Email";
 		if (isElementLoaded(inviteOnBoardSelect, 15)) {
+			scrollToBottom();
 			selectByVisibleText(inviteOnBoardSelect, email);
 		}else{
 			SimpleUtils.fail("On board option failed to load!", true);

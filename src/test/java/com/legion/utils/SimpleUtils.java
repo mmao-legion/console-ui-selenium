@@ -6,6 +6,8 @@ import com.legion.test.testrail.APIException;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.tests.testframework.ScreenshotManager;
+import cucumber.api.java8.Da;
+import org.apache.commons.lang.time.DateUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -328,12 +330,11 @@ public class SimpleUtils {
 			SimpleUtils.fail("Size of Current Team Count should be equal to Previous Team Count",false);
 		}
 	}
-	public static String getCurrentDateMonthYearWithTimeZone(String timeZone)
+	public static String getCurrentDateMonthYearWithTimeZone(String timeZone, SimpleDateFormat sdf)
 	{
 		String date = "";
-		SimpleDateFormat dateTimeInGMT = new SimpleDateFormat("yyyy-MMM-dd");
-		dateTimeInGMT.setTimeZone(TimeZone.getTimeZone(timeZone));
-		date = dateTimeInGMT.format(new Date());
+		sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
+		date = sdf.format(new Date());
 		return date;
 	}
 

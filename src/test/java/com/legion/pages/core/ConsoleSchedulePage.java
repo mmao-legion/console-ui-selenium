@@ -1929,7 +1929,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow) throws Exception {
+    public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow, String currentTime) throws Exception {
         return null;
     }
 
