@@ -48,4 +48,8 @@ public interface ForecastPage<pubic> {
     public void verifyActualDataForPastWeek() throws Exception;
 
 	public void verifyFilterFunctionInForecast() throws Exception;
+
+	public boolean verifyIsWeekForecastVisibleAndOpenByDefault() throws Exception;
+
+	public boolean verifyIsShopperTypeSelectedByDefaultAndLaborTabIsClickable() throws Exception;
 }

@@ -2,11 +2,13 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -270,6 +272,16 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private List<WebElement> committedHoursPeriodFileds;
 	@FindBy(css="div[ng-click=\"$ctrl.select(tab)\"]")
 	private List<WebElement> schedulingPolicyGroupsTabs;
+	@FindBy(css="div.lg-question-input__wrapper.bg.budget_score > input-field > ng-form > div")
+	private WebElement budgetScoreInputField;
+	@FindBy(css="input-field[value=\"$ctrl.scheduleScoreWeight.coverageScoreWeightRegular\"]")
+	private WebElement coverageScoreWeightRegularInputField;
+	@FindBy(css="input-field[value=\"$ctrl.scheduleScoreWeight.coverageScoreWeightPeak\"]")
+	private WebElement coverageScoreWeightPeakInputField;
+	@FindBy(css="input-field[value=\"$ctrl.scheduleScoreWeight.employeeMatchScoreWeight\"]")
+	private WebElement employeeMatchScoreWeightInputField;
+	@FindBy(css="input-field[value=\"$ctrl.scheduleScoreWeight.complianceScoreWeight\"]")
+	private WebElement complianceScoreWeightInputField;
 
 	//added by Nishant
 
@@ -4933,4 +4945,97 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 		return timeZone;
 	}
+
+	@FindBy(css = "lg-schedule-score-control > div > div > div.tr > lg-button > button > span > span")
+	private WebElement manageBtnInScheduleScore;
+
+	@FindBy(css = "select[class=\"ng-pristine ng-untouched ng-valid ng-not-empty ng-valid-required\"]")
+	private WebElement drpCoverField;
+
+
+	@FindBy(css = "input[class=\"ng-pristine ng-untouched ng-valid ng-scope ng-not-empty ng-valid-min ng-valid-max ng-valid-required ng-valid-pattern\"]")
+	private List<WebElement> scoreFieldList;
+
+	@FindBy(css = "[label=\"Save\"]")
+	private WebElement saveBtnInManageSchScore;
+
+	@Override
+	public void updateScheduleScore(String budget_score, String coverage_scores_regular_hours, String coverage_scores_peak_hours, String employee_match_score, String compliance_score, String how_to_measure_coverage_relative_to_guidance_budget) throws Exception {
+		if (isElementLoaded(manageBtnInScheduleScore,5)) {
+			/**
+			 * wait for value load
+			 */
+			waitForSeconds(3);
+			click(manageBtnInScheduleScore);
+			try {
+				Select drpCoverage = new Select(drpCoverField);
+				drpCoverage.selectByVisibleText(how_to_measure_coverage_relative_to_guidance_budget);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if (scoreFieldList.size() >= 0) {
+				for (WebElement e: scoreFieldList
+					 ) {
+					e.click();
+					e.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+					e.sendKeys(budget_score);
+				}
+				click(saveBtnInManageSchScore);
+
+			} else
+				SimpleUtils.fail("manage button load failed and can not update schedule score", false);
+		}
+	}
+	@FindBy(css = ".lg-question-input__text.tr")
+	private List<WebElement> scoreListInSchedulePolicy;
+
+
+	@Override
+	public boolean isScheduleScoreUpdated(String budget_score, String coverage_scores_regular_hours, String coverage_scores_peak_hours, String employee_match_score, String compliance_score, String how_to_measure_coverage_relative_to_guidance_budget) {
+
+		boolean isScoreUpdated = false;
+		String abc = scoreListInSchedulePolicy.get(0).getText().replaceAll("%","");
+
+		if(scoreListInSchedulePolicy.get(0).getText().replaceAll("%","").equals(budget_score))
+		{
+			isScoreUpdated = true;
+			SimpleUtils.pass("Controls Page: Schedule policy - 'budget_score' updated successfully.");
+		}
+		String b = scoreListInSchedulePolicy.get(1).getText().replaceAll("%","");
+		if(scoreListInSchedulePolicy.get(1).getText().replaceAll("%","").equals(coverage_scores_regular_hours))
+		{
+			isScoreUpdated = true;
+			SimpleUtils.pass("Controls Page: Schedule policy - 'coverage_scores_regular_hours' updated successfully.");
+		}
+
+		String c = scoreListInSchedulePolicy.get(2).getText().replaceAll("%","");
+		if( scoreListInSchedulePolicy.get(2).getText().replaceAll("%","").equals(coverage_scores_peak_hours))
+		{
+			isScoreUpdated = true;
+			SimpleUtils.pass("Controls Page: Schedule policy - 'coverage_scores_peak_hours' updated successfully.");
+		}
+
+		String d = scoreListInSchedulePolicy.get(3).getText().replaceAll("%","");
+		if(scoreListInSchedulePolicy.get(3).getText().replaceAll("%","").equals(employee_match_score))
+		{
+			isScoreUpdated = true;
+			SimpleUtils.pass("Controls Page: Schedule policy - 'employee_match_score' updated successfully.");
+		}
+		String e = scoreListInSchedulePolicy.get(4).getText().replaceAll("%","");
+		if(scoreListInSchedulePolicy.get(4).getText().replaceAll("%","").equals(compliance_score))
+		{
+			isScoreUpdated = true;
+			SimpleUtils.pass("Controls Page: Schedule policy - 'compliance_score' updated successfully.");
+		}
+		String f = scoreListInSchedulePolicy.get(5).getText().replaceAll("%","");
+		if( scoreListInSchedulePolicy.get(5).getText().replaceAll("%","").equals(how_to_measure_coverage_relative_to_guidance_budget))
+		{
+			isScoreUpdated = true;
+			SimpleUtils.pass("Controls Page: Schedule policy - 'how_to_measure_coverage_relative_to_guidance_budget' updated successfully.");
+		}
+		return isScoreUpdated;
+
+	}
+
+
 }

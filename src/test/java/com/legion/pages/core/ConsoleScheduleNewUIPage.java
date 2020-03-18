@@ -687,7 +687,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = "[on-change=\"updateGroupBy(value)\"]")
     private WebElement groupByAllIcon;
 
-    @FindBy(css = "[ng-click=\"printAction($event)\"]")
+    @FindBy(css = "[ng-click=\"printActionInProgress() || printAction($event)\"]")
     private WebElement printButton;
 
     @FindBy(xpath ="//*[text()=\"Portrait\"]")
@@ -891,7 +891,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
         WebElement scheduleWeekViewButton = MyThreadLocal.getDriver().
                 findElement(By.cssSelector("div.lg-button-group-last"));
-        if (isElementLoaded(scheduleWeekViewButton)) {
+        if (isElementLoaded(scheduleWeekViewButton,5)) {
             if (!scheduleWeekViewButton.getAttribute("class").toString().contains("selected"))//selected
             {
                 click(scheduleWeekViewButton);
@@ -5021,7 +5021,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     public void dayWeekPickerSectionNavigatingCorrectly()  throws Exception{
-        String weekIcon = "Mon - Sun";
+        String weekIcon = "Sun - Sat";
         String activeWeekText = getActiveWeekText();
         if(activeWeekText.contains(weekIcon)){
             SimpleUtils.pass("Week pick show correctly");
@@ -5040,7 +5040,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public void landscapePortraitModeShowWellInWeekView() throws Exception {
         if (isElementLoaded(printButton,10)) {
-            click(printButton);
+//            click(printButton);
+            waitForSeconds(5);
             if(isElementLoaded(LandscapeButton)&isElementLoaded(PortraitButton)){
                 SimpleUtils.pass("Landscape and Portrait mode show well");
             }else {
@@ -5058,7 +5059,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void landscapeModeWorkWellInWeekView() throws Exception {
         String currentWindow =getDriver().getWindowHandle();
         if (isElementLoaded(printButton,5)) {
-
             click(printButton);
             click(LandscapeButton);
             click(printButtonInPrintLayout);
@@ -5078,7 +5078,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public void portraitModeWorkWellInWeekView() throws Exception {
         String currentWindow =getDriver().getWindowHandle();
-
         if (isElementLoaded(printButton,3)) {
             click(printButton);
             click(PortraitButton);
@@ -5123,38 +5122,59 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
         public void weatherWeekSmartCardIsDisplayedForAWeek() throws Exception {
-            String jsonTimeZoon = parametersMap2.get("Time_Zone");
-            TimeZone timeZone = TimeZone.getTimeZone(jsonTimeZoon);
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
-            dfs.setTimeZone(timeZone);
-            String currentTime =  dfs.format(new Date());
-            int currentDay = Integer.valueOf(currentTime.substring(currentTime.length()-2));
-            String firstDayInWeatherSmtCad2 = getDriver().findElement(By.xpath("//*[contains(text(),'Weather - Week of')]")).getText();
-            int firstDayInWeatherSmtCad = Integer.valueOf(firstDayInWeatherSmtCad2.substring(firstDayInWeatherSmtCad2.length()-2));
-            SimpleUtils.report("firstDayInWeatherSmtCad"+firstDayInWeatherSmtCad);
-            if((firstDayInWeatherSmtCad+7)>currentDay){
-                SimpleUtils.pass("The week smartcard is current week");
-                if (areListElementVisible(weatherTemperatures,8)) {
-                    String weatherWeekTest = getWeatherDayOfWeek();
-
-                    System.out.println("weatherWeekTest"+weatherWeekTest);
-                    for (DayOfWeek e : DayOfWeek.values()) {
-                        if (weatherWeekTest.contains(e.toString())) {
-                            SimpleUtils.pass("Weather smartcard include one week weather");
-                        } else {
-                            SimpleUtils.fail("Weather Smart card is not one whole week",false);
+            if (isElementLoaded(smartcardArrowRight,5)) {
+                click(smartcardArrowRight);
+                String jsonTimeZoon = parametersMap2.get("Time_Zone");
+                TimeZone timeZone = TimeZone.getTimeZone(jsonTimeZoon);
+                SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+                dfs.setTimeZone(timeZone);
+                String currentTime =  dfs.format(new Date());
+                int currentDay = Integer.valueOf(currentTime.substring(currentTime.length()-2));
+                String firstDayInWeatherSmtCad2 = getDriver().findElement(By.xpath("//*[contains(text(),'Weather - Week of')]")).getText();
+                int firstDayInWeatherSmtCad = Integer.valueOf(firstDayInWeatherSmtCad2.substring(firstDayInWeatherSmtCad2.length()-2));
+                SimpleUtils.report("firstDayInWeatherSmtCad"+firstDayInWeatherSmtCad);
+                if((firstDayInWeatherSmtCad+7)>currentDay){
+                    SimpleUtils.pass("The week smartcard is current week");
+                    if (areListElementVisible(weatherTemperatures,8)) {
+                        String weatherWeekTest = getWeatherDayOfWeek();
+                        SimpleUtils.report("weatherWeekTest"+weatherWeekTest);
+                        for (DayOfWeek e : DayOfWeek.values()) {
+                            if (weatherWeekTest.contains(e.toString())) {
+                                SimpleUtils.pass("Weather smartcard include one week weather");
+                            } else
+                                SimpleUtils.fail("Weather Smart card is not one whole week",false);
                         }
                     }
-
-                }else {
-                    SimpleUtils.fail("there is no week weather smartcard",false);
-                }
-
+                }else
+                    SimpleUtils.fail("This is not current week weather smartcard ",true);
             }else {
-                SimpleUtils.fail("This is not current week weather smartcard ",false);
+                String jsonTimeZoon = parametersMap2.get("Time_Zone");
+                TimeZone timeZone = TimeZone.getTimeZone(jsonTimeZoon);
+                SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+                dfs.setTimeZone(timeZone);
+                String currentTime =  dfs.format(new Date());
+                int currentDay = Integer.valueOf(currentTime.substring(currentTime.length()-2));
+                String firstDayInWeatherSmtCad2 = getDriver().findElement(By.xpath("//*[contains(text(),'Weather - Week of')]")).getText();
+                int firstDayInWeatherSmtCad = Integer.valueOf(firstDayInWeatherSmtCad2.substring(firstDayInWeatherSmtCad2.length()-2));
+                SimpleUtils.report("firstDayInWeatherSmtCad"+firstDayInWeatherSmtCad);
+                if((firstDayInWeatherSmtCad+7)>currentDay){
+                    SimpleUtils.pass("The week smartcard is current week");
+                    if (areListElementVisible(weatherTemperatures,8)) {
+                        String weatherWeekTest = getWeatherDayOfWeek();
+                        SimpleUtils.report("weatherWeekTest" + weatherWeekTest);
+                        for (DayOfWeek e : DayOfWeek.values()) {
+                            if (weatherWeekTest.contains(e.toString())) {
+                                SimpleUtils.pass("Weather smartcard include one week weather");
+                            } else
+                                SimpleUtils.fail("Weather Smart card is not one whole week", false);
+                        }
+                    }
+                }else
+                    SimpleUtils.fail("This is not current week weather smartcard ",true);
             }
 
-        }
+    }
+
 
 
     public String getScheduleDayRange() throws Exception {
@@ -5185,7 +5205,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             String preWeekText2 = preWeekText.trim().substring(preWeekText.length()-2);
             click(calendarNavigationPreviousWeek);
             String scheCalDay = getScheduleDayRange().trim();
-            System.out.println("scheCalDay==========="+ scheCalDay) ;
             if (areListElementVisible(schCalendarDateLabel,10) && scheCalDay.trim().contains(preWeekText2.trim())) {
                 SimpleUtils.pass("data is getting updating on Schedule page according to corresponding week");
             }else {
@@ -5209,14 +5228,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyComplianceShiftsSmartCardShowing() throws Exception {
-        if (complianceShitShowIcon.size() > 0) {
-
+//        if (complianceShitShowIcon.size() > 0) {
             if (isElementLoaded(complianceSmartcardHeader,15)) {
-                SimpleUtils.report("Compliance smartcard is visible ");
+                SimpleUtils.pass("Compliance smartcard is visible ");
             } else {
                 SimpleUtils.report("there is no compliance smartcard this week");
             }
-        }
+//        }
     }
 
     @Override
@@ -5228,7 +5246,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 SimpleUtils.fail("compliance shifts display failed",false);
             }
         }else {
-            SimpleUtils.fail("there is no compliance smartcard in current week",false);
+            SimpleUtils.report("there is no compliance smartcard in current week");
         }
 
     }
@@ -5240,7 +5258,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(complianceSmartcardHeader,10) & clickViewShift()) {
             SimpleUtils.pass("view shift button is clickable");
             String clearFilterTxt =viewShift.getText();
-            System.out.println("clear filter is==" + clearFilterTxt);
+            SimpleUtils.report("clear filter is" + clearFilterTxt);
             if (clearFilterBtnTextDefault.equals(clearFilterTxt)) {
                 click(viewShift);
                 SimpleUtils.pass("clear filter button is clickable");
@@ -5249,13 +5267,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (filterText.equals("")) {
                     SimpleUtils.pass("filter 'Compliance shifts' will be unselected after clicking clear filter");
                 }
-            }else {
+            }else
                 SimpleUtils.fail("clear filter  button can't clickable",true);
-            }
-
-        }else {
+        }else
             SimpleUtils.report("there is no compliance shift this week");
-        }
 
     }
 
@@ -5289,6 +5304,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 SimpleUtils.fail("Staffing Guidance Schedule History-Scrollbar is not working correctly version x details",true);
             }
         }
+      click(scheduleAnalyzePopupCloseButton);
+        SimpleUtils.pass("close button is working");
 
     }
 
@@ -5359,7 +5376,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(viewShiftBtn);
             SimpleUtils.report("View shift button is visible ");
             return true;
-        }
+        }else
         SimpleUtils.report("No view shift button");
         return false;
 
@@ -5375,7 +5392,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 SimpleUtils.report("Compliance filter is selected after clicking view shift button");
             }
         }else {
-            SimpleUtils.fail("there is no view shift button",false);
+            SimpleUtils.report("there is no compliance");
         }
     }
 
