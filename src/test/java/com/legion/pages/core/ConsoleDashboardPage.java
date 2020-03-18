@@ -410,7 +410,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				isShown = true;
 				SimpleUtils.pass("Projected Demand Graph shows!");
 			}else{
-				SimpleUtils.fail("Projected Demand Graph failed to show!", false);
+				SimpleUtils.fail("Projected Demand Graph failed to show!", true);
 			}
 		}else {
 			SimpleUtils.fail("Project Demand section failed to show!", true);

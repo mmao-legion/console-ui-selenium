@@ -2012,7 +2012,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     }
                     if (isElementLoaded(publishSheduleButton, 5)) {
                         // Wait for the Publish button to disappear.
-                        waitForSeconds(5);
+                        waitForSeconds(10);
                     }
                 }
             }

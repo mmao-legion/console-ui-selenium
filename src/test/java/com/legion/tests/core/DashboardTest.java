@@ -73,6 +73,8 @@ public class DashboardTest extends TestBase{
 		String nickName = profileNewUIPage.getNickNameFromProfile();
 		dashboardPage.verifyTheWelcomeMessage(nickName);
 		// Verify Today's forecast section > Projected Demand graph is present
+		// LEG-9104: Projected Demand and Shoppers are showing up Zero for Current and future weeks
+		// TODO: following check will fail since LEG-9104
 		dashboardPage.isProjectedDemandGraphShown();
 		HashMap<String, String> hoursOnDashboard = dashboardPage.getHoursFromDashboardPage();
 		String dateFromDashboard = dashboardPage.getCurrentDateFromDashboard();
@@ -103,7 +105,7 @@ public class DashboardTest extends TestBase{
 		boolean startingSoonLoaded = dashboardPage.isStartingSoonLoaded();
 		HashMap<String, String> hours = dashboardPage.getHoursFromDashboardPage();
 		// LEG-8474: When schedule of Current week is in Guidance, still data is showing on Dashboard
-		// So the following verification will fail since this bug
+		// TODO: following check will fail since LEG-8474
 		dashboardPage.verifyStartingSoonNScheduledHourWhenGuidanceOrDraft(startingSoonLoaded, hours.get("Scheduled"));
 		// Verify starting soon section
 		schedulePage = dashboardPage.goToTodayForNewUI();

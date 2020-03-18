@@ -18,7 +18,7 @@
 <!--       </classes>-->
 <!--   </test>-->
 
-<test name="Schedule Test">
+    <test name="Schedule Test">
         <classes>
             <class name="com.legion.tests.core.RegressionTest">
                 <methods>
@@ -60,22 +60,6 @@
            </class>
        </classes>
    </test>
-
-<!--    <test name="Dashboard Test">-->
-<!--        <classes>-->
-<!--            <class name="com.legion.tests.core.DashboardTestKendraScott2">-->
-<!--                <methods>-->
-<!--                    <include name="verifyTheDisplayLocationWithSelectedLocation" />-->
-<!--                    <include name="verifyTheClickActionOnChangeLocationButton" />-->
-<!--                    <include name="verifyTheContentDisplayedInChangeLocationLayout" />-->
-<!--                    <include name="verifyTheFunctionOfSearchTextBox" />-->
-<!--                    <include name="verifyTheWelcomeMessage" />-->
-<!--                    <include name="verifyTheFunctionOfViewTodaySchedule" />-->
-<!--                    <include name="verifyTheDataSourceForBudgetScheduledOther" />-->
-<!--                </methods>-->
-<!--            </class>-->
-<!--        </classes>-->
-<!--    </test>-->
 
 <!--    <test name="Schedule Test">-->
 <!--            <classes>-->
