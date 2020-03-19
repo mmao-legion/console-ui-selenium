@@ -335,6 +335,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		public void searchAndSelectTeamMemberByName(String username) throws Exception {
 			boolean isteamMemberFound = false;
 			if(isElementLoaded(teamMemberSearchBox, 10)) {
+				teamMemberSearchBox.clear();
 				teamMemberSearchBox.sendKeys(username);
 				waitForSeconds(2);
 				if(teamMembersList.size() > 0) {
@@ -517,6 +518,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement currentDay;
 	@FindBy (css = "div.day")
 	private List<WebElement> daysOnCalendar;
+	@FindBy (css = "div.loan-from-calendar div.day")
+	private List<WebElement> startDaysOnCalendar;
+	@FindBy (css = "div.loan-to-calendar div.day")
+	private	List<WebElement> endDaysOnCalendar;
 	@FindBy (css = "button.save-btn.pull-right")
 	private WebElement applyOnTransfer;
 	@FindBy (className = "lgn-alert-modal")
@@ -542,11 +547,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@FindBy (className = "lgnCheckBox")
 	private List<WebElement> badgeCheckBoxes;
 	@FindBy (className = "one-badge")
-	private List<WebElement> badgesOnProfile;
-	@FindBy (css = "div.one-badge path")
-	private List<WebElement> otherBadges;
-	@FindBy (css = "div.one-badge polygon")
-	private List<WebElement> starBadges;
+	private WebElement badgeIcon;
 	@FindBy (css = "button[ng-switch-when=\"invite\"]")
 	private List<WebElement> inviteButtons;
 	@FindBy (className = "modal-content")
@@ -629,6 +630,12 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement nextMonthArrow;
 	@FindBy (css = "lgn-action-button[label=\"'MANUAL ONBOARD'\"] button")
 	private WebElement manualOnBoardButton;
+	@FindBy (css = "div.loan-to-calendar i.next-month")
+	private WebElement endDateNextMonthArrow;
+	@FindBy (css = "[ng-src*=\"home-location\"]")
+	private WebElement homeStoreImg;
+	@FindBy (css = "div.personal-details-panel div.invitation-status")
+	private WebElement personalInvitationStatus;
 
 	@Override
 	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception {
@@ -650,28 +657,32 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 						for (WebElement teamMember : teamMembers){
 							WebElement tr = teamMember.findElement(By.className("tr"));
 							if (tr != null) {
-								List<WebElement> respectiveElements = tr.findElements(By.tagName("div"));
-								/*
-								 * It will get the respective elements of Team Member, they are Image, Name, Job Title, Status, Badges and Actions.
-								 */
-								if (respectiveElements != null && respectiveElements.size() == 6) {
-									String nameJobTitleStatus = respectiveElements.get(1).getText() + respectiveElements.get(2).getText()
-											+ respectiveElements.get(3).getText();
-									if (nameJobTitleStatus.toLowerCase().contains(testString)) {
+								WebElement name = tr.findElement(By.cssSelector("span.name"));
+								WebElement title = tr.findElement(By.cssSelector("span.title"));
+								WebElement status = tr.findElement(By.cssSelector("span.status"));
+								if (name != null && title != null && status != null) {
+									String nameJobTitleStatus = name.getText() + title.getText() + status.getText();
+									if (nameJobTitleStatus.toLowerCase().contains(testString.toLowerCase())) {
 										SimpleUtils.pass("Verified " + teamMember.getText() + " contains test string: " + testString);
 									} else {
 										SimpleUtils.fail("Team member: " + teamMember.getText() + " doesn't contain the test String: "
 												+ testString, true);
 									}
+								}else {
+									SimpleUtils.fail("Failed to find the name, title and status elements!", true);
 								}
+							}else {
+								SimpleUtils.fail("Failed to find the tr element!", true);
 							}
 						}
 					}else{
-						SimpleUtils.fail("Team members failed to load!", true);
+						SimpleUtils.report("Doesn't find the Team member that contains: " + testString);
 					}
 					searchTextBox.clear();
 				}
 			}
+		}else {
+			SimpleUtils.fail("Failed to find the search textbox element!", true);
 		}
 	}
 
@@ -693,6 +704,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					}else{
 						SimpleUtils.fail("Personal Details and Engagement Details sections failed to load", true);
 					}
+				}else {
+					SimpleUtils.fail("Failed to find the personal and engagement sections!", true);
 				}
 			}else{
 				SimpleUtils.fail("Two sections on Add New Team Member Tab failed to load", false);
@@ -739,6 +752,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					SimpleUtils.fail("It doesn't display the calendar for current month and current day, current day is: "
 							+ currentDateForSelectedLocation + ", but calendar displayed day is: " + currentDateOnCalendar, true);
 				}
+			}else {
+				SimpleUtils.fail("Current month, year and today elements failed to load!", true);
 			}
 		}
 	}
@@ -752,7 +767,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			int randomIndex = random.nextInt(teamMemberNames.size() - 1);
 			teamMember = teamMemberNames.get(randomIndex).getText();
 			click(teamMemberNames.get(randomIndex));
-			if (isElementLoaded(transferButton, 5)) {
+			if (isElementLoaded(transferButton, 5) && isElementLoaded(homeStoreImg, 10)) {
 				if (transfer.equals(transferButton.getText())) {
 					SimpleUtils.pass("Find a Team Member that can be transferred!");
 					moveToElementAndClick(transferButton);
@@ -764,6 +779,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 						click(transferButton);
 					}
 				}
+			}else {
+				SimpleUtils.fail("Transfer button and home store image failed to load!", true);
 			}
 		}else{
 			SimpleUtils.fail("Team Members didn't load successfully!", false);
@@ -772,33 +789,18 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 	@Override
-	public void selectATeamMemberToCancelTransfer() throws Exception {
+	public void isCancelTransferButtonLoadedAndClick() throws Exception {
 		String cancelTransfer = "CANCEL TRANSFER";
-		selectATeamMemberToViewProfile();
 		if (isElementLoaded(transferButton, 5)) {
 			if (cancelTransfer.equals(transferButton.getText())) {
-				SimpleUtils.pass("Find a Team Member that can be cancel transferred!");
+				SimpleUtils.pass("CANCEL TRANSFER button loaded successfully!");
 				moveToElementAndClick(transferButton);
 			} else {
-				transferTheHomeStoreLocationAndCancelTransfer();
+				SimpleUtils.fail("This button isn't CANCEL TRANSFER, it is: " + transferButton.getText(), false);
 			}
 		} else {
-			SimpleUtils.fail("TRANSFER button failed to load!", true);
+			SimpleUtils.fail("TRANSFER/CANCEL TRANSFER button failed to load!", true);
 		}
-	}
-
-	@Override
-	public String selectATeamMemberToViewProfile() throws Exception {
-		String teamMember = null;
-		if (areListElementVisible(teamMemberNames, 15)) {
-			Random random = new Random();
-			int randomIndex = random.nextInt(teamMemberNames.size() - 1);
-			teamMember = teamMemberNames.get(randomIndex).getText();
-			click(teamMemberNames.get(randomIndex));
-		} else {
-			SimpleUtils.fail("Team Members are failed to load!", true);
-		}
-		return teamMember;
 	}
 
 	@Override
@@ -824,42 +826,34 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	public boolean verifyTransferButtonEnabledAfterCancelingTransfer() throws Exception {
 		boolean isEnabled = false;
 		String transfer = "TRANSFER";
-		if (isElementLoaded(confirmButton, 5)) {
+		if (isElementLoaded(confirmButton, 10)) {
 			click(confirmButton);
-			if (isElementLoaded(popupMessage, 5)) {
-				if (isElementEnabled(transferButton, 10)) {
-					if (transferButton.getText().equals(transfer)) {
-						isEnabled = true;
-						SimpleUtils.pass("TRANSFER button is enabled!");
-					} else {
-						SimpleUtils.fail("CANCEL TRANSFER button doesn't change to TRANSFER", true);
-					}
+			if (isElementEnabled(transferButton, 10)) {
+				if (transferButton.getText().equals(transfer)) {
+					isEnabled = true;
+					SimpleUtils.pass("TRANSFER button is enabled!");
 				} else {
-					SimpleUtils.fail("Cancel Transfer failed!", true);
+					SimpleUtils.fail("CANCEL TRANSFER button doesn't change to TRANSFER", true);
 				}
+			} else {
+				SimpleUtils.fail("Cancel Transfer failed!", true);
 			}
+		}else {
+			SimpleUtils.fail("Cancel transfer confirm button failed to load!", true);
 		}
 		return isEnabled;
 	}
 
 	@Override
 	public void verifyHomeLocationAfterCancelingTransfer(String homeLocation) throws Exception {
-		if (verifyCancelTransferWindowPopup()) {
-			click(confirmButton);
-			if (!isElementLoaded(changeLocationMsg, 10)){
-				SimpleUtils.pass("Change Location message doesn't show!");
+		if (isElementLoaded(homeStoreLocation, 5)) {
+			if (homeStoreLocation.getText().contains(homeLocation)){
+				SimpleUtils.pass("Home Store location is the previous one!");
 			}else {
-				SimpleUtils.fail("Change Location message is still shown!", true);
-			}
-			if (isElementLoaded(homeStoreLocation, 5)) {
-				if (homeStoreLocation.getText().contains(homeLocation)){
-					SimpleUtils.pass("Home Store location is the previous one!");
-				}else {
-					SimpleUtils.fail("Home Store location isn't the previous one!", true);
-				}
+				SimpleUtils.fail("Home Store location isn't the previous one!", true);
 			}
 		}else {
-			SimpleUtils.fail("Cancel Transfer window does't show up!", true);
+			SimpleUtils.fail("Home Location element failed to load!", false);
 		}
 	}
 
@@ -876,17 +870,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}
 		}
 		return isLoaded;
-	}
-
-	private void transferTheHomeStoreLocationAndCancelTransfer() throws Exception {
-		moveToElementAndClick(transferButton);
-		verifyHomeLocationCanBeSelected();
-		verifyDateCanBeSelectedOnTransfer();
-		isApplyButtonEnabled();
-		verifyClickOnApplyButtonOnTransfer();
-		verifyTheFunctionOfConfirmTransferButton();
-		waitForSeconds(3);
-		click(transferButton);
 	}
 
 	private boolean isCancelTransferSuccess() throws Exception {
@@ -940,7 +923,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void verifyClickOnTemporaryTransferButton() throws Exception {
 		if (isElementLoaded(temporaryTransferButton, 5)) {
-			click(temporaryTransferButton);
+			if (!temporaryTransferButton.getAttribute("class").contains("checked")) {
+				click(temporaryTransferButton);
+			}
 			if (isElementLoaded(checkImage, 5)){
 				SimpleUtils.pass("Temporary Transfer button is checked!");
 			}else{
@@ -954,7 +939,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void verifyTwoCalendarsForCurrentMonthAreShown(String currentDate) throws Exception {
 		String className = "month-header";
-		verifyClickOnTemporaryTransferButton();
 		if (areListElementVisible(transferTitles, 10) && areListElementVisible(transferCalendars, 10)){
 			if (transferTitles.size() == 2 && transferCalendars.size() == 2){
 				String monthYearLeft = transferCalendars.get(0).findElement(By.className(className)).getText().toLowerCase();
@@ -968,7 +952,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				SimpleUtils.fail("Calendar counts are incorrect!", true);
 			}
 		}else {
-			SimpleUtils.fail("Calendars are failed to loade!", true);
+			SimpleUtils.fail("Calendars are failed to loaded!", true);
 		}
 	}
 
@@ -998,6 +982,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					}else {
 						SimpleUtils.fail("Selected day is inconsistent with the date shown in Date Hired!", true);
 					}
+				}else {
+					SimpleUtils.fail("Real days elements failed to load!", true);
 				}
 			}else {
 				SimpleUtils.fail("Back and Forward arrows are failed to load!", true);
@@ -1024,31 +1010,49 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					SimpleUtils.fail("Current day isn't highlighted!", true);
 				}
 			}
-			verifyDateCanBeSelectedOnTransfer();
+			verifyDateCanBeSelectedOnTempTransfer();
 		}else {
 			SimpleUtils.fail("Calendar failed to load!", true);
 		}
 	}
 
 	@Override
-	public void verifyDateCanBeSelectedOnTransfer() throws Exception {
+	public void verifyDateCanBeSelectedOnTempTransfer() throws Exception {
 		String className = "selected-day";
-		int nextDayIndex = 0;
+		int currentDayIndex = 0;
 		int maxIndex = 0;
 		Random random = new Random();
-		if (areListElementVisible(daysOnCalendar, 10)) {
+		if (areListElementVisible(startDaysOnCalendar, 10)) {
 			/*
-			 * Select a future date to transfer.
+			 * Select a start date to temp transfer, should start from today or future.
 			 */
-			nextDayIndex = getSpecificDayIndex(currentDay) + 1;
-			maxIndex = daysOnCalendar.size() - 1;
-			int randomIndex = nextDayIndex + random.nextInt(maxIndex - nextDayIndex);
-			WebElement randomElement = daysOnCalendar.get(randomIndex);
+			currentDayIndex = getSpecificDayIndex(currentDay);
+			maxIndex = startDaysOnCalendar.size() - 1;
+			int randomIndex = currentDayIndex + random.nextInt(maxIndex - currentDayIndex);
+			WebElement randomElement = startDaysOnCalendar.get(randomIndex);
 			click(randomElement);
 			if (randomElement.getAttribute("class").contains(className)) {
-				SimpleUtils.pass("Select a date successfully!");
+				SimpleUtils.pass("Select a start date successfully!");
 			} else {
-				SimpleUtils.fail("Failed to select a date!", true);
+				SimpleUtils.fail("Failed to select a start date!", true);
+			}
+		}else {
+			SimpleUtils.fail("Days on calendar failed to load!", true);
+		}
+		if (areListElementVisible(endDaysOnCalendar, 10)) {
+			/*
+			 * Select a end date to temp transfer.
+			 */
+			if (isElementLoaded(endDateNextMonthArrow, 5)) {
+				click(endDateNextMonthArrow);
+			}
+			int randomIndex = 7 + random.nextInt(maxIndex - 7);
+			WebElement randomElement = endDaysOnCalendar.get(randomIndex);
+			click(randomElement);
+			if (randomElement.getAttribute("class").contains(className)) {
+				SimpleUtils.pass("Select an end date successfully!");
+			} else {
+				SimpleUtils.fail("Failed to select an end date!", true);
 			}
 		}else {
 			SimpleUtils.fail("Days on calendar failed to load!", true);
@@ -1116,30 +1120,16 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					SimpleUtils.fail("The pop-up message is incorrect!", true);
 				}
 			}
-		}
-	}
-
-	@Override
-	public void	verifyTheFunctionOfCancelTransferButton() throws Exception {
-		String transfer = "TRANSFER";
-		if (isElementLoaded(confirmPopupWindow, 10) && isElementLoaded(cancelButton, 10)) {
-			click(cancelButton);
-			if (isElementLoaded(transferButton, 10)){
-				if (transferButton.getText().equals(transfer)) {
-					SimpleUtils.pass("Cancel Transfer Successfully!");
-				}else {
-					SimpleUtils.fail("Button doesn't remain TRANSFER!", true);
-				}
-			}
 		}else {
-			SimpleUtils.fail("Cancel button doesn't show on pop-up Window!", true);
+			SimpleUtils.fail("Confirm pop up window failed to load!", true);
 		}
 	}
 
 	@Override
 	public void verifyTheHomeStoreLocationOnProfilePage(String location, String selectedLocation) throws Exception {
 		String actualLocationMessage = null;
-		String date = null;
+		String startDate = null;
+		String endDate = null;
 		boolean isCorrectFormat = false;
 		SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy");
 		if (isElementLoaded(homeStoreLocation, 10) && isElementLoaded(changeLocationMsg, 10)) {
@@ -1151,12 +1141,13 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			actualLocationMessage = changeLocationMsg.getText();
 			if (actualLocationMessage.contains("-")) {
 				String[] values = actualLocationMessage.split("-");
-				if (values.length == 2) {
-					date = values[1].trim();
+				if (values.length == 3) {
+					startDate = values[1].trim().split("\n")[0];
+					endDate = values[2].trim();
 					/*
 					 * Check whether the date format is correct, eg: 02/20/2020
 					 */
-					isCorrectFormat = SimpleUtils.isDateFormatCorrect(date, format);
+					isCorrectFormat = SimpleUtils.isDateFormatCorrect(startDate, format) && SimpleUtils.isDateFormatCorrect(endDate, format);
 				}
 			}
 			/*
@@ -1169,41 +1160,62 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}else {
 				SimpleUtils.fail("Change Location Message is incorrect!", true);
 			}
+		}else {
+			SimpleUtils.fail("Home store location and change location message failed to load!", true);
 		}
 	}
 
 	@Override
-	public void verifyTheFunctionOfEditBadges() throws Exception {
+	public String verifyTheFunctionOfEditBadges() throws Exception {
 		String badges = "BADGES";
-		int badgeCount = 0;
+		String badgeID = "";
 		if (isElementLoaded(badgeTitle, 5)) {
 			if (badgeTitle.getText().equals(badges)) {
 				WebElement editBadge = badgeTitle.findElement(By.tagName("i"));
 				click(editBadge);
 				if (isManageBadgesLoaded()) {
-					badgeCount = selectAllTheBadges();
+					badgeID = selectTheBadgeByRandom();
 					confirmButton.click();
-					if (areListElementVisible(badgesOnProfile, 5)) {
-						if (badgesOnProfile.size() == badgeCount) {
+					if (isElementLoaded(badgeIcon, 5)) {
+						WebElement badge = badgeIcon.findElement(By.id(badgeID));
+						if (badge != null) {
 							SimpleUtils.pass("Select the badges successfully!");
 						}else{
-							SimpleUtils.fail("Selected count is inconsistent with the showing count!", true);
+							SimpleUtils.fail("The selected badge doesn't show!", true);
 						}
+					}else {
+						SimpleUtils.fail("Badges failed to load on Profile page!", true);
 					}
 				}
+			}else {
+				SimpleUtils.fail("Failed to find the title: BADGES!", true);
 			}
 		}else{
 			SimpleUtils.fail("BADGES failed to load!", true);
 		}
+		return badgeID;
 	}
 
 	@Override
-	public void verifyTheVisibleOfBadgesOnTeamRoster() throws Exception {
-		boolean areBadgesLoaded = areListElementVisible(otherBadges, 15) || areListElementVisible(starBadges, 15);
-		if (areBadgesLoaded) {
-			SimpleUtils.pass("Badges are visible on Team Roster!");
-		} else {
-			SimpleUtils.fail("Badges are invisible on Team Roster!", true);
+	public void verifyTheVisibleOfBadgesOnTeamRoster(String firstName, String badgeID) throws Exception {
+		WebElement badge = null;
+		if (isElementLoaded(searchTextBox, 5)) {
+			searchTextBox.sendKeys(firstName);
+			waitForSeconds(1);
+			if (areListElementVisible(teamMemberNames, 5)) {
+				if (isElementLoaded(badgeIcon, 5)) {
+					badge = badgeIcon.findElement(By.id(badgeID));
+				}
+				if (badge != null) {
+					SimpleUtils.pass("Badge: " + badgeID + " is visible on Team Roster!");
+				} else {
+					SimpleUtils.fail("Badge: " + badgeID + " failed to load on Team Roster!", true);
+				}
+			} else {
+				SimpleUtils.fail("Failed to find the team member: " + firstName, true);
+			}
+		}else {
+			SimpleUtils.fail("Search textbox failed to load!", true);
 		}
 	}
 
@@ -1250,17 +1262,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 	@Override
-	public void selectATeamMemberToInvite() throws Exception {
-		if (areListElementVisible(inviteButtons, 15)) {
-			Random random = new Random();
-			int index = random.nextInt(inviteButtons.size());
-			click(inviteButtons.get(index));
-		}else {
-			SimpleUtils.fail("Invite Buttons are not shown!", true);
-		}
-	}
-
-	@Override
 	public boolean isSendAndCancelLoadedAndEnabledOnInvite() throws Exception {
 		boolean isEnabled = false;
 		if (isElementLoaded(cancelInviteButton, 5) && isElementLoaded(sendInviteButton, 5)) {
@@ -1281,8 +1282,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	public String addANewTeamMemberToInvite(Map<String, String> newTMDetails) throws Exception {
 		String firstName = null;
 		String successfulMsg = "The team member has been added.";
-		String email = "Email";
-		String phoneNumber = "Phone Number";
 		firstName = checkAndFillInTheFieldsToCreateInviteTM(newTMDetails);
 		if (isElementEnabled(saveTMButton, 5)) {
 			SimpleUtils.pass("Save button on new TM page is enabled!");
@@ -1294,8 +1293,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				}else {
 					SimpleUtils.fail("The message is incorrect!", true);
 				}
-			}else {
-				SimpleUtils.fail("Successful message doesn't show!", true);
 			}
 		} else {
 			SimpleUtils.fail("Save Button is not enabled!", true);
@@ -1305,19 +1302,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void saveTheNewTeamMember() throws Exception {
-		String successfulMsg = "The team member has been added.";
 		if (isSaveButtonOnNewTMPageEnabled()) {
 			scrollToBottom();
 			click(saveTMButton);
-			if (isElementLoaded(popupMessage, 5)) {
-				if (popupMessage.getText().equals(successfulMsg)) {
-					SimpleUtils.pass("The New Team member is added successfully");
-				}else {
-					SimpleUtils.fail("The message is incorrect!", true);
-				}
-			}else {
-				SimpleUtils.fail("Successful message doesn't show!", true);
-			}
 		}
 	}
 
@@ -1398,26 +1385,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		selectByVisibleText(salariedSelect, newTMDetails.get("SALARIED"));
 		selectByVisibleText(exemptSelect, newTMDetails.get("EXEMPT"));
 		return firstName;
-	}
-
-	@Override
-	public void inviteTheNewCreatedTeamMember(String firstName) throws Exception {
-		verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		if (isElementLoaded(searchTextBox, 5)) {
-			searchTextBox.sendKeys(firstName);
-			if (areListElementVisible(inviteButtons, 5)){
-				if (inviteButtons.size() > 0) {
-					// The newly created team member is at last.
-					click(inviteButtons.get(inviteButtons.size() - 1));
-				} else {
-					SimpleUtils.fail("Can't find the new team member!", false);
-				}
-			}else {
-				SimpleUtils.fail("There is no Invite Button loaded!", true);
-			}
-		}else {
-			SimpleUtils.fail("Search textBox failed to load!", false);
-		}
 	}
 
 	@Override
@@ -1515,21 +1482,29 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}catch (Exception e){
 				SimpleUtils.fail("Parse String to Integer failed!", false);
 			}
+		}else {
+			SimpleUtils.fail("Team Members and team count failed to load!", true);
 		}
 	}
 
 	@Override
-	public void verifyCancelButtonOnAddTMAndClick() throws Exception {
+	public void verifyCancelButtonOnAddTMIsEnabled() throws Exception {
 		if (isElementLoaded(cancelButtonAddTM, 5)) {
 			SimpleUtils.pass("Cancel Button loaded successfully!");
 			if (isElementEnabled(cancelButtonAddTM, 5)) {
 				SimpleUtils.pass("Cancel Button is Enabled by default!");
-				click(cancelButtonAddTM);
 			} else {
 				SimpleUtils.fail("Cancel Button is not enabled!", true);
 			}
 		}else {
 			SimpleUtils.fail("Cancel Button failed to load!", true);
+		}
+	}
+
+	@Override
+	public void clickCancelButton() throws Exception {
+		if (isElementLoaded(cancelButtonAddTM, 5)) {
+			click(cancelButtonAddTM);
 		}
 	}
 
@@ -1616,60 +1591,20 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			SimpleUtils.fail("TODO cards failed to load!", false);
 		}
 		if (!isVisible) {
-			SimpleUtils.fail("Failed to find the team member:" + name + " on TODO!", false);
+			SimpleUtils.fail("Failed to find the team member:" + name + " on TODO!", true);
 		}
 	}
 
 	@Override
-	public void	selectAInvitedOrNotInvitedTeamMemberToView() throws Exception {
+	public void	verifyInviteAndReInviteButtonThenInvite() throws Exception {
 		boolean isAvailable = false;
-		String invite = "(Invited)";
-		String notInvite = "(Not invited)";
-		String inviteStatus = null;
-		WebElement parent = null;
-		WebElement tmName = null;
-		if (areListElementVisible(invitationStatus, 10)) {
-			for (int i = 0; i < invitationStatus.size(); i++) {
-				inviteStatus = invitationStatus.get(i).getText();
-				if (inviteStatus != null && !inviteStatus.isEmpty()) {
-					if (inviteStatus.equals(invite) || inviteStatus.equals(notInvite)) {
-						parent = invitationStatus.get(i).findElement(By.xpath("./../.."));
-						if (parent != null) {
-							tmName = parent.findElement(By.cssSelector("span.name"));
-						}
-						if (tmName != null) {
-							click(tmName);
-							isProfilePageLoaded();
-							if (isInviteButtonAvailable(inviteStatus)) {
-								click(inviteButton);
-								isInviteTeamMemberWindowLoaded();
-								isAvailable = true;
-							}
-						} else {
-							SimpleUtils.fail("Failed to find the team member name!", true);
-						}
-						break;
-					}
-				}
-			}
-		} else {
-			SimpleUtils.fail("Invitation Status failed to load!", true);
+		if (isInviteButtonAvailable()) {
+			click(inviteButton);
+			isAvailable = true;
 		}
 		if (!isAvailable) {
 			SimpleUtils.fail("INVITE/REINVITE button is unavailable!", true);
 		}
-	}
-
-	@Override
-	public int selectATeamMemberToActivate() throws Exception {
-		int activateCount = 0;
-		if (areListElementVisible(activateButtons, 15)) {
-			activateCount = activateButtons.size();
-			Random random = new Random();
-			int index = random.nextInt(activateButtons.size());
-			click(activateButtons.get(index));
-		}
-		return activateCount;
 	}
 
 	@Override
@@ -1736,8 +1671,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					} else {
 						SimpleUtils.fail("Failed to activate the Team member", false);
 					}
-				} else {
-					SimpleUtils.fail("Pop up message failed to show!", false);
 				}
 			}else {
 				SimpleUtils.fail("Activate button on activate window is disabled!", false);
@@ -1783,8 +1716,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 	@Override
-	public void verifyTheStatusOfTeamMember() throws Exception {
-		String expectedStatus = "Active";
+	public void verifyTheStatusOfTeamMember(String expectedStatus) throws Exception {
 		if (isElementLoaded(tmStatus, 10)) {
 			if (expectedStatus.equals(tmStatus.getText())) {
 				SimpleUtils.pass("Team member's status is correct!");
@@ -1806,54 +1738,12 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 	@Override
-	public void cancelActivateOrDeactivateTeamMember() throws Exception {
-		boolean isActivateLoaded = false;
-		if (isElementLoaded(deactivateButton, 10)) {
-			click(deactivateButton);
-			isDeactivateWindowLoaded();
-			selectADateOnCalendarAndApplyDeactivate();
-			if (isElementLoaded(popupMessage, 10)) {
-				if (isElementLoaded(activateButton, 10) && isElementEnabled(activateButton, 10)) {
-					isActivateLoaded = true;
-				}
-			}
-		}
-		if (isElementLoaded(cancelActivateButton, 10)) {
-			click(cancelActivateButton);
-			if (isElementLoaded(confirmPopupWindow, 10)) {
-				if (isElementLoaded(confirmButton)) {
-					click(confirmButton);
-					if (isElementLoaded(popupMessage, 10)) {
-						if (isElementLoaded(activateButton, 10) && isElementEnabled(activateButton, 10)) {
-							isActivateLoaded = true;
-						}
-					}
-				}else {
-					SimpleUtils.fail("Confirm Button failed to load!", false);
-				}
-			}else {
-				SimpleUtils.fail("Confirm pop up window failed to load!", false);
-			}
-		}
-		if (!isActivateLoaded) {
-			SimpleUtils.fail("Activate Button is not enabled!", false);
-		}
-	}
-
-	@Override
-	public void searchForTeamMemberByStatus(String status) throws Exception {
-		if (isElementEnabled(searchTextBox, 10)) {
-			searchTextBox.sendKeys(status);
-			// wait for the team members to updated according to the keyword
-			waitForSeconds(1);
-		}else {
-			SimpleUtils.fail("Search Textbox failed to load!", false);
-		}
-	}
-
-	@Override
-	public void sendTheInviteViaEmail() throws Exception {
+	public void sendTheInviteViaEmail(String email) throws Exception {
 		if (isSendAndCancelLoadedAndEnabledOnInvite()) {
+			if (isElementLoaded(emailInput, 5)) {
+				emailInput.clear();
+				emailInput.sendKeys(email);
+			}
 			click(sendInviteButton);
 			waitUntilElementIsInVisible(inviteTMWindow);
 		} else {
@@ -1975,8 +1865,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					}else {
 						SimpleUtils.fail("The pop up message is incorrect!", false);
 					}
-				}else {
-					SimpleUtils.fail("Pop up message doesn't show!", false);
 				}
 			} else {
 				SimpleUtils.fail("Confirm window doesn't show!", false);
@@ -2035,8 +1923,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				}else {
 					SimpleUtils.fail("Failed to cancel the termination!", false);
 				}
-			}else{
-				SimpleUtils.fail("Pop up message failed to load!", false);
 			}
 		}else{
 			SimpleUtils.fail("Confirm pop up window failed to load!", false);
@@ -2059,7 +1945,11 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	public void manualOnBoardTeamMember() throws Exception {
 		String successfulMsg = "Team member successfully On-boarded.";
 		String actualMsg = "";
-		click(manualOnBoardButton);
+		if (isElementLoaded(manualOnBoardButton, 5)) {
+			click(manualOnBoardButton);
+		}else {
+			SimpleUtils.fail("Manual OnBoard button failed to load!", true);
+		}
 		if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
 			click(confirmButton);
 			if (isElementLoaded(popupMessage, 15)) {
@@ -2069,8 +1959,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				}else {
 					SimpleUtils.fail("Manual OnBoard message is incorrect! " + actualMsg, false);
 				}
-			}else {
-				SimpleUtils.fail("Pop up message failed to load!", false);
 			}
 		}else {
 			SimpleUtils.fail("Manual OnBoard Pop up window doesn't show!", false);
@@ -2106,52 +1994,21 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		return isLoaded;
 	}
 
-	private void isDeactivateWindowLoaded() throws Exception {
-		if (isElementLoaded(deactivateWindow, 10)) {
-			SimpleUtils.pass("Deactivate window loaded successfully!");
-		} else {
-			SimpleUtils.fail("Deactivate window failed to load!", false);
-		}
-	}
-
-	private void selectADateOnCalendarAndApplyDeactivate() throws Exception {
-		if (isElementLoaded(currentDay, 10)) {
-			click(currentDay);
-			// Apply Deactivate button is the same css as applyOnActivate
-			if (isElementEnabled(applyButton, 10)) {
-				click(applyButton);
-				if (isElementLoaded(confirmPopupWindow, 10)) {
-					if (isElementLoaded(confirmButton)) {
-						click(confirmButton);
-					}else {
-						SimpleUtils.fail("Confirm Button failed to load!", false);
-					}
-				}else {
-					SimpleUtils.fail("Confirm pop up window failed to load!", false);
-				}
-			}else {
-				SimpleUtils.fail("Apply button failed to load!", false);
-			}
-		}else {
-			SimpleUtils.fail("Calendar failed to load!", false);
-		}
-	}
-
-	private boolean isInviteButtonAvailable(String inviteStatus) throws Exception {
+	private boolean isInviteButtonAvailable() throws Exception {
 		boolean isAvailable = false;
-		String invite = "(Invited)";
-		String notInvite = "(Not invited)";
+		String invite = "Invited to onboard";
+		String notInvite = "(Not invited yet)";
 		String inviteButtonName = "INVITE";
 		String reInviteButtonName = "REINVITE";
-		if (isElementLoaded(inviteButton, 10)) {
-			if (inviteStatus.equals(invite)) {
+		if (isElementLoaded(inviteButton, 5) && isElementLoaded(personalInvitationStatus, 5)) {
+			if (personalInvitationStatus.getText().contains(invite)) {
 				if (inviteButton.getText().equals(reInviteButtonName)) {
 					isAvailable = true;
 					SimpleUtils.pass("REINVITE button is available when the status is invited");
 				}else {
 					SimpleUtils.fail("When status is invited, button should be REINVITE, but actual is: " + inviteButton.getText(), true);
 				}
-			}else if (inviteStatus.equals(notInvite)) {
+			}else if (personalInvitationStatus.getText().equals(notInvite)) {
 				if (inviteButton.getText().equals(inviteButtonName)) {
 					isAvailable = true;
 					SimpleUtils.pass("INVITE button is available when the status is Not invited");
@@ -2203,30 +2060,37 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		return isLoaded;
 	}
 
-	private int selectAllTheBadges() throws Exception {
-		int badgeCount = 0;
+	private String selectTheBadgeByRandom() throws Exception {
+		String badgeID = "";
 		String checked = "checked";
 		if (areListElementVisible(badgeCheckBoxes, 15)) {
-			badgeCount = badgeCheckBoxes.size();
-			for (WebElement badgeCheckBox : badgeCheckBoxes) {
-				if (!badgeCheckBox.getAttribute("class").contains(checked)) {
-					badgeCheckBox.click();
-					if (badgeCheckBox.getAttribute("class").contains(checked)) {
-						SimpleUtils.pass("Check the Badge successfully!");
+			int randomIndex = (new Random()).nextInt(badgeCheckBoxes.size());
+			click(badgeCheckBoxes.get(randomIndex));
+			if (badgeCheckBoxes.get(randomIndex).getAttribute("class").contains(checked)) {
+				SimpleUtils.pass("Check the Badge successfully!");
+				WebElement parent = badgeCheckBoxes.get(randomIndex).findElement(By.xpath("./../.."));
+				if (parent != null) {
+					WebElement badge = parent.findElement(By.cssSelector("g#Symbols>g"));
+					if (badge != null) {
+						badgeID = badge.getAttribute("id");
 					}
+				}else {
+					SimpleUtils.fail("Failed to find the parent element!", true);
 				}
+			}else {
+				SimpleUtils.fail("Failed to select the badge!", true);
 			}
 		}else {
 			SimpleUtils.fail("Badge checkboxes are failed to load!", true);
 		}
-		return badgeCount;
+		return badgeID;
 	}
 
 	private int getSpecificDayIndex(WebElement specificDay) {
 		int index = 0;
-		if (areListElementVisible(daysOnCalendar, 10)){
-			for (int i = 0; i < daysOnCalendar.size(); i++) {
-				String day = daysOnCalendar.get(i).getText();
+		if (areListElementVisible(startDaysOnCalendar, 10)){
+			for (int i = 0; i < startDaysOnCalendar.size(); i++) {
+				String day = startDaysOnCalendar.get(i).getText();
 				if (day.equals(specificDay.getText())){
 					index = i;
 					SimpleUtils.pass("Get current day's index successfully");

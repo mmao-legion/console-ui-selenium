@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -249,622 +250,9 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828041 Search Team Members is working correctly")
+	@TestName(description = "Verify the Team Functionality In Update Info")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheFunctionOfSearchTMBar(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		List<String> testStrings = new ArrayList<>(Arrays.asList("jam", "boris", "h"));
-		teamPage.verifyTheFunctionOfSearchTMBar(testStrings);
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828042 plus button to add TM is working")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheFunctionOfPlusIcon(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828047 add TM Date Hired calendar is open for current month only and current date" +
-			" should be in Red color")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheCalendarLoadForCurrentDayAndColor(String browser, String username, String password, String location) throws Exception {
-		String timeZone = null;
-		String currentDate = null;
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		if (controlsNewUIPage.isControlsPageLoaded()){
-			controlsNewUIPage.clickOnControlsLocationProfileSection();
-			if (controlsNewUIPage.isControlsLocationProfileLoaded()){
-				timeZone = controlsNewUIPage.getTimeZoneFromLocationDetailsPage();
-				if (timeZone != null && !timeZone.isEmpty()){
-					currentDate = SimpleUtils.getCurrentDateMonthYearWithTimeZone(timeZone);
-				}
-			}
-		}
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-		teamPage.verifyTheMonthAndCurrentDayOnCalendar(currentDate);
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828049 any new home location can be selected")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyNewHomeLocationCanBeSelectedOnTransfer(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.selectATeamMemberToTransfer();
-		teamPage.verifyHomeLocationCanBeSelected();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828050 Temp transfer button is working")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheFunctionOfTemporaryTransferButton(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.selectATeamMemberToTransfer();
-		teamPage.verifyClickOnTemporaryTransferButton();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828051 when click on temp Transfer button,Start date and End date calendar is opening")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTwoCalendarsAreShownAfterClickTemp(String browser, String username, String password, String location) throws Exception {
-		String timeZone = null;
-		String currentDate = null;
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		if (controlsNewUIPage.isControlsPageLoaded()){
-			controlsNewUIPage.clickOnControlsLocationProfileSection();
-			if (controlsNewUIPage.isControlsLocationProfileLoaded()){
-				timeZone = controlsNewUIPage.getTimeZoneFromLocationDetailsPage();
-				if (timeZone != null && !timeZone.isEmpty()){
-					currentDate = SimpleUtils.getCurrentDateMonthYearWithTimeZone(timeZone);
-				}
-			}
-		}
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.selectATeamMemberToTransfer();
-		teamPage.verifyTwoCalendarsForCurrentMonthAreShown(currentDate);
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828048 add TM Calendar can be Navigate to Previous future")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheFunctionOfAddTMCalendar(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-		teamPage.verifyTheCalendarCanNavToPreviousAndFuture();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828052 current date is by default selected Other Dates can be selected")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheCurrentDateAndSelectOtherDateOnTransfer(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.selectATeamMemberToTransfer();
-		teamPage.verifyTheCurrentDateAndSelectOtherDateOnTransfer();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828053 while transferring to a new location old location shift is converting into open shift")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTransferToANewLocation(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		String teamMember = teamPage.selectATeamMemberToTransfer();
-		String selectedLocation = teamPage.verifyHomeLocationCanBeSelected();
-		teamPage.verifyDateCanBeSelectedOnTransfer();
-		teamPage.isApplyButtonEnabled();
-		teamPage.verifyClickOnApplyButtonOnTransfer();
-		teamPage.verifyTheMessageOnPopupWindow(location, selectedLocation, teamMember);
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828054 Confirm cancel button is working")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyConfirmButtonOnPopupWindowWorking(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.selectATeamMemberToTransfer();
-		teamPage.verifyHomeLocationCanBeSelected();
-		teamPage.verifyDateCanBeSelectedOnTransfer();
-		teamPage.isApplyButtonEnabled();
-		teamPage.verifyClickOnApplyButtonOnTransfer();
-		teamPage.verifyTheFunctionOfConfirmTransferButton();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828054 Confirm cancel button is working")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyCancelButtonOnPopupWindowWorking(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.selectATeamMemberToTransfer();
-		teamPage.verifyHomeLocationCanBeSelected();
-		teamPage.verifyDateCanBeSelectedOnTransfer();
-		teamPage.isApplyButtonEnabled();
-		teamPage.verifyClickOnApplyButtonOnTransfer();
-		teamPage.verifyTheFunctionOfCancelTransferButton();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828055 home location is not updating to new location but It is giving information like New Location 07042019 and Back to Home store 07052019")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyHomeLocationNotUpdateAndGivenInformation(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.selectATeamMemberToTransfer();
-		String selectedLocation = teamPage.verifyHomeLocationCanBeSelected();
-		teamPage.verifyDateCanBeSelectedOnTransfer();
-		teamPage.isApplyButtonEnabled();
-		teamPage.verifyClickOnApplyButtonOnTransfer();
-		teamPage.verifyTheFunctionOfConfirmTransferButton();
-		teamPage.verifyTheHomeStoreLocationOnProfilePage(location, selectedLocation);
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828057 cancel Transfer button is working After click on Cancel Transfer-one pop-up is coming")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyPopupIsShownAfterClickingCancelTransfer(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.selectATeamMemberToCancelTransfer();
-		teamPage.verifyCancelTransferWindowPopup();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828056 After click on Cancel Transfer  button,Transfer button is enabled again")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTransferButtonEnabledAfterCancelingTransfer(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.selectATeamMemberToCancelTransfer();
-		teamPage.verifyCancelTransferWindowPopup();
-		teamPage.verifyTransferButtonEnabledAfterCancelingTransfer();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828070 After cancelling the transfer Home location should get updated as the previous one")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyHomeLocationAfterCancelingTransfer(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.selectATeamMemberToCancelTransfer();
-		teamPage.verifyCancelTransferWindowPopup();
-		teamPage.verifyHomeLocationAfterCancelingTransfer(location);
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828061 Badges is working and is able to edit into any new one")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheFunctionOfBadges(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.selectATeamMemberToViewProfile();
-		teamPage.isProfilePageLoaded();
-		teamPage.verifyTheFunctionOfEditBadges();
-	}
-
-	@Automated(automated ="Manual")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828062 Badges is visible on Team roster.")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheVisibleOfBadgesOnTeamRoster(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.verifyTheVisibleOfBadgesOnTeamRoster();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828067 in Email only correct domain is accepted")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheEmailDomainOnInvite(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		controlsNewUIPage.isControlsPageLoaded();
-		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-		controlsNewUIPage.isControlsScheduleCollaborationLoaded();
-		controlsNewUIPage.setOnBoardOptionAsEmailWhileInviting();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.selectATeamMemberToInvite();
-		teamPage.isInviteTeamMemberWindowLoaded();
-		List<String> testEmails = new ArrayList<>(Arrays.asList("123456", "nora@legion.co", "@#$%%"));
-		teamPage.verifyTheEmailFormatOnInviteWindow(testEmails);
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828068 To use the legion when click on invite button Invite Team Member page should be opened")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyInviteTeamMemberPageLoaded(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.selectATeamMemberToInvite();
-		teamPage.isInviteTeamMemberWindowLoaded();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828075 Verify Contact Information Enter Committed Availability and Personalize Welcome Message Field should be available")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyThreeTitlesDisplayedOnInvite(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-		String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
-		teamPage.inviteTheNewCreatedTeamMember(firstName);
-		teamPage.isInviteTeamMemberWindowLoaded();
-		teamPage.verifyThereSectionsAreLoadedOnInviteWindow();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828076 Send Cancel button should be available on Invite  Team Member")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifySendAndCancelEnabledOnInvite(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.selectATeamMemberToInvite();
-		teamPage.isInviteTeamMemberWindowLoaded();
-		teamPage.isSendAndCancelLoadedAndEnabledOnInvite();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828043 add TM Save button is enabled only when all the mandatory details are filled")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifySaveButtonEnableOnNewTMPage(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		controlsNewUIPage.isControlsPageLoaded();
-		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-		controlsNewUIPage.isControlsScheduleCollaborationLoaded();
-		String mandatoryField = controlsNewUIPage.getOnBoardOptionFromScheduleCollaboration();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-		teamPage.checkAddATMMandatoryFieldsAreLoaded(mandatoryField);
-		teamPage.fillInMandatoryFieldsOnNewTMPage(newTMDetails, mandatoryField);
-		teamPage.isSaveButtonOnNewTMPageEnabled();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828044 add TM Contact number accept in numeric digits only no special or alphabetical character allowed")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTMContactNumberInNumericOnly(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-		List<String> contactNumbers = new ArrayList<>(Arrays.asList("123456", "abc123cfg566", "@#$%%", "1234567890"));
-		teamPage.verifyContactNumberFormatOnNewTMPage(contactNumbers);
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828040 TM count is correct from roster")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTMCountIsCorrectFromRoster(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.verifyTMCountIsCorrectOnRoster();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828046 add TM Cancel button is enabled By-default")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyCancelButtonEnabledOnAddTM(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-		teamPage.verifyCancelButtonOnAddTMAndClick();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828045 add TM Mandatory field can not leave empty")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyMandatoryFieldsOnAddTM(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		controlsNewUIPage.isControlsPageLoaded();
-		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-		controlsNewUIPage.isControlsScheduleCollaborationLoaded();
-		String mandatoryField = controlsNewUIPage.getOnBoardOptionFromScheduleCollaboration();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-		teamPage.checkAddATMMandatoryFieldsAreLoaded(mandatoryField);
-		teamPage.verifyTheMandatoryFieldsCannotEmpty();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828069 Team member is invited and visible on todos")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTMIsInvitedAndVisibleOnTODO(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-		String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
-		teamPage.openToDoPopupWindow();
-		teamPage.verifyTMIsVisibleAndInvitedOnTODO(firstName);
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828072 To Invite Team Member for Onboarding Invite Re-Invite button should be available")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyInviteAndReInviteAreAvailable(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.selectAInvitedOrNotInvitedTeamMemberToView();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828058 While activating team Member On boarded date is updating to new one and Deactivate terminate button is enabled")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyOnBoardedDateAndButtonsWhileActivating(String browser, String username, String password, String location) throws Exception {
-		String onBoardedDate = null;
-		String active = "Active";
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		if (teamPage.selectATeamMemberToActivate() != 0) {
-			if (!teamPage.isProfilePageSelected()) {
-				teamPage.navigateToProfileTab();
-			}
-		}else {
-			teamPage.searchForTeamMemberByStatus(active);
-			teamPage.selectATeamMemberToViewProfile();
-			teamPage.isProfilePageLoaded();
-			if (!teamPage.isActivateButtonLoaded()) {
-				teamPage.cancelActivateOrDeactivateTeamMember();
-			}
-		}
-		onBoardedDate = teamPage.getOnBoardedDate();
-		teamPage.clickOnActivateButton();
-		teamPage.isActivateWindowLoaded();
-		teamPage.selectADateOnCalendarAndActivate();
-		teamPage.verifyDeactivateAndTerminateEnabled();
-		teamPage.isOnBoardedDateUpdated(onBoardedDate);
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828060 Status will change into Activate status according to date")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTeamMemberStatusAfterActivating(String browser, String username, String password, String location) throws Exception {
-		String active = "Active";
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.searchForTeamMemberByStatus(active);
-		teamPage.selectATeamMemberToViewProfile();
-		teamPage.isProfilePageLoaded();
-		if (!teamPage.isActivateButtonLoaded()) {
-			teamPage.cancelActivateOrDeactivateTeamMember();
-		}
-		teamPage.clickOnActivateButton();
-		teamPage.isActivateWindowLoaded();
-		teamPage.selectADateOnCalendarAndActivate();
-		teamPage.verifyTheStatusOfTeamMember();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828073 After Click on Invite Re-invite button invitation code should be sent to Email id")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyInvitationCodeIsSent(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		controlsNewUIPage.isControlsPageLoaded();
-		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-		controlsNewUIPage.isControlsScheduleCollaborationLoaded();
-		controlsNewUIPage.setOnBoardOptionAsEmailWhileInviting();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-		String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
-		teamPage.inviteTheNewCreatedTeamMember(firstName);
-		teamPage.isInviteTeamMemberWindowLoaded();
-		teamPage.sendTheInviteViaEmail();
-		GmailPage gmailPage = pageFactory.createConsoleGmailPage();
-		gmailPage.loginToGmailWithCredential();
-		gmailPage.waitUntilInvitationEmailLoaded();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828074 Invitation code should be available on Email id")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyInvitationCodeIsAvailableOnEmailID(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		controlsNewUIPage.isControlsPageLoaded();
-		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-		controlsNewUIPage.isControlsScheduleCollaborationLoaded();
-		controlsNewUIPage.setOnBoardOptionAsEmailWhileInviting();
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-		String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
-		teamPage.inviteTheNewCreatedTeamMember(firstName);
-		teamPage.isInviteTeamMemberWindowLoaded();
-		teamPage.sendTheInviteViaEmail();
-		GmailPage gmailPage = pageFactory.createConsoleGmailPage();
-		gmailPage.loginToGmailWithCredential();
-		gmailPage.waitUntilInvitationEmailLoaded();
-		gmailPage.verifyInvitationCodeIsAvailableOnEmailID();
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828066 It is present when any information is pending for TM Contact number email id")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyUpdateInfoIsPresentWhenPendingForContactOrEmail(String browser, String username, String password, String location) throws Exception {
+	public void verifyTheTeamFunctionalityInUpdateInfo(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		dashboardPage.verifyDashboardPageLoadedProperly();
 		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
@@ -882,6 +270,7 @@ public class TeamTestKendraScott2 extends TestBase{
 		String firstName = teamPage.fillInMandatoryFieldsOnNewTMPage(newTMDetails, mandatoryField);
 		teamPage.isSaveButtonOnNewTMPageEnabled();
 		teamPage.saveTheNewTeamMember();
+		teamPage.goToTeam();
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 		teamPage.searchTheNewTMAndUpdateInfo(firstName);
 		teamPage.isProfilePageLoaded();
@@ -894,53 +283,174 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828063 While Clicking on Terminate button particular TM is able to removed from Team roster on the set date")
+	@TestName(description = "Verify the Team functionality In Roster")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheFunctionOfTerminateButton(String browser, String username, String password, String location) throws Exception {
-		String status = "New";
+	public void verifyTheTeamFunctionalityInRoster(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		dashboardPage.verifyDashboardPageLoadedProperly();
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.isControlsPageLoaded();
+		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+		controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+		String mandatoryField = controlsNewUIPage.getOnBoardOptionFromScheduleCollaboration();
+		String currentDate = getTimeZoneFromControlsAndGetDate();
+		// Verify TM Count is correct from roster
 		TeamPage teamPage = pageFactory.createConsoleTeamPage();
 		teamPage.goToTeam();
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.searchForTeamMemberByStatus(status);
-		teamPage.selectATeamMemberToViewProfile();
-		teamPage.isProfilePageLoaded();
-		teamPage.isTerminateButtonLoaded();
-		teamPage.terminateTheTeamMember(true);
-		/*
-		 * Since employeeID is distinct, so if searching from roster, it shouldn't find the team member if it has been terminated.
-		 */
-		String employeeID = teamPage.getEmployeeIDFromProfilePage();
-		teamPage.goToTeam();
+		teamPage.verifyTMCountIsCorrectOnRoster();
+		// Verify Search Team Members is working correctly
+		List<String> testStrings = new ArrayList<>(Arrays.asList("jam", "boris", "Retail"));
+		teamPage.verifyTheFunctionOfSearchTMBar(testStrings);
+		// Verify + button to add TM is working
+		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+		// Verify Cancel button is enabled by default
+		teamPage.verifyCancelButtonOnAddTMIsEnabled();
+		// Verify Contact number accept in numeric digits only
+		List<String> contactNumbers = new ArrayList<>(Arrays.asList("123456", "abc123cfg566", "@#$%%", "1234567890"));
+		teamPage.verifyContactNumberFormatOnNewTMPage(contactNumbers);
+		// Verify Mandatory field can not leave empty
+		teamPage.checkAddATMMandatoryFieldsAreLoaded(mandatoryField);
+		teamPage.verifyTheMandatoryFieldsCannotEmpty();
+		// Verify Date Hired calendar is open for current month only and current date should be in Red color
+		teamPage.verifyTheMonthAndCurrentDayOnCalendar(currentDate);
+		// Verify Calendar can be Navigate to Previous/future
+		teamPage.verifyTheCalendarCanNavToPreviousAndFuture();
+		// Verify Save button is enabled only when all the mandatory details are filled
+		teamPage.fillInMandatoryFieldsOnNewTMPage(newTMDetails, mandatoryField);
+		teamPage.isSaveButtonOnNewTMPageEnabled();
+		// Verify click on Cancel button, it will return to the Roster page
+		teamPage.clickCancelButton();
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.searchTheTeamMemberByEmployeeIDFromRoster(employeeID, true);
 	}
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "T1828065 Cancel Termination button is working TM will not removed from Roster after click on this button")
+	@TestName(description = "Verify the Team functionality In Transfer")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheFunctionOfCancelTerminateButton(String browser, String username, String password, String location) throws Exception {
-		String status = "New";
+	public void verifyTheTeamFunctionalityInTransfer(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		dashboardPage.verifyDashboardPageLoadedProperly();
+		String currentDate = getTimeZoneFromControlsAndGetDate();
 		TeamPage teamPage = pageFactory.createConsoleTeamPage();
 		teamPage.goToTeam();
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.searchForTeamMemberByStatus(status);
-		teamPage.selectATeamMemberToViewProfile();
-		teamPage.isProfilePageLoaded();
-		boolean isCancel = teamPage.isCancelTerminateButtonLoaded();
-		if (!isCancel) {
-			teamPage.terminateTheTeamMember(false);
-		}
-		teamPage.verifyTheFunctionOfCancelTerminate();
-		String employeeID = teamPage.getEmployeeIDFromProfilePage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.searchTheTeamMemberByEmployeeIDFromRoster(employeeID, false);
+		// Verify any new home location can be selected
+		String teamMember = teamPage.selectATeamMemberToTransfer();
+		String selectedLocation = teamPage.verifyHomeLocationCanBeSelected();
+		// Verify Temp transfer button is working
+		teamPage.verifyClickOnTemporaryTransferButton();
+		// Verify when click on temp Transfer button,Start date and End date calendar is opening
+		teamPage.verifyTwoCalendarsForCurrentMonthAreShown(currentDate);
+		// Verify current date is by default selected, Other Dates can be selected
+		teamPage.verifyTheCurrentDateAndSelectOtherDateOnTransfer();
+		// Verify while transferring to a new location, old location shift is converting into open shift
+		teamPage.isApplyButtonEnabled();
+		teamPage.verifyClickOnApplyButtonOnTransfer();
+		teamPage.verifyTheMessageOnPopupWindow(location, selectedLocation, teamMember);
+		// Verify Confirm button is working
+		teamPage.verifyTheFunctionOfConfirmTransferButton();
+		// Verify home location is not updating to new location
+		teamPage.verifyTheHomeStoreLocationOnProfilePage(location, selectedLocation);
+		// Verify cancel Transfer button is working,After click on Cancel Transfer-one pop-up is coming
+		teamPage.isCancelTransferButtonLoadedAndClick();
+		teamPage.verifyCancelTransferWindowPopup();
+		// Verify After click on Cancel Transfer button, Transfer button is enabled again
+		teamPage.verifyTransferButtonEnabledAfterCancelingTransfer();
+		// Verify After cancelling the transfer, Home location should get updated as the previous one
+		teamPage.verifyHomeLocationAfterCancelingTransfer(location);
 	}
 
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the Team Functionality In Badges")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInBadges(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.isDashboardPageLoaded();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+		teamPage.isProfilePageLoaded();
+		String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(firstName);
+		teamPage.isProfilePageLoaded();
+		// Verify Badges is working and is able to edit into any new one
+		String badgeID = teamPage.verifyTheFunctionOfEditBadges();
+		teamPage.goToTeam();
+		// Verify Badges is visible on Team roster.
+		teamPage.verifyTheVisibleOfBadgesOnTeamRoster(firstName, badgeID);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the Team Functionality Invite Team Member")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInInviteTeamMember(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.isDashboardPageLoaded();
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.isControlsPageLoaded();
+		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+		controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+		// Set the on boarded option as Email while inviting
+		controlsNewUIPage.setOnBoardOptionAsEmailWhileInviting();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+		String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
+		// Verify Team member is invited and visible on todos
+		teamPage.openToDoPopupWindow();
+		teamPage.verifyTMIsVisibleAndInvitedOnTODO(firstName);
+		teamPage.goToTeam();
+		teamPage.searchAndSelectTeamMemberByName(firstName);
+		teamPage.isProfilePageLoaded();
+		// Verify To Invite Team Member for Onboarding, Invite/Re-Invite button should be available
+		teamPage.verifyInviteAndReInviteButtonThenInvite();
+		// Verify To use the legion, when click on invite button, Invite Team Member page should be opened.
+		teamPage.isInviteTeamMemberWindowLoaded();
+		// Verify Contact Information, Enter Committed Availability and Personalize Welcome Message Field should be available
+		teamPage.verifyThereSectionsAreLoadedOnInviteWindow();
+		// Verify in Email, only correct domain is accepted.
+		List<String> testEmails = new ArrayList<>(Arrays.asList("123456", "@#$%%", "nora@legion.co"));
+		teamPage.verifyTheEmailFormatOnInviteWindow(testEmails);
+		// Verify Send/Cancel button should be available on Invite Team Member
+		teamPage.isSendAndCancelLoadedAndEnabledOnInvite();
+		teamPage.sendTheInviteViaEmail(newTMDetails.get("EMAIL"));
+		// Verify Invitation code should be available on Email id
+		GmailPage gmailPage = pageFactory.createConsoleGmailPage();
+		gmailPage.loginToGmailWithCredential();
+		gmailPage.waitUntilInvitationEmailLoaded();
+		gmailPage.verifyInvitationCodeIsAvailableOnEmailID();
+	}
+
+	public String getTimeZoneFromControlsAndGetDate() throws Exception {
+		String timeZone = "";
+		String currentDate = "";
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		if (controlsNewUIPage.isControlsPageLoaded()){
+			controlsNewUIPage.clickOnControlsLocationProfileSection();
+			if (controlsNewUIPage.isControlsLocationProfileLoaded()){
+				timeZone = controlsNewUIPage.getTimeZoneFromLocationDetailsPage();
+				if (timeZone != null && !timeZone.isEmpty()){
+					SimpleDateFormat format = new SimpleDateFormat("MMMM yyyy dd");
+					currentDate = SimpleUtils.getCurrentDateMonthYearWithTimeZone(timeZone, format);
+				}
+			}
+		}
+		return currentDate;
+	}
 }

@@ -2135,7 +2135,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     }
                     if (isElementLoaded(publishSheduleButton, 5)) {
                         // Wait for the Publish button to disappear.
-                        waitForSeconds(5);
+                        waitForSeconds(10);
                     }
                 }
             }
@@ -3480,8 +3480,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else{
             moveDayViewCards(scheduleOperatingEndHrsSlider, sliderOffSet);
         }
-
-
     }
 
     @Override
@@ -4449,6 +4447,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement createNewShiftWeekView;
     @FindBy(className = "week-schedule-shift-wrapper")
     private List<WebElement> shiftsWeekView;
+    @FindBy(css = "div.popover div:nth-child(3)>div.ng-binding")
+    private WebElement timeDuration;
 
     @Override
     public void verifyShiftsChangeToOpenAfterTerminating(List<Integer> indexes, String name, String currentTime) throws Exception {
@@ -4565,14 +4565,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow) throws Exception {
+    public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow, String currentTime) throws Exception {
         HashMap<String, String> fourShifts = new HashMap<>();
         String activeDay = null;
         if (isStartTomorrow) {
             activeDay = getActiveAndNextDay();
             clickOnNextDaySchedule(activeDay);
+            fourShifts = getAvailableShiftsForDayView(fourShifts);
+        }else {
+            fourShifts = getShiftsForCurrentDayIfStartingSoon(fourShifts, currentTime);
         }
-        fourShifts = getAvailableShiftsForDayView(fourShifts);
         while (fourShifts.size() < 4) {
             activeDay = getActiveAndNextDay();
             clickOnNextDaySchedule(activeDay);
@@ -4684,17 +4686,59 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String role = null;
         if (areListElementVisible(dayViewAvailableShifts, 15)) {
             for (WebElement dayViewAvailableShift : dayViewAvailableShifts) {
-                name = dayViewAvailableShift.findElement(By.className("sch-day-view-shift-worker-name")).getText();
+                name = dayViewAvailableShift.findElement(By.className("sch-day-view-shift-worker-name")).getText().toLowerCase();
                 if (name.contains("(")) {
                     name = name.substring(0, name.indexOf("(") - 1);
                 }
-                if (!name.contains("Open") && !name.contains("Unassigned")) {
-                    role = dayViewAvailableShift.findElement(By.className("sch-day-view-shift-worker-title-role")).getText();
+                if (!name.contains("open") && !name.contains("unassigned")) {
+                    role = dayViewAvailableShift.findElement(By.className("sch-day-view-shift-worker-title-role")).getText().toLowerCase();
                     if (fourShifts.size() < 4) {
                         fourShifts.put(name, role);
-                    }else {
-                        break;
                     }
+                }
+                if (fourShifts.size() >= 4) {
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Day View Available shifts failed to load!", true);
+        }
+        return fourShifts;
+    }
+
+    public HashMap<String, String> getShiftsForCurrentDayIfStartingSoon(HashMap<String, String> fourShifts, String currentTime) throws Exception {
+        String name = null;
+        String role = null;
+        if (areListElementVisible(dayViewAvailableShifts, 15)) {
+            for (WebElement dayViewAvailableShift : dayViewAvailableShifts) {
+                WebElement hoverInfo = dayViewAvailableShift.findElement(By.className("day-view-shift-hover-info-icon"));
+                if (hoverInfo != null) {
+                    click(hoverInfo);
+                    if (isElementLoaded(timeDuration, 5)) {
+                        String startTime = timeDuration.getText().split("-")[0];
+                        click(hoverInfo);
+                        int shiftStartMinutes = getMinutesFromTime(startTime);
+                        int currentMinutes = getMinutesFromTime(currentTime);
+                        if (shiftStartMinutes > currentMinutes) {
+                            name = dayViewAvailableShift.findElement(By.className("sch-day-view-shift-worker-name")).getText().toLowerCase();
+                            if (name.contains("(")) {
+                                name = name.substring(0, name.indexOf("(") - 1);
+                            }
+                            if (!name.contains("open") && !name.contains("unassigned")) {
+                                role = dayViewAvailableShift.findElement(By.className("sch-day-view-shift-worker-title-role")).getText().toLowerCase();
+                                if (fourShifts.size() < 4) {
+                                    fourShifts.put(name, role);
+                                }
+                            }
+                            if (fourShifts.size() >= 4) {
+                                break;
+                            }
+                        }
+                    }else {
+                        SimpleUtils.fail("Failed to get the time duration!", true);
+                    }
+                }else {
+                    SimpleUtils.fail("Failed to get the hover info element!", true);
                 }
             }
         }else {
@@ -4774,7 +4818,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void closeButtonIsClickable() {
         getDriver().close();
         SimpleUtils.pass("close button is clickable");
-}
+    }
 
     @Override
     public void legionButtonIsClickableAndHasNoEditButton() throws Exception {

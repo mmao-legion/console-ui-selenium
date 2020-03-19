@@ -529,22 +529,26 @@ public class BasePage {
     }
 
     public void selectByVisibleText(WebElement element, String text) throws Exception {
-        click(element);
-        Select select = new Select(element);
-        List<WebElement> options = select.getOptions();
-        List<String> optionTexts = new ArrayList<>();
-        if (options.size() > 0) {
-            for (WebElement option : options) {
-                optionTexts.add(option.getText());
-            }
-            if (optionTexts.contains(text)){
-                select.selectByVisibleText(text);
-                SimpleUtils.pass("Select:" + text + " Successfully!");
+        if (isElementLoaded(element, 5)) {
+            click(element);
+            Select select = new Select(element);
+            List<WebElement> options = select.getOptions();
+            List<String> optionTexts = new ArrayList<>();
+            if (options.size() > 0) {
+                for (WebElement option : options) {
+                    optionTexts.add(option.getText());
+                }
+                if (optionTexts.contains(text)) {
+                    select.selectByVisibleText(text);
+                    SimpleUtils.pass("Select:" + text + " Successfully!");
+                } else {
+                    SimpleUtils.fail(text + " doesn't exist in options!", true);
+                }
             } else {
-                SimpleUtils.fail(text + " doesn't exist in options!", true);
+                SimpleUtils.fail("Select options are empty!", true);
             }
-        } else {
-            SimpleUtils.fail("Select options are empty!", true);
+        }else {
+            SimpleUtils.fail("Select Element failed to load!", true);
         }
     }
 

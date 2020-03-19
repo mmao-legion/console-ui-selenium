@@ -99,11 +99,13 @@ public class TeamTest extends TestBase{
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "Coffee_Enterprise")
-	@TestName(description = "T1828059 Shifts will go to Auto Scheduling  after Activating any TM TM will start being auto scheduled the Week of x date")
+	@TestName(description = "Verify the Team functionality In Activate")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyShiftCanAssignToTMAfterActivating(String browser, String username, String password, String location) throws Exception {
+	public void verifyTheTeamFunctionalityInActivate(String browser, String username, String password, String location) throws Exception {
+		String onBoarded = "Onboarded";
+		String active = "Active";
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
+		dashboardPage.isDashboardPageLoaded();
 		String currentDay = dashboardPage.getCurrentDateFromDashboard();
 		TeamPage teamPage = pageFactory.createConsoleTeamPage();
 		teamPage.goToTeam();
@@ -111,16 +113,24 @@ public class TeamTest extends TestBase{
 		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
 		teamPage.isProfilePageLoaded();
 		String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
+		teamPage.goToTeam();
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 		teamPage.searchAndSelectTeamMemberByName(firstName);
 		teamPage.isProfilePageLoaded();
 		teamPage.isManualOnBoardButtonLoaded();
 		teamPage.manualOnBoardTeamMember();
+		teamPage.verifyTheStatusOfTeamMember(onBoarded);
 		teamPage.isActivateButtonLoaded();
+		//String onBoardedDate = teamPage.getOnBoardedDate();
 		teamPage.clickOnActivateButton();
 		teamPage.isActivateWindowLoaded();
 		teamPage.selectADateOnCalendarAndActivate();
-		teamPage.verifyTheStatusOfTeamMember();
+		// Verify While activating team Member, On boarded date is updating to new one and Deactivate & terminate button is enabled
+		teamPage.verifyDeactivateAndTerminateEnabled();
+		// TODO: To check whether the on boarded date should update or not
+		//teamPage.isOnBoardedDateUpdated(onBoardedDate);
+		// Verify Status will change into Activate status according to date
+		teamPage.verifyTheStatusOfTeamMember(active);
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.goToSchedulePage();
 		schedulePage.isSchedulePage();
@@ -143,18 +153,20 @@ public class TeamTest extends TestBase{
 		schedulePage.searchTeamMemberByName(firstName);
 		schedulePage.clickOnOfferOrAssignBtn();
 		schedulePage.clickOnWeekView();
+		// Verify Shifts will go to Auto Scheduling  after Activating any TM
 		schedulePage.verifyNewShiftsAreShownOnSchedule(firstName);
 	}
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "Coffee_Enterprise")
-	@TestName(description = "T1828064 TMs assigned shift is converting to open shift")
+	@TestName(description = "Verify the Team functionality In Terminate")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyShiftIsOpenAfterTerminating(String browser, String username, String password, String location) throws Exception {
-		String timeZone = null;
+	public void verifyTheTeamFunctionalityInTerminate(String browser, String username, String password, String location) throws Exception {
+		String timeZone = "";
+		String active = "Active";
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
+		dashboardPage.isDashboardPageLoaded();
 		String currentDay = dashboardPage.getCurrentDateFromDashboard();
 		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
 		controlsPage.gotoControlsPage();
@@ -166,11 +178,13 @@ public class TeamTest extends TestBase{
 			}
 		}
 		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		// Create a new team member
 		teamPage.goToTeam();
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 		teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
 		teamPage.isProfilePageLoaded();
 		String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
+		teamPage.goToTeam();
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 		teamPage.searchAndSelectTeamMemberByName(firstName);
 		teamPage.isProfilePageLoaded();
@@ -180,8 +194,9 @@ public class TeamTest extends TestBase{
 		teamPage.clickOnActivateButton();
 		teamPage.isActivateWindowLoaded();
 		teamPage.selectADateOnCalendarAndActivate();
-		teamPage.verifyTheStatusOfTeamMember();
+		teamPage.verifyTheStatusOfTeamMember(active);
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		// Go to schedule page, assign shift to the new team member
 		schedulePage.goToSchedulePage();
 		schedulePage.isSchedulePage();
 		schedulePage.goToSchedule();
@@ -210,13 +225,32 @@ public class TeamTest extends TestBase{
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 		teamPage.searchAndSelectTeamMemberByName(firstName);
 		teamPage.isProfilePageLoaded();
+		// Verify Cancel Termination button is working, TM will not removed from Roster after click on this button
+		boolean isCancel = teamPage.isCancelTerminateButtonLoaded();
+		if (!isCancel) {
+			teamPage.isTerminateButtonLoaded();
+			teamPage.terminateTheTeamMember(false);
+		}
+		teamPage.verifyTheFunctionOfCancelTerminate();
+		String employeeID = teamPage.getEmployeeIDFromProfilePage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchTheTeamMemberByEmployeeIDFromRoster(employeeID, false);
+		// Verify While Clicking on Terminate button, particular TM is able to removed from Team roster on the set date
+		teamPage.searchAndSelectTeamMemberByName(firstName);
+		teamPage.isProfilePageLoaded();
 		teamPage.isTerminateButtonLoaded();
 		teamPage.terminateTheTeamMember(true);
 		String currentTime = SimpleUtils.getCurrentTimeWithTimeZone(timeZone);
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchTheTeamMemberByEmployeeIDFromRoster(employeeID, true);
+		// Verify TM's assigned shift is converting to open shift
 		schedulePage.goToSchedulePage();
 		schedulePage.isSchedulePage();
 		schedulePage.goToSchedule();
 		schedulePage.isSchedule();
 		schedulePage.verifyShiftsChangeToOpenAfterTerminating(indexes, firstName, currentTime);
 	}
+
 }

@@ -183,6 +183,7 @@ public interface SchedulePage {
 
 	public void portraitModeWorkWellInWeekView()throws Exception;
 
+	public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow, String currentTime) throws Exception;
 	public void landscapeModeOnlyInDayView() throws Exception;
 
 	public void weatherWeekSmartCardIsDisplayedForAWeek() throws Exception;
