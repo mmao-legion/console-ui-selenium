@@ -197,7 +197,8 @@ public abstract class TestBase {
                 System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
                 ChromeOptions options = new ChromeOptions();
                 if(propertyMap.get("isHeadlessBrowser").equalsIgnoreCase("true")){
-                    options.addArguments("headless");
+//                    options.addArguments("headless");
+                    options.addArguments( "--headless","--disable-gpu", "--no-sandbox" );
                     options.addArguments("window-size=1200x600");
                     runScriptOnHeadlessOrBrowser(options);
                 }else{
