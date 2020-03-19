@@ -833,27 +833,6 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	}
 
 
-	public List getActualDataInShopperForPastWeek() throws Exception {
-//		HashMap<String, String> actualDataInSight = new HashMap<String, String>();
-		List<String> actualDataInSightText = new ArrayList<>();
-		if (areListElementVisible(actualDataInSightSmartCard,5)) {
-
-
-			for (WebElement e : actualDataInSightSmartCard
-			) {
-				actualDataInSightText.add(e.getText());
-			}
-			System.out.println("actualDataInSightText is :" + actualDataInSightText);
-//			for (actualdata:actualDataInSightText) {
-//				if (actualdata) {
-//
-//				}
-//			}
-
-		}
-		return actualDataInSightText;
-	}
-
 	@Override
 	public void verifyBudgetedHoursInLaborSummaryWhileSelectDifferentWorkRole() throws Exception {
 		for (WebElement e:workRoleList
@@ -871,14 +850,6 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		}
 
 	}
-
-	public void calculateHoursBySelectedWorkRoleInLaborWeek(HashMap<String, Float> workRoleData){
-		if (workRoleData.size()>0) {
-
-		}
-
-	}
-
 
 		@Override
 		public void verifyRefreshBtnInLaborWeekView() throws Exception {
