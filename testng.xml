@@ -92,7 +92,7 @@
 
 	<test name="Forecast Test">
        <classes>
-           <class name="com.legion.tests.core.">
+           <class name="com.legion.tests.core.ForecastTest">
                <methods>
                    <include name="verifyShopperForecastFunctionality"/>
                    <include name="validateWeatherSmartCardOnForecastPage"/>
