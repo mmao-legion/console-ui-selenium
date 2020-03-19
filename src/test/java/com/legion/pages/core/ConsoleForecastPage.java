@@ -40,13 +40,13 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(css = "div.day-week-picker-arrow-left")
 	private WebElement forecastCalendarNavigationPreviousWeekArrow;
 
-	@FindBy(xpath = "//span[contains(@class,'buttonLabel')][contains(text(),'Week')]")
+	@FindBy(css = ".ng-scope.lg-button-group-selected.lg-button-group-last")
 	private WebElement weekViewButton;
 
 	@FindBy(xpath = "//span[contains(@class,'buttonLabel')][contains(text(),'Day')]")
 	private WebElement dayViewButton;
 
-	@FindBy(xpath = "//span[contains(@class,'buttonLabel')][contains(text(),'Shoppers')]")
+	@FindBy(css = ".ng-scope.lg-button-group-selected.lg-button-group-first")
 	private WebElement shoppersTab;
 
 	@FindBy(xpath = "//span[contains(@class,'buttonLabel')][contains(text(),'Labor')]")
@@ -159,7 +159,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(xpath = "//lg-filter[@label=\"Filter\"]/div/input-field")
 	private WebElement filterButtonForShopper;
 
-	@FindBy(css = "div.row-fx.schedule-search-options > div:nth-child(3) > lg-filter > div > input-field > ng-form > div")
+	@FindBy(css = "input[class = \"ng-pristine ng-untouched ng-scope ng-valid-pattern ng-valid ng-valid-required ng-not-empty\"]")
 	private WebElement filterButtonText;
 
 	@FindBy(css = "a.lg-filter__clear.ng-scope.lg-filter__clear-active")
@@ -395,10 +395,10 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 					SimpleUtils.pass("Close button is clickable in holidays window");
 				}
 			} else {
-				SimpleUtils.fail("this week has no holiday", true);
+				SimpleUtils.report("this week has no holiday");
 			}
 		} else {
-			SimpleUtils.fail("Forecast Sub Menu Tab Not Found", false);
+			SimpleUtils.fail("Forecast Sub Menu Tab Not Found", true);
 		}
 	}
 
@@ -414,21 +414,27 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 	@Override
 	public void verifyNextPreviousBtnCorrectOrNot() throws Exception {
-		if (isElementLoaded(forecastCalendarNavigationNextWeekArrow, 3) || isElementLoaded(forecastCalendarNavigationPreviousWeekArrow, 3)) {
-			navigateToPreviousAndFutureWeek(forecastCalendarNavigationNextWeekArrow);
-//			navigateToPreviousAndFutureWeek(forecastCalendarNavigationNextWeekArrow);
+		if (isElementLoaded(postWeekNextToCurrentWeek,5) & isElementLoaded(futureWeekNextToCurrentWeek,5)) {
+			SimpleUtils.pass("post current future week is visible");
 			String currentWeekPeriodText = currentWeekPeriod.getText().trim().replace("\n", "").replace(" ", "").replace("-", "");
-			System.out.println("currentWeekPeriodText======" + currentWeekPeriodText);
+			SimpleUtils.report("currentWeekPeriodText======" + currentWeekPeriodText);
 			navigateToPreviousAndFutureWeek(forecastCalendarNavigationPreviousWeekArrow);
 			String WeekPeriodTextAftBack = currentWeekPeriod.getText().trim().replace("\n", "").replace(" ", "").replace("-", "");
-			System.out.println("WeekPeriodTextAftBack======" + WeekPeriodTextAftBack);
+			SimpleUtils.report("WeekPeriodTextAftBack======" + WeekPeriodTextAftBack);
 			if (WeekPeriodTextAftBack.trim().equals(currentWeekPeriodText.trim())) {
-				SimpleUtils.fail(" Foreword and Back buttons are not working", true);
+				SimpleUtils.fail(" Back buttons are not working", true);
 			} else {
-				SimpleUtils.pass(" Foreword and Back buttons are working normally");
-
+				SimpleUtils.pass(" Back button is working normally");
 			}
-		} else {
+			navigateToPreviousAndFutureWeek(forecastCalendarNavigationNextWeekArrow);
+			String WeekPeriodTextAftForeword = currentWeekPeriod.getText().trim().replace("\n", "").replace(" ", "").replace("-", "");
+			if (WeekPeriodTextAftForeword.trim().equals(currentWeekPeriodText.trim())) {
+				SimpleUtils.pass(" Foreword button is working normally");
+			} else {
+				SimpleUtils.fail(" Foreword buttons are not working normally",true);
+			}
+		}
+			else {
 			SimpleUtils.fail("Foreword and Back buttons is not displayed", false);
 		}
 
@@ -438,7 +444,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@Override
 	public void verifyDisplayOfActualLineSelectedByDefaultInOrangeColor() throws Exception {
 
-		if (isElementLoaded(displayDropDownBtnInProjected, 20)) {
+		if (isElementLoaded(displayDropDownBtnInProjected, 5)) {
 			click(displayDropDownBtnInProjected);
 			if (isElementLoaded(actualLine, 5)) {
 				click(checkBoxOfActualLine);
@@ -457,7 +463,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@Override
 	public void verifyRecentTrendLineIsSelectedAndColorInBrown() throws Exception {
 		if (isElementLoaded(displayDropDownBtnInProjected, 20)) {
-			click(displayDropDownBtnInProjected);
+//			click(displayDropDownBtnInProjected);
 			click(checkBoxOfRecentTrendLine);
 			if (isElementLoaded(recentTrendLine, 5)) {
 				SimpleUtils.pass(" Display of RecentTrend line should be selected  and in Brown color");
@@ -465,7 +471,8 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 				SimpleUtils.fail("RecentTrend line selected failed", false);
 			}
 
-			click(displayDropDownBtnInProjected);
+//			click(displayDropDownBtnInProjected);
+			click(checkBoxOfRecentTrendLine);
 		} else {
 
 			SimpleUtils.fail("Display dropdown list load failed", false);
@@ -475,7 +482,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@Override
 	public void verifyLastYearLineIsSelectedAndColorInPurple() throws Exception {
 		if (isElementLoaded(displayDropDownBtnInProjected, 20)) {
-			click(displayDropDownBtnInProjected);
+//			click(displayDropDownBtnInProjected);
 			click(checkBoxOfLstYearLine);
 			if (isElementLoaded(lastYearLine, 5)) {
 				SimpleUtils.pass(" Display of LastYear line should be selected  and in purple color");
@@ -483,7 +490,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 				SimpleUtils.fail("RecentTrend line selected failed", false);
 			}
 		}
-		click(displayDropDownBtnInProjected);
+		click(checkBoxOfLstYearLine);
 
 	}
 
@@ -516,7 +523,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			SimpleUtils.pass("Current week's Holidays are showing");
 			return true;
 		} else {
-			SimpleUtils.fail("There is no holiday in current week", false);
+			SimpleUtils.report("There is no holiday in current week");
 			return false;
 		}
 
@@ -527,13 +534,11 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		click(laborTab);
 
 		if (isElementLoaded(filterWorkRoleButton, 10)) {
-
 			String workRoleText = filterWorkRoleButton.getText();
 			goToPostWeekNextToCurrentWeek();
 			String postWeekFilterText = filterWorkRoleButton.getText();
 			goToFutureWeekNextToCurrentWeek();
 			String futureWeekFilterText = filterWorkRoleButton.getText();
-
 			if (workRoleText.equals(postWeekFilterText)) {
 				SimpleUtils.pass("work role is  remain  seleced after switching to post week");
 			} else {
@@ -621,58 +626,19 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		if (isElementLoaded(filterButton, 10)) {
 			defaultValueIsAll();
 			click(filterButton);
-			waitForSeconds(4);
 			clickOnClearFilterInWorkRole();
-			selectWorkRole();
+//			selectWorkRole();
 		} else {
 			SimpleUtils.fail("Work role filter load failed", false);
 		}
 	}
 
-	private void selectWorkRole() {
-		List<WebElement> workRoleList2 = new ArrayList();
-		workRoleList2.add(workRoleList.get(8));
-		workRoleList2.add(workRoleList.get(9));
-		workRoleList2.add(workRoleList.get(10));
-		workRoleList2.add(workRoleList.get(11));
-		if (areListElementVisible(workRoleList, 10)) {
-			for (WebElement e : workRoleList2
-			) {
-				click(e);
-				SimpleUtils.pass("work role" + e + " is selected");
-			}
-		} else {
-			SimpleUtils.fail("can't select work role", true);
-		}
-	}
 
-	private void selectWorkRoleByIndex(int index) {
-		List<String> workRoleList2 = new ArrayList();
-//		workRoleList2.add(workRoleList.get(8));
-//		workRoleList2.add(workRoleList.get(9));
-//		workRoleList2.add(workRoleList.get(10));
-//		workRoleList2.add(workRoleList.get(11));
-		for (int i = 0; i < workRoleList.size(); i++) {
-			if (workRoleList.get(index).getText() != null) {
-				workRoleList2.add(workRoleList.get(i).getText());
-			}
-
-		}
-
-		if (areListElementVisible(workRoleList, 10)) {
-			for (String e : workRoleList2
-			) {
-				click(workRoleList.get(index));
-				SimpleUtils.pass("work role" + workRoleList.get(index).getText() + " is selected");
-			}
-		} else {
-			SimpleUtils.fail("can't select work role", true);
-		}
-	}
 
 	private void defaultValueIsAll() throws Exception {
 		String defaultWorkRoleText = "All";
 		if (isElementLoaded(filterButton, 15)) {
+			click(filterButton);
 			String workRoleDefaultText = filterButtonText.getText().trim();
 			System.out.println("workRoleDefaultText" + workRoleDefaultText);
 			if (defaultWorkRoleText.equals(workRoleDefaultText)) {
@@ -761,16 +727,20 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	}
 
 
-	public HashMap<String, String> getHoursBySelectedWorkRoleInLaborWeek() throws Exception {
-		HashMap<String, String> hoursByWorkRole = new HashMap<String,String>();
+	public HashMap<String, Float> getHoursBySelectedWorkRoleInLaborWeek() throws Exception {
+		HashMap<String, Float> hoursByWorkRole = new HashMap<String,Float>();
 		if (areListElementVisible(hoursOfWorkRole,5)) {
 			for (WebElement e :hoursOfWorkRole
 				 ) {
-				hoursByWorkRole.put(e.getText().split(":")[0],(e.getText().split(":")[1]));
+				if (hoursByWorkRole.size()<0) {
+					hoursByWorkRole.put(" operation - other role",0.0f);
+				}else
+				hoursByWorkRole.put(e.getText().split(":")[0],Float.valueOf(e.getText().split(":")[1].replaceAll("H","")));
 			}
 		}else {
 			SimpleUtils.fail("work roles hours load failed",false);
 		}
+
 		return hoursByWorkRole;
 	}
 
@@ -784,7 +754,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			String[] peakShopperDayInInsight = insightSmartCardText.split("\n");
 
 			for (String peakShopperDay: peakShopperDayInInsight) {
-				if (actualDataInSightSmartCard.size()>= 0) {
+				if (actualDataInSightSmartCard.size()> 0) {
 					if(peakShopperDay.toLowerCase().contains("peak items"))
 					{
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
@@ -863,50 +833,36 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	}
 
 
-	public List getActualDataInShopperForPastWeek() throws Exception {
-//		HashMap<String, String> actualDataInSight = new HashMap<String, String>();
-		List<String> actualDataInSightText = new ArrayList<>();
-		if (areListElementVisible(actualDataInSightSmartCard,5)) {
-
-
-			for (WebElement e : actualDataInSightSmartCard
-			) {
-				actualDataInSightText.add(e.getText());
-			}
-			System.out.println("actualDataInSightText is :" + actualDataInSightText);
-//			for (actualdata:actualDataInSightText) {
-//				if (actualdata) {
-//
-//				}
-//			}
-
-		}
-		return actualDataInSightText;
-	}
-
 	@Override
 	public void verifyBudgetedHoursInLaborSummaryWhileSelectDifferentWorkRole() throws Exception {
-		HashMap<String, Float> hoursAndWedgetInSummary = getSummaryLaborHoursAndWages();
-		HashMap<String, String> HoursBySelectedWorkRoleInLaborWeek = getHoursBySelectedWorkRoleInLaborWeek();
-		System.out.println("hoursAndWedgetInSummary is "+hoursAndWedgetInSummary);
-		System.out.println("HoursBySelectedWorkRoleInLaborWeek is "+HoursBySelectedWorkRoleInLaborWeek);
-//		if (hoursAndWedgetInSummary.get("ForecastHours").equals(HoursBySelectedWorkRoleInLaborWeek.get())) {
-//
-//		}
+		for (WebElement e:workRoleList
+			 ) {
+			e.click();
+			String workRoleText = e.getText();
+			SimpleUtils.pass("work role ‘ " + workRoleText + " ’ is selected");
+			HashMap<String, Float> HoursBySelectedWorkRoleInLaborWeek = getHoursBySelectedWorkRoleInLaborWeek();
+			HashMap<String, Float> hoursAndWedgetInSummary = getSummaryLaborHoursAndWages();
+			if (hoursAndWedgetInSummary.get("ForecastHours") == HoursBySelectedWorkRoleInLaborWeek.get(workRoleText.toUpperCase())){
+                SimpleUtils.pass("Smartcard's budgeted hours are matching with the sum of work role hours");
+			}else
+				SimpleUtils.fail("Smartcard budget hours are not matching with selected work roles hours",true);
+		    e.click();
+		}
+
 	}
 
 		@Override
 		public void verifyRefreshBtnInLaborWeekView() throws Exception {
 			if (isElementLoaded(weatherWeekSmartCardHeader,10)) {
 		        String defaultText = getDriver().findElement(By.cssSelector(".card-carousel.row-fx")).getText();
-				System.out.println(defaultText);
+				SimpleUtils.report("content before default is : "+defaultText);
 				click(refreshBtn);
 				SimpleUtils.pass("refresh is clickable");
 				waitForSeconds(10);//wait to load the page data
 				String textAftRefresh =  getDriver().findElement(By.cssSelector(".card-carousel.row-fx")).getText();
-				System.out.println(textAftRefresh);
+				SimpleUtils.report("content after refresh is:"+textAftRefresh);
 				if(defaultText.equals(textAftRefresh)){
-					SimpleUtils.pass("page back to previous page ");
+					SimpleUtils.pass("page get refresh ");
 				}
 			}else {
 				SimpleUtils.fail("Refresh button load failed",true);
@@ -945,7 +901,6 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 
 	public void shopperFilterInForecast(ArrayList<WebElement> shiftTypeFilters) {
-		//String shiftType = "";
 
 		try {
 			if (areListElementVisible(shiftTypeFilters, 10)) {
@@ -965,19 +920,6 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		}
 	}
 
-
-	public void unCheckFilters(ArrayList<WebElement> filterElements) {
-		if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
-			click(filterButton);
-		waitForSeconds(2);
-		for (WebElement filterElement : filterElements) {
-			WebElement filterCheckBox = filterElement.findElement(By.cssSelector("input[type=\"checkbox\"]"));
-			String elementClasses = filterCheckBox.getAttribute("class").toLowerCase();
-			if (elementClasses.contains("ng-not-empty"))
-				click(filterElement);
-
-		}
-	}
 
 	public List<String> getForecastBarGraphData() throws Exception {
 		List<String> barGraphDataForEachDay = new ArrayList<>();
@@ -1001,8 +943,8 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			insightDataInWeek = getInsightDataInShopperWeekView();
 			List<String> dataInBar = getForecastBarGraphData();
 			SimpleUtils.report("data in bar graph is :"+dataInBar);
-			int max = 0;
-			int totalItemsInbar = 0;
+			Float max = 0.0f;
+			Float totalItemsInbar = 0.0f;
 
 			for (int i = 0; i < dataInBar.size(); i++) {
 				String totalShoppersInBar = dataInBar.get(i).split(" ")[3];
@@ -1014,9 +956,9 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 					forecastInBar = forecastInBar.replaceAll(",","");
 				}else forecastInBar=forecastInBar;
 				try {
-					totalItemsInbar +=Integer.parseInt (totalShoppersInBar);
-					if (max <= Integer.parseInt(forecastInBar)) {
-						max=Integer.parseInt(forecastInBar);
+					totalItemsInbar +=Float.valueOf (totalShoppersInBar);
+					if (max <= Float.valueOf (forecastInBar)) {
+						max=Float.valueOf(forecastInBar);
 					}
 					else {
 						max=max;
@@ -1028,13 +970,13 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			}
 			SimpleUtils.report("max number in bar graph:"+max);
 			SimpleUtils.report("total items in bar graph:"+totalItemsInbar);
-
+			Float totalShoppersInInsightcard = insightDataInWeek.get("totalShoppers");
 			try {
-				if (insightDataInWeek.get("totalItems") == totalItemsInbar & insightDataInWeek.get("peakItems") == max)  {
+				if (insightDataInWeek.get("totalShoppers").equals(totalItemsInbar) & insightDataInWeek.get("peakShoppers").equals(max)) {
 				   SimpleUtils.pass("In smart card ,total shoppers and peak shoppers  are  matching with bar graph");
 				}
 				else {
-					SimpleUtils.fail("data in Insight smart card is not matching with bar graph",false);
+					SimpleUtils.fail("data in Insight smart card is not matching with bar graph",true);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1057,8 +999,8 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		System.out.println("insightdata is "+insightDataInWeek);
 		List<String> dataInBar = getForecastBarGraphData();
 		System.out.println("data in bar graph is :"+dataInBar);
-		int max = 0;
-		int actualTotalShoppersInbar = 0;
+		Float max = 0.0f;
+		Float actualTotalShoppersInbar =0.0f;
 
 		for (int i = 0; i < dataInBar.size(); i++) {
 			String actualShoppers = dataInBar.get(i).split(" ")[9];
@@ -1067,9 +1009,9 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 				actualShoppers = actualShoppers.replaceAll(",","");
 			}else actualShoppers = actualShoppers;
 			try {
-				actualTotalShoppersInbar +=Integer.parseInt (actualShoppers);
-				if (max <= Integer.parseInt(actualShoppers)) {
-					max=Integer.parseInt(actualShoppers);
+				actualTotalShoppersInbar +=Float.valueOf(actualShoppers);
+				if (max <=Float.valueOf(actualShoppers)) {
+					max=Float.valueOf(actualShoppers);
 				}
 				else {
 					max=max;
@@ -1079,11 +1021,11 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			}
 
 		}
-		System.out.println(max);
-		System.out.println(actualTotalShoppersInbar);
+		SimpleUtils.report("max actual data in bar graph for this week is :"+max);
+		SimpleUtils.report("actual total shoppers in bar graph for this week is "+actualTotalShoppersInbar);
 
 		try {
-			if (insightDataInWeek.get("actualTotalItems") == actualTotalShoppersInbar & insightDataInWeek.get("actualPeakItems") == max)  {
+			if (insightDataInWeek.get("actualTotalShoppers").equals(actualTotalShoppersInbar)  & insightDataInWeek.get("actualPeakItems").equals(max) )  {
 				SimpleUtils.pass("In smart card ,total shoppers and peak shoppers  are  matching with bar graph");
 			}
 			else {
@@ -1100,6 +1042,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		shopperFilterInForecast(availableFilters);
 
 	}
+
 	@FindBy(css = "[ng-repeat=\"(key, opts) in $ctrl.displayFilters\"]")
 	private List<WebElement> scheduleFilterElements;
 
@@ -1127,5 +1070,44 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		return filterList;
 	}
 
+
+	public boolean verifyIsShopperTypeSelectedByDefaultAndLaborTabIsClickable() throws Exception {
+		boolean flag=false;
+		if (isElementLoaded(shoppersTab,5)) {
+			if (shoppersTab.getAttribute("class").contains("selected")) {
+				SimpleUtils.pass("shopper forecast is selected by default");
+				clickOnLabor();
+				flag = true;
+			}else {
+				SimpleUtils.fail("shopper forecast is not selected by default",false);
+			}
+		}else {
+			flag = false;
+			SimpleUtils.fail("shopper button load failed",false);
+		}
+		return flag;
+	}
+
+
+	public boolean verifyIsWeekForecastVisibleAndOpenByDefault() throws Exception {
+		boolean flag=false;
+		goToPostWeekNextToCurrentWeek();
+		if (isElementLoaded(weekViewButton,25)) {
+			String aaa = weekViewButton.getAttribute("class");
+			if (weekViewButton.getAttribute("class").contains("selected")) {
+				SimpleUtils.pass("week forecast is selected by default");
+				if (weatherTemperatures.size()>=6) {
+					flag=true;
+					SimpleUtils.pass("week forecast is open");
+				}
+			}else {
+				SimpleUtils.fail("weekly forecast is not selected by default",false);
+			}
+		}else {
+			flag =false;
+			SimpleUtils.fail("weekly button load failed",false);
+		}
+		return flag;
+	}
 
 }

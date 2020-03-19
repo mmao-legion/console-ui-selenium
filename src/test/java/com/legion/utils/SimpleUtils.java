@@ -1781,7 +1781,7 @@ public class SimpleUtils {
 		if (1 == dayWeek) {
 			cal.add(Calendar.DAY_OF_MONTH, -1);
 		}
-		cal.setFirstDayOfWeek(Calendar.MONDAY);
+		cal.setFirstDayOfWeek(Calendar.SUNDAY);
 		int day = cal.get(Calendar.DAY_OF_WEEK);
 		cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);
 

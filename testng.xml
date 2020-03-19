@@ -84,6 +84,16 @@
 <!--            </classes>-->
 <!--    </test>-->
 
+        <test name="Controls Test">
+           <classes>
+               <class name="com.legion.tests.core.ControlsNewUITest">
+                   <methods>
+                       <include name="verifyScheduleScoreIsUpdated"/>
+
+                   </methods>
+               </class>
+           </classes>
+       </test>
 
     <test name="TeamTab Test KendraScott2">
        <classes>

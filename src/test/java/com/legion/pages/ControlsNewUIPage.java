@@ -230,6 +230,10 @@ public interface ControlsNewUIPage {
 
 	public String getTimeZoneFromLocationDetailsPage() throws Exception;
 
+	public void updateScheduleScore(String budget_score, String coverage_scores_regular_hours, String coverage_scores_peak_hours, String employee_match_score, String compliance_score, String how_to_measure_coverage_relative_to_guidance_budget) throws Exception;
+
+	public boolean isScheduleScoreUpdated(String budget_score, String coverage_scores_regular_hours, String coverage_scores_peak_hours, String employee_match_score, String compliance_score, String how_to_measure_coverage_relative_to_guidance_budget);
+
 	public String getOnBoardOptionFromScheduleCollaboration() throws Exception;
 
 	public void setOnBoardOptionAsEmailWhileInviting() throws Exception;
