@@ -8,185 +8,186 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-    <test name="Timesheet Test">
-       <classes>
-           <class name="com.legion.tests.core.DMScheduleTest">
-               <methods>
-                   <include name="validateDMViewDataWithSMViewAsInternalAdmin"/>
-               </methods>
-           </class>
-       </classes>
-   </test>
+<!--    <test name="Timesheet Test">-->
+<!--       <classes>-->
+<!--           <class name="com.legion.tests.core.DMScheduleTest">-->
+<!--               <methods>-->
+<!--                   <include name="validateDMViewDataWithSMViewAsInternalAdmin"/>-->
+<!--               </methods>-->
+<!--           </class>-->
+<!--       </classes>-->
+<!--   </test>-->
 
-    <test name="Schedule Test">
-        <classes>
-            <class name="com.legion.tests.core.RegressionTest">
-                <methods>
-                    <include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>
-<!--                    <include name="validateScheduleSmartCardsAsStoreManager"/>-->
-<!--                    <include name="validateScheduleGenerationFunctionalityAsStoreManager"/>-->
-<!--                    <include name="validateGuidanceWeekAsStoreManager"/>-->
-<!--                    <include name="validateSchedulePublishAsStoreManager"/>-->
-<!--                    <include name="editManualShiftScheduleAsStoreManager"/>-->
-<!--                    <include name="updateControlsSectionLoadingAsInternalAdmin"/>-->
-<!--                    <include name="scheduleSubTabNavigationStoreManager"/>-->
-<!--                    <include name="legionAppNavigationAllTabsStoreManager"/>-->
-<!--                    <include name="verifyControlsBreadcrumbAsInternalAdmin"/>-->
-<!--                    <include name="verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager"/>-->
-<!--                    <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>-->
-<!--                    <include name="validateGuidanceScheduleAndOtherHoursOnDashBoardForAllLocationAsStoreManager"/>-->
-<!--                    <include name="validateWeatherForecastOnSchedulePageAsStoreManager"/>-->
-<!--                    <include name="validateSchedulePublishFeatureAsStoreManager"/>-->
-<!--                    <include name="changeAndValidateOperatingHoursAsInternalAdmin"/>-->
-                    <include name="verifyScheduleOverlappingAsInternalAdmin"/>
-<!--                    <include name="updateWorkingHoursAsInternalAdmin"/>-->
-<!--                    <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>-->
-<!--                    <include name="updateControlsSectionLoadingAsStoreManager"/>-->
-<!--                    <include name="updateWorkingHoursAsInternalAdmin"/>-->
-<!--                    <include name="updateWorkingHoursAsInternalAdmin"/>-->
+             <test name="Schedule Test">
+                 <classes>
+                     <class name="com.legion.tests.core.RegressionTest">
+                         <methods>
+         <!--                    <include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>-->
+         <!--                    <include name="validateScheduleSmartCardsAsStoreManager"/>-->
+         <!--                    <include name="validateScheduleGenerationFunctionalityAsStoreManager"/>-->
+         <!--                    <include name="validateGuidanceWeekAsStoreManager"/>-->
+         <!--                    <include name="validateSchedulePublishAsStoreManager"/>-->
+         <!--                    <include name="editManualShiftScheduleAsStoreManager"/>-->
+         <!--                    <include name="updateControlsSectionLoadingAsInternalAdmin"/>-->
+         <!--                    <include name="scheduleSubTabNavigationStoreManager"/>-->
+         <!--                     <include name="legionAppNavigationAllTabsStoreManager"/>-->
+         <!--                    <include name="verifyControlsBreadcrumbAsInternalAdmin"/>-->
+         <!--                    <include name="verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager"/>-->
+         <!--                    <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>-->
+         <!--                    <include name="validateGuidanceScheduleAndOtherHoursOnDashBoardForAllLocationAsStoreManager"/>-->
+         <!--                    <include name="validateWeatherForecastOnSchedulePageAsStoreManager"/>-->
+         <!--                    <include name="validateSchedulePublishFeatureAsStoreManager"/>-->
+         <!--                    <include name="changeAndValidateOperatingHoursAsInternalAdmin"/>-->
+         <!--                    <include name="verifyScheduleOverlappingAsInternalAdmin"/>-->
+         <!--                    <include name="updateWorkingHoursAsInternalAdmin"/>-->
+         <!--                    <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>-->
+         <!--                    <include name="updateControlsSectionLoadingAsStoreManager"/>-->
+         <!--                    <include name="validateTeamTabAsStoreManager"/>-->
+         <!--                    <include name="VerifyWhetherManagerCanApproveTimeOffRequestAsTeamMember"/>-->
+         <!-- 				     <include name="generateScheduleAndCheckScheduleNTMSizeWeekView"/>-->
+         					     <include name="editAssignTeamScheduleAsStoreManager"/>
+                         </methods>
+                     </class>
+                 </classes>
+             </test>
+
+<!--    <test name="Dashboard Test">-->
+<!--       <classes>-->
+<!--           <class name="com.legion.tests.core.DashboardTest">-->
+<!--               <methods>-->
+<!--                   <include name="verifyStartingSoonSection"/>-->
+<!--               </methods>-->
+<!--           </class>-->
+<!--       </classes>-->
+<!--   </test>-->
+
+<!--    <test name="Dashboard Test KendraScott2">-->
+<!--        <classes>-->
+<!--            <class name="com.legion.tests.core.DashboardTestKendraScott2">-->
+<!--                <methods>-->
+<!--                    <include name="verifyTheDisplayLocationWithSelectedLocation" />-->
+<!--                    <include name="verifyTheClickActionOnChangeLocationButton" />-->
+<!--                    <include name="verifyTheContentDisplayedInChangeLocationLayout" />-->
+<!--                    <include name="verifyTheFunctionOfSearchTextBox" />-->
+<!--                    <include name="verifyTheWelcomeMessage" />-->
+<!--                    <include name="verifyTheFunctionOfViewTodaySchedule" />-->
+<!--                    <include name="verifyTheDataSourceForBudgetScheduledOther" />-->
+<!--                    <include name="verifyTheProjectedDemandGraphIsShown" />-->
+<!--                    <include name="verifyStartingSoonNScheduledHourNotShowWhenGuidanceOrDraft" />-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--        <test name="Schedule New UI Test">-->
+<!--            <classes>-->
+<!--                <class name="com.legion.tests.core.ScheduleTestKendraScott2">-->
+<!--                    <methods>-->
+<!--&lt;!&ndash;                        <include name="printButtonIsClickable" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="todoButtonIsClickable" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="closeButtonIsClickable" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="legionIsDisplayingTheScheduleWhichIsGeneratedByTheSystemAtTheVeryFirstTime" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="legionButtonIsClickableAndHasNoEditButton" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="currentWeekIsGettingOpenByDefault" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="dayWeekPickerSectionNavigatingCorrectly" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="landscapePortraitModeShowAndWorkWellInWeekView" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="landscapeModeOnlyInDayView" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="weatherWeekSmartCardIsDisplayedForAWeek" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="scheduleUpdateAccordingToSelectWeek" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="verifyComplianceShiftsShowing" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="verifyRedFlagIsVisible" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="viewShiftIsWorkingAndComplianceFilterAppliedAutomatically" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="complianceShiftWillDisplay"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="verifyClearFilterFunction"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="verifyAnalyzeBtnFunctionAndScheduleHistoryScroll"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="verifyScheduleBudgetedHoursInScheduleSmartCard"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <include name="verifyFilterFunctionForShiftTypeAndWorkRole"/>&ndash;&gt;-->
+<!--                    </methods>-->
+<!--                </class>-->
+<!--            </classes>-->
+<!--        </test>-->
+
+<!--        <test name="Forecast Test">-->
+<!--            <classes>-->
+<!--                <class name="com.legion.tests.core.ForecastTest">-->
+<!--                    <methods>-->
+<!--                        <include name="holidaySmartCardIsDisplayedForCurrentAWeek" />-->
+<!--                        <include name="preNxtArrowAreWorkingAfterNavigateTo2FutureWeek" />-->
+<!--                        <include name="verifyDisplayOfActualLineSelectedByDefaultInOrangeColor" />-->
+<!--                        <include name="selectedRecentTrendAndLastYearLineToVerifyColor" />-->
+<!--                        <include name="verifyForecastColor" />-->
+<!--                        <include name="verifyWorkRoleIsSelectedAftSwitchToPastFutureWeek"/>-->
+<!--                        <include name="weatherWeekSmartCardIsDisplayedForAWeek"/>-->
+<!--                        <include name="verifyWeatherWeekSmartCardNavigation"/>-->
+<!--                        <include name="verifyWorkRoleSelection"/>-->
+<!--                        <include name="verifyBudgetedHoursInLaborSummaryWhileSelectDifferentWorkRole"/>-->
+<!--                        <include name="verifyRefreshBtnInLaborWeekView"/>-->
+<!--                        <include name="verifyRefreshBtnInShopperWeekView"/>-->
+<!--                        <include name="verifySmartcardAreAvailableInShoppers"/>-->
+<!--                        <include name="validateWeatherSmartCardOnForecastPage"/>-->
+<!--                        <include name="dataValidationIfStoreClosed"/>-->
+<!--                        <include name="verifyPeakShopperPeakDayData"/>-->
+<!--                        <include name="verifyActualDataForPastWeek"/>-->
+<!--                        <include name="verifyFilterFunctionInForecast"/>-->
+<!--                        <include name="verifyForecastColor"/>-->
+<!--                    </methods>-->
+<!--                </class>-->
+<!--            </classes>-->
+<!--        </test>-->
 
 
-                </methods>
-            </class>
-        </classes>
-    </test>
-    <test name="Dashboard Test">
-       <classes>
-           <class name="com.legion.tests.core.DashboardTest">
-               <methods>
-                   <include name="verifyStartingSoonSection"/>
-               </methods>
-           </class>
-       </classes>
-   </test>
-
-    <test name="Dashboard Test KendraScott2">
-        <classes>
-            <class name="com.legion.tests.core.DashboardTestKendraScott2">
-                <methods>
-                    <include name="verifyTheDisplayLocationWithSelectedLocation" />
-                    <include name="verifyTheClickActionOnChangeLocationButton" />
-                    <include name="verifyTheContentDisplayedInChangeLocationLayout" />
-                    <include name="verifyTheFunctionOfSearchTextBox" />
-                    <include name="verifyTheWelcomeMessage" />
-                    <include name="verifyTheFunctionOfViewTodaySchedule" />
-                    <include name="verifyTheDataSourceForBudgetScheduledOther" />
-                    <include name="verifyTheProjectedDemandGraphIsShown" />
-                    <include name="verifyStartingSoonNScheduledHourNotShowWhenGuidanceOrDraft" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-        <test name="Schedule New UI Test">
-            <classes>
-                <class name="com.legion.tests.core.ScheduleTestKendraScott2">
-                    <methods>
-                        <include name="printButtonIsClickable" />
-                        <include name="todoButtonIsClickable" />
-                        <include name="closeButtonIsClickable" />
-                        <include name="legionIsDisplayingTheScheduleWhichIsGeneratedByTheSystemAtTheVeryFirstTime" />
-                        <include name="legionButtonIsClickableAndHasNoEditButton" />
-                        <include name="currentWeekIsGettingOpenByDefault" />
-                        <include name="dayWeekPickerSectionNavigatingCorrectly" />
-                        <include name="landscapePortraitModeShowAndWorkWellInWeekView" />
-                        <include name="landscapeModeOnlyInDayView" />
-                        <include name="weatherWeekSmartCardIsDisplayedForAWeek" />
-                        <include name="scheduleUpdateAccordingToSelectWeek" />
-                        <include name="verifyComplianceShiftsShowing" />
-                        <include name="verifyRedFlagIsVisible" />
-                        <include name="viewShiftIsWorkingAndComplianceFilterAppliedAutomatically" />
-                        <include name="complianceShiftWillDisplay"/>
-                        <include name="verifyClearFilterFunction"/>
-                        <include name="verifyAnalyzeBtnFunctionAndScheduleHistoryScroll"/>
-                        <include name="verifyScheduleBudgetedHoursInScheduleSmartCard"/>
-                        <include name="verifyFilterFunctionForShiftTypeAndWorkRole"/>
-                    </methods>
-                </class>
-            </classes>
-        </test>
-
-        <test name="Forecast Test">
-            <classes>
-                <class name="com.legion.tests.core.ForecastTest">
-                    <methods>
-                        <include name="holidaySmartCardIsDisplayedForCurrentAWeek" />
-                        <include name="preNxtArrowAreWorkingAfterNavigateTo2FutureWeek" />
-                        <include name="verifyDisplayOfActualLineSelectedByDefaultInOrangeColor" />
-                        <include name="selectedRecentTrendAndLastYearLineToVerifyColor" />
-                        <include name="verifyForecastColor" />
-                        <include name="verifyWorkRoleIsSelectedAftSwitchToPastFutureWeek"/>
-                        <include name="weatherWeekSmartCardIsDisplayedForAWeek"/>
-                        <include name="verifyWeatherWeekSmartCardNavigation"/>
-                        <include name="verifyWorkRoleSelection"/>
-                        <include name="verifyBudgetedHoursInLaborSummaryWhileSelectDifferentWorkRole"/>
-                        <include name="verifyRefreshBtnInLaborWeekView"/>
-                        <include name="verifyRefreshBtnInShopperWeekView"/>
-                        <include name="verifySmartcardAreAvailableInShoppers"/>
-                        <include name="validateWeatherSmartCardOnForecastPage"/>
-                        <include name="dataValidationIfStoreClosed"/>
-                        <include name="verifyPeakShopperPeakDayData"/>
-                        <include name="verifyActualDataForPastWeek"/>
-                        <include name="verifyFilterFunctionInForecast"/>
-                        <include name="verifyForecastColor"/>
-                    </methods>
-                </class>
-            </classes>
-        </test>
-
-
-    <test name="TeamTab Test KendraScott2">
-       <classes>
-           <class name="com.legion.tests.core.TeamTestKendraScott2">
-               <methods>
-                   <include name="verifyTheFunctionOfSearchTMBar"/>
-                   <include name="verifyTheFunctionOfPlusIcon" />
-                   <include name="verifyTheCalendarLoadForCurrentDayAndColor" />
-                   <include name="verifyNewHomeLocationCanBeSelectedOnTransfer" />
-                   <include name="verifyTheFunctionOfTemporaryTransferButton" />
-                   <include name="verifyTwoCalendarsAreShownAfterClickTemp" />
-                   <include name="verifyTheFunctionOfAddTMCalendar" />
-                   <include name="verifyTheCurrentDateAndSelectOtherDateOnTransfer" />
-                   <include name="verifyTransferToANewLocation" />
-                   <include name="verifyConfirmButtonOnPopupWindowWorking" />
-                   <include name="verifyCancelButtonOnPopupWindowWorking" />
-                   <include name="verifyHomeLocationNotUpdateAndGivenInformation" />
-                   <include name="verifyPopupIsShownAfterClickingCancelTransfer" />
-                   <include name="verifyTransferButtonEnabledAfterCancelingTransfer" />
-                   <include name="verifyHomeLocationAfterCancelingTransfer" />
-                   <include name="verifyTheFunctionOfBadges" />
-                   <include name="verifyTheVisibleOfBadgesOnTeamRoster" />
-                   <include name="verifyTheEmailDomainOnInvite" />
-                   <include name="verifyInviteTeamMemberPageLoaded" />
-                   <include name="verifySendAndCancelEnabledOnInvite" />
-                   <include name="verifyThreeTitlesDisplayedOnInvite" />
-                   <include name="verifySaveButtonEnableOnNewTMPage" />
-                   <include name="verifyTMContactNumberInNumericOnly" />
-                   <include name="verifyTMCountIsCorrectFromRoster" />
-                   <include name="verifyCancelButtonEnabledOnAddTM" />
-                   <include name="verifyMandatoryFieldsOnAddTM" />
-                   <include name="verifyTMIsInvitedAndVisibleOnTODO" />
-                   <include name="verifyInviteAndReInviteAreAvailable" />
-                   <include name="verifyOnBoardedDateAndButtonsWhileActivating" />
-                   <include name="verifyTeamMemberStatusAfterActivating" />
-                   <include name="verifyInvitationCodeIsSent" />
-                   <include name="verifyInvitationCodeIsAvailableOnEmailID" />
-                   <include name="verifyUpdateInfoIsPresentWhenPendingForContactOrEmail" />
-                   <include name="verifyTheFunctionOfTerminateButton" />
-                   <include name="verifyTheFunctionOfCancelTerminateButton" />
-               </methods>
-           </class>
-       </classes>
-   </test>
-    <test name="TeamTab Test">
-        <classes>
-            <class name="com.legion.tests.core.TeamTest">
-                <methods>
-                    <include name="verifyShiftCanAssignToTMAfterActivating"/>
-                    <include name="verifyShiftIsOpenAfterTerminating" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+<!--    <test name="TeamTab Test KendraScott2">-->
+<!--       <classes>-->
+<!--           <class name="com.legion.tests.core.TeamTestKendraScott2">-->
+<!--               <methods>-->
+<!--                   <include name="verifyTheFunctionOfSearchTMBar"/>-->
+<!--                   <include name="verifyTheFunctionOfPlusIcon" />-->
+<!--                   <include name="verifyTheCalendarLoadForCurrentDayAndColor" />-->
+<!--                   <include name="verifyNewHomeLocationCanBeSelectedOnTransfer" />-->
+<!--                   <include name="verifyTheFunctionOfTemporaryTransferButton" />-->
+<!--                   <include name="verifyTwoCalendarsAreShownAfterClickTemp" />-->
+<!--                   <include name="verifyTheFunctionOfAddTMCalendar" />-->
+<!--                   <include name="verifyTheCurrentDateAndSelectOtherDateOnTransfer" />-->
+<!--                   <include name="verifyTransferToANewLocation" />-->
+<!--                   <include name="verifyConfirmButtonOnPopupWindowWorking" />-->
+<!--                   <include name="verifyCancelButtonOnPopupWindowWorking" />-->
+<!--                   <include name="verifyHomeLocationNotUpdateAndGivenInformation" />-->
+<!--                   <include name="verifyPopupIsShownAfterClickingCancelTransfer" />-->
+<!--                   <include name="verifyTransferButtonEnabledAfterCancelingTransfer" />-->
+<!--                   <include name="verifyHomeLocationAfterCancelingTransfer" />-->
+<!--                   <include name="verifyTheFunctionOfBadges" />-->
+<!--                   <include name="verifyTheVisibleOfBadgesOnTeamRoster" />-->
+<!--                   <include name="verifyTheEmailDomainOnInvite" />-->
+<!--                   <include name="verifyInviteTeamMemberPageLoaded" />-->
+<!--                   <include name="verifySendAndCancelEnabledOnInvite" />-->
+<!--                   <include name="verifyThreeTitlesDisplayedOnInvite" />-->
+<!--                   <include name="verifySaveButtonEnableOnNewTMPage" />-->
+<!--                   <include name="verifyTMContactNumberInNumericOnly" />-->
+<!--                   <include name="verifyTMCountIsCorrectFromRoster" />-->
+<!--                   <include name="verifyCancelButtonEnabledOnAddTM" />-->
+<!--                   <include name="verifyMandatoryFieldsOnAddTM" />-->
+<!--                   <include name="verifyTMIsInvitedAndVisibleOnTODO" />-->
+<!--                   <include name="verifyInviteAndReInviteAreAvailable" />-->
+<!--                   <include name="verifyOnBoardedDateAndButtonsWhileActivating" />-->
+<!--                   <include name="verifyTeamMemberStatusAfterActivating" />-->
+<!--                   <include name="verifyInvitationCodeIsSent" />-->
+<!--                   <include name="verifyInvitationCodeIsAvailableOnEmailID" />-->
+<!--                   <include name="verifyUpdateInfoIsPresentWhenPendingForContactOrEmail" />-->
+<!--                   <include name="verifyTheFunctionOfTerminateButton" />-->
+<!--                   <include name="verifyTheFunctionOfCancelTerminateButton" />-->
+<!--               </methods>-->
+<!--           </class>-->
+<!--       </classes>-->
+<!--   </test>-->
+<!--    <test name="TeamTab Test">-->
+<!--        <classes>-->
+<!--            <class name="com.legion.tests.core.TeamTest">-->
+<!--                <methods>-->
+<!--                    <include name="verifyShiftCanAssignToTMAfterActivating"/>-->
+<!--                    <include name="verifyShiftIsOpenAfterTerminating" />-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
 
 
 </suite> <!-- Suite -->
