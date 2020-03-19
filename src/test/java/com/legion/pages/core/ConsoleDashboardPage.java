@@ -86,7 +86,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy (css = "li[ng-if='canShowTimeoffs']")
 	private WebElement timeOffLink;
 
-	@FindBy (css = "div.header-company-icon")
+	@FindBy (css = "[ng-src*='t-m-time-offs']")
 	private WebElement iconImage;
 
 	@FindBy (css = ".col-sm-6.text-right")

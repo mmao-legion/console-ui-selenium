@@ -280,7 +280,7 @@ public class RegressionTest extends TestBase{
 		boolean isWeekFoundToUnGenerate = false;
 		for(WebElement overviewWeek : overviewWeeks)
 		{
-			if(! overviewWeek.getText().contains(overviewWeeksStatus.Guidance.getValue()))
+			if(!overviewWeek.getText().contains(overviewWeeksStatus.Guidance.getValue()) )
 			{
 				String weekStatus = overviewWeek.getText();
 				isWeekFoundToUnGenerate = true;
@@ -386,9 +386,9 @@ public class RegressionTest extends TestBase{
 			if(index != 0)
 				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.One.getValue());
 
-			if(schedulePage.isGenerateButtonLoaded())
+			if(schedulePage.isGenerateButtonLoaded() || schedulePage.isGenerateButtonLoadedForManagerView())
 			{
-				SimpleUtils.pass("Guidance week found : '"+ schedulePage.getActiveWeekText() +"'");
+				SimpleUtils.pass("Guidance/Draft week found : '"+ schedulePage.getActiveWeekText() +"'");
 
 				SimpleUtils.assertOnFail("Schedule Page: 'Edit' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
 						(! schedulePage.isActionButtonLoaded("Edit")) , false);
@@ -544,7 +544,12 @@ public class RegressionTest extends TestBase{
 					(!overviewWeeks.get(i).getText().contains(overviewWeeksStatus.Finalized.getValue())) &&
 					!overviewWeeks.get(i).getText().contains(overviewWeeksStatus.Published.getValue())) {
 				basePase.click(overviewWeeks.get(i));
-				schedulePage.clickOnSchedulePublishButton();
+				if(schedulePage.isGenerateButtonLoadedForManagerView()){
+					schedulePage.generateOrUpdateAndGenerateSchedule();
+					schedulePage.clickOnSchedulePublishButton();
+				}else{
+					schedulePage.clickOnSchedulePublishButton();
+				}
 				break;
 			}
 		}
@@ -1459,7 +1464,7 @@ public class RegressionTest extends TestBase{
 	@MobilePlatform(platform = "Android")
 	@Automated(automated = "Automated")
 	@Owner(owner = "Naval")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "DGStage_Enterprise")
 	@TestName(description = "Verify whether Manager is able to approve Time Off request")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void VerifyWhetherManagerCanApproveTimeOffRequestAsTeamMember(String browser, String username, String password, String location)
@@ -1491,7 +1496,7 @@ public class RegressionTest extends TestBase{
 
 		// Login as Store Manager
 		String fileName = "UsersCredentials.json";
-		fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+		fileName = SimpleUtils.getEnterprise(getEnterprise() + "_Enterprise")+ fileName;
 		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
 		Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
 		loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])

@@ -15,6 +15,7 @@ import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.tests.testframework.LegionWebDriverEventListener;
 import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
@@ -74,6 +75,7 @@ public abstract class TestBase {
     public static AndroidDriver<MobileElement> driver;
     public static String versionString;
     public static int version;
+    public String enterpriseName;
     public static String pth=System.getProperty("user.dir");
     public static String reportFilePath=pth+"/Reports/";
     public static String screenshotFilePath=pth+"/screenshots/";

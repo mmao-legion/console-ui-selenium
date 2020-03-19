@@ -260,10 +260,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.sch-day-view-grid-header span:nth-child(1)")
     private WebElement shiftStartday;
 
-    @FindBy(css = "div.lgn-time-slider-notch-selector-start span.lgn-time-slider-label")
+//    @FindBy(css = "div.lgn-time-slider-notch-selector-start span.lgn-time-slider-label")
+//    private WebElement customizeShiftStartdayLabelTimeFormat;
+
+    @FindBy(xpath = "//div[contains(@class,'lgn-time-slider-notch-selector-start')]/following-sibling::div[2]")
     private WebElement customizeShiftStartdayLabel;
 
-    @FindBy(css = "div.lgn-time-slider-notch-selector-end span.lgn-time-slider-label")
+//    @FindBy(css = "div.lgn-time-slider-notch-selector-end span.lgn-time-slider-label")
+//    private WebElement customizeShiftEnddayLabelTimeFormat;
+
+    @FindBy(xpath = "//div[contains(@class,'lgn-time-slider-notch-selector-end')]/following-sibling::div[2]")
     private WebElement customizeShiftEnddayLabel;
 
     @FindBy(css = "div.lgn-time-slider-notch-selector-start")
@@ -705,7 +711,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = "[on-change=\"updateGroupBy(value)\"]")
     private WebElement groupByAllIcon;
 
-    @FindBy(css = "[ng-click=\"printAction($event)\"]")
+    @FindBy(css = "[ng-click*=\"printAction($event)\"]")
     private WebElement printButton;
 
     @FindBy(xpath ="//*[text()=\"Portrait\"]")
@@ -748,6 +754,33 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(css = "[src=\"img/legion/schedule/shift-info-danger.png\"]")
     private List<WebElement> complianceShitShowIcon;
+
+    //added by Nishant for schedule generation
+
+    @FindBy(css = "div.modal-instance.generate-modal")
+    private WebElement copySchedulePopUp;
+
+    @FindBy(css = "div.modal-instance-header-title")
+    private WebElement copyScheduleHeader;
+
+    @FindBy(css = ".target-budget")
+    private WebElement copyScheduleTargetBudget;
+
+    @FindBy(css = ".target-budget")
+    private WebElement copyScheduleLocationName;
+
+    @FindBy(css = "div.suggested div.generate-modal-week-schedules-header-title")
+    private WebElement copyScheduleSuggestedScheduleTxt;
+
+    @FindBy(xpath = "//div[contains(text(),'Copy')]")
+    private WebElement copyScheduleWindowCopyScheduleTxt;
+
+    @FindBy(css = "div[ng-repeat='schedule in previousWeeksSchedules'] div.generate-modal-week-container")
+    private List<WebElement> generateModalWeekContainerForPreviousWeeks;
+
+    @FindBy(css = "div.confirm")
+    private WebElement btnContinue;
+
 
     List<String> scheduleWeekDate = new ArrayList<String>();
     List<String> scheduleWeekStatus = new ArrayList<String>();
@@ -944,7 +977,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(xpath = "//*[@class='shift-hover-seperator']/following-sibling::div[1]/div[1]")
     private WebElement shiftSize;
 
-    @FindBy(css = "img[ng-if*='hasViolateCompliance']")
+    @FindBy(css = "img[ng-if*='hasViolation']")
     private List<WebElement> infoIcon;
 
 
@@ -1095,10 +1128,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public Boolean isWeekGenerated() throws Exception {
-        if (isElementLoaded(generateSheduleButton, 3)) {
-            if (generateSheduleButton.isEnabled()) {
+        if (isElementEnabled(generateSheduleButton, 3)) {
                 return false;
-            }
+        }else if(isElementEnabled(generateScheduleBtn, 3)){
+            return false;
         }
         SimpleUtils.pass("Week: '" + getActiveWeekText() + "' Already Generated!");
         return true;
@@ -1216,8 +1249,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public void clickOnEditButton() throws Exception {
-        if (isElementEnabled(edit,2)) {
-            click(edit);
+        if (isElementEnabled(newEdit,2)) {
+            click(newEdit);
             if (isElementLoaded(editAnywayPopupButton, 2)) {
                 click(editAnywayPopupButton);
                 SimpleUtils.pass("Schedule edit shift page loaded successfully!");
@@ -1262,8 +1295,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     public Boolean isAddNewDayViewShiftButtonLoaded() throws Exception {
-        if (isElementLoaded(addNewShiftOnDayViewButton)) {
-            SimpleUtils.pass("User is not allowed to add new shift for past week!");
+        if (isElementLoaded(createNewShiftWeekView)) {
             return true;
         } else {
             return false;
@@ -1280,6 +1312,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public Boolean isGenerateButtonLoaded() throws Exception {
         if (isElementLoaded(scheduleGenerateButton,2)) {
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean isGenerateButtonLoadedForManagerView() throws Exception {
+        if (isElementLoaded(generateScheduleBtn,2)) {
             return true;
         }
         return false;
@@ -1440,7 +1479,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	public String clickNewDayViewShiftButtonLoaded() throws Exception
 	{
 		String textStartDay = null;
-		if(isElementEnabled(addNewShiftOnDayViewButton,5))
+		if(isElementEnabled(createNewShiftWeekView,5))
 		{
 			SimpleUtils.pass("User is allowed to add new shift for current or future week!");
 			if(isElementEnabled(shiftStartday)){
@@ -1449,7 +1488,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			}else{
 				SimpleUtils.fail("Shift Start day not getting Loaded!",true);
 			}
-			click(addNewShiftOnDayViewButton);
+			click(createNewShiftWeekView);
 		}
 		else
 		{
@@ -1475,15 +1514,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	{
 		if(isElementLoaded(customizeShiftStartdayLabel,10))
 		{
-			String[] actualTextStartDay = customizeShiftStartdayLabel.getText().split(":");
-			if(actualTextStartDay[0].equals(textStartDay)){
-				SimpleUtils.pass("Start time on Custimize New shift page "+actualTextStartDay[0]+" is same as "+textStartDay);
+//			String[] actualTextStartDay = customizeShiftStartdayLabel.getText().split(":");
+			if(customizeShiftStartdayLabel.getText().equals(textStartDay)){
+				SimpleUtils.pass("Start time on Custimize New shift page "+customizeShiftStartdayLabel.getText()+" is same as "+textStartDay);
 			}else{
-				SimpleUtils.fail("Start time on Custimize New shift page "+actualTextStartDay[0]+" is not same as "+textStartDay,true);
+				SimpleUtils.fail("Start time on Custimize New shift page "+customizeShiftStartdayLabel.getText()+" is not same as "+textStartDay,true);
 			}
 		}else
 		{
-			SimpleUtils.fail("Customize New Shift Page not loaded Successfully!",false);
+			SimpleUtils.    fail("Customize New Shift Page not loaded Successfully!",false);
 		}
 			
 	}
@@ -1493,11 +1532,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	{
 		if(isElementLoaded(customizeShiftStartdayLabel))
 		{
-			String[] actualTextStartDay = customizeShiftStartdayLabel.getText().split(":");
-			if(actualTextStartDay[0].equals(textStartDay)){
-				SimpleUtils.pass("Start time on Customize New shift page "+actualTextStartDay[0]+" is same as "+textStartDay);
+//			String[] actualTextStartDay = customizeShiftStartdayLabel.getText().split(":");
+			if(customizeShiftStartdayLabel.getText().equals(textStartDay)){
+				SimpleUtils.pass("Start time on Customize New shift page "+customizeShiftStartdayLabel.getText()+" is same as "+textStartDay);
 			}else{
-				SimpleUtils.fail("Start time on Customize New shift page "+actualTextStartDay[0]+" is not same as "+textStartDay,true);
+				SimpleUtils.fail("Start time on Customize New shift page "+customizeShiftStartdayLabel.getText()+" is not same as "+textStartDay,true);
 			}
 		}else
 		{
@@ -1516,8 +1555,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 					if(i == (shiftStartingCount + Integer.parseInt(shiftTime))){
 						WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child("+(i+Integer.parseInt(shiftTime))+")"));
 						mouseHoverDragandDrop(sliderNotchEnd,element);
-						MyThreadLocal.setScheduleHoursEndTime(customizeShiftEnddayLabel.getText());
-						break;
+                        if(customizeShiftEnddayLabel.getAttribute("class").contains("PM")){
+                            MyThreadLocal.setScheduleHoursEndTime(customizeShiftEnddayLabel.getText() + ":00PM");
+                            break;
+                        }else{
+                            MyThreadLocal.setScheduleHoursEndTime(customizeShiftEnddayLabel.getText() + ":00AM");
+                            break;
+                        }
 					}
 				}
 				
@@ -1531,8 +1575,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 					if(i == (shiftStartingCount + Integer.parseInt(shiftTime))){
 						WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child("+(i+Integer.parseInt(shiftTime))+")"));
 						mouseHoverDragandDrop(sliderNotchStart,element);
-						MyThreadLocal.setScheduleHoursStartTime(customizeShiftStartdayLabel.getText());
-						break;
+						if(customizeShiftStartdayLabel.getAttribute("class").contains("AM")){
+                            MyThreadLocal.setScheduleHoursStartTime(customizeShiftStartdayLabel.getText() + ":00AM");
+                            break;
+                        }else{
+                            MyThreadLocal.setScheduleHoursStartTime(customizeShiftStartdayLabel.getText() + ":00PM");
+                            break;
+                        }
 					}
 				}
 				
@@ -1549,18 +1598,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			String scheduledHoursStartTime = MyThreadLocal.getScheduleHoursStartTime();
 			String scheduledHoursEndTime = MyThreadLocal.getScheduleHoursEndTime();
 			scheduleHoursDifference =  SimpleUtils.convertDateIntotTwentyFourHrFormat(scheduledHoursStartTime , scheduledHoursEndTime);
-			String[] customizeStartTimeLabel = customizeShiftStartdayLabel.getText().split(":");
-			String[] customizeEndTimeLabel = customizeShiftEnddayLabel.getText().split(":");
+//			String[] customizeStartTimeLabel = customizeShiftStartdayLabel.getText().split(":");
+//			String[] customizeEndTimeLabel = customizeShiftEnddayLabel.getText().split(":");
 			SimpleUtils.pass("Schedule hour difference is "+scheduleHoursDifference);
 			shiftTimeSchedule.put("ScheduleHrDifference",Float.toString(scheduleHoursDifference));
-			shiftTimeSchedule.put("CustomizeStartTimeLabel",customizeStartTimeLabel[0]);
-			shiftTimeSchedule.put("CustomizeEndTimeLabel",customizeEndTimeLabel[0]);
+			shiftTimeSchedule.put("CustomizeStartTimeLabel",customizeShiftStartdayLabel.getText());
+			shiftTimeSchedule.put("CustomizeEndTimeLabel",customizeShiftEnddayLabel.getText());
 		}
 		return shiftTimeSchedule;
 	}
 
     public void selectWorkRole(String workRoles) throws Exception {
-        if (isElementLoaded(weatherWeekSmartCardHeader, 20)) {
+        if (isElementLoaded(btnWorkRole, 20)) {
             click(btnWorkRole);
             SimpleUtils.pass("Work Role button clicked Successfully");
         } else {
@@ -1685,8 +1734,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public void clickSaveBtn() throws Exception {
-        if (isElementLoaded(scheduleSaveBtn)) {
-            click(scheduleSaveBtn);
+        if (isElementLoaded(newScheduleSaveButton)) {
+            click(newScheduleSaveButton);
             clickOnVersionSaveBtn();
             clickOnPostSaveBtn();
         } else {
@@ -2592,8 +2641,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void addOpenShiftWithDefaultTime(String workRole) throws Exception {
-        if (isElementLoaded(addNewShiftOnDayViewButton)) {
-            click(addNewShiftOnDayViewButton);
+        if (isElementLoaded(createNewShiftWeekView)) {
+            click(createNewShiftWeekView);
             selectWorkRole(workRole);
             clickRadioBtnStaffingOption(staffingOption.OpenShift.getValue());
             clickOnCreateOrNextBtn();
@@ -3107,7 +3156,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void generateOrUpdateAndGenerateSchedule() throws Exception {
-        if (isElementEnabled(generateSheduleButton)) {
+        if (isElementEnabled(generateSheduleButton,5)) {
             click(generateSheduleButton);
             openBudgetPopUp();
 //            openBudgetPopUpGenerateSchedule();
@@ -3115,21 +3164,28 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 click(generateSheduleForEnterBudgetBtn);
                 if (isElementEnabled(checkOutTheScheduleButton, 20)) {
                     checkoutSchedule();
+                    switchToManagerView();
                 } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                     updateAndGenerateSchedule();
+                    switchToManagerView();
                 } else {
                     SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
                 }
             } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                 updateAndGenerateSchedule();
+                switchToManagerView();
             } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
                 checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
                 SimpleUtils.pass("Schedule Generated Successfuly!");
+                switchToManagerView();
             } else {
                 SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
             }
 
-        } else {
+        } else if(isElementEnabled(generateScheduleBtn,5)){
+            switchToManagerView();
+        }
+        else {
             SimpleUtils.assertOnFail("Schedule Already generated for active week!", false, true);
         }
     }
@@ -3358,23 +3414,36 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement operatingHoursCancelBtn;
 
     public void updateScheduleOperatingHours(String day, String startTime, String endTime) throws Exception {
-        Thread.sleep(1000);
+        waitForSeconds(1);
+        String strScheduleOperatingStartHrsSlider = null;
+        String strScheduleOperatingEndHrsSlider = null;
+        boolean startHrsSlider = true;
         if (operatingHoursRows.size() > 0) {
             for (WebElement operatingHoursRow : operatingHoursRows) {
                 if (operatingHoursRow.getText().toLowerCase().contains(day.toLowerCase())) {
                     WebElement editBtn = operatingHoursRow.findElement(By.cssSelector("span[ng-if=\"canEditWorkingHours\"]"));
                     if (isElementLoaded(editBtn)) {
                         click(editBtn);
-                        if (scheduleOperatingStartHrsSlider.getText().toLowerCase().contains(startTime.toLowerCase())
-                                && scheduleOperatingEndHrsSlider.getText().toLowerCase().contains(endTime.toLowerCase())) {
+                        if(customizeShiftStartdayLabel.getAttribute("class").contains("AM")){
+                            strScheduleOperatingStartHrsSlider = customizeShiftStartdayLabel.getText() + ":00AM";
+                        }else{
+                            strScheduleOperatingStartHrsSlider = customizeShiftStartdayLabel.getText() + ":00PM";
+                        }
+                        if(customizeShiftEnddayLabel.getAttribute("class").contains("PM")){
+                            strScheduleOperatingEndHrsSlider = customizeShiftEnddayLabel.getText() + ":00PM";
+                        }else{
+                            strScheduleOperatingEndHrsSlider = customizeShiftEnddayLabel.getText() + ":00AM";
+                        }
+                        if (strScheduleOperatingStartHrsSlider.toLowerCase().contains(startTime.toLowerCase())
+                                && strScheduleOperatingEndHrsSlider.toLowerCase().contains(endTime.toLowerCase())) {
                             SimpleUtils.pass("Operating Hours already updated for the day '" + day + "' with Start time '" + startTime
                                     + "' and End time '" + endTime + "'.");
                             if (isElementLoaded(operatingHoursCancelBtn)) {
                                 click(operatingHoursCancelBtn);
                             }
                         } else {
-                            dragRollerElementTillTextMatched(scheduleOperatingStartHrsSlider, startTime);
-                            dragRollerElementTillTextMatched(scheduleOperatingEndHrsSlider, endTime);
+                            dragRollerElementTillTextMatched(customizeShiftStartdayLabel, startTime, startHrsSlider);
+                            dragRollerElementTillTextMatched(customizeShiftEnddayLabel, endTime, startHrsSlider);
                             if (isElementLoaded(operatingHoursSaveBtn)) {
                                 click(operatingHoursSaveBtn);
                                 SimpleUtils.pass("Operating Hours updated for the day '" + day + "' with Start time '" + startTime
@@ -3390,21 +3459,29 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch) throws Exception {
-
-        int hourOnSlider = Integer.valueOf(rollerElement.getText().split(":")[0]);
-        if (rollerElement.getText().toLowerCase().contains("pm"))
+    public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch, boolean startHrsSlider) throws Exception {
+        String rollerElementTxt = null;
+        if(rollerElement.getAttribute("class").contains("AM")){
+            rollerElementTxt = rollerElement.getText() + ":00AM";
+        }else{
+            rollerElementTxt = rollerElement.getText() + ":00PM";
+        }
+        int hourOnSlider = Integer.valueOf(rollerElement.getText());
+        if (rollerElementTxt.toLowerCase().contains("pm"))
             hourOnSlider = hourOnSlider + 12;
         int openingHourOnJson = Integer.valueOf(textToMatch.split(":")[0]);
         if (textToMatch.toLowerCase().contains("pm"))
             openingHourOnJson = openingHourOnJson + 12;
-        int sliderOffSet = 5;
+        int sliderOffSet = 2;
         if (hourOnSlider > openingHourOnJson)
-            sliderOffSet = -5;
-        while (!rollerElement.getText().toLowerCase().contains(textToMatch.toLowerCase())) {
-            Thread.sleep(500);
-            moveDayViewCards(rollerElement, sliderOffSet);
+            sliderOffSet = -2;
+        if(startHrsSlider){
+            moveDayViewCards(scheduleOperatingStartHrsSlider, sliderOffSet);
+        }else{
+            moveDayViewCards(scheduleOperatingEndHrsSlider, sliderOffSet);
         }
+
+
     }
 
     @Override
@@ -4180,7 +4257,42 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    public void switchToManagerView() throws Exception {
+        String activeWeekText = getActiveWeekText();
+        if(isElementEnabled(activScheduleType,5)){
+            if(activScheduleType.getText().equalsIgnoreCase("Suggested")){
+                click(scheduleTypeManager);
+                if(isGenerateButtonLoadedForManagerView()){
+                    click(generateScheduleBtn);
+                    generateScheduleFromCreateNewScheduleWindow(activeWeekText);
+                }else{
+                    SimpleUtils.fail("Generate button not found on page",false);
+                }
+            }else{
+                if(isGenerateButtonLoadedForManagerView()){
+                    click(generateScheduleBtn);
+                    generateScheduleFromCreateNewScheduleWindow(activeWeekText);
+                }else{
+                    SimpleUtils.fail("Generate button not found on page",false);
+                }
+            }
+        }else{
+            SimpleUtils.fail("Schedule Type " + scheduleTypeManager.getText() + " is disabled",false);
+        }
+    }
 
+    public void generateScheduleFromCreateNewScheduleWindow(String activeWeekText) throws Exception {
+        if(isElementEnabled(copySchedulePopUp,5)){
+            SimpleUtils.pass("Copy From Schedule Window opened for week " + activeWeekText);
+            if(isElementEnabled(btnContinue,2)){
+                click(btnContinue);
+            }else{
+                SimpleUtils.fail("Continue button was not present on page",false);
+            }
+        }else{
+            SimpleUtils.fail("Copy From Schedule Window not opened for week " + activeWeekText,false);
+        }
+    }
     //added by Nishant for DM Test cases
 
     @FindBy(css = "div.analytics-new-table-group")
@@ -4662,7 +4774,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void closeButtonIsClickable() {
         getDriver().close();
         SimpleUtils.pass("close button is clickable");
-    }
+}
 
     @Override
     public void legionButtonIsClickableAndHasNoEditButton() throws Exception {
@@ -5651,7 +5763,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         SimpleUtils.report("No view shift button");
         return false;
-
     }
 
     @Override
