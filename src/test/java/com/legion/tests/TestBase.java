@@ -198,7 +198,7 @@ public abstract class TestBase {
                 ChromeOptions options = new ChromeOptions();
                 if(propertyMap.get("isHeadlessBrowser").equalsIgnoreCase("true")){
 //                    options.addArguments("headless");
-                    options.addArguments( "--headless","--disable-gpu", "--no-sandbox" );
+                    options.addArguments( "--headless","--disable-gpu", "--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage" );
                     options.addArguments("window-size=1200x600");
                     runScriptOnHeadlessOrBrowser(options);
                 }else{
