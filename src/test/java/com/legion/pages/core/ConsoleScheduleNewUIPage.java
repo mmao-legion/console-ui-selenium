@@ -58,6 +58,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private static HashMap<String, String> propertyBudgetValue = JsonUtil.getPropertiesFromJsonFile("src/test/resources/Budget.json");
     private static HashMap<String, String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     private static HashMap<String, String> parametersMap2 = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ControlsPageLocationDetail.json");
+    private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
     public enum scheduleHoursAndWagesData {
         scheduledHours("scheduledHours"),
         budgetedHours("budgetedHours"),
@@ -1555,6 +1556,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 					if(i == (shiftStartingCount + Integer.parseInt(shiftTime))){
 						WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child("+(i+Integer.parseInt(shiftTime))+")"));
 						mouseHoverDragandDrop(sliderNotchEnd,element);
+						WebElement ele = getDriver().findElement(By.xpath("//div[contains(@class,'lgn-time-slider-notch-selector-end')]/following-sibling::div[1]"));
+						String txt = ele.getAttribute("innerHTML");
                         if(customizeShiftEnddayLabel.getAttribute("class").contains("PM")){
                             MyThreadLocal.setScheduleHoursEndTime(customizeShiftEnddayLabel.getText() + ":00PM");
                             break;
@@ -3444,7 +3447,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             }
                         } else {
                             dragRollerElementTillTextMatched(customizeShiftStartdayLabel, startTime, startHrsSlider);
-                            dragRollerElementTillTextMatched(customizeShiftEnddayLabel, endTime, startHrsSlider);
+                            dragRollerElementTillTextMatched(customizeShiftEnddayLabel, endTime, false);
                             if (isElementLoaded(operatingHoursSaveBtn)) {
                                 click(operatingHoursSaveBtn);
                                 SimpleUtils.pass("Operating Hours updated for the day '" + day + "' with Start time '" + startTime
@@ -3459,6 +3462,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Operating Hours Rows not loaded.", false);
     }
 
+    @FindBy(xpath = "//div[@class='lgn-time-slider-notch-mark']/following-sibling::div[1]")
+    private List<WebElement> sliderNotchLabel;
+
+    @FindBy(css = "div.lgn-time-slider-notch.droppable")
+    private List<WebElement> sliderNotchDroppable;
+
     @Override
     public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch, boolean startHrsSlider) throws Exception {
         String rollerElementTxt = null;
@@ -3467,20 +3476,43 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else{
             rollerElementTxt = rollerElement.getText() + ":00PM";
         }
-        int hourOnSlider = Integer.valueOf(rollerElement.getText());
-        if (rollerElementTxt.toLowerCase().contains("pm"))
-            hourOnSlider = hourOnSlider + 12;
-        int openingHourOnJson = Integer.valueOf(textToMatch.split(":")[0]);
-        if (textToMatch.toLowerCase().contains("pm"))
-            openingHourOnJson = openingHourOnJson + 12;
-        int sliderOffSet = 2;
-        if (hourOnSlider > openingHourOnJson)
-            sliderOffSet = -2;
+
         if(startHrsSlider){
-            moveDayViewCards(scheduleOperatingStartHrsSlider, sliderOffSet);
+            Outerloop:
+            for(int i = 0;i < sliderNotchDroppable.size();i++){
+                for(int j= 0;j< sliderNotchLabel.size();j++){
+                    if(rollerElement.getText().equals(sliderNotchLabel.get(j).getText()) && !rollerElementTxt.toLowerCase().contains(textToMatch.toLowerCase())){
+                        mouseHoverDragandDrop(scheduleOperatingStartHrsSlider, sliderNotchDroppable.get(j+Integer.parseInt(propertyCustomizeMap.get("INCREASE_START_OPERATING_TIME"))));
+                        break Outerloop;
+                    }
+                }
+            }
         }else{
-            moveDayViewCards(scheduleOperatingEndHrsSlider, sliderOffSet);
+            Outerloop:
+            for(int i = 0;i < sliderNotchLabel.size();i++){
+                for(int j= 0;j< sliderNotchDroppable.size();j++){
+                    if(rollerElement.getText().equals(sliderNotchLabel.get(j).getText()) && !rollerElementTxt.toLowerCase().contains(textToMatch.toLowerCase())){
+                        mouseHoverDragandDrop(scheduleOperatingEndHrsSlider, sliderNotchDroppable.get((j*2)+Integer.parseInt(propertyCustomizeMap.get("INCREASE_END_OPERATING_TIME"))));
+                        break Outerloop;
+                    }
+                }
+            }
         }
+
+//        int hourOnSlider = Integer.valueOf(rollerElement.getText());
+//        if (rollerElementTxt.toLowerCase().contains("pm"))
+//            hourOnSlider = hourOnSlider + 12;
+//        int openingHourOnJson = Integer.valueOf(textToMatch.split(":")[0]);
+//        if (textToMatch.toLowerCase().contains("pm"))
+//            openingHourOnJson = openingHourOnJson + 12;
+//        int sliderOffSet = 2;
+//        if (hourOnSlider > openingHourOnJson)
+//            sliderOffSet = -2;
+//        if(startHrsSlider){
+//            moveDayViewCards(scheduleOperatingStartHrsSlider, sliderOffSet);
+//        }else{
+//            moveDayViewCards(scheduleOperatingEndHrsSlider, sliderOffSet);
+//        }
     }
 
     @Override
@@ -4282,13 +4314,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public void generateScheduleFromCreateNewScheduleWindow(String activeWeekText) throws Exception {
         if(isElementEnabled(copySchedulePopUp,5)){
-            SimpleUtils.pass("Copy From Schedule Window opened for week " + activeWeekText);
+            SimpleUtils.pass("Copy From Schedule Window opened for week " + activeWeekText); SimpleUtils.pass("Copy From Schedule Window opened for week " + activeWeekText);
             if(isElementEnabled(btnContinue,2)){
                 click(btnContinue);
             }else{
                 SimpleUtils.fail("Continue button was not present on page",false);
             }
-        }else{
+        }else if (isElementEnabled(publishSheduleButton,5)){
+            SimpleUtils.pass("Copy From Schedule Window not opened for " + activeWeekText +" because there was no past week published schedule" + activeWeekText);
+        }
+        else{
             SimpleUtils.fail("Copy From Schedule Window not opened for week " + activeWeekText,false);
         }
     }

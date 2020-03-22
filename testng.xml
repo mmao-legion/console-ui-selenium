@@ -23,14 +23,12 @@
                         <include name="legionAppNavigationAllTabsStoreManager"/>
                         <include name="verifyControlsBreadcrumbAsInternalAdmin"/>
                         <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>
-                        <include name="validateGuidanceScheduleAndOtherHoursOnDashBoardForAllLocationAsStoreManager"/>
                         <include name="validateWeatherForecastOnSchedulePageAsStoreManager"/>
                         <include name="validateSchedulePublishFeatureAsStoreManager"/>
                         <include name="verifyScheduleOverlappingAsInternalAdmin"/>
                         <include name="updateWorkingHoursAsInternalAdmin"/>
                         <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>
                         <include name="updateControlsSectionLoadingAsStoreManager"/>
-                        <include name="validateTeamTabAsStoreManager"/>
                         <include name="VerifyWhetherManagerCanApproveTimeOffRequestAsTeamMember"/>
                         <include name="generateScheduleAndCheckScheduleNTMSizeWeekView"/>
                         <include name="editAssignTeamScheduleAsStoreManager"/>
@@ -73,22 +71,13 @@
                    <include name="verifyTheTeamFunctionalityInTransfer"/>
                    <include name="verifyTheTeamFunctionalityInUpdateInfo"/>
                    <include name="verifyTheTeamFunctionalityInBadges"/>
-                   <include name="verifyTheTeamFunctionalityInInviteTeamMember"/>
+
                </methods>
            </class>
        </classes>
    </test>
 
-    <test name="TeamTab Test">
-        <classes>
-            <class name="com.legion.tests.core.TeamTest">
-                <methods>
-                    <include name="verifyTheTeamFunctionalityInActivate"/>
-                    <include name="verifyTheTeamFunctionalityInTerminate"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
+
 
 	<test name="Forecast Test">
        <classes>

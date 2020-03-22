@@ -789,6 +789,17 @@ public class BasePage {
         }
         return result;
     }
+
+    public void moveDayViewCards(WebElement webElement, int xOffSet)
+    {
+        Actions builder = new Actions(MyThreadLocal.getDriver());
+        builder.moveToElement(webElement)
+                .clickAndHold()
+                .moveByOffset(xOffSet, 0)
+                .release()
+                .build()
+                .perform();
+    }
 //
 //
 //     public void assertIsDisplay(Map<String,String> map){

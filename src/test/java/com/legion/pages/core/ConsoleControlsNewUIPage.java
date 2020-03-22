@@ -512,15 +512,17 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		else
 			SimpleUtils.fail("Controls Page: Working Hours Card not Loaded!", false);
 	}
-	
 
-	@Override
+	@FindBy(css = "div.lgn-time-slider-notch-label")
+	private List<WebElement> sliderNotchLabel;
+
 	public void updateControlsRegularHours(String isStoreClosed, String openingHours, String closingHours, String day)
 			throws Exception {
 		openingHours = openingHours.replace(" ", "");
 		closingHours = closingHours.replace(" ", "");
 		WebElement collapsibleHeader = regularHoursBlock.findElement(By.cssSelector("div.collapsible.row"));
 		boolean isRegularHoursSectionOpened = collapsibleHeader.getAttribute("class").contains("open");
+
 		if(! isRegularHoursSectionOpened)
 			click(regularHoursBlock);
 
@@ -534,41 +536,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					if(isElementLoaded(regularHoursEditBtn))
 					{
 						click(regularHoursEditBtn);
-
 						// Select Opening Hours
-						int openingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(0).getText().split(":")[0].trim());
-						if(editRegularHoursSliders.get(0).getText().toLowerCase().contains("pm"))
-							openingHourOnSlider = openingHourOnSlider + 12;
-						int openingHourOnJson = Integer.valueOf(openingHours.split(":")[0].trim());
-						if(openingHours.toLowerCase().contains("pm"))
-							openingHourOnJson = openingHourOnJson + 12;
-						int sliderOffSet = 5;
-						
-						if(openingHourOnSlider > openingHourOnJson)
-							sliderOffSet = -5;
-						
-						while(! editRegularHoursSliders.get(0).getText().toLowerCase().contains(openingHours.toLowerCase()))
-						{
-							moveDayViewCards(editRegularHoursSliders.get(0), sliderOffSet);
-						}
+						WebElement editRegularHoursSlidersStart = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch-selector-start"));
+						moveDayViewCards(editRegularHoursSlidersStart, 80);
 						
 						// Select Closing Hours
-						int closingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(1).getText().split(":")[0].trim());
-						if(editRegularHoursSliders.get(1).getText().toLowerCase().contains("pm"))
-							closingHourOnSlider = closingHourOnSlider + 12;
-						int closingHourOnJson = Integer.valueOf(closingHours.split(":")[0].trim());
-						if(closingHours.toLowerCase().contains("pm"))
-							closingHourOnJson = closingHourOnJson + 12;
-						if(closingHourOnSlider > closingHourOnJson)
-							sliderOffSet = -5;
-						else
-							sliderOffSet = 5;
-
-						while(! editRegularHoursSliders.get(1).getText().toLowerCase().contains(closingHours.toLowerCase()))
-						{
-							moveDayViewCards(editRegularHoursSliders.get(1), sliderOffSet);
-						}
-						
+						WebElement editRegularHoursSlidersEnd = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch-selector-end"));
+						moveDayViewCards(editRegularHoursSlidersEnd, -40);
 						if(isElementLoaded(saveWorkersHoursBtn))
 						{
 							click(saveWorkersHoursBtn);

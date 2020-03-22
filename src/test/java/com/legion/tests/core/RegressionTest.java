@@ -2340,7 +2340,35 @@ public class RegressionTest extends TestBase{
 //		Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
 //		verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
 	}
+	//added by Nishant
 
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Nishant")
+	@SanitySuite(sanity =  "Sanity")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the drag an drop functionality for swapping shift")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void dragAndDropSwapShiftAsStoreManager(String browser, String username, String password, String location)
+			throws Exception {
+		int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
+//	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+		if(!isActiveWeekGenerated){
+			schedulePage.generateOrUpdateAndGenerateSchedule();
+		}
+		//The schedules that are already published should remain unchanged
+		boolean isStoreClosed = false;
+		schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
+		schedulePage.clickOnEditButton();
+
+	}
 
 
 	public void verifyControlBreadcrumbForSchedulingPolicies() throws Exception {
