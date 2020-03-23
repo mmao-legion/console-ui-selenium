@@ -4063,7 +4063,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             WebElement element = getDriver().findElement(By.cssSelector("div.sch-worker-popover.allow-pointer-events.ng-scope"));
             JavascriptExecutor jse = (JavascriptExecutor) getDriver();
             String txt = jse.executeScript("return arguments[0].innerHTML;", element).toString();
-            System.out.println(txt);
 //		  	 	   		if(viewProfile.size()>0){
 //				   		   click(viewProfile.get(1));
 //			 	   		}
@@ -4314,9 +4313,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public void generateScheduleFromCreateNewScheduleWindow(String activeWeekText) throws Exception {
         if(isElementEnabled(copySchedulePopUp,5)){
-            SimpleUtils.pass("Copy From Schedule Window opened for week " + activeWeekText); SimpleUtils.pass("Copy From Schedule Window opened for week " + activeWeekText);
+            SimpleUtils.pass("Copy From Schedule Window opened for week " + activeWeekText);
             if(isElementEnabled(btnContinue,2)){
-                click(btnContinue);
+                JavascriptExecutor jse = (JavascriptExecutor) getDriver();
+                jse.executeScript("arguments[0].click();", btnContinue);
             }else{
                 SimpleUtils.fail("Continue button was not present on page",false);
             }
