@@ -18,7 +18,7 @@
 <!--       </classes>-->
 <!--   </test>-->
 
-    <test name="Schedule Test">
+    <test name="Schedule Regression Test">
         <classes>
             <class name="com.legion.tests.core.RegressionTest">
                 <methods>
@@ -61,6 +61,17 @@
        </classes>
    </test>
 
+    <test name="Schedule Test">
+       <classes>
+           <class name="com.legion.tests.core.ScheduleTest">
+               <methods>
+                   <include name="verifyTheTeamMemberViewSwapAsTeamMember"/>
+                   <include name="verifyTheTeamMemberViewCoverAsTeamMember" />
+               </methods>
+           </class>
+       </classes>
+   </test>
+
 <!--    <test name="Schedule Test">-->
 <!--            <classes>-->
 <!--                <class name="com.legion.tests.core.ScheduleTestKendraScott2">-->
@@ -88,6 +99,8 @@
                    <include name="verifyTheTeamFunctionalityInUpdateInfo" />
                    <include name="verifyTheTeamFunctionalityInBadges" />
                    <include name="verifyTheTeamFunctionalityInInviteTeamMember" />
+                   <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
+                   <include name="verifyTheTeamFunctionalityInProfileSectionAsInternalAdmin" />
                </methods>
            </class>
        </classes>
@@ -99,6 +112,8 @@
                 <methods>
                     <include name="verifyTheTeamFunctionalityInActivate" />
                     <include name="verifyTheTeamFunctionalityInTerminate" />
+                    <include name="verifyTheTeamFunctionalityInCoverageAsInternalAdmin" />
+                    <include name="verifyTheTeamFunctionalityInTimeOffAsStoreManager" />
                 </methods>
             </class>
         </classes>

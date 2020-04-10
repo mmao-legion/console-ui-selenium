@@ -359,6 +359,15 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	private WebElement startingSoonTitle;
 
 	@Override
+	public boolean isViewMySchedulePresentAndClickable() throws Exception {
+		boolean isPresentAndClickable = false;
+		if (isElementLoaded(goToTodayScheduleButton, 5) && isClickable(goToTodayScheduleButton, 5)) {
+			isPresentAndClickable = true;
+		}
+		return isPresentAndClickable;
+	}
+
+	@Override
 	public String getCurrentDateFromDashboard() throws Exception {
 		if (isElementLoaded(currentDate, 5)){
 			return currentDate.getText();

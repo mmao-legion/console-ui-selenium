@@ -2,6 +2,7 @@ package com.legion.pages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeMap;
 
 public interface ProfileNewUIPage {
@@ -96,4 +97,28 @@ public interface ProfileNewUIPage {
 			String timeOffEndDuration, String action) throws Exception;
 
 	public String getNickNameFromProfile() throws Exception;
+
+	public boolean isNewTimeOffWindowLoaded() throws Exception;
+
+	public void verifyCalendarForCurrentAndNextMonthArePresent(String currentYearMonthDate) throws Exception;
+
+	public void clickOnUserProfileImage() throws Exception;
+
+	public void selectProfileSubPageByLabelOnProfileImage(String profilePageSubSectionLabel) throws Exception;
+
+	public List<String> selectStartAndEndDate() throws Exception;
+
+	public boolean areAllDayCheckboxesLoaded() throws Exception;
+
+	public void deSelectAllDayCheckboxes() throws Exception;
+
+	public void verifyStartDateAndEndDateIsCorrect(String timeOffStartDate, String timeOffEndDate) throws Exception;
+
+	public void verifyTimeIsCorrectAfterDeSelectAllDay() throws Exception;
+
+	public void verifyAlignmentOfAMAndPMAfterDeSelectAllDay() throws Exception;
+
+	public int getTimeOffCountByStatusLabel(String status) throws Exception;
+
+	public HashMap<String, List<String>> selectCurrentDayAsStartNEndDate() throws Exception;
 }

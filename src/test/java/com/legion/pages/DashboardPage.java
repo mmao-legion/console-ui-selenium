@@ -29,4 +29,5 @@ public interface DashboardPage {
         throws Exception;
     public HashMap<String, String> getUpComingShifts() throws Exception;
     public boolean isStartingTomorrow() throws Exception;
+    public boolean isViewMySchedulePresentAndClickable() throws Exception;
 }

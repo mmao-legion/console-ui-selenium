@@ -1,6 +1,8 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import org.openqa.selenium.WebElement;
@@ -647,5 +649,92 @@ public class ScheduleTest extends TestBase{
 			SimpleUtils.pass("Navigate to Schedule page");
 			SimpleUtils.pass("assert alue of Other Hrs in Schedule tab should be same as Dashboard page");
 	    }
-	   
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "Coffee2_Enterprise")
+	@TestName(description = "Verify the Team Member view Swap")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamMemberViewSwapAsTeamMember(String browser, String username, String password, String location)
+			throws Exception
+	{
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		// Verify Shift should be shown as starting Tomorrow/Today
+		if (dashboardPage.getUpComingShifts().size() > 0) {
+			SimpleUtils.pass("Shifts are shown Successfully!");
+		}else {
+			SimpleUtils.fail("Shifts not loaded successfully!", true);
+		}
+		// Verify View my Schedule button should be present and clickable
+		dashboardPage.isViewMySchedulePresentAndClickable();
+		// Verify After click on the View My Schedule, page should navigate to My Schedule page
+		SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+		schedulePage.isSchedule();
+		// Verify On My Schedule page, Schedule shifts should be present on Schedule table
+		SimpleUtils.assertOnFail("Schedule Shifts are not present!", schedulePage.areShiftsPresent(), true);
+		// Verify After click on any shift from Schedule table, 2 Button should be available for : 1. Request to Swap shift 2. Request to cover shift
+		int index = schedulePage.verifyClickOnAnyShift();
+		List<String> requests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
+		SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", schedulePage.verifyShiftRequestButtonOnPopup(requests), true);
+		// Verify After click on the Request to swap shift, Find Shifts to Swap page should be opened.
+		String swapRequest = "Request to Swap Shift";
+		String swapTitle = "Find Shifts to Swap";
+		schedulePage.clickTheShiftRequestByName(swapRequest);
+		SimpleUtils.assertOnFail(swapTitle + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(swapTitle), true);
+		// Verify On Find Shifts to Swap page should have comparable shifts that you can ask to trade
+		schedulePage.verifyComparableShiftsAreLoaded();
+		// Verify After requesting for Swap shift, Request should go to the another TM
+		String teamMember = schedulePage.selectOneTeamMemberToSwap();
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "Coffee2_Enterprise")
+	@TestName(description = "Verify the Team Member view Cover")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamMemberViewCoverAsTeamMember(String browser, String username, String password, String location)
+			throws Exception
+	{
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		// Verify Shift should be shown as starting Tomorrow/Today
+		if (dashboardPage.getUpComingShifts().size() > 0) {
+			SimpleUtils.pass("Shifts are shown Successfully!");
+		}else {
+			SimpleUtils.fail("Shifts not loaded successfully!", true);
+		}
+		// Verify View my Schedule button should be present and clickable
+		dashboardPage.isViewMySchedulePresentAndClickable();
+		// Verify After click on the View My Schedule, page should navigate to My Schedule page
+		SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+		schedulePage.isSchedule();
+		// Verify On My Schedule page, Schedule shifts should be present on Schedule table
+		SimpleUtils.assertOnFail("Schedule Shifts are not present!", schedulePage.areShiftsPresent(), true);
+		// Verify After click on any shift from Schedule table, 2 Button should be available for : 1. Request to Swap shift 2. Request to cover shift
+		int index = schedulePage.verifyClickOnAnyShift();
+		// Verify After Click on the Request to Cover shift, Submit Cover Request should be opened.
+		String request = "Request to Cover Shift";
+		String title = "Submit Cover Request";
+		schedulePage.clickTheShiftRequestByName(request);
+		SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
+		// Verify Submit Cover Request should have Message Text box, Submit and cancel button
+		schedulePage.verifyComponentsOnSubmitCoverRequest();
+		// Verify After Click on the Submit button, confirmation pop-up should be opened.
+		schedulePage.verifyClickOnSubmitButton();
+		// Verify After requesting for cover request, View Cover Request status should be shown
+		schedulePage.clickOnShiftByIndex(index);
+		List<String> requests = new ArrayList<>(Arrays.asList("View Cover Request Status"));
+		SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", schedulePage.verifyShiftRequestButtonOnPopup(requests), true);
+		// Verify After Click on the View Cover Request , Cover Request status page should be opened
+		schedulePage.clickTheShiftRequestByName(requests.get(0));
+		title = "Cover Request Status";
+		SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
+		// Validate the cancellation of cover request
+		schedulePage.verifyClickCancelSwapOrCoverRequest();
+		// Validate the Submit swap/cover request pop-up keep Showing
+		schedulePage.clickOnShiftByIndex(index);
+		requests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
+		SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", schedulePage.verifyShiftRequestButtonOnPopup(requests), true);
+	}
 }

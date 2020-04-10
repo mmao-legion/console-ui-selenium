@@ -1972,4 +1972,59 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public List<Integer> getAddedShiftIndexes(String name) throws Exception {
         return null;
     }
+
+    @Override
+    public boolean areShiftsPresent() throws Exception {
+        return false;
+    }
+
+    @Override
+    public int verifyClickOnAnyShift() throws Exception {
+        return 0;
+    }
+
+    @Override
+    public void clickTheShiftRequestByName(String requestName) throws Exception {
+
+    }
+
+    @Override
+    public boolean isPopupWindowLoaded(String title) throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyComponentsOnSubmitCoverRequest() throws Exception {
+
+    }
+
+    @Override
+    public void verifyClickOnSubmitButton() throws Exception {
+
+    }
+
+    @Override
+    public void clickOnShiftByIndex(int index) throws Exception {
+
+    }
+
+    @Override
+    public boolean verifyShiftRequestButtonOnPopup(List<String> requests) throws Exception {
+        return true;
+    }
+
+    @Override
+    public void verifyComparableShiftsAreLoaded() throws Exception {
+
+    }
+
+    @Override
+    public String selectOneTeamMemberToSwap() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyClickCancelSwapOrCoverRequest() throws Exception {
+
+    }
 }

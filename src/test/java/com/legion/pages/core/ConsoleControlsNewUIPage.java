@@ -4,6 +4,7 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -1702,6 +1703,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	
 	@Override
 	public void updateCanWorkerRequestTimeOff(String canWorkerRequestTimeOffValue) throws Exception{
+		scrollToBottom();
 		if(isElementLoaded(canWorkerRequestTimeOffBtnGroup)) {
 			WebElement canWorkerRequestTimeOffBtnGroupDiv = canWorkerRequestTimeOffBtnGroup.findElement(
 					By.cssSelector("div.lg-button-group"));
@@ -1710,7 +1712,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			}
 			else {
 				List<WebElement> canWorkerRequestTimeOffBtns = canWorkerRequestTimeOffBtnGroup.findElements(
-						By.cssSelector("div[ng-click=\"$ctrl.change(button.value)\"]"));
+						By.cssSelector("span.buttonLabel"));
 				if(canWorkerRequestTimeOffBtns.size() > 0) {
 					for(WebElement canWorkerRequestTimeOffBtn : canWorkerRequestTimeOffBtns) {
 						if(canWorkerRequestTimeOffBtn.getText().toLowerCase().contains(canWorkerRequestTimeOffValue.toLowerCase())) {
@@ -1868,7 +1870,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			}
 			else {
 				List<WebElement> showTimeOffReasonsBtns = showTimeOffReasonsBtnGroup.findElements(
-						By.cssSelector("div[ng-click=\"$ctrl.change(button.value)\"]"));
+						By.cssSelector("span.buttonLabel"));
 				if(showTimeOffReasonsBtns.size() > 0) {
 					for(WebElement showTimeOffReasonsBtn : showTimeOffReasonsBtns) {
 						if(showTimeOffReasonsBtn.getText().toLowerCase().contains(isShowTimeOffReasons.toLowerCase())) {
@@ -4922,6 +4924,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement onBoardOption;
 	@FindBy (css = "input-field[value*=\"teamPreference\"] select")
 	private WebElement inviteOnBoardSelect;
+	@FindBy (css = ".collapsible-title-text span")
+	private List<WebElement> workingHoursTypes;
+	@FindBy (css = "#day\\.dayOfTheWeek .pills-row")
+	private List<WebElement> weekDays;
 
 	@Override
     public String getTimeZoneFromLocationDetailsPage() throws Exception {
@@ -4960,5 +4966,44 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}else{
 			SimpleUtils.fail("On board option failed to load!", true);
 		}
+	}
+
+	@Override
+	public void clickOnWorkHoursTypeByText(String title) throws Exception {
+		if (areListElementVisible(workingHoursTypes, 5)) {
+			for (WebElement workingHoursType : workingHoursTypes) {
+				if (workingHoursType.getText().equalsIgnoreCase(title)) {
+					click(workingHoursType);
+					SimpleUtils.pass("Click on Type: " + title + " Successfully!");
+				}
+			}
+		}else {
+			SimpleUtils.fail("Working Hours Types not loaded Successfully!", true);
+		}
+	}
+
+	@Override
+	public LinkedHashMap<String, List<String>> getRegularWorkingHours() throws Exception {
+		LinkedHashMap<String, List<String>> regularHours = new LinkedHashMap<>();
+		List<String> startNEndTime = null;
+		if (areListElementVisible(weekDays, 10)) {
+			for (WebElement weekDay : weekDays) {
+				WebElement day = weekDay.findElement(By.className("ellipsis"));
+				List<WebElement> workTimes = weekDay.findElements(By.className("work-time"));
+				if (day != null && workTimes != null && workTimes.size() == 2) {
+					String startTime = workTimes.get(0).getText();
+					String endTime = workTimes.get(1).getText();
+					startNEndTime = new ArrayList<>();
+					startNEndTime.add(startTime);
+					startNEndTime.add(endTime);
+					regularHours.put(day.getText(), startNEndTime);
+					SimpleUtils.report("Get time for: " + day.getText() + ", time is: " + startTime + " - " + endTime);
+				}
+			}
+		}
+		if (regularHours.size() != 7) {
+			SimpleUtils.fail("Failed to find the weekday and working times!", true);
+		}
+		return regularHours;
 	}
 }

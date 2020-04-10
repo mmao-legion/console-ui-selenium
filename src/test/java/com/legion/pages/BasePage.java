@@ -6,9 +6,14 @@ import static io.appium.java_client.touch.offset.ElementOption.element;
 import static io.appium.java_client.touch.offset.PointOption.point;
 import static java.time.Duration.ofSeconds;
 
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
+import java.security.Key;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -16,7 +21,9 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
 import org.apache.poi.ss.formula.functions.T;
 import org.openqa.selenium.*;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.*;
 
@@ -349,7 +356,6 @@ public class BasePage {
         actions.dragAndDrop(fromDestination, toDestination).build().perform();
     }
 
-
     //added by Nishant for Optimization of code
 
     public boolean isElementEnabled(WebElement enabledElement){
@@ -621,6 +627,23 @@ public class BasePage {
         String timeOffEndDate = getDateCalculation(toDate);
         timeOffDate.put("startDateTimeOff", timeOffStartDate);
         timeOffDate.put("endDateTimeOff", timeOffEndDate);
+        return timeOffDate;
+    }
+
+    public HashMap<String,String> getTimeOffDateWithYear(int fromDate, int toDate) {
+        HashMap<String, String> timeOffDate = new HashMap<>();
+        String timeOffStartDate = getDateWithYearCalculation(fromDate);
+        String timeOffEndDate = getDateWithYearCalculation(toDate);
+        timeOffDate.put("startDateWithYearTimeOff", timeOffStartDate);
+        timeOffDate.put("endDateWithYearTimeOff", timeOffEndDate);
+        return timeOffDate;
+    }
+
+    public String getDateWithYearCalculation(int daysFromToday){
+        LocalDate now = LocalDate.now();
+        LocalDate wanted = now.plusDays(daysFromToday);
+        String monthName = wanted.getMonth().toString().substring(0,1) + wanted.getMonth().toString().substring(1,3).toLowerCase();
+        String timeOffDate = wanted.getYear() + " " + monthName + " " + wanted.getDayOfMonth();
         return timeOffDate;
     }
 

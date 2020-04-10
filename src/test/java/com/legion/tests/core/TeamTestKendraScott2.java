@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
+import java.net.SocketImpl;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.Map;
 import com.legion.pages.core.ConsoleGmailPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import org.apache.poi.ss.formula.ptg.ControlPtg;
+import org.apache.xpath.operations.Bool;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -59,6 +61,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	private static Map<String, String> newTMDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember.json");
 	private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
 	private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
+    private static HashMap<String, String> imageFilePath = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ProfileImageFilePath.json");
 
 	@Override
 	  @BeforeMethod()
@@ -433,6 +436,81 @@ public class TeamTestKendraScott2 extends TestBase{
 		gmailPage.loginToGmailWithCredential();
 		gmailPage.waitUntilInvitationEmailLoaded();
 		gmailPage.verifyInvitationCodeIsAvailableOnEmailID();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the Team functionality Work Preferences")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.isDashboardPageLoaded();
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.selectATeamMemberToViewProfile();
+		teamPage.isProfilePageLoaded();
+		teamPage.navigateToWorkPreferencesTab();
+		// Verify shift preferences- can be Edit by clicking on pencil icon Changes are being Cancel by clicking on cancel button
+		List<String> previousPreferences = teamPage.getShiftPreferences();
+		teamPage.clickOnEditShiftPreference();
+		SimpleUtils.assertOnFail("Edit Shift Preferences layout failed to load!", teamPage.isEditShiftPreferLayoutLoaded(), true);
+		teamPage.setSliderForShiftPreferences();
+		teamPage.changeShiftPreferencesStatus();
+		teamPage.clickCancelEditShiftPrefBtn();
+		List<String> currentPreferences = teamPage.getShiftPreferences();
+		if (previousPreferences.containsAll(currentPreferences) && currentPreferences.containsAll(previousPreferences)) {
+			SimpleUtils.pass("Shift preferences don't change after cancelling!");
+		}else {
+			SimpleUtils.fail("Shift preferences are changed after cancelling!", true);
+		}
+		// Verify shift preferences- can be Edit by clicking on pencil icon Changes are being Saved by clicking on Save button
+		teamPage.clickOnEditShiftPreference();
+		SimpleUtils.assertOnFail("Edit Shift Preferences layout failed to load!", teamPage.isEditShiftPreferLayoutLoaded(), true);
+		List<String> changedShiftPrefs = teamPage.setSliderForShiftPreferences();
+		List<String> status = teamPage.changeShiftPreferencesStatus();
+		teamPage.clickSaveShiftPrefBtn();
+		currentPreferences = teamPage.getShiftPreferences();
+		teamPage.verifyCurrentShiftPrefIsConsistentWithTheChanged(currentPreferences, changedShiftPrefs, status);
+		// Verify Availability Graph [Edited by manager/Admin]:Weekly Availability/Unavailability is showing by green/Red color
+		teamPage.editOrUnLockAvailability();
+		SimpleUtils.assertOnFail("Edit Availability layout failed to load!", teamPage.areCancelAndSaveAvailabilityBtnLoaded(), true);
+		teamPage.changePreferredHours();
+		teamPage.changeBusyHours();
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the Team Functionality Profile section")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInProfileSectionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		// Login with Internal Admin Credentials
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+	    TeamPage teamPage = pageFactory.createConsoleTeamPage();
+	    teamPage.goToTeam();
+	    teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+	    teamPage.selectATeamMemberToViewProfile();
+	    teamPage.isProfilePageLoaded();
+	    // Verify Profile picture is updating
+		String filePath = imageFilePath.get("FilePath");
+		teamPage.updateProfilePicture(filePath);
+	    // Verify Phone number and Email id are updating
+	    String phoneNumber = "1234455678";
+	    String emailID = "nora@legion.co";
+	    teamPage.updatePhoneNumberAndEmailID(phoneNumber, emailID);
+	    // Verify Engagement details are updating
+	    teamPage.updateEngagementDetails(newTMDetails);
+	    // Verify Badges is updating
+		teamPage.clickOnEditBadgeButton();
+		List<String> selectedBadgeIDs = teamPage.updateTheSelectedBadges();
+		List<String> badgeIDs = teamPage.getCurrentBadgesOnEngagement();
+		if (badgeIDs.containsAll(selectedBadgeIDs) && selectedBadgeIDs.containsAll(badgeIDs)) {
+			SimpleUtils.pass("Badges updated Successfully!");
+		}else {
+			SimpleUtils.fail("Badges not updated successfully!", true);
+		}
 	}
 
 	public String getTimeZoneFromControlsAndGetDate() throws Exception {
