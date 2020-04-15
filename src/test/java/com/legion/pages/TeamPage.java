@@ -1,5 +1,11 @@
 package com.legion.pages;
 
+import cucumber.api.java.it.Ma;
+import org.apache.xpath.operations.Bool;
+import org.openqa.selenium.WebElement;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +64,8 @@ public interface TeamPage {
 	public void	verifyInviteAndReInviteButtonThenInvite() throws Exception;
 	public boolean isProfilePageSelected() throws Exception;
 	public void navigateToProfileTab() throws Exception;
+	public void navigateToWorkPreferencesTab() throws Exception;
+	public boolean isWorkPreferencesPageLoaded() throws Exception;
 	public void clickOnActivateButton() throws Exception;
 	public void isActivateWindowLoaded() throws Exception;
 	public void selectADateOnCalendarAndActivate() throws Exception;
@@ -81,4 +89,36 @@ public interface TeamPage {
     public void manualOnBoardTeamMember() throws Exception;
     public void clickCancelButton() throws Exception;
     public void isCancelTransferButtonLoadedAndClick() throws Exception;
+    public String selectATeamMemberToViewProfile() throws Exception;
+    public List<String> getShiftPreferences() throws Exception;
+    public void clickOnEditShiftPreference() throws Exception;
+    public boolean isEditShiftPreferLayoutLoaded() throws Exception;
+	public List<String> setSliderForShiftPreferences() throws Exception;
+	public List<String> changeShiftPreferencesStatus() throws Exception;
+	public void clickCancelEditShiftPrefBtn() throws Exception;
+	public void clickSaveShiftPrefBtn() throws Exception;
+	public void verifyCurrentShiftPrefIsConsistentWithTheChanged(List<String> shiftPrefs, List<String> changedShiftPrefs,
+																 List<String> status) throws Exception;
+	public void editOrUnLockAvailability() throws Exception;
+	public boolean areCancelAndSaveAvailabilityBtnLoaded() throws Exception;
+	public void changePreferredHours() throws Exception;
+	public void changeBusyHours() throws Exception;
+	public int verifyTimeOffRequestShowsOnToDoList(String userName, String timeOffStartDuration, String timeOffEndDuration) throws Exception;
+	public int getTimeOffCountByStartAndEndDate(List<String> timeOffStartNEndDate) throws Exception;
+	public void updatePhoneNumberAndEmailID(String phoneNumber, String emailID) throws Exception;
+	public void updateEngagementDetails(Map<String, String> tmDetails) throws Exception;
+	public List<String> getCurrentBadgesOnEngagement() throws Exception;
+	public void clickOnEditBadgeButton() throws Exception;
+	public List<String> updateTheSelectedBadges() throws Exception;
+	public void updateProfilePicture(String filePath) throws Exception;
+	public void clickOnJobTitleFilter() throws Exception;
+	public void clickOnClearFilterBtn() throws Exception;
+	public void navigateToSubTabOnCoverage(String subTabName) throws Exception;
+	public HashMap<Integer, List<String>> getTimeOffWeekTableOnCoverage(HashMap<Integer, String> indexAndTimes, LinkedHashMap<String, List<String>> regularHours) throws Exception;
+	public String selectAJobTitleByRandom() throws Exception;
+	public HashMap<Integer, String> generateIndexAndRelatedTimes(LinkedHashMap<String, List<String>> regularHours) throws Exception;
+	public void navigateToTimeOffPage() throws Exception;
+	public void	selectTheJobTitleByName(String jobTitleName) throws Exception;
+	public HashMap<Integer, List<String>> getTimeOffWeekTableByDateNTime(HashMap<Integer, List<String>> previousTimeOffs,
+																		 HashMap<String, List<String>> selectedDateNTime, HashMap<Integer, String> indexAndTimes) throws Exception;
 }

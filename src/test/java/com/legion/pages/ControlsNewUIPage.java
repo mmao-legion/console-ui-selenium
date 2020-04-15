@@ -2,6 +2,7 @@ package com.legion.pages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.openqa.selenium.WebElement;
@@ -237,6 +238,10 @@ public interface ControlsNewUIPage {
 	public String getOnBoardOptionFromScheduleCollaboration() throws Exception;
 
 	public void setOnBoardOptionAsEmailWhileInviting() throws Exception;
+
+	public void clickOnWorkHoursTypeByText(String title) throws Exception;
+
+	public LinkedHashMap<String, List<String>> getRegularWorkingHours() throws Exception;
 
 	public void enableOverRideAssignmentRuleAsYes() throws Exception;
 }

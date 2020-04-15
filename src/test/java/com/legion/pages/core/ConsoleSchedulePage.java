@@ -1685,7 +1685,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 	}
 
 	@Override
-	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch , boolean startHrsSlider) throws Exception {
+	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch) throws Exception {
 		// TODO Auto-generated method stub
 
 	}
@@ -2047,4 +2047,59 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
 
+
+    @Override
+    public boolean areShiftsPresent() throws Exception {
+        return false;
+    }
+
+    @Override
+    public int verifyClickOnAnyShift() throws Exception {
+        return 0;
+    }
+
+    @Override
+    public void clickTheShiftRequestByName(String requestName) throws Exception {
+
+    }
+
+    @Override
+    public boolean isPopupWindowLoaded(String title) throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyComponentsOnSubmitCoverRequest() throws Exception {
+
+    }
+
+    @Override
+    public void verifyClickOnSubmitButton() throws Exception {
+
+    }
+
+    @Override
+    public void clickOnShiftByIndex(int index) throws Exception {
+
+    }
+
+    @Override
+    public boolean verifyShiftRequestButtonOnPopup(List<String> requests) throws Exception {
+        return true;
+    }
+
+    @Override
+    public void verifyComparableShiftsAreLoaded() throws Exception {
+
+    }
+
+    @Override
+    public String selectOneTeamMemberToSwap() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyClickCancelSwapOrCoverRequest() throws Exception {
+
+    }
 }

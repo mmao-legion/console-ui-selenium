@@ -120,7 +120,7 @@ public interface SchedulePage {
 	public void toggleSummaryView() throws Exception;
 	public boolean isSummaryViewLoaded() throws Exception;
 	public void updateScheduleOperatingHours(String day, String startTime, String endTime) throws Exception;
-	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch, boolean startHrsSlider) throws Exception;
+	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch) throws Exception;
 	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception;
 	public void verifyScheduledHourNTMCountIsCorrect() throws Exception;
 	public void complianceShiftSmartCard() throws Exception;
@@ -222,5 +222,16 @@ public interface SchedulePage {
 	public void verifyNewShiftsAreShownOnSchedule(String name) throws Exception;
 	public void verifyShiftsChangeToOpenAfterTerminating(List<Integer> indexes, String name, String currentTime) throws Exception;
 	public List<Integer> getAddedShiftIndexes(String name) throws Exception;
+	public boolean areShiftsPresent() throws Exception;
+	public int verifyClickOnAnyShift() throws Exception;
+	public void clickTheShiftRequestByName(String requestName) throws Exception;
+	public boolean isPopupWindowLoaded(String title) throws Exception;
+	public void verifyComponentsOnSubmitCoverRequest() throws Exception;
+	public void verifyClickOnSubmitButton() throws Exception;
+	public void clickOnShiftByIndex(int index) throws Exception;
+	public boolean verifyShiftRequestButtonOnPopup(List<String> requests) throws Exception;
+	public void	verifyComparableShiftsAreLoaded() throws Exception;
+	public String selectOneTeamMemberToSwap() throws Exception;
+	public void verifyClickCancelSwapOrCoverRequest() throws Exception;
 	public Boolean isGenerateButtonLoadedForManagerView() throws Exception;
 }

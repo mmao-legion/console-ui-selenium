@@ -63,49 +63,52 @@
 		   </classes>
 	   </test>
 
-		<test name="TeamTab Test KendraScott2">
-		   <classes>
-			   <class name="com.legion.tests.core.TeamTestKendraScott2">
-				   <methods>
-					   <include name="verifyTheTeamFunctionalityInRoster"/>
-					   <include name="verifyTheTeamFunctionalityInTransfer"/>
-					   <include name="verifyTheTeamFunctionalityInUpdateInfo"/>
-					   <include name="verifyTheTeamFunctionalityInBadges"/>
+<!--    <test name="Schedule Test">-->
+<!--            <classes>-->
+<!--                <class name="com.legion.tests.core.ScheduleTestKendraScott2">-->
+<!--                    <methods>-->
+<!--                        <include name="printButtonIsClickable" />-->
+<!--                        <include name="todoButtonIsClickable" />-->
+<!--                        <include name="closeButtonIsClickable" />-->
+<!--                        <include name="legionIsDisplayingTheScheduleWhichIsGeneratedByTheSystemAtTheVeryFirstTime" />-->
+<!--                        <include name="legionButtonIsClickableAndHasNoEditButton" />-->
+<!--                        <include name="CurrentWeekIsGettingOpenByDefault" />-->
+<!--                        <include name="DayWeekPickerSectionNavigatingCorrectly" />-->
+<!--                        <include name="LandscapePortraitModeShowAndWorkWellInWeekView" />-->
+<!--                    </methods>-->
+<!--                </class>-->
+<!--            </classes>-->
+<!--    </test>-->
 
-				   </methods>
-			   </class>
-		   </classes>
-	   </test>
 
-
-
-	<test name="Forecast Test">
+    <test name="TeamTab Test KendraScott2">
        <classes>
-           <class name="com.legion.tests.core.ForecastTest">
+           <class name="com.legion.tests.core.TeamTestKendraScott2">
                <methods>
-                   <include name="verifyShopperForecastFunctionality"/>
-                   <include name="validateWeatherSmartCardOnForecastPage"/>
-                   <include name="verifyScheduleFunctionalityForecast"/>
-                   <include name="verifyScheduleLaborForeCastFunctionality"/>
+                   <include name="verifyTheTeamFunctionalityInRoster" />
+                   <include name="verifyTheTeamFunctionalityInTransfer" />
+                   <include name="verifyTheTeamFunctionalityInUpdateInfo" />
+                   <include name="verifyTheTeamFunctionalityInBadges" />
+                   <include name="verifyTheTeamFunctionalityInInviteTeamMember" />
+                   <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
+                   <include name="verifyTheTeamFunctionalityInProfileSectionAsInternalAdmin" />
                </methods>
            </class>
        </classes>
    </test>
 
-   <test name="Schedule Test Kendrascott2">
-       <classes>
-           <class name="com.legion.tests.core.ScheduleTestKendraScott2">
-               <methods>
-                   <include name="verifyScheduleLegionFunctionality"/>
-                   <include name="verifyScheduleFunctionalitySchedule"/>
-                   <include name="verifyComplianceSmartCardFunctionality"/>
-                   <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
-               </methods>
-           </class>
-       </classes>
-   </test>
+    <test name="TeamTab Test">
+        <classes>
+            <class name="com.legion.tests.core.TeamTest">
+                <methods>
+                    <include name="verifyTheTeamFunctionalityInActivate" />
+                    <include name="verifyTheTeamFunctionalityInTerminate" />
+                    <include name="verifyTheTeamFunctionalityInCoverageAsInternalAdmin" />
+                    <include name="verifyTheTeamFunctionalityInTimeOffAsStoreManager" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 
 </suite> <!-- Suite -->
-
-
 

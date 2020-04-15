@@ -187,6 +187,17 @@ public class SimpleUtils {
 		return currentDate.getYear();
 	}
 
+	public static String getNextMonthAndYearFromCurrentMonth(String currentMonthYear) throws ParseException {
+		String nextMonthAndYear = null;
+		SimpleDateFormat format = new SimpleDateFormat("MMMM yyyy");
+		Date date = format.parse(currentMonthYear);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + 1);
+		date = calendar.getTime();
+		nextMonthAndYear = format.format(date);
+		return nextMonthAndYear;
+	}
 
 	public static HashMap<String, String> getDayMonthDateFormatForCurrentPastAndFutureWeek(int dayOfYear, int isoYear) {
 		LocalDate dateBasedOnGivenParameter = Year.of(isoYear).atDay(dayOfYear);
@@ -355,6 +366,34 @@ public class SimpleUtils {
 			convertSuccess = false;
 		}
 		return convertSuccess;
+	}
+
+	public static boolean isTimeBetweenStartNEndTime(String nowStartDate, String nowEndDate, String startDate, String endDate) throws Exception {
+
+		SimpleDateFormat format = new SimpleDateFormat("hh:mm a");
+
+		Date nowStart = format.parse(nowStartDate);
+		Date nowEnd = format.parse(nowEndDate);
+		Date start = format.parse(startDate);
+		Date end = format.parse(endDate);
+
+		long nowStartTime = nowStart.getTime();
+		long nowEndTime = nowEnd.getTime();
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+
+		return nowStartTime >= startTime && nowEndTime <= endTime;
+	}
+
+	public static int getHashMapKeyByValue(HashMap<Integer, String> hashMap, String value) {
+		int expectedKey = 0;
+		for (Integer key : hashMap.keySet()) {
+			if (hashMap.get(key).equalsIgnoreCase(value)) {
+				expectedKey = key;
+				break;
+			}
+		}
+		return expectedKey;
 	}
 
 	public static String dateWeekPickerDateComparision(String weekActiveDate) {
@@ -1788,6 +1827,44 @@ public class SimpleUtils {
 		cal.add(Calendar.DATE, 6);
 		String imptimeEnd = sdf.format(cal.getTime());
 		return imptimeBegin + "," + imptimeEnd;
+	}
+
+	public static boolean isDateInTimeDuration(Date nowTime, Date startTime, Date endTime) {
+		if (nowTime.getTime() == startTime.getTime()
+				|| nowTime.getTime() == endTime.getTime()) {
+			return true;
+		}
+
+		Calendar date = Calendar.getInstance();
+		date.setTime(nowTime);
+
+		Calendar begin = Calendar.getInstance();
+		begin.setTime(startTime);
+
+		Calendar end = Calendar.getInstance();
+		end.setTime(endTime);
+
+		if (date.after(begin) && date.before(end)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean isSameDayComparingTwoDays(String dateString1, String dateString2, SimpleDateFormat format1,
+													SimpleDateFormat format2) throws ParseException {
+		Date date1 = format1.parse(dateString1);
+		Date date2 = format2.parse(dateString2);
+		return DateUtils.isSameDay(date1, date2);
+	}
+
+	public static boolean isNumeric(String str){
+		Pattern pattern = Pattern.compile("[0-9]*");
+		Matcher isNum = pattern.matcher(str.trim());
+		if( !isNum.matches() ){
+			return false;
+		}
+		return true;
 	}
 
 	public static boolean compareHashMapByEntrySet(HashMap<String,String> map1, HashMap<String, String> map2){

@@ -111,7 +111,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         PageFactory.initElements(getDriver(), this);
     }
 
-
     @FindBy(css = "div.console-navigation-item-label.Schedule")
     private WebElement goToScheduleButton;
 
@@ -1166,7 +1165,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
-	
+
 
     @Override
     public void generateSchedule() throws Exception {
@@ -5910,6 +5909,249 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else{
             SimpleUtils.fail("Role Violation pop up not displayed",false);
         }
+    }
+
+    // Added by Nora: for Team Member View
+    @FindBy(className = "sch-shift-worker-img-28-28")
+    private List<WebElement> tmIcons;
+    @FindBy(className = "sch-worker-popover")
+    private WebElement popOverLayout;
+    @FindBy(css = "span.sch-worker-action-label")
+    private List<WebElement> shiftRequests;
+    @FindBy(css = "div.lg-modal")
+    private WebElement popUpWindow;
+    @FindBy(className = "lg-modal__title-icon")
+    private WebElement popUpWindowTitle;
+    @FindBy(css = "[label=\"Cancel\"]")
+    private WebElement cancelButton;
+    @FindBy(css = "[label=\"Submit\"]")
+    private WebElement submitButton;
+    @FindBy(css = "textarea[placeholder]")
+    private WebElement messageText;
+    @FindBy(className = "lgn-alert-modal")
+    private WebElement confirmWindow;
+    @FindBy(className = "lgn-action-button-success")
+    private WebElement okBtnOnConfirm;
+    @FindBy(css = "[ng-repeat*=\"shift in results\"]")
+    private List<WebElement> comparableShifts;
+    @FindBy(css = "[label=\"Next\"]")
+    private WebElement nextButton;
+    @FindBy(css = "[label=\"Cancel Cover Request\"]")
+    private WebElement cancelCoverBtn;
+    @FindBy(css = "[label=\"Cancel Swap Request\"]")
+    private WebElement cancelSwapBtn;
+
+    @Override
+    public void verifyClickCancelSwapOrCoverRequest() throws Exception {
+        if (isElementLoaded(cancelCoverBtn, 5)) {
+            click(cancelCoverBtn);
+        }
+        if (isElementLoaded(cancelSwapBtn, 5)) {
+            click(cancelSwapBtn);
+        }
+        if (isElementLoaded(okBtnOnConfirm, 5)) {
+            click(okBtnOnConfirm);
+        }else {
+            SimpleUtils.fail("Confirm Button failed to load!", true);
+        }
+    }
+
+    @Override
+    public String selectOneTeamMemberToSwap() throws Exception {
+        String tmName = "";
+        if (areListElementVisible(comparableShifts, 5) && isElementLoaded(nextButton, 5)) {
+            int randomIndex = (new Random()).nextInt(comparableShifts.size());
+            WebElement selectBtn = comparableShifts.get(randomIndex).findElement(By.cssSelector("td.shift-swap-modal-shift-table-select>div"));
+            WebElement name = comparableShifts.get(randomIndex).findElement(By.className("shift-swap-modal-table-name"));
+            click(selectBtn);
+            tmName = name.getText();
+            SimpleUtils.pass("Select team member: " + tmName + " Successfully!");
+            click(nextButton);
+            verifyClickOnSubmitButton();
+        }else {
+            SimpleUtils.fail("Comparable Shifts not loaded Successfully!", false);
+        }
+        return tmName;
+    }
+
+    @Override
+    public void verifyComparableShiftsAreLoaded() throws Exception {
+        if (areListElementVisible(comparableShifts, 5)) {
+            SimpleUtils.pass("Comparable Shifts loaded Successfully!");
+        }else {
+            SimpleUtils.fail("Comparable Shifts not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public boolean verifyShiftRequestButtonOnPopup(List<String> requests) throws Exception {
+        boolean isConsistent = false;
+        List<String> shiftRequestsOnUI = new ArrayList<>();
+        if (areListElementVisible(shiftRequests, 5)) {
+            for (WebElement shiftRequest : shiftRequests) {
+                shiftRequestsOnUI.add(shiftRequest.getText());
+            }
+        }
+        if (shiftRequestsOnUI.containsAll(requests) && requests.containsAll(shiftRequestsOnUI)) {
+            isConsistent = true;
+            SimpleUtils.pass("Shift Requests loaded Successfully!");
+        }
+        return isConsistent;
+    }
+
+    @Override
+    public void clickOnShiftByIndex(int index) throws Exception {
+        if (areListElementVisible(tmIcons, 5)) {
+            if (index < tmIcons.size()) {
+                click(tmIcons.get(index));
+            }else {
+                SimpleUtils.fail("Index: " + index + " is out of range, the total size is: " + tmIcons.size(), true);
+            }
+        }else {
+            SimpleUtils.fail("Shift Requests not loaded Successfully!", true);
+        }
+    }
+
+    @Override
+    public void verifyClickOnSubmitButton() throws Exception {
+        if (isElementLoaded(submitButton, 5)) {
+            click(submitButton);
+            if (isElementLoaded(confirmWindow, 5) && isElementLoaded(okBtnOnConfirm, 5)) {
+                click(okBtnOnConfirm);
+                SimpleUtils.pass("Confirm window loaded Successfully!");
+            }else {
+                SimpleUtils.fail("Confirm window not loaded Successfully!", true);
+            }
+        }else {
+            SimpleUtils.fail("Submit button on Submit Cover Request not loaded Successfully!", true);
+        }
+    }
+
+    @Override
+    public void verifyComponentsOnSubmitCoverRequest() throws Exception {
+        if (isElementLoaded(messageText, 5)) {
+            SimpleUtils.pass("Message textbox loaded Successfully!");
+        }else {
+            SimpleUtils.fail("Message textbox not loaded Successfully!", true);
+        }
+        if (isElementLoaded(cancelButton, 5)) {
+            SimpleUtils.pass("Cancel button on Submit Cover Request loaded Successfully!");
+        }else {
+            SimpleUtils.fail("Cancel button on Submit Cover Request not loaded Successfully!", true);
+        }
+        if (isElementLoaded(submitButton, 5)) {
+            SimpleUtils.pass("Submit button on Submit Cover Request loaded Successfully!");
+        }else {
+            SimpleUtils.fail("Submit button on Submit Cover Request not loaded Successfully!", true);
+        }
+    }
+
+    @Override
+    public boolean isPopupWindowLoaded(String title) throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(popUpWindow, 5) && isElementLoaded(popUpWindowTitle, 5)) {
+            if (title.equalsIgnoreCase(popUpWindowTitle.getText())) {
+                SimpleUtils.pass(title + " window loaded Successfully!");
+                isLoaded = true;
+            }
+        }
+        return isLoaded;
+    }
+
+    @Override
+    public void clickTheShiftRequestByName(String requestName) throws Exception {
+        if (areListElementVisible(shiftRequests, 5)) {
+            for (WebElement shiftRequest : shiftRequests) {
+                if (shiftRequest.getText().equalsIgnoreCase(requestName)) {
+                    click(shiftRequest);
+                    SimpleUtils.pass("Click " + requestName + " button Successfully!");
+                    break;
+                }
+            }
+        }else {
+            SimpleUtils.fail("Shift Request buttons not loaded Successfully!", true);
+        }
+    }
+
+    @Override
+    public boolean areShiftsPresent() throws Exception {
+        boolean arePresent = false;
+        if (areListElementVisible(dayViewAvailableShifts, 5)) {
+            arePresent = true;
+        }
+        return arePresent;
+    }
+
+    @Override
+    public int verifyClickOnAnyShift() throws Exception {
+        List<String> expectedRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
+        int index = 100;
+        if (areListElementVisible(tmIcons, 5)) {
+            for (int i = 0; i < tmIcons.size(); i++) {
+                moveToElementAndClick(tmIcons.get(i));
+                if (isPopOverLayoutLoaded()) {
+                    if (verifyShiftRequestButtonOnPopup(expectedRequests)) {
+                        index = i;
+                        break;
+                    }
+                }
+            }
+            if (index == 100) {
+                // Doesn't find any shift that can swap or cover, cancel the previous
+                index = cancelSwapOrCoverRequests(expectedRequests);
+            }
+        }else {
+            SimpleUtils.fail("Team Members' Icons not loaded Successfully!", true);
+        }
+        return index;
+    }
+
+    public int cancelSwapOrCoverRequests(List<String> expectedRequests) throws Exception {
+        List<String> swapRequest = new ArrayList<>(Arrays.asList("View Swap Request Status"));
+        List<String> coverRequest = new ArrayList<>(Arrays.asList("View Cover Request Status"));
+        int index = 100;
+        if (areListElementVisible(tmIcons, 5)) {
+            for (int i = 0; i < tmIcons.size(); i++) {
+                moveToElementAndClick(tmIcons.get(i));
+                if (isPopOverLayoutLoaded()) {
+                    if (verifyShiftRequestButtonOnPopup(swapRequest)) {
+                        cancelRequestByTitle(swapRequest, swapRequest.get(0).substring(5).trim());
+                    }
+                    if (verifyShiftRequestButtonOnPopup(coverRequest)) {
+                        cancelRequestByTitle(coverRequest, coverRequest.get(0).substring(5).trim());
+                    }
+                    moveToElementAndClick(tmIcons.get(i));
+                    if (verifyShiftRequestButtonOnPopup(expectedRequests)) {
+                        index = i;
+                        break;
+                    }
+                }
+            }
+        }else {
+            SimpleUtils.fail("Team Members' Icons not loaded Successfully!", true);
+        }
+        if (index == 100) {
+            SimpleUtils.fail("Failed to find a shift that can swap or cover!", false);
+        }
+        return index;
+    }
+
+    public void cancelRequestByTitle(List<String> requests, String title) throws Exception {
+        if (requests.size() > 0) {
+            clickTheShiftRequestByName(requests.get(0));
+            if (isPopupWindowLoaded(title)) {
+                verifyClickCancelSwapOrCoverRequest();
+            }
+        }
+    }
+
+    public boolean isPopOverLayoutLoaded() throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(popOverLayout, 5)) {
+            isLoaded = true;
+            SimpleUtils.pass("Pop over layout loaded Successfully!");
+        }
+        return isLoaded;
     }
 
 }

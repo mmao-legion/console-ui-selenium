@@ -1,14 +1,10 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import java.util.Map;
+import java.util.*;
 
 import com.legion.pages.*;
+import cucumber.api.java.ro.Si;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -20,6 +16,9 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+
+import static com.legion.utils.MyThreadLocal.getTimeOffEndTime;
+import static com.legion.utils.MyThreadLocal.getTimeOffStartTime;
 
 public class TeamTest extends TestBase{
 	
@@ -251,6 +250,181 @@ public class TeamTest extends TestBase{
 		schedulePage.goToSchedule();
 		schedulePage.isSchedule();
 		schedulePage.verifyShiftsChangeToOpenAfterTerminating(indexes, firstName, currentTime);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "Verify the Team Functionality Time Off")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInTimeOffAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		// Login with Store Manager Credentials
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		// Get the current month, year and date
+		String currentMonthYearDate = (new TeamTestKendraScott2()).getTimeZoneFromControlsAndGetDate();
+		// Set time off policy
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.updateCanWorkerRequestTimeOff("Yes");
+		controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+		controlsNewUIPage.updateShowTimeOffReasons("Yes");
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		// Login as Team Member
+		String fileName = "UsersCredentials.json";
+		fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+		Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+		loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+				, String.valueOf(teamMemberCredentials[0][2]));
+		dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String nickName = profileNewUIPage.getNickNameFromProfile();
+		profileNewUIPage.clickOnUserProfileImage();
+		String myProfileLabel = "My Profile";
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+		SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
+		String aboutMeLabel = "About Me";
+		profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
+		String myTimeOffLabel = "My Time Off";
+		profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+		String pendingLabel = "Pending";
+		int previousPendingCount = profileNewUIPage.getTimeOffCountByStatusLabel(pendingLabel);
+		// Verify Create Time off button is working
+		profileNewUIPage.clickOnCreateTimeOffBtn();
+		SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
+		String timeOffReasonLabel = "VACATION";
+		// Verify Reason can be selected
+		profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
+		// Verify Calendar is present and date-time showing correct
+		profileNewUIPage.verifyCalendarForCurrentAndNextMonthArePresent(currentMonthYearDate);
+		// Verify Calendar start n end date and time is correct
+		List<String> startNEndDates = profileNewUIPage.selectStartAndEndDate();
+		profileNewUIPage.areAllDayCheckboxesLoaded();
+		profileNewUIPage.deSelectAllDayCheckboxes();
+		profileNewUIPage.verifyStartDateAndEndDateIsCorrect(getTimeOffStartTime(), getTimeOffEndTime());
+		profileNewUIPage.verifyTimeIsCorrectAfterDeSelectAllDay();
+		// Verify Alignment for AM/PM is correct in starts n end time after deselecting All day checkbox
+		profileNewUIPage.verifyAlignmentOfAMAndPMAfterDeSelectAllDay();
+		// Verify Time off request can be requested
+		profileNewUIPage.clickOnSaveTimeOffRequestBtn();
+		// Verify count of Pending/approved/Rejected is being increased and decreased accordingly
+		int currentPendingCount = profileNewUIPage.getTimeOffCountByStatusLabel(pendingLabel);
+		if (currentPendingCount - previousPendingCount == 1) {
+			SimpleUtils.pass("Pending count is increased!");
+		}else {
+			SimpleUtils.fail("Pending count doesn't increased 1!", true);
+		}
+		loginPage.logOut();
+
+		// Login as Store Manager again
+		loginToLegionAndVerifyIsLoginDone(username, password, location);
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.openToDoPopupWindow();
+		// Verify Info come in TODO list
+		int timeOffDays = teamPage.verifyTimeOffRequestShowsOnToDoList(nickName, getTimeOffStartTime(), getTimeOffEndTime());
+		teamPage.closeToDoPopupWindow();
+		// Verify impacting on Coverage
+		teamPage.coverage();
+		int previousCount = teamPage.getTimeOffCountByStartAndEndDate(startNEndDates);
+		// Approve the time off request, then check the time off days on coverage
+		teamPage.openToDoPopupWindow();
+		teamPage.approveOrRejectTimeOffRequestFromToDoList(nickName, getTimeOffStartTime(), getTimeOffEndTime(), TeamTestKendraScott2.timeOffRequestAction.Approve.getValue());
+		teamPage.goToTeam();
+		teamPage.coverage();
+		int currentCount = teamPage.getTimeOffCountByStartAndEndDate(startNEndDates);
+		if (timeOffDays == (currentCount - previousCount)){
+			SimpleUtils.pass("Time Off days get updated on Coverage");
+		}else {
+			SimpleUtils.fail("Time Off days on coverage is incorrect, expected days: " + (timeOffDays + previousCount)
+					+ ", but actual time off days are: " + currentCount, true);
+		}
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "Verify the Team Functionality Coverage")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInCoverageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		String workingHoursType = "Regular";
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		// Get Regular hours from
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+		controlsNewUIPage.clickOnControlsWorkingHoursCard();
+		SimpleUtils.assertOnFail("Working Hours Card not loaded Successfully!", controlsNewUIPage.isControlsWorkingHoursLoaded(), false);
+		controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursType);
+		LinkedHashMap<String, List<String>> regularHours = controlsNewUIPage.getRegularWorkingHours();
+
+		// Set time off policy
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.updateCanWorkerRequestTimeOff("Yes");
+		controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+		controlsNewUIPage.updateShowTimeOffReasons("Yes");
+
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		HashMap<Integer, String> indexAndTimes = teamPage.generateIndexAndRelatedTimes(regularHours);
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.coverage();
+		// Verify 'All Job Title' filter is working, if selecting one/more of those then timeoff is updaing according to that
+		String jobTitle = teamPage.selectAJobTitleByRandom();
+		SimpleUtils.report("Select the job title: " + jobTitle + " Successfully!");
+		String subTab = "Time off";
+		teamPage.navigateToSubTabOnCoverage(subTab);
+		HashMap<Integer, List<String>> previousTimeOffs = teamPage.getTimeOffWeekTableOnCoverage(indexAndTimes, regularHours);
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(jobTitle);
+		teamPage.isProfilePageLoaded();
+		teamPage.navigateToTimeOffPage();
+
+		// Create the time off for the user
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		profileNewUIPage.clickOnCreateTimeOffBtn();
+		SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
+		String timeOffReasonLabel = "JURY DUTY";
+		profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
+		HashMap<String, List<String>> selectedDateNTime = profileNewUIPage.selectCurrentDayAsStartNEndDate();
+		profileNewUIPage.clickOnSaveTimeOffRequestBtn();
+		String approvedLabel = "Approved";
+		int approvedCount = profileNewUIPage.getTimeOffCountByStatusLabel(approvedLabel);
+		if (approvedCount > 0) {
+			SimpleUtils.pass("Create the time off request Successfully!");
+		}else {
+			SimpleUtils.fail("The time off request doesn't approved!", true);
+		}
+
+		// Go to coverage to check the time off table
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.coverage();
+		teamPage.selectTheJobTitleByName(jobTitle);
+		teamPage.navigateToSubTabOnCoverage(subTab);
+		HashMap<Integer, List<String>> currentTimeOffs = teamPage.getTimeOffWeekTableOnCoverage(indexAndTimes, regularHours);
+		HashMap<Integer, List<String>> expectedTimeOffs = teamPage.getTimeOffWeekTableByDateNTime(
+				previousTimeOffs, selectedDateNTime, indexAndTimes);
+		if (currentTimeOffs.equals(expectedTimeOffs)) {
+			SimpleUtils.pass("Verified Time off table is updated Correctly!");
+		}else {
+			SimpleUtils.fail("Time Off table updated is incorrectly!", true);
+		}
 	}
 
 }
