@@ -3475,6 +3475,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Operating Hours Rows not loaded.", false);
     }
 
+
     @FindBy(xpath = "//div[@class='lgn-time-slider-notch-mark']/following-sibling::div[1]")
     private List<WebElement> sliderNotchLabel;
 

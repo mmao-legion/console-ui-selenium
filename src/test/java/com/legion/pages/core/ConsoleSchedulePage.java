@@ -1684,11 +1684,6 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	}
 
-	@Override
-	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception {
@@ -2100,6 +2095,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyClickCancelSwapOrCoverRequest() throws Exception {
+
+    }
+
+    @Override
+    public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch, boolean startHrsSlider) throws Exception {
 
     }
 }

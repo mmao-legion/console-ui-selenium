@@ -120,7 +120,7 @@ public interface SchedulePage {
 	public void toggleSummaryView() throws Exception;
 	public boolean isSummaryViewLoaded() throws Exception;
 	public void updateScheduleOperatingHours(String day, String startTime, String endTime) throws Exception;
-	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch) throws Exception;
+	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch, boolean startHrsSlider) throws Exception;;
 	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception;
 	public void verifyScheduledHourNTMCountIsCorrect() throws Exception;
 	public void complianceShiftSmartCard() throws Exception;
@@ -234,4 +234,5 @@ public interface SchedulePage {
 	public String selectOneTeamMemberToSwap() throws Exception;
 	public void verifyClickCancelSwapOrCoverRequest() throws Exception;
 	public Boolean isGenerateButtonLoadedForManagerView() throws Exception;
+
 }
