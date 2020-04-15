@@ -83,7 +83,7 @@ public class BasePage {
     }
 
     public void scrollToElement(WebElement element) {
-        ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(0,document.body.scrollHeight)");
+        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", element);
     }
 
     //get current date by specific zoon

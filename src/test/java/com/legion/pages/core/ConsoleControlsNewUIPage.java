@@ -299,7 +299,18 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@FindBy(css="div.lg-search-options__option")
 	private List<WebElement> locationName;
-	
+
+	//added by Nishant
+
+	@FindBy(xpath="//yes-no[@value='sp.weeklySchedulePreference.canOverrideAssignmentRule']")
+	private WebElement btnOverrideAssignmentRule;
+
+	@FindBy(css="yes-no[value='sp.weeklySchedulePreference.canOverrideAssignmentRule'] div.lg-button-group-first")
+	private WebElement btnOverrideAssignmentRuleYes;
+
+	@FindBy(css="yes-no[value='sp.weeklySchedulePreference.canOverrideAssignmentRule'] div.lg-button-group-last")
+	private WebElement btnOverrideAssignmentRuleNo;
+
 	String timeSheetHeaderLabel = "Controls";
 	
 	@Override
@@ -617,6 +628,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 		else if(!enable && isBudgetSmartcardEnabled())
 		{
+			scrollToElement(enableBudgetNoBtn);
 			click(enableBudgetNoBtn);
 			SimpleUtils.pass("Schedule Policies Budget card disabled successfully.");
 			displaySuccessMessage();
@@ -5040,4 +5052,25 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("On board option failed to load!", true);
 		}
 	}
+
+	//added by Nishant
+
+	public void enableOverRideAssignmentRuleAsYes() throws Exception {
+		boolean OverrideAssignmentRule = true;
+		if(isElementEnabled(btnOverrideAssignmentRule,5)){
+			if(isElementEnabled(btnOverrideAssignmentRuleYes,3)) {
+				if (btnOverrideAssignmentRuleYes.getAttribute("class").contains("selected")) {
+					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button already enabled");
+				} else {
+					click(btnOverrideAssignmentRuleYes);
+					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button selected!");
+					displaySuccessMessage();
+				}
+			}else{
+				SimpleUtils.fail("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button not loaded!!", false);
+			}
+		}
+	}
+
+
 }

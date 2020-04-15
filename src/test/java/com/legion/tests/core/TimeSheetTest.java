@@ -760,7 +760,7 @@ public class TimeSheetTest extends TestBase{
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void addTestRailTestCaseAsStoreManager(String browser, String username, String password, String location)
     		throws Exception {
-		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/MobileTCs.xlsx", "MOBILE");
+		ArrayList<HashMap<String, String>> spreadSheetData = SpreadSheetUtils.readExcel("src/test/resources/TMViewTCs.xlsx", "Schedule");
 		for(HashMap<String, String> spreadSheetRow : spreadSheetData)
 		{
 			 String defaultAction = "";

@@ -237,4 +237,6 @@ public interface ControlsNewUIPage {
 	public String getOnBoardOptionFromScheduleCollaboration() throws Exception;
 
 	public void setOnBoardOptionAsEmailWhileInviting() throws Exception;
+
+	public void enableOverRideAssignmentRuleAsYes() throws Exception;
 }

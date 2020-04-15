@@ -232,7 +232,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "[ng-click=\"goToSchedule()\"]")
     private WebElement checkOutTheScheduleButton;
 
-    @FindBy(css = "lg-button[label=\"Generate Schedule\"]")
+    @FindBy(css = "lg-button[label=\"Generate schedule\"]")
     private WebElement generateScheduleBtn;
 
     @FindBy(className = "console-navigation-item")
@@ -394,7 +394,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "td.table-field.action-field.tr>div")
     private List<WebElement> radionBtnSelectTeamMembers;
 
-	@FindBy(xpath="//div[@class='tma-search-action']/following-sibling::div[1]//div[@class='tma-staffing-option-outer-circle']")
+	@FindBy(xpath="//div[@class='tma-search-action']/following-sibling::div[1]//div[@ng-click='selectAction($event, worker)']")
 	private List<WebElement> radionBtnSearchTeamMembers;
 
 	@FindBy(css="button.tma-action.sch-save")
@@ -1134,8 +1134,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else if(isElementEnabled(generateScheduleBtn, 3)){
             return false;
         }
-        SimpleUtils.pass("Week: '" + getActiveWeekText() + "' Already Generated!");
-        return true;
+        if(areListElementVisible(scheduleTableWeekViewWorkerDetail,3)){
+            SimpleUtils.pass("Week: '" + getActiveWeekText() + "' Already Generated!");
+            return true;
+        }
+        return false;
     }
 
 
@@ -2351,7 +2354,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception {
-        if (carouselCards.size() != 0) {
+        waitForSeconds(4);
+	    if (carouselCards.size() != 0) {
             for (WebElement carouselCard : carouselCards) {
                 smartCardScrolleToLeft();
                 if (carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase())
@@ -2490,11 +2494,21 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			for(int i=0; i<scheduleSearchTeamMemberStatus.size();i++){
 				if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Available")
 						|| scheduleSearchTeamMemberStatus.get(i).getText().contains("Unknown")){
+				    if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Role Violation")){
+                        click(radionBtnSearchTeamMembers.get(i));
+                        displayAlertPopUpForRoleViolation();
+                        setWorkerRole(searchWorkerRole.get(i).getText());
+                        setWorkerLocation(searchWorkerLocation.get(i).getText());
+//                        setWorkerShiftTime(searchWorkerSchShiftTime.getText());
+//                        setWorkerShiftDuration(searchWorkerSchShiftDuration.getText());
+                        ScheduleStatus = true;
+                        break;
+                    }
 					click(radionBtnSearchTeamMembers.get(i));
 					setWorkerRole(searchWorkerRole.get(i).getText());
 					setWorkerLocation(searchWorkerLocation.get(i).getText());
-					setWorkerShiftTime(searchWorkerSchShiftTime.getText());
-					setWorkerShiftDuration(searchWorkerSchShiftDuration.getText());
+//					setWorkerShiftTime(searchWorkerSchShiftTime.getText());
+//					setWorkerShiftDuration(searchWorkerSchShiftDuration.getText());
 					ScheduleStatus = true;
 					break;
 				}
@@ -5874,6 +5888,27 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }else {
             SimpleUtils.report("there is no compliance");
+        }
+    }
+
+    //added by Nishant
+
+    public void displayAlertPopUpForRoleViolation() throws Exception{
+        String msgAlert = null;
+        if(isElementLoaded(popUpScheduleOverlap,5)){
+            if(isElementLoaded(alertMessage,5)){
+                msgAlert = alertMessage.getText();
+                if(isElementLoaded(btnAssignAnyway,5)){
+                    SimpleUtils.pass("Role violation messsage as such as " + msgAlert);
+                    click(btnAssignAnyway);
+                }else{
+                    SimpleUtils.fail("Assign Anyway button not displayed on the page",false);
+                }
+            }else{
+                SimpleUtils.fail("Alert message for not displayed",false);
+            }
+        }else{
+            SimpleUtils.fail("Role Violation pop up not displayed",false);
         }
     }
 

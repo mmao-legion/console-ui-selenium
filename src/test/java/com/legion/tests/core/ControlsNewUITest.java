@@ -214,6 +214,50 @@ public class ControlsNewUITest extends TestBase{
 	  if(! isBudgetSmartcardAppeared)
 		SimpleUtils.pass("Budget Smartcard not loaded on 'Schedule' tab when Scheduling policies Disabled Budget Smartcard.");
   }
+
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Nishant")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Controls - Scheduling Policies > Enable Assignment Rule on Scheduling Policies")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void enableAssignmentRuleFromSchedulingPoliciesAsInternalAdmin(String browser, String username, String password, String location)
+			throws Exception {
+
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		navigateToControlsSchedulingPolicies(controlsNewUIPage);
+
+		// Enable Budget Smartcard
+		boolean enableBudgetSmartcard = true;
+		controlsNewUIPage.enableDisableBudgetSmartcard(enableBudgetSmartcard);
+
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+
+		String budgetSmartcardText = "WEEKLY BUDGET";
+		boolean isBudgetSmartcardAppeared = schedulePage.isSmartCardAvailableByLabel(budgetSmartcardText);
+		SimpleUtils.assertOnFail("Budget Smartcard not loaded on 'Schedule' tab even Scheduling policies Enabled Budget Smartcard.",
+				isBudgetSmartcardAppeared , false);
+		if(isBudgetSmartcardAppeared)
+			SimpleUtils.pass("Budget Smartcard loaded on 'Schedule' tab when Scheduling policies Enabled Budget Smartcard.");
+
+
+		// Disable Budget Smartcard
+		navigateToControlsSchedulingPolicies(controlsNewUIPage);
+		enableBudgetSmartcard = false;
+		controlsNewUIPage.enableDisableBudgetSmartcard(enableBudgetSmartcard);
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+		isBudgetSmartcardAppeared = schedulePage.isSmartCardAvailableByLabel(budgetSmartcardText);
+		SimpleUtils.assertOnFail("Budget Smartcard loaded on 'Schedule' tab even Scheduling policies Disabled Budget Smartcard.",
+				! isBudgetSmartcardAppeared , false);
+		if(! isBudgetSmartcardAppeared)
+			SimpleUtils.pass("Budget Smartcard not loaded on 'Schedule' tab when Scheduling policies Disabled Budget Smartcard.");
+	}
   
   public void navigateToControlsSchedulingPolicies(ControlsNewUIPage controlsNewUIPage)
   {

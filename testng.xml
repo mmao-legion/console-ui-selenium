@@ -37,45 +37,45 @@
              </classes>
          </test>
 
-    <test name="Dashboard Test">
-        <classes>
-            <class name="com.legion.tests.core.DashboardTestKendraScott2">
-                <methods>
-                   <include name="verifyTheDisplayLocationWithSelectedLocation"/>
-                   <include name="verifyTheClickActionOnChangeLocationButton"/>
-                   <include name="verifyTheContentDisplayedInChangeLocationLayout"/>
-                   <include name="verifyTheFunctionOfSearchTextBox"/>
-                   <include name="verifyTheWelcomeMessage"/>
-                   <include name="verifyTheFunctionOfViewTodaySchedule"/>
-                   <include name="verifyTheDataSourceForBudgetScheduledOther"/>
-                </methods>
-            </class>
-       </classes>
-   </test>
+		<test name="Dashboard Test">
+			<classes>
+				<class name="com.legion.tests.core.DashboardTestKendraScott2">
+					<methods>
+					   <include name="verifyTheDisplayLocationWithSelectedLocation"/>
+					   <include name="verifyTheClickActionOnChangeLocationButton"/>
+					   <include name="verifyTheContentDisplayedInChangeLocationLayout"/>
+					   <include name="verifyTheFunctionOfSearchTextBox"/>
+					   <include name="verifyTheWelcomeMessage"/>
+					   <include name="verifyTheFunctionOfViewTodaySchedule"/>
+					   <include name="verifyTheDataSourceForBudgetScheduledOther"/>
+					</methods>
+				</class>
+		   </classes>
+	   </test>
 
-    <test name="Controls Test">
-       <classes>
-           <class name="com.legion.tests.core.ControlsNewUITest">
-               <methods>
-                   <include name="verifyScheduleScoreIsUpdated"/>
-               </methods>
-           </class>
-       </classes>
-   </test>
+		<test name="Controls Test">
+		   <classes>
+			   <class name="com.legion.tests.core.ControlsNewUITest">
+				   <methods>
+					   <include name="verifyScheduleScoreIsUpdated"/>
+				   </methods>
+			   </class>
+		   </classes>
+	   </test>
 
-    <test name="TeamTab Test KendraScott2">
-       <classes>
-           <class name="com.legion.tests.core.TeamTestKendraScott2">
-               <methods>
-                   <include name="verifyTheTeamFunctionalityInRoster"/>
-                   <include name="verifyTheTeamFunctionalityInTransfer"/>
-                   <include name="verifyTheTeamFunctionalityInUpdateInfo"/>
-                   <include name="verifyTheTeamFunctionalityInBadges"/>
+		<test name="TeamTab Test KendraScott2">
+		   <classes>
+			   <class name="com.legion.tests.core.TeamTestKendraScott2">
+				   <methods>
+					   <include name="verifyTheTeamFunctionalityInRoster"/>
+					   <include name="verifyTheTeamFunctionalityInTransfer"/>
+					   <include name="verifyTheTeamFunctionalityInUpdateInfo"/>
+					   <include name="verifyTheTeamFunctionalityInBadges"/>
 
-               </methods>
-           </class>
-       </classes>
-   </test>
+				   </methods>
+			   </class>
+		   </classes>
+	   </test>
 
 
 
@@ -106,4 +106,6 @@
    </test>
 
 </suite> <!-- Suite -->
+
+
 
