@@ -1,15 +1,19 @@
 package com.legion.pages;
 
-import static com.legion.utils.MyThreadLocal.getAndroidDriver;
-import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.*;
 import static io.appium.java_client.touch.WaitOptions.waitOptions;
 import static io.appium.java_client.touch.offset.ElementOption.element;
 import static io.appium.java_client.touch.offset.PointOption.point;
 import static java.time.Duration.ofSeconds;
 
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
+import java.security.Key;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -17,13 +21,11 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
 import org.apache.poi.ss.formula.functions.T;
 import org.openqa.selenium.*;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
 
 import com.aventstack.extentreports.Status;
 import com.legion.tests.testframework.ExtentTestManager;
@@ -60,25 +62,46 @@ public class BasePage {
         }
     }
 
+    public void openNewURLOnNewTab(String url) {
+        String currentHandle = getDriver().getWindowHandle();
+        ((JavascriptExecutor) getDriver()).executeScript("window.open(arguments[0]),\'_blank\'", url);
+        Set<String> handles = getDriver().getWindowHandles();
+        if (handles.size() > 1) {
+            for (String handle : handles) {
+                if (!handle.equals(currentHandle)) {
+                    getDriver().switchTo().window(handle);
+                    if (handle.equals(getDriver().getWindowHandle())) {
+                        SimpleUtils.pass("Navigate to the New Tab successfully!");
+                    }
+                }
+            }
+        }else {
+            SimpleUtils.fail("New window doesn't open!", false);
+        }
+    }
 
     public void scrollToTop() {
         ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(document.body.scrollHeight,0)");
 
     }
 
-    public void scrollToBottom(WebElement element, boolean... shouldWait) {
+    public void scrollToBottom() {
         ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(0,document.body.scrollHeight)");
     }
 
+    public void scrollToElement(WebElement element) {
+        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", element);
+    }
+
     //get current date by specific zoon
-    public Date getCurrentTime(){
-        TimeZone zone = TimeZone.getTimeZone("GMT+5:00");
+    public Date getCurrentTimeby(String timeZone){
+        TimeZone zone = TimeZone.getTimeZone(timeZone);
         Calendar cal = Calendar.getInstance(zone);
         return cal.getTime();
         }
 
     //click method for mobile app
-    
+
     public void clickOnMobileElement(WebElement element, boolean... shouldWait) {
     	try {
             waitUntilElementIsVisibleOnMobile(element);
@@ -133,7 +156,7 @@ public class BasePage {
     	WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), 30);
     	 
     	try {
-    	    tempWait.until(ExpectedConditions.visibilityOf(element)); 
+    	    tempWait.until(ExpectedConditions.visibilityOf(element));
     	    return true;
     	}
     	catch (NoSuchElementException | TimeoutException te) {
@@ -329,14 +352,16 @@ public class BasePage {
         Actions actions = new Actions(getDriver());
         actions.click().build().perform();
     }
+    public void mouseToElement(WebElement element){
+        Actions actions = new Actions(getDriver());
+        actions.moveToElement(element).perform();
+    }
 
-    
     public void mouseHoverDragandDrop(WebElement fromDestination, WebElement toDestination)
     {
         Actions actions = new Actions(getDriver());
         actions.dragAndDrop(fromDestination, toDestination).build().perform();
     }
-
 
     //added by Nishant for Optimization of code
 
@@ -496,6 +521,42 @@ public class BasePage {
         return element;
     }
 
+    public void waitForElementLoaded(String css, long timeOutInSeconds) {
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(
+                MyThreadLocal.getDriver()).withTimeout(ofSeconds(timeOutInSeconds))
+                .pollingEvery(ofSeconds(10))
+                .ignoring(org.openqa.selenium.NoSuchElementException.class);
+        wait.until(new Function<WebDriver, WebElement>() {
+            @Override
+            public WebElement apply(WebDriver t) {
+                return t.findElement(By.cssSelector(css));
+            }
+        });
+    }
+
+    public void selectByVisibleText(WebElement element, String text) throws Exception {
+        if (isElementLoaded(element, 5)) {
+            click(element);
+            Select select = new Select(element);
+            List<WebElement> options = select.getOptions();
+            List<String> optionTexts = new ArrayList<>();
+            if (options.size() > 0) {
+                for (WebElement option : options) {
+                    optionTexts.add(option.getText());
+                }
+                if (optionTexts.contains(text)) {
+                    select.selectByVisibleText(text);
+                    SimpleUtils.pass("Select:" + text + " Successfully!");
+                } else {
+                    SimpleUtils.fail(text + " doesn't exist in options!", true);
+                }
+            } else {
+                SimpleUtils.fail("Select options are empty!", true);
+            }
+        }else {
+            SimpleUtils.fail("Select Element failed to load!", true);
+        }
+    }
 
     public void selectDate(int daysFromToday) {
         LocalDate now = LocalDate.now();
@@ -573,6 +634,23 @@ public class BasePage {
         String timeOffEndDate = getDateCalculation(toDate);
         timeOffDate.put("startDateTimeOff", timeOffStartDate);
         timeOffDate.put("endDateTimeOff", timeOffEndDate);
+        return timeOffDate;
+    }
+
+    public HashMap<String,String> getTimeOffDateWithYear(int fromDate, int toDate) {
+        HashMap<String, String> timeOffDate = new HashMap<>();
+        String timeOffStartDate = getDateWithYearCalculation(fromDate);
+        String timeOffEndDate = getDateWithYearCalculation(toDate);
+        timeOffDate.put("startDateWithYearTimeOff", timeOffStartDate);
+        timeOffDate.put("endDateWithYearTimeOff", timeOffEndDate);
+        return timeOffDate;
+    }
+
+    public String getDateWithYearCalculation(int daysFromToday){
+        LocalDate now = LocalDate.now();
+        LocalDate wanted = now.plusDays(daysFromToday);
+        String monthName = wanted.getMonth().toString().substring(0,1) + wanted.getMonth().toString().substring(1,3).toLowerCase();
+        String timeOffDate = wanted.getYear() + " " + monthName + " " + wanted.getDayOfMonth();
         return timeOffDate;
     }
 
@@ -733,6 +811,17 @@ public class BasePage {
                     " DM View " + datePickerTxtDMView + " not matches with Date picker text from SM View " + datePickerTxtSMView,true);
         }
         return result;
+    }
+
+    public void moveDayViewCards(WebElement webElement, int xOffSet)
+    {
+        Actions builder = new Actions(MyThreadLocal.getDriver());
+        builder.moveToElement(webElement)
+                .clickAndHold()
+                .moveByOffset(xOffSet, 0)
+                .release()
+                .build()
+                .perform();
     }
 //
 //

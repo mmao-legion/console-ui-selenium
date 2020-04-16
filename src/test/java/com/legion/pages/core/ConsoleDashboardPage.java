@@ -13,6 +13,7 @@ import com.legion.pages.DashboardPage;
 import com.legion.pages.SchedulePage;
 import com.legion.utils.SimpleUtils;
 
+import cucumber.api.java.hu.Ha;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -85,7 +86,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy (css = "li[ng-if='canShowTimeoffs']")
 	private WebElement timeOffLink;
 
-	@FindBy (css = "div.header-company-icon")
+	@FindBy (css = "[ng-src*='t-m-time-offs']")
 	private WebElement iconImage;
 
 	@FindBy (css = ".col-sm-6.text-right")
@@ -348,11 +349,37 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	private WebElement scheduledSection;
 	@FindBy (css = "div.forecast>div:nth-child(4)")
 	private WebElement otherSection;
+	@FindBy (css = "div#curved-graph0 svg")
+	private WebElement projectedDemand;
+	@FindBy (className = "no-shifts-message")
+	private WebElement noShiftMessage;
+	@FindBy (css = "div.upcoming-shift")
+	private List<WebElement> upComingShifts;
+	@FindBy (css = "h4.title-blue.text-left")
+	private WebElement startingSoonTitle;
+
+	@Override
+	public boolean isViewMySchedulePresentAndClickable() throws Exception {
+		boolean isPresentAndClickable = false;
+		if (isElementLoaded(goToTodayScheduleButton, 5) && isClickable(goToTodayScheduleButton, 5)) {
+			isPresentAndClickable = true;
+		}
+		return isPresentAndClickable;
+	}
 
 	@Override
 	public String getCurrentDateFromDashboard() throws Exception {
 		if (isElementLoaded(currentDate, 5)){
 			return currentDate.getText();
+		}else{
+			return null;
+		}
+	}
+
+	@Override
+	public String getCurrentTimeFromDashboard() throws Exception {
+		if (isElementLoaded(currentTime, 5)){
+			return currentTime.getText();
 		}else{
 			return null;
 		}
@@ -380,6 +407,80 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.fail("Failed to find the elements!", true);
 		}
 		return scheduledHours;
+	}
+
+	@Override
+	public boolean isProjectedDemandGraphShown() throws Exception {
+		boolean isShown = false;
+		if (isElementLoaded(projectedDemand, 15)) {
+			List<WebElement> g = projectedDemand.findElements(By.tagName("g"));
+			WebElement path = projectedDemand.findElement(By.tagName("path"));
+			if (g != null && g.size() > 0 && path != null) {
+				isShown = true;
+				SimpleUtils.pass("Projected Demand Graph shows!");
+			}else{
+				SimpleUtils.fail("Projected Demand Graph failed to show!", true);
+			}
+		}else {
+			SimpleUtils.fail("Project Demand section failed to show!", true);
+		}
+		return isShown;
+	}
+
+	@Override
+	public boolean isStartingSoonLoaded() throws Exception {
+		if (isElementLoaded(noShiftMessage, 10)) {
+			return false;
+		}else {
+			if (areListElementVisible(upComingShifts, 10)){
+				return true;
+			}else {
+				return false;
+			}
+		}
+	}
+
+	@Override
+	public void verifyStartingSoonNScheduledHourWhenGuidanceOrDraft(boolean isStartingSoonLoaded, String scheduledHour) throws Exception {
+		if (!isStartingSoonLoaded) {
+			SimpleUtils.pass("Starting soon shifts are not shown when schedule is Guidance or draft.");
+		}else {
+			SimpleUtils.fail("Starting soon shifts should not show when schedule is Guidance or draft.", true);
+		}
+		if (scheduledHour.equals("0")) {
+			SimpleUtils.pass("Scheduled hour is 0 when schedule is Guidance or draft.");
+		}else {
+			SimpleUtils.fail("Scheduled hour should be 0 when schedule is Guidance or draft, but the actual is: " + scheduledHour, true);
+		}
+	}
+
+	@Override
+	public HashMap<String, String> getUpComingShifts() throws Exception {
+		HashMap<String, String> shifts = new HashMap<>();
+		String name = null;
+		String role = null;
+		if (areListElementVisible(upComingShifts, 15)) {
+			for (WebElement upComingShift : upComingShifts) {
+				name = upComingShift.findElement(By.cssSelector("span.name-muted")).getText().toLowerCase();
+				role = upComingShift.findElement(By.cssSelector("span.role-name")).getText().toLowerCase();
+				shifts.put(name, role);
+			}
+		}else {
+			SimpleUtils.fail("Up Coming shifts failed to load!", true);
+		}
+		return shifts;
+	}
+
+	@Override
+	public boolean isStartingTomorrow() throws Exception {
+		String tomorrow = "Starting tomorrow";
+		boolean isTomorrow = false;
+		if (isElementLoaded(startingSoonTitle, 10)) {
+			if (tomorrow.equals(startingSoonTitle.getText())){
+				isTomorrow = true;
+			}
+		}
+		return isTomorrow;
 	}
 
 	private String getTimePeriod(String date) throws Exception {

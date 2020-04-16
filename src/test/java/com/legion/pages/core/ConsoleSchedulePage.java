@@ -225,7 +225,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @FindBy (css = "div.console-navigation-item-label.Schedule")
 	private WebElement consoleSchedulePageTabElement;
 
-    @FindBy (css = "week-view-detail[weekly-schedule-data='weeklyScheduleData']")
+    @FindBy (css = "week-schedule[legacy='legacyObjectForNewSchedule']")
     private WebElement scheduleTableWeekView;
 
     @FindBy (css = "div.sch-day-view-grid")
@@ -1315,7 +1315,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
             } else {
                 SimpleUtils.fail("Smartcard Section Not Loaded for Week " + daypickers[1], true);
             }
-            if (isElementEnabled(scheduleTableWeekViewWorkerDetail.get(0)) && Float.parseFloat(budgetDisplayOnScheduleSmartcard.get(0).getText()) > 0 && Float.parseFloat(scheduleDisplayOnScheduleSmartcard.get(0).getText().replaceAll(",","")) > 0) {
+            if (isElementEnabled(scheduleTableWeekViewWorkerDetail.get(0)) && Float.parseFloat(budgetDisplayOnScheduleSmartcard.get(0).getText().replaceAll(",","")) > 0 && Float.parseFloat(scheduleDisplayOnScheduleSmartcard.get(0).getText().replaceAll(",","")) > 0) {
                 SimpleUtils.pass("Schedule Loaded Successfully! for Week " + daypickers[1] + " value for Budgeted Hour is " + budgetDisplayOnScheduleSmartcard.get(0).getText() + "Hours and Scheduled Hour is " + scheduleDisplayOnScheduleSmartcard.get(0).getText() + "Hours");
             } else {
                 SimpleUtils.fail("Schedule Not Loaded for Week " + daypickers[1] + " value for Budgeted Hour is " + budgetDisplayOnScheduleSmartcard.get(0).getText() + "Hours and Scheduled Hour is " + scheduleDisplayOnScheduleSmartcard.get(0).getText() + "Hours", true);
@@ -1684,11 +1684,6 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	}
 
-	@Override
-	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception {
@@ -1925,6 +1920,186 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @Override
     public void portraitModeWorkWellInWeekView() throws Exception {
+
+    }
+
+    @Override
+    public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow, String currentTime) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception {
+
+    }
+
+    @Override
+    public void clickOnCreateNewShiftWeekView() throws Exception {
+
+    }
+
+    @Override
+    public void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception {
+
+    }
+
+    @Override
+    public void selectDaysFromCurrentDay(String currentDay) throws Exception {
+
+    }
+
+    @Override
+    public void searchTeamMemberByName(String name) throws Exception {
+
+    }
+
+    @Override
+    public void verifyNewShiftsAreShownOnSchedule(String name) throws Exception {
+
+    }
+
+    @Override
+    public void verifyShiftsChangeToOpenAfterTerminating(List<Integer> indexes, String name, String currentTime) throws Exception {
+
+    }
+
+    @Override
+    public List<Integer> getAddedShiftIndexes(String name) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void landscapeModeOnlyInDayView() throws Exception {
+
+    }
+
+    @Override
+    public void weatherWeekSmartCardIsDisplayedForAWeek() throws Exception {
+
+    }
+
+    @Override
+    public void scheduleUpdateAccordingToSelectWeek() throws Exception {
+
+    }
+
+    @Override
+    public boolean verifyRedFlagIsVisible() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyComplianceShiftsSmartCardShowing() throws Exception {
+
+    }
+
+
+
+    @Override
+    public boolean clickViewShift() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyComplianceFilterIsSelectedAftClickingViewShift() throws Exception {
+
+    }
+
+    @Override
+    public void verifyComplianceShiftsShowingInGrid() throws Exception {
+
+    }
+
+    @Override
+    public void verifyClearFilterFunction() throws Exception {
+
+    }
+
+    @Override
+    public void clickOnFilterBtn() throws Exception {
+
+    }
+
+
+    @Override
+    public void verifyShiftSwapCoverRequestedIsDisplayInTo() {
+
+    }
+
+    @Override
+    public void verifyAnalyzeBtnFunctionAndScheduleHistoryScroll() throws Exception {
+
+    }
+
+    @Override
+    public HashMap<String, Float> getScheduleBudgetedHoursInScheduleSmartCard() throws Exception {
+
+        return null;
+    }
+
+    public Boolean isGenerateButtonLoadedForManagerView() throws Exception {
+        return false;
+    }
+
+
+
+    @Override
+    public boolean areShiftsPresent() throws Exception {
+        return false;
+    }
+
+    @Override
+    public int verifyClickOnAnyShift() throws Exception {
+        return 0;
+    }
+
+    @Override
+    public void clickTheShiftRequestByName(String requestName) throws Exception {
+
+    }
+
+    @Override
+    public boolean isPopupWindowLoaded(String title) throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyComponentsOnSubmitCoverRequest() throws Exception {
+
+    }
+
+    @Override
+    public void verifyClickOnSubmitButton() throws Exception {
+
+    }
+
+    @Override
+    public void clickOnShiftByIndex(int index) throws Exception {
+
+    }
+
+    @Override
+    public boolean verifyShiftRequestButtonOnPopup(List<String> requests) throws Exception {
+        return true;
+    }
+
+    @Override
+    public void verifyComparableShiftsAreLoaded() throws Exception {
+
+    }
+
+    @Override
+    public String selectOneTeamMemberToSwap() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyClickCancelSwapOrCoverRequest() throws Exception {
+
+    }
+
+    @Override
+    public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch, boolean startHrsSlider) throws Exception {
 
     }
 }

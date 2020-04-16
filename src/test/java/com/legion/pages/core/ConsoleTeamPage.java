@@ -1,18 +1,25 @@
 package com.legion.pages.core;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.teamMemberName;
-
 import java.lang.reflect.Array;
 import java.net.SocketImpl;
+import java.nio.file.WatchEvent;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.legion.utils.FileDownloadVerify;
+import com.legion.utils.MyThreadLocal;
+import cucumber.api.java.hu.Ha;
+import cucumber.api.java.it.Ma;
+import cucumber.api.java.sl.In;
 import freemarker.template.SimpleDate;
+import net.bytebuddy.TypeCache;
 import net.sourceforge.htmlunit.corejs.javascript.EcmaError;
+import org.apache.xerces.parsers.IntegratedParserConfiguration;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -21,6 +28,9 @@ import com.legion.pages.TeamPage;
 import com.legion.tests.core.TeamTestKendraScott2.timeOffRequestAction;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.support.ui.Select;
+
+import static com.legion.utils.MyThreadLocal.*;
 
 public class ConsoleTeamPage extends BasePage implements TeamPage{
 	
@@ -137,7 +147,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
     @FindBy(css="img[src*=\"img/legion/todos-none\"]")
     private WebElement toDoBtnToOpen;
 
-    @FindBy(css="div[ng-click=\"closeTodoPanelClick()\"]")
+    @FindBy(css="[src*=\"todos-selected\"]")
     private WebElement toDoBtnToClose;
 
     @FindBy(css="div[ng-show=\"show\"]")
@@ -331,23 +341,37 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 		@Override
 		public void searchAndSelectTeamMemberByName(String username) throws Exception {
-			boolean isteamMemberFound = false;
+			boolean isTeamMemberFound = false;
 			if(isElementLoaded(teamMemberSearchBox, 10)) {
+				teamMemberSearchBox.clear();
 				teamMemberSearchBox.sendKeys(username);
 				waitForSeconds(2);
-				if(teamMembersList.size() > 0) {
-					for(WebElement teamMember : teamMembersList) {
-						if(teamMember.getText().toLowerCase().contains(username.toLowerCase())) {
-							click(teamMember);
-							isteamMemberFound = true;
-							SimpleUtils.pass("Team Page: Team Member '"+username+"' selected Successfully.");;
-							break;
+				if (teamMembers.size() > 0){
+					for (WebElement teamMember : teamMembers){
+						WebElement tr = teamMember.findElement(By.className("tr"));
+						if (tr != null) {
+							WebElement name = tr.findElement(By.cssSelector("span.name"));
+							WebElement title = tr.findElement(By.cssSelector("span.title"));
+							WebElement status = tr.findElement(By.cssSelector("span.status"));
+							if (name != null && title != null && status != null) {
+								String nameJobTitleStatus = name.getText() + title.getText() + status.getText();
+								if (nameJobTitleStatus.toLowerCase().contains(username.toLowerCase())) {
+									click(name);
+									isTeamMemberFound = true;
+									SimpleUtils.pass("Team Page: Team Member '" + username + "' selected Successfully.");
+									break;
+								}
+							}else {
+								SimpleUtils.fail("Failed to find the name, title and Status!", true);
+							}
+						}else {
+							SimpleUtils.fail("Failed to find the tr element!", true);
 						}
 					}
 				}
 			}
-			if(!isteamMemberFound)
-				SimpleUtils.fail("Team Page: Team Member '"+username+"' not found.", false);
+			if(!isTeamMemberFound)
+				SimpleUtils.report("Team Page: Team Member '"+username+"' not found.");
 		}
 
 		@Override
@@ -388,6 +412,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 		@Override
 		public void openToDoPopupWindow() throws Exception {
+	 	scrollToTop();
 		waitForSeconds(2);
 	 	if(isElementLoaded(toDoBtnToOpen,5)) {
 				click(toDoBtnToOpen);
@@ -401,10 +426,11 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 		@Override
 		public void closeToDoPopupWindow() throws Exception {
-			if(isElementLoaded(toDoBtnToClose)) {
-				click(toDoBtnToClose);
-				Thread.sleep(1000);
-				if(! isToDoWindowOpened())
+			if(isElementLoaded(toDoBtnToClose, 5)) {
+				waitForSeconds(3);
+				moveToElementAndClick(toDoBtnToClose);
+				waitForSeconds(1);
+				if(!isToDoWindowOpened())
 					SimpleUtils.pass("Team Page: 'ToDo' popup window closed successfully.");
 				else
 					SimpleUtils.fail("Team Page: 'ToDo' popup window not closed.", false);
@@ -460,6 +486,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 								else
 									SimpleUtils.fail("Team Page: ToDo list time off request 'Reject' button not found.", false);
 							}
+							break;
 						}
 					}
 				}
@@ -515,6 +542,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement currentDay;
 	@FindBy (css = "div.day")
 	private List<WebElement> daysOnCalendar;
+	@FindBy (css = "div.loan-from-calendar div.day")
+	private List<WebElement> startDaysOnCalendar;
+	@FindBy (css = "div.loan-to-calendar div.day")
+	private	List<WebElement> endDaysOnCalendar;
 	@FindBy (css = "button.save-btn.pull-right")
 	private WebElement applyOnTransfer;
 	@FindBy (className = "lgn-alert-modal")
@@ -531,6 +562,245 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement homeStoreLocation;
 	@FindBy (css = "pre.change-location-msg")
 	private WebElement changeLocationMsg;
+	@FindBy (css = "div.badge-section div.profile-heading")
+	private WebElement badgeTitle;
+	@FindBy (css = "div.collapsible-title-open span.ng-binding")
+	private WebElement profileTabTitle;
+	@FindBy (className = "lgn-tm-manage-badges")
+	private WebElement manageBadgesWindow;
+	@FindBy (className = "lgnCheckBox")
+	private List<WebElement> badgeCheckBoxes;
+	@FindBy (className = "one-badge")
+	private WebElement badgeIcon;
+	@FindBy (css = "button[ng-switch-when=\"invite\"]")
+	private List<WebElement> inviteButtons;
+	@FindBy (className = "modal-content")
+	private WebElement inviteTMWindow;
+	@FindBy (id = "email")
+	private WebElement emailInput;
+	@FindBy (className = "help-block")
+	private WebElement emailErrorMsg;
+	@FindBy (css = "section[ng-form=\"inviteTm\"]")
+	private WebElement inviteTMSection;
+	@FindBy (css = "button.pull-left")
+	private WebElement cancelInviteButton;
+	@FindBy (css = "button.btn-success")
+	private WebElement sendInviteButton;
+	@FindBy (css = "input[placeholder=\"First\"]")
+	private WebElement firstNameInput;
+	@FindBy (css = "input[placeholder=\"Last\"]")
+	private WebElement lastNameInput;
+	@FindBy (css = "input[name=\"email\"]")
+	private WebElement emailInputTM;
+	@FindBy (css = "input[name=\"phone\"]")
+	private WebElement phoneInput;
+	@FindBy (css = "input[placeholder*=\"Employee\"]")
+	private WebElement employeeIDInput;
+	@FindBy (css = "select[ng-model*=\"role\"]")
+	private WebElement jobTitleSelect;
+	@FindBy (css = "select[ng-model*=\"Status\"]")
+	private WebElement engagementStatusSelect;
+	@FindBy (css = "select[ng-model*=\"hourly\"]")
+	private WebElement hourlySelect;
+	@FindBy (css = "select[ng-model*=\"salaried\"]")
+	private WebElement salariedSelect;
+	@FindBy (css = "select[ng-model*=\"exempt\"]")
+	private WebElement exemptSelect;
+	@FindBy (className = "current-location-text")
+	private WebElement homeStoreLabel;
+	@FindBy (className = "btn-success")
+	private WebElement saveTMButton;
+	@FindBy (className = "contact-error")
+	private WebElement contactErrorMsg;
+	@FindBy (className = "count")
+	private WebElement tmCount;
+	@FindBy (className = "pull-left")
+	private WebElement cancelButtonAddTM;
+	@FindBy (css = "span.invitationStatus")
+	private List<WebElement> invitationStatus;
+	@FindBy (css = "lgn-action-button.invite-button button")
+	private WebElement inviteButton;
+	@FindBy (css = "button[ng-switch-when=\"activate\"]")
+	private List<WebElement> activateButtons;
+	@FindBy (css = "profile-management div.collapsible-title")
+	private WebElement profileTab;
+	@FindBy (css = "img[src*=\"t-m-preferences\"]+[ng-bind-html=\"blockTitle\"]")
+	private WebElement workPreferTab;
+	@FindBy (css = "timeoff-management .collapsible-title-text")
+	private WebElement timeOffTab;
+	@FindBy (css = "[ng-click=\"newTimeOff()\"]")
+	private WebElement newTimeOffBtn;
+	@FindBy (css = "work-preference-management [ng-bind-html=\"blockTitle\"]")
+	private WebElement shiftPreferTab;
+	@FindBy (css = "availability-management [ng-bind-html=\"blockTitle\"]")
+	private WebElement availabilityTab;
+	@FindBy (css = "lgn-action-button[label=\"'ACTIVATE'\"] button")
+	private WebElement activateButton;
+	@FindBy (css = "div.activate")
+	private WebElement activateWindow;
+	@FindBy (css = "button.save-btn.pull-right")
+	private WebElement applyButton;
+	@FindBy (css = "lgn-action-button[label=\"'DEACTIVATE'\"] button")
+	private WebElement deactivateButton;
+	@FindBy (css = "lgn-action-button[label=\"'TERMINATE'\"] button")
+	private WebElement terminateButton;
+	@FindBy (css = "lgn-action-button[label=\"'CANCEL TERMINATE'\"] button")
+	private WebElement cancelTerminateButton;
+	@FindBy (css = "div.legion-status div.invitation-status")
+	private WebElement onBoardedDate;
+	@FindBy (css = "div.legion-status>div:nth-child(2)")
+	private WebElement tmStatus;
+	@FindBy (css = "lgn-action-button[label=\"'CANCEL ACTIVATE'\"] button")
+	private WebElement cancelActivateButton;
+	@FindBy (className = "modal-content")
+	private WebElement deactivateWindow;
+	@FindBy (css = "button[ng-switch-when=\"update\"]")
+	private List<WebElement> updateInfoButtons;
+	@FindBy (className = "location-date-selector")
+	private WebElement removeWindow;
+	@FindBy (css = "lgn-tm-engagement-quick div:nth-child(5)>div")
+	private WebElement employeeID;
+	@FindBy (css = "i.next-month")
+	private WebElement nextMonthArrow;
+	@FindBy (css = "lgn-action-button[label=\"'MANUAL ONBOARD'\"] button")
+	private WebElement manualOnBoardButton;
+	@FindBy (css = "div.loan-to-calendar i.next-month")
+	private WebElement endDateNextMonthArrow;
+	@FindBy (css = "[ng-src*=\"home-location\"]")
+	private WebElement homeStoreImg;
+	@FindBy (css = "div.personal-details-panel div.invitation-status")
+	private WebElement personalInvitationStatus;
+	@FindBy (css = "[src*=\"TimeOff\"] h1")
+	private WebElement timeOffDays;
+	@FindBy (className = "day-week-picker-date")
+	private WebElement calMonthYear;
+	@FindBy (className = "day-week-picker-period")
+	private List<WebElement> weekDurations;
+	@FindBy (className = "day-week-picker-arrow-right")
+	private WebElement nextWeekPickerArrow;
+
+	@Override
+	public int getTimeOffCountByStartAndEndDate(List<String> timeOffStartNEndDate) throws Exception {
+		int timeOffCount = 0;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd");
+		Date timeOffStartDate = dateFormat.parse(timeOffStartNEndDate.get(0));
+		Date timeOffEndDate = dateFormat.parse(timeOffStartNEndDate.get(1));
+		List<String> daysAndStatus = getTimeOffDaysAndStatus(timeOffStartDate, timeOffEndDate, timeOffCount, false, false);
+		while (!Boolean.parseBoolean(daysAndStatus.get(1)) || !Boolean.parseBoolean(daysAndStatus.get(2))) {
+			if (isElementLoaded(nextWeekPickerArrow, 5)) {
+				click(nextWeekPickerArrow);
+				daysAndStatus = getTimeOffDaysAndStatus(timeOffStartDate, timeOffEndDate, Integer.parseInt(daysAndStatus.get(0)),
+						Boolean.parseBoolean(daysAndStatus.get(1)), Boolean.parseBoolean(daysAndStatus.get(2)));
+			}
+		}
+		SimpleUtils.report("Time Off Days: " + daysAndStatus.get(0));
+		return Integer.parseInt(daysAndStatus.get(0));
+	}
+
+	public List<String> getTimeOffDaysAndStatus(Date timeOffStartDate, Date timeOffEndDate, int timeOffCount,
+												boolean isStartFound, boolean isEndFound) throws Exception {
+		List<String> daysAndStatus = new ArrayList<>();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd");
+		if (areListElementVisible(weekDurations, 5)) {
+			for (int i = 0; i < weekDurations.size(); i++) {
+				click(weekDurations.get(i));
+				List<String> years = getYearsFromCalendarMonthYearText();
+				String activeWeek = getActiveWeekText(weekDurations.get(i));
+				String[] items = activeWeek.split(" ");
+				String weekStartText = years.get(0) + " " + items[3] + " " + items[4];
+				String weekEndText = (years.size() == 2 ? years.get(1) : years.get(0)) + " " + items[6] + " " + items[7];
+				Date weekStartDate = dateFormat.parse(weekStartText);
+				Date weekEndDate = dateFormat.parse(weekEndText);
+				if (!isStartFound) {
+					isStartFound = SimpleUtils.isDateInTimeDuration(timeOffStartDate, weekStartDate, weekEndDate);
+				}
+				isEndFound = SimpleUtils.isDateInTimeDuration(timeOffEndDate, weekStartDate, weekEndDate);
+				if (isStartFound && isEndFound) {
+					if (isElementLoaded(timeOffDays, 5)) {
+						// Wait for the time off days to be loaded
+						waitForSeconds(5);
+						timeOffCount += Integer.parseInt(timeOffDays.getText());
+						break;
+					}
+				}
+				if (isStartFound || isEndFound) {
+					if (isElementLoaded(timeOffDays, 5)) {
+						// Wait for the time off days to be loaded
+						waitForSeconds(5);
+						timeOffCount += Integer.parseInt(timeOffDays.getText());
+					}
+				}
+			}
+		}
+		daysAndStatus.add(Integer.toString(timeOffCount));
+		daysAndStatus.add(Boolean.toString(isStartFound));
+		daysAndStatus.add(Boolean.toString(isEndFound));
+		return daysAndStatus;
+	}
+
+	public List<String> getYearsFromCalendarMonthYearText() throws Exception {
+		List<String> years = new ArrayList<>();
+		if (isElementLoaded(calMonthYear, 5)) {
+			if (calMonthYear.getText().contains("-")) {
+				String[] monthAndYear = calMonthYear.getText().split("-");
+				if (monthAndYear.length == 2) {
+					if (monthAndYear[0].trim().length() > 4)
+					    years.add(monthAndYear[0].trim().substring(monthAndYear[0].trim().length() - 4));
+					if (monthAndYear[1].trim().length() > 4)
+					    years.add(monthAndYear[1].trim().substring(monthAndYear[1].trim().length() - 4));
+				}
+			}else {
+				years.add(calMonthYear.getText().trim().substring(calMonthYear.getText().trim().length() - 4));
+			}
+		}else {
+			SimpleUtils.fail("Calendar month and year not loaded successfully!", false);
+		}
+		return years;
+	}
+
+	public String getActiveWeekText(WebElement element) throws Exception {
+		String activeWeekText = "";
+		if (isElementLoaded(element, 5)) {
+			activeWeekText = element.getText().contains("\n") ? element.getText().replace("\n", " ") : element.getText();
+		}
+		return activeWeekText;
+	}
+
+	@Override
+	public int verifyTimeOffRequestShowsOnToDoList(String userName, String timeOffStartDuration, String timeOffEndDuration) throws Exception {
+		int timeOffDays = 0;
+		boolean isTimeOffRequestToDoCardFound = false;
+		String timeOffRequestCardText = "TIME OFF REQUEST";
+		String timeOffStartDate = timeOffStartDuration.split(", ")[1];
+		String timeOffEndDate =  timeOffEndDuration.split(", ")[1];
+		if(isElementLoaded(todoCards.get(0))) {
+			for (WebElement todoCard : todoCards) {
+				if (isElementLoaded(nextToDoCardArrow, 10) && !todoCard.isDisplayed())
+					click(nextToDoCardArrow);
+				if (todoCard.getText().toLowerCase().contains(timeOffRequestCardText.toLowerCase())) {
+					if (todoCard.getText().toLowerCase().contains(timeOffStartDate.toLowerCase())
+							&& todoCard.getText().toLowerCase().contains(timeOffEndDate.toLowerCase())
+							&& todoCard.getText().toLowerCase().contains(userName.toLowerCase())) {
+						isTimeOffRequestToDoCardFound = true;
+						SimpleUtils.pass("User: " + userName + " is visible on TODO list!");
+						String headingText = todoCard.findElement(By.cssSelector("p.heading")).getText();
+						String[] items = headingText.split(" ");
+						for (String item : items) {
+							if (SimpleUtils.isNumeric(item)) {
+								timeOffDays = Integer.parseInt(item);
+								SimpleUtils.report("Get Time Off Days: " + timeOffDays);
+							}
+						}
+						break;
+					}
+				}
+			}
+		}
+		if (!isTimeOffRequestToDoCardFound) {
+			SimpleUtils.fail("Failed to find user: " + userName + " on TODO list!", false);
+		}
+		return timeOffDays;
+	}
 
 	@Override
 	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception {
@@ -552,28 +822,32 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 						for (WebElement teamMember : teamMembers){
 							WebElement tr = teamMember.findElement(By.className("tr"));
 							if (tr != null) {
-								List<WebElement> respectiveElements = tr.findElements(By.tagName("div"));
-								/*
-								 * It will get the respective elements of Team Member, they are Image, Name, Job Title, Status, Badges and Actions.
-								 */
-								if (respectiveElements != null && respectiveElements.size() == 6) {
-									String nameJobTitleStatus = respectiveElements.get(1).getText() + respectiveElements.get(2).getText()
-											+ respectiveElements.get(3).getText();
-									if (nameJobTitleStatus.toLowerCase().contains(testString)) {
+								WebElement name = tr.findElement(By.cssSelector("span.name"));
+								WebElement title = tr.findElement(By.cssSelector("span.title"));
+								WebElement status = tr.findElement(By.cssSelector("span.status"));
+								if (name != null && title != null && status != null) {
+									String nameJobTitleStatus = name.getText() + title.getText() + status.getText();
+									if (nameJobTitleStatus.toLowerCase().contains(testString.toLowerCase())) {
 										SimpleUtils.pass("Verified " + teamMember.getText() + " contains test string: " + testString);
 									} else {
 										SimpleUtils.fail("Team member: " + teamMember.getText() + " doesn't contain the test String: "
 												+ testString, true);
 									}
+								}else {
+									SimpleUtils.fail("Failed to find the name, title and status elements!", true);
 								}
+							}else {
+								SimpleUtils.fail("Failed to find the tr element!", true);
 							}
 						}
 					}else{
-						SimpleUtils.fail("Team members failed to load!", true);
+						SimpleUtils.report("Doesn't find the Team member that contains: " + testString);
 					}
 					searchTextBox.clear();
 				}
 			}
+		}else {
+			SimpleUtils.fail("Failed to find the search textbox element!", true);
 		}
 	}
 
@@ -595,6 +869,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					}else{
 						SimpleUtils.fail("Personal Details and Engagement Details sections failed to load", true);
 					}
+				}else {
+					SimpleUtils.fail("Failed to find the personal and engagement sections!", true);
 				}
 			}else{
 				SimpleUtils.fail("Two sections on Add New Team Member Tab failed to load", false);
@@ -641,6 +917,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					SimpleUtils.fail("It doesn't display the calendar for current month and current day, current day is: "
 							+ currentDateForSelectedLocation + ", but calendar displayed day is: " + currentDateOnCalendar, true);
 				}
+			}else {
+				SimpleUtils.fail("Current month, year and today elements failed to load!", true);
 			}
 		}
 	}
@@ -654,7 +932,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			int randomIndex = random.nextInt(teamMemberNames.size() - 1);
 			teamMember = teamMemberNames.get(randomIndex).getText();
 			click(teamMemberNames.get(randomIndex));
-			if (isElementLoaded(transferButton, 5)) {
+			if (isElementLoaded(transferButton, 5) && isElementLoaded(homeStoreImg, 10)) {
 				if (transfer.equals(transferButton.getText())) {
 					SimpleUtils.pass("Find a Team Member that can be transferred!");
 					moveToElementAndClick(transferButton);
@@ -666,11 +944,97 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 						click(transferButton);
 					}
 				}
+			}else {
+				SimpleUtils.fail("Transfer button and home store image failed to load!", true);
 			}
 		}else{
 			SimpleUtils.fail("Team Members didn't load successfully!", false);
 		}
 		return teamMember;
+	}
+
+	@Override
+	public void isCancelTransferButtonLoadedAndClick() throws Exception {
+		String cancelTransfer = "CANCEL TRANSFER";
+		if (isElementLoaded(transferButton, 5)) {
+			if (cancelTransfer.equals(transferButton.getText())) {
+				SimpleUtils.pass("CANCEL TRANSFER button loaded successfully!");
+				moveToElementAndClick(transferButton);
+			} else {
+				SimpleUtils.fail("This button isn't CANCEL TRANSFER, it is: " + transferButton.getText(), false);
+			}
+		} else {
+			SimpleUtils.fail("TRANSFER/CANCEL TRANSFER button failed to load!", true);
+		}
+	}
+
+	@Override
+	public boolean verifyCancelTransferWindowPopup() throws Exception {
+		boolean isPopup = false;
+		String expectedMessage = "Are you sure you want to cancel the transfer to the new location?";
+		String actualMessage = null;
+		if (isElementLoaded(confirmPopupWindow, 5) && isElementLoaded(popupMessage, 5)) {
+			actualMessage = popupMessage.findElement(By.tagName("span")).getText();
+			if (expectedMessage.trim().equals(actualMessage.trim())){
+				isPopup = true;
+				SimpleUtils.pass("Cancel Transfer window pops up!");
+			}else {
+				SimpleUtils.fail("The Message on Cancel Transfer window is incorrect!", true);
+			}
+		} else {
+			SimpleUtils.fail("Cancel Transfer pop-up window doesn't show!", true);
+		}
+		return isPopup;
+	}
+
+	@Override
+	public boolean verifyTransferButtonEnabledAfterCancelingTransfer() throws Exception {
+		boolean isEnabled = false;
+		String transfer = "TRANSFER";
+		if (isElementLoaded(confirmButton, 10)) {
+			click(confirmButton);
+			if (isElementEnabled(transferButton, 10)) {
+				if (transferButton.getText().equals(transfer)) {
+					isEnabled = true;
+					SimpleUtils.pass("TRANSFER button is enabled!");
+				} else {
+					SimpleUtils.fail("CANCEL TRANSFER button doesn't change to TRANSFER", true);
+				}
+			} else {
+				SimpleUtils.fail("Cancel Transfer failed!", true);
+			}
+		}else {
+			SimpleUtils.fail("Cancel transfer confirm button failed to load!", true);
+		}
+		return isEnabled;
+	}
+
+	@Override
+	public void verifyHomeLocationAfterCancelingTransfer(String homeLocation) throws Exception {
+		if (isElementLoaded(homeStoreLocation, 5)) {
+			if (homeStoreLocation.getText().contains(homeLocation)){
+				SimpleUtils.pass("Home Store location is the previous one!");
+			}else {
+				SimpleUtils.fail("Home Store location isn't the previous one!", true);
+			}
+		}else {
+			SimpleUtils.fail("Home Location element failed to load!", false);
+		}
+	}
+
+	@Override
+	public boolean isProfilePageLoaded() throws Exception {
+		boolean isLoaded = false;
+		String profile = "Profile";
+		if (isElementLoaded(profileTabTitle, 5)){
+			if (profileTabTitle.getText().equals(profile)){
+				isLoaded = true;
+				SimpleUtils.pass("Profile Page loaded successfully!");
+			} else {
+				SimpleUtils.fail("Profile Page doesn't load successfully!", true);
+			}
+		}
+		return isLoaded;
 	}
 
 	private boolean isCancelTransferSuccess() throws Exception {
@@ -724,7 +1088,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void verifyClickOnTemporaryTransferButton() throws Exception {
 		if (isElementLoaded(temporaryTransferButton, 5)) {
-			click(temporaryTransferButton);
+			if (!temporaryTransferButton.getAttribute("class").contains("checked")) {
+				click(temporaryTransferButton);
+			}
 			if (isElementLoaded(checkImage, 5)){
 				SimpleUtils.pass("Temporary Transfer button is checked!");
 			}else{
@@ -738,7 +1104,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void verifyTwoCalendarsForCurrentMonthAreShown(String currentDate) throws Exception {
 		String className = "month-header";
-		verifyClickOnTemporaryTransferButton();
 		if (areListElementVisible(transferTitles, 10) && areListElementVisible(transferCalendars, 10)){
 			if (transferTitles.size() == 2 && transferCalendars.size() == 2){
 				String monthYearLeft = transferCalendars.get(0).findElement(By.className(className)).getText().toLowerCase();
@@ -752,7 +1117,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				SimpleUtils.fail("Calendar counts are incorrect!", true);
 			}
 		}else {
-			SimpleUtils.fail("Calendars are failed to loade!", true);
+			SimpleUtils.fail("Calendars are failed to loaded!", true);
 		}
 	}
 
@@ -782,6 +1147,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					}else {
 						SimpleUtils.fail("Selected day is inconsistent with the date shown in Date Hired!", true);
 					}
+				}else {
+					SimpleUtils.fail("Real days elements failed to load!", true);
 				}
 			}else {
 				SimpleUtils.fail("Back and Forward arrows are failed to load!", true);
@@ -808,31 +1175,49 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					SimpleUtils.fail("Current day isn't highlighted!", true);
 				}
 			}
-			verifyDateCanBeSelectedOnTransfer();
+			verifyDateCanBeSelectedOnTempTransfer();
 		}else {
 			SimpleUtils.fail("Calendar failed to load!", true);
 		}
 	}
 
 	@Override
-	public void verifyDateCanBeSelectedOnTransfer() throws Exception {
+	public void verifyDateCanBeSelectedOnTempTransfer() throws Exception {
 		String className = "selected-day";
-		int nextDayIndex = 0;
+		int currentDayIndex = 0;
 		int maxIndex = 0;
 		Random random = new Random();
-		if (areListElementVisible(daysOnCalendar, 10)) {
+		if (areListElementVisible(startDaysOnCalendar, 10)) {
 			/*
-			 * Select a future date to transfer.
+			 * Select a start date to temp transfer, should start from today or future.
 			 */
-			nextDayIndex = getSpecificDayIndex(currentDay) + 1;
-			maxIndex = daysOnCalendar.size() - 1;
-			int randomIndex = nextDayIndex + random.nextInt(maxIndex - nextDayIndex);
-			WebElement randomElement = daysOnCalendar.get(randomIndex);
+			currentDayIndex = getSpecificDayIndex(currentDay);
+			maxIndex = startDaysOnCalendar.size() - 1;
+			int randomIndex = currentDayIndex + random.nextInt(maxIndex - currentDayIndex);
+			WebElement randomElement = startDaysOnCalendar.get(randomIndex);
 			click(randomElement);
 			if (randomElement.getAttribute("class").contains(className)) {
-				SimpleUtils.pass("Select a date successfully!");
+				SimpleUtils.pass("Select a start date successfully!");
 			} else {
-				SimpleUtils.fail("Failed to select a date!", true);
+				SimpleUtils.fail("Failed to select a start date!", true);
+			}
+		}else {
+			SimpleUtils.fail("Days on calendar failed to load!", true);
+		}
+		if (areListElementVisible(endDaysOnCalendar, 10)) {
+			/*
+			 * Select a end date to temp transfer.
+			 */
+			if (isElementLoaded(endDateNextMonthArrow, 5)) {
+				click(endDateNextMonthArrow);
+			}
+			int randomIndex = 7 + random.nextInt(maxIndex - 7);
+			WebElement randomElement = endDaysOnCalendar.get(randomIndex);
+			click(randomElement);
+			if (randomElement.getAttribute("class").contains(className)) {
+				SimpleUtils.pass("Select an end date successfully!");
+			} else {
+				SimpleUtils.fail("Failed to select an end date!", true);
 			}
 		}else {
 			SimpleUtils.fail("Days on calendar failed to load!", true);
@@ -900,30 +1285,16 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					SimpleUtils.fail("The pop-up message is incorrect!", true);
 				}
 			}
-		}
-	}
-
-	@Override
-	public void	verifyTheFunctionOfCancelTransferButton() throws Exception {
-		String transfer = "TRANSFER";
-		if (isElementLoaded(confirmPopupWindow, 10) && isElementLoaded(cancelButton, 10)) {
-			click(cancelButton);
-			if (isElementLoaded(transferButton, 10)){
-				if (transferButton.getText().equals(transfer)) {
-					SimpleUtils.pass("Cancel Transfer Successfully!");
-				}else {
-					SimpleUtils.fail("Button doesn't remain TRANSFER!", true);
-				}
-			}
 		}else {
-			SimpleUtils.fail("Cancel button doesn't show on pop-up Window!", true);
+			SimpleUtils.fail("Confirm pop up window failed to load!", true);
 		}
 	}
 
 	@Override
 	public void verifyTheHomeStoreLocationOnProfilePage(String location, String selectedLocation) throws Exception {
 		String actualLocationMessage = null;
-		String date = null;
+		String startDate = null;
+		String endDate = null;
 		boolean isCorrectFormat = false;
 		SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy");
 		if (isElementLoaded(homeStoreLocation, 10) && isElementLoaded(changeLocationMsg, 10)) {
@@ -935,12 +1306,13 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			actualLocationMessage = changeLocationMsg.getText();
 			if (actualLocationMessage.contains("-")) {
 				String[] values = actualLocationMessage.split("-");
-				if (values.length == 2) {
-					date = values[1].trim();
+				if (values.length == 3) {
+					startDate = values[1].trim().split("\n")[0];
+					endDate = values[2].trim();
 					/*
 					 * Check whether the date format is correct, eg: 02/20/2020
 					 */
-					isCorrectFormat = SimpleUtils.isDateFormatCorrect(date, format);
+					isCorrectFormat = SimpleUtils.isDateFormatCorrect(startDate, format) && SimpleUtils.isDateFormatCorrect(endDate, format);
 				}
 			}
 			/*
@@ -953,14 +1325,1344 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}else {
 				SimpleUtils.fail("Change Location Message is incorrect!", true);
 			}
+		}else {
+			SimpleUtils.fail("Home store location and change location message failed to load!", true);
 		}
+	}
+
+	@Override
+	public String verifyTheFunctionOfEditBadges() throws Exception {
+		String badges = "BADGES";
+		String badgeID = "";
+		if (isElementLoaded(badgeTitle, 5)) {
+			if (badgeTitle.getText().equals(badges)) {
+				WebElement editBadge = badgeTitle.findElement(By.tagName("i"));
+				click(editBadge);
+				if (isManageBadgesLoaded()) {
+					badgeID = selectTheBadgeByRandom();
+					confirmButton.click();
+					if (isElementLoaded(badgeIcon, 5)) {
+						WebElement badge = badgeIcon.findElement(By.id(badgeID));
+						if (badge != null) {
+							SimpleUtils.pass("Select the badges successfully!");
+						}else{
+							SimpleUtils.fail("The selected badge doesn't show!", true);
+						}
+					}else {
+						SimpleUtils.fail("Badges failed to load on Profile page!", true);
+					}
+				}
+			}else {
+				SimpleUtils.fail("Failed to find the title: BADGES!", true);
+			}
+		}else{
+			SimpleUtils.fail("BADGES failed to load!", true);
+		}
+		return badgeID;
+	}
+
+	@Override
+	public void verifyTheVisibleOfBadgesOnTeamRoster(String firstName, String badgeID) throws Exception {
+		WebElement badge = null;
+		if (isElementLoaded(searchTextBox, 5)) {
+			searchTextBox.sendKeys(firstName);
+			waitForSeconds(1);
+			if (areListElementVisible(teamMemberNames, 5)) {
+				if (isElementLoaded(badgeIcon, 5)) {
+					badge = badgeIcon.findElement(By.id(badgeID));
+				}
+				if (badge != null) {
+					SimpleUtils.pass("Badge: " + badgeID + " is visible on Team Roster!");
+				} else {
+					SimpleUtils.fail("Badge: " + badgeID + " failed to load on Team Roster!", true);
+				}
+			} else {
+				SimpleUtils.fail("Failed to find the team member: " + firstName, true);
+			}
+		}else {
+			SimpleUtils.fail("Search textbox failed to load!", true);
+		}
+	}
+
+	@Override
+	public boolean isInviteTeamMemberWindowLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(inviteTMWindow, 5) && isElementLoaded(inviteTMSection, 5)) {
+			isLoaded = true;
+			SimpleUtils.pass("Invite Team Member Window sections are loaded!");
+		}else {
+			SimpleUtils.fail("Invite Team Member window failed to load!", false);
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void verifyTheEmailFormatOnInviteWindow(List<String> testEmails) throws Exception {
+		String regex = "^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}" +
+				"\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,10}))$";
+		String errorMessage = "Email is invalid.";
+		if (isElementEnabled(emailInput, 5) && testEmails.size() > 0) {
+			for (String testEmail : testEmails) {
+				emailInput.clear();
+				emailInput.sendKeys(testEmail);
+				if (testEmail.matches(regex)) {
+					if (isElementLoaded(emailErrorMsg, 5)){
+						SimpleUtils.fail("Email: " + testEmail + "'s format is correct, but error message shows", true);
+					}else {
+						SimpleUtils.pass("Email: " + testEmail + "'s format is correct!");
+					}
+				}else{
+					if (isElementLoaded(emailErrorMsg, 5)) {
+						if (emailErrorMsg.getText().equals(errorMessage)) {
+							SimpleUtils.pass("Email: " + testEmail + "'s format is incorrect, error message shows!");
+						}
+					}else {
+						SimpleUtils.fail("Email: " + testEmail + "'s format is incorrect, but error message doesn't show!", true);
+					}
+				}
+			}
+		}else {
+			SimpleUtils.fail("Email Input failed to load!", true);
+		}
+	}
+
+	@Override
+	public boolean isSendAndCancelLoadedAndEnabledOnInvite() throws Exception {
+		boolean isEnabled = false;
+		if (isElementLoaded(cancelInviteButton, 5) && isElementLoaded(sendInviteButton, 5)) {
+			SimpleUtils.pass("Cancel and Send buttons are Loaded!");
+			if (isElementEnabled(cancelInviteButton, 5) && isElementEnabled(sendInviteButton, 5)) {
+				SimpleUtils.pass("Cancel and Send buttons are available!");
+				isEnabled = true;
+			} else {
+				SimpleUtils.fail("Cancel and Send buttons are not available!", true);
+			}
+		}else {
+			SimpleUtils.fail("Cancel and Send buttons are failed to load!", true);
+		}
+		return isEnabled;
+	}
+
+	@Override
+	public String addANewTeamMemberToInvite(Map<String, String> newTMDetails) throws Exception {
+		String firstName = null;
+		String successfulMsg = "The team member has been added.";
+		firstName = checkAndFillInTheFieldsToCreateInviteTM(newTMDetails);
+		if (isElementEnabled(saveTMButton, 5)) {
+			SimpleUtils.pass("Save button on new TM page is enabled!");
+			scrollToBottom();
+			click(saveTMButton);
+			if (isElementLoaded(popupMessage, 5)) {
+				if (popupMessage.getText().equals(successfulMsg)) {
+					SimpleUtils.pass("The New Team member is added successfully");
+				}else {
+					SimpleUtils.fail("The message is incorrect!", true);
+				}
+			}
+		} else {
+			SimpleUtils.fail("Save Button is not enabled!", true);
+		}
+		return firstName;
+	}
+
+	@Override
+	public void saveTheNewTeamMember() throws Exception {
+		if (isSaveButtonOnNewTMPageEnabled()) {
+			scrollToBottom();
+			click(saveTMButton);
+		}
+	}
+
+	@Override
+	public String fillInMandatoryFieldsOnNewTMPage(Map<String, String> newTMDetails, String mandatoryField) throws Exception {
+		String email = "Email";
+		String phoneNumber = "Phone Number";
+		String firstName = newTMDetails.get("FIRST_NAME") + new Random().nextInt(200) + new Random().nextInt(200);
+		firstNameInput.sendKeys(firstName);
+		lastNameInput.sendKeys(newTMDetails.get("LAST_NAME"));
+		if (mandatoryField.equals(email)) {
+			emailInputTM.sendKeys(newTMDetails.get("EMAIL"));
+		}
+		if (mandatoryField.equals(phoneNumber)) {
+			phoneInput.sendKeys(newTMDetails.get("PHONE"));
+		}
+		click(dateHiredInput);
+		if (areListElementVisible(realDays, 5) && isElementLoaded(todayHighlighted, 5)) {
+			click(todayHighlighted);
+		}
+		employeeIDInput.sendKeys( "E" + new Random().nextInt(200) + new Random().nextInt(200) + new Random().nextInt(200));
+		selectByVisibleText(jobTitleSelect, newTMDetails.get("JOB_TITLE"));
+		selectByVisibleText(engagementStatusSelect, newTMDetails.get("ENGAGEMENT_STATUS"));
+		selectByVisibleText(hourlySelect, newTMDetails.get("HOURLY"));
+		selectByVisibleText(salariedSelect, newTMDetails.get("SALARIED"));
+		selectByVisibleText(exemptSelect, newTMDetails.get("EXEMPT"));
+		return firstName;
+	}
+
+	@Override
+	public void checkAddATMMandatoryFieldsAreLoaded(String mandatoryField) throws Exception {
+		String email = "Email";
+		String phoneNumber = "Phone Number";
+		isElementLoadedAndPrintTheMessage(firstNameInput, "FIRST NAME Input");
+		isElementLoadedAndPrintTheMessage(lastNameInput, "LAST NAME Input");
+		if (mandatoryField.equals(email)) {
+			isElementLoadedAndPrintTheMessage(emailInputTM, "EMAIL Input");
+		}
+		if (mandatoryField.equals(phoneNumber)) {
+			isElementLoadedAndPrintTheMessage(phoneInput, "PHONE Input");
+		}
+		isElementLoadedAndPrintTheMessage(dateHiredInput, "DATE HIRED Input");
+		isElementLoadedAndPrintTheMessage(employeeIDInput, "EMPLOYEE ID Input");
+		isElementLoadedAndPrintTheMessage(jobTitleSelect, "JOB TITLE SELECT");
+		isElementLoadedAndPrintTheMessage(engagementStatusSelect, "ENGAGEMENT STATUS SELECT");
+		isElementLoadedAndPrintTheMessage(hourlySelect, "HOURLY SELECT");
+		isElementLoadedAndPrintTheMessage(salariedSelect, "SALARIED SELECT");
+		isElementLoadedAndPrintTheMessage(exemptSelect, "EXEMPT SELECT");
+		isElementLoadedAndPrintTheMessage(homeStoreLabel, "HOME STORE LOCATION");
+	}
+
+	private String checkAndFillInTheFieldsToCreateInviteTM(Map<String, String> newTMDetails) throws Exception {
+		String firstName = newTMDetails.get("FIRST_NAME") + new Random().nextInt(200) + new Random().nextInt(200);
+		isElementLoadedAndPrintTheMessage(firstNameInput, "FIRST NAME Input");
+		isElementLoadedAndPrintTheMessage(lastNameInput, "LAST NAME Input");
+		isElementLoadedAndPrintTheMessage(emailInputTM, "EMAIL Input");
+		isElementLoadedAndPrintTheMessage(phoneInput, "PHONE Input");
+		isElementLoadedAndPrintTheMessage(dateHiredInput, "DATE HIRED Input");
+		isElementLoadedAndPrintTheMessage(employeeIDInput, "EMPLOYEE ID Input");
+		isElementLoadedAndPrintTheMessage(jobTitleSelect, "JOB TITLE SELECT");
+		isElementLoadedAndPrintTheMessage(engagementStatusSelect, "ENGAGEMENT STATUS SELECT");
+		isElementLoadedAndPrintTheMessage(hourlySelect, "HOURLY SELECT");
+		isElementLoadedAndPrintTheMessage(salariedSelect, "SALARIED SELECT");
+		isElementLoadedAndPrintTheMessage(exemptSelect, "EXEMPT SELECT");
+		isElementLoadedAndPrintTheMessage(homeStoreLabel, "HOME STORE LOCATION");
+		firstNameInput.sendKeys(firstName);
+		lastNameInput.sendKeys(newTMDetails.get("LAST_NAME"));
+		emailInputTM.sendKeys(newTMDetails.get("EMAIL"));
+		phoneInput.sendKeys(newTMDetails.get("PHONE"));
+		click(dateHiredInput);
+		if (areListElementVisible(realDays, 5) && isElementLoaded(todayHighlighted, 5)) {
+			click(todayHighlighted);
+		}
+		employeeIDInput.sendKeys( "E" + new Random().nextInt(200) + new Random().nextInt(200) + new Random().nextInt(200));
+		selectByVisibleText(jobTitleSelect, newTMDetails.get("JOB_TITLE"));
+		selectByVisibleText(engagementStatusSelect, newTMDetails.get("ENGAGEMENT_STATUS"));
+		selectByVisibleText(hourlySelect, newTMDetails.get("HOURLY"));
+		selectByVisibleText(salariedSelect, newTMDetails.get("SALARIED"));
+		selectByVisibleText(exemptSelect, newTMDetails.get("EXEMPT"));
+		return firstName;
+	}
+
+	@Override
+	public void verifyThereSectionsAreLoadedOnInviteWindow() throws Exception {
+		String contact = "Verify Contact Information";
+		String availability = "Enter Committed Availability";
+		String welcome = "Personalize Welcome Message";
+		if (isElementLoaded(inviteTMSection, 5)) {
+			List<WebElement> threeSections = inviteTMSection.findElements(By.tagName("h2"));
+			if (areListElementVisible(threeSections, 10)) {
+				if (threeSections.size() == 3) {
+					if (threeSections.get(0).getText().equals(contact)) {
+						SimpleUtils.pass(contact + " section loaded!");
+					} else {
+						SimpleUtils.fail(contact + " failed to load!", true);
+					}
+					if (threeSections.get(1).getText().equals(availability)) {
+						SimpleUtils.pass(availability + " section loaded!");
+					} else {
+						SimpleUtils.fail(availability + " failed to load!", true);
+					}
+					if (threeSections.get(2).getText().equals(welcome)) {
+						SimpleUtils.pass(welcome + " section loaded!");
+					} else {
+						SimpleUtils.fail(welcome + " failed to load!", true);
+					}
+				} else {
+					SimpleUtils.fail("Should load 3 sections, but load " + threeSections.size() + " section(s).", true);
+				}
+			} else {
+				SimpleUtils.fail("Three sections failed to load!", true);
+			}
+		} else {
+			SimpleUtils.fail("Invite TM section failed to load!", true);
+		}
+	}
+
+	@Override
+	public boolean isSaveButtonOnNewTMPageEnabled() throws Exception {
+		boolean isEnabled = false;
+		if (isElementEnabled(saveTMButton, 5)) {
+			isEnabled = true;
+			SimpleUtils.pass("Save Button on Add New Team member page is enabled!");
+		} else {
+			SimpleUtils.fail("Save button isn't enabled!", true);
+		}
+		return isEnabled;
+	}
+
+	@Override
+	public void verifyContactNumberFormatOnNewTMPage(List<String> contactNumbers) throws Exception {
+		String regex = "^[(]{0,1}[0-9]{3}[)]{0,1}[-\\s\\.]{0,1}[0-9]{3}[-\\s\\.]{0,1}[0-9]{4}$";
+		String phone = "Phone";
+		if (isElementEnabled(phoneInput, 5) && contactNumbers.size() > 0) {
+			for (String contactNumber : contactNumbers) {
+				phoneInput.clear();
+				phoneInput.sendKeys(contactNumber);
+				if (contactNumber.matches(regex)) {
+					if (isElementLoaded(contactErrorMsg, 5)) {
+						if (contactErrorMsg.getText().contains(phone)) {
+							SimpleUtils.fail("Phone: " + contactNumber + "'s format is correct, but error message shows", true);
+						} else {
+							SimpleUtils.pass("Phone: " + contactNumber + "'s format is correct!");
+						}
+					}else {
+						SimpleUtils.pass("Phone: " + contactNumber + "'s format is correct!");
+					}
+				}else{
+					if (isElementLoaded(contactErrorMsg, 5)) {
+						if (contactErrorMsg.getText().contains(phone)) {
+							SimpleUtils.pass("Phone: " + contactNumber + "'s format is incorrect, error message shows!");
+						}
+					}else {
+						SimpleUtils.fail("Phone: " + contactNumber + "'s format is incorrect, but error message doesn't show!", true);
+					}
+				}
+			}
+		}else {
+			SimpleUtils.fail("Phone Input failed to load!", true);
+		}
+	}
+
+	@Override
+	public void verifyTMCountIsCorrectOnRoster() throws Exception {
+		int count = 0;
+		if (areListElementVisible(teamMemberNames, 5) && isElementLoaded(tmCount, 5)) {
+			String countOnRoster = tmCount.getText().substring(tmCount.getText().indexOf("(") + 1, tmCount.getText().indexOf(")"));
+			try {
+				count = Integer.parseInt(countOnRoster);
+				if (count == teamMemberNames.size()) {
+					SimpleUtils.pass("TM Count is correct On roster page!");
+				} else {
+					SimpleUtils.fail("TM Count is incorrect on roster page!", true);
+				}
+			}catch (Exception e){
+				SimpleUtils.fail("Parse String to Integer failed!", false);
+			}
+		}else {
+			SimpleUtils.fail("Team Members and team count failed to load!", true);
+		}
+	}
+
+	@Override
+	public void verifyCancelButtonOnAddTMIsEnabled() throws Exception {
+		if (isElementLoaded(cancelButtonAddTM, 5)) {
+			SimpleUtils.pass("Cancel Button loaded successfully!");
+			if (isElementEnabled(cancelButtonAddTM, 5)) {
+				SimpleUtils.pass("Cancel Button is Enabled by default!");
+			} else {
+				SimpleUtils.fail("Cancel Button is not enabled!", true);
+			}
+		}else {
+			SimpleUtils.fail("Cancel Button failed to load!", true);
+		}
+	}
+
+	@Override
+	public void clickCancelButton() throws Exception {
+		if (isElementLoaded(cancelButtonAddTM, 5)) {
+			click(cancelButtonAddTM);
+		}
+	}
+
+	@Override
+	public void verifyTheMandatoryFieldsCannotEmpty() throws Exception {
+		if (isMandatoryElement(firstNameInput))
+			SimpleUtils.pass("Checked First Name Input cannot be empty when adding a new TM!");
+		else
+			SimpleUtils.fail("First Name Input can be empty, but it is a mandatory field!", true);
+		if (isMandatoryElement(lastNameInput))
+			SimpleUtils.pass("Checked Last Name Input cannot be empty when adding a new TM!");
+		else
+			SimpleUtils.fail("Last Name Input can be empty, but it is a mandatory field!", true);
+		if (isMandatoryElement(emailInputTM))
+			SimpleUtils.pass("Checked Email Input cannot be empty when adding a new TM!");
+		else
+			SimpleUtils.fail("Email Input can be empty, but it is a mandatory field!", true);
+		if (isMandatoryElement(dateHiredInput))
+			SimpleUtils.pass("Checked Date Hired Input cannot be empty when adding a new TM!");
+		else
+			SimpleUtils.fail("Date Hired Input can be empty, but it is a mandatory field!", true);
+		if (isMandatoryElement(employeeIDInput))
+			SimpleUtils.pass("Checked Employee ID Input cannot be empty when adding a new TM!");
+		else
+			SimpleUtils.fail("Employee ID Input can be empty, but it is a mandatory field!", true);
+		if (isMandatoryElement(jobTitleSelect))
+			SimpleUtils.pass("Checked Job Title Select cannot be empty when adding a new TM!");
+		else
+			SimpleUtils.fail("Job Title Select can be empty, but it is a mandatory field!", true);
+		if (isMandatoryElement(engagementStatusSelect))
+			SimpleUtils.pass("Checked Engagement Status Select cannot be empty when adding a new TM!");
+		else
+			SimpleUtils.fail("Engagement Status Select can be empty, but it is a mandatory field!", true);
+		if (isMandatoryElement(hourlySelect))
+			SimpleUtils.pass("Checked Hourly Select cannot be empty when adding a new TM!");
+		else
+			SimpleUtils.fail("Hourly Select can be empty, but it is a mandatory field!", true);
+		if (isMandatoryElement(salariedSelect))
+			SimpleUtils.pass("Checked Salaried Select cannot be empty when adding a new TM!");
+		else
+			SimpleUtils.fail("Salaried Select can be empty, but it is a mandatory field!", true);
+		if (isMandatoryElement(exemptSelect))
+			SimpleUtils.pass("Checked Exempt Select cannot be empty when adding a new TM!");
+		else
+			SimpleUtils.fail("Exempt Select can be empty, but it is a mandatory field!", true);
+		if (isElementLoaded(homeStoreLabel) && homeStoreLabel != null && !homeStoreLabel.getText().isEmpty())
+			SimpleUtils.pass("Checked Home Store has value!");
+		else
+			SimpleUtils.fail("Home Store is empty, but it is a mandatory field!", true);
+	}
+
+	@Override
+	public void verifyTMIsVisibleAndInvitedOnTODO(String name) throws Exception {
+		boolean isVisible = false;
+		String cardTitle = "ONBOARD NEW TEAM MEMBER";
+		String tmMessage = name + " is a new Team Member";
+		String inviteMessage = "Invite TM to create a Legion account";
+		String dismiss = "DISMISS";
+		String invite = "INVITE TO LEGION";
+		if (areListElementVisible(todoCards, 10)) {
+			for (WebElement todoCard : todoCards) {
+				WebElement title = todoCard.findElement(By.cssSelector("div.todo-header"));
+				WebElement teamMember = todoCard.findElement(By.cssSelector("p.heading"));
+				WebElement inviteMsgElement = todoCard.findElement(By.cssSelector("span[ng-bind-html=\"p.text\"]"));
+				if (isElementLoaded(title, 10) && isElementLoaded(teamMember, 10) && isElementLoaded(inviteMsgElement, 10)) {
+					if (title.getText().contains(cardTitle) && teamMember.getText().equals(tmMessage) && inviteMsgElement.getText().equals(inviteMessage)) {
+						WebElement dismissButton = todoCard.findElement(By.cssSelector("a.text-grey"));
+						WebElement inviteButton = todoCard.findElement(By.cssSelector("a.text-green"));
+						if (isElementLoaded(dismissButton, 10) && isElementLoaded(inviteButton, 10)) {
+							if (dismissButton.getText().equals(dismiss) && inviteButton.getText().equals(invite)) {
+								SimpleUtils.pass("Team member: " + name + " is visible and invited on TODO!");
+								isVisible = true;
+								break;
+							}
+						}
+					} else {
+						continue;
+					}
+				} else {
+					continue;
+				}
+			}
+		} else {
+			SimpleUtils.fail("TODO cards failed to load!", false);
+		}
+		if (!isVisible) {
+			SimpleUtils.fail("Failed to find the team member:" + name + " on TODO!", true);
+		}
+	}
+
+	@Override
+	public void	verifyInviteAndReInviteButtonThenInvite() throws Exception {
+		boolean isAvailable = false;
+		if (isInviteButtonAvailable()) {
+			click(inviteButton);
+			isAvailable = true;
+		}
+		if (!isAvailable) {
+			SimpleUtils.fail("INVITE/REINVITE button is unavailable!", true);
+		}
+	}
+
+	@Override
+	public boolean isProfilePageSelected() throws Exception {
+		boolean isProfile = false;
+		String titleOpen = "collapsible-title-open";
+		scrollToTop();
+		if (isElementLoaded(profileTab, 10)) {
+			String className = profileTab.getAttribute("class");
+			if (className.contains(titleOpen)) {
+				SimpleUtils.pass("Profile Tab is open!");
+				isProfile = true;
+			}
+		} else {
+			SimpleUtils.fail("Profile tab failed to load!", false);
+		}
+		return isProfile;
+	}
+
+	@Override
+	public void navigateToProfileTab() throws Exception {
+		if (isElementLoaded(profileTab, 10)) {
+			click(profileTab);
+			if (isProfilePageSelected()) {
+				SimpleUtils.pass("Navigate to profile tab successfully!");
+			} else {
+				SimpleUtils.fail("Failed to navigate to the profile tab.", false);
+			}
+		} else {
+			SimpleUtils.fail("Profile tab failed to load!", false);
+		}
+	}
+
+	@Override
+	public void navigateToWorkPreferencesTab() throws Exception {
+		scrollToTop();
+		if (isElementLoaded(workPreferTab, 10)) {
+			click(workPreferTab);
+			if (isWorkPreferencesPageLoaded()) {
+				SimpleUtils.pass("Navigate to Work Preferences tab successfully!");
+			} else {
+				SimpleUtils.fail("Failed to navigate to the Work Preferences tab.", false);
+			}
+		} else {
+			SimpleUtils.fail("Work Preferences tab failed to load!", false);
+		}
+	}
+
+	@Override
+	public boolean isWorkPreferencesPageLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(shiftPreferTab, 5) && isElementLoaded(availabilityTab, 5)) {
+			isLoaded = true;
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void navigateToTimeOffPage() throws Exception {
+		if (isElementLoaded(timeOffTab, 5)) {
+			click(timeOffTab);
+			if (isElementLoaded(newTimeOffBtn, 5)) {
+				SimpleUtils.pass("Navigate to Time Off page Successfully!");
+			}else {
+				SimpleUtils.fail("Time Off page not loaded Successfully!", true);
+			}
+		}else {
+			SimpleUtils.fail("Time Off tab title not loaded Successfully!", true);
+		}
+	}
+
+	@Override
+	public void clickOnActivateButton() throws Exception {
+		if (isElementLoaded(activateButton, 10)) {
+			click(activateButton);
+		} else {
+			SimpleUtils.fail("Activate button failed to load on Profile Tab!", false);
+		}
+	}
+
+	@Override
+	public void isActivateWindowLoaded() throws Exception {
+		if (isElementLoaded(activateWindow, 10)) {
+			SimpleUtils.pass("Activate window loaded successfully!");
+		} else {
+			SimpleUtils.fail("Activate window failed to load!", false);
+		}
+	}
+
+	@Override
+	public void selectADateOnCalendarAndActivate() throws Exception {
+		String successfulMsg = "Successfully scheduled activation of Team Member.";
+		String actualMsg = null;
+		if (isElementLoaded(currentDay, 10)) {
+			click(currentDay);
+			if (isElementEnabled(applyButton, 10)) {
+				click(applyButton);
+				if (isElementLoaded(popupMessage, 10)) {
+					actualMsg = popupMessage.getText();
+					if (actualMsg.equals(successfulMsg)) {
+						SimpleUtils.pass("Activate the Team Member successfully!");
+					} else {
+						SimpleUtils.fail("Failed to activate the Team member", false);
+					}
+				}
+			}else {
+				SimpleUtils.fail("Activate button on activate window is disabled!", false);
+			}
+		}else {
+			SimpleUtils.fail("Calendar failed to load!", false);
+		}
+	}
+
+	@Override
+	public void verifyDeactivateAndTerminateEnabled() throws Exception {
+		if (isElementLoaded(deactivateButton, 10) && isElementLoaded(terminateButton, 10)) {
+			if (isElementEnabled(deactivateButton, 5) && isElementEnabled(terminateButton, 5)) {
+				SimpleUtils.pass("DEACTIVATE and TERMINATE button are enabled!");
+			}else {
+				SimpleUtils.fail("DEACTIVATE and TERMINATE button are not enabled!", false);
+			}
+		}else {
+			SimpleUtils.fail("DEACTIVATE and TERMINATE button are not loaded!", false);
+		}
+	}
+
+	@Override
+	public String getOnBoardedDate() throws Exception {
+		if (isElementLoaded(onBoardedDate, 10)) {
+			return onBoardedDate.getText();
+		}else {
+			return null;
+		}
+	}
+
+	@Override
+	public void isOnBoardedDateUpdated(String previousDate) throws Exception {
+		if (isElementLoaded(onBoardedDate, 10)) {
+			if (!onBoardedDate.getText().equals(previousDate)) {
+				SimpleUtils.pass("On Boarded Date is updated!");
+			}else {
+				SimpleUtils.fail("On Boarded Date is not updated!", true);
+			}
+		}else {
+			SimpleUtils.fail("On boarded date failed to load!", false);
+		}
+	}
+
+	@Override
+	public void verifyTheStatusOfTeamMember(String expectedStatus) throws Exception {
+		if (isElementLoaded(tmStatus, 10)) {
+			if (expectedStatus.equals(tmStatus.getText())) {
+				SimpleUtils.pass("Team member's status is correct!");
+			}else {
+				SimpleUtils.fail("Team member's status is incorrect!", true);
+			}
+		}else {
+			SimpleUtils.fail("Status Element failed to load!", true);
+		}
+	}
+
+	@Override
+	public boolean isActivateButtonLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(activateButton, 10)) {
+			isLoaded = true;
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void sendTheInviteViaEmail(String email) throws Exception {
+		if (isSendAndCancelLoadedAndEnabledOnInvite()) {
+			if (isElementLoaded(emailInput, 5)) {
+				emailInput.clear();
+				emailInput.sendKeys(email);
+			}
+			click(sendInviteButton);
+			waitUntilElementIsInVisible(inviteTMWindow);
+		} else {
+			SimpleUtils.fail("Send Invitation Button failed to load!", false);
+		}
+	}
+
+	@Override
+	public void searchTheNewTMAndUpdateInfo(String firstName) throws Exception {
+		if (isElementLoaded(searchTextBox, 5)) {
+			searchTextBox.sendKeys(firstName);
+			waitForSeconds(2);
+			if (areListElementVisible(updateInfoButtons, 5)){
+				if (updateInfoButtons.size() > 0) {
+					// The newly created team member is at the last.
+					click(updateInfoButtons.get(updateInfoButtons.size() - 1));
+				} else {
+					SimpleUtils.fail("Can't find the new team member!", false);
+				}
+			}else {
+				SimpleUtils.fail("There is no Update Info Button loaded!", true);
+			}
+		}else {
+			SimpleUtils.fail("Search textBox failed to load!", false);
+		}
+	}
+
+	@Override
+	public boolean isEmailOrPhoneNumberEmptyAndUpdate(Map<String, String> newTMDetails, String mandatoryField) throws Exception {
+		boolean isEmpty = false;
+		String email = "Email";
+		String phone = "Phone Number";
+		String emailValue = null;
+		String phoneValue = null;
+		if (isElementLoaded(phoneInput, 10) && isElementLoaded(emailInputTM, 10)) {
+			emailValue = emailInputTM.getText();
+			phoneValue = phoneInput.getText();
+			if (email.equals(mandatoryField) && (phoneValue == null || (phoneValue != null && phoneValue.isEmpty()))) {
+				isEmpty = true;
+				SimpleUtils.pass("Email is a mandatory field, and phone number is empty, waiting for updated");
+				phoneInput.sendKeys(newTMDetails.get("PHONE"));
+			}
+			if (phone.equals(mandatoryField) && (emailValue == null || (emailValue != null && emailValue.isEmpty()))) {
+				isEmpty = true;
+				SimpleUtils.pass("Phone Number is a mandatory field, and email is empty, waiting for updated");
+				emailInputTM.sendKeys(newTMDetails.get("EMAIL"));
+			}
+		} else {
+			SimpleUtils.fail("Phone and Email inputs failed to load!", true);
+		}
+		if (isEmpty) {
+			scrollToBottom();
+			click(saveTMButton);
+			waitUntilElementIsInVisible(saveTMButton);
+		}else {
+			SimpleUtils.fail("Update Info button shows when email or phone is empty, but they are not empty!", false);
+		}
+		return isEmpty;
+	}
+
+	@Override
+	public void searchTheTMAndCheckUpdateInfoNotShow(String firstName) throws Exception {
+		if (isElementLoaded(searchTextBox, 5)) {
+			searchTextBox.sendKeys(firstName);
+			waitForSeconds(2);
+			if (areListElementVisible(updateInfoButtons, 10)) {
+				SimpleUtils.fail("Update Info button still shows after updating the info!", false);
+			} else {
+				SimpleUtils.pass("Update Info Button doesn't show after updating the info!");
+			}
+		}else {
+			SimpleUtils.fail("Search textBox failed to load!", false);
+		}
+	}
+
+	@Override
+	public boolean isTerminateButtonLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(terminateButton, 10)) {
+			SimpleUtils.pass("Terminate Button is Loaded!");
+			isLoaded = true;
+		}else {
+			SimpleUtils.fail("Terminate Button failed to load!", false);
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public boolean isCancelTerminateButtonLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(cancelTerminateButton, 10)) {
+			SimpleUtils.pass("Cancel Terminate Button is Loaded!");
+			isLoaded = true;
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void terminateTheTeamMember(boolean isCurrentDay) throws Exception {
+		String removeMsg = "Successfully scheduled removal of Team Member from Roster.";
+		String actualMsg = "";
+		scrollToBottom();
+		click(terminateButton);
+		isTerminateWindowLoaded();
+		if (isElementLoaded(currentDay, 10) && isElementLoaded(applyButton)) {
+			if (isCurrentDay) {
+				click(currentDay);
+			}else {
+				selectAFutureDateFromCalendar();
+			}
+			click(applyButton);
+			if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
+				click(confirmButton);
+				if (isElementLoaded(popupMessage, 15))
+				{
+					actualMsg = popupMessage.getText();
+					if (removeMsg.equals(actualMsg)) {
+						SimpleUtils.pass("Terminate the team member successfully!");
+					}else {
+						SimpleUtils.fail("The pop up message is incorrect!", false);
+					}
+				}
+			} else {
+				SimpleUtils.fail("Confirm window doesn't show!", false);
+			}
+		}else {
+			SimpleUtils.fail("Current day and apply button doesn't show!", false);
+		}
+	}
+
+	@Override
+	public String getEmployeeIDFromProfilePage() throws Exception {
+		String employeeIDText = null;
+		if (isElementLoaded(employeeID, 10)) {
+			employeeIDText = employeeID.getText();
+		}else {
+			SimpleUtils.fail("EMPLOYEE ID failed to load!", false);
+		}
+		return employeeIDText;
+	}
+
+	@Override
+	public void searchTheTeamMemberByEmployeeIDFromRoster(String employeeID, boolean isTerminated) throws Exception {
+		if (isElementLoaded(searchTextBox, 5)) {
+			searchTextBox.sendKeys(employeeID);
+			waitForSeconds(2);
+			if (isTerminated) {
+				if (areListElementVisible(teamMemberNames, 10)) {
+					SimpleUtils.fail("Team Member still shows after terminating it!", false);
+				} else {
+					SimpleUtils.pass("Team member can't be found from Roster after terminating it!");
+				}
+			}else {
+				if (areListElementVisible(teamMemberNames, 10)) {
+					SimpleUtils.pass("Team Member shows after cancel terminating it!");
+				} else {
+					SimpleUtils.fail("Team member should be found from Roster after cancel terminating it!", false);
+				}
+			}
+		}else {
+			SimpleUtils.fail("Search textBox failed to load!", false);
+		}
+	}
+
+	@Override
+	public void verifyTheFunctionOfCancelTerminate() throws Exception {
+		String cancelMsg = "Successfully cancelled removal of Team Member from Roster.";
+		String actualMsg = "";
+		isCancelTerminateButtonLoaded();
+		click(cancelTerminateButton);
+		if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
+			click(confirmButton);
+			if (isElementLoaded(popupMessage, 15)) {
+				actualMsg = popupMessage.getText();
+				if (cancelMsg.equals(actualMsg)) {
+					SimpleUtils.pass("Cancelled Terminated successfully!");
+				}else {
+					SimpleUtils.fail("Failed to cancel the termination!", false);
+				}
+			}
+		}else{
+			SimpleUtils.fail("Confirm pop up window failed to load!", false);
+		}
+	}
+
+	@Override
+	public boolean isManualOnBoardButtonLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(manualOnBoardButton, 15)) {
+			isLoaded = true;
+			SimpleUtils.pass("Manual Onboard Button Loaded Successfully!");
+		}else{
+			SimpleUtils.fail("Manual Onboard Button failed to load!", false);
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void manualOnBoardTeamMember() throws Exception {
+		String successfulMsg = "Team member successfully On-boarded.";
+		String actualMsg = "";
+		if (isElementLoaded(manualOnBoardButton, 5)) {
+			click(manualOnBoardButton);
+		}else {
+			SimpleUtils.fail("Manual OnBoard button failed to load!", true);
+		}
+		if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
+			click(confirmButton);
+			if (isElementLoaded(popupMessage, 15)) {
+				actualMsg = popupMessage.getText();
+				if (successfulMsg.equals(actualMsg)) {
+					SimpleUtils.pass("Manual OnBoard the team member successfully!");
+				}else {
+					SimpleUtils.fail("Manual OnBoard message is incorrect! " + actualMsg, false);
+				}
+			}
+		}else {
+			SimpleUtils.fail("Manual OnBoard Pop up window doesn't show!", false);
+		}
+	}
+
+	@Override
+	public String selectATeamMemberToViewProfile() throws Exception {
+		String teamMember = null;
+		if (areListElementVisible(teamMemberNames, 15)) {
+			Random random = new Random();
+			int randomIndex = random.nextInt(teamMemberNames.size());
+			teamMember = teamMemberNames.get(randomIndex).getText();
+			click(teamMemberNames.get(randomIndex));
+		} else {
+			SimpleUtils.fail("Team Members are failed to load!", true);
+		}
+		return teamMember;
+	}
+
+	// Added by Nora: For Work Preferences
+	@FindBy (css = "div.adjust-hours div.value")
+	private List<WebElement> quickPrefers;
+	@FindBy (css = "[class=\"receiveOffers\"]>div.ng-scope")
+	private WebElement vsl;
+	@FindBy (css = "[class=\"receiveOffers\"]>[class=\"ng-binding\"]")
+	private WebElement otherPreferredLocation;
+	@FindBy (css = "work-preference-management i.fa")
+	private WebElement editShiftPreferButton;
+	@FindBy (css = "[ng-click=\"cancelEdit()\"]")
+	private WebElement cancelEditButton;
+	@FindBy (css = "[ng-click*=\"savePreferences\"]")
+	private WebElement savePreferButton;
+	@FindBy (className = "edit-pref-values")
+	private List<WebElement> editPrefValues;
+	@FindBy (className = "check-box-circle")
+	private List<WebElement> shiftPrefChkes;
+	@FindBy (css = "lgn-tm-edit-availability>div>div:nth-child(2) li")
+	private List<WebElement> hoursPerWeek;
+	@FindBy (css = "lgn-tm-edit-availability>div>div:nth-child(3) li")
+	private List<WebElement> shiftsLength;
+	@FindBy (css = "lgn-tm-edit-availability>div>div:nth-child(4) li")
+	private List<WebElement> shiftsPerWeek;
+	@FindBy (className = "rz-pointer-min")
+	private List<WebElement> startNodes;
+	@FindBy (className = "rz-pointer-max")
+	private List<WebElement> endNodes;
+	@FindBy (css = ".fa.fa-lock")
+	private WebElement lockBtn;
+	@FindBy (css = "availability-management i.fa-pencil")
+	private WebElement editAvailability;
+	@FindBy (className = "lgn-action-button-success")
+	private WebElement unLockButton;
+	@FindBy (className = "modal-content")
+	private WebElement unlockRemindWindow;
+	@FindBy (css = "[ng-click=\"cancelEdit()\"]")
+	private WebElement cancelAvailability;
+	@FindBy (css = "[ng-click*=\"saveAvailability\"]")
+	private WebElement saveAvailability;
+	@FindBy (css = "div.tab")
+	private List<WebElement> availabilityTabs;
+	@FindBy (css = "i.fa-remove")
+	private WebElement removeIcon;
+	@FindBy (className = "availability-box-ghost")
+	private List<WebElement> boxGhosts;
+
+	public enum availabilityTabNames{
+		Preferred(0),
+		Busy(1),
+		Committed(2);
+		private final int value;
+		availabilityTabNames(final int newValue) {
+			value = newValue;
+		}
+		public int getValue() { return value; }
+	}
+
+	public enum availabilityColors{
+		Green("green-zone"),
+		Red("red-zone"),
+		GreenColor("#74c479"),
+		RedColor("#cc2f33");
+		private final String value;
+		availabilityColors(final String newValue) {
+			value = newValue;
+		}
+		public String getValue() { return value; }
+	}
+
+	@Override
+	public void changePreferredHours() throws Exception {
+		if (availabilityTabNames.Preferred.getValue() != whichAvailabilityTabIsSelected()) {
+			selectAvailabilityTabByIndex(availabilityTabNames.Preferred.getValue());
+		}
+		changeAvailabilityHours(availabilityColors.Green.getValue(), availabilityColors.GreenColor.getValue());
+	}
+
+	@Override
+	public void changeBusyHours() throws Exception {
+		if (availabilityTabNames.Busy.getValue() != whichAvailabilityTabIsSelected()) {
+			selectAvailabilityTabByIndex(availabilityTabNames.Busy.getValue());
+		}
+		changeAvailabilityHours(availabilityColors.Red.getValue(), availabilityColors.RedColor.getValue());
+	}
+
+	private void changeAvailabilityHours(String zoneClassName, String expectedColor) throws Exception {
+		List<WebElement> zones = getDriver().findElements(By.className(zoneClassName));
+		if (areListElementVisible(zones, 5)) {
+			for (int i = 0; i < zones.size(); i++) {
+				try {
+					WebElement span = zones.get(i).findElement(By.tagName("span"));
+					if (span != null){
+						mouseHoverDragandDrop(zones.get(i), span);
+					}
+				}catch (Exception e) {
+					moveToElementAndClick(zones.get(i));
+				}
+				if (isElementLoaded(removeIcon, 5)) {
+					click(removeIcon);
+				}
+			}
+		}
+		if (areListElementVisible(boxGhosts, 5)) {
+			int index = (new Random()).nextInt(boxGhosts.size());
+			List<WebElement> hourCells = boxGhosts.get(index).findElements(By.className("hour-cell-ghost"));
+			if (hourCells.size() > 0) {
+				int min = (new Random()).nextInt(hourCells.size() / 2);
+				int max = (new Random()).nextInt(hourCells.size() / 2) + hourCells.size() / 2;
+				mouseHoverDragandDrop(hourCells.get(min), hourCells.get(max));
+			}
+		}
+		zones = getDriver().findElements(By.className(zoneClassName));
+		if (areListElementVisible(zones, 5)) {
+			for (WebElement zone : zones) {
+				String actualColor = Color.fromString(zone.getCssValue("background-color")).asHex();
+				if (expectedColor.equals(actualColor)) {
+					SimpleUtils.pass("Select the hour successfully and the color is correct: " + expectedColor);
+				} else {
+					SimpleUtils.fail("The Color for the hour cells is incorrect, expected is: " + expectedColor + ", but actual is: " + actualColor, true);
+				}
+			}
+		}else {
+			SimpleUtils.fail("Failed to select the hours!", true);
+		}
+	}
+
+	private int whichAvailabilityTabIsSelected() throws Exception {
+		int index = 3;
+		if (areListElementVisible(availabilityTabs, 5)) {
+			for (int i = 0; i < availabilityTabs.size(); i++) {
+				if (availabilityTabs.get(i).getAttribute("class").contains("select")) {
+					index = i;
+				}
+			}
+		}else {
+			SimpleUtils.fail("Availability Tabs failed to load!", true);
+		}
+		return index;
+	}
+
+	private void selectAvailabilityTabByIndex(int index) throws Exception {
+		if (areListElementVisible(availabilityTabs, 5)) {
+			if (index < availabilityTabs.size()) {
+				click(availabilityTabs.get(index));
+			}else {
+				SimpleUtils.fail("The index is out of bound!", true);
+			}
+		}else {
+			SimpleUtils.fail("Availability Tabs failed to load!", true);
+		}
+	}
+
+	@Override
+	public List<String> getShiftPreferences() throws Exception {
+		List<String> shiftPrefs = new ArrayList<>();
+		// Element is loaded, but the data doesn't, so wait for seconds to wait for the data loaded
+		waitForSeconds(5);
+		if (areListElementVisible(quickPrefers, 5)) {
+			if (quickPrefers.size() == 3) {
+				for (WebElement quickPrefer : quickPrefers) {
+					shiftPrefs.add(quickPrefer.getText());
+				}
+			}
+		}
+		if (isElementLoaded(vsl, 5)) {
+			shiftPrefs.add(vsl.getText());
+		}
+		if (isElementLoaded(otherPreferredLocation, 5)) {
+			shiftPrefs.add(otherPreferredLocation.getText());
+		}
+		if (shiftPrefs.size() < 3) {
+			SimpleUtils.fail("Failed to get the shift preferences!", true);
+		}
+		return shiftPrefs;
+	}
+
+	@Override
+	public void clickOnEditShiftPreference() throws Exception {
+		if (isElementLoaded(editShiftPreferButton, 5)) {
+			click(editShiftPreferButton);
+		}else {
+			SimpleUtils.fail("Edit Shift Preferences pencil button failed to load!", true);
+		}
+	}
+
+	@Override
+	public boolean isEditShiftPreferLayoutLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(cancelEditButton, 5) && isElementLoaded(savePreferButton, 5)) {
+			isLoaded = true;
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public List<String> setSliderForShiftPreferences() throws Exception {
+		List<String> shiftPreferences = new ArrayList<>();
+		if (areListElementVisible(startNodes, 5) && areListElementVisible(endNodes, 5)) {
+			if (startNodes.size() == 3 && endNodes.size() == 3) {
+				if (areListElementVisible(hoursPerWeek, 5)) {
+					clickSliderAtSomePoint(startNodes.get(0), endNodes.get(0), hoursPerWeek);
+				}
+				if (areListElementVisible(shiftsLength, 5)) {
+					clickSliderAtSomePoint(startNodes.get(1), endNodes.get(1), shiftsLength);
+				}
+				if (areListElementVisible(shiftsPerWeek, 5)) {
+					clickSliderAtSomePoint(startNodes.get(2), endNodes.get(2), shiftsPerWeek);
+				}
+			}else {
+				SimpleUtils.fail("The size of start nodes and end nodes is incorrect!", true);
+			}
+		}else {
+			SimpleUtils.fail("Start nodes and end nodes not loaded Successfully!", true);
+		}
+		if (areListElementVisible(editPrefValues, 5)) {
+			for (WebElement editPrefValue : editPrefValues) {
+				shiftPreferences.add(editPrefValue.getText());
+			}
+		}else {
+			SimpleUtils.fail("Edit preferences values failed to load!", true);
+		}
+		return shiftPreferences;
+	}
+
+	@Override
+	public List<String> changeShiftPreferencesStatus() throws Exception {
+		String enabled = "enabled";
+		String otherLocation = "Other preferred locations: ";
+		String vsl = "Voluntary Standby List: ";
+		String yes = "Yes";
+		String no = "No";
+		String otherLocationText = "";
+		List<String> status = new ArrayList<>();
+		if (areListElementVisible(shiftPrefChkes, 5)) {
+			for (WebElement shiftPrefChk : shiftPrefChkes) {
+				click(shiftPrefChk);
+				WebElement element = shiftPrefChk.findElement(By.xpath("./../following-sibling::div[1]"));
+				if (element != null)
+					otherLocationText = element.getText();
+				String className = shiftPrefChk.getAttribute("class");
+				if (className != null) {
+					String result = className.contains(enabled) ? yes : no;
+					if (otherLocationText.contains("other locations")) {
+						status.add(otherLocation + result);
+					}
+					if (otherLocationText.contains("Voluntary")){
+						status.add(vsl + result);
+					}
+				}
+			}
+		}else {
+			SimpleUtils.fail("Shift Preferences checkboxes failed to load!", true);
+		}
+		return status;
+	}
+
+	@Override
+	public void clickCancelEditShiftPrefBtn() throws Exception {
+		if (isElementLoaded(cancelEditButton, 5)) {
+			click(cancelEditButton);
+		}else {
+			SimpleUtils.fail("Cancel edit shit preferences button failed to load!", true);
+		}
+	}
+
+	@Override
+	public void clickSaveShiftPrefBtn() throws Exception {
+		if (isElementLoaded(savePreferButton, 5)) {
+			click(savePreferButton);
+		}else {
+			SimpleUtils.fail("Save edit shit preferences button failed to load!", true);
+		}
+	}
+
+	@Override
+	public void verifyCurrentShiftPrefIsConsistentWithTheChanged(List<String> shiftPrefs, List<String> changedShiftPrefs,
+																 List<String> status) throws Exception {
+		if (shiftPrefs != null && changedShiftPrefs != null && status != null) {
+			if (shiftPrefs.size() == (changedShiftPrefs.size() + status.size())) {
+				changedShiftPrefs.addAll(status);
+				if (shiftPrefs.containsAll(changedShiftPrefs) && changedShiftPrefs.containsAll(shiftPrefs)) {
+					SimpleUtils.pass("Current shift preferences are consistent with the changed one.");
+				}else {
+					SimpleUtils.fail("Current shift preferences are inconsistent with the changed one.", true);
+				}
+			}else {
+				SimpleUtils.fail("Current shift preferences are inconsistent with the changed one.", true);
+			}
+		}else {
+			SimpleUtils.fail("Shift preferences are null!", true);
+		}
+	}
+
+	@Override
+	public void editOrUnLockAvailability() throws Exception {
+		if (isElementLoaded(lockBtn, 5)) {
+			click(lockBtn);
+			if (isElementLoaded(unLockButton, 5)) {
+				click(unLockButton);
+				if (isElementLoaded(unlockRemindWindow, 5) && isElementLoaded(unLockButton, 5)) {
+					click(unLockButton);
+				}
+			}
+		}
+		if (isElementLoaded(editAvailability, 5)) {
+			click(editAvailability);
+		}
+	}
+
+	@Override
+	public boolean areCancelAndSaveAvailabilityBtnLoaded() throws Exception {
+		boolean areLoaded = false;
+		if (isElementLoaded(cancelAvailability, 5) && isElementLoaded(saveAvailability, 5)) {
+			areLoaded = true;
+		}
+		return areLoaded;
+	}
+
+	public void clickSliderAtSomePoint(WebElement startNode, WebElement endNode, List<WebElement> liElements) throws Exception {
+		String startValue = "";
+		String endValue = "";
+		String maxValue = "";
+		String minValue = "";
+		if (isElementLoaded(startNode, 5) && isElementLoaded(endNode, 5)) {
+			startValue = startNode.getAttribute("aria-valuenow");
+			endValue = endNode.getAttribute("aria-valuenow");
+			maxValue = endNode.getAttribute("aria-valuemax");
+			minValue = startNode.getAttribute("aria-valuemin");
+			if (Integer.parseInt(endValue) > Integer.parseInt(maxValue)) {
+				endValue = maxValue;
+			}
+			if (Integer.parseInt(startValue) < Integer.parseInt(minValue)) {
+				startValue = minValue;
+			}
+		}
+		if (areListElementVisible(liElements, 5)) {
+			int index = (new Random()).nextInt(liElements.size());
+			String value = liElements.get(index).findElement(By.tagName("span")) == null ? "" : liElements.get(index).findElement(By.tagName("span")).getText();
+			if (!startValue.equals(value) && !endValue.equals(value)) {
+				click(liElements.get(index));
+				startValue = startNode.getAttribute("aria-valuenow");
+				endValue = endNode.getAttribute("aria-valuenow");
+				if (Integer.parseInt(endValue) > Integer.parseInt(maxValue)) {
+					endValue = maxValue;
+				}
+				if (Integer.parseInt(startValue) < Integer.parseInt(minValue)) {
+					startValue = minValue;
+				}
+				SimpleUtils.report("Select value: " + value + " successfully!");
+			}
+		}else {
+			SimpleUtils.fail("li elements failed to load!", true);
+		}
+	}
+
+	private void selectAFutureDateFromCalendar() throws Exception {
+		if (isElementLoaded(nextMonthArrow, 5)){
+			click(nextMonthArrow);
+			if (areListElementVisible(daysOnCalendar, 15)){
+				/*
+				 * Generate a random to select a day!
+				 */
+				Random random = new Random();
+				WebElement realDay = daysOnCalendar.get(random.nextInt(daysOnCalendar.size()));
+				click(realDay);
+			}else {
+				SimpleUtils.fail("Days on calendar failed to load!", false);
+			}
+		}else {
+			SimpleUtils.fail("Back and Forward arrows are failed to load!", true);
+		}
+	}
+
+	private boolean isTerminateWindowLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(removeWindow)) {
+			SimpleUtils.pass("Terminate window loaded successfully!");
+			isLoaded = true;
+		}else {
+			SimpleUtils.fail("Terminate window failed to load!", false);
+		}
+		return isLoaded;
+	}
+
+	private boolean isInviteButtonAvailable() throws Exception {
+		boolean isAvailable = false;
+		String invite = "Invited to onboard";
+		String notInvite = "(Not invited yet)";
+		String inviteButtonName = "INVITE";
+		String reInviteButtonName = "REINVITE";
+		if (isElementLoaded(inviteButton, 5) && isElementLoaded(personalInvitationStatus, 5)) {
+			if (personalInvitationStatus.getText().contains(invite)) {
+				if (inviteButton.getText().equals(reInviteButtonName)) {
+					isAvailable = true;
+					SimpleUtils.pass("REINVITE button is available when the status is invited");
+				}else {
+					SimpleUtils.fail("When status is invited, button should be REINVITE, but actual is: " + inviteButton.getText(), true);
+				}
+			}else if (personalInvitationStatus.getText().equals(notInvite)) {
+				if (inviteButton.getText().equals(inviteButtonName)) {
+					isAvailable = true;
+					SimpleUtils.pass("INVITE button is available when the status is Not invited");
+				}else {
+					SimpleUtils.fail("When status is Not invited, button should be INVITE, but actual is: " + inviteButton.getText(), true);
+				}
+			} else {
+				SimpleUtils.fail("Failed to find the INVITE/REINVITE button!", true);
+			}
+		}else {
+			SimpleUtils.fail("INVITE/REINVITE button is not shown!", true);
+		}
+		return isAvailable;
+	}
+
+	private boolean isMandatoryElement(WebElement element) throws Exception{
+		boolean isCannotEmpty = false;
+		String notEmptyClassName = "ng-invalid-required";
+		if (isElementLoaded(element, 5)){
+			if (element != null){
+				String className = element.getAttribute("class");
+				if (className.contains(notEmptyClassName)){
+					isCannotEmpty = true;
+				}
+			}
+		}
+		return isCannotEmpty;
+	}
+
+	private boolean isElementLoadedAndPrintTheMessage(WebElement element, String elementName) throws Exception {
+		boolean isLoaded = false;
+		if (isElementEnabled(element, 5)) {
+			isLoaded = true;
+			SimpleUtils.pass(elementName + " loaded Successfully!");
+		}else {
+			SimpleUtils.fail(elementName + " failed to load!", false);
+		}
+		return isLoaded;
+	}
+
+	private boolean isManageBadgesLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(manageBadgesWindow, 10)) {
+			isLoaded = true;
+			SimpleUtils.pass("Manage Badges Window Loaded successfully!");
+		}else {
+			SimpleUtils.fail("Manage Badges Window failed to load!", true);
+		}
+		return isLoaded;
+	}
+
+	private String selectTheBadgeByRandom() throws Exception {
+		String badgeID = "";
+		String checked = "checked";
+		if (areListElementVisible(badgeCheckBoxes, 15)) {
+			int randomIndex = (new Random()).nextInt(badgeCheckBoxes.size());
+			click(badgeCheckBoxes.get(randomIndex));
+			if (badgeCheckBoxes.get(randomIndex).getAttribute("class").contains(checked)) {
+				SimpleUtils.pass("Check the Badge successfully!");
+				WebElement parent = badgeCheckBoxes.get(randomIndex).findElement(By.xpath("./../.."));
+				if (parent != null) {
+					WebElement badge = parent.findElement(By.cssSelector("g#Symbols>g"));
+					if (badge != null) {
+						badgeID = badge.getAttribute("id");
+					}
+				}else {
+					SimpleUtils.fail("Failed to find the parent element!", true);
+				}
+			}else {
+				SimpleUtils.fail("Failed to select the badge!", true);
+			}
+		}else {
+			SimpleUtils.fail("Badge checkboxes are failed to load!", true);
+		}
+		return badgeID;
 	}
 
 	private int getSpecificDayIndex(WebElement specificDay) {
 		int index = 0;
-		if (areListElementVisible(daysOnCalendar, 10)){
-			for (int i = 0; i < daysOnCalendar.size(); i++) {
-				String day = daysOnCalendar.get(i).getText();
+		if (areListElementVisible(startDaysOnCalendar, 10)){
+			for (int i = 0; i < startDaysOnCalendar.size(); i++) {
+				String day = startDaysOnCalendar.get(i).getText();
 				if (day.equals(specificDay.getText())){
 					index = i;
 					SimpleUtils.pass("Get current day's index successfully");
@@ -1019,6 +2721,595 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			SimpleUtils.fail("Calendar Image failed to show.", true);
 		}
 		return isSuccess;
+	}
+
+	// Added by Nora: For Profile Section
+	@FindBy (css = "[ng-click=\"editProfile()\"]")
+	private WebElement editProfileButton;
+	@FindBy (css = "[ng-click=\"editEngagement()\"]")
+	private WebElement editEngagementBtn;
+	@FindBy (css = "[ng-click=\"manageBadges()\"]")
+	private WebElement editBadgeBtn;
+	@FindBy (css = "span.phone")
+	private WebElement phoneText;
+	@FindBy (css = "span.email")
+	private WebElement emailText;
+	@FindBy (css = "div.col-xs-6.value")
+	private List<WebElement> engagementTexts;
+	@FindBy (css = "div.col-xs-12.value")
+	private List<WebElement> nextEngagementTexts;
+	@FindBy (css = "div.one-badge")
+	private List<WebElement> badges;
+	@FindBy (id = "uploadFormInput")
+	private WebElement imageInput;
+
+	@Override
+	public void updateProfilePicture(String filePath) throws Exception {
+		if (isElementLoaded(editProfileButton, 5)) {
+			click(editProfileButton);
+			if (isElementEnabled(imageInput, 5)) {
+				imageInput.sendKeys(filePath);
+				// wait for the picture to be loaded
+				waitForSeconds(5);
+				clickTheSaveTMButton();
+			}else {
+				SimpleUtils.fail("Image input element isn't enabled!", true);
+			}
+		}else {
+			SimpleUtils.fail("Edit Profile Button failed to load!", true);
+		}
+	}
+
+	@Override
+	public List<String> updateTheSelectedBadges() throws Exception {
+		List<String> selectedBadgeIDs = new ArrayList<>();
+		String checked = "checked";
+		if (areListElementVisible(badgeCheckBoxes, 15)) {
+			int randomIndex = (new Random()).nextInt(badgeCheckBoxes.size());
+			click(badgeCheckBoxes.get(randomIndex));
+			for (WebElement badgeCheckBox : badgeCheckBoxes) {
+				if (badgeCheckBox.getAttribute("class").contains(checked)) {
+					WebElement parent = badgeCheckBox.findElement(By.xpath("./../.."));
+					if (parent != null) {
+						WebElement badge = parent.findElement(By.cssSelector("g#Symbols>g"));
+						if (badge != null) {
+							selectedBadgeIDs.add(badge.getAttribute("id"));
+							SimpleUtils.report("Get the badge id: " + badge.getAttribute("id") + " Successfully!");
+						}else {
+							SimpleUtils.fail("Failed to find the badge icon!", true);
+						}
+					} else {
+						SimpleUtils.fail("Failed to find the parent element!", true);
+					}
+				}
+			}
+			clickConfirmButtonOnBadgeWindow();
+		}else {
+			SimpleUtils.fail("Badge checkboxes are failed to load!", true);
+		}
+		return selectedBadgeIDs;
+	}
+
+	private void clickConfirmButtonOnBadgeWindow() throws Exception {
+		if (isElementLoaded(confirmButton, 5)) {
+			confirmButton.click();
+		}else {
+			SimpleUtils.fail("Confirm button not loaded Successfully!", true);
+		}
+	}
+
+	@Override
+	public void clickOnEditBadgeButton() throws Exception {
+		if (isElementLoaded(editBadgeBtn, 5)) {
+			waitForSeconds(3);
+			moveToElementAndClick(editBadgeBtn);
+			isManageBadgesLoaded();
+		}else {
+			SimpleUtils.fail("Edit Badge button failed to load!", true);
+		}
+	}
+
+	@Override
+	public List<String> getCurrentBadgesOnEngagement() throws Exception {
+		List<String> badgeIDs = new ArrayList<>();
+		if (areListElementVisible(badges, 5)) {
+			for (WebElement badge : badges) {
+				WebElement icon = badge.findElement(By.cssSelector("g#Symbols>g"));
+				if (icon != null) {
+					badgeIDs.add(icon.getAttribute("id"));
+					SimpleUtils.report("Get the badge id: " + icon.getAttribute("id") + " Successfully!");
+				}else {
+					SimpleUtils.fail("Failed to get the badge icon element!", true);
+				}
+			}
+		}
+		return badgeIDs;
+	}
+
+	@Override
+	public void updatePhoneNumberAndEmailID(String phoneNumber, String emailID) throws Exception {
+		if (isElementLoaded(editProfileButton, 5)) {
+			click(editProfileButton);
+			if (isElementLoaded(emailInputTM, 5) && isElementLoaded(phoneInput, 5)) {
+				emailInputTM.clear();
+				emailInputTM.sendKeys(emailID);
+				phoneInput.clear();
+				phoneInput.sendKeys(phoneNumber);
+				clickTheSaveTMButton();
+				if (isElementEnabled(phoneText, 5) && isElementLoaded(emailText, 5)) {
+					if (phoneNumber.equalsIgnoreCase(phoneText.getText()) && emailID.equalsIgnoreCase(emailText.getText())) {
+						SimpleUtils.pass("Phone number and email ID are updated successfully!");
+					}else {
+						SimpleUtils.fail("Phone number and email ID aren't updated successfully!", true);
+					}
+				}else {
+					SimpleUtils.fail("Phone Text and Email Text not loaded Successfully!", true);
+				}
+			}else {
+				SimpleUtils.fail("Email and Phone Inputs not loaded successfully!", true);
+			}
+		}else {
+			SimpleUtils.fail("Edit Profile Button not loaded successfully!", true);
+		}
+	}
+
+	@Override
+	public void updateEngagementDetails(Map<String, String> tmDetails) throws Exception {
+		String selectedDate = "";
+		if (isElementLoaded(editEngagementBtn, 5)) {
+			click(editEngagementBtn);
+			isElementLoadedAndPrintTheMessage(dateHiredInput, "Date Hired Input");
+			click(dateHiredInput);
+			if (areListElementVisible(realDays, 5) && isElementLoaded(todayHighlighted, 5)) {
+				click(todayHighlighted);
+				// Wait for the selected date to be loaded
+				waitForSeconds(2);
+				selectedDate = dateHiredInput.getAttribute("value");
+				SimpleUtils.report("Select the hired date: " + selectedDate);
+			}
+			isElementLoadedAndPrintTheMessage(jobTitleSelect, "Job Title Select");
+			selectByVisibleText(jobTitleSelect, tmDetails.get("JOB_TITLE"));
+			isElementLoadedAndPrintTheMessage(engagementStatusSelect, "Engagement Status Select");
+			selectByVisibleText(engagementStatusSelect, tmDetails.get("ENGAGEMENT_STATUS"));
+			isElementLoadedAndPrintTheMessage(hourlySelect, "Hourly Select");
+			selectByVisibleText(hourlySelect, tmDetails.get("HOURLY"));
+			isElementLoadedAndPrintTheMessage(salariedSelect, "Salaried Select");
+			selectByVisibleText(salariedSelect, tmDetails.get("SALARIED"));
+			isElementLoadedAndPrintTheMessage(exemptSelect, "Exempt Select");
+			selectByVisibleText(exemptSelect, tmDetails.get("EXEMPT"));
+			clickTheSaveTMButton();
+			verifyTheEngagementDetailsSavedSuccessfully(tmDetails, selectedDate);
+		}else {
+			SimpleUtils.fail("Edit Engagement Details button not loaded successfully!", true);
+		}
+	}
+
+	public void verifyTheEngagementDetailsSavedSuccessfully(Map<String, String> tmDetails, String selectedDate) throws Exception {
+		boolean areConsistent = true;
+		SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat format2 = new SimpleDateFormat("MMM dd, yyyy");
+		if (areListElementVisible(engagementTexts, 5) && areListElementVisible(nextEngagementTexts, 5)) {
+			if (engagementTexts.size() == 4 && nextEngagementTexts.size() == 4) {
+				String actualDate = engagementTexts.get(0).getText();
+				String jobTitle = engagementTexts.get(1).getText();
+				String engagementStatus = nextEngagementTexts.get(0).getText();
+				String hourly = nextEngagementTexts.get(1).getText();
+				String salaried = nextEngagementTexts.get(2).getText();
+				String exempt = nextEngagementTexts.get(3).getText();
+				if (!SimpleUtils.isSameDayComparingTwoDays(actualDate, selectedDate, format1, format2) || !jobTitle.equalsIgnoreCase(tmDetails.get("JOB_TITLE"))
+				|| !engagementStatus.equalsIgnoreCase(tmDetails.get("ENGAGEMENT_STATUS")) || !hourly.equalsIgnoreCase(tmDetails.get("HOURLY"))
+				|| !salaried.equalsIgnoreCase(tmDetails.get("SALARIED")) || !exempt.equalsIgnoreCase(tmDetails.get("EXEMPT"))) {
+					areConsistent = false;
+				}
+			}else {
+				areConsistent = false;
+			}
+		}else {
+			areConsistent = false;
+		}
+		if (areConsistent) {
+			SimpleUtils.pass("Verified Engagement details are updated successfully!");
+		}else {
+			SimpleUtils.fail("Engagement details not updated successfully!", true);
+		}
+	}
+
+	public void clickTheSaveTMButton() throws Exception {
+		if (isElementLoaded(saveTMButton, 5) && isElementEnabled(saveTMButton, 5)) {
+			scrollToBottom();
+			moveToElementAndClick(saveTMButton);
+		}else {
+			SimpleUtils.fail("Save Team Member not loaded or enabled successfully!", true);
+		}
+	}
+
+	// Added by Nora: for Coverage
+	@FindBy(css = "[ng-click*=\"openFilter()\"]")
+	private WebElement openFilterBtn;
+	@FindBy(className = "lg-filter__wrapper")
+	private WebElement filterLayout;
+	@FindBy(className = "lg-filter__clear")
+	private WebElement clearFilterBtn;
+	@FindBy(css = "[ng-repeat=\"opt in opts\"]")
+	private List<WebElement> jobTitles;
+	@FindBy(css = "div.search-option div.lg-button-group>div")
+	private List<WebElement> subTabsOnCoverage;
+	@FindBy(css = "[class=\"coverage-row row-fx ng-scope coverage-timeoff\"]")
+	private List<WebElement> timeOffRows;
+	@FindBy(className = "coverage-no-heatmap")
+	private WebElement noTimeOff;
+	@FindBy(css = ".sch-calendar-day")
+	private List<WebElement> weekDays;
+
+	@Override
+	public HashMap<Integer, String> generateIndexAndRelatedTimes(LinkedHashMap<String, List<String>> regularHours) throws Exception {
+		HashMap<Integer, String> indexAndTime = null;
+		List<String> startTimes = new ArrayList<>();
+		List<String> endTimes = new ArrayList<>();
+		for (Map.Entry<String, List<String>> entry : regularHours.entrySet()) {
+			if (entry.getValue().size() == 2) {
+				startTimes.add(entry.getValue().get(0));
+				endTimes.add(entry.getValue().get(1));
+			}
+		}
+		String minStartTime = getMinNMaxTimes(startTimes).get(0);
+		String maxEndTime = getMinNMaxTimes(endTimes).get(1);
+		SimpleUtils.report("Get the minimum start time: " + minStartTime);
+		SimpleUtils.report("Get the maximum end time: " + maxEndTime);
+		int count = getTimeDurationByStartNEndTime(minStartTime, maxEndTime);
+		indexAndTime = generateIndexAndTime(count, minStartTime, maxEndTime);
+		return indexAndTime;
+	}
+
+	public HashMap<Integer, String> generateIndexAndTime(int count, String minStartTime, String maxEndTime) throws ParseException {
+		HashMap<Integer, String> indexAndTime = new HashMap<>();
+		for (int i = 0; i < count; i++) {
+			String time = (i == 0 ? minStartTime : timeAdd(minStartTime, i * 30));
+			indexAndTime.put(i, time);
+			SimpleUtils.report("Add the index: " + i + ", and related time: " + time);
+		}
+		if (indexAndTime.get(count - 1).equalsIgnoreCase(timeMinus(maxEndTime, 30))) {
+			SimpleUtils.pass("Get the index and time Successfully!");
+		}else {
+			SimpleUtils.fail("The last time isn't equal to the maximum end time!", true);
+		}
+		return indexAndTime;
+	}
+
+	public String timeAdd(String oldTime, int addMinutes) throws ParseException {
+		SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
+		Date date = df.parse(oldTime);
+		Date expireTime = new Date(date.getTime() + addMinutes * 60 * 1000);
+		String newTime = df.format(expireTime);
+		return newTime;
+	}
+
+	public String timeMinus(String oldTime, int minusMinutes) throws ParseException {
+		SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
+		Date date = df.parse(oldTime);
+		Date expireTime = new Date(date.getTime() - minusMinutes * 60 * 1000);
+		String newTime = df.format(expireTime);
+		return newTime;
+	}
+
+	public List<String> getMinNMaxTimes(List<String> times) {
+		List<String> minNMaxTimes = new ArrayList<>();
+		int minIndex = 0;
+		int maxIndex = 0;
+		int minCount = 0;
+		int maxCount = 0;
+		if (times.size() > 0) {
+			for (int i = 0; i < times.size(); i++) {
+				int currentCount  = getMinutesFromTime(times.get(i));
+				if (i == 0) {
+					minCount = currentCount;
+					maxCount = currentCount;
+				}else {
+					if (currentCount < minCount) {
+						minCount = currentCount;
+						minIndex = i;
+					}
+					if (currentCount > maxCount) {
+						maxCount = currentCount;
+						maxIndex = i;
+					}
+				}
+			}
+			minNMaxTimes.add(times.get(minIndex));
+			minNMaxTimes.add(times.get(maxIndex));
+		}else {
+			SimpleUtils.fail("Times size is incorrect!", true);
+		}
+		return minNMaxTimes;
+	}
+
+	public int getTimeDurationByStartNEndTime(String startTime, String endTime) {
+		int startHalfHourCount = 0;
+		int endHalfHourCount = 0;
+		startHalfHourCount = getMinutesFromTime(startTime)/30;
+		endHalfHourCount = getMinutesFromTime(endTime)/30;
+		return endHalfHourCount - startHalfHourCount;
+	}
+
+	public int getMinutesFromTime(String time) {
+		int totalMinutes = 0;
+		int hour = 0;
+		int minute = 0;
+		if (time.contains(":")) {
+			String[] hourNMinute = time.split(":");
+			if (hourNMinute.length == 2 && hourNMinute[1].length() > 2) {
+				if (hourNMinute[1].contains("pm") && !hourNMinute[0].trim().equalsIgnoreCase("12")) {
+					hour = Integer.parseInt(hourNMinute[0].trim()) + 12;
+				}else {
+					hour = Integer.parseInt(hourNMinute[0].trim());
+				}
+				minute = Integer.parseInt(hourNMinute[1].substring(0, hourNMinute[1].length() - 2).trim());
+				totalMinutes = hour * 60 + minute;
+			}
+		}else {
+			SimpleUtils.fail("Time format is incorrect!", false);
+		}
+		return totalMinutes;
+	}
+
+	@Override
+	public String selectAJobTitleByRandom() throws Exception {
+		String selectedJobTitle = "";
+		clickOnJobTitleFilter();
+		clickOnClearFilterBtn();
+		if (areListElementVisible(jobTitles, 5)) {
+			int index = (new Random()).nextInt(jobTitles.size());
+			WebElement checkbox = jobTitles.get(index).findElement(By.className("input-form"));
+			WebElement title = jobTitles.get(index).findElement(By.tagName("label"));
+			if (checkbox != null && title != null) {
+				click(checkbox);
+				selectedJobTitle = title.getText();
+			}else {
+				SimpleUtils.fail("Failed to find the checkbox and title element!", true);
+			}
+		}else {
+			SimpleUtils.fail("Job titles not loaded Successfully!", true);
+		}
+		return selectedJobTitle;
+	}
+
+	@Override
+	public void	selectTheJobTitleByName(String jobTitleName) throws Exception {
+		clickOnJobTitleFilter();
+		clickOnClearFilterBtn();
+		if (areListElementVisible(jobTitles, 5)) {
+			for (WebElement jobTitle : jobTitles) {
+				WebElement checkbox = jobTitle.findElement(By.className("input-form"));
+				WebElement title = jobTitle.findElement(By.tagName("label"));
+				if (checkbox != null && title != null) {
+					if (jobTitleName.equalsIgnoreCase(title.getText())) {
+						click(checkbox);
+						break;
+					}
+				}else {
+					SimpleUtils.fail("Failed to find the checkbox and title element!", true);
+				}
+			}
+		}else {
+			SimpleUtils.fail("Job titles not loaded Successfully!", true);
+		}
+	}
+
+	@Override
+	public HashMap<Integer, List<String>> getTimeOffWeekTableOnCoverage(HashMap<Integer, String> indexAndTimes,
+																		LinkedHashMap<String, List<String>> regularHours) throws Exception {
+		HashMap<Integer, List<String>> timeOffs = new HashMap<>();
+		List<String> weekTimeOffCounts = null;
+		if (isElementLoaded(noTimeOff, 5)) {
+			timeOffs = generateTheDefaultTimeOffTableByRegularHours(indexAndTimes, regularHours);
+		}
+		if (areListElementVisible(timeOffRows, 10)) {
+			for (int i = 0; i < timeOffRows.size(); i++) {
+				String className = timeOffRows.get(i).getAttribute("class");
+				if (!className.contains("ng-hide")) {
+					List<WebElement> timeOffCounts = timeOffRows.get(i).findElements(By.className("coverage-cell"));
+					if (areListElementVisible(timeOffCounts, 5)) {
+						weekTimeOffCounts = new ArrayList<>();
+						for (WebElement timeOffCount : timeOffCounts) {
+							weekTimeOffCounts.add(timeOffCount.getText());
+						}
+						timeOffs.put(i, weekTimeOffCounts);
+					} else {
+						SimpleUtils.fail("Coverage cell elements not loaded Successfully!", true);
+					}
+				}
+			}
+		}
+		return timeOffs;
+	}
+
+	@Override
+	public HashMap<Integer, List<String>> getTimeOffWeekTableByDateNTime(HashMap<Integer, List<String>> previousTimeOffs,
+																		 HashMap<String, List<String>> selectedDateNTime, HashMap<Integer, String> indexAndTimes) throws Exception {
+		String selectedDate = "";
+		if (previousTimeOffs != null && previousTimeOffs.size() > 0 && selectedDateNTime != null && selectedDateNTime.size() > 0
+		&& indexAndTimes != null && indexAndTimes.size() > 0) {
+			Set<String> mapSet = selectedDateNTime.keySet();
+			Iterator<String> iterator = mapSet.iterator();
+			while (iterator.hasNext()) {
+				selectedDate = iterator.next();
+				break;
+			}
+			if (!selectedDate.contains(",")) {
+				SimpleUtils.fail("Selected date's format is incorrect!", false);
+			}
+			int index = getWeekDayIndexByTitle(selectedDate.split(",")[0]);
+			List<String> selectedTimes = selectedDateNTime.get(selectedDate);
+			List<Integer> timeIndexes = getRowIndexBySelectedTime(selectedTimes, indexAndTimes);
+			if (timeIndexes.size() == 1) {
+				String currentValue = previousTimeOffs.get(timeIndexes.get(0)).get(index);
+				if (!currentValue.isEmpty()) {
+					int value = Integer.parseInt(currentValue);
+					previousTimeOffs.get(timeIndexes.get(0)).set(index, Integer.toString(value + 1));
+				}
+			} else if (timeIndexes.size() == 2) {
+				previousTimeOffs = updateTimeOffTableByIndexes(previousTimeOffs, index, timeIndexes);
+			} else {
+				SimpleUtils.fail("Time indexes are incorrect!", true);
+			}
+		}else {
+			SimpleUtils.fail("Previous time off graph table, selected date and time, or indexes and times are incorrect!", true);
+		}
+		return previousTimeOffs;
+	}
+
+	public HashMap<Integer, List<String>> updateTimeOffTableByIndexes(HashMap<Integer, List<String>> previousTimeOffs, int index, List<Integer> timeIndexes) {
+		if (timeIndexes.size() != 2) {
+			SimpleUtils.fail("Time Indexes are incorrect!", false);
+		}
+		int startIndex = timeIndexes.get(0);
+		int endIndex = timeIndexes.get(1);
+		for (int i = startIndex; i <= endIndex; i++) {
+			String currentValue = previousTimeOffs.get(i).get(index);
+			if (!currentValue.isEmpty()) {
+				int value = Integer.parseInt(currentValue);
+				previousTimeOffs.get(i).set(index, Integer.toString(value + 1));
+			}
+		}
+		return previousTimeOffs;
+	}
+
+	public List<Integer> getRowIndexBySelectedTime(List<String> selectedTimes, HashMap<Integer, String> indexAndTimes) throws ParseException {
+		List<Integer> timeIndexes = new ArrayList<>();
+		int startIndex = 0;
+		int endIndex = 0;
+		if (selectedTimes.size() == 2 && indexAndTimes.size() > 2) {
+			startIndex = SimpleUtils.getHashMapKeyByValue(indexAndTimes, selectedTimes.get(0));
+			endIndex = SimpleUtils.getHashMapKeyByValue(indexAndTimes, timeMinus(selectedTimes.get(1), 30));
+			SimpleUtils.report("Get the start index: " + startIndex + ", for start time: " + selectedTimes.get(0));
+			SimpleUtils.report("Get the end index: " + endIndex + ", for end time: " + selectedTimes.get(1));
+		}
+		if (startIndex != endIndex) {
+			timeIndexes.add(startIndex);
+			timeIndexes.add(endIndex);
+		}else {
+			timeIndexes.add(startIndex);
+		}
+		return timeIndexes;
+	}
+
+
+
+	public int getWeekDayIndexByTitle(String selectedWeekDay) throws Exception {
+		int index = 7;
+		if (areListElementVisible(weekDays, 5)) {
+			for (int i = 0; i < weekDays.size(); i++) {
+				if (weekDays.get(i).getText().contains(selectedWeekDay)) {
+					index = i;
+					SimpleUtils.report("Get the index of " + selectedWeekDay + " is: " + index);
+					break;
+				}
+			}
+		}else {
+			SimpleUtils.fail("Week days elements not loaded Successfully!", true);
+		}
+		if (index == 7) {
+			SimpleUtils.fail("Failed to get the index!", true);
+		}
+		return index;
+	}
+
+	public HashMap<Integer, List<String>> generateTheDefaultTimeOffTableByRegularHours(HashMap<Integer, String> indexAndTimes,
+																					   LinkedHashMap<String, List<String>> regularHours) throws Exception {
+		HashMap<Integer, List<String>> timeOffs = new HashMap<>();
+		List<String> weekTimeOffCounts = null;
+		String startTime = null;
+		String endTime = null;
+		for (int i = 0; i < indexAndTimes.size(); i++) {
+			weekTimeOffCounts = new ArrayList<>();
+			for (Map.Entry<String, List<String>> entry : regularHours.entrySet()) {
+				startTime = indexAndTimes.get(i);
+				endTime = timeAdd(startTime, 30);
+				if (SimpleUtils.isTimeBetweenStartNEndTime(startTime, endTime, entry.getValue().get(0), entry.getValue().get(1))) {
+					weekTimeOffCounts.add("0");
+				}else {
+					weekTimeOffCounts.add("");
+				}
+			}
+			timeOffs.put(i, weekTimeOffCounts);
+		}
+		if (timeOffs.size() == indexAndTimes.size()) {
+			SimpleUtils.pass("Get the Default time off table Successfully!");
+		}else {
+			SimpleUtils.fail("Failed to get the default time off table!", true);
+		}
+		return timeOffs;
+	}
+
+	@Override
+	public void navigateToSubTabOnCoverage(String subTabName) throws Exception {
+		if (areListElementVisible(subTabsOnCoverage, 5)) {
+			for (WebElement subTab : subTabsOnCoverage) {
+				WebElement titleLabel = subTab.findElement(By.tagName("span"));
+				if (titleLabel != null && subTabName.equalsIgnoreCase(titleLabel.getText())) {
+					click(subTab);
+					SimpleUtils.pass("Navigate to sub tab: " + subTabName + " Successfully!");
+				}
+			}
+		}else {
+			SimpleUtils.fail("Sub tabs not loaded Successfully!", true);
+		}
+	}
+
+	@Override
+	public void clickOnJobTitleFilter() throws Exception {
+		if (isElementLoaded(openFilterBtn, 5)) {
+			click(openFilterBtn);
+			if (isFilterLayoutLoaded()) {
+				SimpleUtils.pass("Click the open filter button Successfully!");
+			}else {
+				SimpleUtils.fail("Filter Layout not loaded Successfully", true);
+			}
+		}else {
+			SimpleUtils.fail("Open Filter Button not loaded Successfully!", true);
+		}
+	}
+
+	public boolean isFilterLayoutLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(filterLayout, 5)) {
+			isLoaded = true;
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void clickOnClearFilterBtn() throws Exception {
+		if (isElementLoaded(clearFilterBtn, 5)) {
+			click(clearFilterBtn);
+			if (isClearFilterSuccessFully()) {
+				SimpleUtils.pass("Clear Filter Successfully!");
+			}else {
+				SimpleUtils.fail("Clear Filter not successfully!", true);
+			}
+		}else {
+			SimpleUtils.fail("Clear Filter button not loaded Successfully!", true);
+		}
+	}
+
+	public boolean isClearFilterSuccessFully() throws Exception {
+		boolean isClear = true;
+		if (areListElementVisible(jobTitles, 5)) {
+			for (WebElement jobTitle : jobTitles) {
+				WebElement checkbox = jobTitle.findElement(By.tagName("input"));
+				if (checkbox != null) {
+					String className = checkbox.getAttribute("class");
+					if (className.contains("ng-not-empty")) {
+						isClear = false;
+					}
+				}else {
+					SimpleUtils.fail("Failed to find the input element!", true);
+				}
+			}
+		}else {
+			SimpleUtils.fail("Job Title Filters not loaded Successfully!", true);
+		}
+		return isClear;
 	}
 
 //    public boolean isTeam() throws Exception

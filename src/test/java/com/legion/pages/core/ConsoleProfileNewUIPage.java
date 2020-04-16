@@ -4,10 +4,7 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.utils.MyThreadLocal.setTimeOffEndTime;
 import static com.legion.utils.MyThreadLocal.setTimeOffStartTime;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -1560,7 +1557,262 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 		return timeOffRequestsStatusCount;
 	}
-	
+
+	// Added by Nora: Time Off
+	@FindBy (className = "modal-content")
+	private WebElement newTimeOffWindow;
+	@FindBy (className = "lgnCheckBox")
+	private List<WebElement> allDayCheckboxes;
+	@FindBy (css = "button.btn-sm")
+	private List<WebElement> smButtons;
+	@FindBy (className = "ranged-calendar__month-name")
+	private List<WebElement> calendarMonthNames;
+	@FindBy (css = "div.is-today")
+	private WebElement todayOnCalendar;
+	@FindBy (className = "header-user-switch-menu-item")
+	private List<WebElement> profileSubPageLabels;
+	@FindBy (css = "div.in-range")
+	private List<WebElement> selectedDates;
+	@FindBy (css = "b.text-blue")
+	private List<WebElement> startNEndDates;
+	@FindBy (css = "[options=\"startOptions\"] [selected=\"selected\"]")
+	private List<WebElement> startTimes;
+	@FindBy (css = "[options*=\"end\"] [selected=\"selected\"]")
+	private List<WebElement> endTimes;
+	@FindBy (css = "span.text-blue")
+	private List<WebElement> startNEndTimes;
+	@FindBy (className = "count-block-label")
+	private List<WebElement> timeOffStatus;
+
+	@Override
+	public void verifyTimeIsCorrectAfterDeSelectAllDay() throws Exception {
+		String actualStartTime = null;
+		String actualEndTime = null;
+		List<String> selectedStartNEndTimes = getSelectedStartNEndTime();
+		if (selectedStartNEndTimes.size() == 0) {
+			SimpleUtils.fail("Failed to get the selected start and End time!", false);
+		}
+		String expectedStartTime = selectedStartNEndTimes.get(0);
+		String expectedEndTime = selectedStartNEndTimes.get(1);
+		if (areListElementVisible(startNEndTimes, 5) && startNEndTimes.size() == 2) {
+			actualStartTime = startNEndTimes.get(0).getText();
+			actualEndTime = startNEndTimes.get(1).getText();
+		}
+		if (expectedStartTime != null && expectedEndTime != null && actualStartTime != null && actualEndTime != null &&
+				expectedStartTime.equals(actualStartTime) && expectedEndTime.equals(actualEndTime)) {
+			SimpleUtils.pass("Start and End time are correct!");
+		}else {
+			SimpleUtils.fail("Start and End time are incorrect!", true);
+		}
+	}
+
+	public List<String> getSelectedStartNEndTime() throws Exception {
+		List<String> startNEndTime = new ArrayList<>();
+		String expectedStartTime = null;
+		String expectedEndTime = null;
+		if (areListElementVisible(startTimes, 5) && areListElementVisible(endTimes, 5) && areListElementVisible(smButtons, 5)
+				&& startTimes.size() == 2 && endTimes.size() == 2 && smButtons.size() == 4) {
+			expectedStartTime = startTimes.get(0).getText() + ":" + (startTimes.get(1).getText().length() == 1 ?
+					startTimes.get(1).getText() + "0" : startTimes.get(1).getText());
+			expectedEndTime = endTimes.get(0).getText() + ":" + (endTimes.get(1).getText().length() == 1 ?
+					endTimes.get(1).getText() + "0" : endTimes.get(1).getText());
+			List<String> amOrPM = new ArrayList<>();
+			for (WebElement smButton : smButtons) {
+				if (smButton.getAttribute("class").contains("isActive")) {
+					amOrPM.add(smButton.getText());
+				}
+			}
+			if (amOrPM.size() == 2) {
+				expectedStartTime = expectedStartTime + " " + amOrPM.get(0);
+				expectedEndTime = expectedEndTime + " " + amOrPM.get(1);
+			}
+		}else {
+			SimpleUtils.fail("Selected start and end time failed to load!", true);
+		}
+		startNEndTime.add(expectedStartTime);
+		startNEndTime.add(expectedEndTime);
+		return startNEndTime;
+	}
+
+	@Override
+	public boolean isNewTimeOffWindowLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(newTimeOffWindow, 5)) {
+			SimpleUtils.pass("New Time Off Request Window loaded successfully!");
+			isLoaded = true;
+		}else {
+			SimpleUtils.fail("New Time Off Request Window failed to load!", false);
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void verifyCalendarForCurrentAndNextMonthArePresent(String currentMonthYearDate) throws Exception {
+		String currentYear = null;
+		String currentMonth = null;
+		String currentDate = null;
+		if (currentMonthYearDate.contains(" ")) {
+			List<String> yearMonthDate = Arrays.asList(currentMonthYearDate.split(" "));
+			if (yearMonthDate.size() == 3) {
+				currentMonth = yearMonthDate.get(0);
+				currentYear = yearMonthDate.get(1);
+				currentDate = yearMonthDate.get(2);
+			}
+		}
+		if (areListElementVisible(calendarMonthNames, 5) && calendarMonthNames.size() == 2) {
+			String currentMonthOnCalendar = calendarMonthNames.get(0).getText();
+			String nextMonthOnCalendar = calendarMonthNames.get(1).getText();
+			String expectedNextMonth = SimpleUtils.getNextMonthAndYearFromCurrentMonth(currentMonthOnCalendar);
+			// Verify the current Month is correct on calendar
+			if (currentMonthOnCalendar.contains(currentYear) && currentMonthOnCalendar.contains(currentMonth)) {
+				SimpleUtils.pass("Current Month is loaded properly!");
+			}else {
+				SimpleUtils.fail("Current month is incorrect!", true);
+			}
+			// Verify next month on calendar is correct
+			if (nextMonthOnCalendar.equals(expectedNextMonth)) {
+				SimpleUtils.pass("Next Month is loaded properly!");
+			}else {
+				SimpleUtils.fail("Next month is incorrect, expected is: " + expectedNextMonth, true);
+			}
+		}else {
+			SimpleUtils.fail("Two calendars failed to load!", true);
+		}
+		// Verify the current day is loaded
+		if (isElementLoaded(todayOnCalendar, 5)) {
+			if (Integer.parseInt(todayOnCalendar.getText()) == Integer.parseInt(currentDate)) {
+				SimpleUtils.pass("Today is correct and today is: " + currentDate);
+			}else {
+				SimpleUtils.fail("Today: " + todayOnCalendar.getText() + " is incorrect, expected is: " + currentDate, true);
+			}
+		}else {
+			SimpleUtils.fail("Current Day failed to load!", true);
+		}
+	}
+
+	@Override
+	public List<String> selectStartAndEndDate() throws Exception {
+		List<String> startNEndDates = new ArrayList<>();
+		selectDate(10);
+		selectDate(15);
+		HashMap<String, String> timeOffDate = getTimeOffDate(10, 15);
+		String timeOffStartDate = timeOffDate.get("startDateTimeOff");
+		String timeOffEndDate = timeOffDate.get("endDateTimeOff");
+		setTimeOffStartTime(timeOffStartDate);
+		setTimeOffEndTime(timeOffEndDate);
+		HashMap<String, String> timeOffDateWithYear = getTimeOffDateWithYear(10, 15);
+		String timeOffStartDateWithYear = timeOffDateWithYear.get("startDateWithYearTimeOff");
+		String timeOffEndDateWithYear = timeOffDateWithYear.get("endDateWithYearTimeOff");
+		startNEndDates.add(timeOffStartDateWithYear);
+		startNEndDates.add(timeOffEndDateWithYear);
+		return startNEndDates;
+	}
+
+	@Override
+	public HashMap<String, List<String>> selectCurrentDayAsStartNEndDate() throws Exception {
+		HashMap<String, List<String>> selectedDateNTime = new HashMap<>();
+		List<String> startNEndTimes = new ArrayList<>();
+		if (isElementLoaded(todayOnCalendar, 5)) {
+			click(todayOnCalendar);
+			click(todayOnCalendar);
+			areAllDayCheckboxesLoaded();
+			deSelectAllDayCheckboxes();
+			if (areListElementVisible(startNEndDates, 5) && startNEndDates.size() == 2) {
+				startNEndTimes = getSelectedStartNEndTime();
+				if (startNEndDates.get(0).getText().equalsIgnoreCase(startNEndDates.get(1).getText())) {
+					selectedDateNTime.put(startNEndDates.get(0).getText(), startNEndTimes);
+				} else {
+					SimpleUtils.fail("Start date and end date is inconsistent since choosing one day!", true);
+				}
+			}else {
+				SimpleUtils.fail("Start and end dates not loaded Successfully!", true);
+			}
+		}else {
+			SimpleUtils.fail("Today on Calendar not loaded Successfully!", true);
+		}
+		return selectedDateNTime;
+	}
+
+	@Override
+	public boolean areAllDayCheckboxesLoaded() throws Exception {
+		boolean areLoaded = false;
+		if (areListElementVisible(allDayCheckboxes, 5)) {
+			SimpleUtils.pass("All day checkboxes are loaded successfully!");
+			areLoaded = true;
+		}else {
+			SimpleUtils.fail("All day checkboxes failed to load!", false);
+		}
+		return areLoaded;
+	}
+
+	@Override
+	public void deSelectAllDayCheckboxes() throws Exception {
+		if (areListElementVisible(allDayCheckboxes, 5)) {
+			for (WebElement allDay : allDayCheckboxes) {
+				if (allDay.isDisplayed() && allDay.getAttribute("class").contains("checked")) {
+					click(allDay);
+				}
+			}
+		}else {
+			SimpleUtils.fail("All day checkbox failed to load!", false);
+		}
+	}
+
+	@Override
+	public void verifyAlignmentOfAMAndPMAfterDeSelectAllDay() throws Exception {
+		String textAlign = "center";
+		String verticalAlign = "middle";
+		if (isAMAndPMLoaded()) {
+			for (WebElement sm : smButtons) {
+				if (!textAlign.equals(sm.getCssValue("text-align")) || !verticalAlign.equals(sm.getCssValue("vertical-align"))) {
+					SimpleUtils.fail("Alignment for AM and PM is incorrect!", false);
+				}
+			}
+		}else {
+			SimpleUtils.fail("AM and PM button failed to load!", false);
+		}
+	}
+
+	@Override
+	public void verifyStartDateAndEndDateIsCorrect(String timeOffStartDate, String timeOffEndDate) throws Exception {
+		boolean isCorrect = false;
+		if (areListElementVisible(startNEndDates, 5) && startNEndDates.size() == 2) {
+			String actualStartDate = startNEndDates.get(0).getText();
+			String actualEndDate = startNEndDates.get(1).getText();
+			if (timeOffStartDate.equals(actualStartDate) && timeOffEndDate.equals(actualEndDate)) {
+				SimpleUtils.pass("Starts Date and Ends date are correct!");
+				isCorrect = true;
+			}
+		}
+		if (!isCorrect) {
+			SimpleUtils.fail("Starts Date and Ends date are incorrect!", true);
+		}
+	}
+
+	@Override
+	public int getTimeOffCountByStatusLabel(String status) throws Exception {
+		int count = 0;
+		if (areListElementVisible(timeOffStatus, 5)) {
+			for (WebElement element : timeOffStatus) {
+				if (element.getText().equalsIgnoreCase(status)) {
+					WebElement countElement = element.findElement(By.xpath("./preceding-sibling::span[1]"));
+					count = Integer.parseInt(countElement.getText());
+				}
+			}
+		}else {
+			SimpleUtils.fail("Time Off Status elements not loaded Successfully!", true);
+		}
+		return count;
+	}
+
+	public boolean isAMAndPMLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (areListElementVisible(smButtons, 5)) {
+			SimpleUtils.pass("AM and PM buttons are loaded successfully!");
+			isLoaded = true;
+		}
+		return isLoaded;
+	}
 	
 	@Override
 	public void approveOrRejectTimeOffRequestFromToDoList(String timeOffReasonLabel, String timeOffStartDuration, 
@@ -1628,5 +1880,28 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("Get NickName of the logged in user failed", true);
 		}
 		return nickName;
+	}
+
+	@Override
+	public void clickOnUserProfileImage() throws Exception {
+		if(isElementLoaded(userProfileImage, 5)) {
+			click(userProfileImage);
+		}else {
+			SimpleUtils.fail("User profile Image failed to load!", false);
+		}
+	}
+
+	@Override
+	public void selectProfileSubPageByLabelOnProfileImage(String profilePageSubSectionLabel) throws Exception {
+		if (areListElementVisible(profileSubPageLabels, 5)) {
+			for (WebElement label : profileSubPageLabels) {
+				if (label.getText().equals(profilePageSubSectionLabel)) {
+					click(label);
+					break;
+				}
+			}
+		}else {
+			SimpleUtils.fail("Profile sub labels failed to load after clicking on Profile Image!", false);
+		}
 	}
 }

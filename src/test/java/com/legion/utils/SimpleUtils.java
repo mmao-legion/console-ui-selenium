@@ -6,6 +6,8 @@ import com.legion.test.testrail.APIException;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.tests.testframework.ScreenshotManager;
+import cucumber.api.java8.Da;
+import org.apache.commons.lang.time.DateUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -36,7 +38,6 @@ import static org.testng.AssertJUnit.assertTrue;
  */
 public class SimpleUtils {
 
-//	static HashMap<String,String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/ciEnvCfg.json");
 //	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
 	static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
@@ -186,6 +187,17 @@ public class SimpleUtils {
 		return currentDate.getYear();
 	}
 
+	public static String getNextMonthAndYearFromCurrentMonth(String currentMonthYear) throws ParseException {
+		String nextMonthAndYear = null;
+		SimpleDateFormat format = new SimpleDateFormat("MMMM yyyy");
+		Date date = format.parse(currentMonthYear);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + 1);
+		date = calendar.getTime();
+		nextMonthAndYear = format.format(date);
+		return nextMonthAndYear;
+	}
 
 	public static HashMap<String, String> getDayMonthDateFormatForCurrentPastAndFutureWeek(int dayOfYear, int isoYear) {
 		LocalDate dateBasedOnGivenParameter = Year.of(isoYear).atDay(dayOfYear);
@@ -329,10 +341,18 @@ public class SimpleUtils {
 			SimpleUtils.fail("Size of Current Team Count should be equal to Previous Team Count",false);
 		}
 	}
-	public static String getCurrentDateMonthYearWithTimeZone(String timeZone)
+	public static String getCurrentDateMonthYearWithTimeZone(String timeZone, SimpleDateFormat sdf)
 	{
 		String date = "";
-		SimpleDateFormat dateTimeInGMT = new SimpleDateFormat("yyyy-MMM-dd");
+		sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
+		date = sdf.format(new Date());
+		return date;
+	}
+
+	public static String getCurrentTimeWithTimeZone(String timeZone)
+	{
+		String date = "";
+		SimpleDateFormat dateTimeInGMT = new SimpleDateFormat("hh:mm a");
 		dateTimeInGMT.setTimeZone(TimeZone.getTimeZone(timeZone));
 		date = dateTimeInGMT.format(new Date());
 		return date;
@@ -346,6 +366,34 @@ public class SimpleUtils {
 			convertSuccess = false;
 		}
 		return convertSuccess;
+	}
+
+	public static boolean isTimeBetweenStartNEndTime(String nowStartDate, String nowEndDate, String startDate, String endDate) throws Exception {
+
+		SimpleDateFormat format = new SimpleDateFormat("hh:mm a");
+
+		Date nowStart = format.parse(nowStartDate);
+		Date nowEnd = format.parse(nowEndDate);
+		Date start = format.parse(startDate);
+		Date end = format.parse(endDate);
+
+		long nowStartTime = nowStart.getTime();
+		long nowEndTime = nowEnd.getTime();
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+
+		return nowStartTime >= startTime && nowEndTime <= endTime;
+	}
+
+	public static int getHashMapKeyByValue(HashMap<Integer, String> hashMap, String value) {
+		int expectedKey = 0;
+		for (Integer key : hashMap.keySet()) {
+			if (hashMap.get(key).equalsIgnoreCase(value)) {
+				expectedKey = key;
+				break;
+			}
+		}
+		return expectedKey;
 	}
 
 	public static String dateWeekPickerDateComparision(String weekActiveDate) {
@@ -697,19 +745,19 @@ public class SimpleUtils {
 
 	}
 
-	public static Float convertDateIntotTwentyFourHrFormat(String startDate, String endDate) throws ParseException {
+	public static Float convertDateIntotTwentyFourHrFormat(String startTime, String endTime) throws ParseException {
 		SimpleDateFormat displayFormat = new SimpleDateFormat("HH:mm");
 		SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
 		int shiftHourcalculation =0;
 		Float shiftMinutecalculation =0.0f;
 		Float scheduleHoursDifference = 0.0f;
-		Date startDateFormat = parseFormat.parse(startDate.substring(0,startDate.length()-2) + " " +startDate.substring(startDate.length()-2));
-		Date endDateFormat = parseFormat.parse(endDate.substring(0,endDate.length()-2) + " " +endDate.substring(endDate.length()-2));
+		Date startDateFormat = parseFormat.parse(startTime.substring(0,startTime.length()-2) + " " +startTime.substring(startTime.length()-2));
+		Date endDateFormat = parseFormat.parse(endTime.substring(0,endTime.length()-2) + " " +endTime.substring(endTime.length()-2));
 		String strEndDate = displayFormat.format(endDateFormat).toString();
 		String strStartDate = displayFormat.format(startDateFormat).toString();
 		String[] arrEndDate = strEndDate.split(":");
 		String[] arrStartDate = strStartDate.split(":");
-		if(endDate.contains("AM")){
+		if(endTime.contains("AM")){
 			shiftHourcalculation = (24 + Integer.parseInt(arrEndDate[0]))-(Integer.parseInt(arrStartDate[0]));
 			shiftMinutecalculation =  (Float.parseFloat(arrEndDate[1]) -  Float.parseFloat(arrEndDate[1]))/60;
 			scheduleHoursDifference = shiftHourcalculation + shiftMinutecalculation ;
@@ -1771,7 +1819,7 @@ public class SimpleUtils {
 		if (1 == dayWeek) {
 			cal.add(Calendar.DAY_OF_MONTH, -1);
 		}
-		cal.setFirstDayOfWeek(Calendar.MONDAY);
+		cal.setFirstDayOfWeek(Calendar.SUNDAY);
 		int day = cal.get(Calendar.DAY_OF_WEEK);
 		cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);
 
@@ -1779,5 +1827,77 @@ public class SimpleUtils {
 		cal.add(Calendar.DATE, 6);
 		String imptimeEnd = sdf.format(cal.getTime());
 		return imptimeBegin + "," + imptimeEnd;
+	}
+
+	public static boolean isDateInTimeDuration(Date nowTime, Date startTime, Date endTime) {
+		if (nowTime.getTime() == startTime.getTime()
+				|| nowTime.getTime() == endTime.getTime()) {
+			return true;
+		}
+
+		Calendar date = Calendar.getInstance();
+		date.setTime(nowTime);
+
+		Calendar begin = Calendar.getInstance();
+		begin.setTime(startTime);
+
+		Calendar end = Calendar.getInstance();
+		end.setTime(endTime);
+
+		if (date.after(begin) && date.before(end)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean isSameDayComparingTwoDays(String dateString1, String dateString2, SimpleDateFormat format1,
+													SimpleDateFormat format2) throws ParseException {
+		Date date1 = format1.parse(dateString1);
+		Date date2 = format2.parse(dateString2);
+		return DateUtils.isSameDay(date1, date2);
+	}
+
+	public static boolean isNumeric(String str){
+		Pattern pattern = Pattern.compile("[0-9]*");
+		Matcher isNum = pattern.matcher(str.trim());
+		if( !isNum.matches() ){
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean compareHashMapByEntrySet(HashMap<String,String> map1, HashMap<String, String> map2){
+		if(map1.size()!=map2.size()){
+			return false;
+		}
+		String tmp1;
+		String tmp2;
+		boolean isSame = false;
+		for(Map.Entry<String, String> entry : map1.entrySet()){
+			if(map2.containsKey(entry.getKey())){
+				tmp1 = entry.getValue();
+				tmp2 = map2.get(entry.getKey());
+				if(tmp1 != null && tmp2 != null){
+					if(tmp1.equals(tmp2)){
+						isSame = true;
+						continue;
+					}else{
+						isSame = false;
+						break;
+					}
+				}else if(tmp1 == null && tmp2 == null){
+					isSame = true;
+					continue;
+				}else{
+					isSame = false;
+					break;
+				}
+			}else{
+				isSame = false;
+				break;
+			}
+		}
+		return isSame;
 	}
 }
