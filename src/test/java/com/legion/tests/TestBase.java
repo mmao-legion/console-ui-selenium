@@ -15,6 +15,7 @@ import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.tests.testframework.LegionWebDriverEventListener;
 import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
@@ -74,6 +75,7 @@ public abstract class TestBase {
     public static AndroidDriver<MobileElement> driver;
     public static String versionString;
     public static int version;
+    public String enterpriseName;
     public static String pth=System.getProperty("user.dir");
     public static String reportFilePath=pth+"/Reports/";
     public static String screenshotFilePath=pth+"/screenshots/";
@@ -195,7 +197,8 @@ public abstract class TestBase {
                 System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
                 ChromeOptions options = new ChromeOptions();
                 if(propertyMap.get("isHeadlessBrowser").equalsIgnoreCase("true")){
-                    options.addArguments("headless");
+//                    options.addArguments("headless");
+                    options.addArguments( "--headless","--disable-gpu", "--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage" );
                     options.addArguments("window-size=1200x600");
                     runScriptOnHeadlessOrBrowser(options);
                 }else{

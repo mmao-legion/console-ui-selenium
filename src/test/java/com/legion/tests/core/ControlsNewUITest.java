@@ -6,15 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.legion.pages.*;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import com.legion.pages.DashboardPage;
-import com.legion.pages.LoginPage;
-import com.legion.pages.ScheduleOverviewPage;
-import com.legion.pages.SchedulePage;
-import com.legion.pages.BasePage;
-import com.legion.pages.ControlsNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -219,6 +214,50 @@ public class ControlsNewUITest extends TestBase{
 	  if(! isBudgetSmartcardAppeared)
 		SimpleUtils.pass("Budget Smartcard not loaded on 'Schedule' tab when Scheduling policies Disabled Budget Smartcard.");
   }
+
+	@Automated(automated =  "Automated")
+	@Owner(owner = "Nishant")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Controls - Scheduling Policies > Enable Assignment Rule on Scheduling Policies")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void enableAssignmentRuleFromSchedulingPoliciesAsInternalAdmin(String browser, String username, String password, String location)
+			throws Exception {
+
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		navigateToControlsSchedulingPolicies(controlsNewUIPage);
+
+		// Enable Budget Smartcard
+		boolean enableBudgetSmartcard = true;
+		controlsNewUIPage.enableDisableBudgetSmartcard(enableBudgetSmartcard);
+
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+
+		String budgetSmartcardText = "WEEKLY BUDGET";
+		boolean isBudgetSmartcardAppeared = schedulePage.isSmartCardAvailableByLabel(budgetSmartcardText);
+		SimpleUtils.assertOnFail("Budget Smartcard not loaded on 'Schedule' tab even Scheduling policies Enabled Budget Smartcard.",
+				isBudgetSmartcardAppeared , false);
+		if(isBudgetSmartcardAppeared)
+			SimpleUtils.pass("Budget Smartcard loaded on 'Schedule' tab when Scheduling policies Enabled Budget Smartcard.");
+
+
+		// Disable Budget Smartcard
+		navigateToControlsSchedulingPolicies(controlsNewUIPage);
+		enableBudgetSmartcard = false;
+		controlsNewUIPage.enableDisableBudgetSmartcard(enableBudgetSmartcard);
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+		isBudgetSmartcardAppeared = schedulePage.isSmartCardAvailableByLabel(budgetSmartcardText);
+		SimpleUtils.assertOnFail("Budget Smartcard loaded on 'Schedule' tab even Scheduling policies Disabled Budget Smartcard.",
+				! isBudgetSmartcardAppeared , false);
+		if(! isBudgetSmartcardAppeared)
+			SimpleUtils.pass("Budget Smartcard not loaded on 'Schedule' tab when Scheduling policies Disabled Budget Smartcard.");
+	}
   
   public void navigateToControlsSchedulingPolicies(ControlsNewUIPage controlsNewUIPage)
   {
@@ -1397,9 +1436,32 @@ public class ControlsNewUITest extends TestBase{
 		// Validate Controls Location Section
 		boolean isLocationSection = controlsNewUIPage.isControlsLocationsCard();
 		SimpleUtils.assertOnFail("Controls Page: Location Section not Loaded.", isLocationSection, true);
+  }
+
+		@Automated(automated = "Automated")
+		@Owner(owner = "Estelle")
+		@Enterprise(name = "Kendrascott2_Enterprise")
+		@TestName(description = "Controls Scheduling policies")
+		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+		public void verifyScheduleScoreIsUpdated(String username, String password, String browser, String location)
+				throws Exception {
+			String Budget_Score = schedulingPoliciesData.get("Budget_Score");
+			String Coverage_Scores_Regular_Hours = schedulingPoliciesData.get("Coverage_Scores_Regular_Hours");
+			String Coverage_Scores_Peak_Hours = schedulingPoliciesData.get("Coverage_Scores_Peak_Hours");
+			String Employee_Match_Score = schedulingPoliciesData.get("Employee_Match_Score");
+			String Compliance_Score = schedulingPoliciesData.get("Compliance_Score");
+			String How_to_measure_coverage_relative_to_guidance_budget = schedulingPoliciesData.get("How_to_measure_coverage_relative_to_guidance_budget");
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			controlsNewUIPage.clickOnControlsConsoleMenu();
+			controlsNewUIPage.clickOnControlsSchedulingPolicies();
+			boolean isSchedulingPolicies = controlsNewUIPage.isControlsSchedulingPoliciesLoaded();
+			SimpleUtils.assertOnFail("Controls Page: Scheduling Policies Section not Loaded.", isSchedulingPolicies, true);
+			controlsNewUIPage.clickOnGlobalLocationButton();
+			controlsNewUIPage.updateScheduleScore(Budget_Score,Coverage_Scores_Regular_Hours,Coverage_Scores_Peak_Hours,Employee_Match_Score,Compliance_Score,How_to_measure_coverage_relative_to_guidance_budget);
+			boolean isScheduleScoreUpdated = controlsNewUIPage.isScheduleScoreUpdated(Budget_Score,Coverage_Scores_Regular_Hours,Coverage_Scores_Peak_Hours,Employee_Match_Score,Compliance_Score,How_to_measure_coverage_relative_to_guidance_budget);
+			SimpleUtils.assertOnFail("Schedule score updated  failed", isScheduleScoreUpdated, false);
+
 	}
-
-
 
 	
 }

@@ -84,6 +84,8 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     public void changeLocation(String locationName)
     {
         waitForSeconds(4);
+        getDriver().navigate().refresh();
+        waitForSeconds(4);
         try {
             Boolean isLocationMatched = false;
             activeConsoleName = activeConsoleMenuItem.getText();
@@ -104,12 +106,12 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                         break;
                                     }
                                 }
-                                if (!isLocationMatched) {
-                                    if (isElementLoaded(dashboardLocationsPopupCancelButton)) {
-                                        click(dashboardLocationsPopupCancelButton);
-                                    }
-                                    SimpleUtils.fail("Location does matched with '" + locationName + "'", true);
+                            if (!isLocationMatched) {
+                                if (isElementLoaded(dashboardLocationsPopupCancelButton)) {
+                                    click(dashboardLocationsPopupCancelButton);
                                 }
+                                SimpleUtils.fail("Location does not match with '" + locationName + "'", true);
+                            }
 
                             }
                         }

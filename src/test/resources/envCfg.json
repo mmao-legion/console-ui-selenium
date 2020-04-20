@@ -38,7 +38,7 @@
  "platformVersion" : "9",
  "isParallelBrowser" : "false",
  "Download_File_Default_Dir" : "C:\\Users\\Lenovo\\Downloads",
- "isHeadlessBrowser" : "false",
+ "isHeadlessBrowser" : "true",
  "legion.cucumber.extent.report.name" : "TA_Report",
  "legion.cucumber.extent.report.path" : "legion_bdd_report",
  "legion.cucumber.extent.report.theme" : "dark",
