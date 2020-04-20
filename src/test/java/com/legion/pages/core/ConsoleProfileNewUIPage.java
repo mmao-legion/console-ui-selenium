@@ -1,11 +1,12 @@
 package com.legion.pages.core;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.setTimeOffEndTime;
-import static com.legion.utils.MyThreadLocal.setTimeOffStartTime;
-
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
+import com.legion.utils.JsonUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -18,6 +19,8 @@ import com.legion.pages.ProfileNewUIPage;
 import com.legion.tests.core.TeamTestKendraScott2.timeOffRequestAction;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+
+import static com.legion.utils.MyThreadLocal.*;
 
 public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPage{
 	
@@ -1057,7 +1060,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 							String[] preferenceOptionsText = preferenceOptions.getText().split("\n");
 							if(preferenceOptionsText.length > 0) {
 								for(String preferenceOptionsTextLine : preferenceOptionsText) {
-									if(preferenceOptionsTextLine.toLowerCase().contains("volunteer for additional work")) {
+									if(preferenceOptionsTextLine.toLowerCase().contains("volunteer for additional work") || preferenceOptionsTextLine.toLowerCase().contains("voluntary standby list")) {
 										String[] volunteerOptionText = preferenceOptionsTextLine.split(":");
 										if(volunteerOptionText.length > 1) {
 											shiftPreferenceData.put("volunteerForAdditionalWork",volunteerOptionText[1]);
@@ -1903,5 +1906,421 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}else {
 			SimpleUtils.fail("Profile sub labels failed to load after clicking on Profile Image!", false);
 		}
+	}
+
+	//Added by Julie
+	@FindBy(css = ".address")
+	private WebElement profileAddressInformation;
+
+	@FindBy(css = ".lgn-alert-message")
+	private WebElement alertMessage;
+
+	@FindBy(css = ".ng-binding[ng-if=\"noticePeriodToRequestTimeOff\"]")
+	private WebElement noticePeriodToRequestTimeOff;
+
+	@FindBy(css = ".ranged-calendar__day.is-today")
+	private WebElement todayInCalendarDates;
+
+	@FindBy(css = ".request-buttons-reject")
+	private WebElement cancelButtonOfPendingRequest;
+
+	@FindBy(css = ".lgn-alert-modal")
+	private WebElement alertDialog;
+
+	@FindBy(css = ".lgn-action-button-success")
+	private WebElement OKButton;
+
+	private ArrayList<String> minMaxArray = new ArrayList<>();
+
+	public void checkUserProfileHomeAddress(String streetAddress1, String streetAddress2, String city, String state, String zip) throws Exception {
+		if (isElementLoaded(profileAddressInformation, 5)) {
+			if (profileAddressInformation.getText().contains(streetAddress1) && profileAddressInformation.getText().contains(streetAddress2) && profileAddressInformation.getText().contains(city) && profileAddressInformation.getText().contains(state) && profileAddressInformation.getText().contains(zip))
+				SimpleUtils.pass("Profile Page: User Profile Address already updated with value: '" + streetAddress1 + " " + streetAddress2 + " " + city + " " + state + " " + zip + "'.");
+			SimpleUtils.pass("Profile Page: User Profile changes reflects after saving successfully");
+		} else {
+			SimpleUtils.fail("Profile Page: User Profile Address not updated", true);
+		}
+	}
+
+	@Override
+	public void validateTheEditFunctionalityOnMyProfile(String streetAddress1, String streetAddress2, String city, String state, String zip) throws Exception {
+		clickOnEditUserProfilePencilIcon();
+		updateUserProfileHomeAddress(streetAddress1, streetAddress2, city, state, zip);
+		scrollToBottom();
+		clickOnSaveUserProfileBtn();
+		if (isElementLoaded(alertDialog, 5))
+			click(OKButton);
+		scrollToTop();
+		checkUserProfileHomeAddress(streetAddress1, streetAddress2, city, state, zip);
+		if (isEngagementDetrailsSectionLoaded()) {
+			if (engagementDetailsSection.findElements(By.tagName("input")).size() == 0 || engagementDetailsSection.findElements(By.tagName("i")).size() == 0) {
+				SimpleUtils.pass("Profile Page: Engagement Details are not be editable as expected");
+			} else {
+				SimpleUtils.fail("Profile Page: Engagement Details can be editable", true);
+			}
+		} else {
+			SimpleUtils.fail("Engagement Details not loaded", true);
+		}
+	}
+
+	@Override
+	public void validateTheFeatureOfChangePassword(String oldPassword) throws Exception {
+		if (isElementLoaded(userProfileChangePasswordBtn, 5)) {
+			click(userProfileChangePasswordBtn);
+			SimpleUtils.pass("Profile Page: user profile 'Change Password' button clicked successfully.");
+
+			if (isElementLoaded(changePasswordPopUp, 5)) {
+				String newPassword = "";
+				String confirmPassword = "";
+				SimpleUtils.pass("Profile Page: user profile 'Change Password' popup loaded successfully.");
+
+				newPassword = getNewPassword(oldPassword);
+				confirmPassword = getNewPassword(oldPassword);
+				changePasswordPopUpOldPasswordField.sendKeys(oldPassword);
+				changePasswordPopUpNewPasswordField.sendKeys(newPassword);
+				changePasswordPopUpConfirmPasswordField.sendKeys(confirmPassword);
+				click(changePasswordPopUpPopUpSendBtn);
+				if (isElementLoaded(alertMessage, 2) && alertMessage.getText().contains("Password changed successfully")) {
+					SimpleUtils.pass("Profile Page: New password is saved successfully");
+				} else {
+					SimpleUtils.fail("Profile Page: New password may be not saved since there isn't alert message", true);
+				}
+			} else
+				SimpleUtils.fail("Profile Page: user profile 'Change Password' popup not loaded.", false);
+		} else {
+			SimpleUtils.fail("Profile Page: user profile 'Change Password' button failed to load", true);
+		}
+	}
+
+	@Override
+	public String getNewPassword(String oldPassword) throws Exception {
+		String newPassword = "";
+		if (oldPassword.equals("legionco1")) {
+			newPassword = "legionco2";
+			return newPassword;
+		} else if (oldPassword.equals("legionco2")) {
+			newPassword = "legionco1";
+			return newPassword;
+		} else {
+			SimpleUtils.fail("Please check the current user password", true);
+			return "";
+		}
+	}
+
+	@Override
+	public void validateTheUpdateOfShiftPreferences(boolean canReceiveOfferFromOtherLocation, boolean isVolunteersForAdditional) throws Exception {
+		updateMyShiftPreferenceData(canReceiveOfferFromOtherLocation, isVolunteersForAdditional);
+		minMaxArray = updateMyShiftPreferencesAvailabilitySliders();
+		saveMyShiftPreferencesData();
+		checkMyShiftPreferenceData(canReceiveOfferFromOtherLocation, isVolunteersForAdditional, minMaxArray);
+	}
+
+	public void checkMyShiftPreferenceData(boolean canReceiveOfferFromOtherLocation, boolean isVolunteersForAdditional, ArrayList<String> minMaxArray) throws Exception {
+		HashMap<String, String> shiftPreferenceData = getMyShiftPreferenceData();
+		if (minMaxArray != null && minMaxArray.size() == 6 && (minMaxArray.get(0) + " - " + minMaxArray.get(1)).equals(shiftPreferenceData.get("hoursPerWeek")))
+			SimpleUtils.pass("Shift Preference Data: 'Hours/wk' value('"
+					+ minMaxArray.get(0) + " - " + minMaxArray.get(1) + "/" + shiftPreferenceData.get("hoursPerWeek") + "') matched.");
+		else
+			SimpleUtils.fail("Shift Preference Data: 'Hours/wk' value('"
+					+ minMaxArray.get(0) + " - " + minMaxArray.get(1) + "/" + shiftPreferenceData.get("hoursPerShift") + "') not matched.", true);
+		if (minMaxArray != null && minMaxArray.size() == 6 && (minMaxArray.get(2) + " - " + minMaxArray.get(3)).equals(shiftPreferenceData.get("hoursPerShift")))
+			SimpleUtils.pass("Shift Preference Data: 'Hours/shift' value('"
+					+ minMaxArray.get(2) + " - " + minMaxArray.get(3) + "/" + shiftPreferenceData.get("hoursPerShift") + "') matched.");
+		else
+			SimpleUtils.fail("Shift Preference Data: 'Hours/shift' value('"
+					+ minMaxArray.get(2) + " - " + minMaxArray.get(3) + "/" + shiftPreferenceData.get("hoursPerShift") + "') not matched.", true);
+		if (minMaxArray != null && minMaxArray.size() == 6 && (minMaxArray.get(4) + " - " + minMaxArray.get(5)).equals(shiftPreferenceData.get("shiftsPerWeek")))
+			SimpleUtils.pass("Shift Preference Data: 'Shifts/wk' value('"
+					+ minMaxArray.get(4) + " - " + minMaxArray.get(5) + "/" + shiftPreferenceData.get("shiftsPerWeek") + "') matched.");
+		else
+			SimpleUtils.fail("Shift Preference Data: 'Shifts/wk' value('"
+					+ minMaxArray.get(4) + " - " + minMaxArray.get(5) + "/" + shiftPreferenceData.get("shiftsPerWeek") + "') not matched.", true);
+		if (isVolunteersForAdditional == SimpleUtils.convertYesOrNoToTrueOrFalse(shiftPreferenceData.get("volunteerForAdditionalWork")))
+			SimpleUtils.pass("Shift Preference Data: ''Volunteer Standby List' value('"
+					+ isVolunteersForAdditional + "/" + shiftPreferenceData.get("volunteerForAdditionalWork") + "') matched.");
+		else
+			SimpleUtils.fail("Shift Preference Data: 'Volunteer Standby List' value('"
+					+ isVolunteersForAdditional + "/" + shiftPreferenceData.get("volunteerForAdditionalWork") + "') not matched.", true);
+		if (canReceiveOfferFromOtherLocation == SimpleUtils.convertYesOrNoToTrueOrFalse(shiftPreferenceData.get("otherPreferredLocations")))
+			SimpleUtils.pass("Shift Preference Data: 'Other preferred locations' value('"
+					+ canReceiveOfferFromOtherLocation + "/" + shiftPreferenceData.get("otherPreferredLocations") + "') matched.");
+		else
+			SimpleUtils.fail("Shift Preference Data: 'Other preferred locations' value('"
+					+ canReceiveOfferFromOtherLocation + "/" + shiftPreferenceData.get("otherPreferredLocations") + "') not matched.", true);
+
+	}
+
+	public void updateMyShiftPreferenceData(boolean canReceiveOfferFromOtherLocation, boolean isVolunteersForAdditional) throws Exception {
+		clickOnEditMyShiftPreferencePencilIcon();
+		if (isMyShiftPreferenceEditContainerLoaded()) {
+			SimpleUtils.pass("Profile Page: 'My Shift Preference' edit Container loaded successfully.");
+			updateReceivesShiftOffersForOtherLocationCheckButton(canReceiveOfferFromOtherLocation);
+			updateVolunteersForAdditionalWorkCheckButton(isVolunteersForAdditional);
+		} else
+			SimpleUtils.fail("Profile Page: 'My Shift Preference' edit Container not loaded.", true);
+	}
+
+	public ArrayList<String> updateMyShiftPreferencesAvailabilitySliders() throws Exception {
+		String startValue = "";
+		String endValue = "";
+		String maxValue = "";
+		String minValue = "";
+		WebElement minSlider = null;
+		WebElement maxSlider = null;
+		WebElement sliderType = null;
+		if (areListElementVisible(availabilitySliders, 20) && availabilitySliders.size() > 0) {
+			for (WebElement availabilitySlider : availabilitySliders) {
+				minSlider = availabilitySlider.findElement(By.cssSelector("span[ng-style=\"minPointerStyle\"]"));
+				maxSlider = availabilitySlider.findElement(By.cssSelector("span[ng-style=\"maxPointerStyle\"]"));
+				sliderType = availabilitySlider.findElement(By.cssSelector(".edit-pref-label"));
+				startValue = minSlider.getAttribute("aria-valuenow");
+				endValue = maxSlider.getAttribute("aria-valuenow");
+				maxValue = maxSlider.getAttribute("aria-valuemax");
+				minValue = minSlider.getAttribute("aria-valuemin");
+				if (Integer.parseInt(endValue) > Integer.parseInt(maxValue)) {
+					endValue = maxValue;
+				}
+				if (Integer.parseInt(startValue) < Integer.parseInt(minValue)) {
+					startValue = minValue;
+				}
+				// Update Min/Max Slider
+				if (areListElementVisible(availabilitySlider.findElements(By.tagName("li")), 5)) {
+					int index = (new Random()).nextInt(availabilitySlider.findElements(By.tagName("li")).size());
+					String value = availabilitySlider.findElements(By.tagName("li")).get(index).findElement(By.tagName("span")) == null ? "" : availabilitySlider.findElements(By.tagName("li")).get(index).findElement(By.tagName("span")).getText();
+					if (!startValue.equals(value) && !endValue.equals(value)) {
+						click(availabilitySlider.findElements(By.tagName("li")).get(index));
+						startValue = minSlider.getAttribute("aria-valuenow");
+						endValue = maxSlider.getAttribute("aria-valuenow");
+						if (Integer.parseInt(endValue) > Integer.parseInt(maxValue)) {
+							endValue = maxValue;
+						}
+						if (Integer.parseInt(startValue) < Integer.parseInt(minValue)) {
+							startValue = minValue;
+						}
+						SimpleUtils.report("Select value: " + value + " successfully!");
+						SimpleUtils.report("Profile Page: 'Min Slider' " + startValue + " for " + sliderType.getText() + "  is selected.");
+						SimpleUtils.report("Profile Page: 'Max Slide' " + endValue + " for " + sliderType.getText() + " is selected");
+					}
+				} else {
+					SimpleUtils.fail("Slider elements failed to load!", true);
+				}
+				minMaxArray.add(startValue);
+				minMaxArray.add(endValue);
+			}
+		} else
+			SimpleUtils.fail("Profile Page: Edit My Shift Preferences - Availability Sliders not loaded.", true);
+		return minMaxArray;
+	}
+
+	@Override
+	public void validateTheUpdateOfAvailability(String hoursType, int sliderIndex, String leftOrRightDuration,
+												int durationMinutes, String repeatChanges) throws Exception {
+		boolean isMyAvailabilityLocked = isMyAvailabilityLocked();
+		if (isMyAvailabilityLocked) {
+			ArrayList<HashMap<String, ArrayList<String>>> myAvailabilityPreferredAndBusyHoursBeforeUpdate = getMyAvailabilityPreferredAndBusyHours();
+			String availabilityPreferredAndBusyHoursHTMLBefore = "<table>";
+			for (HashMap<String, ArrayList<String>> preferredAndBusyHours : myAvailabilityPreferredAndBusyHoursBeforeUpdate) {
+				availabilityPreferredAndBusyHoursHTMLBefore = availabilityPreferredAndBusyHoursHTMLBefore + "<tr>";
+				for (Map.Entry<String, ArrayList<String>> entry : preferredAndBusyHours.entrySet()) {
+					if (entry.getValue().size() > 0) {
+						availabilityPreferredAndBusyHoursHTMLBefore = availabilityPreferredAndBusyHoursHTMLBefore + "<td><b>"
+								+ entry.getKey() + "</b></td>";
+						for (String value : entry.getValue()) {
+							availabilityPreferredAndBusyHoursHTMLBefore = availabilityPreferredAndBusyHoursHTMLBefore + "<td>"
+									+ value + "</td>";
+						}
+						availabilityPreferredAndBusyHoursHTMLBefore = availabilityPreferredAndBusyHoursHTMLBefore + "</td>";
+					}
+				}
+				availabilityPreferredAndBusyHoursHTMLBefore = availabilityPreferredAndBusyHoursHTMLBefore + "</tr>";
+			}
+			availabilityPreferredAndBusyHoursHTMLBefore = availabilityPreferredAndBusyHoursHTMLBefore + "</table>";
+
+			if (myAvailabilityPreferredAndBusyHoursBeforeUpdate.size() > 0)
+				SimpleUtils.pass("Profile page: 'My Availability Preferred & Busy Hours Duration Per Day <b>Before Updating</b> loaded as Below.<br>"
+						+ availabilityPreferredAndBusyHoursHTMLBefore);
+			else
+				SimpleUtils.fail("Profile page: 'My Availability Preferred & Busy Hours Duration not loaded", true);
+
+			//Update Preferred And Busy Hours
+			updateLockedAvailabilityPreferredOrBusyHoursSlider(hoursType, sliderIndex, leftOrRightDuration,
+					durationMinutes, repeatChanges);
+
+			hoursType = "Busy";
+			sliderIndex = 0;
+			updateLockedAvailabilityPreferredOrBusyHoursSlider(hoursType, sliderIndex, leftOrRightDuration,
+					durationMinutes, repeatChanges);
+
+			ArrayList<HashMap<String, ArrayList<String>>> myAvailabilityPreferredAndBusyHoursAfterUpdate = getMyAvailabilityPreferredAndBusyHours();
+			String availabilityPreferredAndBusyHoursHTMLAfter = "<table>";
+			for (HashMap<String, ArrayList<String>> preferredAndBusyHours : myAvailabilityPreferredAndBusyHoursAfterUpdate) {
+				availabilityPreferredAndBusyHoursHTMLAfter = availabilityPreferredAndBusyHoursHTMLAfter + "<tr>";
+				for (Map.Entry<String, ArrayList<String>> entry : preferredAndBusyHours.entrySet()) {
+					if (entry.getValue().size() > 0) {
+						availabilityPreferredAndBusyHoursHTMLAfter = availabilityPreferredAndBusyHoursHTMLAfter + "<td><b>"
+								+ entry.getKey() + "</b></td>";
+						for (String value : entry.getValue()) {
+							availabilityPreferredAndBusyHoursHTMLAfter = availabilityPreferredAndBusyHoursHTMLAfter + "<td>"
+									+ value + "</td>";
+						}
+						availabilityPreferredAndBusyHoursHTMLAfter = availabilityPreferredAndBusyHoursHTMLAfter + "</td>";
+					}
+				}
+				availabilityPreferredAndBusyHoursHTMLAfter = availabilityPreferredAndBusyHoursHTMLAfter + "</tr>";
+			}
+			availabilityPreferredAndBusyHoursHTMLAfter = availabilityPreferredAndBusyHoursHTMLAfter + "</table>";
+
+			if (myAvailabilityPreferredAndBusyHoursAfterUpdate.size() > 0)
+				SimpleUtils.pass("Profile page: 'My Availability Preferred & Busy Hours Duration Per Day <b>After Updating</b> loaded as Below.<br>"
+						+ availabilityPreferredAndBusyHoursHTMLAfter);
+			else
+				SimpleUtils.fail("Profile page: 'My Availability Preferred & Busy Hours Duration not loaded", true);
+		} else
+			SimpleUtils.report("Profile Page: 'My Availability Section not locked for the week '"
+					+ getMyAvailabilityData().get("activeWeek") + "'");
+	}
+
+	public int verifyCannotSelectDates() throws Exception {
+		int cannotSelectDates = 0;
+		int periodToRequestTimeOff = getPeriodToRequestTimeOff();
+		if (areListElementVisible(calendarDates, 10)) {
+			for (WebElement calendarDate : calendarDates) {
+				if (calendarDate.getAttribute("class").contains("can-not-select")) {
+					cannotSelectDates++;
+				}
+			}
+			if (Integer.parseInt(calendarDates.get(cannotSelectDates).getText().trim()) == Integer.parseInt(todayInCalendarDates.getText().trim()) + periodToRequestTimeOff) {
+				SimpleUtils.pass("New Time Off Request: It should not be able to select a date within " + periodToRequestTimeOff + " days from today(Can be changed as per the Control settings)");
+			} else {
+				SimpleUtils.fail("New Time Off Request: It can be able to select a date within " + periodToRequestTimeOff + " days from today", true);
+			}
+		} else
+			SimpleUtils.fail("New Time Off Request: It failed to load", true);
+		return cannotSelectDates;
+	}
+
+	public int getPeriodToRequestTimeOff() throws Exception {
+		int periodToRequestTimeOff = 0;
+		if (isElementLoaded(noticePeriodToRequestTimeOff, 5)) {
+			Pattern pattern = Pattern.compile("\\d+");
+			Matcher matcher = pattern.matcher(noticePeriodToRequestTimeOff.getText());
+			while (matcher.find()) {
+				periodToRequestTimeOff = Integer.valueOf(matcher.group(0));
+			}
+		}
+		return periodToRequestTimeOff;
+	}
+
+	public void reasonsOfLeaveOnNewTimOffRequest() throws Exception {
+		if (areListElementVisible(timeOffReasons, 10) && timeOffReasons.size() > 0) {
+			for (WebElement timeOffReason : timeOffReasons) {
+				if (timeOffReason.isDisplayed())
+					SimpleUtils.pass("New Time Off Request: " + timeOffReason.getText() + " is displayed");
+				else
+					SimpleUtils.fail("New Time Off Request: " + timeOffReason.getText() + " isn't displayed", true);
+			}
+		} else if (areListElementVisible(calendarDates, 10))
+			SimpleUtils.report("New Time Off Request: No time off reason in the request required per the control settings");
+		else
+			SimpleUtils.fail("New Time Off Request: Reasons failed to load", true);
+	}
+
+	@Override
+	public String selectRandomReasonOfLeaveOnNewTimeOffRequest() throws Exception {
+		String timeoffReasonLabel = "";
+		if (areListElementVisible(timeOffReasons, 10)) {
+			int index = (new Random()).nextInt(timeOffReasons.size());
+			timeoffReasonLabel = timeOffReasons.get(index).getText().trim();
+			SimpleUtils.pass("New Time Off Request: " + timeoffReasonLabel + " is selected");
+		} else
+			SimpleUtils.fail("New Time Off Request: Reasons failed to load", true);
+		return timeoffReasonLabel;
+	}
+
+	public HashMap<String, String> getTimeOffDate() throws Exception {
+		int cannotSelectDates = verifyCannotSelectDates();
+		int daysStartFromToday = 0;
+		int daysEndFromToday = 0;
+		int periodToRequestTimeOff = getPeriodToRequestTimeOff();
+		IntStream intStream = (new Random()).ints(periodToRequestTimeOff, calendarDates.size() - cannotSelectDates);
+		int[] array = intStream.limit(2).boxed().mapToInt(Integer::valueOf).toArray();
+		if (array[0] < array[1]) {
+			daysStartFromToday = array[0];
+			daysEndFromToday = array[1];
+		} else {
+			daysStartFromToday = array[1];
+			daysEndFromToday = array[0];
+		}
+		selectDate(daysStartFromToday);
+		selectDate(daysEndFromToday);
+		HashMap<String, String> timeOffDate = getTimeOffDate(daysStartFromToday, daysEndFromToday);
+		return timeOffDate;
+	}
+
+	@Override
+	public void createNewTimeOffRequestAndVerify(String timeOffReasonLabel, String timeOffExplanationText) throws Exception {
+		selectTimeOffReason(timeOffReasonLabel);
+		updateTimeOffExplanation(timeOffExplanationText);
+		HashMap<String, String> timeOffDate = getTimeOffDate();
+		String timeOffStartDate = timeOffDate.get("startDateTimeOff");
+		String timeOffEndDate = timeOffDate.get("endDateTimeOff");
+		setTimeOffStartTime(timeOffStartDate);
+		setTimeOffEndTime(timeOffEndDate);
+		scrollToBottom();
+		clickOnSaveTimeOffRequestBtn();
+		String expectedRequestStatus = "PENDING";
+		String requestStatus = getTimeOffRequestStatus(timeOffReasonLabel
+				, timeOffExplanationText, timeOffStartDate, timeOffEndDate);
+		if (requestStatus.toLowerCase().contains(expectedRequestStatus.toLowerCase()))
+			SimpleUtils.pass("Profile Page: New Time Off Request reflects in '" + requestStatus + "' successfully after saving");
+		else
+			SimpleUtils.fail("Profile Page: New Time Off Request status is not '" + expectedRequestStatus
+					+ "', status found as '" + requestStatus + "'", true);
+	}
+
+	@Override
+	public void validateTheFunctionalityOfTimeOffCancellation() throws Exception {
+		Boolean pendingRequestCanBeCancelled = pendingRequestCanBeCancelled();
+		if (pendingRequestCanBeCancelled) {
+			SimpleUtils.pass("Profile Page: Time off request is cancelled successfully");
+		} else {
+			SimpleUtils.report("Profile Page: No Pending Time off request found or can be cancelled. We will create a new time off");
+			clickOnCreateTimeOffBtn();
+			String timeOffReasonLabel = selectRandomReasonOfLeaveOnNewTimeOffRequest();
+			createNewTimeOffRequestAndVerify(timeOffReasonLabel, "");
+			String requestStatus = getTimeOffRequestStatus(timeOffReasonLabel,
+					"", getTimeOffStartTime(), getTimeOffEndTime());
+			if (requestStatus.toLowerCase().contains("pending")) {
+				pendingRequestCanBeCancelled = pendingRequestCanBeCancelled();
+				if (pendingRequestCanBeCancelled) {
+					SimpleUtils.pass("Profile Page: Time off request is cancelled successfully");
+				} else {
+					SimpleUtils.fail("Profile Page: Failed to cancel a pending time off request ", true);
+				}
+			} else
+				SimpleUtils.fail("Profile Page: Failed to create a new time off", true);
+		}
+	}
+
+	public Boolean pendingRequestCanBeCancelled() throws Exception {
+		Boolean pendingRequestCanBeCancelled = false;
+		for (int i = 0; i < timeOffRequestRows.size(); i++) {
+			WebElement requestStatus = timeOffRequestRows.get(i).findElement(By.cssSelector("span.request-status"));
+			String requestStatusText = requestStatus.getText();
+			if (requestStatusText.toLowerCase().contains("pending")) {
+				clickTheElement(requestStatus);
+				if (isElementLoaded(cancelButtonOfPendingRequest, 5)) {
+					clickTheElement(cancelButtonOfPendingRequest);
+					if (timeOffRequestRows.get(i).findElement(By.cssSelector(".request-status-Cancelled")).getText().toLowerCase().contains("cancelled")) {
+						SimpleUtils.pass("Profile Page: The pending time off request is cancelled successfully");
+						pendingRequestCanBeCancelled = true;
+						break;
+					} else {
+						SimpleUtils.fail("Profile Page: The pending time off request failed to cancel", true);
+					}
+				}
+			}
+		}
+		return pendingRequestCanBeCancelled;
 	}
 }

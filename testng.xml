@@ -48,6 +48,7 @@
 					   <include name="verifyTheWelcomeMessage"/>
 					   <include name="verifyTheFunctionOfViewTodaySchedule"/>
 					   <include name="verifyTheDataSourceForBudgetScheduledOther"/>
+                        <include name="verifyDashboardFunctionalityAsTeamMember" />
 					</methods>
 				</class>
 		   </classes>
@@ -63,10 +64,10 @@
 		   </classes>
 	   </test>
 
-<!--    <test name="Schedule Test">-->
-<!--            <classes>-->
-<!--                <class name="com.legion.tests.core.ScheduleTestKendraScott2">-->
-<!--                    <methods>-->
+    <test name="Schedule Test">
+            <classes>
+                <class name="com.legion.tests.core.ScheduleTestKendraScott2">
+                    <methods>
 <!--                        <include name="printButtonIsClickable" />-->
 <!--                        <include name="todoButtonIsClickable" />-->
 <!--                        <include name="closeButtonIsClickable" />-->
@@ -75,10 +76,12 @@
 <!--                        <include name="CurrentWeekIsGettingOpenByDefault" />-->
 <!--                        <include name="DayWeekPickerSectionNavigatingCorrectly" />-->
 <!--                        <include name="LandscapePortraitModeShowAndWorkWellInWeekView" />-->
-<!--                    </methods>-->
-<!--                </class>-->
-<!--            </classes>-->
-<!--    </test>-->
+                       <include name="verificationOfMySchedulePageAsTeamMember" />
+                       <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
+                    </methods>
+                </class>
+            </classes>
+    </test>
 
 
     <test name="TeamTab Test KendraScott2">
@@ -105,6 +108,18 @@
                     <include name="verifyTheTeamFunctionalityInTerminate" />
                     <include name="verifyTheTeamFunctionalityInCoverageAsInternalAdmin" />
                     <include name="verifyTheTeamFunctionalityInTimeOffAsStoreManager" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Profile Test">
+        <classes>
+            <class name="com.legion.tests.core.ProfileNewUITestKendraScott2">
+                <methods>
+                    <include name="verifyMyProfileDetailsByUpdatingTheInformationAsTeamMember" />
+                    <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
+                    <include name="verifyCreateNewTimeOffFunctionalityAsTeamMember" />
                 </methods>
             </class>
         </classes>

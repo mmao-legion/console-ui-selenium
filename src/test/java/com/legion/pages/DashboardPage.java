@@ -30,4 +30,22 @@ public interface DashboardPage {
     public HashMap<String, String> getUpComingShifts() throws Exception;
     public boolean isStartingTomorrow() throws Exception;
     public boolean isViewMySchedulePresentAndClickable() throws Exception;
+    public void validateTMAccessibleTabs() throws Exception;
+    public void validateThePresenceOfLocation() throws Exception;
+    public void validateTheAccessibleLocation() throws Exception;
+    public void validateThePresenceOfLogo() throws Exception;
+    public void validateDateAndTimeAfterSelectingDifferentLocation() throws Exception;
+    public void validateTheVisibilityOfUsername(String userName) throws Exception;
+    public void validateDateAndTime() throws Exception;
+    public void validateTheUpcomingSchedules(String userName) throws Exception;
+    public void validateVIEWMYSCHEDULEButtonClickable() throws Exception;
+    public void validateTheVisibilityOfProfilePicture() throws Exception;
+    public void validateProfilePictureIconClickable() throws Exception;
+    public void validateTheVisibilityOfProfile() throws Exception;
+    public void validateProfileDropdownClickable() throws Exception;
+    public void validateTheDataOfMyProfile() throws Exception;
+    public void validateTheDataOfMyWorkPreferences(String date) throws Exception;
+    public void validateTheDataOfMyTimeOff() throws Exception;
+    public void clickOnSubMenuOnProfile(String subMenu) throws Exception;
+    public String getDateFromTimeZoneOfLocation(String pattern) throws Exception;
 }

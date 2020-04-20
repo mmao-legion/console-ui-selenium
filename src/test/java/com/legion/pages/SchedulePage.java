@@ -234,5 +234,35 @@ public interface SchedulePage {
 	public String selectOneTeamMemberToSwap() throws Exception;
 	public void verifyClickCancelSwapOrCoverRequest() throws Exception;
 	public Boolean isGenerateButtonLoadedForManagerView() throws Exception;
+	public List<String> getWeekScheduleShiftTimeListOfMySchedule() throws Exception;
 
+	public List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception;
+
+	public void validateTheAvailabilityOfScheduleTable(String userName) throws Exception;
+
+	public void validateTheDisabilityOfLocationSelectorOnSchedulePage() throws Exception;
+
+	public void validateTheAvailabilityOfScheduleMenu() throws Exception;
+
+	public void validateTheFocusOfSchedule() throws Exception;
+
+	public void validateTheDefaultFilterIsSelectedAsScheduled() throws Exception;
+
+	public void validateTheFocusOfWeek(String currentDate) throws Exception;
+
+	public void validateForwardAndBackwardButtonClickable() throws Exception;
+
+	public void validateTheDataAccordingToTheSelectedWeek() throws Exception;
+
+	public void validateTheSevenDaysIsAvailableInScheduleTable() throws Exception;
+
+	public String getTheEarliestAndLatestTimeInSummaryView() throws Exception;
+
+	public String getTheEarliestAndLatestTimeInScheduleTable() throws Exception;
+
+	public void compareOperationHoursBetweenAdminAndTM(String theEarliestAndLatestTimeInScheduleSummary, String theEarliestAndLatestTimeInScheduleTable) throws Exception;
+
+	public void validateThatHoursAndDateIsVisibleOfShifts() throws Exception;
+
+	public void goToConsoleScheduleAndScheduleSubMenu() throws Exception;
 }

@@ -1,16 +1,15 @@
 package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.SimpleUtils.getCurrentDateMonthYearWithTimeZone;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.SchedulePage;
+import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
 import cucumber.api.java.hu.Ha;
@@ -511,5 +510,417 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.fail("Get Time Period failed!", true);
 		}
 		return timePeriod;
+	}
+
+	//Added by Julie
+	@FindBy(xpath = "//span[text()='My Availability']")
+	private WebElement myAvailabilityInMyWorkPreferences;
+
+	@FindBy(xpath = "//span[text()='My Availability Change Requests']")
+	private WebElement myAvailabilityChangeRequestsInMyWorkPreferences;
+
+	@FindBy(css = "div.console-navigation-item-label.Schedule")
+	private WebElement scheduleConsoleNameInTM;
+
+	@FindBy(css = "[ng-show=\"showLocation()\"]")
+	private WebElement showLocation;
+
+	@FindBy(css = "lg-picker-input > div > input-field > ng-form > div")
+	private WebElement currentLocation;
+
+	@FindBy(css = ".lg-search-options__option")
+	private List<WebElement> allLocations;
+
+	@FindBy(css = ".upcoming-shift")
+	private List<WebElement> upcomingShifts;
+
+	@FindBy(css = "li[ng-click^='goToProfile']")
+	private List<WebElement> goToProfile;
+
+	@FindBy(css = ".lgn-alert-modal")
+	private WebElement alertDialog;
+
+	@FindBy(css = ".lgn-action-button-success")
+	private WebElement OKButton;
+
+	@FindBy(css = ".quick-profile")
+	private WebElement personalDetails;
+
+	@FindBy(css = ".quick-engagement")
+	private WebElement engagementDetails;
+
+	@FindBy(xpath = "//span[contains(text(),'My Shift Preferences')]")
+	private WebElement myShiftPreferences;
+
+	@FindBy(xpath = "//span[contains(text(),'My Availability')]")
+	private WebElement myAvailability;
+
+	@FindBy(css = ".week-nav-icon-main")
+	private WebElement currentWeek;
+
+	@FindBy(css = ".timeoff-requests")
+	private List<WebElement> timeoffRequests;
+
+	@FindBy(css = ".col-sm-5 .count-block-pending")
+	private WebElement pending;
+
+	@FindBy(css = ".col-sm-5 .count-block-approved")
+	private WebElement approved;
+
+	@FindBy(css = ".col-sm-5 .count-block-rejected")
+	private WebElement rejected;
+
+	private static HashMap<String, String> propertyLocationTimeZone = JsonUtil.getPropertiesFromJsonFile("src/test/resources/LocationTimeZone.json");
+
+	@Override
+	public void validateTMAccessibleTabs() throws Exception {
+		if (isElementLoaded(dashboardConsoleName, 5) && isElementLoaded(scheduleConsoleNameInTM, 5)) {
+			if (isElementEnabled(dashboardConsoleName, 5) && isElementEnabled(scheduleConsoleNameInTM, 5)) {
+				SimpleUtils.pass("Dashboard and Schedule tabs are accessible successfully");
+				for (WebElement consoleMenu : consoleNavigationMenuItems) {
+					if (consoleMenu.getAttribute("class").contains("ng-hide")) {
+						SimpleUtils.assertOnFail(" This console is also enabled, which is not expected in TM view", consoleMenu.isEnabled(), true);
+					}
+				}
+			} else {
+				SimpleUtils.fail("Dashboard and Schedule tabs are disabled", true);
+			}
+		} else {
+			SimpleUtils.fail("Dashboard and Schedule tabs failed to load", true);
+		}
+	}
+
+	@Override
+	public void validateThePresenceOfLocation() throws Exception {
+		if (isElementEnabled(showLocation, 20)) {
+			if (currentLocation.isDisplayed() && !currentLocation.getText().isEmpty() && currentLocation.getText() != null) {
+				if (getDriver().findElement(By.xpath("//header//*[@class=\"location\"]")).equals(showLocation)) {
+					SimpleUtils.pass("Dashboard Page: Location shows at top of the page successfully");
+				} else {
+					SimpleUtils.fail("Dashboard Page: Location is not at top of the page", true);
+				}
+			} else {
+				SimpleUtils.fail("Dashboard Page: Location isn't present", true);
+			}
+		} else {
+			SimpleUtils.fail("Dashboard Page: Location failed to load", true);
+		}
+	}
+
+	@Override
+	public void validateTheAccessibleLocation() throws Exception {
+		if (areListElementVisible(allLocations, 10)) {
+			if (allLocations.size() > 1) {
+				click(currentLocation);
+				for (int i = 0; i < allLocations.size(); i++) {
+					if (allLocations.get(i).isEnabled()) {
+						try {
+							if (currentLocation.getText().equals(allLocations.get(i).getText())) {
+								SimpleUtils.pass("Dashboard Page: " + currentLocation.getText() + " is accessible successfully");
+								continue;
+							} else {
+								SimpleUtils.pass("Dashboard Page: " + allLocations.get(i).getText() + " is accessible successfully");
+								click(allLocations.get(i));
+							}
+						} catch (Exception e) {
+							SimpleUtils.fail("Dashboard Page: Exception occurs when clicking location", true);
+						}
+						if (i != allLocations.size() - 1)
+							click(currentLocation);
+					} else {
+						SimpleUtils.fail("Dashboard Page: " + allLocations.get(i).getText() + " isn't accessible", true);
+					}
+				}
+			} else {
+				SimpleUtils.report("Dashboard Page: No more locations are accessible");
+			}
+		} else {
+			SimpleUtils.fail("Dashboard Page: Locations failed to load", true);
+		}
+	}
+
+	@Override
+	public void validateThePresenceOfLogo() throws Exception {
+		if (isElementLoaded(iconImage, 5)) {
+			if (iconImage.isDisplayed()) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[1]")).equals(iconImage)) {
+					SimpleUtils.pass("Dashboard Page: Logo is present at right corner of page successfully");
+				} else {
+					SimpleUtils.fail("Dashboard Page: Logo isn't present at right corner of page", true);
+				}
+			} else {
+				SimpleUtils.fail("Dashboard Page: Company logo failed to display", true);
+			}
+		} else {
+			SimpleUtils.fail("Dashboard Page: Company logo failed to load", true);
+		}
+	}
+
+	@Override
+	public void validateDateAndTimeAfterSelectingDifferentLocation() throws Exception {
+		String dateFromLocation = getDateFromTimeZoneOfLocation("EEEE, MMMM d h:mm a");
+		String dateFromDashboard = getCurrentDateFromDashboard() + " " + currentTime.getText().toUpperCase();
+		if (dateFromDashboard.equals(dateFromLocation)) {
+			SimpleUtils.pass("Dashboard Page: The date and time on Dashboard is consistent with the timezone of current location");
+		} else {
+			SimpleUtils.fail("Dashboard Page: The date and time on Dashboard is different from the timezone of the current location", true);
+		}
+
+		click(currentLocation);
+		if (allLocations.size() > 1) {
+			for (int i = 0; i < allLocations.size(); i++) {
+				if (currentLocation.getText().equals(allLocations.get(i).getText())) {
+					continue;
+				} else {
+					click(allLocations.get(i));
+					SimpleUtils.pass("Dashboard Page: Another location is selected successfully");
+					break;
+				}
+			}
+			String dateFromAnotherLocation = getDateFromTimeZoneOfLocation("EEEE, MMMM d h:mm a");
+			String dateFromAnotherDashboard = getCurrentDateFromDashboard() + " " + currentTime.getText().toUpperCase();
+			if (dateFromAnotherDashboard.equals(dateFromAnotherLocation)) {
+				SimpleUtils.pass("Dashboard Page: The date and time on Dashboard is consistent with the timezone of another location");
+			} else {
+				SimpleUtils.fail("Dashboard Page: The date and time on Dashboard is different from the timezone of another location", true);
+			}
+		} else {
+			SimpleUtils.report("Dashboard Page: No more locations can be selected");
+		}
+	}
+
+	@Override
+	public void validateTheVisibilityOfUsername(String userName) throws Exception {
+		if (isElementLoaded(dashboardWelcomeSection, 5)) {
+			if (dashboardWelcomeSection.getText().contains(userName)) {
+				if (dashboardWelcomeSection.getAttribute("class").contains("center")) {
+					SimpleUtils.pass("Dashboard Page: Username shows in center of the page successfully");
+				} else {
+					SimpleUtils.fail("Dashboard Page: Username doesn't show in center of the page", true);
+				}
+			} else {
+				SimpleUtils.fail("Dashboard Page: Username doesn't show in the dashboard page", true);
+			}
+		} else {
+			SimpleUtils.fail("Dashboard Page: Welcome Text Section doesn't Load successfully!", true);
+		}
+	}
+
+	@Override
+	public void validateDateAndTime() throws Exception {
+		if (isElementLoaded(currentDate, 5) && isElementLoaded(currentTime, 5)) {
+			SimpleUtils.pass("Current date and time are loaded successfully");
+			String dateFromDashboard = getCurrentDateFromDashboard() + " " + currentTime.getText().toUpperCase();
+			String dateFromLocation = getDateFromTimeZoneOfLocation("EEEE, MMMM d h:mm a");
+			if (dateFromDashboard.equals(dateFromLocation)) {
+				SimpleUtils.pass("Date and time shows according to the US(Particular location) timing successfully");
+			} else {
+				SimpleUtils.fail("The date and time on Dashboard is different from the current location", true);
+			}
+		} else {
+			SimpleUtils.fail("Current date and time failed to load", true);
+		}
+	}
+
+	@Override
+	public void validateTheUpcomingSchedules(String userName) throws Exception {
+		if (isElementLoaded(dashboardUpcomingShiftContainer, 20)) {
+			SimpleUtils.pass("Today's published Shifts loaded Successfully on Dashboard!");
+			if (publishedShiftForTodayDiv.getText().contains("No Published") && publishedShiftForTodayDiv.getText().contains("Shifts for today")) {
+				SimpleUtils.pass("No Published Shifts for today");
+			} else {
+				for (WebElement us : upcomingShifts) {
+					if (us.getText().contains(userName) && us.getText().contains("am") || us.getText().contains("pm")) {
+						SimpleUtils.pass("All the upcoming schedules are present with shift timings successfully");
+					} else {
+						SimpleUtils.fail("Shifts don't display on Dashboard", true);
+					}
+				}
+			}
+		} else {
+			SimpleUtils.fail("Today's Published Shifts failed to load on Dashboard!", true);
+		}
+	}
+
+	@Override
+	public void validateVIEWMYSCHEDULEButtonClickable() throws Exception {
+		if (isElementLoaded(goToTodayScheduleButton, 5)) {
+			click(goToTodayScheduleButton);
+			waitForSeconds(2);
+			for (WebElement consoleMenu : consoleNavigationMenuItems) {
+				if (consoleMenu.getAttribute("class").contains("active") && consoleMenu.getText().equals("Schedule")) {
+					SimpleUtils.pass("Click on the [VIEW MY SCHEDULE] button, it redirects to Schedule page successfully");
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("'VIEW MY SCHEDULE' button failed to load", true);
+		}
+	}
+
+	@Override
+	public void validateTheVisibilityOfProfilePicture() throws Exception {
+		if (isElementLoaded(iconProfile, 5)) {
+			if (iconProfile.isDisplayed()) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[2]")).equals(iconProfile)) {
+					SimpleUtils.pass("Profile picture is visible at right corner of the page successfully");
+				} else {
+					SimpleUtils.fail("Profile picture isn't visible at right corner of the page", true);
+				}
+			} else {
+				SimpleUtils.fail("Profile picture failed to display", true);
+			}
+		} else {
+			SimpleUtils.fail("Profile picture failed to load", true);
+		}
+	}
+
+	@Override
+	public void validateProfilePictureIconClickable() throws Exception {
+		clickOnProfileIconOnDashboard();
+		if (areListElementVisible(goToProfile, 10)) {
+			if (goToProfile.size() != 0) {
+				SimpleUtils.pass("Profile Page: Dropdown list opens after clicking on profile picture icon");
+			} else {
+				SimpleUtils.fail("Profile Page: Dropdown list doesn't open after clicking on profile picture icon", true);
+			}
+		} else {
+			SimpleUtils.fail("Profile Page: Dropdown list failed to load", true);
+		}
+	}
+
+	@Override
+	public void validateTheVisibilityOfProfile() throws Exception {
+		clickOnProfileIconOnDashboard();
+		if (areListElementVisible(goToProfile, 10)) {
+			if (goToProfile.size() == 3) {
+				SimpleUtils.pass("Profile Page: Dropdown list has three rows successfully");
+			} else {
+				SimpleUtils.fail("Profile Page: Dropdown list doesn't have three rows", true);
+			}
+			for (WebElement e : goToProfile) {
+				if (e.getText().trim().equals("My Profile") || e.getText().trim().equals("My Work Preferences") || e.getText().trim().equals("My Time Off")) {
+					SimpleUtils.pass("Profile Page: Dropdown list includes " + e.getText());
+				} else {
+					SimpleUtils.fail("Profile Page: " + e.getText() + " isn't expected in dropdown list", true);
+				}
+			}
+		} else {
+			SimpleUtils.fail("Profile Page: Dropdown list failed to load", true);
+		}
+	}
+
+	@Override
+	public void validateProfileDropdownClickable() throws Exception {
+		if (areListElementVisible(goToProfile, 10) && goToProfile.size() != 0) {
+			for (int i = 0; i < goToProfile.size(); i++) {
+				click(goToProfile.get(i));
+				SimpleUtils.pass("Profile Page: " + goToProfile.get(i).getText() + " is clickable successfully");
+				if (isElementLoaded(alertDialog, 5)) {
+					click(OKButton);
+					clickOnProfileIconOnDashboard();
+				}
+			}
+		} else {
+			SimpleUtils.fail("Profile Page: Dropdown list failed to load", true);
+		}
+	}
+
+	@Override
+	public void validateTheDataOfMyProfile() throws Exception {
+		clickOnSubMenuOnProfile("My Profile");
+		if (isElementLoaded(personalDetails, 30) && isElementLoaded(engagementDetails, 30)) {
+			if (personalDetails.isDisplayed() && engagementDetails.isDisplayed())
+				SimpleUtils.pass("My Profile: It shows the TM's personal and engagement details successfully");
+		} else {
+			SimpleUtils.fail("My Profile: Failed to show the TM's personal and engagement", true);
+		}
+	}
+
+	@Override
+	public void clickOnSubMenuOnProfile(String subMenu) throws Exception {
+		clickOnProfileIconOnDashboard();
+		if (areListElementVisible(goToProfile,10) && goToProfile.size() != 0 ) {
+			for(WebElement e : goToProfile) {
+				if(e.getText().toLowerCase().contains(subMenu.toLowerCase())) {
+					click(e);
+					if (isElementLoaded(alertDialog, 5))
+						click(OKButton);
+					else click(iconImage);
+					SimpleUtils.pass("Able to click on '"+ subMenu+"' link Successfully!!");
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("'"+subMenu+ "' failed to load", true);
+		}
+	}
+
+	@Override
+	public void validateTheDataOfMyWorkPreferences(String date) throws Exception {
+		clickOnSubMenuOnProfile("My Work Preferences");
+		if (isElementLoaded(myAvailabilityInMyWorkPreferences, 10) && isElementLoaded(myShiftPreferences, 10)&&isElementLoaded(myAvailabilityChangeRequestsInMyWorkPreferences,10) ) {
+			SimpleUtils.pass("My Work Preferences: It shows the Availability and Shift Preferences successfully");
+			if(date.contains(",") && date.contains(" ")) {
+				date = date.split(",")[1].trim().split(" ")[1];
+				SimpleUtils.report("Current date is " + date);
+			}
+			//currentWeek.getText() is Apr 6-Apr 12
+			String weekDefaultEnd = "";
+			String weekDefaultBegin = "";
+			if (currentWeek.getText().contains("-") && currentWeek.getText().contains(" ")) {
+				try {
+					weekDefaultBegin = currentWeek.getText().split("-")[0].split(" ")[1];
+					SimpleUtils.report("weekDefaultBegin is:" + weekDefaultBegin);
+					weekDefaultEnd = currentWeek.getText().split("-")[1].split(" ")[1];
+					SimpleUtils.report("weekDefaultEnd is:" + weekDefaultEnd);
+				} catch (Exception e) {
+					SimpleUtils.fail("Active week text doesn't have enough length", true);
+				}
+			}
+			if (Integer.valueOf(date)<=Integer.valueOf(weekDefaultEnd) && Integer.valueOf(date)>=Integer.valueOf(weekDefaultBegin)) {
+				SimpleUtils.pass("My Work Preferences: Current week availability shows by default");
+			} else {
+				SimpleUtils.fail("My Work Preferences: Current week availability shows incorrectly", true);
+			}
+		} else {
+			SimpleUtils.fail("Failed to show the Availability and Shift Preferences on My Work Preferences", true);
+		}
+	}
+
+	@Override
+	public void validateTheDataOfMyTimeOff() throws Exception {
+		clickOnSubMenuOnProfile("My Time Off");
+		if (isElementLoaded(pending, 10) && isElementLoaded(approved, 10) && isElementLoaded(rejected, 10)) {
+			SimpleUtils.pass("A summary of all pending, approved and rejected shows successfully on My Time Off");
+			if (Integer.valueOf(pending.getText().substring(0, 1)) != 0 || Integer.valueOf(approved.getText().substring(0, 1)) != 0 || Integer.valueOf(rejected.getText().substring(0, 1)) != 0) {
+				if (areListElementVisible(timeoffRequests, 10) && timeoffRequests.size() > 1 ) {
+					SimpleUtils.pass("My Time Off: All the leaves of employee are visible successfully");
+				} else {
+					SimpleUtils.fail("My Time Off: No leaves of employee are visible", true);
+				}
+			} else {
+				SimpleUtils.report("My Time Off: All the leaves of employee aren't visible since request count is 0");
+			}
+		} else {
+			SimpleUtils.fail("My Time Off: A summary of all pending, approved and rejected doesn't show", true);
+		}
+	}
+
+	@Override
+	public String getDateFromTimeZoneOfLocation(String pattern) throws Exception {
+		String dateFromTimeZone = "";
+		if (isElementLoaded(currentLocation, 10)) {
+			String jsonTimeZone = propertyLocationTimeZone.get(currentLocation.getText().trim());
+			if (jsonTimeZone != null && !jsonTimeZone.isEmpty()) {
+				SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+				dateFromTimeZone = getCurrentDateMonthYearWithTimeZone(jsonTimeZone,sdf);
+			} else {
+				SimpleUtils.fail("Current timezone doesn't exist, please check your location", true);
+			}
+		} else {
+			SimpleUtils.fail("Current location failed to load", true);
+		}
+		return dateFromTimeZone;
 	}
 }

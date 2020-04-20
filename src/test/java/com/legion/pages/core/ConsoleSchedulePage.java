@@ -2102,4 +2102,85 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch, boolean startHrsSlider) throws Exception {
 
     }
+
+    //Added by Julie
+    @Override
+    public List<String> getWeekScheduleShiftTimeListOfMySchedule() throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void validateTheAvailabilityOfScheduleTable(String userName) throws Exception {
+
+    }
+
+    @Override
+    public void validateTheDisabilityOfLocationSelectorOnSchedulePage() throws Exception {
+
+    }
+
+    @Override
+    public void validateTheAvailabilityOfScheduleMenu() throws Exception {
+
+    }
+
+    @Override
+    public void validateTheFocusOfSchedule() throws Exception {
+
+    }
+
+    @Override
+    public void validateTheDefaultFilterIsSelectedAsScheduled() throws Exception {
+
+    }
+
+    @Override
+    public void validateTheFocusOfWeek(String dateFromLocation) throws Exception {
+
+    }
+
+    @Override
+    public void validateForwardAndBackwardButtonClickable() throws Exception {
+
+    }
+
+    @Override
+    public void validateTheDataAccordingToTheSelectedWeek() throws Exception {
+
+    }
+
+    @Override
+    public void validateTheSevenDaysIsAvailableInScheduleTable() throws Exception {
+
+    }
+
+    @Override
+    public String getTheEarliestAndLatestTimeInSummaryView() throws Exception {
+        return null;
+    }
+
+    @Override
+    public String getTheEarliestAndLatestTimeInScheduleTable() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void compareOperationHoursBetweenAdminAndTM(String theEarliestAndLatestTimeInScheduleSummary, String theEarliestAndLatestTimeInScheduleTable) throws Exception {
+
+    }
+
+    @Override
+    public void validateThatHoursAndDateIsVisibleOfShifts() throws Exception {
+
+    }
+
+    @Override
+    public void goToConsoleScheduleAndScheduleSubMenu() throws Exception {
+
+    }
 }

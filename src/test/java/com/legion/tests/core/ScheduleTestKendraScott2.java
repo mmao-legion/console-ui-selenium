@@ -374,5 +374,90 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				SimpleUtils.fail("Scheduled Hours and Overview Schedule Hours not same",true);
 			}
 		}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Julie")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verification of My Schedule Page when login through TM View")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verificationOfMySchedulePageAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+
+		//T1838603 Validate the availability of schedule table.
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String nickName = profileNewUIPage.getNickNameFromProfile();
+		schedulePage.validateTheAvailabilityOfScheduleTable(nickName);
+
+		//T1838604 Validate the disability of location selector on Schedule page.
+		schedulePage.validateTheDisabilityOfLocationSelectorOnSchedulePage();
+
+		//T1838605 Validate the availability of profile menu.
+		schedulePage.validateTheAvailabilityOfScheduleMenu();
+
+		//T1838606 Validate the focus of schedule.
+		schedulePage.validateTheFocusOfSchedule();
+
+		//T1838607 Validate the default filter is selected as Scheduled.
+		schedulePage.validateTheDefaultFilterIsSelectedAsScheduled();
+
+		//T1838608 Validate the focus of week.
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.navigateToDashboard();
+		String currentDate = dashboardPage.getCurrentDateFromDashboard();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.validateTheFocusOfWeek(currentDate);
+
+		//T1838609 Validate the selection of previous and upcoming week.
+		//todo: schedulePage.verifySelectOtherWeeks();
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Julie")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verification of To and Fro navigation of week picker when login through TM View")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verificationOfToAndFroNavigationOfWeekPickerAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+
+		//T1838610 Validate the click ability of forward and backward button.
+		schedulePage.validateForwardAndBackwardButtonClickable();
+
+		//T1838611 Validate the data according to the selected week.
+		schedulePage.validateTheDataAccordingToTheSelectedWeek();
+
+		//T1838612 Validate the seven days - Sunday to Saturday is available in schedule table.
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.validateTheSevenDaysIsAvailableInScheduleTable();
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		///Log in as admin to get the operation hours
+		String fileName = "UsersCredentials.json";
+		fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
+		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+		Object[][] internalAdminCredentials = userCredentials.get("InternalAdmin");
+		loginToLegionAndVerifyIsLoginDone(String.valueOf(internalAdminCredentials[0][0]), String.valueOf(internalAdminCredentials[0][1])
+				, String.valueOf(internalAdminCredentials[0][2]));
+		SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePageAdmin.clickOnScheduleConsoleMenuItem();
+		schedulePageAdmin.clickOnScheduleSubTab("Schedule");
+		if (!schedulePage.isSummaryViewLoaded())
+			schedulePage.toggleSummaryView();
+		String theEarliestAndLatestTimeInSummaryView = schedulePage.getTheEarliestAndLatestTimeInSummaryView();
+		SimpleUtils.report("theEarliestAndLatestOperationHoursInSummaryView is " + theEarliestAndLatestTimeInSummaryView);
+		loginPage.logOut();
+
+		///Log in as team member again to compare the operation hours
+		loginToLegionAndVerifyIsLoginDone(username, password, location);
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		String theEarliestAndLatestTimeInScheduleTable = schedulePage.getTheEarliestAndLatestTimeInScheduleTable();
+		SimpleUtils.report("theEarliestAndLatestOperationHoursInScheduleTable is " + theEarliestAndLatestTimeInScheduleTable);
+		schedulePage.compareOperationHoursBetweenAdminAndTM(theEarliestAndLatestTimeInSummaryView, theEarliestAndLatestTimeInScheduleTable);
+
+		//T1838613 Validate that hours and date is visible of shifts.
+		schedulePage.validateThatHoursAndDateIsVisibleOfShifts();
+	}
 }
 

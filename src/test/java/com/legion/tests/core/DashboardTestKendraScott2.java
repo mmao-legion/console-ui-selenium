@@ -102,4 +102,92 @@ public class DashboardTestKendraScott2 extends TestBase{
 		locationSelectorPage.verifyTheFunctionOfSearchTextBox(testStrings);
 	}
 
+	@Automated(automated = "Automated")
+	@Owner(owner = "Julie")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify dashboard functionality when login through TM View")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyDashboardFunctionalityAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String nickName = profileNewUIPage.getNickNameFromProfile();
+
+		//T1838579 Validate the TM accessible tabs.
+		dashboardPage.validateTMAccessibleTabs();
+
+		//T1838580 Validate the presence of location.
+		dashboardPage.validateThePresenceOfLocation();
+
+		//T1838581 Validate the accessible location.
+		dashboardPage.validateTheAccessibleLocation();
+
+		//T1838582 Validate the presence of logo.
+		dashboardPage.validateThePresenceOfLogo();
+
+		//T1838584 Validate the visibility of Username.
+		dashboardPage.validateTheVisibilityOfUsername(nickName);
+
+		//T1838583 Validate the information after selecting different location.
+		dashboardPage.validateDateAndTimeAfterSelectingDifferentLocation();
+		SchedulePage schedulePageTM = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePageTM.clickOnScheduleConsoleMenuItem();
+		List<String> scheduleListTM = schedulePageTM.getWeekScheduleShiftTimeListOfMySchedule();
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		String fileName = "UsersCredentials.json";
+		fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
+		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+		Object[][] internalAdminCredentials = userCredentials.get("InternalAdmin");
+		loginToLegionAndVerifyIsLoginDone(String.valueOf(internalAdminCredentials[0][0]), String.valueOf(internalAdminCredentials[0][1])
+				, String.valueOf(internalAdminCredentials[0][2]));
+		SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePageAdmin.goToConsoleScheduleAndScheduleSubMenu();
+		List<String> scheduleListAdmin = schedulePageAdmin.getWeekScheduleShiftTimeListOfWeekView(nickName);
+		if (scheduleListTM != null && scheduleListTM.size() > 0 && scheduleListAdmin != null && scheduleListAdmin.size() > 0) {
+			if (scheduleListTM.size() == scheduleListAdmin.size() && scheduleListTM.containsAll(scheduleListAdmin)) {
+				SimpleUtils.pass("Schedules in TM view is consistent with the Admin view of the location successfully");
+			} else
+				SimpleUtils.fail("Schedule doesn't show of the location correctly", true);
+		} else {
+			SimpleUtils.report("Schedule may have not been generated");
+		}
+		loginPage.logOut();
+		loginToLegionAndVerifyIsLoginDone(username, password, location);
+
+		//T1838585 Validate date and time.
+		dashboardPage.validateDateAndTime();
+
+		//T1838586 Validate the upcoming schedules.
+		dashboardPage.validateTheUpcomingSchedules(nickName);
+
+		//T1838587 Validate the click ability of VIEW MY SCHEDULE button.
+		dashboardPage.validateVIEWMYSCHEDULEButtonClickable();
+		dashboardPage.navigateToDashboard();
+
+		//T1838588 Validate the visibility of profile picture.
+		dashboardPage.validateTheVisibilityOfProfilePicture();
+
+		//T1838589 Validate the click ability of Profile picture icon.
+		dashboardPage.validateProfilePictureIconClickable();
+
+		//T1838590 Validate the visibility of Profile.
+		dashboardPage.validateTheVisibilityOfProfile();
+
+		//T1838591 Validate the click ability of My profile, My Work Preferences, My Time off.
+		dashboardPage.validateProfileDropdownClickable();
+
+		//T1838592 Validate the data of My profile.
+		dashboardPage.clickOnProfileIconOnDashboard();
+		dashboardPage.validateTheDataOfMyProfile();
+
+		//T1838593 Validate the functionality My Work Preferences and My Availability.
+		String dateFromDashboard = dashboardPage.getCurrentDateFromDashboard();
+		dashboardPage.navigateToDashboard();
+		dashboardPage.validateTheDataOfMyWorkPreferences(dateFromDashboard);
+
+		//T1838594 Validate the presence of data on Time off page.
+		dashboardPage.validateTheDataOfMyTimeOff();
+	}
+
 }
