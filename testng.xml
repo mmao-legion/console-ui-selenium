@@ -67,6 +67,8 @@
                <methods>
                    <include name="verifyTheTeamMemberViewSwapAsTeamMember"/>
                    <include name="verifyTheTeamMemberViewCoverAsTeamMember" />
+                   <include name="verifyTheTeamScheduleOptionAsInternalAdmin" />
+                   <include name="verifyTheFunctionalityOfSwapAndCoverAsTeamLead" />
                </methods>
            </class>
        </classes>

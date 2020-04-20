@@ -5351,6 +5351,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement cancelButton;
     @FindBy(css = "[label=\"Submit\"]")
     private WebElement submitButton;
+    @FindBy(css = "[label=\"Back\"]")
+    private WebElement backButton;
     @FindBy(css = "textarea[placeholder]")
     private WebElement messageText;
     @FindBy(className = "lgn-alert-modal")
@@ -5365,6 +5367,211 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement cancelCoverBtn;
     @FindBy(css = "[label=\"Cancel Swap Request\"]")
     private WebElement cancelSwapBtn;
+    @FindBy(css = ".shift-swap-modal-table th.ng-binding")
+    private WebElement resultCount;
+    @FindBy(css = "td.shift-swap-modal-shift-table-select>div")
+    private List<WebElement> selectBtns;
+    @FindBy(css = ".modal-content .sch-day-view-shift-outer")
+    private List<WebElement> swapRequestShifts;
+    @FindBy(css = "[label=\"Accept\"]")
+    private List<WebElement> acceptButtons;
+    @FindBy(css = "[label=\"I agree\"]")
+    private WebElement agreeButton;
+    @FindBy(css = "lg-close.dismiss")
+    private WebElement closeDialogBtn;
+    @FindBy(className = "shift-swap-offer-time")
+    private WebElement shiftOfferTime;
+    @FindBy(className = "shift-swap-modal-table-shift-status")
+    private List<WebElement> shiftStatus;
+
+    @Override
+    public void verifyShiftRequestStatus(String expectedStatus) throws Exception {
+        if (areListElementVisible(shiftStatus, 5)) {
+            for (WebElement status : shiftStatus) {
+                if (expectedStatus.equalsIgnoreCase(status.getText())) {
+                    SimpleUtils.pass("Verified shift status is correct!");
+                }else {
+                    SimpleUtils.fail("Shift status is incorrect, expected is: " + expectedStatus + ", but actual is: "
+                    + status.getText(), false);
+                }
+            }
+        }else {
+            SimpleUtils.fail("Shift Status not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void verifyClickAcceptSwapButton() throws Exception {
+        String title = "Confirm Shift Swap";
+        if (areListElementVisible(acceptButtons, 5) && acceptButtons.size() > 0) {
+            click(acceptButtons.get(0));
+            SimpleUtils.assertOnFail(title + " not loaded Successfully!", isPopupWindowLoaded(title), false);
+            if (isElementLoaded(agreeButton, 5)) {
+                click(agreeButton);
+                if (isElementLoaded(closeDialogBtn, 5)) {
+                    click(closeDialogBtn);
+                }
+            }else {
+                SimpleUtils.fail("I Agree button not loaded Successfully!", false);
+            }
+        }else {
+            SimpleUtils.fail("Accept Button not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void verifySwapRequestShiftsLoaded() throws Exception {
+        if (areListElementVisible(swapRequestShifts, 5)) {
+            SimpleUtils.pass("Swap Request Shifts loaded Successfully!");
+        }else {
+            SimpleUtils.fail("Swap Request Shifts not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void verifyTheRedirectionOfBackButton() throws Exception {
+        verifyBackNSubmitBtnLoaded();
+        click(backButton);
+        String title = "Find Shifts to Swap";
+        if (isPopupWindowLoaded(title)) {
+            SimpleUtils.pass("Redirect to Find Shifts to Swap windows Successfully!");
+        }else {
+            SimpleUtils.fail("Failed to redirect to Find Shifts to Swap window!", false);
+        }
+    }
+
+    @Override
+    public void verifyBackNSubmitBtnLoaded() throws Exception {
+        if (isElementLoaded(backButton, 5)) {
+            SimpleUtils.pass("Back button loaded Successfully on submit swap request!");
+        }else {
+            SimpleUtils.fail("Back button not loaded Successfully on submit swap request!", true);
+        }
+        if (isElementLoaded(submitButton, 5)) {
+            SimpleUtils.pass("Submit button loaded Successfully on submit swap request!");
+        }else {
+            SimpleUtils.fail("Submit button not loaded Successfully on submit swap request!", false);
+        }
+    }
+
+    @Override
+    public void verifyClickOnNextButtonOnSwap() throws Exception {
+        verifySelectOneShiftNVerifyNextButtonEnabled();
+        click(nextButton);
+    }
+
+    @Override
+    public void verifySelectMultipleSwapShifts() throws Exception {
+        String selected = "selected";
+        if (areListElementVisible(selectBtns, 5) && selectBtns.size() > 0) {
+            for (WebElement selectBtn : selectBtns) {
+                String className = selectBtn.getAttribute("class");
+                if (className.isEmpty()) {
+                    click(selectBtn);
+                    className = selectBtn.getAttribute("class");
+                    if (className.contains(selected)) {
+                        SimpleUtils.pass("Select one shift Successfully!");
+                    }else {
+                        SimpleUtils.fail("Failed to select the shift!", false);
+                    }
+                }
+            }
+        }else {
+            SimpleUtils.fail("Select Buttons not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void verifySelectOneShiftNVerifyNextButtonEnabled() throws Exception {
+        String selected = "selected";
+        if (areListElementVisible(selectBtns, 10) && selectBtns.size() > 0) {
+            if (selectBtns.get(0).getAttribute("class").isEmpty()) {
+                click(selectBtns.get(0));
+            }
+            if (selectBtns.get(0).getAttribute("class").contains(selected)) {
+                SimpleUtils.pass("Select one shift Successfully!");
+                if (isElementEnabled(nextButton, 5)) {
+                    SimpleUtils.pass("Next Button is enabled after selecting one shift!");
+                }else {
+                    SimpleUtils.fail("Next button is still disabled after selecting one shift!", false);
+                }
+            }else {
+                SimpleUtils.fail("Failed to select the shift!", false);
+            }
+        }else {
+            SimpleUtils.fail("Select Buttons not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void verifyNextButtonIsLoadedAndDisabledByDefault() throws Exception {
+        String notAllowed = "not-allowed";
+        if (isElementLoaded(nextButton, 5)) {
+            SimpleUtils.pass("Next button loaded Successfully!");
+            WebElement button = nextButton.findElement(By.tagName("button"));
+            String cursorAttribute = button == null ? "" : button.getCssValue("cursor");
+            if (notAllowed.equalsIgnoreCase(cursorAttribute)) {
+                SimpleUtils.pass("Next button is disabled by default!");
+            }else {
+                SimpleUtils.fail("Next button should be disabled by default, but it is enabled!", false);
+            }
+        }else {
+            SimpleUtils.fail("Next button not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void verifyTheSumOfSwapShifts() throws Exception {
+        int sum = 0;
+        if (isElementLoaded(resultCount, 5) && areListElementVisible(comparableShifts, 5)) {
+            String result = resultCount.getText();
+            if (result.length() > 7) {
+                sum = Integer.parseInt(result.substring(0, result.length() - 7).trim());
+            }
+            if (sum == comparableShifts.size()) {
+                SimpleUtils.pass("Verified Sum of swap shifts is correct!");
+            }else {
+                SimpleUtils.fail("Sum of swap shifts is incorrect, showing sum is: " + sum + ", but actual is: " + comparableShifts.size(), false);
+            }
+        }else {
+            SimpleUtils.fail("Sum results and comparable shifts not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void verifyTheDataOfComparableShifts() throws Exception {
+        if (areListElementVisible(comparableShifts, 5)) {
+            for (WebElement comparableShift : comparableShifts) {
+                WebElement name = comparableShift.findElement(By.className("shift-swap-modal-table-name"));
+                WebElement dateNTime = comparableShift.findElement(By.className("shift-swap-modal-table-shift-info"));
+                WebElement location = comparableShift.findElement(By.className("shift-swap-modal-table-home-location"));
+                if (name != null && dateNTime != null && location != null && !name.getText().isEmpty() &&
+                !dateNTime.getText().isEmpty() && !location.getText().isEmpty()) {
+                    SimpleUtils.report("Verified name: " + name.getText() + ", date and time: " + dateNTime.getText() +
+                            ", location: " + location.getText() + " are loaded!");
+                }else {
+                    SimpleUtils.fail("The data of the comparable shift is incorrect!", false);
+                    break;
+                }
+            }
+        }else {
+            SimpleUtils.fail("Comparable shifts not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void clickCancelButtonOnPopupWindow() throws Exception {
+        if (isElementLoaded(cancelButton, 5)) {
+            click(cancelButton);
+            if (!isElementLoaded(popUpWindow, 5)) {
+                SimpleUtils.pass("Pop up window get closed after clicking cancel button!");
+            }else {
+                SimpleUtils.fail("Pop up window still shows after clicking cancel button!", false);
+            }
+        }else {
+            SimpleUtils.fail("Cancel Button not loaded Successfully on pop up window!", false);
+        }
+    }
 
     @Override
     public void verifyClickCancelSwapOrCoverRequest() throws Exception {
@@ -5439,7 +5646,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyClickOnSubmitButton() throws Exception {
-        if (isElementLoaded(submitButton, 5)) {
+        if (isElementLoaded(submitButton, 10)) {
             click(submitButton);
             if (isElementLoaded(confirmWindow, 5) && isElementLoaded(okBtnOnConfirm, 5)) {
                 click(okBtnOnConfirm);
@@ -5468,6 +5675,23 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.pass("Submit button on Submit Cover Request loaded Successfully!");
         }else {
             SimpleUtils.fail("Submit button on Submit Cover Request not loaded Successfully!", true);
+        }
+    }
+
+    @Override
+    public void verifyTheContentOfMessageOnSubmitCover() throws Exception {
+        if (isElementLoaded(messageText, 5) && isElementLoaded(shiftOfferTime, 5)) {
+            String expectedText = "Hey, I have a commitment " + shiftOfferTime.getText() + " that conflicts with my shift, would you be able to help cover my shift?";
+            String actualText = messageText.getAttribute("value");
+            if (expectedText.equalsIgnoreCase(actualText)) {
+                SimpleUtils.pass("The content of Add Message text box is correct!");
+                messageText.clear();
+            }else {
+                SimpleUtils.fail("The content of Add Message text box is incorrect! Expected is: " + expectedText
+                + " but actual is: " + actualText, false);
+            }
+        }else {
+            SimpleUtils.fail("Message text box not loaded Successfully!", true);
         }
     }
 
@@ -5579,4 +5803,338 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return isLoaded;
     }
 
+    // Added by Nora: for Team schedule option as team member
+    @FindBy (css = "week-schedule-shift .week-schedule-shift-wrapper")
+    private List<WebElement> wholeWeekShifts;
+    @FindBy (css = ".day-week-picker-period-week")
+    private List<WebElement> currentWeeks;
+    @FindBy (className = "period-name")
+    private WebElement weekPeriod;
+    @FindBy (className = "card-carousel-card")
+    private List<WebElement> smartCards;
+    @FindBy (className = "card-carousel-link")
+    private List<WebElement> cardLinks;
+    @FindBy (css = "[src*=\"print.svg\"]")
+    private WebElement printIcon;
+
+    public enum monthsOfCalendar {
+        Jan("January"),
+        Feb("February"),
+        Mar("March"),
+        Apr("April"),
+        May("May"),
+        Jun("June"),
+        Jul("July"),
+        Aug("August"),
+        Sep("September"),
+        Oct("October"),
+        Nov("November"),
+        Dec("December");
+        private final String value;
+
+        monthsOfCalendar(final String newValue) {
+            value = newValue;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    @Override
+    public void verifyThePrintFunction() throws Exception {
+        if (isPrintIconLoaded()) {
+            click(printIcon);
+            if (isElementLoaded(printButtonInPrintLayout, 5)) {
+                click(printButtonInPrintLayout);
+                if (!isElementLoaded(printButtonInPrintLayout, 6)) {
+                    String downloadPath = parameterMap.get("Download_File_Default_Dir");
+                    SimpleUtils.assertOnFail("Failed to download the team schedule", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekViewSchedulePdf"), false);
+                }else {
+                    SimpleUtils.fail("Failed to print the team schedule!", true);
+                }
+            }else {
+                SimpleUtils.fail("Print Layout not loaded Successfully!", false);
+            }
+        }else {
+            SimpleUtils.fail("Print icon not loaded Successfully on Schedule page!", false);
+        }
+    }
+
+    @Override
+    public boolean isPrintIconLoaded() throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(printIcon, 5)) {
+            isLoaded = true;
+            SimpleUtils.pass("Print Icon loaded Successfully!");
+        }
+        return isLoaded;
+    }
+
+    @Override
+    public void filterScheduleByShiftTypeAsTeamMember(boolean isWeekView) throws Exception {
+        String shiftTypeFilterKey = "shifttype";
+        HashMap<String, ArrayList<WebElement>> availableFilters = getAvailableFilters();
+        if (availableFilters.size() > 0) {
+            ArrayList<WebElement> shiftTypeFilters = availableFilters.get(shiftTypeFilterKey);
+            if (isWeekView) {
+                filterScheduleByShiftTypeWeekViewAsTeamMember(shiftTypeFilters);
+            }else {
+                filterScheduleByShiftTypeDayViewAsTeamMember(shiftTypeFilters);
+            }
+        }
+    }
+
+    public void filterScheduleByShiftTypeWeekViewAsTeamMember(ArrayList<WebElement> shiftTypeFilters) throws Exception {
+        if (shiftTypeFilters.size() > 0) {
+            for (WebElement shiftTypeFilter : shiftTypeFilters) {
+                if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+                    click(filterButton);
+                unCheckFilters(shiftTypeFilters);
+                String shiftType = shiftTypeFilter.getText();
+                SimpleUtils.report("Data for Shift Type: '" + shiftType + "'");
+                click(shiftTypeFilter);
+                click(filterButton);
+                if (areListElementVisible(wholeWeekShifts, 5)) {
+                    for (WebElement shift : wholeWeekShifts) {
+                        WebElement name = shift.findElement(By.className("week-schedule-worker-name"));
+                        if (shiftType.equalsIgnoreCase("Open")) {
+                            if (!name.getText().equalsIgnoreCase("Open")) {
+                                SimpleUtils.fail("Shift: " + name.getText() + " isn't for shift type: " + shiftType, true);
+                            }
+                        }else {
+                            if (name.getText().equalsIgnoreCase("Open")) {
+                                SimpleUtils.fail("Shift: " + name.getText() + " isn't for shift type: " + shiftType, true);
+                            }
+                        }
+                    }
+                }else {
+                    SimpleUtils.report("Didn't find shift for type: " + shiftType);
+                }
+            }
+        }else {
+            SimpleUtils.fail("Shift Type Filters not loaded Successfully!", false);
+        }
+    }
+
+    public void filterScheduleByShiftTypeDayViewAsTeamMember(ArrayList<WebElement> shiftTypeFilters) throws Exception {
+        if (shiftTypeFilters.size() > 0) {
+            for (WebElement shiftTypeFilter : shiftTypeFilters) {
+                if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+                    click(filterButton);
+                unCheckFilters(shiftTypeFilters);
+                String shiftType = shiftTypeFilter.getText();
+                SimpleUtils.report("Data for Shift Type: '" + shiftType + "'");
+                click(shiftTypeFilter);
+                click(filterButton);
+                if (areListElementVisible(dayViewAvailableShifts, 5)) {
+                    for (WebElement shift : dayViewAvailableShifts) {
+                        WebElement name = shift.findElement(By.className("sch-day-view-shift-worker-name"));
+                        if (shiftType.equalsIgnoreCase("Open")) {
+                            if (!name.getText().equalsIgnoreCase("Open")) {
+                                SimpleUtils.fail("Shift: " + name.getText() + " isn't for shift type: " + shiftType, true);
+                            }
+                        }else {
+                            if (name.getText().equalsIgnoreCase("Open")) {
+                                SimpleUtils.fail("Shift: " + name.getText() + " isn't for shift type: " + shiftType, true);
+                            }
+                        }
+                    }
+                }else {
+                    SimpleUtils.report("Didn't find shift for type: " + shiftType);
+                }
+            }
+        }else {
+            SimpleUtils.fail("Shift Type Filters not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public int getShiftsCount() throws Exception {
+        int count = 0;
+        if (areListElementVisible(wholeWeekShifts, 5)) {
+            count = wholeWeekShifts.size();
+        }else {
+            SimpleUtils.fail("Whole Week Shifts not loaded Successfully!", false);
+        }
+        return count;
+    }
+
+    @Override
+    public void clickLinkOnSmartCardByName(String linkName) throws Exception {
+        if (areListElementVisible(cardLinks, 5)) {
+            for (WebElement cardLink : cardLinks) {
+                if (cardLink.getText().equalsIgnoreCase(linkName)) {
+                    click(cardLink);
+                    SimpleUtils.pass("Click the link: " + linkName + " Successfully!");
+                    break;
+                }
+            }
+        }else {
+            SimpleUtils.report("There are no smart card links!");
+        }
+    }
+
+    @Override
+    public int getCountFromSmartCardByName(String cardName) throws Exception {
+        int count = -1;
+        if (areListElementVisible(smartCards, 5)) {
+            for (WebElement smartCard : smartCards) {
+                WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
+                if (title != null && title.getText().trim().equalsIgnoreCase(cardName)) {
+                    WebElement h1 = smartCard.findElement(By.tagName("h1"));
+                    String h1Title = h1 == null ? "" : h1.getText();
+                    if (h1Title.contains(" ")) {
+                        String[] items = h1Title.split(" ");
+                        for (String item : items) {
+                            if (SimpleUtils.isNumeric(item)) {
+                                count = Integer.parseInt(item);
+                                SimpleUtils.report("Get " + cardName + " count is: " + count);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (count == -1) {
+            SimpleUtils.fail("Failed to get the count from " + cardName + " card!", false);
+        }
+        return count;
+    }
+
+    @Override
+    public boolean isSpecificSmartCardLoaded(String cardName) throws Exception {
+        boolean isLoaded = false;
+        if (areListElementVisible(smartCards, 5)) {
+            for (WebElement smartCard : smartCards) {
+                WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
+                if (title != null && title.getText().trim().equalsIgnoreCase(cardName)) {
+                    isLoaded = true;
+                    break;
+                }
+            }
+        }
+        return isLoaded;
+    }
+
+    @Override
+    public void goToSchedulePageAsTeamMember() throws Exception {
+        if (isElementLoaded(goToScheduleButton, 5)) {
+            click(goToScheduleButton);
+            if (areListElementVisible(ScheduleSubTabsElement, 5)) {
+                SimpleUtils.pass("Navigate to schedule page successfully!");
+            }else {
+                SimpleUtils.fail("Schedule page not loaded Successfully!", true);
+            }
+        }else {
+            SimpleUtils.fail("Go to Schedule button not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void gotoScheduleSubTabByText(String subTitle) throws Exception {
+        if (areListElementVisible(ScheduleSubTabsElement, 5)) {
+            for (WebElement scheduleSubTab : ScheduleSubTabsElement) {
+                if (isElementEnabled(scheduleSubTab, 5) && isClickable(scheduleSubTab, 5)
+                        && scheduleSubTab.getText().equalsIgnoreCase(subTitle)) {
+                    click(scheduleSubTab);
+                    break;
+                }
+            }
+            if (isElementLoaded(activatedSubTabElement, 5) && activatedSubTabElement.getText().equalsIgnoreCase(subTitle)) {
+                SimpleUtils.pass("Navigate to sub tab: " + subTitle + " Successfully!");
+            }else {
+                SimpleUtils.fail("Failed navigating to sub tab: " + subTitle, false);
+            }
+        }else {
+            SimpleUtils.fail("Schedule sub tab elements not loaded SUccessfully!", false);
+        }
+    }
+
+    @Override
+    public void verifyTeamScheduleInViewMode() throws Exception {
+        if (isElementLoaded(edit, 5)) {
+            SimpleUtils.fail("Team Member shouldn't see the Edit button!", false);
+        }else {
+            SimpleUtils.pass("Verified Team Schedule is in View Mode!");
+        }
+    }
+
+    @Override
+    public List<String> getWholeWeekSchedule() throws Exception {
+        List<String> weekShifts = new ArrayList<>();
+        if (areListElementVisible(wholeWeekShifts, 5)) {
+            for (WebElement shift : wholeWeekShifts) {
+                WebElement name = shift.findElement(By.className("week-schedule-worker-name"));
+                if (!name.getText().contains("Open")) {
+                    weekShifts.add(shift.getText());
+                }
+            }
+        }else {
+            SimpleUtils.fail("Whole Week Shifts not loaded Successfully!", true);
+        }
+        if (weekShifts.size() == 0) {
+            SimpleUtils.fail("Failed to get the whole week shifts!", false);
+        }
+        return weekShifts;
+    }
+
+    @Override
+    public String getSelectedWeek() throws Exception {
+        String selectedWeek = "";
+        if (isElementLoaded(currentActiveWeek, 5)) {
+            selectedWeek = currentActiveWeek.getText();
+            SimpleUtils.report("Get current active week: " + selectedWeek);
+        }else {
+            SimpleUtils.fail("Current Active Week not loaded Successfully!", false);
+        }
+        return selectedWeek;
+    }
+
+    @Override
+    public void verifySelectOtherWeeks() throws Exception {
+        String currentWeekPeriod = "";
+        String weekDate = "";
+        if (areListElementVisible(currentWeeks, 5)) {
+            for (int i = 0; i < currentWeeks.size(); i++) {
+                click(currentWeeks.get(i));
+                if (isElementLoaded(periodName, 5)) {
+                    currentWeekPeriod = periodName.getText().length() > 12 ? periodName.getText().substring(12) : "";
+                }
+                if (currentWeeks.get(i).getText().contains("\n")) {
+                    weekDate = currentWeeks.get(i).getText().split("\n").length >= 2 ? currentWeeks.get(i).getText().split("\n")[1] : "";
+                    if (weekDate.length() > 3) {
+                        String shortMonth = weekDate.substring(0, 3);
+                        String fullMonth = getFullMonthName(shortMonth);
+                        weekDate = weekDate.replaceAll(shortMonth, fullMonth);
+                    }
+                }
+                if (weekDate.trim().equalsIgnoreCase(currentWeekPeriod.trim())) {
+                    SimpleUtils.pass("Selected week is: " + currentWeeks.get(i).getText() + " and current week is: " + currentWeekPeriod);
+                }else {
+                    SimpleUtils.fail("Selected week is: " + currentWeeks.get(i).getText() + " but current week is: " + currentWeekPeriod, false);
+                }
+                if (i == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
+                    click(calendarNavigationNextWeekArrow);
+                    verifySelectOtherWeeks();
+                }
+            }
+        }else {
+            SimpleUtils.fail("Current weeks' elements not loaded Successfully!", false);
+        }
+    }
+
+    public String getFullMonthName(String shortName) {
+        String fullName = "";
+        monthsOfCalendar[] shortNames = monthsOfCalendar.values();
+        for (int i = 0; i < shortNames.length; i++) {
+            if (shortNames[i].name().equalsIgnoreCase(shortName)) {
+                fullName = shortNames[i].value;
+                SimpleUtils.report("Get the full name of " + shortName + ", is: " + fullName);
+                break;
+            }
+        }
+        return fullName;
+    }
 }
