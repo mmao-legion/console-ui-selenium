@@ -225,7 +225,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @FindBy (css = "div.console-navigation-item-label.Schedule")
 	private WebElement consoleSchedulePageTabElement;
 
-    @FindBy (css = "week-view-detail[weekly-schedule-data='weeklyScheduleData']")
+    @FindBy (css = "week-schedule[legacy='legacyObjectForNewSchedule']")
     private WebElement scheduleTableWeekView;
 
     @FindBy (css = "div.sch-day-view-grid")
@@ -1315,7 +1315,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
             } else {
                 SimpleUtils.fail("Smartcard Section Not Loaded for Week " + daypickers[1], true);
             }
-            if (isElementEnabled(scheduleTableWeekViewWorkerDetail.get(0)) && Float.parseFloat(budgetDisplayOnScheduleSmartcard.get(0).getText()) > 0 && Float.parseFloat(scheduleDisplayOnScheduleSmartcard.get(0).getText().replaceAll(",","")) > 0) {
+            if (isElementEnabled(scheduleTableWeekViewWorkerDetail.get(0)) && Float.parseFloat(budgetDisplayOnScheduleSmartcard.get(0).getText().replaceAll(",","")) > 0 && Float.parseFloat(scheduleDisplayOnScheduleSmartcard.get(0).getText().replaceAll(",","")) > 0) {
                 SimpleUtils.pass("Schedule Loaded Successfully! for Week " + daypickers[1] + " value for Budgeted Hour is " + budgetDisplayOnScheduleSmartcard.get(0).getText() + "Hours and Scheduled Hour is " + scheduleDisplayOnScheduleSmartcard.get(0).getText() + "Hours");
             } else {
                 SimpleUtils.fail("Schedule Not Loaded for Week " + daypickers[1] + " value for Budgeted Hour is " + budgetDisplayOnScheduleSmartcard.get(0).getText() + "Hours and Scheduled Hour is " + scheduleDisplayOnScheduleSmartcard.get(0).getText() + "Hours", true);
@@ -1684,11 +1684,6 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	}
 
-	@Override
-	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception {
@@ -1974,6 +1969,81 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void landscapeModeOnlyInDayView() throws Exception {
+
+    }
+
+    @Override
+    public void weatherWeekSmartCardIsDisplayedForAWeek() throws Exception {
+
+    }
+
+    @Override
+    public void scheduleUpdateAccordingToSelectWeek() throws Exception {
+
+    }
+
+    @Override
+    public boolean verifyRedFlagIsVisible() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyComplianceShiftsSmartCardShowing() throws Exception {
+
+    }
+
+
+
+    @Override
+    public boolean clickViewShift() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyComplianceFilterIsSelectedAftClickingViewShift() throws Exception {
+
+    }
+
+    @Override
+    public void verifyComplianceShiftsShowingInGrid() throws Exception {
+
+    }
+
+    @Override
+    public void verifyClearFilterFunction() throws Exception {
+
+    }
+
+    @Override
+    public void clickOnFilterBtn() throws Exception {
+
+    }
+
+
+    @Override
+    public void verifyShiftSwapCoverRequestedIsDisplayInTo() {
+
+    }
+
+    @Override
+    public void verifyAnalyzeBtnFunctionAndScheduleHistoryScroll() throws Exception {
+
+    }
+
+    @Override
+    public HashMap<String, Float> getScheduleBudgetedHoursInScheduleSmartCard() throws Exception {
+
+        return null;
+    }
+
+    public Boolean isGenerateButtonLoadedForManagerView() throws Exception {
+        return false;
+    }
+
+
+
+    @Override
     public boolean areShiftsPresent() throws Exception {
         return false;
     }
@@ -2155,6 +2225,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyShiftRequestStatus(String expectedStatus) throws Exception {
+      
+    }
+  
+    @Override
+    public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch, boolean startHrsSlider) throws Exception {
 
     }
 }

@@ -120,7 +120,7 @@ public interface SchedulePage {
 	public void toggleSummaryView() throws Exception;
 	public boolean isSummaryViewLoaded() throws Exception;
 	public void updateScheduleOperatingHours(String day, String startTime, String endTime) throws Exception;
-	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch) throws Exception;
+	public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch, boolean startHrsSlider) throws Exception;;
 	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception;
 	public void verifyScheduledHourNTMCountIsCorrect() throws Exception;
 	public void complianceShiftSmartCard() throws Exception;
@@ -184,6 +184,36 @@ public interface SchedulePage {
 	public void portraitModeWorkWellInWeekView()throws Exception;
 
 	public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow, String currentTime) throws Exception;
+	public void landscapeModeOnlyInDayView() throws Exception;
+
+	public void weatherWeekSmartCardIsDisplayedForAWeek() throws Exception;
+
+	public void scheduleUpdateAccordingToSelectWeek() throws Exception;
+
+	public boolean verifyRedFlagIsVisible() throws Exception;
+
+	public void verifyComplianceShiftsSmartCardShowing() throws Exception;
+
+	public boolean clickViewShift() throws Exception;
+
+	public void verifyComplianceFilterIsSelectedAftClickingViewShift() throws Exception;
+
+	public void verifyComplianceShiftsShowingInGrid() throws Exception;
+
+	public void verifyClearFilterFunction() throws Exception;
+
+	public void clickOnFilterBtn() throws Exception;
+
+
+
+	public void  verifyShiftSwapCoverRequestedIsDisplayInTo();
+
+	public void verifyAnalyzeBtnFunctionAndScheduleHistoryScroll() throws Exception;
+
+	public HashMap<String, Float> getScheduleBudgetedHoursInScheduleSmartCard() throws Exception;
+
+
+//	public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow) throws Exception;
 	public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception;
 	public void clickOnCreateNewShiftWeekView() throws Exception;
 	public void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception;
@@ -229,4 +259,5 @@ public interface SchedulePage {
 	public void verifyClickAcceptSwapButton() throws Exception;
 	public void verifyTheContentOfMessageOnSubmitCover() throws Exception;
 	public void verifyShiftRequestStatus(String expectedStatus) throws Exception;
+	public Boolean isGenerateButtonLoadedForManagerView() throws Exception;
 }

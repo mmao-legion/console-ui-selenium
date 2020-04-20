@@ -38,7 +38,6 @@ import static org.testng.AssertJUnit.assertTrue;
  */
 public class SimpleUtils {
 
-//	static HashMap<String,String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/ciEnvCfg.json");
 //	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
 	static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
@@ -746,19 +745,19 @@ public class SimpleUtils {
 
 	}
 
-	public static Float convertDateIntotTwentyFourHrFormat(String startDate, String endDate) throws ParseException {
+	public static Float convertDateIntotTwentyFourHrFormat(String startTime, String endTime) throws ParseException {
 		SimpleDateFormat displayFormat = new SimpleDateFormat("HH:mm");
 		SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
 		int shiftHourcalculation =0;
 		Float shiftMinutecalculation =0.0f;
 		Float scheduleHoursDifference = 0.0f;
-		Date startDateFormat = parseFormat.parse(startDate.substring(0,startDate.length()-2) + " " +startDate.substring(startDate.length()-2));
-		Date endDateFormat = parseFormat.parse(endDate.substring(0,endDate.length()-2) + " " +endDate.substring(endDate.length()-2));
+		Date startDateFormat = parseFormat.parse(startTime.substring(0,startTime.length()-2) + " " +startTime.substring(startTime.length()-2));
+		Date endDateFormat = parseFormat.parse(endTime.substring(0,endTime.length()-2) + " " +endTime.substring(endTime.length()-2));
 		String strEndDate = displayFormat.format(endDateFormat).toString();
 		String strStartDate = displayFormat.format(startDateFormat).toString();
 		String[] arrEndDate = strEndDate.split(":");
 		String[] arrStartDate = strStartDate.split(":");
-		if(endDate.contains("AM")){
+		if(endTime.contains("AM")){
 			shiftHourcalculation = (24 + Integer.parseInt(arrEndDate[0]))-(Integer.parseInt(arrStartDate[0]));
 			shiftMinutecalculation =  (Float.parseFloat(arrEndDate[1]) -  Float.parseFloat(arrEndDate[1]))/60;
 			scheduleHoursDifference = shiftHourcalculation + shiftMinutecalculation ;
@@ -1820,7 +1819,7 @@ public class SimpleUtils {
 		if (1 == dayWeek) {
 			cal.add(Calendar.DAY_OF_MONTH, -1);
 		}
-		cal.setFirstDayOfWeek(Calendar.MONDAY);
+		cal.setFirstDayOfWeek(Calendar.SUNDAY);
 		int day = cal.get(Calendar.DAY_OF_WEEK);
 		cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);
 

@@ -2,12 +2,14 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -271,6 +273,16 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private List<WebElement> committedHoursPeriodFileds;
 	@FindBy(css="div[ng-click=\"$ctrl.select(tab)\"]")
 	private List<WebElement> schedulingPolicyGroupsTabs;
+	@FindBy(css="div.lg-question-input__wrapper.bg.budget_score > input-field > ng-form > div")
+	private WebElement budgetScoreInputField;
+	@FindBy(css="input-field[value=\"$ctrl.scheduleScoreWeight.coverageScoreWeightRegular\"]")
+	private WebElement coverageScoreWeightRegularInputField;
+	@FindBy(css="input-field[value=\"$ctrl.scheduleScoreWeight.coverageScoreWeightPeak\"]")
+	private WebElement coverageScoreWeightPeakInputField;
+	@FindBy(css="input-field[value=\"$ctrl.scheduleScoreWeight.employeeMatchScoreWeight\"]")
+	private WebElement employeeMatchScoreWeightInputField;
+	@FindBy(css="input-field[value=\"$ctrl.scheduleScoreWeight.complianceScoreWeight\"]")
+	private WebElement complianceScoreWeightInputField;
 
 	//added by Nishant
 
@@ -288,7 +300,18 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@FindBy(css="div.lg-search-options__option")
 	private List<WebElement> locationName;
-	
+
+	//added by Nishant
+
+	@FindBy(xpath="//yes-no[@value='sp.weeklySchedulePreference.canOverrideAssignmentRule']")
+	private WebElement btnOverrideAssignmentRule;
+
+	@FindBy(css="yes-no[value='sp.weeklySchedulePreference.canOverrideAssignmentRule'] div.lg-button-group-first")
+	private WebElement btnOverrideAssignmentRuleYes;
+
+	@FindBy(css="yes-no[value='sp.weeklySchedulePreference.canOverrideAssignmentRule'] div.lg-button-group-last")
+	private WebElement btnOverrideAssignmentRuleNo;
+
 	String timeSheetHeaderLabel = "Controls";
 	
 	@Override
@@ -501,7 +524,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		else
 			SimpleUtils.fail("Controls Page: Working Hours Card not Loaded!", false);
 	}
-	
+
+	@FindBy(css = "div.lgn-time-slider-notch-label")
+	private List<WebElement> sliderNotchLabel;
 
 	@Override
 	public void updateControlsRegularHours(String isStoreClosed, String openingHours, String closingHours, String day)
@@ -510,6 +535,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		closingHours = closingHours.replace(" ", "");
 		WebElement collapsibleHeader = regularHoursBlock.findElement(By.cssSelector("div.collapsible.row"));
 		boolean isRegularHoursSectionOpened = collapsibleHeader.getAttribute("class").contains("open");
+
 		if(! isRegularHoursSectionOpened)
 			click(regularHoursBlock);
 
@@ -523,41 +549,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					if(isElementLoaded(regularHoursEditBtn))
 					{
 						click(regularHoursEditBtn);
-
 						// Select Opening Hours
-						int openingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(0).getText().split(":")[0].trim());
-						if(editRegularHoursSliders.get(0).getText().toLowerCase().contains("pm"))
-							openingHourOnSlider = openingHourOnSlider + 12;
-						int openingHourOnJson = Integer.valueOf(openingHours.split(":")[0].trim());
-						if(openingHours.toLowerCase().contains("pm"))
-							openingHourOnJson = openingHourOnJson + 12;
-						int sliderOffSet = 5;
-						
-						if(openingHourOnSlider > openingHourOnJson)
-							sliderOffSet = -5;
-						
-						while(! editRegularHoursSliders.get(0).getText().toLowerCase().contains(openingHours.toLowerCase()))
-						{
-							moveDayViewCards(editRegularHoursSliders.get(0), sliderOffSet);
-						}
+						WebElement editRegularHoursSlidersStart = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch-selector-start"));
+						moveDayViewCards(editRegularHoursSlidersStart, 80);
 						
 						// Select Closing Hours
-						int closingHourOnSlider = Integer.valueOf(editRegularHoursSliders.get(1).getText().split(":")[0].trim());
-						if(editRegularHoursSliders.get(1).getText().toLowerCase().contains("pm"))
-							closingHourOnSlider = closingHourOnSlider + 12;
-						int closingHourOnJson = Integer.valueOf(closingHours.split(":")[0].trim());
-						if(closingHours.toLowerCase().contains("pm"))
-							closingHourOnJson = closingHourOnJson + 12;
-						if(closingHourOnSlider > closingHourOnJson)
-							sliderOffSet = -5;
-						else
-							sliderOffSet = 5;
-
-						while(! editRegularHoursSliders.get(1).getText().toLowerCase().contains(closingHours.toLowerCase()))
-						{
-							moveDayViewCards(editRegularHoursSliders.get(1), sliderOffSet);
-						}
-						
+						WebElement editRegularHoursSlidersEnd = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch-selector-end"));
+						moveDayViewCards(editRegularHoursSlidersEnd, -40);
 						if(isElementLoaded(saveWorkersHoursBtn))
 						{
 							click(saveWorkersHoursBtn);
@@ -632,6 +630,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 		else if(!enable && isBudgetSmartcardEnabled())
 		{
+			scrollToElement(enableBudgetNoBtn);
 			click(enableBudgetNoBtn);
 			SimpleUtils.pass("Schedule Policies Budget card disabled successfully.");
 			displaySuccessMessage();
@@ -4944,6 +4943,99 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		return timeZone;
 	}
 
+	@FindBy(css = "lg-schedule-score-control > div > div > div.tr > lg-button > button > span > span")
+	private WebElement manageBtnInScheduleScore;
+
+	@FindBy(css = "select[class=\"ng-pristine ng-untouched ng-valid ng-not-empty ng-valid-required\"]")
+	private WebElement drpCoverField;
+
+
+	@FindBy(css = "input[class=\"ng-pristine ng-untouched ng-valid ng-scope ng-not-empty ng-valid-min ng-valid-max ng-valid-required ng-valid-pattern\"]")
+	private List<WebElement> scoreFieldList;
+
+	@FindBy(css = "[label=\"Save\"]")
+	private WebElement saveBtnInManageSchScore;
+
+	@Override
+	public void updateScheduleScore(String budget_score, String coverage_scores_regular_hours, String coverage_scores_peak_hours, String employee_match_score, String compliance_score, String how_to_measure_coverage_relative_to_guidance_budget) throws Exception {
+		if (isElementLoaded(manageBtnInScheduleScore,5)) {
+			/**
+			 * wait for value load
+			 */
+			waitForSeconds(3);
+			click(manageBtnInScheduleScore);
+			try {
+				Select drpCoverage = new Select(drpCoverField);
+				drpCoverage.selectByVisibleText(how_to_measure_coverage_relative_to_guidance_budget);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if (scoreFieldList.size() >= 0) {
+				for (WebElement e: scoreFieldList
+					 ) {
+					e.click();
+					e.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+					e.sendKeys(budget_score);
+				}
+				click(saveBtnInManageSchScore);
+
+			} else
+				SimpleUtils.fail("manage button load failed and can not update schedule score", false);
+		}
+	}
+	@FindBy(css = ".lg-question-input__text.tr")
+	private List<WebElement> scoreListInSchedulePolicy;
+
+
+	@Override
+	public boolean isScheduleScoreUpdated(String budget_score, String coverage_scores_regular_hours, String coverage_scores_peak_hours, String employee_match_score, String compliance_score, String how_to_measure_coverage_relative_to_guidance_budget) {
+
+		boolean isScoreUpdated = false;
+		String abc = scoreListInSchedulePolicy.get(0).getText().replaceAll("%","");
+
+		if(scoreListInSchedulePolicy.get(0).getText().replaceAll("%","").equals(budget_score))
+		{
+			isScoreUpdated = true;
+			SimpleUtils.pass("Controls Page: Schedule policy - 'budget_score' updated successfully.");
+		}
+		String b = scoreListInSchedulePolicy.get(1).getText().replaceAll("%","");
+		if(scoreListInSchedulePolicy.get(1).getText().replaceAll("%","").equals(coverage_scores_regular_hours))
+		{
+			isScoreUpdated = true;
+			SimpleUtils.pass("Controls Page: Schedule policy - 'coverage_scores_regular_hours' updated successfully.");
+		}
+
+		String c = scoreListInSchedulePolicy.get(2).getText().replaceAll("%","");
+		if( scoreListInSchedulePolicy.get(2).getText().replaceAll("%","").equals(coverage_scores_peak_hours))
+		{
+			isScoreUpdated = true;
+			SimpleUtils.pass("Controls Page: Schedule policy - 'coverage_scores_peak_hours' updated successfully.");
+		}
+
+		String d = scoreListInSchedulePolicy.get(3).getText().replaceAll("%","");
+		if(scoreListInSchedulePolicy.get(3).getText().replaceAll("%","").equals(employee_match_score))
+		{
+			isScoreUpdated = true;
+			SimpleUtils.pass("Controls Page: Schedule policy - 'employee_match_score' updated successfully.");
+		}
+		String e = scoreListInSchedulePolicy.get(4).getText().replaceAll("%","");
+		if(scoreListInSchedulePolicy.get(4).getText().replaceAll("%","").equals(compliance_score))
+		{
+			isScoreUpdated = true;
+			SimpleUtils.pass("Controls Page: Schedule policy - 'compliance_score' updated successfully.");
+		}
+		String f = scoreListInSchedulePolicy.get(5).getText().replaceAll("%","");
+		if( scoreListInSchedulePolicy.get(5).getText().replaceAll("%","").equals(how_to_measure_coverage_relative_to_guidance_budget))
+		{
+			isScoreUpdated = true;
+			SimpleUtils.pass("Controls Page: Schedule policy - 'how_to_measure_coverage_relative_to_guidance_budget' updated successfully.");
+		}
+		return isScoreUpdated;
+
+	}
+
+
+
 	@Override
 	public String getOnBoardOptionFromScheduleCollaboration() throws Exception {
 		String emailOrPhone = null;
@@ -4967,6 +5059,27 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("On board option failed to load!", true);
 		}
 	}
+
+	//added by Nishant
+
+	public void enableOverRideAssignmentRuleAsYes() throws Exception {
+		boolean OverrideAssignmentRule = true;
+		if(isElementEnabled(btnOverrideAssignmentRule,5)){
+			if(isElementEnabled(btnOverrideAssignmentRuleYes,3)) {
+				if (btnOverrideAssignmentRuleYes.getAttribute("class").contains("selected")) {
+					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button already enabled");
+				} else {
+					click(btnOverrideAssignmentRuleYes);
+					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button selected!");
+					displaySuccessMessage();
+				}
+			}else{
+				SimpleUtils.fail("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button not loaded!!", false);
+			}
+		}
+	}
+
+
 
 	@Override
 	public void clickOnWorkHoursTypeByText(String title) throws Exception {
