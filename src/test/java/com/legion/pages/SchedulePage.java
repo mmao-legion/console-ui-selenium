@@ -166,7 +166,6 @@ public interface SchedulePage {
 	public HashMap<String, String> getHoursFromSchedulePage() throws Exception;
 	public void printButtonIsClickable() throws Exception;
 	public void todoButtonIsClickable()throws Exception;
-	public void closeButtonIsClickable();
 	public void legionButtonIsClickableAndHasNoEditButton() throws Exception;;
 	public void clickOnSuggestedButton() throws Exception;
 	public void legionIsDisplayingTheSchedul() throws Exception;
@@ -192,7 +191,7 @@ public interface SchedulePage {
 
 	public boolean verifyRedFlagIsVisible() throws Exception;
 
-	public void verifyComplianceShiftsSmartCardShowing() throws Exception;
+	void verifyComplianceShiftsSmartCardShowing() throws Exception;
 
 	public boolean clickViewShift() throws Exception;
 
@@ -261,4 +260,71 @@ public interface SchedulePage {
 	public void verifyShiftRequestStatus(String expectedStatus) throws Exception;
 	public Boolean isGenerateButtonLoadedForManagerView() throws Exception;
 
+	public void validateGroupBySelectorSchedulePage() throws Exception;
+	public boolean checkEditButton() 	throws Exception;
+	public void verifyEditButtonFuntionality() 		throws Exception;
+	public boolean checkCancelButton() 	throws Exception;
+	public void selectCancelButton()	throws Exception;
+	public boolean checkSaveButton()	throws Exception;
+	public void selectSaveButton()		throws Exception;
+	public boolean isScheduleFinalized() throws Exception;
+	public boolean isProfileIconsEnable() throws Exception;
+	public void clickOnProfileIcon() throws Exception;
+	public boolean isViewProfileEnable() throws Exception;
+	public boolean isViewOpenShiftEnable() throws Exception;
+	public boolean isChangeRoleEnable() throws Exception;
+	public boolean isAssignTMEnable() throws Exception;
+	public boolean isConvertToOpenEnable() throws Exception;
+	public void selectNextWeekSchedule() throws Exception;
+	public void clickOnViewProfile() throws Exception;
+	public void clickOnChangeRole() throws Exception;
+	public boolean validateVariousWorkRolePrompt() throws Exception;
+	public void verifyRecommendedAndSearchTMEnabled() throws Exception;
+	public void clickonAssignTM() throws Exception;
+
+	public void verifyPersonalDetailsDisplayed() throws Exception;
+	public void verifyWorkPreferenceDisplayed() throws Exception;
+	public void verifyAvailabilityDisplayed() throws Exception;
+	public void closeViewProfileContainer() throws Exception;
+
+
+	public boolean  verifyContextOfTMDisplay() throws Exception;
+
+	public void verifyChangeRoleFunctionality() throws Exception;
+
+	public void verifyMealBreakTimeDisplayAndFunctionality() throws Exception;
+
+	public void verifyDeleteShift() throws Exception;
+
+	public void clickOnEditMeaLBreakTime() throws Exception;
+
+	public void clickOnEditButtonNoMaterScheduleFinalizedOrNot() throws Exception;
+
+	public void clickOnOpenShitIcon();
+
+	public String getTimeDurationWhenCreateNewShift() throws Exception;
+
+	public void verifyConvertToOpenShiftBySelectedSpecificTM() throws Exception;
+
+	public int getOTShiftCount();
+
+	public void saveSchedule();
+
+	public void validateXButtonForEachShift() throws Exception;
+
+	public void selectSpecificWorkDay(int dayCountInOneWeek);
+
+	public float getShiftHoursByTMInWeekView(String teamMember);
+
+	public void selectSpecificTMWhileCreateNewShift(String teamMemberName) throws Exception;
+
+	public void verifyWeeklyOverTimeAndFlag(String teamMemberName) throws Exception;
+
+	public void deleteTMShiftInWeekView(String teamMemberName) throws Exception;
+
+	public void filterScheduleByJobTitle(boolean isWeekView);
+
+	public void filterScheduleByWorkRoleAndJobTitle(boolean isWeekView);
+
+	public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView);
 }

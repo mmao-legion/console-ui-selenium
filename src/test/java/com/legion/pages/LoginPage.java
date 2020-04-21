@@ -12,4 +12,5 @@ public interface LoginPage {
     public void goToDashboardHomePage(String username, String password) throws Exception;
     public void logOut() throws Exception;
     public void verifyLoginDone(boolean isLoginDone, String selectedLocation) throws Exception;
+    public void verifyNewTermsOfServicePopUp() throws Exception;
 }

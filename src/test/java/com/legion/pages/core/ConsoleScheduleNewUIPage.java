@@ -18,6 +18,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
@@ -52,13 +53,12 @@ import java.util.regex.Pattern;
 
 public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private  ConsoleScheduleOverviewPage overviewPage;
-
+    private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
     private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
     private static HashMap<String, String> propertyWorkRole = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
     private static HashMap<String, String> propertyBudgetValue = JsonUtil.getPropertiesFromJsonFile("src/test/resources/Budget.json");
     private static HashMap<String, String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     private static HashMap<String, String> parametersMap2 = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ControlsPageLocationDetail.json");
-    private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
     public enum scheduleHoursAndWagesData {
         scheduledHours("scheduledHours"),
         budgetedHours("budgetedHours"),
@@ -82,7 +82,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public enum scheduleGroupByFilterOptions {
         groupbyAll("Group by All"),
         groupbyWorkRole("Group by Work Role"),
-        groupbyTM("Group by TM");
+        groupbyTM("Group by TM"),
+        groupbyJobTitle("Group by Job Title");
+
         private final String value;
 
         scheduleGroupByFilterOptions(final String newValue) {
@@ -281,7 +283,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.lgn-time-slider-notch.droppable")
     private List<WebElement> sliderDroppableCount;
 
-    @FindBy(css = "div.lgn-dropdown.open ul li")
+    @FindBy(css = " [ng-click=\"selectChoice($event, choice)\"]")
     private List<WebElement> listWorkRoles;
 
     @FindBy(css = "button.lgn-dropdown-button:nth-child(1)")
@@ -403,6 +405,37 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement updateAndGenerateScheduleButton;
 
 
+    @FindBy(css = "select.ng-pristine.ng-valid.ng-not-empty.ng-valid-required")
+    private WebElement groupBySelector;
+
+    // Options of group by selectors
+
+    @FindBy(xpath = "//option[contains(@value,'string:All')]")
+    private WebElement groupByAll;
+
+    @FindBy(xpath = "//option[contains(@value,'string:WorkRole')]")
+    private WebElement groupByWorkRole;
+
+    @FindBy(xpath = "//option[contains(@value,'string:TM')]")
+    private WebElement groupByTM;
+
+    @FindBy(xpath = "//option[contains(@value,'string:JobTitle')]")
+    private WebElement groupByJobTitle;
+
+    // Verify Group by work Role
+    @FindBy(css = "div.week-schedule-shift-place.ng-scope.week-schedule-shift-place-ribbon")
+    private WebElement workRoleDisaplayedOnScreen;
+
+    @FindBy(css = "[ng-if=\"showColorLabel\"]")
+    private List<WebElement> workRoleLabor;
+    // Verify Group by TM
+    @FindBy(css = "div.week-schedule-right-strip.ng-scope")
+    private WebElement tmDetailsDisplayedOnScreen;
+
+
+
+
+
 
 	//added by Naval
 
@@ -496,6 +529,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(css = "button.sch-action.sch-save")
     private WebElement convertToOpenYesBtn;
+
+    @FindBy(css = "[ng-click=\"selectManualOpenShiftAction($event)\"]")
+    private WebElement offerToSpecificTMBtn;
 
     @FindBy(css = "div.card-carousel-arrow.card-carousel-arrow-right")
     private WebElement smartcardArrowRight;
@@ -1482,7 +1518,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	public String clickNewDayViewShiftButtonLoaded() throws Exception
 	{
 		String textStartDay = null;
-		if(isElementEnabled(createNewShiftWeekView,5))
+		if(isElementEnabled(addNewShiftOnDayViewButton,5))
 		{
 			SimpleUtils.pass("User is allowed to add new shift for current or future week!");
 			if(isElementEnabled(shiftStartday)){
@@ -1491,7 +1527,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			}else{
 				SimpleUtils.fail("Shift Start day not getting Loaded!",true);
 			}
-			click(createNewShiftWeekView);
+			click(addNewShiftOnDayViewButton);
 		}
 		else
 		{
@@ -1926,14 +1962,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public ArrayList<String> getScheduleDayViewScheduleTeamMembersCount() {
-        ArrayList<String> BudgetedTMsCount = new ArrayList<String>();
+        ArrayList<String> ScheduledTMsCount = new ArrayList<String>();
         if (dayViewScheduleTMsCount.size() != 0) {
             for (WebElement scheduleTMs : dayViewScheduleTMsCount) {
-                BudgetedTMsCount.add(scheduleTMs.getText());
+                ScheduledTMsCount.add(scheduleTMs.getText());
             }
         }
 
-        return BudgetedTMsCount;
+        return ScheduledTMsCount;
     }
 
 
@@ -2463,6 +2499,21 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Select Team member option and Recommended options are not available on page", false);
         }
 
+    }
+
+    @FindBy(css = ".sch-day-view-shift-overtime-icon")
+    private List<WebElement> oTFlag;
+
+    @FindBy(css = ".ot-hours-text")
+    private List<WebElement> oTHoursText;
+
+    @Override
+    public int getOTShiftCount() {
+        int count =0;
+        if (areListElementVisible(oTFlag,5) && areListElementVisible(oTHoursText,5)) {
+            count = oTHoursText.size();
+        }
+        return count;
     }
 
     public void searchText(String searchInput) throws Exception {
@@ -3588,6 +3639,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.sch-worker-display-name")
     private List<WebElement> workerName;
 
+    @FindBy(css = "div.week-schedule-worker-name.ng-binding")
+    private List<WebElement> workerNameList;
+
     @FindBy(xpath = "//*[contains(@class,'week-view-shift-hover-info-icon')]/preceding-sibling::div")
     private List<WebElement> shiftDurationInWeekView;
 
@@ -4139,8 +4193,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         int counter = 0;
         if (areListElementVisible(imageSize, 5)) {
             for (int i = 0; i < imageSize.size(); i++) {
-                if (!workerName.get(i).getText().equalsIgnoreCase("open")) {
+                if (!workerNameList.get(i).getText().equalsIgnoreCase("open")) {
                     click(scheduleInfoIcon.get(i));
+                    waitForSeconds(3);
                     String[] workerRole = workerRoleDetailsFromPopUp.getText().split("as ");
                     TMName = workerNameInPopUp.getText();
                     TMWorkerRole = workerRole[1];
@@ -4862,12 +4917,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else {
             SimpleUtils.fail("there is no todo button", true);
         }
-    }
-
-    @Override
-    public void closeButtonIsClickable() {
-        getDriver().close();
-        SimpleUtils.pass("close button is clickable");
     }
 
     @Override
@@ -6714,3 +6763,1060 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return fullName;
     }
 }
+    //added by Estelle
+    @Override
+    public void validateGroupBySelectorSchedulePage() throws Exception {
+
+        if(isElementLoaded(groupBySelector,5))
+        {
+           click( groupBySelector);
+            // Validate the each button on dropdown
+            if(isElementEnabled(groupByAll,3) && isElementEnabled(groupByWorkRole,3) && isElementEnabled(groupByTM,3) && isElementLoaded(groupByJobTitle,3))
+                SimpleUtils.pass("In Week view: 'Group by All' filter have 4 filters:1.Group by all 2. Group by work role 3. Group by TM 4.Group by job title");
+            else SimpleUtils.fail("Group by All filter does not have 4 filters:1.Group by all 2. Group by work role 3. Group by TM 4.Group by job title",true);
+        }
+        else SimpleUtils.fail("Group By Selector is not available on screen ", true);
+
+    }
+
+
+    @FindBy(css = "lg-button[ng-click=\"controlPanel.fns.editAction($event)\"]")
+    private WebElement editScheduleButton;
+
+
+    @Override
+    public boolean checkEditButton() throws Exception {
+        if(isElementEnabled(editScheduleButton,10))
+        {
+
+            SimpleUtils.pass("Edit button is Editable");
+            return true;
+        }
+        else {
+            SimpleUtils.fail("Edit button is not Enable on screen",true);
+            return false;
+        }
+    }
+
+    @FindBy(css = "div.modal-content")
+    private WebElement popupAlertPremiumPay;
+    @FindBy(css = "button.btn.lgn-action-button.lgn-action-button-success")
+    private WebElement btnEditAnyway;
+
+    @FindBy(css = "button.btn.lgn-action-button.lgn-action-button-default")
+    private WebElement btnCancelOnAlertPopup;
+
+    public void clickOnEditButtonNoMaterScheduleFinalizedOrNot() throws Exception {
+        if(checkEditButton())
+        {
+            // Validate what happens next to the Edit!
+            // When Status is finalized, look for extra popup.
+            if(isScheduleFinalized())
+            {
+                click(editScheduleButton);
+                if(isElementLoaded(popupAlertPremiumPay,5)) {
+                    SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
+                    // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
+                    if(isElementEnabled(btnEditAnyway,5) && isElementEnabled(btnCancelOnAlertPopup,5)){
+                        SimpleUtils.pass("CANCEL And EDIT ANYWAY Buttons are enabled on Alert Pop up");
+                        SimpleUtils.report("Click on EDIT ANYWAY button and check for next save and cancel buttons");
+                        click(btnEditAnyway);
+                        if(checkSaveButton() && checkCancelButton()) {
+                            SimpleUtils.pass("Save and Cancel buttons are enabled ");
+                        }
+                        else
+                            SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
+                    }
+                    else
+                        SimpleUtils.fail("CANCEL And EDIT ANYWAY Buttons are not enabled on Alert Popup ",false);
+                }
+            }
+            else
+            {
+                click(editScheduleButton);
+                // Validate Save and cancel buttons are enabled!
+                if(checkSaveButton() && checkCancelButton()) {
+                    SimpleUtils.pass("Save and Cancel buttons are enabled ");
+                }
+                else
+                    SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
+            }
+        }else
+            generateOrUpdateAndGenerateSchedule();
+    }
+
+    @Override
+    public void clickOnOpenShitIcon() {
+        if (areListElementVisible(openShiftIcon,5) ) {
+                click(openShiftIcon.get(0));
+                SimpleUtils.pass("open shift is clickable");
+        }else
+            SimpleUtils.fail("there is no open shift",true);
+    }
+
+    @Override
+    public void verifyEditButtonFuntionality() throws Exception {
+
+        if(checkEditButton())
+        {
+            // Validate what happens next to the Edit!
+            // When Status is finalized, look for extra popup.
+            if(isScheduleFinalized())
+            {
+                click(editScheduleButton);
+                if(isElementLoaded(popupAlertPremiumPay,5)) {
+                    SimpleUtils.pass("Alert(premium pay pop-up) is appeared on Screen");
+                    // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
+                    if(isElementEnabled(btnEditAnyway,5) && isElementEnabled(btnCancelOnAlertPopup,5)){
+                        SimpleUtils.pass("CANCEL And EDIT ANYWAY Buttons are enabled on Alert Pop up");
+                        SimpleUtils.report("Click on EDIT ANYWAY button and check for next save and cancel buttons");
+                        click(btnEditAnyway);
+                        if(checkSaveButton() && checkCancelButton()) {
+                            SimpleUtils.pass("Save and Cancel buttons are enabled ");
+                            selectCancelButton();
+                        }
+                        else
+                            SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
+
+                    }
+                    else
+                        SimpleUtils.fail("CANCEL And EDIT ANYWAY Buttons are not enabled on Alert Popup ",false);
+                }
+                else
+                    SimpleUtils.fail("Alert(premium pay pop-up) is not appeared on Screen",false);
+            }
+            else
+            {
+                click(editScheduleButton);
+                SimpleUtils.pass("Edit button is clickable");
+                // Validate Save and cancel buttons are enabled!
+                if(checkSaveButton() && checkCancelButton()) {
+                    SimpleUtils.pass("Save and Cancel buttons are enabled ");
+                    selectCancelButton();
+                }
+                else
+                    SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
+            }
+        }
+    }
+
+
+    @FindBy(css = "lg-button[ng-click=\"controlPanel.fns.saveConfirmation($event)\"]")
+    private WebElement btnSaveOnSchedulePage;
+    @FindBy(css = "lg-button[ng-click=\"controlPanel.fns.cancelAction($event)\"]")
+    private WebElement btnCancelOnSchedulePage;
+
+    @Override
+    public boolean checkCancelButton() throws Exception {
+        if(isElementEnabled(btnCancelOnSchedulePage,5))
+        {
+            SimpleUtils.pass("Cancel button is enabled ");
+            return true;
+        }
+        else
+        {
+            SimpleUtils.fail("Cancel button is not enabled. ", true);
+            return false;
+        }
+    }
+
+    @Override
+    public void selectCancelButton() throws Exception {
+        if(checkCancelButton())
+        {
+            click(btnCancelOnSchedulePage);
+            SimpleUtils.pass("Cancel button is clicked ! ");
+        }
+        else
+        {
+            SimpleUtils.fail("Cancel Button cannot be clicked! ",false);
+        }
+    }
+
+    @Override
+    public boolean checkSaveButton() throws Exception {
+        if(isElementEnabled(btnSaveOnSchedulePage,5))
+        {
+            SimpleUtils.pass("Save button is enabled ");
+            return true;
+        }
+        else
+        {
+            SimpleUtils.fail("Save button is not enabled. ", true);
+            return false;
+        }
+    }
+
+    @Override
+    public void selectSaveButton() throws Exception {
+        if(checkCancelButton())
+        {
+            click(btnSaveOnSchedulePage);
+            SimpleUtils.pass("Save button is clicked ! ");
+        }
+        else
+        {
+            SimpleUtils.fail("Save Button cannot be clicked! ",false);
+        }
+
+    }
+
+
+    @Override
+    public boolean isScheduleFinalized() throws Exception {
+        if(isElementLoaded(publishButton,5))
+        {
+            SimpleUtils.report("Publish button is loaded on screen, Hence We don't expect Alert Popup.  ");
+            return false;  }
+        else {
+            SimpleUtils.report("Publish button is not loaded on screen, Hence We have to expect Alert Popup.  ");
+            return true;  }
+    }
+
+    @FindBy(css = "[ng-class=\"borderClass()\"]")
+      private List<WebElement> profileIcons;
+
+    @FindBy(css = "div.sch-open-shift")
+    private List<WebElement> openShiftIcon;
+
+    @FindBy(css = "div[ng-class=\"workerActionClass('ViewProfile')\"]")
+    private WebElement viewProfileOnIcon;
+
+    @FindBy(css = "div[ng-class=\"workerActionClass('ViewOpenShift')\"]")
+    private WebElement viewOpenShift;
+
+    @FindBy(css = "div[ng-click=\"editMealBreakTime($event, shift)\"]")
+    private WebElement editMealBreakTime;
+
+    @FindBy(css = "div.modal-instance-header-title")
+    private WebElement editMealBreakTitle;
+
+    @FindBy(css = "[ng-click=\"addMealBreak()\"]")
+    private WebElement addMealBreakButton;
+
+    @FindBy(css = "[ng-click=\"closeModal()\"]")
+    private WebElement cannelBtnInMealBreakButton;
+
+    @FindBy(css = "[ng-click=\"confirm()\"]")
+    private WebElement continueBtnInMealBreakButton;
+    @FindBy(css = "day-part-weekday.ng-isolate-scope")
+    private WebElement sliderInMealBreakButton;
+
+
+    @FindBy(css = "div[ng-click=\"deleteShift($event, shift)\"]")
+    private WebElement deleteShift;
+
+    @FindBy(css = "div.lgn-alert-title.ng-binding.warning")
+    private WebElement titleInDeleteWindows;
+
+    @FindBy(css = ".lgn-alert-message.ng-binding.ng-scope.warning")
+    private WebElement alertMsgInDeleteWindows;
+
+    @FindBy(css = "[label=\"cancelLabel()\"]")
+    private WebElement cancelBtnInDeleteWindows;
+
+    @FindBy(css = "[label=\"okLabel()\"]")
+    private WebElement deleteBtnInDeleteWindows;
+
+    @FindBy(css = "[src=\"img/legion/edit/deleted-shift-week.png\"]")
+    private WebElement deleteShiftImg;
+
+    //View Profile Personal details
+    @FindBy(css="div.tmprofile.profile-container.ng-scope")
+    private WebElement tmpProfileContainer;
+
+    @FindBy(xpath ="//div[contains(@class,'day-week-picker-period-week')][3]")
+    private WebElement pickNextWeekOnSchedule;
+
+    @Override
+    public void selectNextWeekSchedule() throws Exception {
+        if(isElementEnabled(pickNextWeekOnSchedule,5)){
+            click(pickNextWeekOnSchedule);
+            SimpleUtils.pass("Next Week On Schedule is picked ");
+            //   return true;
+        }
+        else {
+            SimpleUtils.fail("Next Week On Schedule is not available", true);
+            //   return false;
+        }
+    }
+
+    @Override
+    public boolean isProfileIconsEnable() throws Exception {
+        if(areListElementVisible(profileIcons,5)){
+            SimpleUtils.pass("Profile Icon is present for selected Employee");
+            return true;
+        }
+        else {
+            SimpleUtils.fail("Profile Icon is not present for selected Employee", true);
+            return false;
+        }
+    }
+
+
+    public void clickOnProfileIcon() throws Exception {
+        if(isProfileIconsEnable())
+        {
+            if (profileIcons.get(0).getAttribute("ng-if").equals("hasWorkerInitial()")) {
+                click(MyThreadLocal.getDriver().findElement(By.cssSelector(".sch-shift-worker-initials-28-28.ng-scope")));
+                SimpleUtils.pass("Clicked on Profile Icon successfully");
+            }else if (profileIcons.get(0).getAttribute("ng-if").equals("hasWorkerImg()")){
+                click(MyThreadLocal.getDriver().findElement(By.cssSelector(".sch-shift-worker-img-28-28.ng-scope")));
+                SimpleUtils.pass("Clicked on Profile which has imge successfully");
+            }else {
+                click(MyThreadLocal.getDriver().findElement(By.cssSelector(".sch-open-shift-28-28.ng-scope")));
+                SimpleUtils.pass("Clicked on open Profile Icon successfully");
+            }
+        }
+        else
+            SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
+    }
+
+
+    @Override
+    public boolean isViewProfileEnable() throws Exception {
+        if(isElementEnabled(viewProfileOnIcon,5)){
+            SimpleUtils.pass("View Profile  is enable/available on Pop Over Style!");
+            return true;
+        }
+        else{
+            SimpleUtils.fail("View Profile option is not enable/available on Pop Over Style ",true);
+            return false;
+        }
+    }
+
+    @Override
+    public void clickOnViewProfile() throws Exception {
+        if(isViewProfileEnable())
+        {
+            click(viewProfileOnIcon);
+            SimpleUtils.pass("View Profile Clicked on Pop Over Style!");
+        }
+        else {
+            SimpleUtils.fail("View Profile can not be clicked ",false);
+        }
+    }
+
+    @FindBy(css = "div.tm-address-container")
+    private WebElement personalDetailsContainer;
+    @FindBy(css = "span.tm-nickname.ng-binding")
+    private WebElement personalDetailsName;
+    @FindBy(css = "div.tm-phone")
+    private WebElement personalDetailsPhone;
+    @FindBy(css = "div.tm-email")
+    private WebElement personalDetailsEmailAddress;
+
+    @Override
+    public void verifyPersonalDetailsDisplayed() throws Exception {
+        if(isElementEnabled(personalDetailsContainer,5))
+        {
+            SimpleUtils.pass("Personal Details Container is Loaded in popup!");
+        }
+        else
+        {
+            SimpleUtils.fail("Personal Details Container is not Loaded in Popup!",true);
+        }
+        //
+        if(isElementLoaded(personalDetailsName,5))
+        {
+            SimpleUtils.pass("Personal Details Name is Loaded in popup!");
+        }
+        else
+        {
+            SimpleUtils.fail("Personal Details Name is not Loaded in Popup!",true);
+        }
+
+        if(isElementLoaded(personalDetailsPhone,5))
+        {
+            SimpleUtils.pass("Phone details are Loaded in popup!");
+        }
+        else
+        {
+            SimpleUtils.fail("Phone details are not Loaded in Popup!",true);
+        }
+//
+        if(isElementLoaded(personalDetailsEmailAddress,5))
+        {
+            SimpleUtils.pass("Personal Email Address is Loaded in popup!");
+        }
+        else
+        {
+            SimpleUtils.fail("Personal Email Address is not Loaded in Popup!",true);
+        }
+
+    }
+
+    //WorkDetails
+
+    @FindBy(css = "div[class=\"staffing-details-container\"]")
+    private WebElement workPreferenceContainer;
+    @FindBy(css = "div[class=\"tm-prefs-container\"]")
+    private WebElement workPrefValues;
+    @FindBy(css = "div[class=\"tm-additional-locations-container tm-details\"]")
+    private WebElement workPrefAdditionalDetails;
+
+
+    @Override
+    public void verifyWorkPreferenceDisplayed() throws Exception {
+
+        if(isElementLoaded(workPreferenceContainer,5)){
+            SimpleUtils.pass("Work Preference Details are displayed");
+        }else{
+            SimpleUtils.fail("Work Preference Details are not displayed", true);
+        }
+        if(isElementLoaded(workPrefValues,5)){
+            SimpleUtils.pass("Work Preference Values are displayed");
+        }else {
+            SimpleUtils.fail("Work Preference Values are not displayed", true);
+        }
+        if(isElementLoaded(workPrefAdditionalDetails,5)){
+            SimpleUtils.pass("Work Additional Detail are displayed");
+        }else{
+            SimpleUtils.fail("Work Additional Detail are not displayed", true);
+        }
+
+    }
+
+    @FindBy(css = "div.availability-container")
+    private WebElement availabilityText;
+
+    @FindBy(css = "availability.ng-isolate-scope") private WebElement availabilityWeeklyView;
+
+    @FindBy(css = "div.profile-close-button-container")
+    private WebElement closeViewProfileContainer;
+
+    @Override
+    public void closeViewProfileContainer() throws Exception{
+        if(isElementEnabled(closeViewProfileContainer,5)){
+            click(closeViewProfileContainer);
+            SimpleUtils.pass("Close button is available and clicked");
+        }
+        else
+        { SimpleUtils.fail("Close Button is not enabled ", true); }
+
+    }
+
+
+    @Override
+    public void verifyAvailabilityDisplayed() throws Exception {
+        if(isElementLoaded(availabilityText,5)){
+            SimpleUtils.pass("AvailabilityText is displayed");
+        }else {
+            SimpleUtils.fail("AvailabilityText is not displayed", true);
+        }
+        if(isElementLoaded(availabilityWeeklyView,5)){
+            SimpleUtils.pass("Availability Weekly View is displayed");
+        }else{
+            SimpleUtils.fail("Availability Weekly View ise not displayed", true);
+        }
+
+    }
+
+
+    @Override
+    public boolean isViewOpenShiftEnable() throws Exception {
+        if(isElementEnabled(viewOpenShift,5)){
+            SimpleUtils.pass("View Open Shift  is enable/available on Pop Over Style!");
+            return true;
+        }
+        else{
+            SimpleUtils.fail("View Open Shift option is not enable/available on Pop Over Style ",true);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isChangeRoleEnable() throws Exception {
+        if(isElementEnabled(changeRole,5)){
+            SimpleUtils.pass("Change Role is available on Pop Over Style!");
+            return true;
+        }
+        else{
+            SimpleUtils.fail("Change Role option is not enable/available on Pop Over Style ",true);
+            return false;
+        }
+    }
+
+    public boolean isEditMealBreakTimeEnable() throws Exception {
+        if(isElementEnabled(editMealBreakTime,5)){
+            SimpleUtils.pass("Edit Meal Break Time is available on Pop Over Style!");
+            return true;
+        }
+        else{
+            SimpleUtils.fail("Edit Meal Break Time is not enable/available on Pop Over Style ",true);
+            return false;
+        }
+    }
+
+    public boolean isDeleteShiftEnable() throws Exception {
+        if(isElementEnabled(deleteShift,5)){
+            SimpleUtils.pass("Delete Shift is available on Pop Over Style!");
+            return true;
+        }
+        else{
+            SimpleUtils.fail("Delete Shift is not enable/available on Pop Over Style ",true);
+            return false;
+        }
+    }
+
+    @Override
+        public void  verifyDeleteShift() throws Exception {
+            int count1 = profileIcons.size();
+            clickOnProfileIcon();
+            click(deleteShift);
+            if (isDeleteShiftShowWell ()) {
+                click(deleteBtnInDeleteWindows);
+                if (isElementLoaded(deleteShiftImg,5)) {
+                    SimpleUtils.pass("delete shift draft successfully");
+                }else
+                    SimpleUtils.fail("delete shift draft failed",true);
+            }
+            saveSchedule();
+            int count2 = profileIcons.size();
+             if (count1 > count2) {
+                 SimpleUtils.pass("delete shift successfully");
+             }else
+                 SimpleUtils.fail("delete shift draft failed",true);
+    }
+
+    private boolean isDeleteShiftShowWell() throws Exception {
+        if (isElementLoaded(titleInDeleteWindows,3) && isElementLoaded(alertMsgInDeleteWindows,3)
+        && isElementLoaded(cancelBtnInDeleteWindows,3) && isElementLoaded(deleteBtnInDeleteWindows,3)) {
+        SimpleUtils.pass("delete shift pop up window show well");
+        return true;
+        }else
+            SimpleUtils.fail("delete shift pop up window load failed",true);
+        return false;
+    }
+
+
+    @FindBy(css = "div.sch-worker-change-role-title")
+    private WebElement schWorkerInfoPrompt;
+
+    @FindBy(xpath ="//div[contains(@ng-click,'changeRoleMoveLeft($event)')]")
+    private WebElement moveLeftWorkerInfoPrompt;
+
+    @FindBy(xpath ="//div[contains(@ng-click,'changeRoleMoveRight($event)')]")
+    private WebElement moveRightWorkerInfoPrompt;
+
+    @FindBy(xpath= "//span[contains(@class,'sch-worker-change-role-name')]")
+    private List<WebElement> schWrokersList;
+
+    public boolean validateVariousWorkRolePrompt() throws Exception{
+        if(isElementEnabled(schWorkerInfoPrompt,5)){
+            SimpleUtils.pass("Various Work Role Prompt is displayed ");
+            if(isElementLoaded(moveRightWorkerInfoPrompt,5)){
+                SimpleUtils.pass("Move Right button is displayed on Worker InfoPrompt ");
+                System.out.println("Right arrow is displayed by default"+moveRightWorkerInfoPrompt.getAttribute("class"));
+                if (moveRightWorkerInfoPrompt.getAttribute("class").contains("right")) {
+                    SimpleUtils.report("Move Right button is Enabled by Default");
+                }
+                else {
+                    SimpleUtils.report("Move Right button is Disabled by Default");
+                }
+            }
+            else
+                SimpleUtils.fail("Move Right button is not displayed on Worker InfoPrompt",true);
+
+            for (WebElement schWrokers : schWrokersList) {
+                click(schWrokers);
+                SimpleUtils.pass("Role '"+schWrokers.getText()+"' is selected!");
+            }
+
+            click(moveRightWorkerInfoPrompt);
+            for (WebElement schWrokers : schWrokersList) {
+                click(schWrokers);
+                String lastSelectedRole = schWrokers.getText();
+                SimpleUtils.pass("Role '"+schWrokers.getText()+"' is selected!");
+            }
+            click(ApplybuttonChangeRole);
+            return true;
+        } else
+            return false;
+    }
+
+    public void clickOnChangeRole() throws Exception {
+        if(isElementLoaded(changeRole,5))
+        {
+            click(changeRole);
+            SimpleUtils.pass("Change Role option is clicked");
+        }
+        else
+            SimpleUtils.fail("Change Role option is not enable",false);
+    }
+
+    @Override
+    public boolean isAssignTMEnable() throws Exception {
+        if(isElementEnabled(assignTM,5)){
+            SimpleUtils.pass("Assign TM is available on Pop Over Style!");
+            return true;
+        }
+        else{
+            SimpleUtils.fail("Assign TM option is not enable/available on Pop Over Style ",true);
+            return false;
+        }
+    }
+    @Override
+    public void clickonAssignTM() throws Exception{
+        if(isAssignTMEnable())
+        {
+            click(assignTM);
+            SimpleUtils.pass("Clicked on Assign TM ");
+        }
+        else
+            SimpleUtils.fail("Assign TM is disabled or not available to Click ", false);
+    }
+
+    @Override
+    public void clickOnEditMeaLBreakTime() throws Exception{
+        if(isElementLoaded(editMealBreakTime,5))
+        {
+            click(editMealBreakTime);
+            SimpleUtils.pass("Clicked on Edit Meal Break Time ");
+        }
+        else
+            SimpleUtils.fail("Edit Meal Break Timeis disabled or not available to Click ", false);
+    }
+
+
+    @Override
+    public boolean isConvertToOpenEnable() throws Exception {
+        if(isElementEnabled(convertOpen,5)){
+            SimpleUtils.pass("Convert To Open option is available on Pop Over Style!");
+            return true;
+        }
+        else{
+            SimpleUtils.fail("Convert To Open option is not enable/available on Pop Over Style ",true);
+            return false;
+        }
+    }
+
+    @FindBy(css="div.modal-content")
+    private WebElement popupSelectTM;
+
+    @FindBy (css="div.tab.ng-scope")
+    private List<WebElement> subtabsSelectTeamMember;
+
+    @Override
+    public void verifyRecommendedAndSearchTMEnabled() throws Exception
+    {
+        if (isElementLoaded(profileInfoInSeletedTM,3) && isElementLoaded(tabSearchTM,5) && isElementLoaded(tabRecommendedTM,5)) {
+            SimpleUtils.pass("Select TMs window is opened");
+            for (int i = 0; i <btnSearchteamMember.size() ; i++) {
+                click(btnSearchteamMember.get(i));
+                SimpleUtils.pass(btnSearchteamMember.get(i).getText() +" is enable");
+            }
+        }else
+            SimpleUtils.fail("Select TMs window load failed",true);
+        click(btnSearchteamMember.get(0));
+        waitForSeconds(3);
+    }
+
+
+    @FindBy(css = "tr.table-row.ng-scope:nth-child(1)")
+    private WebElement firstTableRow;
+
+    @FindBy(css = "tr.table-row.ng-scope:nth-child(1) > td > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)")
+    private WebElement firstnameOfTM;
+    @FindBy(css = "tr.table-row.ng-scope:nth-child(1) > td > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)")
+    private WebElement lastInitialOfTM;
+
+    private String strNameOfTM ;//= firstnameOfTM+" "+lastInitialOfTM;
+
+    @FindBy(css = "tr.table-row.ng-scope:nth-child(1) > td:nth-child(4)>div")
+    private WebElement rdBtnFirstInList;
+
+    @FindBy(css = "span.sch-worker-h-view-last-initial")
+    private WebElement nameLastIntial;
+
+    @FindBy(css = "span.sch-worker-h-view-display-name")
+    private WebElement nameDisplayName;
+
+    @FindBy(css = "div.tab.ng-scope:nth-child(2)")
+    private WebElement tabSearchTM;
+    @FindBy(css = "div.tab.ng-scope:nth-child(1)")
+    private WebElement tabRecommendedTM;
+    @FindBy(css = "[ng-click=\"cancelAction()\"]")
+    private WebElement closeBtnInSeletedTM;
+    @FindBy(css = "div.break-container")
+    private WebElement profileInfoInSeletedTM;
+
+
+    @FindBy(css = "input.form-control.tma-search-field-input-text")
+    private   WebElement textInputBoxOnAssignTM;
+
+    @FindBy(xpath ="//button[contains(@ng-class,'assignActionClass()')]")
+    private WebElement btnAssign;
+    @FindBy(xpath ="//i[contains(@ng-click,'searchAction()')]")
+    private WebElement btnSearch;
+
+    @FindBy(css = "div.lgn-modal-small-title")
+    private WebElement titleOfConvertToOpenShiftPopup;
+
+    @FindBy(css = "button.sch-action.sch-cancel")
+    private WebElement btnCancelOpenSchedule;
+
+    @FindBy(css="button.sch-action.sch-save")
+    private WebElement btnYesOpenSchedule;
+
+    @FindBy(xpath ="//div[contains(@ng-class,'selectManualOpenShiftActionClass()')]")
+    private WebElement radioBtnManualOpenShift;
+
+    public boolean verifyConvertToOpenPopUpDisplay() throws Exception {
+
+        if (isElementLoaded(titleOfConvertToOpenShiftPopup,5) && isElementLoaded(radioBtnManualOpenShift,5)
+        && isElementLoaded(btnCancelOpenSchedule,5) && isElementLoaded(btnYesOpenSchedule,5)) {
+            SimpleUtils.pass("checkbox is available to offer the shift to any specific TM[optional] Cancel /yes");
+            return true;
+        }else
+            SimpleUtils.fail("Convert To Open PopUp windows load failed",true);
+        return false;
+    }
+
+    @Override
+    public void verifyMealBreakTimeDisplayAndFunctionality() throws Exception {
+        if (isMealBreaktDisplayWell()) {
+            click(addMealBreakButton);
+            click(continueBtnInMealBreakButton);
+            SimpleUtils.pass("add meal break time successfully");
+
+        }else
+            SimpleUtils.fail("add meal break failed",true);
+    }
+
+
+    private boolean isMealBreaktDisplayWell() throws Exception {
+        clickOnProfileIcon();
+        clickOnEditMeaLBreakTime();
+        if (isElementLoaded(editMealBreakTitle,5) && isElementLoaded(addMealBreakButton,5) &&
+        isElementLoaded(cannelBtnInMealBreakButton,5) && isElementLoaded(continueBtnInMealBreakButton,5)
+        && isElementLoaded(sliderInMealBreakButton,5)) {
+            SimpleUtils.pass("the Edit Meal break windows is pop up which include: 1.profile info 2.add meal break button 3.Specify meal break time period 4 cancel ,continue button");
+             return  true;
+        }else
+            SimpleUtils.fail("edit meal break time windows load failed",true);
+            return false;
+    }
+
+    @FindBy(css = "div.sch-day-view-shift-delete")
+    private WebElement btnDelete ;
+
+
+    public void validateXButtonForEachShift() throws Exception{
+        String deletedInfo = "Deleted";
+        int shiftCount = scheduleShiftsRows.size();
+        for (WebElement shift:scheduleShiftsRows){
+            if(isElementEnabled(shift,5)){
+                click(shift);
+                if(isElementEnabled(btnDelete,5))
+                {
+                    SimpleUtils.pass(": X button is present for selected Shift");
+                    click(btnDelete);
+                    if (shift.getText().contains(deletedInfo)) {
+                        SimpleUtils.pass( "can delete shift by X button");
+                        break;
+                    }else
+                        SimpleUtils.fail("delete shift failed by X button",true);
+                }
+                else SimpleUtils.fail("X button is not present for ",true);
+
+            }
+
+        }
+       saveSchedule();
+        int shiftCountAftDelete =  scheduleShiftsRows.size();
+        if (shiftCountAftDelete < shiftCount) {
+            SimpleUtils.pass("delete shift successfully by X button");
+
+        }else
+            SimpleUtils.fail("delete shift failed by X button",true);
+    }
+
+    @Override
+    public boolean verifyContextOfTMDisplay() throws Exception {
+        clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        clickOnProfileIcon();
+        if (isViewProfileEnable() &&  isChangeRoleEnable() && isAssignTMEnable() && isConvertToOpenEnable() &&isEditMealBreakTimeEnable() && isDeleteShiftEnable()) {
+            SimpleUtils.pass("context of any TM show well and include: 1. View profile 2. Change shift role  3.Assign TM 4.  Convert to open shift is enabled for current and future week day 5.Edit meal break time 6. Delete shift");
+           return true;
+
+        }else
+        return false;
+    }
+
+    @Override
+    public void verifyChangeRoleFunctionality() throws Exception {
+
+        if (validateVariousWorkRolePrompt()) {
+            SimpleUtils.pass("various work role any one of them can be selected");
+        }else
+            SimpleUtils.fail("various work load failed",true);
+    }
+
+    @FindBy(css = "div.tma-time-interval.fl-right.ng-binding")
+    private WebElement timeDurationWhenCreateNewShift;
+
+    @Override
+    public String getTimeDurationWhenCreateNewShift() throws Exception {
+        if (isElementLoaded(timeDurationWhenCreateNewShift,5)) {
+            String timeDuration = timeDurationWhenCreateNewShift.getText();
+            return timeDuration;
+        }else
+            SimpleUtils.fail("time duration load failed",true);
+        return null;
+    }
+
+    @Override
+    public void verifyConvertToOpenShiftBySelectedSpecificTM() throws Exception {
+        clickOnProfileIcon();
+        if (isConvertToOpenEnable()) {
+            click(convertOpen);
+        }
+        if (isElementLoaded(offerToSpecificTMBtn,3) && isElementLoaded(convertToOpenYesBtn,3)) {
+            click(offerToSpecificTMBtn);
+            click(convertToOpenYesBtn);
+            verifySelectTeamMembersOption();
+            clickOnOfferOrAssignBtn();
+        }else
+            SimpleUtils.fail("offer to Specific tm button load failed",true);
+    }
+
+    @Override
+    public void selectSpecificWorkDay(int dayCountInOneWeek) {
+        if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+            for (int i = 0; i < dayCountInOneWeek; i++) {
+                if (!weekDays.get(i).getAttribute("class").contains("selected")) {
+                    click(weekDays.get(i));
+                }
+            }
+        }else
+            SimpleUtils.fail("week days load failed",true);
+    }
+
+
+    @FindBy(xpath = "//div/shift-hover/div/div[5]/div[1]")
+    private WebElement totalHoursInWeekFromPopUp;
+
+    @Override
+    public float getShiftHoursByTMInWeekView(String teamMember) {
+        Float timeDurationForTMInWeek = 0.0f;
+        if (areListElementVisible(workerNameList,5) ) {
+            for (int i = 0; i <workerNameList.size() ; i++) {
+                if ( workerNameList.get(i).getText().trim().toLowerCase().contains(teamMember.toLowerCase())) {
+                  click(scheduleInfoIcon.get(i));
+                  String[] timeDurationForTMContext = totalHoursInWeekFromPopUp.getText().split(" ");
+                  timeDurationForTMInWeek = Float.valueOf(timeDurationForTMContext[3].trim());
+                  break;
+                }
+            }
+        }else
+            timeDurationForTMInWeek = 0.0f;
+        return timeDurationForTMInWeek;
+    }
+
+    @Override
+    public void selectSpecificTMWhileCreateNewShift(String teamMemberName) throws Exception {
+        if(areListElementVisible(btnSearchteamMember,5)){
+            click(btnSearchteamMember.get(1));
+            searchText(teamMemberName);
+        }
+
+    }
+
+    @FindBy (css = "[ng-repeat=\"message in getComplianceMessages()\"]")
+    private WebElement otFlagandOThoursInWeekForTM;
+    @Override
+    public void verifyWeeklyOverTimeAndFlag(String teamMemberName) throws Exception {
+
+        if (isElementLoaded(otFlagandOThoursInWeekForTM, 5) && otFlagandOThoursInWeekForTM.getText().contains("week overtime")) {
+            SimpleUtils.pass("week overtime shifts created successfully");
+
+        } else {
+            SimpleUtils.fail("weekly overtime Flag is not present for team member " + propertySearchTeamMember.get("TeamMember"), false);
+        }
+    }
+
+    @Override
+    public void deleteTMShiftInWeekView(String teamMemberName) throws Exception {
+        if (areListElementVisible(workerNameList,5) ) {
+            for (int i = 0; i <workerNameList.size() ; i++) {
+                if (workerNameList.get(i).getText().toLowerCase().contains(teamMemberName.toLowerCase())) {
+                   click(profileIcons.get(i));
+                    if (isElementLoaded(deleteShift,3)) {
+                        click(deleteShift);
+                    }else
+                        SimpleUtils.fail("delete item for this TM load failed",true);
+                    if (isElementLoaded(deleteBtnInDeleteWindows,3) ) {
+                        click(deleteBtnInDeleteWindows);
+                        SimpleUtils.pass("existing shift "+i+"delete successfully");
+                    } else
+                        SimpleUtils.fail("delete confirm button load failed",true);
+                }
+            }
+
+        }else
+            SimpleUtils.fail("shifts load failed or there is no shift in this week",true);
+    }
+
+    //added by Estelle for job title filter functionality
+
+    public void filterScheduleByJobTitleWeekView(ArrayList<WebElement> jobTitleFilters) {
+
+        for (WebElement jobTitleFilter : jobTitleFilters) {
+            try {
+                Thread.sleep(1000);
+                if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+                    click(filterButton);
+                unCheckFilters(jobTitleFilters);
+                String jobTitle = jobTitleFilter.getText();
+                SimpleUtils.report("Data for job title: '" + jobTitle + "'");
+                click(jobTitleFilter);
+                click(filterButton);
+                String cardHoursAndWagesText = "";
+                HashMap<String, Float> hoursAndWagesCardData = getScheduleLabelHoursAndWages();
+                for (Entry<String, Float> hoursAndWages : hoursAndWagesCardData.entrySet()) {
+                    if (cardHoursAndWagesText != "")
+                        cardHoursAndWagesText = cardHoursAndWagesText + ", " + hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
+                    else
+                        cardHoursAndWagesText = hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
+                }
+                SimpleUtils.report("Active Week Card's Data: " + cardHoursAndWagesText);
+                SimpleUtils.assertOnFail("Sum of Daily Schedule Hours not equal to Active Week Schedule Hours!", verifyActiveWeekDailyScheduleHoursInWeekView(), true);
+
+            } catch (Exception e) {
+                SimpleUtils.fail("Unable to get Card data for active week!", true);
+            }
+        }
+    }
+
+    public void filterScheduleByJobTitleDayView(ArrayList<WebElement> jobTitleFilters) {
+        for (WebElement jobTitleFilter : jobTitleFilters) {
+            try {
+                if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+                    click(filterButton);
+                unCheckFilters(jobTitleFilters);
+                SimpleUtils.report("Data for Job Title: '" + jobTitleFilter.getText() + "'");
+                click(jobTitleFilter);
+                click(filterButton);
+                String cardHoursAndWagesText = "";
+                HashMap<String, Float> hoursAndWagesCardData = getScheduleLabelHoursAndWages();
+                for (Entry<String, Float> hoursAndWages : hoursAndWagesCardData.entrySet()) {
+                    if (cardHoursAndWagesText != "")
+                        cardHoursAndWagesText = cardHoursAndWagesText + ", " + hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
+                    else
+                        cardHoursAndWagesText = hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
+                }
+                SimpleUtils.report("Active Day Card's Data: " + cardHoursAndWagesText);
+                Float activeDayScheduleHoursOnCard = (float) 0;
+                activeDayScheduleHoursOnCard = getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.scheduledHours.getValue());
+
+                Float totalShiftsWorkTime = getActiveShiftHoursInDayView();
+                SimpleUtils.report("Active Day Total Work Time Data: " + totalShiftsWorkTime);
+
+                if (activeDayScheduleHoursOnCard == totalShiftsWorkTime) {
+                    SimpleUtils.pass("Schedule Hours in smart card  equal to total Active Schedule Hours by job title filter ");
+                }
+
+            } catch (Exception e) {
+                SimpleUtils.fail("Unable to get Card data for active week!", true);
+            }
+        }
+    }
+
+
+    public void filterScheduleByJobTitle(boolean isWeekView) {
+        waitForSeconds(10);
+        String jobTitleFilterKey = "jobtitle";
+        HashMap<String, ArrayList<WebElement>> availableFilters = getAvailableFilters();
+        if (availableFilters.size() > 1) {
+            ArrayList<WebElement> jobTitleFilters = availableFilters.get(jobTitleFilterKey);
+                if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+                    click(filterButton);
+                unCheckFilters(jobTitleFilters);
+                if (isWeekView)
+                    filterScheduleByJobTitleWeekView(jobTitleFilters);
+                else
+                    filterScheduleByJobTitleDayView(jobTitleFilters);
+
+        } else {
+            SimpleUtils.fail("Filters are not appears on Schedule page!", false);
+        }
+
+    }
+
+    @FindBy(css = "div.day-view-shift-hover-info-icon")
+    private List<WebElement> scheduleInfoIconInDayView;
+
+    @FindBy(xpath = "//div/shift-hover/div/div[5]/div[1]")
+    private WebElement  workHoursInDayViewFromPopUp;
+    public float getActiveShiftHoursInDayView() {
+        Float totalDayWorkTime = 0.0f;
+        if (areListElementVisible(scheduleTableWeekViewWorkerDetail,5) ) {
+            for (int i = 0; i <scheduleTableWeekViewWorkerDetail.size() ; i++) {
+                    click(scheduleInfoIconInDayView.get(i));
+                    String[] timeDurationForTMContext = workHoursInDayViewFromPopUp.getText().split(" ");
+                     float shiftSizeInHour = Float.valueOf(timeDurationForTMContext[0]);
+                    totalDayWorkTime = totalDayWorkTime+shiftSizeInHour;
+            }
+        }else
+            totalDayWorkTime = 0.0f;
+        return totalDayWorkTime;
+    }
+
+
+    @Override
+    public void filterScheduleByWorkRoleAndJobTitle(boolean isWeekView) {
+        waitForSeconds(10);
+        String workRoleFilterKey = "workrole";
+        String jobTitleFilterKey = "jobtitle";
+
+        HashMap<String, ArrayList<WebElement>> availableFilters = getAvailableFilters();
+        if (availableFilters.size() > 1) {
+            ArrayList<WebElement> workRoleFilters = availableFilters.get(workRoleFilterKey);
+            ArrayList<WebElement> jobTitleFilters = availableFilters.get(jobTitleFilterKey);
+            for (WebElement workRoleFilter : workRoleFilters) {
+                if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+                    click(filterButton);
+                unCheckFilters(workRoleFilters);
+                click(workRoleFilter);
+                SimpleUtils.report("Data for Work Role: '" + workRoleFilter.getText() + "'");
+                if (isWeekView) {
+                    filterScheduleByJobTitleWeekView(jobTitleFilters);
+                }else {
+                    filterScheduleByJobTitleDayView(jobTitleFilters);
+                }
+            }
+        } else {
+            SimpleUtils.fail("Filters are not appears on Schedule page!", false);
+        }
+    }
+    @Override
+    public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView) {
+        waitForSeconds(10);
+        String shiftTypeFilterKey = "shifttype";
+        String jobTitleFilterKey = "jobtitle";
+
+        HashMap<String, ArrayList<WebElement>> availableFilters = getAvailableFilters();
+        if (availableFilters.size() > 1) {
+            ArrayList<WebElement> shiftTypeFilters = availableFilters.get(shiftTypeFilterKey);
+            ArrayList<WebElement> jobTitleFilters = availableFilters.get(jobTitleFilterKey);
+            for (WebElement jobTitleFilter : jobTitleFilters) {
+                if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+                    click(filterButton);
+                unCheckFilters(jobTitleFilters);
+                click(jobTitleFilter);
+                SimpleUtils.report("Data for Work Role: '" + jobTitleFilter.getText() + "'");
+                if (isWeekView) {
+                    filterScheduleByShiftTypeWeekView(shiftTypeFilters);
+                }else {
+                    filterScheduleByShiftTypeDayView(shiftTypeFilters);
+                }
+            }
+        } else {
+            SimpleUtils.fail("Filters are not appears on Schedule page!", false);
+        }
+    }
+
+}
+
+

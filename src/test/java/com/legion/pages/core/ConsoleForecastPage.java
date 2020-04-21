@@ -159,7 +159,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(xpath = "//lg-filter[@label=\"Filter\"]/div/input-field")
 	private WebElement filterButtonForShopper;
 
-	@FindBy(css = "input[class = \"ng-pristine ng-untouched ng-scope ng-valid-pattern ng-valid ng-valid-required ng-not-empty\"]")
+	@FindBy(css = "div.row-fx.schedule-search-options>div:nth-child(3)>lg-filter>div>input-field>ng-form>div")
 	private WebElement filterButtonText;
 
 	@FindBy(css = "a.lg-filter__clear.ng-scope.lg-filter__clear-active")
@@ -624,7 +624,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	public void verifyWorkRoleSelection() throws Exception {
 
 		if (isElementLoaded(filterButton, 10)) {
-			defaultValueIsAll();
+//			defaultValueIsAll();
 			click(filterButton);
 			clickOnClearFilterInWorkRole();
 //			selectWorkRole();
@@ -640,10 +640,8 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		if (isElementLoaded(filterButton, 15)) {
 			click(filterButton);
 			String workRoleDefaultText = filterButtonText.getText().trim();
-			System.out.println("workRoleDefaultText" + workRoleDefaultText);
 			if (defaultWorkRoleText.equals(workRoleDefaultText)) {
 				SimpleUtils.pass("Work role filter is selected all roles by default");
-
 			} else {
 				SimpleUtils.fail("default work role value is not all", false);
 			}

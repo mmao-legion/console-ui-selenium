@@ -244,4 +244,11 @@ public interface ControlsNewUIPage {
 	public LinkedHashMap<String, List<String>> getRegularWorkingHours() throws Exception;
 
 	public void enableOverRideAssignmentRuleAsYes() throws Exception;
+
+
+	public HashMap<String, Integer> getOvertimePayDataFromControls();
+
+	public HashMap<String, Integer> getMealBreakDataFromControls();
+
+	public boolean isCompliancePageLoaded() throws Exception;
 }
