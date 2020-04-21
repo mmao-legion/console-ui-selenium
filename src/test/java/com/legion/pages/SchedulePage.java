@@ -260,4 +260,5 @@ public interface SchedulePage {
 	public void verifyTheContentOfMessageOnSubmitCover() throws Exception;
 	public void verifyShiftRequestStatus(String expectedStatus) throws Exception;
 	public Boolean isGenerateButtonLoadedForManagerView() throws Exception;
+
 }
