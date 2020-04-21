@@ -2225,9 +2225,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyShiftRequestStatus(String expectedStatus) throws Exception {
-
+      
     }
-
+  
     @Override
     public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch, boolean startHrsSlider) throws Exception {
 
