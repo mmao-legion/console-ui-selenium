@@ -6762,7 +6762,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         return fullName;
     }
-}
+
     //added by Estelle
     @Override
     public void validateGroupBySelectorSchedulePage() throws Exception {
