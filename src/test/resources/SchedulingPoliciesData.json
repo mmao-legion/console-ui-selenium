@@ -10,5 +10,7 @@
   "Coverage_Scores_Peak_Hours": "20",
   "Employee_Match_Score": "20",
   "Compliance_Score": "20",
-  "How_to_measure_coverage_relative_to_guidance_budget": "Average"
+  "How_to_measure_coverage_relative_to_guidance_budget": "Average",
+  "single_workweek_overtime" : "40",
+  "single_workday_overtime" : "10"
 }

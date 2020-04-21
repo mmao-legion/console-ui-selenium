@@ -50,6 +50,8 @@ public class MyThreadLocal {
 	public static ThreadLocal<List<Integer>> testRailRun = new ThreadLocal<>();
 	public static final ThreadLocal<String> teamMemberName = new ThreadLocal<>();
 	public static final ThreadLocal<String> workerRole = new ThreadLocal<>();
+	public static final ThreadLocal<String> workerStatus = new ThreadLocal<>();
+	public static final ThreadLocal<String> workerStatusDes = new ThreadLocal<>();
 	public static final ThreadLocal<String> workerLocation = new ThreadLocal<>();
 	public static final ThreadLocal<String> workerShiftTime = new ThreadLocal<>();
 	public static final ThreadLocal<String> workerShiftDuration = new ThreadLocal<>();
@@ -85,6 +87,14 @@ public class MyThreadLocal {
 	public static void setWorkerLocation(String value) { workerLocation.set(value); }
 
 	public static String getWorkerLocation() { return workerLocation.get(); }
+
+	public static void setWorkerStatus(String value) { workerStatus.set(value); }
+
+	public static String getWorkerStatus() { return workerStatus.get(); }
+
+	public static void setWorkerStatusDes(String value) { workerStatusDes.set(value); }
+
+	public static String getWorkerStatusDes() { return workerStatusDes.get(); }
 
 	public static void setWorkerShiftTime(String value) { workerShiftTime.set(value); }
 

@@ -306,6 +306,7 @@ public abstract class TestBase {
     {
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.loginToLegionWithCredential(username, Password);
+        loginPage.verifyNewTermsOfServicePopUp();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();

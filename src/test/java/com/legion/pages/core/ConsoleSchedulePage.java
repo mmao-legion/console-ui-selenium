@@ -1315,7 +1315,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
             } else {
                 SimpleUtils.fail("Smartcard Section Not Loaded for Week " + daypickers[1], true);
             }
-            if (isElementEnabled(scheduleTableWeekViewWorkerDetail.get(0)) && Float.parseFloat(budgetDisplayOnScheduleSmartcard.get(0).getText().replaceAll(",","")) > 0 && Float.parseFloat(scheduleDisplayOnScheduleSmartcard.get(0).getText().replaceAll(",","")) > 0) {
+            if (isElementEnabled(scheduleTableWeekViewWorkerDetail.get(0)) && Float.parseFloat(budgetDisplayOnScheduleSmartcard.get(0).getText()) > 0 && Float.parseFloat(scheduleDisplayOnScheduleSmartcard.get(0).getText().replaceAll(",","")) > 0) {
                 SimpleUtils.pass("Schedule Loaded Successfully! for Week " + daypickers[1] + " value for Budgeted Hour is " + budgetDisplayOnScheduleSmartcard.get(0).getText() + "Hours and Scheduled Hour is " + scheduleDisplayOnScheduleSmartcard.get(0).getText() + "Hours");
             } else {
                 SimpleUtils.fail("Schedule Not Loaded for Week " + daypickers[1] + " value for Budgeted Hour is " + budgetDisplayOnScheduleSmartcard.get(0).getText() + "Hours and Scheduled Hour is " + scheduleDisplayOnScheduleSmartcard.get(0).getText() + "Hours", true);
@@ -1684,7 +1684,6 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 	}
 
-
 	@Override
 	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception {
 		// TODO Auto-generated method stub
@@ -1870,11 +1869,6 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     }
     public void todoButtonIsClickable() throws Exception {
-
-    }
-
-    @Override
-    public void closeButtonIsClickable() {
 
     }
 
@@ -2087,6 +2081,235 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void verifyComparableShiftsAreLoaded() throws Exception {
 
     }
+
+    @Override
+    public void validateGroupBySelectorSchedulePage() throws Exception {
+
+    }
+
+    @Override
+    public boolean checkEditButton() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyEditButtonFuntionality() throws Exception {
+
+    }
+
+
+    @Override
+    public boolean checkCancelButton() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void selectCancelButton() throws Exception {
+
+    }
+
+    @Override
+    public boolean checkSaveButton() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void selectSaveButton() throws Exception {
+
+    }
+
+    @Override
+    public boolean isScheduleFinalized() throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isProfileIconsEnable() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void clickOnProfileIcon() throws Exception {
+
+    }
+
+    @Override
+    public boolean isViewProfileEnable() throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isViewOpenShiftEnable() throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isChangeRoleEnable() throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isAssignTMEnable() throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isConvertToOpenEnable() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void selectNextWeekSchedule() throws Exception {
+
+    }
+
+    @Override
+    public void clickOnViewProfile() throws Exception {
+
+    }
+
+    @Override
+    public void clickOnChangeRole() throws Exception {
+
+    }
+
+    @Override
+    public boolean validateVariousWorkRolePrompt() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyRecommendedAndSearchTMEnabled() throws Exception {
+
+    }
+
+    @Override
+    public void clickonAssignTM() throws Exception {
+
+    }
+
+    @Override
+    public void verifyPersonalDetailsDisplayed() throws Exception {
+
+    }
+
+    @Override
+    public void verifyWorkPreferenceDisplayed() throws Exception {
+
+    }
+
+    @Override
+    public void verifyAvailabilityDisplayed() throws Exception {
+
+    }
+
+    @Override
+    public void closeViewProfileContainer() throws Exception {
+
+    }
+
+
+    @Override
+    public boolean verifyContextOfTMDisplay() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyChangeRoleFunctionality() throws Exception {
+
+    }
+
+    @Override
+    public void verifyMealBreakTimeDisplayAndFunctionality() {
+
+    }
+
+    @Override
+    public void verifyDeleteShift() throws Exception {
+
+    }
+
+    @Override
+    public void clickOnEditMeaLBreakTime() throws Exception {
+
+    }
+
+    @Override
+    public void clickOnEditButtonNoMaterScheduleFinalizedOrNot() throws Exception {
+
+    }
+
+    @Override
+    public void clickOnOpenShitIcon() {
+
+    }
+
+    @Override
+    public String getTimeDurationWhenCreateNewShift() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyConvertToOpenShiftBySelectedSpecificTM() throws Exception {
+
+    }
+
+
+    @Override
+    public int getOTShiftCount() {
+        return 0;
+    }
+
+    @Override
+    public void saveSchedule() {
+
+    }
+
+    @Override
+    public void validateXButtonForEachShift() throws Exception {
+
+    }
+
+    @Override
+    public void selectSpecificWorkDay(int dayCountInOneWeek) {
+
+    }
+
+    @Override
+    public float getShiftHoursByTMInWeekView(String teamMember) {
+        return 0;
+    }
+
+    @Override
+    public void selectSpecificTMWhileCreateNewShift(String teamMemberName) {
+
+    }
+
+    @Override
+    public void verifyWeeklyOverTimeAndFlag(String teamMemberName) throws Exception {
+
+    }
+
+    @Override
+    public void deleteTMShiftInWeekView(String teamMemberName) {
+
+    }
+
+    @Override
+    public void filterScheduleByJobTitle(boolean isWeekView) {
+
+    }
+
+    @Override
+    public void filterScheduleByWorkRoleAndJobTitle(boolean isWeekView) {
+
+    }
+
+    @Override
+    public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView) {
+
+    }
+
 
     @Override
     public String selectOneTeamMemberToSwap() throws Exception {

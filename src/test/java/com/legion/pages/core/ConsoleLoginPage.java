@@ -110,4 +110,18 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     	setScreenshotConsoleName(activeConsoleName);
     }
 
+	@FindBy(css = "button.btn.sch-publish-confirm-btn")
+	private WebElement continueBtnInNewTermsOfServicePopUpWindow;
+
+	@FindBy(css = "div.modal-dialog")
+	private WebElement newTermsOfServicePopUpWindow;
+
+	@Override
+	public void verifyNewTermsOfServicePopUp() throws Exception {
+		if (isElementLoaded(newTermsOfServicePopUpWindow,3)
+				&& isElementLoaded(continueBtnInNewTermsOfServicePopUpWindow,3)) {
+			click(continueBtnInNewTermsOfServicePopUpWindow);
+		}else
+			SimpleUtils.report("There is no new terms of service");
+	}
 }
