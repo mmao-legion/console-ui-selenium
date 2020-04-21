@@ -47,7 +47,7 @@
 		   </classes>
 	   </test>
 
-		<test name="Controls Test">
+        <test name="Controls Test">
 		   <classes>
 			   <class name="com.legion.tests.core.ControlsNewUITest">
 				   <methods>
@@ -56,6 +56,19 @@
 			   </class>
 		   </classes>
 	   </test>
+
+    <test name="Schedule Page Test">
+       <classes>
+           <class name="com.legion.tests.core.ScheduleTest">
+               <methods>
+                   <include name="verifyTheTeamMemberViewSwapAsTeamMember"/>
+                   <include name="verifyTheTeamMemberViewCoverAsTeamMember" />
+                   <include name="verifyTheTeamScheduleOptionAsInternalAdmin" />
+                   <include name="verifyTheFunctionalityOfSwapAndCoverAsTeamLead" />
+               </methods>
+           </class>
+       </classes>
+   </test>
 
 <!--    <test name="Schedule Test">-->
 <!--            <classes>-->

@@ -233,6 +233,32 @@ public interface SchedulePage {
 	public void	verifyComparableShiftsAreLoaded() throws Exception;
 	public String selectOneTeamMemberToSwap() throws Exception;
 	public void verifyClickCancelSwapOrCoverRequest() throws Exception;
+	public void goToSchedulePageAsTeamMember() throws Exception;
+	public void gotoScheduleSubTabByText(String subTitle) throws Exception;
+	public void	verifyTeamScheduleInViewMode() throws Exception;
+	public List<String> getWholeWeekSchedule() throws Exception;
+	public String getSelectedWeek() throws Exception;
+	public void verifySelectOtherWeeks() throws Exception;
+	public boolean isSpecificSmartCardLoaded(String cardName) throws Exception;
+	public int getCountFromSmartCardByName(String cardName) throws Exception;
+	public void clickLinkOnSmartCardByName(String linkName) throws Exception;
+	public int getShiftsCount() throws Exception;
+	public void filterScheduleByShiftTypeAsTeamMember(boolean isWeekView) throws Exception;
+	public boolean isPrintIconLoaded() throws Exception;
+	public void verifyThePrintFunction() throws Exception;
+	public void clickCancelButtonOnPopupWindow() throws Exception;
+	public void verifyTheDataOfComparableShifts() throws Exception;
+	public void verifyTheSumOfSwapShifts() throws Exception;
+	public void verifyNextButtonIsLoadedAndDisabledByDefault() throws Exception;
+	public void verifySelectOneShiftNVerifyNextButtonEnabled() throws Exception;
+	public void verifySelectMultipleSwapShifts() throws Exception;
+	public void verifyClickOnNextButtonOnSwap() throws Exception;
+	public void verifyBackNSubmitBtnLoaded() throws Exception;
+	public void verifyTheRedirectionOfBackButton() throws Exception;
+	public void verifySwapRequestShiftsLoaded() throws Exception;
+	public void verifyClickAcceptSwapButton() throws Exception;
+	public void verifyTheContentOfMessageOnSubmitCover() throws Exception;
+	public void verifyShiftRequestStatus(String expectedStatus) throws Exception;
 	public Boolean isGenerateButtonLoadedForManagerView() throws Exception;
 
 }
