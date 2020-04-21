@@ -20,15 +20,9 @@
                         <include name="editManualShiftScheduleAsStoreManager"/>
                         <include name="updateControlsSectionLoadingAsInternalAdmin"/>
                         <include name="scheduleSubTabNavigationStoreManager"/>
-                        <include name="legionAppNavigationAllTabsStoreManager"/>
-                        <include name="verifyControlsBreadcrumbAsInternalAdmin"/>
                         <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>
                         <include name="validateWeatherForecastOnSchedulePageAsStoreManager"/>
-                        <include name="validateSchedulePublishFeatureAsStoreManager"/>
                         <include name="verifyScheduleOverlappingAsInternalAdmin"/>
-                        <include name="updateWorkingHoursAsInternalAdmin"/>
-                        <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>
-                        <include name="updateControlsSectionLoadingAsStoreManager"/>
                         <include name="VerifyWhetherManagerCanApproveTimeOffRequestAsTeamMember"/>
                         <include name="generateScheduleAndCheckScheduleNTMSizeWeekView"/>
                         <include name="editAssignTeamScheduleAsStoreManager"/>
