@@ -535,7 +535,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 			for (int i = 0; i < monthYearInCalendar.size(); i++) {
 				monthYearInCalendar2.add(dft2.parse(monthYearInCalendar.get(i)));
 			}
-			System.out.println(monthYearInCalendar2);
+
 			if (currentTime.before(monthYearInCalendar2.get(1)) & currentTime.before(monthYearInCalendar2.get(2))) {
 				SimpleUtils.pass("Current +2 month calendar is visible");
 				flag = true;
