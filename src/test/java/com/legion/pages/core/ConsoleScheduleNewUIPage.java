@@ -246,8 +246,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "[ng-if=\"canShowNewShiftButton()\"]")
     private WebElement addNewShiftOnDayViewButton;
 
-    @FindBy(css = "lg-button[label=\"Cancel\"]")
+    @FindBy(css = "[icon=\"'fa-times'\"]")
     private WebElement scheduleEditModeCancelButton;
+
+    @FindBy(css = "icon=\"'fa-check'\"")
+    private WebElement scheduleEditModeSaveButton;
 
     @FindBy(css = "[ng-click=\"regenerateFromOverview()\"]")
     private WebElement scheduleGenerateButton;
@@ -1044,7 +1047,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		{
 //			Thread.sleep(2000);
 			String scheduleWagesAndHoursCardText = budgetedScheduledLabelsDivElement.getText();
-			String[] scheduleWagesAndHours = scheduleWagesAndHoursCardText.split("\n");
+            String [] tmp =  scheduleWagesAndHoursCardText.split("\n");
+            String[] scheduleWagesAndHours = new String[5];
+            if (tmp.length>5) {
+                scheduleWagesAndHours[0] = tmp[0];
+                scheduleWagesAndHours[1] = tmp[1];
+                scheduleWagesAndHours[2] = tmp[2];
+                scheduleWagesAndHours[3] = tmp[3]+" "+tmp[4]+" "+tmp[5];
+                scheduleWagesAndHours[4] = tmp[6];
+            }else
+                scheduleWagesAndHours =tmp;
 			for(String wagesAndHours: scheduleWagesAndHours)
 			{
 				if(wagesAndHours.toLowerCase().contains(scheduleHoursAndWagesData.hours.getValue().toLowerCase()))
@@ -7102,7 +7114,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     //added by Estelle for job title filter functionality
 
-    public void filterScheduleByJobTitleWeekView(ArrayList<WebElement> jobTitleFilters) {
+    public void filterScheduleByJobTitleWeekView(ArrayList<WebElement> jobTitleFilters, ArrayList<String> availableJobTitleList) {
 
         for (WebElement jobTitleFilter : jobTitleFilters) {
             try {
@@ -7123,7 +7135,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         cardHoursAndWagesText = hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
                 }
                 SimpleUtils.report("Active Week Card's Data: " + cardHoursAndWagesText);
-                SimpleUtils.assertOnFail("Sum of Daily Schedule Hours not equal to Active Week Schedule Hours!", verifyActiveWeekDailyScheduleHoursInWeekView(), true);
+                if (availableJobTitleList.contains(jobTitleFilter.getText().toLowerCase().trim())) {
+                    SimpleUtils.assertOnFail("Sum of Daily Schedule Hours not equal to Active Week Schedule Hours!", verifyActiveWeekDailyScheduleHoursInWeekView(), true);
+                }else
+                    SimpleUtils.report("there is no data for this job title: '" + jobTitleFilter.getText() + "'");
+
 
             } catch (Exception e) {
                 SimpleUtils.fail("Unable to get Card data for active week!", true);
@@ -7131,7 +7147,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    public void filterScheduleByJobTitleDayView(ArrayList<WebElement> jobTitleFilters) {
+    public void filterScheduleByJobTitleDayView(ArrayList<WebElement> jobTitleFilters,ArrayList<String> availableJobTitleList) {
         for (WebElement jobTitleFilter : jobTitleFilters) {
             try {
                 if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
@@ -7142,6 +7158,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 click(filterButton);
                 String cardHoursAndWagesText = "";
                 HashMap<String, Float> hoursAndWagesCardData = getScheduleLabelHoursAndWages();
+                System.out.println(hoursAndWagesCardData);
                 for (Entry<String, Float> hoursAndWages : hoursAndWagesCardData.entrySet()) {
                     if (cardHoursAndWagesText != "")
                         cardHoursAndWagesText = cardHoursAndWagesText + ", " + hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
@@ -7154,19 +7171,28 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
                 Float totalShiftsWorkTime = getActiveShiftHoursInDayView();
                 SimpleUtils.report("Active Day Total Work Time Data: " + totalShiftsWorkTime);
-
-                if (activeDayScheduleHoursOnCard == totalShiftsWorkTime) {
-                    SimpleUtils.pass("Schedule Hours in smart card  equal to total Active Schedule Hours by job title filter ");
-                }
+                if (availableJobTitleList.contains(jobTitleFilter.getText().toLowerCase().trim())) {
+                    if (activeDayScheduleHoursOnCard == totalShiftsWorkTime) {
+                        SimpleUtils.pass("Schedule Hours in smart card  equal to total Active Schedule Hours by job title filter ");
+                    }else
+                        SimpleUtils.fail("the job tile filter hours not equal to schedule hours in schedule samrtcard",true);
+                }else
+                    SimpleUtils.report( "there is no data for this job title: '" + jobTitleFilter.getText() + "'");
 
             } catch (Exception e) {
-                SimpleUtils.fail("Unable to get Card data for active week!", true);
+                SimpleUtils.fail("Unable to get Card data for active day!", true);
             }
         }
     }
 
 
     public void filterScheduleByJobTitle(boolean isWeekView) {
+        ArrayList<String> availableJobTitleList = new ArrayList<>();
+        if (isWeekView == true) {
+             availableJobTitleList = getAvailableJobTitleListInWeekView();
+        }else
+            availableJobTitleList = getAvailableJobTitleListInDayView();
+
         waitForSeconds(10);
         String jobTitleFilterKey = "jobtitle";
         HashMap<String, ArrayList<WebElement>> availableFilters = getAvailableFilters();
@@ -7175,15 +7201,42 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
                     click(filterButton);
                 unCheckFilters(jobTitleFilters);
-                if (isWeekView)
-                    filterScheduleByJobTitleWeekView(jobTitleFilters);
-                else
-                    filterScheduleByJobTitleDayView(jobTitleFilters);
-
+                if (isWeekView) {
+                    filterScheduleByJobTitleWeekView(jobTitleFilters, availableJobTitleList);
+                }
+                else {
+                    filterScheduleByJobTitleDayView(jobTitleFilters, availableJobTitleList);
+                }
         } else {
             SimpleUtils.fail("Filters are not appears on Schedule page!", false);
         }
 
+    }
+
+    @FindBy(className = "week-schedule-shift-title")
+    private List<WebElement> availableJobTitleListInWeekView;
+
+    @FindBy(className = "sch-group-label")
+    private List<WebElement> availableJobTitleListInDayView;
+
+    public ArrayList<String> getAvailableJobTitleListInWeekView(){
+        ArrayList<String> availableJobTitleList = new ArrayList<>();
+        for (WebElement jobTitle:availableJobTitleListInWeekView
+             ) {
+            availableJobTitleList.add(jobTitle.getText().toLowerCase().trim());
+        }
+
+        return availableJobTitleList;
+    }
+
+    public ArrayList<String> getAvailableJobTitleListInDayView(){
+        ArrayList<String> availableJobTitleList = new ArrayList<>();
+        for (WebElement jobTitle:availableJobTitleListInDayView
+        ) {
+            availableJobTitleList.add(jobTitle.getText().toLowerCase().trim());
+        }
+
+        return availableJobTitleList;
     }
 
     @FindBy(css = "div.day-view-shift-hover-info-icon")
@@ -7191,6 +7244,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(xpath = "//div/shift-hover/div/div[5]/div[1]")
     private WebElement  workHoursInDayViewFromPopUp;
+
     public float getActiveShiftHoursInDayView() {
         Float totalDayWorkTime = 0.0f;
         if (areListElementVisible(scheduleTableWeekViewWorkerDetail,5) ) {
@@ -7209,6 +7263,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void filterScheduleByWorkRoleAndJobTitle(boolean isWeekView) {
         waitForSeconds(10);
+        ArrayList<String> availableJobTitleList = new ArrayList<>();
+        if (isWeekView == true) {
+            availableJobTitleList = getAvailableJobTitleListInWeekView();
+        }else
+            availableJobTitleList = getAvailableJobTitleListInDayView();
+
         String workRoleFilterKey = "workrole";
         String jobTitleFilterKey = "jobtitle";
 
@@ -7223,9 +7283,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 click(workRoleFilter);
                 SimpleUtils.report("Data for Work Role: '" + workRoleFilter.getText() + "'");
                 if (isWeekView) {
-                    filterScheduleByJobTitleWeekView(jobTitleFilters);
+                    filterScheduleByJobTitleWeekView(jobTitleFilters, availableJobTitleList);
                 }else {
-                    filterScheduleByJobTitleDayView(jobTitleFilters);
+                    filterScheduleByJobTitleDayView(jobTitleFilters, availableJobTitleList);
                 }
             }
         } else {
@@ -7235,6 +7295,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView) {
         waitForSeconds(10);
+        ArrayList<String> availableJobTitleList = new ArrayList<>();
+        if (isWeekView == true) {
+            availableJobTitleList = getAvailableJobTitleListInWeekView();
+        }else
+            availableJobTitleList = getAvailableJobTitleListInDayView();
+
         String shiftTypeFilterKey = "shifttype";
         String jobTitleFilterKey = "jobtitle";
 
@@ -7242,16 +7308,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (availableFilters.size() > 1) {
             ArrayList<WebElement> shiftTypeFilters = availableFilters.get(shiftTypeFilterKey);
             ArrayList<WebElement> jobTitleFilters = availableFilters.get(jobTitleFilterKey);
-            for (WebElement jobTitleFilter : jobTitleFilters) {
+            for (WebElement shiftTypeFilter : shiftTypeFilters) {
                 if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
                     click(filterButton);
-                unCheckFilters(jobTitleFilters);
-                click(jobTitleFilter);
-                SimpleUtils.report("Data for Work Role: '" + jobTitleFilter.getText() + "'");
+                unCheckFilters(shiftTypeFilters);
+                click(shiftTypeFilter);
+                SimpleUtils.report("Data for Work Role: '" + shiftTypeFilter.getText() + "'");
                 if (isWeekView) {
-                    filterScheduleByShiftTypeWeekView(shiftTypeFilters);
+                    filterScheduleByJobTitleWeekView(jobTitleFilters, availableJobTitleList);
                 }else {
-                    filterScheduleByShiftTypeDayView(shiftTypeFilters);
+                    filterScheduleByJobTitleDayView(jobTitleFilters, availableJobTitleList);
                 }
             }
         } else {
