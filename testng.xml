@@ -110,6 +110,8 @@
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView"/>
+                    <include name="verifyTheFeatureOfFilterAsTeamMember" />
+                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamMember" />
                 </methods>
             </class>
         </classes>

@@ -327,4 +327,23 @@ public interface SchedulePage {
 	public void filterScheduleByWorkRoleAndJobTitle(boolean isWeekView);
 
 	public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView);
+
+	// Added by Nora
+	public void verifyScheduledNOpenFilterLoaded() throws Exception;
+	public void checkAndUnCheckTheFilters() throws Exception;
+	public void filterScheduleByBothAndNone() throws Exception;
+	public String selectOneFilter() throws Exception;
+	public void verifySelectedFilterPersistsWhenSelectingOtherWeeks(String selectedFilter) throws Exception;
+	public int selectOneShiftIsClaimShift(List<String> claimShift) throws Exception;
+	public void verifyClaimShiftOfferNBtnsLoaded() throws Exception;
+	public List<String> getShiftHoursFromInfoLayout() throws Exception;
+	public void verifyTheShiftHourOnPopupWithScheduleTable(String scheduleShiftTime, String weekDay) throws Exception;
+	public String getSpecificShiftWeekDay(int index) throws Exception;
+	public void verifyClickAgreeBtnOnClaimShiftOffer() throws Exception;
+	public void verifyClickCancelBtnOnClaimShiftOffer() throws Exception;
+	public void verifyTheColorOfCancelClaimRequest(String cancelClaim) throws Exception;
+	public void verifyReConfirmDialogPopup() throws Exception;
+	public void verifyClickNoButton() throws Exception;
+	public void verifyClickOnYesButton() throws Exception;
+	public void verifyTheFunctionalityOfClearFilter() throws Exception;
 }
