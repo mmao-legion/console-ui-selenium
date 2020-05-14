@@ -2322,6 +2322,136 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void goToSchedulePageAsTeamMember() throws Exception {
+
+    }
+
+    @Override
+    public void gotoScheduleSubTabByText(String subTitle) throws Exception {
+
+    }
+
+    @Override
+    public void verifyTeamScheduleInViewMode() throws Exception {
+
+    }
+
+    @Override
+    public List<String> getWholeWeekSchedule() throws Exception {
+        return null;
+    }
+
+    @Override
+    public String getSelectedWeek() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifySelectOtherWeeks() throws Exception {
+
+    }
+
+    @Override
+    public boolean isSpecificSmartCardLoaded(String cardName) throws Exception {
+        return false;
+    }
+
+    @Override
+    public int getCountFromSmartCardByName(String cardName) throws Exception {
+        return 0;
+    }
+
+    @Override
+    public void clickLinkOnSmartCardByName(String linkName) throws Exception {
+
+    }
+
+    @Override
+    public int getShiftsCount() throws Exception {
+        return 0;
+    }
+
+    @Override
+    public void filterScheduleByShiftTypeAsTeamMember(boolean isWeekView) throws Exception {
+
+    }
+
+    @Override
+    public boolean isPrintIconLoaded() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyThePrintFunction() throws Exception {
+
+    }
+
+    @Override
+    public void clickCancelButtonOnPopupWindow() throws Exception {
+
+    }
+
+    @Override
+    public void verifyTheDataOfComparableShifts() throws Exception {
+
+    }
+
+    @Override
+    public void verifyTheSumOfSwapShifts() throws Exception {
+
+    }
+
+    @Override
+    public void verifyNextButtonIsLoadedAndDisabledByDefault() throws Exception {
+
+    }
+
+    @Override
+    public void verifySelectOneShiftNVerifyNextButtonEnabled() throws Exception {
+
+    }
+
+    @Override
+    public void verifySelectMultipleSwapShifts() throws Exception {
+
+    }
+
+    @Override
+    public void verifyClickOnNextButtonOnSwap() throws Exception {
+
+    }
+
+    @Override
+    public void verifyBackNSubmitBtnLoaded() throws Exception {
+
+    }
+
+    @Override
+    public void verifyTheRedirectionOfBackButton() throws Exception {
+
+    }
+
+    @Override
+    public void verifySwapRequestShiftsLoaded() throws Exception {
+
+    }
+
+    @Override
+    public void verifyClickAcceptSwapButton() throws Exception {
+
+    }
+
+    @Override
+    public void verifyTheContentOfMessageOnSubmitCover() throws Exception {
+
+    }
+
+    @Override
+    public void verifyShiftRequestStatus(String expectedStatus) throws Exception {
+      
+    }
+  
+    @Override
     public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch, boolean startHrsSlider) throws Exception {
 
     }
