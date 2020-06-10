@@ -1,10 +1,15 @@
 package com.legion.tests.core;
 
+import java.awt.print.PrinterGraphics;
 import java.lang.reflect.Method;
 import java.util.*;
 
 import com.gargoylesoftware.htmlunit.html.HtmlListing;
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleNewUIPage;
+import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
+import org.omg.CORBA.TRANSACTION_MODE;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -18,8 +23,14 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 
+
+
 public class ScheduleTestKendraScott2 extends TestBase {
 
+	private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
+	private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
+	private static HashMap<String, String> schedulePolicyData = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SchedulingPoliciesData.json");
+	private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
 
 	@Override
 	@BeforeMethod()
@@ -27,6 +38,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		this.createDriver((String) params[0], "69", "Window");
 		visitPage(testMethod);
 		loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+
 	}
 
 	@Automated(automated = "Manual")
@@ -247,7 +259,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
-	@Enterprise(name = "Kendrascott2_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "LEG-5232: Data for Schedule does not get loaded when user clicks on next day without waiting data for highlighted day gets loaded")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void groupByLocationFilterShouldBeSelected(String username, String password, String browser, String location)
@@ -260,7 +272,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
-	@Enterprise(name = "Kendrascott2_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "LEG-5230: Group By selection filter is blank on navigating back from different tabs")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void groupByAllShouldNotBeBlank(String username, String password, String browser, String location)
@@ -275,7 +287,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Estelle")
-	@Enterprise(name = "Kendrascott2_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Schedule functionality  Legion")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyScheduleLegionFunctionality(String username, String password, String browser, String location)
@@ -290,7 +302,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Auto")
 	@Owner(owner = "Estelle")
-	@Enterprise(name = "Kendrascott2_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Schedule functionality > Schedule")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyScheduleFunctionalitySchedule(String username, String password, String browser, String location)
@@ -332,8 +344,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 		@Automated(automated = "Automated")
 		@Owner(owner = "Estelle")
-		@Enterprise(name = "Kendrascott2_Enterprise")
-		@TestName(description = "Verify the Schedule functionality  Compliance smartcard")
+		@Enterprise(name = "KendraScott2_Enterprise")
+		@TestName(description = "Verify the Schedule functionality  Compliance Smartcard")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyComplianceSmartCardFunctionality(String username, String password, String browser, String location)
 				throws Exception {
@@ -349,8 +361,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
         @Automated(automated = "Automated")
 		@Owner(owner = "Estelle")
-		@Enterprise(name = "Kendrascott2_Enterprise")
-		@TestName(description = "Verify the Schedule functionality  Schedule smartcard")
+		@Enterprise(name = "KendraScott2_Enterprise")
+		@TestName(description = "Verify the Schedule functionality  Schedule Smartcard")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyScheduleFunctionalityScheduleSmartCard(String username, String password, String browser, String location)
 				throws Exception {
@@ -375,89 +387,296 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			}
 		}
 
+	
 	@Automated(automated = "Automated")
-	@Owner(owner = "Julie")
+	@Owner(owner = "Estelle")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verification of My Schedule Page when login through TM View")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verificationOfMySchedulePageAsTeamMember(String browser, String username, String password, String location) throws Exception {
+	@TestName(description = "Verify the Schedule functionality > Week View")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyScheduleFunctionalityWeekView(String username, String password, String browser, String location)
+			throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.clickOnScheduleConsoleMenuItem();
-
-		//T1838603 Validate the availability of schedule table.
-		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-		String nickName = profileNewUIPage.getNickNameFromProfile();
-		schedulePage.validateTheAvailabilityOfScheduleTable(nickName);
-
-		//T1838604 Validate the disability of location selector on Schedule page.
-		schedulePage.validateTheDisabilityOfLocationSelectorOnSchedulePage();
-
-		//T1838605 Validate the availability of profile menu.
-		schedulePage.validateTheAvailabilityOfScheduleMenu();
-
-		//T1838606 Validate the focus of schedule.
-		schedulePage.validateTheFocusOfSchedule();
-
-		//T1838607 Validate the default filter is selected as Scheduled.
-		schedulePage.validateTheDefaultFilterIsSelectedAsScheduled();
-
-		//T1838608 Validate the focus of week.
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.navigateToDashboard();
-		String currentDate = dashboardPage.getCurrentDateFromDashboard();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		schedulePage.validateTheFocusOfWeek(currentDate);
-
-		//T1838609 Validate the selection of previous and upcoming week.
-		//todo: schedulePage.verifySelectOtherWeeks();
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+		if(!isActiveWeekGenerated){
+			schedulePage.generateOrUpdateAndGenerateSchedule();
+		}
+		//Edit button should be clickable
+		//While click on edit button,if Schedule is finalized then prompt is available and Prompt is in proper alignment and correct msg info.
+		//Edit anyway and cancel button is clickable
+		schedulePage.verifyEditButtonFuntionality();
+		//In week view, Group by All filter have 3 filters:1.Group by all  2. Group by work role  3. Group by TM 4.Group by job title
+		schedulePage.validateGroupBySelectorSchedulePage();
+		//click on the context of any TM, 1. View profile 2. Change shift role  3.Assign TM 4.  Convert to open shift is enabled for current and future week day 5.Edit meal break time 6. Delete shift
+		schedulePage.selectNextWeekSchedule();
+		boolean isActiveWeekGenerated2 = schedulePage.isWeekGenerated();
+		if(!isActiveWeekGenerated2){
+			schedulePage.generateOrUpdateAndGenerateSchedule();
+		}
+			//"After Click on view profile,then particular TM profile is displayed :1. Personal details 2. Work Preferences 3. Availability
+			SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , schedulePage.verifyContextOfTMDisplay(), true);
+			schedulePage.clickOnViewProfile();
+			schedulePage.verifyPersonalDetailsDisplayed();
+			schedulePage.verifyWorkPreferenceDisplayed();
+			schedulePage.verifyAvailabilityDisplayed();
+			schedulePage.closeViewProfileContainer();
+			//"After Click on the Change shift role, one prompt is enabled:various work role any one of them can be selected"
+			schedulePage.clickOnProfileIcon();
+			schedulePage.clickOnChangeRole();
+			schedulePage.verifyChangeRoleFunctionality();
+			//After Click on Assign TM-Select TMs window is opened,Recommended and search TM tab is enabled
+			schedulePage.clickonAssignTM();
+			schedulePage.verifyRecommendedAndSearchTMEnabled();
+			//Search and select any TM,Click on the assign: new Tm is updated on the schedule table
+			schedulePage.verifySelectTeamMembersOption();
+			schedulePage.clickOnOfferOrAssignBtn();
+			//Click on the Convert to open shift, checkbox is available to offer the shift to any specific TM[optional] Cancel /yes
+			//if checkbox is unselected then, shift is convert to open
+			schedulePage.convertToOpenShift();
+			//After Click on Edit Meal Break Time, the Edit Meal break windows is pop up which include: 1.profile info 2.add meal break button 3.Specify meal break time period 4 cancel ,continue button
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.verifyMealBreakTimeDisplayAndFunctionality();
+			//if checkbox is selected then, shift is offered to selected TM
+			schedulePage.verifyConvertToOpenShiftBySelectedSpecificTM();
+			//verify delete shift
+			schedulePage.verifyDeleteShift();
 	}
 
 	@Automated(automated = "Automated")
-	@Owner(owner = "Julie")
+	@Owner(owner = "Estelle")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verification of To and Fro navigation of week picker when login through TM View")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verificationOfToAndFroNavigationOfWeekPickerAsTeamMember(String browser, String username, String password, String location) throws Exception {
+	@TestName(description = "Verify the Schedule functionality  Day View")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyScheduleFunctionalityDayView(String username, String password, String browser, String location)
+			throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		//go to controls page to get overtime pay data
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		boolean isControlsComplianceCardSection = controlsNewUIPage.isControlsComplianceCard();
+		SimpleUtils.assertOnFail("Controls Page: Compliance Section not Loaded.", isControlsComplianceCardSection, true);
+		controlsNewUIPage.clickOnControlsComplianceSection();
+		SimpleUtils.assertOnFail("Controls:Compliance  Page not loaded Successfully!",controlsNewUIPage.isCompliancePageLoaded() , false);
+		HashMap<String, Integer> overtimePayData = controlsNewUIPage.getOvertimePayDataFromControls();
+		int dailyOvertimePay = overtimePayData.get("overtimeDailyText");
+		HashMap<String, Integer> mealBreakTimeData = controlsNewUIPage.getMealBreakDataFromControls();
+		float mealBreakTime = mealBreakTimeData.get("unPaiedMins")/ 60f;
+		int everyHoursOfWork = mealBreakTimeData.get("everyXHoursOfWork");
+		//Overtime hours = shift total hours  - meal time(defined in controls )-overtime pay hours in controls
+		//for example OT is one hour
+		int dragIncreasePoint = (int) (((1+dailyOvertimePay)*everyHoursOfWork/(everyHoursOfWork-mealBreakTime))*2)-Integer.valueOf(propertyCustomizeMap.get("INCREASE_END_TIME"));
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		//Current week and day is selected by default
+		schedulePage.currentWeekIsGettingOpenByDefault();
+		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+		if(!isActiveWeekGenerated){
+			schedulePage.generateOrUpdateAndGenerateSchedule();
+		}
+		//click on Edit button to add new shift
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickOnDayView();
+		schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
+		SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
 
-		//T1838610 Validate the click ability of forward and backward button.
-		schedulePage.validateForwardAndBackwardButtonClickable();
+		//"while selecting Open shift:Auto,create button is enabled one open shift will created and system will offer shift automatically
+		schedulePage.clickNewDayViewShiftButtonLoaded();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
 
-		//T1838611 Validate the data according to the selected week.
-		schedulePage.validateTheDataAccordingToTheSelectedWeek();
+//		"While selecting Open shift:Manual,Next button is enabled,After Click on Next Select Tms window is enabled and after selecting N number of TMs, offer will send to them"
+		schedulePage.clickNewDayViewShiftButtonLoaded();
+		schedulePage.customizeNewShiftPage();
+		String defaultTimeDuration = schedulePage.getTimeDurationWhenCreateNewShift();
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		String defaultTimeDurationAftDrag = schedulePage.getTimeDurationWhenCreateNewShift();
+		if (!defaultTimeDurationAftDrag.equals(defaultTimeDuration)) {
+			SimpleUtils.pass("A shift time and duration can be changed by dragging it");
+		}else
+			SimpleUtils.report("there is no change for time duration");
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.verifySelectTeamMembersOption();
+		schedulePage.clickOnOfferOrAssignBtn();
 
-		//T1838612 Validate the seven days - Sunday to Saturday is available in schedule table.
+//		While selecting Assign TM,Next button is enabled, After Click on Next, Select Tm window is enabled and only one TM can be selected, and shift will assign to him/her
+		schedulePage.clickNewDayViewShiftButtonLoaded();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.verifySelectTeamMembersOption();
+		schedulePage.clickOnOfferOrAssignBtn();
+        //While click on any shift from Schedule grid , X red button is enabled to delete the shift
+		schedulePage.validateXButtonForEachShift();
+
+		//If a shift is more than 8 hours (defined in Controls) then Daily OT hours(Daily OT should be enabled in Controls) should show
+		//if make X hour overtime, the Daily OT will be show
+		int otFlagCount = schedulePage.getOTShiftCount();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickNewDayViewShiftButtonLoaded();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), dragIncreasePoint, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.verifySelectTeamMembersOption();
+		schedulePage.clickOnOfferOrAssignBtn();
+		int otFlagCountAftAddNewShift = schedulePage.getOTShiftCount();
+		if (otFlagCountAftAddNewShift > otFlagCount) {
+			SimpleUtils.pass("OT shit add successfully");
+		}else
+			SimpleUtils.fail("add OT new shift failed" , true);
+
+
+		//If a TM has more than 40 working hours in a week (As defined in Controls) then Week OT hours should show (Week OT should be enabled in Controls)
+		int workWeekOverTime = Integer.valueOf(schedulePolicyData.get("single_workweek_overtime"));
+		int dayCountInOneWeek = Integer.valueOf(propertyCustomizeMap.get("WORKDAY_COUNT"));
+		int shiftHoursEachDay;
+		if ((workWeekOverTime % dayCountInOneWeek) == 0) {
+			shiftHoursEachDay = workWeekOverTime / dayCountInOneWeek;
+		} else {
+			shiftHoursEachDay = (workWeekOverTime / dayCountInOneWeek) + 1;
+		}
+//		float totalShiftHoursInWeekForTM = (shiftHoursEachDay-0.5f)*dayCountInOneWeek;
+//		int overtimeHoursInWeekForTM = totalShiftHoursInWeekForTM-workWeekOverTime;
+		String teamMemberName = propertySearchTeamMember.get("TeamMember");
+		float shiftHoursInWeekForTM = schedulePage.getShiftHoursByTMInWeekView(teamMemberName);
+		if (shiftHoursInWeekForTM == 0) {
+			schedulePage.clickNewDayViewShiftButtonLoaded();
+			schedulePage.customizeNewShiftPage();
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), (2+shiftHoursEachDay*2-7), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+//			schedulePage.moveSliderAtCertainPoint2( String.valueOf(2+(shiftHoursEachDay+0.5f)*2), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+			schedulePage.selectSpecificWorkDay(dayCountInOneWeek);
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.selectSpecificTMWhileCreateNewShift(teamMemberName);
+			schedulePage.clickOnOfferOrAssignBtn();
+			schedulePage.saveSchedule();
+			float shiftHoursInWeekForTMAftAddNewShift = schedulePage.getShiftHoursByTMInWeekView(teamMemberName);
+
+			if ((shiftHoursInWeekForTMAftAddNewShift -shiftHoursInWeekForTM)>workWeekOverTime) {
+				schedulePage.verifyWeeklyOverTimeAndFlag(teamMemberName);
+			}
+		}else{
+			schedulePage.deleteTMShiftInWeekView(teamMemberName);
+			schedulePage.clickNewDayViewShiftButtonLoaded();
+			schedulePage.customizeNewShiftPage();
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), (2+shiftHoursEachDay*2-7), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+//			schedulePage.moveSliderAtCertainPoint2( String.valueOf(2+shiftHoursEachDay*2), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+			schedulePage.selectSpecificWorkDay(dayCountInOneWeek);
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.selectSpecificTMWhileCreateNewShift(teamMemberName);
+			schedulePage.clickOnOfferOrAssignBtn();
+			schedulePage.saveSchedule();
+			float shiftHoursInWeekForTMAftAddNewShift = schedulePage.getShiftHoursByTMInWeekView(teamMemberName);
+
+			if (shiftHoursInWeekForTMAftAddNewShift > workWeekOverTime) {
+				schedulePage.verifyWeeklyOverTimeAndFlag(teamMemberName);
+			}
+		}
+
+
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Estelle")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the Schedule functionality  Job Title Filter Functionality")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+	public void viewAndFilterScheduleWithGroupByJobTitleInWeekView(String username, String password, String browser, String location)
+			throws Exception {
+
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage = dashboardPage.goToTodayForNewUI();
+		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , true);
+
+		/*
+		 *  Navigate to Schedule Week view
+		 */
+		boolean isWeekView = true;
+		schedulePage.clickOnWeekView();
+		schedulePage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
+		schedulePage.filterScheduleByJobTitle(isWeekView);
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.filterScheduleByJobTitle(isWeekView);
+		schedulePage.clickOnCancelButtonOnEditMode();
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Estelle")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the Schedule functionality  Job Title Filter Functionality")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+	public void viewAndFilterScheduleWithGroupByJobTitleInDayView(String username, String password, String browser, String location)
+			throws Exception {
+
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage = dashboardPage.goToTodayForNewUI();
+		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , true);
+
+		/*
+		 *  Navigate to Schedule day view
+		 */
+		boolean isWeekView = false;
+		schedulePage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
+		schedulePage.filterScheduleByJobTitle(isWeekView);
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.filterScheduleByJobTitle(isWeekView);
+		schedulePage.clickOnCancelButtonOnEditMode();
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Estelle")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the Schedule functionality  Job Title Filter Functionality")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+	public void viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView(String username, String password, String browser, String location)
+			throws Exception {
+
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.clickOnScheduleConsoleMenuItem();
-		schedulePage.validateTheSevenDaysIsAvailableInScheduleTable();
-		LoginPage loginPage = pageFactory.createConsoleLoginPage();
-		loginPage.logOut();
-
-		///Log in as admin to get the operation hours
-		String fileName = "UsersCredentials.json";
-		fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
-		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-		Object[][] internalAdminCredentials = userCredentials.get("InternalAdmin");
-		loginToLegionAndVerifyIsLoginDone(String.valueOf(internalAdminCredentials[0][0]), String.valueOf(internalAdminCredentials[0][1])
-				, String.valueOf(internalAdminCredentials[0][2]));
-		SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePageAdmin.clickOnScheduleConsoleMenuItem();
-		schedulePageAdmin.clickOnScheduleSubTab("Schedule");
-		if (!schedulePage.isSummaryViewLoaded())
-			schedulePage.toggleSummaryView();
-		String theEarliestAndLatestTimeInSummaryView = schedulePage.getTheEarliestAndLatestTimeInSummaryView();
-		SimpleUtils.report("theEarliestAndLatestOperationHoursInSummaryView is " + theEarliestAndLatestTimeInSummaryView);
-		loginPage.logOut();
-
-		///Log in as team member again to compare the operation hours
-		loginToLegionAndVerifyIsLoginDone(username, password, location);
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		String theEarliestAndLatestTimeInScheduleTable = schedulePage.getTheEarliestAndLatestTimeInScheduleTable();
-		SimpleUtils.report("theEarliestAndLatestOperationHoursInScheduleTable is " + theEarliestAndLatestTimeInScheduleTable);
-		schedulePage.compareOperationHoursBetweenAdminAndTM(theEarliestAndLatestTimeInSummaryView, theEarliestAndLatestTimeInScheduleTable);
-
-		//T1838613 Validate that hours and date is visible of shifts.
-		schedulePage.validateThatHoursAndDateIsVisibleOfShifts();
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		/*
+		 *  Navigate to Schedule week view
+		 */
+		boolean isWeekView = true;
+		schedulePage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
+		schedulePage.filterScheduleByWorkRoleAndJobTitle(isWeekView);
+		schedulePage.filterScheduleByShiftTypeAndJobTitle(isWeekView);
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.filterScheduleByJobTitle(isWeekView);
+		schedulePage.clickOnCancelButtonOnEditMode();
 	}
 }
 

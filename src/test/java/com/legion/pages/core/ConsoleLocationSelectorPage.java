@@ -63,6 +63,15 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy (css = "div.lg-location-chooser__highlight>lg-select>div>lg-picker-input>div>input-field>ng-form>div")
     private WebElement changeLocationButton;
 
+    @FindBy(css = "[search-hint='Search District'] div.input-faked")
+    private WebElement districtSelectorButton;
+    @FindBy(css = "[search-hint=\"Search District\"] div.lg-search-options")
+    private WebElement districtDropDownButton;
+    @FindBy(css = "lg-search[placeholder=\"Search District\"] input")
+    private WebElement searchDistrictInput;
+    @FindBy(className = "lg-search-icon")
+    private WebElement searchIcon;
+
     String dashboardConsoleMenuText = "Dashboard";
     private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
@@ -161,10 +170,10 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     }
 
     //added by Gunjan
-    @FindBy(css = "lg-select[search-hint='Search District'] div.input-faked")
-    private WebElement districtSelectorButton;
-    @FindBy(css = "[search-hint=\"Search District\"] div.lg-search-options")
-    private WebElement districtDropDownButton;
+//    @FindBy(css = "lg-select[search-hint='Search District'] div.input-faked")
+//    private WebElement districtSelectorButton;
+//    @FindBy(css = "[search-hint=\"Search District\"] div.lg-search-options")
+//    private WebElement districtDropDownButton;
     @Override
     public Boolean isChangeDistrictButtonLoaded() throws Exception
     {

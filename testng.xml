@@ -20,15 +20,9 @@
                         <include name="editManualShiftScheduleAsStoreManager"/>
                         <include name="updateControlsSectionLoadingAsInternalAdmin"/>
                         <include name="scheduleSubTabNavigationStoreManager"/>
-                        <include name="legionAppNavigationAllTabsStoreManager"/>
-                        <include name="verifyControlsBreadcrumbAsInternalAdmin"/>
                         <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>
                         <include name="validateWeatherForecastOnSchedulePageAsStoreManager"/>
-                        <include name="validateSchedulePublishFeatureAsStoreManager"/>
                         <include name="verifyScheduleOverlappingAsInternalAdmin"/>
-                        <include name="updateWorkingHoursAsInternalAdmin"/>
-                        <include name="verifyBudgetSmartcardEnableOrDisableFromSchedulingPoliciesAsInternalAdmin"/>
-                        <include name="updateControlsSectionLoadingAsStoreManager"/>
                         <include name="VerifyWhetherManagerCanApproveTimeOffRequestAsTeamMember"/>
                         <include name="generateScheduleAndCheckScheduleNTMSizeWeekView"/>
                         <include name="editAssignTeamScheduleAsStoreManager"/>
@@ -48,7 +42,6 @@
 					   <include name="verifyTheWelcomeMessage"/>
 					   <include name="verifyTheFunctionOfViewTodaySchedule"/>
 					   <include name="verifyTheDataSourceForBudgetScheduledOther"/>
-                        <include name="verifyDashboardFunctionalityAsTeamMember" />
 					</methods>
 				</class>
 		   </classes>
@@ -63,27 +56,6 @@
 			   </class>
 		   </classes>
 	   </test>
-
-    <test name="Schedule Test">
-            <classes>
-                <class name="com.legion.tests.core.ScheduleTestKendraScott2">
-                    <methods>
-<!--                        <include name="printButtonIsClickable" />-->
-<!--                        <include name="todoButtonIsClickable" />-->
-<!--                        <include name="closeButtonIsClickable" />-->
-<!--                        <include name="legionIsDisplayingTheScheduleWhichIsGeneratedByTheSystemAtTheVeryFirstTime" />-->
-<!--                        <include name="legionButtonIsClickableAndHasNoEditButton" />-->
-<!--                        <include name="CurrentWeekIsGettingOpenByDefault" />-->
-<!--                        <include name="DayWeekPickerSectionNavigatingCorrectly" />-->
-<!--                        <include name="LandscapePortraitModeShowAndWorkWellInWeekView" />-->
-                       <include name="verificationOfMySchedulePageAsTeamMember" />
-                       <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
-                    </methods>
-                </class>
-            </classes>
-    </test>
-
-
     <test name="TeamTab Test KendraScott2">
        <classes>
            <class name="com.legion.tests.core.TeamTestKendraScott2">
@@ -113,17 +85,48 @@
         </classes>
     </test>
 
-    <test name="Profile Test">
+
+    <test name="Overview Test">
         <classes>
-            <class name="com.legion.tests.core.ProfileNewUITestKendraScott2">
+            <class name="com.legion.tests.core.ScheduleOverviewTest">
                 <methods>
-                    <include name="verifyMyProfileDetailsByUpdatingTheInformationAsTeamMember" />
-                    <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
-                    <include name="verifyCreateNewTimeOffFunctionalityAsTeamMember" />
+                    <include name="verifyScheduleFunctionalityOverview"/>
                 </methods>
             </class>
         </classes>
     </test>
+
+
+    <test name="Schedule New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleTestKendraScott2">
+                <methods>
+                    <include name="verifyScheduleLegionFunctionality" />
+                    <include name="verifyComplianceSmartCardFunctionality" />
+                    <include name="verifyScheduleFunctionalitySchedule" />
+                    <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
+                    <include name="verifyScheduleFunctionalityWeekView"/>
+                    <include name="verifyScheduleFunctionalityDayView"/>
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView"/>
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView"/>
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+        <test name="Forecast Test">
+            <classes>
+                <class name="com.legion.tests.core.ForecastTest">
+                    <methods>
+                        <include name="verifyScheduleLaborForeCastFunctionality"/>
+                        <include name="verifyShopperForecastFunctionality"/>
+                        <include name="validateWeatherSmartCardOnForecastPage"/>
+                        <include name="verifyScheduleFunctionalityForecast"/>
+                    </methods>
+                </class>
+            </classes>
+        </test>
 
 </suite> <!-- Suite -->
 

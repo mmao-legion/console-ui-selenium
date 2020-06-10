@@ -29,4 +29,10 @@ public interface ScheduleOverviewPage {
 	public String getOverviewWeekDuration(WebElement webElement) throws Exception;
 	public void clickOverviewTab();
 
+    public boolean isCurrent2MonthCalendarVisible() throws Exception;
+	public boolean isCurrentDateRed() throws Exception;
+	public void verifyNavigation() throws Exception;
+	public boolean isCurrentWeekDarkBlueColor();
+
+	public List<String> getScheduleActivityInfo();
 }

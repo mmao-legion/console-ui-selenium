@@ -724,12 +724,25 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	
 	@Override
 	public void clickOnControlsComplianceSection() throws Exception {
-		if(isElementLoaded(complianceSection))
+		if(isElementLoaded(complianceSection,5))
 			click(complianceSection);
 		else
 			SimpleUtils.fail("Controls Page: Compliance Card not Loaded!", false);
 	}
-	
+
+	@Override
+	public boolean isCompliancePageLoaded() throws Exception
+	{
+		if(isElementLoaded(overtimeWeeklyText,10))
+		{
+			SimpleUtils.pass("Compliance page loaded successfully");
+			return true;
+		}else{
+			SimpleUtils.fail("Compliance not Loaded",false);
+			return false;
+		}
+	}
+
 	@Override
 	public void clickOnControlsUsersAndRolesSection() throws Exception {
 		if(isElementLoaded(usersAndRolesSection))
@@ -4620,7 +4633,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	public boolean isControlsComplianceCard() throws Exception {
 		boolean flag = false;
-		if(isElementLoaded(complianceSection,5)){
+		if(isElementLoaded(complianceSection,10)){
 			SimpleUtils.pass("Controls Page: Compliance Section Loaded Successfully!");
 			flag= true;
 		}else{
@@ -5118,5 +5131,41 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Failed to find the weekday and working times!", true);
 		}
 		return regularHours;
+	}
+	//added by Estelle to get overtime configuration data
+
+	@FindBy(xpath = "//form-section[1]/ng-transclude/content-box/ng-transclude/question-input[1]/div/div[1]/h3")
+	private WebElement overtimeWeeklyText;
+
+	@FindBy(xpath = "//form-section[1]/ng-transclude/content-box/ng-transclude/question-input[2]/div/div[1]/h3")
+	private WebElement overtimeDailyText;
+
+	@FindBy(xpath = "//form-section[1]/ng-transclude/content-box/ng-transclude/question-input[3]/div/div[1]/h3")
+	private WebElement maxConsecutiveRegularDays;
+
+	@Override
+	public HashMap<String, Integer> getOvertimePayDataFromControls(){
+		waitForSeconds(10); // to wait data load completed
+		HashMap<String, Integer> overtimePayData = new HashMap<String, Integer>();
+		String[] overtimeWeeklyData = overtimeWeeklyText.getText().split(" ");
+		String[] overtimeDailyData = overtimeDailyText.getText().split(" ");
+		String[] maxConsecutiveRegularDaysData = maxConsecutiveRegularDays.getText().split(" ");
+		overtimePayData.put("overtimeWeeklyText",Integer.valueOf(overtimeWeeklyData[12]));
+		overtimePayData.put("overtimeDailyText",Integer.valueOf(overtimeDailyData[12]));
+		overtimePayData.put("maxConsecutiveRegularDays",Integer.valueOf(maxConsecutiveRegularDaysData[10].substring(0,1)));
+		return overtimePayData;
+	}
+
+
+	@FindBy(xpath = "//form-section[3]/ng-transclude/content-box[1]/ng-transclude/question-input[1]/div/div[1]/h3")
+	private WebElement mealBreakDataInControlsCompliance;
+
+	@Override
+	public HashMap<String, Integer> getMealBreakDataFromControls(){
+		HashMap<String, Integer> mealTimeBreakData = new HashMap<String, Integer>();
+		String [] mealBreakDataInControls = mealBreakDataInControlsCompliance.getText().split(" ");
+		mealTimeBreakData.put("unPaiedMins",Integer.valueOf(mealBreakDataInControls[6]));
+		mealTimeBreakData.put("everyXHoursOfWork",Integer.valueOf(mealBreakDataInControls[13]));
+		return mealTimeBreakData;
 	}
 }
