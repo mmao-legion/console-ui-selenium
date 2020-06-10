@@ -112,7 +112,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 		String nickName = profileNewUIPage.getNickNameFromProfile();
 
-		//T1838579 Validate the TM accessible tabs.
+    	//T1838579 Validate the TM accessible tabs.
 		dashboardPage.validateTMAccessibleTabs();
 
 		//T1838580 Validate the presence of location.
@@ -178,12 +178,11 @@ public class DashboardTestKendraScott2 extends TestBase{
 		dashboardPage.validateProfileDropdownClickable();
 
 		//T1838592 Validate the data of My profile.
-		dashboardPage.clickOnProfileIconOnDashboard();
 		dashboardPage.validateTheDataOfMyProfile();
 
 		//T1838593 Validate the functionality My Work Preferences and My Availability.
-		String dateFromDashboard = dashboardPage.getCurrentDateFromDashboard();
 		dashboardPage.navigateToDashboard();
+		String dateFromDashboard = dashboardPage.getCurrentDateFromDashboard();
 		dashboardPage.validateTheDataOfMyWorkPreferences(dateFromDashboard);
 
 		//T1838594 Validate the presence of data on Time off page.

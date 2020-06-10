@@ -2536,4 +2536,45 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void goToConsoleScheduleAndScheduleSubMenu() throws Exception {
 
     }
+
+    @Override
+    public void validateProfilePictureInAShiftClickable() throws Exception {
+
+    }
+
+    @Override
+    public void validateTheDateOfProfilePopupInAShift() throws Exception {
+
+    }
+
+
+    @Override
+    public void validateTheAvailabilityOfInfoIcon() throws Exception {
+
+    }
+
+    @Override
+    public void validateInfoIconClickable() throws Exception {
+
+    }
+
+    @Override
+    public void validateTheAvailabilityOfOpenShiftSmartcard() throws Exception {
+
+    }
+
+    @Override
+    public void validateViewShiftsClickable() throws Exception {
+
+    }
+
+    @Override
+    public void validateTheNumberOfOpenShifts() throws Exception {
+
+    }
+
+    @Override
+    public void verifyTheAvailabilityOfClaimOpenShiftPopup() throws Exception {
+
+    }
 }

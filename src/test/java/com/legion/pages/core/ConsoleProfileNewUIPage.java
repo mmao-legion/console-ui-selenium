@@ -178,9 +178,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement myAvailabilityUnLockBtn;
 	@FindBy(css="button[ng-click=\"saveAvailability($event)\"]")
 	private WebElement myAvailabilityEditModeSaveBtn;
-	@FindBy(css="button[ng-click=\"save(false)\"]")
+	@FindBy(css="[ng-click=\"save()\"]")
 	private WebElement MyAvailabilityEditSaveThisWeekOnlyBtn;
-	@FindBy(css="button[ng-click=\"save(false)\"]")
+	@FindBy(css="[ng-click=\"save()\"]")
 	private WebElement MyAvailabilityEditSaveRepeatForwordBtn;
 	@FindBy(css="div.hour-cell.hour-cell-ghost.cursor-resizableE")
 	private List<WebElement> hourCellsResizableCursorsRight;
@@ -424,7 +424,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		if(timeOffRequestCount > 0) {
 			for(WebElement timeOffRequest : timeOffRequestRows) {
 				WebElement requestType = timeOffRequest.findElement(By.cssSelector("span.request-type"));
-				if(requestType.getText().toLowerCase().contains(timeOffReasonLabel.toLowerCase())) {
+				if(timeOffReasonLabel.toLowerCase().contains(requestType.getText().toLowerCase())) {
 					WebElement requestDate = timeOffRequest.findElement(By.cssSelector("div.request-date"));
 					String[] requestDateText = requestDate.getText().replace("\n", "").split("-");
 					if(requestDateText.length > 1) {
@@ -1969,7 +1969,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			click(userProfileChangePasswordBtn);
 			SimpleUtils.pass("Profile Page: user profile 'Change Password' button clicked successfully.");
 
-			if (isElementLoaded(changePasswordPopUp, 5)) {
+			if (isElementLoaded(changePasswordPopUp, 10)) {
 				String newPassword = "";
 				String confirmPassword = "";
 				SimpleUtils.pass("Profile Page: user profile 'Change Password' popup loaded successfully.");
@@ -2035,12 +2035,16 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		else
 			SimpleUtils.fail("Shift Preference Data: 'Shifts/wk' value('"
 					+ minMaxArray.get(4) + " - " + minMaxArray.get(5) + "/" + shiftPreferenceData.get("shiftsPerWeek") + "') not matched.", true);
-		if (isVolunteersForAdditional == SimpleUtils.convertYesOrNoToTrueOrFalse(shiftPreferenceData.get("volunteerForAdditionalWork")))
-			SimpleUtils.pass("Shift Preference Data: ''Volunteer Standby List' value('"
-					+ isVolunteersForAdditional + "/" + shiftPreferenceData.get("volunteerForAdditionalWork") + "') matched.");
-		else
-			SimpleUtils.fail("Shift Preference Data: 'Volunteer Standby List' value('"
-					+ isVolunteersForAdditional + "/" + shiftPreferenceData.get("volunteerForAdditionalWork") + "') not matched.", true);
+		if (isElementLoaded(volunteerMoreHoursCheckButton, 10)) {
+			if (isVolunteersForAdditional == SimpleUtils.convertYesOrNoToTrueOrFalse(shiftPreferenceData.get("volunteerForAdditionalWork")))
+				SimpleUtils.pass("Shift Preference Data: ''Volunteer Standby List' value('"
+						+ isVolunteersForAdditional + "/" + shiftPreferenceData.get("volunteerForAdditionalWork") + "') matched.");
+			else
+				SimpleUtils.fail("Shift Preference Data: 'Volunteer Standby List' value('"
+						+ isVolunteersForAdditional + "/" + shiftPreferenceData.get("volunteerForAdditionalWork") + "') not matched.", true);
+		} else  {
+			SimpleUtils.report("Shift Preference Data: ''Volunteer Standby List' is disabled and cannot be set");
+		}
 		if (canReceiveOfferFromOtherLocation == SimpleUtils.convertYesOrNoToTrueOrFalse(shiftPreferenceData.get("otherPreferredLocations")))
 			SimpleUtils.pass("Shift Preference Data: 'Other preferred locations' value('"
 					+ canReceiveOfferFromOtherLocation + "/" + shiftPreferenceData.get("otherPreferredLocations") + "') matched.");
@@ -2055,7 +2059,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		if (isMyShiftPreferenceEditContainerLoaded()) {
 			SimpleUtils.pass("Profile Page: 'My Shift Preference' edit Container loaded successfully.");
 			updateReceivesShiftOffersForOtherLocationCheckButton(canReceiveOfferFromOtherLocation);
-			updateVolunteersForAdditionalWorkCheckButton(isVolunteersForAdditional);
+			if(isElementLoaded(volunteerMoreHoursCheckButton, 10)) {
+				updateVolunteersForAdditionalWorkCheckButton(isVolunteersForAdditional);
+			} else
+				SimpleUtils.report("Profile Page: 'Volunteers for Additional Work' Checkbox is disabled due to admin setting");
 		} else
 			SimpleUtils.fail("Profile Page: 'My Shift Preference' edit Container not loaded.", true);
 	}
@@ -2143,11 +2150,6 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.fail("Profile page: 'My Availability Preferred & Busy Hours Duration not loaded", true);
 
 			//Update Preferred And Busy Hours
-			updateLockedAvailabilityPreferredOrBusyHoursSlider(hoursType, sliderIndex, leftOrRightDuration,
-					durationMinutes, repeatChanges);
-
-			hoursType = "Busy";
-			sliderIndex = 0;
 			updateLockedAvailabilityPreferredOrBusyHoursSlider(hoursType, sliderIndex, leftOrRightDuration,
 					durationMinutes, repeatChanges);
 
@@ -2242,15 +2244,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		int daysStartFromToday = 0;
 		int daysEndFromToday = 0;
 		int periodToRequestTimeOff = getPeriodToRequestTimeOff();
-		IntStream intStream = (new Random()).ints(periodToRequestTimeOff, calendarDates.size() - cannotSelectDates);
-		int[] array = intStream.limit(2).boxed().mapToInt(Integer::valueOf).toArray();
-		if (array[0] < array[1]) {
-			daysStartFromToday = array[0];
-			daysEndFromToday = array[1];
-		} else {
-			daysStartFromToday = array[1];
-			daysEndFromToday = array[0];
-		}
+		daysStartFromToday = new Random().ints(1,periodToRequestTimeOff,calendarDates.size() - cannotSelectDates).findFirst().getAsInt();
+		daysEndFromToday = daysStartFromToday + 1;
 		selectDate(daysStartFromToday);
 		selectDate(daysEndFromToday);
 		HashMap<String, String> timeOffDate = getTimeOffDate(daysStartFromToday, daysEndFromToday);

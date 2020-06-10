@@ -513,6 +513,12 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	//Added by Julie
+	@FindBy( css = ".col-sm-4 > .header-company-icon > img")
+	private WebElement companyIconImg;
+
+	@FindBy(css = "[ng-if=\"scheduleForToday($index) && !scheduleForToday($index).length\"]")
+	private WebElement publishedShiftForToday;
+
 	@FindBy(xpath = "//span[text()='My Availability']")
 	private WebElement myAvailabilityInMyWorkPreferences;
 
@@ -641,9 +647,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateThePresenceOfLogo() throws Exception {
-		if (isElementLoaded(iconImage, 5)) {
-			if (iconImage.isDisplayed()) {
-				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[1]")).equals(iconImage)) {
+		if (isElementLoaded(companyIconImg, 5)) {
+			if (companyIconImg.isDisplayed()) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[1]/img")).equals(companyIconImg)) {
 					SimpleUtils.pass("Dashboard Page: Logo is present at right corner of page successfully");
 				} else {
 					SimpleUtils.fail("Dashboard Page: Logo isn't present at right corner of page", true);
@@ -724,9 +730,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateTheUpcomingSchedules(String userName) throws Exception {
-		if (isElementLoaded(dashboardUpcomingShiftContainer, 20)) {
+		if (isElementLoaded(dashboardUpcomingShiftContainer, 20) && isElementLoaded(publishedShiftForToday,20)) {
 			SimpleUtils.pass("Today's published Shifts loaded Successfully on Dashboard!");
-			if (publishedShiftForTodayDiv.getText().contains("No Published") && publishedShiftForTodayDiv.getText().contains("Shifts for today")) {
+			if (publishedShiftForToday.getText().contains("No Published") && publishedShiftForToday.getText().contains("Shifts for today")) {
 				SimpleUtils.pass("No Published Shifts for today");
 			} else {
 				for (WebElement us : upcomingShifts) {
@@ -829,7 +835,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public void validateTheDataOfMyProfile() throws Exception {
 		clickOnSubMenuOnProfile("My Profile");
-		if (isElementLoaded(personalDetails, 30) && isElementLoaded(engagementDetails, 30)) {
+		if (isElementLoaded(personalDetails, 20) && isElementLoaded(engagementDetails, 20)) {
 			if (personalDetails.isDisplayed() && engagementDetails.isDisplayed())
 				SimpleUtils.pass("My Profile: It shows the TM's personal and engagement details successfully");
 		} else {
@@ -846,7 +852,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 					click(e);
 					if (isElementLoaded(alertDialog, 5))
 						click(OKButton);
-					else click(iconImage);
+					else click(companyIconImg);
 					SimpleUtils.pass("Able to click on '"+ subMenu+"' link Successfully!!");
 					break;
 				}
@@ -858,6 +864,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateTheDataOfMyWorkPreferences(String date) throws Exception {
+		SimpleUtils.report(date);
 		clickOnSubMenuOnProfile("My Work Preferences");
 		if (isElementLoaded(myAvailabilityInMyWorkPreferences, 10) && isElementLoaded(myShiftPreferences, 10)&&isElementLoaded(myAvailabilityChangeRequestsInMyWorkPreferences,10) ) {
 			SimpleUtils.pass("My Work Preferences: It shows the Availability and Shift Preferences successfully");
@@ -878,11 +885,12 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 					SimpleUtils.fail("Active week text doesn't have enough length", true);
 				}
 			}
-			if (Integer.valueOf(date)<=Integer.valueOf(weekDefaultEnd) && Integer.valueOf(date)>=Integer.valueOf(weekDefaultBegin)) {
-				SimpleUtils.pass("My Work Preferences: Current week availability shows by default");
-			} else {
+			if (Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd) && Integer.parseInt(date) >= Integer.parseInt(weekDefaultBegin)) {
+				SimpleUtils.pass("My Work Preferences: Current week availability shows by default successfully");
+			} else if (Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd) && weekDefaultBegin.length() == 2 && date.length() == 1 ) {
+				SimpleUtils.pass("My Work Preferences: Current week availability shows by default successfully");
+			} else
 				SimpleUtils.fail("My Work Preferences: Current week availability shows incorrectly", true);
-			}
 		} else {
 			SimpleUtils.fail("Failed to show the Availability and Shift Preferences on My Work Preferences", true);
 		}

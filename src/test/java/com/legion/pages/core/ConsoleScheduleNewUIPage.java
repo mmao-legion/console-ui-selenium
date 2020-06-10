@@ -7817,6 +7817,594 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    //Added by Julie
+    @FindBy(css = "div.rows")
+    private List<WebElement> weekScheduleShiftsOfWeekView;
+
+    @FindBy(css = ".sch-day-view-shift-time")
+    private List<WebElement> weekScheduleShiftsTimeOfMySchedule;
+
+    @FindBy(css = ".my-schedule-no-schedule")
+    private WebElement myScheduleNoSchedule;
+
+    @FindBy(className = "sch-grid-container")
+    private WebElement scheduleTable;
+
+    @FindBy(css = "ng-form.input-field-disabled")
+    private WebElement currentLocationOnSchedulePage;
+
+    @FindBy(css = ".sub-navigation-view-link")
+    private List<WebElement> subMenusOnSchedulePage;
+
+    @FindBy(css = "[ng-repeat=\"opt in opts\"] input-field")
+    private List<WebElement> shiftTypes;
+
+    @FindBy(css = "div[ng-attr-class^=\"sch-date-title\"]")
+    private List<WebElement> weekScheduleShiftsDateOfMySchedule;
+
+    @FindBy(css = "div.sch-day-view-grid-header span")
+    private List<WebElement> scheduleShiftTimeOnHeader;
+
+    @FindBy(css = ".day-view-shift-hover-info-icon")
+    private List<WebElement> hoverIcons;
+
+    @FindBy(className = "popover-content")
+    private WebElement popOverContent;
+
+    @FindBy(css = ".card-carousel-card-default")
+    private WebElement openShiftCard;
+
+    @FindBy(className = "card-carousel-link")
+    private WebElement viewShiftsBtn;
+
+    @FindBy(css = "h1[ng-if=\"weeklyScheduleData.hasSchedule !== 'FALSE'\"]")
+    private WebElement openShiftData;
+
+    @FindBy(css = "img.sch-open-shift-28-28-icon")
+    private List<WebElement> blueIconsOfOpenShift;
+
+    List<String> weekScheduleShiftTimeListOfWeekView = new ArrayList<String>();
+    List<String> weekScheduleShiftTimeListOfMySchedule = new ArrayList<String>();
+
+    @Override
+    public List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception {
+        clickOnWeekView();
+        if (areListElementVisible(weekScheduleShiftsOfWeekView, 10) && weekScheduleShiftsOfWeekView.size() != 0) {
+            for (int i = 0; i < weekScheduleShiftsOfWeekView.size(); i++) {
+                if (weekScheduleShiftsOfWeekView.get(i).findElement(By.cssSelector(".week-schedule-worker-name")).getText().contains(teamMemberName)) {
+                    weekScheduleShiftTimeListOfWeekView.add(weekScheduleShiftsOfWeekView.get(i).findElement(By.cssSelector(".week-schedule-shift-time")).getText().replace(" ", "").toLowerCase());
+                }
+            }
+        } else if (weekScheduleShiftsOfWeekView.size() == 0) {
+            SimpleUtils.report("Schedule Week View Page: No shift available");
+        } else {
+            SimpleUtils.fail("Schedule Week View Page: Failed to load shifts", true);
+        }
+        return weekScheduleShiftTimeListOfWeekView;
+    }
+
+    public List<String> getWeekScheduleShiftTimeListOfMySchedule() throws Exception {
+        if (areListElementVisible(weekScheduleShiftsTimeOfMySchedule, 20)) {
+            if (weekScheduleShiftsTimeOfMySchedule.size() > 0) {
+                for (int i = 0; i < weekScheduleShiftsTimeOfMySchedule.size(); i++) {
+                    weekScheduleShiftTimeListOfMySchedule.add(weekScheduleShiftsTimeOfMySchedule.get(i).getText().trim().replace(":00", ""));
+                }
+            } else if (weekScheduleShiftsTimeOfMySchedule.size() == 0)
+                SimpleUtils.report("My Schedule Page: No shift hours in the schedule table");
+        } else if (isElementLoaded(myScheduleNoSchedule, 10)) {
+            SimpleUtils.report("My Schedule Page: Schedule has not been generated.");
+        } else
+            SimpleUtils.fail("My Schedule Page: Failed to load shifts", true);
+        return weekScheduleShiftTimeListOfMySchedule;
+    }
+
+    @Override
+    public void validateTheAvailabilityOfScheduleTable(String userName) throws Exception {
+        if (isElementLoaded(scheduleTable, 10)) {
+            SimpleUtils.pass("My Schedule Page: Schedule table is present");
+            if (scheduleShiftsRows.size() > 0) {
+                for (WebElement scheduleShift : scheduleShiftsRows) {
+                    if (scheduleShift.getText().toLowerCase().contains(userName.toLowerCase())) {
+                        SimpleUtils.pass("My Schedule Page: TM's Schedules show in schedule table");
+                        break;
+                    } else if (scheduleShift.getText() == null)
+                        SimpleUtils.report("My Schedule Page: TM's Schedules are empty");
+                    else
+                        SimpleUtils.fail("My Schedule Page: TM's Schedules don't show in schedule table", true);
+                }
+            }
+        } else if (isElementLoaded(myScheduleNoSchedule, 10)) {
+            SimpleUtils.report("My Schedule Page: Schedule has not been generated.");
+        } else {
+            SimpleUtils.fail("My Schedule Page: Failed to load shifts", true);
+        }
+    }
+
+    @Override
+    public void validateTheDisabilityOfLocationSelectorOnSchedulePage() throws Exception {
+        if (isElementLoaded(currentLocationOnSchedulePage, 10)) {
+            if (currentLocationOnSchedulePage.getCssValue("cursor").contains("not-allowed"))
+                SimpleUtils.pass("My Schedule Page: Location selector is in disable mode");
+            else SimpleUtils.fail("My Schedule Page: Location selector is still enabled", true);
+        } else SimpleUtils.fail("My Schedule Page: Location failed to load", true);
+    }
+
+    @Override
+    public void goToConsoleScheduleAndScheduleSubMenu() throws Exception {
+        if (isElementLoaded(consoleSchedulePageTabElement, 5)) {
+            click(consoleSchedulePageTabElement);
+            click(ScheduleSubMenu);
+            if (isElementLoaded(todoButton, 5)) {
+                SimpleUtils.pass("Schedule New UI load successfully");
+            } else {
+                SimpleUtils.fail("Schedule New UI load failed", true);
+            }
+        }
+    }
+
+    @Override
+    public void validateTheAvailabilityOfScheduleMenu() throws Exception {
+        if (areListElementVisible(subMenusOnSchedulePage, 10)) {
+            if (subMenusOnSchedulePage.size() == 2) {
+                SimpleUtils.pass("Schedule Page: It has two sub menus successfully");
+            } else {
+                SimpleUtils.fail("Schedule Page: It doesn't have two sub menus", true);
+            }
+            for (WebElement subMenu : subMenusOnSchedulePage) {
+                if (subMenu.getText().trim().equals("My Schedule") || subMenu.getText().trim().equals("Team Schedule")) {
+                    SimpleUtils.pass("Schedule Page: It includes " + subMenu.getText());
+                } else {
+                    SimpleUtils.fail("Schedule Page: " + subMenu.getText() + " isn't expected in sub menu list", true);
+                }
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: Sub menu list failed to load", true);
+        }
+    }
+
+    @Override
+    public void validateTheFocusOfSchedule() throws Exception {
+        if (areListElementVisible(subMenusOnSchedulePage, 10) && subMenusOnSchedulePage.size() > 1) {
+            if (subMenusOnSchedulePage.get(0).getAttribute("class").contains("active") && subMenusOnSchedulePage.get(0).getText().contains("My Schedule")) {
+                SimpleUtils.pass("Schedule Page: My schedule is selected by default not the Team schedule successfully ");
+            } else
+                SimpleUtils.fail("Schedule Page: My schedule isn't selected by default", true);
+        } else SimpleUtils.fail("Schedule Page: Sub menus failed to load", true);
+    }
+
+    @Override
+    public void validateTheDefaultFilterIsSelectedAsScheduled() throws Exception {
+        if (isElementLoaded(filterButton, 5)) {
+            click(filterButton);
+            if (shiftTypes.size() > 0) {
+                for (WebElement shiftType : shiftTypes) {
+                    WebElement filterCheckBox = shiftType.findElement(By.tagName("input"));
+                    if (filterCheckBox.getAttribute("class").contains("ng-not-empty")) {
+                        if (shiftType.getText().equals("Scheduled"))
+                            SimpleUtils.pass("My Schedule Page: Scheduled filter is applied by default successfully");
+                        else
+                            SimpleUtils.fail("My Schedule Page: Scheduled filter isn't applied by default successfully", true);
+                    }
+                }
+            } else if (isElementLoaded(myScheduleNoSchedule, 10)) {
+                SimpleUtils.report("My Schedule Page: Schedule has not been generated.");
+            } else
+                SimpleUtils.fail("My Schedule Page: No schedule shift type can be applied", true);
+            //Click again to close the pop up menu
+            click(filterButton);
+        } else
+            SimpleUtils.fail("My Schedule Page: Filter button failed to load", true);
+    }
+
+    @Override
+    public void validateTheFocusOfWeek(String currentDate) throws Exception {
+        String date = null;
+        if (isScheduleWeekViewActive()) {
+            SimpleUtils.pass("My Schedule Page: It is in week view now");
+            if (currentDate.contains(",") && currentDate.contains(" ")) {
+                date = currentDate.split(",")[1].trim().split(" ")[1];
+                SimpleUtils.report("Current date is " + date);
+            }
+            //activeWeekText is Mon - Sun Apr 13 - Apr 19
+            String activeWeekText = getActiveWeekText();
+            SimpleUtils.report("activeWeekText is: " + activeWeekText);
+            String weekDefaultEnd = "";
+            String weekDefaultBegin = "";
+            if (activeWeekText.contains(" ") && activeWeekText.contains("-")) {
+                try {
+                    weekDefaultBegin = activeWeekText.split("-")[1].split(" ")[3];
+                    SimpleUtils.report("weekDefaultBegin is: " + weekDefaultBegin);
+                    weekDefaultEnd = activeWeekText.split("-")[2].split(" ")[2];
+                    SimpleUtils.report("weekDefaultEnd is: " + weekDefaultEnd);
+                } catch (Exception e) {
+                    SimpleUtils.fail("My Schedule Page: Active week text doesn't have enough length", true);
+                }
+            }
+            if (Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd) && (Integer.parseInt(date) >= Integer.parseInt(weekDefaultBegin) || (weekDefaultBegin.length() == 2 && date.length() == 1))) {
+                SimpleUtils.pass("My Schedule Page: By default focus is on current week successfully");
+            } else {
+                SimpleUtils.fail("My Schedule Page: Current week isn't selected by default", true);
+            }
+        } else
+            SimpleUtils.fail("My Schedule Page: It isn't in week view", true);
+    }
+
+    @Override
+    public void validateForwardAndBackwardButtonClickable() throws Exception {
+        String activeWeekText = getActiveWeekText();
+        if (isElementLoaded(calendarNavigationNextWeekArrow, 10)) {
+            try {
+                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
+                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Previous.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
+                if (activeWeekText.equals(getActiveWeekText()))
+                    SimpleUtils.pass("My Schedule Page: Forward and backward button to view previous or upcoming week is clickable successfully");
+            } catch (Exception e) {
+                SimpleUtils.fail("My Schedule Page: Exception occurs when clicking forward and backward button", true);
+            }
+        } else if (isElementLoaded(calendarNavigationPreviousWeekArrow, 10)) {
+            try {
+                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Previous.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
+                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
+                if (activeWeekText.equals(getActiveWeekText()))
+                    SimpleUtils.pass("My Schedule Page: Forward and backward button to view previous or upcoming week is clickable successfully");
+            } catch (Exception e) {
+                SimpleUtils.fail("My Schedule Page: Exception occurs when clicking forward and backward button", true);
+            }
+        } else
+            SimpleUtils.fail("My Schedule Page: Forward and backward button failed to load to view previous or upcoming week", true);
+    }
+
+    @Override
+    public void validateTheDataAccordingToTheSelectedWeek() throws Exception {
+        if (isElementLoaded(calendarNavigationPreviousWeekArrow, 10)) {
+            navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Previous.getValue(), ScheduleNewUITest.weekCount.Two.getValue());
+        } else if (isElementLoaded(calendarNavigationNextWeekArrow, 10)) {
+            navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.Two.getValue());
+        } else
+            SimpleUtils.fail("My Schedule Page: Forward and backward button failed to load to view previous or upcoming week", true);
+        //todo: verifySelectOtherWeeks();
+        validateTheScheduleShiftsAccordingToTheSelectedWeek();
+    }
+
+    public void validateTheScheduleShiftsAccordingToTheSelectedWeek() throws Exception {
+        if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20) && weekScheduleShiftsDateOfMySchedule.size() == 7 && isElementLoaded(currentActiveWeek, 5)) {
+            String activeWeek = currentActiveWeek.getText();
+            String weekScheduleShiftStartDate = weekScheduleShiftsDateOfMySchedule.get(0).getText();
+            String weekScheduleShiftEndDate = weekScheduleShiftsDateOfMySchedule.get(6).getText();
+            if (activeWeek.contains("\n") && weekScheduleShiftStartDate.contains(",") && weekScheduleShiftStartDate.contains(" ") && weekScheduleShiftEndDate.contains(",") && weekScheduleShiftEndDate.contains(" ") && activeWeek.contains("-")) {
+                try {
+                    if (weekScheduleShiftStartDate.split(",")[1].trim().split(" ")[1].startsWith("0")) {
+                        weekScheduleShiftStartDate = weekScheduleShiftStartDate.split(",")[1].trim().split(" ")[0] + " " + weekScheduleShiftStartDate.split(",")[1].split(" ")[2].substring(1, 2);
+                    } else {
+                        weekScheduleShiftStartDate = weekScheduleShiftStartDate.split(",")[1].trim();
+                    }
+                    if (weekScheduleShiftEndDate.split(",")[1].trim().split(" ")[1].startsWith("0")) {
+                        weekScheduleShiftEndDate = weekScheduleShiftEndDate.split(",")[1].trim().split(" ")[0] + " " + weekScheduleShiftEndDate.split(",")[1].split(" ")[2].substring(1, 2);
+                    } else {
+                        weekScheduleShiftEndDate = weekScheduleShiftEndDate.split(",")[1].trim();
+                    }
+                    activeWeek = activeWeek.split("\n")[1];
+                    SimpleUtils.report("weekScheduleShiftStartDate is " + weekScheduleShiftStartDate);
+                    SimpleUtils.report("weekScheduleShiftEndDate is " + weekScheduleShiftEndDate);
+                    SimpleUtils.report("activeWeek is " + activeWeek);
+                    if (weekScheduleShiftStartDate.equalsIgnoreCase(activeWeek.split("-")[0].trim()) && weekScheduleShiftEndDate.equalsIgnoreCase(activeWeek.split("-")[1].trim())) {
+                        SimpleUtils.pass("My Schedule Page: The schedule shifts show according to the selected week successfully");
+                    } else
+                        SimpleUtils.fail("My Schedule Page: The schedule shifts failed to show according to the selected week", true);
+                } catch (Exception e) {
+                    SimpleUtils.fail("My Schedule Page: The schedule shifts texts don't have enough length ", true);
+                }
+            }
+        } else if (isElementLoaded(myScheduleNoSchedule, 10)) {
+            SimpleUtils.report("My Schedule Page: Schedule has not been generated.");
+        } else {
+            SimpleUtils.fail("My Schedule Page: Failed to load shifts", true);
+        }
+    }
+
+    @Override
+    public void validateTheSevenDaysIsAvailableInScheduleTable() throws Exception {
+        if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20) && weekScheduleShiftsDateOfMySchedule.size() == 7 && isElementLoaded(currentActiveWeek, 5)) {
+            String activeWeek = currentActiveWeek.getText();
+            String weekScheduleShiftStartDay = weekScheduleShiftsDateOfMySchedule.get(0).getText();
+            String weekScheduleShiftEndDay = weekScheduleShiftsDateOfMySchedule.get(6).getText();
+            if (activeWeek.contains("-") && activeWeek.contains("\n") && weekScheduleShiftStartDay.contains(",") && weekScheduleShiftEndDay.contains(",")) {
+                try {
+                    activeWeek = activeWeek.split("\n")[0];
+                    weekScheduleShiftStartDay = weekScheduleShiftStartDay.split(",")[0].substring(0, 3);
+                    weekScheduleShiftEndDay = weekScheduleShiftEndDay.split(",")[0].substring(0, 3);
+                    SimpleUtils.report("weekScheduleShiftStartDay is " + weekScheduleShiftStartDay);
+                    SimpleUtils.report("weekScheduleShiftEndDay is " + weekScheduleShiftEndDay);
+                    SimpleUtils.report("activeWeek is " + activeWeek);
+                    if (weekScheduleShiftStartDay.equalsIgnoreCase(activeWeek.split("-")[0].trim()) && weekScheduleShiftEndDay.equalsIgnoreCase(activeWeek.split("-")[1].trim())) {
+                        SimpleUtils.pass("My Schedule Page: Seven days - Sunday to Saturday show in the schedule table successfully");
+                        //todo according to the operation hours
+                    } else
+                        SimpleUtils.fail("My Schedule Page: Seven days - Sunday to Saturday failed to show in the schedule table", true);
+                } catch (Exception e) {
+                    SimpleUtils.fail("My Schedule Page: The schedule shifts texts don't have enough length ", true);
+                }
+            }
+        } else if (isElementLoaded(myScheduleNoSchedule, 10)) {
+            SimpleUtils.report("My Schedule Page: Schedule has not been generated.");
+        } else {
+            SimpleUtils.fail("My Schedule Page: Failed to load shifts", true);
+        }
+    }
+
+    @Override
+    public String getTheEarliestAndLatestTimeInSummaryView() throws Exception {
+        String day = null;
+        String shiftStartTime = null;
+        String shiftEndTime = null;
+        double shiftStartTimeDouble = 12.0;
+        double shiftEndTimeDouble = 0.0;
+        HashMap<String, String> activeDayAndOperatingHrs = new HashMap<>();
+        if (areListElementVisible(operatingHoursRows, 5) &&
+                areListElementVisible(operatingHoursScheduleDay, 5) &&
+                areListElementVisible(scheduleOperatingHrsTimeDuration, 5)) {
+            for (int i = 0; i < operatingHoursRows.size(); i++) {
+                if (scheduleOperatingHrsTimeDuration.get(i).getText().contains("Closed"))
+                    continue;
+                day = operatingHoursScheduleDay.get(i).getText().substring(0, 3);
+                activeDayAndOperatingHrs = getOperatingHrsValue(day);
+                shiftStartTime = (activeDayAndOperatingHrs.get("ScheduleOperatingHrs").split("-"))[1];
+                if (shiftStartTime.endsWith("pm"))
+                    continue;
+                shiftEndTime = (activeDayAndOperatingHrs.get("ScheduleOperatingHrs").split("-"))[2];
+                if (shiftStartTime.contains(":"))
+                    shiftStartTime = shiftStartTime.replace(":", ".");
+                if (shiftEndTime.contains(":"))
+                    shiftEndTime = shiftEndTime.replace(":", ".");
+                shiftStartTime = shiftStartTime.replaceAll("[a-zA-Z]", "");
+                shiftEndTime = shiftEndTime.replaceAll("[a-zA-Z]", "");
+                if (shiftStartTimeDouble > Double.valueOf(shiftStartTime))
+                    shiftStartTimeDouble = Double.valueOf(shiftStartTime);
+                if (shiftEndTimeDouble < Double.valueOf(shiftEndTime))
+                    shiftEndTimeDouble = Double.valueOf(shiftEndTime);
+            }
+        } else {
+            SimpleUtils.fail("Operating hours table not loaded Successfully", true);
+        }
+        return Integer.valueOf((int) shiftStartTimeDouble).toString() + "-" + Integer.valueOf((int) shiftEndTimeDouble).toString();
+    }
+
+    @Override
+    public String getTheEarliestAndLatestTimeInScheduleTable() throws Exception {
+        String operationStartTimeInScheduleTable = null;
+        String operationEndTimeInScheduleTable = null;
+        if (areListElementVisible(scheduleShiftTimeOnHeader, 30)) {
+            if (scheduleShiftTimeOnHeader.size() >= 2) {
+                if (scheduleShiftTimeOnHeader.get(0).getText().contains("AM"))
+                    operationStartTimeInScheduleTable = scheduleShiftTimeOnHeader.get(0).getText().replaceAll("[^0-9]", "");
+                else
+                    operationStartTimeInScheduleTable = scheduleShiftTimeOnHeader.get(1).getText().replaceAll("[^0-9]", "");
+                if (scheduleShiftTimeOnHeader.get(scheduleShiftTimeOnHeader.size() - 1).getText().contains("PM"))
+                    operationEndTimeInScheduleTable = scheduleShiftTimeOnHeader.get(scheduleShiftTimeOnHeader.size() - 1).getText().replaceAll("[^0-9]", "");
+                else
+                    operationEndTimeInScheduleTable = scheduleShiftTimeOnHeader.get(scheduleShiftTimeOnHeader.size() - 2).getText().replaceAll("[^0-9]", "");
+            } else SimpleUtils.fail("My Schedule Page: The operation hours shows wrong", true);
+        } else if (isElementLoaded(myScheduleNoSchedule, 20))
+            SimpleUtils.report("My Schedule Page: Schedule has not been generated.");
+        else
+            SimpleUtils.fail("My Schedule Page: The operation hours failed to load", true);
+        return operationStartTimeInScheduleTable + "-" + operationEndTimeInScheduleTable;
+    }
+
+    @Override
+    public void compareOperationHoursBetweenAdminAndTM(String theEarliestAndLatestTimeInScheduleSummary, String theEarliestAndLatestTimeInScheduleTable) throws Exception {
+        if (theEarliestAndLatestTimeInScheduleSummary.contains("-") && theEarliestAndLatestTimeInScheduleTable.contains("-")) {
+            if (Integer.valueOf(theEarliestAndLatestTimeInScheduleSummary.split("-")[0]) >= Integer.valueOf(theEarliestAndLatestTimeInScheduleTable.split("-")[0]) && Integer.valueOf(theEarliestAndLatestTimeInScheduleSummary.split("-")[1]) <= Integer.valueOf(theEarliestAndLatestTimeInScheduleTable.split("-")[1])) {
+                SimpleUtils.pass("My Schedule Page: Seven days - Sunday to Saturday show in the schedule table according to the operating hours");
+            } else
+                SimpleUtils.fail("My Schedule Page: Seven days - Sunday to Saturday don't show in the schedule table according to the operating hours", true);
+        } else
+            SimpleUtils.fail("My Schedule Page: Operation hours display wrong, please check whether the shift is generated and published", true);
+    }
+
+    @Override
+    public void validateThatHoursAndDateIsVisibleOfShifts() throws Exception {
+        if (areListElementVisible(weekScheduleShiftsTimeOfMySchedule, 20) && areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20) && weekScheduleShiftsDateOfMySchedule.size() == 7) {
+            for (int i = 0; i < weekScheduleShiftsDateOfMySchedule.size(); i++) {
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd");
+                try {
+                    String date = weekScheduleShiftsDateOfMySchedule.get(i).getText();
+                    sdf.setLenient(false);
+                    sdf.parse(date.trim());
+                    SimpleUtils.pass("My Schedule Page: Result Shifts show with shift date " + date.trim() + " successfully");
+                } catch (Exception e) {
+                    SimpleUtils.fail("My Schedule Page: Shifts don't show a legal DateTime type", true);
+                }
+            }
+        } else if (weekScheduleShiftsTimeOfMySchedule.size() == 0) {
+            SimpleUtils.report("My Schedule Page: No shift hours in the schedule table");
+            for (int i = 0; i < weekScheduleShiftsTimeOfMySchedule.size(); i++) {
+                if (weekScheduleShiftsTimeOfMySchedule.get(i).getText().contains("am") || weekScheduleShiftsTimeOfMySchedule.get(i).getText().contains("pm"))
+                    SimpleUtils.pass("My Schedule Page: Result Shifts show with shift hours " + weekScheduleShiftsTimeOfMySchedule.get(i).getText() + " successfully");
+                else
+                    SimpleUtils.fail("My Schedule Page: Result Shifts failed to show with shift hours " + weekScheduleShiftsTimeOfMySchedule.get(i).getText(), true);
+            }
+        } else if (isElementLoaded(myScheduleNoSchedule, 10)) {
+            SimpleUtils.report("My Schedule Page: Schedule has not been generated.");
+        } else {
+            SimpleUtils.fail("My Schedule Page: Failed to load shifts", true);
+        }
+    }
+
+    @Override
+    public void validateProfilePictureInAShiftClickable() throws Exception {
+        Boolean isShiftDetailsShowed = false;
+        if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20)) {
+            if (scheduleTableWeekViewWorkerDetail.size() != 0) {
+                int randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
+                moveToElementAndClick(scheduleTableWeekViewWorkerDetail.get(randomIndex));
+                SimpleUtils.pass("My Schedule Page: Profile picture is clickable successfully");
+                if (isPopOverLayoutLoaded()) {
+                    if (!popOverLayout.getText().isEmpty() && popOverLayout.getText() != null) {
+                        isShiftDetailsShowed = true;
+                    }
+                    moveToElementAndClick(scheduleTableWeekViewWorkerDetail.get(randomIndex));
+                }
+                if (isShiftDetailsShowed == true)
+                    SimpleUtils.pass("My Schedule Page: Profile picture shows details of TM successfully");
+                else
+                    SimpleUtils.fail("My Schedule Page: Profile picture failed to details of TM", true);
+            } else if (scheduleTableWeekViewWorkerDetail.size() == 0)
+                SimpleUtils.report("My Schedule Page: No shift hours in the schedule table");
+        } else if (isElementLoaded(myScheduleNoSchedule, 10))
+            SimpleUtils.report("My Schedule Page: Schedule has not been generated.");
+        else SimpleUtils.fail("My Schedule Page: Failed to load shifts", true);
+    }
+
+    @Override
+    public void validateTheDateOfProfilePopupInAShift() throws Exception {
+        Boolean isShiftDetailsShowed = false;
+        if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20)) {
+            if (scheduleTableWeekViewWorkerDetail.size() != 0) {
+                int randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
+                moveToElementAndClick(scheduleTableWeekViewWorkerDetail.get(randomIndex));
+                if (isPopOverLayoutLoaded()) {
+/*                    System.out.println("pop is " + popOverLayout.getAttribute("innerHTML"));
+                    if (popOverLayout.getAttribute("class").contains("sch-worker-h-view-name")
+                            && popOverLayout.getAttribute("class").contains("sch-worker-role")
+                            && popOverLayout.getAttribute("class").contains("sch-worker-h-sub-row")
+                            && popOverLayout.getAttribute("class").contains("sch-worker-h-badges-row")) {
+                        if (popOverLayout.findElement(By.className("sch-worker-h-view-name")).getText() != null
+                                && popOverLayout.findElement(By.className("sch-worker-role")).getText() != null
+                                && popOverLayout.findElement(By.className("sch-worker-h-sub-row")).getText() != null
+                                && popOverLayout.findElement(By.className("sch-worker-h-badges-row")).getText() != null) {
+                            //todo: LEG-10929
+                            isShiftDetailsShowed = true;
+                        }
+                    }*/
+                    moveToElementAndClick(scheduleTableWeekViewWorkerDetail.get(randomIndex));
+                }
+                if (isShiftDetailsShowed == true)
+                    SimpleUtils.pass("My Schedule Page: Profile popup contains location, badges, job title and name successfully");
+                else
+                    SimpleUtils.fail("My Schedule Page: Profile popup doesn't contain location, badges, job title and name", true);
+            } else if (scheduleTableWeekViewWorkerDetail.size() == 0)
+                SimpleUtils.report("My Schedule Page: No shift hours in the schedule table");
+        } else if (isElementLoaded(myScheduleNoSchedule, 10))
+            SimpleUtils.report("My Schedule Page: Schedule has not been generated.");
+        else SimpleUtils.fail("My Schedule Page: Failed to load shifts", true);
+    }
+
+    @Override
+    public void validateTheAvailabilityOfInfoIcon() throws Exception {
+        if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20)) {
+            if (hoverIcons.size() != 0) {
+                if (getDriver().findElements(By.xpath("//*[@class=\"right-shift-box\"]//*[@popover-placement=\"top\"]")).size() == hoverIcons.size())
+                    SimpleUtils.pass("My Schedule Page: Info icon is present at the right side of a shift successfully");
+                else
+                    SimpleUtils.fail("My Schedule Page: Info icon isn't present at the right side of a shift", true);
+            } else if (hoverIcons.size() == 0)
+                SimpleUtils.report("My Schedule Page: No shift hours in the schedule table");
+        } else if (isElementLoaded(myScheduleNoSchedule, 10))
+            SimpleUtils.report("My Schedule Page: Schedule has not been generated.");
+        else SimpleUtils.fail("My Schedule Page: Failed to load shifts", true);
+    }
+
+    @Override
+    public void validateInfoIconClickable() throws Exception {
+        if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20)) {
+            if (hoverIcons.size() != 0) {
+                int randomIndex = (new Random()).nextInt(hoverIcons.size());
+                click(hoverIcons.get(randomIndex));
+                if (isElementLoaded(popOverContent, 5)) {
+                    SimpleUtils.pass("My Schedule Page: Info icon is clickable successfully");
+                    List<WebElement> hoverSubContainers = popOverContent.findElements(By.className("hover-sub-container"));
+                    if (hoverSubContainers.size() == 3) {
+                        String shiftRole = hoverSubContainers.get(0).findElement(By.cssSelector(".shift-hover-subheading")).getText();
+                        String timing = hoverSubContainers.get(1).getText();
+                        String duration = hoverSubContainers.get(2).getText();
+                        if (shiftRole != null && (timing.contains("am") || timing.contains("pm")) && duration.contains("Hrs this week")) {
+                            SimpleUtils.pass("My Schedule Page: Info icon has the shift details like duration, timing and shift role");
+                        } else
+                            SimpleUtils.fail("My Schedule Page: Info icon has the shift details like duration, timing and shift role", true);
+                    }
+                    click(hoverIcons.get(randomIndex));
+                }
+            } else if (hoverIcons.size() == 0)
+                SimpleUtils.report("My Schedule Page: No shift hours in the schedule table");
+        } else if (isElementLoaded(myScheduleNoSchedule, 10))
+            SimpleUtils.report("My Schedule Page: Schedule has not been generated");
+        else SimpleUtils.fail("My Schedule Page: Failed to load shifts", true);
+    }
+
+    @Override
+    public void validateTheAvailabilityOfOpenShiftSmartcard() throws Exception {
+        if (areListElementVisible(carouselCards, 10)) {
+            if (isSmartCardAvailableByLabel("WANT MORE HOURS"))
+                SimpleUtils.pass("My Schedule Page: Open Shift Smartcard is present on Schedule Page successfully");
+            else SimpleUtils.fail("My Schedule Page: Open Shift Smartcard isn't present on Schedule Page", true);
+        } else SimpleUtils.fail("My Schedule Page: Smartcards failed to load", true);
+    }
+
+    public boolean isViewShiftsBtnPresent() throws Exception {
+        boolean isConsistent = false;
+        if (areListElementVisible(carouselCards, 10)) {
+            if (isSmartCardAvailableByLabel("WANT MORE HOURS")) {
+                if (isElementLoaded(viewShiftsBtn, 5)) {
+                    isConsistent = true;
+                    SimpleUtils.pass("My Schedule Page: 'View Shifts' button is present on Open Shift Smartcard successfully");
+                } else
+                    SimpleUtils.report("My Schedule Page: 'View Shifts' button isn't present on Open Shift Smartcard since there is 0 shift offer");
+            } else SimpleUtils.fail("My Schedule Page: Open Shift Smartcard isn't present on Schedule Page", true);
+        } else SimpleUtils.fail("My Schedule Page: Smartcards failed to load", true);
+        return isConsistent;
+    }
+
+    @Override
+    public void validateViewShiftsClickable() throws Exception {
+        if (isViewShiftsBtnPresent()) {
+            click(viewShiftsBtn);
+            SimpleUtils.pass("My Schedule Page: View shift is clickable and a filter for Open shift is applied after that successfully");
+            click(filterButton);
+            if (shiftTypes.size() > 0) {
+                for (WebElement shiftType : shiftTypes) {
+                    WebElement filterCheckBox = shiftType.findElement(By.tagName("input"));
+                    if (filterCheckBox.getAttribute("class").contains("ng-not-empty")) {
+                        if (shiftType.getText().equals("Open"))
+                            SimpleUtils.pass("My Schedule Page: only open shifts for the selected week should show successfully");
+                        else
+                            SimpleUtils.fail("My Schedule Page: Not only open shifts for the selected week show", true);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void validateTheNumberOfOpenShifts() throws Exception {
+        if (isViewShiftsBtnPresent()) {
+            if (areListElementVisible(dayViewAvailableShifts, 10)) {
+                if (dayViewAvailableShifts.size() == Integer.valueOf(openShiftData.getText().replaceAll("[^0-9]", "")))
+                    SimpleUtils.pass("My Schedule Page: The total number of open shifts in smartcard matches with the open shifts available in the schedule table successfully");
+                else
+                    SimpleUtils.fail("My Schedule Page: The total number of open shifts in smartcard doesn't match with the open shifts available in the schedule table", true);
+            } else SimpleUtils.fail("My Schedule Page: Open shifts failed to load in the schedule table", true);
+        }
+    }
+
+    @Override
+    public void verifyTheAvailabilityOfClaimOpenShiftPopup() throws Exception {
+        List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
+        if (isViewShiftsBtnPresent()) {
+            if (areListElementVisible(dayViewAvailableShifts, 10)) {
+                int randomIndex = (new Random()).nextInt(dayViewAvailableShifts.size());
+                moveToElementAndClick(dayViewAvailableShifts.get(randomIndex));
+                if (isPopOverLayoutLoaded()) {
+                    if (verifyShiftRequestButtonOnPopup(claimShift))
+                        SimpleUtils.pass("My Schedule Page: A popup to claim the open shift shows successfully");
+                    else SimpleUtils.fail("My Schedule Page: A popup to claim the open shift doesn't show", true);
+                } else SimpleUtils.fail("My Schedule Page: No popup appears", true);
+            } else SimpleUtils.fail("My Schedule Page: Open shifts failed to load in the schedule table", true);
+        }
+    }
+
+    public void closeButtonIsClickable() {
+        getDriver().close();
+        SimpleUtils.pass("close button is clickable");
+    }
 }
-
-

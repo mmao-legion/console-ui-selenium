@@ -153,10 +153,10 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
         requestStatusReject = profileNewUIPage.getTimeOffRequestStatus(timeOffReasonLabelReject, "Hi World", timeOffStartDateReject, timeOffEndDateReject);
         if (requestStatusReject.toLowerCase().contains(TeamTestKendraScott2.timeOffRequestStatus.Rejected.getValue().toLowerCase()))
             SimpleUtils.pass("Profile Page: New Time Off Request status is '" + requestStatusReject
-                    + "' after Store Manager Approved the request.");
+                    + "' after Store Manager Rejected the request.");
         else
             SimpleUtils.fail("Profile Page: New Time Off Request status is '" + requestStatusReject
-                    + "' after Store Manager Approved the request.", true);
+                    + "' after Store Manager Rejected the request.", true);
 
         //T1838602 Validate the functionality of time off cancellation.
         profileNewUIPage.validateTheFunctionalityOfTimeOffCancellation();

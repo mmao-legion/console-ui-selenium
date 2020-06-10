@@ -66,12 +66,12 @@ public interface SchedulePage {
 	public int getgutterSize();
 	public void verifySelectTeamMembersOption() throws Exception;
 	public void searchText(String searchInput) throws Exception;
-	public void getAvailableStatus()throws Exception;
+	public void getAvailableStatus() throws Exception;
 	public void clickOnOfferOrAssignBtn() throws Exception;
 	public void clickOnShiftContainer(int index) throws Exception;
 	public void deleteShift();
 	public void deleteShiftGutterText();
-	public boolean getScheduleStatus()throws Exception;
+	public boolean getScheduleStatus() throws Exception;
 	public boolean inActiveWeekDayClosed(int dayIndex) throws Exception;
 	public void navigateDayViewWithIndex(int dayIndex);
 	public String getActiveGroupByFilter() throws Exception;
@@ -165,7 +165,7 @@ public interface SchedulePage {
 	public void isScheduleForCurrentDayInDayView(String dateFromDashboard) throws Exception;
 	public HashMap<String, String> getHoursFromSchedulePage() throws Exception;
 	public void printButtonIsClickable() throws Exception;
-	public void todoButtonIsClickable()throws Exception;
+	public void todoButtonIsClickable() throws Exception;
 	public void legionButtonIsClickableAndHasNoEditButton() throws Exception;;
 	public void clickOnSuggestedButton() throws Exception;
 	public void legionIsDisplayingTheSchedul() throws Exception;
@@ -180,7 +180,7 @@ public interface SchedulePage {
 
 	public void landscapeModeWorkWellInWeekView() throws Exception;
 
-	public void portraitModeWorkWellInWeekView()throws Exception;
+	public void portraitModeWorkWellInWeekView() throws Exception;
 
 	public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow, String currentTime) throws Exception;
 	public void landscapeModeOnlyInDayView() throws Exception;
@@ -327,4 +327,52 @@ public interface SchedulePage {
 	public void filterScheduleByWorkRoleAndJobTitle(boolean isWeekView);
 
 	public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView);
+
+	public void validateTheAvailabilityOfScheduleTable(String userName) throws Exception;
+
+	public void validateTheAvailabilityOfScheduleMenu() throws Exception;
+
+	public void validateTheFocusOfSchedule() throws Exception;
+
+	public void validateTheDefaultFilterIsSelectedAsScheduled() throws Exception;
+
+	public void validateTheFocusOfWeek(String currentDate) throws Exception;
+
+	public void validateForwardAndBackwardButtonClickable() throws Exception;
+
+	public void validateTheDataAccordingToTheSelectedWeek() throws Exception;
+
+	public void validateTheSevenDaysIsAvailableInScheduleTable() throws Exception;
+
+	public String getTheEarliestAndLatestTimeInSummaryView() throws Exception;
+
+	public String getTheEarliestAndLatestTimeInScheduleTable() throws Exception;
+
+	public void compareOperationHoursBetweenAdminAndTM(String theEarliestAndLatestTimeInScheduleSummary, String theEarliestAndLatestTimeInScheduleTable) throws Exception;
+
+	public void validateThatHoursAndDateIsVisibleOfShifts() throws Exception;
+
+	public void validateTheDisabilityOfLocationSelectorOnSchedulePage() throws Exception;
+
+	public void goToConsoleScheduleAndScheduleSubMenu() throws Exception;
+
+	public void validateProfilePictureInAShiftClickable() throws Exception;
+
+	public void validateTheDateOfProfilePopupInAShift() throws Exception;
+
+	public void validateTheAvailabilityOfInfoIcon() throws Exception;
+
+	public void validateInfoIconClickable() throws Exception;
+
+	public void validateTheAvailabilityOfOpenShiftSmartcard() throws Exception;
+
+	public void validateViewShiftsClickable() throws Exception;
+
+	public void validateTheNumberOfOpenShifts() throws Exception;
+
+	public void verifyTheAvailabilityOfClaimOpenShiftPopup() throws Exception;
+
+	public  List<String> getWeekScheduleShiftTimeListOfMySchedule() throws Exception;
+
+	public List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception;
 }
