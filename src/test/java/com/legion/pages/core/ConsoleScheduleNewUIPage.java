@@ -6024,10 +6024,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyShiftRequestStatus(String expectedStatus) throws Exception {
-        if (areListElementVisible(shiftStatus, 5)) {
+        if (areListElementVisible(shiftStatus, 10)) {
             for (WebElement status : shiftStatus) {
                 if (expectedStatus.equalsIgnoreCase(status.getText())) {
-                    SimpleUtils.pass("Verified shift status is correct!");
+                    SimpleUtils.pass("Verified shift status: " + expectedStatus + " is correct!");
                 }else {
                     SimpleUtils.fail("Shift status is incorrect, expected is: " + expectedStatus + ", but actual is: "
                     + status.getText(), false);
@@ -6041,11 +6041,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void verifyClickAcceptSwapButton() throws Exception {
         String title = "Confirm Shift Swap";
+        String expectedMessage = "Success! Accepted successfully";
         if (areListElementVisible(acceptButtons, 5) && acceptButtons.size() > 0) {
             click(acceptButtons.get(0));
             SimpleUtils.assertOnFail(title + " not loaded Successfully!", isPopupWindowLoaded(title), false);
             if (isElementLoaded(agreeButton, 5)) {
                 click(agreeButton);
+                verifyThePopupMessageOnTop(expectedMessage);
                 if (isElementLoaded(closeDialogBtn, 5)) {
                     click(closeDialogBtn);
                 }
@@ -6246,7 +6248,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyComparableShiftsAreLoaded() throws Exception {
-        if (areListElementVisible(comparableShifts, 5)) {
+        if (areListElementVisible(comparableShifts, 10)) {
             SimpleUtils.pass("Comparable Shifts loaded Successfully!");
         }else {
             SimpleUtils.fail("Comparable Shifts not loaded Successfully!", false);
@@ -6286,7 +6288,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifyClickOnSubmitButton() throws Exception {
         if (isElementLoaded(submitButton, 10)) {
             click(submitButton);
-            if (isElementLoaded(confirmWindow, 5) && isElementLoaded(okBtnOnConfirm, 5)) {
+            if (isElementLoaded(confirmWindow, 10) && isElementLoaded(okBtnOnConfirm, 10)) {
                 click(okBtnOnConfirm);
                 SimpleUtils.pass("Confirm window loaded Successfully!");
             }else {
@@ -6374,12 +6376,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         List<String> expectedRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
         int index = 100;
         if (areListElementVisible(tmIcons, 5)) {
+            scrollToBottom();
             for (int i = 0; i < tmIcons.size(); i++) {
                 moveToElementAndClick(tmIcons.get(i));
                 if (isPopOverLayoutLoaded()) {
                     if (verifyShiftRequestButtonOnPopup(expectedRequests)) {
                         index = i;
                         break;
+                    }else {
+                        click(tmIcons.get(i));
                     }
                 }
             }
@@ -6673,6 +6678,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         List<String> shiftHours = new ArrayList<>();
         if (areListElementVisible(infoIcons, 5)) {
             for (WebElement infoIcon : infoIcons) {
+                scrollToBottom();
                 click(infoIcon);
                 if (isElementLoaded(shiftDuration, 5)) {
                     shiftHours.add(shiftDuration.getText());
@@ -7155,10 +7161,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
                 if (currentWeeks.get(i).getText().contains("\n")) {
                     weekDate = currentWeeks.get(i).getText().split("\n").length >= 2 ? currentWeeks.get(i).getText().split("\n")[1] : "";
-                    if (weekDate.length() > 3) {
-                        String shortMonth = weekDate.substring(0, 3);
-                        String fullMonth = getFullMonthName(shortMonth);
-                        weekDate = weekDate.replaceAll(shortMonth, fullMonth);
+                    if (weekDate.contains("-")) {
+                        String[] dates = weekDate.split("-");
+                        String shortMonth1 = dates[0].trim().substring(0, 3);
+                        String shortMonth2 = dates[1].trim().substring(0, 3);
+                        String fullMonth1 = getFullMonthName(shortMonth1);
+                        String fullMonth2 = getFullMonthName(shortMonth2);
+                        weekDate = weekDate.replaceAll(shortMonth1, fullMonth1);
+                        if (!shortMonth1.equalsIgnoreCase(shortMonth2)) {
+                            weekDate = weekDate.replaceAll(shortMonth2, fullMonth2);
+                        }
                     }
                 }
                 if (weekDate.trim().equalsIgnoreCase(currentWeekPeriod.trim())) {

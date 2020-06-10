@@ -42,6 +42,7 @@
 					   <include name="verifyTheWelcomeMessage"/>
 					   <include name="verifyTheFunctionOfViewTodaySchedule"/>
 					   <include name="verifyTheDataSourceForBudgetScheduledOther"/>
+                        <include name="verifyDashboardFunctionality" />
 					</methods>
 				</class>
 		   </classes>
@@ -110,6 +111,19 @@
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Schedule Test LegionCoffee">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleTest">
+                <methods>
+                    <include name="verifyTheTeamMemberViewSwapAsTeamMember" />
+                    <include name="verifyTheTeamMemberViewCoverAsTeamMember" />
+                    <include name="verifyTheTeamScheduleOptionAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfSwapAndCoverAsTeamMember" />
                     <include name="verifyTheFeatureOfFilterAsTeamMember" />
                     <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamMember" />
                 </methods>

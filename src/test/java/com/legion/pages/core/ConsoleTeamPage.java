@@ -887,7 +887,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				SimpleUtils.fail("\"+\" icon isn't clickable on team tab!", true);
 			}
 		}else{
-			SimpleUtils.fail("\"+\" icon is visible on team tab!", false);
+			SimpleUtils.fail("\"+\" icon is invisible on team tab!", false);
 		}
 	}
 
@@ -959,6 +959,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		if (isElementLoaded(transferButton, 5)) {
 			if (cancelTransfer.equals(transferButton.getText())) {
 				SimpleUtils.pass("CANCEL TRANSFER button loaded successfully!");
+				waitForSeconds(3);
 				moveToElementAndClick(transferButton);
 			} else {
 				SimpleUtils.fail("This button isn't CANCEL TRANSFER, it is: " + transferButton.getText(), false);
@@ -1211,6 +1212,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			if (isElementLoaded(endDateNextMonthArrow, 5)) {
 				click(endDateNextMonthArrow);
 			}
+			maxIndex = endDaysOnCalendar.size() - 1;
 			int randomIndex = 7 + random.nextInt(maxIndex - 7);
 			WebElement randomElement = endDaysOnCalendar.get(randomIndex);
 			click(randomElement);
@@ -3146,6 +3148,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				if (!currentValue.isEmpty()) {
 					int value = Integer.parseInt(currentValue);
 					previousTimeOffs.get(timeIndexes.get(0)).set(index, Integer.toString(value + 1));
+				}else {
+					previousTimeOffs.get(timeIndexes.get(0)).set(index, "1");
 				}
 			} else if (timeIndexes.size() == 2) {
 				previousTimeOffs = updateTimeOffTableByIndexes(previousTimeOffs, index, timeIndexes);
@@ -3169,6 +3173,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			if (!currentValue.isEmpty()) {
 				int value = Integer.parseInt(currentValue);
 				previousTimeOffs.get(i).set(index, Integer.toString(value + 1));
+			}else {
+				previousTimeOffs.get(i).set(index, "1");
 			}
 		}
 		return previousTimeOffs;
@@ -3218,18 +3224,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 																					   LinkedHashMap<String, List<String>> regularHours) throws Exception {
 		HashMap<Integer, List<String>> timeOffs = new HashMap<>();
 		List<String> weekTimeOffCounts = null;
-		String startTime = null;
-		String endTime = null;
 		for (int i = 0; i < indexAndTimes.size(); i++) {
 			weekTimeOffCounts = new ArrayList<>();
 			for (Map.Entry<String, List<String>> entry : regularHours.entrySet()) {
-				startTime = indexAndTimes.get(i);
-				endTime = timeAdd(startTime, 30);
-				if (SimpleUtils.isTimeBetweenStartNEndTime(startTime, endTime, entry.getValue().get(0), entry.getValue().get(1))) {
-					weekTimeOffCounts.add("0");
-				}else {
-					weekTimeOffCounts.add("");
-				}
+				weekTimeOffCounts.add("");
 			}
 			timeOffs.put(i, weekTimeOffCounts);
 		}

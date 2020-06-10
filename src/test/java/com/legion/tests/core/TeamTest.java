@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.legion.pages.*;
@@ -262,7 +263,7 @@ public class TeamTest extends TestBase{
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		// Get the current month, year and date
-		String currentMonthYearDate = (new TeamTestKendraScott2()).getTimeZoneFromControlsAndGetDate();
+		String currentMonthYearDate = getTimeZoneFromControlsAndGetDate();
 		// Set time off policy
 		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
 		controlsPage.gotoControlsPage();
@@ -300,7 +301,7 @@ public class TeamTest extends TestBase{
 		// Verify Create Time off button is working
 		profileNewUIPage.clickOnCreateTimeOffBtn();
 		SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
-		String timeOffReasonLabel = "VACATION";
+		String timeOffReasonLabel = "JURY DUTY";
 		// Verify Reason can be selected
 		profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
 		// Verify Calendar is present and date-time showing correct
@@ -427,4 +428,22 @@ public class TeamTest extends TestBase{
 		}
 	}
 
+	public String getTimeZoneFromControlsAndGetDate() throws Exception {
+		String timeZone = "";
+		String currentDate = "";
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		if (controlsNewUIPage.isControlsPageLoaded()){
+			controlsNewUIPage.clickOnControlsLocationProfileSection();
+			if (controlsNewUIPage.isControlsLocationProfileLoaded()){
+				timeZone = controlsNewUIPage.getTimeZoneFromLocationDetailsPage();
+				if (timeZone != null && !timeZone.isEmpty()){
+					SimpleDateFormat format = new SimpleDateFormat("MMMM yyyy dd");
+					currentDate = SimpleUtils.getCurrentDateMonthYearWithTimeZone(timeZone, format);
+				}
+			}
+		}
+		return currentDate;
+	}
 }
