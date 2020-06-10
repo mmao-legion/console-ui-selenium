@@ -630,10 +630,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement timeOffTab;
 	@FindBy (css = "[ng-click=\"newTimeOff()\"]")
 	private WebElement newTimeOffBtn;
-	@FindBy (css = "work-preference-management [ng-bind-html=\"blockTitle\"]")
-	private WebElement shiftPreferTab;
-	@FindBy (css = "availability-management [ng-bind-html=\"blockTitle\"]")
-	private WebElement availabilityTab;
+	@FindBy (css = ".user-profile-section")
+	private List<WebElement> userProfileSections;
 	@FindBy (css = "lgn-action-button[label=\"'ACTIVATE'\"] button")
 	private WebElement activateButton;
 	@FindBy (css = "div.activate")
@@ -1823,7 +1821,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public boolean isWorkPreferencesPageLoaded() throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(shiftPreferTab, 5) && isElementLoaded(availabilityTab, 5)) {
+		if (areListElementVisible(userProfileSections, 10)) {
 			isLoaded = true;
 		}
 		return isLoaded;
@@ -2191,11 +2189,11 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement vsl;
 	@FindBy (css = "[class=\"receiveOffers\"]>[class=\"ng-binding\"]")
 	private WebElement otherPreferredLocation;
-	@FindBy (css = "work-preference-management i.fa")
+	@FindBy (css = "work-preference-management [label=\"Edit\"]")
 	private WebElement editShiftPreferButton;
-	@FindBy (css = "[ng-click=\"cancelEdit()\"]")
+	@FindBy (css = "[label=\"Cancel\"]")
 	private WebElement cancelEditButton;
-	@FindBy (css = "[ng-click*=\"savePreferences\"]")
+	@FindBy (css = "[label=\"Save\"]")
 	private WebElement savePreferButton;
 	@FindBy (className = "edit-pref-values")
 	private List<WebElement> editPrefValues;
@@ -2213,15 +2211,15 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private List<WebElement> endNodes;
 	@FindBy (css = ".fa.fa-lock")
 	private WebElement lockBtn;
-	@FindBy (css = "availability-management i.fa-pencil")
+	@FindBy (css = "availability-management [label=\"Edit\"]")
 	private WebElement editAvailability;
 	@FindBy (className = "lgn-action-button-success")
 	private WebElement unLockButton;
 	@FindBy (className = "modal-content")
 	private WebElement unlockRemindWindow;
-	@FindBy (css = "[ng-click=\"cancelEdit()\"]")
+	@FindBy (css = "availability-management [label=\"Cancel\"]")
 	private WebElement cancelAvailability;
-	@FindBy (css = "[ng-click*=\"saveAvailability\"]")
+	@FindBy (css = "availability-management [label=\"Save\"]")
 	private WebElement saveAvailability;
 	@FindBy (css = "div.tab")
 	private List<WebElement> availabilityTabs;
@@ -2479,6 +2477,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void editOrUnLockAvailability() throws Exception {
+		scrollToBottom();
 		if (isElementLoaded(lockBtn, 5)) {
 			click(lockBtn);
 			if (isElementLoaded(unLockButton, 5)) {
