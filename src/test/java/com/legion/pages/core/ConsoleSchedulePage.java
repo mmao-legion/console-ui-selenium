@@ -1983,8 +1983,8 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void verifyComplianceShiftsSmartCardShowing() throws Exception {
-
+    public boolean verifyComplianceShiftsSmartCardShowing() throws Exception {
+        return false;
     }
 
 
@@ -2189,6 +2189,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void clickOnConvertToOpenShift() throws Exception {
+
+    }
+
+    @Override
     public void verifyPersonalDetailsDisplayed() throws Exception {
 
     }
@@ -2307,6 +2312,16 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @Override
     public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView) {
+
+    }
+
+    @Override
+    public boolean verifyConvertToOpenPopUpDisplay() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void convertToOpenShiftDirectly() {
 
     }
 

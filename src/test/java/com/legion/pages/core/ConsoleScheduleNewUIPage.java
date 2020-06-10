@@ -245,10 +245,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "[ng-if=\"canShowNewShiftButton()\"]")
     private WebElement addNewShiftOnDayViewButton;
 
-    @FindBy(css = "[icon=\"'fa-times'\"]")
+    @FindBy(css = "[label=\"Cancel\"]")
     private WebElement scheduleEditModeCancelButton;
 
-    @FindBy(css = "icon=\"'fa-check'\"")
+    @FindBy(css = "[label=\"Save\"]")
     private WebElement scheduleEditModeSaveButton;
 
     @FindBy(css = "[ng-click=\"regenerateFromOverview()\"]")
@@ -1445,7 +1445,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public String getActiveWeekText() throws Exception {
         WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
-        if (isElementLoaded(activeWeek))
+        if (isElementLoaded(activeWeek,5))
             return activeWeek.getText().replace("\n", " ");
         return "";
     }
@@ -1533,7 +1533,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		if(isElementEnabled(addNewShiftOnDayViewButton,5))
 		{
 			SimpleUtils.pass("User is allowed to add new shift for current or future week!");
-			if(isElementEnabled(shiftStartday)){
+			if(isElementEnabled(shiftStartday,10)){
 				String[] txtStartDay = shiftStartday.getText().split(" ");
 				textStartDay = txtStartDay[0];
 			}else{
@@ -1550,7 +1550,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	
 	public void customizeNewShiftPage() throws Exception
 	{
-		if(isElementLoaded(customizeNewShift,10))
+		if(isElementLoaded(customizeNewShift,15))
 		{
 			SimpleUtils.pass("Customize New Shift Page loaded Successfully!");
 		}
@@ -4206,7 +4206,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(imageSize, 5)) {
             for (int i = 0; i < imageSize.size(); i++) {
                 if (!workerNameList.get(i).getText().equalsIgnoreCase("open")) {
-                    click(scheduleInfoIcon.get(i));
+                    click(profileIcons.get(i));
                     waitForSeconds(3);
                     String[] workerRole = workerRoleDetailsFromPopUp.getText().split("as ");
                     TMName = workerNameInPopUp.getText();
@@ -5549,7 +5549,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         SimpleUtils.report("weekBeginBYCurrentDate is : "+ weekBeginBYCurrentDate);
         SimpleUtils.report("weekEndBYCurrentDate is : "+ weekEndBYCurrentDate);
         String activeWeekText =getActiveWeekText();
-        String weekDefaultBegin = activeWeekText.substring(14,17);
+        String weekDefaultBegin = activeWeekText.substring(14,16);
         SimpleUtils.report("weekDefaultBegin is :"+weekDefaultBegin);
         String weekDefaultEnd = activeWeekText.substring(activeWeekText.length()-2);
         SimpleUtils.report("weekDefaultEnd is :"+weekDefaultEnd);
@@ -5784,14 +5784,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void verifyComplianceShiftsSmartCardShowing() throws Exception {
-//        if (complianceShitShowIcon.size() > 0) {
+    public boolean verifyComplianceShiftsSmartCardShowing() throws Exception {
             if (isElementLoaded(complianceSmartcardHeader,15)) {
                 SimpleUtils.pass("Compliance smartcard is visible ");
+                return true;
             } else {
                 SimpleUtils.report("there is no compliance smartcard this week");
+                return false;
             }
-//        }
+
     }
 
     @Override
@@ -5812,15 +5813,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifyClearFilterFunction() throws Exception {
         String clearFilterBtnTextDefault = "Clear Filter";
 
-        if (isElementLoaded(complianceSmartcardHeader,10) & clickViewShift()) {
-            SimpleUtils.pass("view shift button is clickable");
+        if (isElementLoaded(complianceSmartcardHeader,10) ) {
             String clearFilterTxt =viewShift.getText();
             SimpleUtils.report("clear filter is" + clearFilterTxt);
             if (clearFilterBtnTextDefault.equals(clearFilterTxt)) {
                 click(viewShift);
                 SimpleUtils.pass("clear filter button is clickable");
                 String filterText = getDriver().findElement(By.cssSelector("lg-filter > div > input-field > ng-form > div")).getText();
-                System.out.println("filterText====="+ filterText);
                 if (filterText.equals("")) {
                     SimpleUtils.pass("filter 'Compliance shifts' will be unselected after clicking clear filter");
                 }
@@ -6881,7 +6880,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
                     if(isElementEnabled(btnEditAnyway,5) && isElementEnabled(btnCancelOnAlertPopup,5)){
                         SimpleUtils.pass("CANCEL And EDIT ANYWAY Buttons are enabled on Alert Pop up");
-                        SimpleUtils.report("Click on EDIT ANYWAY button and check for next save and cancel buttons");
                         click(btnEditAnyway);
                         if(checkSaveButton() && checkCancelButton()) {
                             SimpleUtils.pass("Save and Cancel buttons are enabled ");
@@ -7067,20 +7065,19 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     public void clickOnProfileIcon() throws Exception {
-        if(isProfileIconsEnable())
-        {
-            if (profileIcons.get(0).getAttribute("ng-if").equals("hasWorkerInitial()")) {
-                click(MyThreadLocal.getDriver().findElement(By.cssSelector(".sch-shift-worker-initials-28-28.ng-scope")));
+        if(isProfileIconsEnable()) {
+            if (profileIcons.get(1).getAttribute("ng-if").equals("hasWorkerInitial()")) {
+                click(MyThreadLocal.getDriver().findElement(By.className("sch-shift-worker-initials")));
                 SimpleUtils.pass("Clicked on Profile Icon successfully");
-            }else if (profileIcons.get(0).getAttribute("ng-if").equals("hasWorkerImg()")){
-                click(MyThreadLocal.getDriver().findElement(By.cssSelector(".sch-shift-worker-img-28-28.ng-scope")));
+            } else if (profileIcons.get(1).getAttribute("ng-if").equals("hasWorkerImg()")) {
+                click(MyThreadLocal.getDriver().findElement(By.className("sch-shift-worker-img-28-28")));
                 SimpleUtils.pass("Clicked on Profile which has imge successfully");
-            }else {
-                click(MyThreadLocal.getDriver().findElement(By.cssSelector(".sch-open-shift-28-28.ng-scope")));
+            } else if (profileIcons.get(1).getAttribute("ng-if").equals("!hasWorker() && isOpenShift()")) {
+                click(MyThreadLocal.getDriver().findElement(By.className("sch-open-shift")));
                 SimpleUtils.pass("Clicked on open Profile Icon successfully");
+
             }
-        }
-        else
+        } else
             SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
     }
 
@@ -7138,7 +7135,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Personal Details Name is not Loaded in Popup!",true);
         }
 
-        if(isElementLoaded(personalDetailsPhone,5))
+        if(isElementLoaded(personalDetailsPhone,8))
         {
             SimpleUtils.pass("Phone details are Loaded in popup!");
         }
@@ -7380,6 +7377,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void clickOnConvertToOpenShift() throws Exception{
+        if(isConvertToOpenEnable())
+        {
+            click(convertOpen);
+            SimpleUtils.pass("Clicked on Convert to open shift successfully ");
+        } else
+            SimpleUtils.fail(" Convert to open shift is disabled or not available to Click ", false);
+    }
+
+
+    @Override
     public void clickOnEditMeaLBreakTime() throws Exception{
         if(isElementLoaded(editMealBreakTime,5))
         {
@@ -7485,6 +7493,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return false;
     }
 
+    public void convertToOpenShiftDirectly(){
+       click(btnYesOpenSchedule);
+       SimpleUtils.pass("can convert to open shift by yes button directly");
+
+    }
+
     @Override
     public void verifyMealBreakTimeDisplayAndFunctionality() throws Exception {
         if (isMealBreaktDisplayWell()) {
@@ -7524,11 +7538,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 {
                     SimpleUtils.pass(": X button is present for selected Shift");
                     click(btnDelete);
-                    if (shift.getText().contains(deletedInfo)) {
-                        SimpleUtils.pass( "can delete shift by X button");
-                        break;
-                    }else
-                        SimpleUtils.fail("delete shift failed by X button",true);
+                    for (int i = 0; i < gutterText.size(); i++) {
+                        String deletedShiftInfo = gutterText.get(i).getText();
+                        if (deletedShiftInfo.contains(deletedInfo)) {
+                            SimpleUtils.pass( "can delete shift by X button");
+                            break;
+                        }else
+                            SimpleUtils.fail("delete shift failed by X button",true);
+                    }
+                   break;
                 }
                 else SimpleUtils.fail("X button is not present for ",true);
 
@@ -7681,7 +7699,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     click(filterButton);
                 unCheckFilters(jobTitleFilters);
                 String jobTitle = jobTitleFilter.getText();
-                SimpleUtils.report("Data for job title: '" + jobTitle + "'");
+                SimpleUtils.report("Data for job title: '" + jobTitle + "' as bellow");
                 click(jobTitleFilter);
                 click(filterButton);
                 String cardHoursAndWagesText = "";
@@ -7693,10 +7711,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         cardHoursAndWagesText = hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
                 }
                 SimpleUtils.report("Active Week Card's Data: " + cardHoursAndWagesText);
-                if (availableJobTitleList.contains(jobTitleFilter.getText().toLowerCase().trim())) {
+                if (availableJobTitleList.contains(jobTitle.toLowerCase().trim())) {
                     SimpleUtils.assertOnFail("Sum of Daily Schedule Hours not equal to Active Week Schedule Hours!", verifyActiveWeekDailyScheduleHoursInWeekView(), true);
                 }else
-                    SimpleUtils.report("there is no data for this job title: '" + jobTitleFilter.getText() + "'");
+                    SimpleUtils.report("there is no data for this job title: '" + jobTitle+ "'");
 
 
             } catch (Exception e) {
@@ -7711,12 +7729,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
                     click(filterButton);
                 unCheckFilters(jobTitleFilters);
-                SimpleUtils.report("Data for Job Title: '" + jobTitleFilter.getText() + "'");
+                String jobTitle = jobTitleFilter.getText();
+                SimpleUtils.report("Data for job title: '" + jobTitle + "' as bellow");
                 click(jobTitleFilter);
                 click(filterButton);
                 String cardHoursAndWagesText = "";
                 HashMap<String, Float> hoursAndWagesCardData = getScheduleLabelHoursAndWages();
-                System.out.println(hoursAndWagesCardData);
                 for (Entry<String, Float> hoursAndWages : hoursAndWagesCardData.entrySet()) {
                     if (cardHoursAndWagesText != "")
                         cardHoursAndWagesText = cardHoursAndWagesText + ", " + hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
@@ -7724,18 +7742,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         cardHoursAndWagesText = hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
                 }
                 SimpleUtils.report("Active Day Card's Data: " + cardHoursAndWagesText);
-                Float activeDayScheduleHoursOnCard = (float) 0;
-                activeDayScheduleHoursOnCard = getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.scheduledHours.getValue());
-
-                Float totalShiftsWorkTime = getActiveShiftHoursInDayView();
+                float activeDayScheduleHoursOnCard = getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.scheduledHours.getValue());
+                float totalShiftsWorkTime = getActiveShiftHoursInDayView();
                 SimpleUtils.report("Active Day Total Work Time Data: " + totalShiftsWorkTime);
-                if (availableJobTitleList.contains(jobTitleFilter.getText().toLowerCase().trim())) {
+                if (availableJobTitleList.contains(jobTitle.toLowerCase().trim())) {
                     if (activeDayScheduleHoursOnCard == totalShiftsWorkTime) {
                         SimpleUtils.pass("Schedule Hours in smart card  equal to total Active Schedule Hours by job title filter ");
                     }else
                         SimpleUtils.fail("the job tile filter hours not equal to schedule hours in schedule samrtcard",true);
                 }else
-                    SimpleUtils.report( "there is no data for this job title: '" + jobTitleFilter.getText() + "'");
+                    SimpleUtils.report( "there is no data for this job title: '" + jobTitle + "'");
 
             } catch (Exception e) {
                 SimpleUtils.fail("Unable to get Card data for active day!", true);

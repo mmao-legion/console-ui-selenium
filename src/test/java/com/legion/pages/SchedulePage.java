@@ -191,7 +191,7 @@ public interface SchedulePage {
 
 	public boolean verifyRedFlagIsVisible() throws Exception;
 
-	void verifyComplianceShiftsSmartCardShowing() throws Exception;
+	public boolean verifyComplianceShiftsSmartCardShowing() throws Exception;
 
 	public boolean clickViewShift() throws Exception;
 
@@ -281,7 +281,7 @@ public interface SchedulePage {
 	public boolean validateVariousWorkRolePrompt() throws Exception;
 	public void verifyRecommendedAndSearchTMEnabled() throws Exception;
 	public void clickonAssignTM() throws Exception;
-
+	public void clickOnConvertToOpenShift() throws Exception;
 	public void verifyPersonalDetailsDisplayed() throws Exception;
 	public void verifyWorkPreferenceDisplayed() throws Exception;
 	public void verifyAvailabilityDisplayed() throws Exception;
@@ -327,4 +327,8 @@ public interface SchedulePage {
 	public void filterScheduleByWorkRoleAndJobTitle(boolean isWeekView);
 
 	public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView);
+
+	public boolean verifyConvertToOpenPopUpDisplay() throws Exception;
+
+	public void convertToOpenShiftDirectly();
 }

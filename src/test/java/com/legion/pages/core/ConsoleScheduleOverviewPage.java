@@ -413,7 +413,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	public LinkedHashMap<String, Float> getWeekHoursByWeekElement(WebElement overViewWeek) {
 		LinkedHashMap<String, Float> weekHours = new LinkedHashMap<String, Float>();
 		List<WebElement> weekHoursElement = overViewWeek.findElements(By.cssSelector("span.text-hours"));
-		if(weekHoursElement.size() == 3)
+		if(weekHoursElement.size() == 4)
 		{
 			float guidanceHours = Float.valueOf(weekHoursElement.get(0).getText().split(" ")[0]);
 			float scheduledHours = Float.valueOf(weekHoursElement.get(1).getText().split(" ")[0]);

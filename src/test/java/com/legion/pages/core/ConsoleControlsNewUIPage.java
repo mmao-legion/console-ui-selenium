@@ -316,7 +316,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	
 	@Override
 	public void clickOnControlsConsoleMenu() throws Exception {
-		if(isElementLoaded(controlsConsoleMenuDiv))
+		if(isElementLoaded(controlsConsoleMenuDiv,10))
 			click(controlsConsoleMenuDiv);
 		else
 			SimpleUtils.fail("Controls Console Menu not loaded Successfully!", false);
@@ -325,7 +325,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public boolean isControlsConsoleMenuAvailable() throws Exception {
-		if(isElementLoaded(controlsConsoleMenuDiv))
+		if(isElementLoaded(controlsConsoleMenuDiv,10))
 			return true;
 		else
 			return false;
@@ -344,7 +344,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void clickOnGlobalLocationButton() throws Exception {
-		if(isElementLoaded(globalLocationButton,5)) {
+		if(isElementLoaded(globalLocationButton,10)) {
 			click(globalLocationButton);
 			SimpleUtils.pass("Controls Page: 'Global Location' loaded successfully.");
 		}
@@ -355,7 +355,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	
 	@Override
 	public void clickOnControlsCompanyProfileCard() throws Exception {
-		if(isElementLoaded(companyProfileCard,5))
+		if(isElementLoaded(companyProfileCard,10))
 			click(companyProfileCard);
 		else
 			SimpleUtils.fail("Controls Page: Company Profile Card not Loaded!", false);
@@ -733,7 +733,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public boolean isCompliancePageLoaded() throws Exception
 	{
-		if(isElementLoaded(overtimeWeeklyText,10))
+		if(isElementLoaded(overtimeWeeklyText,15))
 		{
 			SimpleUtils.pass("Compliance page loaded successfully");
 			return true;
@@ -772,7 +772,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public boolean isControlsSchedulingPoliciesLoaded() throws Exception {
-		if(isElementLoaded(breadcrumbsSchedulingPolicies)) {
+		if(isElementLoaded(breadcrumbsSchedulingPolicies,10)) {
 			SimpleUtils.pass("Controls Page: Scheduling Policies Section Loaded Successfully.");
 			return true;
 		}
@@ -4971,11 +4971,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void updateScheduleScore(String budget_score, String coverage_scores_regular_hours, String coverage_scores_peak_hours, String employee_match_score, String compliance_score, String how_to_measure_coverage_relative_to_guidance_budget) throws Exception {
+
+			/*
+			* wait for page loaded
+			*/
+			waitForSeconds(10);
+		scrollToBottom();
 		if (isElementLoaded(manageBtnInScheduleScore,5)) {
-			/**
-			 * wait for value load
-			 */
-			waitForSeconds(3);
 			click(manageBtnInScheduleScore);
 			try {
 				Select drpCoverage = new Select(drpCoverField);
@@ -5145,7 +5147,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public HashMap<String, Integer> getOvertimePayDataFromControls(){
-		waitForSeconds(10); // to wait data load completed
+		waitForSeconds(15); // to wait data load completed
 		HashMap<String, Integer> overtimePayData = new HashMap<String, Integer>();
 		String[] overtimeWeeklyData = overtimeWeeklyText.getText().split(" ");
 		String[] overtimeDailyData = overtimeDailyText.getText().split(" ");

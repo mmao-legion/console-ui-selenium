@@ -107,7 +107,7 @@ public class ScheduleOverviewTest extends TestBase{
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Estelle")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Schedule functionality  Overview")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyScheduleFunctionalityOverview(String username, String password, String browser, String location) throws Exception {
