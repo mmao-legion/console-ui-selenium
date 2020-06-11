@@ -45,4 +45,6 @@ public interface PageFactory {
     ForecastPage createForecastPage();
 
     GmailPage createConsoleGmailPage();
+
+    ActivityPage createConsoleActivityPage();
 }

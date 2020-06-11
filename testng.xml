@@ -144,5 +144,15 @@
             </classes>
         </test>
 
+    <test name="Activity Test">
+        <classes>
+            <class name="com.legion.tests.core.ActivityTest">
+                <methods>
+                    <include name="verifyTheContentOfShiftSwapActivityAsTeamMember"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->
 

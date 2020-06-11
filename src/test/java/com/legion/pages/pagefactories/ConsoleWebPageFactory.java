@@ -102,4 +102,7 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public GmailPage createConsoleGmailPage() { return new ConsoleGmailPage(); }
+
+	@Override
+	public ActivityPage createConsoleActivityPage() { return new ConsoleActivityPage(); }
 }
