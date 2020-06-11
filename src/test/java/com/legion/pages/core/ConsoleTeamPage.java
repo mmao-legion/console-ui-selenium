@@ -630,10 +630,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement timeOffTab;
 	@FindBy (css = "[ng-click=\"newTimeOff()\"]")
 	private WebElement newTimeOffBtn;
-	@FindBy (css = "work-preference-management [ng-bind-html=\"blockTitle\"]")
-	private WebElement shiftPreferTab;
-	@FindBy (css = "availability-management [ng-bind-html=\"blockTitle\"]")
-	private WebElement availabilityTab;
+	@FindBy (css = ".user-profile-section")
+	private List<WebElement> userProfileSections;
 	@FindBy (css = "lgn-action-button[label=\"'ACTIVATE'\"] button")
 	private WebElement activateButton;
 	@FindBy (css = "div.activate")
@@ -887,7 +885,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				SimpleUtils.fail("\"+\" icon isn't clickable on team tab!", true);
 			}
 		}else{
-			SimpleUtils.fail("\"+\" icon is visible on team tab!", false);
+			SimpleUtils.fail("\"+\" icon is invisible on team tab!", false);
 		}
 	}
 
@@ -959,6 +957,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		if (isElementLoaded(transferButton, 5)) {
 			if (cancelTransfer.equals(transferButton.getText())) {
 				SimpleUtils.pass("CANCEL TRANSFER button loaded successfully!");
+				waitForSeconds(3);
 				moveToElementAndClick(transferButton);
 			} else {
 				SimpleUtils.fail("This button isn't CANCEL TRANSFER, it is: " + transferButton.getText(), false);
@@ -1211,6 +1210,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			if (isElementLoaded(endDateNextMonthArrow, 5)) {
 				click(endDateNextMonthArrow);
 			}
+			maxIndex = endDaysOnCalendar.size() - 1;
 			int randomIndex = 7 + random.nextInt(maxIndex - 7);
 			WebElement randomElement = endDaysOnCalendar.get(randomIndex);
 			click(randomElement);
@@ -1821,7 +1821,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public boolean isWorkPreferencesPageLoaded() throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(shiftPreferTab, 5) && isElementLoaded(availabilityTab, 5)) {
+		if (areListElementVisible(userProfileSections, 10)) {
 			isLoaded = true;
 		}
 		return isLoaded;
@@ -2189,11 +2189,11 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement vsl;
 	@FindBy (css = "[class=\"receiveOffers\"]>[class=\"ng-binding\"]")
 	private WebElement otherPreferredLocation;
-	@FindBy (css = "work-preference-management i.fa")
+	@FindBy (css = "work-preference-management [label=\"Edit\"]")
 	private WebElement editShiftPreferButton;
-	@FindBy (css = "[ng-click=\"cancelEdit()\"]")
+	@FindBy (css = "[label=\"Cancel\"]")
 	private WebElement cancelEditButton;
-	@FindBy (css = "[ng-click*=\"savePreferences\"]")
+	@FindBy (css = "[label=\"Save\"]")
 	private WebElement savePreferButton;
 	@FindBy (className = "edit-pref-values")
 	private List<WebElement> editPrefValues;
@@ -2211,15 +2211,15 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private List<WebElement> endNodes;
 	@FindBy (css = ".fa.fa-lock")
 	private WebElement lockBtn;
-	@FindBy (css = "availability-management i.fa-pencil")
+	@FindBy (css = "availability-management [label=\"Edit\"]")
 	private WebElement editAvailability;
 	@FindBy (className = "lgn-action-button-success")
 	private WebElement unLockButton;
 	@FindBy (className = "modal-content")
 	private WebElement unlockRemindWindow;
-	@FindBy (css = "[ng-click=\"cancelEdit()\"]")
+	@FindBy (css = "availability-management [label=\"Cancel\"]")
 	private WebElement cancelAvailability;
-	@FindBy (css = "[ng-click*=\"saveAvailability\"]")
+	@FindBy (css = "availability-management [label=\"Save\"]")
 	private WebElement saveAvailability;
 	@FindBy (css = "div.tab")
 	private List<WebElement> availabilityTabs;
@@ -2477,6 +2477,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void editOrUnLockAvailability() throws Exception {
+		scrollToBottom();
 		if (isElementLoaded(lockBtn, 5)) {
 			click(lockBtn);
 			if (isElementLoaded(unLockButton, 5)) {
@@ -3146,6 +3147,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				if (!currentValue.isEmpty()) {
 					int value = Integer.parseInt(currentValue);
 					previousTimeOffs.get(timeIndexes.get(0)).set(index, Integer.toString(value + 1));
+				}else {
+					previousTimeOffs.get(timeIndexes.get(0)).set(index, "1");
 				}
 			} else if (timeIndexes.size() == 2) {
 				previousTimeOffs = updateTimeOffTableByIndexes(previousTimeOffs, index, timeIndexes);
@@ -3169,6 +3172,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			if (!currentValue.isEmpty()) {
 				int value = Integer.parseInt(currentValue);
 				previousTimeOffs.get(i).set(index, Integer.toString(value + 1));
+			}else {
+				previousTimeOffs.get(i).set(index, "1");
 			}
 		}
 		return previousTimeOffs;
@@ -3218,18 +3223,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 																					   LinkedHashMap<String, List<String>> regularHours) throws Exception {
 		HashMap<Integer, List<String>> timeOffs = new HashMap<>();
 		List<String> weekTimeOffCounts = null;
-		String startTime = null;
-		String endTime = null;
 		for (int i = 0; i < indexAndTimes.size(); i++) {
 			weekTimeOffCounts = new ArrayList<>();
 			for (Map.Entry<String, List<String>> entry : regularHours.entrySet()) {
-				startTime = indexAndTimes.get(i);
-				endTime = timeAdd(startTime, 30);
-				if (SimpleUtils.isTimeBetweenStartNEndTime(startTime, endTime, entry.getValue().get(0), entry.getValue().get(1))) {
-					weekTimeOffCounts.add("0");
-				}else {
-					weekTimeOffCounts.add("");
-				}
+				weekTimeOffCounts.add("");
 			}
 			timeOffs.put(i, weekTimeOffCounts);
 		}

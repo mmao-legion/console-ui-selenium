@@ -42,6 +42,7 @@
 					   <include name="verifyTheWelcomeMessage"/>
 					   <include name="verifyTheFunctionOfViewTodaySchedule"/>
 					   <include name="verifyTheDataSourceForBudgetScheduledOther"/>
+                        <include name="verifyDashboardFunctionality" />
 					</methods>
 				</class>
 		   </classes>
@@ -115,6 +116,21 @@
         </classes>
     </test>
 
+    <test name="Schedule Test LegionCoffee">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleTest">
+                <methods>
+                    <include name="verifyTheTeamMemberViewSwapAsTeamMember" />
+                    <include name="verifyTheTeamMemberViewCoverAsTeamMember" />
+                    <include name="verifyTheTeamScheduleOptionAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfSwapAndCoverAsTeamMember" />
+                    <include name="verifyTheFeatureOfFilterAsTeamMember" />
+                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
         <test name="Forecast Test">
             <classes>
                 <class name="com.legion.tests.core.ForecastTest">
@@ -127,6 +143,16 @@
                 </class>
             </classes>
         </test>
+
+    <test name="Activity Test">
+        <classes>
+            <class name="com.legion.tests.core.ActivityTest">
+                <methods>
+                    <include name="verifyTheContentOfShiftSwapActivityAsTeamMember"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 
 </suite> <!-- Suite -->
 

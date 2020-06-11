@@ -9,7 +9,6 @@ import com.legion.pages.*;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
-import org.omg.CORBA.TRANSACTION_MODE;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -684,5 +683,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.filterScheduleByJobTitle(isWeekView);
 		schedulePage.clickOnCancelButtonOnEditMode();
 	}
+
 }
 
