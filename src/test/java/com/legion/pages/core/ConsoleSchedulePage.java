@@ -1983,8 +1983,8 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void verifyComplianceShiftsSmartCardShowing() throws Exception {
-
+    public boolean verifyComplianceShiftsSmartCardShowing() throws Exception {
+        return false;
     }
 
 
@@ -2189,6 +2189,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void clickOnConvertToOpenShift() throws Exception {
+
+    }
+
+    @Override
     public void verifyPersonalDetailsDisplayed() throws Exception {
 
     }
@@ -2307,6 +2312,101 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @Override
     public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView) {
+
+    }
+
+    @Override
+    public boolean verifyConvertToOpenPopUpDisplay() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void convertToOpenShiftDirectly() {
+
+    }
+
+    @Override
+    public void verifyScheduledNOpenFilterLoaded() throws Exception {
+
+    }
+
+    @Override
+    public void checkAndUnCheckTheFilters() throws Exception {
+
+    }
+
+    @Override
+    public void filterScheduleByBothAndNone() throws Exception {
+
+    }
+
+    @Override
+    public String selectOneFilter() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifySelectedFilterPersistsWhenSelectingOtherWeeks(String selectedFilter) throws Exception {
+
+    }
+
+    @Override
+    public int selectOneShiftIsClaimShift(List<String> claimShift) throws Exception {
+        return 0;
+    }
+
+    @Override
+    public void verifyClaimShiftOfferNBtnsLoaded() throws Exception {
+
+    }
+
+    @Override
+    public List<String> getShiftHoursFromInfoLayout() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyTheShiftHourOnPopupWithScheduleTable(String scheduleShiftTime, String weekDay) throws Exception {
+
+    }
+
+    @Override
+    public String getSpecificShiftWeekDay(int index) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyClickAgreeBtnOnClaimShiftOffer() throws Exception {
+
+    }
+
+    @Override
+    public void verifyClickCancelBtnOnClaimShiftOffer() throws Exception {
+
+    }
+
+    @Override
+    public void verifyTheColorOfCancelClaimRequest(String cancelClaim) throws Exception {
+
+    }
+
+    @Override
+    public void verifyReConfirmDialogPopup() throws Exception {
+
+    }
+
+    @Override
+    public void verifyClickNoButton() throws Exception {
+
+    }
+
+    @Override
+    public void verifyClickOnYesButton() throws Exception {
+
+    }
+
+    @Override
+    public void verifyTheFunctionalityOfClearFilter() throws Exception {
 
     }
 

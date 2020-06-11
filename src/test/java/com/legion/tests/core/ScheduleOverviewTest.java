@@ -107,7 +107,7 @@ public class ScheduleOverviewTest extends TestBase{
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Estelle")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Schedule functionality  Overview")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyScheduleFunctionalityOverview(String username, String password, String browser, String location) throws Exception {
@@ -139,18 +139,18 @@ public class ScheduleOverviewTest extends TestBase{
 		List<WebElement> scheduleOverViewWeeks =  scheduleOverviewPage.getOverviewScheduleWeeks();
 		HashMap<String, Float> overviewData = scheduleOverviewPage.getWeekHoursByWeekElement(scheduleOverViewWeeks.get(0));
 		//	user can click on Schedule week which will navigate to Schedule page
-//		scheduleOverviewPage.clickOnCurrentWeekToOpenSchedule();
-//		SimpleUtils.pass("user can click on Schedule week which will navigate to Schedule page");
-//		HashMap<String, Float> scheduleSmartCardHoursWages = schedulePage.getScheduleBudgetedHoursInScheduleSmartCard();
-//		if (overviewData.get("guidanceHours").equals(scheduleSmartCardHoursWages.get("budgetedHours"))
-//				& overviewData.get("scheduledHours").equals(scheduleSmartCardHoursWages.get("scheduledHours"))
-//				& overviewData.get("otherHours").equals(scheduleSmartCardHoursWages.get("otherHours"))) {
-//			SimpleUtils.pass("Schedule/Budgeted smartcard-is showing the values in Hours and wages, it is displaying the same data as overview page have for the current week .");
-//		}else {
-//			SimpleUtils.fail("Scheduled Hours and Overview Schedule Hours not same",true);
-//		}
-//
-//		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+		scheduleOverviewPage.clickOnCurrentWeekToOpenSchedule();
+		SimpleUtils.pass("user can click on Schedule week which will navigate to Schedule page");
+		HashMap<String, Float> scheduleSmartCardHoursWages = schedulePage.getScheduleBudgetedHoursInScheduleSmartCard();
+		if (overviewData.get("guidanceHours").equals(scheduleSmartCardHoursWages.get("budgetedHours"))
+				& overviewData.get("scheduledHours").equals(scheduleSmartCardHoursWages.get("scheduledHours"))
+				& overviewData.get("otherHours").equals(scheduleSmartCardHoursWages.get("otherHours"))) {
+			SimpleUtils.pass("Schedule/Budgeted smartcard-is showing the values in Hours and wages, it is displaying the same data as overview page have for the current week .");
+		}else {
+			SimpleUtils.fail("Scheduled Hours and Overview Schedule Hours not same",true);
+		}
+
+		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 		//	After Generating Schedule, status will be in draft and scheduled hour will also updated.
 		List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
 		Float guidanceHoursForGuidanceSchedule = 0.0f;

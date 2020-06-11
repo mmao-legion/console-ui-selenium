@@ -651,7 +651,7 @@ public class ScheduleTest extends TestBase{
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "Coffee2_Enterprise")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the Team Member view Swap")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamMemberViewSwapAsTeamMember(String browser, String username, String password, String location)
@@ -689,7 +689,7 @@ public class ScheduleTest extends TestBase{
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "Coffee2_Enterprise")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the Team Member view Cover")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamMemberViewCoverAsTeamMember(String browser, String username, String password, String location)
@@ -752,11 +752,6 @@ public class ScheduleTest extends TestBase{
 		schedulePage.isSchedulePage();
 		schedulePage.goToSchedule();
 		schedulePage.isSchedule();
-		if (!schedulePage.isWeekGenerated()) {
-			schedulePage.generateOrUpdateAndGenerateSchedule();
-			schedulePage.publishActiveSchedule();
-		}
-		// todo: create the open shift
 		List<String> weekSchedule = schedulePage.getWholeWeekSchedule();
 		LoginPage loginPage = pageFactory.createConsoleLoginPage();
 		loginPage.logOut();
@@ -816,10 +811,10 @@ public class ScheduleTest extends TestBase{
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "Coffee2_Enterprise")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Validate the functionality of Swap and Cover request options")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheFunctionalityOfSwapAndCoverAsTeamLead(String browser, String username, String password, String location)
+	public void verifyTheFunctionalityOfSwapAndCoverAsTeamMember(String browser, String username, String password, String location)
 			throws Exception {
 		String swapName = "";
 		Object[][] credential = null;
@@ -869,6 +864,7 @@ public class ScheduleTest extends TestBase{
 		SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
 		String status = "Pending";
 		schedulePage.verifyShiftRequestStatus(status);
+		schedulePage.verifyClickCancelSwapOrCoverRequest();
 
 		// For Swap Feature
 		index = schedulePage.verifyClickOnAnyShift();
@@ -938,10 +934,14 @@ public class ScheduleTest extends TestBase{
 		dashboardPage.goToTodayForNewUI();
 		schedulePage.isSchedule();
 
-		// Create the Swap request again, so that it can be cancelled
-		createTheSwapRequest(index);
 		schedulePage.clickOnShiftByIndex(index);
 		List<String> viewSwapRequest = new ArrayList<>(Arrays.asList("View Swap Request Status"));
+		if (!schedulePage.verifyShiftRequestButtonOnPopup(viewSwapRequest)) {
+			schedulePage.clickOnShiftByIndex(index);
+			// Create the Swap request again, so that it can be cancelled
+			createTheSwapRequest(index);
+			schedulePage.clickOnShiftByIndex(index);
+		}
 		schedulePage.clickTheShiftRequestByName(viewSwapRequest.get(0));
 		title = "Swap Request Status";
 		SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
@@ -956,6 +956,89 @@ public class ScheduleTest extends TestBase{
 		}else {
 			SimpleUtils.fail("Request to Swap and Request to Cover options are still shown!", false);
 		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "Validate the feature of filter")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheFeatureOfFilterAsTeamMember(String browser, String username, String password, String location)
+			throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		schedulePage.goToSchedulePageAsTeamMember();
+		String subTitle = "Team Schedule";
+		schedulePage.gotoScheduleSubTabByText(subTitle);
+		// Validate the feature of filter
+		schedulePage.verifyScheduledNOpenFilterLoaded();
+		// Validate the filter - Schedule and Open
+		schedulePage.checkAndUnCheckTheFilters();
+		// Validate the filter results by applying scheduled filter
+		// Validate the filter results by applying Open filter
+		schedulePage.filterScheduleByShiftTypeAsTeamMember(true);
+		// Validate the filter results by applying both filters and none of them
+		schedulePage.filterScheduleByBothAndNone();
+		// Validate the filter value by moving to other weeks
+		String selectedFilter = schedulePage.selectOneFilter();
+		schedulePage.verifySelectedFilterPersistsWhenSelectingOtherWeeks(selectedFilter);
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "Verify the availibility and functionality of claiming open shift popup")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheFunctionalityOfClaimOpenShiftAsTeamMember(String browser, String username, String password, String location)
+			throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded() , false);
+		SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+		schedulePage.isSchedule();
+		// Validate the clickability of claim open text in popup
+		String cardName = "WANT MORE HOURS?";
+		SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(cardName), false);
+		String linkName = "View Shifts";
+		schedulePage.clickLinkOnSmartCardByName(linkName);
+		SimpleUtils.assertOnFail("Open shifts not loaed Successfully!", schedulePage.areShiftsPresent(), false);
+		List<String> shiftHours = schedulePage.getShiftHoursFromInfoLayout();
+		List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
+		int index = schedulePage.selectOneShiftIsClaimShift(claimShift);
+		String weekDay = schedulePage.getSpecificShiftWeekDay(index);
+		// Validate the availability of Claim Shift Request popup
+		schedulePage.clickTheShiftRequestByName(claimShift.get(0));
+		// Validate the availability of Cancel and I Agree buttons in popup
+		schedulePage.verifyClaimShiftOfferNBtnsLoaded();
+		// Validate the date and time of Claim Shift Request popup
+		schedulePage.verifyTheShiftHourOnPopupWithScheduleTable(shiftHours.get(index), weekDay);
+		// Validate the clickability of Cancel button
+		schedulePage.verifyClickCancelBtnOnClaimShiftOffer();
+		// Validate the clickability of I Agree button
+		schedulePage.clickOnShiftByIndex(index);
+		schedulePage.clickTheShiftRequestByName(claimShift.get(0));
+		schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+		// Validate the status of Claim request
+		schedulePage.clickOnShiftByIndex(index);
+		List<String> claimStatus = new ArrayList<>(Arrays.asList("Claim Shift Approval Pending", "Cancel Claim Request"));
+		schedulePage.verifyShiftRequestButtonOnPopup(claimStatus);
+		// Validate the availability of Cancel Claim Request option.
+		schedulePage.verifyTheColorOfCancelClaimRequest(claimStatus.get(1));
+		// Validate that Cancel claim request is clickable and popup is displaying by clicking on it to reconfirm the cancellation
+		schedulePage.clickTheShiftRequestByName(claimStatus.get(1));
+		schedulePage.verifyReConfirmDialogPopup();
+		// Validate that Claim request remains in Pending state after clicking on No button
+		schedulePage.verifyClickNoButton();
+		schedulePage.clickOnShiftByIndex(index);
+		schedulePage.verifyShiftRequestButtonOnPopup(claimStatus);
+		// Validate the Cancellation of Claim request by clicking  on Yes
+		schedulePage.clickTheShiftRequestByName(claimStatus.get(1));
+		schedulePage.verifyReConfirmDialogPopup();
+		schedulePage.verifyClickOnYesButton();
+		schedulePage.clickOnShiftByIndex(index);
+		schedulePage.verifyShiftRequestButtonOnPopup(claimShift);
+		// Validate the functionality of clear filter in Open shift smart card
+		schedulePage.verifyTheFunctionalityOfClearFilter();
 	}
 
 	public void createTheSwapRequest(int index) throws Exception {

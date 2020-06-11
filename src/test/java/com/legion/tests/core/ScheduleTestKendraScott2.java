@@ -350,11 +350,12 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				throws Exception {
 			SchedulePage schedulePage  = pageFactory.createConsoleScheduleNewUIPage();
 			schedulePage.goToScheduleNewUI();
-			schedulePage.verifyComplianceShiftsSmartCardShowing();
-			SimpleUtils.assertOnFail("there is no red flag when there is no compliance" , schedulePage.verifyRedFlagIsVisible(), true);
-			schedulePage.verifyComplianceFilterIsSelectedAftClickingViewShift();
-			schedulePage.verifyComplianceShiftsShowingInGrid();
-			schedulePage.verifyClearFilterFunction();
+			if(schedulePage.verifyComplianceShiftsSmartCardShowing() && schedulePage.verifyRedFlagIsVisible()){
+				schedulePage.verifyComplianceFilterIsSelectedAftClickingViewShift();
+				schedulePage.verifyComplianceShiftsShowingInGrid();
+				schedulePage.verifyClearFilterFunction();
+			}else
+				SimpleUtils.report("There is no compliance and no red flag");
 		}
 
 
@@ -408,7 +409,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//Edit button should be clickable
 		//While click on edit button,if Schedule is finalized then prompt is available and Prompt is in proper alignment and correct msg info.
 		//Edit anyway and cancel button is clickable
-		schedulePage.verifyEditButtonFuntionality();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();;
 		//In week view, Group by All filter have 3 filters:1.Group by all  2. Group by work role  3. Group by TM 4.Group by job title
 		schedulePage.validateGroupBySelectorSchedulePage();
 		//click on the context of any TM, 1. View profile 2. Change shift role  3.Assign TM 4.  Convert to open shift is enabled for current and future week day 5.Edit meal break time 6. Delete shift
@@ -426,8 +427,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.closeViewProfileContainer();
 			//"After Click on the Change shift role, one prompt is enabled:various work role any one of them can be selected"
 			schedulePage.clickOnProfileIcon();
-			schedulePage.clickOnChangeRole();
-			schedulePage.verifyChangeRoleFunctionality();
+//			schedulePage.clickOnChangeRole();
+//			schedulePage.verifyChangeRoleFunctionality();
 			//After Click on Assign TM-Select TMs window is opened,Recommended and search TM tab is enabled
 			schedulePage.clickonAssignTM();
 			schedulePage.verifyRecommendedAndSearchTMEnabled();
@@ -436,12 +437,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickOnOfferOrAssignBtn();
 			//Click on the Convert to open shift, checkbox is available to offer the shift to any specific TM[optional] Cancel /yes
 			//if checkbox is unselected then, shift is convert to open
-			schedulePage.convertToOpenShift();
+		    schedulePage.clickOnProfileIcon();
+		    schedulePage.clickOnConvertToOpenShift();
+			if (schedulePage.verifyConvertToOpenPopUpDisplay()) {
+				schedulePage.convertToOpenShiftDirectly();
+			}
+//			schedulePage.convertToOpenShift();
 			//After Click on Edit Meal Break Time, the Edit Meal break windows is pop up which include: 1.profile info 2.add meal break button 3.Specify meal break time period 4 cancel ,continue button
-			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+//			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.verifyMealBreakTimeDisplayAndFunctionality();
 			//if checkbox is selected then, shift is offered to selected TM
-			schedulePage.verifyConvertToOpenShiftBySelectedSpecificTM();
+//			schedulePage.verifyConvertToOpenShiftBySelectedSpecificTM();//existing RoleViolation need to enhancement
 			//verify delete shift
 			schedulePage.verifyDeleteShift();
 	}
