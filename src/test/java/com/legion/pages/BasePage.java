@@ -823,6 +823,10 @@ public class BasePage {
                 .build()
                 .perform();
     }
+
+    public void clickTheElement(WebElement element) {
+        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].click();", element);
+    }
 //
 //
 //     public void assertIsDisplay(Map<String,String> map){

@@ -121,4 +121,24 @@ public interface ProfileNewUIPage {
 	public int getTimeOffCountByStatusLabel(String status) throws Exception;
 
 	public HashMap<String, List<String>> selectCurrentDayAsStartNEndDate() throws Exception;
+
+	public void validateTheEditFunctionalityOnMyProfile(String streetAddress1, String streetAddress2, String city, String state, String zip) throws Exception;
+
+	public void validateTheFeatureOfChangePassword(String oldPassword) throws Exception;
+
+	public String getNewPassword(String oldPassword) throws Exception;
+
+	public void validateTheUpdateOfShiftPreferences(boolean canReceiveOfferFromOtherLocation, boolean isVolunteersForAdditional) throws Exception;
+
+	public void validateTheUpdateOfAvailability(String hoursType, int sliderIndex, String leftOrRightDuration,
+												int durationMinutes, String repeatChanges) throws Exception;
+
+	public void reasonsOfLeaveOnNewTimOffRequest() throws Exception;
+
+	public String selectRandomReasonOfLeaveOnNewTimeOffRequest() throws Exception;
+
+	public void createNewTimeOffRequestAndVerify(String timeOffReasonLabel, String timeOffExplanationText) throws Exception;
+
+	public void validateTheFunctionalityOfTimeOffCancellation() throws Exception;
+
 }

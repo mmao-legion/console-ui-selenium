@@ -42,6 +42,7 @@
 					   <include name="verifyTheWelcomeMessage"/>
 					   <include name="verifyTheFunctionOfViewTodaySchedule"/>
 					   <include name="verifyTheDataSourceForBudgetScheduledOther"/>
+                       <include name="verifyDashboardFunctionalityAsTeamMember" />
                         <include name="verifyDashboardFunctionality" />
 					</methods>
 				</class>
@@ -111,6 +112,11 @@
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView"/>
+                    <include name="verificationOfMySchedulePageAsTeamMember" />
+                    <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
+                    <include name="verifyProfilePictureFunctionalityAsTeamMember" />
+                    <include name="verifyInfoIconFunctionalityAsTeamMember" />
+                    <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
                 </methods>
             </class>
         </classes>
@@ -154,5 +160,16 @@
         </classes>
     </test>
 
-</suite> <!-- Suite -->
+    <test name="Profile Test">
+        <classes>
+            <class name="com.legion.tests.core.ProfileNewUITestKendraScott2">
+                <methods>
+                    <include name="verifyMyProfileDetailsByUpdatingTheInformationAsTeamMember" />
+                    <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
+                    <include name="verifyCreateNewTimeOffFunctionalityAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 
+</suite> <!-- Suite -->
