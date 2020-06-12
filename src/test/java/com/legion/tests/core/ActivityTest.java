@@ -7,6 +7,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -15,6 +16,9 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public class ActivityTest extends TestBase {
+
+    private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
+    private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
 
     @Override
     @BeforeMethod()
@@ -92,9 +96,9 @@ public class ActivityTest extends TestBase {
             SimpleUtils.fail("Request to Swap and Request to Cover options are still shown!", false);
         }
 
+
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
-
         loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                 , String.valueOf(credential[0][2]));
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -129,5 +133,91 @@ public class ActivityTest extends TestBase {
         activityPage.clickActivityFilterByIndex(indexOfActivityType.ShiftSwap.getValue(), indexOfActivityType.ShiftSwap.name());
         activityPage.approveOrRejectShiftSwapRequestOnActivity(requestUserName, swapName, approveRejectAction.Approve.getValue());
     }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Validate the activity of publish or update schedule")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyActivityOfPublishUpdateSchedule(String browser, String username, String password, String location) throws Exception {
+
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+
+        //make publish schedule activity
+        boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+        if(!isActiveWeekGenerated){
+            schedulePage.generateOrUpdateAndGenerateSchedule();
+            schedulePage.publishActiveSchedule();
+        }else {
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+            schedulePage.generateOrUpdateAndGenerateSchedule();
+            schedulePage.publishActiveSchedule();
+        }
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String requestUserName = profileNewUIPage.getNickNameFromProfile();
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+
+
+        // Login as Store Manager
+        String fileName = "UserCredentialsForComparableSwapShifts.json";
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        fileName = "UsersCredentials.json";
+        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+
+
+        // Verify Schedule publish activity are loaded
+
+        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+        activityPage.verifyActivityBellIconLoaded();
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.clickActivityFilterByIndex(indexOfActivityType.Schedule.getValue(), indexOfActivityType.Schedule.name());
+        activityPage.verifyActivityOfPublishSchedule(requestUserName);
+        activityPage.verifyClickOnActivityCloseButton();
+
+        //make update schedule activity to add one open shift
+        schedulePage.clickOnDayView();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickNewDayViewShiftButtonLoaded();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
+
+
+        // Verify Schedule update activity are
+
+        String requestUserNameSM = profileNewUIPage.getNickNameFromProfile();
+        activityPage.verifyActivityBellIconLoaded();
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.clickActivityFilterByIndex(indexOfActivityType.Schedule.getValue(), indexOfActivityType.Schedule.name());
+        activityPage.verifyActivityOfUpdateSchedule(requestUserNameSM);
+
+
+
+
+    }
+
 
 }

@@ -27,6 +27,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
     private WebElement filterTitle;
     @FindBy (className = "notification-container")
     private List<WebElement> activityCards;
+    @FindBy (css = "ng-click=\"close()\"")
+    private WebElement closeActivityFeedBtn;
 
     @Override
     public void verifyActivityBellIconLoaded() throws Exception {
@@ -122,5 +124,60 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
         }else {
             SimpleUtils.fail("Failed to find a new Shift Swap activity!", false);
         }
+    }
+
+    @Override
+    public void verifyActivityOfPublishSchedule(String requestUserName) throws Exception {
+        String expectedMessage = "published the schedule for";
+        WebElement shiftSwapCard = null;
+        waitForSeconds(5);
+        if (areListElementVisible(activityCards, 15)) {
+            WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
+            if (message != null && message.getText().contains(requestUserName) && message.getText().toLowerCase().contains(expectedMessage)) {
+                SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
+                shiftSwapCard = activityCards.get(0);
+            }else if( message.getText().toLowerCase().contains("no activities available for the selected filter")){
+               SimpleUtils.report("No activities available for the selected filter");
+            }else {
+                SimpleUtils.fail("Failed to find the card that is new and contain: " + requestUserName + ", "
+                        +  expectedMessage + "! Actual card is: " + message.getText(), false);
+            }
+
+        }else {
+            SimpleUtils.fail("Schedule Activity failed to Load", false);
+        }
+
+    }
+
+    @Override
+    public void verifyActivityOfUpdateSchedule(String requestUserName) throws Exception {
+        String expectedMessage = "updated the schedule for";
+        WebElement shiftSwapCard = null;
+        waitForSeconds(5);
+        if (areListElementVisible(activityCards, 15)) {
+            WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
+            if (message != null && message.getText().contains(requestUserName) && message.getText().toLowerCase().contains(expectedMessage)) {
+                SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
+                shiftSwapCard = activityCards.get(0);
+            }else if( message.getText().toLowerCase().contains("no activities available for the selected filter")){
+                SimpleUtils.report("No activities available for the selected filter");
+            }else {
+                SimpleUtils.fail("Failed to find the card that is new and contain: " + requestUserName + ", "
+                        +  expectedMessage + "! Actual card is: " + message.getText(), false);
+            }
+        }else {
+            SimpleUtils.fail("Schedule Activity failed to Load", false);
+        }
+
+    }
+    @Override
+    public void verifyClickOnActivityCloseButton() throws Exception {
+        if (isElementLoaded(closeActivityFeedBtn, 10)) {
+            click(closeActivityFeedBtn);
+            SimpleUtils.pass("Click on Activity Close Button Successfully!");
+        }else {
+                SimpleUtils.fail("Activity Close Button failed to load!", false);
+            }
+
     }
 }

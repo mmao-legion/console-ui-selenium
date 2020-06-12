@@ -23,8 +23,8 @@ import com.legion.utils.SimpleUtils;
 
 
 public class ControlsNewUITest extends TestBase{
-	
-	
+
+
 	public enum dayWeekOrPayPeriodViewType{
 		  Next("Next"),
 		  Previous("Previous");
