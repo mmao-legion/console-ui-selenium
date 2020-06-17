@@ -19,6 +19,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
         PageFactory.initElements(getDriver(), this);
     }
 
+    // Added by Nora
     @FindBy (className = "bell-container")
     private WebElement activityBell;
     @FindBy (className = "notification-bell-popup-filters-filter")
@@ -27,8 +28,51 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
     private WebElement filterTitle;
     @FindBy (className = "notification-container")
     private List<WebElement> activityCards;
-    @FindBy (css = "ng-click=\"close()\"")
+    @FindBy (css = "[ng-click=\"close()\"]")
     private WebElement closeActivityFeedBtn;
+    @FindBy (className = "notification-bell-popup-container")
+    private WebElement activityContainer;
+
+    @Override
+    public boolean isActivityContainerPoppedUp() throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(activityContainer, 5)) {
+            isLoaded = true;
+            SimpleUtils.pass("Activity pop up Container loaded Successfully!");
+        }
+        return isLoaded;
+    }
+
+    @Override
+    public void verifyFiveActivityButtonsLoaded() throws Exception {
+        if (areListElementVisible(activityFilters, 10) && activityFilters.size() == 5) {
+            if (activityFilters.get(0).getAttribute("src").contains("time-off")) {
+                SimpleUtils.pass("Find the first filter 'Time Off' Successfully!");
+            }else {
+                SimpleUtils.fail("Filter 'Time Off' not loaded Successfully!", false);
+            }
+            if (activityFilters.get(1).getAttribute("src").contains("offer")) {
+                SimpleUtils.pass("Find the second filter 'Shift Offer' Successfully!");
+            }else {
+                SimpleUtils.fail("Filter 'Shift Offer' not loaded Successfully!", false);
+            }
+            if (activityFilters.get(2).getAttribute("src").contains("shift-swap")) {
+                SimpleUtils.pass("Find the third filter 'Shift Swap' Successfully!");
+            }else {
+                SimpleUtils.fail("Filter 'Shift Swap' not loaded Successfully!", false);
+            }
+            if (activityFilters.get(3).getAttribute("src").contains("team")) {
+                SimpleUtils.pass("Find the forth filter 'Profile Update' Successfully!");
+            }else {
+                SimpleUtils.fail("Filter 'Profile Update' not loaded Successfully!", false);
+            }
+            if (activityFilters.get(4).getAttribute("src").contains("calendar")) {
+                SimpleUtils.pass("Find the fifth filter 'Schedule' Successfully");
+            }else {
+                SimpleUtils.fail("Filter 'Schedule' not loaded Successfully!", false);
+            }
+        }
+    }
 
     @Override
     public void verifyActivityBellIconLoaded() throws Exception {
@@ -76,16 +120,14 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
     }
 
     @Override
-    public WebElement verifyNewShiftSwapCardShowsOnActivity(String requestUserName, String respondUserName) throws Exception {
+    public void verifyNewShiftSwapCardShowsOnActivity(String requestUserName, String respondUserName) throws Exception {
         String expectedMessage = "requested to swap shifts";
-        WebElement shiftSwapCard = null;
         waitForSeconds(5);
         if (areListElementVisible(activityCards, 15)) {
             WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
             if (message != null && message.getText().contains(requestUserName) && message.getText().contains(respondUserName)
                     && message.getText().toLowerCase().contains(expectedMessage)) {
                 SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
-                shiftSwapCard = activityCards.get(0);
             }else {
                 SimpleUtils.fail("Failed to find the card that is new and contain: " + requestUserName + ", "
                         + respondUserName + ", " + expectedMessage + "! Actual card is: " + message.getText(), false);
@@ -93,12 +135,12 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
         }else {
             SimpleUtils.fail("Shift Swap Activity failed to Load1", false);
         }
-        return shiftSwapCard;
     }
 
     @Override
     public void approveOrRejectShiftSwapRequestOnActivity(String requestUserName, String respondUserName, String action) throws Exception {
-        WebElement shiftSwapCard = verifyNewShiftSwapCardShowsOnActivity(requestUserName, respondUserName);
+        verifyNewShiftSwapCardShowsOnActivity(requestUserName, respondUserName);
+        WebElement shiftSwapCard = activityCards.get(0);
         if (shiftSwapCard != null) {
             List<WebElement> actionButtons = shiftSwapCard.findElements(By.className("notification-buttons-button"));
             if (actionButtons != null && actionButtons.size() == 2) {
@@ -126,6 +168,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
         }
     }
 
+    //Added by Estelle
     @Override
     public void verifyActivityOfPublishSchedule(String requestUserName) throws Exception {
         String expectedMessage = "published the schedule for";

@@ -350,7 +350,6 @@ public interface SchedulePage {
 	public void verifyClickNoButton() throws Exception;
 	public void verifyClickOnYesButton() throws Exception;
 	public void verifyTheFunctionalityOfClearFilter() throws Exception;
-}
 
 	public void validateTheAvailabilityOfScheduleTable(String userName) throws Exception;
 

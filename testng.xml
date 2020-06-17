@@ -155,6 +155,9 @@
             <class name="com.legion.tests.core.ActivityTest">
                 <methods>
                     <include name="verifyTheContentOfShiftSwapActivityAsTeamMember"/>
+                    <include name="verifyTheContentOfActivityPageAsStoreManager" />
+                    <include name="verifyToCloseActivityFeedAsStoreManager" />
+                    <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
                 </methods>
             </class>
         </classes>
