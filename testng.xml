@@ -158,6 +158,8 @@
                     <include name="verifyTheContentOfActivityPageAsStoreManager" />
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
+                    <include name="verifyActivityOfClaimOpenShift" />
+                    <include name="verifyActivityOfPublishUpdateSchedule" />
                 </methods>
             </class>
         </classes>
