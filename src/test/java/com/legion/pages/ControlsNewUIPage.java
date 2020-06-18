@@ -251,4 +251,8 @@ public interface ControlsNewUIPage {
 	public HashMap<String, Integer> getMealBreakDataFromControls();
 
 	public boolean isCompliancePageLoaded() throws Exception;
+
+	public String getIsApprovalByManagerRequiredWhenEmployeeClaimsOpenShiftSelectedOption() throws Exception;
+
+	public void updateOpenShiftApprovedByManagerOption(String option)throws Exception;
 }

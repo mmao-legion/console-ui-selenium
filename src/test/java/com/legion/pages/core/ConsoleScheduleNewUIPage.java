@@ -12,6 +12,7 @@ import com.legion.utils.MyThreadLocal;
 
 import cucumber.api.java.hu.Ha;
 import cucumber.api.java.sl.In;
+import org.apache.bcel.generic.IFNE;
 import org.apache.http.impl.execchain.TunnelRefusedException;
 import org.apache.xpath.axes.HasPositionalPredChecker;
 import org.openqa.selenium.By;
@@ -4120,7 +4121,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
-    @FindBy(css = "div.week-view-shift-hover-info-icon")
+    @FindBy(css = "div.week-view-shift-info-icon")
     private List<WebElement> scheduleInfoIcon;
 
     @FindBy(css = "button[ng-click*='confirmSaveAction']")
@@ -8068,6 +8069,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public float getShiftHoursByTMInWeekView(String teamMember) {
         Float timeDurationForTMInWeek = 0.0f;
+        waitForSeconds(5);
         if (areListElementVisible(workerNameList,5) ) {
             for (int i = 0; i <workerNameList.size() ; i++) {
                 if ( workerNameList.get(i).getText().trim().toLowerCase().contains(teamMember.toLowerCase())) {
@@ -8923,8 +8925,4 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    public void closeButtonIsClickable() {
-        getDriver().close();
-        SimpleUtils.pass("close button is clickable");
-    }
 }
