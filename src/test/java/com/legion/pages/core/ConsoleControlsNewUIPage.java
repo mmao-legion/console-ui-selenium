@@ -4876,6 +4876,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		return mealTimeBreakData;
 	}
 
+<<<<<<< Updated upstream
 	//Added by Estelle to check open shift is approved by man
 	@Override
 	public String getIsApprovalByManagerRequiredWhenEmployeeClaimsOpenShiftSelectedOption() throws Exception {
@@ -4905,3 +4906,27 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	}
 }
+=======
+	@FindBy(css = "question-input[question-title=\"Is manager approval required when an employee changes availability?\"] input-field")
+	private WebElement isApprovalRequiredToChangeAvailability;
+	//added by Haya
+	//Options: Not required;Required for all changes;Required for reducing availability
+	@Override
+	public void updateAvailabilityManagementIsApprovalRequired(String option) throws Exception {
+		WebElement confSelect = isApprovalRequiredToChangeAvailability.findElement(By.cssSelector("select"));
+		if(isElementLoaded(confSelect)) {
+			//WebElement input = isApprovalRequiredToChangeAvailability.findElement(By.xpath("//input-field"));
+			if(isElementLoaded(confSelect)) {
+				selectByVisibleText(confSelect,option);
+				preserveTheSetting();
+				System.out.println(isApprovalRequiredToChangeAvailability.getText());
+			} else{
+				SimpleUtils.fail("Is manager approval required when an employee changes availability? input field not loaded.", false);
+			}
+		} else{
+			SimpleUtils.fail("Is manager approval required when an employee changes availability?  section not loaded.", false);
+
+		}
+	}
+}
+>>>>>>> Stashed changes

@@ -176,12 +176,20 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> myAvailabilityDayOfWeekRows;
 	@FindBy(css="button.lgn-action-button-success")
 	private WebElement myAvailabilityUnLockBtn;
-	@FindBy(css="button[ng-click=\"saveAvailability($event)\"]")
+	@FindBy(css="lg-button[ng-click=\"onSave()\"]")
 	private WebElement myAvailabilityEditModeSaveBtn;
+<<<<<<< Updated upstream
 	@FindBy(css="[ng-click=\"save()\"]")
 	private WebElement MyAvailabilityEditSaveThisWeekOnlyBtn;
 	@FindBy(css="[ng-click=\"save()\"]")
+=======
+	@FindBy(css="input-field[label=\"This week only\"] label")
+	private WebElement MyAvailabilityEditSaveThisWeekOnlyBtn;
+	@FindBy(css="input-field[label=\"Repeat forward\"] label")
+>>>>>>> Stashed changes
 	private WebElement MyAvailabilityEditSaveRepeatForwordBtn;
+	@FindBy(css = "[ng-click=\"save()\"]")
+	private WebElement myAvailabilityConfirmSubmitBtn;
 	@FindBy(css="div.hour-cell.hour-cell-ghost.cursor-resizableE")
 	private List<WebElement> hourCellsResizableCursorsRight;
 	@FindBy(css="div.hour-cell.hour-cell-ghost.cursor-resizableW")
@@ -200,7 +208,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement nextToDoCardArrow;
 	@FindBy(css="button.lgn-action-button-success")
 	private WebElement confirmTimeOffApprovalBtn;
-	@FindBy(css="span[ng-if=\"canCancel(r)\"]")
+	//timeOffRequestCancelBtn last updated by Haya
+	@FindBy(css="span[ng-if=\"canCancel(timeoff)\"]")
 	private WebElement timeOffRequestCancelBtn;
 	@FindBy(xpath="//div[contains(text(),'Starts')]/b")
 	private WebElement timeOffRequestStartDate;
@@ -1394,6 +1403,69 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		return false;
 	}
 
+	//added by Haya
+	@FindBy(css="user-profile-section[editing-locked]")
+	private WebElement myAvailability;
+	@Override
+	public boolean isMyAvailabilityLockedNewUI() throws Exception
+	{
+		if(isElementLoaded(myAvailability,10)) {
+			waitForSeconds(5);
+			String lockLable = myAvailability.findElement(By.cssSelector("div[class=\"user-profile-section__header\"] span")).getText();
+			if (lockLable.toLowerCase().contains("locked")){
+				return true;
+			}
+		}else{
+			SimpleUtils.fail("My Availability section not loaded under 'My Work Preference' Tab.", true);
+		}
+		return false;
+	}
+
+	//added by Haya
+	@Override
+	public void updateMyAvailability(String hoursType, int sliderIndex,
+										String leftOrRightSliderArrow, double durationhours, String repeatChanges) throws Exception
+	{
+		WebElement editBtn = myAvailability.findElement(By.cssSelector("div[class=\"user-profile-section__header\"] span"));
+		if (isElementLoaded(editBtn,10)){
+			click(editBtn);
+			updatePreferredOrBusyHoursDurationNew(sliderIndex,durationhours,leftOrRightSliderArrow, hoursType);
+			saveMyAvailabilityEditMode(repeatChanges);
+		}else{
+			SimpleUtils.fail("Edit button is not loaded!", false);
+		}
+	}
+
+	//Haya: the old method updatePreferredOrBusyHoursDuration has problem with xOffSet. So add copied one and update it.
+	private void updatePreferredOrBusyHoursDurationNew(int rowIndex, double durationhours, String leftOrRightDuration, String hoursType) throws Exception {
+		String preferredHoursTabText = "Preferred";
+		String busyHoursTabText = "Busy";
+		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase()))
+			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
+		else
+			selectMyAvaliabilityEditHoursTabByLabel(busyHoursTabText);
+
+		int xOffSet = (int)(durationhours *  40);
+		if(leftOrRightDuration.toLowerCase().contains("right")) {
+			if(hourCellsResizableCursorsRight.size() > rowIndex) {
+				scrollToElement(hourCellsResizableCursorsRight.get(rowIndex));
+				moveElement(hourCellsResizableCursorsRight.get(rowIndex), xOffSet);
+				SimpleUtils.pass("My Availability Edit Mode - '"+hoursType+"' Hours Row updated with index - '"+rowIndex+"'.");
+			}
+			else {
+				SimpleUtils.fail("My Availability Edit Mode - '"+hoursType+"' Hours Row not loaded with index - '"+rowIndex+"'.", false);
+			}
+		}
+		else {
+			if(hourCellsResizableCursorsLeft.size() > rowIndex) {
+				moveElement(hourCellsResizableCursorsLeft.get(rowIndex), xOffSet);
+				SimpleUtils.pass("My Availability Edit Mode - '"+hoursType+"' Hours Row updated with index - '"+rowIndex+"'.");
+			}
+			else {
+				SimpleUtils.fail("My Availability Edit Mode - '"+hoursType+"' Hours Row not loaded with index - '"+rowIndex+"'.", false);
+			}
+		}
+	}
 	
 	@Override
 	public ArrayList<HashMap<String, ArrayList<String>>> getMyAvailabilityPreferredAndBusyHours() {
@@ -1456,29 +1528,31 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 	}
 	
-	
+	//updated by Haya
 	private void saveMyAvailabilityEditMode(String availabilityChangesRepeat ) throws Exception {
 		if(isElementLoaded(myAvailabilityEditModeSaveBtn)) {
 			click(myAvailabilityEditModeSaveBtn);
 			if(availabilityChangesRepeat.toLowerCase().contains("repeat forward")) {
-				if(isElementLoaded(MyAvailabilityEditSaveRepeatForwordBtn))
-					click(MyAvailabilityEditSaveRepeatForwordBtn);
-			}
-			else {
-				if(isElementLoaded(MyAvailabilityEditSaveThisWeekOnlyBtn))
-					click(MyAvailabilityEditSaveThisWeekOnlyBtn);
+				if(isElementLoaded(MyAvailabilityEditSaveRepeatForwordBtn)){
+					moveToElementAndClick(MyAvailabilityEditSaveRepeatForwordBtn);
+					click(myAvailabilityConfirmSubmitBtn);
+				}
+			} else {
+				if(isElementLoaded(MyAvailabilityEditSaveThisWeekOnlyBtn)){
+					moveToElementAndClick(MyAvailabilityEditSaveThisWeekOnlyBtn);
+					click(myAvailabilityConfirmSubmitBtn);
+				}
 			}
 			if(! isElementLoaded(myAvailabilityEditModeHeader, 2)) 
 				SimpleUtils.pass("Profile Page: 'My Availability section' edit mode Saved successfully.");
 			else
 				SimpleUtils.fail("Profile Page: 'My Availability section' edit mode not Saved.", false);
-		}
-		else
+		} else{
 			SimpleUtils.fail("Profile Page: 'My Availability section' edit mode 'save' button not loaded.", true);
-		
+		}
 	}
 
-	
+
 	private void updatePreferredOrBusyHoursDuration(int rowIndex, int durationMinutes, String leftOrRightDuration, String hoursType) throws Exception {
 		String preferredHoursTabText = "Preferred";
 		String busyHoursTabText = "Busy";
@@ -1490,6 +1564,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		int xOffSet = ((durationMinutes / 60) * 100) / 2;
 		if(leftOrRightDuration.toLowerCase().contains("right")) {
 			if(hourCellsResizableCursorsRight.size() > rowIndex) {
+				scrollToElement(hourCellsResizableCursorsRight.get(rowIndex));
 				moveElement(hourCellsResizableCursorsRight.get(rowIndex), xOffSet);
 				SimpleUtils.pass("My Availability Edit Mode - '"+hoursType+"' Hours Row updated with index - '"+rowIndex+"'.");
 			}
@@ -1816,11 +1891,59 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 		return isLoaded;
 	}
-	
+
+	//added by Haya
+	@FindBy(xpath = "//div[@class=\"timeoff-requests ng-scope\"]//timeoff-list-item")
+	private List<WebElement> timeOffRequestItems;
+	@Override
+	public void newApproveOrRejectTimeOffRequestFromToDoList(String timeOffReasonLabel, String timeOffStartDuration,
+														  String timeOffEndDuration, String action) throws Exception{
+		String timeOffStartDate = timeOffStartDuration.split(", ")[1].split(" ")[1];
+		String timeOffStartMonth = timeOffStartDuration.split(", ")[1].split(" ")[0];
+		String timeOffEndDate = timeOffEndDuration.split(", ")[1].split(" ")[1];
+		String timeOffEndMonth = timeOffEndDuration.split(", ")[1].split(" ")[0];
+
+		//int timeOffRequestCount = timeOffRequestItems.size();
+		if(areListElementVisible(timeOffRequestItems,10) && timeOffRequestItems.size() > 0) {
+			for(WebElement timeOffRequest : timeOffRequestItems) {
+				WebElement requestType = timeOffRequest.findElement(By.cssSelector("span.request-type"));
+				if(requestType.getText().toLowerCase().contains(timeOffReasonLabel.toLowerCase())) {
+					WebElement requestDate = timeOffRequest.findElement(By.cssSelector("div.request-date"));
+					String[] requestDateText = requestDate.getText().replace("\n", "").split("-");
+
+					if(requestDateText[0].toLowerCase().contains(timeOffStartMonth.toLowerCase())
+							&& requestDateText[0].toLowerCase().contains(timeOffStartDate.toLowerCase())
+							&& requestDateText[1].toLowerCase().contains(timeOffEndMonth.toLowerCase())
+							&& requestDateText[1].toLowerCase().contains(timeOffEndDate.toLowerCase())) {
+						click(timeOffRequest);
+						if(action.toLowerCase().contains("cancel")) {
+							if(isElementLoaded(timeOffRequestCancelBtn)) {
+								scrollToElement(timeOffRequestCancelBtn);
+								click(timeOffRequestCancelBtn);
+								SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
+							}
+							else
+								SimpleUtils.fail("My Time Off: Time off request cancel button not loaded.", true);
+						}
+						else if(action.toLowerCase().contains("approve")) {
+							if(isElementLoaded(timeOffRequestApproveBtn)) {
+								click(timeOffRequestApproveBtn);
+								SimpleUtils.pass("My Time Off: Time off request Approve button clicked.");
+							}
+							else
+								SimpleUtils.fail("My Time Off: Time off request Approve button not loaded.", true);
+						}
+					}
+				}
+			}
+		}
+		else
+			SimpleUtils.fail("Profile Page: No Time off request found.", false);
+	}
+
 	@Override
 	public void approveOrRejectTimeOffRequestFromToDoList(String timeOffReasonLabel, String timeOffStartDuration, 
 			String timeOffEndDuration, String action) throws Exception{
-		
 		String timeOffStartDate = timeOffStartDuration.split(",")[0].split(" ")[1];
 		String timeOffStartMonth = timeOffStartDuration.split(",")[0].split(" ")[0];
 		String timeOffEndDate = timeOffEndDuration.split(",")[0].split(" ")[1];
@@ -1908,6 +2031,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 	}
 
+<<<<<<< Updated upstream
 	//Added by Julie
 	@FindBy(css = ".address")
 	private WebElement profileAddressInformation;
@@ -2317,5 +2441,27 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			}
 		}
 		return pendingRequestCanBeCancelled;
+=======
+	//added by Haya
+	@FindBy(css = "span[ng-click=\"getNextWeekData()\"]")
+	private WebElement nextWeekBtn;
+	@Override
+	public void clickNextWeek() throws Exception {
+		if (isElementLoaded(nextWeekBtn,10)){
+			click(nextWeekBtn);
+		}
+	}
+
+	//added by Haya
+	@Override
+	public String getAvailabilityWeek() throws Exception {
+		WebElement dateSpan = myAvailability.findElement(By.cssSelector(".week-nav-icon-main.ng-binding"));
+		if (isElementLoaded(dateSpan,5)){
+			return dateSpan.getText();
+		} else {
+			SimpleUtils.fail("Fail to load date info for availability!", true);
+		}
+		return null;
+>>>>>>> Stashed changes
 	}
 }

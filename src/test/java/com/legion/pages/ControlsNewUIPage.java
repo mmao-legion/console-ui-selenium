@@ -252,7 +252,11 @@ public interface ControlsNewUIPage {
 
 	public boolean isCompliancePageLoaded() throws Exception;
 
+<<<<<<< Updated upstream
 	public String getIsApprovalByManagerRequiredWhenEmployeeClaimsOpenShiftSelectedOption() throws Exception;
 
 	public void updateOpenShiftApprovedByManagerOption(String option)throws Exception;
+=======
+	public void updateAvailabilityManagementIsApprovalRequired(String option) throws Exception;
+>>>>>>> Stashed changes
 }

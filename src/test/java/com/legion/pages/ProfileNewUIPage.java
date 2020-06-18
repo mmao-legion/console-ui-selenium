@@ -86,10 +86,15 @@ public interface ProfileNewUIPage {
 
 	boolean isMyAvailabilityLocked() throws Exception;
 
+	boolean isMyAvailabilityLockedNewUI() throws Exception;
+
 	public ArrayList<HashMap<String, ArrayList<String>>> getMyAvailabilityPreferredAndBusyHours();
 
 	public void updateLockedAvailabilityPreferredOrBusyHoursSlider(String hoursType, int sliderIndex,
 			String leftOrRightSliderArrow, int durationMinutes, String repeatChanges) throws Exception;
+
+	public void updateMyAvailability(String hoursType, int sliderIndex,
+												   String leftOrRightSliderArrow, double durationHours, String repeatChanges) throws Exception;
 
 	public HashMap<String, Integer> getTimeOffRequestsStatusCount() throws Exception;
 
@@ -122,6 +127,7 @@ public interface ProfileNewUIPage {
 
 	public HashMap<String, List<String>> selectCurrentDayAsStartNEndDate() throws Exception;
 
+<<<<<<< Updated upstream
 	public void validateTheEditFunctionalityOnMyProfile(String streetAddress1, String streetAddress2, String city, String state, String zip) throws Exception;
 
 	public void validateTheFeatureOfChangePassword(String oldPassword) throws Exception;
@@ -141,4 +147,12 @@ public interface ProfileNewUIPage {
 
 	public void validateTheFunctionalityOfTimeOffCancellation() throws Exception;
 
+=======
+	public void newApproveOrRejectTimeOffRequestFromToDoList(String timeOffReasonLabel, String timeOffStartDuration,
+															 String timeOffEndDuration, String action) throws Exception;
+
+	public void clickNextWeek() throws Exception;
+
+	public String getAvailabilityWeek() throws Exception;
+>>>>>>> Stashed changes
 }
