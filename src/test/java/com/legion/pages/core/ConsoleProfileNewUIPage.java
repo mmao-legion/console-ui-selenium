@@ -178,15 +178,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement myAvailabilityUnLockBtn;
 	@FindBy(css="lg-button[ng-click=\"onSave()\"]")
 	private WebElement myAvailabilityEditModeSaveBtn;
-<<<<<<< Updated upstream
-	@FindBy(css="[ng-click=\"save()\"]")
-	private WebElement MyAvailabilityEditSaveThisWeekOnlyBtn;
-	@FindBy(css="[ng-click=\"save()\"]")
-=======
 	@FindBy(css="input-field[label=\"This week only\"] label")
 	private WebElement MyAvailabilityEditSaveThisWeekOnlyBtn;
 	@FindBy(css="input-field[label=\"Repeat forward\"] label")
->>>>>>> Stashed changes
 	private WebElement MyAvailabilityEditSaveRepeatForwordBtn;
 	@FindBy(css = "[ng-click=\"save()\"]")
 	private WebElement myAvailabilityConfirmSubmitBtn;
@@ -2031,7 +2025,6 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 	}
 
-<<<<<<< Updated upstream
 	//Added by Julie
 	@FindBy(css = ".address")
 	private WebElement profileAddressInformation;
@@ -2441,7 +2434,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			}
 		}
 		return pendingRequestCanBeCancelled;
-=======
+	}
 	//added by Haya
 	@FindBy(css = "span[ng-click=\"getNextWeekData()\"]")
 	private WebElement nextWeekBtn;
@@ -2462,6 +2455,5 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("Fail to load date info for availability!", true);
 		}
 		return null;
->>>>>>> Stashed changes
 	}
 }

@@ -20,12 +20,9 @@ import static com.legion.utils.MyThreadLocal.getTimeOffStartTime;
 
 public class ActivityTest extends TestBase {
 
-<<<<<<< Updated upstream
     private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
     private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
-=======
     private static Map<String, String> newTMDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember.json");
->>>>>>> Stashed changes
 
     @Override
     @BeforeMethod()
@@ -142,7 +139,6 @@ public class ActivityTest extends TestBase {
     }
 
     @Automated(automated ="Automated")
-<<<<<<< Updated upstream
     @Owner(owner = "Nora")
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Validate the content of Activities page after click on the Activities button")
@@ -278,7 +274,6 @@ public class ActivityTest extends TestBase {
     }
 
 
-=======
     @Owner(owner = "Haya")
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Verify the notification when TM is requesting time off")
@@ -704,5 +699,4 @@ public class ActivityTest extends TestBase {
         activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Reject.getValue());
     }
 
->>>>>>> Stashed changes
 }

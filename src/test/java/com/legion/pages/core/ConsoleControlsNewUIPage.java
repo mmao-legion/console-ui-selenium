@@ -4876,7 +4876,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		return mealTimeBreakData;
 	}
 
-<<<<<<< Updated upstream
 	//Added by Estelle to check open shift is approved by man
 	@Override
 	public String getIsApprovalByManagerRequiredWhenEmployeeClaimsOpenShiftSelectedOption() throws Exception {
@@ -4905,8 +4904,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 
 	}
-}
-=======
+
 	@FindBy(css = "question-input[question-title=\"Is manager approval required when an employee changes availability?\"] input-field")
 	private WebElement isApprovalRequiredToChangeAvailability;
 	//added by Haya
@@ -4929,4 +4927,3 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 	}
 }
->>>>>>> Stashed changes

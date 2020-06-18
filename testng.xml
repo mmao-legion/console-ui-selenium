@@ -157,13 +157,11 @@
             <class name="com.legion.tests.core.ActivityTest">
                 <methods>
                     <include name="verifyTheContentOfShiftSwapActivityAsTeamMember"/>
-<<<<<<< Updated upstream
                     <include name="verifyTheContentOfActivityPageAsStoreManager" />
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
                     <include name="verifyActivityOfClaimOpenShift" />
                     <include name="verifyActivityOfPublishUpdateSchedule" />
-=======
                     <include name="verifyTheNotificationForCancelTimeOffAsStoreManager"/>
                     <include name="verifyNoNotificationForActivateTMAsStoreManager"/>
                     <include name="verifyTheNotificationForRequestTimeOffAsStoreManager"/>
@@ -171,7 +169,6 @@
                     <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin"/>
                     <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin"/>
->>>>>>> Stashed changes
                 </methods>
             </class>
         </classes>

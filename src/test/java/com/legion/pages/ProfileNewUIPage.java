@@ -127,7 +127,6 @@ public interface ProfileNewUIPage {
 
 	public HashMap<String, List<String>> selectCurrentDayAsStartNEndDate() throws Exception;
 
-<<<<<<< Updated upstream
 	public void validateTheEditFunctionalityOnMyProfile(String streetAddress1, String streetAddress2, String city, String state, String zip) throws Exception;
 
 	public void validateTheFeatureOfChangePassword(String oldPassword) throws Exception;
@@ -147,12 +146,10 @@ public interface ProfileNewUIPage {
 
 	public void validateTheFunctionalityOfTimeOffCancellation() throws Exception;
 
-=======
 	public void newApproveOrRejectTimeOffRequestFromToDoList(String timeOffReasonLabel, String timeOffStartDuration,
 															 String timeOffEndDuration, String action) throws Exception;
 
 	public void clickNextWeek() throws Exception;
 
 	public String getAvailabilityWeek() throws Exception;
->>>>>>> Stashed changes
 }
