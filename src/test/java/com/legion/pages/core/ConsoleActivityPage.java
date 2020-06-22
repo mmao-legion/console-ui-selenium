@@ -120,10 +120,73 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
     }
 
     @Override
-    public void verifyNewShiftSwapCardShowsOnActivity(String requestUserName, String respondUserName) throws Exception {
-        String expectedMessage = "requested to swap shifts";
+    public void verifyNewBusinessProfileCardShowsOnActivity(String userName, boolean isNewLabelShows) throws Exception {
+        String newStatus = "New";
+        String expectedMessage = userName + " updated business profile photo.";
         waitForSeconds(5);
         if (areListElementVisible(activityCards, 15)) {
+            WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
+            if (isNewLabelShows) {
+                WebElement newLabel = activityCards.get(0).findElement(By.className("notification-new-label"));
+                if (newLabel != null && newLabel.getText().equalsIgnoreCase(newStatus) && message != null) {
+                    SimpleUtils.pass("Verified 'New' label shows correctly");
+                }else {
+                    SimpleUtils.fail("Failed to find a new business profile update activity!", false);
+                }
+            }
+            if (message != null && message.getText().equals(expectedMessage)) {
+                SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
+            }else {
+                SimpleUtils.fail("Failed to find the card with the message: " + expectedMessage
+                        + " Actual card is: " + message.getText(), false);
+            }
+            List<WebElement> actionButtons = activityCards.get(0).findElements(By.className("notification-buttons-button"));
+            if (actionButtons != null && actionButtons.size() == 2) {
+                if (actionButtons.get(0).getText().equals("Approve") && actionButtons.get(1).getText().equals("Reject")) {
+                    SimpleUtils.pass("Approve and Reject buttons loaded Successfully on Business Profile Update Card!");
+                }else {
+                    SimpleUtils.fail("Approve and Reject buttons are not loaded on Business Profile Update Card!", false);
+                }
+            }else {
+                SimpleUtils.fail("Actions buttons and size are incorrect on Business Profile Update Card!", false);
+            }
+        }else {
+            SimpleUtils.fail("Business Profile Update Activity failed to Load!", false);
+        }
+    }
+
+    @Override
+    public void verifyNewWorkPreferencesCardShowsOnActivity(String userName) throws Exception {
+        String expectedMessage = userName + " updated work preferences.";
+        waitForSeconds(5);
+        if (areListElementVisible(activityCards, 15)) {
+            WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
+            if (message != null && message.getText().equals(expectedMessage)) {
+                SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
+            }else {
+                SimpleUtils.fail("Failed to find the card that contains: " + expectedMessage
+                        + "! Actual card is: " + message.getText(), false);
+            }
+        }else {
+            SimpleUtils.fail("Profile Update Activity failed to Load!", false);
+        }
+    }
+
+    @Override
+    public void verifyNewShiftSwapCardShowsOnActivity(String requestUserName, String respondUserName, String actionLabel,
+                                                      boolean isNewLabelShows) throws Exception {
+        String newStatus = "New";
+        String expectedMessage = actionLabel + " to swap shifts";
+        waitForSeconds(5);
+        if (areListElementVisible(activityCards, 15)) {
+            if (isNewLabelShows) {
+                WebElement newLabel = activityCards.get(0).findElement(By.className("notification-new-label"));
+                if (newLabel != null && newLabel.getText().equalsIgnoreCase(newStatus)) {
+                    SimpleUtils.pass("Verified 'New' label shows correctly");
+                }else {
+                    SimpleUtils.fail("Failed to find a new business profile update activity!", false);
+                }
+            }
             WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
             if (message != null && message.getText().contains(requestUserName) && message.getText().contains(respondUserName)
                     && message.getText().toLowerCase().contains(expectedMessage)) {
@@ -133,13 +196,12 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
                         + respondUserName + ", " + expectedMessage + "! Actual card is: " + message.getText(), false);
             }
         }else {
-            SimpleUtils.fail("Shift Swap Activity failed to Load1", false);
+            SimpleUtils.fail("Shift Swap Activity failed to Load!", false);
         }
     }
 
     @Override
     public void approveOrRejectShiftSwapRequestOnActivity(String requestUserName, String respondUserName, String action) throws Exception {
-        verifyNewShiftSwapCardShowsOnActivity(requestUserName, respondUserName);
         WebElement shiftSwapCard = activityCards.get(0);
         if (shiftSwapCard != null) {
             List<WebElement> actionButtons = shiftSwapCard.findElements(By.className("notification-buttons-button"));

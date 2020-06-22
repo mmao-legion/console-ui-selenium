@@ -2568,6 +2568,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void navigateToNextWeek() throws Exception {
+
+    }
+
+    @Override
     public void validateTheAvailabilityOfScheduleTable(String userName) throws Exception {
 
     }

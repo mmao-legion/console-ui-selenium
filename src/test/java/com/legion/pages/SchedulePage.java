@@ -398,4 +398,6 @@ public interface SchedulePage {
 	public  List<String> getWeekScheduleShiftTimeListOfMySchedule() throws Exception;
 
 	public List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception;
+
+	public void navigateToNextWeek() throws Exception;
 }

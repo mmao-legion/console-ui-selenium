@@ -121,4 +121,5 @@ public interface TeamPage {
 	public void	selectTheJobTitleByName(String jobTitleName) throws Exception;
 	public HashMap<Integer, List<String>> getTimeOffWeekTableByDateNTime(HashMap<Integer, List<String>> previousTimeOffs,
 																		 HashMap<String, List<String>> selectedDateNTime, HashMap<Integer, String> indexAndTimes) throws Exception;
+	public void updateBusinessProfilePicture(String filePath) throws Exception;
 }

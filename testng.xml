@@ -158,6 +158,9 @@
                     <include name="verifyTheContentOfActivityPageAsStoreManager" />
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
+                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
+                    <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />
+                    <include name="verifyTheContentOfShiftSwapActivityWithoutApprovalAsTeamMember" />
                 </methods>
             </class>
         </classes>
