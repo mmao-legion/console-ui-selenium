@@ -2418,6 +2418,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		if (areListElementVisible(shiftPrefChkes, 5)) {
 			for (WebElement shiftPrefChk : shiftPrefChkes) {
 				click(shiftPrefChk);
+				if (isElementEnabled(confirmButton, 5)) {
+					click(confirmButton);
+				}
 				WebElement element = shiftPrefChk.findElement(By.xpath("./../following-sibling::div[1]"));
 				if (element != null)
 					otherLocationText = element.getText();
@@ -2743,6 +2746,25 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private List<WebElement> badges;
 	@FindBy (id = "uploadFormInput")
 	private WebElement imageInput;
+	@FindBy (id = "uploadBusinessFormInput")
+	private WebElement businessImageInput;
+
+	@Override
+	public void updateBusinessProfilePicture(String filePath) throws Exception {
+		if (isElementLoaded(editProfileButton, 5)) {
+			click(editProfileButton);
+			if (isElementEnabled(businessImageInput, 5)) {
+				businessImageInput.sendKeys(filePath);
+				// wait for the picture to be loaded
+				waitForSeconds(5);
+				clickTheSaveTMButton();
+			}else {
+				SimpleUtils.fail("Business Profile Image input element isn't enabled!", true);
+			}
+		}else {
+			SimpleUtils.fail("Edit Profile Button failed to load!", true);
+		}
+	}
 
 	@Override
 	public void updateProfilePicture(String filePath) throws Exception {

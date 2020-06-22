@@ -12,6 +12,7 @@ import com.legion.utils.MyThreadLocal;
 
 import cucumber.api.java.hu.Ha;
 import cucumber.api.java.sl.In;
+import org.apache.bcel.generic.IFNE;
 import org.apache.http.impl.execchain.TunnelRefusedException;
 import org.apache.xpath.axes.HasPositionalPredChecker;
 import org.openqa.selenium.By;
@@ -4120,7 +4121,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
-    @FindBy(css = "div.week-view-shift-hover-info-icon")
+    @FindBy(css = "div.week-view-shift-info-icon")
     private List<WebElement> scheduleInfoIcon;
 
     @FindBy(css = "button[ng-click*='confirmSaveAction']")
@@ -6032,6 +6033,31 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement shiftOfferTime;
     @FindBy(className = "shift-swap-modal-table-shift-status")
     private List<WebElement> shiftStatus;
+
+    @Override
+    public void navigateToNextWeek() throws Exception {
+        int currentWeekIndex = -1;
+        if (areListElementVisible(currentWeeks, 5)) {
+            for (int i = 0; i < currentWeeks.size(); i++) {
+                String className = currentWeeks.get(i).getAttribute("class");
+                if (className.contains("day-week-picker-period-active")) {
+                    currentWeekIndex = i;
+                }
+            }
+            if (currentWeekIndex == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
+                click(calendarNavigationNextWeekArrow);
+                if (areListElementVisible(currentWeeks, 5)) {
+                    click(currentWeeks.get(0));
+                    SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(0).getText() + "' Successfully!");
+                }
+            }else {
+                click(currentWeeks.get(currentWeekIndex + 1));
+                SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(currentWeekIndex + 1).getText() + "' Successfully!");
+            }
+        }else {
+            SimpleUtils.fail("Current weeks' elements not loaded Successfully!", false);
+        }
+    }
 
     @Override
     public void verifyShiftRequestStatus(String expectedStatus) throws Exception {
@@ -8068,6 +8094,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public float getShiftHoursByTMInWeekView(String teamMember) {
         Float timeDurationForTMInWeek = 0.0f;
+        waitForSeconds(5);
         if (areListElementVisible(workerNameList,5) ) {
             for (int i = 0; i <workerNameList.size() ; i++) {
                 if ( workerNameList.get(i).getText().trim().toLowerCase().contains(teamMember.toLowerCase())) {

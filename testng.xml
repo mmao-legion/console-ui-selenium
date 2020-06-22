@@ -8,6 +8,7 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
+
      <test name="Schedule Test">
          <classes>
              <class name="com.legion.tests.core.RegressionTest">
@@ -150,6 +151,7 @@
             </classes>
         </test>
 
+
     <test name="Activity Test">
         <classes>
             <class name="com.legion.tests.core.ActivityTest">
@@ -160,6 +162,21 @@
                     <include name="verifyTheContentOfShiftSwapActivityAsStoreManager"/>
                     <include name="verifyApproveCoverRequestOfShiftSwapActivityAsTeamMember"/>
                     <include name="verifyRejectCoverRequestOfShiftSwapActivityAsTeamMember"/>
+                    <include name="verifyTheContentOfActivityPageAsStoreManager" />
+                    <include name="verifyToCloseActivityFeedAsStoreManager" />
+                    <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
+                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
+                    <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />
+                    <include name="verifyTheContentOfShiftSwapActivityWithoutApprovalAsTeamMember" />
+                    <include name="verifyActivityOfClaimOpenShift" />
+                    <include name="verifyActivityOfPublishUpdateSchedule" />
+                    <include name="verifyTheNotificationForCancelTimeOffAsStoreManager"/>
+                    <include name="verifyNoNotificationForActivateTMAsStoreManager"/>
+                    <include name="verifyTheNotificationForRequestTimeOffAsStoreManager"/>
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin"/>
+                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin"/>
+                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
