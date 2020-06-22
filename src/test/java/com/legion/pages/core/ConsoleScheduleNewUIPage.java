@@ -8927,4 +8927,41 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         getDriver().close();
         SimpleUtils.pass("close button is clickable");
     }
+
+    public boolean isRequestUserNameOnPopup(String requestUserName) throws Exception {
+        boolean isRequestUserNameOnPopup = false;
+        if (areListElementVisible(shiftRequests, 5)) {
+            for (WebElement shiftRequest : shiftRequests) {
+                if (shiftRequest.getText().contains(requestUserName)){
+                    isRequestUserNameOnPopup = true;
+                    break;
+                }
+            }
+        }
+        return isRequestUserNameOnPopup;
+    }
+
+    @Override
+    public void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception {
+        int index = 0;
+        if (areListElementVisible(tmIcons, 5)) {
+            for (int i = 0; i < tmIcons.size(); i++) {
+                moveToElementAndClick(tmIcons.get(i));
+                if (isPopOverLayoutLoaded()) {
+                    System.out.println("pop is " + popOverLayout.getAttribute("innerHTML"));
+                    if (popOverLayout.getText().contains(requestName) && popOverLayout.getText().contains(requestUserName)) {
+                        index = 1;
+                        click(popOverLayout.findElement(By.cssSelector("span.sch-worker-action-label")));
+                        SimpleUtils.pass("Click " + requestName + " button Successfully!");
+                        break;
+                    }
+                }
+            }
+            if (index == 0) {
+                SimpleUtils.fail("Failed to select one shift to claim", true);
+            }
+        } else {
+            SimpleUtils.fail("Team Members' Icons not loaded", true);
+        }
+    }
 }

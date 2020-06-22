@@ -350,7 +350,6 @@ public interface SchedulePage {
 	public void verifyClickNoButton() throws Exception;
 	public void verifyClickOnYesButton() throws Exception;
 	public void verifyTheFunctionalityOfClearFilter() throws Exception;
-}
 
 	public void validateTheAvailabilityOfScheduleTable(String userName) throws Exception;
 
@@ -399,4 +398,6 @@ public interface SchedulePage {
 	public  List<String> getWeekScheduleShiftTimeListOfMySchedule() throws Exception;
 
 	public List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception;
+
+	public void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception;
 }
