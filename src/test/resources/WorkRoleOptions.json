@@ -1,4 +1,5 @@
 {
 	  "WorkRole" : "MANAGER",
+	  "WorkRole_BARISTA" : "BARISTA",
 	  "changeWorkRole" : "Manager"
 }
