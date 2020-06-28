@@ -236,6 +236,191 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
     @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Validate the functioning of Approve button on pending Approval for swap the shift")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheFunctionOfShiftSwapActivityAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        SimpleUtils.report("Need to set 'Is approval by Manager required when an employee claims a shift swap or cover request?' to 'Always' First!");
+        String swapName = "";
+        Object[][] credential = null;
+        String fileName = "UserCredentialsForComparableSwapShifts.json";
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
+            swapName = entry.getKey();
+            credential = userCredentials.get(swapName);
+        }
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String requestUserName = profileNewUIPage.getNickNameFromProfile();
+        SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+        schedulePage.isSchedule();
+        schedulePage.navigateToNextWeek();
+
+        // For Swap Feature
+        List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
+        int index = schedulePage.verifyClickOnAnyShift();
+        String request = "Request to Swap Shift";
+        String title = "Find Shifts to Swap";
+        schedulePage.clickTheShiftRequestByName(request);
+        SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
+        schedulePage.verifyComparableShiftsAreLoaded();
+        schedulePage.verifySelectMultipleSwapShifts();
+        // Validate the Submit button feature
+        schedulePage.verifyClickOnNextButtonOnSwap();
+        title = "Submit Swap Request";
+        SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), false);
+        schedulePage.verifyClickOnSubmitButton();
+        // Validate the disappearence of Request to Swap and Request to Cover option
+        schedulePage.clickOnShiftByIndex(index);
+        if (!schedulePage.verifyShiftRequestButtonOnPopup(swapCoverRequsts)) {
+            SimpleUtils.pass("Request to Swap and Request to Cover options are disappear");
+        }else {
+            SimpleUtils.fail("Request to Swap and Request to Cover options are still shown!", false);
+        }
+
+
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
+                , String.valueOf(credential[0][2]));
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        dashboardPage.goToTodayForNewUI();
+        schedulePage.isSchedule();
+        schedulePage.navigateToNextWeek();
+
+        // Validate that swap request smartcard is available to recipient team member
+        String smartCard = "SWAP REQUESTS";
+        schedulePage.isSmartCardAvailableByLabel(smartCard);
+        // Validate the availability of all swap request shifts in schedule table
+        String linkName = "View All";
+        schedulePage.clickLinkOnSmartCardByName(linkName);
+        schedulePage.verifySwapRequestShiftsLoaded();
+        // Validate that recipient can claim the swap request shift.
+        schedulePage.verifyClickAcceptSwapButton();
+
+        loginPage.logOut();
+
+        // Login as Store Manager
+        fileName = "UsersCredentials.json";
+        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+        // Verify Activity Icon is loaded
+        String actionLabel = "requested";
+        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+        activityPage.verifyActivityBellIconLoaded();
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.verifyNewShiftSwapCardShowsOnActivity(requestUserName, swapName, actionLabel, true);
+        activityPage.clickActivityFilterByIndex(indexOfActivityType.ShiftSwap.getValue(), indexOfActivityType.ShiftSwap.name());
+        activityPage.verifyNewShiftSwapCardShowsOnActivity(requestUserName, swapName, actionLabel, false);
+        List<String> swapData = activityPage.getShiftSwapDataFromActivity(requestUserName, swapName);
+        activityPage.approveOrRejectShiftSwapRequestOnActivity(requestUserName, swapName, approveRejectAction.Approve.getValue());
+        activityPage.closeActivityWindow();
+
+        // Go to Schedule page to check whether the shifts are swapped
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        schedulePage.isSchedule();
+        schedulePage.navigateToNextWeek();
+        schedulePage.verifyShiftsAreSwapped(swapData);
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Validate the functioning of Reject button on pending Reject for swap the shift")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheContentOfRejectShiftSwapActivityAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        SimpleUtils.report("Need to set 'Is approval by Manager required when an employee claims a shift swap or cover request?' to 'Always' First!");
+        String swapName = "";
+        Object[][] credential = null;
+        String fileName = "UserCredentialsForComparableSwapShifts.json";
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
+            swapName = entry.getKey();
+            credential = userCredentials.get(swapName);
+        }
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String requestUserName = profileNewUIPage.getNickNameFromProfile();
+        SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+        schedulePage.isSchedule();
+        schedulePage.navigateToNextWeek();
+
+        // For Swap Feature
+        List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
+        int index = schedulePage.verifyClickOnAnyShift();
+        String request = "Request to Swap Shift";
+        String title = "Find Shifts to Swap";
+        schedulePage.clickTheShiftRequestByName(request);
+        SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
+        schedulePage.verifyComparableShiftsAreLoaded();
+        schedulePage.verifySelectMultipleSwapShifts();
+        // Validate the Submit button feature
+        schedulePage.verifyClickOnNextButtonOnSwap();
+        title = "Submit Swap Request";
+        SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), false);
+        schedulePage.verifyClickOnSubmitButton();
+        // Validate the disappearence of Request to Swap and Request to Cover option
+        schedulePage.clickOnShiftByIndex(index);
+        if (!schedulePage.verifyShiftRequestButtonOnPopup(swapCoverRequsts)) {
+            SimpleUtils.pass("Request to Swap and Request to Cover options are disappear");
+        }else {
+            SimpleUtils.fail("Request to Swap and Request to Cover options are still shown!", false);
+        }
+
+
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
+                , String.valueOf(credential[0][2]));
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        dashboardPage.goToTodayForNewUI();
+        schedulePage.isSchedule();
+        schedulePage.navigateToNextWeek();
+
+        // Validate that swap request smartcard is available to recipient team member
+        String smartCard = "SWAP REQUESTS";
+        schedulePage.isSmartCardAvailableByLabel(smartCard);
+        // Validate the availability of all swap request shifts in schedule table
+        String linkName = "View All";
+        schedulePage.clickLinkOnSmartCardByName(linkName);
+        schedulePage.verifySwapRequestShiftsLoaded();
+        // Validate that recipient can claim the swap request shift.
+        schedulePage.verifyClickAcceptSwapButton();
+
+        loginPage.logOut();
+
+        // Login as Store Manager
+        fileName = "UsersCredentials.json";
+        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+        // Verify Activity Icon is loaded
+        String actionLabel = "requested";
+        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+        activityPage.verifyActivityBellIconLoaded();
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.verifyNewShiftSwapCardShowsOnActivity(requestUserName, swapName, actionLabel, true);
+        activityPage.clickActivityFilterByIndex(indexOfActivityType.ShiftSwap.getValue(), indexOfActivityType.ShiftSwap.name());
+        activityPage.verifyNewShiftSwapCardShowsOnActivity(requestUserName, swapName, actionLabel, false);
+        activityPage.approveOrRejectShiftSwapRequestOnActivity(requestUserName, swapName, approveRejectAction.Reject.getValue());
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Validate the content of Activities page after click on the Activities button")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheContentOfActivityPageAsStoreManager(String browser, String username, String password, String location) throws Exception {

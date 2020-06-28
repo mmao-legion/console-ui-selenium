@@ -4580,6 +4580,50 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> shiftsWeekView;
     @FindBy(css = "div.popover div:nth-child(3)>div.ng-binding")
     private WebElement timeDuration;
+    @FindBy(className = "sch-calendar-day-label")
+    private List<WebElement> weekDayLabels;
+
+    @Override
+    public void verifyShiftsAreSwapped(List<String> swapData) throws Exception {
+        int swapRequestIndex1 = -1;
+        int swapRequestIndex2 = -1;
+        String[] swapData1 = swapData.get(0).split("\n");
+        String[] swapData2 = swapData.get(1).split("\n");
+        if (areListElementVisible(weekDayLabels, 10)) {
+            for (int i = 0; i < weekDayLabels.size(); i++) {
+                if (weekDayLabels.get(i).getText().equalsIgnoreCase(swapData1[2].substring(0, 3))) {
+                    swapRequestIndex1 = i;
+                    SimpleUtils.pass("Get the index of " + swapData1[2] + ", the index is: " + i);
+                }
+                if (weekDayLabels.get(i).getText().equalsIgnoreCase(swapData2[2].substring(0, 3))) {
+                    swapRequestIndex2 = i;
+                    SimpleUtils.pass("Get the index of " + swapData2[2] + ", the index is: " + i);
+                }
+            }
+            WebElement weekScheduleCol1 = getDriver().findElement(By.className("week-schedule-day-col-" + swapRequestIndex1));
+            WebElement weekScheduleCol2 = getDriver().findElement(By.className("week-schedule-day-col-" + swapRequestIndex2));
+            List<WebElement> workerNames1 = weekScheduleCol1.findElements(By.className("week-schedule-worker-name"));
+            List<WebElement> workerNames2 = weekScheduleCol2.findElements(By.className("week-schedule-worker-name"));
+            for (WebElement workerName1 : workerNames1) {
+                if (workerName1.getText().equals(swapData1[0])) {
+                    SimpleUtils.fail("Swap failed, still can find the swap Name: " + swapData1[0] + " at: " + swapData1[2], false);
+                }
+                if (workerName1.getText().equals(swapData2[0])) {
+                    SimpleUtils.pass("Swap Successfully, can find the swap Name: " + swapData2[0] + " at: " + swapData1[2]);
+                }
+            }
+            for (WebElement workerName2 : workerNames2) {
+                if (workerName2.getText().equals(swapData2[0])) {
+                    SimpleUtils.fail("Swap failed, still can find the swap Name: " + swapData2[0] + " at: " + swapData2[2], false);
+                }
+                if (workerName2.getText().equals(swapData1[0])) {
+                    SimpleUtils.pass("Swap Successfully, can find the swap Name: " + swapData1[0] + " at: " + swapData2[2]);
+                }
+            }
+        }else {
+            SimpleUtils.fail("Week Day Labels not loaded Successfully!", false);
+        }
+    }
 
     @Override
     public void verifyShiftsChangeToOpenAfterTerminating(List<Integer> indexes, String name, String currentTime) throws Exception {
@@ -6386,6 +6430,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void clickTheShiftRequestByName(String requestName) throws Exception {
+        scrollToBottom();
+        waitForSeconds(2);
         if (areListElementVisible(shiftRequests, 5)) {
             for (WebElement shiftRequest : shiftRequests) {
                 if (shiftRequest.getText().equalsIgnoreCase(requestName)) {

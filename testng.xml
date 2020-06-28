@@ -163,6 +163,8 @@
                     <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
                     <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />
                     <include name="verifyTheContentOfShiftSwapActivityWithoutApprovalAsTeamMember" />
+                    <include name="verifyTheFunctionOfShiftSwapActivityAsTeamMember" />
+                    <include name="verifyTheContentOfRejectShiftSwapActivityAsTeamMember" />
                     <include name="verifyActivityOfClaimOpenShift" />
                     <include name="verifyActivityOfPublishUpdateSchedule" />
                     <include name="verifyTheNotificationForCancelTimeOffAsStoreManager"/>
