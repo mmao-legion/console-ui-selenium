@@ -10,6 +10,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -33,6 +35,35 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	private WebElement closeActivityFeedBtn;
 	@FindBy (className = "notification-bell-popup-container")
 	private WebElement activityContainer;
+
+	@Override
+	public List<String> getShiftSwapDataFromActivity(String requestUserName, String respondUserName) throws Exception {
+		List<String> swapData = new ArrayList<>();
+		if (areListElementVisible(activityCards, 5)) {
+			WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
+			if (message != null && message.getText().contains(requestUserName) && message.getText().contains(respondUserName)) {
+				List<WebElement> swapResults = activityCards.get(0).findElements(By.cssSelector("[ng-repeat*=\"swapData\"]"));
+				if (swapResults != null && swapResults.size() > 0) {
+					for(WebElement swapResult : swapResults) {
+						WebElement date = swapResult.findElement(By.className("date"));
+						WebElement nameAndTitle = swapResult.findElement(By.className("name-and-title"));
+						if (date != null && nameAndTitle != null) {
+							swapData.add(nameAndTitle.getText() + "\n" + date.getText());
+							SimpleUtils.report("Get the swap date: " + date.getText() + " and swap name title: " + nameAndTitle.getText() + " Successfully!");
+						}else {
+							SimpleUtils.fail("Failed to find the date and name elements!", false);
+						}
+					}
+				}else {
+					SimpleUtils.fail("Failed to find the swap elements!", false);
+				}
+			}
+		}
+		if (swapData.size() != 2) {
+			SimpleUtils.fail("Failed to get the swap data!", false);
+		}
+		return swapData;
+	}
 
 	@Override
 	public boolean isActivityContainerPoppedUp() throws Exception {

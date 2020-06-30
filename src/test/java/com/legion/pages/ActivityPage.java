@@ -2,6 +2,9 @@ package com.legion.pages;
 
 import org.openqa.selenium.WebElement;
 
+import java.util.HashMap;
+import java.util.List;
+
 public interface ActivityPage{
     public void verifyActivityBellIconLoaded() throws Exception;
     public void verifyClickOnActivityIcon() throws Exception;
@@ -28,4 +31,5 @@ public interface ActivityPage{
     public void closeActivityWindow() throws Exception;
     public void verifyNoNotificationForActivateTM() throws Exception;
     public void verifyNotificationForUpdateAvailability(String requestName,String isApprovalRequired,String requestOrCancelLabel,String weekInfo,String repeatChange) throws Exception;
+    public List<String> getShiftSwapDataFromActivity(String requestUserName, String respondUserName) throws Exception;
 }

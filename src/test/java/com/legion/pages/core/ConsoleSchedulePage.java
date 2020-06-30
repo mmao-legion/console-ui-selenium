@@ -2573,6 +2573,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void verifyShiftsAreSwapped(List<String> swapData) throws Exception {
+
+    }
+
+    @Override
     public void validateTheAvailabilityOfScheduleTable(String userName) throws Exception {
 
     }

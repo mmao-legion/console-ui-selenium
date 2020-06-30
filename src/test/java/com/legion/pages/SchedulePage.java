@@ -402,4 +402,6 @@ public interface SchedulePage {
 	public void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception;
 	
 	public void navigateToNextWeek() throws Exception;
+
+	public void verifyShiftsAreSwapped(List<String> swapData) throws Exception;
 }
