@@ -8613,7 +8613,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     SimpleUtils.fail("My Schedule Page: Active week text doesn't have enough length", true);
                 }
             }
-            if (Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd) && (Integer.parseInt(date) >= Integer.parseInt(weekDefaultBegin) || (weekDefaultBegin.length() == 2 && date.length() == 1))) {
+            if ((Integer.parseInt(weekDefaultBegin) <= Integer.parseInt(date) && Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd))
+                    || (Integer.parseInt(date) >= Integer.parseInt(weekDefaultEnd) && (weekDefaultBegin.length() == 2 && date.length() == 1))
+                    || (Integer.parseInt(date) >= Integer.parseInt(weekDefaultBegin) && (weekDefaultBegin.length() == 2 && date.length() == 2))) {
                 SimpleUtils.pass("My Schedule Page: By default focus is on current week successfully");
             } else {
                 SimpleUtils.fail("My Schedule Page: Current week isn't selected by default", true);
