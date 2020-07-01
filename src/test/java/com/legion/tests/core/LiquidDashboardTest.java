@@ -51,9 +51,14 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.switchOnWidget(widgetType.Helpful_Links.getValue());
         //verify close helpful links widget
         liquidDashboardPage.closeWidget(widgetType.Helpful_Links.getValue());
-        //verify if there is update time info icon
         liquidDashboardPage.switchOnWidget(widgetType.Helpful_Links.getValue());
+        //verify back button to get out of manage page
+        liquidDashboardPage.verifyBackBtn();
+        //verify if there is update time info icon
         liquidDashboardPage.saveAndExitEditMode();
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Helpful_Links.getValue());
+        //verify search input
+        liquidDashboardPage.enterEditMode();
+        liquidDashboardPage.verifySearchInput(widgetType.Helpful_Links.getValue());
     }
 }

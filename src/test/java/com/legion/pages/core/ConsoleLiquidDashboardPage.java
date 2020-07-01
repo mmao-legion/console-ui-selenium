@@ -41,8 +41,15 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @FindBy (xpath = "//span[text()=\"Cancel\"]")
     private WebElement cancelBtn;
 
+    @FindBy (xpath = "//span[text()=\"Back\"]")
+    private WebElement backBtn;
+
+    @FindBy (css = "input[placeholder=\"Search for widgets\"]")
+    private WebElement searchInput;
+
     @Override
     public void enterEditMode() throws Exception {
+        scrollToTop();
         if (isElementLoaded(editBtn,5)){
             click(editBtn.findElement(By.cssSelector("button")));
             if (isElementLoaded(editDasboardText,5)){
@@ -171,7 +178,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             for (WebElement widgetTemp : widgetsInDashboardPage){
                 if(widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains(widgetTitle)){
                     scrollToElement(widgetTemp);
-                    mouseHover(widgetTemp);
+                    mouseToElement(widgetTemp);
                     if (widgetTemp.findElement(By.cssSelector(".widget-timerclock"))!=null){
                         SimpleUtils.pass("update time icon load successfully!");
                     }
@@ -198,6 +205,46 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             click(cancelBtn);
         } else {
             SimpleUtils.fail("cancel button is not loaded!",true);
+        }
+    }
+
+    @Override
+    public void verifyBackBtn() throws Exception {
+        if (isElementLoaded(manageBtn,5)){
+            click(manageBtn);
+            if (isElementLoaded(backBtn,10)){
+                click(backBtn);
+                SimpleUtils.pass("Back button is working fine!");
+            } else {
+                SimpleUtils.fail("Back button is not loaded!",true);
+            }
+        } else {
+            SimpleUtils.fail("verifyBackBtn: Manage button fail to load!",true);
+        }
+    }
+
+    @Override
+    public void verifySearchInput(String widgetTitle) throws Exception {
+        if (isElementLoaded(manageBtn,10)){
+            click(manageBtn);
+        } else {
+            SimpleUtils.fail("Manage button fail to load!",true);
+        }
+        if (isElementLoaded(searchInput,5)){
+            searchInput.sendKeys(widgetTitle);
+            waitForSeconds(5);
+            if (areListElementVisible(widgetsInManagePage,5)){
+                String actualResult = widgetsInManagePage.get(0).findElement(By.cssSelector("div[class=\"detail-div\"] :nth-child(1)")).getText().toLowerCase();
+                if (widgetsInManagePage.size()==1 && widgetTitle.toLowerCase().contains(actualResult)){
+                    SimpleUtils.pass("Search result is what you want!");
+                } else {
+                    SimpleUtils.fail("Search result is not correct!",true);
+                }
+            } else {
+                SimpleUtils.fail("verifySearchInput: no search widgets result!",true);
+            }
+        } else {
+            SimpleUtils.fail("Search input is not loaded!",true);
         }
     }
 }

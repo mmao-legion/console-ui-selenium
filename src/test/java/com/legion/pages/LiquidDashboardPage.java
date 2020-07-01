@@ -12,4 +12,6 @@ public interface LiquidDashboardPage {
     public void verifyUpdateTimeInfoIcon(String widgetTitle) throws Exception;
     public void saveAndExitEditMode() throws Exception;
     public void cancelAndExitEditMode() throws Exception;
+    public void verifyBackBtn() throws Exception;
+    public void verifySearchInput(String widgetTitle) throws Exception;
 }
