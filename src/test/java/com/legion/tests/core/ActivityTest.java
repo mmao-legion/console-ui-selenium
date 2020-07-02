@@ -645,7 +645,7 @@ public class ActivityTest extends TestBase {
 
 
     @Owner(owner = "Haya")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM is requesting time off")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyTheNotificationForRequestTimeOffAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -667,7 +667,7 @@ public class ActivityTest extends TestBase {
 
         // Login as Team Member to create time off
         String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
@@ -682,13 +682,13 @@ public class ActivityTest extends TestBase {
         profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
         String myTimeOffLabel = "My Time Off";
         profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+        profileNewUIPage.cancelAllTimeOff();
         profileNewUIPage.clickOnCreateTimeOffBtn();
         SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
         String timeOffReasonLabel = "JURY DUTY";
         // select time off reason
         profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
         profileNewUIPage.selectStartAndEndDate();
-        profileNewUIPage.verifyStartDateAndEndDateIsCorrect(getTimeOffStartTime(), getTimeOffEndTime());
         profileNewUIPage.clickOnSaveTimeOffRequestBtn();
         loginPage.logOut();
 
@@ -712,12 +712,12 @@ public class ActivityTest extends TestBase {
         SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
         profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
         profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+        profileNewUIPage.cancelAllTimeOff();
         profileNewUIPage.clickOnCreateTimeOffBtn();
         SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
         //select time off reason
         profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
         profileNewUIPage.selectStartAndEndDate();
-        profileNewUIPage.verifyStartDateAndEndDateIsCorrect(getTimeOffStartTime(), getTimeOffEndTime());
         profileNewUIPage.clickOnSaveTimeOffRequestBtn();
         loginPage.logOut();
 
@@ -727,11 +727,24 @@ public class ActivityTest extends TestBase {
         activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
         activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
         activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Approve.getValue());
+        activityPage.closeActivityWindow();
+        loginPage.logOut();
+
+        // Login as Team Member to cancel all time off
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        pageFactory.createProfileNewUIPage();
+        profileNewUIPage.clickOnUserProfileImage();
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+        SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
+        profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
+        profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+        profileNewUIPage.cancelAllTimeOff();
     }
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM cancels time off request")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyTheNotificationForCancelTimeOffAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -753,7 +766,7 @@ public class ActivityTest extends TestBase {
 
         // Login as Team Member to create time off
         String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
@@ -769,16 +782,15 @@ public class ActivityTest extends TestBase {
         profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
         String myTimeOffLabel = "My Time Off";
         profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+        String timeOffReasonLabel = "JURY DUTY";
+        profileNewUIPage.cancelAllTimeOff();
         profileNewUIPage.clickOnCreateTimeOffBtn();
         SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
-        String timeOffReasonLabel = "JURY DUTY";
         // select time off reason
         profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
         List<String> startNEndDates = profileNewUIPage.selectStartAndEndDate();
-        profileNewUIPage.verifyStartDateAndEndDateIsCorrect(getTimeOffStartTime(), getTimeOffEndTime());
         profileNewUIPage.clickOnSaveTimeOffRequestBtn();
-        String timeOffOperationType = "Cancel";
-        profileNewUIPage.newApproveOrRejectTimeOffRequestFromToDoList(timeOffReasonLabel,getTimeOffStartTime(),getTimeOffEndTime(),timeOffOperationType);
+        profileNewUIPage.cancelAllTimeOff();
         loginPage.logOut();
 
         // Login as Store Manager again to check message
@@ -792,7 +804,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify there is no notification when TM has been activated")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNoNotificationForActivateTMAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -827,7 +839,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM updates availability from a week onwards.Set \"Is manager approval required when an employee changes availability?\" to \"Not required\" ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -849,7 +861,7 @@ public class ActivityTest extends TestBase {
 
         //Login as Team Member to change availability
         String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
@@ -887,7 +899,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM updates availability from a week onwards.Set \"Is manager approval required when an employee changes availability?\" to \"Not required\" ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -909,7 +921,7 @@ public class ActivityTest extends TestBase {
 
         //Login as Team Member to change availability
         String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
@@ -947,7 +959,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM updates availability from a week onwards.Set \"Is manager approval required when an employee changes availability?\" to \"Required for all changes\" ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -969,7 +981,7 @@ public class ActivityTest extends TestBase {
 
         //Login as Team Member to change availability
         String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
@@ -1009,7 +1021,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM updates availability from a week onwards.Set \"Is manager approval required when an employee changes availability?\" to \"Required for all changes\" ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1031,7 +1043,7 @@ public class ActivityTest extends TestBase {
 
         //Login as Team Member to change availability
         String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])

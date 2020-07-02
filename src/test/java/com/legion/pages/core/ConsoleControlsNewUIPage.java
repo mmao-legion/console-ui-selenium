@@ -4914,7 +4914,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		WebElement confSelect = isApprovalRequiredToChangeAvailability.findElement(By.cssSelector("select"));
 		if(isElementLoaded(confSelect)) {
 			//WebElement input = isApprovalRequiredToChangeAvailability.findElement(By.xpath("//input-field"));
-			if(isElementLoaded(confSelect)) {
+			if(isElementLoaded(confSelect,5)) {
+				scrollToElement(confSelect);
 				selectByVisibleText(confSelect,option);
 				preserveTheSetting();
 				System.out.println(isApprovalRequiredToChangeAvailability.getText());

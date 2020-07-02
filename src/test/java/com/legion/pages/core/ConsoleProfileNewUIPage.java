@@ -1896,15 +1896,12 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		String timeOffStartMonth = timeOffStartDuration.split(", ")[1].split(" ")[0];
 		String timeOffEndDate = timeOffEndDuration.split(", ")[1].split(" ")[1];
 		String timeOffEndMonth = timeOffEndDuration.split(", ")[1].split(" ")[0];
-
-		//int timeOffRequestCount = timeOffRequestItems.size();
 		if(areListElementVisible(timeOffRequestItems,10) && timeOffRequestItems.size() > 0) {
 			for(WebElement timeOffRequest : timeOffRequestItems) {
 				WebElement requestType = timeOffRequest.findElement(By.cssSelector("span.request-type"));
 				if(requestType.getText().toLowerCase().contains(timeOffReasonLabel.toLowerCase())) {
 					WebElement requestDate = timeOffRequest.findElement(By.cssSelector("div.request-date"));
 					String[] requestDateText = requestDate.getText().replace("\n", "").split("-");
-
 					if(requestDateText[0].toLowerCase().contains(timeOffStartMonth.toLowerCase())
 							&& requestDateText[0].toLowerCase().contains(timeOffStartDate.toLowerCase())
 							&& requestDateText[1].toLowerCase().contains(timeOffEndMonth.toLowerCase())
@@ -1915,17 +1912,17 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 								scrollToElement(timeOffRequestCancelBtn);
 								click(timeOffRequestCancelBtn);
 								SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
-							}
-							else
+							} else {
 								SimpleUtils.fail("My Time Off: Time off request cancel button not loaded.", true);
+							}
 						}
 						else if(action.toLowerCase().contains("approve")) {
 							if(isElementLoaded(timeOffRequestApproveBtn)) {
 								click(timeOffRequestApproveBtn);
 								SimpleUtils.pass("My Time Off: Time off request Approve button clicked.");
-							}
-							else
+							} else{
 								SimpleUtils.fail("My Time Off: Time off request Approve button not loaded.", true);
+							}
 						}
 					}
 				}
@@ -1933,6 +1930,20 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 		else
 			SimpleUtils.fail("Profile Page: No Time off request found.", false);
+	}
+
+	@Override
+	public void cancelAllTimeOff() throws Exception {
+		if(areListElementVisible(timeOffRequestItems,10) && timeOffRequestItems.size() > 0) {
+			for(WebElement timeOffRequest : timeOffRequestItems) {
+						click(timeOffRequest);
+						if(isElementLoaded(timeOffRequestCancelBtn,5)) {
+							scrollToElement(timeOffRequestCancelBtn);
+							click(timeOffRequestCancelBtn);
+							SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
+						}
+			}
+		}
 	}
 
 	@Override

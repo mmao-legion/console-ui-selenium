@@ -15,7 +15,7 @@ public class ConsoleControlsPage extends BasePage implements ControlsPage{
 	@FindBy (css = "div.console-navigation-item-label.Controls")
 	private WebElement controlsConsoleName;
 	
-	@FindBy (css = ".lg-location-chooser__global.ng-scope")
+	@FindBy (css = ".lg-new-location-chooser__global.ng-scope")
 	private WebElement globalIconControls;
 	@FindBy (css = ".center.ng-scope")
 	private WebElement controlsPage;
