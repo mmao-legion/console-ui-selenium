@@ -645,7 +645,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate access controls on Activities page when logon with Admin/TM or SM switch to employer view")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyAccessControlsOnActivitiesPage(String browser, String username, String password, String location) throws Exception {
@@ -662,7 +662,7 @@ public class ActivityTest extends TestBase {
 
         // Verify Activity Feed as Store Manager
         String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
@@ -687,7 +687,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the content when there is no notification in every activity tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheContentOnActivityAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -700,7 +700,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the content of shift swap activity when there is no TM request to cover/swap shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheContentOfShiftSwapActivityAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -714,7 +714,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the content of Shift Swap activity when TM request to cover the shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyApproveCoverRequestOfShiftSwapActivityAsTeamMember(String browser, String username, String password, String location) throws Exception {
@@ -777,7 +777,7 @@ public class ActivityTest extends TestBase {
 
         // Login as Store Manager
         fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
@@ -795,7 +795,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the content of Shift Swap activity when TM request to cover the shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyRejectCoverRequestOfShiftSwapActivityAsTeamMember(String browser, String username, String password, String location) throws Exception {
@@ -858,7 +858,7 @@ public class ActivityTest extends TestBase {
 
         // Login as Store Manager
         fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
