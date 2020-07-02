@@ -48,4 +48,6 @@ public interface DashboardPage {
     public void validateTheDataOfMyTimeOff() throws Exception;
     public void clickOnSubMenuOnProfile(String subMenu) throws Exception;
     public String getDateFromTimeZoneOfLocation(String pattern) throws Exception;
+    public void clickOnSwitchToEmployeeView() throws Exception;
+    public boolean isSwitchToEmployeeViewPresent() throws Exception;
 }

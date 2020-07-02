@@ -2687,4 +2687,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void verifyTheAvailabilityOfClaimOpenShiftPopup() throws Exception {
 
     }
+
+    @Override
+    public void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception {
+
+    }
 }

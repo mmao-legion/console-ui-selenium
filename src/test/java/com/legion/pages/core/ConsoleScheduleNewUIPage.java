@@ -8614,6 +8614,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             }
             if (Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd) && (Integer.parseInt(date) >= Integer.parseInt(weekDefaultBegin) || (weekDefaultBegin.length() == 2 && date.length() == 1))) {
+                if ((Integer.parseInt(weekDefaultBegin) <= Integer.parseInt(date) && Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd))
+                        || (Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd) && (weekDefaultBegin.length() == 2 && date.length() == 1))
+                        || (Integer.parseInt(date) >= Integer.parseInt(weekDefaultBegin) && (weekDefaultBegin.length() == 2 && date.length() == 2))) {
                 SimpleUtils.pass("My Schedule Page: By default focus is on current week successfully");
             } else {
                 SimpleUtils.fail("My Schedule Page: Current week isn't selected by default", true);
@@ -8996,4 +8999,45 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    public void closeButtonIsClickable() {
+        getDriver().close();
+        SimpleUtils.pass("close button is clickable");
+    }
+
+    public boolean isRequestUserNameOnPopup(String requestUserName) throws Exception {
+        boolean isRequestUserNameOnPopup = false;
+        if (areListElementVisible(shiftRequests, 5)) {
+            for (WebElement shiftRequest : shiftRequests) {
+                if (shiftRequest.getText().contains(requestUserName)){
+                    isRequestUserNameOnPopup = true;
+                    break;
+                }
+            }
+        }
+        return isRequestUserNameOnPopup;
+    }
+
+    @Override
+    public void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception {
+        int index = 0;
+        if (areListElementVisible(tmIcons, 5)) {
+            for (int i = 0; i < tmIcons.size(); i++) {
+                moveToElementAndClick(tmIcons.get(i));
+                if (isPopOverLayoutLoaded()) {
+                    System.out.println("pop is " + popOverLayout.getAttribute("innerHTML"));
+                    if (popOverLayout.getText().contains(requestName) && popOverLayout.getText().contains(requestUserName)) {
+                        index = 1;
+                        click(popOverLayout.findElement(By.cssSelector("span.sch-worker-action-label")));
+                        SimpleUtils.pass("Click " + requestName + " button Successfully!");
+                        break;
+                    }
+                }
+            }
+            if (index == 0) {
+                SimpleUtils.fail("Failed to select one shift to claim", true);
+            }
+        } else {
+            SimpleUtils.fail("Team Members' Icons not loaded", true);
+        }
+    }
 }
