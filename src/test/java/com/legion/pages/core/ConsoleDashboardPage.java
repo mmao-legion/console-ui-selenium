@@ -931,4 +931,27 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 		return dateFromTimeZone;
 	}
+
+	//Added by Julie
+	@FindBy(css = "[ng-click=\"switchView()\"]")
+	private WebElement switchToEmployeeView;
+
+	@Override
+	public boolean isSwitchToEmployeeViewPresent() throws Exception {
+		clickOnProfileIconOnDashboard();
+		if (isElementLoaded(switchToEmployeeView, 10))
+			return true;
+		else
+			return false;
+	}
+
+	@Override
+	public void clickOnSwitchToEmployeeView() throws Exception {
+		if (isElementLoaded(switchToEmployeeView, 10)) {
+			click(switchToEmployeeView);
+			SimpleUtils.pass("Click on Switch To Employee View Successfully!");
+		} else {
+			SimpleUtils.fail("Switch To Employee View not Loaded!", true);
+		}
+	}
 }

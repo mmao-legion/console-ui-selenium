@@ -399,6 +399,8 @@ public interface SchedulePage {
 
 	public List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception;
 
+	public void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception;
+	
 	public void navigateToNextWeek() throws Exception;
 
 	public void verifyShiftsAreSwapped(List<String> swapData) throws Exception;
