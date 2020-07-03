@@ -93,7 +93,7 @@
         <classes>
             <class name="com.legion.tests.core.ScheduleOverviewTest">
                 <methods>
-                    <include name="verifyScheduleFunctionalityOverview"/>
+                    <include name="verifyScheduleFunctionalityOverviewAsStoreManager"/>
                 </methods>
             </class>
         </classes>
