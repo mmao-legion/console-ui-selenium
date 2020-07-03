@@ -61,7 +61,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the content of Shift Swap activity when TM request to swap the shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheContentOfShiftSwapActivityAsTeamMember(String browser, String username, String password, String location) throws Exception {
@@ -149,7 +149,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the content of Shift Swap activity when TM automatic to request to swap the shif")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheContentOfShiftSwapActivityWithoutApprovalAsTeamMember(String browser, String username, String password, String location) throws Exception {
@@ -236,7 +236,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the functioning of Approve button on pending Approval for swap the shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheFunctionOfShiftSwapActivityAsTeamMember(String browser, String username, String password, String location) throws Exception {
@@ -333,7 +333,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the functioning of Reject button on pending Reject for swap the shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheContentOfRejectShiftSwapActivityAsTeamMember(String browser, String username, String password, String location) throws Exception {
@@ -421,7 +421,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the content of Activities page after click on the Activities button")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheContentOfActivityPageAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -435,7 +435,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate to close Activity Feed")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyToCloseActivityFeedAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -454,7 +454,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the navigation in each tab is normal on Activities page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyNavigationOfEachTabOnActivityAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -472,7 +472,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM updates work preferences")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheNotificationOfWorkPreferencesAsTeamMember(String browser, String username, String password, String location) throws Exception {
@@ -519,7 +519,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM updates business profile")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheNotificationOfBusinessProfileAsTeamMember(String browser, String username, String password, String location) throws Exception {
@@ -561,7 +561,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Estelle")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the activity of publish or update schedule")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyActivityOfPublishUpdateSchedule(String browser, String username, String password, String location) throws Exception {
@@ -1312,7 +1312,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the activity of claim open shift")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyActivityOfClaimOpenShift(String browser, String username, String password, String location) throws Exception {

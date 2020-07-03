@@ -5611,11 +5611,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         SimpleUtils.report("weekDefaultBegin is :"+weekDefaultBegin);
         String weekDefaultEnd = activeWeekText.substring(activeWeekText.length()-2);
         SimpleUtils.report("weekDefaultEnd is :"+weekDefaultEnd);
-        if(weekBeginBYCurrentDate.trim().equals(weekDefaultBegin.trim()) && weekEndBYCurrentDate.trim().equals(weekDefaultEnd.trim())){
-            SimpleUtils.pass("Current week is getting open by default");
-        }
-        else {
-            SimpleUtils.fail("Current week is not getting open by default",true);
+        if (SimpleUtils.isNumeric(weekBeginBYCurrentDate.trim()) && SimpleUtils.isNumeric(weekDefaultBegin.trim()) &&
+                SimpleUtils.isNumeric(weekEndBYCurrentDate.trim()) && SimpleUtils.isNumeric(weekDefaultEnd.trim())) {
+            if ((Integer.parseInt(weekBeginBYCurrentDate.trim()) == Integer.parseInt(weekDefaultBegin.trim())) &&
+                    (Integer.parseInt(weekEndBYCurrentDate.trim()) == Integer.parseInt(weekDefaultEnd.trim()))) {
+                SimpleUtils.pass("Current week is getting open by default");
+            } else {
+                SimpleUtils.fail("Current week is not getting open by default", true);
+            }
+        }else {
+            SimpleUtils.fail("The date is not the numeric format!", false);
         }
     }
 
@@ -8613,14 +8618,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     SimpleUtils.fail("My Schedule Page: Active week text doesn't have enough length", true);
                 }
             }
-            if (Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd) && (Integer.parseInt(date) >= Integer.parseInt(weekDefaultBegin) || (weekDefaultBegin.length() == 2 && date.length() == 1))) {
-                if ((Integer.parseInt(weekDefaultBegin) <= Integer.parseInt(date) && Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd))
-                        || (Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd) && (weekDefaultBegin.length() == 2 && date.length() == 1))
-                        || (Integer.parseInt(date) >= Integer.parseInt(weekDefaultBegin) && (weekDefaultBegin.length() == 2 && date.length() == 2))) {
-                    SimpleUtils.pass("My Schedule Page: By default focus is on current week successfully");
-                } else {
-                    SimpleUtils.fail("My Schedule Page: Current week isn't selected by default", true);
-                }
+            if ((Integer.parseInt(weekDefaultBegin) <= Integer.parseInt(date) && Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd))
+                    || (Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd) && (weekDefaultBegin.length() == 2 && date.length() == 1))
+                    || (Integer.parseInt(date) >= Integer.parseInt(weekDefaultBegin) && (weekDefaultBegin.length() == 2 && date.length() == 2))) {
+                SimpleUtils.pass("My Schedule Page: By default focus is on current week successfully");
+            } else {
+                SimpleUtils.fail("My Schedule Page: Current week isn't selected by default", true);
             }
         } else
             SimpleUtils.fail("My Schedule Page: It isn't in week view", true);

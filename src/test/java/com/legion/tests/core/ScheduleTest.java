@@ -651,7 +651,7 @@ public class ScheduleTest extends TestBase{
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team Member view Swap")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamMemberViewSwapAsTeamMember(String browser, String username, String password, String location)
@@ -689,7 +689,7 @@ public class ScheduleTest extends TestBase{
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team Member view Cover")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamMemberViewCoverAsTeamMember(String browser, String username, String password, String location)
@@ -739,7 +739,7 @@ public class ScheduleTest extends TestBase{
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate the functionality of Team schedule option")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamScheduleOptionAsInternalAdmin(String browser, String username, String password, String location)
@@ -811,7 +811,7 @@ public class ScheduleTest extends TestBase{
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate the functionality of Swap and Cover request options")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheFunctionalityOfSwapAndCoverAsTeamMember(String browser, String username, String password, String location)
@@ -960,7 +960,7 @@ public class ScheduleTest extends TestBase{
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate the feature of filter")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheFeatureOfFilterAsTeamMember(String browser, String username, String password, String location)
@@ -987,7 +987,7 @@ public class ScheduleTest extends TestBase{
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the availibility and functionality of claiming open shift popup")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheFunctionalityOfClaimOpenShiftAsTeamMember(String browser, String username, String password, String location)
