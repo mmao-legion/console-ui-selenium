@@ -781,7 +781,7 @@ public class ActivityTest extends TestBase {
 
         loginPage.logOut();
 
-        // Login as Store Manager
+        // Login as Store Manager to see
         fileName = "UsersCredentials.json";
         fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
