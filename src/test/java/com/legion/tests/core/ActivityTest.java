@@ -577,11 +577,15 @@ public class ActivityTest extends TestBase {
         //make publish schedule activity
         boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
         if(!isActiveWeekGenerated){
-            schedulePage.generateOrUpdateAndGenerateSchedule();
+            // generateOrUpdateAndGenerateSchedule() is used for the old UI
+            //schedulePage.generateOrUpdateAndGenerateSchedule();
+            schedulePage.createScheduleForNonDGFlowNewUI();
             schedulePage.publishActiveSchedule();
         }else {
             schedulePage.unGenerateActiveScheduleScheduleWeek();
-            schedulePage.generateOrUpdateAndGenerateSchedule();
+            // generateOrUpdateAndGenerateSchedule() is used for the old UI
+            //schedulePage.generateOrUpdateAndGenerateSchedule();
+            schedulePage.createScheduleForNonDGFlowNewUI();
             schedulePage.publishActiveSchedule();
         }
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -594,7 +598,7 @@ public class ActivityTest extends TestBase {
         String fileName = "UserCredentialsForComparableSwapShifts.json";
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
@@ -619,11 +623,13 @@ public class ActivityTest extends TestBase {
         //make update schedule activity to add one open shift
         schedulePage.clickOnDayView();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.clickNewDayViewShiftButtonLoaded();
+        // This method is used for the old UI
+        //schedulePage.clickNewDayViewShiftButtonLoaded();
+        schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
         schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
         schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-        schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+        schedulePage.selectWorkRole("MOD");
         schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
         schedulePage.clickOnCreateOrNextBtn();
         schedulePage.saveSchedule();

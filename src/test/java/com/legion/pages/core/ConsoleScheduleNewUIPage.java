@@ -3284,6 +3284,62 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    // Added by Nora: For non dg flow create schedule
+    @FindBy (className = "generate-modal-subheader-title")
+    private WebElement generateModalTitle;
+    @FindBy (css = "[ng-click=\"next()\"]")
+    private WebElement nextButtonOnCreateSchedule;
+    @FindBy (className = "generate-modal-week-container")
+    private List<WebElement> availableCopyWeeks;
+
+    @Override
+    public void createScheduleForNonDGFlowNewUI() throws Exception {
+        String subTitle1 = "Confirm Operating Hours";
+        String subTitle2 = "Enter Budget";
+        String finish = "FINISH";
+        if (isElementEnabled(generateSheduleButton,5)) {
+            click(generateSheduleButton);
+            if (isElementLoaded(generateModalTitle, 5) && subTitle1.equalsIgnoreCase(generateModalTitle.getText().trim())
+            && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
+                click(nextButtonOnCreateSchedule);
+                if (isElementLoaded(generateModalTitle, 5) && subTitle2.equalsIgnoreCase(generateModalTitle.getText().trim())
+                        && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
+                    click(nextButtonOnCreateSchedule);
+                }
+                if (areListElementVisible(availableCopyWeeks, 5)) {
+                    SimpleUtils.pass("Copy Schedule page loaded Successfully!");
+                    for (WebElement copyWeek : availableCopyWeeks) {
+                        WebElement scheduledHours = copyWeek.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
+                        if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
+                            if (!copyWeek.getAttribute("class").contains("selected")) {
+                                click(copyWeek);
+                                SimpleUtils.pass("Selected the week with scheduled hour: " + scheduledHours.getText() + " Successfully!");
+                            }else {
+                                SimpleUtils.pass("Selected 'SUGGESTED SCHEDULE' with scheduled hour: " + scheduledHours.getText() + " Successfully!");
+                            }
+                            break;
+                        }
+                    }
+                    if (isElementLoaded(nextButtonOnCreateSchedule) && nextButtonOnCreateSchedule.getText().equals(finish)) {
+                        click(nextButtonOnCreateSchedule);
+                        waitForSeconds(5);
+                        if (areListElementVisible(shiftsWeekView, 10) && shiftsWeekView.size() > 0) {
+                            SimpleUtils.pass("Create the schedule successfully!");
+                        }else {
+                            SimpleUtils.fail("Not able to generate the schedule successfully for non dg flow!", false);
+                        }
+                    }else {
+                        SimpleUtils.fail("'FINISH' button not loaded Successfully!", false);
+                    }
+                }
+            }else {
+                SimpleUtils.fail("'Confirm Operating Hours' pop up windows not loaded Successfully!", false);
+            }
+        }else {
+            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+        }
+    }
+
 
     public void checkOutGenerateScheduleBtn(WebElement checkOutTheScheduleButton) {
         Wait<WebDriver> wait = new FluentWait<WebDriver>(
@@ -4933,12 +4989,28 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void clickOnCreateNewShiftWeekView() throws Exception {
+    public void clickOnCreateNewShiftButton() throws Exception {
         if (isElementLoaded(createNewShiftWeekView, 5)) {
             click(createNewShiftWeekView);
             SimpleUtils.pass("Click on Create New Shift button successfully!");
         }else {
             SimpleUtils.fail("Create New Shift button failed to load on Week View!", false);
+        }
+    }
+
+    @Override
+    public void clickOnDayViewAddNewShiftButton() throws Exception {
+        if (isElementLoaded(createNewShiftWeekView, 10)) {
+            click(createNewShiftWeekView);
+            SimpleUtils.pass("Click on Create New Shift button successfully!");
+        }else {
+            SimpleUtils.report("Create New Shift button not loaded, currently is the old UI!");
+        }
+        if (isElementLoaded(addNewShiftOnDayViewButton, 10)) {
+            click(addNewShiftOnDayViewButton);
+            SimpleUtils.pass("Click on Add New Shift '+' button successfully!");
+        }else {
+            SimpleUtils.report("Add New Shift '+' button not loaded, currently is the new UI!");
         }
     }
 
@@ -7433,7 +7505,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public boolean checkCancelButton() throws Exception {
-        if(isElementEnabled(btnCancelOnSchedulePage,5))
+        if(isElementEnabled(btnCancelOnSchedulePage,10))
         {
             SimpleUtils.pass("Cancel button is enabled ");
             return true;
@@ -7460,7 +7532,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public boolean checkSaveButton() throws Exception {
-        if(isElementEnabled(btnSaveOnSchedulePage,5))
+        if(isElementEnabled(btnSaveOnSchedulePage,10))
         {
             SimpleUtils.pass("Save button is enabled ");
             return true;

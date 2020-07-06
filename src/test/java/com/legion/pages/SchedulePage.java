@@ -112,6 +112,7 @@ public interface SchedulePage {
 	public void validatingGenrateSchedule() throws Exception;
 	public boolean loadSchedule() throws Exception;
 	public void generateOrUpdateAndGenerateSchedule() throws Exception;
+	public void createScheduleForNonDGFlowNewUI() throws Exception;
 	public HashMap<String, Integer> getScheduleBufferHours() throws Exception;
 	public boolean isComlianceReviewRequiredForActiveWeek() throws Exception;
 	public void unGenerateActiveScheduleScheduleWeek() throws Exception;
@@ -214,7 +215,7 @@ public interface SchedulePage {
 
 //	public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow) throws Exception;
 	public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception;
-	public void clickOnCreateNewShiftWeekView() throws Exception;
+	public void clickOnCreateNewShiftButton() throws Exception;
 	public void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception;
 	public void selectDaysFromCurrentDay(String currentDay) throws Exception;
 	public void searchTeamMemberByName(String name) throws Exception;
@@ -404,4 +405,6 @@ public interface SchedulePage {
 	public void navigateToNextWeek() throws Exception;
 
 	public void verifyShiftsAreSwapped(List<String> swapData) throws Exception;
+
+	public void clickOnDayViewAddNewShiftButton() throws Exception;
 }

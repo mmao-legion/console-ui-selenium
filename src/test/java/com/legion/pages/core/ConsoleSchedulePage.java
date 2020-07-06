@@ -1732,6 +1732,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     }
 
+    @Override
+    public void createScheduleForNonDGFlowNewUI() throws Exception {
+
+    }
+
     public void clickWorkerImage(){
 
     }
@@ -1928,7 +1933,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void clickOnCreateNewShiftWeekView() throws Exception {
+    public void clickOnCreateNewShiftButton() throws Exception {
 
     }
 
@@ -2574,6 +2579,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyShiftsAreSwapped(List<String> swapData) throws Exception {
+
+    }
+
+    @Override
+    public void clickOnDayViewAddNewShiftButton() throws Exception {
 
     }
 
