@@ -128,7 +128,7 @@ public class ActivityTest extends TestBase {
 
         // Login as Store Manager
         fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
@@ -216,7 +216,7 @@ public class ActivityTest extends TestBase {
 
         // Login as Store Manager
         fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
@@ -303,7 +303,7 @@ public class ActivityTest extends TestBase {
 
         // Login as Store Manager
         fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
@@ -400,7 +400,7 @@ public class ActivityTest extends TestBase {
 
         // Login as Store Manager
         fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
@@ -501,7 +501,7 @@ public class ActivityTest extends TestBase {
 
         // Login as Store Manager to check the activity
         String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
@@ -542,7 +542,7 @@ public class ActivityTest extends TestBase {
 
         // Login as Store Manager to check the activity
         String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
@@ -1392,7 +1392,7 @@ public class ActivityTest extends TestBase {
 
         String fileName = "UsersCredentials.json";
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise") + fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
         userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])

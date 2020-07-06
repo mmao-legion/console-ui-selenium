@@ -4819,7 +4819,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	public LinkedHashMap<String, List<String>> getRegularWorkingHours() throws Exception {
 		LinkedHashMap<String, List<String>> regularHours = new LinkedHashMap<>();
 		List<String> startNEndTime = null;
-		if (areListElementVisible(weekDays, 10)) {
+		if (areListElementVisible(weekDays, 30)) {
 			for (WebElement weekDay : weekDays) {
 				WebElement day = weekDay.findElement(By.className("ellipsis"));
 				List<WebElement> workTimes = weekDay.findElements(By.className("work-time"));

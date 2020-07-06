@@ -383,6 +383,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public void clickOnSaveTimeOffRequestBtn() throws Exception
 	{
+		waitForSeconds(3);
 		if(timeOffApplyBtn.isEnabled()) {
 			click(timeOffApplyBtn);
 		}
@@ -1633,7 +1634,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	// Added by Nora: Time Off
 	@FindBy (className = "modal-content")
 	private WebElement newTimeOffWindow;
-	@FindBy (className = "lgnCheckBox")
+	@FindBy (css = "[checked=\"options.fullDay\"] .lgnCheckBox")
 	private List<WebElement> allDayCheckboxes;
 	@FindBy (css = "button.btn-sm")
 	private List<WebElement> smButtons;
@@ -1645,7 +1646,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> profileSubPageLabels;
 	@FindBy (css = "div.in-range")
 	private List<WebElement> selectedDates;
-	@FindBy (css = "b.text-blue")
+	@FindBy (css = "b.day-selected")
 	private List<WebElement> startNEndDates;
 	@FindBy (css = "[options=\"startOptions\"] [selected=\"selected\"]")
 	private List<WebElement> startTimes;
@@ -1658,20 +1659,16 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void verifyTimeIsCorrectAfterDeSelectAllDay() throws Exception {
-		String actualStartTime = null;
-		String actualEndTime = null;
+		String expectedStartTime = "10:00 AM";
+		String expectedEndTime = "3:00 PM";
 		List<String> selectedStartNEndTimes = getSelectedStartNEndTime();
 		if (selectedStartNEndTimes.size() == 0) {
 			SimpleUtils.fail("Failed to get the selected start and End time!", false);
 		}
-		String expectedStartTime = selectedStartNEndTimes.get(0);
-		String expectedEndTime = selectedStartNEndTimes.get(1);
-		if (areListElementVisible(startNEndTimes, 5) && startNEndTimes.size() == 2) {
-			actualStartTime = startNEndTimes.get(0).getText();
-			actualEndTime = startNEndTimes.get(1).getText();
-		}
-		if (expectedStartTime != null && expectedEndTime != null && actualStartTime != null && actualEndTime != null &&
-				expectedStartTime.equals(actualStartTime) && expectedEndTime.equals(actualEndTime)) {
+		String actualStartTime = selectedStartNEndTimes.get(0);
+		String actualEndTime = selectedStartNEndTimes.get(1);
+
+		if (expectedStartTime.equals(actualStartTime) && expectedEndTime.equals(actualEndTime)) {
 			SimpleUtils.pass("Start and End time are correct!");
 		}else {
 			SimpleUtils.fail("Start and End time are incorrect!", true);
@@ -1889,6 +1886,11 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	//added by Haya
 	@FindBy(xpath = "//div[@class=\"timeoff-requests ng-scope\"]//timeoff-list-item")
 	private List<WebElement> timeOffRequestItems;
+	@FindBy(className = "request-status-Approved")
+	private List<WebElement> approvedTimeOffRequests;
+	@FindBy(className = "request-status-Pending")
+	private List<WebElement> pendingTimeOffRequests;
+
 	@Override
 	public void newApproveOrRejectTimeOffRequestFromToDoList(String timeOffReasonLabel, String timeOffStartDuration,
 														  String timeOffEndDuration, String action) throws Exception{
@@ -1934,14 +1936,24 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void cancelAllTimeOff() throws Exception {
-		if(areListElementVisible(timeOffRequestItems,10) && timeOffRequestItems.size() > 0) {
-			for(WebElement timeOffRequest : timeOffRequestItems) {
+		if(areListElementVisible(approvedTimeOffRequests,10) && approvedTimeOffRequests.size() > 0) {
+			for(WebElement timeOffRequest : approvedTimeOffRequests) {
 						click(timeOffRequest);
 						if(isElementLoaded(timeOffRequestCancelBtn,5)) {
 							scrollToElement(timeOffRequestCancelBtn);
 							click(timeOffRequestCancelBtn);
 							SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
 						}
+			}
+		}
+		if(areListElementVisible(pendingTimeOffRequests,10) && pendingTimeOffRequests.size() > 0) {
+			for(WebElement timeOffRequest : pendingTimeOffRequests) {
+				click(timeOffRequest);
+				if(isElementLoaded(timeOffRequestCancelBtn,5)) {
+					scrollToElement(timeOffRequestCancelBtn);
+					click(timeOffRequestCancelBtn);
+					SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
+				}
 			}
 		}
 	}
