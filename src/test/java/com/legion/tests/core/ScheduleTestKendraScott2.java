@@ -294,6 +294,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		dashboardPage.goToTodayForNewUI();
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+		if(!isActiveWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
 		schedulePage.legionButtonIsClickableAndHasNoEditButton();
 		schedulePage.legionIsDisplayingTheSchedul();
 	}
@@ -311,6 +315,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.goToScheduleNewUI();
 		//Current week is getting open by default
 		schedulePage.currentWeekIsGettingOpenByDefault();
+		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+		if(!isActiveWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
 		//Weather week smartcard is displayed correctly-Current week[Sun-Sat] Next week will show which days are past day for current week: Eg: Sun for current week
 		schedulePage.weatherWeekSmartCardIsDisplayedForAWeek();
 		//If selecting one week then data is getting updating on Schedule page according to corresponding week
@@ -371,6 +379,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			HashMap<String, Float> overviewData = new HashMap<>();
 			SchedulePage schedulePage  = pageFactory.createConsoleScheduleNewUIPage();
 			schedulePage.goToScheduleNewUI();
+			boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+			if(!isActiveWeekGenerated){
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
 			scheduleSmartCardHoursWages = schedulePage.getScheduleBudgetedHoursInScheduleSmartCard();
 			SimpleUtils.report("scheduleSmartCardHoursWages :"+scheduleSmartCardHoursWages);
 			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
@@ -404,7 +416,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
 		if(!isActiveWeekGenerated){
-			schedulePage.generateOrUpdateAndGenerateSchedule();
+			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
 		//Edit button should be clickable
 		//While click on edit button,if Schedule is finalized then prompt is available and Prompt is in proper alignment and correct msg info.
@@ -416,7 +428,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.selectNextWeekSchedule();
 		boolean isActiveWeekGenerated2 = schedulePage.isWeekGenerated();
 		if(!isActiveWeekGenerated2){
-			schedulePage.generateOrUpdateAndGenerateSchedule();
+			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
 			//"After Click on view profile,then particular TM profile is displayed :1. Personal details 2. Work Preferences 3. Availability
 			SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , schedulePage.verifyContextOfTMDisplay(), true);

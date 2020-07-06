@@ -81,7 +81,7 @@
                 <methods>
                     <include name="verifyTheTeamFunctionalityInActivate" />
                     <include name="verifyTheTeamFunctionalityInTerminate" />
-                    <include name="verifyTheTeamFunctionalityInCoverageAsInternalAdmin" />
+                    <include name="verifyTheTeamFunctionalityInCoverageAsStoreManager" />
                     <include name="verifyTheTeamFunctionalityInTimeOffAsStoreManager" />
                 </methods>
             </class>

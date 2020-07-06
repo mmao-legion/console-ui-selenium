@@ -676,6 +676,25 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private List<WebElement> weekDurations;
 	@FindBy (className = "day-week-picker-arrow-right")
 	private WebElement nextWeekPickerArrow;
+	@FindBy (className = "timeoff-requests-request")
+	private List<WebElement> timeOffRequests;
+	@FindBy (className = "request-buttons")
+	private WebElement requestButton;
+
+	@Override
+	public void rejectAllTheTimeOffRequests() throws Exception {
+		if (areListElementVisible(timeOffRequests, 10) && timeOffRequests.size() > 0) {
+			for (WebElement timeOffRequest : timeOffRequests) {
+				click(timeOffRequest);
+				if (isElementEnabled(requestButton, 10)) {
+					SimpleUtils.pass("Request Button: " + requestButton.getText() + " loaded Successfully!");
+					click(requestButton);
+				}
+			}
+		}else {
+			SimpleUtils.report("There is no Time Off requests loaded!");
+		}
+	}
 
 	@Override
 	public int getTimeOffCountByStartAndEndDate(List<String> timeOffStartNEndDate) throws Exception {
