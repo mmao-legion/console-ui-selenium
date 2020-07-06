@@ -5063,6 +5063,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void legionButtonIsClickableAndHasNoEditButton() throws Exception {
+        if (isElementLoaded(generateSheduleButton,10)){
+            createScheduleForNonDGFlowNewUI();
+            //SimpleUtils.pass("generate schedule successfully!");
+        }
         clickOnSuggestedButton();
         if(!isElementLoaded(edit,5)){
             SimpleUtils.pass("Legion schedule has no edit button");
