@@ -382,7 +382,7 @@ public interface SchedulePage {
 
 	public void validateProfilePictureInAShiftClickable() throws Exception;
 
-	public void validateTheDateOfProfilePopupInAShift() throws Exception;
+	public void validateTheDataOfProfilePopupInAShift() throws Exception;
 
 	public void validateTheAvailabilityOfInfoIcon() throws Exception;
 

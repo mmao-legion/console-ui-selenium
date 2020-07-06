@@ -2663,7 +2663,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void validateTheDateOfProfilePopupInAShift() throws Exception {
+    public void validateTheDataOfProfilePopupInAShift() throws Exception {
 
     }
 

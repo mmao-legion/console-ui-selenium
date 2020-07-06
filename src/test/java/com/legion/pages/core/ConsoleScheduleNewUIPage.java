@@ -8604,7 +8604,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(consoleSchedulePageTabElement, 5)) {
             click(consoleSchedulePageTabElement);
             click(ScheduleSubMenu);
-            if (isElementLoaded(todoButton, 5)) {
+            if (isElementLoaded(printButton, 10)) {
                 SimpleUtils.pass("Schedule New UI load successfully");
             } else {
                 SimpleUtils.fail("Schedule New UI load failed", true);
@@ -8734,7 +8734,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.Two.getValue());
         } else
             SimpleUtils.fail("My Schedule Page: Forward and backward button failed to load to view previous or upcoming week", true);
-        //todo: verifySelectOtherWeeks();
+        verifySelectOtherWeeks();
         validateTheScheduleShiftsAccordingToTheSelectedWeek();
     }
 
@@ -8929,7 +8929,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void validateTheDateOfProfilePopupInAShift() throws Exception {
+    public void validateTheDataOfProfilePopupInAShift() throws Exception {
         Boolean isShiftDetailsShowed = false;
         if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20)) {
             if (scheduleTableWeekViewWorkerDetail.size() != 0) {

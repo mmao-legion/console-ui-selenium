@@ -519,11 +519,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "[ng-if=\"scheduleForToday($index) && !scheduleForToday($index).length\"]")
 	private WebElement publishedShiftForToday;
 
-	@FindBy(xpath = "//span[text()='My Availability']")
-	private WebElement myAvailabilityInMyWorkPreferences;
-
-	@FindBy(xpath = "//span[text()='My Availability Change Requests']")
-	private WebElement myAvailabilityChangeRequestsInMyWorkPreferences;
+	@FindBy(css = ".user-profile-section__title.ng-binding")
+	private List<WebElement> userProfileSection;
 
 	@FindBy(css = "div.console-navigation-item-label.Schedule")
 	private WebElement scheduleConsoleNameInTM;
@@ -621,7 +618,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				for (int i = 0; i < allLocations.size(); i++) {
 					if (allLocations.get(i).isEnabled()) {
 						try {
-							if (currentLocation.getText().equals(allLocations.get(i).getText())) {
+							if (allLocations.get(i).getText().contains(currentLocation.getText())) {
 								SimpleUtils.pass("Dashboard Page: " + currentLocation.getText() + " is accessible successfully");
 								continue;
 							} else {
@@ -714,7 +711,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateDateAndTime() throws Exception {
-		if (isElementLoaded(currentDate, 5) && isElementLoaded(currentTime, 5)) {
+		if (isElementLoaded(currentDate, 10) && isElementLoaded(currentTime, 10)) {
 			SimpleUtils.pass("Current date and time are loaded successfully");
 			String dateFromDashboard = getCurrentDateFromDashboard() + " " + currentTime.getText().toUpperCase();
 			String dateFromLocation = getDateFromTimeZoneOfLocation("EEEE, MMMM d h:mm a");
@@ -750,7 +747,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateVIEWMYSCHEDULEButtonClickable() throws Exception {
-		if (isElementLoaded(goToTodayScheduleButton, 5)) {
+		if (isElementLoaded(goToTodayScheduleButton, 10)) {
 			click(goToTodayScheduleButton);
 			waitForSeconds(2);
 			for (WebElement consoleMenu : consoleNavigationMenuItems) {
@@ -866,8 +863,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateTheDataOfMyWorkPreferences(String date) throws Exception {
 		SimpleUtils.report(date);
 		clickOnSubMenuOnProfile("My Work Preferences");
-		if (isElementLoaded(myAvailabilityInMyWorkPreferences, 10) && isElementLoaded(myShiftPreferences, 10)&&isElementLoaded(myAvailabilityChangeRequestsInMyWorkPreferences,10) ) {
-			SimpleUtils.pass("My Work Preferences: It shows the Availability and Shift Preferences successfully");
+		if (areListElementVisible(userProfileSection, 10) && userProfileSection.size() == 3) {
+			SimpleUtils.pass("My Work Preferences: It shows the Availability,  Availability Change Requests and Shift Preferences successfully");
 			if(date.contains(",") && date.contains(" ")) {
 				date = date.split(",")[1].trim().split(" ")[1];
 				SimpleUtils.report("Current date is " + date);
@@ -885,9 +882,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 					SimpleUtils.fail("Active week text doesn't have enough length", true);
 				}
 			}
-			if (Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd) && Integer.parseInt(date) >= Integer.parseInt(weekDefaultBegin)) {
-				SimpleUtils.pass("My Work Preferences: Current week availability shows by default successfully");
-			} else if (Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd) && weekDefaultBegin.length() == 2 && date.length() == 1 ) {
+			if ((Integer.parseInt(weekDefaultBegin) <= Integer.parseInt(date) && Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd))
+					|| (Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd) && (weekDefaultBegin.length() == 2 && date.length() == 1))
+					|| (Integer.parseInt(date) >= Integer.parseInt(weekDefaultBegin) && (weekDefaultBegin.length() == 2 && date.length() == 2))) {
 				SimpleUtils.pass("My Work Preferences: Current week availability shows by default successfully");
 			} else
 				SimpleUtils.fail("My Work Preferences: Current week availability shows incorrectly", true);

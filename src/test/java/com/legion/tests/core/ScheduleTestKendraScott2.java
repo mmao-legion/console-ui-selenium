@@ -782,7 +782,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.validateProfilePictureInAShiftClickable();
 
 		//T1838615 Validate the data of profile popup in a shift.
-		//schedulePage.validateTheDateOfProfilePopupInAShift();
+		//schedulePage.validateTheDataOfProfilePopupInAShift();
 		// todo: <Here is an incident LEG-10929>
 	}
 

@@ -128,10 +128,6 @@ public class DashboardTestKendraScott2 extends TestBase{
 		dashboardPage.validateTheVisibilityOfUsername(nickName);
 
 		//T1838583 Validate the information after selecting different location.
-		dashboardPage.validateDateAndTimeAfterSelectingDifferentLocation();
-		SchedulePage schedulePageTM = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePageTM.clickOnScheduleConsoleMenuItem();
-		List<String> scheduleListTM = schedulePageTM.getWeekScheduleShiftTimeListOfMySchedule();
 		LoginPage loginPage = pageFactory.createConsoleLoginPage();
 		loginPage.logOut();
 
@@ -143,7 +139,28 @@ public class DashboardTestKendraScott2 extends TestBase{
 				, String.valueOf(internalAdminCredentials[0][2]));
 		SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePageAdmin.goToConsoleScheduleAndScheduleSubMenu();
+		if (schedulePageAdmin.isGenerateButtonLoaded())
+			schedulePageAdmin.createScheduleForNonDGFlowNewUI();
+		schedulePageAdmin.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePageAdmin.clickOnCreateNewShiftButton();
+		HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
+		schedulePageAdmin.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePageAdmin.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		schedulePageAdmin.selectWorkRole("MOD");
+		schedulePageAdmin.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+		schedulePageAdmin.clickOnCreateOrNextBtn();
+		schedulePageAdmin.searchTeamMemberByName(nickName);
+		schedulePageAdmin.clickOnOfferOrAssignBtn();
+		schedulePageAdmin.saveSchedule();
+		schedulePageAdmin.publishActiveSchedule();
 		List<String> scheduleListAdmin = schedulePageAdmin.getWeekScheduleShiftTimeListOfWeekView(nickName);
+		loginPage.logOut();
+
+		loginToLegionAndVerifyIsLoginDone(username, password, location);
+		dashboardPage.validateDateAndTimeAfterSelectingDifferentLocation();
+		SchedulePage schedulePageTM = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePageTM.clickOnScheduleConsoleMenuItem();
+		List<String> scheduleListTM = schedulePageTM.getWeekScheduleShiftTimeListOfMySchedule();
 		if (scheduleListTM != null && scheduleListTM.size() > 0 && scheduleListAdmin != null && scheduleListAdmin.size() > 0) {
 			if (scheduleListTM.size() == scheduleListAdmin.size() && scheduleListTM.containsAll(scheduleListAdmin)) {
 				SimpleUtils.pass("Schedules in TM view is consistent with the Admin view of the location successfully");
@@ -152,8 +169,6 @@ public class DashboardTestKendraScott2 extends TestBase{
 		} else {
 			SimpleUtils.report("Schedule may have not been generated");
 		}
-		loginPage.logOut();
-		loginToLegionAndVerifyIsLoginDone(username, password, location);
 
 		//T1838585 Validate date and time.
 		dashboardPage.validateDateAndTime();
