@@ -311,6 +311,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.goToScheduleNewUI();
 		//Current week is getting open by default
 		schedulePage.currentWeekIsGettingOpenByDefault();
+		if (schedulePage.isGenerateButtonLoaded()){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
 		//Weather week smartcard is displayed correctly-Current week[Sun-Sat] Next week will show which days are past day for current week: Eg: Sun for current week
 		schedulePage.weatherWeekSmartCardIsDisplayedForAWeek();
 		//If selecting one week then data is getting updating on Schedule page according to corresponding week
@@ -371,6 +374,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			HashMap<String, Float> overviewData = new HashMap<>();
 			SchedulePage schedulePage  = pageFactory.createConsoleScheduleNewUIPage();
 			schedulePage.goToScheduleNewUI();
+			if (schedulePage.isGenerateButtonLoaded()){
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
 			scheduleSmartCardHoursWages = schedulePage.getScheduleBudgetedHoursInScheduleSmartCard();
 			SimpleUtils.report("scheduleSmartCardHoursWages :"+scheduleSmartCardHoursWages);
 			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
