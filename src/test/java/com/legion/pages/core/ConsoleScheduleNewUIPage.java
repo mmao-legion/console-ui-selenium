@@ -1606,8 +1606,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 				SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
 				for(int i= shiftStartingCount; i<= sliderDroppableCount.size();i++){
 					if(i == (shiftStartingCount + Integer.parseInt(shiftTime))){
-						WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child("+(i+Integer.parseInt(shiftTime))+")"));
-						mouseHoverDragandDrop(sliderNotchEnd,element);
+                        WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child("+i+")"));
+                        mouseHoverDragandDrop(sliderNotchEnd,element);
 						WebElement ele = getDriver().findElement(By.xpath("//div[contains(@class,'lgn-time-slider-notch-selector-end')]/following-sibling::div[1]"));
 						String txt = ele.getAttribute("innerHTML");
                         if(customizeShiftEnddayLabel.getAttribute("class").contains("PM")){
@@ -1628,7 +1628,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 				SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for Starting point");
 				for(int i= shiftStartingCount; i<= sliderDroppableCount.size();i++){
 					if(i == (shiftStartingCount + Integer.parseInt(shiftTime))){
-						WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child("+(i+Integer.parseInt(shiftTime))+")"));
+						WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child("+i+")"));
 						mouseHoverDragandDrop(sliderNotchStart,element);
 						if(customizeShiftStartdayLabel.getAttribute("class").contains("AM")){
                             MyThreadLocal.setScheduleHoursStartTime(customizeShiftStartdayLabel.getText() + ":00AM");
