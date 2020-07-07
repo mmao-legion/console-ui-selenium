@@ -426,17 +426,22 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		String requestStatusText = "";
 		int timeOffRequestCount = timeOffRequestRows.size();
 		if(timeOffRequestCount > 0) {
-			for(WebElement timeOffRequest : timeOffRequestRows) {
+			for(int i = 2; i < timeOffRequestRows.size(); i++) {
+				WebElement timeOffRequest = timeOffRequestRows.get(i);
 				WebElement requestType = timeOffRequest.findElement(By.cssSelector("span.request-type"));
-				if(timeOffReasonLabel.toLowerCase().contains(requestType.getText().toLowerCase())) {
+				WebElement requestStatus = timeOffRequest.findElement(By.cssSelector("span.request-status"));
+				String requestTypeText = requestType.getText();
+				if(timeOffReasonLabel.toLowerCase().contains(requestTypeText.toLowerCase())) {
 					WebElement requestDate = timeOffRequest.findElement(By.cssSelector("div.request-date"));
-					String[] requestDateText = requestDate.getText().replace("\n", "").split("-");
-					if(requestDateText.length > 1) {
-						if(requestDateText[0].toLowerCase().contains(timeOffStartDate.toLowerCase())
-								&& requestDateText[1].toLowerCase().contains(timeOffEndDate.toLowerCase())) {
-							WebElement requestStatus = timeOffRequest.findElement(By.cssSelector("span.request-status"));
-							requestStatusText = requestStatus.getText();
-						}
+					String requestDateText = requestDate.getText().replaceAll("\n"," ");
+				if (requestDateText.contains("-")) {
+					if(requestDateText.split("-")[0].toLowerCase().contains(timeOffStartDate.toLowerCase())
+							&& requestDateText.split("-")[1].toLowerCase().contains(timeOffEndDate.toLowerCase())) {
+						requestStatusText = requestStatus.getText();
+					}
+				} else if ((requestDateText.split(" ")[2] + " " + requestDateText.split(" ")[1]).equalsIgnoreCase(timeOffStartDate)
+						&& timeOffStartDate.equals(timeOffEndDate)) {
+					requestStatusText = requestStatus.getText();
 					}
 				}
 			}
@@ -1030,9 +1035,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public HashMap<String, String> getMyShiftPreferenceData() throws Exception
 	{
 		HashMap<String, String> shiftPreferenceData = new HashMap<String, String>();
-		if(isElementLoaded(collapsibleWorkPreferenceSection)) {
-			List<WebElement> myShiftPreferenceDataLabels = collapsibleWorkPreferenceSection.findElements(By.cssSelector("div.quick-schedule-preference.label"));
-			List<WebElement> myShiftPreferenceDataValues = collapsibleWorkPreferenceSection.findElements(By.cssSelector("div.quick-schedule-preference.value"));
+		if(isElementLoaded(myAvailabilitySection, 10)) {
+			List<WebElement> myShiftPreferenceDataLabels = myAvailabilitySection.findElements(By.cssSelector("div.quick-schedule-preference.label"));
+			List<WebElement> myShiftPreferenceDataValues = myAvailabilitySection.findElements(By.cssSelector("div.quick-schedule-preference.value"));
 			if(myShiftPreferenceDataLabels.size() > 0 && myShiftPreferenceDataLabels.size() == myShiftPreferenceDataValues.size()) {
 				for(int index = 0; index < myShiftPreferenceDataLabels.size(); index++) {
 					if(myShiftPreferenceDataLabels.get(index).isDisplayed()) {
@@ -1341,10 +1346,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public HashMap<String, Object> getMyAvailabilityData() throws Exception {
 		
 		HashMap<String, Object> myAvailabilityData = new HashMap<String, Object>();
-		boolean isMyAvailabilityWindowOpen = isMyAvailabilityCollapsibleWindowOpen();
-	      if(! isMyAvailabilityWindowOpen)
-	    	  clickOnMyAvailabilityCollapsibleWindowHeader();
-	      
+
 	      float scheduleHoursValue = 0;
 	      float remainingHoursValue = 0;
 	      float totalHoursValue = 0;
@@ -2070,6 +2072,12 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy(css = ".lgn-action-button-success")
 	private WebElement OKButton;
 
+	@FindBy(css = "lg-button[label=\"Edit\"]")
+	private WebElement editBtnOfMyShiftPreferences;
+
+	@FindBy(css = "lg-button[label=\"Save\"]")
+	private WebElement saveBtnOfMyShiftPreference;
+
 	private ArrayList<String> minMaxArray = new ArrayList<>();
 
 	public void checkUserProfileHomeAddress(String streetAddress1, String streetAddress2, String city, String state, String zip) throws Exception {
@@ -2151,7 +2159,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void validateTheUpdateOfShiftPreferences(boolean canReceiveOfferFromOtherLocation, boolean isVolunteersForAdditional) throws Exception {
 		updateMyShiftPreferenceData(canReceiveOfferFromOtherLocation, isVolunteersForAdditional);
 		minMaxArray = updateMyShiftPreferencesAvailabilitySliders();
-		saveMyShiftPreferencesData();
+		saveMyShiftPreferences();
 		checkMyShiftPreferenceData(canReceiveOfferFromOtherLocation, isVolunteersForAdditional, minMaxArray);
 	}
 
@@ -2195,7 +2203,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 
 	public void updateMyShiftPreferenceData(boolean canReceiveOfferFromOtherLocation, boolean isVolunteersForAdditional) throws Exception {
-		clickOnEditMyShiftPreferencePencilIcon();
+		clickOnEditMyShiftPreferenceButton();
 		if (isMyShiftPreferenceEditContainerLoaded()) {
 			SimpleUtils.pass("Profile Page: 'My Shift Preference' edit Container loaded successfully.");
 			updateReceivesShiftOffersForOtherLocationCheckButton(canReceiveOfferFromOtherLocation);
@@ -2385,7 +2393,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		int daysEndFromToday = 0;
 		int periodToRequestTimeOff = getPeriodToRequestTimeOff();
 		daysStartFromToday = new Random().ints(1,periodToRequestTimeOff,calendarDates.size() - cannotSelectDates).findFirst().getAsInt();
-		daysEndFromToday = daysStartFromToday + 1;
+		daysEndFromToday = daysStartFromToday;
 		selectDate(daysStartFromToday);
 		selectDate(daysEndFromToday);
 		HashMap<String, String> timeOffDate = getTimeOffDate(daysStartFromToday, daysEndFromToday);
@@ -2406,7 +2414,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		String expectedRequestStatus = "PENDING";
 		String requestStatus = getTimeOffRequestStatus(timeOffReasonLabel
 				, timeOffExplanationText, timeOffStartDate, timeOffEndDate);
-		if (requestStatus.toLowerCase().contains(expectedRequestStatus.toLowerCase()))
+		if (requestStatus.contains(expectedRequestStatus))
 			SimpleUtils.pass("Profile Page: New Time Off Request reflects in '" + requestStatus + "' successfully after saving");
 		else
 			SimpleUtils.fail("Profile Page: New Time Off Request status is not '" + expectedRequestStatus
@@ -2458,6 +2466,25 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 		return pendingRequestCanBeCancelled;
 	}
+
+	public void clickOnEditMyShiftPreferenceButton()  throws Exception {
+		if(isElementLoaded(editBtnOfMyShiftPreferences, 10))
+			click(editBtnOfMyShiftPreferences);
+		else
+			SimpleUtils.fail("Profile Page: 'Edit' button not loaded under 'My Shift Preference' Header.", true);
+	}
+
+	private void saveMyShiftPreferences() throws Exception {
+		if(isElementLoaded(saveBtnOfMyShiftPreference, 10)) {
+			click(saveBtnOfMyShiftPreference);
+			if(! isMyShiftPreferenceEditContainerLoaded())
+				SimpleUtils.pass("Profile Page: 'My Shift Preference' data saved successfully.");
+			else
+				SimpleUtils.pass("Profile Page: Unable to save 'My Shift Preference' data.");
+		} else
+			SimpleUtils.fail("Profile Page: 'My Shift Preference' edit container 'Save' button not loaded.", false);
+	}
+
 	//added by Haya
 	@FindBy(css = "span[ng-click=\"getNextWeekData()\"]")
 	private WebElement nextWeekBtn;
