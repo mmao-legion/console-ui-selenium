@@ -323,11 +323,11 @@ public interface SchedulePage {
 
 	public void deleteTMShiftInWeekView(String teamMemberName) throws Exception;
 
-	public void filterScheduleByJobTitle(boolean isWeekView);
+	public void filterScheduleByJobTitle(boolean isWeekView) throws Exception;
 
-	public void filterScheduleByWorkRoleAndJobTitle(boolean isWeekView);
+	public void filterScheduleByWorkRoleAndJobTitle(boolean isWeekView) throws Exception;
 
-	public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView);
+	public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView) throws Exception;
 
 	public boolean verifyConvertToOpenPopUpDisplay() throws Exception;
 

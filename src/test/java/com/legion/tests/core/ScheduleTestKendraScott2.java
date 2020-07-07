@@ -634,6 +634,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		/*
 		 *  Navigate to Schedule Week view
 		 */
+		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+		if(!isActiveWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
 		boolean isWeekView = true;
 		schedulePage.clickOnWeekView();
 		schedulePage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyJobTitle.getValue());

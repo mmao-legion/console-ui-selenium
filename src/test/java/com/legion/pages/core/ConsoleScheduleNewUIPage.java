@@ -1021,18 +1021,31 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "img[ng-if*='hasViolation']")
     private List<WebElement> infoIcon;
 
+    @FindBy(css = ".sch-shift-hover.visible")
+    private WebElement shiftInfo;
 
-    public float calcTotalScheduledHourForDayInWeekView() {
+    //updated by haya
+    public float calcTotalScheduledHourForDayInWeekView() throws Exception {
         float sumOfAllShiftsLength = 0;
         for (int i = 0; i < infoIcon.size(); i++) {
             if (isElementEnabled(infoIcon.get(i))) {
                 click(infoIcon.get(i));
-                String[] TMShiftSize = shiftSize.getText().split(" ");
-                float shiftSizeInHour = Float.valueOf(TMShiftSize[0]);
-                sumOfAllShiftsLength = sumOfAllShiftsLength + shiftSizeInHour;
+                waitForSeconds(2);
+                if (isElementLoaded(shiftInfo,10)){
+                    String[] TMShiftSize = shiftSize.getText().split(" ");
+                    float shiftSizeInHour = Float.valueOf(TMShiftSize[0]);
+                    String workRoleInfo = shiftInfo.findElement(By.cssSelector(".shift-hover-subheading.ng-binding")).getText();
+                    if (workRoleInfo.toLowerCase().contains("as retail manager")){
+                        //schedule hours on smart card does not count SM work role's hours.
+                    } else {
+                        sumOfAllShiftsLength = sumOfAllShiftsLength + shiftSizeInHour;
+                    }
+                }else{
+                    SimpleUtils.fail("Shift info not loaded successfully in week view", true);
+                }
 
             } else {
-                SimpleUtils.fail("Shift not loaded successfully in week view", false);
+                SimpleUtils.fail("Shift not loaded successfully in week view!",false);
             }
         }
         return (sumOfAllShiftsLength);
@@ -8278,10 +8291,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     //added by Estelle for job title filter functionality
 
-    public void filterScheduleByJobTitleWeekView(ArrayList<WebElement> jobTitleFilters, ArrayList<String> availableJobTitleList) {
+    public void filterScheduleByJobTitleWeekView(ArrayList<WebElement> jobTitleFilters, ArrayList<String> availableJobTitleList) throws Exception{
 
         for (WebElement jobTitleFilter : jobTitleFilters) {
-            try {
                 Thread.sleep(1000);
                 if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
                     click(filterButton);
@@ -8303,17 +8315,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     SimpleUtils.assertOnFail("Sum of Daily Schedule Hours not equal to Active Week Schedule Hours!", verifyActiveWeekDailyScheduleHoursInWeekView(), true);
                 }else
                     SimpleUtils.report("there is no data for this job title: '" + jobTitle+ "'");
-
-
-            } catch (Exception e) {
-                SimpleUtils.fail("Unable to get Card data for active week!", true);
-            }
         }
     }
 
-    public void filterScheduleByJobTitleDayView(ArrayList<WebElement> jobTitleFilters,ArrayList<String> availableJobTitleList) {
+    public void filterScheduleByJobTitleDayView(ArrayList<WebElement> jobTitleFilters,ArrayList<String> availableJobTitleList) throws Exception{
         for (WebElement jobTitleFilter : jobTitleFilters) {
-            try {
                 if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
                     click(filterButton);
                 unCheckFilters(jobTitleFilters);
@@ -8340,15 +8346,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         SimpleUtils.fail("the job tile filter hours not equal to schedule hours in schedule samrtcard",true);
                 }else
                     SimpleUtils.report( "there is no data for this job title: '" + jobTitle + "'");
-
-            } catch (Exception e) {
-                SimpleUtils.fail("Unable to get Card data for active day!", true);
-            }
         }
     }
 
 
-    public void filterScheduleByJobTitle(boolean isWeekView) {
+    public void filterScheduleByJobTitle(boolean isWeekView) throws Exception{
         ArrayList<String> availableJobTitleList = new ArrayList<>();
         if (isWeekView == true) {
              availableJobTitleList = getAvailableJobTitleListInWeekView();
@@ -8423,7 +8425,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     @Override
-    public void filterScheduleByWorkRoleAndJobTitle(boolean isWeekView) {
+    public void filterScheduleByWorkRoleAndJobTitle(boolean isWeekView) throws Exception{
         waitForSeconds(10);
         ArrayList<String> availableJobTitleList = new ArrayList<>();
         if (isWeekView == true) {
@@ -8455,7 +8457,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
     @Override
-    public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView) {
+    public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView) throws Exception{
         waitForSeconds(10);
         ArrayList<String> availableJobTitleList = new ArrayList<>();
         if (isWeekView == true) {
