@@ -4653,6 +4653,60 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> weekDayLabels;
 
     @Override
+    public void addNewShiftsByNames(List<String> names) throws Exception {
+        for(int i = 0; i < names.size(); i++) {
+            clickOnDayViewAddNewShiftButton();
+            customizeNewShiftPage();
+            clearAllSelectedDays();
+            if (i == 0) {
+                selectDaysByIndex(2, 4, 6);
+            }else {
+                selectDaysByIndex(1, 3, 5);
+            }
+            selectWorkRole("Event Manager");
+            clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            clickOnCreateOrNextBtn();
+            searchTeamMemberByName(names.get(i));
+            clickOnOfferOrAssignBtn();
+        }
+    }
+
+    private void clearAllSelectedDays() throws Exception {
+        if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+            for (WebElement weekDay : weekDays) {
+                if (weekDay.getAttribute("class").contains("week-day-multi-picker-day-selected")) {
+                    click(weekDay);
+                }
+            }
+        }else{
+            SimpleUtils.fail("Weeks Days failed to load!", true);
+        }
+    }
+
+    private void selectDaysByIndex(int index1, int index2, int index3) throws Exception {
+        if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+            if (index1 < weekDays.size() && index2 < weekDays.size() && index3 < weekDays.size()) {
+                if (!weekDays.get(index1).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
+                    click(weekDays.get(index1));
+                    SimpleUtils.report("Select day: " + weekDays.get(index1).getText() + " Successfully!");
+                }
+                if (!weekDays.get(index2).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
+                    click(weekDays.get(index2));
+                    SimpleUtils.report("Select day: " + weekDays.get(index2).getText() + " Successfully!");
+                }
+                if (!weekDays.get(index3).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
+                    click(weekDays.get(index3));
+                    SimpleUtils.report("Select day: " + weekDays.get(index3).getText() + " Successfully!");
+                }
+            }else {
+                SimpleUtils.fail("There is index that out of range: " + index1 + ", " + index2 + ", " + index3 + ", the max value is 6!", false);
+            }
+        }else{
+            SimpleUtils.fail("Weeks Days failed to load!", true);
+        }
+    }
+
+    @Override
     public void verifyShiftsAreSwapped(List<String> swapData) throws Exception {
         int swapRequestIndex1 = -1;
         int swapRequestIndex2 = -1;

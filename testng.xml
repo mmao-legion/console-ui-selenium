@@ -150,13 +150,11 @@
                 </class>
             </classes>
         </test>
-
-
     <test name="Activity Test">
         <classes>
             <class name="com.legion.tests.core.ActivityTest">
                 <methods>
-                    <include name="verifyTheContentOfShiftSwapActivityAsTeamMember"/>
+                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin"/>
                     <include name="verifyAccessControlsOnActivitiesPage"/>
                     <include name="verifyTheContentOnActivityAsStoreManager"/>
                     <include name="verifyTheContentOfShiftSwapActivityAsStoreManager"/>

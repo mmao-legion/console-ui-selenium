@@ -407,4 +407,6 @@ public interface SchedulePage {
 	public void verifyShiftsAreSwapped(List<String> swapData) throws Exception;
 
 	public void clickOnDayViewAddNewShiftButton() throws Exception;
+
+	public void addNewShiftsByNames(List<String> names) throws Exception;
 }

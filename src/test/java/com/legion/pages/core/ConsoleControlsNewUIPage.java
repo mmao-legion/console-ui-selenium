@@ -4652,6 +4652,24 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private List<WebElement> workingHoursTypes;
 	@FindBy(css = "#day\\.dayOfTheWeek .pills-row")
 	private List<WebElement> weekDays;
+	@FindBy(css = "[value=\"sc.shiftSwapOfferPreference.approvalRequired\"] select")
+	private WebElement swapApprovalRequired;
+
+	@Override
+	public void updateSwapAndCoverRequestIsApprovalRequired(String option) throws Exception {
+		if (isElementLoaded(swapApprovalRequired, 20)) {
+			String selectedValue = swapApprovalRequired.findElement(By.cssSelector("[selected=\"selected\"]")).getText();
+			if (!option.equals(selectedValue)) {
+				selectByVisibleText(swapApprovalRequired, option);
+				displaySuccessMessage();
+				SimpleUtils.pass("Select Swap Approval Required Option: " + option + " Successfully!");
+			}else {
+				SimpleUtils.pass("Swap Approval Required Option: " + option + " is already selected!");
+			}
+		}else {
+			SimpleUtils.fail("Swap Request Approval Required Select not loaded Successfully!", false);
+		}
+	}
 
 	@Override
 	public String getTimeZoneFromLocationDetailsPage() throws Exception {

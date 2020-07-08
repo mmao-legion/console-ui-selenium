@@ -2588,6 +2588,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void addNewShiftsByNames(List<String> names) throws Exception {
+
+    }
+
+    @Override
     public void validateTheAvailabilityOfScheduleTable(String userName) throws Exception {
 
     }

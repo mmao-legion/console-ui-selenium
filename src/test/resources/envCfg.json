@@ -1,5 +1,5 @@
 {
-  "CHROME_DRIVER_PATH": "D:\\chromedriver.exe",
+  "CHROME_DRIVER_PATH": "C:\\Softwares\\chromedriver_win32\\chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "D:\\geckodriver.exe",
  "DEVURL": "https://mobilestage.legion.work/",
  "QAURL": "https://rc-enterprise.dev.legion.work/",
@@ -37,7 +37,7 @@
  "deviceName" : "OnePlus 6T",
  "platformVersion" : "9",
  "isParallelBrowser" : "true",
- "Download_File_Default_Dir" : "C:\\Users\\Lenovo\\Downloads",
+ "Download_File_Default_Dir" : "C:\\Users\\DMF\\Downloadss",
  "isHeadlessBrowser" : "false",
  "legion.cucumber.extent.report.name" : "TA_Report",
  "legion.cucumber.extent.report.path" : "legion_bdd_report",
