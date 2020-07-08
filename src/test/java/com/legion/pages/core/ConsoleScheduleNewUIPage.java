@@ -1051,21 +1051,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(shifts,10)){
             for (int i = 0; i < shifts.size(); i++) {
                 if (isElementEnabled(shifts.get(i))) {
-                    //click(shifts.get(i).findElement(By.cssSelector(".rows")));
-                    //waitForSeconds(2);
-                    //scrollToBottom();
-                    //scrollToElement(shifts.get(i));
-                    //scrollToElement(shifts.get(i).findElement(By.cssSelector("div[class=\"shift-container draggable-shift\"] img")));
                     click(shifts.get(i).findElement(By.cssSelector("img[ng-if*='hasViolation']")));
                     if (isElementLoaded(shiftInfo,10)){
                         String[] TMShiftSize = shiftSize.getText().split(" ");
                         float shiftSizeInHour = Float.valueOf(TMShiftSize[0]);
-                        String workRoleInfo = shiftInfo.findElement(By.cssSelector(".shift-hover-subheading.ng-binding")).getText();
+                        sumOfAllShiftsLength = sumOfAllShiftsLength + shiftSizeInHour;
+                        /*String workRoleInfo = shiftInfo.findElement(By.cssSelector(".shift-hover-subheading.ng-binding")).getText();
                         if (workRoleInfo.toLowerCase().contains("as retail manager")){
                             //schedule hours on smart card does not count SM work role's hours.
                         } else {
                             sumOfAllShiftsLength = sumOfAllShiftsLength + shiftSizeInHour;
-                        }
+                        } */
                     }else{
                         SimpleUtils.fail("Shift info not loaded successfully in week view", true);
                     }
