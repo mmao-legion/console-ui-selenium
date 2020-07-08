@@ -1388,7 +1388,11 @@ public class ActivityTest extends TestBase {
     @TestName(description = "Validate the activity of claim open shift")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyActivityOfClaimOpenShift(String browser, String username, String password, String location) throws Exception {
-
+        String fileName = "UsersCredentials.json";
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
+        userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
         // 1.Checking configuration in controls
         String option = "Always";
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1404,7 +1408,7 @@ public class ActivityTest extends TestBase {
         } else {
 
             // 2.admin create one manual open shift and assign to specific TM
-            String teamMemberName = propertySearchTeamMember.get("TeamLCMember");
+            String teamMemberName = String.valueOf(teamMemberCredentials[0][0]);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
@@ -1414,18 +1418,21 @@ public class ActivityTest extends TestBase {
             //to generate schedule  if current week is not generated
             boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
             if(!isActiveWeekGenerated){
-                schedulePage.generateOrUpdateAndGenerateSchedule();
+                schedulePage.createScheduleForNonDGFlowNewUI();
             }
 
             float shiftHoursInWeekForTM = schedulePage.getShiftHoursByTMInWeekView(teamMemberName);
             if (shiftHoursInWeekForTM == 0) {
                 schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 schedulePage.clickOnDayView();
-                schedulePage.clickNewDayViewShiftButtonLoaded();
+                //schedulePage.clickOnNextDaySchedule();
+                schedulePage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
+                schedulePage.clickOnDayViewAddNewShiftButton();
+
                 schedulePage.customizeNewShiftPage();
                 schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
                 schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-                schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole_BARISTA"));
+                schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
                 schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
                 schedulePage.clickOnCreateOrNextBtn();
                 schedulePage.selectSpecificTMWhileCreateNewShift(teamMemberName);
@@ -1436,11 +1443,13 @@ public class ActivityTest extends TestBase {
                 schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 schedulePage.deleteTMShiftInWeekView(teamMemberName);
                 schedulePage.clickOnDayView();
-                schedulePage.clickNewDayViewShiftButtonLoaded();
+                schedulePage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
+                schedulePage.clickOnDayViewAddNewShiftButton();
+
                 schedulePage.customizeNewShiftPage();
                 schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
                 schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-                schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole_BARISTA"));
+                schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
                 schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
                 schedulePage.clickOnCreateOrNextBtn();
                 schedulePage.selectSpecificTMWhileCreateNewShift(teamMemberName);
@@ -1455,12 +1464,6 @@ public class ActivityTest extends TestBase {
         loginPage.logOut();
 
         // 3.Login with the TM to claim the shift
-
-        String fileName = "UsersCredentials.json";
-        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
-        userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
                 , String.valueOf(teamMemberCredentials[0][2]));
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);

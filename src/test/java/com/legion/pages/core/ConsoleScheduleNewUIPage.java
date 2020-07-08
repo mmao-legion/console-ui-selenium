@@ -1021,37 +1021,60 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "img[ng-if*='hasViolation']")
     private List<WebElement> infoIcon;
 
-    @FindBy(css = ".sch-shift-hover.visible")
-    private WebElement shiftInfo;
 
-    //updated by haya
     public float calcTotalScheduledHourForDayInWeekView() throws Exception {
         float sumOfAllShiftsLength = 0;
         for (int i = 0; i < infoIcon.size(); i++) {
             if (isElementEnabled(infoIcon.get(i))) {
                 click(infoIcon.get(i));
-                waitForSeconds(2);
-                if (isElementLoaded(shiftInfo,10)){
-                    String[] TMShiftSize = shiftSize.getText().split(" ");
-                    float shiftSizeInHour = Float.valueOf(TMShiftSize[0]);
-                    String workRoleInfo = shiftInfo.findElement(By.cssSelector(".shift-hover-subheading.ng-binding")).getText();
-                    if (workRoleInfo.toLowerCase().contains("as retail manager")){
-                        //schedule hours on smart card does not count SM work role's hours.
-                    } else {
-                        sumOfAllShiftsLength = sumOfAllShiftsLength + shiftSizeInHour;
-                    }
-                }else{
-                    SimpleUtils.fail("Shift info not loaded successfully in week view", true);
-                }
+                String[] TMShiftSize = shiftSize.getText().split(" ");
+                float shiftSizeInHour = Float.valueOf(TMShiftSize[0]);
+                sumOfAllShiftsLength = sumOfAllShiftsLength + shiftSizeInHour;
 
             } else {
-                SimpleUtils.fail("Shift not loaded successfully in week view!",false);
+                SimpleUtils.fail("Shift not loaded successfully in week view", false);
             }
         }
         return (sumOfAllShiftsLength);
 
     }
 
+    //added by haya
+    @FindBy(css = ".sch-shift-hover.visible")
+    private WebElement shiftInfo;
+
+    @FindBy(css = ".shift-container.week-schedule-shift-wrapper")
+    private List<WebElement> shifts;
+
+    private float newCalcTotalScheduledHourForDayInWeekView() throws Exception {
+        float sumOfAllShiftsLength = 0;
+        if (areListElementVisible(shifts,10)){
+            for (int i = 0; i < shifts.size(); i++) {
+                if (isElementEnabled(shifts.get(i))) {
+                    click(shifts.get(i).findElement(By.cssSelector("img[ng-if*='hasViolation']")));
+                    if (isElementLoaded(shiftInfo,10)){
+                        String[] TMShiftSize = shiftSize.getText().split(" ");
+                        float shiftSizeInHour = Float.valueOf(TMShiftSize[0]);
+                        sumOfAllShiftsLength = sumOfAllShiftsLength + shiftSizeInHour;
+                        /*String workRoleInfo = shiftInfo.findElement(By.cssSelector(".shift-hover-subheading.ng-binding")).getText();
+                        if (workRoleInfo.toLowerCase().contains("as retail manager")){
+                            //schedule hours on smart card does not count SM work role's hours.
+                        } else {
+                            sumOfAllShiftsLength = sumOfAllShiftsLength + shiftSizeInHour;
+                        } */
+                    }else{
+                        SimpleUtils.fail("Shift info not loaded successfully in week view", true);
+                    }
+                } else {
+                    SimpleUtils.fail("Shift not loaded successfully in week view!",true);
+                }
+            }
+        } else {
+            SimpleUtils.fail("NewCalcTotalScheduledHourForDayInWeekView: info icons are not loaded!", false);
+        }
+        return (sumOfAllShiftsLength);
+
+    }
 
 	@Override
 	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
@@ -2078,6 +2101,27 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //            }
         } catch (Exception e) {
             SimpleUtils.fail("Unable to Verify Daily Schedule Hours with Week Schedule Hours!", true);
+        }
+        return false;
+    }
+
+    //added by haya
+    private boolean newVerifyActiveWeekDailyScheduleHoursInWeekView() throws Exception {
+        Float weekDaysScheduleHours = (float) 0;
+        Float activeWeekScheduleHoursOnCard = (float) 0;
+        activeWeekScheduleHoursOnCard = getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.scheduledHours.getValue());
+        if (weekDaySummeryHoursAndTeamMembers.size() != 0) {
+            for (WebElement weekDayHoursAndTMs : weekDaySummeryHoursAndTeamMembers) {
+                float dayScheduleHours = Float.parseFloat(weekDayHoursAndTMs.getText().split("HRs")[0]);
+                weekDaysScheduleHours = (float) (weekDaysScheduleHours + Math.round(dayScheduleHours * 10.0) / 10.0);
+            }
+        }
+        float totalShiftSizeForWeek = newCalcTotalScheduledHourForDayInWeekView();
+        if (totalShiftSizeForWeek == activeWeekScheduleHoursOnCard) {
+            SimpleUtils.pass("Sum of all the shifts in a week equal to Week Schedule Hours!('" + totalShiftSizeForWeek + "/" + activeWeekScheduleHoursOnCard + "')");
+            return true;
+        } else {
+            SimpleUtils.fail("Sum of all the shifts in an week is not equal to Week scheduled Hour!('" + totalShiftSizeForWeek + "/" + activeWeekScheduleHoursOnCard + "')", false);
         }
         return false;
     }
@@ -3942,7 +3986,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	}
 
-
+    @Override
 	public boolean displayAlertPopUp() throws Exception{
 		boolean flag = true;
 		String msgAlert = null;
@@ -3953,7 +3997,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 					if(btnAssignAnyway.getText().toLowerCase().equals("OK".toLowerCase())){
 						click(btnAssignAnyway);
 						flag = false;
-					}else{
+					} else if (btnAssignAnyway.getText().toUpperCase().equals("ASSIGN ANYWAY")) {
+                         flag = true;
+                    } else {
 						String startTime = ((msgAlert.split(": "))[1].split(" - "))[0];
 						String startTimeFinal = SimpleUtils.convertTimeIntoHHColonMM(startTime);
 						String endTime = (((msgAlert.split(": "))[1].split(" - "))[1].split(" "))[0];
@@ -6154,7 +6200,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     //added by Nishant
-
+    @Override
     public void displayAlertPopUpForRoleViolation() throws Exception{
         String msgAlert = null;
         if(isElementLoaded(popUpScheduleOverlap,5)){
@@ -6500,7 +6546,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void clickOnShiftByIndex(int index) throws Exception {
         if (areListElementVisible(tmIcons, 5)) {
             if (index < tmIcons.size()) {
-                click(tmIcons.get(index));
+                moveToElementAndClick(tmIcons.get(index));
             }else {
                 SimpleUtils.fail("Index: " + index + " is out of range, the total size is: " + tmIcons.size(), true);
             }
@@ -6945,6 +6991,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 moveToElementAndClick(tmIcons.get(i));
                 if (isPopOverLayoutLoaded()) {
                     if (verifyShiftRequestButtonOnPopup(claimShift)) {
+                        moveToElementAndClick(tmIcons.get(i));
                         index = i;
                         break;
                     }
@@ -8366,7 +8413,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
                 SimpleUtils.report("Active Week Card's Data: " + cardHoursAndWagesText);
                 if (availableJobTitleList.contains(jobTitle.toLowerCase().trim())) {
-                    SimpleUtils.assertOnFail("Sum of Daily Schedule Hours not equal to Active Week Schedule Hours!", verifyActiveWeekDailyScheduleHoursInWeekView(), true);
+                    SimpleUtils.assertOnFail("Sum of Daily Schedule Hours not equal to Active Week Schedule Hours!", newVerifyActiveWeekDailyScheduleHoursInWeekView(), true);
                 }else
                     SimpleUtils.report("there is no data for this job title: '" + jobTitle+ "'");
         }
