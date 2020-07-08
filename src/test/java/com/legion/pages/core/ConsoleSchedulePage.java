@@ -2702,4 +2702,14 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception {
 
     }
+
+    @Override
+    public boolean displayAlertPopUp() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void displayAlertPopUpForRoleViolation() throws Exception {
+
+    }
 }

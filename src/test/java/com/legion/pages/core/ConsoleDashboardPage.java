@@ -516,9 +516,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy( css = ".col-sm-4 > .header-company-icon > img")
 	private WebElement companyIconImg;
 
-	@FindBy(css = "[ng-if=\"scheduleForToday($index) && !scheduleForToday($index).length\"]")
-	private WebElement publishedShiftForToday;
-
 	@FindBy(css = ".user-profile-section__title.ng-binding")
 	private List<WebElement> userProfileSection;
 
@@ -727,9 +724,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateTheUpcomingSchedules(String userName) throws Exception {
-		if (isElementLoaded(dashboardUpcomingShiftContainer, 20) && isElementLoaded(publishedShiftForToday,20)) {
+		if (isElementLoaded(dashboardUpcomingShiftContainer, 20)) {
 			SimpleUtils.pass("Today's published Shifts loaded Successfully on Dashboard!");
-			if (publishedShiftForToday.getText().contains("No Published") && publishedShiftForToday.getText().contains("Shifts for today")) {
+			if (dashboardUpcomingShiftContainer.getText().contains("No Published Shifts for today")) {
 				SimpleUtils.pass("No Published Shifts for today");
 			} else {
 				for (WebElement us : upcomingShifts) {

@@ -134,7 +134,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 		String fileName = "UsersCredentials.json";
 		fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
 		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-		Object[][] internalAdminCredentials = userCredentials.get("InternalAdmin");
+		Object[][] internalAdminCredentials = userCredentials.get("StoreManager");
 		loginToLegionAndVerifyIsLoginDone(String.valueOf(internalAdminCredentials[0][0]), String.valueOf(internalAdminCredentials[0][1])
 				, String.valueOf(internalAdminCredentials[0][2]));
 		SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
@@ -150,6 +150,8 @@ public class DashboardTestKendraScott2 extends TestBase{
 		schedulePageAdmin.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 		schedulePageAdmin.clickOnCreateOrNextBtn();
 		schedulePageAdmin.searchTeamMemberByName(nickName);
+		if (schedulePageAdmin.displayAlertPopUp())
+			schedulePageAdmin.displayAlertPopUpForRoleViolation();
 		schedulePageAdmin.clickOnOfferOrAssignBtn();
 		schedulePageAdmin.saveSchedule();
 		schedulePageAdmin.publishActiveSchedule();
@@ -171,6 +173,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 		}
 
 		//T1838585 Validate date and time.
+		dashboardPage.navigateToDashboard();
 		dashboardPage.validateDateAndTime();
 
 		//T1838586 Validate the upcoming schedules.

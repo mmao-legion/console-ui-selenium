@@ -3942,7 +3942,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 	}
 
-
+    @Override
 	public boolean displayAlertPopUp() throws Exception{
 		boolean flag = true;
 		String msgAlert = null;
@@ -3953,7 +3953,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 					if(btnAssignAnyway.getText().toLowerCase().equals("OK".toLowerCase())){
 						click(btnAssignAnyway);
 						flag = false;
-					}else{
+					} else if (btnAssignAnyway.getText().toUpperCase().equals("ASSIGN ANYWAY")) {
+                         flag = true;
+                    } else {
 						String startTime = ((msgAlert.split(": "))[1].split(" - "))[0];
 						String startTimeFinal = SimpleUtils.convertTimeIntoHHColonMM(startTime);
 						String endTime = (((msgAlert.split(": "))[1].split(" - "))[1].split(" "))[0];
@@ -6100,7 +6102,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     //added by Nishant
-
+    @Override
     public void displayAlertPopUpForRoleViolation() throws Exception{
         String msgAlert = null;
         if(isElementLoaded(popUpScheduleOverlap,5)){
