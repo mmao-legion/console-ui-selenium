@@ -89,6 +89,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
         dashboardPage.clickOnSubMenuOnProfile("My Time Off");
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         SimpleUtils.assertOnFail("Profile Page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
+        profileNewUIPage.cancelAllTimeOff();
 
         //T1838600 Validate the New time off functionality.
         profileNewUIPage.clickOnCreateTimeOffBtn();
