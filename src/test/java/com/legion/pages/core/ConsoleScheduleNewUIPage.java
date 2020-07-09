@@ -3394,7 +3394,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 switchToManagerViewToCheckForSecondGenerate();
             } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
                 checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
-                SimpleUtils.pass("Schedule Generated Successfuly!");
+                SimpleUtils.pass("Schedule Generated Successfully!");
                 switchToManagerViewToCheckForSecondGenerate();
             } else {
                 SimpleUtils.fail("Not able to generate schedule Successfully!", false);
@@ -6654,11 +6654,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void clickTheShiftRequestByName(String requestName) throws Exception {
-        scrollToBottom();
         waitForSeconds(2);
         if (areListElementVisible(shiftRequests, 5)) {
             for (WebElement shiftRequest : shiftRequests) {
-                if (shiftRequest.getText().equalsIgnoreCase(requestName)) {
+                if (shiftRequest.getText().trim().equalsIgnoreCase(requestName.trim())) {
                     click(shiftRequest);
                     SimpleUtils.pass("Click " + requestName + " button Successfully!");
                     break;
@@ -7025,7 +7024,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 moveToElementAndClick(tmIcons.get(i));
                 if (isPopOverLayoutLoaded()) {
                     if (verifyShiftRequestButtonOnPopup(claimShift)) {
-                        moveToElementAndClick(tmIcons.get(i));
                         index = i;
                         break;
                     }
