@@ -3356,6 +3356,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String finish = "FINISH";
         if (isElementEnabled(generateSheduleButton,5)) {
             click(generateSheduleButton);
+            openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 5) && subTitle1.equalsIgnoreCase(generateModalTitle.getText().trim())
             && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
                 click(nextButtonOnCreateSchedule);
@@ -3389,14 +3390,59 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         SimpleUtils.fail("'FINISH' button not loaded Successfully!", false);
                     }
                 }
-            }else {
-                SimpleUtils.fail("'Confirm Operating Hours' pop up windows not loaded Successfully!", false);
+            }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
+                click(generateSheduleForEnterBudgetBtn);
+                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+                    checkoutSchedule();
+                    switchToManagerViewToCheckForSecondGenerate();
+                } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+                    updateAndGenerateSchedule();
+                    switchToManagerViewToCheckForSecondGenerate();
+                } else {
+                    SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
+                }
+            } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+                updateAndGenerateSchedule();
+                switchToManagerViewToCheckForSecondGenerate();
+            } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
+                checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
+                SimpleUtils.pass("Schedule Generated Successfuly!");
+                switchToManagerViewToCheckForSecondGenerate();
+            } else {
+                SimpleUtils.fail("Not able to generate schedule Successfully!", false);
             }
         }else {
             SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
         }
     }
 
+    public void switchToManagerViewToCheckForSecondGenerate() throws Exception {
+        String activeWeekText = getActiveWeekText();
+        if(isElementEnabled(activScheduleType,5)){
+            if(activScheduleType.getText().equalsIgnoreCase("Suggested")){
+                click(scheduleTypeManager);
+                if(isGenerateButtonLoadedForManagerView()){
+                    click(generateScheduleBtn);
+                    generateScheduleFromCreateNewScheduleWindow(activeWeekText);
+                } else if (isElementLoaded(publishSheduleButton, 5)) {
+                    SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
+                } else{
+                    SimpleUtils.fail("Generate button or Publish Button not found on page",false);
+                }
+            }else{
+                if(isGenerateButtonLoadedForManagerView()){
+                    click(generateScheduleBtn);
+                    generateScheduleFromCreateNewScheduleWindow(activeWeekText);
+                } else if (isElementLoaded(publishSheduleButton, 5)) {
+                    SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
+                } else{
+                    SimpleUtils.fail("Generate button or Publish not found on page",false);
+                }
+            }
+        }else{
+            SimpleUtils.fail("Schedule Type " + scheduleTypeManager.getText() + " is disabled",false);
+        }
+    }
 
     public void checkOutGenerateScheduleBtn(WebElement checkOutTheScheduleButton) {
         Wait<WebDriver> wait = new FluentWait<WebDriver>(
@@ -7175,17 +7221,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifyThePrintFunction() throws Exception {
         if (isPrintIconLoaded()) {
             click(printIcon);
-            if (isElementLoaded(printButtonInPrintLayout, 5)) {
-                click(printButtonInPrintLayout);
-                if (!isElementLoaded(printButtonInPrintLayout, 6)) {
-                    String downloadPath = parameterMap.get("Download_File_Default_Dir");
-                    SimpleUtils.assertOnFail("Failed to download the team schedule", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekViewSchedulePdf"), false);
-                }else {
-                    SimpleUtils.fail("Failed to print the team schedule!", true);
-                }
-            }else {
-                SimpleUtils.fail("Print Layout not loaded Successfully!", false);
-            }
+            // Wait for the schedule to be downloaded
+            waitForSeconds(6);
+            String downloadPath = parameterMap.get("Download_File_Default_Dir");
+            SimpleUtils.assertOnFail("Failed to download the team schedule", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekViewSchedulePdf"), false);
         }else {
             SimpleUtils.fail("Print icon not loaded Successfully on Schedule page!", false);
         }

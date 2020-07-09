@@ -3,16 +3,13 @@ package com.legion.tests.core;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import com.legion.pages.LoginPage;
+import com.legion.pages.*;
 import org.openqa.selenium.WebElement;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.aventstack.extentreports.Status;
-import com.legion.pages.DashboardPage;
-import com.legion.pages.ScheduleOverviewPage;
-import com.legion.pages.SchedulePage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -649,16 +646,81 @@ public class ScheduleTest extends TestBase{
 			SimpleUtils.pass("assert alue of Other Hrs in Schedule tab should be same as Dashboard page");
 	    }
 
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Prepare the data for swap")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+	public void prepareTheSwapShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		List<String> swapNames = new ArrayList<>();
+		String fileName = "UserCredentialsForComparableSwapShifts.json";
+		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+		for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
+			if (!entry.getKey().equals("Cover TM")) {
+				swapNames.add(entry.getKey());
+				SimpleUtils.pass("Get Swap User name:" + entry.getKey());
+			}
+		}
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+
+		schedulePage.navigateToNextWeek();
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+		// Deleting the existing shifts for swap team members
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.deleteTMShiftInWeekView(swapNames.get(0));
+		schedulePage.deleteTMShiftInWeekView(swapNames.get(1));
+		schedulePage.saveSchedule();
+		// Add the new shifts for swap team members
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.addNewShiftsByNames(swapNames);
+		schedulePage.saveSchedule();
+		schedulePage.publishActiveSchedule();
+	}
+
 	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team Member view Swap")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamMemberViewSwapAsTeamMember(String browser, String username, String password, String location)
+	public void verifyTheTeamMemberViewSwapAsInternalAdmin(String browser, String username, String password, String location)
 			throws Exception
 	{
+		prepareTheSwapShiftsAsInternalAdmin(browser, username, password, location);
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		List<String> swapNames = new ArrayList<>();
+		String fileName = "UserCredentialsForComparableSwapShifts.json";
+		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+		for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
+			if (!entry.getKey().equals("Cover TM")) {
+				swapNames.add(entry.getKey());
+				SimpleUtils.pass("Get Swap User name: " + entry.getKey());
+			}
+		}
+		Object[][] credential = null;
+		credential = userCredentials.get(swapNames.get(0));
+		loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
+				, String.valueOf(credential[0][2]));
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String requestUserName = profileNewUIPage.getNickNameFromProfile();
+		if (dashboardPage.isSwitchToEmployeeViewPresent()) {
+			dashboardPage.clickOnSwitchToEmployeeView();
+		}
 		// Verify Shift should be shown as starting Tomorrow/Today
 		if (dashboardPage.getUpComingShifts().size() > 0) {
 			SimpleUtils.pass("Shifts are shown Successfully!");
@@ -670,10 +732,11 @@ public class ScheduleTest extends TestBase{
 		// Verify After click on the View My Schedule, page should navigate to My Schedule page
 		SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
 		schedulePage.isSchedule();
+		schedulePage.navigateToNextWeek();
 		// Verify On My Schedule page, Schedule shifts should be present on Schedule table
 		SimpleUtils.assertOnFail("Schedule Shifts are not present!", schedulePage.areShiftsPresent(), true);
 		// Verify After click on any shift from Schedule table, 2 Button should be available for : 1. Request to Swap shift 2. Request to cover shift
-		int index = schedulePage.verifyClickOnAnyShift();
+		schedulePage.verifyClickOnAnyShift();
 		List<String> requests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
 		SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", schedulePage.verifyShiftRequestButtonOnPopup(requests), true);
 		// Verify After click on the Request to swap shift, Find Shifts to Swap page should be opened.
@@ -684,7 +747,7 @@ public class ScheduleTest extends TestBase{
 		// Verify On Find Shifts to Swap page should have comparable shifts that you can ask to trade
 		schedulePage.verifyComparableShiftsAreLoaded();
 		// Verify After requesting for Swap shift, Request should go to the another TM
-		String teamMember = schedulePage.selectOneTeamMemberToSwap();
+		schedulePage.selectOneTeamMemberToSwap();
 	}
 
 	@Automated(automated = "Automated")
@@ -692,11 +755,33 @@ public class ScheduleTest extends TestBase{
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team Member view Cover")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamMemberViewCoverAsTeamMember(String browser, String username, String password, String location)
+	public void verifyTheTeamMemberViewCoverAsInternalAdmin(String browser, String username, String password, String location)
 			throws Exception
 	{
+		prepareTheSwapShiftsAsInternalAdmin(browser, username, password, location);
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		List<String> swapNames = new ArrayList<>();
+		String fileName = "UserCredentialsForComparableSwapShifts.json";
+		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+		for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
+			if (!entry.getKey().equals("Cover TM")) {
+				swapNames.add(entry.getKey());
+				SimpleUtils.pass("Get Swap User name: " + entry.getKey());
+			}
+		}
+		Object[][] credential = null;
+		credential = userCredentials.get(swapNames.get(0));
+		loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
+				, String.valueOf(credential[0][2]));
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String requestUserName = profileNewUIPage.getNickNameFromProfile();
+		if (dashboardPage.isSwitchToEmployeeViewPresent()) {
+			dashboardPage.clickOnSwitchToEmployeeView();
+		}
 		// Verify Shift should be shown as starting Tomorrow/Today
 		if (dashboardPage.getUpComingShifts().size() > 0) {
 			SimpleUtils.pass("Shifts are shown Successfully!");
@@ -708,6 +793,7 @@ public class ScheduleTest extends TestBase{
 		// Verify After click on the View My Schedule, page should navigate to My Schedule page
 		SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
 		schedulePage.isSchedule();
+		schedulePage.navigateToNextWeek();
 		// Verify On My Schedule page, Schedule shifts should be present on Schedule table
 		SimpleUtils.assertOnFail("Schedule Shifts are not present!", schedulePage.areShiftsPresent(), true);
 		// Verify After click on any shift from Schedule table, 2 Button should be available for : 1. Request to Swap shift 2. Request to cover shift
@@ -748,17 +834,33 @@ public class ScheduleTest extends TestBase{
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.goToSchedulePage();
-		schedulePage.isSchedulePage();
-		schedulePage.goToSchedule();
-		schedulePage.isSchedule();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+		//make publish schedule activity
+		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+		if(isActiveWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickOnDayViewAddNewShiftButton();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.selectWorkRole("Event Manager");
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.saveSchedule();
+		schedulePage.publishActiveSchedule();
 		List<String> weekSchedule = schedulePage.getWholeWeekSchedule();
 		LoginPage loginPage = pageFactory.createConsoleLoginPage();
 		loginPage.logOut();
 
 		// Login as Team Member
 		String fileName = "UsersCredentials.json";
-		fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+		fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
 		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
 		Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
 		loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])

@@ -127,8 +127,8 @@
         <classes>
             <class name="com.legion.tests.core.ScheduleTest">
                 <methods>
-                    <include name="verifyTheTeamMemberViewSwapAsTeamMember" />
-                    <include name="verifyTheTeamMemberViewCoverAsTeamMember" />
+                    <include name="verifyTheTeamMemberViewSwapAsInternalAdmin" />
+                    <include name="verifyTheTeamMemberViewCoverAsInternalAdmin" />
                     <include name="verifyTheTeamScheduleOptionAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfSwapAndCoverAsTeamMember" />
                     <include name="verifyTheFeatureOfFilterAsTeamMember" />
@@ -165,9 +165,9 @@
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
                     <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
                     <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />
-                    <include name="verifyTheContentOfShiftSwapActivityWithoutApprovalAsTeamMember" />
-                    <include name="verifyTheFunctionOfShiftSwapActivityAsTeamMember" />
-                    <include name="verifyTheContentOfRejectShiftSwapActivityAsTeamMember" />
+                    <include name="verifyTheContentOfShiftSwapActivityWithoutApprovalAsInternalAdmin" />
+                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyActivityOfClaimOpenShift" />
                     <include name="verifyActivityOfPublishUpdateSchedule" />
                     <include name="verifyTheNotificationForCancelTimeOffAsStoreManager"/>

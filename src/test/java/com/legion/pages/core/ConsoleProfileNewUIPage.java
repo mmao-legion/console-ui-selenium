@@ -1888,9 +1888,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	//added by Haya
 	@FindBy(xpath = "//div[@class=\"timeoff-requests ng-scope\"]//timeoff-list-item")
 	private List<WebElement> timeOffRequestItems;
-	@FindBy(className = "request-status-Approved")
+	@FindBy(css = "[timeoff=\"timeoff\"] .request-status-Approved")
 	private List<WebElement> approvedTimeOffRequests;
-	@FindBy(className = "request-status-Pending")
+	@FindBy(css = "[timeoff=\"timeoff\"] .request-status-Pending")
 	private List<WebElement> pendingTimeOffRequests;
 
 	@Override
