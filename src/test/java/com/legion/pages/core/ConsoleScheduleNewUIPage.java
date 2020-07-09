@@ -1046,31 +1046,19 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = ".shift-container.week-schedule-shift-wrapper")
     private List<WebElement> shifts;
 
+    @FindBy(css = ".sch-calendar-day-summary")
+    private List<WebElement> daySummaries;
+
     private float newCalcTotalScheduledHourForDayInWeekView() throws Exception {
         float sumOfAllShiftsLength = 0;
-        if (areListElementVisible(shifts,10)){
-            for (int i = 0; i < shifts.size(); i++) {
-                if (isElementEnabled(shifts.get(i))) {
-                    click(shifts.get(i).findElement(By.cssSelector("img[ng-if*='hasViolation']")));
-                    if (isElementLoaded(shiftInfo,10)){
-                        String[] TMShiftSize = shiftSize.getText().split(" ");
-                        float shiftSizeInHour = Float.valueOf(TMShiftSize[0]);
-                        sumOfAllShiftsLength = sumOfAllShiftsLength + shiftSizeInHour;
-                        /*String workRoleInfo = shiftInfo.findElement(By.cssSelector(".shift-hover-subheading.ng-binding")).getText();
-                        if (workRoleInfo.toLowerCase().contains("as retail manager")){
-                            //schedule hours on smart card does not count SM work role's hours.
-                        } else {
-                            sumOfAllShiftsLength = sumOfAllShiftsLength + shiftSizeInHour;
-                        } */
-                    }else{
-                        SimpleUtils.fail("Shift info not loaded successfully in week view", true);
-                    }
-                } else {
-                    SimpleUtils.fail("Shift not loaded successfully in week view!",true);
-                }
+        if (areListElementVisible(daySummaries,10)){
+            for (int i=0; i<daySummaries.size();i++){
+                String[] TMShiftSize = daySummaries.get(i).findElement(By.cssSelector("span:nth-child(1)")).getText().split(" ");
+                float shiftSizeInHour = Float.valueOf(TMShiftSize[0]);
+                sumOfAllShiftsLength = sumOfAllShiftsLength + shiftSizeInHour;
             }
         } else {
-            SimpleUtils.fail("NewCalcTotalScheduledHourForDayInWeekView: info icons are not loaded!", false);
+            SimpleUtils.fail("weekDaySummeryHoursAndTeamMembers are not loaded!", false);
         }
         return (sumOfAllShiftsLength);
 
