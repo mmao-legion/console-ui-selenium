@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 import com.legion.utils.JsonUtil;
+import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -78,7 +79,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement timeOffRequestsSection;
 	@FindBy(css="div.location-selector-location-name-text")
 	private WebElement locationSelectorLocationName;
-	@FindBy(css="div.timeoff-requests-request.row-fx")
+	@FindBy(css="[timeoff=\"timeoff\"] .timeoff-requests-request.row-fx")
 	private List<WebElement> timeOffRequestRows;
 	@FindBy(css="i[ng-click=\"editProfile()\"]")
 	private WebElement profileEditPencilIcon;
@@ -424,31 +425,32 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 //		String timeOffEndMonth = timeOffEndDuration.split(",")[0].split(" ")[0];
 		
 		String requestStatusText = "";
-		int timeOffRequestCount = timeOffRequestRows.size();
-		if(timeOffRequestCount > 0) {
-			for(int i = 2; i < timeOffRequestRows.size(); i++) {
-				WebElement timeOffRequest = timeOffRequestRows.get(i);
-				WebElement requestType = timeOffRequest.findElement(By.cssSelector("span.request-type"));
-				WebElement requestStatus = timeOffRequest.findElement(By.cssSelector("span.request-status"));
-				String requestTypeText = requestType.getText();
-				if(timeOffReasonLabel.toLowerCase().contains(requestTypeText.toLowerCase())) {
-					WebElement requestDate = timeOffRequest.findElement(By.cssSelector("div.request-date"));
-					String requestDateText = requestDate.getText().replaceAll("\n"," ");
-				if (requestDateText.contains("-")) {
-					if(requestDateText.split("-")[0].toLowerCase().contains(timeOffStartDate.toLowerCase())
-							&& requestDateText.split("-")[1].toLowerCase().contains(timeOffEndDate.toLowerCase())) {
-						requestStatusText = requestStatus.getText();
-					}
-				} else if ((requestDateText.split(" ")[2] + " " + requestDateText.split(" ")[1]).equalsIgnoreCase(timeOffStartDate)
-						&& timeOffStartDate.equals(timeOffEndDate)) {
-					requestStatusText = requestStatus.getText();
+		if(areListElementVisible(timeOffRequestRows, 10)) {
+			int timeOffRequestCount = timeOffRequestRows.size();
+			if (timeOffRequestCount > 0) {
+				for (int i = 0; i < timeOffRequestRows.size(); i++) {
+					WebElement timeOffRequest = timeOffRequestRows.get(i);
+					WebElement requestType = timeOffRequest.findElement(By.cssSelector("span.request-type"));
+					WebElement requestStatus = timeOffRequest.findElement(By.cssSelector("span.request-status"));
+					String requestTypeText = requestType.getText();
+					if (timeOffReasonLabel.toLowerCase().contains(requestTypeText.toLowerCase())) {
+						WebElement requestDate = timeOffRequest.findElement(By.cssSelector("div.request-date"));
+						String requestDateText = requestDate.getText().replaceAll("\n", " ");
+						if (requestDateText.contains("-")) {
+							if (requestDateText.split("-")[0].toLowerCase().contains(timeOffStartDate.toLowerCase())
+									&& requestDateText.split("-")[1].toLowerCase().contains(timeOffEndDate.toLowerCase())) {
+								requestStatusText = requestStatus.getText();
+							}
+						} else if ((requestDateText.split(" ")[2] + " " + requestDateText.split(" ")[1]).equalsIgnoreCase(timeOffStartDate)
+								&& timeOffStartDate.equals(timeOffEndDate)) {
+							requestStatusText = requestStatus.getText();
+						}
 					}
 				}
-			}
-		}
-		else
-			SimpleUtils.fail("Profile Page: No Time off request found.", false);
-		
+			} else
+				SimpleUtils.fail("Profile Page: No Time off request found.", true);
+		} else
+			SimpleUtils.fail("Profile Page: Time off request failed to load",true);
 		return requestStatusText;
 	}
 	
