@@ -186,7 +186,7 @@
         <classes>
             <class name="com.legion.tests.core.ProfileNewUITestKendraScott2">
                 <methods>
-                    <include name="verifyMyProfileDetailsByUpdatingTheInformationAsTeamMember" />
+                    <include name="verifyMyProfileDetailsByUpdatingTheInformationAsTeamMember2" />
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
                     <include name="verifyCreateNewTimeOffFunctionalityAsTeamMember" />
                 </methods>

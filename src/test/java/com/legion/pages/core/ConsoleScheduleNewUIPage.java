@@ -3342,7 +3342,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String subTitle1 = "Confirm Operating Hours";
         String subTitle2 = "Enter Budget";
         String finish = "FINISH";
-        if (isElementEnabled(generateSheduleButton,5)) {
+        if (isElementEnabled(generateSheduleButton,10)) {
             click(generateSheduleButton);
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 5) && subTitle1.equalsIgnoreCase(generateModalTitle.getText().trim())
@@ -3354,6 +3354,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
                 if (areListElementVisible(availableCopyWeeks, 5)) {
                     SimpleUtils.pass("Copy Schedule page loaded Successfully!");
+                    // Wait for 8 seconds to make sure that SUGGESTED SCHEDULE is loaded
+                    waitForSeconds(8);
                     for (WebElement copyWeek : availableCopyWeeks) {
                         WebElement scheduledHours = copyWeek.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
                         if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
@@ -3364,6 +3366,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                                 SimpleUtils.pass("Selected 'SUGGESTED SCHEDULE' with scheduled hour: " + scheduledHours.getText() + " Successfully!");
                             }
                             break;
+                        }else {
+                            SimpleUtils.fail("Scheduled Hour not loaded Successfully!", false);
                         }
                     }
                     if (isElementLoaded(nextButtonOnCreateSchedule) && nextButtonOnCreateSchedule.getText().equals(finish)) {
