@@ -218,6 +218,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement userProfileImage;
 	@FindBy(css=".header-user-switch-menu-item-main")
 	private WebElement userNickName;
+	@FindBy(className = "request-buttons-reject")
+	private WebElement timeOffRejectBtn;
 	
 	@Override
 	public void clickOnProfileConsoleMenu() throws Exception {
@@ -1956,6 +1958,20 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				if(isElementLoaded(timeOffRequestCancelBtn,5)) {
 					scrollToElement(timeOffRequestCancelBtn);
 					click(timeOffRequestCancelBtn);
+					SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
+				}
+			}
+		}
+	}
+
+	@Override
+	public void rejectAllTimeOff() throws Exception {
+		if(areListElementVisible(approvedTimeOffRequests,10) && approvedTimeOffRequests.size() > 0) {
+			for(WebElement timeOffRequest : approvedTimeOffRequests) {
+				click(timeOffRequest);
+				if(isElementLoaded(timeOffRejectBtn,5)) {
+					scrollToElement(timeOffRejectBtn);
+					click(timeOffRejectBtn);
 					SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
 				}
 			}

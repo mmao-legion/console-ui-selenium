@@ -154,4 +154,6 @@ public interface ProfileNewUIPage {
 	public String getAvailabilityWeek() throws Exception;
 
 	public void cancelAllTimeOff() throws Exception;
+
+	public void rejectAllTimeOff() throws Exception;
 }

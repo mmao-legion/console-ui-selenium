@@ -134,18 +134,27 @@ public class DashboardTestKendraScott2 extends TestBase{
 		String fileName = "UsersCredentials.json";
 		fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
 		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-		Object[][] internalAdminCredentials = userCredentials.get("StoreManager");
+		Object[][] internalAdminCredentials = userCredentials.get("InternalAdmin");
 		loginToLegionAndVerifyIsLoginDone(String.valueOf(internalAdminCredentials[0][0]), String.valueOf(internalAdminCredentials[0][1])
 				, String.valueOf(internalAdminCredentials[0][2]));
+
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(nickName);
+		profileNewUIPage.selectProfilePageSubSectionByLabel("Time Off");
+		profileNewUIPage.rejectAllTimeOff();
+
 		SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePageAdmin.goToConsoleScheduleAndScheduleSubMenu();
-		if (schedulePageAdmin.isGenerateButtonLoaded())
-			schedulePageAdmin.createScheduleForNonDGFlowNewUI();
+		boolean isWeekGenerated = schedulePageAdmin.isWeekGenerated();
+		if (isWeekGenerated){
+			schedulePageAdmin.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePageAdmin.createScheduleForNonDGFlowNewUI();
 		schedulePageAdmin.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePageAdmin.clickOnCreateNewShiftButton();
-		HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
-		schedulePageAdmin.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePageAdmin.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		schedulePageAdmin.deleteTMShiftInWeekView(nickName);
+		schedulePageAdmin.clickOnDayViewAddNewShiftButton();
 		schedulePageAdmin.selectWorkRole("MOD");
 		schedulePageAdmin.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 		schedulePageAdmin.clickOnCreateOrNextBtn();

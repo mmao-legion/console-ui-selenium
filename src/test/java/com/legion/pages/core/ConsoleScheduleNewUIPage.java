@@ -4054,9 +4054,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 			}else{
 				SimpleUtils.fail("Schedule Overlap alert message not displayed",false);
 			}
-		}else{
-			SimpleUtils.fail("Schedule Overlap pop up not displayed",false);
-		}
+		}else {
+		    flag = false;
+        }
 		return flag;
 	}
 
@@ -4723,8 +4723,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement scheduleTableHours;
     @FindBy(className = "week-day-multi-picker-day")
     private List<WebElement> weekDays;
-    @FindBy(css = "div[ng-if=\"!searchLoading\"] [ng-class*=\"selectActionClass\"]")
-    private WebElement selectButton;
+    @FindBy(css = "[ng-show=\"hasSearchResults()\"] [ng-repeat=\"worker in searchResults\"]")
+    private List<WebElement> searchResults;
     @FindBy(css = "img[src*=\"added-shift\"]")
     private List<WebElement> addedShiftIcons;
     @FindBy(css = "[label=\"Create New Shift\"]")
@@ -5003,8 +5003,19 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {
                     textSearch.sendKeys(name);
                     click(searchIcon);
-                    if (isElementLoaded(selectButton, 5) && isElementEnabled(selectButton, 5)) {
-                        click(selectButton);
+                    if (areListElementVisible(searchResults, 5)) {
+                        for (WebElement searchResult : searchResults) {
+                            WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-display-name"));
+                            WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
+                            if (workerName != null && optionCircle != null) {
+                                if (workerName.getText().trim().equals(name.trim())) {
+                                    click(optionCircle);
+                                    SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                                }
+                            }else {
+                                SimpleUtils.fail("Worker name or option circle not loaded Successfully!", false);
+                            }
+                        }
                     }else {
                         SimpleUtils.fail("Failed to find the team member!", false);
                     }
