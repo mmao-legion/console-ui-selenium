@@ -1090,16 +1090,20 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	public boolean verifyIsShopperTypeSelectedByDefaultAndLaborTabIsClickable() throws Exception {
 		boolean flag=false;
 		if (isElementLoaded(shoppersTab,5)) {
-			if (shoppersTab.getAttribute("class").contains("selected")) {
-				SimpleUtils.pass("shopper forecast is selected by default");
-				clickOnLabor();
-				flag = true;
-			}else {
-				SimpleUtils.fail("shopper forecast is not selected by default",false);
+			if (shoppersTab.findElement(By.cssSelector("span")).getText().toLowerCase().contains("shopper")){
+				if (shoppersTab.getAttribute("class").contains("selected")) {
+					SimpleUtils.pass("shopper forecast is selected by default");
+					clickOnLabor();
+					flag = true;
+				}else {
+					SimpleUtils.fail("shopper forecast is not selected by default",false);
+				}
+			} else {
+				SimpleUtils.warn("Shopper tap is not loaded!");
 			}
 		}else {
 			flag = false;
-			SimpleUtils.fail("shopper button load failed",false);
+			SimpleUtils.fail("verifyIsShopperTypeSelectedByDefaultAndLaborTabIsClickable : forecast tab load failed",false);
 		}
 		return flag;
 	}
@@ -1115,6 +1119,9 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 				if (weatherTemperatures.size()>=6) {
 					flag=true;
 					SimpleUtils.pass("week forecast is open");
+				} else {
+					flag=true;
+					SimpleUtils.warn("No weather smart card!");
 				}
 			}else {
 				SimpleUtils.fail("weekly forecast is not selected by default",false);
