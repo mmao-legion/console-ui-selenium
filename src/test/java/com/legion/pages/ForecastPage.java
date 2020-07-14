@@ -31,7 +31,7 @@ public interface ForecastPage<pubic> {
 
 	public HashMap<String, Float> getSummaryLaborHoursAndWages()  throws Exception;
 
-	public HashMap<String, String> getHoursBySelectedWorkRoleInLaborWeek()  throws Exception;
+	public HashMap<String, String> getHoursBySelectedWorkRoleInLaborWeek(String workRole)  throws Exception;
 
 	public void verifyBudgetedHoursInLaborSummaryWhileSelectDifferentWorkRole() throws Exception;
 
