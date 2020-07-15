@@ -22,6 +22,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 
 public class ScheduleTestKendraScott2 extends TestBase {
@@ -324,12 +325,15 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//If selecting one week then data is getting updating on Schedule page according to corresponding week
 		schedulePage.scheduleUpdateAccordingToSelectWeek();
 		//Print button is clickable
+		String handle = getDriver().getWindowHandle();
 		schedulePage.printButtonIsClickable();
+		getDriver().switchTo().window(handle);
+
 		//In week View > Clicking on Print button  it should give option to print in both Landscape or Portrait mode Both should work.
-		schedulePage.landscapePortraitModeShowWellInWeekView();
+		//schedulePage.landscapePortraitModeShowWellInWeekView();
 		//In Week view should be able to change the mode between Landscape and Portrait
-		schedulePage.landscapeModeWorkWellInWeekView();
-		schedulePage.portraitModeWorkWellInWeekView();
+		//schedulePage.landscapeModeWorkWellInWeekView();
+		//schedulePage.portraitModeWorkWellInWeekView();
 		//Day-week picker section navigating correctly
 		//Todo:Run failed by LEG-10221
 		schedulePage.dayWeekPickerSectionNavigatingCorrectly();
