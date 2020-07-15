@@ -438,7 +438,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		}
 
 		public boolean isToDoWindowOpened() throws Exception{
-			if(isElementLoaded(toDoPopUpWindow,5) && areListElementVisible(todoCards,5)) {
+			if(isElementLoaded(toDoPopUpWindow,10) && areListElementVisible(todoCards,10)) {
 				if(toDoPopUpWindow.getAttribute("class").contains("is-shown"))
 					return true;
 			}
@@ -676,23 +676,22 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private List<WebElement> weekDurations;
 	@FindBy (className = "day-week-picker-arrow-right")
 	private WebElement nextWeekPickerArrow;
-	@FindBy (className = "timeoff-requests-request")
-	private List<WebElement> timeOffRequests;
-	@FindBy (className = "request-buttons")
-	private WebElement requestButton;
+	@FindBy(css = "[timeoff=\"timeoff\"] .request-status-Approved")
+	private List<WebElement> approvedTimeOffRequests;
+	@FindBy(className = "request-buttons-reject")
+	private WebElement timeOffRejectBtn;
 
 	@Override
 	public void rejectAllTheTimeOffRequests() throws Exception {
-		if (areListElementVisible(timeOffRequests, 10) && timeOffRequests.size() > 0) {
-			for (WebElement timeOffRequest : timeOffRequests) {
+		if(areListElementVisible(approvedTimeOffRequests,10) && approvedTimeOffRequests.size() > 0) {
+			for(WebElement timeOffRequest : approvedTimeOffRequests) {
 				click(timeOffRequest);
-				if (isElementEnabled(requestButton, 10)) {
-					SimpleUtils.pass("Request Button: " + requestButton.getText() + " loaded Successfully!");
-					click(requestButton);
+				if(isElementLoaded(timeOffRejectBtn,5)) {
+					scrollToElement(timeOffRejectBtn);
+					click(timeOffRejectBtn);
+					SimpleUtils.pass("My Time Off: Time off request Reject button clicked.");
 				}
 			}
-		}else {
-			SimpleUtils.report("There is no Time Off requests loaded!");
 		}
 	}
 
@@ -2909,8 +2908,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				selectedDate = dateHiredInput.getAttribute("value");
 				SimpleUtils.report("Select the hired date: " + selectedDate);
 			}
-			isElementLoadedAndPrintTheMessage(jobTitleSelect, "Job Title Select");
-			selectByVisibleText(jobTitleSelect, tmDetails.get("JOB_TITLE"));
 			isElementLoadedAndPrintTheMessage(engagementStatusSelect, "Engagement Status Select");
 			selectByVisibleText(engagementStatusSelect, tmDetails.get("ENGAGEMENT_STATUS"));
 			isElementLoadedAndPrintTheMessage(hourlySelect, "Hourly Select");
@@ -2933,13 +2930,12 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		if (areListElementVisible(engagementTexts, 5) && areListElementVisible(nextEngagementTexts, 5)) {
 			if (engagementTexts.size() == 4 && nextEngagementTexts.size() == 4) {
 				String actualDate = engagementTexts.get(0).getText();
-				String jobTitle = engagementTexts.get(1).getText();
 				String engagementStatus = nextEngagementTexts.get(0).getText();
 				String hourly = nextEngagementTexts.get(1).getText();
 				String salaried = nextEngagementTexts.get(2).getText();
 				String exempt = nextEngagementTexts.get(3).getText();
-				if (!SimpleUtils.isSameDayComparingTwoDays(actualDate, selectedDate, format1, format2) || !jobTitle.equalsIgnoreCase(tmDetails.get("JOB_TITLE"))
-				|| !engagementStatus.equalsIgnoreCase(tmDetails.get("ENGAGEMENT_STATUS")) || !hourly.equalsIgnoreCase(tmDetails.get("HOURLY"))
+				if (!SimpleUtils.isSameDayComparingTwoDays(actualDate, selectedDate, format1, format2)
+				|| !engagementStatus.equalsIgnoreCase(tmDetails.get("ENGAGEMENT_STATUS").replaceAll(" ", "")) || !hourly.equalsIgnoreCase(tmDetails.get("HOURLY"))
 				|| !salaried.equalsIgnoreCase(tmDetails.get("SALARIED")) || !exempt.equalsIgnoreCase(tmDetails.get("EXEMPT"))) {
 					areConsistent = false;
 				}

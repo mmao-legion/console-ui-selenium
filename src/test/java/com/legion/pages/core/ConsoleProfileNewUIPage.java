@@ -425,7 +425,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 //		String timeOffStartMonth = timeOffStartDuration.split(",")[0].split(" ")[0];
 		String timeOffEndDate = timeOffEndDuration.split(", ")[1].toUpperCase();
 //		String timeOffEndMonth = timeOffEndDuration.split(",")[0].split(" ")[0];
-		
+
 		String requestStatusText = "";
 		if(areListElementVisible(timeOffRequestRows, 10)) {
 			int timeOffRequestCount = timeOffRequestRows.size();
@@ -451,6 +451,27 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				}
 			} else
 				SimpleUtils.fail("Profile Page: No Time off request found.", true);
+		} else
+			SimpleUtils.fail("Profile Page: Time off request failed to load",true);
+		return requestStatusText;
+	}
+
+	@Override
+	public String getTimeOffRequestStatusByExplanationText(String timeOffExplanationText) throws Exception {
+		String requestStatusText = "";
+		if(areListElementVisible(timeOffRequestRows, 10) && timeOffRequestRows.size() > 0) {
+			for (WebElement timeOffRequest: timeOffRequestRows) {
+				WebElement requestStatus = timeOffRequest.findElement(By.cssSelector("span.request-status"));
+				try {
+					WebElement timeOffReason = timeOffRequest.findElement(By.cssSelector("[ng-if=\"timeoff.reason\"]"));
+					if (timeOffReason.getText().contains(timeOffExplanationText)) {
+						requestStatusText = requestStatus.getText();
+						break;
+					}
+				}catch (Exception e) {
+					continue;
+				}
+			}
 		} else
 			SimpleUtils.fail("Profile Page: Time off request failed to load",true);
 		return requestStatusText;
@@ -1944,16 +1965,18 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void cancelAllTimeOff() throws Exception {
 		if(areListElementVisible(approvedTimeOffRequests,10) && approvedTimeOffRequests.size() > 0) {
 			for(WebElement timeOffRequest : approvedTimeOffRequests) {
-						click(timeOffRequest);
-						if(isElementLoaded(timeOffRequestCancelBtn,5)) {
-							scrollToElement(timeOffRequestCancelBtn);
-							click(timeOffRequestCancelBtn);
-							SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
-						}
+				scrollToElement(timeOffRequest);
+				click(timeOffRequest);
+				if(isElementLoaded(timeOffRequestCancelBtn,5)) {
+					scrollToElement(timeOffRequestCancelBtn);
+					click(timeOffRequestCancelBtn);
+					SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
+				}
 			}
 		}
 		if(areListElementVisible(pendingTimeOffRequests,10) && pendingTimeOffRequests.size() > 0) {
 			for(WebElement timeOffRequest : pendingTimeOffRequests) {
+				scrollToElement(timeOffRequest);
 				click(timeOffRequest);
 				if(isElementLoaded(timeOffRequestCancelBtn,5)) {
 					scrollToElement(timeOffRequestCancelBtn);
@@ -2430,8 +2453,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		scrollToBottom();
 		clickOnSaveTimeOffRequestBtn();
 		String expectedRequestStatus = "PENDING";
-		String requestStatus = getTimeOffRequestStatus(timeOffReasonLabel
-				, timeOffExplanationText, timeOffStartDate, timeOffEndDate);
+		String requestStatus = getTimeOffRequestStatusByExplanationText(timeOffExplanationText);
 		if (requestStatus.contains(expectedRequestStatus))
 			SimpleUtils.pass("Profile Page: New Time Off Request reflects in '" + requestStatus + "' successfully after saving");
 		else
@@ -2448,9 +2470,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.report("Profile Page: No Pending Time off request found or can be cancelled. We will create a new time off");
 			clickOnCreateTimeOffBtn();
 			String timeOffReasonLabel = selectRandomReasonOfLeaveOnNewTimeOffRequest();
-			createNewTimeOffRequestAndVerify(timeOffReasonLabel, "");
-			String requestStatus = getTimeOffRequestStatus(timeOffReasonLabel,
-					"", getTimeOffStartTime(), getTimeOffEndTime());
+			String timeOffExplanation = (new Random()).nextInt(100) + "random" + (new Random()).nextInt(100) + "random" + (new Random()).nextInt(100);
+			createNewTimeOffRequestAndVerify(timeOffReasonLabel, timeOffExplanation);
+			String requestStatus = getTimeOffRequestStatusByExplanationText(timeOffExplanation);
 			if (requestStatus.toLowerCase().contains("pending")) {
 				pendingRequestCanBeCancelled = pendingRequestCanBeCancelled();
 				if (pendingRequestCanBeCancelled) {

@@ -158,8 +158,8 @@
                     <include name="verifyAccessControlsOnActivitiesPage"/>
                     <include name="verifyTheContentOnActivityAsStoreManager"/>
                     <include name="verifyTheContentOfShiftSwapActivityAsStoreManager"/>
-                    <include name="verifyApproveCoverRequestOfShiftSwapActivityAsTeamMember"/>
-                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsTeamMember"/>
+                    <include name="verifyApproveCoverRequestOfShiftSwapActivityAsInternalAdmin"/>
+                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin"/>
                     <include name="verifyTheContentOfActivityPageAsStoreManager" />
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />

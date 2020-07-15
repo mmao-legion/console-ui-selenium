@@ -9243,7 +9243,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             for (int i = 0; i < tmIcons.size(); i++) {
                 moveToElementAndClick(tmIcons.get(i));
                 if (isPopOverLayoutLoaded()) {
-                    System.out.println("pop is " + popOverLayout.getAttribute("innerHTML"));
                     if (popOverLayout.getText().contains(requestName) && popOverLayout.getText().contains(requestUserName)) {
                         index = 1;
                         click(popOverLayout.findElement(By.cssSelector("span.sch-worker-action-label")));

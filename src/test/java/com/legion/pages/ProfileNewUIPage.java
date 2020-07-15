@@ -156,4 +156,6 @@ public interface ProfileNewUIPage {
 	public void cancelAllTimeOff() throws Exception;
 
 	public void rejectAllTimeOff() throws Exception;
+
+	public String getTimeOffRequestStatusByExplanationText(String timeOffExplanationText) throws Exception;
 }
