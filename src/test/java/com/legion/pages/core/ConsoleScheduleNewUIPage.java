@@ -2715,6 +2715,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 		}
 	}
 
+	public void deleteAllShiftsInDayView(){
+        if (areListElementVisible(dayViewAvailableShifts,10)){
+            for (WebElement e: dayViewAvailableShifts) {
+                moveToElementAndClick(e);
+                deleteShift();
+            }
+        }
+    }
 
 	public void deleteShiftGutterText(){
 		if(shiftDeleteGutterText.size()!=0){
@@ -8299,31 +8307,40 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.sch-day-view-shift-delete")
     private WebElement btnDelete ;
 
+    @FindBy(css = "div[ng-repeat=\"shift in filteredShifts\"]")
+    private List<WebElement> shiftsInDayView;
 
+    //update by haya
     public void validateXButtonForEachShift() throws Exception{
         String deletedInfo = "Deleted";
-        int shiftCount = scheduleShiftsRows.size();
-        for (WebElement shift:scheduleShiftsRows){
+        int shiftCount = shiftsInDayView.size();
+        for (WebElement shift:shiftsInDayView){
             if(isElementEnabled(shift,5)){
                 click(shift);
                 if(isElementEnabled(btnDelete,5))
                 {
                     SimpleUtils.pass(": X button is present for selected Shift");
                     click(btnDelete);
-                    for (int i = 0; i < gutterText.size(); i++) {
+                    String deletedShiftInfo = shift.findElement(By.cssSelector("div.sch-day-view-right-gutter-text")).getText();
+                    if (deletedShiftInfo.contains(deletedInfo)) {
+                        SimpleUtils.pass( "can delete shift by X button");
+                        break;
+                    }else {
+                        SimpleUtils.fail("delete shift failed by X button, no deleted guter text!",true);
+                    }
+                    /*for (int i = 0; i < gutterText.size(); i++) {
                         String deletedShiftInfo = gutterText.get(i).getText();
                         if (deletedShiftInfo.contains(deletedInfo)) {
                             SimpleUtils.pass( "can delete shift by X button");
                             break;
                         }else
                             SimpleUtils.fail("delete shift failed by X button",true);
-                    }
+                    }  */
                    break;
                 }
                 else SimpleUtils.fail("X button is not present for ",true);
 
             }
-
         }
        saveSchedule();
         int shiftCountAftDelete =  scheduleShiftsRows.size();
@@ -8427,13 +8444,22 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @FindBy (css = "[ng-repeat=\"message in getComplianceMessages()\"]")
-    private WebElement otFlagandOThoursInWeekForTM;
+    private List<WebElement> otFlagandOThoursInWeekForTM;
     @Override
     public void verifyWeeklyOverTimeAndFlag(String teamMemberName) throws Exception {
-
-        if (isElementLoaded(otFlagandOThoursInWeekForTM, 5) && otFlagandOThoursInWeekForTM.getText().contains("week overtime")) {
+        boolean flag = false;
+        if (areListElementVisible(otFlagandOThoursInWeekForTM,10)){
+            for (WebElement e : otFlagandOThoursInWeekForTM){
+                if (e.getText().contains("week overtime")){
+                    flag = true;
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Flag is not present for team member " + propertySearchTeamMember.get("TeamMember"), false);
+        }
+        if (flag) {
             SimpleUtils.pass("week overtime shifts created successfully");
-
         } else {
             SimpleUtils.fail("weekly overtime Flag is not present for team member " + propertySearchTeamMember.get("TeamMember"), false);
         }
@@ -8444,7 +8470,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(workerNameList,5) && areListElementVisible(profileIcons, 5) && workerNameList.size() == profileIcons.size()) {
             for (int i = 0; i <workerNameList.size() ; i++) {
                 if (workerNameList.get(i).getText().toLowerCase().contains(teamMemberName.toLowerCase())) {
-                   click(profileIcons.get(i));
+                   click(shiftsWeekView.get(i).findElement(By.cssSelector("[ng-class=\"borderClass()\"]")));
                     if (isElementLoaded(deleteShift,3)) {
                         clickTheElement(deleteShift);
                         if (isElementLoaded(deleteBtnInDeleteWindows,3) ) {
