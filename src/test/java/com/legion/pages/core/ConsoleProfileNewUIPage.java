@@ -1991,10 +1991,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void rejectAllTimeOff() throws Exception {
 		if(areListElementVisible(approvedTimeOffRequests,10) && approvedTimeOffRequests.size() > 0) {
 			for(WebElement timeOffRequest : approvedTimeOffRequests) {
-				click(timeOffRequest);
+				clickTheElement(timeOffRequest);
 				if(isElementLoaded(timeOffRejectBtn,5)) {
 					scrollToElement(timeOffRejectBtn);
-					click(timeOffRejectBtn);
+					clickTheElement(timeOffRejectBtn);
 					SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
 				}
 			}

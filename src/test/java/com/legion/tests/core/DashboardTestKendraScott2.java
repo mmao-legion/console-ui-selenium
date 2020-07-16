@@ -148,19 +148,19 @@ public class DashboardTestKendraScott2 extends TestBase{
 		SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePageAdmin.goToConsoleScheduleAndScheduleSubMenu();
 		boolean isWeekGenerated = schedulePageAdmin.isWeekGenerated();
-		if (isWeekGenerated){
-			schedulePageAdmin.unGenerateActiveScheduleScheduleWeek();
+		if (!isWeekGenerated){
+			schedulePageAdmin.createScheduleForNonDGFlowNewUI();
 		}
-		schedulePageAdmin.createScheduleForNonDGFlowNewUI();
 		schedulePageAdmin.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		schedulePageAdmin.deleteTMShiftInWeekView(nickName);
 		schedulePageAdmin.clickOnDayViewAddNewShiftButton();
+		schedulePageAdmin.customizeNewShiftPage();
 		schedulePageAdmin.selectWorkRole("MOD");
 		schedulePageAdmin.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 		schedulePageAdmin.clickOnCreateOrNextBtn();
 		schedulePageAdmin.searchTeamMemberByName(nickName);
-		if (schedulePageAdmin.displayAlertPopUp())
-			schedulePageAdmin.displayAlertPopUpForRoleViolation();
+//		if (schedulePageAdmin.displayAlertPopUp())
+//			schedulePageAdmin.displayAlertPopUpForRoleViolation();
 		schedulePageAdmin.clickOnOfferOrAssignBtn();
 		schedulePageAdmin.saveSchedule();
 		schedulePageAdmin.publishActiveSchedule();

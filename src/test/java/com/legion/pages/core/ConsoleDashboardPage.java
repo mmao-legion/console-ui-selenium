@@ -920,10 +920,10 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				SimpleDateFormat sdf = new SimpleDateFormat(pattern);
 				dateFromTimeZone = getCurrentDateMonthYearWithTimeZone(jsonTimeZone,sdf);
 			} else {
-				SimpleUtils.fail("Current timezone doesn't exist, please check your location", true);
+				SimpleUtils.fail("Current timezone doesn't exist, please check your location", false);
 			}
 		} else {
-			SimpleUtils.fail("Current location failed to load", true);
+			SimpleUtils.fail("Current location failed to load", false);
 		}
 		return dateFromTimeZone;
 	}

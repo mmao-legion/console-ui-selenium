@@ -2679,7 +2679,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	}
 
 	public void clickOnOfferOrAssignBtn() throws Exception{
-		if(isElementEnabled(btnOffer,5)){
+		if(isElementLoaded(btnOffer,5)){
+		    scrollToElement(btnOffer);
 			click(btnOffer);
 		}else{
 			SimpleUtils.fail("Offer Or Assign Button is not clickable", false);
@@ -3350,15 +3351,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 5) && subTitle1.equalsIgnoreCase(generateModalTitle.getText().trim())
             && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
-                click(nextButtonOnCreateSchedule);
+                clickTheElement(nextButtonOnCreateSchedule);
                 if (isElementLoaded(generateModalTitle, 5) && subTitle2.equalsIgnoreCase(generateModalTitle.getText().trim())
                         && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
-                    click(nextButtonOnCreateSchedule);
+                    clickTheElement(nextButtonOnCreateSchedule);
                 }
                 if (areListElementVisible(availableCopyWeeks, 5)) {
                     SimpleUtils.pass("Copy Schedule page loaded Successfully!");
-                    // Wait for 8 seconds to make sure that SUGGESTED SCHEDULE is loaded
-                    waitForSeconds(8);
+                    // Wait for 7 seconds to make sure that SUGGESTED SCHEDULE is loaded
+                    waitForSeconds(7);
                     for (WebElement copyWeek : availableCopyWeeks) {
                         WebElement scheduledHours = copyWeek.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
                         if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
@@ -3374,7 +3375,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         }
                     }
                     if (isElementLoaded(nextButtonOnCreateSchedule) && nextButtonOnCreateSchedule.getText().equals(finish)) {
-                        click(nextButtonOnCreateSchedule);
+                        clickTheElement(nextButtonOnCreateSchedule);
                         waitForSeconds(5);
                         if (areListElementVisible(shiftsWeekView, 10) && shiftsWeekView.size() > 0) {
                             SimpleUtils.pass("Create the schedule successfully!");
@@ -4333,12 +4334,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public void saveSchedule() {
         if (isElementEnabled(scheduleSaveBtn)) {
-            click(scheduleSaveBtn);
+            clickTheElement(scheduleSaveBtn);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
         if (isElementEnabled(saveOnSaveConfirmationPopup)) {
-            click(saveOnSaveConfirmationPopup);
+            clickTheElement(saveOnSaveConfirmationPopup);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
@@ -7754,7 +7755,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             return true;  }
     }
 
-    @FindBy(css = "[ng-class=\"borderClass()\"]")
+    @FindBy(css = ".sch-day-view-shift-worker-detail")
       private List<WebElement> profileIcons;
 
     @FindBy(css = "div.sch-open-shift")
@@ -8440,19 +8441,19 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void deleteTMShiftInWeekView(String teamMemberName) throws Exception {
-        if (areListElementVisible(workerNameList,5) ) {
+        if (areListElementVisible(workerNameList,5) && areListElementVisible(profileIcons, 5) && workerNameList.size() == profileIcons.size()) {
             for (int i = 0; i <workerNameList.size() ; i++) {
                 if (workerNameList.get(i).getText().toLowerCase().contains(teamMemberName.toLowerCase())) {
                    click(profileIcons.get(i));
                     if (isElementLoaded(deleteShift,3)) {
-                        click(deleteShift);
+                        clickTheElement(deleteShift);
+                        if (isElementLoaded(deleteBtnInDeleteWindows,3) ) {
+                            click(deleteBtnInDeleteWindows);
+                            SimpleUtils.pass("existing shift "+i+"delete successfully");
+                        } else
+                        SimpleUtils.fail("delete confirm button load failed",true);
                     }else
                         SimpleUtils.fail("delete item for this TM load failed",true);
-                    if (isElementLoaded(deleteBtnInDeleteWindows,3) ) {
-                        click(deleteBtnInDeleteWindows);
-                        SimpleUtils.pass("existing shift "+i+"delete successfully");
-                    } else
-                        SimpleUtils.fail("delete confirm button load failed",true);
                 }
             }
 
