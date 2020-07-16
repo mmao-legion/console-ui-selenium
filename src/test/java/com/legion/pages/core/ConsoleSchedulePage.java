@@ -1068,6 +1068,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void deleteAllShiftsInDayView(){
+        // TODO Auto-generated method stub
+    }
+
+    @Override
     public void deleteShiftGutterText() {
         // TODO Auto-generated method stub
 
