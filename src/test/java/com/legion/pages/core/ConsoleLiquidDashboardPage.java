@@ -162,7 +162,6 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @Override
     public void closeWidget(String widgetTitle) throws Exception {
         boolean flag =false;
-        int i=0;
         waitForSeconds(10);
         if (areListElementVisible(widgetsInDashboardPage,10)){
             for (WebElement widgetTemp : widgetsInDashboardPage){
