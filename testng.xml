@@ -194,4 +194,14 @@
         </classes>
     </test>
 
+    <test name="LiquidDashboard Test">
+        <classes>
+            <class name="com.legion.tests.core.LiquidDashboardTest">
+                <methods>
+                    <include name="verifyUIOfHelpfulLinkswidgetAsStoreManager" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->

@@ -47,4 +47,6 @@ public interface PageFactory {
     GmailPage createConsoleGmailPage();
 
     ActivityPage createConsoleActivityPage();
+
+    LiquidDashboardPage createConsoleLiquidDashboardPage();
 }
