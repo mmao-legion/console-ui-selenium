@@ -1155,7 +1155,7 @@ public class ScheduleTest extends TestBase{
 		schedulePage.selectWorkRole("MOD");
 		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
 		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.selectSpecificTMWhileCreateNewShift(tmName);
+		schedulePage.searchTeamMemberByName(tmName);
 		schedulePage.clickOnOfferOrAssignBtn();
 		schedulePage.saveSchedule();
 		schedulePage.publishActiveSchedule();

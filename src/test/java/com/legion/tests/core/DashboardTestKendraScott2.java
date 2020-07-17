@@ -171,7 +171,13 @@ public class DashboardTestKendraScott2 extends TestBase{
 		dashboardPage.validateDateAndTimeAfterSelectingDifferentLocation();
 		SchedulePage schedulePageTM = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePageTM.clickOnScheduleConsoleMenuItem();
-		List<String> scheduleListTM = schedulePageTM.getWeekScheduleShiftTimeListOfMySchedule();
+		List<String> scheduleListTM = new ArrayList<>();
+		if (schedulePageTM.getShiftHoursFromInfoLayout().size() > 0) {
+			for (String tmShiftTime : schedulePageTM.getShiftHoursFromInfoLayout()) {
+				tmShiftTime = tmShiftTime.replaceAll(":00", "");
+				scheduleListTM.add(tmShiftTime);
+			}
+		}
 		if (scheduleListTM != null && scheduleListTM.size() > 0 && scheduleListAdmin != null && scheduleListAdmin.size() > 0) {
 			if (scheduleListTM.size() == scheduleListAdmin.size() && scheduleListTM.containsAll(scheduleListAdmin)) {
 				SimpleUtils.pass("Schedules in TM view is consistent with the Admin view of the location successfully");

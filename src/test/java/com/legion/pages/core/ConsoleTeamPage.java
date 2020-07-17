@@ -3319,10 +3319,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			if (isClearFilterSuccessFully()) {
 				SimpleUtils.pass("Clear Filter Successfully!");
 			}else {
-				SimpleUtils.fail("Clear Filter not successfully!", true);
+				SimpleUtils.fail("Clear Filter not successfully!", false);
 			}
 		}else {
-			SimpleUtils.fail("Clear Filter button not loaded Successfully!", true);
+			SimpleUtils.fail("Clear Filter button not loaded Successfully!", false);
 		}
 	}
 
