@@ -43,8 +43,8 @@ public class LiquidDashboardTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Verify UI for Helpful Links widget")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify UI for common widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyCommonUIOfwidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -158,5 +158,4 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.enterEditMode();
         liquidDashboardPage.verifySearchInput(widgetType.Helpful_Links.getValue());
     }
-
 }
