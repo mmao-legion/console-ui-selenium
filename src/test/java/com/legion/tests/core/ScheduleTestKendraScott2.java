@@ -22,6 +22,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 
 public class ScheduleTestKendraScott2 extends TestBase {
@@ -294,6 +295,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		dashboardPage.goToTodayForNewUI();
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+		if(!isActiveWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
 		schedulePage.legionButtonIsClickableAndHasNoEditButton();
 		schedulePage.legionIsDisplayingTheSchedul();
 	}
@@ -311,17 +316,24 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.goToScheduleNewUI();
 		//Current week is getting open by default
 		schedulePage.currentWeekIsGettingOpenByDefault();
+		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+		if(!isActiveWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
 		//Weather week smartcard is displayed correctly-Current week[Sun-Sat] Next week will show which days are past day for current week: Eg: Sun for current week
 		schedulePage.weatherWeekSmartCardIsDisplayedForAWeek();
 		//If selecting one week then data is getting updating on Schedule page according to corresponding week
 		schedulePage.scheduleUpdateAccordingToSelectWeek();
 		//Print button is clickable
+		String handle = getDriver().getWindowHandle();
 		schedulePage.printButtonIsClickable();
+		getDriver().switchTo().window(handle);
+
 		//In week View > Clicking on Print button  it should give option to print in both Landscape or Portrait mode Both should work.
-		schedulePage.landscapePortraitModeShowWellInWeekView();
+		//schedulePage.landscapePortraitModeShowWellInWeekView();
 		//In Week view should be able to change the mode between Landscape and Portrait
-		schedulePage.landscapeModeWorkWellInWeekView();
-		schedulePage.portraitModeWorkWellInWeekView();
+		//schedulePage.landscapeModeWorkWellInWeekView();
+		//schedulePage.portraitModeWorkWellInWeekView();
 		//Day-week picker section navigating correctly
 		//Todo:Run failed by LEG-10221
 		schedulePage.dayWeekPickerSectionNavigatingCorrectly();
@@ -371,6 +383,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			HashMap<String, Float> overviewData = new HashMap<>();
 			SchedulePage schedulePage  = pageFactory.createConsoleScheduleNewUIPage();
 			schedulePage.goToScheduleNewUI();
+			boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+			if(!isActiveWeekGenerated){
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
 			scheduleSmartCardHoursWages = schedulePage.getScheduleBudgetedHoursInScheduleSmartCard();
 			SimpleUtils.report("scheduleSmartCardHoursWages :"+scheduleSmartCardHoursWages);
 			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
@@ -404,7 +420,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
 		if(!isActiveWeekGenerated){
-			schedulePage.generateOrUpdateAndGenerateSchedule();
+			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
 		//Edit button should be clickable
 		//While click on edit button,if Schedule is finalized then prompt is available and Prompt is in proper alignment and correct msg info.
@@ -416,7 +432,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.selectNextWeekSchedule();
 		boolean isActiveWeekGenerated2 = schedulePage.isWeekGenerated();
 		if(!isActiveWeekGenerated2){
-			schedulePage.generateOrUpdateAndGenerateSchedule();
+			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
 			//"After Click on view profile,then particular TM profile is displayed :1. Personal details 2. Work Preferences 3. Availability
 			SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , schedulePage.verifyContextOfTMDisplay(), true);
@@ -473,9 +489,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		HashMap<String, Integer> mealBreakTimeData = controlsNewUIPage.getMealBreakDataFromControls();
 		float mealBreakTime = mealBreakTimeData.get("unPaiedMins")/ 60f;
 		int everyHoursOfWork = mealBreakTimeData.get("everyXHoursOfWork");
-		//Overtime hours = shift total hours  - meal time(defined in controls )-overtime pay hours in controls
-		//for example OT is one hour
-		int dragIncreasePoint = (int) (((1+dailyOvertimePay)*everyHoursOfWork/(everyHoursOfWork-mealBreakTime))*2)-Integer.valueOf(propertyCustomizeMap.get("INCREASE_END_TIME"));
+		//Overtime hours = shift total hours  - 8h
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.clickOnScheduleConsoleMenuItem();
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
@@ -485,25 +499,28 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.currentWeekIsGettingOpenByDefault();
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
 		if(!isActiveWeekGenerated){
-			schedulePage.generateOrUpdateAndGenerateSchedule();
+			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
 		//click on Edit button to add new shift
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		schedulePage.clickOnDayView();
 		schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
+		schedulePage.deleteAllShiftsInDayView();
+		schedulePage.saveSchedule();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
 
 		//"while selecting Open shift:Auto,create button is enabled one open shift will created and system will offer shift automatically
-		schedulePage.clickNewDayViewShiftButtonLoaded();
+		schedulePage.clickOnDayViewAddNewShiftButton();
 		schedulePage.customizeNewShiftPage();
 		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
 		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
 		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
 		schedulePage.clickOnCreateOrNextBtn();
 
 //		"While selecting Open shift:Manual,Next button is enabled,After Click on Next Select Tms window is enabled and after selecting N number of TMs, offer will send to them"
-		schedulePage.clickNewDayViewShiftButtonLoaded();
+		schedulePage.clickOnDayViewAddNewShiftButton();
 		schedulePage.customizeNewShiftPage();
 		String defaultTimeDuration = schedulePage.getTimeDurationWhenCreateNewShift();
 		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
@@ -513,7 +530,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.pass("A shift time and duration can be changed by dragging it");
 		}else
 			SimpleUtils.report("there is no change for time duration");
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
 		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
 		schedulePage.clickOnCreateOrNextBtn();
 		schedulePage.customizeNewShiftPage();
@@ -521,11 +538,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.clickOnOfferOrAssignBtn();
 
 //		While selecting Assign TM,Next button is enabled, After Click on Next, Select Tm window is enabled and only one TM can be selected, and shift will assign to him/her
-		schedulePage.clickNewDayViewShiftButtonLoaded();
+		schedulePage.clickOnDayViewAddNewShiftButton();
 		schedulePage.customizeNewShiftPage();
 		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
 		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
 		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 		schedulePage.clickOnCreateOrNextBtn();
 		schedulePage.verifySelectTeamMembersOption();
@@ -537,10 +554,12 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//if make X hour overtime, the Daily OT will be show
 		int otFlagCount = schedulePage.getOTShiftCount();
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.clickNewDayViewShiftButtonLoaded();
+		schedulePage.clickOnDayViewAddNewShiftButton();
 		schedulePage.customizeNewShiftPage();
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), dragIncreasePoint, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		//schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), dragIncreasePoint, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
 		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 		schedulePage.clickOnCreateOrNextBtn();
 		schedulePage.verifySelectTeamMembersOption();
@@ -555,51 +574,54 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//If a TM has more than 40 working hours in a week (As defined in Controls) then Week OT hours should show (Week OT should be enabled in Controls)
 		int workWeekOverTime = Integer.valueOf(schedulePolicyData.get("single_workweek_overtime"));
 		int dayCountInOneWeek = Integer.valueOf(propertyCustomizeMap.get("WORKDAY_COUNT"));
-		int shiftHoursEachDay;
-		if ((workWeekOverTime % dayCountInOneWeek) == 0) {
-			shiftHoursEachDay = workWeekOverTime / dayCountInOneWeek;
-		} else {
-			shiftHoursEachDay = (workWeekOverTime / dayCountInOneWeek) + 1;
-		}
-//		float totalShiftHoursInWeekForTM = (shiftHoursEachDay-0.5f)*dayCountInOneWeek;
-//		int overtimeHoursInWeekForTM = totalShiftHoursInWeekForTM-workWeekOverTime;
-		String teamMemberName = propertySearchTeamMember.get("TeamMember");
+		String teamMemberName = "Gardner";
+		schedulePage.clickOnWeekView();
 		float shiftHoursInWeekForTM = schedulePage.getShiftHoursByTMInWeekView(teamMemberName);
+		schedulePage.clickOnDayView();
 		if (shiftHoursInWeekForTM == 0) {
-			schedulePage.clickNewDayViewShiftButtonLoaded();
+			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
-			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), (2+shiftHoursEachDay*2-7), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-//			schedulePage.moveSliderAtCertainPoint2( String.valueOf(2+(shiftHoursEachDay+0.5f)*2), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-			schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
 			schedulePage.selectSpecificWorkDay(dayCountInOneWeek);
 			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 			schedulePage.clickOnCreateOrNextBtn();
 			schedulePage.selectSpecificTMWhileCreateNewShift(teamMemberName);
 			schedulePage.clickOnOfferOrAssignBtn();
 			schedulePage.saveSchedule();
+			schedulePage.clickOnWeekView();
+			System.out.println(teamMemberName.substring(0,6));
 			float shiftHoursInWeekForTMAftAddNewShift = schedulePage.getShiftHoursByTMInWeekView(teamMemberName);
 
 			if ((shiftHoursInWeekForTMAftAddNewShift -shiftHoursInWeekForTM)>workWeekOverTime) {
 				schedulePage.verifyWeeklyOverTimeAndFlag(teamMemberName);
 			}
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView(teamMemberName);
+			schedulePage.saveSchedule();
 		}else{
 			schedulePage.deleteTMShiftInWeekView(teamMemberName);
-			schedulePage.clickNewDayViewShiftButtonLoaded();
+			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
-			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), (2+shiftHoursEachDay*2-7), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-//			schedulePage.moveSliderAtCertainPoint2( String.valueOf(2+shiftHoursEachDay*2), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-			schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
 			schedulePage.selectSpecificWorkDay(dayCountInOneWeek);
 			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 			schedulePage.clickOnCreateOrNextBtn();
 			schedulePage.selectSpecificTMWhileCreateNewShift(teamMemberName);
 			schedulePage.clickOnOfferOrAssignBtn();
 			schedulePage.saveSchedule();
+			schedulePage.clickOnWeekView();
 			float shiftHoursInWeekForTMAftAddNewShift = schedulePage.getShiftHoursByTMInWeekView(teamMemberName);
 
 			if (shiftHoursInWeekForTMAftAddNewShift > workWeekOverTime) {
 				schedulePage.verifyWeeklyOverTimeAndFlag(teamMemberName);
 			}
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView(teamMemberName);
+			schedulePage.saveSchedule();
 		}
 
 
@@ -622,6 +644,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		/*
 		 *  Navigate to Schedule Week view
 		 */
+		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+		if(!isActiveWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
 		boolean isWeekView = true;
 		schedulePage.clickOnWeekView();
 		schedulePage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
@@ -782,7 +808,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.validateProfilePictureInAShiftClickable();
 
 		//T1838615 Validate the data of profile popup in a shift.
-		//schedulePage.validateTheDateOfProfilePopupInAShift();
+		//schedulePage.validateTheDataOfProfilePopupInAShift();
 		// todo: <Here is an incident LEG-10929>
 	}
 

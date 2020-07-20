@@ -1,5 +1,7 @@
 {
 	  "WorkRole" : "MANAGER",
 	  "WorkRole_BARISTA" : "BARISTA",
-	  "changeWorkRole" : "Manager"
+	  "changeWorkRole" : "Manager",
+	  "MOD": "MOD",
+	  "EVENT_MANAGER": "EVENT MANAGER"
 }

@@ -109,8 +109,8 @@ public class ScheduleOverviewTest extends TestBase{
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Schedule functionality  Overview")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyScheduleFunctionalityOverview(String username, String password, String browser, String location) throws Exception {
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyScheduleFunctionalityOverviewAsStoreManager(String username, String password, String browser, String location) throws Exception {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.clickOnScheduleConsoleMenuItem();
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -141,6 +141,9 @@ public class ScheduleOverviewTest extends TestBase{
 		//	user can click on Schedule week which will navigate to Schedule page
 		scheduleOverviewPage.clickOnCurrentWeekToOpenSchedule();
 		SimpleUtils.pass("user can click on Schedule week which will navigate to Schedule page");
+		if (schedulePage.isGenerateButtonLoaded()){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
 		HashMap<String, Float> scheduleSmartCardHoursWages = schedulePage.getScheduleBudgetedHoursInScheduleSmartCard();
 		if (overviewData.get("guidanceHours").equals(scheduleSmartCardHoursWages.get("budgetedHours"))
 				& overviewData.get("scheduledHours").equals(scheduleSmartCardHoursWages.get("scheduledHours"))
@@ -160,7 +163,7 @@ public class ScheduleOverviewTest extends TestBase{
 		{
 			if(overviewPageScheduledWeeks.get(i).getText().toLowerCase().contains(LoginTest.overviewWeeksStatus.Guidance.getValue().toLowerCase()))
 			{
-				HashMap<String, Float> overviewDataInGuidance = scheduleOverviewPage.getWeekHoursByWeekElement(scheduleOverViewWeeks.get(0));
+				HashMap<String, Float> overviewDataInGuidance = scheduleOverviewPage.getWeekHoursByWeekElement(scheduleOverViewWeeks.get(i));
 				if (!overviewDataInGuidance.get("guidanceHours").equals(guidanceHoursForGuidanceSchedule) & overviewDataInGuidance.get("scheduledHours").equals(scheduledHoursForGuidanceSchedule) & overviewDataInGuidance.get("otherHours").equals(otherHoursForGuidanceSchedule) ) {
 					SimpleUtils.pass("If any week is in Guidance status, then only Budgeted hours are showing, scheduledHours and otherHours are all zero");
 				}else
@@ -172,8 +175,7 @@ public class ScheduleOverviewTest extends TestBase{
 				Thread.sleep(5000);
 				if(schedulePage.isGenerateButtonLoaded())
 				{
-					schedulePage.generateOrUpdateAndGenerateSchedule();
-//					schedulePage.publishActiveSchedule();
+					schedulePage.createScheduleForNonDGFlowNewUI();
 					schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 
 					List<String> scheduleActivityInfo = scheduleOverviewPage.getScheduleActivityInfo();

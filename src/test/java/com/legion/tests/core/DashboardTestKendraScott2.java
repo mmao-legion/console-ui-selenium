@@ -128,10 +128,6 @@ public class DashboardTestKendraScott2 extends TestBase{
 		dashboardPage.validateTheVisibilityOfUsername(nickName);
 
 		//T1838583 Validate the information after selecting different location.
-		dashboardPage.validateDateAndTimeAfterSelectingDifferentLocation();
-		SchedulePage schedulePageTM = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePageTM.clickOnScheduleConsoleMenuItem();
-		List<String> scheduleListTM = schedulePageTM.getWeekScheduleShiftTimeListOfMySchedule();
 		LoginPage loginPage = pageFactory.createConsoleLoginPage();
 		loginPage.logOut();
 
@@ -141,9 +137,47 @@ public class DashboardTestKendraScott2 extends TestBase{
 		Object[][] internalAdminCredentials = userCredentials.get("InternalAdmin");
 		loginToLegionAndVerifyIsLoginDone(String.valueOf(internalAdminCredentials[0][0]), String.valueOf(internalAdminCredentials[0][1])
 				, String.valueOf(internalAdminCredentials[0][2]));
+
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(nickName);
+		profileNewUIPage.selectProfilePageSubSectionByLabel("Time Off");
+		profileNewUIPage.rejectAllTimeOff();
+
 		SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePageAdmin.goToConsoleScheduleAndScheduleSubMenu();
+		boolean isWeekGenerated = schedulePageAdmin.isWeekGenerated();
+		if (!isWeekGenerated){
+			schedulePageAdmin.createScheduleForNonDGFlowNewUI();
+		}
+		schedulePageAdmin.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePageAdmin.deleteTMShiftInWeekView(nickName);
+		schedulePageAdmin.clickOnDayViewAddNewShiftButton();
+		schedulePageAdmin.customizeNewShiftPage();
+		schedulePageAdmin.selectWorkRole("MOD");
+		schedulePageAdmin.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+		schedulePageAdmin.clickOnCreateOrNextBtn();
+		schedulePageAdmin.searchTeamMemberByName(nickName);
+//		if (schedulePageAdmin.displayAlertPopUp())
+//			schedulePageAdmin.displayAlertPopUpForRoleViolation();
+		schedulePageAdmin.clickOnOfferOrAssignBtn();
+		schedulePageAdmin.saveSchedule();
+		schedulePageAdmin.publishActiveSchedule();
 		List<String> scheduleListAdmin = schedulePageAdmin.getWeekScheduleShiftTimeListOfWeekView(nickName);
+		loginPage.logOut();
+
+		loginToLegionAndVerifyIsLoginDone(username, password, location);
+		dashboardPage.validateDateAndTimeAfterSelectingDifferentLocation();
+		SchedulePage schedulePageTM = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePageTM.clickOnScheduleConsoleMenuItem();
+		List<String> scheduleListTM = new ArrayList<>();
+		if (schedulePageTM.getShiftHoursFromInfoLayout().size() > 0) {
+			for (String tmShiftTime : schedulePageTM.getShiftHoursFromInfoLayout()) {
+				tmShiftTime = tmShiftTime.replaceAll(":00", "");
+				scheduleListTM.add(tmShiftTime);
+			}
+		}
 		if (scheduleListTM != null && scheduleListTM.size() > 0 && scheduleListAdmin != null && scheduleListAdmin.size() > 0) {
 			if (scheduleListTM.size() == scheduleListAdmin.size() && scheduleListTM.containsAll(scheduleListAdmin)) {
 				SimpleUtils.pass("Schedules in TM view is consistent with the Admin view of the location successfully");
@@ -152,10 +186,9 @@ public class DashboardTestKendraScott2 extends TestBase{
 		} else {
 			SimpleUtils.report("Schedule may have not been generated");
 		}
-		loginPage.logOut();
-		loginToLegionAndVerifyIsLoginDone(username, password, location);
 
 		//T1838585 Validate date and time.
+		dashboardPage.navigateToDashboard();
 		dashboardPage.validateDateAndTime();
 
 		//T1838586 Validate the upcoming schedules.
@@ -198,22 +231,34 @@ public class DashboardTestKendraScott2 extends TestBase{
 		HashMap<String, String> upComingShifts = new HashMap<>();
 		HashMap<String, String> fourShifts = new HashMap<>();
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SchedulePage schedulePage = null;
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		dashboardPage.verifyDashboardPageLoadedProperly();
 		// Verify the Welcome section
 		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 		String nickName = profileNewUIPage.getNickNameFromProfile();
 		dashboardPage.verifyTheWelcomeMessage(nickName);
 		// Verify Today's forecast section > Projected Demand graph is present
-		// LEG-9104: Projected Demand and Shoppers are showing up Zero for Current and future weeks
-		// TODO: following check will fail since LEG-9104
 		dashboardPage.isProjectedDemandGraphShown();
+
+		// Make sure schedule is published
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+		if(isActiveWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+		schedulePage.publishActiveSchedule();
+		dashboardPage.navigateToDashboard();
+
 		HashMap<String, String> hoursOnDashboard = dashboardPage.getHoursFromDashboardPage();
 		String dateFromDashboard = dashboardPage.getCurrentDateFromDashboard();
 		String timeFromDashboard = dashboardPage.getCurrentTimeFromDashboard();
+
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(
-				ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , true);
+				ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
 		// Verify View Today's schedule button is working and navigating to the schedule page[Current date in day view]
 		schedulePage.isScheduleForCurrentDayInDayView(dateFromDashboard);
 		HashMap<String, String> hoursOnSchedule = schedulePage.getHoursFromSchedulePage();
@@ -223,10 +268,10 @@ public class DashboardTestKendraScott2 extends TestBase{
 				SimpleUtils.pass("Data Source for Budget, Scheduled and Other are consistent with the data on schedule page!");
 			}else{
 				SimpleUtils.fail("Data Source for Budget, Scheduled and Other are inconsistent with the data " +
-						"on schedule page!", true);
+						"on schedule page!", false);
 			}
 		}else{
-			SimpleUtils.fail("Failed to get the hours!", true);
+			SimpleUtils.fail("Failed to get the hours!", false);
 		}
 		// Verify that Starting soon shifts and Scheduled hours are not showing when current week's schedule is in Guidance or Draft
 		if (!schedulePage.isGenerateButtonLoaded()) {
@@ -243,7 +288,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		schedulePage.isSchedule();
 		if (!schedulePage.isPublishButtonLoaded()) {
-			schedulePage.generateOrUpdateAndGenerateSchedule();
+			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
 		schedulePage.publishActiveSchedule();
 		dashboardPage.navigateToDashboard();
@@ -257,7 +302,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 			fourShifts = schedulePage.getFourUpComingShifts(isStartingTomorrow, timeFromDashboard);
 			schedulePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
 		}else {
-			SimpleUtils.fail("Shifts failed to load on Dashboard when the schedule is published!", true);
+			SimpleUtils.fail("Shifts failed to load on Dashboard when the schedule is published!", false);
 		}
 	}
 

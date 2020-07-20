@@ -251,6 +251,14 @@ public class SimpleUtils {
 		}
 	}
 
+	public static void warn(String message) {
+
+		ExtentTestManager.getTest().log(Status.WARNING,"<div class=\"row\" style=\"background-color:#FFA500; color:white; padding: 7px 5px;\">" + message
+				+ "</div>");
+		if(getTestRailReporting()!=null){
+			SimpleUtils.addTestResultIntoTestRailN(6, message);
+		}
+	}
 
 	public static HashMap<String, Object[][]> getEnvironmentBasedUserCredentialsFromJson(String fileName)
 	{

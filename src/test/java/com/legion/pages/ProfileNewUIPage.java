@@ -152,4 +152,10 @@ public interface ProfileNewUIPage {
 	public void clickNextWeek() throws Exception;
 
 	public String getAvailabilityWeek() throws Exception;
+
+	public void cancelAllTimeOff() throws Exception;
+
+	public void rejectAllTimeOff() throws Exception;
+
+	public String getTimeOffRequestStatusByExplanationText(String timeOffExplanationText) throws Exception;
 }

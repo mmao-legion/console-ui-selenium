@@ -70,6 +70,7 @@ public interface SchedulePage {
 	public void clickOnOfferOrAssignBtn() throws Exception;
 	public void clickOnShiftContainer(int index) throws Exception;
 	public void deleteShift();
+	public void deleteAllShiftsInDayView();
 	public void deleteShiftGutterText();
 	public boolean getScheduleStatus() throws Exception;
 	public boolean inActiveWeekDayClosed(int dayIndex) throws Exception;
@@ -112,6 +113,7 @@ public interface SchedulePage {
 	public void validatingGenrateSchedule() throws Exception;
 	public boolean loadSchedule() throws Exception;
 	public void generateOrUpdateAndGenerateSchedule() throws Exception;
+	public void createScheduleForNonDGFlowNewUI() throws Exception;
 	public HashMap<String, Integer> getScheduleBufferHours() throws Exception;
 	public boolean isComlianceReviewRequiredForActiveWeek() throws Exception;
 	public void unGenerateActiveScheduleScheduleWeek() throws Exception;
@@ -214,7 +216,7 @@ public interface SchedulePage {
 
 //	public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow) throws Exception;
 	public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception;
-	public void clickOnCreateNewShiftWeekView() throws Exception;
+	public void clickOnCreateNewShiftButton() throws Exception;
 	public void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception;
 	public void selectDaysFromCurrentDay(String currentDay) throws Exception;
 	public void searchTeamMemberByName(String name) throws Exception;
@@ -322,11 +324,11 @@ public interface SchedulePage {
 
 	public void deleteTMShiftInWeekView(String teamMemberName) throws Exception;
 
-	public void filterScheduleByJobTitle(boolean isWeekView);
+	public void filterScheduleByJobTitle(boolean isWeekView) throws Exception;
 
-	public void filterScheduleByWorkRoleAndJobTitle(boolean isWeekView);
+	public void filterScheduleByWorkRoleAndJobTitle(boolean isWeekView) throws Exception;
 
-	public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView);
+	public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView) throws Exception;
 
 	public boolean verifyConvertToOpenPopUpDisplay() throws Exception;
 
@@ -381,7 +383,7 @@ public interface SchedulePage {
 
 	public void validateProfilePictureInAShiftClickable() throws Exception;
 
-	public void validateTheDateOfProfilePopupInAShift() throws Exception;
+	public void validateTheDataOfProfilePopupInAShift() throws Exception;
 
 	public void validateTheAvailabilityOfInfoIcon() throws Exception;
 
@@ -399,7 +401,16 @@ public interface SchedulePage {
 
 	public List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception;
 
+	public void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception;
+	
 	public void navigateToNextWeek() throws Exception;
 
 	public void verifyShiftsAreSwapped(List<String> swapData) throws Exception;
+
+	public void clickOnDayViewAddNewShiftButton() throws Exception;
+
+	public void addNewShiftsByNames(List<String> names) throws Exception;
+	public boolean displayAlertPopUp() throws Exception;
+
+	public void displayAlertPopUpForRoleViolation() throws Exception;
 }

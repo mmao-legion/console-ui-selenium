@@ -98,7 +98,7 @@ public class TeamTest extends TestBase{
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team functionality In Activate")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInActivate(String browser, String username, String password, String location) throws Exception {
@@ -159,7 +159,7 @@ public class TeamTest extends TestBase{
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team functionality In Terminate")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInTerminate(String browser, String username, String password, String location) throws Exception {
@@ -255,7 +255,7 @@ public class TeamTest extends TestBase{
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team Functionality Time Off")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInTimeOffAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -279,7 +279,7 @@ public class TeamTest extends TestBase{
 
 		// Login as Team Member
 		String fileName = "UsersCredentials.json";
-		fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+		fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
 		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
 		Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
 		loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
@@ -297,6 +297,7 @@ public class TeamTest extends TestBase{
 		String myTimeOffLabel = "My Time Off";
 		profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
 		String pendingLabel = "Pending";
+		profileNewUIPage.cancelAllTimeOff();
 		int previousPendingCount = profileNewUIPage.getTimeOffCountByStatusLabel(pendingLabel);
 		// Verify Create Time off button is working
 		profileNewUIPage.clickOnCreateTimeOffBtn();
@@ -352,10 +353,10 @@ public class TeamTest extends TestBase{
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team Functionality Coverage")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInCoverageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+	public void verifyTheTeamFunctionalityInCoverageAsStoreManager(String browser, String username, String password, String location) throws Exception {
 		String workingHoursType = "Regular";
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("Dashboard page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -426,6 +427,14 @@ public class TeamTest extends TestBase{
 		}else {
 			SimpleUtils.fail("Time Off table updated is incorrectly!", true);
 		}
+
+		// Clear Data, reject the time off
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(jobTitle);
+		teamPage.isProfilePageLoaded();
+		teamPage.navigateToTimeOffPage();
+		teamPage.rejectAllTheTimeOffRequests();
 	}
 
 	public String getTimeZoneFromControlsAndGetDate() throws Exception {

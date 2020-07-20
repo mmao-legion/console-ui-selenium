@@ -415,9 +415,9 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		List<WebElement> weekHoursElement = overViewWeek.findElements(By.cssSelector("span.text-hours"));
 		if(weekHoursElement.size() == 4)
 		{
-			float guidanceHours = Float.valueOf(weekHoursElement.get(0).getText().split(" ")[0]);
-			float scheduledHours = Float.valueOf(weekHoursElement.get(1).getText().split(" ")[0]);
-			float otherHours = Float.valueOf(weekHoursElement.get(2).getText().split(" ")[0]);
+			float guidanceHours = Float.valueOf(weekHoursElement.get(0).getText().split(" ")[0].replace(",",""));
+			float scheduledHours = Float.valueOf(weekHoursElement.get(1).getText().split(" ")[0].replace(",",""));
+			float otherHours = Float.valueOf(weekHoursElement.get(2).getText().split(" ")[0].replace(",",""));
 			weekHours.put("guidanceHours", guidanceHours);
 			weekHours.put("scheduledHours", scheduledHours);
 			weekHours.put("otherHours", otherHours);

@@ -107,5 +107,9 @@ public class ConsoleWebPageFactory implements PageFactory {
 	public ActivityPage createConsoleActivityPage() { return new ConsoleActivityPage(); }
 
 	@Override
+	public LocationsPage createOpsPortalLocationsPage() { return new OpsPortalLocationsPage();
+	}
+
+	@Override
 	public LiquidDashboardPage createConsoleLiquidDashboardPage() { return new ConsoleLiquidDashboardPage(); }
 }

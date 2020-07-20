@@ -4652,6 +4652,24 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private List<WebElement> workingHoursTypes;
 	@FindBy(css = "#day\\.dayOfTheWeek .pills-row")
 	private List<WebElement> weekDays;
+	@FindBy(css = "[value=\"sc.shiftSwapOfferPreference.approvalRequired\"] select")
+	private WebElement swapApprovalRequired;
+
+	@Override
+	public void updateSwapAndCoverRequestIsApprovalRequired(String option) throws Exception {
+		if (isElementLoaded(swapApprovalRequired, 20)) {
+			String selectedValue = swapApprovalRequired.findElement(By.cssSelector("[selected=\"selected\"]")).getText();
+			if (!option.equals(selectedValue)) {
+				selectByVisibleText(swapApprovalRequired, option);
+				displaySuccessMessage();
+				SimpleUtils.pass("Select Swap Approval Required Option: " + option + " Successfully!");
+			}else {
+				SimpleUtils.pass("Swap Approval Required Option: " + option + " is already selected!");
+			}
+		}else {
+			SimpleUtils.fail("Swap Request Approval Required Select not loaded Successfully!", false);
+		}
+	}
 
 	@Override
 	public String getTimeZoneFromLocationDetailsPage() throws Exception {
@@ -4819,7 +4837,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	public LinkedHashMap<String, List<String>> getRegularWorkingHours() throws Exception {
 		LinkedHashMap<String, List<String>> regularHours = new LinkedHashMap<>();
 		List<String> startNEndTime = null;
-		if (areListElementVisible(weekDays, 10)) {
+		if (areListElementVisible(weekDays, 30)) {
 			for (WebElement weekDay : weekDays) {
 				WebElement day = weekDay.findElement(By.className("ellipsis"));
 				List<WebElement> workTimes = weekDay.findElements(By.className("work-time"));
@@ -4914,7 +4932,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		WebElement confSelect = isApprovalRequiredToChangeAvailability.findElement(By.cssSelector("select"));
 		if(isElementLoaded(confSelect)) {
 			//WebElement input = isApprovalRequiredToChangeAvailability.findElement(By.xpath("//input-field"));
-			if(isElementLoaded(confSelect)) {
+			if(isElementLoaded(confSelect,5)) {
+				scrollToElement(confSelect);
 				selectByVisibleText(confSelect,option);
 				preserveTheSetting();
 				System.out.println(isApprovalRequiredToChangeAvailability.getText());

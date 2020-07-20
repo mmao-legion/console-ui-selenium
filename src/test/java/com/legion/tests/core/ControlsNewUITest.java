@@ -1440,7 +1440,7 @@ public class ControlsNewUITest extends TestBase{
 
 		@Automated(automated = "Automated")
 		@Owner(owner = "Estelle")
-		@Enterprise(name = "Kendrascott2_Enterprise")
+		@Enterprise(name = "KendraScott2_Enterprise")
 		@TestName(description = "Controls Scheduling policies")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyScheduleScoreIsUpdated(String username, String password, String browser, String location)

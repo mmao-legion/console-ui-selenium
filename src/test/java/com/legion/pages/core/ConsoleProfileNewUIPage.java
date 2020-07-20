@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 import com.legion.utils.JsonUtil;
+import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -78,7 +79,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement timeOffRequestsSection;
 	@FindBy(css="div.location-selector-location-name-text")
 	private WebElement locationSelectorLocationName;
-	@FindBy(css="div.timeoff-requests-request.row-fx")
+	@FindBy(css="[timeoff=\"timeoff\"] .timeoff-requests-request.row-fx")
 	private List<WebElement> timeOffRequestRows;
 	@FindBy(css="i[ng-click=\"editProfile()\"]")
 	private WebElement profileEditPencilIcon;
@@ -217,6 +218,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement userProfileImage;
 	@FindBy(css=".header-user-switch-menu-item-main")
 	private WebElement userNickName;
+	@FindBy(className = "request-buttons-reject")
+	private WebElement timeOffRejectBtn;
 	
 	@Override
 	public void clickOnProfileConsoleMenu() throws Exception {
@@ -383,6 +386,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public void clickOnSaveTimeOffRequestBtn() throws Exception
 	{
+		waitForSeconds(3);
 		if(timeOffApplyBtn.isEnabled()) {
 			click(timeOffApplyBtn);
 		}
@@ -421,28 +425,55 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 //		String timeOffStartMonth = timeOffStartDuration.split(",")[0].split(" ")[0];
 		String timeOffEndDate = timeOffEndDuration.split(", ")[1].toUpperCase();
 //		String timeOffEndMonth = timeOffEndDuration.split(",")[0].split(" ")[0];
-		
+
 		String requestStatusText = "";
-		int timeOffRequestCount = timeOffRequestRows.size();
-		if(timeOffRequestCount > 0) {
-			for(WebElement timeOffRequest : timeOffRequestRows) {
-				WebElement requestType = timeOffRequest.findElement(By.cssSelector("span.request-type"));
-				if(timeOffReasonLabel.toLowerCase().contains(requestType.getText().toLowerCase())) {
-					WebElement requestDate = timeOffRequest.findElement(By.cssSelector("div.request-date"));
-					String[] requestDateText = requestDate.getText().replace("\n", "").split("-");
-					if(requestDateText.length > 1) {
-						if(requestDateText[0].toLowerCase().contains(timeOffStartDate.toLowerCase())
-								&& requestDateText[1].toLowerCase().contains(timeOffEndDate.toLowerCase())) {
-							WebElement requestStatus = timeOffRequest.findElement(By.cssSelector("span.request-status"));
+		if(areListElementVisible(timeOffRequestRows, 10)) {
+			int timeOffRequestCount = timeOffRequestRows.size();
+			if (timeOffRequestCount > 0) {
+				for (int i = 0; i < timeOffRequestRows.size(); i++) {
+					WebElement timeOffRequest = timeOffRequestRows.get(i);
+					WebElement requestType = timeOffRequest.findElement(By.cssSelector("span.request-type"));
+					WebElement requestStatus = timeOffRequest.findElement(By.cssSelector("span.request-status"));
+					String requestTypeText = requestType.getText();
+					if (timeOffReasonLabel.toLowerCase().contains(requestTypeText.toLowerCase())) {
+						WebElement requestDate = timeOffRequest.findElement(By.cssSelector("div.request-date"));
+						String requestDateText = requestDate.getText().replaceAll("\n", " ");
+						if (requestDateText.contains("-")) {
+							if (requestDateText.split("-")[0].toLowerCase().contains(timeOffStartDate.toLowerCase())
+									&& requestDateText.split("-")[1].toLowerCase().contains(timeOffEndDate.toLowerCase())) {
+								requestStatusText = requestStatus.getText();
+							}
+						} else if ((requestDateText.split(" ")[2] + " " + requestDateText.split(" ")[1]).equalsIgnoreCase(timeOffStartDate)
+								&& timeOffStartDate.equals(timeOffEndDate)) {
 							requestStatusText = requestStatus.getText();
 						}
 					}
 				}
+			} else
+				SimpleUtils.fail("Profile Page: No Time off request found.", true);
+		} else
+			SimpleUtils.fail("Profile Page: Time off request failed to load",true);
+		return requestStatusText;
+	}
+
+	@Override
+	public String getTimeOffRequestStatusByExplanationText(String timeOffExplanationText) throws Exception {
+		String requestStatusText = "";
+		if(areListElementVisible(timeOffRequestRows, 10) && timeOffRequestRows.size() > 0) {
+			for (WebElement timeOffRequest: timeOffRequestRows) {
+				WebElement requestStatus = timeOffRequest.findElement(By.cssSelector("span.request-status"));
+				try {
+					WebElement timeOffReason = timeOffRequest.findElement(By.cssSelector("[ng-if=\"timeoff.reason\"]"));
+					if (timeOffReason.getText().contains(timeOffExplanationText)) {
+						requestStatusText = requestStatus.getText();
+						break;
+					}
+				}catch (Exception e) {
+					continue;
+				}
 			}
-		}
-		else
-			SimpleUtils.fail("Profile Page: No Time off request found.", false);
-		
+		} else
+			SimpleUtils.fail("Profile Page: Time off request failed to load",true);
 		return requestStatusText;
 	}
 	
@@ -1029,9 +1060,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public HashMap<String, String> getMyShiftPreferenceData() throws Exception
 	{
 		HashMap<String, String> shiftPreferenceData = new HashMap<String, String>();
-		if(isElementLoaded(collapsibleWorkPreferenceSection)) {
-			List<WebElement> myShiftPreferenceDataLabels = collapsibleWorkPreferenceSection.findElements(By.cssSelector("div.quick-schedule-preference.label"));
-			List<WebElement> myShiftPreferenceDataValues = collapsibleWorkPreferenceSection.findElements(By.cssSelector("div.quick-schedule-preference.value"));
+		if(isElementLoaded(myAvailabilitySection, 10)) {
+			List<WebElement> myShiftPreferenceDataLabels = myAvailabilitySection.findElements(By.cssSelector("div.quick-schedule-preference.label"));
+			List<WebElement> myShiftPreferenceDataValues = myAvailabilitySection.findElements(By.cssSelector("div.quick-schedule-preference.value"));
 			if(myShiftPreferenceDataLabels.size() > 0 && myShiftPreferenceDataLabels.size() == myShiftPreferenceDataValues.size()) {
 				for(int index = 0; index < myShiftPreferenceDataLabels.size(); index++) {
 					if(myShiftPreferenceDataLabels.get(index).isDisplayed()) {
@@ -1340,10 +1371,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public HashMap<String, Object> getMyAvailabilityData() throws Exception {
 		
 		HashMap<String, Object> myAvailabilityData = new HashMap<String, Object>();
-		boolean isMyAvailabilityWindowOpen = isMyAvailabilityCollapsibleWindowOpen();
-	      if(! isMyAvailabilityWindowOpen)
-	    	  clickOnMyAvailabilityCollapsibleWindowHeader();
-	      
+
 	      float scheduleHoursValue = 0;
 	      float remainingHoursValue = 0;
 	      float totalHoursValue = 0;
@@ -1633,7 +1661,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	// Added by Nora: Time Off
 	@FindBy (className = "modal-content")
 	private WebElement newTimeOffWindow;
-	@FindBy (className = "lgnCheckBox")
+	@FindBy (css = "[checked=\"options.fullDay\"] .lgnCheckBox")
 	private List<WebElement> allDayCheckboxes;
 	@FindBy (css = "button.btn-sm")
 	private List<WebElement> smButtons;
@@ -1645,7 +1673,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> profileSubPageLabels;
 	@FindBy (css = "div.in-range")
 	private List<WebElement> selectedDates;
-	@FindBy (css = "b.text-blue")
+	@FindBy (css = "b.day-selected")
 	private List<WebElement> startNEndDates;
 	@FindBy (css = "[options=\"startOptions\"] [selected=\"selected\"]")
 	private List<WebElement> startTimes;
@@ -1658,20 +1686,16 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void verifyTimeIsCorrectAfterDeSelectAllDay() throws Exception {
-		String actualStartTime = null;
-		String actualEndTime = null;
+		String expectedStartTime = "10:00 AM";
+		String expectedEndTime = "3:00 PM";
 		List<String> selectedStartNEndTimes = getSelectedStartNEndTime();
 		if (selectedStartNEndTimes.size() == 0) {
 			SimpleUtils.fail("Failed to get the selected start and End time!", false);
 		}
-		String expectedStartTime = selectedStartNEndTimes.get(0);
-		String expectedEndTime = selectedStartNEndTimes.get(1);
-		if (areListElementVisible(startNEndTimes, 5) && startNEndTimes.size() == 2) {
-			actualStartTime = startNEndTimes.get(0).getText();
-			actualEndTime = startNEndTimes.get(1).getText();
-		}
-		if (expectedStartTime != null && expectedEndTime != null && actualStartTime != null && actualEndTime != null &&
-				expectedStartTime.equals(actualStartTime) && expectedEndTime.equals(actualEndTime)) {
+		String actualStartTime = selectedStartNEndTimes.get(0);
+		String actualEndTime = selectedStartNEndTimes.get(1);
+
+		if (expectedStartTime.equals(actualStartTime) && expectedEndTime.equals(actualEndTime)) {
 			SimpleUtils.pass("Start and End time are correct!");
 		}else {
 			SimpleUtils.fail("Start and End time are incorrect!", true);
@@ -1889,6 +1913,11 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	//added by Haya
 	@FindBy(xpath = "//div[@class=\"timeoff-requests ng-scope\"]//timeoff-list-item")
 	private List<WebElement> timeOffRequestItems;
+	@FindBy(css = "[timeoff=\"timeoff\"] .request-status-Approved")
+	private List<WebElement> approvedTimeOffRequests;
+	@FindBy(css = "[timeoff=\"timeoff\"] .request-status-Pending")
+	private List<WebElement> pendingTimeOffRequests;
+
 	@Override
 	public void newApproveOrRejectTimeOffRequestFromToDoList(String timeOffReasonLabel, String timeOffStartDuration,
 														  String timeOffEndDuration, String action) throws Exception{
@@ -1896,15 +1925,12 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		String timeOffStartMonth = timeOffStartDuration.split(", ")[1].split(" ")[0];
 		String timeOffEndDate = timeOffEndDuration.split(", ")[1].split(" ")[1];
 		String timeOffEndMonth = timeOffEndDuration.split(", ")[1].split(" ")[0];
-
-		//int timeOffRequestCount = timeOffRequestItems.size();
 		if(areListElementVisible(timeOffRequestItems,10) && timeOffRequestItems.size() > 0) {
 			for(WebElement timeOffRequest : timeOffRequestItems) {
 				WebElement requestType = timeOffRequest.findElement(By.cssSelector("span.request-type"));
 				if(requestType.getText().toLowerCase().contains(timeOffReasonLabel.toLowerCase())) {
 					WebElement requestDate = timeOffRequest.findElement(By.cssSelector("div.request-date"));
 					String[] requestDateText = requestDate.getText().replace("\n", "").split("-");
-
 					if(requestDateText[0].toLowerCase().contains(timeOffStartMonth.toLowerCase())
 							&& requestDateText[0].toLowerCase().contains(timeOffStartDate.toLowerCase())
 							&& requestDateText[1].toLowerCase().contains(timeOffEndMonth.toLowerCase())
@@ -1915,17 +1941,17 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 								scrollToElement(timeOffRequestCancelBtn);
 								click(timeOffRequestCancelBtn);
 								SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
-							}
-							else
+							} else {
 								SimpleUtils.fail("My Time Off: Time off request cancel button not loaded.", true);
+							}
 						}
 						else if(action.toLowerCase().contains("approve")) {
 							if(isElementLoaded(timeOffRequestApproveBtn)) {
 								click(timeOffRequestApproveBtn);
 								SimpleUtils.pass("My Time Off: Time off request Approve button clicked.");
-							}
-							else
+							} else{
 								SimpleUtils.fail("My Time Off: Time off request Approve button not loaded.", true);
+							}
 						}
 					}
 				}
@@ -1933,6 +1959,46 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 		else
 			SimpleUtils.fail("Profile Page: No Time off request found.", false);
+	}
+
+	@Override
+	public void cancelAllTimeOff() throws Exception {
+		if(areListElementVisible(approvedTimeOffRequests,10) && approvedTimeOffRequests.size() > 0) {
+			for(WebElement timeOffRequest : approvedTimeOffRequests) {
+				scrollToElement(timeOffRequest);
+				click(timeOffRequest);
+				if(isElementLoaded(timeOffRequestCancelBtn,5)) {
+					scrollToElement(timeOffRequestCancelBtn);
+					click(timeOffRequestCancelBtn);
+					SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
+				}
+			}
+		}
+		if(areListElementVisible(pendingTimeOffRequests,10) && pendingTimeOffRequests.size() > 0) {
+			for(WebElement timeOffRequest : pendingTimeOffRequests) {
+				scrollToElement(timeOffRequest);
+				click(timeOffRequest);
+				if(isElementLoaded(timeOffRequestCancelBtn,5)) {
+					scrollToElement(timeOffRequestCancelBtn);
+					click(timeOffRequestCancelBtn);
+					SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
+				}
+			}
+		}
+	}
+
+	@Override
+	public void rejectAllTimeOff() throws Exception {
+		if(areListElementVisible(approvedTimeOffRequests,10) && approvedTimeOffRequests.size() > 0) {
+			for(WebElement timeOffRequest : approvedTimeOffRequests) {
+				clickTheElement(timeOffRequest);
+				if(isElementLoaded(timeOffRejectBtn,5)) {
+					scrollToElement(timeOffRejectBtn);
+					clickTheElement(timeOffRejectBtn);
+					SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
+				}
+			}
+		}
 	}
 
 	@Override
@@ -2047,6 +2113,12 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy(css = ".lgn-action-button-success")
 	private WebElement OKButton;
 
+	@FindBy(css = "lg-button[label=\"Edit\"]")
+	private WebElement editBtnOfMyShiftPreferences;
+
+	@FindBy(css = "lg-button[label=\"Save\"]")
+	private WebElement saveBtnOfMyShiftPreference;
+
 	private ArrayList<String> minMaxArray = new ArrayList<>();
 
 	public void checkUserProfileHomeAddress(String streetAddress1, String streetAddress2, String city, String state, String zip) throws Exception {
@@ -2128,7 +2200,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void validateTheUpdateOfShiftPreferences(boolean canReceiveOfferFromOtherLocation, boolean isVolunteersForAdditional) throws Exception {
 		updateMyShiftPreferenceData(canReceiveOfferFromOtherLocation, isVolunteersForAdditional);
 		minMaxArray = updateMyShiftPreferencesAvailabilitySliders();
-		saveMyShiftPreferencesData();
+		saveMyShiftPreferences();
 		checkMyShiftPreferenceData(canReceiveOfferFromOtherLocation, isVolunteersForAdditional, minMaxArray);
 	}
 
@@ -2172,7 +2244,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 
 	public void updateMyShiftPreferenceData(boolean canReceiveOfferFromOtherLocation, boolean isVolunteersForAdditional) throws Exception {
-		clickOnEditMyShiftPreferencePencilIcon();
+		clickOnEditMyShiftPreferenceButton();
 		if (isMyShiftPreferenceEditContainerLoaded()) {
 			SimpleUtils.pass("Profile Page: 'My Shift Preference' edit Container loaded successfully.");
 			updateReceivesShiftOffersForOtherLocationCheckButton(canReceiveOfferFromOtherLocation);
@@ -2362,7 +2434,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		int daysEndFromToday = 0;
 		int periodToRequestTimeOff = getPeriodToRequestTimeOff();
 		daysStartFromToday = new Random().ints(1,periodToRequestTimeOff,calendarDates.size() - cannotSelectDates).findFirst().getAsInt();
-		daysEndFromToday = daysStartFromToday + 1;
+		daysEndFromToday = daysStartFromToday;
 		selectDate(daysStartFromToday);
 		selectDate(daysEndFromToday);
 		HashMap<String, String> timeOffDate = getTimeOffDate(daysStartFromToday, daysEndFromToday);
@@ -2381,9 +2453,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		scrollToBottom();
 		clickOnSaveTimeOffRequestBtn();
 		String expectedRequestStatus = "PENDING";
-		String requestStatus = getTimeOffRequestStatus(timeOffReasonLabel
-				, timeOffExplanationText, timeOffStartDate, timeOffEndDate);
-		if (requestStatus.toLowerCase().contains(expectedRequestStatus.toLowerCase()))
+		String requestStatus = getTimeOffRequestStatusByExplanationText(timeOffExplanationText);
+		if (requestStatus.contains(expectedRequestStatus))
 			SimpleUtils.pass("Profile Page: New Time Off Request reflects in '" + requestStatus + "' successfully after saving");
 		else
 			SimpleUtils.fail("Profile Page: New Time Off Request status is not '" + expectedRequestStatus
@@ -2399,9 +2470,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.report("Profile Page: No Pending Time off request found or can be cancelled. We will create a new time off");
 			clickOnCreateTimeOffBtn();
 			String timeOffReasonLabel = selectRandomReasonOfLeaveOnNewTimeOffRequest();
-			createNewTimeOffRequestAndVerify(timeOffReasonLabel, "");
-			String requestStatus = getTimeOffRequestStatus(timeOffReasonLabel,
-					"", getTimeOffStartTime(), getTimeOffEndTime());
+			String timeOffExplanation = (new Random()).nextInt(100) + "random" + (new Random()).nextInt(100) + "random" + (new Random()).nextInt(100);
+			createNewTimeOffRequestAndVerify(timeOffReasonLabel, timeOffExplanation);
+			String requestStatus = getTimeOffRequestStatusByExplanationText(timeOffExplanation);
 			if (requestStatus.toLowerCase().contains("pending")) {
 				pendingRequestCanBeCancelled = pendingRequestCanBeCancelled();
 				if (pendingRequestCanBeCancelled) {
@@ -2435,6 +2506,25 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 		return pendingRequestCanBeCancelled;
 	}
+
+	public void clickOnEditMyShiftPreferenceButton()  throws Exception {
+		if(isElementLoaded(editBtnOfMyShiftPreferences, 10))
+			click(editBtnOfMyShiftPreferences);
+		else
+			SimpleUtils.fail("Profile Page: 'Edit' button not loaded under 'My Shift Preference' Header.", true);
+	}
+
+	private void saveMyShiftPreferences() throws Exception {
+		if(isElementLoaded(saveBtnOfMyShiftPreference, 10)) {
+			click(saveBtnOfMyShiftPreference);
+			if(! isMyShiftPreferenceEditContainerLoaded())
+				SimpleUtils.pass("Profile Page: 'My Shift Preference' data saved successfully.");
+			else
+				SimpleUtils.pass("Profile Page: Unable to save 'My Shift Preference' data.");
+		} else
+			SimpleUtils.fail("Profile Page: 'My Shift Preference' edit container 'Save' button not loaded.", false);
+	}
+
 	//added by Haya
 	@FindBy(css = "span[ng-click=\"getNextWeekData()\"]")
 	private WebElement nextWeekBtn;

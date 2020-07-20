@@ -27,7 +27,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy(css = "div.console-navigation-item.active")
     private WebElement activeConsoleMenuItem;
 
-    @FindBy(xpath = "//i[contains(@class,'lg-location-chooser__arrow')]//following-sibling::div[2]//div[@class='lg-search-options']")
+    @FindBy(css = ".lg-new-location-chooser__highlight .lg-search-options")
     private WebElement locationDropDownButton;
 
     @FindBy(className = "location-selector-dropdown-menu-items")
@@ -45,13 +45,13 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy (css = "div.console-navigation-item-label.Dashboard")
     private WebElement dashboardConsoleName;
 
-    @FindBy (css = "div.lg-location-chooser__highlight div.lg-search-options__option-wrapper--selected")
+    @FindBy (css = ".lg-new-location-chooser__highlight .lg-search-options__option-wrapper--selected")
     private WebElement selectedLocationCardsName;
 
     @FindBy (css = "input[placeholder='Search Location']")
     private WebElement searchTextbox;
 
-    @FindBy (css = "div.lg-location-chooser__highlight div.lg-search-options")
+    @FindBy (css = "div.lg-new-location-chooser__highlight div.lg-search-options")
     private WebElement locationDropDownList;
 
     @FindBy (css = "lg-search-options[search-hint='Search Location'] div.lg-search-options__scroller")
@@ -60,7 +60,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy (css = "div.lg-location-chooser__highlight div.lg-search-options__option")
     private  List<WebElement> detailLocations;
 
-    @FindBy (css = "div.lg-location-chooser__highlight>lg-select>div>lg-picker-input>div>input-field>ng-form>div")
+    @FindBy (css = ".lg-new-location-chooser__highlight [placeholder=\"Select...\"] .input-faked")
     private WebElement changeLocationButton;
 
     @FindBy(css = "[search-hint='Search District'] div.input-faked")
@@ -190,7 +190,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         click(changeLocationButton);
         WebElement detailLocation = selectedLocationCardsName.findElement(By.className("ng-binding"));
         String detailLocationName = detailLocation.getText();
-        if (detailLocationName.equals(displayLocation)) {
+        if (detailLocationName.contains(displayLocation)) {
             isConsistent = true;
         }
         if (isConsistent){

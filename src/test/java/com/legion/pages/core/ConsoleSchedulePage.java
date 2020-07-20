@@ -1068,6 +1068,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void deleteAllShiftsInDayView(){
+        // TODO Auto-generated method stub
+    }
+
+    @Override
     public void deleteShiftGutterText() {
         // TODO Auto-generated method stub
 
@@ -1732,6 +1737,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     }
 
+    @Override
+    public void createScheduleForNonDGFlowNewUI() throws Exception {
+
+    }
+
     public void clickWorkerImage(){
 
     }
@@ -1928,7 +1938,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void clickOnCreateNewShiftWeekView() throws Exception {
+    public void clickOnCreateNewShiftButton() throws Exception {
 
     }
 
@@ -2578,6 +2588,16 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void clickOnDayViewAddNewShiftButton() throws Exception {
+
+    }
+
+    @Override
+    public void addNewShiftsByNames(List<String> names) throws Exception {
+
+    }
+
+    @Override
     public void validateTheAvailabilityOfScheduleTable(String userName) throws Exception {
 
     }
@@ -2653,7 +2673,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void validateTheDateOfProfilePopupInAShift() throws Exception {
+    public void validateTheDataOfProfilePopupInAShift() throws Exception {
 
     }
 
@@ -2685,6 +2705,21 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyTheAvailabilityOfClaimOpenShiftPopup() throws Exception {
+
+    }
+
+    @Override
+    public void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception {
+
+    }
+
+    @Override
+    public boolean displayAlertPopUp() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void displayAlertPopUpForRoleViolation() throws Exception {
 
     }
 }
