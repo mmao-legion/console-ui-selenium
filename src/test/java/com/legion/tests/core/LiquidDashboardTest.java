@@ -2,6 +2,8 @@ package com.legion.tests.core;
 
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LiquidDashboardPage;
+import com.legion.pages.ProfileNewUIPage;
+import com.legion.pages.SchedulePage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -9,10 +11,12 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.hu.Ha;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 public class LiquidDashboardTest extends TestBase {
     @Override
@@ -36,6 +40,18 @@ public class LiquidDashboardTest extends TestBase {
         Compliance_Violation("compilance violation");
         private final String value;
         widgetType(final String newValue) {
+            value = newValue;
+        }
+        public String getValue() { return value; }
+    }
+
+    public enum linkNames{
+        View_Schedules("view schedules"),
+        View_TimeSheets("view timesheets"),
+        View_Schedule("view schedule"),
+        View_Forecast("view forecast");
+        private final String value;
+        linkNames(final String newValue) {
             value = newValue;
         }
         public String getValue() { return value; }
@@ -157,5 +173,59 @@ public class LiquidDashboardTest extends TestBase {
         //verify search input
         liquidDashboardPage.enterEditMode();
         liquidDashboardPage.verifySearchInput(widgetType.Helpful_Links.getValue());
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the content Starting Soon section")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheContentOfStartingSoonWidgetAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+        if (!liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Starting_Soon.getValue())) {
+            // Verify Edit mode Dashboard loaded
+            liquidDashboardPage.enterEditMode();
+
+            //verify switch on Starting_Soon widget
+            liquidDashboardPage.switchOnWidget(widgetType.Starting_Soon.getValue());
+            // Exit Edit mode
+            liquidDashboardPage.saveAndExitEditMode();
+        }
+
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated){
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        schedulePage.createScheduleForNonDGFlowNewUI();
+        schedulePage.publishActiveSchedule();
+
+        dashboardPage.navigateToDashboard();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+        // Get the current upcoming shifts
+        HashMap<String, String> upComingShifts = new HashMap<>();
+        boolean areShiftsLoaded = dashboardPage.isStartingSoonLoaded();
+        if (areShiftsLoaded) {
+            upComingShifts = dashboardPage.getUpComingShifts();
+            // Verify click on "View Schedule" link
+            liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Starting_Soon.getValue(), linkNames.View_Schedule.getValue());
+            schedulePage.isSchedule();
+            String timeFromDashboard = dashboardPage.getDateFromTimeZoneOfLocation("hh:mm aa");
+            HashMap<String, String> fourShifts = schedulePage.getFourUpComingShifts(false, timeFromDashboard);
+            schedulePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
+        }else {
+            SimpleUtils.fail("No upcoming shifts loaded!", false);
+        }
     }
 }

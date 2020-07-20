@@ -290,7 +290,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInRoster(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
 		controlsPage.gotoControlsPage();
 		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
@@ -336,7 +336,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInTransfer(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		String currentDate = getTimeZoneFromControlsAndGetDate();
 		TeamPage teamPage = pageFactory.createConsoleTeamPage();
 		teamPage.goToTeam();

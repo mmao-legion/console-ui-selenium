@@ -199,6 +199,7 @@
             <class name="com.legion.tests.core.LiquidDashboardTest">
                 <methods>
                     <include name="verifyUIOfHelpfulLinkswidgetAsStoreManager" />
+                    <include name="verifyTheContentOfStartingSoonWidgetAsStoreManager" />
                 </methods>
             </class>
         </classes>

@@ -14,4 +14,6 @@ public interface LiquidDashboardPage {
     public void cancelAndExitEditMode() throws Exception;
     public void verifyBackBtn() throws Exception;
     public void verifySearchInput(String widgetTitle) throws Exception;
+    public void clickOnLinkByWidgetNameAndLinkName(String widgetName, String LinkName) throws Exception;
+    public boolean isSpecificWidgetLoaded(String widgetName) throws Exception;
 }

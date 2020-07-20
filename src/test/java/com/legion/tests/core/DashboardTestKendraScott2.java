@@ -60,7 +60,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheDisplayLocationWithSelectedLocation(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 		locationSelectorPage.verifyTheDisplayLocationWithSelectedLocationConsistent();
 	}
@@ -72,7 +72,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheClickActionOnChangeLocationButton(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 		locationSelectorPage.verifyClickChangeLocationButton();
 	}
@@ -84,7 +84,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheContentDisplayedInChangeLocationLayout(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 		locationSelectorPage.verifyTheContentOfDetailLocations();
 	}
@@ -96,7 +96,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheFunctionOfSearchTextBox(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		List<String> testStrings = new ArrayList<>(Arrays.asList("s", "h", "W"));
 		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 		locationSelectorPage.verifyTheFunctionOfSearchTextBox(testStrings);

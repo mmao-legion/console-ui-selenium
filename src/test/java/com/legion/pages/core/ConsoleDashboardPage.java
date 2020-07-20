@@ -467,7 +467,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				shifts.put(name, role);
 			}
 		}else {
-			SimpleUtils.fail("Up Coming shifts failed to load!", true);
+			SimpleUtils.report("Up Coming shifts are not loaded!");
 		}
 		return shifts;
 	}

@@ -294,4 +294,49 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         }
         return widgetTitleInManagePage;
     }
+
+    // Added by Nora
+    @FindBy(css = ".gridster-item")
+    private List<WebElement> widgets;
+
+    @Override
+    public void clickOnLinkByWidgetNameAndLinkName(String widgetName, String linkName) throws Exception {
+        String startingTomorrow = "starting tomorrow";
+        if (areListElementVisible(widgets, 10)) {
+            for (WebElement widget : widgets) {
+                WebElement widgetTitle = widget.findElement(By.className("dms-box-title"));
+                if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetName.toLowerCase()) ||
+                        widgetTitle.getText().toLowerCase().trim().contains(startingTomorrow.toLowerCase().trim()))) {
+                    try {
+                        WebElement link = widget.findElement(By.className("dms-action-link"));
+                        if (link != null && linkName.toLowerCase().equals(link.getText().toLowerCase().trim())) {
+                            clickTheElement(link);
+                            SimpleUtils.pass("Click on: \"" + linkName + "\" on Widget: \"" + widgetName + "\" Successfully!");
+                            break;
+                        }
+                    }catch (Exception e) {
+                        continue;
+                    }
+                }
+            }
+        }else {
+            SimpleUtils.report("There are no widgets on dashboard, please turn on them!");
+        }
+    }
+
+    @Override
+    public boolean isSpecificWidgetLoaded(String widgetName) throws Exception {
+        boolean isLoaded = false;
+        String startingTomorrow = "starting tomorrow";
+        if (areListElementVisible(widgets, 10)) {
+            for (WebElement widget : widgets) {
+                WebElement widgetTitle = widget.findElement(By.className("dms-box-title"));
+                if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetName.toLowerCase()) ||
+                        widgetTitle.getText().toLowerCase().trim().contains(startingTomorrow.toLowerCase().trim()))) {
+                    isLoaded = true;
+                }
+            }
+        }
+        return isLoaded;
+    }
 }
