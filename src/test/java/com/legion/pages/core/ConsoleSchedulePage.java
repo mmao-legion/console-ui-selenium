@@ -2725,6 +2725,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @Override
     public void unGenerateActiveScheduleFromCurrentWeekOnward(int loopCount) throws Exception {
+    }
 
+    public List<String> getOverviewData() throws Exception {
+        return null;
     }
 }

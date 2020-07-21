@@ -1966,6 +1966,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		if(areListElementVisible(approvedTimeOffRequests,10) && approvedTimeOffRequests.size() > 0) {
 			for(WebElement timeOffRequest : approvedTimeOffRequests) {
 				scrollToElement(timeOffRequest);
+				waitForSeconds(3);
 				click(timeOffRequest);
 				if(isElementLoaded(timeOffRequestCancelBtn,5)) {
 					scrollToElement(timeOffRequestCancelBtn);
