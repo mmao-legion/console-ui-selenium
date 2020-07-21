@@ -2585,4 +2585,25 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("View Violation link on Dashboard not clicked Successfully!!",false);
 		}
 	}
+
+	// Added by Nora
+	@Override
+	public List<String> getAlertsDataFromSmartCard() throws Exception {
+		List<String> alerts = new ArrayList<>();
+		// wait for the data loaded on smart card
+		waitForSeconds(3);
+		if (areListElementVisible(alertsSmartCardValue, 5) && alertsSmartCardValue.size() == 6) {
+			for (WebElement alertsCell : alertsSmartCardValue) {
+				if (!alertsCell.getText().isEmpty()) {
+					alerts.add(alertsCell.getText());
+					SimpleUtils.report("Get the alerts Data: \"" + alertsCell.getText() + "\" Successfully!");
+				}else {
+					SimpleUtils.fail("Failed to get the alert data!", false);
+				}
+			}
+		}else {
+			SimpleUtils.fail("The Alerts data not loaded Successfully!", false);
+		}
+		return alerts;
+	}
 }

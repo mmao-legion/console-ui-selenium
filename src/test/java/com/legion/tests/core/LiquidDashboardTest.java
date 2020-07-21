@@ -1,9 +1,6 @@
 package com.legion.tests.core;
 
-import com.legion.pages.DashboardPage;
-import com.legion.pages.LiquidDashboardPage;
-import com.legion.pages.ProfileNewUIPage;
-import com.legion.pages.SchedulePage;
+import com.legion.pages.*;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -16,7 +13,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class LiquidDashboardTest extends TestBase {
     @Override
@@ -180,7 +179,7 @@ public class LiquidDashboardTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the content Starting Soon section")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyTheContentOfStartingSoonWidgetAsStoreManager(String browser, String username, String password, String location) throws Exception {
+    public void verifyTheContentOfStartingSoonWidgetAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
@@ -226,6 +225,98 @@ public class LiquidDashboardTest extends TestBase {
             schedulePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
         }else {
             SimpleUtils.fail("No upcoming shifts loaded!", false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate no content Starting Soon section")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyNoContentInStartingSoonWidgetAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+        if (!liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Starting_Soon.getValue())) {
+            // Verify Edit mode Dashboard loaded
+            liquidDashboardPage.enterEditMode();
+
+            //verify switch on Starting_Soon widget
+            liquidDashboardPage.switchOnWidget(widgetType.Starting_Soon.getValue());
+            // Exit Edit mode
+            liquidDashboardPage.saveAndExitEditMode();
+        }
+
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+
+        // Ungenerate the schedule from current week
+        schedulePage.unGenerateActiveScheduleFromCurrentWeekOnward(0);
+
+        // Navigate to dashboard page to check there should no shifts in Starting soon, there should show "No published shifts for today"
+        dashboardPage.navigateToDashboard();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+        boolean areShiftsLoaded = dashboardPage.isStartingSoonLoaded();
+        if (!areShiftsLoaded) {
+            SimpleUtils.pass("There are no shifts after ungenerating the schedule from current week onward!");
+        }else {
+            SimpleUtils.fail("There still shows the upcoming shifts after ungenerating the schedule from current week onward!", false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the content of Alerts widget")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheContentOfAlertWidgetAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+
+        if (!liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Alerts.getValue())) {
+            // Verify Edit mode Dashboard loaded
+            liquidDashboardPage.enterEditMode();
+            //verify switch on Starting_Soon widget
+            liquidDashboardPage.switchOnWidget(widgetType.Alerts.getValue());
+            // Exit Edit mode
+            liquidDashboardPage.saveAndExitEditMode();
+        }
+
+        // Make sure that Schedules widget is loaded, we can compare the current week from Schedules widget
+        if (!liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Schedules.getValue())) {
+            // Verify Edit mode Dashboard loaded
+            liquidDashboardPage.enterEditMode();
+            //verify switch on Starting_Soon widget
+            liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
+            // Exit Edit mode
+            liquidDashboardPage.saveAndExitEditMode();
+        }
+
+        String currentWeek = liquidDashboardPage.getTheStartOfCurrentWeekFromSchedulesWidget();
+        List<String> alertsFromDashboard = new ArrayList<>();
+        // Verify the content on Alerts Widget
+        if (liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Alerts.getValue())) {
+            alertsFromDashboard = liquidDashboardPage.verifyTheContentOnAlertsWidgetLoaded(currentWeek);
+        }else {
+            SimpleUtils.fail("\"Alerts\" widget not loaded Successfully!", false);
+        }
+        liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Alerts.getValue(), linkNames.View_TimeSheets.getValue());
+        SimpleUtils.assertOnFail("Timesheet page not loaded Successfully!", timeSheetPage.isTimeSheetPageLoaded(), false);
+        List<String> alertsFromTimesheet = timeSheetPage.getAlertsDataFromSmartCard();
+
+        if (alertsFromDashboard.containsAll(alertsFromTimesheet) && alertsFromTimesheet.containsAll(alertsFromDashboard)) {
+            SimpleUtils.pass("Alerts data on Dashboard is consistent with Timesheet page!");
+        }else {
+            SimpleUtils.fail("Alerts data on Dashboard is inconsistent with Timesheet page!", false);
         }
     }
 }

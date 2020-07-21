@@ -2722,4 +2722,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void displayAlertPopUpForRoleViolation() throws Exception {
 
     }
+
+    @Override
+    public void unGenerateActiveScheduleFromCurrentWeekOnward(int loopCount) throws Exception {
+
+    }
 }

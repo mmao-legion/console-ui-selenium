@@ -16,4 +16,6 @@ public interface LiquidDashboardPage {
     public void verifySearchInput(String widgetTitle) throws Exception;
     public void clickOnLinkByWidgetNameAndLinkName(String widgetName, String LinkName) throws Exception;
     public boolean isSpecificWidgetLoaded(String widgetName) throws Exception;
+    public String getTheStartOfCurrentWeekFromSchedulesWidget() throws Exception;
+    public List<String> verifyTheContentOnAlertsWidgetLoaded(String currentWeek) throws Exception;
 }

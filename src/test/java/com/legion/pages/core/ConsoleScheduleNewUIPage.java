@@ -4749,6 +4749,31 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> weekDayLabels;
 
     @Override
+    public void unGenerateActiveScheduleFromCurrentWeekOnward(int loopCount) throws Exception {
+        if (areListElementVisible(currentWeeks, 5)) {
+            for (int i = 0; i < currentWeeks.size(); i++) {
+                // Current week is at the center by default, since we don't need to ungenerate the schedule for previous week
+                if (loopCount == 0) {
+                    if (i == 0) {
+                        continue;
+                    }
+                }
+                click(currentWeeks.get(i));
+                if (isWeekGenerated()) {
+                    unGenerateActiveScheduleScheduleWeek();
+                }
+                if (i == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
+                    click(calendarNavigationNextWeekArrow);
+                    loopCount += 1;
+                    unGenerateActiveScheduleFromCurrentWeekOnward(loopCount);
+                }
+            }
+        }else {
+            SimpleUtils.fail("Current Weeks' elements not loaded Successfully!", false);
+        }
+    }
+
+    @Override
     public void addNewShiftsByNames(List<String> names) throws Exception {
         for(int i = 0; i < names.size(); i++) {
             clickOnDayViewAddNewShiftButton();

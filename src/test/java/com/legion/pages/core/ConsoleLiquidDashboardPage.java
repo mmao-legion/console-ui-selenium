@@ -2,12 +2,16 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.LiquidDashboardPage;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.hu.Ha;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -298,6 +302,12 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     // Added by Nora
     @FindBy(css = ".gridster-item")
     private List<WebElement> widgets;
+    @FindBy(css = "div.background-current-week-legend-table")
+    private WebElement currentWeekOnSchedules;
+    @FindBy(css = "lg-alert .slideNumberText")
+    private WebElement alertsWeek;
+    @FindBy(css = ".lg-timesheet-carousel__table-cell")
+    private List<WebElement> alertsCells;
 
     @Override
     public void clickOnLinkByWidgetNameAndLinkName(String widgetName, String linkName) throws Exception {
@@ -338,5 +348,58 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             }
         }
         return isLoaded;
+    }
+
+    @Override
+    public String getTheStartOfCurrentWeekFromSchedulesWidget() throws Exception {
+        String currentWeek = "";
+        if (isElementLoaded(currentWeekOnSchedules, 5)) {
+            if (currentWeekOnSchedules.getText().contains("—")) {
+                currentWeek = currentWeekOnSchedules.getText().split("—")[0];
+                if (currentWeek.endsWith("\n")) {
+                    currentWeek = currentWeek.substring(0, currentWeek.length() - 1);
+                }
+            }
+        }
+        if (!currentWeek.isEmpty()) {
+            SimpleUtils.pass("Get the start of the current week: \"" + currentWeek + "\" Successfully!");
+        }else {
+            SimpleUtils.fail("Failed to get the start of the current week!", false);
+        }
+        return currentWeek;
+    }
+
+    @Override
+    public List<String> verifyTheContentOnAlertsWidgetLoaded(String currentWeek) throws Exception {
+        List<String> alerts = new ArrayList<>();
+        /*Alerts widget should show:
+        a. current week, e.g. Week of Jun 20;
+        b. the number of Early Clocks/Incomplete Clocks/No Show/Late Clocks
+                /Missed Meal/Unscheduled
+        c. [View Timesheets] button*/
+        if (isElementLoaded(alertsWeek, 5) && alertsWeek.getText().toLowerCase().contains(currentWeek.toLowerCase())) {
+            SimpleUtils.pass("The week of Alerts is loaded and correct!");
+        }else {
+            SimpleUtils.fail("The week of \"Alerts\" is not loaded or incorrect!", false);
+        }
+        if (areListElementVisible(alertsCells, 5) && alertsCells.size() == 6) {
+            for (WebElement alertsCell : alertsCells) {
+                if (!alertsCell.getText().isEmpty()) {
+                    alerts.add(alertsCell.getText());
+                    SimpleUtils.report("Get the alerts Data: \"" + alertsCell.getText() + "\" Successfully!");
+                }else {
+                    SimpleUtils.fail("Failed to get the alert data!", false);
+                }
+            }
+        }else {
+            SimpleUtils.fail("The Alerts data not loaded Successfully!", false);
+        }
+        if (isElementLoaded(MyThreadLocal.getDriver().findElement(By.cssSelector("lg-alert .dms-action-link")), 5)) {
+            SimpleUtils.pass("\"View Timesheets\" link loaded Successfully!");
+        }else {
+            SimpleUtils.fail("\"View Timesheets\" link not loaded Successfully!", false);
+        }
+
+        return alerts;
     }
 }
