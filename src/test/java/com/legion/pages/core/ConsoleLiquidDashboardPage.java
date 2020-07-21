@@ -13,7 +13,6 @@ import org.openqa.selenium.support.PageFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashboardPage {
@@ -50,6 +49,30 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
 
     @FindBy (css = "input[placeholder=\"Search for widgets\"]")
     private WebElement searchInput;
+
+    @FindBy (css = "div[ng-if=\"ShowEdit\"]")
+    private WebElement editLinkBtn;
+
+    @FindBy (xpath = "//div[text()=\"Add Link\"]")
+    private WebElement addLinkBtn;
+
+    @FindBy (xpath = "//span[text()=\"CANCEL\"]")
+    private WebElement cancelAddLinkBtn;
+
+    @FindBy (xpath = "//span[text()=\"SAVE\"]")
+    private WebElement saveAddLinkBtn;
+
+    @FindBy (css = ".link-title.link-title-text")
+    private List<WebElement> linkTitles;
+
+    @FindBy (css = ".link-row.link-row-text")
+    private List<WebElement> linkTexts;
+
+    @FindBy (css = "ng-container[ng-repeat=\"link in dataLinks\"] div")
+    private List<WebElement> linksOnWidget;
+
+    @FindBy (css = ".forecast.forecast-row.row-fx.ng-scope")
+    private WebElement dataOnTodayForecast;
 
     @Override
     public void enterEditMode() throws Exception {
@@ -299,6 +322,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         return widgetTitleInManagePage;
     }
 
+
     // Added by Nora
     @FindBy(css = ".gridster-item")
     private List<WebElement> widgets;
@@ -311,12 +335,14 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
 
     @Override
     public void clickOnLinkByWidgetNameAndLinkName(String widgetName, String linkName) throws Exception {
-        String startingTomorrow = "starting tomorrow";
+        //String startingTomorrow = "starting tomorrow";
         if (areListElementVisible(widgets, 10)) {
             for (WebElement widget : widgets) {
                 WebElement widgetTitle = widget.findElement(By.className("dms-box-title"));
-                if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetName.toLowerCase()) ||
-                        widgetTitle.getText().toLowerCase().trim().contains(startingTomorrow.toLowerCase().trim()))) {
+                //if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetName.toLowerCase()) ||
+                if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)) ||
+                        //widgetTitle.getText().toLowerCase().trim().contains(startingTomorrow.toLowerCase().trim()))) {
+                        widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)))) {
                     try {
                         WebElement link = widget.findElement(By.className("dms-action-link"));
                         if (link != null && linkName.toLowerCase().equals(link.getText().toLowerCase().trim())) {
@@ -331,6 +357,101 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             }
         }else {
             SimpleUtils.report("There are no widgets on dashboard, please turn on them!");
+        }
+    }
+
+    @Override
+    public void verifyEditLinkOfHelpgulLinks() throws Exception {
+        if (isElementLoaded(editLinkBtn,10)){
+            scrollToElement(editLinkBtn);
+            click(editLinkBtn);
+            SimpleUtils.pass("Edit link button has been clicked!");
+        } else {
+            SimpleUtils.fail("verifyEditLinkOfHelpgulLinks: Edit link button fail to load!", true);
+        }
+    }
+
+    @Override
+    public void addLinkOfHelpfulLinks() throws Exception {
+        if (isElementLoaded(addLinkBtn,10)){
+            click(addLinkBtn);
+            SimpleUtils.pass("add link button has been clicked successfully!");
+            editNewLink();
+        } else if(areListElementVisible(linkTitles) && linkTitles.size()==5) {
+            SimpleUtils.pass("there already 5 links");
+        } else {
+            SimpleUtils.fail("Add Link button fail to load!",true);
+        }
+    }
+
+    private void editNewLink() throws Exception{
+        if (areListElementVisible(linkTitles,10) && areListElementVisible(linkTexts,10)){
+            linkTitles.get(linkTitles.size()-1).findElement(By.cssSelector("input")).sendKeys("link"+linkTitles.size());
+            linkTexts.get(linkTexts.size()-1).findElement(By.cssSelector("input")).sendKeys("https://www.google.com/");
+        } else {
+            SimpleUtils.fail("editNewLink: there is no link to edit!",true);
+        }
+    }
+
+    @Override
+    public void deleteAllLinks() throws Exception {
+        int s = linkTexts.size();
+        if (areListElementVisible(linkTexts,10)){
+            for(int i=0; i<s ;i++){
+                moveToElementAndClick(linkTexts.get(0).findElement(By.cssSelector(".removeLink")));
+                SimpleUtils.pass("delete link successfully!");
+            }
+        } else {
+            SimpleUtils.report("No links to delete!");
+        }
+    }
+
+    @Override
+    public void saveLinks() throws Exception {
+        if (isElementLoaded(saveAddLinkBtn,10)){
+            click(saveAddLinkBtn);
+            SimpleUtils.pass("save button has been clicked successfully!");
+        } else {
+            SimpleUtils.fail("save button fail to load!",true);
+        }
+    }
+
+    @Override
+    public void cancelLinks() throws Exception {
+        if (isElementLoaded(cancelAddLinkBtn,10)){
+            click(cancelAddLinkBtn);
+            SimpleUtils.pass("cancel button has been clicked successfully!");
+        } else {
+            SimpleUtils.fail("cancel button fail to load!",true);
+        }
+    }
+
+    @Override
+    public void verifyLinks() throws Exception {
+        String handle = getDriver().getWindowHandle();
+        if (areListElementVisible(linksOnWidget,10)){
+            for (WebElement e: linksOnWidget){
+                moveToElementAndClick(e);
+                SimpleUtils.pass("new tab open: "+getDriver().getWindowHandle());
+                getDriver().switchTo().window(handle);
+            }
+        } else {
+            SimpleUtils.fail("verifyLinks: there is no links to click!",true);
+        }
+    }
+
+    @Override
+    public void verifyNoLinksOnHelpfulLinks() throws Exception {
+        if (areListElementVisible(widgetsInDashboardPage,10)){
+            for (WebElement widgetTemp : widgetsInDashboardPage){
+                if(widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("helpful links")){
+                    if (widgetTemp.findElement(By.cssSelector("div[ng-if=\"linkText\"]")).getAttribute("class").contains("nodata")){
+                        SimpleUtils.pass("No links, message: "+widgetTemp.findElement(By.cssSelector("div[ng-if=\"linkText\"] h1")).getText());
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("Widgets in Dashboard page fail to load!",true);
         }
     }
 
@@ -401,5 +522,35 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         }
 
         return alerts;
+    public void verifyIsGraphExistedOnWidget() throws Exception {
+        if (areListElementVisible(widgetsInDashboardPage,10)){
+            for (WebElement widgetTemp : widgetsInDashboardPage){
+                waitForSeconds(3);
+                if(widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("forecast")){
+                    if (isElementLoaded(widgetTemp.findElement(By.cssSelector("#curvedGraphDiv")),10)){
+                        SimpleUtils.pass("there is a graph on today's forecast widget.");
+                    } else {
+                        SimpleUtils.fail("there is no graph on today's widget.",true);
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("Widgets in Dashboard page fail to load!",true);
+        }
+    }
+
+    @Override
+    public HashMap <String, Float> getDataOnTodayForecast() throws Exception {
+        HashMap <String, Float> resultData = new HashMap<String, Float>();
+        if (isElementLoaded(dataOnTodayForecast,10)){
+            String tempData = dataOnTodayForecast.getText();
+            String[] dataString = dataOnTodayForecast.getText().split("\n");
+            resultData.put("demand forecast",Float.valueOf(dataString[0].replaceAll("Shoppers","")));
+            resultData.put("budget",Float.valueOf(dataString[2].replaceAll("Hrs","")));
+            resultData.put("scheduled",Float.valueOf(dataString[4].replaceAll("Hrs","")));
+        } else {
+            SimpleUtils.fail("getDataOnTodayForecast: No data on widget!",false);
+        }
+        return resultData;
     }
 }

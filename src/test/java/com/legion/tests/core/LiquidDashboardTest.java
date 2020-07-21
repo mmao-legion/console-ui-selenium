@@ -8,10 +8,8 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.hu.Ha;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -317,6 +315,73 @@ public class LiquidDashboardTest extends TestBase {
             SimpleUtils.pass("Alerts data on Dashboard is consistent with Timesheet page!");
         }else {
             SimpleUtils.fail("Alerts data on Dashboard is inconsistent with Timesheet page!", false);
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Helpful Links widget")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyHelpfulLinksWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+        // Verifiy Edit mode Dashboard loaded
+        liquidDashboardPage.enterEditMode();
+        liquidDashboardPage.switchOnWidget(widgetType.Helpful_Links.getValue());
+        //verify there are 5 link at most
+        liquidDashboardPage.verifyEditLinkOfHelpgulLinks();
+        liquidDashboardPage.deleteAllLinks();
+        liquidDashboardPage.saveLinks();
+        liquidDashboardPage.verifyNoLinksOnHelpfulLinks();
+        liquidDashboardPage.verifyEditLinkOfHelpgulLinks();
+        liquidDashboardPage.deleteAllLinks();
+        for (int i=0;i<6;i++){ //the 6th is to verify no add link button
+            liquidDashboardPage.addLinkOfHelpfulLinks();
+        }
+        liquidDashboardPage.saveLinks();
+        liquidDashboardPage.verifyEditLinkOfHelpgulLinks();
+        liquidDashboardPage.cancelLinks();
+        liquidDashboardPage.saveAndExitEditMode();
+        //verify links
+        liquidDashboardPage.verifyLinks();
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Helpful Links widget")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTodayForecastWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+        // Verifiy Edit mode Dashboard loaded
+        liquidDashboardPage.enterEditMode();
+        liquidDashboardPage.switchOnWidget(widgetType.Todays_Forecast.getValue());
+        liquidDashboardPage.saveAndExitEditMode();
+        //verify there is a graph
+        liquidDashboardPage.verifyIsGraphExistedOnWidget();
+        HashMap <String,Float> dataOnWidget = liquidDashboardPage.getDataOnTodayForecast();
+        //verify view forecast link
+        liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Todays_Forecast.getValue(),linkNames.View_Forecast.getValue());
+        //verify value on widget
+        ForecastPage forecastPage = pageFactory.createForecastPage();
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        HashMap <String,Float> insightDataFromForecastPage = forecastPage.getInsightDataInShopperWeekView();
+        schedulePage.clickOnScheduleSubTab("Schedule");
+        HashMap <String,Float> dataFromSchedule = schedulePage.getScheduleLabelHoursAndWages();
+        if (dataOnWidget.get("demand forecast") <= insightDataFromForecastPage.get("totalShoppers") && dataOnWidget.get("demand forecast") >= insightDataFromForecastPage.get("totalShoppers")){
+            SimpleUtils.pass("Demand Forecast number is correct!");
+        } else {
+            SimpleUtils.fail("Demand Forecast number is not correct!",true);
+        }
+        if (dataOnWidget.get("budget") >= dataFromSchedule.get("budgetedHours")&&dataOnWidget.get("budget") <= dataFromSchedule.get("budgetedHours")){
+            SimpleUtils.pass("budget number is correct!");
+        } else {
+            SimpleUtils.fail("budget number is not correct!",true);
+        }
+        if (dataOnWidget.get("scheduled") <= dataFromSchedule.get("scheduledHours")&&dataOnWidget.get("scheduled") >= dataFromSchedule.get("scheduledHours")){
+            SimpleUtils.pass("scheduledHours number is correct!");
+        } else {
+            SimpleUtils.fail("scheduledHours number is not correct!",true);
         }
     }
 }

@@ -18,4 +18,13 @@ public interface LiquidDashboardPage {
     public boolean isSpecificWidgetLoaded(String widgetName) throws Exception;
     public String getTheStartOfCurrentWeekFromSchedulesWidget() throws Exception;
     public List<String> verifyTheContentOnAlertsWidgetLoaded(String currentWeek) throws Exception;
+    public void verifyEditLinkOfHelpgulLinks() throws Exception;
+    public void addLinkOfHelpfulLinks() throws Exception;
+    public void deleteAllLinks() throws Exception;
+    public void saveLinks() throws  Exception;
+    public void cancelLinks() throws Exception;
+    public void verifyLinks() throws Exception;
+    public void verifyNoLinksOnHelpfulLinks() throws Exception;
+    public void verifyIsGraphExistedOnWidget() throws Exception;
+    public HashMap <String, Float> getDataOnTodayForecast() throws Exception;
 }
