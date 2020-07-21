@@ -276,7 +276,7 @@ public class LiquidDashboardTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheContentOfAlertWidgetAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
         TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
 
@@ -304,7 +304,7 @@ public class LiquidDashboardTest extends TestBase {
         // Verify the content on Alerts Widget
         if (liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Alerts.getValue())) {
             alertsFromDashboard = liquidDashboardPage.verifyTheContentOnAlertsWidgetLoaded(currentWeek);
-        }else {
+        } else {
             SimpleUtils.fail("\"Alerts\" widget not loaded Successfully!", false);
         }
         liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Alerts.getValue(), linkNames.View_TimeSheets.getValue());
@@ -313,8 +313,11 @@ public class LiquidDashboardTest extends TestBase {
 
         if (alertsFromDashboard.containsAll(alertsFromTimesheet) && alertsFromTimesheet.containsAll(alertsFromDashboard)) {
             SimpleUtils.pass("Alerts data on Dashboard is consistent with Timesheet page!");
-        }else {
+        } else {
             SimpleUtils.fail("Alerts data on Dashboard is inconsistent with Timesheet page!", false);
+        }
+    }
+    
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify Helpful Links widget")

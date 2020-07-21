@@ -500,7 +500,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         c. [View Timesheets] button*/
         if (isElementLoaded(alertsWeek, 5) && alertsWeek.getText().toLowerCase().contains(currentWeek.toLowerCase())) {
             SimpleUtils.pass("The week of Alerts is loaded and correct!");
-        }else {
+        } else {
             SimpleUtils.fail("The week of \"Alerts\" is not loaded or incorrect!", false);
         }
         if (areListElementVisible(alertsCells, 5) && alertsCells.size() == 6) {
@@ -508,20 +508,23 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                 if (!alertsCell.getText().isEmpty()) {
                     alerts.add(alertsCell.getText());
                     SimpleUtils.report("Get the alerts Data: \"" + alertsCell.getText() + "\" Successfully!");
-                }else {
+                } else {
                     SimpleUtils.fail("Failed to get the alert data!", false);
                 }
             }
-        }else {
+        } else {
             SimpleUtils.fail("The Alerts data not loaded Successfully!", false);
         }
         if (isElementLoaded(MyThreadLocal.getDriver().findElement(By.cssSelector("lg-alert .dms-action-link")), 5)) {
             SimpleUtils.pass("\"View Timesheets\" link loaded Successfully!");
-        }else {
+        } else {
             SimpleUtils.fail("\"View Timesheets\" link not loaded Successfully!", false);
         }
 
         return alerts;
+    }
+
+    @Override
     public void verifyIsGraphExistedOnWidget() throws Exception {
         if (areListElementVisible(widgetsInDashboardPage,10)){
             for (WebElement widgetTemp : widgetsInDashboardPage){
