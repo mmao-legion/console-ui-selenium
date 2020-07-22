@@ -575,7 +575,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "img[ng-if=\"hasViolateCompliance(line, scheduleWeekDay)\"]")
     private List<WebElement> complianceReviewDangerImgs;
 
-    @FindBy(css = "lg-dropdown-base[ng-if=\"isAdmin\"]")
+    @FindBy(css = "lg-dropdown-base[ng-if=\"canEditSchedule\"]")
     private WebElement scheduleAdminDropDownBtn;
 
     @FindBy(css = "div[ng-repeat=\"action in supportedAdminActions.actions\"]")
@@ -3379,7 +3379,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             }
                             break;
                         }else {
-                            SimpleUtils.fail("Scheduled Hour not loaded Successfully!", false);
+                            SimpleUtils.report("Scheduled Hour not loaded Successfully!");
                         }
                     }
                     if (isElementLoaded(nextButtonOnCreateSchedule) && nextButtonOnCreateSchedule.getText().equals(finish)) {
@@ -5045,7 +5045,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-display-name"));
                             WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
                             if (workerName != null && optionCircle != null) {
-                                if (workerName.getText().trim().equals(name.trim())) {
+                                if (workerName.getText().toLowerCase().trim().equals(name.trim().toLowerCase())) {
                                     click(optionCircle);
                                     SimpleUtils.report("Select Team Member: " + name + " Successfully!");
                                 }
