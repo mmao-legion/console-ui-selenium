@@ -350,7 +350,7 @@ public class LiquidDashboardTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify Helpful Links widget")
+    @TestName(description = "Verify today's forecast widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTodayForecastWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -385,6 +385,41 @@ public class LiquidDashboardTest extends TestBase {
             SimpleUtils.pass("scheduledHours number is correct!");
         } else {
             SimpleUtils.fail("scheduledHours number is not correct!",true);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Schedules widget")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySchedulesWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+        // Verifiy Edit mode Dashboard loaded
+        liquidDashboardPage.enterEditMode();
+        liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
+        liquidDashboardPage.saveAndExitEditMode();
+        //verify view schedules link
+        List<String> resultListOnWidget = liquidDashboardPage.getDataOnSchedulesWidget();
+        liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Schedules.getValue(),linkNames.View_Schedules.getValue());
+        //verify value on widget
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        List<String> resultListInOverview = schedulePage.getOverviewData();
+        if (resultListOnWidget.size()==resultListInOverview.size()){
+            boolean falg = false;
+            for (int i=0;i<resultListInOverview.size();i++){
+                falg = resultListInOverview.get(i).equals(resultListOnWidget.get(i));
+            }
+            if (falg){
+                SimpleUtils.pass("Values on widged are consistent with the one in overview");
+            } else {
+                SimpleUtils.fail("Values on widged are not consistent with the one in overview!",true);
+            }
+
+        } else {
+            SimpleUtils.fail("something wrong with the number of week displayed!",true);
         }
     }
 }

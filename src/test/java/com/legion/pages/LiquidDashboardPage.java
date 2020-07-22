@@ -27,4 +27,5 @@ public interface LiquidDashboardPage {
     public void verifyNoLinksOnHelpfulLinks() throws Exception;
     public void verifyIsGraphExistedOnWidget() throws Exception;
     public HashMap <String, Float> getDataOnTodayForecast() throws Exception;
+    public List<String> getDataOnSchedulesWidget() throws Exception;
 }

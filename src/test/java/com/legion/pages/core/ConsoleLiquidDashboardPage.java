@@ -11,6 +11,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -73,6 +74,9 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
 
     @FindBy (css = ".forecast.forecast-row.row-fx.ng-scope")
     private WebElement dataOnTodayForecast;
+
+    @FindBy (css = ".row-fx.schedule-table-row.ng-scope")
+    private List<WebElement> dataOnSchedules;
 
     @Override
     public void enterEditMode() throws Exception {
@@ -555,5 +559,25 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             SimpleUtils.fail("getDataOnTodayForecast: No data on widget!",false);
         }
         return resultData;
+    }
+
+    @Override
+    public List<String> getDataOnSchedulesWidget() throws Exception {
+        List<String> resultList= new ArrayList<String>();
+        if (areListElementVisible(dataOnSchedules,10)){
+            for (int i=0;i<dataOnSchedules.size();i++){
+                String[] temp1 = dataOnSchedules.get(i).getText().split("\n");
+                String[] temp2 = Arrays.copyOf(temp1,8);
+                resultList.add(Arrays.toString(temp2));
+            }
+        } else {
+            SimpleUtils.fail("data on schedules widget fail to load!",true);
+        }
+        if (resultList.size()<=4){
+            SimpleUtils.pass("there are 4 week info on Schedules widget!");
+        } else {
+            SimpleUtils.fail("there are more than 4 week on Schedule widget which is not expected!",true);
+        }
+        return resultList;
     }
 }

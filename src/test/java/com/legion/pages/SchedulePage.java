@@ -415,4 +415,5 @@ public interface SchedulePage {
 	public void displayAlertPopUpForRoleViolation() throws Exception;
 
 	public void unGenerateActiveScheduleFromCurrentWeekOnward(int loopCount) throws Exception;
+	public List<String> getOverviewData() throws Exception;
 }

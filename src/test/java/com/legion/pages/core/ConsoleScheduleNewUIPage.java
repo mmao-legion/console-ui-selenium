@@ -9340,4 +9340,28 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Team Members' Icons not loaded", true);
         }
     }
+
+    //added by haya.  return a List has 4 week's data including last week
+    @FindBy (css = ".row-fx.schedule-table-row.ng-scope")
+    private List<WebElement> rowDataInOverviewPage;
+    @FindBy (xpath = "//div[contains(@class,\"background-current-week-legend-calendar\")]/preceding-sibling::div[1]")
+    private WebElement lastWeekNavigation;
+    @Override
+    public List<String> getOverviewData() throws Exception {
+        List<String> resultList = new ArrayList<String>();
+        if(isElementLoaded(lastWeekNavigation,10)){
+            click(lastWeekNavigation);// click on last in overview page
+        }
+        waitForSeconds(3);
+        if (areListElementVisible(rowDataInOverviewPage,10)){
+            for (int i=0;i<rowDataInOverviewPage.size() && i<4;i++){
+                String[] temp1 = rowDataInOverviewPage.get(i).getText().split("\n");
+                String[] temp2 = Arrays.copyOf(temp1,8);
+                resultList.add(Arrays.toString(temp2));
+            }
+        } else {
+            SimpleUtils.fail("data on schedules widget fail to load!",true);
+        }
+        return resultList;
+    }
 }
