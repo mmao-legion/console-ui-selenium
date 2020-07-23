@@ -575,7 +575,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "img[ng-if=\"hasViolateCompliance(line, scheduleWeekDay)\"]")
     private List<WebElement> complianceReviewDangerImgs;
 
-    @FindBy(css = "lg-dropdown-base[ng-if=\"canEditSchedule\"]")
+    @FindBy(css = ".schedule-action-buttons lg-dropdown-base")
     private WebElement scheduleAdminDropDownBtn;
 
     @FindBy(css = "div[ng-repeat=\"action in supportedAdminActions.actions\"]")
@@ -7871,17 +7871,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public void clickOnProfileIcon() throws Exception {
         if(isProfileIconsEnable()) {
-            if (profileIcons.get(1).getAttribute("ng-if").equals("hasWorkerInitial()")) {
-                click(MyThreadLocal.getDriver().findElement(By.className("sch-shift-worker-initials")));
-                SimpleUtils.pass("Clicked on Profile Icon successfully");
-            } else if (profileIcons.get(1).getAttribute("ng-if").equals("hasWorkerImg()")) {
-                click(MyThreadLocal.getDriver().findElement(By.className("sch-shift-worker-img-28-28")));
-                SimpleUtils.pass("Clicked on Profile which has imge successfully");
-            } else if (profileIcons.get(1).getAttribute("ng-if").equals("!hasWorker() && isOpenShift()")) {
-                click(MyThreadLocal.getDriver().findElement(By.className("sch-open-shift")));
-                SimpleUtils.pass("Clicked on open Profile Icon successfully");
-
-            }
+            int randomIndex = (new Random()).nextInt(profileIcons.size());
+            click(profileIcons.get(randomIndex));
         } else
             SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
     }
