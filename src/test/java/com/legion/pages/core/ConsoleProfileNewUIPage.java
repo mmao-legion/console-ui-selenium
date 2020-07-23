@@ -123,7 +123,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement inviteTeamMemberPopUpCancelBtn;
 	@FindBy(css="button[ng-click=\"send()\"]")
 	private WebElement inviteTeamMemberPopUpSendBtn;
-	@FindBy(css="lgn-action-button[ng-click=\"changePassword()\"]")
+	@FindBy(css="//span[text()=\"Change Password\"]")
 	private WebElement userProfileChangePasswordBtn;
 	@FindBy(css="div[ng-form=\"changePassword\"]")
 	private WebElement changePasswordPopUp;
@@ -220,6 +220,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement userNickName;
 	@FindBy(className = "request-buttons-reject")
 	private WebElement timeOffRejectBtn;
+	@FindBy(css = "form-section[on-action=\"editProfile()\"]")
+	private WebElement profileSection;
 	
 	@Override
 	public void clickOnProfileConsoleMenu() throws Exception {
@@ -699,9 +701,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	
 	public void clickOnEditUserProfilePencilIcon() throws Exception
 	{
-		if(isElementLoaded(profileEditPencilIcon))
-			click(profileEditPencilIcon);
-		if(isElementLoaded(profileEditForm))
+		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),10))
+			click(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
+		//verify if edit profile mode load
+		if(isElementLoaded(profileSection.findElement(By.cssSelector("div[ng-if=\"editing.profile\"]")),10))
 			SimpleUtils.pass("Profile Page: User profile edit form loaded successfully.");
 		else
 			SimpleUtils.fail("Profile Page: User profile edit form not loaded.", false);
@@ -756,46 +759,47 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void updateUserProfileHomeAddress(String streetAddress1, String streetAddress2, String city, String state, String zip) throws Exception
 	{
 		// Updating Home Address Street Address 1
-		if(isElementLoaded(profileAddressStreetAddress1InputBox)) {
-			if(profileAddressStreetAddress1InputBox.getAttribute("value").toLowerCase().contains(streetAddress1.toLowerCase()))
+		if(isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")),5)) {
+			if(profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).getAttribute("value").toLowerCase().contains(streetAddress1.toLowerCase()))
 				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' already updated with value: '"
 						+streetAddress1+"'.");
 			else {
-				profileAddressStreetAddress1InputBox.clear();
-				profileAddressStreetAddress1InputBox.sendKeys(streetAddress1);
+				profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).clear();
+				profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).sendKeys(streetAddress1);
 				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' updated with value: '"
 						+streetAddress1+"'.");
 			}
 		}
 		
 		// Updating Home Address Street Address 2
-		if(isElementLoaded(profileAddressStreetAddress2InputBox)) {
-			if(profileAddressStreetAddress2InputBox.getAttribute("value").toLowerCase().contains(streetAddress2.toLowerCase()))
+		if(isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")),5)) {
+			if(profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).getAttribute("value").toLowerCase().contains(streetAddress2.toLowerCase()))
 				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' already updated with value: '"
 						+streetAddress2+"'.");
 			else {
-				profileAddressStreetAddress2InputBox.clear();
-				profileAddressStreetAddress2InputBox.sendKeys(streetAddress2);
+				profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).clear();
+				profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).sendKeys(streetAddress2);
 				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' updated with value: '"
 						+streetAddress2+"'.");
 			}
 		}
 		
 		// Updating Home Address City
-		if(isElementLoaded(profileAddressCityInputBox)) {
-			if(profileAddressCityInputBox.getAttribute("value").toLowerCase().contains(city.toLowerCase()))
+		if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")),5)) {
+			if(profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).getAttribute("value").toLowerCase().contains(city.toLowerCase()))
 				SimpleUtils.pass("Profile Page: User Profile Home Address 'City' already updated with value: '"+city+"'.");
 			else {
-				profileAddressCityInputBox.clear();
-				profileAddressCityInputBox.sendKeys(city);
+				profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).clear();
+				profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).sendKeys(city);
 				SimpleUtils.pass("Profile Page: User Profile Home Address 'City' updated with value: '"+city+"'.");
 			}
 		}
 		
 		// Updating Home Address State
-		if(isElementLoaded(profileAddressStateInputBox)) {
-			boolean isStateSelected = false;
-			Select statesDropdown = new Select(profileAddressStateInputBox);
+		if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")),5)) {
+			selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")),state);
+/*			boolean isStateSelected = false;
+			Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")));
 			if(statesDropdown.getFirstSelectedOption().getText().toLowerCase().contains(state.toLowerCase()))
 				SimpleUtils.pass("Profile Page: User Profile Nick Name already updated with value: '"+state+"'.");
 			else {
@@ -809,16 +813,16 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					SimpleUtils.pass("Profile Page: User Profile Home Address 'State' updated with value: '"+state+"'.");
 				else
 					SimpleUtils.fail("Profile Page: User Profile Home Address State: '"+state+"' not found.", true);
-			}
+			} */
 		}
 		
 		// Updating Home Address Zip
-		if(isElementLoaded(profileAddressZipInputBox)) {
-			if(profileAddressZipInputBox.getAttribute("value").toLowerCase().contains(zip.toLowerCase()))
+		if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")),5)) {
+			if(profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).getAttribute("value").toLowerCase().contains(zip.toLowerCase()))
 				SimpleUtils.pass("Profile Page: User Profile Home Address 'Zip' already updated with value: '"+zip+"'.");
 			else {
-				profileAddressZipInputBox.clear();
-				profileAddressZipInputBox.sendKeys(zip);
+				profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).clear();
+				profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).sendKeys(zip);
 				SimpleUtils.pass("Profile Page: User Profile Home Address 'Zip' updated with value: '"+zip+"'.");
 			}
 		}
@@ -2136,7 +2140,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void validateTheEditFunctionalityOnMyProfile(String streetAddress1, String streetAddress2, String city, String state, String zip) throws Exception {
 		clickOnEditUserProfilePencilIcon();
 		updateUserProfileHomeAddress(streetAddress1, streetAddress2, city, state, zip);
-		scrollToBottom();
+		//scrollToBottom();
 		clickOnSaveUserProfileBtn();
 		if (isElementLoaded(alertDialog, 5))
 			click(OKButton);
