@@ -1246,10 +1246,8 @@ public class ActivityTest extends TestBase {
         teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
         teamPage.searchAndSelectTeamMemberByName(firstName);
         teamPage.isProfilePageLoaded();
-        teamPage.isManualOnBoardButtonLoaded();
         teamPage.manualOnBoardTeamMember();
         teamPage.verifyTheStatusOfTeamMember(onBoarded);
-        teamPage.isActivateButtonLoaded();
         teamPage.clickOnActivateButton();
         teamPage.isActivateWindowLoaded();
         teamPage.selectADateOnCalendarAndActivate();

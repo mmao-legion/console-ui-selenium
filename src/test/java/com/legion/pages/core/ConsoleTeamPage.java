@@ -558,7 +558,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private List<WebElement> alertMessages;
 	@FindBy (css = "div.lgn-alert-message")
 	private WebElement popupMessage;
-	@FindBy (css = "div:nth-child(7) > div.value")
+	//@FindBy (css = "div:nth-child(7) > div.value")
+	@FindBy (css = ".lg-user-locations__item span")
 	private WebElement homeStoreLocation;
 	@FindBy (css = "pre.change-location-msg")
 	private WebElement changeLocationMsg;
@@ -1348,11 +1349,40 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		}
 	}
 
+	@FindBy(css = "form-section[on-action=\"editProfile()\"]")
+	private WebElement profileSection;
 	@Override
 	public String verifyTheFunctionOfEditBadges() throws Exception {
 		String badges = "BADGES";
 		String badgeID = "";
-		if (isElementLoaded(badgeTitle, 5)) {
+		if (isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),5)){
+			click(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
+			SimpleUtils.pass("enter edit profile mode!");
+			waitForSeconds(3);
+			WebElement manageBadge = profileSection.findElement(By.cssSelector(".ManageButton"));
+			scrollToElement(manageBadge);
+			moveToElementAndClick(manageBadge);
+			if (isManageBadgesLoaded()) {
+				badgeID = selectTheBadgeByRandom();
+				confirmButton.click();
+				if (isElementLoaded(badgeIcon, 5)) {
+					WebElement badge = badgeIcon.findElement(By.id(badgeID));
+					if (badge != null) {
+						SimpleUtils.pass("Select the badges successfully!");
+					}else{
+						SimpleUtils.fail("The selected badge doesn't show!", true);
+					}
+				}else {
+					SimpleUtils.fail("Badges failed to load on Profile page!", true);
+				}
+			}
+			moveToElementAndClick(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
+		} else {
+			SimpleUtils.fail("Edit button is not loaded!",true);
+		}
+
+
+		/*if (isElementLoaded(badgeTitle, 5)) {
 			if (badgeTitle.getText().equals(badges)) {
 				WebElement editBadge = badgeTitle.findElement(By.tagName("i"));
 				click(editBadge);
@@ -1375,7 +1405,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}
 		}else{
 			SimpleUtils.fail("BADGES failed to load!", true);
-		}
+		} */
 		return badgeID;
 	}
 
@@ -1861,8 +1891,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void clickOnActivateButton() throws Exception {
-		if (isElementLoaded(activateButton, 10)) {
-			click(activateButton);
+		if (isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Activate\"]")), 10)) {
+			click(profileSection.findElement(By.xpath("//span[text()=\"Activate\"]")));
 		} else {
 			SimpleUtils.fail("Activate button failed to load on Profile Tab!", false);
 		}
@@ -1938,14 +1968,24 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void verifyTheStatusOfTeamMember(String expectedStatus) throws Exception {
-		if (isElementLoaded(tmStatus, 10)) {
-			if (expectedStatus.equals(tmStatus.getText())) {
-				SimpleUtils.pass("Team member's status is correct!");
-			}else {
-				SimpleUtils.fail("Team member's status is incorrect!", true);
+		if (teamMembers.size() > 0){
+			for (WebElement teamMember : teamMembers){
+				WebElement tr = teamMember.findElement(By.className("tr"));
+				if (tr != null) {
+					WebElement status = tr.findElement(By.cssSelector("span.status"));
+					if (status != null) {
+						if (expectedStatus.equals(status.getText())) {
+							SimpleUtils.pass("Team member's status is correct!");
+						}else {
+							SimpleUtils.fail("Team member's status is incorrect!", true);
+						}
+					}else {
+						SimpleUtils.fail("Failed to find the Status!", true);
+					}
+				}else {
+					SimpleUtils.fail("Failed to find the tr element!", true);
+				}
 			}
-		}else {
-			SimpleUtils.fail("Status Element failed to load!", true);
 		}
 	}
 
@@ -2153,7 +2193,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public boolean isManualOnBoardButtonLoaded() throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(manualOnBoardButton, 15)) {
+		if (isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Manual Onboard\"]")), 15)) {
 			isLoaded = true;
 			SimpleUtils.pass("Manual Onboard Button Loaded Successfully!");
 		}else{
@@ -2162,17 +2202,19 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		return isLoaded;
 	}
 
+	@FindBy (xpath = "//button[text()=\"CONFIRM\"]")
+	private WebElement confirmBtn;
 	@Override
 	public void manualOnBoardTeamMember() throws Exception {
 		String successfulMsg = "Team member successfully On-boarded.";
 		String actualMsg = "";
-		if (isElementLoaded(manualOnBoardButton, 5)) {
-			click(manualOnBoardButton);
+		if (isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Manual Onboard\"]")), 5)) {
+			click(profileSection.findElement(By.xpath("//span[text()=\"Manual Onboard\"]")));
 		}else {
 			SimpleUtils.fail("Manual OnBoard button failed to load!", true);
 		}
-		if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
-			click(confirmButton);
+		if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmBtn, 15)) {
+			click(confirmBtn);
 			if (isElementLoaded(popupMessage, 15)) {
 				actualMsg = popupMessage.getText();
 				if (successfulMsg.equals(actualMsg)) {
@@ -2769,18 +2811,19 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void updateBusinessProfilePicture(String filePath) throws Exception {
-		if (isElementLoaded(editProfileButton, 5)) {
-			click(editProfileButton);
-			if (isElementEnabled(businessImageInput, 5)) {
-				businessImageInput.sendKeys(filePath);
-				// wait for the picture to be loaded
-				waitForSeconds(5);
-				clickTheSaveTMButton();
-			}else {
-				SimpleUtils.fail("Business Profile Image input element isn't enabled!", true);
-			}
-		}else {
-			SimpleUtils.fail("Edit Profile Button failed to load!", true);
+		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),10)){
+			click(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
+				if (isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1), 5)) {
+					getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(filePath);
+					// wait for the picture to be loaded
+					waitForSeconds(5);
+					scrollToElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
+					click(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
+				}else {
+					SimpleUtils.fail("Business Profile Image input element isn't enabled!", true);
+				}
+		} else {
+			SimpleUtils.fail("Edit button is not loaded!",true);
 		}
 	}
 
