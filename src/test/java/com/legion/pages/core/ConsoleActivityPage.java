@@ -264,7 +264,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 
 	@Override
 	public void verifyActivityOfShiftOffer(String requestUserName) throws Exception {
-		String expectedMessage = "requested to swap shifts";
+		String expectedMessage = "open shift";
 		waitForSeconds(5);
 		if (areListElementVisible(activityCards, 15)) {
 			WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
@@ -278,7 +278,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 						+ ", " + expectedMessage + "! Actual card is: " + message.getText(), false);
 			}
 		}else {
-			SimpleUtils.fail("Shift Swap Activity failed to Load1", false);
+			SimpleUtils.fail("Shift Offer Activity failed to Load1", false);
 		}
 	}
 

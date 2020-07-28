@@ -974,26 +974,26 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			Float totalItemsInbar = 0.0f;
 
 			for (int i = 0; i < dataInBar.size(); i++) {
-				String totalShoppersInBar = dataInBar.get(i).split(" ")[3];
-				String forecastInBar = dataInBar.get(i).split(" ")[6];
-				if (totalShoppersInBar.contains(",")) {
-					totalShoppersInBar = totalShoppersInBar.replaceAll(",","");
-				}else totalShoppersInBar = totalShoppersInBar;
-				if (forecastInBar.contains(",")){
-					forecastInBar = forecastInBar.replaceAll(",","");
-				}else forecastInBar=forecastInBar;
-				try {
-					totalItemsInbar +=Float.valueOf (totalShoppersInBar);
-					if (max <= Float.valueOf (forecastInBar)) {
-						max=Float.valueOf(forecastInBar);
+				if (!dataInBar.get(i).isEmpty()) {
+					String totalShoppersInBar = dataInBar.get(i).split(" ")[3];
+					String forecastInBar = dataInBar.get(i).split(" ")[6];
+					if (totalShoppersInBar.contains(",")) {
+						totalShoppersInBar = totalShoppersInBar.replaceAll(",", "");
+					} else totalShoppersInBar = totalShoppersInBar;
+					if (forecastInBar.contains(",")) {
+						forecastInBar = forecastInBar.replaceAll(",", "");
+					} else forecastInBar = forecastInBar;
+					try {
+						totalItemsInbar += Float.valueOf(totalShoppersInBar);
+						if (max <= Float.valueOf(forecastInBar)) {
+							max = Float.valueOf(forecastInBar);
+						} else {
+							max = max;
+						}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
 					}
-					else {
-						max=max;
-					}
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
 				}
-
 			}
 			SimpleUtils.report("max number in bar graph:"+max);
 			SimpleUtils.report("total items in bar graph:"+totalItemsInbar);
@@ -1028,25 +1028,33 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		Float actualTotalShoppersInbar =0.0f;
 
 		for (int i = 0; i < dataInBar.size(); i++) {
-			if (dataInBar.get(i).split(" ").length > 9){
-				String actualShoppers = dataInBar.get(i).split(" ")[9];
-				String forecastInBar = dataInBar.get(i).split(" ")[6];
-				if (actualShoppers.contains(",")) {
-					actualShoppers = actualShoppers.replaceAll(",","");
-				}else actualShoppers = actualShoppers;
-				try {
-					actualTotalShoppersInbar +=Float.valueOf(actualShoppers);
-					if (max <=Float.valueOf(actualShoppers)) {
-						max=Float.valueOf(actualShoppers);
+			if (!dataInBar.get(i).isEmpty()) {
+				if (dataInBar.get(i).split(" ").length > 0) {
+					String actualShoppers = "";
+					if (dataInBar.get(i).split(" ").length == 9) {
+						actualShoppers = dataInBar.get(i).split(" ")[7];
 					}
-					else {
-						max=max;
+					if (dataInBar.get(i).split(" ").length == 8) {
+						actualShoppers = dataInBar.get(i).split(" ")[6];
 					}
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
+					if (actualShoppers.contains(",")) {
+						actualShoppers = actualShoppers.replaceAll(",", "");
+					}else if (actualShoppers.equals("N/A")) {
+						actualShoppers = actualShoppers.replace("N/A","0");
+					}
+					try {
+						actualTotalShoppersInbar += Float.valueOf(actualShoppers);
+						if (max <= Float.valueOf(actualShoppers)) {
+							max = Float.valueOf(actualShoppers);
+						} else {
+							max = max;
+						}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+				} else {
+					SimpleUtils.fail("actual value in tooltip is not loaded!", true);
 				}
-			} else {
-				SimpleUtils.fail("actual value in tooltip is not loaded!",true);
 			}
 		}
 		SimpleUtils.report("max actual data in bar graph for this week is :"+max);

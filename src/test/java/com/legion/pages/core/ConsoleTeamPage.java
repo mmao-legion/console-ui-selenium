@@ -165,6 +165,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
     @FindBy(css="button.lgn-action-button-success")
     private WebElement confirmTimeOffApprovalBtn;
 
+    @FindBy(className = "day-week-picker-period-active")
+	private WebElement currentWeek;
+
 	 public ConsoleTeamPage() {
 		PageFactory.initElements(getDriver(), this);
     }
@@ -250,9 +253,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					SimpleUtils.pass("Coverage tab present on Team Page");
 					goToCoverageTab.click();
 					if(isElementLoaded(coverageLoading)){
-						SimpleUtils.pass("Coverage Loaded Successfully for current week "+coverageTitle.getText());
+						SimpleUtils.pass("Coverage Loaded Successfully for current week "+ currentWeek.getText());
 					}else{
-						SimpleUtils.fail("Coverage not-loaded for "+coverageTitle.getText(),false);
+						SimpleUtils.fail("Coverage not-loaded for "+ currentWeek.getText(),false);
 					}
 
 				}else{

@@ -1209,6 +1209,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 return false;
         }else if(isElementEnabled(generateScheduleBtn, 3)){
             return false;
+        }else if(isElementLoaded(publishSheduleButton, 5)) {
+            return true;
         }
         if(areListElementVisible(scheduleTableWeekViewWorkerDetail,3)){
             SimpleUtils.pass("Week: '" + getActiveWeekText() + "' Already Generated!");
@@ -1699,7 +1701,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         if (listWorkRoles.size() > 0) {
             for (WebElement listWorkRole : listWorkRoles) {
-                if (listWorkRole.getText().equalsIgnoreCase(workRoles)) {
+                if (listWorkRole.getText().toLowerCase().contains(workRoles.toLowerCase())) {
                     click(listWorkRole);
                     SimpleUtils.pass("Work Role " + workRoles + "selected Successfully");
                     break;
@@ -5040,7 +5042,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {
                     textSearch.sendKeys(name);
                     click(searchIcon);
-                    if (areListElementVisible(searchResults, 5)) {
+                    if (areListElementVisible(searchResults, 15)) {
                         for (WebElement searchResult : searchResults) {
                             WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-display-name"));
                             WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
@@ -5235,11 +5237,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(printButton,10)){
             scrollToTop();
             click(printButton);
-           /* if(isElementLoaded(printButtonInPrintLayout)) {
-                SimpleUtils.pass("Print button is  clickable");
-            }else {
-                SimpleUtils.fail("Print button is not  clickable",true);
-            } */
+            if(isElementLoaded(printButtonInPrintLayout, 5)) {
+                click(printButtonInPrintLayout);
+            }
         }else{
             SimpleUtils.fail("there is no print button",true);
         }
@@ -7287,6 +7287,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isPrintIconLoaded()) {
             click(printIcon);
             // Wait for the schedule to be downloaded
+            if(isElementLoaded(printButtonInPrintLayout, 5)) {
+                click(printButtonInPrintLayout);
+            }
             waitForSeconds(6);
             String downloadPath = parameterMap.get("Download_File_Default_Dir");
             SimpleUtils.assertOnFail("Failed to download the team schedule", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekViewSchedulePdf"), false);
@@ -7440,7 +7443,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public boolean isSpecificSmartCardLoaded(String cardName) throws Exception {
         boolean isLoaded = false;
-        waitForSeconds(5);
+        waitForSeconds(6);
         if (areListElementVisible(smartCards, 5)) {
             for (WebElement smartCard : smartCards) {
                 WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
@@ -7872,7 +7875,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void clickOnProfileIcon() throws Exception {
         if(isProfileIconsEnable()) {
             int randomIndex = (new Random()).nextInt(profileIcons.size());
-            click(profileIcons.get(randomIndex));
+            clickTheElement(profileIcons.get(randomIndex));
         } else
             SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
     }
@@ -7931,24 +7934,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Personal Details Name is not Loaded in Popup!",true);
         }
 
-        if(isElementLoaded(personalDetailsPhone,8))
+        if(isElementLoaded(personalDetailsPhone,8) || isElementLoaded(personalDetailsEmailAddress,5))
         {
-            SimpleUtils.pass("Phone details are Loaded in popup!");
+            SimpleUtils.pass("Phone/Email details are Loaded in popup!");
         }
         else
         {
-            SimpleUtils.fail("Phone details are not Loaded in Popup!",true);
+            SimpleUtils.fail("Phone/Email details are not Loaded in Popup!",true);
         }
-//
-        if(isElementLoaded(personalDetailsEmailAddress,5))
-        {
-            SimpleUtils.pass("Personal Email Address is Loaded in popup!");
-        }
-        else
-        {
-            SimpleUtils.fail("Personal Email Address is not Loaded in Popup!",true);
-        }
-
     }
 
     //WorkDetails

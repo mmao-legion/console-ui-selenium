@@ -1028,9 +1028,9 @@ public class ActivityTest extends TestBase {
         loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                 , String.valueOf(credential[0][2]));
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        String coverName = profileNewUIPage.getNickNameFromProfile();
         if (dashboardPage.isSwitchToEmployeeViewPresent())
             dashboardPage.clickOnSwitchToEmployeeView();
-        String coverName = profileNewUIPage.getNickNameFromProfile();
         dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
         schedulePage.navigateToNextWeek();
@@ -1507,16 +1507,24 @@ public class ActivityTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the activity of claim open shift")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyActivityOfClaimOpenShift(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyActivityOfClaimOpenShiftAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String teamMemberName = profileNewUIPage.getNickNameFromProfile();
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+
         String fileName = "UsersCredentials.json";
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
         userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+        Object[][] credential = userCredentials.get("InternalAdmin");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1]), String.valueOf(credential[0][2]));
+
         // 1.Checking configuration in controls
         String option = "Always";
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         controlsNewUIPage.clickOnControlsConsoleMenu();
@@ -1529,7 +1537,6 @@ public class ActivityTest extends TestBase {
         } else {
 
             // 2.admin create one manual open shift and assign to specific TM
-            String teamMemberName = String.valueOf(teamMemberCredentials[0][0]);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
@@ -1556,7 +1563,7 @@ public class ActivityTest extends TestBase {
                 schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
                 schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
                 schedulePage.clickOnCreateOrNextBtn();
-                schedulePage.selectSpecificTMWhileCreateNewShift(teamMemberName);
+                schedulePage.searchTeamMemberByName(teamMemberName);
                 schedulePage.clickOnOfferOrAssignBtn();
                 schedulePage.saveSchedule();
                 schedulePage.publishActiveSchedule();
@@ -1573,7 +1580,7 @@ public class ActivityTest extends TestBase {
                 schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
                 schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
                 schedulePage.clickOnCreateOrNextBtn();
-                schedulePage.selectSpecificTMWhileCreateNewShift(teamMemberName);
+                schedulePage.searchTeamMemberByName(teamMemberName);
                 schedulePage.clickOnOfferOrAssignBtn();
                 schedulePage.saveSchedule();
                 schedulePage.publishActiveSchedule();
@@ -1581,12 +1588,10 @@ public class ActivityTest extends TestBase {
 
         }
 
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
 
         // 3.Login with the TM to claim the shift
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                , String.valueOf(teamMemberCredentials[0][2]));
+        loginToLegionAndVerifyIsLoginDone(username, password, location);
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
@@ -1595,15 +1600,11 @@ public class ActivityTest extends TestBase {
         String linkName = "View Shifts";
         schedulePage.clickLinkOnSmartCardByName(linkName);
         SimpleUtils.assertOnFail("Open shifts not loaed Successfully!", schedulePage.areShiftsPresent(), false);
-        List<String> shiftHours = schedulePage.getShiftHoursFromInfoLayout();
         List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
-        int index = schedulePage.selectOneShiftIsClaimShift(claimShift);
-        schedulePage.clickOnShiftByIndex(index);
+        schedulePage.selectOneShiftIsClaimShift(claimShift);
         schedulePage.clickTheShiftRequestByName(claimShift.get(0));
         schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
 
-        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-        String requestUserName = profileNewUIPage.getNickNameFromProfile();
         loginPage.logOut();
 
         // 4.Login with SM to check activity
@@ -1615,8 +1616,8 @@ public class ActivityTest extends TestBase {
         activityPage.verifyActivityBellIconLoaded();
         activityPage.verifyClickOnActivityIcon();
         activityPage.clickActivityFilterByIndex(indexOfActivityType.ShiftOffer.getValue(), indexOfActivityType.ShiftOffer.name());
-        activityPage.verifyActivityOfShiftOffer(requestUserName);
-        activityPage.approveOrRejectShiftOfferRequestOnActivity(requestUserName,approveRejectAction.Approve.getValue());
+        activityPage.verifyActivityOfShiftOffer(teamMemberName);
+        activityPage.approveOrRejectShiftOfferRequestOnActivity(teamMemberName,approveRejectAction.Approve.getValue());
 
     }
 }

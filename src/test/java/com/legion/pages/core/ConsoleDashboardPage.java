@@ -181,7 +181,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	checkElementVisibility(goToTodayScheduleButton);
     	SimpleUtils.pass("Dashboard Page Loaded Successfully!");
     	activeConsoleName = scheduleConsoleName.getText();
-    	click(goToTodayScheduleButton);
+    	clickTheElement(goToTodayScheduleButton);
         return new ConsoleScheduleNewUIPage();
     }
     
@@ -934,7 +934,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public boolean isSwitchToEmployeeViewPresent() throws Exception {
-		clickOnProfileIconOnDashboard();
 		if (isElementLoaded(switchToEmployeeView, 10))
 			return true;
 		else

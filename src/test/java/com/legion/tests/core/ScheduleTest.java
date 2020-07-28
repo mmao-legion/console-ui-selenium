@@ -716,8 +716,7 @@ public class ScheduleTest extends TestBase{
 				, String.valueOf(credential[0][2]));
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-		String requestUserName = profileNewUIPage.getNickNameFromProfile();
+		dashboardPage.clickOnProfileIconOnDashboard();
 		if (dashboardPage.isSwitchToEmployeeViewPresent()) {
 			dashboardPage.clickOnSwitchToEmployeeView();
 		}
@@ -778,7 +777,7 @@ public class ScheduleTest extends TestBase{
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-		String requestUserName = profileNewUIPage.getNickNameFromProfile();
+		dashboardPage.clickOnProfileIconOnDashboard();
 		if (dashboardPage.isSwitchToEmployeeViewPresent()) {
 			dashboardPage.clickOnSwitchToEmployeeView();
 		}
@@ -938,7 +937,7 @@ public class ScheduleTest extends TestBase{
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-		String requestUserName = profileNewUIPage.getNickNameFromProfile();
+		dashboardPage.clickOnProfileIconOnDashboard();
 		if (dashboardPage.isSwitchToEmployeeViewPresent()) {
 			dashboardPage.clickOnSwitchToEmployeeView();
 		}
@@ -1033,7 +1032,7 @@ public class ScheduleTest extends TestBase{
 		loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
 				, String.valueOf(credential[0][2]));
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		profileNewUIPage.getNickNameFromProfile();
+		dashboardPage.clickOnProfileIconOnDashboard();
 		if (dashboardPage.isSwitchToEmployeeViewPresent()) {
 			dashboardPage.clickOnSwitchToEmployeeView();
 		}
@@ -1055,7 +1054,7 @@ public class ScheduleTest extends TestBase{
 		loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
 				, String.valueOf(credential[0][2]));
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		profileNewUIPage.getNickNameFromProfile();
+		dashboardPage.clickOnProfileIconOnDashboard();
 		if (dashboardPage.isSwitchToEmployeeViewPresent()) {
 			dashboardPage.clickOnSwitchToEmployeeView();
 		}
