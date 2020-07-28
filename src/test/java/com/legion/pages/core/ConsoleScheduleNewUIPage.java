@@ -1872,7 +1872,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return scheduleFilters;
     }
 
-    public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView) {
+    public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView) throws Exception {
         waitForSeconds(10);
         String shiftTypeFilterKey = "shifttype";
         String workRoleFilterKey = "workrole";
@@ -2016,16 +2016,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    public void unCheckFilters(ArrayList<WebElement> filterElements) {
+    public void unCheckFilters(ArrayList<WebElement> filterElements) throws Exception {
         if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
             click(filterButton);
         waitForSeconds(2);
         for (WebElement filterElement : filterElements) {
-            WebElement filterCheckBox = filterElement.findElement(By.cssSelector("input[type=\"checkbox\"]"));
-            String elementClasses = filterCheckBox.getAttribute("class").toLowerCase();
-            if (elementClasses.contains("ng-not-empty"))
-                click(filterElement);
-
+            if (isElementLoaded(filterElement, 5)) {
+                WebElement filterCheckBox = filterElement.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+                String elementClasses = filterCheckBox.getAttribute("class").toLowerCase();
+                if (elementClasses.contains("ng-not-empty"))
+                    click(filterElement);
+            }
         }
     }
 
@@ -8476,7 +8477,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void deleteTMShiftInWeekView(String teamMemberName) throws Exception {
-        if (areListElementVisible(workerNameList,5) && areListElementVisible(profileIcons, 5) && workerNameList.size() == profileIcons.size()) {
+        if (areListElementVisible(workerNameList,10) && areListElementVisible(profileIcons, 10) && workerNameList.size() == profileIcons.size()) {
             for (int i = 0; i <workerNameList.size() ; i++) {
                 if (workerNameList.get(i).getText().toLowerCase().contains(teamMemberName.toLowerCase())) {
                    click(shiftsWeekView.get(i).findElement(By.cssSelector("[ng-class=\"borderClass()\"]")));
@@ -8507,7 +8508,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 unCheckFilters(jobTitleFilters);
                 String jobTitle = jobTitleFilter.getText();
                 SimpleUtils.report("Data for job title: '" + jobTitle + "' as bellow");
-                click(jobTitleFilter);
+                clickTheElement(jobTitleFilter);
                 click(filterButton);
                 String cardHoursAndWagesText = "";
                 HashMap<String, Float> hoursAndWagesCardData = getScheduleLabelHoursAndWages();
@@ -9014,7 +9015,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public String getTheEarliestAndLatestTimeInSummaryView() throws Exception {
+    public String getTheEarliestAndLatestTimeInSummaryView(HashMap<String, Integer> schedulePoliciesBufferHours) throws Exception {
         String day = null;
         String shiftStartTime = null;
         String shiftEndTime = null;
@@ -9047,7 +9048,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("Operating hours table not loaded Successfully", true);
         }
-        return Integer.valueOf((int) shiftStartTimeDouble).toString() + "-" + Integer.valueOf((int) shiftEndTimeDouble).toString();
+        return Integer.valueOf(((int) shiftStartTimeDouble) - schedulePoliciesBufferHours.get("openingBufferHours")).toString() + "-" +
+                Integer.valueOf(((int) shiftEndTimeDouble) + schedulePoliciesBufferHours.get("closingBufferHours")).toString();
     }
 
     @Override
@@ -9075,7 +9077,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void compareOperationHoursBetweenAdminAndTM(String theEarliestAndLatestTimeInScheduleSummary, String theEarliestAndLatestTimeInScheduleTable) throws Exception {
         if (theEarliestAndLatestTimeInScheduleSummary.contains("-") && theEarliestAndLatestTimeInScheduleTable.contains("-")) {
-            if (Integer.valueOf(theEarliestAndLatestTimeInScheduleSummary.split("-")[0]) >= Integer.valueOf(theEarliestAndLatestTimeInScheduleTable.split("-")[0]) && Integer.valueOf(theEarliestAndLatestTimeInScheduleSummary.split("-")[1]) <= Integer.valueOf(theEarliestAndLatestTimeInScheduleTable.split("-")[1])) {
+            if ((Integer.valueOf(theEarliestAndLatestTimeInScheduleSummary.split("-")[0]) <= Integer.valueOf(theEarliestAndLatestTimeInScheduleTable.split("-")[0])) && (Integer.valueOf(theEarliestAndLatestTimeInScheduleSummary.split("-")[1]) >= Integer.valueOf(theEarliestAndLatestTimeInScheduleTable.split("-")[1]))) {
                 SimpleUtils.pass("My Schedule Page: Seven days - Sunday to Saturday show in the schedule table according to the operating hours");
             } else
                 SimpleUtils.fail("My Schedule Page: Seven days - Sunday to Saturday don't show in the schedule table according to the operating hours", true);

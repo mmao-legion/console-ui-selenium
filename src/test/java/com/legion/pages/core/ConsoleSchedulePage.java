@@ -2643,7 +2643,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public String getTheEarliestAndLatestTimeInSummaryView() throws Exception {
+    public String getTheEarliestAndLatestTimeInSummaryView(HashMap<String, Integer> schedulePoliciesBufferHours) throws Exception {
         return null;
     }
 

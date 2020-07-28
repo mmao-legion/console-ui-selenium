@@ -574,7 +574,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//If a TM has more than 40 working hours in a week (As defined in Controls) then Week OT hours should show (Week OT should be enabled in Controls)
 		int workWeekOverTime = Integer.valueOf(schedulePolicyData.get("single_workweek_overtime"));
 		int dayCountInOneWeek = Integer.valueOf(propertyCustomizeMap.get("WORKDAY_COUNT"));
-		String teamMemberName = "Gardner";
+		String teamMemberName = "Donald";
 		schedulePage.clickOnWeekView();
 		float shiftHoursInWeekForTM = schedulePage.getShiftHoursByTMInWeekView(teamMemberName);
 		schedulePage.clickOnDayView();
@@ -587,11 +587,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.selectSpecificWorkDay(dayCountInOneWeek);
 			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 			schedulePage.clickOnCreateOrNextBtn();
-			schedulePage.selectSpecificTMWhileCreateNewShift(teamMemberName);
+			schedulePage.searchTeamMemberByName(teamMemberName);
 			schedulePage.clickOnOfferOrAssignBtn();
 			schedulePage.saveSchedule();
 			schedulePage.clickOnWeekView();
-			System.out.println(teamMemberName.substring(0,6));
 			float shiftHoursInWeekForTMAftAddNewShift = schedulePage.getShiftHoursByTMInWeekView(teamMemberName);
 
 			if ((shiftHoursInWeekForTMAftAddNewShift -shiftHoursInWeekForTM)>workWeekOverTime) {
@@ -610,7 +609,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.selectSpecificWorkDay(dayCountInOneWeek);
 			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 			schedulePage.clickOnCreateOrNextBtn();
-			schedulePage.selectSpecificTMWhileCreateNewShift(teamMemberName);
+			schedulePage.searchTeamMemberByName(teamMemberName);
 			schedulePage.clickOnOfferOrAssignBtn();
 			schedulePage.saveSchedule();
 			schedulePage.clickOnWeekView();
@@ -775,12 +774,22 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		Object[][] internalAdminCredentials = userCredentials.get("InternalAdmin");
 		loginToLegionAndVerifyIsLoginDone(String.valueOf(internalAdminCredentials[0][0]), String.valueOf(internalAdminCredentials[0][1])
 				, String.valueOf(internalAdminCredentials[0][2]));
+
+		// Go to Scheduling Policies to get the additional Scheduled Hour
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling Policies Page not loaded Successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		HashMap<String, Integer> schedulePoliciesBufferHours = controlsNewUIPage.getScheduleBufferHours();
+
 		SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePageAdmin.clickOnScheduleConsoleMenuItem();
 		schedulePageAdmin.clickOnScheduleSubTab("Schedule");
 		if (!schedulePage.isSummaryViewLoaded())
 			schedulePage.toggleSummaryView();
-		String theEarliestAndLatestTimeInSummaryView = schedulePage.getTheEarliestAndLatestTimeInSummaryView();
+		String theEarliestAndLatestTimeInSummaryView = schedulePage.getTheEarliestAndLatestTimeInSummaryView(schedulePoliciesBufferHours);
 		SimpleUtils.report("theEarliestAndLatestOperationHoursInSummaryView is " + theEarliestAndLatestTimeInSummaryView);
 		loginPage.logOut();
 

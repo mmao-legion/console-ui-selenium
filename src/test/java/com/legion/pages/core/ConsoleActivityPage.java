@@ -372,33 +372,39 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
      * Verify the notification message and detail for time off request
      * */
     public void verifyTheNotificationForReqestTimeOff(String requestUserName, String startTime, String endTime,String timeOffAction) throws Exception {
-        String expectedMessage = requestUserName +" "+timeOffAction+" time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
+        boolean isFound = false;
+    	String expectedMessage = requestUserName +" "+timeOffAction+" time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
         if (timeOffAction.toLowerCase().contains("cancel")){
             expectedMessage = requestUserName +" "+timeOffAction+" the time off request for "+ startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
         }
         String actualMessage = "";
         waitForSeconds(5);
         if (areListElementVisible(activityCards, 15)) {
-            actualMessage = activityCards.get(0).findElement(By.className("notification-content-message")).getText();
-            if (actualMessage != null && actualMessage.equals(expectedMessage)) {
-                SimpleUtils.pass("Find Card: " + actualMessage + " Successfully!");
-                //check the detail
-                if (timeOffAction.equals("requested")){
-                    WebElement detail = activityCards.get(0).findElement(By.cssSelector("div[ng-if=\"canShowDetails()\"]"));
-                    if (isElementLoaded(detail,5) && isClickable(detail,5)){
-                        click(detail);
-                        click(detail);
-                        SimpleUtils.pass("detail load!");
-                    }else{
-                        SimpleUtils.fail("detail is not loaded!",true);
-                    }
-                }
-            }else {
-                SimpleUtils.fail("Failed to find the card that is new and contain: " + expectedMessage + "! Actual card is: " + actualMessage, false);
-            }
+        	for (WebElement activityCard : activityCards) {
+				actualMessage = activityCard.findElement(By.className("notification-content-message")).getText();
+				if (actualMessage != null && actualMessage.equals(expectedMessage)) {
+					SimpleUtils.pass("Find Card: " + actualMessage + " Successfully!");
+					isFound = true;
+					//check the detail
+					if (timeOffAction.equals("requested")) {
+						WebElement detail = activityCard.findElement(By.cssSelector("div[ng-if=\"canShowDetails()\"]"));
+						if (isElementLoaded(detail, 5) && isClickable(detail, 5)) {
+							click(detail);
+							click(detail);
+							SimpleUtils.pass("detail load!");
+						} else {
+							SimpleUtils.fail("detail is not loaded!", true);
+						}
+					}
+					break;
+				}
+			}
         }else {
             SimpleUtils.fail("Time Off Request Activity failed to Load!", false);
         }
+        if (!isFound) {
+			SimpleUtils.fail("Failed to find the card that is new and contain: " + expectedMessage + "! Actual card is: " + actualMessage, false);
+		}
     }
 
     @Override

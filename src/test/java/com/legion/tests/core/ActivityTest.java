@@ -1098,7 +1098,6 @@ public class ActivityTest extends TestBase {
                 , String.valueOf(teamMemberCredentials[0][2]));
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
-        profileNewUIPage.clickOnUserProfileImage();
         String myProfileLabel = "My Profile";
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
         SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
@@ -1198,7 +1197,6 @@ public class ActivityTest extends TestBase {
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
-        profileNewUIPage.clickOnUserProfileImage();
         String myProfileLabel = "My Profile";
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
         SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
@@ -1291,7 +1289,6 @@ public class ActivityTest extends TestBase {
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
-        profileNewUIPage.clickOnUserProfileImage();
         String myWorkPreferencesLabel = "My Work Preferences";
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
         //Update Preferred And Busy Hours
@@ -1351,7 +1348,6 @@ public class ActivityTest extends TestBase {
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
-        profileNewUIPage.clickOnUserProfileImage();
         String myWorkPreferencesLabel = "My Work Preferences";
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
         //Update Preferred And Busy Hours
@@ -1411,7 +1407,6 @@ public class ActivityTest extends TestBase {
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
-        profileNewUIPage.clickOnUserProfileImage();
         String myWorkPreferencesLabel = "My Work Preferences";
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
         //Update Preferred And Busy Hours
@@ -1473,7 +1468,6 @@ public class ActivityTest extends TestBase {
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
-        profileNewUIPage.clickOnUserProfileImage();
         String myWorkPreferencesLabel = "My Work Preferences";
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
         //Update Preferred And Busy Hours

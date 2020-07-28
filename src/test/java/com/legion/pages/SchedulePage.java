@@ -54,7 +54,7 @@ public interface SchedulePage {
 	public void clickSaveBtn() throws Exception;
 	public void clickOnVersionSaveBtn() throws Exception;
 	public void clickOnPostSaveBtn() throws Exception;
-    public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView);
+    public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView) throws Exception;
     public void selectGroupByFilter(String optionVisibleText);
     public String getActiveWeekText() throws Exception;
     public ArrayList<WebElement> getAllAvailableShiftsInWeekView();
@@ -369,7 +369,7 @@ public interface SchedulePage {
 
 	public void validateTheSevenDaysIsAvailableInScheduleTable() throws Exception;
 
-	public String getTheEarliestAndLatestTimeInSummaryView() throws Exception;
+	public String getTheEarliestAndLatestTimeInSummaryView(HashMap<String, Integer> schedulePoliciesBufferHours) throws Exception;
 
 	public String getTheEarliestAndLatestTimeInScheduleTable() throws Exception;
 
