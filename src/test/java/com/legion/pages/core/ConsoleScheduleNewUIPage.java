@@ -61,6 +61,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private static HashMap<String, String> propertyBudgetValue = JsonUtil.getPropertiesFromJsonFile("src/test/resources/Budget.json");
     private static HashMap<String, String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     private static HashMap<String, String> parametersMap2 = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ControlsPageLocationDetail.json");
+    private static HashMap<String, String> propertyOperatingHours = JsonUtil.getPropertiesFromJsonFile("src/test/resources/operatingHours.json");
+
     public enum scheduleHoursAndWagesData {
         scheduledHours("scheduledHours"),
         budgetedHours("budgetedHours"),
@@ -2684,7 +2686,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	public void clickOnOfferOrAssignBtn() throws Exception{
 		if(isElementLoaded(btnOffer,5)){
 		    scrollToElement(btnOffer);
-			click(btnOffer);
+			clickTheElement(btnOffer);
 		}else{
 			SimpleUtils.fail("Offer Or Assign Button is not clickable", false);
 		}
@@ -3351,6 +3353,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement nextButtonOnCreateSchedule;
     @FindBy (className = "generate-modal-week-container")
     private List<WebElement> availableCopyWeeks;
+    @FindBy (css = "generate-modal-operating-hours-step [label=\"Edit\"]")
+    private WebElement operatingHoursEditBtn;
+    @FindBy (css = ".operating-hours-day-list-item.ng-scope")
+    private List<WebElement> operatingHoursDayLists;
+    @FindBy (css = "generate-modal-budget-step [label=\"Edit\"]")
+    private WebElement editBudgetBtn;
+    @FindBy (css = "generate-modal-budget-step [ng-repeat=\"r in summary.staffingGuidance.roleHours\"]")
+    private List<WebElement> roleHoursRows;
 
     @Override
     public void createScheduleForNonDGFlowNewUI() throws Exception {
@@ -3362,9 +3372,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 5) && subTitle1.equalsIgnoreCase(generateModalTitle.getText().trim())
             && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
+                editTheOperatingHours();
                 clickTheElement(nextButtonOnCreateSchedule);
                 if (isElementLoaded(generateModalTitle, 5) && subTitle2.equalsIgnoreCase(generateModalTitle.getText().trim())
                         && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
+                    editTheBudgetForNondgFlow();
                     clickTheElement(nextButtonOnCreateSchedule);
                 }
                 if (areListElementVisible(availableCopyWeeks, 5)) {
@@ -3420,6 +3432,76 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }else {
             SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+        }
+    }
+
+    public void editTheBudgetForNondgFlow() throws Exception {
+        if (isElementLoaded(editBudgetBtn, 5)) {
+            clickTheElement(editBudgetBtn);
+            // Cancel and Save buttons are consistent with operating hours
+            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
+                SimpleUtils.pass("Create Schedule - Enter Budget: Click on Edit button Successfully!");
+                if (areListElementVisible(roleHoursRows, 5)) {
+                    for (WebElement roleHoursRow : roleHoursRows) {
+                        try {
+                            WebElement forecastHour = roleHoursRow.findElement(By.cssSelector("td:nth-child(3)"));
+                            WebElement budgetHour = roleHoursRow.findElement(By.cssSelector("input[type=\"number\"]"));
+                            if (forecastHour != null && budgetHour != null) {
+                                budgetHour.clear();
+                                budgetHour.sendKeys(forecastHour.getText().trim());
+                            }
+                        }catch (Exception e) {
+                            continue;
+                        }
+                    }
+                    clickTheElement(operatingHoursSaveBtn);
+                    if (isElementEnabled(editBudgetBtn, 5)) {
+                        SimpleUtils.pass("Create Schedule: Save the budget hours Successfully!");
+                    }else {
+                        SimpleUtils.fail("Create Schedule: Click on Save the budget hours button failed, Next button is not enabled!", false);
+                    }
+                }
+            }
+        }else {
+            SimpleUtils.fail("Create Schedule - Enter Budget: Edit button not loaded Successfully!", false);
+        }
+    }
+
+    public void editTheOperatingHours() throws Exception {
+        if (isElementLoaded(operatingHoursEditBtn, 10)) {
+            clickTheElement(operatingHoursEditBtn);
+            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
+                SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
+                if (areListElementVisible(operatingHoursDayLists, 5)) {
+                    for (WebElement dayList : operatingHoursDayLists) {
+                        WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+                        WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
+                        List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("input[placeholder=\"--:--\"]"));
+                        if (checkbox != null && weekDay != null && startNEndTimes != null && startNEndTimes.size() == 2) {
+                            if (checkbox.getAttribute("class").contains("ng-empty")) {
+                                clickTheElement(checkbox);
+                            }
+                            String[] operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
+                            startNEndTimes.get(0).clear();
+                            startNEndTimes.get(1).clear();
+                            startNEndTimes.get(0).sendKeys(operatingHours[0].trim());
+                            startNEndTimes.get(1).sendKeys(operatingHours[1].trim());
+                        }else {
+                            SimpleUtils.fail("Failed to find the checkbox, weekday or start and end time elements!", false);
+                        }
+                    }
+                    clickTheElement(operatingHoursSaveBtn);
+                    if (isElementEnabled(operatingHoursEditBtn, 5)) {
+                        SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
+                    }else {
+                        SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
+                    }
+                }
+            }else {
+                SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
+            }
+        }else {
+            SimpleUtils.fail("Operating Hours Edit button not loaded Successfully!", false);
         }
     }
 

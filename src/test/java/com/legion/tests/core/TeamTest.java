@@ -288,7 +288,6 @@ public class TeamTest extends TestBase{
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 		String nickName = profileNewUIPage.getNickNameFromProfile();
-		profileNewUIPage.clickOnUserProfileImage();
 		String myProfileLabel = "My Profile";
 		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
 		SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);

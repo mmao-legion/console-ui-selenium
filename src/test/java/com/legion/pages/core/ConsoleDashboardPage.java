@@ -572,6 +572,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = ".col-sm-5 .count-block-rejected")
 	private WebElement rejected;
 
+	@FindBy(css = "header-user-switch-menu[ng-show=\"showMenu\"]")
+	private WebElement switchMenu;
+
 	private static HashMap<String, String> propertyLocationTimeZone = JsonUtil.getPropertiesFromJsonFile("src/test/resources/LocationTimeZone.json");
 
 	@Override
@@ -645,7 +648,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateThePresenceOfLogo() throws Exception {
 		if (isElementLoaded(companyIconImg, 5)) {
 			if (companyIconImg.isDisplayed()) {
-				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[1]/img")).equals(companyIconImg)) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[2]//img[contains(@class,'company-icon-img')]")).equals(companyIconImg)) {
 					SimpleUtils.pass("Dashboard Page: Logo is present at right corner of page successfully");
 				} else {
 					SimpleUtils.fail("Dashboard Page: Logo isn't present at right corner of page", true);
@@ -764,7 +767,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateTheVisibilityOfProfilePicture() throws Exception {
 		if (isElementLoaded(iconProfile, 5)) {
 			if (iconProfile.isDisplayed()) {
-				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[2]")).equals(iconProfile)) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[1]")).equals(iconProfile)) {
 					SimpleUtils.pass("Profile picture is visible at right corner of the page successfully");
 				} else {
 					SimpleUtils.fail("Profile picture isn't visible at right corner of the page", true);
@@ -779,7 +782,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateProfilePictureIconClickable() throws Exception {
-		clickOnProfileIconOnDashboard();
+		if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+			clickOnProfileIconOnDashboard();
+		}
 		if (areListElementVisible(goToProfile, 10)) {
 			if (goToProfile.size() != 0) {
 				SimpleUtils.pass("Profile Page: Dropdown list opens after clicking on profile picture icon");
@@ -793,7 +798,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateTheVisibilityOfProfile() throws Exception {
-		clickOnProfileIconOnDashboard();
+		if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+			clickOnProfileIconOnDashboard();
+		}
 		if (areListElementVisible(goToProfile, 10)) {
 			if (goToProfile.size() == 3) {
 				SimpleUtils.pass("Profile Page: Dropdown list has three rows successfully");
@@ -814,12 +821,20 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateProfileDropdownClickable() throws Exception {
+		if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+			clickOnProfileIconOnDashboard();
+		}
 		if (areListElementVisible(goToProfile, 10) && goToProfile.size() != 0) {
 			for (int i = 0; i < goToProfile.size(); i++) {
-				click(goToProfile.get(i));
+				clickTheElement(goToProfile.get(i));
 				SimpleUtils.pass("Profile Page: " + goToProfile.get(i).getText() + " is clickable successfully");
 				if (isElementLoaded(alertDialog, 5)) {
 					click(OKButton);
+					if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+						clickOnProfileIconOnDashboard();
+					}
+				}
+				if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
 					clickOnProfileIconOnDashboard();
 				}
 			}
@@ -841,11 +856,13 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void clickOnSubMenuOnProfile(String subMenu) throws Exception {
-		clickOnProfileIconOnDashboard();
+		if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+			clickOnProfileIconOnDashboard();
+		}
 		if (areListElementVisible(goToProfile,10) && goToProfile.size() != 0 ) {
 			for(WebElement e : goToProfile) {
 				if(e.getText().toLowerCase().contains(subMenu.toLowerCase())) {
-					click(e);
+					clickTheElement(e);
 					if (isElementLoaded(alertDialog, 5))
 						click(OKButton);
 					else click(companyIconImg);

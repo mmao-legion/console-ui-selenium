@@ -4680,6 +4680,11 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			 */
 			waitForSeconds(3);
 			timeZone = timeZoneSelected.getText();
+			if (isElementLoaded(backNavigator, 5)) {
+				clickTheElement(backNavigator);
+			}else {
+				SimpleUtils.fail("Controls: Back Navigator not loaded Successfully!", false);
+			}
 		} else {
 			SimpleUtils.fail("Time Zone Select failed to load!", true);
 		}

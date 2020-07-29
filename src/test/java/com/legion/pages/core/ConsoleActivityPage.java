@@ -316,35 +316,37 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 
     @Override
     public void verifyNewBusinessProfileCardShowsOnActivity(String userName, boolean isNewLabelShows) throws Exception {
+		boolean isFound = false;
         String newStatus = "New";
         String expectedMessage = userName + " updated business profile photo.";
         waitForSeconds(5);
         if (areListElementVisible(activityCards, 15)) {
-            WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
-            if (isNewLabelShows) {
-                WebElement newLabel = activityCards.get(0).findElement(By.className("notification-new-label"));
-                if (newLabel != null && newLabel.getText().equalsIgnoreCase(newStatus) && message != null) {
-                    SimpleUtils.pass("Verified 'New' label shows correctly");
-                }else {
-                    SimpleUtils.fail("Failed to find a new business profile update activity!", false);
-                }
-            }
-            if (message != null && message.getText().equals(expectedMessage)) {
-                SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
-            }else {
-                SimpleUtils.fail("Failed to find the card with the message: " + expectedMessage
-                        + " Actual card is: " + message.getText(), false);
-            }
-            List<WebElement> actionButtons = activityCards.get(0).findElements(By.className("notification-buttons-button"));
-            if (actionButtons != null && actionButtons.size() == 2) {
-                if (actionButtons.get(0).getText().equals("Approve") && actionButtons.get(1).getText().equals("Reject")) {
-                    SimpleUtils.pass("Approve and Reject buttons loaded Successfully on Business Profile Update Card!");
-                }else {
-                    SimpleUtils.fail("Approve and Reject buttons are not loaded on Business Profile Update Card!", false);
-                }
-            }else {
-                SimpleUtils.fail("Actions buttons and size are incorrect on Business Profile Update Card!", false);
-            }
+        	for (WebElement activityCard : activityCards) {
+				WebElement message = activityCard.findElement(By.className("notification-content-message"));
+				if (message != null && message.getText().equals(expectedMessage)) {
+					List<WebElement> actionButtons = activityCard.findElements(By.className("notification-buttons-button"));
+					if (actionButtons != null && actionButtons.size() == 2) {
+						if (actionButtons.get(0).getText().equals("Approve") && actionButtons.get(1).getText().equals("Reject")) {
+							SimpleUtils.pass("Approve and Reject buttons loaded Successfully on Business Profile Update Card!");
+							if (isNewLabelShows) {
+								WebElement newLabel = activityCard.findElement(By.className("notification-new-label"));
+								if (newLabel != null && newLabel.getText().equalsIgnoreCase(newStatus) && message != null) {
+									SimpleUtils.pass("Verified 'New' label shows correctly");
+								} else {
+									SimpleUtils.fail("Failed to find a new business profile update activity!", false);
+								}
+							}
+							isFound = true;
+							break;
+						} else {
+							SimpleUtils.fail("Approve and Reject buttons are not loaded on Business Profile Update Card!", false);
+						}
+					}
+				}
+			}
+        	if (!isFound) {
+				SimpleUtils.fail("Failed to find the card with the message: " + expectedMessage, false);
+			}
         }else {
             SimpleUtils.fail("Business Profile Update Activity failed to Load!", false);
         }

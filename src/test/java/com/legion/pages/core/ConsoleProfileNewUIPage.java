@@ -698,13 +698,17 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("Profile Page: unable to cancel edit User profile popup.", false);
 	}
 
-	
+	@FindBy (css = "[ng-click=\"editProfile()\"]")
+	private WebElement editProfileButton;
+	@FindBy (className = "btn-success")
+	private WebElement saveTMBtn;
+
 	public void clickOnEditUserProfilePencilIcon() throws Exception
 	{
-		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),10))
-			click(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
+		if(isElementLoaded(editProfileButton,10))
+			clickTheElement(editProfileButton);
 		//verify if edit profile mode load
-		if(isElementLoaded(profileSection.findElement(By.cssSelector("div[ng-if=\"editing.profile\"]")),10))
+		if(isElementLoaded(saveTMBtn,10))
 			SimpleUtils.pass("Profile Page: User profile edit form loaded successfully.");
 		else
 			SimpleUtils.fail("Profile Page: User profile edit form not loaded.", false);

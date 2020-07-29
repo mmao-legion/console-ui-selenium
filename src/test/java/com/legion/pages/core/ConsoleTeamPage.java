@@ -175,10 +175,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
     public void goToTeam() throws Exception
 	{
     	
-    	if(isElementLoaded(goToTeamButton))
+    	if(isElementLoaded(goToTeamButton, 5))
     	{
     		activeConsoleName = teamConsoleName.getText();
-    		click(goToTeamButton);
+    		clickTheElement(goToTeamButton);
     	}else{
     		SimpleUtils.fail("Team button not present on the page",false);
     	}
@@ -828,7 +828,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		if(areListElementVisible(teamMembers, 60)){
 			SimpleUtils.pass("Team Page is Loaded Successfully!");
 		}else{
-			SimpleUtils.fail("Team Page isn't Loaded Successfully", true);
+			SimpleUtils.fail("Team Page isn't Loaded Successfully", false);
 		}
 	}
 
@@ -1354,6 +1354,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@FindBy(css = "form-section[on-action=\"editProfile()\"]")
 	private WebElement profileSection;
+
 	@Override
 	public String verifyTheFunctionOfEditBadges() throws Exception {
 		String badges = "BADGES";
@@ -2814,17 +2815,17 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void updateBusinessProfilePicture(String filePath) throws Exception {
-		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),10)){
-			click(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
-				if (isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1), 5)) {
-					getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(filePath);
-					// wait for the picture to be loaded
-					waitForSeconds(5);
-					scrollToElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
-					click(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
-				}else {
-					SimpleUtils.fail("Business Profile Image input element isn't enabled!", true);
-				}
+		if(isElementLoaded(editProfileButton,10)){
+			click(editProfileButton);
+			if (isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1), 5)) {
+				getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(filePath);
+				// wait for the picture to be loaded
+				waitForSeconds(5);
+				scrollToElement(saveTMButton);
+				click(saveTMButton);
+			}else {
+				SimpleUtils.fail("Business Profile Image input element isn't enabled!", true);
+			}
 		} else {
 			SimpleUtils.fail("Edit button is not loaded!",true);
 		}
@@ -2954,6 +2955,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				selectedDate = dateHiredInput.getAttribute("value");
 				SimpleUtils.report("Select the hired date: " + selectedDate);
 			}
+			isElementLoadedAndPrintTheMessage(employeeIDInput, "Employee ID Input");
+			if (employeeIDInput.getAttribute("value").isEmpty()) {
+				employeeIDInput.sendKeys("E" + new Random().nextInt(200) + new Random().nextInt(200) + new Random().nextInt(200));
+			}
 			isElementLoadedAndPrintTheMessage(engagementStatusSelect, "Engagement Status Select");
 			selectByVisibleText(engagementStatusSelect, tmDetails.get("ENGAGEMENT_STATUS"));
 			isElementLoadedAndPrintTheMessage(hourlySelect, "Hourly Select");
@@ -2974,7 +2979,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
 		SimpleDateFormat format2 = new SimpleDateFormat("MMM dd, yyyy");
 		if (areListElementVisible(engagementTexts, 5) && areListElementVisible(nextEngagementTexts, 5)) {
-			if (engagementTexts.size() == 4 && nextEngagementTexts.size() == 4) {
+			if (engagementTexts.size() >= 4 && nextEngagementTexts.size() >= 4) {
 				String actualDate = engagementTexts.get(0).getText();
 				String engagementStatus = nextEngagementTexts.get(0).getText();
 				String hourly = nextEngagementTexts.get(1).getText();
