@@ -78,6 +78,9 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @FindBy (css = ".row-fx.schedule-table-row.ng-scope")
     private List<WebElement> dataOnSchedules;
 
+    @FindBy (className = "widgetCommonText")
+    private WebElement welcomeText;
+
     @Override
     public void enterEditMode() throws Exception {
         scrollToTop();
@@ -257,6 +260,11 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     public void saveAndExitEditMode() throws Exception{
         if (isElementLoaded(saveBtn,10)){
             click(saveBtn);
+            if (isElementLoaded(welcomeText, 10)) {
+                SimpleUtils.pass("Edit Dashboard Page: Click on Save button Successfully!");
+            }else {
+                SimpleUtils.fail("Edit Dashboard Page: Click on Save button failed, Dashboard welcome text not loaded Successfully!", false);
+            }
         } else {
             SimpleUtils.fail("save button is not loaded!",true);
         }
@@ -336,6 +344,40 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     private WebElement alertsWeek;
     @FindBy(css = ".lg-timesheet-carousel__table-cell")
     private List<WebElement> alertsCells;
+    @FindBy(css = "[label=\"'Timesheet Approval Status'\"] .dms-box-item-title-row span")
+    private WebElement timesheetApprovalStatusWeek;
+    @FindBy(className = "analytics-new-smart-card-timesheet-approval-legend-item")
+    private List<WebElement> timesheetApprovalLegendItems;
+
+    @Override
+    public void verifyTheContentOnTimesheetApprovalStatusWidgetLoaded(String currentWeek) throws Exception {
+        /*Timesheet Approval Rate  widget should show:
+        a. current week, e.g. Week of Jun 20;
+        b. the card is < 24 Hrs/24-48 Hrs/48+ Hrs/Unapproved with different color
+        c. [View Timesheets] button*/
+        List<String> legendItems = new ArrayList<>(Arrays.asList("< 24 Hrs", "24-48 Hrs", "48+ Hrs", "Unapproved"));
+        if (isElementLoaded(timesheetApprovalStatusWeek, 5) && timesheetApprovalStatusWeek.getText().toLowerCase().contains(currentWeek.toLowerCase())) {
+            SimpleUtils.pass("The week of \"Timesheet Approval Status\" is loaded and correct!");
+        } else {
+            SimpleUtils.warn("The week of \"Timesheet Approval Status\" is not loaded or incorrect!");
+        }
+        if (areListElementVisible(timesheetApprovalLegendItems, 5) && timesheetApprovalLegendItems.size() == 4) {
+            for (WebElement item : timesheetApprovalLegendItems) {
+                if (legendItems.contains(item.getText().trim())) {
+                    SimpleUtils.pass("Verified Legend Item: \"" + item.getText().trim() + "\" loaded Correctly!");
+                }else {
+                    SimpleUtils.fail("Unexpected legend item: \"" + item.getText().trim() + "\" loaded!", false);
+                }
+            }
+        }else {
+            SimpleUtils.fail("The Legend Items of \"Timesheet Approval Status\" not loaded Successfully!", false);
+        }
+        if (isElementLoaded(MyThreadLocal.getDriver().findElement(By.cssSelector("lg-analytics-timesheet-approval-primary .dms-action-link")), 5)) {
+            SimpleUtils.pass("\"View Timesheets\" link loaded Successfully on \"Timesheet Approval Status\"!");
+        } else {
+            SimpleUtils.fail("\"View Timesheets\" link not loaded Successfully on \"Timesheet Approval Status\"!", false);
+        }
+    }
 
     @Override
     public void clickOnLinkByWidgetNameAndLinkName(String widgetName, String linkName) throws Exception {
@@ -465,10 +507,14 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         String startingTomorrow = "starting tomorrow";
         if (areListElementVisible(widgets, 10)) {
             for (WebElement widget : widgets) {
-                WebElement widgetTitle = widget.findElement(By.className("dms-box-title"));
-                if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetName.toLowerCase()) ||
-                        widgetTitle.getText().toLowerCase().trim().contains(startingTomorrow.toLowerCase().trim()))) {
-                    isLoaded = true;
+                try {
+                    WebElement widgetTitle = widget.findElement(By.cssSelector(".dms-box-title"));
+                    if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetName.toLowerCase()) ||
+                            widgetTitle.getText().toLowerCase().trim().contains(startingTomorrow.toLowerCase().trim()))) {
+                        isLoaded = true;
+                    }
+                }catch (Exception e) {
+                    continue;
                 }
             }
         }

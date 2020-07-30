@@ -201,6 +201,7 @@
                     <include name="verifyTheContentOfStartingSoonWidgetAsInternalAdmin" />
                     <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
                     <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
+                    <include name="verifyTheContentOfTimesheetApprovalStatusWidgetAsStoreManager" />
                 </methods>
             </class>
         </classes>

@@ -80,7 +80,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     {
     	if(isElementLoaded(logoutButton))
     	{
-    		click(logoutButton);
+    		clickTheElement(logoutButton);
     	}
     }
     

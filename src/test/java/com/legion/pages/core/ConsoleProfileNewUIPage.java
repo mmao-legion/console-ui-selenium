@@ -123,7 +123,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement inviteTeamMemberPopUpCancelBtn;
 	@FindBy(css="button[ng-click=\"send()\"]")
 	private WebElement inviteTeamMemberPopUpSendBtn;
-	@FindBy(css="//span[text()=\"Change Password\"]")
+	@FindBy(css="[label=\"'CHANGE PASSWORD'\"]")
 	private WebElement userProfileChangePasswordBtn;
 	@FindBy(css="div[ng-form=\"changePassword\"]")
 	private WebElement changePasswordPopUp;
@@ -251,7 +251,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		if(areListElementVisible(profilePageSubSections,10)) {
 			for(WebElement profilePageSubSection : profilePageSubSections) {
 				if(profilePageSubSection.getText().toLowerCase().contains(profilePageSubSectionLabel.toLowerCase())) {
-					click(profilePageSubSection);
+					clickTheElement(profilePageSubSection);
 					isSubSectionSelected = true;
 					break;
 				}
@@ -716,9 +716,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	
 	public void clickOnSaveUserProfileBtn() throws Exception
 	{
-		if(isElementLoaded(userProfileSaveBtn))
-			click(userProfileSaveBtn);
-		if(!isElementLoaded(profileEditForm))
+		if(isElementLoaded(userProfileSaveBtn, 5))
+			clickTheElement(userProfileSaveBtn);
+		if(isElementLoaded(editProfileButton, 5))
 			SimpleUtils.pass("Profile Page: User profile successfully saved.");
 		else
 			SimpleUtils.fail("Profile Page: unable to save User profile.", false);
@@ -762,46 +762,47 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					
 	public void updateUserProfileHomeAddress(String streetAddress1, String streetAddress2, String city, String state, String zip) throws Exception
 	{
-		// Updating Home Address Street Address 1
-		if(isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")),5)) {
-			if(profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).getAttribute("value").toLowerCase().contains(streetAddress1.toLowerCase()))
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' already updated with value: '"
-						+streetAddress1+"'.");
-			else {
-				profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).clear();
-				profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).sendKeys(streetAddress1);
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' updated with value: '"
-						+streetAddress1+"'.");
+		if (isElementLoaded(profileSection, 5)) {
+			// Updating Home Address Street Address 1
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")), 5)) {
+				if (profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).getAttribute("value").toLowerCase().contains(streetAddress1.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' already updated with value: '"
+							+ streetAddress1 + "'.");
+				else {
+					profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).clear();
+					profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).sendKeys(streetAddress1);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' updated with value: '"
+							+ streetAddress1 + "'.");
+				}
 			}
-		}
-		
-		// Updating Home Address Street Address 2
-		if(isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")),5)) {
-			if(profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).getAttribute("value").toLowerCase().contains(streetAddress2.toLowerCase()))
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' already updated with value: '"
-						+streetAddress2+"'.");
-			else {
-				profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).clear();
-				profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).sendKeys(streetAddress2);
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' updated with value: '"
-						+streetAddress2+"'.");
+
+			// Updating Home Address Street Address 2
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")), 5)) {
+				if (profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).getAttribute("value").toLowerCase().contains(streetAddress2.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' already updated with value: '"
+							+ streetAddress2 + "'.");
+				else {
+					profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).clear();
+					profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).sendKeys(streetAddress2);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' updated with value: '"
+							+ streetAddress2 + "'.");
+				}
 			}
-		}
-		
-		// Updating Home Address City
-		if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")),5)) {
-			if(profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).getAttribute("value").toLowerCase().contains(city.toLowerCase()))
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'City' already updated with value: '"+city+"'.");
-			else {
-				profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).clear();
-				profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).sendKeys(city);
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'City' updated with value: '"+city+"'.");
+
+			// Updating Home Address City
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")), 5)) {
+				if (profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).getAttribute("value").toLowerCase().contains(city.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'City' already updated with value: '" + city + "'.");
+				else {
+					profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).clear();
+					profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).sendKeys(city);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'City' updated with value: '" + city + "'.");
+				}
 			}
-		}
-		
-		// Updating Home Address State
-		if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")),5)) {
-			selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")),state);
+
+			// Updating Home Address State
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
+				selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), state);
 /*			boolean isStateSelected = false;
 			Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")));
 			if(statesDropdown.getFirstSelectedOption().getText().toLowerCase().contains(state.toLowerCase()))
@@ -818,16 +819,85 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				else
 					SimpleUtils.fail("Profile Page: User Profile Home Address State: '"+state+"' not found.", true);
 			} */
-		}
-		
-		// Updating Home Address Zip
-		if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")),5)) {
-			if(profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).getAttribute("value").toLowerCase().contains(zip.toLowerCase()))
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'Zip' already updated with value: '"+zip+"'.");
-			else {
-				profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).clear();
-				profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).sendKeys(zip);
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'Zip' updated with value: '"+zip+"'.");
+			}
+
+			// Updating Home Address Zip
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")), 5)) {
+				if (profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).getAttribute("value").toLowerCase().contains(zip.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Zip' already updated with value: '" + zip + "'.");
+				else {
+					profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).clear();
+					profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).sendKeys(zip);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Zip' updated with value: '" + zip + "'.");
+				}
+			}
+		}else {
+			// Updating Home Address Street Address 1
+			if(isElementLoaded(profileAddressStreetAddress1InputBox)) {
+				if(profileAddressStreetAddress1InputBox.getAttribute("value").toLowerCase().contains(streetAddress1.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' already updated with value: '"
+							+streetAddress1+"'.");
+				else {
+					profileAddressStreetAddress1InputBox.clear();
+					profileAddressStreetAddress1InputBox.sendKeys(streetAddress1);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' updated with value: '"
+							+streetAddress1+"'.");
+				}
+			}
+
+			// Updating Home Address Street Address 2
+			if(isElementLoaded(profileAddressStreetAddress2InputBox)) {
+				if(profileAddressStreetAddress2InputBox.getAttribute("value").toLowerCase().contains(streetAddress2.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' already updated with value: '"
+							+streetAddress2+"'.");
+				else {
+					profileAddressStreetAddress2InputBox.clear();
+					profileAddressStreetAddress2InputBox.sendKeys(streetAddress2);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' updated with value: '"
+							+streetAddress2+"'.");
+				}
+			}
+
+			// Updating Home Address City
+			if(isElementLoaded(profileAddressCityInputBox)) {
+				if(profileAddressCityInputBox.getAttribute("value").toLowerCase().contains(city.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'City' already updated with value: '"+city+"'.");
+				else {
+					profileAddressCityInputBox.clear();
+					profileAddressCityInputBox.sendKeys(city);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'City' updated with value: '"+city+"'.");
+				}
+			}
+
+			// Updating Home Address State
+			if(isElementLoaded(profileAddressStateInputBox)) {
+				boolean isStateSelected = false;
+				Select statesDropdown = new Select(profileAddressStateInputBox);
+				if(statesDropdown.getFirstSelectedOption().getText().toLowerCase().contains(state.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Nick Name already updated with value: '"+state+"'.");
+				else {
+					for(WebElement stateOption : statesDropdown.getOptions()) {
+						if(stateOption.getText().toLowerCase().contains(state.toLowerCase())) {
+							click(stateOption);
+							isStateSelected = true;
+						}
+					}
+					if(isStateSelected)
+						SimpleUtils.pass("Profile Page: User Profile Home Address 'State' updated with value: '"+state+"'.");
+					else
+						SimpleUtils.fail("Profile Page: User Profile Home Address State: '"+state+"' not found.", true);
+				}
+			}
+
+			// Updating Home Address Zip
+			if(isElementLoaded(profileAddressZipInputBox)) {
+				if(profileAddressZipInputBox.getAttribute("value").toLowerCase().contains(zip.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Zip' already updated with value: '"+zip+"'.");
+				else {
+					profileAddressZipInputBox.clear();
+					profileAddressZipInputBox.sendKeys(zip);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Zip' updated with value: '"+zip+"'.");
+				}
 			}
 		}
 	}
@@ -2178,7 +2248,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				changePasswordPopUpNewPasswordField.sendKeys(newPassword);
 				changePasswordPopUpConfirmPasswordField.sendKeys(confirmPassword);
 				click(changePasswordPopUpPopUpSendBtn);
-				if (isElementLoaded(alertMessage, 2) && alertMessage.getText().contains("Password changed successfully")) {
+				if (isElementLoaded(alertMessage, 10) && alertMessage.getText().contains("Password changed successfully")) {
 					SimpleUtils.pass("Profile Page: New password is saved successfully");
 				} else {
 					SimpleUtils.fail("Profile Page: New password may be not saved since there isn't alert message", true);

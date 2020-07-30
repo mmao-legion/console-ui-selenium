@@ -28,4 +28,5 @@ public interface LiquidDashboardPage {
     public void verifyIsGraphExistedOnWidget() throws Exception;
     public HashMap <String, Float> getDataOnTodayForecast() throws Exception;
     public List<String> getDataOnSchedulesWidget() throws Exception;
+    public void verifyTheContentOnTimesheetApprovalStatusWidgetLoaded(String currentWeek) throws Exception;
 }

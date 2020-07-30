@@ -527,7 +527,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "[ng-show*=\"showLocation()\"]")
 	private WebElement showLocation;
 
-	@FindBy(css = "lg-picker-input > div > input-field > ng-form > div")
+	@FindBy(css = "[search-hint=\"Search Location\"] input-field[placeholder=\"Select...\"] div.input-faked")
 	private WebElement currentLocation;
 
 	@FindBy(css = ".lg-search-options__option")

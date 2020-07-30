@@ -174,6 +174,47 @@ public class LiquidDashboardTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Validate the content of Timesheet Approval Status widget")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheContentOfTimesheetApprovalStatusWidgetAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+
+        if (!liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Timesheet_Approval_Status.getValue())) {
+            // Verify Edit mode Dashboard loaded
+            liquidDashboardPage.enterEditMode();
+
+            //verify switch on Starting_Soon widget
+            liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Status.getValue());
+            // Exit Edit mode
+            liquidDashboardPage.saveAndExitEditMode();
+        }
+        // Make sure that Schedules widget is loaded, we can compare the current week from Schedules widget
+        if (!liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Schedules.getValue())) {
+            // Verify Edit mode Dashboard loaded
+            liquidDashboardPage.enterEditMode();
+            //verify switch on Starting_Soon widget
+            liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
+            // Exit Edit mode
+            liquidDashboardPage.saveAndExitEditMode();
+        }
+
+        String currentWeek = liquidDashboardPage.getTheStartOfCurrentWeekFromSchedulesWidget();
+        // Verify the content on Timesheet Approval Status Widget
+        if (liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Timesheet_Approval_Status.getValue())) {
+            liquidDashboardPage.verifyTheContentOnTimesheetApprovalStatusWidgetLoaded(currentWeek);
+            liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Timesheet_Approval_Status.getValue(), linkNames.View_TimeSheets.getValue());
+            SimpleUtils.assertOnFail("Timesheet page not loaded Successfully!", timeSheetPage.isTimeSheetPageLoaded(), false);
+        } else {
+            SimpleUtils.fail("\"Timesheet Approval Status\" widget not loaded Successfully!", false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the content Starting Soon section")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
@@ -201,11 +242,13 @@ public class LiquidDashboardTest extends TestBase {
                 schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
 
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
-        if (isWeekGenerated){
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        if (!isWeekGenerated){
+            schedulePage.createScheduleForNonDGFlowNewUI();
         }
-        schedulePage.createScheduleForNonDGFlowNewUI();
-        schedulePage.publishActiveSchedule();
+        boolean isWeekPublished = schedulePage.isWeekPublished();
+        if (!isWeekPublished) {
+            schedulePage.publishActiveSchedule();
+        }
 
         dashboardPage.navigateToDashboard();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -219,8 +262,8 @@ public class LiquidDashboardTest extends TestBase {
             liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Starting_Soon.getValue(), linkNames.View_Schedule.getValue());
             schedulePage.isSchedule();
             String timeFromDashboard = dashboardPage.getDateFromTimeZoneOfLocation("hh:mm aa");
-            HashMap<String, String> fourShifts = schedulePage.getFourUpComingShifts(false, timeFromDashboard);
-            schedulePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
+            HashMap<String, String> shiftsFromDayView = schedulePage.getFourUpComingShifts(false, timeFromDashboard);
+            schedulePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, shiftsFromDayView);
         }else {
             SimpleUtils.fail("No upcoming shifts loaded!", false);
         }

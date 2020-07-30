@@ -3447,8 +3447,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             WebElement forecastHour = roleHoursRow.findElement(By.cssSelector("td:nth-child(3)"));
                             WebElement budgetHour = roleHoursRow.findElement(By.cssSelector("input[type=\"number\"]"));
                             if (forecastHour != null && budgetHour != null) {
+                                String forecastHourString = "";
+                                if (forecastHour.getText().trim().contains(".")) {
+                                    forecastHourString = forecastHour.getText().trim().substring(0, forecastHour.getText().trim().indexOf("."));
+                                }
                                 budgetHour.clear();
-                                budgetHour.sendKeys(forecastHour.getText().trim());
+                                budgetHour.sendKeys(forecastHourString);
                             }
                         }catch (Exception e) {
                             continue;
@@ -5070,26 +5074,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow, String currentTime) throws Exception {
-        HashMap<String, String> fourShifts = new HashMap<>();
+        HashMap<String, String> upComingShifts = new HashMap<>();
         String activeDay = null;
         if (isStartTomorrow) {
             activeDay = getActiveAndNextDay();
             clickOnNextDaySchedule(activeDay);
-            fourShifts = getAvailableShiftsForDayView(fourShifts);
+            upComingShifts = getAvailableShiftsForDayView(upComingShifts);
         }else {
-            fourShifts = getShiftsForCurrentDayIfStartingSoon(fourShifts, currentTime);
+            upComingShifts = getShiftsForCurrentDayIfStartingSoon(upComingShifts, currentTime);
         }
-        while (fourShifts.size() < 4) {
+        while (upComingShifts.size() < 4) {
             activeDay = getActiveAndNextDay();
             clickOnNextDaySchedule(activeDay);
-            fourShifts = getAvailableShiftsForDayView(fourShifts);
+            upComingShifts = getAvailableShiftsForDayView(upComingShifts);
         }
-        if (fourShifts.size() == 4) {
+        if (upComingShifts.size() >= 4) {
             SimpleUtils.pass("Get four shifts successfully!");
         }else {
-            SimpleUtils.fail("Failed to get four shifts!", false);
+            SimpleUtils.fail("Failed to get at least four shifts!", false);
         }
-        return fourShifts;
+        return upComingShifts;
     }
 
     @Override
@@ -5196,7 +5200,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return indexes;
     }
 
-    public HashMap<String, String> getAvailableShiftsForDayView(HashMap<String, String> fourShifts) throws Exception {
+    public HashMap<String, String> getAvailableShiftsForDayView(HashMap<String, String> upComingShifts) throws Exception {
         String name = null;
         String role = null;
         if (areListElementVisible(dayViewAvailableShifts, 15)) {
@@ -5207,31 +5211,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
                 if (!name.contains("open") && !name.contains("unassigned")) {
                     role = dayViewAvailableShift.findElement(By.className("sch-day-view-shift-worker-title-role")).getText().toLowerCase();
-                    if (fourShifts.size() < 4) {
-                        fourShifts.put(name, role);
-                    }
-                }
-                if (fourShifts.size() >= 4) {
-                    break;
+                    upComingShifts.put(name, role);
                 }
             }
         } else {
             SimpleUtils.fail("Day View Available shifts failed to load!", true);
         }
-        return fourShifts;
+        return upComingShifts;
     }
 
-    public HashMap<String, String> getShiftsForCurrentDayIfStartingSoon(HashMap<String, String> fourShifts, String currentTime) throws Exception {
+    public HashMap<String, String> getShiftsForCurrentDayIfStartingSoon(HashMap<String, String> upComingShifts, String currentTime) throws Exception {
         String name = null;
         String role = null;
         if (areListElementVisible(dayViewAvailableShifts, 15)) {
             for (WebElement dayViewAvailableShift : dayViewAvailableShifts) {
                 WebElement hoverInfo = dayViewAvailableShift.findElement(By.className("day-view-shift-hover-info-icon"));
                 if (hoverInfo != null) {
-                    click(hoverInfo);
+                    clickTheElement(hoverInfo);
                     if (isElementLoaded(timeDuration, 5)) {
                         String startTime = timeDuration.getText().split("-")[0];
-                        click(hoverInfo);
+                        clickTheElement(hoverInfo);
                         int shiftStartMinutes = getMinutesFromTime(startTime);
                         int currentMinutes = getMinutesFromTime(currentTime);
                         if (shiftStartMinutes > currentMinutes) {
@@ -5241,12 +5240,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             }
                             if (!name.contains("open") && !name.contains("unassigned")) {
                                 role = dayViewAvailableShift.findElement(By.className("sch-day-view-shift-worker-title-role")).getText().toLowerCase();
-                                if (fourShifts.size() < 4) {
-                                    fourShifts.put(name, role);
-                                }
-                            }
-                            if (fourShifts.size() >= 4) {
-                                break;
+                                upComingShifts.put(name, role);
                             }
                         }
                     }else {
@@ -5259,13 +5253,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else {
             SimpleUtils.fail("Day View Available shifts failed to load!", true);
         }
-        return fourShifts;
+        return upComingShifts;
     }
 
     @Override
     public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception {
-        boolean isConsistent = SimpleUtils.compareHashMapByEntrySet(dashboardShifts, scheduleShifts);
-        if (isConsistent) {
+        if (scheduleShifts.entrySet().containsAll(dashboardShifts.entrySet())) {
             SimpleUtils.pass("Up coming shifts from dashboard is consistent with the shifts in schedule!");
         }else {
             SimpleUtils.fail("Up coming shifts from dashboard isn't consistent with the shifts in schedule!", true);

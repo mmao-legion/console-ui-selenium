@@ -562,7 +562,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@FindBy (css = "div.lgn-alert-message")
 	private WebElement popupMessage;
 	//@FindBy (css = "div:nth-child(7) > div.value")
-	@FindBy (css = ".lg-user-locations__item span")
+	@FindBy (css = ".quick-engagement div:nth-child(7) > div.value")
 	private WebElement homeStoreLocation;
 	@FindBy (css = "pre.change-location-msg")
 	private WebElement changeLocationMsg;
@@ -668,6 +668,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement manualOnBoardButton;
 	@FindBy (css = "div.loan-to-calendar i.next-month")
 	private WebElement endDateNextMonthArrow;
+	@FindBy (css = "div.loan-from-calendar i.next-month")
+	private WebElement startDateNextMonthArrow;
 	@FindBy (css = "[ng-src*=\"home-location\"]")
 	private WebElement homeStoreImg;
 	@FindBy (css = "div.personal-details-panel div.invitation-status")
@@ -1207,6 +1209,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		String className = "selected-day";
 		int currentDayIndex = 0;
 		int maxIndex = 0;
+		int randomIndex = 0;
 		Random random = new Random();
 		if (areListElementVisible(startDaysOnCalendar, 10)) {
 			/*
@@ -1214,9 +1217,16 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			 */
 			currentDayIndex = getSpecificDayIndex(currentDay);
 			maxIndex = startDaysOnCalendar.size() - 1;
-			int randomIndex = currentDayIndex + random.nextInt(maxIndex - currentDayIndex);
+			if (currentDayIndex < maxIndex) {
+				randomIndex = currentDayIndex + 1;
+			}else {
+				if (isElementLoaded(endDateNextMonthArrow, 5)) {
+					click(endDateNextMonthArrow);
+					randomIndex = 7 + random.nextInt(startDaysOnCalendar.size() - 1 - 7);
+				}
+			}
 			WebElement randomElement = startDaysOnCalendar.get(randomIndex);
-			click(randomElement);
+			click(startDaysOnCalendar.get(randomIndex));
 			if (randomElement.getAttribute("class").contains(className)) {
 				SimpleUtils.pass("Select a start date successfully!");
 			} else {
@@ -1231,9 +1241,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			 */
 			if (isElementLoaded(endDateNextMonthArrow, 5)) {
 				click(endDateNextMonthArrow);
+				click(endDateNextMonthArrow);
 			}
 			maxIndex = endDaysOnCalendar.size() - 1;
-			int randomIndex = 7 + random.nextInt(maxIndex - 7);
+			randomIndex = 7 + random.nextInt(maxIndex - 7);
 			WebElement randomElement = endDaysOnCalendar.get(randomIndex);
 			click(randomElement);
 			if (randomElement.getAttribute("class").contains(className)) {
