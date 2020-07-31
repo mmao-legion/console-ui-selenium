@@ -203,14 +203,14 @@
                     <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
                     <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
                     <include name="verifyTheContentOfTimesheetApprovalStatusWidgetAsStoreManager" />
-                    <include name="verifyHelpfulLinksWidgetsAsStoreManager" />
-                    <include name="verifyTodayForecastWidgetsAsStoreManager" />
-                    <include name="verifySchedulesWidgetsAsStoreManager" />
-                    <!--<include name="verifyComplianceViolationWidgetsAsStoreManager" /> -->
                     <include name="verifyTheContentOfOpenShiftsAsInternalAdmin" />
                     <include name="verifySwitchWeekOfOpenShiftsAsStoreManager" />
                     <include name="dataValidationOfOpenShiftsUnclaimedAsStoreManager" />
                     <include name="dataValidationOfOpenShiftsClaimedAsStoreManager" />
+                    <include name="verifyHelpfulLinksWidgetsAsStoreManager" />
+                    <include name="verifyTodayForecastWidgetsAsStoreManager" />
+                    <include name="verifySchedulesWidgetsAsStoreManager" />
+                    <!--<include name="verifyComplianceViolationWidgetsAsStoreManager" /> -->
                 </methods>
             </class>
         </classes>
