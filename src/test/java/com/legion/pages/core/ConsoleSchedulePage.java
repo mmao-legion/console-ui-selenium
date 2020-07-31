@@ -2730,4 +2730,19 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public List<String> getOverviewData() throws Exception {
         return null;
     }
+
+    @Override
+    public void addOpenShiftWithLastDay(String workRole) throws Exception {
+
+    }
+
+    @Override
+    public void deleteOpenShiftWithLastDay() throws Exception {
+
+    }
+
+    @Override
+    public void addManualShiftWithLastDay(String workRole, String tmName) throws Exception {
+
+    }
 }

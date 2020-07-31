@@ -67,6 +67,7 @@
                    <include name="verifyTheTeamFunctionalityInTransfer" />
                    <include name="verifyTheTeamFunctionalityInUpdateInfo" />
                    <include name="verifyTheTeamFunctionalityInBadges" />
+                   <include name="verifyTheTeamFunctionalityInInviteTeamMember" />
                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
                    <include name="verifyTheTeamFunctionalityInProfileSectionAsInternalAdmin" />
                </methods>
@@ -202,6 +203,10 @@
                     <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
                     <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
                     <include name="verifyTheContentOfTimesheetApprovalStatusWidgetAsStoreManager" />
+                    <include name="verifyTheContentOfOpenShiftsAsInternalAdmin" />
+                    <include name="verifySwitchWeekOfOpenShiftsAsStoreManager" />
+                    <include name="dataValidationOfOpenShiftsUnclaimedAsStoreManager" />
+                    <include name="dataValidationOfOpenShiftsClaimedAsStoreManager" />
                 </methods>
             </class>
         </classes>

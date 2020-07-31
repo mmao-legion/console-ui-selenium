@@ -825,8 +825,8 @@ public class ActivityTest extends TestBase {
         // Verify Activity Feed as Store Manager Employee View
         dashboardPage.clickOnProfileIconOnDashboard();
         dashboardPage.clickOnSwitchToEmployeeView();
-        if (activityPage.isActivityBellIconLoaded()) {
-            SimpleUtils.pass("SM Employee view have access to see Activity Feed successfully");
+        if (!activityPage.isActivityBellIconLoaded()) {
+            SimpleUtils.pass("SM Employee view have no access to see Activity Feed successfully");
         } else {
             SimpleUtils.fail("SM Employee view failed to see Activity Feed",true);
         }

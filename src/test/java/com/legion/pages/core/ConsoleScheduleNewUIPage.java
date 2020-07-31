@@ -9402,6 +9402,73 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
+    public void addOpenShiftWithLastDay(String workRole) throws Exception {
+        if (isElementLoaded(createNewShiftWeekView,5)) {
+            click(createNewShiftWeekView);
+            selectWorkRole(workRole);
+            if (weekDays.get(0).getAttribute("class").contains("week-day-multi-picker-day-selected"))
+                click(weekDays.get(0));
+            clickRadioBtnStaffingOption(staffingOption.OpenShift.getValue());
+            click(weekDays.get(6));
+            if (!isElementLoaded(btnSave,5)) {
+                click(weekDays.get(6));
+                click(weekDays.get(5));
+                if (!isElementLoaded(btnSave,5)) {
+                    click(weekDays.get(5));
+                    click(weekDays.get(4));
+                }
+            }
+            clickOnCreateOrNextBtn();
+        } else
+            SimpleUtils.fail("Day View Schedule edit mode, add new shift button not found for Week Day: '" +
+                    getActiveWeekText() + "'", false);
+    }
+
+    @Override
+    public void deleteOpenShiftWithLastDay() throws Exception {
+        if (isElementLoaded(createNewShiftWeekView, 5) && areListElementVisible(blueIconsOfOpenShift,5)) {
+            moveToElementAndClick(blueIconsOfOpenShift.get(blueIconsOfOpenShift.size()-1));
+            if (isPopOverLayoutLoaded()) {
+                click(popOverLayout.findElement(By.xpath("//span[contains(text(), \"Delete Shift\")]")));
+                if (isDeleteShiftShowWell()) {
+                    click(deleteBtnInDeleteWindows);
+                    if (isElementLoaded(deleteShiftImg,5)) {
+                        SimpleUtils.pass("delete shift draft successfully");
+                    } else
+                        SimpleUtils.fail("delete shift draft failed",true);
+                }
+            }
+        } else
+            SimpleUtils.fail("Day View Schedule edit mode, delete shift button not found for Week Day: '" +
+                    getActiveWeekText() + "'", true);
+    }
+
+    @Override
+    public void addManualShiftWithLastDay(String workRole, String tmName) throws Exception {
+        if (isElementLoaded(createNewShiftWeekView,5)) {
+            click(createNewShiftWeekView);
+            selectWorkRole(workRole);
+            if (weekDays.get(0).getAttribute("class").contains("week-day-multi-picker-day-selected"))
+                click(weekDays.get(0));
+            clickRadioBtnStaffingOption(staffingOption.ManualShift.getValue());
+            click(weekDays.get(6));
+            if (!isElementLoaded(btnSave,5)) {
+                click(weekDays.get(6));
+                click(weekDays.get(5));
+                if (!isElementLoaded(btnSave,5)) {
+                    click(weekDays.get(5));
+                    click(weekDays.get(4));
+                }
+            }
+            clickOnCreateOrNextBtn();
+            searchTeamMemberByName(tmName);
+            clickOnOfferOrAssignBtn();
+        } else
+            SimpleUtils.fail("Day View Schedule edit mode, add new shift button not found for Week Day: '" +
+                    getActiveWeekText() + "'", false);
+    }
+
     //added by haya.  return a List has 4 week's data including last week
     @FindBy (css = ".row-fx.schedule-table-row.ng-scope")
     private List<WebElement> rowDataInOverviewPage;
