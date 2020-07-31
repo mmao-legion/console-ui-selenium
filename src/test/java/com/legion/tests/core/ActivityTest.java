@@ -1526,68 +1526,61 @@ public class ActivityTest extends TestBase {
         boolean isScheduleCollaboration = controlsNewUIPage.isControlsScheduleCollaborationLoaded();
         SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
         String selectedOption = controlsNewUIPage.getIsApprovalByManagerRequiredWhenEmployeeClaimsOpenShiftSelectedOption();
-        if (!selectedOption.equalsIgnoreCase("Always")) {
-            controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
-        } else {
-
-            // 2.admin create one manual open shift and assign to specific TM
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-
-            //to generate schedule  if current week is not generated
-            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
-            if(!isActiveWeekGenerated){
-                schedulePage.createScheduleForNonDGFlowNewUI();
-            }
-
-            float shiftHoursInWeekForTM = schedulePage.getShiftHoursByTMInWeekView(teamMemberName);
-            if (shiftHoursInWeekForTM == 0) {
-                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                schedulePage.clickOnDayView();
-                //schedulePage.clickOnNextDaySchedule();
-                schedulePage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
-                schedulePage.clickOnDayViewAddNewShiftButton();
-
-                schedulePage.customizeNewShiftPage();
-                schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-                schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-                schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
-                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-                schedulePage.clickOnCreateOrNextBtn();
-                schedulePage.searchTeamMemberByName(teamMemberName);
-                schedulePage.clickOnOfferOrAssignBtn();
-                schedulePage.saveSchedule();
-                schedulePage.publishActiveSchedule();
-            } else {
-                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                schedulePage.deleteTMShiftInWeekView(teamMemberName);
-                schedulePage.clickOnDayView();
-                schedulePage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
-                schedulePage.clickOnDayViewAddNewShiftButton();
-
-                schedulePage.customizeNewShiftPage();
-                schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-                schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-                schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
-                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-                schedulePage.clickOnCreateOrNextBtn();
-                schedulePage.searchTeamMemberByName(teamMemberName);
-                schedulePage.clickOnOfferOrAssignBtn();
-                schedulePage.saveSchedule();
-                schedulePage.publishActiveSchedule();
-            }
-
+        controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
+        // 2.admin create one manual open shift and assign to specific TM
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());   schedulePage.navigateToNextWeek();
+        //to generate schedule  if current week is not generated
+        boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+        if(!isActiveWeekGenerated){
+            schedulePage.createScheduleForNonDGFlowNewUI();
         }
+        float shiftHoursInWeekForTM = schedulePage.getShiftHoursByTMInWeekView(teamMemberName);
+        if (shiftHoursInWeekForTM == 0) {
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.clickOnDayView();
+            //schedulePage.clickOnNextDaySchedule();
+            schedulePage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
+            schedulePage.clickOnDayViewAddNewShiftButton();
 
+            schedulePage.customizeNewShiftPage();
+            schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchTeamMemberByName(teamMemberName);
+            schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.saveSchedule();
+            schedulePage.publishActiveSchedule();
+        } else {
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView(teamMemberName);
+            schedulePage.clickOnDayView();
+            schedulePage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
+            schedulePage.clickOnDayViewAddNewShiftButton();
+
+            schedulePage.customizeNewShiftPage();
+            schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchTeamMemberByName(teamMemberName);
+            schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.saveSchedule();
+            schedulePage.publishActiveSchedule();
+        }
         loginPage.logOut();
 
         // 3.Login with the TM to claim the shift
         loginToLegionAndVerifyIsLoginDone(username, password, location);
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+        dashboardPage.goToTodayForNewUI();
+        schedulePage.navigateToNextWeek();
         schedulePage.isSchedule();
         String cardName = "WANT MORE HOURS?";
         SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(cardName), false);

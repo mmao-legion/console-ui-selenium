@@ -4839,7 +4839,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void unGenerateActiveScheduleFromCurrentWeekOnward(int loopCount) throws Exception {
-        if (areListElementVisible(currentWeeks, 5)) {
+        if (areListElementVisible(currentWeeks, 10)) {
             for (int i = 0; i < currentWeeks.size(); i++) {
                 // Current week is at the center by default, since we don't need to ungenerate the schedule for previous week
                 if (loopCount == 0) {
@@ -6460,7 +6460,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void navigateToNextWeek() throws Exception {
         int currentWeekIndex = -1;
-        if (areListElementVisible(currentWeeks, 5)) {
+        if (areListElementVisible(currentWeeks, 10)) {
             for (int i = 0; i < currentWeeks.size(); i++) {
                 String className = currentWeeks.get(i).getAttribute("class");
                 if (className.contains("day-week-picker-period-active")) {
@@ -6863,7 +6863,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         List<String> swapRequest = new ArrayList<>(Arrays.asList("View Swap Request Status"));
         List<String> coverRequest = new ArrayList<>(Arrays.asList("View Cover Request Status"));
         int index = 100;
-        if (areListElementVisible(tmIcons, 5)) {
+        if (areListElementVisible(tmIcons, 10)) {
             for (int i = 0; i < tmIcons.size(); i++) {
                 moveToElementAndClick(tmIcons.get(i));
                 if (isPopOverLayoutLoaded()) {
@@ -6900,7 +6900,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public boolean isPopOverLayoutLoaded() throws Exception {
         boolean isLoaded = false;
-        if (isElementLoaded(popOverLayout, 5)) {
+        if (isElementLoaded(popOverLayout, 10)) {
             isLoaded = true;
             SimpleUtils.pass("Pop over layout loaded Successfully!");
         }
@@ -7197,7 +7197,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public int cancelClaimRequest(List<String> expectedRequests) throws Exception {
         List<String> claimStatus = new ArrayList<>(Arrays.asList("Claim Shift Approval Pending", "Cancel Claim Request"));
         int index = -1;
-        if (areListElementVisible(tmIcons, 5)) {
+        if (areListElementVisible(tmIcons, 10)) {
             for (int i = 0; i < tmIcons.size(); i++) {
                 moveToElementAndClick(tmIcons.get(i));
                 if (isPopOverLayoutLoaded()) {
@@ -7224,7 +7224,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void verifySelectedFilterPersistsWhenSelectingOtherWeeks(String selectedFilter) throws Exception {
-        if (areListElementVisible(currentWeeks, 5)) {
+        if (areListElementVisible(currentWeeks, 10)) {
             for (int i = 0; i < currentWeeks.size(); i++) {
                 click(currentWeeks.get(i));
                 if (isElementLoaded(filterButton, 5)) {
@@ -7610,7 +7610,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifySelectOtherWeeks() throws Exception {
         String currentWeekPeriod = "";
         String weekDate = "";
-        if (areListElementVisible(currentWeeks, 5)) {
+        if (areListElementVisible(currentWeeks, 10)) {
             for (int i = 0; i < currentWeeks.size(); i++) {
                 click(currentWeeks.get(i));
                 if (isElementLoaded(periodName, 5)) {

@@ -348,6 +348,29 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     private WebElement timesheetApprovalStatusWeek;
     @FindBy(className = "analytics-new-smart-card-timesheet-approval-legend-item")
     private List<WebElement> timesheetApprovalLegendItems;
+    @FindBy(css = "[ng-if=\"smartCardData.approved24HPerc[0] > 0\"]")
+    private WebElement approved24HRate;
+    @FindBy(css = "[ng-if=\"smartCardData.approved48HPerc[0] > 0\"]")
+    private WebElement approved48HRate;
+    @FindBy(css = "[ng-if=\"smartCardData.approved72HPerc[0] > 0\"]")
+    private WebElement approved72HRate;
+    @FindBy(css = "ng-if=\"smartCardData.unapprovedPerc[0] > 0\"")
+    private WebElement unApprovedRate;
+
+    @Override
+    public int getTimeSheetApprovalStatusFromPieChart() throws Exception {
+        int approvalRate = 0;
+        if (isElementLoaded(approved24HRate, 5)) {
+            approvalRate += Integer.parseInt(approved24HRate.getText().trim().replaceAll("%", ""));
+        }
+        if (isElementLoaded(approved48HRate, 5)) {
+            approvalRate += Integer.parseInt(approved48HRate.getText().trim().replaceAll("%", ""));
+        }
+        if (isElementLoaded(approved72HRate, 5)) {
+            approvalRate += Integer.parseInt(approved72HRate.getText().trim().replaceAll("%", ""));
+        }
+        return approvalRate;
+    }
 
     @Override
     public void verifyTheContentOnTimesheetApprovalStatusWidgetLoaded(String currentWeek) throws Exception {
@@ -381,13 +404,12 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
 
     @Override
     public void clickOnLinkByWidgetNameAndLinkName(String widgetName, String linkName) throws Exception {
-        //String startingTomorrow = "starting tomorrow";
         if (areListElementVisible(widgets, 10)) {
             for (WebElement widget : widgets) {
+                // wait for all the widget content loaded Successfully
+                waitForSeconds(5);
                 WebElement widgetTitle = widget.findElement(By.className("dms-box-title"));
-                //if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetName.toLowerCase()) ||
                 if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)) ||
-                        //widgetTitle.getText().toLowerCase().trim().contains(startingTomorrow.toLowerCase().trim()))) {
                         widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)))) {
                     try {
                         WebElement link = widget.findElement(By.className("dms-action-link"));
@@ -623,6 +645,171 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             SimpleUtils.pass("there are 4 week info on Schedules widget!");
         } else {
             SimpleUtils.fail("there are more than 4 week on Schedule widget which is not expected!",true);
+        }
+        return resultList;
+    }
+
+    @Override
+    public void clickFirstWeekOnSchedulesGoToSchedule() throws Exception {
+        if (areListElementVisible(dataOnSchedules,10)){
+            waitForSeconds(3);
+            moveToElementAndClick(dataOnSchedules.get(0));
+        } else {
+            SimpleUtils.fail("clickFirstWeekOnSchedulesGoToSchedule: data on schedules widget fail to load!",true);
+        }
+    }
+
+    @Override
+    public void verifyWeekInfoOnWidget(String widgetTitle, String startdayOfWeek) throws Exception {
+        String weekinfo = null;
+        if (areListElementVisible(widgetsInDashboardPage,10)){
+            for (WebElement widgetTemp : widgetsInDashboardPage){
+                waitForSeconds(2);
+                if(widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains(widgetsNameWrapper(widgetTitle))){
+                    if (widgetsNameWrapper(widgetTitle).equalsIgnoreCase("timesheet approval")){
+                        if (!widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("timesheet approval status")){
+                            if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("week of")){
+                                weekinfo = widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().split("week of ")[1];
+                                if (startdayOfWeek.toLowerCase().contains(weekinfo)){
+                                    SimpleUtils.pass("week info is right!");
+                                } else {
+                                    SimpleUtils.fail("week info is not correct!",true);
+                                }
+                                break;
+                            }
+                        }
+                    } else {
+                        if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("week of")){
+                            weekinfo = widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().split("week of ")[1];
+                            if (startdayOfWeek.toLowerCase().contains(weekinfo)){
+                                SimpleUtils.pass("week info is right!");
+                            } else {
+                                SimpleUtils.fail("week info is not correct!",true);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("Widgets in Dashboard page fail to load!",true);
+        }
+    }
+
+    @Override
+    public void clickOnCarouselOnWidget(String widgetTitle, String rightOrLeft) throws Exception {
+        if (areListElementVisible(widgetsInDashboardPage,10)){
+            for (WebElement widgetTemp : widgetsInDashboardPage){
+                if(widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains(widgetsNameWrapper(widgetTitle))){
+                    if (widgetsNameWrapper(widgetTitle).equalsIgnoreCase("timesheet approval")){
+                        if (!widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("timesheet approval status")){
+                            List<WebElement> buttonOnCarousel = widgetTemp.findElements(By.cssSelector(".carosel-div .cus-carousel-control"));
+                            if (areListElementVisible(buttonOnCarousel,10)){
+                                if (rightOrLeft.toLowerCase().contains("left")){
+                                    scrollToElement(buttonOnCarousel.get(0));
+                                    click(buttonOnCarousel.get(0));
+                                    SimpleUtils.pass("click left on carousel");
+                                } else {
+                                    scrollToElement(buttonOnCarousel.get(1));
+                                    click(buttonOnCarousel.get(1));
+                                    SimpleUtils.pass("click right on carousel");
+                                }
+                                break;
+                            }
+                        }
+                    } else {
+                        List<WebElement> buttonOnCarousel = widgetTemp.findElements(By.cssSelector(".carosel-div .cus-carousel-control"));
+                        if (areListElementVisible(buttonOnCarousel,10)){
+                            if (rightOrLeft.toLowerCase().contains("left")){
+                                scrollToElement(buttonOnCarousel.get(0));
+                                click(buttonOnCarousel.get(0));
+                                SimpleUtils.pass("click left on carousel");
+                            } else {
+                                scrollToElement(buttonOnCarousel.get(1));
+                                click(buttonOnCarousel.get(1));
+                                SimpleUtils.pass("click right on carousel");
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("Widgets in Dashboard page fail to load!",true);
+        }
+    }
+
+    @FindBy (css = ".dms-number-x-large")
+    private List<WebElement> dataOnComplianceWidget;
+    @Override
+    public List<String> getDataOnComplianceViolationWidget() throws Exception {
+        List<String> resultList= new ArrayList<String>();
+        if (areListElementVisible(dataOnComplianceWidget,10)){
+            for (int i=0;i<dataOnComplianceWidget.size();i++){
+                resultList.add(dataOnComplianceWidget.get(i).getText());
+            }
+        } else {
+            SimpleUtils.fail("data on Compliance violation widget fail to load!",true);
+        }
+        return resultList;
+    }
+
+    @FindBy(css = "div.console-navigation-item-label.Compliance")
+    private WebElement goToCompliance;
+    @Override
+    public void goToCompliancePage() throws Exception {
+        if (isElementLoaded(goToCompliance,5)){
+            click(goToCompliance);
+            SimpleUtils.pass("Comliance button clicked!");
+        } else {
+            SimpleUtils.fail("compliance button is not loaded, please double check!",true);
+        }
+    }
+
+    @FindBy (css = "lg-search.analytics-new-table-filter input")
+    private WebElement searchLocationInCompliancePage;
+    @FindBy (css = ".analytics-new-table-group-row-ScheduleCompliance")
+    private List <WebElement> searchResultsIncompliacePage;
+    @Override
+    public List<String> getDataInCompliancePage(String location) throws Exception {
+        List<String> resultList= new ArrayList<String>();
+        int tempViolation = 0;
+        String tempTotalHrs = "";
+        if (isElementLoaded(searchLocationInCompliancePage,5)){
+            searchLocationInCompliancePage.sendKeys(location);
+            if (areListElementVisible(searchResultsIncompliacePage,5)){
+                //get values from first row
+                waitForSeconds(2);
+                for (WebElement element : searchResultsIncompliacePage.get(0).findElements(By.cssSelector("div[class=\"ng-scope col-fx-1\"]"))){
+                    scrollToBottom();
+                    if (element.getText().toLowerCase().equals("0.0") ){
+                        //0.0 no violation
+                    } else if (element.getText().toLowerCase().equals("yes")){
+                        tempViolation++;
+                    } else if (element.getText().toLowerCase().equals("no")){
+                        //0.0 no violation
+                    } else {
+                        tempViolation++;
+                    }
+                }
+                resultList.add(String.valueOf(tempViolation));
+                tempTotalHrs = searchResultsIncompliacePage.get(0).findElement(By.cssSelector("div.analytics-new-cell-as-input")).getText();
+                //e.g.: 16.0--->16, 16.5--->16.5
+                if (tempTotalHrs!="" && tempTotalHrs!=null){
+                    if (tempTotalHrs.contains(".0")){
+                        //tempTotalHrs.replaceAll(".0","");
+                        String a = tempTotalHrs.substring(0,tempTotalHrs.indexOf("."));
+                        resultList.add(a);
+                    }
+                }
+                //just has 1 location for SM view
+                resultList.add("1");
+            } else {
+                SimpleUtils.fail("No search result!",true);
+            }
+
+        } else {
+            SimpleUtils.fail("getDataInCompliancePage: search input fail to load!",true);
         }
         return resultList;
     }

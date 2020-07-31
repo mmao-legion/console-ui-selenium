@@ -209,8 +209,17 @@ public class LiquidDashboardTest extends TestBase {
         // Verify the content on Timesheet Approval Status Widget
         if (liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Timesheet_Approval_Status.getValue())) {
             liquidDashboardPage.verifyTheContentOnTimesheetApprovalStatusWidgetLoaded(currentWeek);
+            int approvalRate = liquidDashboardPage.getTimeSheetApprovalStatusFromPieChart();
             liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Timesheet_Approval_Status.getValue(), linkNames.View_TimeSheets.getValue());
             SimpleUtils.assertOnFail("Timesheet page not loaded Successfully!", timeSheetPage.isTimeSheetPageLoaded(), false);
+            timeSheetPage.verifyCurrentWeekIsSelectedByDefault(currentWeek);
+            int approvalRateOnTimesheet = timeSheetPage.getApprovalRateFromTimesheetByLocation(location);
+            if (approvalRate == approvalRateOnTimesheet) {
+                SimpleUtils.pass("Verified the TimeSheet Approval Rate on dashboard is consistent with Timesheet Page!");
+            }else {
+                SimpleUtils.warn("Timesheet Approval rate is inconsistent, dashboard: " + approvalRate + ", and Timesheet page: " + approvalRateOnTimesheet
+                + ". Failed Since this bug: https://legiontech.atlassian.net/browse/SF-287");
+            }
         } else {
             SimpleUtils.fail("\"Timesheet Approval Status\" widget not loaded Successfully!", false);
         }
@@ -459,9 +468,9 @@ public class LiquidDashboardTest extends TestBase {
                 falg = resultListInOverview.get(i).equals(resultListOnWidget.get(i));
             }
             if (falg){
-                SimpleUtils.pass("Values on widged are consistent with the one in overview");
+                SimpleUtils.pass("Values on widget are consistent with the one in overview");
             } else {
-                SimpleUtils.fail("Values on widged are not consistent with the one in overview!",true);
+                SimpleUtils.fail("Values on widget are not consistent with the one in overview!",true);
             }
 
         } else {
@@ -766,5 +775,69 @@ public class LiquidDashboardTest extends TestBase {
                 SimpleUtils.fail("Open Shifts: Claimed number failed to calculate and % show incorrectly",true);
         } else
             SimpleUtils.fail("\"Open Shifts\" widget content not loaded", true);
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify compliance violation widget")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyComplianceViolationWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+        // Verifiy Edit mode Dashboard loaded
+        liquidDashboardPage.enterEditMode();
+        liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
+        liquidDashboardPage.saveAndExitEditMode();
+        //get the values on widget: violations, total hrs, locations.
+        List<String> resultListOnWidget = liquidDashboardPage.getDataOnComplianceViolationWidget();
+        //verify week info on widget
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        //gp to schedule, get week info of current week, last week and next week.
+        liquidDashboardPage.clickFirstWeekOnSchedulesGoToSchedule();
+        String startDayOfLastWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+        schedulePage.navigateToNextWeek();
+        String startDayOfCurrentWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+        schedulePage.navigateToNextWeek();
+        String startDayOfNextWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+
+        //go back to dashboard to verify week info on widget is consistent with the ones in schedule.
+        dashboardPage.navigateToDashboard();
+        liquidDashboardPage.verifyWeekInfoOnWidget(widgetType.Compliance_Violation.getValue(),startDayOfCurrentWeek);
+        //click on carousel to navigate to last week and next week to verify
+        liquidDashboardPage.clickOnCarouselOnWidget(widgetType.Compliance_Violation.getValue(),"left");
+        liquidDashboardPage.verifyWeekInfoOnWidget(widgetType.Compliance_Violation.getValue(),startDayOfLastWeek);
+        liquidDashboardPage.clickOnCarouselOnWidget(widgetType.Compliance_Violation.getValue(),"left");
+        liquidDashboardPage.verifyWeekInfoOnWidget(widgetType.Compliance_Violation.getValue(),startDayOfNextWeek);
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+
+        //login as admin, go to DM view, go to compliance page to get the actual value.
+        String fileName = "UsersCredentials.json";
+        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamMemberCredentials = userCredentials.get("InternalAdmin");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeDistrict("PANDA district");
+        liquidDashboardPage.goToCompliancePage();
+        List<String> resultListInCompliancePage = liquidDashboardPage.getDataInCompliancePage(location);
+        //verify if values are right
+        if (resultListOnWidget.size()==resultListInCompliancePage.size()){
+            boolean falg = false;
+            for (int i=0;i<resultListInCompliancePage.size();i++){
+                falg = resultListInCompliancePage.get(i).equals(resultListOnWidget.get(i));
+            }
+            if (falg){
+                SimpleUtils.pass("Values on widget are consistent with the ones in compliance page");
+            } else {
+                SimpleUtils.fail("Values on widget are not consistent with the ones in compliance page!",true);
+            }
+
+        } else {
+            SimpleUtils.fail("something wrong with the number of compliance violation displayed!",true);
+        }
     }
 }

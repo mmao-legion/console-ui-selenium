@@ -61,7 +61,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     	passwordField.clear();
     	userNameField.sendKeys(userName);
 		passwordField.sendKeys(Password);
-		click(loginButton);
+		clickTheElement(loginButton);
     }
     
     public boolean isLoginDone() throws Exception

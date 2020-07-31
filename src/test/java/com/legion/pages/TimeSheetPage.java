@@ -146,5 +146,7 @@ public interface TimeSheetPage {
 	public void toNFroNavigationFromDMDashboardToDMCompliance(String CurrentWeek) throws Exception;
 	public void clickOnComplianceViolationSectionOnDashboard() throws Exception;
 	public List<String> getAlertsDataFromSmartCard() throws Exception;
+	public int getApprovalRateFromTimesheetByLocation(String location) throws Exception;
+	public void verifyCurrentWeekIsSelectedByDefault(String currentWeek) throws Exception;
 
 }
