@@ -2587,6 +2587,33 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	}
 
 	// Added by Nora
+	@FindBy(css = "input[placeholder=\"Select location\"]")
+	private WebElement selectLocationLabel;
+	@FindBy(css = ".lg-filter__category-items [ng-repeat=\"opt in opts\"]")
+	private List<WebElement> locationItemsInFilter;
+	@FindBy(css = ".lg-filter__clear.lg-filter__clear-active")
+	private WebElement activeClearFilterBtn;
+	@FindBy(css = ".lg-filter__wrapper input[placeholder=\"Search Location\"]")
+	private WebElement searchLocationInput;
+	@FindBy(css = ".lg-timesheet-progress__number")
+	private WebElement timesheetApprovalRate;
+	@FindBy(css = ".day-week-picker-period-active")
+	private WebElement activeWeek;
+
+	@Override
+	public void verifyCurrentWeekIsSelectedByDefault(String currentWeek) throws Exception {
+		if (isElementLoaded(activeWeek, 5)) {
+			if (activeWeek.getText().toLowerCase().contains(currentWeek.toLowerCase())) {
+				SimpleUtils.pass("Current Week: " + activeWeek.getText() + " is selected by default on TimeSheet page!");
+			}else {
+				SimpleUtils.fail("Current Week: " + activeWeek.getText() + " is not selected by default on TimeSheet page!"
+				+ " Selected week is: " + activeWeek.getText() + ", but current week on dashboard starts with: " + currentWeek, false);
+			}
+		}else {
+			SimpleUtils.fail("TimeSheet Page: active week not loaded Successfully!", false);
+		}
+	}
+
 	@Override
 	public List<String> getAlertsDataFromSmartCard() throws Exception {
 		List<String> alerts = new ArrayList<>();
@@ -2605,5 +2632,70 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("The Alerts data not loaded Successfully!", false);
 		}
 		return alerts;
+	}
+
+	@Override
+	public int getApprovalRateFromTimesheetByLocation(String location) throws Exception {
+		int rate = 0;
+		filterTheLocationByName(location);
+		if (isElementLoaded(timesheetApprovalRate, 5)) {
+			SimpleUtils.pass("TimeSheet Page: Get the timesheet approval rate: " + timesheetApprovalRate.getText()
+			+ " for location: " + location + " Successfully");
+			rate = timesheetApprovalRate.getText().contains("%") ? Integer.parseInt(timesheetApprovalRate.getText().replaceAll("%", "")) : 0;
+		}else {
+			SimpleUtils.fail("TimeSheet Page: timesheet approval rate not loaded Successfully!", false);
+		}
+		return rate;
+	}
+
+	private void filterTheLocationByName(String locationName) throws Exception {
+		if (isElementLoaded(selectLocationLabel, 5)) {
+			clickTheElement(selectLocationLabel);
+			if (areListElementVisible(locationItemsInFilter, 5)) {
+				SimpleUtils.pass("Timesheet Page: Click on the Location Filter Successfully!");
+				if (isElementLoaded(activeClearFilterBtn, 5)) {
+					clickTheElement(activeClearFilterBtn);
+					boolean isClear = true;
+					for (WebElement locationItem : locationItemsInFilter) {
+						WebElement checkbox = locationItem.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+						if (checkbox != null) {
+							if (checkbox.getAttribute("class").contains("ng-not-empty")) {
+								isClear = false;
+								break;
+							}
+						}else {
+							isClear = false;
+							break;
+						}
+					}
+					if (!isClear) {
+						SimpleUtils.fail("TimeSheet Page: Click on Clear Filter button not Successfully!", false);
+					}else {
+						SimpleUtils.pass("TimeSheet Page: Click on Clear Filter button Successfully!");
+					}
+				}
+				if (isElementLoaded(searchLocationInput, 5)) {
+					searchLocationInput.sendKeys(locationName);
+					waitForSeconds(2);
+					if (areListElementVisible(locationItemsInFilter, 5)) {
+						for (WebElement locationItem : locationItemsInFilter) {
+							if (locationItem.getText().contains(locationName)) {
+								WebElement checkbox = locationItem.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+								clickTheElement(checkbox);
+								break;
+							}
+						}
+					}else {
+						SimpleUtils.fail("Failed to find the location: " + locationName, false);
+					}
+				}else {
+					SimpleUtils.fail("TimeSheet Page: Search Location Input not loaded Successfully!", false);
+				}
+			}else {
+				SimpleUtils.fail("TimeSheet Page: Click on location filter failed!", false);
+			}
+		}else {
+			SimpleUtils.fail("TimeSheet Page: Search Location Filter not loaded Successfully!", false);
+		}
 	}
 }

@@ -348,6 +348,29 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     private WebElement timesheetApprovalStatusWeek;
     @FindBy(className = "analytics-new-smart-card-timesheet-approval-legend-item")
     private List<WebElement> timesheetApprovalLegendItems;
+    @FindBy(css = "[ng-if=\"smartCardData.approved24HPerc[0] > 0\"]")
+    private WebElement approved24HRate;
+    @FindBy(css = "[ng-if=\"smartCardData.approved48HPerc[0] > 0\"]")
+    private WebElement approved48HRate;
+    @FindBy(css = "[ng-if=\"smartCardData.approved72HPerc[0] > 0\"]")
+    private WebElement approved72HRate;
+    @FindBy(css = "ng-if=\"smartCardData.unapprovedPerc[0] > 0\"")
+    private WebElement unApprovedRate;
+
+    @Override
+    public int getTimeSheetApprovalStatusFromPieChart() throws Exception {
+        int approvalRate = 0;
+        if (isElementLoaded(approved24HRate, 5)) {
+            approvalRate += Integer.parseInt(approved24HRate.getText().trim().replaceAll("%", ""));
+        }
+        if (isElementLoaded(approved48HRate, 5)) {
+            approvalRate += Integer.parseInt(approved48HRate.getText().trim().replaceAll("%", ""));
+        }
+        if (isElementLoaded(approved72HRate, 5)) {
+            approvalRate += Integer.parseInt(approved72HRate.getText().trim().replaceAll("%", ""));
+        }
+        return approvalRate;
+    }
 
     @Override
     public void verifyTheContentOnTimesheetApprovalStatusWidgetLoaded(String currentWeek) throws Exception {
@@ -381,13 +404,12 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
 
     @Override
     public void clickOnLinkByWidgetNameAndLinkName(String widgetName, String linkName) throws Exception {
-        //String startingTomorrow = "starting tomorrow";
         if (areListElementVisible(widgets, 10)) {
             for (WebElement widget : widgets) {
+                // wait for all the widget content loaded Successfully
+                waitForSeconds(5);
                 WebElement widgetTitle = widget.findElement(By.className("dms-box-title"));
-                //if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetName.toLowerCase()) ||
                 if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)) ||
-                        //widgetTitle.getText().toLowerCase().trim().contains(startingTomorrow.toLowerCase().trim()))) {
                         widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)))) {
                     try {
                         WebElement link = widget.findElement(By.className("dms-action-link"));

@@ -206,8 +206,17 @@ public class LiquidDashboardTest extends TestBase {
         // Verify the content on Timesheet Approval Status Widget
         if (liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Timesheet_Approval_Status.getValue())) {
             liquidDashboardPage.verifyTheContentOnTimesheetApprovalStatusWidgetLoaded(currentWeek);
+            int approvalRate = liquidDashboardPage.getTimeSheetApprovalStatusFromPieChart();
             liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Timesheet_Approval_Status.getValue(), linkNames.View_TimeSheets.getValue());
             SimpleUtils.assertOnFail("Timesheet page not loaded Successfully!", timeSheetPage.isTimeSheetPageLoaded(), false);
+            timeSheetPage.verifyCurrentWeekIsSelectedByDefault(currentWeek);
+            int approvalRateOnTimesheet = timeSheetPage.getApprovalRateFromTimesheetByLocation(location);
+            if (approvalRate == approvalRateOnTimesheet) {
+                SimpleUtils.pass("Verified the TimeSheet Approval Rate on dashboard is consistent with Timesheet Page!");
+            }else {
+                SimpleUtils.warn("Timesheet Approval rate is inconsistent, dashboard: " + approvalRate + ", and Timesheet page: " + approvalRateOnTimesheet
+                + ". Failed Since this bug: https://legiontech.atlassian.net/browse/SF-287");
+            }
         } else {
             SimpleUtils.fail("\"Timesheet Approval Status\" widget not loaded Successfully!", false);
         }
