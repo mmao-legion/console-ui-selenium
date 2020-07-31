@@ -206,6 +206,7 @@
                     <include name="verifyTodayForecastWidgetsAsStoreManager" />
                     <include name="verifySchedulesWidgetsAsStoreManager" />
                     <!--<include name="verifyComplianceViolationWidgetsAsStoreManager" /> -->
+                    <include name="verifyTimesheetApprovalRateWidgetAsStoreManager" />
                 </methods>
             </class>
         </classes>

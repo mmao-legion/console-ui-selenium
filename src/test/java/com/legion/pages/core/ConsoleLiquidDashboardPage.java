@@ -813,4 +813,25 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         }
         return resultList;
     }
+
+    @FindBy(css = "timesheet-approval-chart text")
+    private List<WebElement> textOnTARWidget;
+    @Override
+    public int getApprovalRateOnTARWidget() throws Exception {
+        int approvalRate = 0;
+        if (areListElementVisible(textOnTARWidget,5)){
+            for (WebElement e : textOnTARWidget){
+                waitForSeconds(2);
+                if (e.getText().contains("%") && e.getText()!=null && e.getText()!=""){
+                    if (e.getText().toLowerCase().contains("timesheet")){
+                        //do nothing
+                    } else {
+                        //get value
+                        approvalRate += Integer.valueOf(e.getText().substring(0,e.getText().indexOf("%")));
+                    }
+                }
+            }
+        }
+        return approvalRate;
+    }
 }

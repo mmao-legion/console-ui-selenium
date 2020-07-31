@@ -487,6 +487,7 @@ public class LiquidDashboardTest extends TestBase {
         // Verifiy Edit mode Dashboard loaded
         liquidDashboardPage.enterEditMode();
         liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
+        liquidDashboardPage.switchOnWidget(widgetType.Compliance_Violation.getValue());
         liquidDashboardPage.saveAndExitEditMode();
         //get the values on widget: violations, total hrs, locations.
         List<String> resultListOnWidget = liquidDashboardPage.getDataOnComplianceViolationWidget();
@@ -537,5 +538,28 @@ public class LiquidDashboardTest extends TestBase {
         } else {
             SimpleUtils.fail("something wrong with the number of compliance violation displayed!",true);
         }
+    }
+
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Helpful Links widget")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTimesheetApprovalRateWidgetAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+        // turn on timesheet approval rate widget.
+        liquidDashboardPage.enterEditMode();
+        liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Rate.getValue());
+        liquidDashboardPage.saveAndExitEditMode();
+        //verify view timesheets link
+        //approvalRateOnWidget is a smmary number of the 3 values on this widget.
+        int approvalRateOnWidget = liquidDashboardPage.getApprovalRateOnTARWidget();
+        liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Timesheet_Approval_Rate.getValue(),linkNames.View_TimeSheets.getValue());
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        SimpleUtils.assertOnFail("timesheet page fail to load!", timeSheetPage.isTimeSheetPageLoaded(),false);
+        //approvalRateOnTimesheet is a total approval rate number on smart card in timesheet page.
+        int approvalRateOnTimesheet = timeSheetPage.getApprovalRateFromTimesheetByLocation(location);
+        SimpleUtils.assertOnFail("values are not consistent!",approvalRateOnTimesheet==approvalRateOnWidget,true);
     }
 }
