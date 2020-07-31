@@ -30,4 +30,10 @@ public interface LiquidDashboardPage {
     public List<String> getDataOnSchedulesWidget() throws Exception;
     public void verifyTheContentOnTimesheetApprovalStatusWidgetLoaded(String currentWeek) throws Exception;
     public int getTimeSheetApprovalStatusFromPieChart() throws Exception;
+    public void verifyWeekInfoOnWidget(String widgetTitle, String startdayOfWeek) throws Exception;
+    public void clickOnCarouselOnWidget(String widgetTitle, String rightOrLeft) throws Exception;
+    public void clickFirstWeekOnSchedulesGoToSchedule() throws Exception;
+    public List<String> getDataOnComplianceViolationWidget() throws Exception;
+    public void goToCompliancePage() throws Exception;
+    public List<String> getDataInCompliancePage(String location) throws Exception;
 }
