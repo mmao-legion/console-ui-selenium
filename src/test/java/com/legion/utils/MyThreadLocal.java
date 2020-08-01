@@ -64,6 +64,7 @@ public class MyThreadLocal {
 	public static final ThreadLocal<Integer> sectionID = new ThreadLocal<>();
 	public static final ThreadLocal<Integer> budgetTolerance = new ThreadLocal<>();
 	public static final ThreadLocal<String> testRailReporting = new ThreadLocal<>();
+	public static final ThreadLocal<String> location = new ThreadLocal<>();
 
 	public static void setScreenshotLocation(String value) { screenshotLoc.set(value); }
 
@@ -410,6 +411,9 @@ public class MyThreadLocal {
 		return platformname.get();
 	}
 
+	//set/get location info
+	public static void setLocationName(String locationName) { location.set(locationName); }
 
+	public static String getLocationName() { return location.get(); }
 
 }

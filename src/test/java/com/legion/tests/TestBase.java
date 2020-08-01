@@ -53,6 +53,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.legion.utils.MyThreadLocal.*;
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 //import org.apache.log4j.Logger;
 
@@ -370,6 +371,17 @@ public abstract class TestBase {
         options.setCapability("silent", true);
         System.setProperty("webdriver.chrome.silentOutput", "true");
         setDriver(new ChromeDriver(options));
+    }
+
+    public  static void switchToNewWindow() {
+        String winHandleBefore =getDriver().getWindowHandle();
+        for(String winHandle : getDriver().getWindowHandles()) {
+            if (winHandle.equals(winHandleBefore)) {
+                continue;
+            }
+            getDriver().switchTo().window(winHandle);
+            break;
+        }
     }
 
 

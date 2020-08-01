@@ -9,14 +9,17 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import static com.legion.tests.TestBase.switchToNewWindow;
 import static com.legion.utils.MyThreadLocal.*;
 import static com.legion.utils.MyThreadLocal.setURL;
 
@@ -29,6 +32,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	// Added by Estelle
 	@FindBy(css="[class='console-navigation-item-label Locations']")
 	private WebElement goToLocationsButton;
+	@FindBy(css="[class='modeSwitchIcon']")
+	private WebElement modeSwitchIcon;
+//	@FindBy(css="[css='.menu-item-console_title.mt-12']")
+	@FindBy(xpath = "//header-mode-switch-menu/div/ul/li[1]/div[2]/p")
+	private WebElement opTitleMenu;
+	@FindBy(xpath="//header-mode-switch-menu/div/ul/li[2]/div[2]/p")
+	private WebElement consoleTitleMenu;
+
 	@FindBy(css="[class='console-navigation-item-label Configuration']")
 	private WebElement goToConfigurationButton;
 	@FindBy(css="[class='console-navigation-item-label Jobs']")
@@ -53,14 +64,28 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	@Override
-	public void clickOpsPortalIconInDashboardPage() {
+	public void clickModelSwitchIconInDashboardPage() {
+		if (isElementEnabled(modeSwitchIcon,10)) {
+			click(modeSwitchIcon);
+			waitForSeconds(3);
+			click(opTitleMenu);
+			switchToNewWindow();
+			
+			if (isElementEnabled(goToLocationsButton,5)) {
+				SimpleUtils.pass("switch to Ops portal successfully");
+
+			}else
+				SimpleUtils.fail("switch to Ops portal failed",false);
+		}else
+			SimpleUtils.fail("mode switch img load failed",false);
+
 
 	}
 
 	@Override
 	public boolean isOpsPortalPageLoaded() throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(goToLocationsButton, 10) && isElementLoaded(goToJobsButton,10))
+		if (isElementLoaded(goToLocationsButton, 10))
 			isLoaded = true;
 		return isLoaded;
 	}
@@ -76,7 +101,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void validateItemsInLocations() throws Exception {
-		if(isElementLoaded(goToConfigurationButton,10)){
+		if(isElementLoaded(goToConfigurationButton,5)){
 			if (isElementLoaded(enterPriseProfileInLocations,5) && isElementLoaded(globalConfigurationInLocations,5)
 			&& isElementLoaded(locationsInLocations,5) && isElementLoaded(districtsInLocations)) {
 				SimpleUtils.pass("Location overview page show well when OPview turn on");
@@ -108,7 +133,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	//new location page
 	@FindBy(css = "input[aria-label=\"location Name\"]")
-	private WebElement locationName;
+	private WebElement locationNameInput;
 	@FindBy(css = "input[aria-label=\"Location Id\"]")
 	private WebElement locationId;
 	@FindBy(css = "select[aria-label=\"Time Zone\"]")
@@ -128,7 +153,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css="input-field[label=\"Effective date\"]")
 	private WebElement effectiveDateSelect;
-	@FindBy(xpath = "//lg-single-calendar/div[2]/div[8]/div[4]")
+	@FindBy(xpath = "//lg-single-calendar/div[2]/div[8]/div[7]")
 	private WebElement firstDay;
 
 	@FindBy(css="lg-button[label=\"Create location\"]")
@@ -137,19 +162,22 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement cancelBtn;
 
 	@Override
-	public void addNewRegularLocationWithMandatoryFields() throws Exception {
-		
+	public void addNewRegularLocationWithMandatoryFields(String locationName) throws Exception {
+
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
-			locationName.sendKeys(newLocationParas.get("Location_Name"));
-			locationId.sendKeys(newLocationParas.get("Location_Id"));
+			locationNameInput.sendKeys(locationName);
+			setLocationName(locationName);
+			locationId.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
 			city.sendKeys(newLocationParas.get("City"));
 			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
-			selectByVisibleText(configTypeSelect,newLocationParas.get("Configuration_Type"));
+			if (isElementEnabled(configTypeSelect,5)) {
+				selectByVisibleText(configTypeSelect,newLocationParas.get("Configuration_Type"));
+			}
 			click(effectiveDateSelect);
 			click(firstDay);
 			scrollToBottom();
@@ -161,10 +189,29 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-	@Override
-	public void searchNewLocation() {
+	@FindBy(css="input[placeholder=\"You can search by name, id, district, country, state, city and district name.\"]")
+	private WebElement searchInput;
+	@FindBy(css = ".lg-search-icon")
+	private WebElement searchBtn;
+	@FindBy(xpath = "//table/tbody/tr[2]/td[1]/lg-button/button/span/span")
+	private WebElement locationsName;
 
+	@Override
+	public void searchNewLocation(String locationName) {
+		waitForSeconds(10);
+//		getDriver().navigate().refresh();
+		if (isElementEnabled(searchInput,5)) {
+			searchInput.sendKeys(getLocationName());
+			searchInput.sendKeys(Keys.ENTER);
+			if (locationsName.getText().trim().equals(locationName)) {
+				SimpleUtils.pass("the location is searched ");
+			}else
+				SimpleUtils.fail("no location searched",false);
+
+		}
+          SimpleUtils.fail("search filed load failed",false);
 
 	}
+
 }
 

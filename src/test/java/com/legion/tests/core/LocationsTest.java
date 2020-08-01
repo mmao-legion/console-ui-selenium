@@ -34,16 +34,19 @@ public class LocationsTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
-    @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the locations tab show well")
+    @Enterprise(name = "LegionCoffee")
+    @TestName(description = "Validate to create location with mandatory fields")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationsTabShowWell(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateLocationWithMandatoryFields(String browser, String username, String password, String location) throws Exception {
 
+        Calendar currentTime = Calendar.getInstance();
+        long currentTimeMillis = currentTime.getTimeInMillis();
+        String locationName = "AutoCreate" +currentTimeMillis;
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-//        locationsPage.clickOpsPortalIconInDashboardPage();
-//        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        locationsPage.clickModelSwitchIconInDashboardPage();
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
         //go to locations tab
         locationsPage.clickOnLocationsTab();
@@ -52,8 +55,9 @@ public class LocationsTest extends TestBase {
         //go to sub-locations tab
         locationsPage.goToSubLocationsInLocationsPage();
         //add new regular location
-        locationsPage.addNewRegularLocationWithMandatoryFields();
-//        locationsPage.searchNewLocation();
+        locationsPage.addNewRegularLocationWithMandatoryFields(locationName);
+        //search created location
+        locationsPage.searchNewLocation(locationName);
 
     }
 }
