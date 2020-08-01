@@ -206,7 +206,7 @@
                     <include name="verifyTheContentOfOpenShiftsAsInternalAdmin" />
                     <include name="verifySwitchWeekOfOpenShiftsAsStoreManager" />
                     <include name="dataValidationOfOpenShiftsUnclaimedAsStoreManager" />
-                    <include name="dataValidationOfOpenShiftsClaimedAsStoreManager" />
+                    <include name="dataValidationOfOpenShiftsClaimedAsTeamMember" />
                     <include name="verifyHelpfulLinksWidgetsAsStoreManager" />
                     <include name="verifyTodayForecastWidgetsAsStoreManager" />
                     <include name="verifySchedulesWidgetsAsStoreManager" />
