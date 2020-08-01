@@ -556,7 +556,7 @@ public class LiquidDashboardTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the content of Open Shifts widget")
+    @TestName(description = "Validate to switch to specific week by clicking arrow or point of Open Shifts widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySwitchWeekOfOpenShiftsAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -592,7 +592,7 @@ public class LiquidDashboardTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the content of Open Shifts widget")
+    @TestName(description = "Data validation of Open Shifts-unclaimed")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void dataValidationOfOpenShiftsUnclaimedAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -687,7 +687,7 @@ public class LiquidDashboardTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the content of Open Shifts widget")
+    @TestName(description = "Data validation of Open Shifts-claimed")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void dataValidationOfOpenShiftsClaimedAsTeamMember(String browser, String username, String password, String location) throws Exception {
         int[] unclaimed1 = new int[2];
