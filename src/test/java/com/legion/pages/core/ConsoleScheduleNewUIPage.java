@@ -9410,13 +9410,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (weekDays.get(0).getAttribute("class").contains("week-day-multi-picker-day-selected"))
                 click(weekDays.get(0));
             clickRadioBtnStaffingOption(staffingOption.OpenShift.getValue());
-            click(weekDays.get(6));
-            if (!isElementLoaded(btnSave,5)) {
-                click(weekDays.get(6));
-                click(weekDays.get(5));
-                if (!isElementLoaded(btnSave,5)) {
-                    click(weekDays.get(5));
-                    click(weekDays.get(4));
+            if (weekDays.size() == 7) {
+                for (int i = weekDays.size() - 1; i >= 0; i--) {
+                    if (weekDays.get(i).getAttribute("class").contains("week-day-multi-picker-day-disabled"))
+                        continue;
+                    else {
+                        click(weekDays.get(i));
+                        break;
+                    }
                 }
             }
             clickOnCreateOrNextBtn();
@@ -9463,6 +9464,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
             clickOnCreateOrNextBtn();
             searchTeamMemberByName(tmName);
+            if(isElementLoaded(btnAssignAnyway,5))
+                click(btnAssignAnyway);
             clickOnOfferOrAssignBtn();
         } else
             SimpleUtils.fail("Day View Schedule edit mode, add new shift button not found for Week Day: '" +

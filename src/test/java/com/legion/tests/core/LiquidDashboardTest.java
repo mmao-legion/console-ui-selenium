@@ -519,8 +519,10 @@ public class LiquidDashboardTest extends TestBase {
         }
 
         // Create open shift in schedule so that we can verify the content on Open_Shifts Widget
-        if (schedulePage.isGenerateButtonLoaded())
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (!isWeekGenerated){
             schedulePage.createScheduleForNonDGFlowNewUI();
+        }
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.addOpenShiftWithLastDay("MOD");
         schedulePage.saveSchedule();
@@ -529,7 +531,7 @@ public class LiquidDashboardTest extends TestBase {
         // Verify the content on Open_Shifts Widget
         dashboardPage.navigateToDashboard();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        if (liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Open_Shifts.getValue()) && liquidDashboardPage.isOpenShiftsPresent()) {
+        if (liquidDashboardPage.isOpenShiftsPresent()) {
             liquidDashboardPage.verifyTheContentOfOpenShiftsWidgetLoaded(currentWeek);
         } else {
             SimpleUtils.fail("\"Open Shifts\" widget content not loaded", true);
@@ -544,7 +546,7 @@ public class LiquidDashboardTest extends TestBase {
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
         // Verify no content on Open_Shifts Widget
-        if (liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Open_Shifts.getValue()) && liquidDashboardPage.isOpenShiftsNoContent()) {
+        if (liquidDashboardPage.isOpenShiftsNoContent()) {
             liquidDashboardPage.verifyTheContentOfOpenShiftsWidgetLoaded(currentWeek);
         } else {
             SimpleUtils.fail("\"Open Shifts\" widget not loaded", true);
@@ -614,8 +616,10 @@ public class LiquidDashboardTest extends TestBase {
 
         // Create open shift in schedule so that we can verify the content on Open_Shifts Widget
         liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Open_Shifts.getValue(), linkNames.View_Schedules.getValue());
-        if (schedulePage.isGenerateButtonLoaded())
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (!isWeekGenerated){
             schedulePage.createScheduleForNonDGFlowNewUI();
+        }
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.addOpenShiftWithLastDay("MOD");
         schedulePage.saveSchedule();
@@ -624,7 +628,7 @@ public class LiquidDashboardTest extends TestBase {
         // Verify the content on Open_Shifts Widget
         dashboardPage.navigateToDashboard();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        if (liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Open_Shifts.getValue()) && liquidDashboardPage.isOpenShiftsPresent()) {
+        if (liquidDashboardPage.isOpenShiftsPresent()) {
             HashMap<String, int[]> dataOnWidget1 = liquidDashboardPage.getDataFromOpenShiftsWidget();
             unclaimed1 = dataOnWidget1.get("Unclaimed");
             claimed1 = dataOnWidget1.get("Claimed");
@@ -634,6 +638,9 @@ public class LiquidDashboardTest extends TestBase {
 
         // Create open shift in schedule again to verify the data on Open_Shifts Widget
         liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Open_Shifts.getValue(), linkNames.View_Schedules.getValue());
+        if (!isWeekGenerated){
+            schedulePage.createScheduleForNonDGFlowNewUI();
+        }
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.addOpenShiftWithLastDay("MOD");
         schedulePage.saveSchedule();
@@ -642,7 +649,7 @@ public class LiquidDashboardTest extends TestBase {
         // Verify if unclaimed number can increase successfully and % show correctly
         dashboardPage.navigateToDashboard();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        if (liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Open_Shifts.getValue()) && liquidDashboardPage.isOpenShiftsPresent()) {
+        if (liquidDashboardPage.isOpenShiftsPresent()) {
             HashMap<String, int[]> dataOnWidget2 = liquidDashboardPage.getDataFromOpenShiftsWidget();
             unclaimed2 = dataOnWidget2.get("Unclaimed");
             claimed2 = dataOnWidget2.get("Claimed");
@@ -655,6 +662,9 @@ public class LiquidDashboardTest extends TestBase {
 
         // Delete one open shift in schedule again to verify the data on Open_Shifts Widget
         liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Open_Shifts.getValue(), linkNames.View_Schedules.getValue());
+        if (!isWeekGenerated){
+            schedulePage.createScheduleForNonDGFlowNewUI();
+        }
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteOpenShiftWithLastDay();
         schedulePage.saveSchedule();
@@ -663,7 +673,7 @@ public class LiquidDashboardTest extends TestBase {
         // Verify if unclaimed number can decrease successfully and % show correctly
         dashboardPage.navigateToDashboard();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        if (liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Open_Shifts.getValue()) && liquidDashboardPage.isOpenShiftsPresent()) {
+        if (liquidDashboardPage.isOpenShiftsPresent()) {
             HashMap<String, int[]> dataOnWidget3 = liquidDashboardPage.getDataFromOpenShiftsWidget();
             unclaimed3 = dataOnWidget3.get("Unclaimed");
             if (unclaimed2[0] - 1 == unclaimed3[0] && Math.round(unclaimed3[0] * 100.0/(unclaimed3[0] + claimed2[0])) == unclaimed3[1]){
@@ -711,8 +721,10 @@ public class LiquidDashboardTest extends TestBase {
 
         // Create Open Shift - Manual in schedule so that we can verify the content on Open_Shifts Widget
         liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Open_Shifts.getValue(), linkNames.View_Schedules.getValue());
-        if (schedulePage.isGenerateButtonLoaded())
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (!isWeekGenerated){
             schedulePage.createScheduleForNonDGFlowNewUI();
+        }
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteTMShiftInWeekView(tmName);
         schedulePage.saveSchedule();
@@ -743,7 +755,6 @@ public class LiquidDashboardTest extends TestBase {
         SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(cardName), false);
         String linkName = "View Shifts";
         schedulePage.clickLinkOnSmartCardByName(linkName);
-        SimpleUtils.assertOnFail("Open shifts not loaed Successfully!", schedulePage.areShiftsPresent(), false);
         List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
         int index = schedulePage.selectOneShiftIsClaimShift(claimShift);
         schedulePage.clickTheShiftRequestByName(claimShift.get(0));
