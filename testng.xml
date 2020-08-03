@@ -212,6 +212,7 @@
                     <include name="verifySchedulesWidgetsAsStoreManager" />
                     <!--<include name="verifyComplianceViolationWidgetsAsStoreManager" /> -->
                     <include name="verifyNoContentOfSwapNCoverWidgetAsInternalAdmin" />
+                    <include name="verifyTimesheetApprovalRateWidgetAsStoreManager" />
                 </methods>
             </class>
         </classes>
