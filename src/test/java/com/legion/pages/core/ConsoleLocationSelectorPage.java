@@ -105,7 +105,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                         SimpleUtils.pass("Given Location '" + locationName + "' already selected!");
                     } else {
                         click(locationSelectorButton);
-                        if (isElementLoaded(locationDropDownButton)) {
+                        if (areListElementVisible(availableLocationCardsName, 10) || isElementLoaded(locationDropDownButton)) {
                             if (availableLocationCardsName.size() != 0) {
                                 for (WebElement locationCardName : availableLocationCardsName) {
                                     if (locationCardName.getText().contains(locationName)) {

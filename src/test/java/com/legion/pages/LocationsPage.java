@@ -2,7 +2,7 @@ package com.legion.pages;
 
 public interface LocationsPage {
 
-    public void clickOpsPortalIconInDashboardPage();
+    public void clickModelSwitchIconInDashboardPage();
 
     public boolean isOpsPortalPageLoaded() throws Exception;
 
@@ -12,9 +12,9 @@ public interface LocationsPage {
 
     public void goToSubLocationsInLocationsPage() throws Exception;
 
-    public     void addNewRegularLocationWithMandatoryFields()throws Exception;
+    public void addNewRegularLocationWithMandatoryFields(String locationName)throws Exception;
 
-    public void searchNewLocation();
+    public void searchNewLocation(String locationName);
 
 
 }
