@@ -10,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.net.SocketImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -260,7 +261,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     public void saveAndExitEditMode() throws Exception{
         if (isElementLoaded(saveBtn,10)){
             click(saveBtn);
-            if (isElementLoaded(welcomeText, 10)) {
+            if (isElementLoaded(welcomeText, 15)) {
                 SimpleUtils.pass("Edit Dashboard Page: Click on Save button Successfully!");
             }else {
                 SimpleUtils.fail("Edit Dashboard Page: Click on Save button failed, Dashboard welcome text not loaded Successfully!", false);
@@ -356,6 +357,25 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     private WebElement approved72HRate;
     @FindBy(css = "ng-if=\"smartCardData.unapprovedPerc[0] > 0\"")
     private WebElement unApprovedRate;
+    @FindBy(css = "[ng-if*=\"requestForswapsdata\"]")
+    private WebElement swapData;
+    @FindBy(css = "[ng-if*=\"requestForCoverdata\"]")
+    private WebElement coverData;
+
+    @Override
+    public void verifyNoContentOfSwapsNCoversWidget() throws Exception {
+        String noSwap = "There are no swaps.";
+        String noCover = "There are no covers.";
+        if (isElementLoaded(swapData, 5) && isElementLoaded(coverData, 5)) {
+            if (swapData.getText().contains(noSwap) && coverData.getText().contains(noCover)) {
+                SimpleUtils.pass("Liquid Dashboard Page: Verified there is no Swaps & Covers data when schedule is not generated!");
+            }else {
+                SimpleUtils.fail("Liquid Dashboard Page: Verified there is data on Swaps & Covers when schedule is not generated!", false);
+            }
+        }else {
+            SimpleUtils.fail("Liquid Dashboard Page: Swaps & Covers elements not loaded SUccessfully!", false);
+        }
+    }
 
     @Override
     public int getTimeSheetApprovalStatusFromPieChart() throws Exception {

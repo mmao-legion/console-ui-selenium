@@ -43,4 +43,5 @@ public interface LiquidDashboardPage {
     public List<String> getDataOnComplianceViolationWidget() throws Exception;
     public void goToCompliancePage() throws Exception;
     public List<String> getDataInCompliancePage(String location) throws Exception;
+    public void verifyNoContentOfSwapsNCoversWidget() throws Exception;
 }

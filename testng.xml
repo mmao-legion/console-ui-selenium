@@ -211,6 +211,7 @@
                     <include name="verifyTodayForecastWidgetsAsStoreManager" />
                     <include name="verifySchedulesWidgetsAsStoreManager" />
                     <!--<include name="verifyComplianceViolationWidgetsAsStoreManager" /> -->
+                    <include name="verifyNoContentOfSwapNCoverWidgetAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
