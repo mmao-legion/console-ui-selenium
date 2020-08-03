@@ -834,4 +834,216 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         }
         return approvalRate;
     }
+    
+    //Added By Julie
+    @FindBy(css = "lg-open-shifts .dms-box-title")
+    private WebElement openShiftsTitle;
+    @FindBy(css = "lg-open-shifts .slideNumberText")
+    private WebElement openShiftsWeek;
+    @FindBy(css = "lg-open-shifts .widgetPieChart")
+    private WebElement openShiftsPieChart;
+    @FindBy(css = "lg-open-shifts .ana-kpi-legend-entry")
+    private List<WebElement> openShiftsLegend;
+    @FindBy(css = "lg-open-shifts .emptyState-div")
+    private WebElement openShiftsNoContent;
+    @FindBy(css = "lg-open-shifts [src*=\"left\"]")
+    private WebElement openShiftsLeftArrow;
+    @FindBy(css = "lg-open-shifts [src*=\"right\"]")
+    private WebElement openShiftsRightArrow;
+    @FindBy(css = "lg-open-shifts .cus-carousel-indicators li")
+    private List<WebElement> openShiftsCarouselIndicators;
+    @FindBy(css = "lg-open-shifts .dms-action-link")
+    private WebElement openShiftsBtn;
+    @FindBy(css = "[ng-attr-class*=\"fx-center left-banner\"]")
+    private List<WebElement> weeksOnSchedules;
+    @FindBy(xpath = "//*[@label=\"'Open Shifts'\"]//pie-chart//*[name()='text']")
+    private List<WebElement> openShiftsPieChartData;
+
+    @Override
+    public void verifyTheContentOfOpenShiftsWidgetLoaded(String currentWeek) throws Exception {
+        /*Open Shifts widget should show:
+        a. Title: Open Shifts
+        b. Default Time: the first day of current week, e.g. Week of Jul 19;
+        c. the number of Unclaimed/Claimed on the right and the corresponding pie chart, or EmptyState image with description "There are no open shifts" in gray
+        d. Applicable Weeks: carousel-indicators show weeks which include Left arrow, Past, Current, Future week point and Right arrow
+        e. [View Schedules] button*/
+
+        if (isElementLoaded(openShiftsTitle, 10) && openShiftsTitle.getText().contains("Open Shifts")) {
+            SimpleUtils.pass("Open Shifts: The title of Open Shifts is loaded and correct");
+        } else {
+            SimpleUtils.fail("Open Shifts: The title of \"Open Shifts\" is not loaded or incorrect!", true);
+        }
+        if (isElementLoaded(openShiftsWeek, 5) && openShiftsWeek.getText().toLowerCase().contains(currentWeek.toLowerCase())) {
+            SimpleUtils.pass("Open Shifts: The week of Open Shifts is loaded and correct!");
+        } else {
+            SimpleUtils.fail("Open Shifts: The week of \"Open Shifts\" is not loaded or incorrect!", true);
+        }
+        if (isOpenShiftsNoContent()) {
+            SimpleUtils.pass("Open Shifts: There are no open shifts");
+        } else if (isOpenShiftsPresent()) {
+            SimpleUtils.pass("Open Shifts: Pie chart and Legend are loaded");
+        } else {
+            SimpleUtils.fail("Open Shifts: Widget info is not loaded", true);
+        }
+        if (areListElementVisible(openShiftsCarouselIndicators, 5) && openShiftsCarouselIndicators.size() == 3
+                && isElementLoaded(openShiftsLeftArrow, 5) && isElementLoaded(openShiftsRightArrow, 5)) {
+            SimpleUtils.pass("Open Shifts: Carousel-indicators show weeks which include Left arrow, Past, Current, Future week point and Right arrow");
+        } else {
+            SimpleUtils.fail("Open Shifts: Carousel-indicators are not loaded", true);
+        }
+        if (isElementLoaded(openShiftsBtn, 5) && openShiftsBtn.getText().contains("View Schedules")) {
+            SimpleUtils.pass("Open Shifts: \"View Schedules\" button is loaded and correct");
+        } else {
+            SimpleUtils.fail("Open Shifts: \"View Schedules\" button is not loaded and incorrect", true);
+        }
+    }
+
+    @Override
+    public boolean isOpenShiftsPresent() throws Exception {
+        Boolean isOpenShiftsPresent = false;
+        if (isElementLoaded(openShiftsPieChart, 5) && areListElementVisible(openShiftsLegend, 5)) {
+            isOpenShiftsPresent = true;
+        }
+        return isOpenShiftsPresent;
+    }
+
+    @Override
+    public boolean isOpenShiftsNoContent() throws Exception {
+        Boolean isOpenShiftsNoContent = false;
+        if (isElementLoaded(openShiftsNoContent, 5) && openShiftsNoContent.getText().contains("There are no open shifts")) {
+            isOpenShiftsNoContent = true;
+        }
+        return isOpenShiftsNoContent;
+    }
+
+    @Override
+    public void switchWeeksOnOpenShiftsWidget(String lastWeek, String currentWeek, String nextWeek) throws Exception {
+        /*
+        a.Can navigate to week by clicking point
+        b.Can navigate to week by clicking arrow
+         */
+        if (areListElementVisible(openShiftsCarouselIndicators, 5) && openShiftsCarouselIndicators.size() == 3) {
+            click(openShiftsCarouselIndicators.get(0));
+            if (openShiftsWeek.getText().toUpperCase().contains(lastWeek)) {
+                SimpleUtils.pass("Open Shifts: The first point switches to the last week successfully");
+            } else {
+                SimpleUtils.fail("Open Shifts: The first point failed to switch to the last week", true);
+            }
+            click(openShiftsCarouselIndicators.get(1));
+            if (openShiftsWeek.getText().toUpperCase().contains(currentWeek)) {
+                SimpleUtils.pass("Open Shifts: The second point switches to the current week successfully");
+            } else {
+                SimpleUtils.fail("Open Shifts: The second point failed to switch to the current week", true);
+            }
+            click(openShiftsCarouselIndicators.get(2));
+            if (openShiftsWeek.getText().toUpperCase().contains(nextWeek)) {
+                SimpleUtils.pass("Open Shifts: The third point switches to the next week successfully");
+            } else {
+                SimpleUtils.fail("Open Shifts: The third point failed to switch to the next week", true);
+            }
+        } else {
+            SimpleUtils.fail("Open Shifts: The carousel indicators failed to load or load incorrectly", true);
+        }
+        if (isElementLoaded(openShiftsLeftArrow, 5) && isElementLoaded(openShiftsRightArrow, 5)) {
+            click(openShiftsLeftArrow);
+            if (openShiftsWeek.getText().toUpperCase().contains(currentWeek)) {
+                SimpleUtils.pass("Open Shifts: The left arrow switches to the current week successfully");
+            } else {
+                SimpleUtils.fail("Open Shifts: The left arrow failed to switch to the current week", true);
+            }
+            click(openShiftsLeftArrow);
+            if (openShiftsWeek.getText().toUpperCase().contains(lastWeek)) {
+                SimpleUtils.pass("Open Shifts: The left arrow switches to the last week successfully");
+            } else {
+                SimpleUtils.fail("Open Shifts: The left arrow failed to switch to the last week", true);
+            }
+            click(openShiftsRightArrow);
+            if (openShiftsWeek.getText().toUpperCase().contains(currentWeek)) {
+                SimpleUtils.pass("Open Shifts: The right arrow switches to the current week successfully");
+            } else {
+                SimpleUtils.fail("Open Shifts: The right arrow failed to switch to the current week", true);
+            }
+            click(openShiftsRightArrow);
+            if (openShiftsWeek.getText().toUpperCase().contains(nextWeek)) {
+                SimpleUtils.pass("Open Shifts: The right arrow switches to the next week successfully");
+            } else {
+                SimpleUtils.fail("Open Shifts: The right arrow failed to switch to the next week", true);
+            }
+        }
+    }
+
+    @Override
+    public String getTheStartOfLastWeekFromSchedulesWidget() throws Exception {
+        String lastWeek = "";
+        if (areListElementVisible(weeksOnSchedules, 5) && weeksOnSchedules.size() == 4) {
+            if (weeksOnSchedules.get(0).getText().contains("—")) {
+                lastWeek = weeksOnSchedules.get(0).getText().split("—")[0];
+                if (lastWeek.endsWith("\n")) {
+                    lastWeek = lastWeek.substring(0, lastWeek.length() - 1);
+                }
+                if (lastWeek.split(" ")[1].startsWith("0")) {
+                    lastWeek = lastWeek.split(" ")[0] + " " + lastWeek.split(" ")[1].substring(1,2);
+                }
+            }
+        }
+        if (!lastWeek.isEmpty()) {
+            SimpleUtils.pass("Get the start of the last week: \"" + lastWeek + "\" Successfully!");
+        } else {
+            SimpleUtils.fail("Failed to get the start of the last week!", false);
+        }
+        return lastWeek;
+    }
+
+    @Override
+    public String getTheStartOfNextWeekFromSchedulesWidget() throws Exception {
+        String nextWeek = "";
+        if (areListElementVisible(weeksOnSchedules, 5) && weeksOnSchedules.size() == 4) {
+            if (weeksOnSchedules.get(2).getText().contains("—")) {
+                nextWeek = weeksOnSchedules.get(2).getText().split("—")[0];
+                if (nextWeek.endsWith("\n")) {
+                    nextWeek = nextWeek.substring(0, nextWeek.length() - 1);
+                }
+                if (nextWeek.split(" ")[1].startsWith("0")) {
+                    nextWeek = nextWeek.split(" ")[0] + " " + nextWeek.split(" ")[1].substring(1,2);
+                }
+            }
+        }
+        if (!nextWeek.isEmpty()) {
+            SimpleUtils.pass("Get the start of the next week: \"" + nextWeek + "\" Successfully!");
+        } else {
+            SimpleUtils.fail("Failed to get the start of the current week!", false);
+        }
+        return nextWeek;
+    }
+
+    @Override
+    public HashMap<String, int[]> getDataFromOpenShiftsWidget() throws Exception {
+        HashMap<String, int[]> openShiftsData = new HashMap<>();
+        int pieChartUnclaimed = 0;
+        int pieChartClaimed = 0;
+        int legendUnclaimed = 0;
+        int legendClaimed = 0;
+        if (areListElementVisible(openShiftsPieChartData,5)) {
+            for (WebElement pieChartData: openShiftsPieChartData) {
+                WebElement pieChartColor = pieChartData.findElement(By.xpath("./../*[name()='path']"));
+                if (pieChartColor.getAttribute("style").contains("rgb(169, 169, 169)"))
+                    pieChartUnclaimed = Integer.parseInt(pieChartData.getText());
+                if (pieChartColor.getAttribute("style").contains("rgb(129, 194, 196)"))
+                    pieChartClaimed = Integer.parseInt(pieChartData.getText());
+            }
+        } else {
+            SimpleUtils.fail("Open Shifts: No data on legend", true);
+        }
+        if (areListElementVisible(openShiftsLegend, 5) && openShiftsLegend.size() == 2) {
+            legendUnclaimed = Integer.valueOf(openShiftsLegend.get(0).getText().substring(openShiftsLegend.get(0).getText().indexOf("(") + 1, openShiftsLegend.get(0).getText().indexOf("%")));
+            legendClaimed = Integer.valueOf(openShiftsLegend.get(1).getText().substring(openShiftsLegend.get(1).getText().indexOf("(") + 1, openShiftsLegend.get(1).getText().indexOf("%")));
+            int[] unclaimedData = new int[]{pieChartUnclaimed, legendUnclaimed};
+            int[] claimedData = new int[]{pieChartClaimed, legendClaimed};
+            openShiftsData.put("Unclaimed", unclaimedData);
+            openShiftsData.put("Claimed", claimedData);
+        } else {
+            SimpleUtils.fail("Open Shifts: No data on legend", true);
+        }
+        return openShiftsData;
+    }
 }

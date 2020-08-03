@@ -29,6 +29,13 @@ public interface LiquidDashboardPage {
     public HashMap <String, Float> getDataOnTodayForecast() throws Exception;
     public List<String> getDataOnSchedulesWidget() throws Exception;
     public void verifyTheContentOnTimesheetApprovalStatusWidgetLoaded(String currentWeek) throws Exception;
+    public void verifyTheContentOfOpenShiftsWidgetLoaded(String currentWeek) throws Exception;
+    public boolean isOpenShiftsPresent() throws Exception;
+    public boolean isOpenShiftsNoContent() throws Exception;
+    public void switchWeeksOnOpenShiftsWidget(String lastWeek, String currentWeek, String nextWeek) throws Exception;
+    public String getTheStartOfLastWeekFromSchedulesWidget() throws Exception;
+    public String getTheStartOfNextWeekFromSchedulesWidget() throws Exception;
+    public HashMap<String, int[]> getDataFromOpenShiftsWidget() throws Exception;
     public int getTimeSheetApprovalStatusFromPieChart() throws Exception;
     public void verifyWeekInfoOnWidget(String widgetTitle, String startdayOfWeek) throws Exception;
     public void clickOnCarouselOnWidget(String widgetTitle, String rightOrLeft) throws Exception;

@@ -416,4 +416,7 @@ public interface SchedulePage {
 
 	public void unGenerateActiveScheduleFromCurrentWeekOnward(int loopCount) throws Exception;
 	public List<String> getOverviewData() throws Exception;
+	public void addOpenShiftWithLastDay(String workRole) throws Exception;
+	public void deleteOpenShiftWithLastDay() throws Exception;
+	public void addManualShiftWithLastDay(String workRole, String tmName) throws Exception;
 }
