@@ -449,13 +449,13 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     }
 
     @Override
-    public void verifyEditLinkOfHelpgulLinks() throws Exception {
+    public void verifyEditLinkOfHelpfulLinks() throws Exception {
         if (isElementLoaded(editLinkBtn,10)){
             scrollToElement(editLinkBtn);
             click(editLinkBtn);
-            SimpleUtils.pass("Edit link button has been clicked!");
+            SimpleUtils.pass("Helpful Links Widget: Edit link button has been clicked!");
         } else {
-            SimpleUtils.fail("verifyEditLinkOfHelpgulLinks: Edit link button fail to load!", true);
+            SimpleUtils.fail("Helpful Links Widget: Verify Edit Link of Helpful Links. Edit link button fail to load!", false);
         }
     }
 
@@ -463,12 +463,12 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     public void addLinkOfHelpfulLinks() throws Exception {
         if (isElementLoaded(addLinkBtn,10)){
             click(addLinkBtn);
-            SimpleUtils.pass("add link button has been clicked successfully!");
+            SimpleUtils.pass("Helpful Links Widget: Add link button has been clicked successfully!");
             editNewLink();
         } else if(areListElementVisible(linkTitles) && linkTitles.size()==5) {
-            SimpleUtils.pass("there already 5 links");
+            SimpleUtils.pass("Helpful Links Widget: There are already 5 links");
         } else {
-            SimpleUtils.fail("Add Link button fail to load!",true);
+            SimpleUtils.fail("Helpful Links Widget: Add Link button fail to load!",false);
         }
     }
 
@@ -477,7 +477,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             linkTitles.get(linkTitles.size()-1).findElement(By.cssSelector("input")).sendKeys("link"+linkTitles.size());
             linkTexts.get(linkTexts.size()-1).findElement(By.cssSelector("input")).sendKeys("https://www.google.com/");
         } else {
-            SimpleUtils.fail("editNewLink: there is no link to edit!",true);
+            SimpleUtils.fail("Helpful Links Widget: editNewLink method: there is no link to edit!",false);
         }
     }
 
@@ -487,10 +487,10 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         if (areListElementVisible(linkTexts,10)){
             for(int i=0; i<s ;i++){
                 moveToElementAndClick(linkTexts.get(0).findElement(By.cssSelector(".removeLink")));
-                SimpleUtils.pass("delete link successfully!");
+                SimpleUtils.pass("Helpful Links Widget: Delete link successfully!");
             }
         } else {
-            SimpleUtils.report("No links to delete!");
+            SimpleUtils.report("Helpful Links Widget: deleteAllLinks method: No links to delete!");
         }
     }
 
@@ -498,9 +498,9 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     public void saveLinks() throws Exception {
         if (isElementLoaded(saveAddLinkBtn,10)){
             click(saveAddLinkBtn);
-            SimpleUtils.pass("save button has been clicked successfully!");
+            SimpleUtils.pass("Helpful Links Widget: Save button has been clicked successfully!");
         } else {
-            SimpleUtils.fail("save button fail to load!",true);
+            SimpleUtils.fail("Helpful Links Widget: Save button fail to load!",true);
         }
     }
 
@@ -508,9 +508,9 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     public void cancelLinks() throws Exception {
         if (isElementLoaded(cancelAddLinkBtn,10)){
             click(cancelAddLinkBtn);
-            SimpleUtils.pass("cancel button has been clicked successfully!");
+            SimpleUtils.pass("Helpful Links Widget: Cancel button has been clicked successfully!");
         } else {
-            SimpleUtils.fail("cancel button fail to load!",true);
+            SimpleUtils.fail("Helpful Links Widget: Cancel button fail to load!",true);
         }
     }
 
@@ -520,11 +520,11 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         if (areListElementVisible(linksOnWidget,10)){
             for (WebElement e: linksOnWidget){
                 moveToElementAndClick(e);
-                SimpleUtils.pass("new tab open: "+getDriver().getWindowHandle());
+                SimpleUtils.pass("Helpful Links Widget: New tab open: "+getDriver().getWindowHandle());
                 getDriver().switchTo().window(handle);
             }
         } else {
-            SimpleUtils.fail("verifyLinks: there is no links to click!",true);
+            SimpleUtils.fail("Helpful Links Widget: verifyLinks method: there is no links to click!",true);
         }
     }
 
@@ -534,12 +534,12 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             for (WebElement widgetTemp : widgetsInDashboardPage){
                 if(widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("helpful links")){
                     if (widgetTemp.findElement(By.cssSelector("div[ng-if=\"linkText\"]")).getAttribute("class").contains("nodata")){
-                        SimpleUtils.pass("No links, message: "+widgetTemp.findElement(By.cssSelector("div[ng-if=\"linkText\"] h1")).getText());
+                        SimpleUtils.pass("Helpful Links Widget: No links, message: "+widgetTemp.findElement(By.cssSelector("div[ng-if=\"linkText\"] h1")).getText());
                     }
                 }
             }
         } else {
-            SimpleUtils.fail("Widgets in Dashboard page fail to load!",true);
+            SimpleUtils.fail("Helpful Links Widget: Widgets in Dashboard page fail to load!",true);
         }
     }
 
@@ -623,14 +623,14 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                 waitForSeconds(3);
                 if(widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("forecast")){
                     if (isElementLoaded(widgetTemp.findElement(By.cssSelector("#curvedGraphDiv")),10)){
-                        SimpleUtils.pass("there is a graph on today's forecast widget.");
+                        SimpleUtils.pass("Today's Forecast widget: There is a graph on today's forecast widget.");
                     } else {
-                        SimpleUtils.fail("there is no graph on today's widget.",true);
+                        SimpleUtils.fail("Today's Forecast widget: There is no graph on today's widget.",true);
                     }
                 }
             }
         } else {
-            SimpleUtils.fail("Widgets in Dashboard page fail to load!",true);
+            SimpleUtils.fail("Today's Forecast widget: Widgets in Dashboard page fail to load!",true);
         }
     }
 
@@ -640,11 +640,16 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         if (isElementLoaded(dataOnTodayForecast,10)){
             String tempData = dataOnTodayForecast.getText();
             String[] dataString = dataOnTodayForecast.getText().split("\n");
-            resultData.put("demand forecast",Float.valueOf(dataString[0].replaceAll("Shoppers","")));
-            resultData.put("budget",Float.valueOf(dataString[2].replaceAll("Hrs","")));
-            resultData.put("scheduled",Float.valueOf(dataString[4].replaceAll("Hrs","")));
+            if (dataString.length>4){
+                resultData.put("demand forecast",Float.valueOf(dataString[0].replaceAll("Shoppers","")));
+                resultData.put("budget",Float.valueOf(dataString[2].replaceAll("Hrs","")));
+                resultData.put("scheduled",Float.valueOf(dataString[4].replaceAll("Hrs","")));
+            } else {
+                SimpleUtils.fail("Today's Forecast widget: Values doesn't display as expected!", false);
+            }
+
         } else {
-            SimpleUtils.fail("getDataOnTodayForecast: No data on widget!",false);
+            SimpleUtils.fail("Today's Forecast widget: getDataOnTodayForecast method: No data on widget!",false);
         }
         return resultData;
     }
@@ -659,12 +664,12 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                 resultList.add(Arrays.toString(temp2));
             }
         } else {
-            SimpleUtils.fail("data on schedules widget fail to load!",true);
+            SimpleUtils.fail("Data on schedules widget fail to load!",true);
         }
         if (resultList.size()<=4){
-            SimpleUtils.pass("there are 4 week info on Schedules widget!");
+            SimpleUtils.pass("There are 4 week info on Schedules widget!");
         } else {
-            SimpleUtils.fail("there are more than 4 week on Schedule widget which is not expected!",true);
+            SimpleUtils.fail("There are more than 4 week on Schedule widget which is not expected!",true);
         }
         return resultList;
     }
@@ -839,13 +844,12 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @Override
     public int getApprovalRateOnTARWidget() throws Exception {
         int approvalRate = 0;
+        //TAR: timesheet Aproval Rate
         if (areListElementVisible(textOnTARWidget,5)){
             for (WebElement e : textOnTARWidget){
                 waitForSeconds(2);
                 if (e.getText().contains("%") && e.getText()!=null && e.getText()!=""){
-                    if (e.getText().toLowerCase().contains("timesheet")){
-                        //do nothing
-                    } else {
+                    if (!e.getText().toLowerCase().contains("timesheet")){
                         //get value
                         approvalRate += Integer.valueOf(e.getText().substring(0,e.getText().indexOf("%")));
                     }

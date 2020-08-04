@@ -59,7 +59,7 @@ public class LiquidDashboardTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify UI for common widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyCommonUIOfwidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
+    public void verifyCommonUIOfWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
@@ -534,17 +534,17 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.enterEditMode();
         liquidDashboardPage.switchOnWidget(widgetType.Helpful_Links.getValue());
         //verify there are 5 link at most
-        liquidDashboardPage.verifyEditLinkOfHelpgulLinks();
+        liquidDashboardPage.verifyEditLinkOfHelpfulLinks();
         liquidDashboardPage.deleteAllLinks();
         liquidDashboardPage.saveLinks();
         liquidDashboardPage.verifyNoLinksOnHelpfulLinks();
-        liquidDashboardPage.verifyEditLinkOfHelpgulLinks();
+        liquidDashboardPage.verifyEditLinkOfHelpfulLinks();
         liquidDashboardPage.deleteAllLinks();
         for (int i=0;i<6;i++){ //the 6th is to verify no add link button
             liquidDashboardPage.addLinkOfHelpfulLinks();
         }
         liquidDashboardPage.saveLinks();
-        liquidDashboardPage.verifyEditLinkOfHelpgulLinks();
+        liquidDashboardPage.verifyEditLinkOfHelpfulLinks();
         liquidDashboardPage.cancelLinks();
         liquidDashboardPage.saveAndExitEditMode();
         //verify links
@@ -554,13 +554,13 @@ public class LiquidDashboardTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify today's forecast widget")
+    @TestName(description = "Verify Today's Forecast widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTodayForecastWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-        // Verifiy Edit mode Dashboard loaded
+        // Verify Edit mode Dashboard loaded
         liquidDashboardPage.enterEditMode();
         liquidDashboardPage.switchOnWidget(widgetType.Todays_Forecast.getValue());
         liquidDashboardPage.saveAndExitEditMode();
@@ -578,17 +578,17 @@ public class LiquidDashboardTest extends TestBase {
         if (dataOnWidget.get("demand forecast") <= insightDataFromForecastPage.get("totalShoppers") && dataOnWidget.get("demand forecast") >= insightDataFromForecastPage.get("totalShoppers")){
             SimpleUtils.pass("Demand Forecast number is correct!");
         } else {
-            SimpleUtils.fail("Demand Forecast number is not correct!",true);
+            SimpleUtils.fail("today's forecast widget: Demand Forecast number is not correct!",true);
         }
         if (dataOnWidget.get("budget") >= dataFromSchedule.get("budgetedHours")&&dataOnWidget.get("budget") <= dataFromSchedule.get("budgetedHours")){
             SimpleUtils.pass("budget number is correct!");
         } else {
-            SimpleUtils.fail("budget number is not correct!",true);
+            SimpleUtils.fail("today's forecast widget: budget number is not correct!",true);
         }
         if (dataOnWidget.get("scheduled") <= dataFromSchedule.get("scheduledHours")&&dataOnWidget.get("scheduled") >= dataFromSchedule.get("scheduledHours")){
             SimpleUtils.pass("scheduledHours number is correct!");
         } else {
-            SimpleUtils.fail("scheduledHours number is not correct!",true);
+            SimpleUtils.fail("today's forecast widget: scheduledHours number is not correct!",true);
         }
     }
 
@@ -601,7 +601,7 @@ public class LiquidDashboardTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-        // Verifiy Edit mode Dashboard loaded
+        // Verify Edit mode Dashboard loaded
         liquidDashboardPage.enterEditMode();
         liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
         liquidDashboardPage.saveAndExitEditMode();
@@ -617,13 +617,13 @@ public class LiquidDashboardTest extends TestBase {
                 falg = resultListInOverview.get(i).equals(resultListOnWidget.get(i));
             }
             if (falg){
-                SimpleUtils.pass("Values on widget are consistent with the one in overview");
+                SimpleUtils.pass("Schedules widget: Values on widget are consistent with the one in overview");
             } else {
-                SimpleUtils.fail("Values on widget are not consistent with the one in overview!",true);
+                SimpleUtils.fail("Schedules widget: Values on widget are not consistent with the one in overview!",true);
             }
 
         } else {
-            SimpleUtils.fail("something wrong with the number of week displayed!",true);
+            SimpleUtils.fail("Schedules widget: something wrong with the number of week displayed!",true);
         }
     }
 
@@ -946,7 +946,7 @@ public class LiquidDashboardTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-        // Verifiy Edit mode Dashboard loaded
+        // Verify Edit mode Dashboard loaded
         liquidDashboardPage.enterEditMode();
         liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
         liquidDashboardPage.switchOnWidget(widgetType.Compliance_Violation.getValue());
@@ -957,11 +957,20 @@ public class LiquidDashboardTest extends TestBase {
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         //gp to schedule, get week info of current week, last week and next week.
         liquidDashboardPage.clickFirstWeekOnSchedulesGoToSchedule();
-        String startDayOfLastWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+        String startDayOfLastWeek = "";
+        if (schedulePage.getActiveWeekText().split("-").length>1){
+            startDayOfLastWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+        }
         schedulePage.navigateToNextWeek();
-        String startDayOfCurrentWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+        String startDayOfCurrentWeek = "";
+        if (schedulePage.getActiveWeekText().split("-").length>1){
+            startDayOfCurrentWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+        }
         schedulePage.navigateToNextWeek();
-        String startDayOfNextWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+        String startDayOfNextWeek = "";
+        if (schedulePage.getActiveWeekText().split("-").length>1){
+            startDayOfNextWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+        }
 
         //go back to dashboard to verify week info on widget is consistent with the ones in schedule.
         dashboardPage.navigateToDashboard();
@@ -992,19 +1001,19 @@ public class LiquidDashboardTest extends TestBase {
                 falg = resultListInCompliancePage.get(i).equals(resultListOnWidget.get(i));
             }
             if (falg){
-                SimpleUtils.pass("Values on widget are consistent with the ones in compliance page");
+                SimpleUtils.pass("compliance violation widget: Values on widget are consistent with the ones in compliance page");
             } else {
-                SimpleUtils.fail("Values on widget are not consistent with the ones in compliance page!",true);
+                SimpleUtils.fail("compliance violation widget: Values on widget are not consistent with the ones in compliance page!",true);
             }
 
         } else {
-            SimpleUtils.fail("something wrong with the number of compliance violation displayed!",true);
+            SimpleUtils.fail("compliance violation widget: something wrong with the number of compliance violation displayed!",true);
         }
     }
 
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify Helpful Links widget")
+    @TestName(description = "Verify Timesheet Approval Rate widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTimesheetApprovalRateWidgetAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1015,13 +1024,13 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Rate.getValue());
         liquidDashboardPage.saveAndExitEditMode();
         //verify view timesheets link
-        //approvalRateOnWidget is a smmary number of the 3 values on this widget.
+        //approvalRateOnWidget is a summary number of the 3 values on this widget.
         int approvalRateOnWidget = liquidDashboardPage.getApprovalRateOnTARWidget();
         liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Timesheet_Approval_Rate.getValue(),linkNames.View_TimeSheets.getValue());
         TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
-        SimpleUtils.assertOnFail("timesheet page fail to load!", timeSheetPage.isTimeSheetPageLoaded(),false);
+        SimpleUtils.assertOnFail("Timesheet Approval Rate widget: timesheet page fail to load!", timeSheetPage.isTimeSheetPageLoaded(),false);
         //approvalRateOnTimesheet is a total approval rate number on smart card in timesheet page.
         int approvalRateOnTimesheet = timeSheetPage.getApprovalRateFromTimesheetByLocation(location);
-        SimpleUtils.assertOnFail("values are not consistent!",approvalRateOnTimesheet==approvalRateOnWidget,true);
+        SimpleUtils.assertOnFail("Timesheet Approval Rate widget: values on timesheet approval rate widget and those in timesheet page are not consistent!",approvalRateOnTimesheet==approvalRateOnWidget,true);
     }
 }
