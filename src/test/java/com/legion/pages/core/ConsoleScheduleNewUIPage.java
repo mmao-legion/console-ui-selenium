@@ -5317,7 +5317,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 click(printButtonInPrintLayout);
             }
         }else{
-            SimpleUtils.fail("there is no print button",true);
+            SimpleUtils.fail("There is no print button",false);
         }
     }
 
