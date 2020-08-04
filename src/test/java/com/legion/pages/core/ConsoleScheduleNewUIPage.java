@@ -3399,8 +3399,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     }
                     if (isElementLoaded(nextButtonOnCreateSchedule) && nextButtonOnCreateSchedule.getText().equals(finish)) {
                         clickTheElement(nextButtonOnCreateSchedule);
-                        waitForSeconds(5);
-                        if (areListElementVisible(shiftsWeekView, 10) && shiftsWeekView.size() > 0) {
+                        waitForSeconds(6);
+                        if (areListElementVisible(shiftsWeekView, 15) && shiftsWeekView.size() > 0) {
                             SimpleUtils.pass("Create the schedule successfully!");
                         }else {
                             SimpleUtils.fail("Not able to generate the schedule successfully for non dg flow!", false);

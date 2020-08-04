@@ -361,6 +361,59 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     private WebElement swapData;
     @FindBy(css = "[ng-if*=\"requestForCoverdata\"]")
     private WebElement coverData;
+    @FindBy(className = "shift-offer")
+    private List<WebElement> shiftOffers;
+
+    @Override
+    public void verifyTheContentOfSwapNCoverWidget(String swapOrCover) throws Exception {
+        String unClaimedColor = "rgb(169, 169, 169)";
+        String claimedColor = "rgb(129, 194, 196)";
+        boolean isConsistent = false;
+        if (areListElementVisible(shiftOffers, 5)) {
+            for (WebElement shiftOffer : shiftOffers) {
+                try {
+                    WebElement pieChart = shiftOffer.findElement(By.className("widgetPieChart"));
+                    WebElement legendLabel = shiftOffer.findElement(By.className("ana-kpi-legend-text-label"));
+                    List<WebElement> percentages = shiftOffer.findElements(By.className("ana-kpi-legend-text"));
+                    if (pieChart != null && legendLabel != null && legendLabel.getText().contains(swapOrCover) && percentages != null
+                    && percentages.size() == 2) {
+                        WebElement path = pieChart.findElement(By.tagName("path"));
+                        WebElement text = pieChart.findElement(By.tagName("text"));
+                        if (path != null && text != null) {
+                            String pieChartColor = path.getAttribute("style");
+                            if (percentages.get(0).getText().contains("(") && percentages.get(0).getText().contains(")") &&
+                                    percentages.get(1).getText().contains("(") && percentages.get(1).getText().contains(")")) {
+                                int unclaimedPercentage = Integer.parseInt(percentages.get(0).getText().substring(percentages.get(0).getText().indexOf("(") + 1,
+                                        percentages.get(0).getText().indexOf(")") - 1).trim());
+                                int claimedPercentage = Integer.parseInt(percentages.get(1).getText().substring(percentages.get(1).getText().indexOf("(") + 1,
+                                        percentages.get(1).getText().indexOf(")") -1 ).trim());
+                                int count = Integer.parseInt(legendLabel.getText().substring(0, 1));
+                                int countInPieChart = Integer.parseInt(text.getText());
+                                if (count == countInPieChart) {
+                                    SimpleUtils.pass("Swaps & Covers Widget: the count of " + swapOrCover + " is: " + count);
+                                    if (unclaimedPercentage == 100 && pieChartColor.contains(unClaimedColor)) {
+                                        SimpleUtils.pass("Swaps & Covers Widget: Verified the pie chart color of Unclaim is correct");
+                                        isConsistent = true;
+                                        break;
+                                    }
+                                    if (claimedPercentage == 100 && pieChartColor.contains(claimedColor)) {
+                                        SimpleUtils.pass("Swaps & Covers Widget: Verified the pie chart color of claim is correct");
+                                        isConsistent = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }catch (Exception e) {
+                    continue;
+                }
+            }
+        }
+        if (!isConsistent) {
+            SimpleUtils.fail("Swaps & Covers Widget: The content on this widget is incorrect!", false);
+        }
+    }
 
     @Override
     public void verifyNoContentOfSwapsNCoversWidget() throws Exception {

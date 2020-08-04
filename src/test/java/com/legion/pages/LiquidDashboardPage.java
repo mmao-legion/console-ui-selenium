@@ -45,4 +45,5 @@ public interface LiquidDashboardPage {
     public List<String> getDataInCompliancePage(String location) throws Exception;
     public void verifyNoContentOfSwapsNCoversWidget() throws Exception;
     public int getApprovalRateOnTARWidget() throws Exception;
+    public void verifyTheContentOfSwapNCoverWidget(String swapOrCover) throws Exception;
 }
