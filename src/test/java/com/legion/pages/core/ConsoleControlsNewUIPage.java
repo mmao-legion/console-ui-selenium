@@ -3067,6 +3067,32 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 	}
 
+	//added by Estelle for update one user's location info
+	@FindBy(css = "lg-button[label=\"Manage\"]")
+	private WebElement managerLocationBtn;
+	@FindBy(css = "[modal-title=\"Manage Locations\"]")
+	private WebElement managerLocationPopUpTitle;
+
+	@Override
+	public void verifyUpdateUserAndRolesOneUserLocationInfo(String userFirstName) throws Exception {
+		searchUserByFirstName(userFirstName);
+		Thread.sleep(2000);
+		if (usersAndRolesAllUsersRows.size() > 0) {
+			List<WebElement> userDetailsLinks = usersAndRolesAllUsersRows.get(0).findElements(By.cssSelector("button[type='button']"));
+			if (userDetailsLinks.size() > 0) {
+				click(userDetailsLinks.get(0));
+				if (isElementLoaded(userAndRolesEditUserBtn)) {
+					click(userAndRolesEditUserBtn);
+					if (isElementLoaded(editUserPageFormSection)) {
+						click(managerLocationBtn);
+						if (isElementLoaded(managerLocationPopUpTitle,5)) {
+
+						}
+					}
+				}
+			}
+		}
+	}
 
 	@FindBy(css = "sub-content-box[box-title=\"Badges\"]")
 	private WebElement editUserPageManageBadgeSection;
@@ -4944,5 +4970,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Is manager approval required when an employee changes availability?  section not loaded.", false);
 
 		}
+
 	}
 }

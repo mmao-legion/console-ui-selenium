@@ -34,7 +34,7 @@ public class LocationsTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
-    @Enterprise(name = "LegionCoffee")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to create location with mandatory fields")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateLocationWithMandatoryFields(String browser, String username, String password, String location) throws Exception {
