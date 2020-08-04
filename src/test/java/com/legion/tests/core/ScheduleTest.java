@@ -681,6 +681,7 @@ public class ScheduleTest extends TestBase{
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		schedulePage.deleteTMShiftInWeekView(swapNames.get(0));
 		schedulePage.deleteTMShiftInWeekView(swapNames.get(1));
+		schedulePage.deleteTMShiftInWeekView("Unassigned");
 		schedulePage.saveSchedule();
 		// Add the new shifts for swap team members
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -846,6 +847,7 @@ public class ScheduleTest extends TestBase{
 		}
 		schedulePage.createScheduleForNonDGFlowNewUI();
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.deleteTMShiftInWeekView("Unassigned");
 		schedulePage.clickOnDayViewAddNewShiftButton();
 		schedulePage.customizeNewShiftPage();
 		schedulePage.selectWorkRole("Event Manager");
@@ -1147,6 +1149,7 @@ public class ScheduleTest extends TestBase{
 		}
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		schedulePage.deleteTMShiftInWeekView(tmName);
+		schedulePage.deleteTMShiftInWeekView("Unassigned");
 		schedulePage.saveSchedule();
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		schedulePage.clickOnDayViewAddNewShiftButton();
