@@ -303,7 +303,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	public void clickOnProfileIconOnDashboard() throws Exception {
 		if(isElementEnabled(iconProfile,5)){
-			click(iconProfile);
+			clickTheElement(iconProfile);
 			SimpleUtils.pass("Able to click on profile icon Successfully!!");
 		}else{
 			SimpleUtils.fail("Profile icon is not clickable",false);
@@ -865,7 +865,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 					clickTheElement(e);
 					if (isElementLoaded(alertDialog, 5))
 						click(OKButton);
-					else click(companyIconImg);
+					else clickTheElement(companyIconImg);
 					SimpleUtils.pass("Able to click on '"+ subMenu+"' link Successfully!!");
 					break;
 				}

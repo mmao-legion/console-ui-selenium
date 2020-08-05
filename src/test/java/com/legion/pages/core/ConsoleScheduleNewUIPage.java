@@ -841,7 +841,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (consoleNavigationMenuItems.size() != 0) {
             WebElement consoleScheduleMenuElement = SimpleUtils.getSubTabElement(consoleNavigationMenuItems, consoleScheduleMenuItemText);
             activeConsoleName = analyticsConsoleName.getText();
-            click(consoleScheduleMenuElement);
+            clickTheElement(consoleScheduleMenuElement);
             SimpleUtils.pass("'Schedule' Console Menu Loaded Successfully!");
         } else {
             SimpleUtils.fail("'Schedule' Console Menu Items Not Loaded Successfully!", false);
@@ -3367,16 +3367,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String subTitle1 = "Confirm Operating Hours";
         String subTitle2 = "Enter Budget";
         String finish = "FINISH";
-        if (isElementEnabled(generateSheduleButton,10)) {
-            click(generateSheduleButton);
+        if (isElementLoaded(generateSheduleButton,10)) {
+            moveToElementAndClick(generateSheduleButton);
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 5) && subTitle1.equalsIgnoreCase(generateModalTitle.getText().trim())
             && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
                 editTheOperatingHours();
+                waitForSeconds(1);
                 clickTheElement(nextButtonOnCreateSchedule);
                 if (isElementLoaded(generateModalTitle, 5) && subTitle2.equalsIgnoreCase(generateModalTitle.getText().trim())
                         && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
                     editTheBudgetForNondgFlow();
+                    waitForSeconds(1);
                     clickTheElement(nextButtonOnCreateSchedule);
                 }
                 if (areListElementVisible(availableCopyWeeks, 5)) {
@@ -8696,7 +8698,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         Float totalDayWorkTime = 0.0f;
         if (areListElementVisible(scheduleTableWeekViewWorkerDetail,5) ) {
             for (int i = 0; i <scheduleTableWeekViewWorkerDetail.size() ; i++) {
-                    click(scheduleInfoIconInDayView.get(i));
+                    clickTheElement(scheduleInfoIconInDayView.get(i));
                     String[] timeDurationForTMContext = workHoursInDayViewFromPopUp.getText().split(" ");
                      float shiftSizeInHour = Float.valueOf(timeDurationForTMContext[0]);
                     totalDayWorkTime = totalDayWorkTime+shiftSizeInHour;
@@ -9268,7 +9270,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20)) {
             if (hoverIcons.size() != 0) {
                 int randomIndex = (new Random()).nextInt(hoverIcons.size());
-                click(hoverIcons.get(randomIndex));
+                clickTheElement(hoverIcons.get(randomIndex));
                 if (isElementLoaded(popOverContent, 5)) {
                     SimpleUtils.pass("My Schedule Page: Info icon is clickable successfully");
                     List<WebElement> hoverSubContainers = popOverContent.findElements(By.className("hover-sub-container"));

@@ -2161,7 +2161,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		if (areListElementVisible(profileSubPageLabels, 5)) {
 			for (WebElement label : profileSubPageLabels) {
 				if (label.getText().equals(profilePageSubSectionLabel)) {
-					click(label);
+					clickTheElement(label);
 					break;
 				}
 			}
@@ -2363,7 +2363,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					int index = (new Random()).nextInt(availabilitySlider.findElements(By.tagName("li")).size());
 					String value = availabilitySlider.findElements(By.tagName("li")).get(index).findElement(By.tagName("span")) == null ? "" : availabilitySlider.findElements(By.tagName("li")).get(index).findElement(By.tagName("span")).getText();
 					if (!startValue.equals(value) && !endValue.equals(value)) {
-						click(availabilitySlider.findElements(By.tagName("li")).get(index));
+						clickTheElement(availabilitySlider.findElements(By.tagName("li")).get(index));
 						startValue = minSlider.getAttribute("aria-valuenow");
 						endValue = maxSlider.getAttribute("aria-valuenow");
 						if (Integer.parseInt(endValue) > Integer.parseInt(maxValue)) {

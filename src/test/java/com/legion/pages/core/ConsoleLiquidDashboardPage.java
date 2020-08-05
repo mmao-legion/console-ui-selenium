@@ -624,6 +624,12 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                 currentWeek = currentWeekOnSchedules.getText().split("—")[0];
                 if (currentWeek.endsWith("\n")) {
                     currentWeek = currentWeek.substring(0, currentWeek.length() - 1);
+                    if (currentWeek.contains(" ")) {
+                        String[] tempItems = currentWeek.split(" ");
+                        if (tempItems.length == 2) {
+                            currentWeek = tempItems[0] + " " + Integer.parseInt(tempItems[1]);
+                        }
+                    }
                 }
             }
         }
