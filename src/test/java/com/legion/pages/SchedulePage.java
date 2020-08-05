@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cucumber.api.java.hu.Ha;
 import org.openqa.selenium.WebElement;
 
 public interface SchedulePage {
@@ -419,4 +420,9 @@ public interface SchedulePage {
 	public void addOpenShiftWithLastDay(String workRole) throws Exception;
 	public void deleteOpenShiftWithLastDay() throws Exception;
 	public void addManualShiftWithLastDay(String workRole, String tmName) throws Exception;
+	public HashMap<String, String> getTheHoursNTheCountOfTMsForEachWeekDays() throws Exception;
+	public HashMap<String, List<String>> getTheContentOfShiftsForEachWeekDay() throws Exception;
+	public HashMap<String, String> getBudgetNScheduledHoursFromSmartCard() throws Exception;
+	public int getComplianceShiftCountFromSmartCard(String cardName) throws Exception;
+	public void createScheduleByCopyFromOtherWeek(String weekInfo) throws Exception;
 }

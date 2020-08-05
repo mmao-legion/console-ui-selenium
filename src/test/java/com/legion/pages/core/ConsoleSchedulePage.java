@@ -2745,4 +2745,29 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void addManualShiftWithLastDay(String workRole, String tmName) throws Exception {
 
     }
+
+    @Override
+    public HashMap<String, String> getTheHoursNTheCountOfTMsForEachWeekDays() throws Exception {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, List<String>> getTheContentOfShiftsForEachWeekDay() throws Exception {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, String> getBudgetNScheduledHoursFromSmartCard() throws Exception {
+        return null;
+    }
+
+    @Override
+    public int getComplianceShiftCountFromSmartCard(String cardName) throws Exception {
+        return 0;
+    }
+
+    @Override
+    public void createScheduleByCopyFromOtherWeek(String weekInfo) throws Exception {
+
+    }
 }

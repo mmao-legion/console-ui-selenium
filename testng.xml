@@ -118,6 +118,7 @@
                     <include name="verifyProfilePictureFunctionalityAsTeamMember" />
                     <include name="verifyInfoIconFunctionalityAsTeamMember" />
                     <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
+                    <include name="verifyTheContentOfCopyScheduleForNonDGFlowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

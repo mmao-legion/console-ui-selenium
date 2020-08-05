@@ -37,6 +37,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.testng.Assert;
 
+import javax.print.DocFlavor;
 import java.awt.*;
 import java.lang.reflect.Method;
 import java.net.SocketImpl;
@@ -3361,56 +3362,192 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement editBudgetBtn;
     @FindBy (css = "generate-modal-budget-step [ng-repeat=\"r in summary.staffingGuidance.roleHours\"]")
     private List<WebElement> roleHoursRows;
+    @FindBy (className = "sch-calendar-day-dimension")
+    private List<WebElement> weekDayDimensions;
+    @FindBy (css = "tbody tr")
+    private List<WebElement> smartCardRows;
+    @FindBy (css = ".generate-modal-week")
+    private List<WebElement> createModalWeeks;
 
     @Override
-    public void createScheduleForNonDGFlowNewUI() throws Exception {
-        String subTitle1 = "Confirm Operating Hours";
-        String subTitle2 = "Enter Budget";
-        String finish = "FINISH";
+    public void createScheduleByCopyFromOtherWeek(String weekInfo) throws Exception {
+        String subTitle = "Confirm Operating Hours";
+        waitForSeconds(2);
         if (isElementLoaded(generateSheduleButton,10)) {
-            moveToElementAndClick(generateSheduleButton);
-            openBudgetPopUp();
-            if (isElementLoaded(generateModalTitle, 5) && subTitle1.equalsIgnoreCase(generateModalTitle.getText().trim())
-            && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
+            clickTheElement(generateSheduleButton);
+            if (isElementLoaded(generateModalTitle, 10) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
+                    && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
                 editTheOperatingHours();
                 waitForSeconds(1);
                 clickTheElement(nextButtonOnCreateSchedule);
-                if (isElementLoaded(generateModalTitle, 5) && subTitle2.equalsIgnoreCase(generateModalTitle.getText().trim())
-                        && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
-                    editTheBudgetForNondgFlow();
-                    waitForSeconds(1);
-                    clickTheElement(nextButtonOnCreateSchedule);
-                }
-                if (areListElementVisible(availableCopyWeeks, 5)) {
-                    SimpleUtils.pass("Copy Schedule page loaded Successfully!");
-                    // Wait for 7 seconds to make sure that SUGGESTED SCHEDULE is loaded
-                    waitForSeconds(7);
-                    for (WebElement copyWeek : availableCopyWeeks) {
-                        WebElement scheduledHours = copyWeek.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
+                checkEnterBudgetWindowLoadedForNonDG();
+                selectWhichWeekToCopyFrom(weekInfo);
+                clickOnFinishButtonOnCreateSchedulePage();
+            } else {
+                SimpleUtils.fail("Not able to generate schedule Successfully!", false);
+            }
+        }else {
+            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+        }
+    }
+
+    public void selectWhichWeekToCopyFrom(String weekInfo) throws Exception {
+        if (areListElementVisible(createModalWeeks, 10)) {
+            SimpleUtils.pass("Copy Schedule page loaded Successfully!");
+            // Wait for 8 seconds to make sure that SUGGESTED SCHEDULE is loaded
+            waitForSeconds(8);
+            for (WebElement createModalWeek : createModalWeeks) {
+                WebElement weekName = createModalWeek.findElement(By.className("generate-modal-week-name"));
+                if (weekName != null && weekName.getText().toLowerCase().contains(weekInfo.toLowerCase())) {
+                    WebElement weekContainer = createModalWeek.findElement(By.className("generate-modal-week-container"));
+                    if (weekContainer != null) {
+                        WebElement scheduledHours = weekContainer.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
                         if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
-                            if (!copyWeek.getAttribute("class").contains("selected")) {
-                                click(copyWeek);
-                                SimpleUtils.pass("Selected the week with scheduled hour: " + scheduledHours.getText() + " Successfully!");
-                            }else {
-                                SimpleUtils.pass("Selected 'SUGGESTED SCHEDULE' with scheduled hour: " + scheduledHours.getText() + " Successfully!");
-                            }
+                            clickTheElement(weekContainer);
+                            SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + "with scheduled hour: " + scheduledHours.getText() + " Successfully!");
                             break;
                         }else {
                             SimpleUtils.report("Scheduled Hour not loaded Successfully!");
                         }
                     }
-                    if (isElementLoaded(nextButtonOnCreateSchedule) && nextButtonOnCreateSchedule.getText().equals(finish)) {
-                        clickTheElement(nextButtonOnCreateSchedule);
-                        waitForSeconds(6);
-                        if (areListElementVisible(shiftsWeekView, 15) && shiftsWeekView.size() > 0) {
-                            SimpleUtils.pass("Create the schedule successfully!");
-                        }else {
-                            SimpleUtils.fail("Not able to generate the schedule successfully for non dg flow!", false);
-                        }
-                    }else {
-                        SimpleUtils.fail("'FINISH' button not loaded Successfully!", false);
+                }
+            }
+        } else {
+            SimpleUtils.fail("Create Schedule Non dg: Available Copy weeks not loaded Successfully!", false);
+        }
+    }
+
+    public void checkEnterBudgetWindowLoadedForNonDG() throws Exception {
+        String title = "Enter Budget";
+        if (isElementLoaded(generateModalTitle, 5) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
+                && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
+            editTheBudgetForNondgFlow();
+            waitForSeconds(3);
+            clickTheElement(nextButtonOnCreateSchedule);
+        }
+    }
+
+    public void clickOnFinishButtonOnCreateSchedulePage() throws Exception {
+        String finish = "FINISH";
+        if (isElementLoaded(nextButtonOnCreateSchedule) && nextButtonOnCreateSchedule.getText().equals(finish)) {
+            clickTheElement(nextButtonOnCreateSchedule);
+            waitForSeconds(6);
+            if (areListElementVisible(shiftsWeekView, 15) && shiftsWeekView.size() > 0) {
+                SimpleUtils.pass("Create the schedule successfully!");
+            }else {
+                SimpleUtils.fail("Not able to generate the schedule successfully for non dg flow!", false);
+            }
+        }else {
+            SimpleUtils.fail("'FINISH' button not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public int getComplianceShiftCountFromSmartCard(String cardName) throws Exception {
+        int count = 0;
+        if (areListElementVisible(smartCards, 5)) {
+            for (WebElement smartCard : smartCards) {
+                WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
+                if (title != null && title.getText().trim().equalsIgnoreCase(cardName)) {
+                    WebElement header = smartCard.findElement(By.tagName("h1"));
+                    if (header != null && !header.getText().isEmpty()) {
+                        count = Integer.parseInt(header.getText().trim().substring(0, 1));
+                        SimpleUtils.report("Compliance Card: Get: " + count + " compliance shift(s).");
+                        break;
                     }
                 }
+            }
+        }
+        if (count == 0) {
+            SimpleUtils.fail("Compliance Card: Failed to get the count of the shift(s)!", false);
+        }
+        return count;
+    }
+
+    @Override
+    public HashMap<String, String> getBudgetNScheduledHoursFromSmartCard() throws Exception {
+        HashMap<String, String> budgetNScheduledHours = new HashMap<>();
+        if (areListElementVisible(smartCardRows, 5) && smartCardRows.size() == 3) {
+            List<WebElement> ths = smartCardRows.get(0).findElements(By.tagName("th"));
+            List<WebElement> tds = smartCardRows.get(1).findElements(By.tagName("td"));
+            if (ths != null && tds != null && ths.size() == 4 && tds.size() == 4) {
+                budgetNScheduledHours.put(ths.get(1).getText(), tds.get(1).getText());
+                budgetNScheduledHours.put(ths.get(2).getText(), tds.get(2).getText());
+                SimpleUtils.report("Smart Card: Get the hour: " + tds.get(1).getText() + " for: " + ths.get(1).getText());
+                SimpleUtils.report("Smart Card: Get the hour: " + tds.get(2).getText() + " for: " + ths.get(2).getText());
+            } else {
+                SimpleUtils.fail("Schedule Week View Page: The format of the budget and Scheduled hours' smart card is incorrect!", false);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Week View Page: Budget and Scheduled smart card not loaded Successfully!", false);
+        }
+        return budgetNScheduledHours;
+    }
+
+    @Override
+    public HashMap<String, List<String>> getTheContentOfShiftsForEachWeekDay() throws Exception {
+        HashMap<String, List<String>> shiftsForEachDay = new HashMap<>();
+        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 7) {
+            for (WebElement weekDayDimension : weekDayDimensions) {
+                WebElement weekDay = weekDayDimension.findElement(By.className("sch-calendar-day-label"));
+                List<WebElement> weekShiftWrappers = weekDayDimension.findElements(By.className("week-schedule-shift-wrapper"));
+                List<String> infos = new ArrayList<>();
+                if (weekShiftWrappers != null && weekShiftWrappers.size() > 0) {
+                    for (WebElement weekShiftWrapper : weekShiftWrappers) {
+                        WebElement shiftTime = weekShiftWrapper.findElement(By.className("week-schedule-shift-time"));
+                        WebElement workerName = weekShiftWrapper.findElement(By.className("week-schedule-worker-name"));
+                        WebElement jobTitle = weekShiftWrapper.findElement(By.className("week-schedule-role-name"));
+                        if (weekDay != null && shiftTime != null && workerName != null && jobTitle != null) {
+                            infos.add(shiftTime.getText() + "\n" + workerName.getText() + "\n" + jobTitle.getText());
+                        } else {
+                            SimpleUtils.fail("Schedule Week View Page: Failed to find the week day, shift time, worker name and job title elements!", false);
+                        }
+                    }
+                }
+                shiftsForEachDay.put(weekDay.getText(), infos);
+                SimpleUtils.report("Schedule Week View Page: Get the shifts for week day: " + weekDay.getText() + ", the shifts are: " + infos.toString());
+            }
+        } else {
+            SimpleUtils.fail("Schedule Week View Page: Each week day dimension not loaded Successfully!", false);
+        }
+        return shiftsForEachDay;
+    }
+
+    @Override
+    public HashMap<String, String> getTheHoursNTheCountOfTMsForEachWeekDays() throws Exception {
+        HashMap<String, String> hoursNTeamMembersCount = new HashMap<>();
+        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 7) {
+            for (WebElement weekDayDimension : weekDayDimensions) {
+                WebElement weekDay = weekDayDimension.findElement(By.className("sch-calendar-day-label"));
+                WebElement hoursNCount = weekDayDimension.findElement(By.className("sch-calendar-day-summary"));
+                if (weekDay != null && hoursNCount != null) {
+                    hoursNTeamMembersCount.put(weekDay.getText(), hoursNCount.getText());
+                    SimpleUtils.report("Schedule Week View Page: Get the week day: " + weekDay.getText() + " and the count of hours" +
+                            ", TMs are: " + hoursNCount.getText());
+                } else {
+                    SimpleUtils.fail("Schedule Week View Page: week day, hours and TMs are not loaded Successfully!", false);
+                }
+            }
+        } else {
+            SimpleUtils.fail("Schedule Week View Page: Each week day dimension not loaded Successfully!", false);
+        }
+        return hoursNTeamMembersCount;
+    }
+
+    @Override
+    public void createScheduleForNonDGFlowNewUI() throws Exception {
+        String subTitle = "Confirm Operating Hours";
+        if (isElementLoaded(generateSheduleButton,10)) {
+            moveToElementAndClick(generateSheduleButton);
+            openBudgetPopUp();
+            if (isElementLoaded(generateModalTitle, 5) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
+            && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
+                editTheOperatingHours();
+                waitForSeconds(3);
+                clickTheElement(nextButtonOnCreateSchedule);
+                checkEnterBudgetWindowLoadedForNonDG();
+                selectWhichWeekToCopyFrom("SUGGESTED");
+                clickOnFinishButtonOnCreateSchedulePage();
             }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
                 if (isElementEnabled(checkOutTheScheduleButton, 20)) {

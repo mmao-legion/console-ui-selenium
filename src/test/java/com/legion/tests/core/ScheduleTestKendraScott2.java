@@ -862,5 +862,93 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//T1838622 Verify the availability of claim open shift popup.
 		schedulePage.verifyTheAvailabilityOfClaimOpenShiftPopup();
 	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the content of copy schedule for non dg flow")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheContentOfCopyScheduleForNonDGFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.deleteTMShiftInWeekView("Unassigned");
+		schedulePage.saveSchedule();
+		schedulePage.publishActiveSchedule();
+
+		// Get the hours and the count of the tms for each day, ex: "37.5 Hrs 5TMs"
+		HashMap<String, String> hoursNTMsCountFirstWeek = schedulePage.getTheHoursNTheCountOfTMsForEachWeekDays();
+		HashMap<String, List<String>> shiftsForEachDayFirstWeek = schedulePage.getTheContentOfShiftsForEachWeekDay();
+		HashMap<String, String> budgetNScheduledHoursFirstWeek = schedulePage.getBudgetNScheduledHoursFromSmartCard();
+		String cardName = "COMPLIANCE";
+		boolean isComplianceCardLoadedFirstWeek = schedulePage.isSpecificSmartCardLoaded(cardName);
+		int complianceShiftCountFirstWeek = 0;
+		if (isComplianceCardLoadedFirstWeek) {
+			complianceShiftCountFirstWeek = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+		}
+		String firstWeekInfo = schedulePage.getActiveWeekText();
+		if (firstWeekInfo.length() > 11) {
+			firstWeekInfo = firstWeekInfo.trim().substring(10);
+			if (firstWeekInfo.contains("-")) {
+				String [] temp = firstWeekInfo.split("-");
+				if (temp.length == 2 && temp[0].contains(" ") && temp[1].contains(" ")) {
+					firstWeekInfo = temp[0].trim().split(" ")[0] + " " + (temp[0].trim().split(" ")[1].length() == 1 ? "0" + temp[0].trim().split(" ")[1] : temp[0].trim().split(" ")[1])
+							+ " - " + temp[1].trim().split(" ")[0] + " " + (temp[1].trim().split(" ")[1].length() == 1 ? "0" + temp[1].trim().split(" ")[1] : temp[1].trim().split(" ")[1]);
+				}
+			}
+		}
+
+		schedulePage.navigateToNextWeek();
+		schedulePage.isSchedule();
+		isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleByCopyFromOtherWeek(firstWeekInfo);
+
+		HashMap<String, String> hoursNTMsCountSecondWeek = schedulePage.getTheHoursNTheCountOfTMsForEachWeekDays();
+		HashMap<String, List<String>> shiftsForEachDaySecondWeek = schedulePage.getTheContentOfShiftsForEachWeekDay();
+		HashMap<String, String> budgetNScheduledHoursSecondWeek = schedulePage.getBudgetNScheduledHoursFromSmartCard();
+		boolean isComplianceCardLoadedSecondWeek = schedulePage.isSpecificSmartCardLoaded(cardName);
+		int complianceShiftCountSecondWeek = 0;
+		if (isComplianceCardLoadedFirstWeek) {
+			complianceShiftCountSecondWeek = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+		}
+
+		if (hoursNTMsCountFirstWeek.equals(hoursNTMsCountSecondWeek)) {
+			SimpleUtils.pass("Verified the scheduled hour and TMs of each week day are consistent with the copied schedule!");
+		}else {
+			SimpleUtils.fail("Verified the scheduled hour and TMs of each week day are inconsistent with the copied schedule", true);
+		}
+		if (SimpleUtils.compareHashMapByEntrySet(shiftsForEachDayFirstWeek, shiftsForEachDaySecondWeek)) {
+			SimpleUtils.pass("Verified the shifts of each week day are consistent with the copied schedule!");
+		}else {
+			SimpleUtils.fail("Verified the shifts of each week day are inconsistent with the copied schedule!", true);
+		}
+		if (budgetNScheduledHoursFirstWeek.get("Scheduled").equals(budgetNScheduledHoursSecondWeek.get("Scheduled"))) {
+			SimpleUtils.pass("The Scheduled hour is consistent with the copied scheudle: " + budgetNScheduledHoursFirstWeek.get("Scheduled"));
+		}else {
+			SimpleUtils.fail("The Scheduled hour is inconsistent, the first week is: " + budgetNScheduledHoursFirstWeek.get("Scheduled")
+			+ ", but second week is: " + budgetNScheduledHoursSecondWeek.get("Scheduled"), true);
+		}
+		if ((isComplianceCardLoadedFirstWeek == isComplianceCardLoadedSecondWeek) && (complianceShiftCountFirstWeek == complianceShiftCountSecondWeek)) {
+			SimpleUtils.pass("Verified Compliance is consistent with the copied schedule");
+		}else {
+			SimpleUtils.fail("Verified Compliance is inconsistent with the copied schedule!", true);
+		}
+	}
 }
 
