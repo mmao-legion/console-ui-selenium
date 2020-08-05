@@ -310,6 +310,7 @@ public class LiquidDashboardTest extends TestBase {
             liquidDashboardPage.saveAndExitEditMode();
         }
         if (liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Swaps_Covers.getValue())) {
+            liquidDashboardPage.clickOnCarouselOnWidget(widgetType.Swaps_Covers.getValue(),"right");
             String swapOrCover = "Swap";
             liquidDashboardPage.verifyTheContentOfSwapNCoverWidget(swapOrCover);
         }else {
@@ -319,7 +320,7 @@ public class LiquidDashboardTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate no content of Swaps & Covers section")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyNoContentOfSwapNCoverWidgetAsInternalAdmin(String browser, String username, String password, String location) throws Exception {

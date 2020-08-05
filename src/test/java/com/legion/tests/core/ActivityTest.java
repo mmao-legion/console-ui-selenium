@@ -830,7 +830,7 @@ public class ActivityTest extends TestBase {
         if (!activityPage.isActivityBellIconLoaded()) {
             SimpleUtils.pass("SM Employee view have no access to see Activity Feed successfully");
         } else {
-            SimpleUtils.fail("SM Employee view failed to see Activity Feed",true);
+            SimpleUtils.fail("SM Employee view still able to see Activity Feed",true);
         }
     }
 

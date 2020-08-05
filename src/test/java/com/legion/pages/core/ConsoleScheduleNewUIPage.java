@@ -8554,24 +8554,31 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void deleteTMShiftInWeekView(String teamMemberName) throws Exception {
-        if (areListElementVisible(workerNameList,10) && areListElementVisible(profileIcons, 10) && workerNameList.size() == profileIcons.size()) {
-            for (int i = 0; i <workerNameList.size() ; i++) {
-                if (workerNameList.get(i).getText().toLowerCase().contains(teamMemberName.toLowerCase())) {
-                   click(shiftsWeekView.get(i).findElement(By.cssSelector("[ng-class=\"borderClass()\"]")));
-                    if (isElementLoaded(deleteShift,3)) {
-                        clickTheElement(deleteShift);
-                        if (isElementLoaded(deleteBtnInDeleteWindows,3) ) {
-                            click(deleteBtnInDeleteWindows);
-                            SimpleUtils.pass("existing shift "+i+"delete successfully");
-                        } else
-                        SimpleUtils.fail("delete confirm button load failed",true);
-                    }else
-                        SimpleUtils.fail("delete item for this TM load failed",true);
+        if (areListElementVisible(shiftsWeekView, 15)) {
+            for (WebElement shiftWeekView : shiftsWeekView) {
+                try {
+                    WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
+                    WebElement image = shiftWeekView.findElement(By.className("sch-day-view-shift-worker-detail"));
+                    if (workerName != null && image != null) {
+                        if (workerName.getText().toLowerCase().contains(teamMemberName.toLowerCase())) {
+                            clickTheElement(image);
+                            if (isElementLoaded(deleteShift, 5)) {
+                                clickTheElement(deleteShift);
+                                if (isElementLoaded(deleteBtnInDeleteWindows, 3)) {
+                                    click(deleteBtnInDeleteWindows);
+                                    SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
+                                } else
+                                    SimpleUtils.fail("delete confirm button load failed", false);
+                            } else
+                                SimpleUtils.fail("delete item for this TM load failed", false);
+                        }
+                    }
+                } catch (Exception e) {
+                    continue;
                 }
             }
-
         }else
-            SimpleUtils.fail("shifts load failed or there is no shift in this week",true);
+            SimpleUtils.fail("Schedule Week View: shifts load failed or there is no shift in this week",false);
     }
 
     //added by Estelle for job title filter functionality
