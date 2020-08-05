@@ -198,7 +198,7 @@
         <classes>
             <class name="com.legion.tests.core.LiquidDashboardTest">
                 <methods>
-                    <include name="verifyCommonUIOfwidgetsAsStoreManager" />
+                    <include name="verifyCommonUIOfWidgetsAsStoreManager" />
                     <include name="verifyTheContentOfStartingSoonWidgetAsInternalAdmin" />
                     <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
                     <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
