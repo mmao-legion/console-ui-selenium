@@ -3314,7 +3314,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void generateOrUpdateAndGenerateSchedule() throws Exception {
         if (isElementEnabled(generateSheduleButton,5)) {
-            click(generateSheduleButton);
+            clickTheElement(generateSheduleButton);
             openBudgetPopUp();
 //            openBudgetPopUpGenerateSchedule();
             if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
@@ -9641,4 +9641,41 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         return resultList;
     }
+
+    //Added by Julie
+//    public List<Float> getBudgetForNonDGFlow() throws Exception {
+//        if (isElementLoaded(editBudgetBtn, 5)) {
+//            clickTheElement(editBudgetBtn);
+//            // Cancel and Save buttons are consistent with operating hours
+//            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
+//                SimpleUtils.pass("Create Schedule - Enter Budget: Click on Edit button Successfully!");
+//                if (areListElementVisible(roleHoursRows, 5)) {
+//                    for (WebElement roleHoursRow : roleHoursRows) {
+//                        try {
+//                            WebElement forecastHour = roleHoursRow.findElement(By.cssSelector("td:nth-child(3)"));
+//                            WebElement budgetHour = roleHoursRow.findElement(By.cssSelector("input[type=\"number\"]"));
+//                            if (forecastHour != null && budgetHour != null) {
+//                                String forecastHourString = "";
+//                                if (forecastHour.getText().trim().contains(".")) {
+//                                    forecastHourString = forecastHour.getText().trim().substring(0, forecastHour.getText().trim().indexOf("."));
+//                                }
+//                                budgetHour.clear();
+//                                budgetHour.sendKeys(forecastHourString);
+//                            }
+//                        }catch (Exception e) {
+//                            continue;
+//                        }
+//                    }
+//                    clickTheElement(operatingHoursSaveBtn);
+//                    if (isElementEnabled(editBudgetBtn, 5)) {
+//                        SimpleUtils.pass("Create Schedule: Save the budget hours Successfully!");
+//                    }else {
+//                        SimpleUtils.fail("Create Schedule: Click on Save the budget hours button failed, Next button is not enabled!", false);
+//                    }
+//                }
+//            }
+//        }else {
+//            SimpleUtils.fail("Create Schedule - Enter Budget: Edit button not loaded Successfully!", false);
+//        }
+//    }
 }

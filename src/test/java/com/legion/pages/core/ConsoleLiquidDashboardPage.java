@@ -147,7 +147,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                             SimpleUtils.pass(widget+" widget's already switched off!");
                         } else {
                             scrollToElement(widgets.get(i));
-                            click(widgets.get(i).findElement(By.cssSelector(".slider")));
+                            clickTheElement(widgets.get(i).findElement(By.cssSelector(".slider")));
                             SimpleUtils.pass(widget+" widget's already switched off!");
                         }
                         break;
@@ -260,7 +260,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @Override
     public void saveAndExitEditMode() throws Exception{
         if (isElementLoaded(saveBtn,10)){
-            click(saveBtn);
+            clickTheElement(saveBtn);
             if (isElementLoaded(welcomeText, 15)) {
                 SimpleUtils.pass("Edit Dashboard Page: Click on Save button Successfully!");
             }else {
@@ -619,7 +619,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @Override
     public String getTheStartOfCurrentWeekFromSchedulesWidget() throws Exception {
         String currentWeek = "";
-        if (isElementLoaded(currentWeekOnSchedules, 5)) {
+        if (isElementLoaded(currentWeekOnSchedules, 10)) {
             if (currentWeekOnSchedules.getText().contains("—")) {
                 currentWeek = currentWeekOnSchedules.getText().split("—")[0];
                 if (currentWeek.endsWith("\n")) {
@@ -649,7 +649,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         b. the number of Early Clocks/Incomplete Clocks/No Show/Late Clocks
                 /Missed Meal/Unscheduled
         c. [View Timesheets] button*/
-        if (isElementLoaded(alertsWeek, 5) && alertsWeek.getText().toLowerCase().contains(currentWeek.toLowerCase())) {
+        if (isElementLoaded(alertsWeek, 10) && alertsWeek.getText().toLowerCase().contains(currentWeek.toLowerCase())) {
             SimpleUtils.pass("The week of Alerts is loaded and correct!");
         } else {
             SimpleUtils.fail("The week of \"Alerts\" is not loaded or incorrect!", false);
@@ -736,7 +736,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @Override
     public void clickFirstWeekOnSchedulesGoToSchedule() throws Exception {
         if (areListElementVisible(dataOnSchedules,10)){
-            waitForSeconds(3);
+            waitForSeconds(10);
             moveToElementAndClick(dataOnSchedules.get(0));
         } else {
             SimpleUtils.fail("clickFirstWeekOnSchedulesGoToSchedule: data on schedules widget fail to load!",true);
@@ -917,7 +917,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         }
         return approvalRate;
     }
-    
+
     //Added By Julie
     @FindBy(css = "lg-open-shifts .dms-box-title")
     private WebElement openShiftsTitle;
