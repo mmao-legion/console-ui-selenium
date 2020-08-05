@@ -4657,6 +4657,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void updateSwapAndCoverRequestIsApprovalRequired(String option) throws Exception {
+		waitForSeconds(3);
 		if (isElementLoaded(swapApprovalRequired, 20)) {
 			String selectedValue = swapApprovalRequired.findElement(By.cssSelector("[selected=\"selected\"]")).getText();
 			if (!option.equals(selectedValue)) {

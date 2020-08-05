@@ -975,23 +975,25 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 			for (int i = 0; i < dataInBar.size(); i++) {
 				if (!dataInBar.get(i).isEmpty()) {
-					String totalShoppersInBar = dataInBar.get(i).split(" ")[3];
-					String forecastInBar = dataInBar.get(i).split(" ")[6];
-					if (totalShoppersInBar.contains(",")) {
-						totalShoppersInBar = totalShoppersInBar.replaceAll(",", "");
-					} else totalShoppersInBar = totalShoppersInBar;
-					if (forecastInBar.contains(",")) {
-						forecastInBar = forecastInBar.replaceAll(",", "");
-					} else forecastInBar = forecastInBar;
-					try {
-						totalItemsInbar += Float.valueOf(totalShoppersInBar);
-						if (max <= Float.valueOf(forecastInBar)) {
-							max = Float.valueOf(forecastInBar);
-						} else {
-							max = max;
+					if (dataInBar.get(i).split(" ").length>6){
+						String totalShoppersInBar = dataInBar.get(i).split(" ")[3];
+						String forecastInBar = dataInBar.get(i).split(" ")[6];
+						if (totalShoppersInBar.contains(",")) {
+							totalShoppersInBar = totalShoppersInBar.replaceAll(",", "");
+						} else totalShoppersInBar = totalShoppersInBar;
+						if (forecastInBar.contains(",")) {
+							forecastInBar = forecastInBar.replaceAll(",", "");
+						} else forecastInBar = forecastInBar;
+						try {
+							totalItemsInbar += Float.valueOf(totalShoppersInBar);
+							if (max <= Float.valueOf(forecastInBar)) {
+								max = Float.valueOf(forecastInBar);
+							} else {
+								max = max;
+							}
+						} catch (NumberFormatException e) {
+							e.printStackTrace();
 						}
-					} catch (NumberFormatException e) {
-						e.printStackTrace();
 					}
 				}
 			}

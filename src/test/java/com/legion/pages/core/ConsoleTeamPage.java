@@ -1370,7 +1370,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	public String verifyTheFunctionOfEditBadges() throws Exception {
 		String badges = "BADGES";
 		String badgeID = "";
-		if (isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),5)){
+		if (isElementLoaded(profileSection,5) && isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),5)){
 			click(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
 			SimpleUtils.pass("enter edit profile mode!");
 			waitForSeconds(3);

@@ -13,10 +13,7 @@ import org.openqa.selenium.By;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class LiquidDashboardTest extends TestBase {
     @Override
@@ -62,7 +59,7 @@ public class LiquidDashboardTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify UI for common widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyCommonUIOfwidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
+    public void verifyCommonUIOfWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
@@ -173,6 +170,218 @@ public class LiquidDashboardTest extends TestBase {
         //verify search input
         liquidDashboardPage.enterEditMode();
         liquidDashboardPage.verifySearchInput(widgetType.Helpful_Links.getValue());
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Prepare the data for swap")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void prepareTheSwapShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        List<String> swapNames = new ArrayList<>();
+        String fileName = "UserCredentialsForComparableSwapShifts.json";
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
+            if (!entry.getKey().equals("Cover TM")) {
+                swapNames.add(entry.getKey());
+                SimpleUtils.pass("Get Swap User name:" + entry.getKey());
+            }
+        }
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+
+        schedulePage.navigateToNextWeek();
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated){
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        schedulePage.createScheduleForNonDGFlowNewUI();
+        // Deleting the existing shifts for swap team members
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView(swapNames.get(0));
+        schedulePage.deleteTMShiftInWeekView(swapNames.get(1));
+        schedulePage.deleteTMShiftInWeekView("Unassigned");
+        schedulePage.saveSchedule();
+        // Add the new shifts for swap team members
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.addNewShiftsByNames(swapNames);
+        schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the content of Swaps & Covers section")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheContentOfSwapNCoverWidgetAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        prepareTheSwapShiftsAsInternalAdmin(browser, username, password, location);
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+
+        List<String> swapNames = new ArrayList<>();
+        String fileName = "UserCredentialsForComparableSwapShifts.json";
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
+            if (!entry.getKey().equals("Cover TM")) {
+                swapNames.add(entry.getKey());
+                SimpleUtils.pass("Get Swap User name: " + entry.getKey());
+            }
+        }
+        Object[][] credential = null;
+        credential = userCredentials.get(swapNames.get(0));
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
+                , String.valueOf(credential[0][2]));
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String requestUserName = profileNewUIPage.getNickNameFromProfile();
+        if (dashboardPage.isSwitchToEmployeeViewPresent()) {
+            dashboardPage.clickOnSwitchToEmployeeView();
+        }
+        SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+        schedulePage.isSchedule();
+        schedulePage.navigateToNextWeek();
+
+        // For Swap Feature
+        List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
+        int index = schedulePage.verifyClickOnAnyShift();
+        String request = "Request to Swap Shift";
+        String title = "Find Shifts to Swap";
+        schedulePage.clickTheShiftRequestByName(request);
+        SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
+        schedulePage.verifyComparableShiftsAreLoaded();
+        schedulePage.verifySelectMultipleSwapShifts();
+        // Validate the Submit button feature
+        schedulePage.verifyClickOnNextButtonOnSwap();
+        title = "Submit Swap Request";
+        SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), false);
+        schedulePage.verifyClickOnSubmitButton();
+        // Validate the disappearence of Request to Swap and Request to Cover option
+        schedulePage.clickOnShiftByIndex(index);
+        if (!schedulePage.verifyShiftRequestButtonOnPopup(swapCoverRequsts)) {
+            SimpleUtils.pass("Request to Swap and Request to Cover options are disappear");
+        }else {
+            SimpleUtils.fail("Request to Swap and Request to Cover options are still shown!", false);
+        }
+
+        loginPage.logOut();
+        credential = userCredentials.get(swapNames.get(1));
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
+                , String.valueOf(credential[0][2]));
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        String respondUserName = profileNewUIPage.getNickNameFromProfile();
+        if (dashboardPage.isSwitchToEmployeeViewPresent()) {
+            dashboardPage.clickOnSwitchToEmployeeView();
+        }
+        dashboardPage.goToTodayForNewUI();
+        schedulePage.isSchedule();
+        schedulePage.navigateToNextWeek();
+
+        // Validate that swap request smartcard is available to recipient team member
+        String smartCard = "SWAP REQUESTS";
+        schedulePage.isSmartCardAvailableByLabel(smartCard);
+        // Validate the availability of all swap request shifts in schedule table
+        String linkName = "View All";
+        schedulePage.clickLinkOnSmartCardByName(linkName);
+        schedulePage.verifySwapRequestShiftsLoaded();
+        // Validate that recipient can claim the swap request shift.
+        schedulePage.verifyClickAcceptSwapButton();
+
+        loginPage.logOut();
+
+        loginToLegionAndVerifyIsLoginDone(username, password, location);
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+        if (!liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Swaps_Covers.getValue())) {
+            // Verify Edit mode Dashboard loaded
+            liquidDashboardPage.enterEditMode();
+            //verify switch on Swaps&Covers widget
+            liquidDashboardPage.switchOnWidget(widgetType.Swaps_Covers.getValue());
+            // Exit Edit mode
+            liquidDashboardPage.saveAndExitEditMode();
+        }
+        if (liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Swaps_Covers.getValue())) {
+            liquidDashboardPage.clickOnCarouselOnWidget(widgetType.Swaps_Covers.getValue(),"right");
+            String swapOrCover = "Swap";
+            liquidDashboardPage.verifyTheContentOfSwapNCoverWidget(swapOrCover);
+        }else {
+            SimpleUtils.fail("\"Swaps & Covers\" widget not loaded Successfully!", false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate no content of Swaps & Covers section")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyNoContentOfSwapNCoverWidgetAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated){
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        dashboardPage.navigateToDashboard();
+
+        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+        if (!liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Swaps_Covers.getValue())) {
+            // Verify Edit mode Dashboard loaded
+            liquidDashboardPage.enterEditMode();
+            //verify switch on Swaps&Covers widget
+            liquidDashboardPage.switchOnWidget(widgetType.Swaps_Covers.getValue());
+            // Exit Edit mode
+            liquidDashboardPage.saveAndExitEditMode();
+        }
+        // Make sure that Schedules widget is loaded, we can compare the current week from Schedules widget
+        if (!liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Schedules.getValue())) {
+            // Verify Edit mode Dashboard loaded
+            liquidDashboardPage.enterEditMode();
+            //verify switch on Schedules widget
+            liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
+            // Exit Edit mode
+            liquidDashboardPage.saveAndExitEditMode();
+        }
+        if (liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Swaps_Covers.getValue())) {
+            //verify week info on widget
+            //gp to schedule, get week info of current week, last week and next week.
+            liquidDashboardPage.clickFirstWeekOnSchedulesGoToSchedule();
+            String startDayOfLastWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+            schedulePage.navigateToNextWeek();
+            String startDayOfCurrentWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+            schedulePage.navigateToNextWeek();
+            String startDayOfNextWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+
+            //go back to dashboard to verify week info on widget is consistent with the ones in schedule.
+            dashboardPage.navigateToDashboard();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            liquidDashboardPage.verifyNoContentOfSwapsNCoversWidget();
+
+            liquidDashboardPage.verifyWeekInfoOnWidget(widgetType.Swaps_Covers.getValue(),startDayOfCurrentWeek);
+            //click on carousel to navigate to last week and next week to verify
+            liquidDashboardPage.clickOnCarouselOnWidget(widgetType.Swaps_Covers.getValue(),"left");
+            liquidDashboardPage.verifyWeekInfoOnWidget(widgetType.Swaps_Covers.getValue(),startDayOfLastWeek);
+            liquidDashboardPage.clickOnCarouselOnWidget(widgetType.Swaps_Covers.getValue(),"left");
+            liquidDashboardPage.verifyWeekInfoOnWidget(widgetType.Swaps_Covers.getValue(),startDayOfNextWeek);
+        } else {
+            SimpleUtils.fail("\"Swaps & Covers\" widget not loaded Successfully!", false);
+        }
     }
 
     @Automated(automated ="Automated")
@@ -385,17 +594,17 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.enterEditMode();
         liquidDashboardPage.switchOnWidget(widgetType.Helpful_Links.getValue());
         //verify there are 5 link at most
-        liquidDashboardPage.verifyEditLinkOfHelpgulLinks();
+        liquidDashboardPage.verifyEditLinkOfHelpfulLinks();
         liquidDashboardPage.deleteAllLinks();
         liquidDashboardPage.saveLinks();
         liquidDashboardPage.verifyNoLinksOnHelpfulLinks();
-        liquidDashboardPage.verifyEditLinkOfHelpgulLinks();
+        liquidDashboardPage.verifyEditLinkOfHelpfulLinks();
         liquidDashboardPage.deleteAllLinks();
         for (int i=0;i<6;i++){ //the 6th is to verify no add link button
             liquidDashboardPage.addLinkOfHelpfulLinks();
         }
         liquidDashboardPage.saveLinks();
-        liquidDashboardPage.verifyEditLinkOfHelpgulLinks();
+        liquidDashboardPage.verifyEditLinkOfHelpfulLinks();
         liquidDashboardPage.cancelLinks();
         liquidDashboardPage.saveAndExitEditMode();
         //verify links
@@ -405,13 +614,13 @@ public class LiquidDashboardTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify today's forecast widget")
+    @TestName(description = "Verify Today's Forecast widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTodayForecastWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-        // Verifiy Edit mode Dashboard loaded
+        // Verify Edit mode Dashboard loaded
         liquidDashboardPage.enterEditMode();
         liquidDashboardPage.switchOnWidget(widgetType.Todays_Forecast.getValue());
         liquidDashboardPage.saveAndExitEditMode();
@@ -429,17 +638,17 @@ public class LiquidDashboardTest extends TestBase {
         if (dataOnWidget.get("demand forecast") <= insightDataFromForecastPage.get("totalShoppers") && dataOnWidget.get("demand forecast") >= insightDataFromForecastPage.get("totalShoppers")){
             SimpleUtils.pass("Demand Forecast number is correct!");
         } else {
-            SimpleUtils.fail("Demand Forecast number is not correct!",true);
+            SimpleUtils.fail("today's forecast widget: Demand Forecast number is not correct!",true);
         }
         if (dataOnWidget.get("budget") >= dataFromSchedule.get("budgetedHours")&&dataOnWidget.get("budget") <= dataFromSchedule.get("budgetedHours")){
             SimpleUtils.pass("budget number is correct!");
         } else {
-            SimpleUtils.fail("budget number is not correct!",true);
+            SimpleUtils.fail("today's forecast widget: budget number is not correct!",true);
         }
         if (dataOnWidget.get("scheduled") <= dataFromSchedule.get("scheduledHours")&&dataOnWidget.get("scheduled") >= dataFromSchedule.get("scheduledHours")){
             SimpleUtils.pass("scheduledHours number is correct!");
         } else {
-            SimpleUtils.fail("scheduledHours number is not correct!",true);
+            SimpleUtils.fail("today's forecast widget: scheduledHours number is not correct!",true);
         }
     }
 
@@ -452,7 +661,7 @@ public class LiquidDashboardTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-        // Verifiy Edit mode Dashboard loaded
+        // Verify Edit mode Dashboard loaded
         liquidDashboardPage.enterEditMode();
         liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
         liquidDashboardPage.saveAndExitEditMode();
@@ -468,13 +677,13 @@ public class LiquidDashboardTest extends TestBase {
                 falg = resultListInOverview.get(i).equals(resultListOnWidget.get(i));
             }
             if (falg){
-                SimpleUtils.pass("Values on widget are consistent with the one in overview");
+                SimpleUtils.pass("Schedules widget: Values on widget are consistent with the one in overview");
             } else {
-                SimpleUtils.fail("Values on widget are not consistent with the one in overview!",true);
+                SimpleUtils.fail("Schedules widget: Values on widget are not consistent with the one in overview!",true);
             }
 
         } else {
-            SimpleUtils.fail("something wrong with the number of week displayed!",true);
+            SimpleUtils.fail("Schedules widget: something wrong with the number of week displayed!",true);
         }
     }
 
@@ -800,9 +1009,10 @@ public class LiquidDashboardTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-        // Verifiy Edit mode Dashboard loaded
+        // Verify Edit mode Dashboard loaded
         liquidDashboardPage.enterEditMode();
         liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
+        liquidDashboardPage.switchOnWidget(widgetType.Compliance_Violation.getValue());
         liquidDashboardPage.saveAndExitEditMode();
         //get the values on widget: violations, total hrs, locations.
         List<String> resultListOnWidget = liquidDashboardPage.getDataOnComplianceViolationWidget();
@@ -810,11 +1020,20 @@ public class LiquidDashboardTest extends TestBase {
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         //gp to schedule, get week info of current week, last week and next week.
         liquidDashboardPage.clickFirstWeekOnSchedulesGoToSchedule();
-        String startDayOfLastWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+        String startDayOfLastWeek = "";
+        if (schedulePage.getActiveWeekText().split("-").length>1){
+            startDayOfLastWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+        }
         schedulePage.navigateToNextWeek();
-        String startDayOfCurrentWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+        String startDayOfCurrentWeek = "";
+        if (schedulePage.getActiveWeekText().split("-").length>1){
+            startDayOfCurrentWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+        }
         schedulePage.navigateToNextWeek();
-        String startDayOfNextWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+        String startDayOfNextWeek = "";
+        if (schedulePage.getActiveWeekText().split("-").length>1){
+            startDayOfNextWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+        }
 
         //go back to dashboard to verify week info on widget is consistent with the ones in schedule.
         dashboardPage.navigateToDashboard();
@@ -845,13 +1064,36 @@ public class LiquidDashboardTest extends TestBase {
                 falg = resultListInCompliancePage.get(i).equals(resultListOnWidget.get(i));
             }
             if (falg){
-                SimpleUtils.pass("Values on widget are consistent with the ones in compliance page");
+                SimpleUtils.pass("compliance violation widget: Values on widget are consistent with the ones in compliance page");
             } else {
-                SimpleUtils.fail("Values on widget are not consistent with the ones in compliance page!",true);
+                SimpleUtils.fail("compliance violation widget: Values on widget are not consistent with the ones in compliance page!",true);
             }
 
         } else {
-            SimpleUtils.fail("something wrong with the number of compliance violation displayed!",true);
+            SimpleUtils.fail("compliance violation widget: something wrong with the number of compliance violation displayed!",true);
         }
+    }
+
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Timesheet Approval Rate widget")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTimesheetApprovalRateWidgetAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+        // turn on timesheet approval rate widget.
+        liquidDashboardPage.enterEditMode();
+        liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Rate.getValue());
+        liquidDashboardPage.saveAndExitEditMode();
+        //verify view timesheets link
+        //approvalRateOnWidget is a summary number of the 3 values on this widget.
+        int approvalRateOnWidget = liquidDashboardPage.getApprovalRateOnTARWidget();
+        liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Timesheet_Approval_Rate.getValue(),linkNames.View_TimeSheets.getValue());
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        SimpleUtils.assertOnFail("Timesheet Approval Rate widget: timesheet page fail to load!", timeSheetPage.isTimeSheetPageLoaded(),false);
+        //approvalRateOnTimesheet is a total approval rate number on smart card in timesheet page.
+        int approvalRateOnTimesheet = timeSheetPage.getApprovalRateFromTimesheetByLocation(location);
+        SimpleUtils.assertOnFail("Timesheet Approval Rate widget: values on timesheet approval rate widget and those in timesheet page are not consistent!",approvalRateOnTimesheet==approvalRateOnWidget,true);
     }
 }

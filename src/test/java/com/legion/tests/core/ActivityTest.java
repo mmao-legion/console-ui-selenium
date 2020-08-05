@@ -765,6 +765,7 @@ public class ActivityTest extends TestBase {
         //make update schedule activity to add one open shift
         schedulePage.clickOnDayView();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView("Unassigned");
         // This method is used for the old UI
         //schedulePage.clickNewDayViewShiftButtonLoaded();
         schedulePage.clickOnDayViewAddNewShiftButton();
@@ -829,7 +830,7 @@ public class ActivityTest extends TestBase {
         if (!activityPage.isActivityBellIconLoaded()) {
             SimpleUtils.pass("SM Employee view have no access to see Activity Feed successfully");
         } else {
-            SimpleUtils.warn("SM Employee view have access to see Activity Feed unexpectedly since this bug: https://legiontech.atlassian.net/browse/SF-323");
+            SimpleUtils.warn("SM Employee view still have access to see Activity Feed unexpectedly since this bug: https://legiontech.atlassian.net/browse/SF-323");
         }
     }
 
@@ -1542,6 +1543,7 @@ public class ActivityTest extends TestBase {
         float shiftHoursInWeekForTM = schedulePage.getShiftHoursByTMInWeekView(teamMemberName);
         if (shiftHoursInWeekForTM == 0) {
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.clickOnDayView();
             //schedulePage.clickOnNextDaySchedule();
             schedulePage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
@@ -1560,6 +1562,7 @@ public class ActivityTest extends TestBase {
         } else {
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView(teamMemberName);
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.clickOnDayView();
             schedulePage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
             schedulePage.clickOnDayViewAddNewShiftButton();

@@ -841,7 +841,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (consoleNavigationMenuItems.size() != 0) {
             WebElement consoleScheduleMenuElement = SimpleUtils.getSubTabElement(consoleNavigationMenuItems, consoleScheduleMenuItemText);
             activeConsoleName = analyticsConsoleName.getText();
-            click(consoleScheduleMenuElement);
+            clickTheElement(consoleScheduleMenuElement);
             SimpleUtils.pass("'Schedule' Console Menu Loaded Successfully!");
         } else {
             SimpleUtils.fail("'Schedule' Console Menu Items Not Loaded Successfully!", false);
@@ -3367,16 +3367,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String subTitle1 = "Confirm Operating Hours";
         String subTitle2 = "Enter Budget";
         String finish = "FINISH";
-        if (isElementEnabled(generateSheduleButton,10)) {
-            click(generateSheduleButton);
+        if (isElementLoaded(generateSheduleButton,10)) {
+            moveToElementAndClick(generateSheduleButton);
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 5) && subTitle1.equalsIgnoreCase(generateModalTitle.getText().trim())
             && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
                 editTheOperatingHours();
+                waitForSeconds(1);
                 clickTheElement(nextButtonOnCreateSchedule);
                 if (isElementLoaded(generateModalTitle, 5) && subTitle2.equalsIgnoreCase(generateModalTitle.getText().trim())
                         && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
                     editTheBudgetForNondgFlow();
+                    waitForSeconds(1);
                     clickTheElement(nextButtonOnCreateSchedule);
                 }
                 if (areListElementVisible(availableCopyWeeks, 5)) {
@@ -3399,8 +3401,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     }
                     if (isElementLoaded(nextButtonOnCreateSchedule) && nextButtonOnCreateSchedule.getText().equals(finish)) {
                         clickTheElement(nextButtonOnCreateSchedule);
-                        waitForSeconds(5);
-                        if (areListElementVisible(shiftsWeekView, 10) && shiftsWeekView.size() > 0) {
+                        waitForSeconds(6);
+                        if (areListElementVisible(shiftsWeekView, 15) && shiftsWeekView.size() > 0) {
                             SimpleUtils.pass("Create the schedule successfully!");
                         }else {
                             SimpleUtils.fail("Not able to generate the schedule successfully for non dg flow!", false);
@@ -5317,7 +5319,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 click(printButtonInPrintLayout);
             }
         }else{
-            SimpleUtils.fail("there is no print button",true);
+            SimpleUtils.fail("There is no print button",false);
         }
     }
 
@@ -8552,24 +8554,31 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void deleteTMShiftInWeekView(String teamMemberName) throws Exception {
-        if (areListElementVisible(workerNameList,10) && areListElementVisible(profileIcons, 10) && workerNameList.size() == profileIcons.size()) {
-            for (int i = 0; i <workerNameList.size() ; i++) {
-                if (workerNameList.get(i).getText().toLowerCase().contains(teamMemberName.toLowerCase())) {
-                   clickTheElement(shiftsWeekView.get(i).findElement(By.cssSelector("[ng-class=\"borderClass()\"]")));
-                    if (isElementLoaded(deleteShift,10)) {
-                        clickTheElement(deleteShift);
-                        if (isElementLoaded(deleteBtnInDeleteWindows,3) ) {
-                            clickTheElement(deleteBtnInDeleteWindows);
-                            SimpleUtils.pass("existing shift "+i+"delete successfully");
-                        } else
-                        SimpleUtils.fail("delete confirm button load failed",true);
-                    }else
-                        SimpleUtils.fail("delete item for this TM load failed",true);
+        if (areListElementVisible(shiftsWeekView, 15)) {
+            for (WebElement shiftWeekView : shiftsWeekView) {
+                try {
+                    WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
+                    WebElement image = shiftWeekView.findElement(By.className("sch-day-view-shift-worker-detail"));
+                    if (workerName != null && image != null) {
+                        if (workerName.getText().toLowerCase().contains(teamMemberName.toLowerCase())) {
+                            clickTheElement(image);
+                            if (isElementLoaded(deleteShift, 5)) {
+                                clickTheElement(deleteShift);
+                                if (isElementLoaded(deleteBtnInDeleteWindows, 3)) {
+                                    click(deleteBtnInDeleteWindows);
+                                    SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
+                                } else
+                                    SimpleUtils.fail("delete confirm button load failed", false);
+                            } else
+                                SimpleUtils.fail("delete item for this TM load failed", false);
+                        }
+                    }
+                } catch (Exception e) {
+                    continue;
                 }
             }
-
         }else
-            SimpleUtils.fail("shifts load failed or there is no shift in this week",true);
+            SimpleUtils.fail("Schedule Week View: shifts load failed or there is no shift in this week",false);
     }
 
     //added by Estelle for job title filter functionality
@@ -8696,7 +8705,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         Float totalDayWorkTime = 0.0f;
         if (areListElementVisible(scheduleTableWeekViewWorkerDetail,5) ) {
             for (int i = 0; i <scheduleTableWeekViewWorkerDetail.size() ; i++) {
-                    click(scheduleInfoIconInDayView.get(i));
+                    clickTheElement(scheduleInfoIconInDayView.get(i));
                     String[] timeDurationForTMContext = workHoursInDayViewFromPopUp.getText().split(" ");
                      float shiftSizeInHour = Float.valueOf(timeDurationForTMContext[0]);
                     totalDayWorkTime = totalDayWorkTime+shiftSizeInHour;
@@ -9268,7 +9277,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20)) {
             if (hoverIcons.size() != 0) {
                 int randomIndex = (new Random()).nextInt(hoverIcons.size());
-                click(hoverIcons.get(randomIndex));
+                clickTheElement(hoverIcons.get(randomIndex));
                 if (isElementLoaded(popOverContent, 5)) {
                     SimpleUtils.pass("My Schedule Page: Info icon is clickable successfully");
                     List<WebElement> hoverSubContainers = popOverContent.findElements(By.className("hover-sub-container"));

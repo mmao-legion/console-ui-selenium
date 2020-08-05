@@ -18,7 +18,7 @@ public interface LiquidDashboardPage {
     public boolean isSpecificWidgetLoaded(String widgetName) throws Exception;
     public String getTheStartOfCurrentWeekFromSchedulesWidget() throws Exception;
     public List<String> verifyTheContentOnAlertsWidgetLoaded(String currentWeek) throws Exception;
-    public void verifyEditLinkOfHelpgulLinks() throws Exception;
+    public void verifyEditLinkOfHelpfulLinks() throws Exception;
     public void addLinkOfHelpfulLinks() throws Exception;
     public void deleteAllLinks() throws Exception;
     public void saveLinks() throws  Exception;
@@ -43,4 +43,7 @@ public interface LiquidDashboardPage {
     public List<String> getDataOnComplianceViolationWidget() throws Exception;
     public void goToCompliancePage() throws Exception;
     public List<String> getDataInCompliancePage(String location) throws Exception;
+    public void verifyNoContentOfSwapsNCoversWidget() throws Exception;
+    public int getApprovalRateOnTARWidget() throws Exception;
+    public void verifyTheContentOfSwapNCoverWidget(String swapOrCover) throws Exception;
 }

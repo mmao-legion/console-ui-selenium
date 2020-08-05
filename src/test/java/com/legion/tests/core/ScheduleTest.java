@@ -777,7 +777,6 @@ public class ScheduleTest extends TestBase{
 				, String.valueOf(credential[0][2]));
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 		dashboardPage.clickOnProfileIconOnDashboard();
 		if (dashboardPage.isSwitchToEmployeeViewPresent()) {
 			dashboardPage.clickOnSwitchToEmployeeView();
@@ -847,6 +846,7 @@ public class ScheduleTest extends TestBase{
 		}
 		schedulePage.createScheduleForNonDGFlowNewUI();
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.deleteTMShiftInWeekView("Unassigned");
 		schedulePage.clickOnDayViewAddNewShiftButton();
 		schedulePage.customizeNewShiftPage();
 		schedulePage.selectWorkRole("Event Manager");
