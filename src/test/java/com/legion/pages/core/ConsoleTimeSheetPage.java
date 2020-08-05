@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import com.legion.utils.JsonUtil;
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -2585,4 +2586,27 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("View Violation link on Dashboard not clicked Successfully!!",false);
 		}
 	}
+
+	//added by Estelle
+	@FindBy(css = "lg-button[label=\"Approve\"]")
+	private WebElement approveBtn;
+	@Override
+	public String verifyLocationList() throws Exception {
+		if (areListElementVisible(timesheetTblRow,5)) {
+			if (timesheetTblRow.size()>0) {
+				SimpleUtils.pass("Location list load successfully");
+				String[] locationNameContext =timesheetTblRow.get(0).getText().split("\n");
+				String locationName = locationNameContext[0];
+				click(timesheetTblRow.get(0));
+				if (isElementLoaded(approveBtn,5)) {
+					SimpleUtils.pass("Can enter "+ locationName+"location's timesheet page");
+				}else
+					SimpleUtils.fail("Enter location"+locationName+"location's timesheet page failed",false);
+			return locationName;
+			}
+		}else
+			SimpleUtils.report("There is no location for this district");
+		    return null;
+	}
+
 }

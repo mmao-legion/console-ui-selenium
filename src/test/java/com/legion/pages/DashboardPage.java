@@ -50,4 +50,7 @@ public interface DashboardPage {
     public String getDateFromTimeZoneOfLocation(String pattern) throws Exception;
     public void clickOnSwitchToEmployeeView() throws Exception;
     public boolean isSwitchToEmployeeViewPresent() throws Exception;
+    public void clickOnDashboardConsoleMenu() throws Exception;
+    public String getCurrentLocation() throws Exception;
+    public String  getCurrentDistrict() throws Exception;
 }

@@ -146,4 +146,5 @@ public interface TimeSheetPage {
 	public void toNFroNavigationFromDMDashboardToDMCompliance(String CurrentWeek) throws Exception;
 	public void clickOnComplianceViolationSectionOnDashboard() throws Exception;
 
+	public String verifyLocationList() throws Exception;
 }

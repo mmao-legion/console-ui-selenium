@@ -950,4 +950,43 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.fail("Switch To Employee View not Loaded!", true);
 		}
 	}
+
+	//added by Estelle
+
+	@FindBy(css = "div.console-navigation-item-label.Dashboard")
+	private WebElement dashboardConsoleMenu;
+	@Override
+	public void clickOnDashboardConsoleMenu() throws Exception {
+		if(isElementLoaded(dashboardConsoleMenu))
+			click(dashboardConsoleMenu);
+		else
+			SimpleUtils.fail("Dashboard Console Menu not loaded Successfully!", false);
+	}
+
+	//added by Estelle
+	@FindBy(className = "lg-new-location-chooser__highlight")
+	private WebElement selectedLocation;
+
+	@Override
+	public String getCurrentLocation() throws Exception {
+
+		if (isElementLoaded(selectedLocation,5)) {
+			return   selectedLocation.getText();
+		}
+		return null;
+	}
+
+	@FindBy(css = "[ng-if=\"$ctrl.parentLocation\"]")
+	private WebElement currentDistrict;
+	@Override
+	public String getCurrentDistrict() throws Exception {
+		if (isElementLoaded(currentDistrict,5)) {
+			return   currentDistrict.getText();
+		}
+		return null;
+	}
+
+
+
+
 }

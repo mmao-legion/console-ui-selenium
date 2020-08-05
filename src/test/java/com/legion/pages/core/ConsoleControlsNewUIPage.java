@@ -2949,7 +2949,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 
-	@FindBy(css = "lg-button[label=\"Edit User\"]")
+	@FindBy(css = "lg-button[label=\"Edit\"]")
 	private WebElement userAndRolesEditUserBtn;
 
 	@FindBy(css = "form-section[on-action=\"editUser()\"]")
@@ -3068,13 +3068,25 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 	//added by Estelle for update one user's location info
-	@FindBy(css = "lg-button[label=\"Manage\"]")
+	@FindBy(css = "lg-button[label=\"Manage Locations\"]")
 	private WebElement managerLocationBtn;
 	@FindBy(css = "[modal-title=\"Manage Locations\"]")
 	private WebElement managerLocationPopUpTitle;
+	@FindBy(css = "input[placeholder=\"You can search by location name, city, and state.\"]")
+	private WebElement managerLocationInputFiled;
+	@FindBy(css = "tr[ng-repeat=\"item in $ctrl.filtered\"]")
+	private List<WebElement> locationListRows;
+	@FindBy(css = "lg-button[label=\"Okay\"]")
+	private WebElement okayBtnInManagerLocationWin;
+	@FindBy(xpath = "//lg-table-fixed-header/h2[1]/div/input-field")
+	private WebElement selectAllCheckBoxInManaLocationWin;
+	@FindBy(className = "lg-user-locations__item-name")
+	private List<WebElement> defaultLocationsForOneUser;
+
 
 	@Override
 	public void verifyUpdateUserAndRolesOneUserLocationInfo(String userFirstName) throws Exception {
+
 		searchUserByFirstName(userFirstName);
 		Thread.sleep(2000);
 		if (usersAndRolesAllUsersRows.size() > 0) {
@@ -3083,16 +3095,59 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				click(userDetailsLinks.get(0));
 				if (isElementLoaded(userAndRolesEditUserBtn)) {
 					click(userAndRolesEditUserBtn);
-					if (isElementLoaded(editUserPageFormSection)) {
+					List<String> defaultLocation = getUserLocationsList();
+					if (isElementLoaded(managerLocationBtn)) {
 						click(managerLocationBtn);
-						if (isElementLoaded(managerLocationPopUpTitle,5)) {
+						searchLocation(userFirstName);
+						click(selectAllCheckBoxInManaLocationWin);
+						List<WebElement> locationCheckBoxs = locationListRows.get(0).findElements(By.cssSelector("input-field[type=\"checkbox\"]"));
+						if (locationCheckBoxs.size()>0) {
+							for (WebElement locationCheckBox: locationCheckBoxs) {
+								if (isElementLoaded(locationCheckBox) && !locationCheckBox.getAttribute("class").contains("not-empty")) {
+									click(locationCheckBox);
+										if (isElementLoaded(okayBtnInManagerLocationWin)) {
+											click(okayBtnInManagerLocationWin);
+									}
+								}
+							}
 
+						}else
+							SimpleUtils.fail("There is no location ",true);
+						}else
+						SimpleUtils.fail("Manager location button load failed ",true);
+
+
+						List<String> locationAfterUpdated = getUserLocationsList();
+						if (locationAfterUpdated.equals(defaultLocation)) {
+							SimpleUtils.pass("User's location was updated successfully");
 						}
-					}
+					}else
+					SimpleUtils.fail("User profile edit button load failed ",true);
+
 				}
 			}
 		}
-	}
+
+
+		public void searchLocation(String userFirstName) throws Exception {
+			if (isElementLoaded(managerLocationPopUpTitle,5)) {
+				managerLocationInputFiled.sendKeys(userFirstName);
+				SimpleUtils.pass("Manager Location: '" + locationListRows.size() + "' location(s) found with name '"
+						+ userFirstName + "'");
+
+			}else
+				SimpleUtils.fail("search input field load failed",false);
+		}
+
+		public List<String> getUserLocationsList(){
+			List<String> userLocationListContext = new ArrayList<String>();
+			for (WebElement location:defaultLocationsForOneUser) {
+				userLocationListContext.add(location.getText());
+				return userLocationListContext;
+			}
+
+			return null;
+		}
 
 	@FindBy(css = "sub-content-box[box-title=\"Badges\"]")
 	private WebElement editUserPageManageBadgeSection;
