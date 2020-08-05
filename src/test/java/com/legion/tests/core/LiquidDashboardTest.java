@@ -642,6 +642,7 @@ public class LiquidDashboardTest extends TestBase {
             schedulePage.createScheduleForNonDGFlowNewUI();
         }
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView("Unassigned");
         schedulePage.addOpenShiftWithLastDay("MOD");
         schedulePage.saveSchedule();
         schedulePage.publishActiveSchedule();
@@ -666,6 +667,7 @@ public class LiquidDashboardTest extends TestBase {
             schedulePage.createScheduleForNonDGFlowNewUI();
         }
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView("Unassigned");
         schedulePage.deleteOpenShiftWithLastDay();
         schedulePage.saveSchedule();
         schedulePage.publishActiveSchedule();
@@ -727,6 +729,7 @@ public class LiquidDashboardTest extends TestBase {
         }
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteTMShiftInWeekView(tmName);
+        schedulePage.deleteTMShiftInWeekView("Unassigned");
         schedulePage.saveSchedule();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.addManualShiftWithLastDay("MOD", tmName);

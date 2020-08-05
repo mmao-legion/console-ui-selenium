@@ -3313,7 +3313,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void generateOrUpdateAndGenerateSchedule() throws Exception {
         if (isElementEnabled(generateSheduleButton,5)) {
-            click(generateSheduleButton);
+            clickTheElement(generateSheduleButton);
             openBudgetPopUp();
 //            openBudgetPopUpGenerateSchedule();
             if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
@@ -8555,11 +8555,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(workerNameList,10) && areListElementVisible(profileIcons, 10) && workerNameList.size() == profileIcons.size()) {
             for (int i = 0; i <workerNameList.size() ; i++) {
                 if (workerNameList.get(i).getText().toLowerCase().contains(teamMemberName.toLowerCase())) {
-                   click(shiftsWeekView.get(i).findElement(By.cssSelector("[ng-class=\"borderClass()\"]")));
-                    if (isElementLoaded(deleteShift,3)) {
+                   clickTheElement(shiftsWeekView.get(i).findElement(By.cssSelector("[ng-class=\"borderClass()\"]")));
+                    if (isElementLoaded(deleteShift,10)) {
                         clickTheElement(deleteShift);
                         if (isElementLoaded(deleteBtnInDeleteWindows,3) ) {
-                            click(deleteBtnInDeleteWindows);
+                            clickTheElement(deleteBtnInDeleteWindows);
                             SimpleUtils.pass("existing shift "+i+"delete successfully");
                         } else
                         SimpleUtils.fail("delete confirm button load failed",true);
@@ -9495,4 +9495,41 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         return resultList;
     }
+
+    //Added by Julie
+//    public List<Float> getBudgetForNonDGFlow() throws Exception {
+//        if (isElementLoaded(editBudgetBtn, 5)) {
+//            clickTheElement(editBudgetBtn);
+//            // Cancel and Save buttons are consistent with operating hours
+//            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
+//                SimpleUtils.pass("Create Schedule - Enter Budget: Click on Edit button Successfully!");
+//                if (areListElementVisible(roleHoursRows, 5)) {
+//                    for (WebElement roleHoursRow : roleHoursRows) {
+//                        try {
+//                            WebElement forecastHour = roleHoursRow.findElement(By.cssSelector("td:nth-child(3)"));
+//                            WebElement budgetHour = roleHoursRow.findElement(By.cssSelector("input[type=\"number\"]"));
+//                            if (forecastHour != null && budgetHour != null) {
+//                                String forecastHourString = "";
+//                                if (forecastHour.getText().trim().contains(".")) {
+//                                    forecastHourString = forecastHour.getText().trim().substring(0, forecastHour.getText().trim().indexOf("."));
+//                                }
+//                                budgetHour.clear();
+//                                budgetHour.sendKeys(forecastHourString);
+//                            }
+//                        }catch (Exception e) {
+//                            continue;
+//                        }
+//                    }
+//                    clickTheElement(operatingHoursSaveBtn);
+//                    if (isElementEnabled(editBudgetBtn, 5)) {
+//                        SimpleUtils.pass("Create Schedule: Save the budget hours Successfully!");
+//                    }else {
+//                        SimpleUtils.fail("Create Schedule: Click on Save the budget hours button failed, Next button is not enabled!", false);
+//                    }
+//                }
+//            }
+//        }else {
+//            SimpleUtils.fail("Create Schedule - Enter Budget: Edit button not loaded Successfully!", false);
+//        }
+//    }
 }

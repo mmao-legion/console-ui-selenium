@@ -754,6 +754,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	public void verificationOfToAndFroNavigationOfWeekPickerAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.clickOnScheduleConsoleMenuItem();
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String nickName = profileNewUIPage.getNickNameFromProfile();
 
 		//T1838610 Validate the click ability of forward and backward button.
 		schedulePage.validateForwardAndBackwardButtonClickable();
@@ -774,6 +776,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		Object[][] internalAdminCredentials = userCredentials.get("InternalAdmin");
 		loginToLegionAndVerifyIsLoginDone(String.valueOf(internalAdminCredentials[0][0]), String.valueOf(internalAdminCredentials[0][1])
 				, String.valueOf(internalAdminCredentials[0][2]));
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 		// Go to Scheduling Policies to get the additional Scheduled Hour
 		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
@@ -787,6 +791,24 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePageAdmin.clickOnScheduleConsoleMenuItem();
 		schedulePageAdmin.clickOnScheduleSubTab("Schedule");
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (!isWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.deleteTMShiftInWeekView("Unassigned");
+		schedulePage.saveSchedule();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickOnDayViewAddNewShiftButton();
+		schedulePage.selectWorkRole("MOD");
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.searchTeamMemberByName(nickName);
+		if(schedulePage.displayAlertPopUp())
+			schedulePage.displayAlertPopUpForRoleViolation();
+		schedulePage.clickOnOfferOrAssignBtn();
+		schedulePage.saveSchedule();
+		schedulePage.publishActiveSchedule();
 		if (!schedulePage.isSummaryViewLoaded())
 			schedulePage.toggleSummaryView();
 		String theEarliestAndLatestTimeInSummaryView = schedulePage.getTheEarliestAndLatestTimeInSummaryView(schedulePoliciesBufferHours);
@@ -861,6 +883,20 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 		//T1838622 Verify the availability of claim open shift popup.
 		schedulePage.verifyTheAvailabilityOfClaimOpenShiftPopup();
+	}
+
+	//@Automated(automated = "Automated")
+	@Owner(owner = "Julie")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verification of Open Shift Schedule Smart Card when login through TM View")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyContentOfBudgetHoursForNonDGFlowAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.isSchedule(), true);
+		if (schedulePage.isWeekGenerated())
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+        schedulePage.createScheduleForNonDGFlowNewUI();
 	}
 }
 
