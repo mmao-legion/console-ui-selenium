@@ -425,7 +425,6 @@ public interface SchedulePage {
 	public HashMap<String, String> getBudgetNScheduledHoursFromSmartCard() throws Exception;
 	public int getComplianceShiftCountFromSmartCard(String cardName) throws Exception;
 	public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose) throws Exception;
-	public void createScheduleByCopyFromOtherWeek(String weekInfo) throws Exception;
 	public void clickCreateScheduleBtn() throws Exception;
 	public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception;
 	public void createScheduleForNonDGFlowNewUIWithGivingParameters(String day, String startTime, String endTime) throws Exception;
