@@ -896,13 +896,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.clickOnScheduleConsoleMenuItem();
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
 		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (isWeekGenerated){
+		if (isWeekGenerated) {
 			schedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
 		schedulePage.createScheduleForNonDGFlowNewUI();
@@ -925,7 +925,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		if (firstWeekInfo.length() > 11) {
 			firstWeekInfo = firstWeekInfo.trim().substring(10);
 			if (firstWeekInfo.contains("-")) {
-				String [] temp = firstWeekInfo.split("-");
+				String[] temp = firstWeekInfo.split("-");
 				if (temp.length == 2 && temp[0].contains(" ") && temp[1].contains(" ")) {
 					firstWeekInfo = temp[0].trim().split(" ")[0] + " " + (temp[0].trim().split(" ")[1].length() == 1 ? "0" + temp[0].trim().split(" ")[1] : temp[0].trim().split(" ")[1])
 							+ " - " + temp[1].trim().split(" ")[0] + " " + (temp[1].trim().split(" ")[1].length() == 1 ? "0" + temp[1].trim().split(" ")[1] : temp[1].trim().split(" ")[1]);
@@ -936,7 +936,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.navigateToNextWeek();
 		schedulePage.isSchedule();
 		isWeekGenerated = schedulePage.isWeekGenerated();
-		if (isWeekGenerated){
+		if (isWeekGenerated) {
 			schedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
 		schedulePage.createScheduleByCopyFromOtherWeek(firstWeekInfo);
@@ -952,37 +952,89 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 		if (hoursNTMsCountFirstWeek.equals(hoursNTMsCountSecondWeek)) {
 			SimpleUtils.pass("Verified the scheduled hour and TMs of each week day are consistent with the copied schedule!");
-		}else {
+		} else {
 			SimpleUtils.fail("Verified the scheduled hour and TMs of each week day are inconsistent with the copied schedule", true);
 		}
 		if (SimpleUtils.compareHashMapByEntrySet(shiftsForEachDayFirstWeek, shiftsForEachDaySecondWeek)) {
 			SimpleUtils.pass("Verified the shifts of each week day are consistent with the copied schedule!");
-		}else {
+		} else {
 			SimpleUtils.fail("Verified the shifts of each week day are inconsistent with the copied schedule!", true);
 		}
 		if (budgetNScheduledHoursFirstWeek.get("Scheduled").equals(budgetNScheduledHoursSecondWeek.get("Scheduled"))) {
 			SimpleUtils.pass("The Scheduled hour is consistent with the copied scheudle: " + budgetNScheduledHoursFirstWeek.get("Scheduled"));
-		}else {
+		} else {
 			SimpleUtils.fail("The Scheduled hour is inconsistent, the first week is: " + budgetNScheduledHoursFirstWeek.get("Scheduled")
-			+ ", but second week is: " + budgetNScheduledHoursSecondWeek.get("Scheduled"), true);
+					+ ", but second week is: " + budgetNScheduledHoursSecondWeek.get("Scheduled"), true);
 		}
 		if ((isComplianceCardLoadedFirstWeek == isComplianceCardLoadedSecondWeek) && (complianceShiftCountFirstWeek == complianceShiftCountSecondWeek)) {
 			SimpleUtils.pass("Verified Compliance is consistent with the copied schedule");
-		}else {
+		} else {
 			SimpleUtils.fail("Verified Compliance is inconsistent with the copied schedule!", true);
 		}
-	//@Automated(automated = "Automated")
+	}
+
+	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verification of Open Shift Schedule Smart Card when login through TM View")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyContentOfBudgetHoursForNonDGFlowAsTeamMember(String browser, String username, String password, String location) throws Exception {
+	public void verifyContentOfBudgetHoursForNonDGFlowAsTeamMember (String browser, String username, String password, String location) throws Exception {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.clickOnScheduleConsoleMenuItem();
 		SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.isSchedule(), true);
 		if (schedulePage.isWeekGenerated())
 			schedulePage.unGenerateActiveScheduleScheduleWeek();
-        schedulePage.createScheduleForNonDGFlowNewUI();
+		schedulePage.createScheduleForNonDGFlowNewUI();
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the content after changing Operating Hours for non dg flow ")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyContentAfterChangingOperatingHrsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab("Schedule");
+		schedulePage.navigateToNextWeek();
+		schedulePage.navigateToNextWeek();
+		if (schedulePage.isWeekGenerated()){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		String day = "Sunday";
+		String startTime = "07:00AM";
+		String endTime = "06:00PM";
+		//set operating hours: Sunday -> start time: 07:00AM, end time: 06:00PM
+		schedulePage.createScheduleForNonDGFlowNewUIWithGivingParameters(day, startTime, endTime);
+		schedulePage.goToToggleSummaryView();
+		//verify the operating hours in Toggle Summary View
+		schedulePage.verifyOperatingHrsInToggleSummary(day, startTime, endTime);
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the content after changing Operating Hours for non dg flow - next day")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab("Schedule");
+		schedulePage.navigateToNextWeek();
+		schedulePage.navigateToNextWeek();
+		if (schedulePage.isWeekGenerated()){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		String day = "Sunday";
+		String startTime = "11:00AM";
+		String endTime = "02:00AM";
+		//set operating hours: Sunday -> start time: 11:00AM, end time: 02:00AM
+		schedulePage.createScheduleForNonDGFlowNewUIWithGivingParameters(day, startTime, endTime);
+		//verify the day we set a next day time has shifts.
+		schedulePage.verifyDayHasShifts(day);
+		//verify the operating hours in Toggle Summary View
+		schedulePage.goToToggleSummaryView();
+		schedulePage.verifyOperatingHrsInToggleSummary(day, startTime, endTime);
 	}
 }
 

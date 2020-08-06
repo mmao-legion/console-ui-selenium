@@ -735,8 +735,8 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
 
     @Override
     public void clickFirstWeekOnSchedulesGoToSchedule() throws Exception {
-        if (areListElementVisible(dataOnSchedules,10)){
-            waitForSeconds(10);
+        if (areListElementVisible(dataOnSchedules,10) && dataOnSchedules.size()>0){
+            waitForSeconds(3);
             moveToElementAndClick(dataOnSchedules.get(0));
         } else {
             SimpleUtils.fail("clickFirstWeekOnSchedulesGoToSchedule: data on schedules widget fail to load!",true);
