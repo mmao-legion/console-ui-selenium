@@ -1003,13 +1003,63 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verification of Open Shift Schedule Smart Card when login through TM View")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyContentOfBudgetHoursForNonDGFlowAsTeamMember(String browser, String username, String password, String location) throws Exception {
+	public void verifyContentOfBudgetHoursForNonDGFlowAsTeamMember (String browser, String username, String password, String location) throws Exception {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.clickOnScheduleConsoleMenuItem();
 		SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.isSchedule(), true);
 		if (schedulePage.isWeekGenerated())
 			schedulePage.unGenerateActiveScheduleScheduleWeek();
-        schedulePage.createScheduleForNonDGFlowNewUI();
+		schedulePage.createScheduleForNonDGFlowNewUI();
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the content after changing Operating Hours for non dg flow ")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyContentAfterChangingOperatingHrsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab("Schedule");
+		schedulePage.navigateToNextWeek();
+		schedulePage.navigateToNextWeek();
+		if (schedulePage.isWeekGenerated()){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		String day = "Sunday";
+		String startTime = "07:00AM";
+		String endTime = "06:00PM";
+		//set operating hours: Sunday -> start time: 07:00AM, end time: 06:00PM
+		schedulePage.createScheduleForNonDGFlowNewUIWithGivingParameters(day, startTime, endTime);
+		schedulePage.goToToggleSummaryView();
+		//verify the operating hours in Toggle Summary View
+		schedulePage.verifyOperatingHrsInToggleSummary(day, startTime, endTime);
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the content after changing Operating Hours for non dg flow - next day")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab("Schedule");
+		schedulePage.navigateToNextWeek();
+		schedulePage.navigateToNextWeek();
+		if (schedulePage.isWeekGenerated()){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		String day = "Sunday";
+		String startTime = "11:00AM";
+		String endTime = "02:00AM";
+		//set operating hours: Sunday -> start time: 11:00AM, end time: 02:00AM
+		schedulePage.createScheduleForNonDGFlowNewUIWithGivingParameters(day, startTime, endTime);
+		//verify the day we set a next day time has shifts.
+		schedulePage.verifyDayHasShifts(day);
+		//verify the operating hours in Toggle Summary View
+		schedulePage.goToToggleSummaryView();
+		schedulePage.verifyOperatingHrsInToggleSummary(day, startTime, endTime);
 	}
 }
 

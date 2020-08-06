@@ -2770,4 +2770,36 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose) throws Exception {
         return 0;
     }
+
+    public void createScheduleByCopyFromOtherWeek(String weekInfo) throws Exception {
+        
+    }
+    public void clickCreateScheduleBtn() throws Exception {
+
+    }
+
+    @Override
+    public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception {
+
+    }
+
+    @Override
+    public void createScheduleForNonDGFlowNewUIWithGivingParameters(String day, String startTime, String endTime) throws Exception {
+
+    }
+
+    @Override
+    public void goToToggleSummaryView() throws Exception {
+
+    }
+
+    @Override
+    public void verifyOperatingHrsInToggleSummary(String day, String startTime, String endTime) throws Exception {
+
+    }
+
+    @Override
+    public void verifyDayHasShifts(String day) throws Exception {
+
+    }
 }
