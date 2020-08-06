@@ -2528,7 +2528,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void clickSaveShiftPrefBtn() throws Exception {
 		if (isElementLoaded(savePreferButton, 5)) {
-			click(savePreferButton);
+			clickTheElement(savePreferButton);
 		}else {
 			SimpleUtils.fail("Save edit shit preferences button failed to load!", true);
 		}
