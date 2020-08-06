@@ -2802,4 +2802,19 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void verifyDayHasShifts(String day) throws Exception {
 
     }
+
+    @Override
+    public void verifyNoShiftsForSpecificWeekDay(List<String> weekDaysToClose) throws Exception {
+
+    }
+
+    @Override
+    public void verifyStoreIsClosedForSpecificWeekDay(List<String> weekDaysToClose) throws Exception {
+
+    }
+
+    @Override
+    public void verifyClosedDaysInToggleSummaryView(List<String> weekDaysToClose) throws Exception {
+
+    }
 }

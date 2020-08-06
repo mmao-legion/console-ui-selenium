@@ -3368,6 +3368,82 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> smartCardRows;
     @FindBy (css = ".generate-modal-week")
     private List<WebElement> createModalWeeks;
+    @FindBy (css = ".holiday-text")
+    private WebElement storeClosedText;
+    @FindBy (css = "[ng-repeat*=\"summary.workingHours\"]")
+    private List<WebElement> summaryWorkingHoursRows;
+
+    @Override
+    public void verifyClosedDaysInToggleSummaryView(List<String> weekDaysToClose) throws Exception {
+        if (areListElementVisible(summaryWorkingHoursRows, 15) && summaryWorkingHoursRows.size() == 7) {
+            for (WebElement row : summaryWorkingHoursRows) {
+                List<WebElement> tds = row.findElements(By.tagName("td"));
+                if (tds != null && tds.size() == 2) {
+                    if (weekDaysToClose.contains(tds.get(0).getText())) {
+                        if (tds.get(1).getText().equals("Closed")) {
+                            SimpleUtils.pass("Verfied " + tds.get(0).getText() + " is \"Closed\"");
+                        } else {
+                            SimpleUtils.fail("Verified " + tds.get(0).getText() + " is not \"Closed\"", false);
+                        }
+                    }
+                } else {
+                    SimpleUtils.fail("Summary Operating Hours: Failed to find two td elements!", false);
+                }
+            }
+        } else {
+            SimpleUtils.fail("Summary Operating Hours rows not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void verifyStoreIsClosedForSpecificWeekDay(List<String> weekDaysToClose) throws Exception {
+        if (weekDaysToClose != null && weekDaysToClose.size() > 0) {
+            for (String weekDayToClose : weekDaysToClose) {
+                if (areListElementVisible(dayPickerAllDaysInDayView, 5)) {
+                    for (WebElement dayPicker : dayPickerAllDaysInDayView) {
+                        if (dayPicker.getText().toLowerCase().contains(weekDayToClose.substring(0, 3).toLowerCase())) {
+                            clickTheElement(dayPicker);
+                            if (isElementLoaded(storeClosed, 10) && isElementLoaded(storeClosedText, 10) &&
+                            storeClosedText.getText().equals("Store is closed.")) {
+                                SimpleUtils.pass("Verified 'Store is closed.' for week day:" + weekDayToClose);
+                            } else {
+                                SimpleUtils.fail("Verified 'Store is not closed.' for week day:" + weekDayToClose, false);
+                            }
+                            break;
+                        }
+                    }
+                } else {
+                    SimpleUtils.fail("Schedule Day View: Day pickers not loaded Successfully!", false);
+                }
+            }
+        }else {
+            SimpleUtils.report("There are no week days that need to close!");
+        }
+    }
+
+    @Override
+    public void verifyNoShiftsForSpecificWeekDay(List<String> weekDaysToClose) throws Exception {
+        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 7) {
+            for (WebElement weekDayDimension : weekDayDimensions) {
+                WebElement weekDay = weekDayDimension.findElement(By.className("sch-calendar-day-label"));
+                // Judge if the week day is in the list, if it is, this day is closed, there should be no shifts
+                if (weekDay != null && weekDaysToClose.contains(getFullWeekDayName(weekDay.getText()))) {
+                    List<WebElement> weekShiftWrappers = weekDayDimension.findElements(By.className("week-schedule-shift-wrapper"));
+                    if (weekShiftWrappers != null) {
+                        if (weekShiftWrappers.size() == 0) {
+                            SimpleUtils.pass("Verified for Week Day: " + weekDay.getText() + ", there are no shifts Loaded!");
+                        } else {
+                            SimpleUtils.fail("Verified for Week Day: " + weekDay.getText() + " failed, this day is closed, but there still have shifts!", false);
+                        }
+                    } else {
+                        SimpleUtils.pass("Verified for Week Day: " + weekDay.getText() + ", there are no shifts Loaded!");
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("Schedule Week View Page: Each week day dimension not loaded Successfully!", false);
+        }
+    }
 
     @Override
     public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose) throws Exception {
@@ -7402,6 +7478,25 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    public enum weekDayNames {
+        Mon("Monday"),
+        Tue("Tuesday"),
+        Wed("Wednesday"),
+        Thu("Thursday"),
+        Fri("Friday"),
+        Sat("Saturday"),
+        Sun("Sunday");
+        private final String value;
+
+        weekDayNames(final String newValue) {
+            value = newValue;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
     @Override
     public void verifyTheFunctionalityOfClearFilter() throws Exception {
         String linkName = "Clear Filter";
@@ -8083,6 +8178,19 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public String getFullMonthName(String shortName) {
         String fullName = "";
         monthsOfCalendar[] shortNames = monthsOfCalendar.values();
+        for (int i = 0; i < shortNames.length; i++) {
+            if (shortNames[i].name().equalsIgnoreCase(shortName)) {
+                fullName = shortNames[i].value;
+                SimpleUtils.report("Get the full name of " + shortName + ", is: " + fullName);
+                break;
+            }
+        }
+        return fullName;
+    }
+
+    public String getFullWeekDayName(String shortName) {
+        String fullName = "";
+        weekDayNames[] shortNames = weekDayNames.values();
         for (int i = 0; i < shortNames.length; i++) {
             if (shortNames[i].name().equalsIgnoreCase(shortName)) {
                 fullName = shortNames[i].value;

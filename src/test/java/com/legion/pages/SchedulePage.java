@@ -431,4 +431,7 @@ public interface SchedulePage {
 	public void goToToggleSummaryView() throws Exception;
 	public void verifyOperatingHrsInToggleSummary(String day, String startTime, String endTime) throws Exception;
 	public void verifyDayHasShifts(String day) throws Exception;
+	public void verifyNoShiftsForSpecificWeekDay(List<String> weekDaysToClose) throws Exception;
+	public void verifyStoreIsClosedForSpecificWeekDay(List<String> weekDaysToClose) throws Exception;
+	public void verifyClosedDaysInToggleSummaryView(List<String> weekDaysToClose) throws Exception;
 }

@@ -996,6 +996,15 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		}
 		List<String> weekDaysToClose = new ArrayList<>(Arrays.asList("Sunday", "Tuesday"));
 		schedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose);
+
+		// Verify that the closed week day should not have any shifts
+		schedulePage.verifyNoShiftsForSpecificWeekDay(weekDaysToClose);
+		// Go to day view, check the closed week day should show "Store is Closed"
+		schedulePage.clickOnDayView();
+		schedulePage.verifyStoreIsClosedForSpecificWeekDay(weekDaysToClose);
+		// Toggle Summary view, verify that the specific week days shows Closed
+		schedulePage.toggleSummaryView();
+		schedulePage.verifyClosedDaysInToggleSummaryView(weekDaysToClose);
 	}
 
 	//@Automated(automated = "Automated")

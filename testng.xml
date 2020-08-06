@@ -121,6 +121,7 @@
                     <include name="verifyTheContentOfCopyScheduleForNonDGFlowAsInternalAdmin" />
                     <include name="verifyContentAfterChangingOperatingHrsAsInternalAdmin" />
                     <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
+                    <include name="verifyTheContentOfClosedWeekDayScheduleForNonDGFlowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
