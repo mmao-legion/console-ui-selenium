@@ -3506,7 +3506,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (areListElementVisible(trs, 5) && trs.size() > 0) {
                     WebElement budget = trs.get(trs.size() - 1).findElement(By.cssSelector("th:nth-child(4)"));
                     budgetHour = Float.parseFloat(budget == null ? "" : budget.getText());
-                    SimpleUtils.report("Enter Budget Window: Get the budget hour: " + budget);
+                    SimpleUtils.report("Enter Budget Window: Get the budget hour: " + budgetHour);
                 }
             } catch (Exception e) {
                 // Nothing
