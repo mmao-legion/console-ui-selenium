@@ -939,7 +939,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		if (isWeekGenerated) {
 			schedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
-		schedulePage.createScheduleByCopyFromOtherWeek(firstWeekInfo);
+		List<String> weekDaysToClose = new ArrayList<>();
+		schedulePage.createScheduleForNonDGByWeekInfo(firstWeekInfo, weekDaysToClose);
 
 		HashMap<String, String> hoursNTMsCountSecondWeek = schedulePage.getTheHoursNTheCountOfTMsForEachWeekDays();
 		HashMap<String, List<String>> shiftsForEachDaySecondWeek = schedulePage.getTheContentOfShiftsForEachWeekDay();
@@ -971,6 +972,30 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		} else {
 			SimpleUtils.fail("Verified Compliance is inconsistent with the copied schedule!", true);
 		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the content of closed week day schedule for non dg flow ")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheContentOfClosedWeekDayScheduleForNonDGFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated) {
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		List<String> weekDaysToClose = new ArrayList<>(Arrays.asList("Sunday", "Tuesday"));
+		schedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose);
 	}
 
 	//@Automated(automated = "Automated")

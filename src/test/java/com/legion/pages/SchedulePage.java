@@ -424,5 +424,5 @@ public interface SchedulePage {
 	public HashMap<String, List<String>> getTheContentOfShiftsForEachWeekDay() throws Exception;
 	public HashMap<String, String> getBudgetNScheduledHoursFromSmartCard() throws Exception;
 	public int getComplianceShiftCountFromSmartCard(String cardName) throws Exception;
-	public void createScheduleByCopyFromOtherWeek(String weekInfo) throws Exception;
+	public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose) throws Exception;
 }

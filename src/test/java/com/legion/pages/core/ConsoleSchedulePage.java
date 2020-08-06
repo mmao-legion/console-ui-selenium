@@ -2767,7 +2767,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void createScheduleByCopyFromOtherWeek(String weekInfo) throws Exception {
-
+    public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose) throws Exception {
+        return 0;
     }
 }

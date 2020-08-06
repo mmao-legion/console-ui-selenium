@@ -3370,17 +3370,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> createModalWeeks;
 
     @Override
-    public void createScheduleByCopyFromOtherWeek(String weekInfo) throws Exception {
+    public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose) throws Exception {
+        float budgetHours = 0;
         String subTitle = "Confirm Operating Hours";
         waitForSeconds(2);
         if (isElementLoaded(generateSheduleButton,10)) {
             clickTheElement(generateSheduleButton);
             if (isElementLoaded(generateModalTitle, 10) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
-                editTheOperatingHours();
+                editTheOperatingHours(weekDaysToClose);
                 waitForSeconds(1);
                 clickTheElement(nextButtonOnCreateSchedule);
-                checkEnterBudgetWindowLoadedForNonDG();
+                budgetHours = checkEnterBudgetWindowLoadedForNonDG();
                 selectWhichWeekToCopyFrom(weekInfo);
                 clickOnFinishButtonOnCreateSchedulePage();
             } else {
@@ -3389,6 +3390,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else {
             SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
         }
+        return budgetHours;
     }
 
     public void selectWhichWeekToCopyFrom(String weekInfo) throws Exception {
@@ -3417,14 +3419,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    public void checkEnterBudgetWindowLoadedForNonDG() throws Exception {
+    public float checkEnterBudgetWindowLoadedForNonDG() throws Exception {
+        float budgetHour = 0;
         String title = "Enter Budget";
         if (isElementLoaded(generateModalTitle, 5) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
                 && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
             editTheBudgetForNondgFlow();
+            try {
+                List<WebElement> trs = MyThreadLocal.getDriver().findElements(By.tagName("tr"));
+                if (areListElementVisible(trs, 5) && trs.size() > 0) {
+                    WebElement budget = trs.get(trs.size() - 1).findElement(By.cssSelector("th:nth-child(4)"));
+                    budgetHour = Float.parseFloat(budget == null ? "" : budget.getText());
+                    SimpleUtils.report("Enter Budget Window: Get the budget hour: " + budget);
+                }
+            } catch (Exception e) {
+                // Nothing
+            }
             waitForSeconds(3);
             clickTheElement(nextButtonOnCreateSchedule);
         }
+        return budgetHour;
     }
 
     public void clickOnFinishButtonOnCreateSchedulePage() throws Exception {
@@ -3542,7 +3556,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 5) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
             && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
-                editTheOperatingHours();
+                editTheOperatingHours(new ArrayList<>());
                 waitForSeconds(3);
                 clickTheElement(nextButtonOnCreateSchedule);
                 checkEnterBudgetWindowLoadedForNonDG();
@@ -3610,27 +3624,33 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    public void editTheOperatingHours() throws Exception {
+    public void editTheOperatingHours(List<String> weekDaysToClose) throws Exception {
         if (isElementLoaded(operatingHoursEditBtn, 10)) {
             clickTheElement(operatingHoursEditBtn);
             if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
                 SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
                 if (areListElementVisible(operatingHoursDayLists, 5)) {
                     for (WebElement dayList : operatingHoursDayLists) {
-                        WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
                         WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
-                        List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("input[placeholder=\"--:--\"]"));
-                        if (checkbox != null && weekDay != null && startNEndTimes != null && startNEndTimes.size() == 2) {
-                            if (checkbox.getAttribute("class").contains("ng-empty")) {
-                                clickTheElement(checkbox);
+                        if (weekDay != null) {
+                            WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+                            if (!weekDaysToClose.contains(weekDay.getText())) {
+                                if (checkbox.getAttribute("class").contains("ng-empty")) {
+                                    clickTheElement(checkbox);
+                                }
+                                String[] operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
+                                List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+                                startNEndTimes.get(0).clear();
+                                startNEndTimes.get(1).clear();
+                                startNEndTimes.get(0).sendKeys(operatingHours[0].trim());
+                                startNEndTimes.get(1).sendKeys(operatingHours[1].trim());
+                            } else {
+                                if (!checkbox.getAttribute("class").contains("ng-empty")) {
+                                    clickTheElement(checkbox);
+                                }
                             }
-                            String[] operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
-                            startNEndTimes.get(0).clear();
-                            startNEndTimes.get(1).clear();
-                            startNEndTimes.get(0).sendKeys(operatingHours[0].trim());
-                            startNEndTimes.get(1).sendKeys(operatingHours[1].trim());
-                        }else {
-                            SimpleUtils.fail("Failed to find the checkbox, weekday or start and end time elements!", false);
+                        } else {
+                            SimpleUtils.fail("Failed to find weekday element!", false);
                         }
                     }
                     clickTheElement(operatingHoursSaveBtn);
