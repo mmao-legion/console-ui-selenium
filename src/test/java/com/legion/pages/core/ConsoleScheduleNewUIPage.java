@@ -3676,6 +3676,282 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    //added by haya, create button for non-dg flow
+    @Override
+    public void clickCreateScheduleBtn() throws Exception {
+        if (isElementEnabled(generateSheduleButton,10)) {
+            click(generateSheduleButton);
+            openBudgetPopUp();
+        }else {
+            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+        }
+    }
+
+    //added by haya, edit operating hours when create new schedule for non-dg flow.
+    //e.g.: day: Sunday, startTime->09:00AM, endTime->05:00PM
+    @Override
+    public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception {
+        if (isElementLoaded(operatingHoursEditBtn, 10)) {
+            clickTheElement(operatingHoursEditBtn);
+            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
+                SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
+                if (areListElementVisible(operatingHoursDayLists, 5)) {
+                    for (WebElement dayList : operatingHoursDayLists) {
+                        WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+                        WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
+                        List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("input[placeholder=\"--:--\"]"));
+                        if (checkbox != null && weekDay != null && startNEndTimes != null && startNEndTimes.size() == 2) {
+                            if (checkbox.getAttribute("class").contains("ng-empty")) {
+                                SimpleUtils.warn("editOperatingHoursWithGivingPrameters: All seven day of a week should be checked by default when create schedule.");
+                                clickTheElement(checkbox);
+                            }
+                            if (weekDay.getText().toLowerCase().contains(day.toLowerCase())){
+                                startNEndTimes.get(0).clear();
+                                startNEndTimes.get(1).clear();
+                                startNEndTimes.get(0).sendKeys(startTime);
+                                startNEndTimes.get(1).sendKeys(endTime);
+                            }
+                        }else {
+                            SimpleUtils.fail("Failed to find the checkbox, weekday or start and end time elements!", false);
+                        }
+                    }
+                    clickTheElement(operatingHoursSaveBtn);
+                    if (isElementEnabled(operatingHoursEditBtn, 5)) {
+                        SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
+                    }else {
+                        SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
+                    }
+                }
+            }else {
+                SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
+            }
+        }else {
+            SimpleUtils.fail("Operating Hours Edit button not loaded Successfully!", false);
+        }
+    }
+
+    //added by haya, create schedule for non-dg flow with giving parameters.
+    //e.g.: day: Sunday, startTime->09:00AM, endTime->05:00PM
+    @Override
+    public void createScheduleForNonDGFlowNewUIWithGivingParameters(String day, String startTime, String endTime) throws Exception {
+        String subTitle1 = "Confirm Operating Hours";
+        String subTitle2 = "Enter Budget";
+        String finish = "FINISH";
+        if (isElementEnabled(generateSheduleButton,10)) {
+            click(generateSheduleButton);
+            openBudgetPopUp();
+            if (isElementLoaded(generateModalTitle, 5) && subTitle1.equalsIgnoreCase(generateModalTitle.getText().trim())
+                    && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
+                editOperatingHoursWithGivingPrameters(day, startTime, endTime);
+                clickTheElement(nextButtonOnCreateSchedule);
+                if (isElementLoaded(generateModalTitle, 5) && subTitle2.equalsIgnoreCase(generateModalTitle.getText().trim())
+                        && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
+                    editTheBudgetForNondgFlow();
+                    clickTheElement(nextButtonOnCreateSchedule);
+                }
+                if (areListElementVisible(availableCopyWeeks, 5)) {
+                    SimpleUtils.pass("Copy Schedule page loaded Successfully!");
+                    // Wait for 7 seconds to make sure that SUGGESTED SCHEDULE is loaded
+                    waitForSeconds(7);
+                    for (WebElement copyWeek : availableCopyWeeks) {
+                        WebElement scheduledHours = copyWeek.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
+                        if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
+                            if (!copyWeek.getAttribute("class").contains("selected")) {
+                                click(copyWeek);
+                                SimpleUtils.pass("Selected the week with scheduled hour: " + scheduledHours.getText() + " Successfully!");
+                            }else {
+                                SimpleUtils.pass("Selected 'SUGGESTED SCHEDULE' with scheduled hour: " + scheduledHours.getText() + " Successfully!");
+                            }
+                            break;
+                        }else {
+                            SimpleUtils.report("Scheduled Hour not loaded Successfully!");
+                        }
+                    }
+                    if (isElementLoaded(nextButtonOnCreateSchedule) && nextButtonOnCreateSchedule.getText().equals(finish)) {
+                        clickTheElement(nextButtonOnCreateSchedule);
+                        waitForSeconds(6);
+                        if (areListElementVisible(shiftsWeekView, 15) && shiftsWeekView.size() > 0) {
+                            SimpleUtils.pass("Create the schedule successfully!");
+                        }else {
+                            SimpleUtils.fail("Not able to generate the schedule successfully for non dg flow!", false);
+                        }
+                    }else {
+                        SimpleUtils.fail("'FINISH' button not loaded Successfully!", false);
+                    }
+                }
+            }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
+                click(generateSheduleForEnterBudgetBtn);
+                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+                    checkoutSchedule();
+                    switchToManagerViewToCheckForSecondGenerate();
+                } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+                    updateAndGenerateSchedule();
+                    switchToManagerViewToCheckForSecondGenerate();
+                } else {
+                    SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
+                }
+            } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+                updateAndGenerateSchedule();
+                switchToManagerViewToCheckForSecondGenerate();
+            } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
+                checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
+                SimpleUtils.pass("Schedule Generated Successfully!");
+                switchToManagerViewToCheckForSecondGenerate();
+            } else {
+                SimpleUtils.fail("Not able to generate schedule Successfully!", false);
+            }
+        }else {
+            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+        }
+    }
+
+    //added by Haya
+    @FindBy (css = "button.dropdown-toggle")
+    private WebElement dropdownToggle;
+    @FindBy (css = "options.ng-scope div[ng-repeat]")
+    private List<WebElement> dropdownMenuFormDropdownToggle;
+    @Override
+    public void goToToggleSummaryView() throws Exception {
+        waitForSeconds(2);
+        if (isElementLoaded(dropdownToggle,10)){
+            click(dropdownToggle);
+            if (areListElementVisible(dropdownMenuFormDropdownToggle,10)){
+                click(dropdownMenuFormDropdownToggle.get(dropdownMenuFormDropdownToggle.size()-1));
+                SimpleUtils.pass("Toggle Summary View has been clicked!");
+            } else {
+                SimpleUtils.fail("After clicking dropdown toggle button, no menu drop down", false);
+            }
+        } else {
+            SimpleUtils.fail("There is no toggle drop down button in schedule page!", false);
+        }
+    }
+
+    //added by Haya
+    @FindBy (css = "div[ng-repeat=\"summary in summaries\"]")
+    private WebElement scheduleSummary;
+    @Override
+    public void verifyOperatingHrsInToggleSummary(String day, String startTime, String endTime) throws Exception {
+        if (isElementLoaded(scheduleSummary) && isElementLoaded(scheduleSummary.findElement(By.cssSelector("div[ng-class=\"hideItem('projected.sales')\"] table")))){
+            List<WebElement> dayInSummary = scheduleSummary.findElements(By.cssSelector("div[ng-class=\"hideItem('projected.sales')\"] tr[ng-repeat=\"day in summary.workingHours\"]"));
+            for (WebElement e : dayInSummary){
+                if (e.getText().contains(day) && e.getText().contains(getTimeFormat(startTime)) && e.getText().contains(getTimeFormat(endTime))){
+                    SimpleUtils.pass("Operating Hours is consistent with setting!");
+                }
+            }
+        } else {
+            SimpleUtils.fail("schedule summary fail to load!", false);
+        }
+    }
+
+    //added by Haya. 09:00AM-->9am
+    private String getTimeFormat(String time) throws Exception{
+        String result = time.substring(0,2);
+        if (time.contains("AM") | time.contains("am")){
+            result = result.concat("am");
+        } else {
+            result = result.concat("pm");
+        }
+        if (result.indexOf("0")==0){
+            result = result.substring(1);
+        }
+        return result;
+    }
+
+    @FindBy (css = "div[ng-repeat=\"day in dates\"]")
+    private List<WebElement> scheduleDays;
+    @Override
+    public void verifyDayHasShifts(String day) throws Exception {
+        if (areListElementVisible(scheduleDays,10)){
+            if (day.toLowerCase().contains("sunday")){
+                for (WebElement e : scheduleDays){
+                    if (e.getAttribute("class").contains("0")){
+                        if (areListElementVisible(e.findElements(By.cssSelector(".week-schedule-shift-place.ng-scope")))){
+                            SimpleUtils.pass("On Sunday there are shifts!");
+                            break;
+                        } else {
+                            SimpleUtils.fail("There are no shifts on Sunday!",false);
+                            break;
+                        }
+                    }
+                }
+            } else if (day.toLowerCase().contains("monday")){
+                for (WebElement e : scheduleDays){
+                    if (e.getAttribute("class").contains("1")){
+                        if (areListElementVisible(e.findElements(By.cssSelector(".week-schedule-shift-place.ng-scope")))){
+                            SimpleUtils.pass("On Monday there are shifts!");
+                            break;
+                        } else {
+                            SimpleUtils.fail("There are no shifts on Monday!",false);
+                            break;
+                        }
+                    }
+                }
+            } else if (day.toLowerCase().contains("tuesday")){
+                for (WebElement e : scheduleDays){
+                    if (e.getAttribute("class").contains("2")){
+                        if (areListElementVisible(e.findElements(By.cssSelector(".week-schedule-shift-place.ng-scope")))){
+                            SimpleUtils.pass("On Tuesday there are shifts!");
+                            break;
+                        } else {
+                            SimpleUtils.fail("There are no shifts on Tuesday!",false);
+                            break;
+                        }
+                    }
+                }
+            } else if (day.toLowerCase().contains("wednesday")){
+                for (WebElement e : scheduleDays){
+                    if (e.getAttribute("class").contains("3")){
+                        if (areListElementVisible(e.findElements(By.cssSelector(".week-schedule-shift-place.ng-scope")))){
+                            SimpleUtils.pass("On Wednesday there are shifts!");
+                            break;
+                        } else {
+                            SimpleUtils.fail("There are no shifts on Wednesday!",false);
+                            break;
+                        }
+                    }
+                }
+            } else if (day.toLowerCase().contains("thursday")){
+                for (WebElement e : scheduleDays){
+                    if (e.getAttribute("class").contains("4")){
+                        if (areListElementVisible(e.findElements(By.cssSelector(".week-schedule-shift-place.ng-scope")))){
+                            SimpleUtils.pass("On Thursday there are shifts!");
+                            break;
+                        } else {
+                            SimpleUtils.fail("There are no shifts on Thursday!",false);
+                            break;
+                        }
+                    }
+                }
+            } else if (day.toLowerCase().contains("friday")){
+                for (WebElement e : scheduleDays){
+                    if (e.getAttribute("class").contains("5")){
+                        if (areListElementVisible(e.findElements(By.cssSelector(".week-schedule-shift-place.ng-scope")))){
+                            SimpleUtils.pass("On Friday there are shifts!");
+                            break;
+                        } else {
+                            SimpleUtils.fail("There are no shifts on Friday!",false);
+                            break;
+                        }
+                    }
+                }
+            } else if (day.toLowerCase().contains("saturday")){
+                for (WebElement e : scheduleDays){
+                    if (e.getAttribute("class").contains("6")){
+                        if (areListElementVisible(e.findElements(By.cssSelector(".week-schedule-shift-place.ng-scope")))){
+                            SimpleUtils.pass("On Saturday there are shifts!");
+                            break;
+                        } else {
+                            SimpleUtils.fail("There are no shifts on Saturday!",false);
+                            break;
+                        }
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("No schedule day loaded in schedule page!",false);
+        }
+    }
+
     public void checkOutGenerateScheduleBtn(WebElement checkOutTheScheduleButton) {
         Wait<WebDriver> wait = new FluentWait<WebDriver>(
                 MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(60))

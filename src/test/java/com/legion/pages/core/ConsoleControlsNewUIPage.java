@@ -4248,7 +4248,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 
 	public void displaySuccessMessage() throws Exception {
-		if (isElementLoaded(successMsg, 5)) {
+		if (isElementLoaded(successMsg, 10)) {
 			SimpleUtils.pass("Success pop up displayed successfully.");
 			if (successMsg.getText().contains("Success!")) {
 				SimpleUtils.pass("Success message displayed successfully." + successMsg.getText());
@@ -4941,8 +4941,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			if(isElementLoaded(confSelect,5)) {
 				scrollToElement(confSelect);
 				selectByVisibleText(confSelect,option);
-				preserveTheSetting();
-				System.out.println(isApprovalRequiredToChangeAvailability.getText());
+				displaySuccessMessage();
 			} else{
 				SimpleUtils.fail("Is manager approval required when an employee changes availability? input field not loaded.", false);
 			}
