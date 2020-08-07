@@ -1040,6 +1040,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		String endTime = "06:00PM";
 		//set operating hours: Sunday -> start time: 07:00AM, end time: 06:00PM
 		schedulePage.createScheduleForNonDGFlowNewUIWithGivingParameters(day, startTime, endTime);
+		schedulePage.verifyDayHasShifts(day);
+		schedulePage.verifyDayHasShifts("Monday");
+		schedulePage.verifyDayHasShifts("Tuesday");
+		schedulePage.verifyDayHasShifts("Wednesday");
+		schedulePage.verifyDayHasShifts("Thursday");
+		schedulePage.verifyDayHasShifts("Friday");
+		schedulePage.verifyDayHasShifts("Saturday");
 		schedulePage.goToToggleSummaryView();
 		//verify the operating hours in Toggle Summary View
 		schedulePage.verifyOperatingHrsInToggleSummary(day, startTime, endTime);
