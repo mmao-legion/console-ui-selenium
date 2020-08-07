@@ -259,4 +259,6 @@ public interface ControlsNewUIPage {
 	public void updateSwapAndCoverRequestIsApprovalRequired(String option) throws Exception;
 	public void searchUserByFirstName(String userFirstName) throws Exception;
 	public void verifyUpdateUserAndRolesOneUserLocationInfo(String userFirstName) throws Exception;
+	public void clickOnLocationsTabInGlobalModel() throws Exception;
+	public List<String> getAllLocationsInGlobalModel() throws Exception;
 }

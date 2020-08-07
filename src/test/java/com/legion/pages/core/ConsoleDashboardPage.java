@@ -964,14 +964,11 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	//added by Estelle
-	@FindBy(className = "lg-new-location-chooser__highlight")
-	private WebElement selectedLocation;
 
 	@Override
 	public String getCurrentLocation() throws Exception {
-
-		if (isElementLoaded(selectedLocation,5)) {
-			return   selectedLocation.getText();
+		if (isElementLoaded(currentLocation,5)) {
+			return   currentLocation.getText();
 		}
 		return null;
 	}
@@ -986,6 +983,30 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return null;
 	}
 
+	@Override
+	public boolean IsThereDistrictNavigationForLegionBasic() throws Exception {
+		if (isElementLoaded(currentDistrict,5)) {
+			return true;
+		}
+		return false;
+	}
+
+	@FindBy(css = "div[ng-class=\"{'lg-search-options__subLabel': !option.subLabel}\"]")
+	private List<WebElement> locationsListInDashboardPage;
+	@Override
+	public List<String> getLocationListInDashboard() {
+		click(currentLocation);
+		waitForSeconds(3);
+			if (locationsListInDashboardPage.size()>0) {
+				List<String> locationList = new ArrayList<String>();
+				for (WebElement location: locationsListInDashboardPage
+					 ) {
+					locationList.add(location.getText().split("\n")[0]);
+				}
+				return locationList;
+			}
+		return null;
+	}
 
 
 

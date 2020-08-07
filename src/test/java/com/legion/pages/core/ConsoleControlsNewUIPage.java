@@ -3129,7 +3129,37 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 
 
-		public void searchLocation(String userFirstName) throws Exception {
+	@Override
+	public void clickOnLocationsTabInGlobalModel() throws Exception {
+		if (isElementLoaded(locationsSection,5)) {
+			click(locationsSection);
+		}else
+			SimpleUtils.fail("LocationsSection load failed",true);
+	}
+
+	@FindBy(css = ".lg-tabs__nav >div:nth-child(2)")
+	private WebElement allLocationsInLocations;
+	@FindBy(css = "tr[ng-repeat=\"location in $ctrl.pagedLocations\"]")
+	private List<WebElement> locationRows;
+	@Override
+	public List<String> getAllLocationsInGlobalModel() throws Exception {
+		if (isElementLoaded(allLocationsInLocations,5)) {
+			click(allLocationsInLocations);
+			if (locationRows.size()>0) {
+				List<String> locationList = new ArrayList<String>();
+				for (WebElement location:locationRows
+					 ) {
+					locationList.add(location.findElement(By.cssSelector("td>lg-button > button>span >span")).getText());
+				}
+				return locationList;
+				}else
+					SimpleUtils.fail("There is no location",true);
+ 			}
+		return null;
+		}
+
+
+	public void searchLocation(String userFirstName) throws Exception {
 			if (isElementLoaded(managerLocationPopUpTitle,5)) {
 				managerLocationInputFiled.sendKeys(userFirstName);
 				SimpleUtils.pass("Manager Location: '" + locationListRows.size() + "' location(s) found with name '"

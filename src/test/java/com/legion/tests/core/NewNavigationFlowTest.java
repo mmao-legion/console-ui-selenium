@@ -12,7 +12,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 public class NewNavigationFlowTest extends TestBase {
 
@@ -106,6 +108,67 @@ public class NewNavigationFlowTest extends TestBase {
         //change location to default one in order to avoid other test case
         locationSelectorPage.changeDistrict(currentDistrict);
 
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "LegionBasic_Enterprise")
+    @TestName(description = "Validate legionbasic navigation function")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLegionBasicNavigationFunctionIn(String browser, String username, String password, String location) throws Exception {
+
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        String defaultLocationAfterLogin = dashboardPage.getCurrentLocation();
+
+        //get all locations from location navigation bar
+        List<String> locationsInDashboard = dashboardPage.getLocationListInDashboard();
+        //validate there is no district
+        boolean isShow = dashboardPage.IsThereDistrictNavigationForLegionBasic();
+        if (!isShow ) {
+            SimpleUtils.pass("There is no district show");
+        }else
+            SimpleUtils.fail("For Legionbasic ,it should show district",true);
+        //Validation the location list on navigation bar
+           // go to Controls->global location>get all locations ->compare with navigation bar show
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        boolean isLocationsTabShow = controlsNewUIPage.isControlsLocationsCard();
+        if (isLocationsTabShow ) {
+            controlsNewUIPage.clickOnLocationsTabInGlobalModel();
+            List<String> locationList = controlsNewUIPage.getAllLocationsInGlobalModel();
+            if ((locationList .size()!= 0 && locationsInDashboard.size() !=0)&& (locationList.size() ==locationsInDashboard.size()))
+            {
+
+
+                String[] locationListSwitch = locationList.toArray(new String[]{});
+                String[] locationsInDashboardSwitch = locationsInDashboard.toArray(new String[]{});
+                Arrays.sort(locationListSwitch);
+                Arrays.sort(locationsInDashboardSwitch);
+                if (Arrays.equals(locationListSwitch, locationsInDashboardSwitch)) {
+                    SimpleUtils.pass("Legion basic show all locations successfully");
+                }
+            } else
+                SimpleUtils.fail("Legion basic location not show well",true);
+            }else
+            SimpleUtils.report("Locations Tab is not show ,maybe OPView switch is on");
+
+        //Validated navigation bar show after switch to other tabs and then return to dashboard page
+
+        SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        dashboardPage.clickOnDashboardConsoleMenu();
+        String locationAfterSwitchToOtherPageAndBackToDashboard = dashboardPage.getCurrentLocation();
+        if (locationAfterSwitchToOtherPageAndBackToDashboard .equals(defaultLocationAfterLogin)) {
+            SimpleUtils.pass("After back to dashboard page the location info should not be changed.");
+        }else
+            SimpleUtils.fail("After back to dashboard page the location info was changed",true);
 
     }
 }
