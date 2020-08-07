@@ -173,7 +173,7 @@ public class ScheduleOverviewTest extends TestBase{
 				String scheduleStatusAftGenerated = null;
 				scheduleOverviewPage.clickOnGuidanceBtnOnOverview(i);
 				Thread.sleep(5000);
-				if(schedulePage.isGenerateButtonLoaded())
+				if(!schedulePage.isWeekGenerated())
 				{
 					schedulePage.createScheduleForNonDGFlowNewUI();
 					schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
