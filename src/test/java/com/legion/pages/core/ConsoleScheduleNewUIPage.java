@@ -3501,6 +3501,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(generateModalTitle, 5) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
                 && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
             editTheBudgetForNondgFlow();
+            waitForSeconds(3);
             try {
                 List<WebElement> trs = MyThreadLocal.getDriver().findElements(By.tagName("tr"));
                 if (areListElementVisible(trs, 5) && trs.size() > 0) {
@@ -3511,7 +3512,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             } catch (Exception e) {
                 // Nothing
             }
-            waitForSeconds(3);
             clickTheElement(nextButtonOnCreateSchedule);
         }
         return budgetHour;
