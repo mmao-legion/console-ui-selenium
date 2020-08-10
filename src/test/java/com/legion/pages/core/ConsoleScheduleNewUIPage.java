@@ -10162,9 +10162,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 editTheOperatingHours(new ArrayList<>());
                 waitForSeconds(3);
                 clickTheElement(nextButtonOnCreateSchedule);
-                checkEnterBudgetWindowLoadedForNonDG();
                 verifyTheContentOnEnterBudgetWindow(weekInfo, location);
                 budgetForNonDGFlow = setAndGetBudgetForNonDGFlow();
+                clickTheElement(nextButtonOnCreateSchedule);
                 selectWhichWeekToCopyFrom("SUGGESTED");
                 targetBudgetHrs = targetBudget.getText().trim();
                 if (targetBudgetHrs.contains(" ")) {
