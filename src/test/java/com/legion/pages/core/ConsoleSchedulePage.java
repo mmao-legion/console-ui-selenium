@@ -2817,4 +2817,34 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void verifyClosedDaysInToggleSummaryView(List<String> weekDaysToClose) throws Exception {
 
     }
+
+    @Override
+    public String getWeekInfoBeforeCreateSchedule() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyTheContentOnEnterBudgetWindow(String weekInfo, String location) throws Exception {
+
+    }
+
+    @Override
+    public List<String> setAndGetBudgetForNonDGFlow() throws Exception {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, String> verifyNGetBudgetNScheduleWhileCreateScheduleForNonDGFlowNewUI(String weekInfo, String location) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<String> getBudgetedHoursOnSTAFF() throws Exception {
+        return null;
+    }
+
+    @Override
+    public String getBudgetOnWeeklyBudget() throws Exception {
+        return null;
+    }
 }

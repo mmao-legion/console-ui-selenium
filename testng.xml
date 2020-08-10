@@ -137,6 +137,7 @@
                     <include name="verifyTheFunctionalityOfSwapAndCoverAsInternalAdmin" />
                     <include name="verifyTheFeatureOfFilterAsTeamMember" />
                     <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamMember" />
+<!--                    <include name="verifyContentOfBudgetHoursForNonDGFlowAsTeamMember" />-->
                 </methods>
             </class>
         </classes>

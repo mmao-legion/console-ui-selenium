@@ -434,4 +434,10 @@ public interface SchedulePage {
 	public void verifyNoShiftsForSpecificWeekDay(List<String> weekDaysToClose) throws Exception;
 	public void verifyStoreIsClosedForSpecificWeekDay(List<String> weekDaysToClose) throws Exception;
 	public void verifyClosedDaysInToggleSummaryView(List<String> weekDaysToClose) throws Exception;
+	public String getWeekInfoBeforeCreateSchedule() throws Exception;
+	public void verifyTheContentOnEnterBudgetWindow(String weekInfo, String location) throws Exception;
+	public List<String> setAndGetBudgetForNonDGFlow() throws Exception;
+	public HashMap<String, String> verifyNGetBudgetNScheduleWhileCreateScheduleForNonDGFlowNewUI(String weekInfo, String location) throws Exception;
+	public List<String> getBudgetedHoursOnSTAFF() throws Exception;
+	public String getBudgetOnWeeklyBudget() throws Exception;
 }

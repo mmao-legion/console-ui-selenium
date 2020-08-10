@@ -1007,18 +1007,49 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.verifyClosedDaysInToggleSummaryView(weekDaysToClose);
 	}
 
-	//@Automated(automated = "Automated")
+	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verification of Open Shift Schedule Smart Card when login through TM View")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyContentOfBudgetHoursForNonDGFlowAsTeamMember (String browser, String username, String password, String location) throws Exception {
+	public void verifyContentOfBudgetHoursForNonDGFlowAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.isSchedule(), true);
-		if (schedulePage.isWeekGenerated())
+		schedulePage.goToConsoleScheduleAndScheduleSubMenu();
+		String weekInfo = "";
+		weekInfo = schedulePage.getWeekInfoBeforeCreateSchedule();
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated){
 			schedulePage.unGenerateActiveScheduleScheduleWeek();
-		schedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		HashMap<String,String> budgetNScheduledFromGraph;
+		budgetNScheduledFromGraph = schedulePage.verifyNGetBudgetNScheduleWhileCreateScheduleForNonDGFlowNewUI(weekInfo, location);
+		String budgetFromGraph = "";
+		String scheduledFromGraph = "";
+		budgetFromGraph = budgetNScheduledFromGraph.get("Budget");
+		scheduledFromGraph = budgetNScheduledFromGraph.get("Scheduled");
+		if (!schedulePage.isSummaryViewLoaded())
+			schedulePage.toggleSummaryView();
+		List<String> budgetsOnSTAFF = schedulePage.getBudgetedHoursOnSTAFF();
+		String budgetOnWeeklyBudget = schedulePage.getBudgetOnWeeklyBudget();
+		HashMap<String, String> budgetNScheduledHoursFromSmartCard = schedulePage.getBudgetNScheduledHoursFromSmartCard();
+		String budgetFromSmartCard = "";
+		String scheduledFromSmartCard = "";
+		budgetFromSmartCard = budgetNScheduledHoursFromSmartCard.get("Budget");
+        scheduledFromSmartCard = budgetNScheduledHoursFromSmartCard.get("Scheduled");
+		System.out.println("budgetOnWeeklyBudget is: "+budgetOnWeeklyBudget);
+		String totalBudgetOnSTAFF = "";
+		if (budgetsOnSTAFF.size() > 1) {
+			totalBudgetOnSTAFF = budgetsOnSTAFF.get(budgetsOnSTAFF.size() - 1);
+			System.out.println("totalBudgetOnSTAFF is: "+totalBudgetOnSTAFF);
+		}
+		if (budgetOnWeeklyBudget.equals(budgetFromGraph) && budgetFromSmartCard.equals(budgetOnWeeklyBudget) && totalBudgetOnSTAFF.equals(budgetFromGraph))
+			SimpleUtils.pass("The budget hours is consistent with the saved value both in STAFF and smart cards (including Weekly)");
+		else
+			SimpleUtils.warn("The budget hours is inconsistent with the saved value both in STAFF and smart cards (including Weekly) since there are bugs https://legiontech.atlassian.net/browse/SF-1054 and (https://legiontech.atlassian.net/browse/SF-1113");
+		if (scheduledFromGraph.equals(scheduledFromSmartCard))
+			SimpleUtils.pass("The scheduled hours is consistent with the saved value both in STAFF and smart card");
+		else
+			SimpleUtils.fail("The scheduled hours is inconsistent with the saved value both in STAFF and smart card",false);
 	}
 
 	@Automated(automated = "Automated")
