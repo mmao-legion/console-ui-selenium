@@ -10049,6 +10049,34 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return resultList;
     }
 
+    @Override
+    public void verifyChangesNotPublishSmartCard(int changesNotPublished) throws Exception {
+        if (areListElementVisible(smartCards,10)){
+            for (WebElement e: smartCards){
+                //findElement(By.cssSelector(".card-carousel-card-title"))
+                if (e.getText().toLowerCase().contains("action required")&&e.getText().toLowerCase().contains("changes")&&e.getText().toLowerCase().contains("not published")){
+                    SimpleUtils.pass("Changes not published smart card loads successfully!");
+                    if (changesNotPublished!=0){
+                        if (e.getText().toLowerCase().contains(String.valueOf(changesNotPublished))){
+                            SimpleUtils.pass("Number of changes is correct!");
+                        } else {
+                            SimpleUtils.fail("Number of changes is not correct!",true);
+                        }
+                    } else {
+                        if (!e.getText().toLowerCase().contains(String.valueOf(changesNotPublished))){
+                            SimpleUtils.pass("No number of changes displays after generate schedule and save it!");
+                        } else {
+                            SimpleUtils.fail("There should not be a number on smart card after generate schedule and save it!",true);
+                        }
+                    }
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("No smart cards!", false);
+        }
+    }
+
     //Added by Julie
 //    public List<Float> getBudgetForNonDGFlow() throws Exception {
 //        if (isElementLoaded(editBudgetBtn, 5)) {

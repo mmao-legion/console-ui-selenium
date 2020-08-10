@@ -434,4 +434,5 @@ public interface SchedulePage {
 	public void verifyNoShiftsForSpecificWeekDay(List<String> weekDaysToClose) throws Exception;
 	public void verifyStoreIsClosedForSpecificWeekDay(List<String> weekDaysToClose) throws Exception;
 	public void verifyClosedDaysInToggleSummaryView(List<String> weekDaysToClose) throws Exception;
+	public void verifyChangesNotPublishSmartCard(int changesNotPublished) throws Exception;
 }
