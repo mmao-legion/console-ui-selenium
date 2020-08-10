@@ -443,6 +443,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.week-schedule-right-strip.ng-scope")
     private WebElement tmDetailsDisplayedOnScreen;
 
+    @FindBy(css = "div.generate-modal-budget-step-container")
+    private WebElement enterBudgetTable;
+
 
 
 
@@ -3503,7 +3506,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             editTheBudgetForNondgFlow();
             waitForSeconds(3);
             try {
-                List<WebElement> trs = MyThreadLocal.getDriver().findElements(By.tagName("tr"));
+                List<WebElement> trs = enterBudgetTable.findElements(By.tagName("tr"));
                 if (areListElementVisible(trs, 5) && trs.size() > 0) {
                     WebElement budget = trs.get(trs.size() - 1).findElement(By.cssSelector("th:nth-child(4)"));
                     budgetHour = Float.parseFloat(budget == null ? "" : budget.getText());
