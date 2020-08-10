@@ -2847,4 +2847,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public String getBudgetOnWeeklyBudget() throws Exception {
         return null;
     }
+
+    @Override
+    public void verifyChangesNotPublishSmartCard(int changesNotPublished) throws Exception {
+
+    }
 }

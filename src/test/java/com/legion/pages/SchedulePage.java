@@ -440,4 +440,5 @@ public interface SchedulePage {
 	public HashMap<String, String> verifyNGetBudgetNScheduleWhileCreateScheduleForNonDGFlowNewUI(String weekInfo, String location) throws Exception;
 	public List<String> getBudgetedHoursOnSTAFF() throws Exception;
 	public String getBudgetOnWeeklyBudget() throws Exception;
+	public void verifyChangesNotPublishSmartCard(int changesNotPublished) throws Exception;
 }

@@ -333,4 +333,35 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             SimpleUtils.fail("Unable to change District!", true);
         }
     }
+
+    public void changeDistrictDirect(String districtName) {
+        waitForSeconds(4);
+        try {
+            Boolean isDistrictMatched = false;
+            if (isChangeDistrictButtonLoaded()) {
+                click(districtSelectorButton);
+                if (isElementLoaded(districtDropDownButton)) {
+                    if (availableLocationCardsName.size() != 0) {
+                        for (WebElement locationCardName : availableLocationCardsName) {
+                            if (locationCardName.getText().contains(districtName)) {
+                                isDistrictMatched = true;
+                                click(locationCardName);
+                                SimpleUtils.pass("District changed successfully to '" + districtName + "'");
+                                break;
+                            }
+                        }
+                        if (!isDistrictMatched) {
+                            if (isChangeDistrictButtonLoaded()) {
+                                click(districtSelectorButton);
+                            }
+                            SimpleUtils.fail("District does not matched with '" + districtName + "'", true);
+                        }
+                    }
+                }
+            }
+        }
+        catch(Exception e) {
+            SimpleUtils.fail("Unable to change District!", true);
+        }
+    }
 }

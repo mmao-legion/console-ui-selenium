@@ -15,4 +15,5 @@ public interface LocationSelectorPage {
 	public void verifyClickChangeLocationButton() throws Exception;
 	public void verifyTheContentOfDetailLocations() throws Exception;
 	public void verifyTheFunctionOfSearchTextBox(List<String> testStrings) throws Exception;
+	public void changeDistrictDirect(String districtName) throws Exception;
 }

@@ -718,18 +718,14 @@ public class ActivityTest extends TestBase {
 
         //make publish schedule activity
         boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
-        if(!isActiveWeekGenerated){
-            // generateOrUpdateAndGenerateSchedule() is used for the old UI
-            //schedulePage.generateOrUpdateAndGenerateSchedule();
-            schedulePage.createScheduleForNonDGFlowNewUI();
-            schedulePage.publishActiveSchedule();
-        }else {
+        if (isActiveWeekGenerated){
             schedulePage.unGenerateActiveScheduleScheduleWeek();
-            // generateOrUpdateAndGenerateSchedule() is used for the old UI
-            //schedulePage.generateOrUpdateAndGenerateSchedule();
-            schedulePage.createScheduleForNonDGFlowNewUI();
-            schedulePage.publishActiveSchedule();
         }
+        schedulePage.createScheduleForNonDGFlowNewUI();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView("Unassigned");
+        schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
         LoginPage loginPage = pageFactory.createConsoleLoginPage();

@@ -444,6 +444,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.week-schedule-right-strip.ng-scope")
     private WebElement tmDetailsDisplayedOnScreen;
 
+    @FindBy(css = "div.generate-modal-budget-step-container")
+    private WebElement enterBudgetTable;
+
 
 
 
@@ -3502,8 +3505,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(generateModalTitle, 5) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
                 && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
             editTheBudgetForNondgFlow();
+            waitForSeconds(3);
             try {
-                List<WebElement> trs = MyThreadLocal.getDriver().findElements(By.tagName("tr"));
+                List<WebElement> trs = enterBudgetTable.findElements(By.tagName("tr"));
                 if (areListElementVisible(trs, 5) && trs.size() > 0) {
                     WebElement budget = trs.get(trs.size() - 1).findElement(By.cssSelector("th:nth-child(4)"));
                     budgetHour = Float.parseFloat(budget == null ? "" : budget.getText());
@@ -3512,7 +3516,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             } catch (Exception e) {
                 // Nothing
             }
-            waitForSeconds(3);
             clickTheElement(nextButtonOnCreateSchedule);
         }
         return budgetHour;
@@ -10250,5 +10253,33 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("data on schedules widget fail to load!",true);
         }
         return resultList;
+    }
+
+    @Override
+    public void verifyChangesNotPublishSmartCard(int changesNotPublished) throws Exception {
+        if (areListElementVisible(smartCards,10)){
+            for (WebElement e: smartCards){
+                //findElement(By.cssSelector(".card-carousel-card-title"))
+                if (e.getText().toLowerCase().contains("action required")&&e.getText().toLowerCase().contains("changes")&&e.getText().toLowerCase().contains("not published")){
+                    SimpleUtils.pass("Changes not published smart card loads successfully!");
+                    if (changesNotPublished!=0){
+                        if (e.getText().toLowerCase().contains(String.valueOf(changesNotPublished))){
+                            SimpleUtils.pass("Number of changes is correct!");
+                        } else {
+                            SimpleUtils.fail("Number of changes is not correct!",true);
+                        }
+                    } else {
+                        if (!e.getText().toLowerCase().contains(String.valueOf(changesNotPublished))){
+                            SimpleUtils.pass("No number of changes displays after generate schedule and save it!");
+                        } else {
+                            SimpleUtils.fail("There should not be a number on smart card after generate schedule and save it!",true);
+                        }
+                    }
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("No smart cards!", false);
+        }
     }
 }

@@ -1100,10 +1100,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			if (locationCard.getAttribute(attribute) != null && !locationCard.getAttribute(attribute).isEmpty()){
 				SimpleUtils.pass("Select one Location successfully!");
 			}else{
-				SimpleUtils.fail("Failed to select the Location!", true);
+				SimpleUtils.fail("Failed to select the Location!", false);
 			}
 		}else{
-			SimpleUtils.fail("Location Cards Failed to load!", true);
+			SimpleUtils.fail("Location Cards Failed to load!", false);
 		}
 		return selectedLocation;
 	}

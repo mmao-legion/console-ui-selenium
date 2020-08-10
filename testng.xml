@@ -122,6 +122,7 @@
                     <include name="verifyContentAfterChangingOperatingHrsAsInternalAdmin" />
                     <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
                     <include name="verifyTheContentOfClosedWeekDayScheduleForNonDGFlowAsInternalAdmin" />
+                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

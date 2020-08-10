@@ -767,7 +767,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateTheVisibilityOfProfilePicture() throws Exception {
 		if (isElementLoaded(iconProfile, 5)) {
 			if (iconProfile.isDisplayed()) {
-				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[1]")).equals(iconProfile)) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[1]/img")).equals(iconProfile)) {
 					SimpleUtils.pass("Profile picture is visible at right corner of the page successfully");
 				} else {
 					SimpleUtils.fail("Profile picture isn't visible at right corner of the page", true);
