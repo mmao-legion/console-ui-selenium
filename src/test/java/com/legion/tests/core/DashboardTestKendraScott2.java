@@ -153,6 +153,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 		}
 		schedulePageAdmin.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		schedulePageAdmin.deleteTMShiftInWeekView(nickName);
+		schedulePageAdmin.deleteTMShiftInWeekView("Unassigned");
 		schedulePageAdmin.clickOnDayViewAddNewShiftButton();
 		schedulePageAdmin.customizeNewShiftPage();
 		schedulePageAdmin.selectWorkRole("MOD");

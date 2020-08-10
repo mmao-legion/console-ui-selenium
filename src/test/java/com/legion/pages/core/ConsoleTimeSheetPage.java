@@ -2649,11 +2649,11 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	}
 
 	private void filterTheLocationByName(String locationName) throws Exception {
-		if (isElementLoaded(selectLocationLabel, 5)) {
+		if (isElementLoaded(selectLocationLabel, 10)) {
 			clickTheElement(selectLocationLabel);
-			if (areListElementVisible(locationItemsInFilter, 5)) {
+			if (areListElementVisible(locationItemsInFilter, 10)) {
 				SimpleUtils.pass("Timesheet Page: Click on the Location Filter Successfully!");
-				if (isElementLoaded(activeClearFilterBtn, 5)) {
+				if (isElementLoaded(activeClearFilterBtn, 10)) {
 					clickTheElement(activeClearFilterBtn);
 					boolean isClear = true;
 					for (WebElement locationItem : locationItemsInFilter) {

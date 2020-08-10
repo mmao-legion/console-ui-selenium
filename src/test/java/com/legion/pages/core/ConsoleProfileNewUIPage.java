@@ -1258,10 +1258,18 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.pass("Profile Page: 'Volunteers for Additional Work' CheckBox already Disabled.");
 			else if(! isOfferForOtherLocation && volunteerMoreHoursCheckButton.getAttribute("class").contains("enable")) {
 				click(volunteerMoreHoursCheckButton);
+				// Verify if "Agree" button loaded
+				if (isElementLoaded(OKButton, 5)) {
+					clickTheElement(OKButton);
+				}
 				SimpleUtils.pass("Profile Page: 'Volunteers for Additional Work' CheckBox Disabled successfully.");
 			}
 			else {
 				click(volunteerMoreHoursCheckButton);
+				// Verify if "Agree" button loaded
+				if (isElementLoaded(OKButton, 5)) {
+					clickTheElement(OKButton);
+				}
 				SimpleUtils.pass("Profile Page: 'Volunteers for Additional Work' CheckBox Enabled successfully.");
 			}
 		}

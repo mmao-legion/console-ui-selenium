@@ -466,10 +466,10 @@ public class LiquidDashboardTest extends TestBase {
         if (!isWeekGenerated){
             schedulePage.createScheduleForNonDGFlowNewUI();
         }
-        boolean isWeekPublished = schedulePage.isWeekPublished();
-        if (!isWeekPublished) {
-            schedulePage.publishActiveSchedule();
-        }
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView("Unassigned");
+        schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
 
         dashboardPage.navigateToDashboard();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
