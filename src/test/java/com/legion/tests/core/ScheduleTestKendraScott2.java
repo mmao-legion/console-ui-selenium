@@ -1077,5 +1077,73 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.goToToggleSummaryView();
 		schedulePage.verifyOperatingHrsInToggleSummary(day, startTime, endTime);
 	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the budget hour in DM view schedule page for non dg flow")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated) {
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		List<String> weekDaysToClose = new ArrayList<>();
+		float budgetHoursInSchedule = schedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose);
+
+		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+		locationSelectorPage.changeDistrictDirect("Demo District");
+
+		ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+		float budgetedHoursInDMViewSchedule = scheduleDMViewPage.getBudgetedHourOfScheduleInDMViewByLocation(location);
+		if (budgetHoursInSchedule != 0 && budgetHoursInSchedule == budgetedHoursInDMViewSchedule) {
+			SimpleUtils.pass("Verified the budget hour in DM view schedule page is consistent with the value saved in create schedule page!");
+		} else {
+			SimpleUtils.fail("Verified the budget hour in DM view schedule page is consistent with the value saved in create schedule page! The budget hour in DM view schedule page is " +
+					budgetHoursInSchedule + ". The value saved in create schedule page is " + budgetedHoursInDMViewSchedule, false);
+		}
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify smart card for schedule not publish(include past weeks)")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifySmartCardForScheduleNotPublishAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab("Schedule");
+		schedulePage.navigateToNextWeek();
+		schedulePage.navigateToNextWeek();
+		if (schedulePage.isWeekGenerated()){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		//make edits
+		schedulePage.customizeNewShiftPage();
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.saveSchedule();
+		//generate and save, should not display number of changes, we set it as 0.
+		int changesNotPublished = 0;
+		//Verify changes not publish smart card.
+		SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
+		schedulePage.verifyChangesNotPublishSmartCard(changesNotPublished);
+
+	}
 }
 

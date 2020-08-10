@@ -2817,4 +2817,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void verifyClosedDaysInToggleSummaryView(List<String> weekDaysToClose) throws Exception {
 
     }
+
+    @Override
+    public void verifyChangesNotPublishSmartCard(int changesNotPublished) throws Exception {
+
+    }
 }

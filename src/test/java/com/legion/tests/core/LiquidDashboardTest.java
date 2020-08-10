@@ -1078,7 +1078,7 @@ public class LiquidDashboardTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify Timesheet Approval Rate widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyTimesheetApprovalRateWidgetAsStoreManager(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimesheetApprovalRateWidgetAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
