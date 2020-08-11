@@ -1176,5 +1176,102 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.verifyChangesNotPublishSmartCard(changesNotPublished);
 
 	}
+
+	// Add the new test cases for "Schedule Not Published"
+	@Automated(automated = "Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "verify smart card for compliance violation")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated) {
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+		String cardName = "COMPLIANCE";
+		int originalComplianceCount = 0;
+		if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
+			originalComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+		}
+		schedulePage.clickOnDayView();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.dragOneShiftToMakeItOverTime();
+		schedulePage.saveSchedule();
+		schedulePage.clickOnWeekView();
+		int currentComplianceCount = 0;
+		if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
+			currentComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+			if (currentComplianceCount == originalComplianceCount + 1) {
+				SimpleUtils.pass("Schedule Week View: Compliance Count is correct after updating a new overtime shift!");
+			} else {
+				SimpleUtils.fail("Schedule Week View: Compliance Count is incorrect, original is: " + originalComplianceCount + ", current is: "
+				+ currentComplianceCount + ", the difference between two numbers should equal to 1!", false);
+			}
+		} else {
+			SimpleUtils.fail("Schedule Week View: Compliance smart card failed to show!", false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "verify smart card for compliance violation -republish")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		schedulePage.navigateToNextWeek();
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated) {
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.deleteTMShiftInWeekView("Unassigned");
+		schedulePage.saveSchedule();
+		schedulePage.publishActiveSchedule();
+
+		String cardName = "COMPLIANCE";
+		int originalComplianceCount = 0;
+		if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
+			originalComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+		}
+		schedulePage.clickOnDayView();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.dragOneShiftToMakeItOverTime();
+		schedulePage.saveSchedule();
+		schedulePage.clickOnWeekView();
+		int currentComplianceCount = 0;
+		if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
+			currentComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+			if (currentComplianceCount == originalComplianceCount + 1) {
+				SimpleUtils.pass("Schedule Week View: Compliance Count is correct after updating a new overtime shift!");
+			} else {
+				SimpleUtils.fail("Schedule Week View: Compliance Count is incorrect, original is: " + originalComplianceCount + ", current is: "
+						+ currentComplianceCount + ", the difference between two numbers should equal to 1!", false);
+			}
+		} else {
+			SimpleUtils.fail("Schedule Week View: Compliance smart card failed to show!", false);
+		}
+	}
 }
 

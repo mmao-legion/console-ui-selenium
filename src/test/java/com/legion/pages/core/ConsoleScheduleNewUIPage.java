@@ -3351,6 +3351,36 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    // Added by Nora: for day view overtime
+    @Override
+    public void dragOneShiftToMakeItOverTime() throws Exception {
+        if (areListElementVisible(scheduleShiftsRows, 10) && scheduleShiftsRows.size() > 0) {
+            SimpleUtils.report("Schedule Day View: shifts loaded Successfully!");
+            int index = 0;
+            WebElement leftPinch = scheduleShiftsRows.get(index).findElement(By.cssSelector(".sch-day-view-shift-pinch.left"));
+            WebElement rightPinch = scheduleShiftsRows.get(index).findElement(By.cssSelector(".sch-day-view-shift-pinch.right"));
+            List<WebElement> gridCells = scheduleShiftsRows.get(index).findElements(By.cssSelector(".sch-day-view-grid-cell"));
+            if (leftPinch != null && rightPinch != null && gridCells != null && gridCells.size() > 0) {
+                WebElement firstCell = gridCells.get(0);
+                WebElement lastCell = gridCells.get(gridCells.size() - 1);
+                mouseHoverDragandDrop(leftPinch, firstCell);
+                waitForSeconds(2);
+                mouseHoverDragandDrop(rightPinch, lastCell);
+                waitForSeconds(2);
+                WebElement flag = scheduleShiftsRows.get(index).findElement(By.cssSelector(".sch-day-view-shift-overtime-icon"));
+                if (flag != null) {
+                    SimpleUtils.pass("Schedule Day View: day overtime icon shows correctly!");
+                } else {
+                    SimpleUtils.fail("Schedule Day View: day overtime icon failed to show!", false);
+                }
+            } else {
+                SimpleUtils.fail("Schedule Day View: Failed to find the left pinch, right pinch and grid cells elements!", false);
+            }
+        } else {
+            SimpleUtils.report("Schedule Day View: There is no shift for this day!");
+        }
+    }
+
     // Added by Nora: For non dg flow create schedule
     @FindBy (className = "generate-modal-subheader-title")
     private WebElement generateModalTitle;
