@@ -123,6 +123,8 @@
                     <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
                     <include name="verifyTheContentOfClosedWeekDayScheduleForNonDGFlowAsInternalAdmin" />
                     <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
+                    <!-- <include name="verifyContentOfBudgetHoursForNonDGFlowAsInternalAdmin" />-->
+                    <include name="verifyTooltipForDeleteShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -138,7 +140,6 @@
                     <include name="verifyTheFunctionalityOfSwapAndCoverAsInternalAdmin" />
                     <include name="verifyTheFeatureOfFilterAsTeamMember" />
                     <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamMember" />
-<!--                    <include name="verifyContentOfBudgetHoursForNonDGFlowAsTeamMember" />-->
                 </methods>
             </class>
         </classes>
