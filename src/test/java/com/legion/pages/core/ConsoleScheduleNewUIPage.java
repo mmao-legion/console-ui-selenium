@@ -832,7 +832,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.confirm")
     private WebElement btnContinue;
 
-
     List<String> scheduleWeekDate = new ArrayList<String>();
     List<String> scheduleWeekStatus = new ArrayList<String>();
 
@@ -9426,6 +9425,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = ".generate-modal-week-container.selected text[x=\"85\"]")
     private WebElement scheduledHrsOnGraph;
 
+    @FindBy (xpath = "//div[contains(text(), \"Action Required\")]/following-sibling::h1[1]")
+    private WebElement changesOnActionRequired;
+
+    @FindBy(css = "img[ng-if=\"unpublishedDeleted && isOneAndOnlyShiftTypeSelected('Edited')\"]")
+    private WebElement tooltipIconOfUnpublishedDeleted;
+
     List<String> weekScheduleShiftTimeListOfWeekView = new ArrayList<String>();
     List<String> weekScheduleShiftTimeListOfMySchedule = new ArrayList<String>();
 
@@ -10259,6 +10264,25 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             budgetOnWeeklyBudget = budgetHoursOnWeeklyBudget.getText().split(" ")[0];
         }
         return budgetOnWeeklyBudget;
+    }
+
+    @Override
+    public String getChangesOnActionRequired() throws Exception {
+        String changes = "";
+        if (isElementLoaded(changesOnActionRequired, 10)) {
+            changes = changesOnActionRequired.getText().replaceAll("\"","").trim();
+        }
+        return changes;
+    }
+
+    @Override
+    public String getTooltipOfUnpublishedDeleted() throws Exception {
+        String tooltipOfUnpublishedDeleted = "";
+        if (isElementLoaded(tooltipIconOfUnpublishedDeleted,10)) {
+            mouseHover(tooltipIconOfUnpublishedDeleted);
+            tooltipOfUnpublishedDeleted = changesOnActionRequired.getAttribute("data-tootik");
+        }
+        return tooltipOfUnpublishedDeleted;
     }
 
     //added by haya.  return a List has 4 week's data including last week

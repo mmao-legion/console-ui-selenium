@@ -1010,9 +1010,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verification of Open Shift Schedule Smart Card when login through TM View")
+	@TestName(description = "Verify the content after changing Budget Hours, and the budget and scheduled hours in smart card for non dg flow")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyContentOfBudgetHoursForNonDGFlowAsTeamMember(String browser, String username, String password, String location) throws Exception {
+	public void verifyContentOfBudgetHoursForNonDGFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.goToConsoleScheduleAndScheduleSubMenu();
 		String weekInfo = "";
@@ -1021,8 +1021,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		if (isWeekGenerated){
 			schedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
-		HashMap<String,String> budgetNScheduledFromGraph;
-		budgetNScheduledFromGraph = schedulePage.verifyNGetBudgetNScheduleWhileCreateScheduleForNonDGFlowNewUI(weekInfo, location);
+		HashMap<String,String> budgetNScheduledFromGraph = schedulePage.verifyNGetBudgetNScheduleWhileCreateScheduleForNonDGFlowNewUI(weekInfo, location);
 		String budgetFromGraph = "";
 		String scheduledFromGraph = "";
 		budgetFromGraph = budgetNScheduledFromGraph.get("Budget");
@@ -1272,6 +1271,44 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		} else {
 			SimpleUtils.fail("Schedule Week View: Compliance smart card failed to show!", false);
 		}
+	}
+	
+	@Automated(automated = "Automated")
+	@Owner(owner = "Julie")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify tooltip for delete shifts")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTooltipForDeleteShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.goToConsoleScheduleAndScheduleSubMenu();
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (!isWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.addOpenShiftWithLastDay("MOD");
+		schedulePage.deleteTMShiftInWeekView("Unassigned");
+		schedulePage.saveSchedule();
+		schedulePage.publishActiveSchedule();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.addOpenShiftWithDefaultTime("MOD");
+		schedulePage.deleteOpenShiftWithLastDay();
+		schedulePage.saveSchedule();
+		// Check the number on changes not publish smart card
+		if (schedulePage.getChangesOnActionRequired().contains("2 Changes"))
+			SimpleUtils.pass("ACTION REQUIRED Smart Card: The number on changes not publish smart card is 2");
+		else
+			SimpleUtils.fail("ACTION REQUIRED Smart Card: The number on changes not publish smart card is incorrect",true);
+		// Filter unpublished changes to check the shifts and tooltip
+		schedulePage.selectShiftTypeFilterByText("Unpublished changes");
+		if (schedulePage.getShiftsCount() == 1)
+			SimpleUtils.pass("ACTION REQUIRED Smart Card: There is only one shift as expected");
+		else
+			SimpleUtils.fail("ACTION REQUIRED Smart Card: There is only one shift as expected",true);
+		if (schedulePage.getTooltipOfUnpublishedDeleted().contains("1 shift deleted"))
+			SimpleUtils.pass("ACTION REQUIRED Smart Card: \"1 shift deleted\" tooltip shows up on smart card");
+		else
+			SimpleUtils.fail("ACTION REQUIRED Smart Card: \"1 shift deleted\" tooltip doesn't show up on smart card",false);
 	}
 }
 

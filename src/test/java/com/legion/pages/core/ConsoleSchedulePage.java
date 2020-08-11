@@ -2857,4 +2857,14 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void dragOneShiftToMakeItOverTime() throws Exception {
 
     }
+
+    @Override
+    public String getChangesOnActionRequired() throws Exception {
+        return null;
+    }
+
+    @Override
+    public String getTooltipOfUnpublishedDeleted() throws Exception {
+        return null;
+    }
 }

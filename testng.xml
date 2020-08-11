@@ -125,6 +125,8 @@
                     <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
                     <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
                     <include name="verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin" />
+                    <!-- <include name="verifyContentOfBudgetHoursForNonDGFlowAsInternalAdmin" />-->
+                    <include name="verifyTooltipForDeleteShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -140,7 +142,6 @@
                     <include name="verifyTheFunctionalityOfSwapAndCoverAsInternalAdmin" />
                     <include name="verifyTheFeatureOfFilterAsTeamMember" />
                     <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamMember" />
-<!--                    <include name="verifyContentOfBudgetHoursForNonDGFlowAsTeamMember" />-->
                 </methods>
             </class>
         </classes>
