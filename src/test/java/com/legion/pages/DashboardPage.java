@@ -1,5 +1,7 @@
 package com.legion.pages;
 
+import org.openqa.selenium.WebElement;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,4 +52,5 @@ public interface DashboardPage {
     public String getDateFromTimeZoneOfLocation(String pattern) throws Exception;
     public void clickOnSwitchToEmployeeView() throws Exception;
     public boolean isSwitchToEmployeeViewPresent() throws Exception;
+    public List<WebElement> getDashboardScheduleWeeks() throws Exception;
 }

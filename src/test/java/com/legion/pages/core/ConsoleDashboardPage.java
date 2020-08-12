@@ -966,4 +966,15 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.fail("Switch To Employee View not Loaded!", true);
 		}
 	}
+
+	@FindBy(css = "div.row-fx.schedule-table-row.ng-scope")
+	private List<WebElement> dashboardScheduleWeeks;
+
+	@Override
+	public List<WebElement> getDashboardScheduleWeeks() {
+		if(areListElementVisible(dashboardScheduleWeeks,10)){
+			return dashboardScheduleWeeks;
+		}
+		return dashboardScheduleWeeks;
+	}
 }

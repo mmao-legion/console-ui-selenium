@@ -9,6 +9,7 @@ import com.legion.pages.*;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -1309,6 +1310,70 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.pass("ACTION REQUIRED Smart Card: \"1 shift deleted\" tooltip shows up on smart card");
 		else
 			SimpleUtils.fail("ACTION REQUIRED Smart Card: \"1 shift deleted\" tooltip doesn't show up on smart card",false);
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "verify the Unpublished Edits text on dashboard and overview page")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (!isWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.addOpenShiftWithLastDay("MOD");
+		schedulePage.saveSchedule();
+
+		//Verify the Unpublished Edits text on overview page
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		List<WebElement> schedulesInOverviewPage = scheduleOverviewPage.getOverviewScheduleWeeks();
+		if (schedulesInOverviewPage != null && schedulesInOverviewPage.size()>0){
+			WebElement warningTextOfCurrentScheduleWeek = schedulesInOverviewPage.get(0).findElement(By.cssSelector("div.text-small.ng-binding"));
+			if (warningTextOfCurrentScheduleWeek != null){
+				String warningText = warningTextOfCurrentScheduleWeek.getText();
+				if (warningText !=null && warningText.equals("Unpublished Edits")){
+					SimpleUtils.pass("Verified the Unpublished Edits on Overview page display correctly. ");
+				}
+				else{
+					SimpleUtils.fail("Verified the Unpublished Edits on Overview page display incorrectly. The actual warning text is " + warningText +".", true);
+				}
+			}
+		}
+		else{
+			SimpleUtils.fail("Overview Page: Schedule weeks not found!" , true);
+		}
+
+		//Verify the Unpublished Edits text on dashboard page
+		dashboardPage.navigateToDashboard();
+		List<WebElement> dashboardScheduleWeeks = dashboardPage.getDashboardScheduleWeeks();
+		if (dashboardScheduleWeeks != null && dashboardScheduleWeeks.size()>0){
+			WebElement warningTextOfCurrentScheduleWeek = dashboardScheduleWeeks.get(1).findElement(By.cssSelector("div.text-small.ng-binding"));
+			if (warningTextOfCurrentScheduleWeek != null){
+				String warningText = warningTextOfCurrentScheduleWeek.getText();
+				if (warningText !=null && warningText.equals("Unpublished Edits")){
+					SimpleUtils.pass("Verified the Unpublished Edits text on Dashboard page display correctly. ");
+				}
+				else{
+					SimpleUtils.fail("Verified the Unpublished Edits text on Dashboard page display incorrectly. The actual warning text is " + warningText +".", false);
+				}
+			}
+		}
+		else{
+			SimpleUtils.fail("Dashboard Page: Schedule weeks not found!" , false);
+		}
 	}
 }
 

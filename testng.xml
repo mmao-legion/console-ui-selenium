@@ -127,6 +127,7 @@
                     <include name="verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin" />
                     <!-- <include name="verifyContentOfBudgetHoursForNonDGFlowAsInternalAdmin" />-->
                     <include name="verifyTooltipForDeleteShiftsAsInternalAdmin" />
+                    <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
