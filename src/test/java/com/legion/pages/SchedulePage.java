@@ -444,4 +444,5 @@ public interface SchedulePage {
 	public void dragOneShiftToMakeItOverTime() throws Exception;
 	public String getChangesOnActionRequired() throws Exception;
 	public String getTooltipOfUnpublishedDeleted() throws Exception;
+	public void verifyLabelOfPublishBtn(String labelExpected) throws  Exception;
 }

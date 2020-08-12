@@ -2867,4 +2867,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public String getTooltipOfUnpublishedDeleted() throws Exception {
         return null;
     }
+
+    @Override
+    public void verifyLabelOfPublishBtn(String labelExpected) throws Exception {
+
+    }
 }

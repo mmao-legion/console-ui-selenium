@@ -10304,36 +10304,87 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 resultList.add(Arrays.toString(temp2));
             }
         } else {
-            SimpleUtils.fail("data on schedules widget fail to load!",true);
+            SimpleUtils.fail("data on schedules widget fail to load!",false);
         }
         return resultList;
     }
 
     @Override
     public void verifyChangesNotPublishSmartCard(int changesNotPublished) throws Exception {
+        boolean flag = false;
         if (areListElementVisible(smartCards,10)){
-            for (WebElement e: smartCards){
+            for (WebElement e: smartCards) {
                 //findElement(By.cssSelector(".card-carousel-card-title"))
-                if (e.getText().toLowerCase().contains("action required")&&e.getText().toLowerCase().contains("changes")&&e.getText().toLowerCase().contains("not published")){
-                    SimpleUtils.pass("Changes not published smart card loads successfully!");
-                    if (changesNotPublished!=0){
-                        if (e.getText().toLowerCase().contains(String.valueOf(changesNotPublished))){
-                            SimpleUtils.pass("Number of changes is correct!");
-                        } else {
-                            SimpleUtils.fail("Number of changes is not correct!",true);
-                        }
-                    } else {
-                        if (!e.getText().toLowerCase().contains(String.valueOf(changesNotPublished))){
-                            SimpleUtils.pass("No number of changes displays after generate schedule and save it!");
-                        } else {
-                            SimpleUtils.fail("There should not be a number on smart card after generate schedule and save it!",true);
-                        }
+                String s = e.getText();
+                if (changesNotPublished == 0) {
+                    if (e.getText().toLowerCase().contains("action required") && e.getText().toLowerCase().contains("schedule not") && e.getText().toLowerCase().contains("published")) {
+                        SimpleUtils.pass("Changes not published smart card loads successfully!");
+                        flag = true;
+                        break;
                     }
-                    break;
+                } else {
+                    if (e.getText().toLowerCase().contains("action required") && e.getText().toLowerCase().contains(changesNotPublished + " change") && e.getText().toLowerCase().contains("not published")) {
+                        SimpleUtils.pass("Changes not published smart card with number of changes loads successfully!");
+                        flag = true;
+                        break;
+                    }
                 }
+            }
+            if (!flag){
+                SimpleUtils.fail("There is no expected smart card",false);
             }
         } else {
             SimpleUtils.fail("No smart cards!", false);
         }
     }
+
+    @Override
+    public void verifyLabelOfPublishBtn(String labelExpected) throws Exception {
+        if (isElementLoaded(txtPublishSheduleButton,5)){
+            if (txtPublishSheduleButton.getText().equals(labelExpected)){
+                SimpleUtils.pass("Label on publish button is correct!");
+            } else {
+                SimpleUtils.fail("Label on publish button is incorrect!",false);
+            }
+        } else {
+            SimpleUtils.fail("publish button fail to load!",false);
+        }
+    }
+
+    //Added by Julie
+//    public List<Float> getBudgetForNonDGFlow() throws Exception {
+//        if (isElementLoaded(editBudgetBtn, 5)) {
+//            clickTheElement(editBudgetBtn);
+//            // Cancel and Save buttons are consistent with operating hours
+//            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
+//                SimpleUtils.pass("Create Schedule - Enter Budget: Click on Edit button Successfully!");
+//                if (areListElementVisible(roleHoursRows, 5)) {
+//                    for (WebElement roleHoursRow : roleHoursRows) {
+//                        try {
+//                            WebElement forecastHour = roleHoursRow.findElement(By.cssSelector("td:nth-child(3)"));
+//                            WebElement budgetHour = roleHoursRow.findElement(By.cssSelector("input[type=\"number\"]"));
+//                            if (forecastHour != null && budgetHour != null) {
+//                                String forecastHourString = "";
+//                                if (forecastHour.getText().trim().contains(".")) {
+//                                    forecastHourString = forecastHour.getText().trim().substring(0, forecastHour.getText().trim().indexOf("."));
+//                                }
+//                                budgetHour.clear();
+//                                budgetHour.sendKeys(forecastHourString);
+//                            }
+//                        }catch (Exception e) {
+//                            continue;
+//                        }
+//                    }
+//                    clickTheElement(operatingHoursSaveBtn);
+//                    if (isElementEnabled(editBudgetBtn, 5)) {
+//                        SimpleUtils.pass("Create Schedule: Save the budget hours Successfully!");
+//                    }else {
+//                        SimpleUtils.fail("Create Schedule: Click on Save the budget hours button failed, Next button is not enabled!", false);
+//                    }
+//                }
+//            }
+//        }else {
+//            SimpleUtils.fail("Create Schedule - Enter Budget: Edit button not loaded Successfully!", false);
+//        }
+//    }
 }
