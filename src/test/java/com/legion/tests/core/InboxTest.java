@@ -15,10 +15,15 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 public class InboxTest extends TestBase {
+
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception{
@@ -28,6 +33,15 @@ public class InboxTest extends TestBase {
     }
 
     //Added by Nora
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "verify reports will be available for export")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyGFEReportsAreAbleToExportAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+    }
 
     //Added by Julie
     @Automated(automated = "Automated")
@@ -47,7 +61,7 @@ public class InboxTest extends TestBase {
         SimpleUtils.assertOnFail("Controls Page: Compliance Section not Loaded.", isControlsComplianceCardSection, false);
         controlsNewUIPage.clickOnControlsComplianceSection();
         boolean isTurnOn = true;
-        inboxPage.turnGFEToggleOnOrOff(isTurnOn);
+        controlsNewUIPage.turnGFEToggleOnOrOff(isTurnOn);
 
         // Get Regular hours from Controls-> Working hours -> Regular
         String workingHoursType = "Regular";
