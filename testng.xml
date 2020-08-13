@@ -236,6 +236,7 @@
             <class name="com.legion.tests.core.InboxTest">
                 <methods>
                     <include name="verifyGFEReportsAreAbleToExportAsInternalAdmin"/>
+                    <include name="verifyTheContentOfOperationHoursAndTheFirstDayOfWeekAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
