@@ -26,7 +26,7 @@ public class LiquidDashboardTest extends TestBase {
 
     public enum widgetType{
         Helpful_Links("helpful links"),
-        Todays_Forecast("today’s forecast"),
+        Todays_Forecast("today's forecast"),
         Schedules("schedules"),
         Timesheet_Approval_Status("timesheet approval status"),
         Timesheet_Approval_Rate("timesheet approval rate"),
@@ -34,7 +34,7 @@ public class LiquidDashboardTest extends TestBase {
         Swaps_Covers("swaps & covers"),
         Starting_Soon("starting soon"),
         Open_Shifts("open shifts"),
-        Compliance_Violation("compilance violation");
+        Compliance_Violation("compliance violation");
         private final String value;
         widgetType(final String newValue) {
             value = newValue;
@@ -621,10 +621,12 @@ public class LiquidDashboardTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-        // Verify Edit mode Dashboard loaded
-        liquidDashboardPage.enterEditMode();
-        liquidDashboardPage.switchOnWidget(widgetType.Todays_Forecast.getValue());
-        liquidDashboardPage.saveAndExitEditMode();
+        if (!liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Todays_Forecast.getValue())) {
+            // Verify Edit mode Dashboard loaded
+            liquidDashboardPage.enterEditMode();
+            liquidDashboardPage.switchOnWidget(widgetType.Todays_Forecast.getValue());
+            liquidDashboardPage.saveAndExitEditMode();
+        }
         //verify there is a graph
         liquidDashboardPage.verifyIsGraphExistedOnWidget();
         HashMap <String,Float> dataOnWidget = liquidDashboardPage.getDataOnTodayForecast();

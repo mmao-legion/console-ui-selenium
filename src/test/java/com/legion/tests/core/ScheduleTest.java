@@ -809,17 +809,17 @@ public class ScheduleTest extends TestBase{
 		// Verify After requesting for cover request, View Cover Request status should be shown
 		schedulePage.clickOnShiftByIndex(index);
 		List<String> requests = new ArrayList<>(Arrays.asList("View Cover Request Status"));
-		SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", schedulePage.verifyShiftRequestButtonOnPopup(requests), true);
+		SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", schedulePage.verifyShiftRequestButtonOnPopup(requests), false);
 		// Verify After Click on the View Cover Request , Cover Request status page should be opened
 		schedulePage.clickTheShiftRequestByName(requests.get(0));
 		title = "Cover Request Status";
-		SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
+		SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), false);
 		// Validate the cancellation of cover request
 		schedulePage.verifyClickCancelSwapOrCoverRequest();
 		// Validate the Submit swap/cover request pop-up keep Showing
 		schedulePage.clickOnShiftByIndex(index);
 		requests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
-		SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", schedulePage.verifyShiftRequestButtonOnPopup(requests), true);
+		SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", schedulePage.verifyShiftRequestButtonOnPopup(requests), false);
 	}
 
 	@Automated(automated = "Automated")
@@ -1092,10 +1092,41 @@ public class ScheduleTest extends TestBase{
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate the feature of filter")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheFeatureOfFilterAsTeamMember(String browser, String username, String password, String location)
+	public void verifyTheFeatureOfFilterAsInternalAdmin(String browser, String username, String password, String location)
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+		// Deleting the existing shifts for swap team members
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.deleteTMShiftInWeekView("Unassigned");
+		schedulePage.addOpenShiftWithLastDay("MOD");
+		schedulePage.saveSchedule();
+		schedulePage.publishActiveSchedule();
+
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		// Login as Team Member
+		String fileName = "UsersCredentials.json";
+		fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+		Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+		loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+				, String.valueOf(teamMemberCredentials[0][2]));
+
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		schedulePage.goToSchedulePageAsTeamMember();
 		String subTitle = "Team Schedule";

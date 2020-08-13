@@ -607,6 +607,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                     if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetName.toLowerCase()) ||
                             widgetTitle.getText().toLowerCase().trim().contains(startingTomorrow.toLowerCase().trim()))) {
                         isLoaded = true;
+                        break;
                     }
                 }catch (Exception e) {
                     continue;
