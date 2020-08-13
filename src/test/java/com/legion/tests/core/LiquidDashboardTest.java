@@ -581,7 +581,8 @@ public class LiquidDashboardTest extends TestBase {
             SimpleUtils.fail("Alerts data on Dashboard is inconsistent with Timesheet page!", false);
         }
     }
-    
+
+    @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify Helpful Links widget")
