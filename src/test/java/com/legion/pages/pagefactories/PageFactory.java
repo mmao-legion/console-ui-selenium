@@ -53,4 +53,6 @@ public interface PageFactory {
     LiquidDashboardPage createConsoleLiquidDashboardPage();
 
     ScheduleDMViewPage createScheduleDMViewPage();
+
+    InboxPage createConsoleInboxPage();
 }

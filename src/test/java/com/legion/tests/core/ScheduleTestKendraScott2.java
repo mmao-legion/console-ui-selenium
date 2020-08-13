@@ -9,6 +9,7 @@ import com.legion.pages.*;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -1145,7 +1146,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify smart card for schedule not publish(include past weeks)")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifySmartCardForScheduleNotPublishAsStoreManager(String browser, String username, String password, String location) throws Exception {
+	public void verifySmartCardForScheduleNotPublishAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.clickOnScheduleConsoleMenuItem();
 		schedulePage.clickOnScheduleSubTab("Schedule");
@@ -1157,6 +1158,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.createScheduleForNonDGFlowNewUI();
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		//make edits
+		schedulePage.clickOnDayViewAddNewShiftButton();
 		schedulePage.customizeNewShiftPage();
 		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
 		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
@@ -1168,9 +1170,174 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//Verify changes not publish smart card.
 		SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
 		schedulePage.verifyChangesNotPublishSmartCard(changesNotPublished);
-
+		schedulePage.verifyLabelOfPublishBtn("Publish");
+		String activeWeek = schedulePage.getActiveWeekText();
+		schedulePage.clickOnScheduleSubTab("Overview");
+		List<String> resultListInOverview = schedulePage.getOverviewData();
+		for (String s : resultListInOverview){
+			String a = s.substring(1,7);
+			if (activeWeek.toLowerCase().contains(a.toLowerCase())){
+				if (s.contains("Unpublished Edits")){
+					SimpleUtils.pass("Warning message in overview page is correct!");
+				} else {
+					SimpleUtils.fail("Warning message is not expected: "+ s.split(",")[4],false);
+				}
+			}
+		}
 	}
 
+	@Automated(automated = "Automated")
+	@Owner(owner = "haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify smart card for schedule not publish(include past weeks) - republish")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab("Schedule");
+		schedulePage.navigateToNextWeek();
+		schedulePage.navigateToNextWeek();
+		if (schedulePage.isWeekGenerated()){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		//make edits and publish
+		schedulePage.clickOnDayViewAddNewShiftButton();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.saveSchedule();
+		schedulePage.publishActiveSchedule();
+		//make edits and save
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickOnDayViewAddNewShiftButton();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.saveSchedule();
+		//generate and save, should not display number of changes, we set it as 0.
+		int changesNotPublished = 1;
+		//Verify changes not publish smart card.
+		SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
+		schedulePage.verifyChangesNotPublishSmartCard(changesNotPublished);
+		schedulePage.verifyLabelOfPublishBtn("Republish");
+		String activeWeek = schedulePage.getActiveWeekText();
+		schedulePage.clickOnScheduleSubTab("Overview");
+		List<String> resultListInOverview = schedulePage.getOverviewData();
+		for (String s : resultListInOverview){
+			String a = s.substring(1,7);
+			if (activeWeek.toLowerCase().contains(a.toLowerCase())){
+				if (s.contains("Unpublished Edits")){
+					SimpleUtils.pass("Warning message in overview page is correct!");
+				} else {
+					SimpleUtils.fail("Warning message is not expected: "+ s.split(",")[4],false);
+				}
+			}
+		}
+	}
+
+	// Add the new test cases for "Schedule Not Published"
+	@Automated(automated = "Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "verify smart card for compliance violation")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated) {
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+		String cardName = "COMPLIANCE";
+		int originalComplianceCount = 0;
+		if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
+			originalComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+		}
+		schedulePage.clickOnDayView();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.dragOneShiftToMakeItOverTime();
+		schedulePage.saveSchedule();
+		schedulePage.clickOnWeekView();
+		int currentComplianceCount = 0;
+		if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
+			currentComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+			if (currentComplianceCount == originalComplianceCount + 1) {
+				SimpleUtils.pass("Schedule Week View: Compliance Count is correct after updating a new overtime shift!");
+			} else {
+				SimpleUtils.fail("Schedule Week View: Compliance Count is incorrect, original is: " + originalComplianceCount + ", current is: "
+				+ currentComplianceCount + ", the difference between two numbers should equal to 1!", false);
+			}
+		} else {
+			SimpleUtils.fail("Schedule Week View: Compliance smart card failed to show!", false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "verify smart card for compliance violation -republish")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		schedulePage.navigateToNextWeek();
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated) {
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.deleteTMShiftInWeekView("Unassigned");
+		schedulePage.saveSchedule();
+		schedulePage.publishActiveSchedule();
+
+		String cardName = "COMPLIANCE";
+		int originalComplianceCount = 0;
+		if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
+			originalComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+		}
+		schedulePage.clickOnDayView();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.dragOneShiftToMakeItOverTime();
+		schedulePage.saveSchedule();
+		schedulePage.clickOnWeekView();
+		int currentComplianceCount = 0;
+		if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
+			currentComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+			if (currentComplianceCount == originalComplianceCount + 1) {
+				SimpleUtils.pass("Schedule Week View: Compliance Count is correct after updating a new overtime shift!");
+			} else {
+				SimpleUtils.fail("Schedule Week View: Compliance Count is incorrect, original is: " + originalComplianceCount + ", current is: "
+						+ currentComplianceCount + ", the difference between two numbers should equal to 1!", false);
+			}
+		} else {
+			SimpleUtils.fail("Schedule Week View: Compliance smart card failed to show!", false);
+		}
+	}
+	
 	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
@@ -1207,6 +1374,70 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.pass("ACTION REQUIRED Smart Card: \"1 shift deleted\" tooltip shows up on smart card");
 		else
 			SimpleUtils.fail("ACTION REQUIRED Smart Card: \"1 shift deleted\" tooltip doesn't show up on smart card",false);
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "verify the Unpublished Edits text on dashboard and overview page")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (!isWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.addOpenShiftWithLastDay("MOD");
+		schedulePage.saveSchedule();
+
+		//Verify the Unpublished Edits text on overview page
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		List<WebElement> schedulesInOverviewPage = scheduleOverviewPage.getOverviewScheduleWeeks();
+		if (schedulesInOverviewPage != null && schedulesInOverviewPage.size()>0){
+			WebElement warningTextOfCurrentScheduleWeek = schedulesInOverviewPage.get(0).findElement(By.cssSelector("div.text-small.ng-binding"));
+			if (warningTextOfCurrentScheduleWeek != null){
+				String warningText = warningTextOfCurrentScheduleWeek.getText();
+				if (warningText !=null && warningText.equals("Unpublished Edits")){
+					SimpleUtils.pass("Verified the Unpublished Edits on Overview page display correctly. ");
+				}
+				else{
+					SimpleUtils.fail("Verified the Unpublished Edits on Overview page display incorrectly. The actual warning text is " + warningText +".", true);
+				}
+			}
+		}
+		else{
+			SimpleUtils.fail("Overview Page: Schedule weeks not found!" , true);
+		}
+
+		//Verify the Unpublished Edits text on dashboard page
+		dashboardPage.navigateToDashboard();
+		List<WebElement> dashboardScheduleWeeks = dashboardPage.getDashboardScheduleWeeks();
+		if (dashboardScheduleWeeks != null && dashboardScheduleWeeks.size()>0){
+			WebElement warningTextOfCurrentScheduleWeek = dashboardScheduleWeeks.get(1).findElement(By.cssSelector("div.text-small.ng-binding"));
+			if (warningTextOfCurrentScheduleWeek != null){
+				String warningText = warningTextOfCurrentScheduleWeek.getText();
+				if (warningText !=null && warningText.equals("Unpublished Edits")){
+					SimpleUtils.pass("Verified the Unpublished Edits text on Dashboard page display correctly. ");
+				}
+				else{
+					SimpleUtils.fail("Verified the Unpublished Edits text on Dashboard page display incorrectly. The actual warning text is " + warningText +".", false);
+				}
+			}
+		}
+		else{
+			SimpleUtils.fail("Dashboard Page: Schedule weeks not found!" , false);
+		}
 	}
 }
 

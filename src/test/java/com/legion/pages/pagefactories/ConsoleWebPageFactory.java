@@ -116,4 +116,6 @@ public class ConsoleWebPageFactory implements PageFactory {
 	@Override
 	public ScheduleDMViewPage createScheduleDMViewPage() { return new ConsoleScheduleDMViewPage(); }
 
+	@Override
+	public InboxPage createConsoleInboxPage() { return new ConsoleInboxPage(); }
 }

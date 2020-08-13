@@ -441,6 +441,8 @@ public interface SchedulePage {
 	public List<String> getBudgetedHoursOnSTAFF() throws Exception;
 	public String getBudgetOnWeeklyBudget() throws Exception;
 	public void verifyChangesNotPublishSmartCard(int changesNotPublished) throws Exception;
+	public void dragOneShiftToMakeItOverTime() throws Exception;
 	public String getChangesOnActionRequired() throws Exception;
 	public String getTooltipOfUnpublishedDeleted() throws Exception;
+	public void verifyLabelOfPublishBtn(String labelExpected) throws  Exception;
 }
