@@ -1,6 +1,9 @@
 package com.legion.tests.core;
 
 import com.legion.pages.DashboardPage;
+import com.legion.pages.ControlsNewUIPage;
+import com.legion.pages.ControlsPage;
+import com.legion.pages.InboxPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -43,4 +46,24 @@ public class InboxTest extends TestBase {
     //Added by Marym
 
     //Added by Haya
+    @Automated(automated ="Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify ")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyHelpfulLinksWidgetsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        controlsPage.gotoControlsPage();
+        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsComplianceSection();
+        //turn on GFE toggle
+
+        inboxPage.turnGFEToggleOnOrOff(false);
+        inboxPage.turnVSLToggleOnOrOff(false);
+
+    }
 }
