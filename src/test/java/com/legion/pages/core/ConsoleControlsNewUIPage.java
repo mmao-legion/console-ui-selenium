@@ -4950,4 +4950,54 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 		}
 	}
+
+	//Added by Haya
+	@FindBy(css = "form-section[form-title=\"Predictable Schedule\"] .lg-question-input")
+	private List<WebElement> predictableScheduleSectionToggles;
+
+	@Override
+	public void turnGFEToggleOnOrOff(boolean isTurnOn) throws Exception {
+		if (areListElementVisible(predictableScheduleSectionToggles,5) && predictableScheduleSectionToggles.size()>3){
+			if (isTurnOn){
+				if (predictableScheduleSectionToggles.get(3).findElement(By.cssSelector("input")).getAttribute("class").contains("ng-empty")){
+					click(predictableScheduleSectionToggles.get(3).findElement(By.cssSelector("span")));
+					SimpleUtils.pass("GFE toggle is turned on!");
+				} else {
+					SimpleUtils.report("GFE toggle is already on!");
+				}
+			} else {
+				if (predictableScheduleSectionToggles.get(3).findElement(By.cssSelector("input")).getAttribute("class").contains("ng-not-empty")){
+					click(predictableScheduleSectionToggles.get(3).findElement(By.cssSelector("span")));
+					SimpleUtils.pass("GFE toggle is turned off !");
+				} else {
+					SimpleUtils.report("GFE toggle is already off!");
+				}
+			}
+		} else {
+			SimpleUtils.fail("There is no predictable schedule settings!", false);
+		}
+	}
+
+	@Override
+	public void turnVSLToggleOnOrOff(boolean isTurnOn) throws Exception {
+		if (areListElementVisible(predictableScheduleSectionToggles,5) && predictableScheduleSectionToggles.size()>1){
+			if (isTurnOn){
+				if (predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("input")).getAttribute("class").contains("ng-empty")){
+					click(predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("span")));
+					SimpleUtils.pass("GFE toggle is turned on!");
+				} else {
+					SimpleUtils.report("GFE toggle is already on!");
+				}
+			} else {
+				if (predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("input")).getAttribute("class").contains("ng-not-empty")){
+					click(predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("span")));
+					SimpleUtils.pass("GFE toggle is turned off !");
+				} else {
+					SimpleUtils.report("GFE toggle is already off!");
+				}
+			}
+		} else {
+			SimpleUtils.fail("There is no predictable schedule settings!", false);
+		}
+	}
 }

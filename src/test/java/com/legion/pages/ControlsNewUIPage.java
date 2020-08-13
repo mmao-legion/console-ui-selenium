@@ -257,4 +257,6 @@ public interface ControlsNewUIPage {
 	public void updateOpenShiftApprovedByManagerOption(String option)throws Exception;
 	public void updateAvailabilityManagementIsApprovalRequired(String option) throws Exception;
 	public void updateSwapAndCoverRequestIsApprovalRequired(String option) throws Exception;
+	public void turnGFEToggleOnOrOff(boolean isTurnOn) throws Exception;
+	public void turnVSLToggleOnOrOff(boolean isTurnOn) throws Exception;
 }
