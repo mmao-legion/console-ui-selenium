@@ -1015,26 +1015,21 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	public void verifyContentOfBudgetHoursForNonDGFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.goToConsoleScheduleAndScheduleSubMenu();
-		String weekInfo = "";
-		weekInfo = schedulePage.getWeekInfoBeforeCreateSchedule();
+		String weekInfo = schedulePage.getWeekInfoBeforeCreateSchedule();
 		boolean isWeekGenerated = schedulePage.isWeekGenerated();
 		if (isWeekGenerated){
 			schedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
 		HashMap<String,String> budgetNScheduledFromGraph = schedulePage.verifyNGetBudgetNScheduleWhileCreateScheduleForNonDGFlowNewUI(weekInfo, location);
-		String budgetFromGraph = "";
-		String scheduledFromGraph = "";
-		budgetFromGraph = budgetNScheduledFromGraph.get("Budget");
-		scheduledFromGraph = budgetNScheduledFromGraph.get("Scheduled");
+		String budgetFromGraph = budgetNScheduledFromGraph.get("Budget");
+		String scheduledFromGraph = budgetNScheduledFromGraph.get("Scheduled");
 		if (!schedulePage.isSummaryViewLoaded())
 			schedulePage.toggleSummaryView();
 		List<String> budgetsOnSTAFF = schedulePage.getBudgetedHoursOnSTAFF();
 		String budgetOnWeeklyBudget = schedulePage.getBudgetOnWeeklyBudget();
 		HashMap<String, String> budgetNScheduledHoursFromSmartCard = schedulePage.getBudgetNScheduledHoursFromSmartCard();
-		String budgetFromSmartCard = "";
-		String scheduledFromSmartCard = "";
-		budgetFromSmartCard = budgetNScheduledHoursFromSmartCard.get("Budget");
-        scheduledFromSmartCard = budgetNScheduledHoursFromSmartCard.get("Scheduled");
+		String budgetFromSmartCard = budgetNScheduledHoursFromSmartCard.get("Budget");
+        String scheduledFromSmartCard = budgetNScheduledHoursFromSmartCard.get("Scheduled");
 		System.out.println("budgetOnWeeklyBudget is: "+budgetOnWeeklyBudget);
 		String totalBudgetOnSTAFF = "";
 		if (budgetsOnSTAFF.size() > 1) {
