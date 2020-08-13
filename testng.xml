@@ -143,7 +143,7 @@
                     <include name="verifyTheTeamMemberViewCoverAsInternalAdmin" />
                     <include name="verifyTheTeamScheduleOptionAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfSwapAndCoverAsInternalAdmin" />
-                    <include name="verifyTheFeatureOfFilterAsTeamMember" />
+                    <include name="verifyTheFeatureOfFilterAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamMember" />
                 </methods>
             </class>
