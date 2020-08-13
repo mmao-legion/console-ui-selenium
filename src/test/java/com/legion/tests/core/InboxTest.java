@@ -99,11 +99,39 @@ public class InboxTest extends TestBase {
         controlsNewUIPage.clickOnControlsComplianceSection();
         SimpleUtils.assertOnFail("Compliance page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
 
+
+        controlsNewUIPage.turnGFEToggleOnOrOff(false);
+
         InboxPage inboxPage = pageFactory.createConsoleInboxPage();
-        inboxPage.turnGFEToggleOnOrOff(false);
+        inboxPage.clickOnInboxConsoleMenuItem();
+
+        inboxPage.checkCreateAnnouncementPageWithGFETurnOnOrTurnOff(false);
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify turn on GFE ")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTurnOnGFEAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+        controlsNewUIPage.clickOnControlsComplianceSection();
+        SimpleUtils.assertOnFail("Compliance page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
 
 
+        controlsNewUIPage.turnGFEToggleOnOrOff(true);
 
+        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+        inboxPage.clickOnInboxConsoleMenuItem();
+
+        inboxPage.checkCreateAnnouncementPageWithGFETurnOnOrTurnOff(true);
 
     }
 
