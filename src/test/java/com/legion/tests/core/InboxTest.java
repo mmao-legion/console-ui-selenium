@@ -135,6 +135,31 @@ public class InboxTest extends TestBase {
 
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify the template loaded when selecting GFE ")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+        controlsNewUIPage.clickOnControlsComplianceSection();
+        SimpleUtils.assertOnFail("Compliance page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
+
+        controlsNewUIPage.turnGFEToggleOnOrOff(true);
+
+        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+        inboxPage.clickOnInboxConsoleMenuItem();
+
+        inboxPage.createGFEAnnouncement();
+
+    }
+
     //Added by Haya
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")

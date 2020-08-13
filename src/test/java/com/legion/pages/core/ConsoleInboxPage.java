@@ -86,10 +86,10 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     @FindBy(css = "[placeholder=\"Your message goes here...\"]")
     private WebElement messageArea;
 
-    @FindBy(className = "btn lgn-action-button lgn-action-button-default")
+    @FindBy(css = "[ng-click=\"callCancelCallback()\"]")
     private WebElement cancelButton;
 
-    @FindBy(className = "btn lgn-action-button lgn-action-button-default")
+    @FindBy(css = "[ng-click=\"callOkCallback()\"]")
     private WebElement SaveButton;
 
     @Override
