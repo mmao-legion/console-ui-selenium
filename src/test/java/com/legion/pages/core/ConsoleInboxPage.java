@@ -11,6 +11,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import javax.xml.crypto.dsig.SignatureMethod;
 import java.util.List;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -28,16 +30,13 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     @FindBy(css = "a[ng-click=\"createAnnouncement()\"]")
     private WebElement createAnnouncementIcon;
 
-    @FindBy(css = "option[label=\"Message\"]")
-    private WebElement messageType;
-
-    @FindBy(css = "option[label=\"Good Faith Estimate\"]")
-    private WebElement GFEType;
+    @FindBy(css = ".weekdays-column")
+    private List<WebElement> weekDaysInGFE;
 
     @FindBy(className = "console-navigation-item")
     private List<WebElement> consoleNavigationMenuItems;
 
-    @FindBy(css = ".select-wrapper")
+    @FindBy(css = "select[ng-attr-id=\"{{$ctrl.inputName}}\"]")
     private WebElement announcementType;
 
     @Override
@@ -55,10 +54,11 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
         if (isElementLoaded(createAnnouncementIcon,10)) {
             clickTheElement(createAnnouncementIcon);
             if (isElementLoaded(announcementType,5)) {
-                clickTheElement(announcementType);
-                waitForSeconds(5);
-                selectByVisibleText(GFEType, "Good Faith Estimate");
-                SimpleUtils.pass("Inbox: A new announcement with type \"Good Faith Estimate\" is selected successfully");
+                selectByVisibleText(announcementType, "Good Faith Estimate");
+                if (areListElementVisible(weekDaysInGFE,5))
+                    SimpleUtils.pass("Inbox: A new announcement with type \"Good Faith Estimate\" is selected successfully");
+                else
+                    SimpleUtils.fail("Inbox: A new announcement with type \"Good Faith Estimate\" failed to select",false);
             } else
                 SimpleUtils.fail("Inbox: Create New Announcement window failed to load after clicking + icon",false);
         } else

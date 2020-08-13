@@ -77,7 +77,7 @@ public class InboxTest extends TestBase {
         inboxPage.createGFEAnnouncement();
     }
 
-    //Added by Marym
+    //Added by Mary
 
     //Added by Haya
 }
