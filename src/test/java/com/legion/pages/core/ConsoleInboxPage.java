@@ -50,7 +50,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
 
     @Override
     public void turnVSLToggleOnOrOff(boolean isTurnOn) throws Exception {
-        if (areListElementVisible(predictableScheduleSectionToggles,5) && predictableScheduleSectionToggles.size()>3){
+        if (areListElementVisible(predictableScheduleSectionToggles,5) && predictableScheduleSectionToggles.size()>1){
             if (isTurnOn){
                 if (predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("input")).getAttribute("class").contains("ng-empty")){
                     click(predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("span")));
