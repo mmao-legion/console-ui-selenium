@@ -1,5 +1,7 @@
 package com.legion.tests.core;
 
+import com.legion.pages.ControlsNewUIPage;
+import com.legion.pages.ControlsPage;
 import com.legion.pages.DashboardPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -36,6 +38,14 @@ public class InboxTest extends TestBase {
     public void verifyGFEReportsAreAbleToExportAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsComplianceSection();
+        SimpleUtils.assertOnFail("Controls: Compliance page not loaded Successfully!", controlsNewUIPage.isControlsComplianceLoaded(), false);
+        controlsNewUIPage.turnGFEToggleOnOrOff(true);
     }
 
     //Added by Julie

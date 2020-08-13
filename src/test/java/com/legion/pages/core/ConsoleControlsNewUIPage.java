@@ -4957,20 +4957,43 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void turnGFEToggleOnOrOff(boolean isTurnOn) throws Exception {
-		if (areListElementVisible(predictableScheduleSectionToggles,5) && predictableScheduleSectionToggles.size()>3){
+		String gfe = "Manager can send Good Faith Estimate.";
+		if (areListElementVisible(predictableScheduleSectionToggles,10) && predictableScheduleSectionToggles.size() > 0){
 			if (isTurnOn){
-				if (predictableScheduleSectionToggles.get(3).findElement(By.cssSelector("input")).getAttribute("class").contains("ng-empty")){
-					click(predictableScheduleSectionToggles.get(3).findElement(By.cssSelector("span")));
-					SimpleUtils.pass("GFE toggle is turned on!");
-				} else {
-					SimpleUtils.report("GFE toggle is already on!");
+				for (WebElement predictableSection : predictableScheduleSectionToggles) {
+					try {
+						WebElement toggle = predictableSection.findElement(By.className("switch"));
+						WebElement text = predictableSection.findElement(By.className("lg-question-input__text"));
+						if (toggle != null && text != null && text.getText().equals(gfe)) {
+							if (toggle.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
+								click(toggle);
+								SimpleUtils.pass("GFE toggle is turned on!");
+							} else {
+								SimpleUtils.report("GFE toggle is already on!");
+							}
+							break;
+						}
+					} catch (Exception e) {
+						continue;
+					}
 				}
 			} else {
-				if (predictableScheduleSectionToggles.get(3).findElement(By.cssSelector("input")).getAttribute("class").contains("ng-not-empty")){
-					click(predictableScheduleSectionToggles.get(3).findElement(By.cssSelector("span")));
-					SimpleUtils.pass("GFE toggle is turned off !");
-				} else {
-					SimpleUtils.report("GFE toggle is already off!");
+				for (WebElement predictableSection : predictableScheduleSectionToggles) {
+					try {
+						WebElement toggle = predictableSection.findElement(By.className("switch"));
+						WebElement text = predictableSection.findElement(By.className("lg-question-input__text"));
+						if (toggle != null && text != null && text.getText().equals(gfe)) {
+							if (toggle.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+								click(toggle);
+								SimpleUtils.pass("GFE toggle is turned off !");
+							} else {
+								SimpleUtils.report("GFE toggle is already off!");
+							}
+							break;
+						}
+					} catch (Exception e) {
+						continue;
+					}
 				}
 			}
 		} else {

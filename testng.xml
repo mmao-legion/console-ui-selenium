@@ -231,4 +231,14 @@
         </classes>
     </test>
 
+    <test name="Inbox Test">
+        <classes>
+            <class name="com.legion.tests.core.InboxTest">
+                <methods>
+                    <include name="verifyGFEReportsAreAbleToExportAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->
