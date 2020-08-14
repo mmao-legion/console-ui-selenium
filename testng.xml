@@ -237,6 +237,7 @@
                 <methods>
                     <include name="verifyGFEReportsAreAbleToExportAsInternalAdmin"/>
                     <include name="verifyTheContentOfOperationHoursAndTheFirstDayOfWeekAsInternalAdmin" />
+                   <include name="verifyVSLInfoShowsOrNotAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
