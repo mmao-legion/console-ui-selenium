@@ -4248,7 +4248,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 
 	public void displaySuccessMessage() throws Exception {
-		if (isElementLoaded(successMsg, 10)) {
+		if (isElementLoaded(successMsg, 20)) {
 			SimpleUtils.pass("Success pop up displayed successfully.");
 			if (successMsg.getText().contains("Success!")) {
 				SimpleUtils.pass("Success message displayed successfully." + successMsg.getText());
@@ -4922,6 +4922,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		if (isElementLoaded(approveByManagerDropDown, 10)) {
 			Select dropdown = new Select(approveByManagerDropDown);
 			dropdown.selectByVisibleText(option);
+			displaySuccessMessage();
 			SimpleUtils.pass("Option is selected successfully");
 		} else {
 			SimpleUtils.fail("Controls - Schedule Collaboration: Open Shift is Approved ByManager While Claim OpenShift dropdown not loaded.", false);
@@ -4935,6 +4936,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	//Options: Not required;Required for all changes;Required for reducing availability
 	@Override
 	public void updateAvailabilityManagementIsApprovalRequired(String option) throws Exception {
+		// Wait for the values loaded
+		waitForSeconds(5);
 		WebElement confSelect = isApprovalRequiredToChangeAvailability.findElement(By.cssSelector("select"));
 		if(isElementLoaded(confSelect)) {
 			//WebElement input = isApprovalRequiredToChangeAvailability.findElement(By.xpath("//input-field"));

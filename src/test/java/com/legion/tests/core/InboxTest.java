@@ -57,7 +57,7 @@ public class InboxTest extends TestBase {
         analyticsPage.switchAllLocationsOrSingleLocation(false);
         String gfe = "Good Faith Estimate";
         if (analyticsPage.isSpecificReportLoaded(gfe)) {
-
+            analyticsPage.mouseHoverAndExportReportByName(gfe);
         } else {
             SimpleUtils.fail("Analytics: " + gfe + " not loaded Successfully!", false);
         }

@@ -30,4 +30,6 @@ public interface AnalyticsPage {
 	public void switchAllLocationsOrSingleLocation(boolean isAllLocations) throws Exception;
 
 	public boolean isSpecificReportLoaded(String reportName) throws Exception;
+
+	public void mouseHoverAndExportReportByName(String reportName) throws Exception;
 }

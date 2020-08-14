@@ -7381,15 +7381,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         List<String> expectedRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
         int index = 100;
         if (areListElementVisible(tmIcons, 5)) {
-            scrollToBottom();
             for (int i = 0; i < tmIcons.size(); i++) {
-                moveToElementAndClick(tmIcons.get(i));
+                scrollToElement(tmIcons.get(i));
+                waitForSeconds(1);
+                clickTheElement(tmIcons.get(i));
                 if (isPopOverLayoutLoaded()) {
                     if (verifyShiftRequestButtonOnPopup(expectedRequests)) {
                         index = i;
                         break;
                     }else {
-                        click(tmIcons.get(i));
+                        clickTheElement(tmIcons.get(i));
                     }
                 }
             }

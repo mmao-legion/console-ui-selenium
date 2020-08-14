@@ -472,6 +472,8 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	private WebElement lastGroup;
 	@FindBy (css = "tbody .sch-kpi-title-text")
 	private List<WebElement> reportTitleTexts;
+	@FindBy (css = "[ng-repeat*=\"kpi in kpiReports\"]")
+	private List<WebElement> reportRows;
 
 	@Override
 	public boolean isReportsPageLoaded() throws Exception {
@@ -530,5 +532,24 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 			}
 		}
 		return isLoaded;
+	}
+
+	@Override
+	public void mouseHoverAndExportReportByName(String reportName) throws Exception {
+		if (areListElementVisible(reportRows, 5)) {
+			for (WebElement reportRow : reportRows) {
+				WebElement text = reportRow.findElement(By.className("sch-kpi-title-text"));
+				if (text != null && text.getText().equalsIgnoreCase(reportName)) {
+					mouseToElement(text);
+					WebElement exportBtn = reportRow.findElement(By.className("sch-kpi-action-text"));
+					if (exportBtn != null) {
+						mouseHover(exportBtn);
+						break;
+					} else {
+						SimpleUtils.fail("Analytics: Failed to find the Export button for report: " + reportName, false);
+					}
+				}
+			}
+		}
 	}
 }
