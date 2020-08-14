@@ -12,7 +12,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -178,21 +177,38 @@ public class InboxTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify ")
+    @TestName(description = "Verify the content of GFE is consistent between SM and TM")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyHelpfulLinksWidgetsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyContentOfGFEAsTeamMember(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+/*        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
         controlsPage.gotoControlsPage();
-        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
         controlsNewUIPage.clickOnControlsComplianceSection();
+
         //turn on GFE toggle
-
-        controlsNewUIPage.turnGFEToggleOnOrOff(false);
+        controlsNewUIPage.turnGFEToggleOnOrOff(true);
         controlsNewUIPage.turnVSLToggleOnOrOff(false);
+*/
+        //login as TM to get nickName
 
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String nickName = profileNewUIPage.getNickNameFromProfile();
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+
+        //go to Inbox page create GFE announcement.
+        String fileName = "UsersCredentials.json";
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+        inboxPage.clickOnInboxConsoleMenuItem();
+        inboxPage.createGFEAnnouncement();
+        inboxPage.sendToTM(nickName);
     }
 }
