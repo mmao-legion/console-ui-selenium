@@ -9,6 +9,7 @@ public interface InboxPage {
     public void clickOnInboxConsoleMenuItem() throws Exception;
 
     //Added by Marym
+    public void checkCreateAnnouncementPageWithGFETurnOnOrTurnOff(boolean isTurnOn) throws Exception;
 
     //Added by Haya
 }
