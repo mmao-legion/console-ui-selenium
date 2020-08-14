@@ -24,4 +24,10 @@ public interface AnalyticsPage {
 	public void selectAnalyticsCheckBoxByLabel(String label) throws Exception;
 
 	public HashMap<String, Float> getAnalyticsKPIHoursByLabel(String label) throws Exception;
+
+	public boolean isReportsPageLoaded() throws Exception;
+
+	public void switchAllLocationsOrSingleLocation(boolean isAllLocations) throws Exception;
+
+	public boolean isSpecificReportLoaded(String reportName) throws Exception;
 }

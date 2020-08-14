@@ -1,9 +1,6 @@
 package com.legion.tests.core;
 
-import com.legion.pages.ControlsNewUIPage;
-import com.legion.pages.ControlsPage;
-import com.legion.pages.DashboardPage;
-import com.legion.pages.InboxPage;
+import com.legion.pages.*;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -42,6 +39,7 @@ public class InboxTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
+        // Go to Controls -> Compliance, turn on the GFE
         ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         controlsPage.gotoControlsPage();
@@ -49,6 +47,19 @@ public class InboxTest extends TestBase {
         controlsNewUIPage.clickOnControlsComplianceSection();
         SimpleUtils.assertOnFail("Controls: Compliance page not loaded Successfully!", controlsNewUIPage.isControlsComplianceLoaded(), false);
         controlsNewUIPage.turnGFEToggleOnOrOff(true);
+
+        // Go to Analytics page
+        AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+        analyticsPage.clickOnAnalyticsConsoleMenu();
+        SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+
+        analyticsPage.switchAllLocationsOrSingleLocation(false);
+        String gfe = "Good Faith Estimate";
+        if (analyticsPage.isSpecificReportLoaded(gfe)) {
+
+        } else {
+            SimpleUtils.fail("Analytics: " + gfe + " not loaded Successfully!", false);
+        }
     }
 
     //Added by Julie
