@@ -4958,6 +4958,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void turnGFEToggleOnOrOff(boolean isTurnOn) throws Exception {
 		String gfe = "Manager can send Good Faith Estimate.";
+		// Wait for the default settings loaded
+		waitForSeconds(5);
 		if (areListElementVisible(predictableScheduleSectionToggles,10) && predictableScheduleSectionToggles.size() > 0){
 			if (isTurnOn){
 				for (WebElement predictableSection : predictableScheduleSectionToggles) {
@@ -4966,7 +4968,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 						WebElement text = predictableSection.findElement(By.className("lg-question-input__text"));
 						if (toggle != null && text != null && text.getText().equals(gfe)) {
 							if (toggle.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
+								scrollToElement(toggle);
+								waitForSeconds(1);
 								click(toggle);
+								displaySuccessMessage();
 								SimpleUtils.pass("GFE toggle is turned on!");
 							} else {
 								SimpleUtils.report("GFE toggle is already on!");
@@ -4984,7 +4989,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 						WebElement text = predictableSection.findElement(By.className("lg-question-input__text"));
 						if (toggle != null && text != null && text.getText().equals(gfe)) {
 							if (toggle.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+								scrollToElement(toggle);
+								waitForSeconds(1);
 								click(toggle);
+								displaySuccessMessage();
 								SimpleUtils.pass("GFE toggle is turned off !");
 							} else {
 								SimpleUtils.report("GFE toggle is already off!");
@@ -5007,6 +5015,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			if (isTurnOn){
 				if (predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("input")).getAttribute("class").contains("ng-empty")){
 					click(predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("span")));
+					displaySuccessMessage();
 					SimpleUtils.pass("GFE toggle is turned on!");
 				} else {
 					SimpleUtils.report("GFE toggle is already on!");
@@ -5014,6 +5023,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			} else {
 				if (predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("input")).getAttribute("class").contains("ng-not-empty")){
 					click(predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("span")));
+					displaySuccessMessage();
 					SimpleUtils.pass("GFE toggle is turned off !");
 				} else {
 					SimpleUtils.report("GFE toggle is already off!");
