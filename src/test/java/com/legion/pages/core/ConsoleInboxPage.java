@@ -13,6 +13,9 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
 import javax.xml.crypto.dsig.SignatureMethod;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -39,6 +42,9 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     @FindBy(css = "select[ng-attr-id=\"{{$ctrl.inputName}}\"]")
     private WebElement announcementType;
 
+    @FindBy(css = "p.estimate-faith-text-vsl")
+    private WebElement VSLInfo;
+
     @Override
     public void clickOnInboxConsoleMenuItem() throws Exception {
         if (consoleNavigationMenuItems.size() != 0) {
@@ -52,6 +58,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     @Override
     public void createGFEAnnouncement() throws Exception {
         if (isElementLoaded(createAnnouncementIcon,10)) {
+            waitForSeconds(5);
             clickTheElement(createAnnouncementIcon);
             if (isElementLoaded(announcementType,5)) {
                 selectByVisibleText(announcementType, "Good Faith Estimate");
@@ -63,6 +70,88 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                 SimpleUtils.fail("Inbox: Create New Announcement window failed to load after clicking + icon",false);
         } else
             SimpleUtils.fail("Inbox: Create Announcement + icon failed to load",false);
+    }
+
+    @Override
+    public LinkedHashMap<String, List<String>> getGFEWorkingHours() throws Exception {
+        // SUN,[09:00AM, 05:00PM]
+        LinkedHashMap<String, List<String>> GFEHours = new LinkedHashMap<>();
+        if (areListElementVisible(weekDaysInGFE, 10)) {
+            for (WebElement weekDay : weekDaysInGFE) {
+                WebElement day = weekDay.findElement(By.className("weekdays-column-header"));
+                List<WebElement> workTimes = weekDay.findElements(By.tagName("input"));
+                if (day != null && workTimes != null && workTimes.size() == 2) {
+                    List<String> startNEndTime = new ArrayList<>();
+                    String startTime = workTimes.get(0).getAttribute("value");
+                    String endTime = workTimes.get(1).getAttribute("value");
+                    startNEndTime.add(startTime);
+                    startNEndTime.add(endTime);
+                    GFEHours.put(day.getText(), startNEndTime);
+                    SimpleUtils.report("Inbox: Get GFE time for: " + day.getText() + ", GFE time is: " + startTime + " - " + endTime);
+                }
+            }
+        }
+        if (GFEHours.size() != 7)
+            SimpleUtils.fail("Inbox: Failed to find the week day and working time of GFE!", false);
+        return GFEHours;
+    }
+
+    @Override
+    public String getGFEFirstDayOfWeek() throws Exception {
+        // SUN
+        String GFETheFirstDayOfWeek = "";
+        if (areListElementVisible(weekDaysInGFE, 10)) {
+            WebElement day = weekDaysInGFE.get(0).findElement(By.className("weekdays-column-header"));
+            GFETheFirstDayOfWeek = day.getText();
+        }
+        return GFETheFirstDayOfWeek;
+    }
+
+    @Override
+    public boolean compareGFEWorkingHrsWithRegularWorkingHrs(LinkedHashMap<String, List<String>> GFEWorkingHours,
+                                                             LinkedHashMap<String, List<String>> regularHoursFromControl) throws Exception {
+        boolean isConsistent = false;
+        Iterator itRegular = regularHoursFromControl.keySet().iterator();
+        while (itRegular.hasNext()) {
+            isConsistent = false;
+            String regularKey = itRegular.next().toString();
+            List<String> regularValue = regularHoursFromControl.get(regularKey);
+            Iterator itGFE = GFEWorkingHours.keySet().iterator();
+            while (itGFE.hasNext()) {
+                if (isConsistent)
+                    break;
+                String GFEKey = itGFE.next().toString();
+                if (regularKey.contains(GFEKey) ) {
+                    List<String> GFEValue = GFEWorkingHours.get(GFEKey);
+                    if (GFEValue.size() == 2 && regularValue.size() == 2) {
+                        if (GFEValue.get(0).contains(regularValue.get(0).replace(" ", "").toUpperCase())
+                                && GFEValue.get(1).contains(regularValue.get(1).replace(" ", "").toUpperCase())) {
+                            isConsistent = true;
+                            SimpleUtils.report("Regular Working Hours: " + regularKey + "---" + regularValue);
+                            SimpleUtils.report("GFE Working Hours: " + GFEKey + "---" + GFEValue);
+                            SimpleUtils.report("Are they consistent? " + isConsistent);
+                        }
+                    }
+                }
+            }
+        }
+       return isConsistent;
+    }
+
+    @Override
+    public void verifyVSLInfo(boolean isVSLTurnOn) throws Exception {
+        if (isVSLTurnOn) {
+            if (isElementLoaded(VSLInfo, 5) &&
+                    VSLInfo.getText().contains("Team members will be informed regarding opting in to the Volntary Standby List"))
+                SimpleUtils.pass("Inbox: VSL info \"Team members will be informed regarding opting in to the Voluntary Standby List.\" is loaded successfully when VSL is turned on");
+             else
+                SimpleUtils.fail("Inbox: VSL info failed to load", false);
+        } else {
+            if (!isElementLoaded(VSLInfo, 5))
+                SimpleUtils.pass("Inbox: No message \"Team members will be informed regarding opting in to the Volntary Standby List.\" loaded when VSL is turned off");
+            else
+                SimpleUtils.fail("Inbox: VSL info still displays although VSL is turned off",false);
+        }
     }
 
     //Added by Marym

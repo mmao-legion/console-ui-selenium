@@ -68,31 +68,87 @@ public class InboxTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the content of operating hours and the first day of week are correct")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTheContentOfOperationHoursAndTheFirstDayOfWeekAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyTheContentOfOperationHrsAndTheFirstDayOfWeekAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         InboxPage inboxPage = pageFactory.createConsoleInboxPage();
 
         // Make sure that GFE is turned on
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
         controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-        boolean isControlsComplianceCardSection = controlsNewUIPage.isControlsComplianceCard();
-        SimpleUtils.assertOnFail("Controls Page: Compliance Section not Loaded.", isControlsComplianceCardSection, false);
+        SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
         controlsNewUIPage.clickOnControlsComplianceSection();
-        boolean isTurnOn = true;
-        controlsNewUIPage.turnGFEToggleOnOrOff(isTurnOn);
+        SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
+        controlsNewUIPage.turnGFEToggleOnOrOff(true);
+
         // Get Regular hours from Controls-> Working hours -> Regular
         String workingHoursType = "Regular";
         controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        SimpleUtils.assertOnFail("Controls page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
         controlsNewUIPage.clickOnControlsWorkingHoursCard();
-        SimpleUtils.assertOnFail("Working Hours Card not loaded Successfully!", controlsNewUIPage.isControlsWorkingHoursLoaded(), false);
+        SimpleUtils.assertOnFail("Working Hours Card failed to load", controlsNewUIPage.isControlsWorkingHoursLoaded(), false);
         controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursType);
-        LinkedHashMap<String, List<String>> regularHours = controlsNewUIPage.getRegularWorkingHours();
+        LinkedHashMap<String, List<String>> regularHoursFromControls = controlsNewUIPage.getRegularWorkingHours();
+
+        // Get the first day of week that schedule begins from Controls -> Scheduling Policies -> Schedules
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        SimpleUtils.assertOnFail("Schedule Policy Card failed to load", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+        String firstDayOfWeekFromControls = controlsNewUIPage.getSchedulingPoliciesFirstDayOfWeek();
 
         // Create a GFE announcement to verify its content of operation hours and the first day of week
         inboxPage.clickOnInboxConsoleMenuItem();
         inboxPage.createGFEAnnouncement();
+        String theFirstDayOfWeekFromGFE = inboxPage.getGFEFirstDayOfWeek();
+        LinkedHashMap<String, List<String>> GFEWorkingHours = inboxPage.getGFEWorkingHours();
+
+        // Compare the first day of week
+        SimpleUtils.report("The first day of week from controls is: " + firstDayOfWeekFromControls);
+        SimpleUtils.report("The first day of week from GFE is: " + theFirstDayOfWeekFromGFE);
+        if (firstDayOfWeekFromControls.toUpperCase().contains(theFirstDayOfWeekFromGFE))
+            SimpleUtils.pass("Inbox page: The first day of the week in GFE is consistent with the setting in Control -> Scheduling Policies -> What day of the week does your schedule begin?");
+        else
+            SimpleUtils.fail("Inbox page: The first day of the week in GFE is inconsistent with the setting in Control -> Scheduling Policies -> What day of the week does your schedule begin?",false);
+
+        // Compare the operation days and hours
+        if (inboxPage.compareGFEWorkingHrsWithRegularWorkingHrs(GFEWorkingHours, regularHoursFromControls))
+            SimpleUtils.pass("Inbox page: Operation days and hours in GFE is consistent with the setting in Controls -> Working Hours -> Regular");
+        else
+            SimpleUtils.fail("Inbox page: Operation days and hours in GFE is inconsistent with the setting in Controls -> Working Hours -> Regular",false);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify VSL info shows or not")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyVSLInfoShowsOrNotAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+
+        // Make sure that GFE is turned on
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsComplianceSection();
+        SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
+        controlsNewUIPage.turnGFEToggleOnOrOff(true);
+
+        // Turn on VSL to verify VSL info
+        controlsNewUIPage.turnVSLToggleOnOrOff(true);
+        inboxPage.clickOnInboxConsoleMenuItem();
+        inboxPage.createGFEAnnouncement();
+        inboxPage.verifyVSLInfo(true);
+
+        // Turn off VSL to verify VSL info
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsComplianceSection();
+        SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
+        controlsNewUIPage.turnVSLToggleOnOrOff(false);
+        inboxPage.clickOnInboxConsoleMenuItem();
+        inboxPage.createGFEAnnouncement();
+        inboxPage.verifyVSLInfo(false);
     }
 
     //Added by Marym
