@@ -196,5 +196,23 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
 
 
     //Added by Haya
-
+    @FindBy(css = ".gfe-send-to-select")
+    private WebElement sendToDiv;
+    @FindBy(css = ".gfe-send-to-select .selector-dropdown span")
+    private List<WebElement> tmOptions;//.findElement(By.cssSelector("selector-input"))
+    @Override
+    public void sendToTM(String nickName) throws Exception {
+        if (isElementLoaded(sendToDiv,5)){
+            click(sendToDiv);
+            for (WebElement element: tmOptions){
+                scrollToElement(element);
+                String s = element.getText();
+                if (element.getText().contains(nickName)){
+                    click(element);
+                    break;
+                }
+            }
+            //sendToDiv.findElement(By.cssSelector("input")).sendKeys(nickName);
+        }
+    }
 }

@@ -12,4 +12,5 @@ public interface InboxPage {
     public void checkCreateAnnouncementPageWithGFETurnOnOrTurnOff(boolean isTurnOn) throws Exception;
 
     //Added by Haya
+    public void sendToTM(String nickName) throws Exception;
 }
