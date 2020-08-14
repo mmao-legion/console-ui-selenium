@@ -285,23 +285,29 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
 
 
     //Added by Haya
-    @FindBy(css = ".gfe-send-to-select")
-    private WebElement sendToDiv;
-    @FindBy(css = ".gfe-send-to-select .selector-dropdown span")
-    private List<WebElement> tmOptions;//.findElement(By.cssSelector("selector-input"))
+    @FindBy(css = ".gfe-send-to-select [ng-model=\"search\"]")
+    private WebElement sendToInput;
+    @FindBy(css = ".gfe-send-to-select .selector-dropdown [ng-bind=\"getObjValue(option, labelAttr) || option\"]")
+    private List<WebElement> tmOptions;
     @Override
     public void sendToTM(String nickName) throws Exception {
-        if (isElementLoaded(sendToDiv,5)){
-            click(sendToDiv);
-            for (WebElement element: tmOptions){
-                scrollToElement(element);
-                String s = element.getText();
-                if (element.getText().contains(nickName)){
-                    click(element);
-                    break;
+        if (isElementLoaded(sendToInput,5)){
+            clickTheElement(sendToInput);
+            sendToInput.sendKeys(nickName);
+            waitForSeconds(1);
+            if (areListElementVisible(tmOptions, 5)) {
+                for (WebElement tmOption : tmOptions) {
+                    if (tmOption.getText().contains(nickName)) {
+                        click(tmOption);
+                        SimpleUtils.pass("GFE Announcement: Select " + tmOption.getText() + " Successfully!");
+                        break;
+                    }
                 }
+            } else {
+                SimpleUtils.report("GFE Announcement: Cannot find " + nickName + "!");
             }
-            //sendToDiv.findElement(By.cssSelector("input")).sendKeys(nickName);
+        } else {
+            SimpleUtils.fail("GFE Announcement: Send to element failed to load!", false);
         }
     }
 }
