@@ -1696,7 +1696,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 	@Override
-	public void verifyTMCountIsCorrectOnRoster() throws Exception {
+	public int verifyTMCountIsCorrectOnRoster() throws Exception {
 		int count = 0;
 		if (areListElementVisible(teamMemberNames, 5) && isElementLoaded(tmCount, 5)) {
 			String countOnRoster = tmCount.getText().substring(tmCount.getText().indexOf("(") + 1, tmCount.getText().indexOf(")"));
@@ -1713,6 +1713,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		}else {
 			SimpleUtils.fail("Team Members and team count failed to load!", true);
 		}
+		return count;
 	}
 
 	@Override
@@ -2182,6 +2183,19 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		}else {
 			SimpleUtils.fail("Search textBox failed to load!", false);
 		}
+	}
+
+	@Override
+	public List<String> getTMNameList() throws Exception {
+		List<String> nameList = new ArrayList<>();
+		if (areListElementVisible(teamMemberNames, 10)) {
+			for (WebElement name : teamMemberNames) {
+				nameList.add(name.getText());
+			}
+		} else {
+			SimpleUtils.fail("Roster Page: Team members' name list not loaded Successfully!", false);
+		}
+		return nameList;
 	}
 
 	@Override

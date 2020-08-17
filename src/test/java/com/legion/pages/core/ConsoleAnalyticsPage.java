@@ -543,13 +543,15 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 					mouseToElement(text);
 					WebElement exportBtn = reportRow.findElement(By.className("sch-kpi-action-text"));
 					if (exportBtn != null) {
-						mouseHover(exportBtn);
+						moveToElementAndClick(exportBtn);
 						break;
 					} else {
 						SimpleUtils.fail("Analytics: Failed to find the Export button for report: " + reportName, false);
 					}
 				}
 			}
+		} else {
+			SimpleUtils.fail("Analytics: Report rows not loaded Successfully!", false);
 		}
 	}
 }
