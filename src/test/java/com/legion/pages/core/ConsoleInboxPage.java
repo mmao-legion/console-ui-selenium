@@ -183,12 +183,8 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     @FindBy(css = "[ng-click=\"callOkCallback()\"]")
     private WebElement saveButton;
 
-    @FindBy(css = ".estimate-faith-area.ng-isolate-scope")
+    @FindBy(css = "textarea[placeholder=\"Write a message...\"]")
     private WebElement messageInCreateGFETemplate;
-
-
-//    @FindBy(xpath = ".//*[@id=\"legion-app\"]/div/div[3]/div/div/div/div[2]/div/div/div[2]/div/div[2]/new-announcement/div/div[1]/div[3]/input-field/ng-form/div")
-//    private WebElement messageInCreateGFETemplate;
 
     @FindBy(css = "[ng-if=\"gfeMetaData.showVSL\"]")
     private WebElement textOfVSL;
@@ -223,32 +219,28 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
             }
 
             //Check Message
-            String expectedTextInMessageSection = " Hi [Name],\n" +
-                    "\n" + "Below is the Good Faith Estimate showing a typical week's schedule for you at [store name]. Your actual work schedule may vary and you may ask for updates to your work schedule/availability.\n" +
-                    "\n" + "Please acknowledge that you have received this estimate.\n";
+            String expectedTextInMessageSection = "Hi [Name],\n" +
+                    "\n" +
+                    "Below is the Good Faith Estimate showing a typical week's schedule for you at [store name]. Your actual work schedule may vary and you may ask for updates to your work schedule/availability.\n" +
+                    "\n" +
+                    "Please acknowledge that you have received this estimate.";
             String expectedTextInOperatingHoursSection= "Select Days to be Included in Good Faith Estimate"
                     + "Click on any Day & Scheduling Window to select and deselect working days."
                     + "Note that edits in the good faith estimate will not change the Legion suggested schedule.";
             String expectedTextOfVSL = "Team members will be informed regarding opting in to the Volntary Standby List.";
 
-            if (getDriver().getPageSource().contains(expectedTextInMessageSection)){
-                SimpleUtils.pass("Inbox: Message in Create GFE page display correctly");
-            } else{
+            if (messageInCreateGFETemplate != null){
+                if (messageInCreateGFETemplate.getAttribute("value").equals(expectedTextInMessageSection)){
+                    SimpleUtils.pass("Inbox: Message in Create DFE page display correctly");
+                }
+                else{
+                    SimpleUtils.fail("Inbox: Message in create GFE page display incorrectly, the expected message is: " + expectedTextInMessageSection
+                            + "the actual message is: "+ messageInCreateGFETemplate.getAttribute("value"),true);
+                }
+            }
+            else{
                 SimpleUtils.fail("Inbox: Message in create GFE page failed to load",true);
             }
-
-//            if (messageInCreateGFETemplate != null){
-//                if (messageInCreateGFETemplate.getText().equals(expectedTextInMessageSection)){
-//                    SimpleUtils.pass("Inbox: Message in Create DFE page display correctly");
-//                }
-//                else{
-//                    SimpleUtils.fail("Inbox: Message in create GFE page display incorrectly, the expected message is: " + expectedTextInMessageSection
-//                            + "the actual message is: "+ messageInCreateGFETemplate.getText(),true);
-//                }
-//            }
-//            else{
-//                SimpleUtils.fail("Inbox: Message in create GFE page failed to load",true);
-//            }
 
             if (isElementLoaded(textOfVSL)){
 
