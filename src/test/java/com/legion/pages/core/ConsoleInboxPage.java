@@ -191,7 +191,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
 //    private WebElement messageInCreateGFETemplate;
 
     @FindBy(css = "[ng-if=\"gfeMetaData.showVSL\"]")
-    private WebElement textOFVSL;
+    private WebElement textOfVSL;
 
     @FindBy(css = ".estimate-faith.ng-scope")
     private WebElement operatingHoursSection;
@@ -210,17 +210,15 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     public void checkCreateGFEPage() throws Exception {
         if(isElementLoaded(newAnnouncementModal,10)){
             //check Send to:
-            if (isElementLoaded(sendToSection)){
+            if (isElementLoaded(sendToSection, 5)){
                 WebElement sendToText = sendToSection.findElement(By.tagName("label"));
                 if (sendToText !=null && sendToText.getText().equals("Send to:") && sendToTextBox != null){
                     SimpleUtils.pass("Inbox: Send to: section display successfully");
-                }
-                else{
+                } else{
                     SimpleUtils.fail("Inbox: Send to text or textbox failed to load",true);
                 }
 
-            }
-            else{
+            } else{
                 SimpleUtils.fail("Inbox: Send to: section failed to load",true);
             }
 
@@ -234,9 +232,8 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
             String expectedTextOfVSL = "Team members will be informed regarding opting in to the Volntary Standby List.";
 
             if (getDriver().getPageSource().contains(expectedTextInMessageSection)){
-                SimpleUtils.pass("Inbox: Message in Create DFE page display correctly");
-            }
-            else{
+                SimpleUtils.pass("Inbox: Message in Create GFE page display correctly");
+            } else{
                 SimpleUtils.fail("Inbox: Message in create GFE page failed to load",true);
             }
 
@@ -253,14 +250,13 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
 //                SimpleUtils.fail("Inbox: Message in create GFE page failed to load",true);
 //            }
 
-            if (isElementLoaded(textOFVSL)){
+            if (isElementLoaded(textOfVSL)){
 
-                if (textOFVSL.getText().equals(expectedTextOfVSL)){
+                if (textOfVSL.getText().equals(expectedTextOfVSL)){
                     SimpleUtils.pass("Inbox: VSL text in create GFR page display correctly");
-                }
-                else{
+                } else{
                     SimpleUtils.fail("Inbox: VSL text in create GFR page display incorrectly. The expected text is: " +expectedTextOfVSL
-                            + " the actual text is: " + textOFVSL, true);
+                            + " the actual text is: " + textOfVSL, true);
                 }
             }
 
@@ -276,8 +272,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
 
                     if (textInOperatingHoursSection.equals(expectedTextInOperatingHoursSection)){
                         SimpleUtils.pass("Inbox: Text in operating hours section display correctly");
-                    }
-                    else{
+                    } else{
                         SimpleUtils.fail("Inbox: Text in operating hours section display incorrectly, the expected message is: \n" + expectedTextInOperatingHoursSection + "\n"
                                 + "the actual message is: \n"+ textInOperatingHoursSection,true);
                     }
@@ -291,20 +286,17 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                         String weekDay = "";
                         if (weekDay!=null){
                             weekDay = weekDayElment.getText();
-                        }
-                        else{
+                        } else{
                             SimpleUtils.fail("Inbox: Week days display incorrectly",true);
                         }
                         if (workingDay.getAttribute("class").contains("selected")){
                             SimpleUtils.pass("Inbox: Working day:  "+ weekDay + " display correctly and selected");
-                        }
-                        else {
+                        } else {
                             SimpleUtils.fail("Inbox: Working day " + weekDay + "display incorrectly",true);
                         }
                     }
 
-                }
-                else{
+                } else{
                     SimpleUtils.fail("Inbox: Working days failed to load",true);
                 }
 
@@ -312,12 +304,10 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                 if (isElementLoaded(weekSummaryText)){
                     if (weekSummaryText.getText().equals("WEEK SUMMARY")){
                         SimpleUtils.pass("Inbox:  Week Summary text display correctly.");
-                    }
-                    else{
+                    } else{
                         SimpleUtils.fail("Inbox:  Week Summary text display incorrectly. The expected text is: WEEK SUMMARY, the actual text is :  " + weekSummaryText.getText(), true);
                     }
-                }
-                else {
+                } else {
                     SimpleUtils.fail("Inbox: Week Summary text failed to load",true);
                 }
 
@@ -326,13 +316,11 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                     if (minimumShifts != null){
                         if(minimumShifts.findElement(By.tagName("label")).getText().equals("Minimum Shifts")){
                             SimpleUtils.pass("Inbox:  Week Summary -> Minimum Shifts display correctly.");
-                        }
-                        else{
+                        } else{
                             SimpleUtils.fail("Inbox:  Week Summary -> Minimum Shifts display incorrectly. The expected text is Minimum Shifts, the actual text is "
                                     + minimumShifts.findElement(By.tagName("label")).getText(), true);
                         }
-                    }
-                    else {
+                    } else {
                         SimpleUtils.fail("Inbox: Week Summary -> Minimum Shifts failed to load",true);
                     }
 
@@ -340,40 +328,34 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                     if (averageHours != null){
                         if(averageHours.findElement(By.tagName("label")).getText().equals("Average Hours")){
                             SimpleUtils.pass("Inbox:  Week Summary -> Average Hours display correctly.");
-                        }
-                        else{
+                        } else{
                             SimpleUtils.fail("Inbox:  Week Summary -> Average Hours display incorrectly. The expected text is Average Hours, the actual text is "
                                     + averageHours.findElement(By.tagName("label")).getText(), true);
                         }
-                    }
-                    else{
+                    } else{
                         SimpleUtils.fail("Inbox: Week Summary -> Average Hours failed to load",true);
                     }
-                }
-                else {
+                } else {
                     SimpleUtils.fail("Inbox: Week Summary items failed to load",true);
                 }
-            }
-            else{
+            } else{
                 SimpleUtils.fail("Inbox: Operating hours section in create GFE page failed to load",true);
             }
-        }
-        else{
+        } else{
             SimpleUtils.fail("Inbox: Create GFE page failed to load",false);
         }
     }
 
     @Override
     public void checkCreateAnnouncementPageWithGFETurnOnOrTurnOff(boolean isTurnOn) throws Exception {
-        if (isElementLoaded(createAnnouncementIcon,10)) {
+        if (isElementLoaded(createAnnouncementIcon,5)) {
             clickTheElement(createAnnouncementIcon);
-            if(isElementLoaded(newAnnouncementModal,10)){
+            if(isElementLoaded(newAnnouncementModal,5)){
                 // check 'Create new announcement' text
                 WebElement createNewAnnouncementText = newAnnouncementModal.findElement(By.tagName("h2"));
                 if (createNewAnnouncementText != null && createNewAnnouncementText.getText().equals("Create new announcement")){
                     SimpleUtils.pass("Inbox: 'Create new announcement' text display successfully");
-                }
-                else{
+                } else{
                     SimpleUtils.fail("Inbox: 'Create new announcement' text failed to load",true);
                 }
 
@@ -385,8 +367,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                         WebElement announcementTypeText = announcementTypeSection.findElement(By.tagName("label"));
                         if (announcementTypeText != null && announcementTypeText.getText().equals("Announcement type:")){
                             SimpleUtils.pass("Inbox: Announcement type text display correctly");
-                        }
-                        else{
+                        } else{
                             SimpleUtils.fail("Inbox: Announcement type text display incorrectly. The expected value is: Announcement type:, "
                                     + "the actual value is: " + announcementTypeText, true);
                         }
@@ -402,24 +383,19 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                                 } else {
                                     SimpleUtils.fail("Inbox: Announcement type: Message & Good Faith Estimate shows incorrectly", true);
                                 }
-                            }
-                            else {
+                            } else {
                                 SimpleUtils.fail("Inbox: Announcement type: Message & Good Faith Estimate failed to load", true);
                             }
-                        }
-                        else {
+                        } else {
                             SimpleUtils.fail("Inbox: Announcement types selector failed to load", true);
                         }
-                    }
-                    else{
+                    } else{
                         SimpleUtils.fail("Inbox: Announcement type failed to load",true);
                     }
-                }
-                else {
-                    if(!isElementLoaded(announcementTypeSection)){
+                } else {
+                    if(!isElementLoaded(announcementTypeSection, 5)){
                         SimpleUtils.pass("Inbox: Announcement type is not displayed, because GFE is turned off");
-                    }
-                    else{
+                    } else{
                         SimpleUtils.fail("Inbox: Announcement type should not display, because GFE is turned off",true);
                     }
                 }
@@ -429,39 +405,33 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                     WebElement sendToText = sendToSection.findElement(By.tagName("label"));
                     if (sendToText !=null && sendToText.getText().equals("Send to:") && sendToTextBox != null){
                         SimpleUtils.pass("Inbox: Send to: section display successfully");
-                    }
-                    else{
+                    } else{
                         SimpleUtils.fail("Inbox: Send to text or textbox failed to load",true);
                     }
 
-                }
-                else{
+                } else{
                     SimpleUtils.fail("Inbox: Send to: section failed to load",true);
                 }
 
                 //check Message section
                 if (messageText !=null && messageText.getText().equals("Message:") && titleArea !=null && messageArea != null){
                     SimpleUtils.pass("Inbox: Message section display successfully");
-                }
-                else{
+                } else{
                     SimpleUtils.fail("Inbox: Message section failed to load",true);
                 }
 
                 //check Cancel and Send button
-                if(isElementLoaded(cancelButton)){
+                if(isElementLoaded(cancelButton, 5)){
                     SimpleUtils.pass("Inbox: Cancel button display successfully");
-                }
-                else{
+                } else{
                     SimpleUtils.fail("Inbox: Cancel button failed to load",true);
                 }
-                if (isElementLoaded(saveButton)){
+                if (isElementLoaded(saveButton, 5)){
                     SimpleUtils.pass("Inbox: Save button display successfully");
-                }
-                else{
+                } else{
                     SimpleUtils.fail("Inbox: Save button failed to load",true);
                 }
-            }
-            else{
+            } else{
                 SimpleUtils.fail("Inbox: Create Announcement page failed to load",false);
             }
         } else

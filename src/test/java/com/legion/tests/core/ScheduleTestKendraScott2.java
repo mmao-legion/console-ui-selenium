@@ -1410,13 +1410,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				String warningText = warningTextOfCurrentScheduleWeek.getText();
 				if (warningText !=null && warningText.equals("Unpublished Edits")){
 					SimpleUtils.pass("Verified the Unpublished Edits on Overview page display correctly. ");
-				}
-				else{
+				} else{
 					SimpleUtils.fail("Verified the Unpublished Edits on Overview page display incorrectly. The actual warning text is " + warningText +".", true);
 				}
 			}
-		}
-		else{
+		} else{
 			SimpleUtils.fail("Overview Page: Schedule weeks not found!" , true);
 		}
 
@@ -1429,13 +1427,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				String warningText = warningTextOfCurrentScheduleWeek.getText();
 				if (warningText !=null && warningText.equals("Unpublished Edits")){
 					SimpleUtils.pass("Verified the Unpublished Edits text on Dashboard page display correctly. ");
-				}
-				else{
+				} else{
 					SimpleUtils.fail("Verified the Unpublished Edits text on Dashboard page display incorrectly. The actual warning text is " + warningText +".", false);
 				}
 			}
-		}
-		else{
+		} else{
 			SimpleUtils.fail("Dashboard Page: Schedule weeks not found!" , false);
 		}
 	}

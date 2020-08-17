@@ -179,17 +179,15 @@ public class InboxTest extends TestBase {
 
         String gfe = "Good Faith Estimate";
         if (!analyticsPage.isSpecificReportLoaded(gfe)){
-            SimpleUtils.pass("Analytics: GFE report is not displayed in all location tab , because GFE is turned off");
-        }
-        else{
-            SimpleUtils.fail("Analytics: Analytics: GFE report should not display in all location tab, because GFE is turned off", true);
+            SimpleUtils.pass("Analytics: GFE report is not displayed in all locations tab, because GFE is turned off");
+        } else{
+            SimpleUtils.fail("Analytics: GFE report should not display in all locations tab, because GFE is turned off", true);
         }
         analyticsPage.switchAllLocationsOrSingleLocation(false);
         if (!analyticsPage.isSpecificReportLoaded(gfe)){
             SimpleUtils.pass("Analytics: GFE report is not displayed in location: " + location +" tab, because GFE is turned off");
-        }
-        else{
-            SimpleUtils.fail("Analytics: Analytics: GFE report should not display in location : " + location +" tab, because GFE is turned off", true);
+        } else{
+            SimpleUtils.fail("Analytics: GFE report should not display in location: " + location +" tab, because GFE is turned off", true);
         }
 
     }
@@ -223,15 +221,13 @@ public class InboxTest extends TestBase {
         String gfe = "Good Faith Estimate";
         if (analyticsPage.isSpecificReportLoaded(gfe)){
             SimpleUtils.pass("Analytics: GFE report loaded successfully in all location tab");
-        }
-        else{
+        } else{
             SimpleUtils.fail("Analytics: Analytics: GFE report failed to load in all location tab", true);
         }
         analyticsPage.switchAllLocationsOrSingleLocation(false);
         if (analyticsPage.isSpecificReportLoaded(gfe)){
             SimpleUtils.pass("Analytics: GFE report loaded successfully in location: " +location+ " tab");
-        }
-        else{
+        } else{
             SimpleUtils.fail("Analytics: Analytics: GFE report failed to load in location: " + location+ "tab", true);
         }
     }

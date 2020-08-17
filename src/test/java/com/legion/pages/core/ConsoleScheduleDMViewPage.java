@@ -34,20 +34,17 @@ public class ConsoleScheduleDMViewPage implements ScheduleDMViewPage {
                         budgetedHours = Float.parseFloat(schedule.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")).getText());
                         break;
                     }
-                }
-                else{
+                } else{
                     SimpleUtils.fail("Get budgeted hours in DM View failed, there is no location display in this schedule" , false);
                 }
             }
             if(!isLocationMatched)
             {
                 SimpleUtils.fail("Get budgeted hours in DM View failed, there is no matched location display in DM view" , false);
-            }
-            else{
+            } else{
                 SimpleUtils.pass("Get budgeted hours in DM View successful, the budgeted hours is '" + budgetedHours + ".");
             }
-        }
-        else{
+        } else{
             SimpleUtils.fail("Get budgeted hours in DM View failed, there is no schedules display in DM view" , false);
         }
         return budgetedHours;
