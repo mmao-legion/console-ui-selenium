@@ -57,7 +57,7 @@ public interface TeamPage {
 	public String fillInMandatoryFieldsOnNewTMPage(Map<String, String> newTMDetails, String mandatoryField) throws Exception;
 	public boolean isSaveButtonOnNewTMPageEnabled() throws Exception;
 	public void verifyContactNumberFormatOnNewTMPage(List<String> contactNumbers) throws Exception;
-	public void verifyTMCountIsCorrectOnRoster() throws Exception;
+	public int verifyTMCountIsCorrectOnRoster() throws Exception;
 	public void verifyCancelButtonOnAddTMIsEnabled() throws Exception;
 	public void verifyTheMandatoryFieldsCannotEmpty() throws Exception;
 	public void verifyTMIsVisibleAndInvitedOnTODO(String name) throws Exception;
@@ -123,4 +123,5 @@ public interface TeamPage {
 																		 HashMap<String, List<String>> selectedDateNTime, HashMap<Integer, String> indexAndTimes) throws Exception;
 	public void updateBusinessProfilePicture(String filePath) throws Exception;
 	public void rejectAllTheTimeOffRequests() throws Exception;
+	public List<String> getTMNameList() throws Exception;
 }

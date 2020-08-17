@@ -1218,7 +1218,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else if(isElementLoaded(publishSheduleButton, 5)) {
             return true;
         }
-        if(areListElementVisible(scheduleTableWeekViewWorkerDetail,3)){
+        if(areListElementVisible(shiftsWeekView,3)){
             SimpleUtils.pass("Week: '" + getActiveWeekText() + "' Already Generated!");
             return true;
         }
@@ -5669,7 +5669,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void searchTeamMemberByName(String name) throws Exception {
         if(areListElementVisible(btnSearchteamMember,5)) {
             if (btnSearchteamMember.size() == 2) {
-                click(btnSearchteamMember.get(1));
+                //click(btnSearchteamMember.get(1));
                 if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {
                     textSearch.sendKeys(name);
                     click(searchIcon);
@@ -5822,7 +5822,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void clickOnDayViewAddNewShiftButton() throws Exception {
         if (isElementLoaded(createNewShiftWeekView, 10)) {
-            click(createNewShiftWeekView);
+            clickTheElement(createNewShiftWeekView);
             SimpleUtils.pass("Click on Create New Shift button successfully!");
         }else {
             SimpleUtils.report("Create New Shift button not loaded, currently is the old UI!");
@@ -9133,9 +9133,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             for (WebElement shiftWeekView : shiftsWeekView) {
                 try {
                     WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
-                    WebElement image = shiftWeekView.findElement(By.className("sch-day-view-shift-worker-detail"));
-                    if (workerName != null && image != null) {
+                    if (workerName != null) {
                         if (workerName.getText().toLowerCase().contains(teamMemberName.toLowerCase())) {
+                            WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
                             clickTheElement(image);
                             if (isElementLoaded(deleteShift, 5)) {
                                 clickTheElement(deleteShift);

@@ -7,19 +7,19 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
-import com.legion.utils.SimpleUtils;
+import com.legion.utils.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.io.File;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 public class InboxTest extends TestBase {
+
+    private static HashMap<String, String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
     @Override
     @BeforeMethod()
@@ -57,8 +57,95 @@ public class InboxTest extends TestBase {
         String gfe = "Good Faith Estimate";
         if (analyticsPage.isSpecificReportLoaded(gfe)) {
             analyticsPage.mouseHoverAndExportReportByName(gfe);
+            // Verify whether the file is downloaded or not
+            Thread.sleep(5000);
+            String downloadPath = parameterMap.get("Download_File_Default_Dir");
+            SimpleUtils.assertOnFail("Failed to download the Good Faith Estimate Report!", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "GoodFaithEstimate"), false);
         } else {
             SimpleUtils.fail("Analytics: " + gfe + " not loaded Successfully!", false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "verify the column and team member details and count of the report")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheColumnAndCountOfGFEReportAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        int rosterCount = teamPage.verifyTMCountIsCorrectOnRoster();
+        List<String> tmNames = teamPage.getTMNameList();
+
+        // Go to Controls -> Compliance, turn on the GFE
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsComplianceSection();
+        SimpleUtils.assertOnFail("Controls: Compliance page not loaded Successfully!", controlsNewUIPage.isControlsComplianceLoaded(), false);
+        controlsNewUIPage.turnGFEToggleOnOrOff(true);
+
+        // Go to Analytics page
+        AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+        analyticsPage.clickOnAnalyticsConsoleMenu();
+        SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+
+        analyticsPage.switchAllLocationsOrSingleLocation(false);
+        String gfe = "Good Faith Estimate";
+        String downloadPath = parameterMap.get("Download_File_Default_Dir");
+        if (analyticsPage.isSpecificReportLoaded(gfe)) {
+            analyticsPage.mouseHoverAndExportReportByName(gfe);
+            // Verify whether the file is downloaded or not
+            Thread.sleep(5000);
+            SimpleUtils.assertOnFail("Failed to download the Good Faith Estimate Report!", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "GoodFaithEstimate"), false);
+        } else {
+            SimpleUtils.fail("Analytics: " + gfe + " not loaded Successfully!", false);
+        }
+        File latestFile = SimpleUtils.getLatestFileFromDirectory(downloadPath);
+        String fileName = latestFile.getName();
+        SimpleUtils.pass("KPI Report exported successfully with file name '"+ fileName +"'.");
+        ArrayList<String> actualHeader = CsvUtils.getHeaderFromCSVFileByPath(downloadPath + "/" + fileName);
+        ArrayList<String> expectedHeader = new ArrayList<>(Arrays.asList("TM first name",
+                "TM last name",
+                "TM Employee ID",
+                "TM Job Title",
+                "Scheduling policy group",
+                "Date & time sent",
+                "Date & time read",
+                "Date & time acknowledged",
+                "Location",
+                "Location ID",
+                "Estimated working Days",
+                "Estimated working hours",
+                "Average hours per week",
+                "Minimum # of shifts per week"));
+        if (actualHeader.containsAll(expectedHeader) && expectedHeader.containsAll(actualHeader)) {
+            SimpleUtils.pass("GFE Report columns are correct!");
+        } else {
+            SimpleUtils.fail("GFE report columns are not correct!", true);
+        }
+        ArrayList<HashMap<String,String>> gfeDetails = CsvUtils.getDataFromCSVFileWithHeader(downloadPath + "/" + fileName);
+        if (gfeDetails != null && gfeDetails.size() > 0 && rosterCount == gfeDetails.size()) {
+            SimpleUtils.pass("Verified the count of TMs in the GFE report is consistent with Roster!");
+            boolean isConsistent = true;
+            for (HashMap<String,String> gfeDetail : gfeDetails) {
+                String name = gfeDetail.get("TM first name") + " " + gfeDetail.get("TM last name");
+                if (!tmNames.contains(name)) {
+                    SimpleUtils.fail(name + " is not exist in the Team Roster!", false);
+                    isConsistent = false;
+                    break;
+                }
+            }
+            if (isConsistent) {
+                SimpleUtils.pass("Team members are consistent with the Roster!");
+            }
+        } else {
+            SimpleUtils.fail("The count of TMs in the GFE report is inconsistent with Roster", false);
         }
     }
 
