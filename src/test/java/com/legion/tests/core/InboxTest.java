@@ -238,6 +238,67 @@ public class InboxTest extends TestBase {
         inboxPage.verifyVSLInfo(false);
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify the content of week summary when selecting different tm")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+
+        // Make sure that GFE is turned on
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsComplianceSection();
+        SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
+        controlsNewUIPage.turnGFEToggleOnOrOff(true);
+
+        // Get 2 TM from Controls-> Users and Roles and get their data from scheduling policy group setting
+        String nickName1 = "";
+        String nickName2 = "";
+        String nickName1_Location = "";
+        String nickName1_schedulingPolicyGroup = "";
+        String nickName1SPG = "";
+        controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+        SimpleUtils.assertOnFail("Users and Roles Card failed to load", controlsNewUIPage.isControlsUsersAndRolesLoaded(), false);
+        HashMap<String, List<String>> TM1 = controlsNewUIPage.getRandomUserNLocationNSchedulingPolicyGroup();
+        Iterator itTM1 = TM1.keySet().iterator();
+        while (itTM1.hasNext()) {
+            nickName1 = itTM1.next().toString();
+            if (nickName1.contains(" "))
+                nickName1 = nickName1.split(" ")[0] + " " + nickName1.split(" ")[1].substring(0, 1) + ".";
+            List<String> nickName1_Value = TM1.get(nickName1);
+            nickName1_Location = nickName1_Value.get(0);
+            nickName1_schedulingPolicyGroup = nickName1_Value.get(2);
+        }
+        controlsPage.gotoControlsPage();
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(nickName1_schedulingPolicyGroup);
+        HashMap<String, List<String>> nickName1_schedulingPolicyGroupData = controlsNewUIPage.getDataFromSchedulingPolicyGroups();
+        Iterator it_nickName1 = nickName1_schedulingPolicyGroupData.keySet().iterator();
+        while (it_nickName1.hasNext()) {
+            nickName1SPG = it_nickName1.next().toString();
+            List<String> nickName1SPG_Value = TM1.get(nickName1);
+            nickName1_Location = nickName1SPG_Value.get(0);
+            nickName1_schedulingPolicyGroup = nickName1SPG_Value.get(2);
+        }
+
+        controlsPage.gotoControlsPage();
+        controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+        SimpleUtils.assertOnFail("Users and Roles Card failed to load", controlsNewUIPage.isControlsUsersAndRolesLoaded(), false);
+        HashMap<String, List<String>> TM2 = controlsNewUIPage.getRandomUserNLocationNSchedulingPolicyGroup();
+
+        // Create GFE Announcement and select random TM to verify its week summary
+        inboxPage.clickOnInboxConsoleMenuItem();
+        inboxPage.createGFEAnnouncement();
+        inboxPage.sendToTM(nickName1);
+        HashMap<String, String> contentOfWeekSummary_TM1 = inboxPage.getTheContentOfWeekSummaryInGFE();
+        inboxPage.sendToTM(nickName2);
+        HashMap<String, String> contentOfWeekSummary_TM2 = inboxPage.getTheContentOfWeekSummaryInGFE();
+    }
+
     //Added by Marym
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")

@@ -13,10 +13,8 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
 import javax.xml.crypto.dsig.SignatureMethod;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
+
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class ConsoleInboxPage  extends BasePage implements InboxPage {
@@ -44,6 +42,18 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
 
     @FindBy(css = "p.estimate-faith-text-vsl")
     private WebElement VSLInfo;
+
+    @FindBy(className = "week-summary")
+    private WebElement weekSummary;
+
+    @FindBy(id = "gfe-min-shifts")
+    private WebElement gfeMinShifts;
+
+    @FindBy(id = "gfe-average-hours")
+    private WebElement gfeAverageHours;
+
+    @FindBy(css = "label.ng-binding")
+    private WebElement gfeLocation;
 
     @Override
     public void clickOnInboxConsoleMenuItem() throws Exception {
@@ -113,7 +123,6 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
         boolean isConsistent = false;
         Iterator itRegular = regularHoursFromControl.keySet().iterator();
         while (itRegular.hasNext()) {
-            isConsistent = false;
             String regularKey = itRegular.next().toString();
             List<String> regularValue = regularHoursFromControl.get(regularKey);
             Iterator itGFE = GFEWorkingHours.keySet().iterator();
@@ -154,6 +163,24 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
         }
     }
 
+    @Override
+    public HashMap<String, String> getTheContentOfWeekSummaryInGFE() throws Exception {
+        HashMap<String, String> theContentOfWeekSummary = new HashMap<>();
+        if (isElementLoaded(weekSummary,5)) {
+            theContentOfWeekSummary.put("Minimum Shifts", gfeMinShifts.getText());
+            theContentOfWeekSummary.put("Average Hours", gfeAverageHours.getText());
+            theContentOfWeekSummary.put("Location", gfeLocation.getText());
+        }
+        return theContentOfWeekSummary;
+    }
+
+    @Override
+    public boolean compareDataInGFEWeekSummary(HashMap<String, String> theContentOfWeekSummaryInGFE,
+                                                             HashMap<String, List<String>> DataFromSchedulingPolicyGroups) throws Exception {
+        boolean isConsistent = false;
+        //todo
+        return isConsistent;
+    }
     //Added by Marym
 
     @FindBy(css = ".new-announcement-modal")

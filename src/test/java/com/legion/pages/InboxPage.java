@@ -1,5 +1,6 @@
 package com.legion.pages;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -15,6 +16,9 @@ public interface InboxPage {
     public boolean compareGFEWorkingHrsWithRegularWorkingHrs(LinkedHashMap<String, List<String>> GFEWorkingHours,
                                                              LinkedHashMap<String, List<String>> regularHoursFromControl) throws Exception;
     public void verifyVSLInfo(boolean isVSLTurnOn) throws Exception;
+    public HashMap<String, String> getTheContentOfWeekSummaryInGFE() throws Exception;
+    public boolean compareDataInGFEWeekSummary(HashMap<String, String> theContentOfWeekSummaryInGFE,
+                                               HashMap<String, List<String>> DataFromSchedulingPolicyGroups) throws Exception;
 
     //Added by Marym
     public void checkCreateAnnouncementPageWithGFETurnOnOrTurnOff(boolean isTurnOn) throws Exception;

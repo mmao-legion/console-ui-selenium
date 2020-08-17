@@ -259,4 +259,6 @@ public interface ControlsNewUIPage {
 	public void updateSwapAndCoverRequestIsApprovalRequired(String option) throws Exception;
 	public void turnGFEToggleOnOrOff(boolean isTurnOn) throws Exception;
 	public void turnVSLToggleOnOrOff(boolean isTurnOn) throws Exception;
+	public HashMap<String, List<String>> getRandomUserNLocationNSchedulingPolicyGroup() throws Exception;
+	public HashMap<String, List<String>> getDataFromSchedulingPolicyGroups() throws Exception;
 }

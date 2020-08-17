@@ -2,10 +2,7 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -5035,5 +5032,65 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		} else {
 			SimpleUtils.fail("There is no predictable schedule settings!", false);
 		}
+	}
+
+	// Added By Julie
+	@FindBy(css = ".lg-user-locations__item-name")
+	private WebElement userLocation;
+
+	@FindBy(css = "select[aria-label=\"Scheduling Policy Group\"]")
+	private WebElement schedulingPolicyGroup;
+
+	@FindBy(css = "[form-title=\"Scheduling Policy Groups\"] lg-tabs lg-tab")
+	private List<WebElement> schedulingPolicyGroupsTabContent;
+
+	@Override
+	public HashMap<String, List<String>> getRandomUserNLocationNSchedulingPolicyGroup() throws Exception {
+		HashMap<String, List<String>> userNLocationNSchedulingPolicyGroup = new HashMap<>();
+		if (areListElementVisible(usersAndRolesAllUsersRows, 10)) {
+			int index = (new Random()).nextInt(usersAndRolesAllUsersRows.size());
+			WebElement userName = usersAndRolesAllUsersRows.get(index).findElement(By.cssSelector("lg-button button span span"));
+			String tmName = userName.getText();
+			click(usersAndRolesAllUsersRows.get(index));
+			if (isElementLoaded(userLocation,5) && isElementLoaded(schedulingPolicyGroup,5)) {
+				String userLocationText = userLocation.getText();
+				String userSchedulingPolicyGroup = schedulingPolicyGroup.getAttribute("value");
+				List<String> locationNSchedulingPolicyGroup = new ArrayList<>();
+				locationNSchedulingPolicyGroup.add(userLocationText);
+				locationNSchedulingPolicyGroup.add(userSchedulingPolicyGroup);
+				userNLocationNSchedulingPolicyGroup.put(tmName, locationNSchedulingPolicyGroup);
+				SimpleUtils.report("Get TM \"" + tmName + "\": Location ---  " + userLocationText + ",  Scheduling Policy Group --- " + userSchedulingPolicyGroup);
+			}
+		}
+		return userNLocationNSchedulingPolicyGroup;
+	}
+
+	@Override
+	public HashMap<String, List<String>> getDataFromSchedulingPolicyGroups() throws Exception {
+		HashMap<String, List<String>> dataFromSchedulingPolicyGroups = new HashMap<>();
+		List<String> minNMaxNIdeal = new ArrayList<>();
+		WebElement currentTab = null;
+		if (areListElementVisible(schedulingPolicyGroupsTabContent,5)) {
+			for (WebElement tab: schedulingPolicyGroupsTabContent) {
+				WebElement tabSelectedOrNot= tab.findElement(By.tagName("ng-transclude"));
+				if (!tabSelectedOrNot.getAttribute("class").contains("ng-hide")) {
+					currentTab = tab;
+					break;
+				}
+				List<WebElement> questionOptions = currentTab.findElements(By.tagName("question-input"));
+				for (WebElement e: questionOptions) {
+					List<WebElement> inputFields = e.findElements(By.tagName("input-field"));
+					if (inputFields.size() !=3)
+						break;
+					for (WebElement input: inputFields)
+						minNMaxNIdeal.add(input.getAttribute("value"));
+					dataFromSchedulingPolicyGroups.put(e.getAttribute("question-title"), minNMaxNIdeal);
+					SimpleUtils.report("Get tab \"" + tab.getAttribute("tab-title") + "\": " + e.getAttribute("question-title") + " --- Minimum&Maximum&Ideal: " + minNMaxNIdeal);
+				}
+			}
+		}
+		if (dataFromSchedulingPolicyGroups.size() != 3)
+			SimpleUtils.fail("Scheduling Policy Groups: Failed to get the data of Hours per week/Shifts per week/Hours per shift", false);
+		return dataFromSchedulingPolicyGroups;
 	}
 }

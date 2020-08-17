@@ -2566,7 +2566,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         SimpleUtils.pass(txtRecommendedOption[0] + " Option selected By default for Select Team member option");
                     }else{
                         if(areListElementVisible(btnSearchteamMember,5)){
-                            click(btnSearchteamMember.get(1));
+                            click(btnSearchteamMember.get(0));
                             searchText(propertySearchTeamMember.get("AssignTeamMember"));
                         }
 
@@ -3956,7 +3956,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     //added by Haya
-    @FindBy (css = "div[ng-repeat=\"summary in summaries\"]")
+    @FindBy (css = "div.generate-schedule-stats")
     private WebElement scheduleSummary;
     @Override
     public void verifyOperatingHrsInToggleSummary(String day, String startTime, String endTime) throws Exception {
@@ -4919,7 +4919,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
-    @FindBy(css = "div.week-view-shift-info-icon")
+    @FindBy(css = ".week-schedule-shit-open-popover")
     private List<WebElement> scheduleInfoIcon;
 
     @FindBy(css = "button[ng-click*='confirmSaveAction']")
@@ -5421,6 +5421,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             clickOnCreateOrNextBtn();
             searchTeamMemberByName(names.get(i));
+            if(isElementLoaded(btnAssignAnyway,5))
+                click(btnAssignAnyway);
             clickOnOfferOrAssignBtn();
         }
     }
@@ -8444,7 +8446,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             return true;  }
     }
 
-    @FindBy(css = ".sch-day-view-shift-worker-detail")
+    @FindBy(css = "worker-image-optimized img")
       private List<WebElement> profileIcons;
 
     @FindBy(css = "div.sch-open-shift")
@@ -8550,7 +8552,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void clickOnViewProfile() throws Exception {
         if(isViewProfileEnable())
         {
-            click(viewProfileOnIcon);
+            clickTheElement(viewProfileOnIcon);
             SimpleUtils.pass("View Profile Clicked on Pop Over Style!");
         }
         else {
@@ -9015,8 +9017,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public boolean verifyContextOfTMDisplay() throws Exception {
-        clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        clickOnProfileIcon();
+          clickOnProfileIcon();
         if (isViewProfileEnable() &&  isChangeRoleEnable() && isAssignTMEnable() && isConvertToOpenEnable() &&isEditMealBreakTimeEnable() && isDeleteShiftEnable()) {
             SimpleUtils.pass("context of any TM show well and include: 1. View profile 2. Change shift role  3.Assign TM 4.  Convert to open shift is enabled for current and future week day 5.Edit meal break time 6. Delete shift");
            return true;
@@ -9057,6 +9058,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(offerToSpecificTMBtn);
             click(convertToOpenYesBtn);
             verifySelectTeamMembersOption();
+            if(isElementLoaded(btnAssignAnyway,5))
+                click(btnAssignAnyway);
             clickOnOfferOrAssignBtn();
         }else
             SimpleUtils.fail("offer to Specific tm button load failed",true);
@@ -10351,41 +10354,4 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("publish button fail to load!",false);
         }
     }
-
-    //Added by Julie
-//    public List<Float> getBudgetForNonDGFlow() throws Exception {
-//        if (isElementLoaded(editBudgetBtn, 5)) {
-//            clickTheElement(editBudgetBtn);
-//            // Cancel and Save buttons are consistent with operating hours
-//            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
-//                SimpleUtils.pass("Create Schedule - Enter Budget: Click on Edit button Successfully!");
-//                if (areListElementVisible(roleHoursRows, 5)) {
-//                    for (WebElement roleHoursRow : roleHoursRows) {
-//                        try {
-//                            WebElement forecastHour = roleHoursRow.findElement(By.cssSelector("td:nth-child(3)"));
-//                            WebElement budgetHour = roleHoursRow.findElement(By.cssSelector("input[type=\"number\"]"));
-//                            if (forecastHour != null && budgetHour != null) {
-//                                String forecastHourString = "";
-//                                if (forecastHour.getText().trim().contains(".")) {
-//                                    forecastHourString = forecastHour.getText().trim().substring(0, forecastHour.getText().trim().indexOf("."));
-//                                }
-//                                budgetHour.clear();
-//                                budgetHour.sendKeys(forecastHourString);
-//                            }
-//                        }catch (Exception e) {
-//                            continue;
-//                        }
-//                    }
-//                    clickTheElement(operatingHoursSaveBtn);
-//                    if (isElementEnabled(editBudgetBtn, 5)) {
-//                        SimpleUtils.pass("Create Schedule: Save the budget hours Successfully!");
-//                    }else {
-//                        SimpleUtils.fail("Create Schedule: Click on Save the budget hours button failed, Next button is not enabled!", false);
-//                    }
-//                }
-//            }
-//        }else {
-//            SimpleUtils.fail("Create Schedule - Enter Budget: Edit button not loaded Successfully!", false);
-//        }
-//    }
 }

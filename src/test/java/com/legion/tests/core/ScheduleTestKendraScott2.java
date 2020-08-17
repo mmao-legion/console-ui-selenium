@@ -435,9 +435,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		if(!isActiveWeekGenerated2){
 			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.deleteTMShiftInWeekView("Unassigned");
+		schedulePage.saveSchedule();
+		schedulePage.publishActiveSchedule();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			//"After Click on view profile,then particular TM profile is displayed :1. Personal details 2. Work Preferences 3. Availability
-			SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , schedulePage.verifyContextOfTMDisplay(), true);
-			schedulePage.clickOnViewProfile();
+			SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , schedulePage.verifyContextOfTMDisplay(), false);
+     		schedulePage.clickOnViewProfile();
 			schedulePage.verifyPersonalDetailsDisplayed();
 			schedulePage.verifyWorkPreferenceDisplayed();
 			schedulePage.verifyAvailabilityDisplayed();
@@ -447,7 +452,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 //			schedulePage.clickOnChangeRole();
 //			schedulePage.verifyChangeRoleFunctionality();
 			//After Click on Assign TM-Select TMs window is opened,Recommended and search TM tab is enabled
-			schedulePage.clickonAssignTM();
+		    schedulePage.clickonAssignTM();
 			schedulePage.verifyRecommendedAndSearchTMEnabled();
 			//Search and select any TM,Click on the assign: new Tm is updated on the schedule table
 			schedulePage.verifySelectTeamMembersOption();
