@@ -18,6 +18,7 @@ public interface InboxPage {
 
     //Added by Marym
     public void checkCreateAnnouncementPageWithGFETurnOnOrTurnOff(boolean isTurnOn) throws Exception;
+    public void checkCreateGFEPage() throws Exception;
 
     //Added by Haya
     public void sendToTM(String nickName) throws Exception;
