@@ -26,4 +26,18 @@ public interface InboxPage {
 
     //Added by Haya
     public void sendToTM(String nickName) throws Exception;
+    public void changeTheMessage(String message) throws Exception;
+    public void verifyMessageIsExpected(String message) throws Exception;
+    public void chooseOneDayToClose(String day) throws Exception;
+    public void verifyDayIsClosed(String day) throws Exception;
+    public void changeOperatingHrsOfDay(String day, String startTime, String endTime) throws Exception;
+    public void verifyOperatingHrsOfDay(String dayExpected, String startTimeExpected, String endTimeExpected) throws Exception;
+    public void changeWeekSummaryInfo(String minimumShifts, String averageHrs) throws Exception;
+    public void clickSendBtn() throws Exception;
+    public void clickFirstGFEInList() throws Exception;
+    public void clickAcknowledgeBtn() throws Exception;
+    public void addComment(String comment) throws Exception;
+    public void verifyComment(String comment, String name) throws Exception;
+
+
 }

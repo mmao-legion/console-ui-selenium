@@ -484,4 +484,222 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
             SimpleUtils.fail("GFE Announcement: Send to element failed to load!", false);
         }
     }
+
+    @FindBy(css = ".estimate-faith-area")
+    private WebElement efaMessageArea;
+    @Override
+    public void changeTheMessage(String message) throws Exception {
+        if (isElementLoaded(efaMessageArea.findElement(By.cssSelector("textarea")),5)){
+            efaMessageArea.findElement(By.cssSelector("textarea")).clear();
+            efaMessageArea.findElement(By.cssSelector("textarea")).sendKeys(message);
+        } else {
+            SimpleUtils.fail("Message textarea fail to load!", false);
+        }
+    }
+
+    @FindBy(css = ".announcement-message div")
+    private WebElement messageViewed;
+    @Override
+    public void verifyMessageIsExpected(String messageExpected) throws Exception {
+        if (isElementLoaded(messageViewed,5)){
+            String s= messageViewed.getText();
+            if (messageExpected.equals(messageViewed.getText())){
+                SimpleUtils.pass("Message is consistent!");
+            } else {
+                SimpleUtils.fail("Message is insonsistent!",false);
+            }
+        } else {
+            SimpleUtils.fail("Message fail to load!",false);
+        }
+    }
+
+    @FindBy(css = ".weekdays-row .weekdays-column")
+    private List<WebElement> allWorkingDays;
+    //Parameters: day
+    //e.g.: SUN,MON,TUE,WED,THU,FRI,SAT
+    @Override
+    public void chooseOneDayToClose(String day) throws Exception {
+        if (areListElementVisible(allWorkingDays,5)){
+            for (WebElement element: allWorkingDays){
+                if (element.findElement(By.cssSelector(".weekdays-column-header")).getText().contains(day)){
+                    click(element.findElement(By.cssSelector(".weekdays-column-header")));
+                    verifyDayIsNotSelected(element);
+                    SimpleUtils.pass(day+" is closed!");
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Working days are not loaded!", false);
+        }
+    }
+    private void verifyDayIsNotSelected(WebElement day){
+        if (!day.getAttribute("class").contains("selected")){
+            SimpleUtils.pass("Operating day is unselected!");
+        }
+    }
+
+    @FindBy(css = ".working-days .working-days-day")
+    private List<WebElement> actualWorkingDays;
+    @Override
+    public void verifyDayIsClosed(String day) throws Exception {
+        if (areListElementVisible(actualWorkingDays,5)){
+            for (WebElement element: actualWorkingDays){
+                if (element.findElement(By.cssSelector(".working-days-day-title")).getText().contains(day)){
+                    if (!element.getAttribute("class").contains("working-days-day--blue")){
+                        SimpleUtils.pass(day+" is closed!");
+                    } else {
+                        SimpleUtils.fail(day+" should be closed!", false);
+                    }
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Working days are not loaded in view mode!", false);
+        }
+    }
+
+    @Override
+    public void changeOperatingHrsOfDay(String day, String startTime, String endTime) throws Exception{
+        if (areListElementVisible(allWorkingDays,5)){
+            for (WebElement element: allWorkingDays){
+                if (element.findElement(By.cssSelector(".weekdays-column-header")).getText().contains(day)){
+                    if (isElementLoaded(element.findElement(By.cssSelector(".weekdays-column-body")),5) && element.findElements(By.cssSelector(".weekdays-column-body input")).size()==2){
+                        element.findElements(By.cssSelector(".weekdays-column-body input")).get(0).clear();
+                        element.findElements(By.cssSelector(".weekdays-column-body input")).get(0).sendKeys(startTime);
+                        element.findElements(By.cssSelector(".weekdays-column-body input")).get(1).clear();
+                        element.findElements(By.cssSelector(".weekdays-column-body input")).get(1).sendKeys(endTime);
+                        SimpleUtils.pass("start time and end time are set");
+                    } else {
+                        SimpleUtils.fail("Start time and end time are not loaded!", false);
+                    }
+                    SimpleUtils.pass(day+" is closed!");
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Working days are not loaded!", false);
+        }
+    }
+
+    @Override
+    public void verifyOperatingHrsOfDay(String dayExpected, String startTimeExpected, String endTimeExpected) throws Exception {
+        if (areListElementVisible(actualWorkingDays,5)){
+            for (WebElement element: actualWorkingDays){
+                if (element.findElement(By.cssSelector(".working-days-day-title")).getText().contains(dayExpected)){
+                    if (element.findElement(By.cssSelector(".working-days-day-work-time")).getText().split("\n").length>1){
+                        String actualStartTime = element.findElement(By.cssSelector(".working-days-day-work-time")).getText().split("\n")[0];
+                        String actualEndTime = element.findElement(By.cssSelector(".working-days-day-work-time")).getText().split("\n")[1];
+                        if (getTimeFormat(startTimeExpected).contains(actualStartTime) && getTimeFormat(endTimeExpected).contains(actualEndTime)){
+                            SimpleUtils.pass(dayExpected+": Operating hours is consistent with setting!");
+                        }else {
+                            SimpleUtils.fail(dayExpected+": Operating hours is inconsistent with setting!", false);
+                        }
+                        break;
+                    } else {
+                        SimpleUtils.fail("start time or end time fail to load!", false);
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("Working days are not loaded!", false);
+        }
+    }
+
+    //09:00AM-->9:00am
+    private String getTimeFormat(String time) throws Exception{
+        String result = time.substring(0,2);
+        if (time.contains("AM") | time.contains("am")){
+            result = result.concat(":00 am");
+        } else {
+            result = result.concat(":00 pm");
+        }
+        if (result.indexOf("0")==0){
+            result = result.substring(1);
+        }
+        return result;
+    }
+
+    @FindBy(css = ".week-summary")
+    private WebElement weekSummarySection;
+    @Override
+    public void changeWeekSummaryInfo(String minimumShifts, String averageHrs) throws Exception {
+        if (isElementLoaded(weekSummarySection,5)){
+            weekSummarySection.findElement(By.id("gfe-min-shifts")).clear();
+            weekSummarySection.findElement(By.id("gfe-min-shifts")).sendKeys(minimumShifts);
+            weekSummarySection.findElement(By.id("gfe-average-hours")).clear();
+            weekSummarySection.findElement(By.id("gfe-average-hours")).sendKeys(averageHrs);
+            SimpleUtils.pass("minimum shifts and average hours are set!");
+        } else {
+            SimpleUtils.fail("Week summary section is not loaded!", false);
+        }
+    }
+
+    @FindBy(css = "div[label=\"'SEND'\"] button")
+    private WebElement sendBtn;
+    @Override
+    public void clickSendBtn() throws Exception {
+        if (isElementLoaded(sendBtn,5)){
+            click(sendBtn);
+            SimpleUtils.pass("Send button has been clicked!");
+        } else {
+            SimpleUtils.fail("Send button is not loaded!", false);
+        }
+    }
+
+    @FindBy(css = ".announcement-object")
+    private List<WebElement> announcements;
+    @Override
+    public void clickFirstGFEInList() throws Exception {
+        if (areListElementVisible(announcements,5)){
+            click(announcements.get(0));
+            SimpleUtils.pass("The first announcement in the list has been chosen!");
+        } else {
+            SimpleUtils.fail("There is no announcement in the lists!", false);
+        }
+    }
+
+    @FindBy(css = ".acknowledge-and-vsl-btns button")
+    private WebElement acknowledgeBtn;
+    @Override
+    public void clickAcknowledgeBtn() throws Exception {
+        if (isElementLoaded(acknowledgeBtn,5)){
+            click(acknowledgeBtn);
+            SimpleUtils.pass("Acknowledge button has been clicked!");
+        } else {
+            SimpleUtils.fail("Acknowledge button fail to load!", false);
+        }
+    }
+
+    @FindBy(css = ".announcement-comments-form")
+    private WebElement commentForm;
+    @Override
+    public void addComment(String comment) throws Exception {
+        if (isElementLoaded(commentForm,5)){
+            commentForm.findElement(By.cssSelector("input")).clear();
+            commentForm.findElement(By.cssSelector("input")).sendKeys(comment);
+            click(commentForm.findElement(By.cssSelector(".invite-icon")));
+            SimpleUtils.pass("Comment is added!");
+        } else {
+            SimpleUtils.fail("Comment form is not loaded!", false);
+        }
+    }
+
+    @FindBy(css = ".announcement-comments-list-comment")
+    private List<WebElement> comments;
+    @Override
+    public void verifyComment(String comment, String name) throws Exception {
+        boolean flag = false;
+        if (areListElementVisible(comments,5)){
+            for(WebElement element: comments){
+                if (element.findElement(By.tagName("b")).getText().contains(name) && element.getText().contains(comment)){
+                    SimpleUtils.pass("Comment displays correctly!");
+                    flag = true;
+                    break;
+                }
+            }
+            if (!flag){
+                SimpleUtils.fail("There is no comment expected!", false);
+            }
+        }
+    }
 }
