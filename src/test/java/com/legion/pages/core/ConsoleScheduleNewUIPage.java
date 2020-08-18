@@ -8446,7 +8446,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             return true;  }
     }
 
-    @FindBy(css = "worker-image-optimized img")
+    @FindBy(css = ".rows worker-image-optimized img")
       private List<WebElement> profileIcons;
 
     @FindBy(css = "div.sch-open-shift")
@@ -8530,6 +8530,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void clickOnProfileIcon() throws Exception {
         if(isProfileIconsEnable()) {
             int randomIndex = (new Random()).nextInt(profileIcons.size());
+            while (profileIcons.get(randomIndex).getAttribute("ng-src").contains("openShiftImage")){
+                randomIndex = (new Random()).nextInt(profileIcons.size());
+            }
             clickTheElement(profileIcons.get(randomIndex));
         } else
             SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
