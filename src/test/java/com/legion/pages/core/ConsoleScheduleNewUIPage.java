@@ -9898,6 +9898,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         } else
                             SimpleUtils.fail("My Schedule Page: Info icon has the shift details like duration, timing and shift role", true);
                     }
+                    scrollToBottom();
                     click(hoverIcons.get(randomIndex));
                 }
             } else if (hoverIcons.size() == 0)
