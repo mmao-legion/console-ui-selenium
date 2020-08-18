@@ -2121,7 +2121,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.pass("Sum of all the shifts in a week equal to Week Schedule Hours!('" + totalShiftSizeForWeek + "/" + activeWeekScheduleHoursOnCard + "')");
             return true;
         } else {
-            SimpleUtils.fail("Sum of all the shifts in a week is not equal to Week scheduled Hour!('" + totalShiftSizeForWeek + "/" + activeWeekScheduleHoursOnCard + "')", false);
+            SimpleUtils.fail("Sum of all the shifts in an week is not equal to Week scheduled Hour!('" + totalShiftSizeForWeek + "/" + activeWeekScheduleHoursOnCard + "')", false);
         }
         return false;
     }
@@ -8820,14 +8820,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Assign TM is disabled or not available to Click ", false);
     }
 
-    @FindBy(css = ".modal-dialog .sch-save span")
-    private WebElement yesForConvertToOpenShift;
     @Override
     public void clickOnConvertToOpenShift() throws Exception{
         if(isConvertToOpenEnable())
         {
             click(convertOpen);
-            click(yesForConvertToOpenShift);
             SimpleUtils.pass("Clicked on Convert to open shift successfully ");
         } else
             SimpleUtils.fail(" Convert to open shift is disabled or not available to Click ", false);
@@ -9901,7 +9898,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         } else
                             SimpleUtils.fail("My Schedule Page: Info icon has the shift details like duration, timing and shift role", true);
                     }
-                    scrollToBottom();
                     click(hoverIcons.get(randomIndex));
                 }
             } else if (hoverIcons.size() == 0)
