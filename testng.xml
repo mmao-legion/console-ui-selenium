@@ -7,7 +7,7 @@
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
-
+<!--
 
      <test name="Schedule Test">
          <classes>
@@ -98,43 +98,24 @@
             </class>
         </classes>
     </test>
-
+-->
 
     <test name="Schedule New UI Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
-                    <include name="verifyScheduleLegionFunctionality" />
-                    <include name="verifyComplianceSmartCardFunctionality" />
-                    <include name="verifyScheduleFunctionalitySchedule" />
-                    <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
                     <include name="verifyScheduleFunctionalityWeekView"/>
-                    <include name="verifyScheduleFunctionalityDayView"/>
-                    <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView"/>
-                    <include name="verificationOfMySchedulePageAsTeamMember" />
-                    <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
-                    <include name="verifyProfilePictureFunctionalityAsTeamMember" />
                     <include name="verifyInfoIconFunctionalityAsTeamMember" />
-                    <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
-                    <include name="verifyTheContentOfCopyScheduleForNonDGFlowAsInternalAdmin" />
-                    <include name="verifyContentAfterChangingOperatingHrsAsInternalAdmin" />
-                    <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
-                    <include name="verifyTheContentOfClosedWeekDayScheduleForNonDGFlowAsInternalAdmin" />
-                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
-                    <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
-                    <include name="verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin" />
                     <!-- <include name="verifyContentOfBudgetHoursForNonDGFlowAsInternalAdmin" />-->
                     <include name="verifyTooltipForDeleteShiftsAsInternalAdmin" />
                     <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />
-                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
-                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
     </test>
-
+<!--
     <test name="Schedule Test LegionCoffee">
         <classes>
             <class name="com.legion.tests.core.ScheduleTest">
@@ -222,8 +203,8 @@
                     <include name="verifyHelpfulLinksWidgetsAsStoreManager" />
                     <include name="verifyTodayForecastWidgetsAsStoreManager" />
                     <include name="verifySchedulesWidgetsAsStoreManager" />
-                    <!--<include name="verifyComplianceViolationWidgetsAsStoreManager" /> -->
-                    <include name="verifyNoContentOfSwapNCoverWidgetAsInternalAdmin" />
+                    <!-<include name="verifyComplianceViolationWidgetsAsStoreManager" /> -->
+<!--                    <include name="verifyNoContentOfSwapNCoverWidgetAsInternalAdmin" />
                     <include name="verifyTimesheetApprovalRateWidgetAsStoreManager" />
                     <include name="verifyTheContentOfSwapNCoverWidgetAsInternalAdmin" />
                 </methods>
@@ -242,5 +223,5 @@
             </class>
         </classes>
     </test>
-
+-->
 </suite> <!-- Suite -->
