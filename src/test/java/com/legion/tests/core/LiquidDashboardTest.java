@@ -26,7 +26,7 @@ public class LiquidDashboardTest extends TestBase {
 
     public enum widgetType{
         Helpful_Links("helpful links"),
-        Todays_Forecast("today's forecast"),
+        Todays_Forecast("today’s forecast"),
         Schedules("schedules"),
         Timesheet_Approval_Status("timesheet approval status"),
         Timesheet_Approval_Rate("timesheet approval rate"),

@@ -2,17 +2,13 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.InboxPage;
-import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
-import org.apache.bcel.generic.Visitor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
-import javax.xml.crypto.dsig.SignatureMethod;
 import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -127,8 +123,6 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
             List<String> regularValue = regularHoursFromControl.get(regularKey);
             Iterator itGFE = GFEWorkingHours.keySet().iterator();
             while (itGFE.hasNext()) {
-                if (isConsistent)
-                    break;
                 String GFEKey = itGFE.next().toString();
                 if (regularKey.contains(GFEKey) ) {
                     List<String> GFEValue = GFEWorkingHours.get(GFEKey);
@@ -139,6 +133,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                             SimpleUtils.report("Regular Working Hours: " + regularKey + "---" + regularValue);
                             SimpleUtils.report("GFE Working Hours: " + GFEKey + "---" + GFEValue);
                             SimpleUtils.report("Are they consistent? " + isConsistent);
+                            break;
                         }
                     }
                 }
@@ -165,22 +160,39 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
 
     @Override
     public HashMap<String, String> getTheContentOfWeekSummaryInGFE() throws Exception {
+        // Minimum Shifts, 3
+        // Average Hours, 30
+        // Location, AUSTIN DOWNTOWN
         HashMap<String, String> theContentOfWeekSummary = new HashMap<>();
         if (isElementLoaded(weekSummary,5)) {
-            theContentOfWeekSummary.put("Minimum Shifts", gfeMinShifts.getText());
-            theContentOfWeekSummary.put("Average Hours", gfeAverageHours.getText());
+            theContentOfWeekSummary.put("Minimum Shifts", gfeMinShifts.getAttribute("value"));
+            theContentOfWeekSummary.put("Average Hours", gfeAverageHours.getAttribute("value"));
             theContentOfWeekSummary.put("Location", gfeLocation.getText());
+            SimpleUtils.report("GFE Minimum Shifts: " + theContentOfWeekSummary.get("Minimum Shifts") + ", Average Hours: " + theContentOfWeekSummary.get("Average Hours")
+                    + ", Location: " + theContentOfWeekSummary.get("Location"));
         }
         return theContentOfWeekSummary;
     }
 
-    @Override
     public boolean compareDataInGFEWeekSummary(HashMap<String, String> theContentOfWeekSummaryInGFE,
                                                              HashMap<String, List<String>> DataFromSchedulingPolicyGroups) throws Exception {
         boolean isConsistent = false;
-        //todo
+        String valueGFE = theContentOfWeekSummaryInGFE.get("Minimum Shifts");
+        List<String> valueSPG = DataFromSchedulingPolicyGroups.get("Shifts per week");
+        if (valueGFE != null && valueSPG.get(0).equals(valueGFE)) {
+            isConsistent = true;
+            SimpleUtils.report("Minimum Shifts in GFE --- " + valueGFE + ", Shifts per week in Scheduling Policy Groups --- " + valueSPG.get(0) + ". Are they consistent? " + isConsistent);
+            valueGFE = theContentOfWeekSummaryInGFE.get("Average Hours");
+            valueSPG = DataFromSchedulingPolicyGroups.get("Hours per week");
+            if (valueGFE != null && valueSPG.get(0).equals(valueGFE)) {
+                isConsistent = true;
+                SimpleUtils.report("Average Hours in GFE --- " + valueGFE + ", Hours per week in Scheduling Policy Groups --- " + valueSPG.get(0) + ". Are they consistent? " + isConsistent);
+            } else
+                isConsistent = false;
+        }
         return isConsistent;
     }
+
     //Added by Marym
 
     @FindBy(css = ".new-announcement-modal")
@@ -473,7 +485,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                 for (WebElement tmOption : tmOptions) {
                     if (tmOption.getText().contains(nickName)) {
                         click(tmOption);
-                        SimpleUtils.pass("GFE Announcement: Select " + tmOption.getText() + " Successfully!");
+                        SimpleUtils.pass("GFE Announcement: Select " + nickName + " Successfully!");
                         break;
                     }
                 }
