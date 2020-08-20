@@ -2053,7 +2053,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			for(WebElement timeOffRequest : approvedTimeOffRequests) {
 				scrollToElement(timeOffRequest);
 				waitForSeconds(3);
-				click(timeOffRequest);
+				clickTheElement(timeOffRequest);
 				if(isElementLoaded(timeOffRequestCancelBtn,5)) {
 					scrollToElement(timeOffRequestCancelBtn);
 					click(timeOffRequestCancelBtn);
@@ -2064,7 +2064,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		if(areListElementVisible(pendingTimeOffRequests,10) && pendingTimeOffRequests.size() > 0) {
 			for(WebElement timeOffRequest : pendingTimeOffRequests) {
 				scrollToElement(timeOffRequest);
-				click(timeOffRequest);
+				clickTheElement(timeOffRequest);
 				if(isElementLoaded(timeOffRequestCancelBtn,5)) {
 					scrollToElement(timeOffRequestCancelBtn);
 					click(timeOffRequestCancelBtn);

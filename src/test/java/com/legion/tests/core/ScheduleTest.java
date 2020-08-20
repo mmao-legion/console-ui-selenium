@@ -1174,9 +1174,10 @@ public class ScheduleTest extends TestBase{
 		schedulePage.navigateToNextWeek();
 
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
-		if(!isActiveWeekGenerated){
-			schedulePage.createScheduleForNonDGFlowNewUI();
+		if(isActiveWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		schedulePage.deleteTMShiftInWeekView(tmName);
 		schedulePage.deleteTMShiftInWeekView("Unassigned");

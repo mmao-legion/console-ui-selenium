@@ -681,6 +681,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		 *  Navigate to Schedule day view
 		 */
 		boolean isWeekView = false;
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (!isWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
 		schedulePage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
 		schedulePage.filterScheduleByJobTitle(isWeekView);
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
