@@ -242,6 +242,8 @@
               <!--      <include name="verifyTurnOffGFEAsInternalAdmin" /> -->
                     <include name="verifyTurnOnGFEAsInternalAdmin" />
                     <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
+                    <include name="verifyContentOfGFEAsInternalAdmin" />
+                    <include name="verifyVSLInfoAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
