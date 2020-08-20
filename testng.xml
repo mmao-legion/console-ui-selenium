@@ -239,7 +239,6 @@
                     <include name="verifyTheContentOfOperationHoursAndTheFirstDayOfWeekAsInternalAdmin" />
                     <include name="verifyVSLInfoShowsOrNotAsInternalAdmin" />
                     <include name="verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin" />
-                    <include name="verifyVSLInfoShowsOrNotAsInternalAdmin" />
               <!--      <include name="verifyTurnOffGFEAsInternalAdmin" /> -->
                     <include name="verifyTurnOnGFEAsInternalAdmin" />
                     <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
