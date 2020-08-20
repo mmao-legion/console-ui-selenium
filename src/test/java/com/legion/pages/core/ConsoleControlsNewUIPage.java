@@ -5036,9 +5036,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	// Added By Julie
 	@FindBy(css = ".lg-user-locations__item-name")
-	private WebElement userLocation;
+	private List<WebElement> userLocation;
 
-	@FindBy(css = "select[aria-label=\"Scheduling Policy Group\"]")
+	@FindBy(css = "select[aria-label=\"Scheduling Policy Group\"] option[selected=\"selected\"]")
 	private WebElement schedulingPolicyGroup;
 
 	@FindBy(css = "[form-title=\"Scheduling Policy Groups\"] lg-tabs lg-tab")
@@ -5050,16 +5050,16 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		if (areListElementVisible(usersAndRolesAllUsersRows, 10)) {
 			int index = (new Random()).nextInt(usersAndRolesAllUsersRows.size());
 			WebElement userName = usersAndRolesAllUsersRows.get(index).findElement(By.cssSelector("lg-button button span span"));
-			String tmName = userName.getText();
-			click(usersAndRolesAllUsersRows.get(index));
-			if (isElementLoaded(userLocation,5) && isElementLoaded(schedulingPolicyGroup,5)) {
-				String userLocationText = userLocation.getText();
-				String userSchedulingPolicyGroup = schedulingPolicyGroup.getAttribute("value");
+			String userNameText = userName.getText();
+			click(userName);
+			if (areListElementVisible(userLocation,5) && isElementLoaded(schedulingPolicyGroup,5)) {
+				String userLocationText = userLocation.get(0).getText();
+				String userSchedulingPolicyGroup = schedulingPolicyGroup.getText();
 				List<String> locationNSchedulingPolicyGroup = new ArrayList<>();
 				locationNSchedulingPolicyGroup.add(userLocationText);
 				locationNSchedulingPolicyGroup.add(userSchedulingPolicyGroup);
-				userNLocationNSchedulingPolicyGroup.put(tmName, locationNSchedulingPolicyGroup);
-				SimpleUtils.report("Get TM \"" + tmName + "\": Location ---  " + userLocationText + ",  Scheduling Policy Group --- " + userSchedulingPolicyGroup);
+				userNLocationNSchedulingPolicyGroup.put(userNameText, locationNSchedulingPolicyGroup);
+				SimpleUtils.report("Get TM \"" + userNameText + "\": Location ---  " + userLocationText + ",  Scheduling Policy Group --- " + userSchedulingPolicyGroup);
 			}
 		}
 		return userNLocationNSchedulingPolicyGroup;
@@ -5068,7 +5068,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public HashMap<String, List<String>> getDataFromSchedulingPolicyGroups() throws Exception {
 		HashMap<String, List<String>> dataFromSchedulingPolicyGroups = new HashMap<>();
-		List<String> minNMaxNIdeal = new ArrayList<>();
 		WebElement currentTab = null;
 		if (areListElementVisible(schedulingPolicyGroupsTabContent,5)) {
 			for (WebElement tab: schedulingPolicyGroupsTabContent) {
@@ -5077,20 +5076,19 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					currentTab = tab;
 					break;
 				}
-				List<WebElement> questionOptions = currentTab.findElements(By.tagName("question-input"));
-				for (WebElement e: questionOptions) {
-					List<WebElement> inputFields = e.findElements(By.tagName("input-field"));
-					if (inputFields.size() !=3)
-						break;
-					for (WebElement input: inputFields)
-						minNMaxNIdeal.add(input.getAttribute("value"));
-					dataFromSchedulingPolicyGroups.put(e.getAttribute("question-title"), minNMaxNIdeal);
-					SimpleUtils.report("Get tab \"" + tab.getAttribute("tab-title") + "\": " + e.getAttribute("question-title") + " --- Minimum&Maximum&Ideal: " + minNMaxNIdeal);
-				}
+			}
+			List<WebElement> questionOptions = currentTab.findElements(By.cssSelector("div div question-input"));
+			for (WebElement e: questionOptions) {
+				List<WebElement> inputFields = e.findElements(By.cssSelector("input-field ng-form input[ng-change=\"$ctrl.handleChange()\"]"));
+				List<String> minNMaxNIdeal = new ArrayList<>();
+				for (WebElement input: inputFields)
+					minNMaxNIdeal.add(input.getAttribute("value"));
+				dataFromSchedulingPolicyGroups.put(e.getAttribute("question-title"), minNMaxNIdeal);
+				SimpleUtils.report("Get tab \"" + currentTab.getAttribute("tab-title") + "\": " + e.getAttribute("question-title") + " --- Minimum & Maximum & Ideal: " + minNMaxNIdeal.get(0) +" & " + minNMaxNIdeal.get(1) + " & " + minNMaxNIdeal.get(2));
+				if (dataFromSchedulingPolicyGroups.size() == 3)
+					break;
 			}
 		}
-		if (dataFromSchedulingPolicyGroups.size() != 3)
-			SimpleUtils.fail("Scheduling Policy Groups: Failed to get the data of Hours per week/Shifts per week/Hours per shift", false);
 		return dataFromSchedulingPolicyGroups;
 	}
 }

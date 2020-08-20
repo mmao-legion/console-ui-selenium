@@ -256,48 +256,84 @@ public class InboxTest extends TestBase {
         SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
         controlsNewUIPage.turnGFEToggleOnOrOff(true);
 
-        // Get 2 TM from Controls-> Users and Roles and get their data from scheduling policy group setting
+        // Get 1 TM from Controls-> Users and Roles and get their data from scheduling policy group setting
         String nickName1 = "";
-        String nickName2 = "";
         String nickName1_Location = "";
         String nickName1_schedulingPolicyGroup = "";
-        String nickName1SPG = "";
+        controlsPage.gotoControlsPage();
         controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-        SimpleUtils.assertOnFail("Users and Roles Card failed to load", controlsNewUIPage.isControlsUsersAndRolesLoaded(), false);
+        //SimpleUtils.assertOnFail("Users and Roles Card failed to load", controlsNewUIPage.isControlsUsersAndRolesLoaded(), false);
         HashMap<String, List<String>> TM1 = controlsNewUIPage.getRandomUserNLocationNSchedulingPolicyGroup();
         Iterator itTM1 = TM1.keySet().iterator();
         while (itTM1.hasNext()) {
             nickName1 = itTM1.next().toString();
-            if (nickName1.contains(" "))
-                nickName1 = nickName1.split(" ")[0] + " " + nickName1.split(" ")[1].substring(0, 1) + ".";
             List<String> nickName1_Value = TM1.get(nickName1);
-            nickName1_Location = nickName1_Value.get(0);
-            nickName1_schedulingPolicyGroup = nickName1_Value.get(2);
+            if (nickName1_Value != null && nickName1_Value.size() == 2) {
+                nickName1_Location = nickName1_Value.get(0);
+                if (nickName1_Location.equals("All Locations"))
+                nickName1_Location = location;
+                nickName1_schedulingPolicyGroup = nickName1_Value.get(1);
+                break;
+            }
         }
+        if (nickName1.contains(" "))
+            nickName1 = nickName1.split(" ")[0] + " " + nickName1.split(" ")[1].substring(0, 1) + ".";
         controlsPage.gotoControlsPage();
         controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        SimpleUtils.assertOnFail("Scheduling Policies Card failed to load", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
         controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(nickName1_schedulingPolicyGroup);
-        HashMap<String, List<String>> nickName1_schedulingPolicyGroupData = controlsNewUIPage.getDataFromSchedulingPolicyGroups();
-        Iterator it_nickName1 = nickName1_schedulingPolicyGroupData.keySet().iterator();
-        while (it_nickName1.hasNext()) {
-            nickName1SPG = it_nickName1.next().toString();
-            List<String> nickName1SPG_Value = TM1.get(nickName1);
-            nickName1_Location = nickName1SPG_Value.get(0);
-            nickName1_schedulingPolicyGroup = nickName1SPG_Value.get(2);
-        }
+        HashMap<String, List<String>> schedulingPolicyGroupData_TM1 = controlsNewUIPage.getDataFromSchedulingPolicyGroups();
 
+        // Get another TM from Controls-> Users and Roles and get their data from scheduling policy group setting
+        String nickName2 = "";
+        String nickName2_Location = "";
+        String nickName2_schedulingPolicyGroup = "";
         controlsPage.gotoControlsPage();
         controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-        SimpleUtils.assertOnFail("Users and Roles Card failed to load", controlsNewUIPage.isControlsUsersAndRolesLoaded(), false);
-        HashMap<String, List<String>> TM2 = controlsNewUIPage.getRandomUserNLocationNSchedulingPolicyGroup();
 
-        // Create GFE Announcement and select random TM to verify its week summary
+        HashMap<String, List<String>> TM2 = controlsNewUIPage.getRandomUserNLocationNSchedulingPolicyGroup();
+        Iterator itTM2 = TM2.keySet().iterator();
+        while (itTM2.hasNext()) {
+            nickName2 = itTM2.next().toString();
+            List<String> nickName2_Value = TM2.get(nickName2);
+            if (nickName2_Value != null && nickName2_Value.size() == 2) {
+                nickName2_Location = nickName2_Value.get(0);
+                if (nickName2_Location.equals("All Locations"))
+                    nickName2_Location = location;
+                nickName2_schedulingPolicyGroup = nickName2_Value.get(1);
+                break;
+            }
+        }
+        if (nickName2.contains(" "))
+            nickName2 = nickName2.split(" ")[0] + " " + nickName2.split(" ")[1].substring(0, 1) + ".";
+        controlsPage.gotoControlsPage();
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        SimpleUtils.assertOnFail("Scheduling Policies Card failed to load", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+        controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(nickName2_schedulingPolicyGroup);
+        HashMap<String, List<String>> schedulingPolicyGroupData_TM2 = controlsNewUIPage.getDataFromSchedulingPolicyGroups();
+
+        // Create GFE Announcement and select 2 TMs to get their week summary
         inboxPage.clickOnInboxConsoleMenuItem();
         inboxPage.createGFEAnnouncement();
         inboxPage.sendToTM(nickName1);
         HashMap<String, String> contentOfWeekSummary_TM1 = inboxPage.getTheContentOfWeekSummaryInGFE();
+        inboxPage.clickOnInboxConsoleMenuItem();
+        inboxPage.createGFEAnnouncement();
         inboxPage.sendToTM(nickName2);
         HashMap<String, String> contentOfWeekSummary_TM2 = inboxPage.getTheContentOfWeekSummaryInGFE();
+
+        // Compare the data to verify the content of week summary when selecting different tm
+        SimpleUtils.report("Inbox: Compare a TM with the data from controls");
+        if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM1, schedulingPolicyGroupData_TM1) && contentOfWeekSummary_TM1.get("Location").equals(nickName1_Location))
+            SimpleUtils.pass("Inbox: The content of week summary is consistent with the data from controls when selecting a tm");
+        else
+            SimpleUtils.fail("Inbox: The content of week summary is inconsistent with the data from controls when selecting a tm",true);
+
+        SimpleUtils.report("Inbox: Compare another TM with the data from controls");
+        if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM2, schedulingPolicyGroupData_TM2) && contentOfWeekSummary_TM2.get("Location").equals(nickName2_Location))
+            SimpleUtils.pass("Inbox: The content of week summary is consistent with the data from controls when selecting another tm");
+        else
+            SimpleUtils.fail("Inbox: The content of week summary is inconsistent with the data from controls when selecting another tm",true);
     }
 
     //Added by Marym

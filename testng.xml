@@ -237,7 +237,11 @@
                 <methods>
                     <include name="verifyGFEReportsAreAbleToExportAsInternalAdmin"/>
                     <include name="verifyTheContentOfOperationHoursAndTheFirstDayOfWeekAsInternalAdmin" />
-                   <include name="verifyVSLInfoShowsOrNotAsInternalAdmin" />
+                    <include name="verifyVSLInfoShowsOrNotAsInternalAdmin" />
+                    <include name="verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin" />
+              <!--      <include name="verifyTurnOffGFEAsInternalAdmin" /> -->
+                    <include name="verifyTurnOnGFEAsInternalAdmin" />
+                    <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
