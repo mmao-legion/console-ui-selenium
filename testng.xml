@@ -9,209 +9,42 @@
     </listeners>
 
 
-<!--     <test name="Schedule Test">-->
-<!--         <classes>-->
-<!--             <class name="com.legion.tests.core.RegressionTest">-->
-<!--                 <methods>-->
-<!--                        <include name="validateScheduleUngenerateFeatureAsInternalAdmin"/>-->
-<!--                        <include name="validateScheduleSmartCardsAsStoreManager"/>-->
-<!--                        <include name="validateScheduleGenerationFunctionalityAsStoreManager"/>-->
-<!--                        <include name="validateGuidanceWeekAsStoreManager"/>-->
-<!--                        <include name="validateSchedulePublishAsStoreManager"/>-->
-<!--                        <include name="editManualShiftScheduleAsStoreManager"/>-->
-<!--                        <include name="updateControlsSectionLoadingAsInternalAdmin"/>-->
-<!--                        <include name="scheduleSubTabNavigationStoreManager"/>-->
-<!--                        <include name="navigateToNextDayIfActiveDayHasStoreClosedAsStoreManager"/>-->
-<!--                        <include name="validateWeatherForecastOnSchedulePageAsStoreManager"/>-->
-<!--                        <include name="verifyScheduleOverlappingAsInternalAdmin"/>-->
-<!--                        <include name="VerifyWhetherManagerCanApproveTimeOffRequestAsTeamMember"/>-->
-<!--                        <include name="generateScheduleAndCheckScheduleNTMSizeWeekView"/>-->
-<!--                        <include name="editAssignTeamScheduleAsStoreManager"/>-->
-<!--                     </methods>-->
-<!--                 </class>-->
-<!--             </classes>-->
-<!--         </test>-->
-
-<!--		<test name="Dashboard Test">-->
-<!--			<classes>-->
-<!--				<class name="com.legion.tests.core.DashboardTestKendraScott2">-->
-<!--					<methods>-->
-<!--					   <include name="verifyTheDisplayLocationWithSelectedLocation"/>-->
-<!--					   <include name="verifyTheClickActionOnChangeLocationButton"/>-->
-<!--					   <include name="verifyTheContentDisplayedInChangeLocationLayout"/>-->
-<!--					   <include name="verifyTheFunctionOfSearchTextBox"/>-->
-<!--					   <include name="verifyTheWelcomeMessage"/>-->
-<!--					   <include name="verifyTheFunctionOfViewTodaySchedule"/>-->
-<!--					   <include name="verifyTheDataSourceForBudgetScheduledOther"/>-->
-<!--                       <include name="verifyDashboardFunctionalityAsTeamMember" />-->
-<!--                        <include name="verifyDashboardFunctionality" />-->
-<!--					</methods>-->
-<!--				</class>-->
-<!--		   </classes>-->
-<!--	   </test>-->
-
-<!--		<test name="Controls Test">-->
-<!--		   <classes>-->
-<!--			   <class name="com.legion.tests.core.ControlsNewUITest">-->
-<!--				   <methods>-->
-<!--					   <include name="verifyScheduleScoreIsUpdated"/>-->
-<!--				   </methods>-->
-<!--			   </class>-->
-<!--		   </classes>-->
-<!--	   </test>-->
-<!--    <test name="TeamTab Test KendraScott2">-->
-<!--       <classes>-->
-<!--           <class name="com.legion.tests.core.TeamTestKendraScott2">-->
-<!--               <methods>-->
-<!--                   <include name="verifyTheTeamFunctionalityInRoster" />-->
-<!--                   <include name="verifyTheTeamFunctionalityInTransfer" />-->
-<!--                   <include name="verifyTheTeamFunctionalityInUpdateInfo" />-->
-<!--                   <include name="verifyTheTeamFunctionalityInBadges" />-->
-<!--                   <include name="verifyTheTeamFunctionalityInInviteTeamMember" />-->
-<!--                   <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />-->
-<!--                   <include name="verifyTheTeamFunctionalityInProfileSectionAsInternalAdmin" />-->
-<!--               </methods>-->
-<!--           </class>-->
-<!--       </classes>-->
-<!--   </test>-->
-
-<!--    <test name="TeamTab Test">-->
-<!--        <classes>-->
-<!--            <class name="com.legion.tests.core.TeamTest">-->
-<!--                <methods>-->
-<!--                    <include name="verifyTheTeamFunctionalityInActivate" />-->
-<!--                    <include name="verifyTheTeamFunctionalityInTerminate" />-->
-<!--                    <include name="verifyTheTeamFunctionalityInCoverageAsStoreManager" />-->
-<!--                    <include name="verifyTheTeamFunctionalityInTimeOffAsStoreManager" />-->
-<!--                </methods>-->
-<!--            </class>-->
-<!--        </classes>-->
-<!--    </test>-->
-
-
-<!--    <test name="Overview Test">-->
-<!--        <classes>-->
-<!--            <class name="com.legion.tests.core.ScheduleOverviewTest">-->
-<!--                <methods>-->
-<!--                    <include name="verifyScheduleFunctionalityOverviewAsStoreManager"/>-->
-<!--                </methods>-->
-<!--            </class>-->
-<!--        </classes>-->
-<!--    </test>-->
-
-
-<!--    <test name="Schedule New UI Test">-->
-<!--        <classes>-->
-<!--            <class name="com.legion.tests.core.ScheduleTestKendraScott2">-->
-<!--                <methods>-->
-<!--                    <include name="verifyScheduleLegionFunctionality" />-->
-<!--                    <include name="verifyComplianceSmartCardFunctionality" />-->
-<!--                    <include name="verifyScheduleFunctionalitySchedule" />-->
-<!--                    <include name="verifyScheduleFunctionalityScheduleSmartCard"/>-->
-<!--                    <include name="verifyScheduleFunctionalityWeekView"/>-->
-<!--                    <include name="verifyScheduleFunctionalityDayView"/>-->
-<!--                    <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView"/>-->
-<!--                    <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView"/>-->
-<!--                    <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView"/>-->
-<!--                    <include name="verificationOfMySchedulePageAsTeamMember" />-->
-<!--                    <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />-->
-<!--                    <include name="verifyProfilePictureFunctionalityAsTeamMember" />-->
-<!--                    <include name="verifyInfoIconFunctionalityAsTeamMember" />-->
-<!--                    <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />-->
-<!--                </methods>-->
-<!--            </class>-->
-<!--        </classes>-->
-<!--    </test>-->
-
-<!--    <test name="Schedule Test LegionCoffee">-->
-<!--        <classes>-->
-<!--            <class name="com.legion.tests.core.ScheduleTest">-->
-<!--                <methods>-->
-<!--                    <include name="verifyTheTeamMemberViewSwapAsInternalAdmin" />-->
-<!--                    <include name="verifyTheTeamMemberViewCoverAsInternalAdmin" />-->
-<!--                    <include name="verifyTheTeamScheduleOptionAsInternalAdmin" />-->
-<!--                    <include name="verifyTheFunctionalityOfSwapAndCoverAsInternalAdmin" />-->
-<!--                    <include name="verifyTheFeatureOfFilterAsTeamMember" />-->
-<!--                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamMember" />-->
-<!--                </methods>-->
-<!--            </class>-->
-<!--        </classes>-->
-<!--    </test>-->
-
-<!--        <test name="Forecast Test">-->
-<!--            <classes>-->
-<!--                <class name="com.legion.tests.core.ForecastTest">-->
-<!--                    <methods>-->
-<!--                        <include name="verifyScheduleLaborForeCastFunctionality"/>-->
-<!--                        <include name="verifyShopperForecastFunctionality"/>-->
-<!--                        <include name="validateWeatherSmartCardOnForecastPage"/>-->
-<!--                        <include name="verifyScheduleFunctionalityForecast"/>-->
-<!--                    </methods>-->
-<!--                </class>-->
-<!--            </classes>-->
-<!--        </test>-->
-<!--    <test name="Activity Test">-->
-<!--        <classes>-->
-<!--            <class name="com.legion.tests.core.ActivityTest">-->
-<!--                <methods>-->
-<!--                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin"/>-->
-<!--                    <include name="verifyAccessControlsOnActivitiesPage"/>-->
-<!--                    <include name="verifyTheContentOnActivityAsStoreManager"/>-->
-<!--                    <include name="verifyTheContentOfShiftSwapActivityAsStoreManager"/>-->
-<!--                    <include name="verifyApproveCoverRequestOfShiftSwapActivityAsInternalAdmin"/>-->
-<!--                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin"/>-->
-<!--                    <include name="verifyTheContentOfActivityPageAsStoreManager" />-->
-<!--                    <include name="verifyToCloseActivityFeedAsStoreManager" />-->
-<!--                    <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />-->
-<!--                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />-->
-<!--                    <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />-->
-<!--                    <include name="verifyTheContentOfShiftSwapActivityWithoutApprovalAsInternalAdmin" />-->
-<!--                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />-->
-<!--                    <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />-->
-<!--                    <include name="verifyActivityOfClaimOpenShift" />-->
-<!--                    <include name="verifyActivityOfPublishUpdateSchedule" />-->
-<!--                    <include name="verifyTheNotificationForCancelTimeOffAsStoreManager"/>-->
-<!--                    <include name="verifyNoNotificationForActivateTMAsStoreManager"/>-->
-<!--                    <include name="verifyTheNotificationForRequestTimeOffAsStoreManager"/>-->
-<!--                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin"/>-->
-<!--                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>-->
-<!--                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin"/>-->
-<!--                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin"/>-->
-<!--                </methods>-->
-<!--            </class>-->
-<!--        </classes>-->
-<!--    </test>-->
-
-<!--    <test name="Profile Test">-->
-<!--        <classes>-->
-<!--            <class name="com.legion.tests.core.ProfileNewUITestKendraScott2">-->
-<!--                <methods>-->
-<!--                    <include name="verifyMyProfileDetailsByUpdatingTheInformationAsTeamMember2" />-->
-<!--                    <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />-->
-<!--                    <include name="verifyCreateNewTimeOffFunctionalityAsTeamMember" />-->
-<!--                </methods>-->
-<!--            </class>-->
-<!--        </classes>-->
-<!--    </test>-->
-
-<!--    <test name="LiquidDashboard Test">-->
-<!--        <classes>-->
-<!--            <class name="com.legion.tests.core.LiquidDashboardTest">-->
-<!--                <methods>-->
-<!--                    <include name="verifyUIOfHelpfulLinkswidgetAsStoreManager" />-->
-<!--                </methods>-->
-<!--            </class>-->
-<!--        </classes>-->
-<!--    </test>-->
-
     <test name="Location Test">
         <classes>
             <class name="com.legion.tests.core.LocationsTest">
                 <methods>
-                    <include name="verifyLocationsTabShowWell" />
+                    <include name="verifyCreateUpdateRegularLocationWithMandatoryFields" />
+                    <include name="verifyCreateUpdateRegularLocationWithAllFields" />
+                    <include name="verifyCreateMockLocation" />
+                    <include name="verifyCreateUpdateNSOLocation" />
+                    <include name="verifyDisableEnableLocationFunction" />
+                    <include name="verifyImportLocationDistrict" />
+                    <include name="verifyExportLocationDistrict" />
                 </methods>
             </class>
         </classes>
     </test>
+
+    <test name="Navigation Test">
+        <classes>
+            <class name="com.legion.tests.core.NewNavigationFlowTest">
+                <methods>
+                    <include name="verifyLocationProfilePageInControls" />
+                    <include name="verifyManagerLocationForOneUserInControlsInControls" />
+                    <include name="verifyLocationListFunctionInTimesheet" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+<!--    <test name="Location Group Test">-->
+<!--        <classes>-->
+<!--            <class name="com.legion.tests.core.LocationsGroupTest">-->
+<!--                <methods>-->
+<!--                    -->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
 
 </suite> <!-- Suite -->
