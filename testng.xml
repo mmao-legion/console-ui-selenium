@@ -131,6 +131,7 @@
                     <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager" />
+                    <include name="verifyAssignTMWarningWhenTMIsInactiveAsStoreManager" />
                 </methods>
             </class>
         </classes>

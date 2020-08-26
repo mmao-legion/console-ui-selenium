@@ -1368,11 +1368,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.addOpenShiftWithDefaultTime("MOD");
 		schedulePage.deleteOpenShiftWithLastDay();
 		schedulePage.saveSchedule();
+
 		// Check the number on changes not publish smart card
 		if (schedulePage.getChangesOnActionRequired().contains("2 Changes"))
 			SimpleUtils.pass("ACTION REQUIRED Smart Card: The number on changes not publish smart card is 2");
 		else
 			SimpleUtils.fail("ACTION REQUIRED Smart Card: The number on changes not publish smart card is incorrect",true);
+
 		// Filter unpublished changes to check the shifts and tooltip
 		schedulePage.selectShiftTypeFilterByText("Unpublished changes");
 		if (schedulePage.getShiftsCount() == 1)
@@ -1383,6 +1385,38 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.pass("ACTION REQUIRED Smart Card: \"1 shift deleted\" tooltip shows up on smart card");
 		else
 			SimpleUtils.fail("ACTION REQUIRED Smart Card: \"1 shift deleted\" tooltip doesn't show up on smart card",false);
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Julie")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify assign TM warning: TM status is inactive")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyAssignTMWarningWhenTMIsInactiveAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		// Prepare a TM who is inactive
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+		String inactiveUser = controlsNewUIPage.selectAnyActiveTM();
+        String date = controlsNewUIPage.deactivateActiveTM();
+
+		// Assign to the TM to verify the message and warning
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.goToConsoleScheduleAndScheduleSubMenu();
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (!isWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.selectAShiftToAssignTM(inactiveUser);
+        schedulePage.verifyInactiveMessageNWarning(inactiveUser,date);
+
+		// Restore the TM to be active
+		controlsNewUIPage.deactivateActiveTM();
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+		controlsNewUIPage.searchAndSelectTeamMemberByName(inactiveUser);
+		controlsNewUIPage.activateInactiveTM();
 	}
 
 	@Automated(automated = "Automated")

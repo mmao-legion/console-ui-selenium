@@ -2,6 +2,7 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import org.openqa.selenium.By;
@@ -5044,6 +5045,43 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "[form-title=\"Scheduling Policy Groups\"] lg-tabs lg-tab")
 	private List<WebElement> schedulingPolicyGroupsTabContent;
 
+
+	@FindBy(css = "[label=\"Cancel Deactivate\"] button")
+	private WebElement cancelDeactivateBtn;
+
+	@FindBy(css = "[label=\"Deactivate\"] button")
+	private WebElement deactivateBtn;
+
+	@FindBy(css = "[label=\"Activate\"] button")
+	private WebElement activateBtn;
+
+	@FindBy(css = ".calendar-week.select-day.current-week")
+	private WebElement currentWeekInDeactivateWindow;
+
+	@FindBy(css = ".current-day")
+	private WebElement currentDayInDeactivateWindow;
+
+	@FindBy(className = "save-btn")
+	private WebElement applyOrActivateOrSaveBtn;
+
+	@FindBy(css = "span.lgn-alert-message")
+	private WebElement alertMessage;
+
+	@FindBy(className = "lgn-action-button-success")
+	private WebElement confirmBtn;
+
+	@FindBy(css = "input[placeholder=\"You can search by name, job title, and status.\"]")
+	private WebElement teamMemberSearchBox;
+
+	@FindBy(tagName = "lg-eg-status")
+	private WebElement statusInUserDetails;
+
+	@FindBy(className = "month-header")
+	private WebElement monthInCalendar;
+
+	@FindBy(className = "selected-day")
+	private WebElement selectedDayInCalendar;
+
 	@Override
 	public HashMap<String, List<String>> getRandomUserNLocationNSchedulingPolicyGroup() throws Exception {
 		HashMap<String, List<String>> userNLocationNSchedulingPolicyGroup = new HashMap<>();
@@ -5052,7 +5090,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			WebElement userName = usersAndRolesAllUsersRows.get(index).findElement(By.cssSelector("lg-button button span span"));
 			String userNameText = userName.getText();
 			click(userName);
-			if (areListElementVisible(userLocation,5) && isElementLoaded(schedulingPolicyGroup,5)) {
+			if (areListElementVisible(userLocation, 5) && isElementLoaded(schedulingPolicyGroup, 5)) {
 				String userLocationText = userLocation.get(0).getText();
 				String userSchedulingPolicyGroup = schedulingPolicyGroup.getText();
 				List<String> locationNSchedulingPolicyGroup = new ArrayList<>();
@@ -5069,26 +5107,130 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	public HashMap<String, List<String>> getDataFromSchedulingPolicyGroups() throws Exception {
 		HashMap<String, List<String>> dataFromSchedulingPolicyGroups = new HashMap<>();
 		WebElement currentTab = null;
-		if (areListElementVisible(schedulingPolicyGroupsTabContent,5)) {
-			for (WebElement tab: schedulingPolicyGroupsTabContent) {
-				WebElement tabSelectedOrNot= tab.findElement(By.tagName("ng-transclude"));
+		if (areListElementVisible(schedulingPolicyGroupsTabContent, 5)) {
+			for (WebElement tab : schedulingPolicyGroupsTabContent) {
+				WebElement tabSelectedOrNot = tab.findElement(By.tagName("ng-transclude"));
 				if (!tabSelectedOrNot.getAttribute("class").contains("ng-hide")) {
 					currentTab = tab;
 					break;
 				}
 			}
 			List<WebElement> questionOptions = currentTab.findElements(By.cssSelector("div div question-input"));
-			for (WebElement e: questionOptions) {
+			for (WebElement e : questionOptions) {
 				List<WebElement> inputFields = e.findElements(By.cssSelector("input-field ng-form input[ng-change=\"$ctrl.handleChange()\"]"));
 				List<String> minNMaxNIdeal = new ArrayList<>();
-				for (WebElement input: inputFields)
+				for (WebElement input : inputFields)
 					minNMaxNIdeal.add(input.getAttribute("value"));
 				dataFromSchedulingPolicyGroups.put(e.getAttribute("question-title"), minNMaxNIdeal);
-				SimpleUtils.report("Get tab \"" + currentTab.getAttribute("tab-title") + "\": " + e.getAttribute("question-title") + " --- Minimum & Maximum & Ideal: " + minNMaxNIdeal.get(0) +" & " + minNMaxNIdeal.get(1) + " & " + minNMaxNIdeal.get(2));
+				SimpleUtils.report("Get tab \"" + currentTab.getAttribute("tab-title") + "\": " + e.getAttribute("question-title") + " --- Minimum & Maximum & Ideal: " + minNMaxNIdeal.get(0) + " & " + minNMaxNIdeal.get(1) + " & " + minNMaxNIdeal.get(2));
 				if (dataFromSchedulingPolicyGroups.size() == 3)
 					break;
 			}
 		}
 		return dataFromSchedulingPolicyGroups;
+	}
+
+	@Override
+	public String selectAnyActiveTM() throws Exception {
+		String activeUser = "";
+		if (areListElementVisible(usersAndRolesAllUsersRows, 10)) {
+			for (WebElement user : usersAndRolesAllUsersRows) {
+				WebElement name = user.findElement(By.cssSelector("lg-button button span span"));
+				WebElement status = user.findElement(By.tagName("lg-eg-status"));
+				if (name != null && status != null) {
+					if (status.getAttribute("type").equalsIgnoreCase("Active")) {
+						activeUser = name.getText();
+						click(name);
+						SimpleUtils.pass("Users and Roles Page: User '" + activeUser + "' selected successfully.");
+						break;
+					}
+				} else
+					SimpleUtils.fail("Users and Roles Page: Failed to find the name and Status!", false);
+			}
+		} else
+			SimpleUtils.fail("Users and Roles Page: Users failed to load or no users", false);
+		return activeUser;
+	}
+
+	@Override
+	public String deactivateActiveTM() throws Exception {
+		String date = "";
+		if (isElementLoaded(cancelDeactivateBtn, 5)) {
+			click(cancelDeactivateBtn);
+			if (alertMessage.getText().contains("should NOT be deactivated?")) {
+				click(confirmBtn);
+			}
+		}
+		if (isElementLoaded(deactivateBtn, 5)) {
+			click(deactivateBtn);
+			if (isElementLoaded(currentDayInDeactivateWindow, 5)) {
+				click(currentDayInDeactivateWindow);
+				if (monthInCalendar.getText().trim().contains(" "))
+					date = monthInCalendar.getText().trim().split(" ")[0] + " " + selectedDayInCalendar.getText().trim() + " " + monthInCalendar.getText().trim().split(" ")[1];
+				Date dateInCalendar = new SimpleDateFormat("MMMM d yyyy").parse(date);
+				date = new SimpleDateFormat("MM/dd/yyyy").format(dateInCalendar);
+				if (applyOrActivateOrSaveBtn.isEnabled()) {
+					click(applyOrActivateOrSaveBtn);
+					SimpleUtils.pass("User Details Page: Select today to deactivate the user successfully");
+					clickTheElement(confirmBtn);
+					waitForSeconds(2);
+					if (statusInUserDetails.getAttribute("Type").contains("Inactive")) {
+						SimpleUtils.pass("User Details Page: Select the current day to deactivate and successfully scheduled deactivation of Team Member");
+					} else
+						SimpleUtils.fail("User Details Page: No successful alert message when deactivating Team Member", false);
+				} else
+					SimpleUtils.fail("User Details Page: APPLY button is disabled to click", false);
+			} else
+				SimpleUtils.fail("User Details Page: Current day in Deactivate Window failed to load", false);
+		} else
+			SimpleUtils.fail("User Details Page: Cannot find 'Deactivate' button", false);
+		return date;
+	}
+
+	@Override
+	public void activateInactiveTM() throws Exception {
+		if (isElementLoaded(activateBtn, 5)) {
+			click(activateBtn);
+			if (isElementLoaded(currentDayInDeactivateWindow, 5)) {
+				click(currentDayInDeactivateWindow);
+				if (applyOrActivateOrSaveBtn.isEnabled()) {
+					click(applyOrActivateOrSaveBtn);
+					waitForSeconds(2);
+					if (statusInUserDetails.getAttribute("Type").contains("Active")) {
+						SimpleUtils.pass("User Details Page: Select the current day to activate and successfully scheduled activation of Team Member");
+					} else
+						SimpleUtils.fail("User Details Page: No successful alert message when activating Team Member", false);
+				} else
+					SimpleUtils.fail("User Details Page: ACTIVATE button is disabled to click", false);
+			} else
+				SimpleUtils.fail("User Details Page: Current day in Deactivate Window failed to load", false);
+		} else
+			SimpleUtils.fail("User Details Page: Cannot find 'Activate' button", false);
+	}
+
+	@Override
+	public void searchAndSelectTeamMemberByName(String username) throws Exception {
+		boolean isTeamMemberFound = false;
+		if (isElementLoaded(teamMemberSearchBox, 10)) {
+			teamMemberSearchBox.clear();
+			teamMemberSearchBox.sendKeys(username);
+			waitForSeconds(2);
+			if (usersAndRolesAllUsersRows.size() > 0) {
+				for (WebElement user : usersAndRolesAllUsersRows) {
+					WebElement name = user.findElement(By.cssSelector("lg-button button span span"));
+					if (name != null) {
+						if (name.getText().equalsIgnoreCase(username)) {
+							click(name);
+							isTeamMemberFound = true;
+							SimpleUtils.pass("Users and Roles Page: User '" + username + "' selected successfully.");
+							break;
+						}
+					}
+				}
+			}
+			if (!isTeamMemberFound)
+				SimpleUtils.report("Users and Roles Page: Team Member '" + username + "' not found.");
+		} else
+			SimpleUtils.fail("Users and Roles Page: failed to load search box",false);
 	}
 }

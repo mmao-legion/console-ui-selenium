@@ -3,11 +3,6 @@ package com.legion.pages.core;
 import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
-import com.legion.test.core.mobile.LoginTest;
-import com.legion.tests.core.ScheduleNewUITest;
-import com.legion.tests.core.ScheduleRoleBasedTest.scheduleHoursAndWagesData;
-import com.legion.tests.core.ScheduleTest.SchedulePageSubTabText;
-import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 
 import org.openqa.selenium.By;
@@ -16,19 +11,14 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import com.legion.pages.BasePage;
-import com.legion.pages.ScheduleOverviewPage;
 import com.legion.pages.SchedulePage;
 import com.legion.utils.SimpleUtils;
 
-import java.lang.reflect.Method;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
@@ -2880,6 +2870,16 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception {
+
+    }
+
+    @Override
+    public void selectAShiftToAssignTM(String username) throws Exception {
+
+    }
+
+    @Override
+    public void verifyInactiveMessageNWarning(String username, String date) throws Exception {
 
     }
 }

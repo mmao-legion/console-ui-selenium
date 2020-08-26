@@ -261,4 +261,8 @@ public interface ControlsNewUIPage {
 	public void turnVSLToggleOnOrOff(boolean isTurnOn) throws Exception;
 	public HashMap<String, List<String>> getRandomUserNLocationNSchedulingPolicyGroup() throws Exception;
 	public HashMap<String, List<String>> getDataFromSchedulingPolicyGroups() throws Exception;
+	public String selectAnyActiveTM() throws Exception;
+	public String deactivateActiveTM() throws Exception;
+	public void activateInactiveTM() throws Exception;
+	public void searchAndSelectTeamMemberByName(String username) throws Exception;
 }

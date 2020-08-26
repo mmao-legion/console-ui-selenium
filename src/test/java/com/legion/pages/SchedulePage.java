@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import cucumber.api.java.hu.Ha;
 import org.openqa.selenium.WebElement;
 
 public interface SchedulePage {
@@ -447,4 +446,6 @@ public interface SchedulePage {
 	public void verifyLabelOfPublishBtn(String labelExpected) throws  Exception;
 	public void verifyMessageIsExpected(String messageExpected) throws Exception;
 	public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception;
+	public void selectAShiftToAssignTM(String username) throws Exception;
+	public void verifyInactiveMessageNWarning(String username, String date) throws Exception;
 }
