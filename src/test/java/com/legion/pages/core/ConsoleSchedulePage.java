@@ -2872,4 +2872,14 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void verifyLabelOfPublishBtn(String labelExpected) throws Exception {
 
     }
+
+    @Override
+    public void verifyMessageIsExpected(String messageExpected) throws Exception {
+
+    }
+
+    @Override
+    public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception {
+
+    }
 }

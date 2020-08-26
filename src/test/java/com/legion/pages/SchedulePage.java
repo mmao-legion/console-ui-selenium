@@ -445,4 +445,6 @@ public interface SchedulePage {
 	public String getChangesOnActionRequired() throws Exception;
 	public String getTooltipOfUnpublishedDeleted() throws Exception;
 	public void verifyLabelOfPublishBtn(String labelExpected) throws  Exception;
+	public void verifyMessageIsExpected(String messageExpected) throws Exception;
+	public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception;
 }

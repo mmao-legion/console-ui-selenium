@@ -10358,4 +10358,40 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("publish button fail to load!",false);
         }
     }
+
+    @FindBy(css = ".worker-edit-availability-status")
+    private WebElement messageForSelectTM;
+    @Override
+    public void verifyMessageIsExpected(String messageExpected) throws Exception {
+        if (isElementLoaded(messageForSelectTM,5)){
+            if (messageForSelectTM.getText()!=null && !messageForSelectTM.getText().equals("") && messageForSelectTM.getText().toLowerCase().contains(messageExpected)){
+                SimpleUtils.pass("There is a message you want to see: "+messageExpected);
+            } else {
+                SimpleUtils.fail("No message you expected! Actual message is "+ messageForSelectTM.getText(), false );
+            }
+        } else {
+            SimpleUtils.fail("message for select TM is not loaded!", false);
+        }
+    }
+
+    @FindBy(css = ".modal-dialog.modal-lgn-md")
+    private WebElement dialogWarningModel;
+    @FindBy(css = ".tma-dismiss-button")
+    private WebElement closeSelectTMWindowBtn;
+    @Override
+    public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception {
+        String expectedMessageOnWarningModel = nickName.toLowerCase()+" is approved for time off.\n\nplease cancel the approved time off before assigning.";
+        if (isElementLoaded(dialogWarningModel,5) && isElementLoaded(dialogWarningModel.findElement(By.cssSelector("div.lgn-alert-message")),5)){
+            String s =dialogWarningModel.findElement(By.cssSelector("div.lgn-alert-message")).getText();
+            if (dialogWarningModel.findElement(By.cssSelector("div.lgn-alert-message")).getText().toLowerCase().contains(expectedMessageOnWarningModel) && isElementLoaded(dialogWarningModel.findElement(By.cssSelector("div[label=\"'OK'\"]")),5)){
+                click(dialogWarningModel.findElement(By.cssSelector("div[label=\"'OK'\"]")));
+                SimpleUtils.pass("There is a warning model with one button labeled OK! and the message is expected!");
+                if (isElementLoaded(closeSelectTMWindowBtn,5)){
+                    click(closeSelectTMWindowBtn);
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no warning model and warning message!", false);
+        }
+    }
 }
