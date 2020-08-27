@@ -682,6 +682,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     @Override
     public void clickSendBtn() throws Exception {
         if (isElementLoaded(sendBtn,5)){
+            scrollToBottom();
             click(sendBtn);
             SimpleUtils.pass("Send button has been clicked!");
         } else {
@@ -743,6 +744,18 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
             if (!flag){
                 SimpleUtils.fail("There is no comment expected!", false);
             }
+        }
+    }
+
+    @FindBy(css = ".acknowledge-and-vsl-btns .acknowledge-and-vsl-btns-vsl-btn")
+    private WebElement vslTooltip;
+    @Override
+    public void verifyVSLTooltip() throws Exception {
+        String expectedTooltip = "You can get more hours by opting in to the Voluntary Standby List! This will enable the team to call you when more help is needed. To opt in please go to your Work Preferences. ";
+        if (isElementLoaded(vslTooltip,5) && expectedTooltip.contains(vslTooltip.getAttribute("data-tootik"))){
+            SimpleUtils.pass("There is right tooltip with VSL.");
+        } else {
+            SimpleUtils.fail("There is no tooltip for VSL!", false);
         }
     }
 }

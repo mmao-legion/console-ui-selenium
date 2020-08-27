@@ -4,24 +4,16 @@ import static com.legion.utils.MyThreadLocal.*;
 import static com.legion.utils.MyThreadLocal.setTeamMemberName;
 import static org.testng.Assert.fail;
 
-import com.gargoylesoftware.htmlunit.html.Keyboard;
 import com.legion.tests.core.ScheduleNewUITest;
 import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 
-import cucumber.api.java.hu.Ha;
-import cucumber.api.java.sl.In;
-import org.apache.bcel.generic.IFNE;
-import org.apache.http.impl.execchain.TunnelRefusedException;
-import org.apache.xpath.axes.HasPositionalPredChecker;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -37,11 +29,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.testng.Assert;
 
-import javax.print.DocFlavor;
-import java.awt.*;
-import java.lang.reflect.Method;
-import java.net.SocketImpl;
-import java.sql.Driver;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -52,8 +39,6 @@ import java.util.Map;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private  ConsoleScheduleOverviewPage overviewPage;
@@ -9411,6 +9396,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "img[ng-if=\"unpublishedDeleted && isOneAndOnlyShiftTypeSelected('Edited')\"]")
     private WebElement tooltipIconOfUnpublishedDeleted;
 
+    @FindBy (className = "sch-calendar-day-border-left")
+    private List<WebElement> scheduleTodayNFutureDays;
+
+    @FindBy (className = "tma-header-text")
+    private WebElement titleInSelectTeamMemberWindow;
+
+    @FindBy (className = "worker-edit-availability-status")
+    private WebElement messageInSelectTeamMemberWindow;
+
+    @FindBy (css = "table .tma-staffing-option-inner-circle")
+    private WebElement optionCircle;
+
     List<String> weekScheduleShiftTimeListOfWeekView = new ArrayList<String>();
     List<String> weekScheduleShiftTimeListOfMySchedule = new ArrayList<String>();
 
@@ -10266,6 +10263,60 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return tooltipOfUnpublishedDeleted;
     }
 
+    @Override
+    public void selectAShiftToAssignTM(String username) throws Exception {
+        if (areListElementVisible(scheduleTodayNFutureDays,10)) {
+           for (WebElement day: scheduleTodayNFutureDays) {
+               List<WebElement> shifts = day.findElements(By.xpath("./../../div[@class=\"week-schedule-shift-place ng-scope\"]"));
+               if (shifts.size() > 0) {
+                   int randomIndex = (new Random()).nextInt(shifts.size());
+                   WebElement shiftImg = shifts.get(randomIndex).findElement(By.tagName("worker-detail"));
+                   moveToElementAndClick(shiftImg);
+                   if (isPopOverLayoutLoaded()) {
+                       clickTheElement(popOverLayout.findElement(By.xpath("//span[contains(text(), \"Assign Team Member\")]")));
+                       if (isAssignTeamMemberShowWell()) {
+                           searchText(username);
+                           SimpleUtils.pass("Assign Team Member: Select a shift and search the team member successfully");
+                           break;
+                       }
+                   }
+               }
+           }
+        } else
+            SimpleUtils.fail("Schedule Page: Failed to find the schedule days",false);
+    }
+
+    @Override
+    public void verifyInactiveMessageNWarning(String username, String date) throws Exception {
+        if (messageInSelectTeamMemberWindow.getText().contains("TM is inactive from " + date)) {
+            SimpleUtils.pass("Assign Team Member: 'Inactive' message shows successfully");
+        } else
+            SimpleUtils.fail("Assign Team Member: 'Inactive' message failed to show",false);
+        click(optionCircle);
+        if (isElementLoaded(alertMessage,5)) {
+            if (alertMessage.getText().trim().equals(username + "is inactive starting " + date + ". Please activate the team member before assigning."))
+                SimpleUtils.pass("Assign Team Member: Warning shows correctly");
+            else
+                SimpleUtils.fail("Assign Team Member: Warning shows incorrectly",false);
+            click(okBtnOnConfirm);
+            if (optionCircle.getAttribute("class").contains("ng-hide"))
+                SimpleUtils.pass("Assign Team Member: Click OK in warning window and nothing changes as expected");
+            else
+                SimpleUtils.fail("Assign Team Member: Click OK in warning window, the inactive TM is selected unexpectedly",false);
+        } else
+            SimpleUtils.fail("Assign Team Member: No warning when assign an inactive TM",false);
+    }
+
+    private boolean isAssignTeamMemberShowWell() throws Exception {
+        if (isElementLoaded(titleInSelectTeamMemberWindow,3) && areListElementVisible(btnSearchteamMember,3)
+        && isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {
+            SimpleUtils.pass("Assign Team Member pop up window show well");
+            return true;
+        } else
+            SimpleUtils.fail("Assign Team Member pop up window load failed",false);
+        return false;
+    }
+
     //added by haya.  return a List has 4 week's data including last week
     @FindBy (css = ".row-fx.schedule-table-row.ng-scope")
     private List<WebElement> rowDataInOverviewPage;
@@ -10329,6 +10380,42 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         } else {
             SimpleUtils.fail("publish button fail to load!",false);
+        }
+    }
+
+    @FindBy(css = ".worker-edit-availability-status")
+    private WebElement messageForSelectTM;
+    @Override
+    public void verifyMessageIsExpected(String messageExpected) throws Exception {
+        if (isElementLoaded(messageForSelectTM,5)){
+            if (messageForSelectTM.getText()!=null && !messageForSelectTM.getText().equals("") && messageForSelectTM.getText().toLowerCase().contains(messageExpected)){
+                SimpleUtils.pass("There is a message you want to see: "+messageExpected);
+            } else {
+                SimpleUtils.fail("No message you expected! Actual message is "+ messageForSelectTM.getText(), false );
+            }
+        } else {
+            SimpleUtils.fail("message for select TM is not loaded!", false);
+        }
+    }
+
+    @FindBy(css = ".modal-dialog.modal-lgn-md")
+    private WebElement dialogWarningModel;
+    @FindBy(css = ".tma-dismiss-button")
+    private WebElement closeSelectTMWindowBtn;
+    @Override
+    public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception {
+        String expectedMessageOnWarningModel = nickName.toLowerCase()+" is approved for time off.\n\nplease cancel the approved time off before assigning.";
+        if (isElementLoaded(dialogWarningModel,5) && isElementLoaded(dialogWarningModel.findElement(By.cssSelector("div.lgn-alert-message")),5)){
+            String s =dialogWarningModel.findElement(By.cssSelector("div.lgn-alert-message")).getText();
+            if (dialogWarningModel.findElement(By.cssSelector("div.lgn-alert-message")).getText().toLowerCase().contains(expectedMessageOnWarningModel) && isElementLoaded(dialogWarningModel.findElement(By.cssSelector("div[label=\"'OK'\"]")),5)){
+                click(dialogWarningModel.findElement(By.cssSelector("div[label=\"'OK'\"]")));
+                SimpleUtils.pass("There is a warning model with one button labeled OK! and the message is expected!");
+                if (isElementLoaded(closeSelectTMWindowBtn,5)){
+                    click(closeSelectTMWindowBtn);
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no warning model and warning message!", false);
         }
     }
 }

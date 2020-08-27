@@ -1369,11 +1369,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.addOpenShiftWithDefaultTime("MOD");
 		schedulePage.deleteOpenShiftWithLastDay();
 		schedulePage.saveSchedule();
+
 		// Check the number on changes not publish smart card
 		if (schedulePage.getChangesOnActionRequired().contains("2 Changes"))
 			SimpleUtils.pass("ACTION REQUIRED Smart Card: The number on changes not publish smart card is 2");
 		else
 			SimpleUtils.fail("ACTION REQUIRED Smart Card: The number on changes not publish smart card is incorrect",true);
+
 		// Filter unpublished changes to check the shifts and tooltip
 		schedulePage.selectShiftTypeFilterByText("Unpublished changes");
 		if (schedulePage.getShiftsCount() == 1)
@@ -1384,6 +1386,38 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.pass("ACTION REQUIRED Smart Card: \"1 shift deleted\" tooltip shows up on smart card");
 		else
 			SimpleUtils.fail("ACTION REQUIRED Smart Card: \"1 shift deleted\" tooltip doesn't show up on smart card",false);
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Julie")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify assign TM warning: TM status is inactive")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyAssignTMWarningWhenTMIsInactiveAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		// Prepare a TM who is inactive
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+		String inactiveUser = controlsNewUIPage.selectAnyActiveTM();
+        String date = controlsNewUIPage.deactivateActiveTM();
+
+		// Assign to the TM to verify the message and warning
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.goToConsoleScheduleAndScheduleSubMenu();
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (!isWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.selectAShiftToAssignTM(inactiveUser);
+        schedulePage.verifyInactiveMessageNWarning(inactiveUser,date);
+
+		// Restore the TM to be active
+		controlsNewUIPage.deactivateActiveTM();
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+		controlsNewUIPage.searchAndSelectTeamMemberByName(inactiveUser);
+		controlsNewUIPage.activateInactiveTM();
 	}
 
 	@Automated(automated = "Automated")
@@ -1444,6 +1478,111 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		} else{
 			SimpleUtils.fail("Dashboard Page: Schedule weeks not found!" , false);
 		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "verify Assign TM warning: TM status is on time off")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String nickNameFromProfile = profileNewUIPage.getNickNameFromProfile();
+		String myProfileLabel = "My Profile";
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+		SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
+		String aboutMeLabel = "About Me";
+		profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
+		String myTimeOffLabel = "My Time Off";
+		profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+		profileNewUIPage.cancelAllTimeOff();
+		profileNewUIPage.clickOnCreateTimeOffBtn();
+		SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
+		String timeOffReasonLabel = "JURY DUTY";
+		// select time off reason
+		profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
+		profileNewUIPage.selectStartAndEndDate();
+		profileNewUIPage.clickOnSaveTimeOffRequestBtn();
+
+
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+		schedulePage.navigateToNextWeek();
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (!isWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		schedulePage.clickOnDayView();
+		//navigate to the time off day
+		for (int i=0; i<6;i++){
+			schedulePage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
+		}
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickOnDayViewAddNewShiftButton();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.searchTeamMemberByName(nickNameFromProfile);
+		schedulePage.verifyMessageIsExpected("time off");
+		schedulePage.verifyWarningModelForAssignTMOnTimeOff(nickNameFromProfile);
+		schedulePage.clickOnCancelButtonOnEditMode();
+
+
+		//go to cancel the time off.
+		profileNewUIPage.getNickNameFromProfile();
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+		SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
+		profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
+		profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+		profileNewUIPage.cancelAllTimeOff();
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify assign TM warning: Assignment rule violation with conf is yes")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyAssignTMWarningForTMHasRoleViolationWithConfYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		//Go to control to set the override assignment rule as Yes.
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+		controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
+
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+		schedulePage.navigateToNextWeek();
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (!isWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickOnDayViewAddNewShiftButton();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.searchTeamMemberByName("Keanu");
 	}
 }
 

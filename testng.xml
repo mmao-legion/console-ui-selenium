@@ -130,6 +130,8 @@
                     <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />
                     <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
+                    <include name="verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager" />
+                    <include name="verifyAssignTMWarningWhenTMIsInactiveAsStoreManager" />
                 </methods>
             </class>
         </classes>
@@ -242,6 +244,8 @@
               <!--      <include name="verifyTurnOffGFEAsInternalAdmin" /> -->
                     <include name="verifyTurnOnGFEAsInternalAdmin" />
                     <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
+                    <include name="verifyContentOfGFEAsInternalAdmin" />
+                    <include name="verifyVSLInfoAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

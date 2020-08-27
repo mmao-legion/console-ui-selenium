@@ -681,4 +681,56 @@ public class InboxTest extends TestBase {
         inboxPage.clickFirstGFEInList();
         inboxPage.verifyComment(commentFromTM, nickNameOfTM);
     }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "verify TM can see the VSL info")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyVSLInfoAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        controlsPage.gotoControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsComplianceSection();
+        //turn on GFE toggle
+        controlsNewUIPage.turnVSLToggleOnOrOff(true);
+        controlsNewUIPage.turnGFEToggleOnOrOff(true);
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+
+        //login as TM to get nickName
+        String fileName = "UsersCredentials.json";
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String nickNameOfTM = profileNewUIPage.getNickNameFromProfile();
+        loginPage.logOut();
+
+        //go to Inbox page create GFE announcement.
+        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                , String.valueOf(storeManagerCredentials[0][2]));
+        String nickNameOfSM = profileNewUIPage.getNickNameFromProfile();
+        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+        inboxPage.clickOnInboxConsoleMenuItem();
+        inboxPage.createGFEAnnouncement();
+        inboxPage.sendToTM(nickNameOfTM);
+        inboxPage.clickSendBtn();
+        loginPage.logOut();
+
+        //login as TM to check the gfe
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        inboxPage.clickOnInboxConsoleMenuItem();
+        inboxPage.clickFirstGFEInList();
+        inboxPage.verifyVSLTooltip();
+        inboxPage.clickAcknowledgeBtn();
+        inboxPage.verifyVSLTooltip();
+    }
 }
