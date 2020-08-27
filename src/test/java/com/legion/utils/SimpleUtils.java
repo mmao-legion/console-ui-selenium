@@ -376,6 +376,38 @@ public class SimpleUtils {
 		return convertSuccess;
 	}
 
+	public enum weekDayNames {
+		Mon("Monday"),
+		Tue("Tuesday"),
+		Wed("Wednesday"),
+		Thu("Thursday"),
+		Fri("Friday"),
+		Sat("Saturday"),
+		Sun("Sunday");
+		private final String value;
+
+		weekDayNames(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
+
+	public static String getFullWeekDayName(String shortName) {
+		String fullName = "";
+		weekDayNames[] shortNames = weekDayNames.values();
+		for (int i = 0; i < shortNames.length; i++) {
+			if (shortNames[i].name().equalsIgnoreCase(shortName)) {
+				fullName = shortNames[i].value;
+				SimpleUtils.report("Get the full name of " + shortName + ", is: " + fullName);
+				break;
+			}
+		}
+		return fullName;
+	}
+
 	public static boolean isTimeBetweenStartNEndTime(String nowStartDate, String nowEndDate, String startDate, String endDate) throws Exception {
 
 		SimpleDateFormat format = new SimpleDateFormat("hh:mm a");

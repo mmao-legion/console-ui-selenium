@@ -92,7 +92,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public void changeLocation(String locationName)
     {
-        waitForSeconds(4);
+        waitForSeconds(8);
         getDriver().navigate().refresh();
         waitForSeconds(4);
         try {
