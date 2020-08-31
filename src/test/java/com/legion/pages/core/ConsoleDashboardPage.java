@@ -515,7 +515,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	//Added by Julie
-	@FindBy( css = ".col-sm-4 > .header-company-icon > img")
+	@FindBy( css = ".header div:nth-child(2) .header-company-icon .company-icon-img")
 	private WebElement companyIconImg;
 
 	@FindBy(css = ".user-profile-section__title.ng-binding")

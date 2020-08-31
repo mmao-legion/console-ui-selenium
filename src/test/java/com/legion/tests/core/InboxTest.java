@@ -213,7 +213,7 @@ public class InboxTest extends TestBase {
         inboxPage.clickFirstGFEInList();
         inboxPage.clickAcknowledgeBtn();
         String jsonTimeZone = propertyLocationTimeZone.get(location);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String acknowledgeTime = SimpleUtils.getCurrentDateMonthYearWithTimeZone(jsonTimeZone, sdf);
         loginPage.logOut();
 
@@ -265,6 +265,9 @@ public class InboxTest extends TestBase {
                 String firstName = gfeDetail.get("TM first name");
                 if (nickNameOfTM.equalsIgnoreCase(firstName)) {
                     String actualEstimatedWorkingDays = gfeDetail.get("Estimated working Days");
+                    if (actualEstimatedWorkingDays.startsWith("\"") && actualEstimatedWorkingDays.endsWith("\"")) {
+                        actualEstimatedWorkingDays = actualEstimatedWorkingDays.substring(1, actualEstimatedWorkingDays.length() - 1);
+                    }
                     if (estimatedWorkingDays.equals(actualEstimatedWorkingDays)) {
                         SimpleUtils.pass("Analytics Report: Verified \"Estimated working Days\" is consistent: " + estimatedWorkingDays);
                     } else {
@@ -272,31 +275,40 @@ public class InboxTest extends TestBase {
                         + ", the value in report is: " + actualEstimatedWorkingDays, true);
                     }
                     String actualWorkingHours = gfeDetail.get("Estimated working hours");
-                    if (selectedOperatingHours.toString().equals(actualWorkingHours)) {
+                    if (actualWorkingHours.startsWith("\"") && actualWorkingHours.endsWith("\"")) {
+                        actualWorkingHours = actualWorkingHours.substring(1, actualWorkingHours.length() - 1);
+                    }
+                    String expectedOperatingHours = selectedOperatingHours.toString();
+                    if (expectedOperatingHours.startsWith("[") && expectedOperatingHours.endsWith("]")) {
+                        expectedOperatingHours = expectedOperatingHours.substring(1, expectedOperatingHours.length() - 1);
+                    }
+                    if (expectedOperatingHours.equals(actualWorkingHours)) {
                         SimpleUtils.pass("Analytics Report: Verified \"Estimated working hours\" is consistent: " + actualWorkingHours);
                     } else {
-                        SimpleUtils.fail("Analytics Report: \"Estimated working hours\" is inconsistent, Expected: " + selectedOperatingHours.toString()
+                        SimpleUtils.fail("Analytics Report: \"Estimated working hours\" is inconsistent, Expected: " + expectedOperatingHours
                                 + ", the value in report is: " + actualWorkingHours, true);
                     }
                     String actualAverageHour = gfeDetail.get("Average hours per week");
-                    if (averageHrs.equals(actualAverageHour)) {
+                    if (Float.parseFloat(averageHrs) == Float.parseFloat(actualAverageHour)) {
                         SimpleUtils.pass("Analytics Report: Verified \"Average hours per week\" is consistent: " + averageHrs);
                     } else {
-                        SimpleUtils.fail("Analytics Report: \"Average hours per week\" is inconsistent, Expected: " + averageHrs.toString()
+                        SimpleUtils.fail("Analytics Report: \"Average hours per week\" is inconsistent, Expected: " + averageHrs
                                 + ", the value in report is: " + actualAverageHour, true);
                     }
                     String actualMinShifts = gfeDetail.get("Minimum # of shifts per week");
                     if (minimumShifts.equals(actualMinShifts)) {
                         SimpleUtils.pass("Analytics Report: Verified \"Minimum # of shifts per week\" is consistent: " + minimumShifts);
                     } else {
-                        SimpleUtils.fail("Analytics Report: \"Minimum # of shifts per week\" is inconsistent, Expected: " + minimumShifts.toString()
+                        SimpleUtils.fail("Analytics Report: \"Minimum # of shifts per week\" is inconsistent, Expected: " + minimumShifts
                                 + ", the value in report is: " + actualMinShifts, true);
                     }
+                    // Judge the difference of two acknowledge times should be less than 1 minute
                     String actualAcknowledgeTime = gfeDetail.get("Date & time acknowledged");
-                    if (acknowledgeTime.equals(actualAcknowledgeTime)) {
-                        SimpleUtils.pass("Analytics Report: Verified \"Date & time acknowledged\" is consistent: " + acknowledgeTime);
+                    if ((sdf.parse(acknowledgeTime).getTime() - sdf.parse(actualAcknowledgeTime).getTime()) < 60*1000) {
+                        SimpleUtils.pass("Analytics Report: Verified \"Date & time acknowledged\" is consistent: " + acknowledgeTime +
+                                "! The difference between the two times should be less than 1 minute!");
                     } else {
-                        SimpleUtils.fail("Analytics Report: \"Date & time acknowledged\" is inconsistent, Expected: " + acknowledgeTime.toString()
+                        SimpleUtils.fail("Analytics Report: \"Date & time acknowledged\" is inconsistent, Expected: " + acknowledgeTime
                                 + ", the value in report is: " + actualAcknowledgeTime, false);
                     }
                     isConsistent = true;
