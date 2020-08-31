@@ -43,14 +43,14 @@
 					   <include name="verifyTheWelcomeMessage"/>
 					   <include name="verifyTheFunctionOfViewTodaySchedule"/>
 					   <include name="verifyTheDataSourceForBudgetScheduledOther"/>
-                       <include name="verifyDashboardFunctionalityAsTeamMember" />
-                        <include name="verifyDashboardFunctionality" />
+<!--                       <include name="verifyDashboardFunctionalityAsTeamMember" />-->
+<!--                        <include name="verifyDashboardFunctionality" />-->
 					</methods>
 				</class>
 		   </classes>
 	   </test>
 
-		<test name="Controls Test">
+<!--		<test name="Controls Test">
 		   <classes>
 			   <class name="com.legion.tests.core.ControlsNewUITest">
 				   <methods>
@@ -58,18 +58,18 @@
 				   </methods>
 			   </class>
 		   </classes>
-	   </test>
+	   </test>-->
     <test name="TeamTab Test KendraScott2">
        <classes>
            <class name="com.legion.tests.core.TeamTestKendraScott2">
                <methods>
-                   <include name="verifyTheTeamFunctionalityInRoster" />
-                   <include name="verifyTheTeamFunctionalityInTransfer" />
-                   <include name="verifyTheTeamFunctionalityInUpdateInfo" />
-                   <include name="verifyTheTeamFunctionalityInBadges" />
-                   <include name="verifyTheTeamFunctionalityInInviteTeamMember" />
+<!--                   <include name="verifyTheTeamFunctionalityInRoster" />-->
+<!--                   <include name="verifyTheTeamFunctionalityInTransfer" />-->
+<!--                   <include name="verifyTheTeamFunctionalityInUpdateInfo" />-->
+<!--                   <include name="verifyTheTeamFunctionalityInBadges" />-->
+<!--                   <include name="verifyTheTeamFunctionalityInInviteTeamMember" />-->
                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
-                   <include name="verifyTheTeamFunctionalityInProfileSectionAsInternalAdmin" />
+<!--                   <include name="verifyTheTeamFunctionalityInProfileSectionAsInternalAdmin" />-->
                </methods>
            </class>
        </classes>
@@ -79,9 +79,9 @@
         <classes>
             <class name="com.legion.tests.core.TeamTest">
                 <methods>
-                    <include name="verifyTheTeamFunctionalityInActivate" />
-                    <include name="verifyTheTeamFunctionalityInTerminate" />
-                    <include name="verifyTheTeamFunctionalityInCoverageAsStoreManager" />
+<!--                    <include name="verifyTheTeamFunctionalityInActivate" />-->
+<!--                    <include name="verifyTheTeamFunctionalityInTerminate" />-->
+<!--                    <include name="verifyTheTeamFunctionalityInCoverageAsStoreManager" />-->
                     <include name="verifyTheTeamFunctionalityInTimeOffAsStoreManager" />
                 </methods>
             </class>
@@ -89,7 +89,7 @@
     </test>
 
 
-    <test name="Overview Test">
+<!--    <test name="Overview Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleOverviewTest">
                 <methods>
@@ -97,7 +97,7 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
 
     <test name="Schedule New UI Test">
@@ -106,13 +106,13 @@
                 <methods>
                     <include name="verifyScheduleLegionFunctionality" />
                     <include name="verifyComplianceSmartCardFunctionality" />
-                    <include name="verifyScheduleFunctionalitySchedule" />
+<!--                    <include name="verifyScheduleFunctionalitySchedule" />-->
                     <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
-                    <include name="verifyScheduleFunctionalityWeekView"/>
+<!--                    <include name="verifyScheduleFunctionalityWeekView"/>-->
                     <include name="verifyScheduleFunctionalityDayView"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView"/>
-                    <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView"/>
+<!--                    <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView"/>-->
                     <include name="verificationOfMySchedulePageAsTeamMember" />
                     <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
                     <include name="verifyProfilePictureFunctionalityAsTeamMember" />
@@ -120,14 +120,14 @@
                     <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
                     <include name="verifyTheContentOfCopyScheduleForNonDGFlowAsInternalAdmin" />
                     <include name="verifyContentAfterChangingOperatingHrsAsInternalAdmin" />
-                    <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
+<!--                    <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />-->
                     <include name="verifyTheContentOfClosedWeekDayScheduleForNonDGFlowAsInternalAdmin" />
                     <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
                     <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
                     <include name="verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin" />
                     <!-- <include name="verifyContentOfBudgetHoursForNonDGFlowAsInternalAdmin" />-->
                     <include name="verifyTooltipForDeleteShiftsAsInternalAdmin" />
-                    <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />
+<!--                    <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />-->
                     <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager" />
@@ -146,13 +146,13 @@
                     <include name="verifyTheTeamScheduleOptionAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfSwapAndCoverAsInternalAdmin" />
                     <include name="verifyTheFeatureOfFilterAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamMember" />
+<!--                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamMember" />-->
                 </methods>
             </class>
         </classes>
     </test>
 
-        <test name="Forecast Test">
+<!--        <test name="Forecast Test">
             <classes>
                 <class name="com.legion.tests.core.ForecastTest">
                     <methods>
@@ -163,7 +163,7 @@
                     </methods>
                 </class>
             </classes>
-        </test>
+        </test>-->
     <test name="Activity Test">
         <classes>
             <class name="com.legion.tests.core.ActivityTest">
@@ -185,7 +185,7 @@
                     <include name="verifyActivityOfClaimOpenShiftAsTeamMember" />
                     <include name="verifyActivityOfPublishUpdateSchedule" />
                     <include name="verifyTheNotificationForCancelTimeOffAsStoreManager"/>
-                    <include name="verifyNoNotificationForActivateTMAsStoreManager"/>
+<!--                    <include name="verifyNoNotificationForActivateTMAsStoreManager"/>-->
                     <include name="verifyTheNotificationForRequestTimeOffAsStoreManager"/>
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin"/>
                     <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
@@ -214,20 +214,20 @@
                 <methods>
                     <include name="verifyCommonUIOfWidgetsAsStoreManager" />
                     <include name="verifyTheContentOfStartingSoonWidgetAsInternalAdmin" />
-                    <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
+<!--                    <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />-->
                     <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
-                    <include name="verifyTheContentOfTimesheetApprovalStatusWidgetAsStoreManager" />
-                    <include name="verifyTheContentOfOpenShiftsAsInternalAdmin" />
+<!--                    <include name="verifyTheContentOfTimesheetApprovalStatusWidgetAsStoreManager" />-->
+<!--                    <include name="verifyTheContentOfOpenShiftsAsInternalAdmin" />-->
                     <include name="verifySwitchWeekOfOpenShiftsAsStoreManager" />
-                    <include name="dataValidationOfOpenShiftsUnclaimedAsStoreManager" />
-                    <include name="dataValidationOfOpenShiftsClaimedAsTeamMember" />
-                    <include name="verifyHelpfulLinksWidgetsAsStoreManager" />
-                    <include name="verifyTodayForecastWidgetsAsStoreManager" />
-                    <include name="verifySchedulesWidgetsAsStoreManager" />
+<!--                    <include name="dataValidationOfOpenShiftsUnclaimedAsStoreManager" />-->
+<!--                    <include name="dataValidationOfOpenShiftsClaimedAsTeamMember" />-->
+<!--                    <include name="verifyHelpfulLinksWidgetsAsStoreManager" />-->
+<!--                    <include name="verifyTodayForecastWidgetsAsStoreManager" />-->
+<!--                    <include name="verifySchedulesWidgetsAsStoreManager" />-->
                     <!--<include name="verifyComplianceViolationWidgetsAsStoreManager" /> -->
-                    <include name="verifyNoContentOfSwapNCoverWidgetAsInternalAdmin" />
-                    <include name="verifyTimesheetApprovalRateWidgetAsStoreManager" />
-                    <include name="verifyTheContentOfSwapNCoverWidgetAsInternalAdmin" />
+<!--                    <include name="verifyNoContentOfSwapNCoverWidgetAsInternalAdmin" />-->
+<!--                    <include name="verifyTimesheetApprovalRateWidgetAsStoreManager" />-->
+<!--                    <include name="verifyTheContentOfSwapNCoverWidgetAsInternalAdmin" />-->
                 </methods>
             </class>
         </classes>
