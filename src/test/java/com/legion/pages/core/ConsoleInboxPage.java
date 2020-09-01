@@ -510,7 +510,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
         }
     }
 
-    @FindBy(css = ".announcement-message div")
+    @FindBy(css = ".announcement-message.ng-binding")
     private WebElement messageViewed;
     @Override
     public void verifyMessageIsExpected(String messageExpected) throws Exception {
@@ -606,7 +606,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                 List<WebElement> startNEndTime = selectedDay.findElements(By.tagName("input"));
                 if (weekDay != null && startNEndTime != null && startNEndTime.size() == 2) {
                     String fullName = SimpleUtils.getFullWeekDayName(weekDay.getText());
-                    SimpleDateFormat twentyFour = new SimpleDateFormat("HH:mm");
+                    SimpleDateFormat twentyFour = new SimpleDateFormat("H:mm");
                     SimpleDateFormat twelve = new SimpleDateFormat("hh:mma");
                     Date startTime = twelve.parse(startNEndTime.get(0).getAttribute("value"));
                     Date endTime = twelve.parse(startNEndTime.get(1).getAttribute("value"));
