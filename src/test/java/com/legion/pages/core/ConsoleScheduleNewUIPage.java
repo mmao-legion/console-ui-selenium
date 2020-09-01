@@ -9405,7 +9405,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (className = "worker-edit-availability-status")
     private WebElement messageInSelectTeamMemberWindow;
 
-    @FindBy (css = "table .tma-staffing-option-inner-circle")
+    @FindBy (css = "[ng-repeat=\"worker in searchResults\"] .tma-staffing-option-outer-circle")
     private WebElement optionCircle;
 
     List<String> weekScheduleShiftTimeListOfWeekView = new ArrayList<String>();
@@ -10292,19 +10292,24 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.pass("Assign Team Member: 'Inactive' message shows successfully");
         } else
             SimpleUtils.fail("Assign Team Member: 'Inactive' message failed to show",false);
-        click(optionCircle);
-        if (isElementLoaded(alertMessage,5)) {
-            if (alertMessage.getText().trim().equals(username + "is inactive starting " + date + ". Please activate the team member before assigning."))
-                SimpleUtils.pass("Assign Team Member: Warning shows correctly");
-            else
-                SimpleUtils.fail("Assign Team Member: Warning shows incorrectly",false);
-            click(okBtnOnConfirm);
-            if (optionCircle.getAttribute("class").contains("ng-hide"))
-                SimpleUtils.pass("Assign Team Member: Click OK in warning window and nothing changes as expected");
-            else
-                SimpleUtils.fail("Assign Team Member: Click OK in warning window, the inactive TM is selected unexpectedly",false);
-        } else
-            SimpleUtils.fail("Assign Team Member: No warning when assign an inactive TM",false);
+        if (isElementLoaded(optionCircle, 5)) {
+            click(optionCircle);
+            if (isElementLoaded(alertMessage,5)) {
+                if (alertMessage.getText().trim().equals(username + "is inactive starting " + date + ". Please activate the team member before assigning.")) {
+                    SimpleUtils.pass("Assign Team Member: Warning shows correctly");
+                    click(okBtnOnConfirm);
+                    if (optionCircle.getAttribute("class").contains("ng-hide")) {
+                        SimpleUtils.pass("Assign Team Member: Click OK in warning window and nothing changes as expected");
+                    } else {
+                        SimpleUtils.fail("Assign Team Member: Click OK in warning window, the inactive TM is selected unexpectedly", false);
+                    }
+                } else {
+                    SimpleUtils.fail("Assign Team Member: Warning shows incorrectly", false);
+                }
+            } else {
+                SimpleUtils.fail("Assign Team Member: No warning when assign an inactive TM", false);
+            }
+        }
     }
 
     private boolean isAssignTeamMemberShowWell() throws Exception {

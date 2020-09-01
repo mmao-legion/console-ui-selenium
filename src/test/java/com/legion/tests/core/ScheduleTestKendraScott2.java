@@ -1357,9 +1357,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.goToConsoleScheduleAndScheduleSubMenu();
 		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (!isWeekGenerated){
-			schedulePage.createScheduleForNonDGFlowNewUI();
+		if (isWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		schedulePage.addOpenShiftWithLastDay("MOD");
 		schedulePage.deleteTMShiftInWeekView("Unassigned");
