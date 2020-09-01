@@ -483,15 +483,35 @@ public class InboxTest extends TestBase {
         inboxPage.sendToTM(nickName2);
         HashMap<String, String> contentOfWeekSummary_TM2 = inboxPage.getTheContentOfWeekSummaryInGFE();
 
+        //Get location detail address
+        //Go to global control page
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnGlobalLocationButton();
+
+        //Go to locations tab
+        controlsNewUIPage.clickOnControlsLocationsSection();
+        SimpleUtils.assertOnFail("Locations page not loaded successfully!", controlsNewUIPage.isLocationsPageLoaded(), false);
+        controlsNewUIPage.clickAllDistrictsOrAllLocationsTab(false);
+
+        //Click location and go to detail page get detail info
+        controlsNewUIPage.goToSpecificLocationDetailPageByLocationName(nickName1_Location);
+        String nickName1_LocationDetailInfo = controlsNewUIPage.getLocationInfoStringFromDetailPage();
+
+        controlsNewUIPage.clickOnBackButtonOnLocationDetailPage();
+        controlsNewUIPage.clickAllDistrictsOrAllLocationsTab(false);
+        controlsNewUIPage.goToSpecificLocationDetailPageByLocationName(nickName2_Location);
+        String nickName2_LocationDetailInfo = controlsNewUIPage.getLocationInfoStringFromDetailPage();
+
         // Compare the data to verify the content of week summary when selecting different tm
         SimpleUtils.report("Inbox: Compare a TM with the data from controls");
-        if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM1, schedulingPolicyGroupData_TM1) && contentOfWeekSummary_TM1.get("Location").equals(nickName1_Location))
+        if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM1, schedulingPolicyGroupData_TM1) && contentOfWeekSummary_TM1.get("Location").equals(nickName1_LocationDetailInfo))
             SimpleUtils.pass("Inbox: The content of week summary is consistent with the data from controls when selecting a tm");
         else
             SimpleUtils.fail("Inbox: The content of week summary is inconsistent with the data from controls when selecting a tm",true);
 
         SimpleUtils.report("Inbox: Compare another TM with the data from controls");
-        if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM2, schedulingPolicyGroupData_TM2) && contentOfWeekSummary_TM2.get("Location").equals(nickName2_Location))
+        if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM2, schedulingPolicyGroupData_TM2) && contentOfWeekSummary_TM2.get("Location").equals(nickName2_LocationDetailInfo))
             SimpleUtils.pass("Inbox: The content of week summary is consistent with the data from controls when selecting another tm");
         else
             SimpleUtils.fail("Inbox: The content of week summary is inconsistent with the data from controls when selecting another tm",true);

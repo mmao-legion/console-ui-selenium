@@ -265,4 +265,10 @@ public interface ControlsNewUIPage {
 	public String deactivateActiveTM() throws Exception;
 	public void activateInactiveTM() throws Exception;
 	public void searchAndSelectTeamMemberByName(String username) throws Exception;
+	public void clickOnControlsLocationsSection() throws Exception;
+	public boolean isLocationsPageLoaded() throws Exception;
+	public void clickAllDistrictsOrAllLocationsTab(boolean isClickDistrictsTab) throws Exception;
+	public void goToSpecificLocationDetailPageByLocationName (String locationName) throws Exception;
+	public String getLocationInfoStringFromDetailPage () throws Exception;
+	public void clickOnBackButtonOnLocationDetailPage() throws Exception;
 }

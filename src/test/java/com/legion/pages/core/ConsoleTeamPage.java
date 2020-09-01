@@ -441,7 +441,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		}
 
 		public boolean isToDoWindowOpened() throws Exception{
-			if(isElementLoaded(toDoPopUpWindow,10) && areListElementVisible(todoCards,10)) {
+			if(isElementLoaded(toDoPopUpWindow,25) && areListElementVisible(todoCards,25)) {
 				if(toDoPopUpWindow.getAttribute("class").contains("is-shown"))
 					return true;
 			}
