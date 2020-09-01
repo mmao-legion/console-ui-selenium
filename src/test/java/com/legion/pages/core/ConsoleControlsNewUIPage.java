@@ -5036,7 +5036,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 	// Added By Julie
-	@FindBy(css = ".lg-user-locations-new__item-name")
+	@FindBy(css = ".lg-user-locations__item-name")
 	private List<WebElement> userLocation;
 
 	@FindBy(css = "select[aria-label=\"Scheduling Policy Group\"] option[selected=\"selected\"]")
