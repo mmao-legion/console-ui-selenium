@@ -3445,7 +3445,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             for (WebElement weekDayDimension : weekDayDimensions) {
                 WebElement weekDay = weekDayDimension.findElement(By.className("sch-calendar-day-label"));
                 // Judge if the week day is in the list, if it is, this day is closed, there should be no shifts
-                if (weekDay != null && weekDaysToClose.contains(getFullWeekDayName(weekDay.getText()))) {
+                if (weekDay != null && weekDaysToClose.contains(SimpleUtils.getFullWeekDayName(weekDay.getText()))) {
                     List<WebElement> weekShiftWrappers = weekDayDimension.findElements(By.className("week-schedule-shift-wrapper"));
                     if (weekShiftWrappers != null) {
                         if (weekShiftWrappers.size() == 0) {
@@ -4904,7 +4904,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
-    @FindBy(css = ".week-schedule-shit-open-popover")
+    @FindBy(css = ".week-view-shift-info-icon")
     private List<WebElement> scheduleInfoIcon;
 
     @FindBy(css = "button[ng-click*='confirmSaveAction']")
@@ -5668,6 +5668,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                                 if (workerName.getText().toLowerCase().trim().equals(name.trim().toLowerCase())) {
                                     click(optionCircle);
                                     SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                                    if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().equalsIgnoreCase("ASSIGN ANYWAY")) {
+                                        click(btnAssignAnyway);
+                                        SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
+                                    }
                                 }
                             }else {
                                 SimpleUtils.fail("Worker name or option circle not loaded Successfully!", false);
@@ -7499,25 +7503,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    public enum weekDayNames {
-        Mon("Monday"),
-        Tue("Tuesday"),
-        Wed("Wednesday"),
-        Thu("Thursday"),
-        Fri("Friday"),
-        Sat("Saturday"),
-        Sun("Sunday");
-        private final String value;
-
-        weekDayNames(final String newValue) {
-            value = newValue;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
-
     @Override
     public void verifyTheFunctionalityOfClearFilter() throws Exception {
         String linkName = "Clear Filter";
@@ -8199,19 +8184,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public String getFullMonthName(String shortName) {
         String fullName = "";
         monthsOfCalendar[] shortNames = monthsOfCalendar.values();
-        for (int i = 0; i < shortNames.length; i++) {
-            if (shortNames[i].name().equalsIgnoreCase(shortName)) {
-                fullName = shortNames[i].value;
-                SimpleUtils.report("Get the full name of " + shortName + ", is: " + fullName);
-                break;
-            }
-        }
-        return fullName;
-    }
-
-    public String getFullWeekDayName(String shortName) {
-        String fullName = "";
-        weekDayNames[] shortNames = weekDayNames.values();
         for (int i = 0; i < shortNames.length; i++) {
             if (shortNames[i].name().equalsIgnoreCase(shortName)) {
                 fullName = shortNames[i].value;
@@ -9126,7 +9098,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
                     if (workerName != null) {
                         if (workerName.getText().toLowerCase().contains(teamMemberName.toLowerCase())) {
-                            WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
+                            //WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
+                            WebElement image = shiftWeekView.findElement(By.cssSelector(".sch-day-view-shift-worker-detail"));
                             clickTheElement(image);
                             if (isElementLoaded(deleteShift, 5)) {
                                 clickTheElement(deleteShift);

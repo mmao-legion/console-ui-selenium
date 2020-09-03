@@ -9,6 +9,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -198,10 +199,10 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     @FindBy(css = ".new-announcement-modal")
     private WebElement newAnnouncementModal;
 
-    @FindBy(css = "[ng-if=\"options.canSendGFE\"]")
+    @FindBy(xpath = "//div[contains(@ng-if,\"options.canSendGFE\")]")
     private WebElement announcementTypeSection;
 
-    @FindBy(css = "[ng-class=\"{'mt-15': options.canSendGFE}\"]")
+    @FindBy(xpath = "//div[contains(@ng-class,\"options.canSendGFE\")]")
     private WebElement sendToSection;
 
     @FindBy(css = ".gfe-send-to-select")
@@ -509,7 +510,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
         }
     }
 
-    @FindBy(css = ".announcement-message div")
+    @FindBy(css = ".announcement-message.ng-binding")
     private WebElement messageViewed;
     @Override
     public void verifyMessageIsExpected(String messageExpected) throws Exception {
@@ -591,6 +592,36 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
         } else {
             SimpleUtils.fail("Working days are not loaded!", false);
         }
+    }
+
+    @FindBy (css = ".weekdays-column.selected")
+    private List<WebElement> selectedDays;
+
+    @Override
+    public List<String> getSelectedOperatingHours() throws Exception {
+        List<String> selectedOperatingHours = new ArrayList<>();
+        if (areListElementVisible(selectedDays, 5)) {
+            for (WebElement selectedDay : selectedDays) {
+                WebElement weekDay = selectedDay.findElement(By.cssSelector(".weekdays-column-header"));
+                List<WebElement> startNEndTime = selectedDay.findElements(By.tagName("input"));
+                if (weekDay != null && startNEndTime != null && startNEndTime.size() == 2) {
+                    String fullName = SimpleUtils.getFullWeekDayName(weekDay.getText());
+                    SimpleDateFormat twentyFour = new SimpleDateFormat("H:mm");
+                    SimpleDateFormat twelve = new SimpleDateFormat("hh:mma");
+                    Date startTime = twelve.parse(startNEndTime.get(0).getAttribute("value"));
+                    Date endTime = twelve.parse(startNEndTime.get(1).getAttribute("value"));
+                    String oneDayTime = fullName + ": " + twentyFour.format(startTime) + "-" + twentyFour.format(endTime);
+                    selectedOperatingHours.add(oneDayTime);
+                    SimpleUtils.pass("Inbox - GFE: get the operating hour: " + oneDayTime + " Successfully!");
+                }
+            }
+            if (selectedOperatingHours.size() != selectedDays.size()) {
+                SimpleUtils.fail("Inbox - GFE: Failed to get the correct operating hours!", false);
+            }
+        } else {
+            SimpleUtils.report("Inbox - GFE: There are no selected working days!");
+        }
+        return selectedOperatingHours;
     }
 
     @Override

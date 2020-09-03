@@ -504,9 +504,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//Current week and day is selected by default
 		schedulePage.currentWeekIsGettingOpenByDefault();
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
-		if(!isActiveWeekGenerated){
-			schedulePage.createScheduleForNonDGFlowNewUI();
+		if(isActiveWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
 		//click on Edit button to add new shift
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		schedulePage.clickOnDayView();

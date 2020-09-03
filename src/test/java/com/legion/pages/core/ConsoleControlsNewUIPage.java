@@ -1,6 +1,7 @@
 package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.loc;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -5036,7 +5037,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 	// Added By Julie
-	@FindBy(css = ".lg-user-locations__item-name")
+	@FindBy(css = ".lg-user-locations-new__item-name")
 	private List<WebElement> userLocation;
 
 	@FindBy(css = "select[aria-label=\"Scheduling Policy Group\"] option[selected=\"selected\"]")
@@ -5233,4 +5234,155 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		} else
 			SimpleUtils.fail("Users and Roles Page: failed to load search box",false);
 	}
+
+	// Added by Marym
+
+	@FindBy(css = "div.lg-tabs__nav-item")
+	private List<WebElement> allDistrictsAndAllLocationsTabs;
+
+	@FindBy(css = "table.lg-table")
+	private List<WebElement> allDistrictsAndAllLocationsTables;
+
+	@FindBy(css = "[ng-click=\"$ctrl.back()\"]")
+	private WebElement backButtonOnLocationDetailPage;
+
+	@Override
+	public void clickOnBackButtonOnLocationDetailPage() throws Exception {
+		if (isElementLoaded(backButtonOnLocationDetailPage, 5))
+			click(backButtonOnLocationDetailPage);
+		else
+			SimpleUtils.fail("Locations Page: Back button on location detail page not loaded!", false);
+
+		if (areListElementVisible(allDistrictsAndAllLocationsTabs, 10))
+			SimpleUtils.pass("Locations Page: Back to locations page successfully");
+		else
+			SimpleUtils.fail("Locations Page: Locations page not loaded!", false);
+	}
+
+	@Override
+	public void clickOnControlsLocationsSection() throws Exception {
+		if (isElementLoaded(locationsSection, 5))
+			click(locationsSection);
+		else
+			SimpleUtils.fail("Controls Page: Locations Card not Loaded!", false);
+	}
+
+	@Override
+	public boolean isLocationsPageLoaded() throws Exception {
+		if (areListElementVisible(allDistrictsAndAllLocationsTabs, 15)) {
+			SimpleUtils.pass("Controls Page: Locations page loaded successfully");
+			return true;
+		} else {
+			SimpleUtils.fail("Controls Page: Locations page not Loaded", false);
+			return false;
+		}
+	}
+
+	@Override
+	public void clickAllDistrictsOrAllLocationsTab(boolean isClickDistrictsTab) throws Exception {
+		if (areListElementVisible(allDistrictsAndAllLocationsTabs, 15) &&
+				allDistrictsAndAllLocationsTabs.size() >=2 &&
+				areListElementVisible(allDistrictsAndAllLocationsTables, 15) &&
+				allDistrictsAndAllLocationsTables.size() >=2){
+			if (isClickDistrictsTab){
+				if (allDistrictsAndAllLocationsTabs.get(0) != null){
+					click(allDistrictsAndAllLocationsTabs.get(0));
+					if (isElementLoaded(allDistrictsAndAllLocationsTables.get(0))) {
+						SimpleUtils.pass("Locations page: All districts page loaded successfully");
+					} else {
+						SimpleUtils.fail("Locations page: All districts page not Loaded", false);
+					}
+				} else {
+					SimpleUtils.fail("Locations page: All districts tab not Loaded", false);
+				}
+			} else {
+				if (allDistrictsAndAllLocationsTabs.get(1) != null){
+					click(allDistrictsAndAllLocationsTabs.get(1));
+					if (isElementLoaded(allDistrictsAndAllLocationsTables.get(1))) {
+						SimpleUtils.pass("Locations page: All locations page loaded successfully");
+					} else {
+						SimpleUtils.fail("Locations page: All locations page not Loaded", false);
+					}
+				} else {
+					SimpleUtils.fail("Locations page: All locations tab not Loaded", false);
+				}
+			}
+		} else{
+			SimpleUtils.fail("Controls Page: Locations page not Loaded", false);
+		}
+	}
+
+	@FindBy (css = ".lg-table.ng-scope")
+	private List<WebElement> tablesOfDistrictsAndLocations;
+
+	@FindBy (css = "input[aria-label=\"Location Address\"]")
+	private WebElement locationAddress;
+
+	@FindBy (css = "input[aria-label=\"City\"]")
+	private WebElement city;
+
+	@FindBy (css = "input[aria-label=\"Zip Code\"]")
+	private WebElement zipCode;
+
+	@FindBy (css = "[value=\"location.state\"] div.select-wrapper")
+	private WebElement state;
+
+	@FindBy (css = ".lg-form-section-action")
+	private WebElement editLocationButton;
+
+	@Override
+	public void goToSpecificLocationDetailPageByLocationName (String locationName) throws Exception {
+		boolean isLocationExist = false;
+		if (allDistrictsAndAllLocationsTables != null && allDistrictsAndAllLocationsTables.size()>=2){
+			WebElement tableOfLocations = allDistrictsAndAllLocationsTables.get(1);
+			if (tableOfLocations != null){
+				List<WebElement> locations =  tableOfLocations.findElements(By.cssSelector("[class=\"ng-binding ng-scope\"]"));
+				if (locations != null && locations.size() != 0){
+					for (WebElement location: locations){
+						if(location != null && location.getText().equals(locationName)){
+							isLocationExist = true;
+							click(location);
+							if (isElementLoaded(locationInformationFormSection, 10)) {
+								SimpleUtils.pass("Locations page: Location detail page loaded successfully");
+							} else {
+								SimpleUtils.fail("Locations page: Location detail page fail to load", false);
+							}
+							break;
+						}
+					}
+					if (!isLocationExist) {
+						SimpleUtils.fail("Locations page: The specified location was not found. The specified location name is: " + locationName, false);
+					}
+				}
+			} else {
+				SimpleUtils.fail("Locations page: All locations page not Loaded", false);
+			}
+		} else {
+			SimpleUtils.fail("Controls Page: Locations page not Loaded", false);
+		}
+	}
+
+	@Override
+	public String getLocationInfoStringFromDetailPage () throws Exception {
+		String locationDetailInfo = "";
+		String stateStr = "";
+		String cityStr = "";
+		String locationAddressStr = "";
+		String zipCodeStr = "";
+
+		if (isElementLoaded(locationAddress, 10) && isElementLoaded(zipCode, 10) &&
+				isElementLoaded(state, 10) && isElementLoaded(city, 10)) {
+			stateStr = state.getAttribute("data-content");
+			cityStr = city.getAttribute("value");
+			locationAddressStr = locationAddress.getAttribute("value");
+			zipCodeStr = zipCode.getAttribute("value");
+		} else {
+			SimpleUtils.fail("Locations page: Elements in location page not Loaded", false);
+		}
+		locationDetailInfo = locationAddressStr + ", " + cityStr + ", " + stateStr + ", " + zipCodeStr;
+		return locationDetailInfo;
+	}
 }
+
+
+

@@ -7,6 +7,7 @@ import java.util.List;
 public interface InboxPage {
 
     //Added by Nora
+    public List<String> getSelectedOperatingHours() throws Exception;
 
     //Added by Julie
     public void createGFEAnnouncement() throws Exception;

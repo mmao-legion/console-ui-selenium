@@ -13,6 +13,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.io.File;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -21,6 +22,7 @@ import java.util.List;
 public class InboxTest extends TestBase {
 
     private static HashMap<String, String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+    private static HashMap<String, String> propertyLocationTimeZone = JsonUtil.getPropertiesFromJsonFile("src/test/resources/LocationTimeZone.json");
 
     @Override
     @BeforeMethod()
@@ -144,6 +146,165 @@ public class InboxTest extends TestBase {
             }
             if (isConsistent) {
                 SimpleUtils.pass("Team members are consistent with the Roster!");
+            }
+        } else {
+            SimpleUtils.fail("The count of TMs in the GFE report is inconsistent with Roster", false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "verify reports show the most recent GFE that was provided for each employee")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheMostRecentGFEIsInReportAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded() , false);
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        controlsPage.gotoControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsComplianceSection();
+        //turn on GFE toggle
+        controlsNewUIPage.turnGFEToggleOnOrOff(true);
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+
+        //login as TM to get nickName
+        String fileName = "UsersCredentials.json";
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String nickNameOfTM = profileNewUIPage.getNickNameFromProfile();
+        loginPage.logOut();
+
+        //go to Inbox page create GFE announcement.
+        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                , String.valueOf(storeManagerCredentials[0][2]));
+        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+        inboxPage.clickOnInboxConsoleMenuItem();
+        inboxPage.createGFEAnnouncement();
+        inboxPage.sendToTM(nickNameOfTM);
+
+        //change operating hours and working day
+        String dayToClose = "MON";
+        String estimatedWorkingDays = "Sunday, Tuesday, Wednesday, Thursday, Friday, Saturday";
+        String dayToChangeHrs = "SUN";
+        String startTime = "08:00AM";
+        String endTime = "06:00PM";
+        inboxPage.chooseOneDayToClose(dayToClose);
+        inboxPage.changeOperatingHrsOfDay(dayToChangeHrs, startTime, endTime);
+        List<String> selectedOperatingHours = inboxPage.getSelectedOperatingHours();
+        //change week summary info
+        String minimumShifts = "6";
+        String averageHrs = "38";
+        inboxPage.changeWeekSummaryInfo(minimumShifts, averageHrs);
+        inboxPage.clickSendBtn();
+        loginPage.logOut();
+
+        //login as TM to check the gfe
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        inboxPage.clickOnInboxConsoleMenuItem();
+        inboxPage.clickFirstGFEInList();
+        inboxPage.clickAcknowledgeBtn();
+        String jsonTimeZone = propertyLocationTimeZone.get(location);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+        String acknowledgeTime = SimpleUtils.getCurrentDateMonthYearWithTimeZone(jsonTimeZone, sdf);
+        loginPage.logOut();
+
+        //login as SM to export the report.
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                , String.valueOf(storeManagerCredentials[0][2]));
+        SimpleUtils.assertOnFail("Dashboard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+        analyticsPage.clickOnAnalyticsConsoleMenu();
+        SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+
+        String gfe = "Good Faith Estimate";
+        String downloadPath = parameterMap.get("Download_File_Default_Dir");
+        if (analyticsPage.isSpecificReportLoaded(gfe)) {
+            analyticsPage.mouseHoverAndExportReportByName(gfe);
+            // Verify whether the file is downloaded or not
+            Thread.sleep(5000);
+            SimpleUtils.assertOnFail("Failed to download the Good Faith Estimate Report!", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "GoodFaithEstimate"), false);
+        } else {
+            SimpleUtils.fail("Analytics: " + gfe + " not loaded Successfully!", false);
+        }
+        File latestFile = SimpleUtils.getLatestFileFromDirectory(downloadPath);
+        String gfeFileName = latestFile.getName();
+        SimpleUtils.pass("KPI Report exported successfully with file name '"+ gfeFileName +"'.");
+        ArrayList<String> actualHeader = CsvUtils.getHeaderFromCSVFileByPath(downloadPath + "/" + gfeFileName);
+        ArrayList<String> expectedHeader = new ArrayList<>(Arrays.asList("TM first name",
+                "TM last name",
+                "TM Employee ID",
+                "TM Job Title",
+                "Scheduling policy group",
+                "Date & time sent",
+                "Date & time read",
+                "Date & time acknowledged",
+                "Location",
+                "Location ID",
+                "Estimated working Days",
+                "Estimated working hours",
+                "Average hours per week",
+                "Minimum # of shifts per week"));
+        if (actualHeader.containsAll(expectedHeader) && expectedHeader.containsAll(actualHeader)) {
+            SimpleUtils.pass("GFE Report columns are correct!");
+        } else {
+            SimpleUtils.fail("GFE report columns are not correct!", true);
+        }
+        ArrayList<HashMap<String,String>> gfeDetails = CsvUtils.getDataFromCSVFileWithHeader(downloadPath + "/" + gfeFileName);
+        if (gfeDetails != null && gfeDetails.size() > 0) {
+            boolean isConsistent = false;
+            for (HashMap<String,String> gfeDetail : gfeDetails) {
+                String firstName = gfeDetail.get("TM first name");
+                if (nickNameOfTM.equalsIgnoreCase(firstName)) {
+                    String actualEstimatedWorkingDays = gfeDetail.get("Estimated working Days");
+                    if (estimatedWorkingDays.equals(actualEstimatedWorkingDays)) {
+                        SimpleUtils.pass("Analytics Report: Verified \"Estimated working Days\" is consistent: " + estimatedWorkingDays);
+                    } else {
+                        SimpleUtils.fail("Analytics Report: \"Estimated working Days\" is inconsistent, Expected: " + estimatedWorkingDays
+                        + ", the value in report is: " + actualEstimatedWorkingDays, true);
+                    }
+                    String actualWorkingHours = gfeDetail.get("Estimated working hours");
+                    if (selectedOperatingHours.toString().equals(actualWorkingHours)) {
+                        SimpleUtils.pass("Analytics Report: Verified \"Estimated working hours\" is consistent: " + actualWorkingHours);
+                    } else {
+                        SimpleUtils.fail("Analytics Report: \"Estimated working hours\" is inconsistent, Expected: " + selectedOperatingHours.toString()
+                                + ", the value in report is: " + actualWorkingHours, true);
+                    }
+                    String actualAverageHour = gfeDetail.get("Average hours per week");
+                    if (averageHrs.equals(actualAverageHour)) {
+                        SimpleUtils.pass("Analytics Report: Verified \"Average hours per week\" is consistent: " + averageHrs);
+                    } else {
+                        SimpleUtils.fail("Analytics Report: \"Average hours per week\" is inconsistent, Expected: " + averageHrs.toString()
+                                + ", the value in report is: " + actualAverageHour, true);
+                    }
+                    String actualMinShifts = gfeDetail.get("Minimum # of shifts per week");
+                    if (minimumShifts.equals(actualMinShifts)) {
+                        SimpleUtils.pass("Analytics Report: Verified \"Minimum # of shifts per week\" is consistent: " + minimumShifts);
+                    } else {
+                        SimpleUtils.fail("Analytics Report: \"Minimum # of shifts per week\" is inconsistent, Expected: " + minimumShifts.toString()
+                                + ", the value in report is: " + actualMinShifts, true);
+                    }
+                    String actualAcknowledgeTime = gfeDetail.get("Date & time acknowledged");
+                    if (acknowledgeTime.equals(actualAcknowledgeTime)) {
+                        SimpleUtils.pass("Analytics Report: Verified \"Date & time acknowledged\" is consistent: " + acknowledgeTime);
+                    } else {
+                        SimpleUtils.fail("Analytics Report: \"Date & time acknowledged\" is inconsistent, Expected: " + acknowledgeTime.toString()
+                                + ", the value in report is: " + actualAcknowledgeTime, false);
+                    }
+                    isConsistent = true;
+                    break;
+                }
+            }
+            if (!isConsistent) {
+                SimpleUtils.fail("Analytics Report: the most recent GFE in report is incorrect!", false);
             }
         } else {
             SimpleUtils.fail("The count of TMs in the GFE report is inconsistent with Roster", false);
@@ -322,15 +483,35 @@ public class InboxTest extends TestBase {
         inboxPage.sendToTM(nickName2);
         HashMap<String, String> contentOfWeekSummary_TM2 = inboxPage.getTheContentOfWeekSummaryInGFE();
 
+        //Get location detail address
+        //Go to global control page
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnGlobalLocationButton();
+
+        //Go to locations tab
+        controlsNewUIPage.clickOnControlsLocationsSection();
+        SimpleUtils.assertOnFail("Locations page not loaded successfully!", controlsNewUIPage.isLocationsPageLoaded(), false);
+        controlsNewUIPage.clickAllDistrictsOrAllLocationsTab(false);
+
+        //Click location and go to detail page get detail info
+        controlsNewUIPage.goToSpecificLocationDetailPageByLocationName(nickName1_Location);
+        String nickName1_LocationDetailInfo = controlsNewUIPage.getLocationInfoStringFromDetailPage();
+
+        controlsNewUIPage.clickOnBackButtonOnLocationDetailPage();
+        controlsNewUIPage.clickAllDistrictsOrAllLocationsTab(false);
+        controlsNewUIPage.goToSpecificLocationDetailPageByLocationName(nickName2_Location);
+        String nickName2_LocationDetailInfo = controlsNewUIPage.getLocationInfoStringFromDetailPage();
+
         // Compare the data to verify the content of week summary when selecting different tm
         SimpleUtils.report("Inbox: Compare a TM with the data from controls");
-        if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM1, schedulingPolicyGroupData_TM1) && contentOfWeekSummary_TM1.get("Location").equals(nickName1_Location))
+        if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM1, schedulingPolicyGroupData_TM1) && contentOfWeekSummary_TM1.get("Location").equals(nickName1_LocationDetailInfo))
             SimpleUtils.pass("Inbox: The content of week summary is consistent with the data from controls when selecting a tm");
         else
             SimpleUtils.fail("Inbox: The content of week summary is inconsistent with the data from controls when selecting a tm",true);
 
         SimpleUtils.report("Inbox: Compare another TM with the data from controls");
-        if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM2, schedulingPolicyGroupData_TM2) && contentOfWeekSummary_TM2.get("Location").equals(nickName2_Location))
+        if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM2, schedulingPolicyGroupData_TM2) && contentOfWeekSummary_TM2.get("Location").equals(nickName2_LocationDetailInfo))
             SimpleUtils.pass("Inbox: The content of week summary is consistent with the data from controls when selecting another tm");
         else
             SimpleUtils.fail("Inbox: The content of week summary is inconsistent with the data from controls when selecting another tm",true);
