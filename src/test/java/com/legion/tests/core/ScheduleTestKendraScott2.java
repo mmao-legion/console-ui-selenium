@@ -1412,7 +1412,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
         schedulePage.verifyInactiveMessageNWarning(inactiveUser,date);
 
 		// Restore the TM to be active
-		controlsNewUIPage.deactivateActiveTM();
 		controlsNewUIPage.clickOnControlsConsoleMenu();
 		controlsNewUIPage.clickOnControlsUsersAndRolesSection();
 		controlsNewUIPage.searchAndSelectTeamMemberByName(inactiveUser);
