@@ -246,6 +246,8 @@
                     <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
                     <include name="verifyContentOfGFEAsInternalAdmin" />
                     <include name="verifyVSLInfoAsInternalAdmin" />
+                    <include name="verifyTheColumnAndCountOfGFEReportAsInternalAdmin" />
+                    <include name="verifyTheMostRecentGFEIsInReportAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

@@ -1357,16 +1357,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.goToConsoleScheduleAndScheduleSubMenu();
 		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (!isWeekGenerated){
-			schedulePage.createScheduleForNonDGFlowNewUI();
+		if (isWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		schedulePage.addOpenShiftWithLastDay("MOD");
 		schedulePage.deleteTMShiftInWeekView("Unassigned");
 		schedulePage.saveSchedule();
 		schedulePage.publishActiveSchedule();
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.addOpenShiftWithDefaultTime("MOD");
+		schedulePage.addOpenShiftWithFirstDay("MOD");
 		schedulePage.deleteOpenShiftWithLastDay();
 		schedulePage.saveSchedule();
 
@@ -1413,7 +1414,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
         schedulePage.verifyInactiveMessageNWarning(inactiveUser,date);
 
 		// Restore the TM to be active
-		controlsNewUIPage.deactivateActiveTM();
 		controlsNewUIPage.clickOnControlsConsoleMenu();
 		controlsNewUIPage.clickOnControlsUsersAndRolesSection();
 		controlsNewUIPage.searchAndSelectTeamMemberByName(inactiveUser);

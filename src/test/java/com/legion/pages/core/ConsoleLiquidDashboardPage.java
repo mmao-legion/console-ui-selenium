@@ -1007,13 +1007,13 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         b.Can navigate to week by clicking arrow
          */
         if (areListElementVisible(openShiftsCarouselIndicators, 5) && openShiftsCarouselIndicators.size() == 3) {
-            click(openShiftsCarouselIndicators.get(0));
+            clickTheElement(openShiftsCarouselIndicators.get(0));
             if (openShiftsWeek.getText().toUpperCase().contains(lastWeek)) {
                 SimpleUtils.pass("Open Shifts: The first point switches to the last week successfully");
             } else {
                 SimpleUtils.fail("Open Shifts: The first point failed to switch to the last week", true);
             }
-            click(openShiftsCarouselIndicators.get(1));
+            clickTheElement(openShiftsCarouselIndicators.get(1));
             if (openShiftsWeek.getText().toUpperCase().contains(currentWeek)) {
                 SimpleUtils.pass("Open Shifts: The second point switches to the current week successfully");
             } else {

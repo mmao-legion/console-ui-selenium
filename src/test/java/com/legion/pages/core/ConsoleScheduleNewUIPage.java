@@ -2798,6 +2798,22 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void addOpenShiftWithFirstDay(String workRole) throws Exception {
+        if (isElementLoaded(createNewShiftWeekView, 10)) {
+            click(createNewShiftWeekView);
+            selectWorkRole(workRole);
+            clearAllSelectedDays();
+            if (areListElementVisible(weekDays, 5) && weekDays.size() > 0) {
+                clickTheElement(weekDays.get(0));
+            }
+            clickRadioBtnStaffingOption(staffingOption.OpenShift.getValue());
+            clickOnCreateOrNextBtn();
+        } else
+            SimpleUtils.fail("Day View Schedule edit mode, add new shift button not found for Week Day: '" +
+                    getActiveWeekText() + "'", false);
+    }
+
+    @Override
     public boolean isNextWeekAvaibale() throws Exception {
         if (!isElementLoaded(calendarNavigationNextWeekArrow)) {
             List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
@@ -9405,8 +9421,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (className = "worker-edit-availability-status")
     private WebElement messageInSelectTeamMemberWindow;
 
-    @FindBy (css = "table .tma-staffing-option-inner-circle")
+    @FindBy (css = "[ng-repeat=\"worker in searchResults\"] .tma-staffing-option-outer-circle")
     private WebElement optionCircle;
+
+    @FindBy (css = "[ng-click=\"cancelAction()\"]")
+    private WebElement closeButtonOnCustomize;
 
     List<String> weekScheduleShiftTimeListOfWeekView = new ArrayList<String>();
     List<String> weekScheduleShiftTimeListOfMySchedule = new ArrayList<String>();
@@ -9998,17 +10017,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(createNewShiftWeekView,5)) {
             click(createNewShiftWeekView);
             selectWorkRole(workRole);
-            if (weekDays.get(0).getAttribute("class").contains("week-day-multi-picker-day-selected"))
-                click(weekDays.get(0));
             clickRadioBtnStaffingOption(staffingOption.OpenShift.getValue());
-            if (weekDays.size() == 7) {
-                for (int i = weekDays.size() - 1; i >= 0; i--) {
-                    if (weekDays.get(i).getAttribute("class").contains("week-day-multi-picker-day-disabled"))
-                        continue;
-                    else {
-                        click(weekDays.get(i));
-                        break;
-                    }
+            clearAllSelectedDays();
+            if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+                if (!weekDays.get(6).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
+                    click(weekDays.get(6));
                 }
             }
             clickOnCreateOrNextBtn();
@@ -10019,21 +10032,37 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void deleteOpenShiftWithLastDay() throws Exception {
-        if (isElementLoaded(createNewShiftWeekView, 5) && areListElementVisible(blueIconsOfOpenShift,5)) {
-            moveToElementAndClick(blueIconsOfOpenShift.get(blueIconsOfOpenShift.size()-1));
-            if (isPopOverLayoutLoaded()) {
-                click(popOverLayout.findElement(By.xpath("//span[contains(text(), \"Delete Shift\")]")));
-                if (isDeleteShiftShowWell()) {
-                    click(deleteBtnInDeleteWindows);
-                    if (isElementLoaded(deleteShiftImg,5)) {
-                        SimpleUtils.pass("delete shift draft successfully");
-                    } else
-                        SimpleUtils.fail("delete shift draft failed",true);
+        boolean isDeleted = false;
+        if (areListElementVisible(weekViewDaysAndDates, 5) && weekViewDaysAndDates.size() == 7) {
+            List<WebElement> names = weekViewDaysAndDates.get(6).findElements(By.className("week-schedule-worker-name"));
+            if (names != null && names.size() > 0) {
+                for (WebElement name : names) {
+                    if (name.getText().equalsIgnoreCase("Open")) {
+                        WebElement parent = name.findElement(By.xpath("./.."));
+                        if (parent != null) {
+                            WebElement icon = parent.findElement(By.className("sch-day-view-shift-worker-detail"));
+                            if (icon != null) {
+                                clickTheElement(icon);
+                                if (isElementLoaded(deleteShift, 10)) {
+                                    clickTheElement(deleteShift);
+                                    if (isElementLoaded(deleteBtnInDeleteWindows, 10)) {
+                                        click(deleteBtnInDeleteWindows);
+                                        SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
+                                        isDeleted = true;
+                                        break;
+                                    } else
+                                        SimpleUtils.fail("delete confirm button load failed", false);
+                                } else
+                                    SimpleUtils.fail("delete item for this TM load failed", false);
+                            }
+                        }
+                    }
                 }
             }
-        } else
-            SimpleUtils.fail("Day View Schedule edit mode, delete shift button not found for Week Day: '" +
-                    getActiveWeekText() + "'", true);
+        }
+        if (!isDeleted) {
+            SimpleUtils.fail("Failed to delete the open shift on Last Day!", false);
+        }
     }
 
     @Override
@@ -10292,19 +10321,30 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.pass("Assign Team Member: 'Inactive' message shows successfully");
         } else
             SimpleUtils.fail("Assign Team Member: 'Inactive' message failed to show",false);
-        click(optionCircle);
-        if (isElementLoaded(alertMessage,5)) {
-            if (alertMessage.getText().trim().equals(username + "is inactive starting " + date + ". Please activate the team member before assigning."))
-                SimpleUtils.pass("Assign Team Member: Warning shows correctly");
-            else
-                SimpleUtils.fail("Assign Team Member: Warning shows incorrectly",false);
-            click(okBtnOnConfirm);
-            if (optionCircle.getAttribute("class").contains("ng-hide"))
-                SimpleUtils.pass("Assign Team Member: Click OK in warning window and nothing changes as expected");
-            else
-                SimpleUtils.fail("Assign Team Member: Click OK in warning window, the inactive TM is selected unexpectedly",false);
-        } else
-            SimpleUtils.fail("Assign Team Member: No warning when assign an inactive TM",false);
+        if (isElementLoaded(optionCircle, 5)) {
+            click(optionCircle);
+            if (isElementLoaded(alertMessage,5)) {
+                if (alertMessage.getText().trim().equals(username + " is inactive starting " + date + ". Please activate the team member before assigning.")) {
+                    SimpleUtils.pass("Assign Team Member: Warning shows correctly");
+                    click(okBtnOnConfirm);
+                    if (optionCircle.findElement(By.className("tma-staffing-option-inner-circle")).getAttribute("class").contains("ng-hide")) {
+                        SimpleUtils.pass("Assign Team Member: Click OK in warning window and nothing changes as expected");
+                        if (isElementLoaded(closeButtonOnCustomize, 5)) {
+                            click(closeButtonOnCustomize);
+                            if (isElementLoaded(scheduleEditModeCancelButton, 10)) {
+                                click(scheduleEditModeCancelButton);
+                            }
+                        }
+                    } else {
+                        SimpleUtils.fail("Assign Team Member: Click OK in warning window, the inactive TM is selected unexpectedly", false);
+                    }
+                } else {
+                    SimpleUtils.fail("Assign Team Member: Warning shows incorrectly", false);
+                }
+            } else {
+                SimpleUtils.fail("Assign Team Member: No warning when assign an inactive TM", false);
+            }
+        }
     }
 
     private boolean isAssignTeamMemberShowWell() throws Exception {

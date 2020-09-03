@@ -133,7 +133,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	public void clickActivityFilterByIndex(int index, String filterName) throws Exception {
 		if (areListElementVisible(activityFilters, 10)) {
 			if (index < activityFilters.size()) {
-				click(activityFilters.get(index));
+				clickTheElement(activityFilters.get(index));
+				waitForSeconds(2);
 				if (isElementLoaded(filterTitle, 5)) {
 					if (filterName.equalsIgnoreCase(filterTitle.getText().replaceAll("\\s*", ""))) {
 						SimpleUtils.pass("Switch to :" + filterTitle.getText() + " tab Successfully!");
@@ -253,6 +254,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	}
 	@Override
 	public void verifyClickOnActivityCloseButton() throws Exception {
+		waitForSeconds(2);
 		if (isElementLoaded(closeActivityFeedBtn, 10)) {
 			click(closeActivityFeedBtn);
 			SimpleUtils.pass("Click on Activity Close Button Successfully!");
@@ -390,7 +392,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 					//check the detail
 					if (timeOffAction.equals("requested")) {
 						WebElement detail = activityCard.findElement(By.cssSelector("div[ng-if=\"canShowDetails()\"]"));
-						if (isElementLoaded(detail, 5) && isClickable(detail, 5)) {
+						if (isElementLoaded(detail, 10)) {
 							click(detail);
 							click(detail);
 							SimpleUtils.pass("detail load!");
@@ -486,7 +488,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
                     if (actualMessage != null && actualMessage.equals(expectedMessage)) {
                         SimpleUtils.pass("Find Card: " + actualMessage + " Successfully!");
                         WebElement detail = activityCards.get(0).findElement(By.cssSelector("div[ng-if=\"canShowDetails()\"]"));
-                        if (isElementLoaded(detail,5) && isClickable(detail,5)){
+                        if (isElementLoaded(detail,10)){
                             click(detail);
                             verifyAvailabilityNotificationDetail(weekInfo,repeatChange);
                             click(detail);

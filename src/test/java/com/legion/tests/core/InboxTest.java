@@ -213,7 +213,7 @@ public class InboxTest extends TestBase {
         inboxPage.clickFirstGFEInList();
         inboxPage.clickAcknowledgeBtn();
         String jsonTimeZone = propertyLocationTimeZone.get(location);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String acknowledgeTime = SimpleUtils.getCurrentDateMonthYearWithTimeZone(jsonTimeZone, sdf);
         loginPage.logOut();
 

@@ -320,7 +320,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void clickOnControlsConsoleMenu() throws Exception {
 		if (isElementLoaded(controlsConsoleMenuDiv, 10))
-			click(controlsConsoleMenuDiv);
+			clickTheElement(controlsConsoleMenuDiv);
 		else
 			SimpleUtils.fail("Controls Console Menu not loaded Successfully!", false);
 	}
@@ -5190,9 +5190,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void activateInactiveTM() throws Exception {
-		if (isElementLoaded(activateBtn, 5)) {
+		if (isElementLoaded(activateBtn, 15)) {
 			click(activateBtn);
-			if (isElementLoaded(currentDayInDeactivateWindow, 5)) {
+			if (isElementLoaded(currentDayInDeactivateWindow, 15)) {
 				click(currentDayInDeactivateWindow);
 				if (applyOrActivateOrSaveBtn.isEnabled()) {
 					click(applyOrActivateOrSaveBtn);

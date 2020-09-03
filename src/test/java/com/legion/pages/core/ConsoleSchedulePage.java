@@ -1177,6 +1177,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void addOpenShiftWithFirstDay(String workRole) throws Exception {
+
+    }
+
+    @Override
     public boolean isSmartCardPanelDisplay() throws Exception {
         // TODO Auto-generated method stub
         return false;
