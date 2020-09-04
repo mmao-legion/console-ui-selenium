@@ -9379,7 +9379,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "h1[ng-if=\"weeklyScheduleData.hasSchedule !== 'FALSE'\"]")
     private WebElement openShiftData;
 
-    @FindBy(css = "img[ng-src=\"img/legion/openShiftImage.svg\"]")
+    @FindBy(css = "img.sch-open-shift-28-28-icon")
     private List<WebElement> blueIconsOfOpenShift;
 
     @FindBy(css = "[ng-if=\"isGenerateOverview()\"] h1")

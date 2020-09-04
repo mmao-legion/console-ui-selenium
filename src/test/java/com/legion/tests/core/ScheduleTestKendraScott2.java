@@ -1382,7 +1382,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		if (schedulePage.getShiftsCount() == 1)
 			SimpleUtils.pass("ACTION REQUIRED Smart Card: There is only one shift as expected");
 		else
-			SimpleUtils.fail("ACTION REQUIRED Smart Card: There is only one shift as expected",true);
+			SimpleUtils.fail("ACTION REQUIRED Smart Card: There is not only one shift unexpectedly",true);
 		if (schedulePage.getTooltipOfUnpublishedDeleted().contains("1 shift deleted"))
 			SimpleUtils.pass("ACTION REQUIRED Smart Card: \"1 shift deleted\" tooltip shows up on smart card");
 		else
