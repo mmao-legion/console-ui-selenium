@@ -7460,7 +7460,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     // Added by Nora: for Team schedule option as team member
-    @FindBy (css = "week-schedule-shift .week-schedule-shift-wrapper")
+    @FindBy (css = ".week-schedule-shift .week-schedule-shift-wrapper")
     private List<WebElement> wholeWeekShifts;
     @FindBy (css = ".day-week-picker-period-week")
     private List<WebElement> currentWeeks;
@@ -9114,8 +9114,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
                     if (workerName != null) {
                         if (workerName.getText().toLowerCase().contains(teamMemberName.toLowerCase())) {
-                            //WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
-                            WebElement image = shiftWeekView.findElement(By.cssSelector(".sch-day-view-shift-worker-detail"));
+                            WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
+                            //WebElement image = shiftWeekView.findElement(By.cssSelector(".sch-day-view-shift-worker-detail"));
                             clickTheElement(image);
                             if (isElementLoaded(deleteShift, 5)) {
                                 clickTheElement(deleteShift);
@@ -9379,7 +9379,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "h1[ng-if=\"weeklyScheduleData.hasSchedule !== 'FALSE'\"]")
     private WebElement openShiftData;
 
-    @FindBy(css = "img.sch-open-shift-28-28-icon")
+    @FindBy(css = "img[src*=\"openShift\"]")
     private List<WebElement> blueIconsOfOpenShift;
 
     @FindBy(css = "[ng-if=\"isGenerateOverview()\"] h1")
@@ -10033,32 +10033,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void deleteOpenShiftWithLastDay() throws Exception {
         boolean isDeleted = false;
-        if (areListElementVisible(weekViewDaysAndDates, 5) && weekViewDaysAndDates.size() == 7) {
-            List<WebElement> names = weekViewDaysAndDates.get(6).findElements(By.className("week-schedule-worker-name"));
-            if (names != null && names.size() > 0) {
-                for (WebElement name : names) {
-                    if (name.getText().equalsIgnoreCase("Open")) {
-                        WebElement parent = name.findElement(By.xpath("./.."));
-                        if (parent != null) {
-                            WebElement icon = parent.findElement(By.className("sch-day-view-shift-worker-detail"));
-                            if (icon != null) {
-                                clickTheElement(icon);
-                                if (isElementLoaded(deleteShift, 10)) {
-                                    clickTheElement(deleteShift);
-                                    if (isElementLoaded(deleteBtnInDeleteWindows, 10)) {
-                                        click(deleteBtnInDeleteWindows);
-                                        SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
-                                        isDeleted = true;
-                                        break;
-                                    } else
-                                        SimpleUtils.fail("delete confirm button load failed", false);
-                                } else
-                                    SimpleUtils.fail("delete item for this TM load failed", false);
-                            }
-                        }
-                    }
-                }
-            }
+        if (areListElementVisible(blueIconsOfOpenShift, 5) && blueIconsOfOpenShift.size() > 0) {
+            clickTheElement(blueIconsOfOpenShift.get(blueIconsOfOpenShift.size() - 1));
+            if (isElementLoaded(deleteShift, 10)) {
+                clickTheElement(deleteShift);
+                if (isElementLoaded(deleteBtnInDeleteWindows, 10)) {
+                    click(deleteBtnInDeleteWindows);
+                    SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
+                    isDeleted = true;
+                } else
+                    SimpleUtils.fail("delete confirm button load failed", false);
+            } else
+                SimpleUtils.fail("delete item for this TM load failed", false);
         }
         if (!isDeleted) {
             SimpleUtils.fail("Failed to delete the open shift on Last Day!", false);
