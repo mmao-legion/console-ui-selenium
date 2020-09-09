@@ -5221,7 +5221,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					WebElement name = user.findElement(By.cssSelector("lg-button button span span"));
 					if (name != null) {
 						if (name.getText().equalsIgnoreCase(username)) {
-							click(name);
+							clickTheElement(name);
 							isTeamMemberFound = true;
 							SimpleUtils.pass("Users and Roles Page: User '" + username + "' selected successfully.");
 							break;

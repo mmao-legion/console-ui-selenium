@@ -9412,8 +9412,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "img[ng-if=\"unpublishedDeleted && isOneAndOnlyShiftTypeSelected('Edited')\"]")
     private WebElement tooltipIconOfUnpublishedDeleted;
 
-    @FindBy (className = "sch-calendar-day-border-left")
-    private List<WebElement> scheduleTodayNFutureDays;
+    @FindBy (className = "sch-calendar-day")
+    private List<WebElement> scheduleCalendarDays;
 
     @FindBy (className = "tma-header-text")
     private WebElement titleInSelectTeamMemberWindow;
@@ -9496,8 +9496,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void goToConsoleScheduleAndScheduleSubMenu() throws Exception {
         if (isElementLoaded(consoleSchedulePageTabElement, 5)) {
-            click(consoleSchedulePageTabElement);
-            click(ScheduleSubMenu);
+            clickTheElement(consoleSchedulePageTabElement);
+            clickTheElement(ScheduleSubMenu);
             if (isElementLoaded(printButton, 10)) {
                 SimpleUtils.pass("Schedule New UI load successfully");
             } else {
@@ -10294,25 +10294,36 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void selectAShiftToAssignTM(String username) throws Exception {
-        if (areListElementVisible(scheduleTodayNFutureDays,10)) {
-           for (WebElement day: scheduleTodayNFutureDays) {
-               List<WebElement> shifts = day.findElements(By.xpath("./../../div[@class=\"week-schedule-shift-place ng-scope\"]"));
-               if (shifts.size() > 0) {
-                   int randomIndex = (new Random()).nextInt(shifts.size());
-                   WebElement shiftImg = shifts.get(randomIndex).findElement(By.tagName("worker-detail"));
-                   moveToElementAndClick(shiftImg);
-                   if (isPopOverLayoutLoaded()) {
-                       clickTheElement(popOverLayout.findElement(By.xpath("//span[contains(text(), \"Assign Team Member\")]")));
-                       if (isAssignTeamMemberShowWell()) {
-                           searchText(username);
-                           SimpleUtils.pass("Assign Team Member: Select a shift and search the team member successfully");
-                           break;
-                       }
-                   }
-               }
-           }
+        boolean isFound = false;
+        if (areListElementVisible(scheduleCalendarDays,10)) {
+            for (WebElement day: scheduleCalendarDays) {
+                if (!day.getAttribute("class").contains("sch-calendar-day-past")) {
+                    WebElement dataDay = day.findElement(By.xpath("./../.."));
+                    String data = dataDay.getAttribute("data-day");
+                    List<WebElement> shifts = MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift"));
+                    System.out.println(shifts.size());
+                    if (shifts.size() > 0) {
+                        System.out.println(shifts.size());
+                        int randomIndex = (new Random()).nextInt(shifts.size());
+                        System.out.println(randomIndex);
+                        WebElement shiftImg = shifts.get(randomIndex).findElement(By.cssSelector(".rows span img"));
+                        moveToElementAndClick(shiftImg);
+                        if (isPopOverLayoutLoaded()) {
+                            clickTheElement(popOverLayout.findElement(By.xpath("//span[contains(text(), \"Assign Team Member\")]")));
+                            if (isAssignTeamMemberShowWell()) {
+                                searchText(username);
+                                isFound = true;
+                                SimpleUtils.pass("Assign Team Member: Select a shift and search the team member successfully");
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         } else
             SimpleUtils.fail("Schedule Page: Failed to find the schedule days",false);
+        if (!isFound)
+            SimpleUtils.fail("Assign Team Member: Failed to select a shift and search the team member",false);
     }
 
     @Override
