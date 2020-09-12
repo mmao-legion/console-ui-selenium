@@ -7453,7 +7453,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     // Added by Nora: for Team schedule option as team member
-    @FindBy (css = ".week-schedule-shift")
+    @FindBy (css = ".week-schedule-shift .week-schedule-shift-wrapper")
     private List<WebElement> wholeWeekShifts;
     @FindBy (css = ".day-week-picker-period-week")
     private List<WebElement> currentWeeks;
@@ -9107,8 +9107,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
                     if (workerName != null) {
                         if (workerName.getText().toLowerCase().contains(teamMemberName.toLowerCase())) {
-                            //WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
-                            WebElement image = shiftWeekView.findElement(By.cssSelector(" .second-row .worker-image-optimized"));
+                            WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
+                            //WebElement image = shiftWeekView.findElement(By.cssSelector(".sch-day-view-shift-worker-detail"));
                             clickTheElement(image);
                             if (isElementLoaded(deleteShift, 5)) {
                                 clickTheElement(deleteShift);
@@ -9372,7 +9372,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "h1[ng-if=\"weeklyScheduleData.hasSchedule !== 'FALSE'\"]")
     private WebElement openShiftData;
 
-    @FindBy(css = "img[src=\"img/legion/openShiftImage.svg\"]")
+    @FindBy(css = "img[src*=\"openShift\"]")
     private List<WebElement> blueIconsOfOpenShift;
 
     @FindBy(css = "[ng-if=\"isGenerateOverview()\"] h1")
