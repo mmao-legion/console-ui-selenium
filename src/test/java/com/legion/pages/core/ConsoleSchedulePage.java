@@ -300,7 +300,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 
     @Override
-    public Boolean varifyActivatedSubTab(String SubTabText) throws Exception {
+    public Boolean verifyActivatedSubTab(String SubTabText) throws Exception {
         if (isElementLoaded(activatedSubTabElement)) {
             if (activatedSubTabElement.getText().toUpperCase().contains(SubTabText)) {
                 return true;
@@ -490,7 +490,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @Override
     public void clickOnScheduleSubTab(String subTabString) throws Exception {
         System.out.println("clickOnScheduleSubTab called1: " + subTabString);
-        if (ScheduleSubTabsElement.size() != 0 && !varifyActivatedSubTab(subTabString)) {
+        if (ScheduleSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
             System.out.println("clickOnScheduleSubTab size: " + ScheduleSubTabsElement.size());
             for (WebElement ScheduleSubTabElement : ScheduleSubTabsElement) {
                 System.out.println("ScheduleSubTabElement Text: " + ScheduleSubTabElement.getText());
@@ -502,7 +502,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
         }
 
-        if (varifyActivatedSubTab(subTabString)) {
+        if (verifyActivatedSubTab(subTabString)) {
             SimpleUtils.pass("Schedule Page: '" + subTabString + "' tab loaded Successfully!");
         } else {
             SimpleUtils.fail("Schedule Page: '" + subTabString + "' tab not loaded Successfully!", true);
@@ -2732,7 +2732,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void deleteOpenShiftWithLastDay() throws Exception {
+    public void deleteLatestOpenShift() throws Exception {
 
     }
 
