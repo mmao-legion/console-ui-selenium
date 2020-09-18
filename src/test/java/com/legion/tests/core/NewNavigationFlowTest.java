@@ -87,7 +87,7 @@ public class NewNavigationFlowTest extends TestBase {
         String currentDistrict = dashboardPage.getCurrentDistrict();
         //change district to show all locations
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict("SST District1");
+        locationSelectorPage.changeDistrict("SanityTest");
 
         TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
 

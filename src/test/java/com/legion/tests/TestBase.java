@@ -423,11 +423,11 @@ public abstract class TestBase {
     }
 
     public static void enableSwitch(String switchName,String enterpriseName) {
-        Response response = given().params("enterpriseName","op","sourceSystem","legion","passwordPlainText","AutoTesting.AD1","userName","AutoTesting.AD1")
-                .when().get("https://staging-enterprise.dev.legion.work/legion/authentication/login").then().statusCode(200).extract().response();
+        Response response = given().params("enterpriseName","dgstage","sourceSystem","legion","passwordPlainText","admin2.a","userName","admin2.a")
+                .when().get("https://rc-enterprise.dev.legion.work/legion/authentication/login").then().statusCode(200).extract().response();
         String sessionId = response.header("sessionid");
         //get ABSwitch to confirm the switch is on or off
-        Response response2= given().log().all().header("sessionId",sessionId).param("switchName", switchName).when().get("https://staging-enterprise.dev.legion.work/legion/business/queryABSwitch").then().log().all().extract().response();
+        Response response2= given().log().all().header("sessionId",sessionId).param("switchName", switchName).when().get("https://rc-enterprise.dev.legion.work/legion/business/queryABSwitch").then().log().all().extract().response();
         String enabled = response2.jsonPath().get("records.enabled[0]").toString();
 
         if (enabled.equals("false")) {
@@ -445,7 +445,7 @@ public abstract class TestBase {
             jsonAsMap.put("valid", true);
             jsonAsMap.put("record",recordContext);
             Response responseAfterDisable= given().log().all().headers("sessionId",sessionId,"Content-Type","application/json").body(jsonAsMap)
-                    .when().post("https://staging-enterprise.dev.legion.work/legion/business/updateABSwitch").then().log().all().extract().response();
+                    .when().post("https://rc-enterprise.dev.legion.work/legion/business/updateABSwitch").then().log().all().extract().response();
             responseAfterDisable.then().statusCode(200);
 
         }

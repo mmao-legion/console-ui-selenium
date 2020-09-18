@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.legion.utils.JsonUtil;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -36,7 +37,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy(css = "div.lg-search-options__option")
     private List<WebElement> availableLocationCardsName;
 
-    @FindBy(className = "location-selector-location-name-text")
+    @FindBy(className = "div.lg-new-location-chooser__highlight > lg-select > div > lg-picker-input > div > input-field > ng-form > div")
     private WebElement dashboardSelectedLocationText;
 
     @FindBy (className = "location-selection-action-cancel")
@@ -116,6 +117,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                     }
                                 }
                             if (!isLocationMatched) {
+                                searchLocationAndSelect(locationName);
                                 if (isElementLoaded(dashboardLocationsPopupCancelButton)) {
                                     click(dashboardLocationsPopupCancelButton);
                                 }
@@ -139,7 +141,20 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     	}
 
     }
-    
+
+    //added by estelle to search location if the location is not in recent list
+    @FindBy(css = "input[placeholder=\"Search Location\"]")
+    private WebElement locationSearchInput;
+    private void searchLocationAndSelect(String locationName) throws Exception {
+        if (isElementLoaded(locationSearchInput,5)) {
+            locationSearchInput.sendKeys(locationName);
+            locationSearchInput.sendKeys(Keys.ENTER);
+            click(availableLocationCardsName.get(-1));
+        }else
+            click(locationSelectorButton);
+            searchLocationAndSelect(locationName);
+    }
+
     @Override
     public Boolean isLocationSelected(String locationName)
     {
@@ -288,6 +303,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
         return false;
     }
+
     @Override
     public void changeDistrict(String districtName) {
         waitForSeconds(4);
@@ -312,6 +328,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                     }
                                 }
                                 if (!isDistrictMatched) {
+                                    searchDistrictAndSelect(districtName);
                                     if (isElementLoaded(dashboardLocationsPopupCancelButton)) {
                                         click(dashboardLocationsPopupCancelButton);
                                     }
@@ -332,5 +349,18 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         catch(Exception e) {
             SimpleUtils.fail("Unable to change District!", true);
         }
+    }
+
+    //added by estelle to search location if the location is not in recent list
+    @FindBy(css = "input[placeholder=\"Search District\"]")
+    private WebElement districtSearchInput;
+    private void searchDistrictAndSelect(String districtName) throws Exception {
+        if (isElementLoaded(districtSearchInput,5)) {
+            districtSearchInput.sendKeys(districtName);
+            districtSearchInput.sendKeys(Keys.ENTER);
+            click(availableLocationCardsName.get(-1));
+        }else
+            click(locationSelectorButton);
+        searchDistrictAndSelect(districtName);
     }
 }

@@ -13,29 +13,32 @@
         <classes>
             <class name="com.legion.tests.core.LocationsTest">
                 <methods>
-                    <include name="verifyCreateUpdateRegularLocationWithMandatoryFields" />
-                    <include name="verifyCreateUpdateRegularLocationWithAllFields" />
-                    <include name="verifyCreateMockLocation" />
-                    <include name="verifyCreateUpdateNSOLocation" />
+<!--                    <include name="verifyCreateRegularLocationWithMandatoryFields" />-->
+                    <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
+                    <include name="verifyCreateMockLocationAndNavigate" />
+                    <include name="verifyCreateNSOLocationAndNavigate" />
                     <include name="verifyDisableEnableLocationFunction" />
                     <include name="verifyImportLocationDistrict" />
                     <include name="verifyExportLocationDistrict" />
+                    <include name="verifyMSLocationGroupFunction" />
+
                 </methods>
             </class>
         </classes>
     </test>
 
-    <test name="Navigation Test">
-        <classes>
-            <class name="com.legion.tests.core.NewNavigationFlowTest">
-                <methods>
-                    <include name="verifyLocationProfilePageInControls" />
-                    <include name="verifyManagerLocationForOneUserInControlsInControls" />
-                    <include name="verifyLocationListFunctionInTimesheet" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+<!--    <test name="Navigation Test">-->
+<!--        <classes>-->
+<!--            <class name="com.legion.tests.core.NewNavigationFlowTest">-->
+<!--                <methods>-->
+<!--                    <include name="verifyLocationProfilePageInControls" />-->
+<!--                    <include name="verifyManagerLocationForOneUserInControlsInControls" />-->
+<!--                    <include name="verifyLocationListFunctionInTimesheet" />-->
+<!--                    <include name="verifyLegionBasicNavigationFunctionIn" />-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
 
 <!--    <test name="Location Group Test">-->
 <!--        <classes>-->

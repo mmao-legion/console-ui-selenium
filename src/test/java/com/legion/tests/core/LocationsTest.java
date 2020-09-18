@@ -1,53 +1,48 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
-import com.legion.pages.core.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
-import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
-import io.restassured.RestAssured;
+import cucumber.api.java.ro.Si;
+import org.apache.xmlbeans.impl.xb.xmlconfig.impl.NsconfigImpl;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.*;
 
 public class LocationsTest extends TestBase {
 
-    public enum enterpriseOption{
+    public enum modelSwitchOperation{
 
-        Op("2d8bebbd-32fd-4157-a0db-b97fb3ffe6ce"),
-        Dgstage("fac86359-4880-45c3-943e-d414abbdf7aa"),
-        LC("4f31d62f-b3cd-4b67-87ab-40b39c9c5626"),
-        KS2("67840cca-5c4a-4411-8c6a-211fe631eb10");
+        Console("Console"),
+        OperationPortal("Operation Portal");
+
         private final String value;
-        enterpriseOption(final String newValue) {
+        modelSwitchOperation(final String newValue) {
             value = newValue;
         }
         public String getValue() { return value; }
     }
+    public enum locationGroupSwitchOperation{
 
-    public enum switchOption{
+        MS("Master Slave"),
+        PTP("Peer to Peer");
 
-        OPView("OPView"),
-        EnableLocationLifeCycle("EnableLocationLifeCycle"),
-        EnableLocationGroupV2("EnableLocationGroupV2"),
-        EnableOMJobs("EnableOMJobs"),
-        UseConfigTemplateSwitch("UseConfigTemplateSwitch");
         private final String value;
-        switchOption(final String newValue) {
+        locationGroupSwitchOperation(final String newValue) {
             value = newValue;
         }
         public String getValue() { return value; }
     }
-
 
 
     @Override
@@ -65,15 +60,15 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to create location with mandatory fields")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateUpdateRegularLocationWithMandatoryFields(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateRegularLocationWithMandatoryFields(String browser, String username, String password, String location) throws Exception {
 
-        Calendar currentTime = Calendar.getInstance();
-        long currentTimeMillis = currentTime.getTimeInMillis();
-        String locationName = "AutoCreate" +currentTimeMillis;
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+        String currentTime =  dfs.format(new Date());
+        String locationName = "AutoCreate" +currentTime;
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-        locationsPage.clickModelSwitchIconInDashboardPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
         SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
         //go to locations tab
@@ -89,11 +84,6 @@ public class LocationsTest extends TestBase {
             SimpleUtils.pass("Create new location successfully");
         }else
             SimpleUtils.fail("Create new location failed or can't search created location",true);
-        locationsPage.updateLocation(locationName);
-        if (locationsPage.searchNewLocation(locationName+"Update")) {
-            SimpleUtils.pass("Update location successfully");
-        }else
-            SimpleUtils.fail("Update location failed or can't search update location",true);
 
     }
 
@@ -102,17 +92,17 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to create location with mandatory fields")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateUpdateRegularLocationWithAllFields(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateRegularLocationWithAllFieldsAndNavigate(String browser, String username, String password, String location) throws Exception {
 
-        Calendar currentTime = Calendar.getInstance();
-        long currentTimeMillis = currentTime.getTimeInMillis();
-        String locationName = "AutoCreate" +currentTimeMillis;
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+        String currentTime =  dfs.format(new Date());
+        String locationName = "AutoCreate" +currentTime;
         int index =0;
-        String searchCharactor = "*";
+        String searchCharactor = "No touch";
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-        locationsPage.clickModelSwitchIconInDashboardPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
         SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
         //go to locations tab
@@ -123,17 +113,17 @@ public class LocationsTest extends TestBase {
         locationsPage.goToSubLocationsInLocationsPage();
         //add new regular location
         locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);
-        //search created location
-        //search created location
-        if (locationsPage.searchNewLocation(locationName)) {
-            SimpleUtils.pass("Create new location successfully");
-        }else
-            SimpleUtils.fail("Create new location failed or can't search created location",true);
-        locationsPage.updateLocation(locationName);
-        if (locationsPage.searchNewLocation(locationName+"Update")) {
-            SimpleUtils.pass("Update location successfully");
-        }else
-            SimpleUtils.fail("Update location failed or can't search update location",true);
+
+//           //search created location
+//        if (locationsPage.searchNewLocation(locationName)) {
+//            SimpleUtils.pass("Create new location successfully");
+//        }else
+//            SimpleUtils.fail("Create new location failed or can't search created location",true);
+        HashMap<String, String> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeDistrict(locationInfoDetails.get("locationDistrict"));
+        locationSelectorPage.changeLocation(locationInfoDetails.get("locationName"));
 
     }
 
@@ -142,16 +132,16 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to create location with mandatory fields")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateMockLocation(String browser, String username, String password, String location) throws Exception {
-        Calendar currentTime = Calendar.getInstance();
-        long currentTimeMillis = currentTime.getTimeInMillis();
-        String locationName = "AutoCreate" +currentTimeMillis;
+    public void verifyCreateMockLocationAndNavigate(String browser, String username, String password, String location) throws Exception {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+        String currentTime =  dfs.format(new Date());
+        String locationName = "AutoCreate" +currentTime;
         int index =0;
-        String searchCharactor = "*";
+        String searchCharactor = "No touch";
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-        locationsPage.clickModelSwitchIconInDashboardPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
         SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
         //go to locations tab
@@ -161,32 +151,36 @@ public class LocationsTest extends TestBase {
         //go to sub-locations tab
         locationsPage.goToSubLocationsInLocationsPage();
         //add one mock location，first create one new location and then to mock that -to avoid duplication
-        locationsPage.addNewRegularLocationWithMandatoryFields(locationName);
+        locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);;
         locationsPage.addNewMockLocationWithAllFields(locationName,locationName,index);
-        //search created location
-        if (locationsPage.searchNewLocation(getLocationName())) {
-            SimpleUtils.pass("Create new mock location successfully");
-        }else
-            SimpleUtils.fail("Create new location failed or can't search created location",true);
-
+//        //search created location
+//        if (locationsPage.searchNewLocation(getLocationName())) {
+//            SimpleUtils.pass("Create new mock location successfully");
+//        }else
+//            SimpleUtils.fail("Create new location failed or can't search created location",true);
+        HashMap<String, String> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeDistrict(locationInfoDetails.get("locationDistrict"));
+        locationSelectorPage.changeLocation(locationInfoDetails.get("locationName"));
     }
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to create NSO location with all fields")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateUpdateNSOLocation(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateNSOLocationAndNavigate(String browser, String username, String password, String location) throws Exception {
 
-        Calendar currentTime = Calendar.getInstance();
-        long currentTimeMillis = currentTime.getTimeInMillis();
-        String locationName = "AutoCreate" +currentTimeMillis;
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+        String currentTime =  dfs.format(new Date());
+        String locationName = "AutoCreate" +currentTime;
         int index =0;
-        String searchCharactor = "*";
+        String searchCharactor = "No touch";
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-        locationsPage.clickModelSwitchIconInDashboardPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
         SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
         //go to locations tab
@@ -196,16 +190,15 @@ public class LocationsTest extends TestBase {
         //go to sub-locations tab
         locationsPage.goToSubLocationsInLocationsPage();
         locationsPage.addNewNSOLocation(locationName,searchCharactor, index);
-        if (locationsPage.searchNewLocation(getLocationName())) {
-            SimpleUtils.pass("Create new mock location successfully");
-        }else
-            SimpleUtils.fail("Create new location failed or can't search created location",true);
-        locationsPage.updateLocation(locationName);
-        if (locationsPage.searchNewLocation(locationName+"Update")) {
-            SimpleUtils.pass("Update location successfully");
-        }else
-            SimpleUtils.fail("Update location failed or can't search update location",true);
-
+//        if (locationsPage.searchNewLocation(getLocationName())) {
+//            SimpleUtils.pass("Create new mock location successfully");
+//        }else
+//            SimpleUtils.fail("Create new location failed or can't search created location",true);
+        HashMap<String, String> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeDistrict(locationInfoDetails.get("locationDistrict"));
+        locationSelectorPage.changeLocation(locationInfoDetails.get("locationName"));
     }
 
     @Automated(automated = "Automated")
@@ -220,7 +213,7 @@ public class LocationsTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-        locationsPage.clickModelSwitchIconInDashboardPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
         SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
         //go to locations tab
@@ -245,7 +238,7 @@ public class LocationsTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-        locationsPage.clickModelSwitchIconInDashboardPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
         SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
         //go to locations tab
@@ -276,7 +269,7 @@ public class LocationsTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-        locationsPage.clickModelSwitchIconInDashboardPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
         SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
         //go to locations tab
@@ -287,6 +280,118 @@ public class LocationsTest extends TestBase {
         locationsPage.goToSubLocationsInLocationsPage();
         locationsPage.verifyExportAllLocationDistrict();
         locationsPage.verifyExportSpecificLocationDistrict(searchCharactor,index);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate Master Slave Location group creation")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMSLocationGroupFunction(String browser, String username, String password, String location) throws Exception {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+        String currentTime =  dfs.format(new Date());
+        String locationName = "LGMSAuto" +currentTime;
+        int index =0;
+        String searchCharactor = "No touch";
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        //check locations item
+        locationsPage.validateItemsInLocations();
+        //go to sub-locations tab
+        locationsPage.goToSubLocationsInLocationsPage();
+        //add new MS location group-parent and child
+        String  parentRelationship = "Parent location";
+        locationsPage.addParentLocation(locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.MS.getValue());
+        String childLocationName = "childLocationForMS" +currentTime;
+        String  childRelationship = "Part of a location group";
+        locationsPage.addChildLocation(childLocationName,locationName,searchCharactor,index,childRelationship);
+        //get location's  info
+        HashMap<String, String> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+        //check location group navigation
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeDistrict(locationInfoDetails.get("locationDistrict"));
+//        if (!locationSelectorPage.searchLocationIsExist(childLocationName)) {
+//            SimpleUtils.pass("Right behavior:MS child location should not show in location navigation bar");
+//        }else
+//            SimpleUtils.fail("Error behavior:MS child location show in location navigation bar",true);
+        locationSelectorPage.changeLocation(locationInfoDetails.get("locationName"));
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        if (teamPage.verifyThereIsLocationColumnForMSLocationGroup()) {
+            SimpleUtils.pass("Location column in Team Tab is showing for MS location group");
+        }else
+            SimpleUtils.fail("There is no location column in Team Tab for MS location group",true);
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate Peer to peer Location group creation")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyPTTLocationGroupFunction(String browser, String username, String password, String location) throws Exception {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+        String currentTime =  dfs.format(new Date());
+        String locationName = "LGPTPAuto" +currentTime;
+        int index =0;
+        int childLocationNum = 1;
+        String searchCharactor = "No touch";
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        //check locations item
+        locationsPage.validateItemsInLocations();
+        //go to sub-locations tab
+        locationsPage.goToSubLocationsInLocationsPage();
+        //add new MS location group-parent and child
+        String  parentRelationship = "Parent location";
+        locationsPage.addParentLocation(locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.PTP.getValue());
+        try {
+            for (int i = 0; i <childLocationNum ; i++) {
+                String childLocationName = "childLocationForMS" +currentTime;
+                String  childRelationship = "Part of a location group";
+                locationsPage.addChildLocation(childLocationName,locationName,searchCharactor,index,childRelationship);
+            }
+        }catch (Exception e){
+            SimpleUtils.fail("Child location creation failed",true);
+        }
+
+
+        //get location's  info
+        HashMap<String, String> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+        if (locationsPage.verifyLGIconShowWellOrNot(locationName,childLocationNum)) {
+
+        }
+        //check location group navigation
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeDistrict(locationInfoDetails.get("locationDistrict"));
+//        if (!locationSelectorPage.searchLocationIsExist(childLocationName)) {
+//            SimpleUtils.pass("Right behavior:MS child location should not show in location navigation bar");
+//        }else
+//            SimpleUtils.fail("Error behavior:MS child location show in location navigation bar",true);
+        locationSelectorPage.changeLocation(locationInfoDetails.get("locationName"));
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        if (teamPage.verifyThereIsLocationColumnForMSLocationGroup()) {
+            SimpleUtils.pass("Location column in Team Tab is showing for MS location group");
+        }else
+            SimpleUtils.fail("There is no location column in Team Tab for MS location group",true);
+
     }
 
 }

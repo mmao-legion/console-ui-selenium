@@ -1,26 +1,20 @@
 package com.legion.pages.core;
 
-import com.jayway.restassured.response.Response;
 import com.legion.pages.BasePage;
 import com.legion.pages.LocationsPage;
-import com.legion.tests.core.LocationsTest;
 import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
-import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
-import sun.awt.im.SimpleInputMethodWindow;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.jayway.restassured.RestAssured.baseURI;
 import static com.jayway.restassured.RestAssured.given;
 import static com.legion.tests.TestBase.switchToNewWindow;
 import static com.legion.utils.MyThreadLocal.*;
@@ -66,27 +60,33 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement exportBtn;
 	@FindBy(css = "lg-button[label=\"Import\"]")
 	private WebElement importBtn;
-
+	@FindBy(css = "li.header-mode-switch-menu-item")
+	private List<WebElement> modelSwitchOption;
 
 
 	@Override
-	public void clickModelSwitchIconInDashboardPage() {
+	public void clickModelSwitchIconInDashboardPage(String value) {
 		if (isElementEnabled(modeSwitchIcon,10)) {
 			click(modeSwitchIcon);
 			waitForSeconds(3);
-			click(opTitleMenu);
-			switchToNewWindow();
-			
-			if (isElementEnabled(goToLocationsButton,5)) {
-				SimpleUtils.pass("switch to Ops portal successfully");
+			if (modelSwitchOption.size() != 0) {
+				for (WebElement subOption : modelSwitchOption) {
+					if (subOption.getText().equalsIgnoreCase(value)) {
+						click(subOption);
+						waitForSeconds(3);
+					}
+				}
 
-			}else
-				SimpleUtils.fail("switch to Ops portal failed",false);
+			}
+			switchToNewWindow();
+
 		}else
 			SimpleUtils.fail("mode switch img load failed",false);
 
 
 	}
+
+
 
 	@Override
 	public boolean isOpsPortalPageLoaded() throws Exception {
@@ -170,6 +170,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement selectALocationTitle;
 	@FindBy(css="div.lg-tab-toolbar__search >lg-search >input-field>ng-form>input")
 	private WebElement searchInputInSelectALocation;
+	@FindBy(css="tr[ng-repeat=\"item in $ctrl.currentPageItems\"]")
+	private List<WebElement> locationRowsInSelectLocation;
 
 	@FindBy(css="tr[ng-repeat=\"location in filteredCollection\"]")
 	private List<WebElement> locationRows;
@@ -188,6 +190,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement effectiveDateSelect;
 	@FindBy(xpath = "//lg-single-calendar/div[2]/div[8]/div[7]")
 	private List<WebElement> firstDay;
+	@FindBy(css = "a[ng-click=\"$ctrl.changeMonth(-1)\"]")
+	private List<WebElement> previousMonthBtn;
 
 	@FindBy(css="lg-button[label=\"Create location\"]")
 	private WebElement createLocationBtn;
@@ -223,7 +227,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-	@FindBy(css="input[placeholder=\"You can search by name, id, district, country, state, city and district name.\"]")
+	@FindBy(css="input[placeholder*=\"You can search by name, id, district, country, state and city.\"]")
 	private WebElement searchInput;
 	@FindBy(css = ".lg-search-icon")
 	private WebElement searchBtn;
@@ -233,11 +237,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public boolean searchNewLocation(String locationName) {
 
-		if (isElementEnabled(searchInput,5)) {
+		if (isElementEnabled(searchInput,10)) {
 			searchInput.sendKeys(locationName);
 			searchInput.sendKeys(Keys.ENTER);
-			waitForSeconds(3);
-			if (locationsName.getText().trim().toLowerCase().equals(getLocationName())) {
+			waitForSeconds(5);
+			if (locationsName.getText().trim().equalsIgnoreCase(locationName.trim())) {
 				SimpleUtils.pass("the location is searched ");
 				return true;
 			}
@@ -285,9 +289,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (isElementEnabled(selectALocationTitle,5)) {
 				searchInputInSelectALocation.sendKeys(searchCharactor);
 				searchInputInSelectALocation.sendKeys(Keys.ENTER);
-				waitForSeconds(2);
-				if (locationRows.size()>0) {
-				WebElement firstRow = locationRows.get(index).findElement(By.cssSelector("input[type=\"radio\"]"));
+				waitForSeconds(5);
+				if (locationRowsInSelectLocation.size()>0) {
+				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"radio\"]"));
 				click(firstRow);
 				click(okBtnInSelectLocation);
 				}else
@@ -295,6 +299,23 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 			}else
 				SimpleUtils.fail("Select a location window load failed",true);
+
+	}
+
+	private void selectLocationOrDistrictWhenExport(String searchCharactor,int index) {
+		if (isElementEnabled(selectALocationTitle,5)) {
+			searchInputInSelectALocation.sendKeys(searchCharactor);
+			searchInputInSelectALocation.sendKeys(Keys.ENTER);
+			waitForSeconds(5);
+			if (locationRowsInSelectLocation.size()>0) {
+				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"checkbox\"]"));
+				click(firstRow);
+				click(okBtnInSelectLocation);
+			}else
+				SimpleUtils.report("Search location result is 0");
+
+		}else
+			SimpleUtils.fail("Select a location window load failed",true);
 
 	}
 
@@ -341,8 +362,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement importBtnInImportLocationPage;
 	@FindBy(css = "lg-button[label=\"Ok\"]")
 	private WebElement okBtnInImportLocationPage;
-	@FindBy(css = "div[ng-if=\"checkValid\"]>div:nth-child(4)")
-	private WebElement importFileValidationMessage;
+	@FindBy(css = "div[ng-if=\"loaded\"]>div:nth-child(4)")
+	private WebElement importFileLoadSuccessMessage;
 
 
 	@Override
@@ -356,9 +377,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			uploaderFileInputBtn.sendKeys("C:\\Users\\DMF\\Desktop\\template\\Import_LocationGroup_Example.csv");
 			waitForSeconds(5);
 			click(importBtnInImportLocationPage);
-			if (importFileValidationMessage.getText().contains("Locations Successfully uploaded")) {
-				SimpleUtils.pass("File upload done");
-			}
 			click(okBtnInImportLocationPage);
 			SimpleUtils.pass("File import action done");
 
@@ -427,9 +445,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(selectOneInChooseDistrict);
 			selectLocationOrDistrict(searchCharactor,index);
 			click(effectiveDateSelect);
+			click(previousMonthBtn.get(0));
 			click(firstDay.get(0));
 
 			click(launchDateSelecter);
+			click(previousMonthBtn.get(1));
 			click(firstDay.get(1));
 			waitForSeconds(2);
 			click(selectOneComparableLocation);
@@ -442,7 +462,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			itemsAndTransactionInoutField.get(1).sendKeys("1");
 
 			click(createLocationBtn);
-			waitForSeconds(5);
+			waitForSeconds(20);
 			SimpleUtils.pass("New location creation done");
 
 		}else
@@ -519,7 +539,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(className = "modal-content")
 	private WebElement disableLocationAlertPage;
-	@FindBy(className = "Enable Location")
+	@FindBy(className = "lg-modal__title")
 	private WebElement enableLocationAlertPage;
 
 	@FindBy(className = "lg-modal__content")
@@ -570,7 +590,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			waitForSeconds(10);
 
 			TimeZone timeZone = TimeZone.getTimeZone("America/Chicago");
-			SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM");
 			dfs.setTimeZone(timeZone);
 			String currentTime =  dfs.format(new Date());
 			String downloadPath = "C:\\Users\\DMF\\Downloads";//when someone run ,need to change this path
@@ -608,12 +628,12 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.fail("Export location page load failed",true);
 
 			click(exportSpecificLocationsRadio);
-			selectLocationOrDistrict("*",0);
+			selectLocationOrDistrictWhenExport("*",0);
 			click(okBtnInExportLocationPage);
 			waitForSeconds(10);
 
 			TimeZone timeZone = TimeZone.getTimeZone("America/Chicago");
-			SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM");
 			dfs.setTimeZone(timeZone);
 			String currentTime =  dfs.format(new Date());
 			String downloadPath = "C:\\Users\\DMF\\Downloads";//when someone run ,need to change this path
@@ -640,9 +660,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			disableLocationName = locationNameText.getText();
 			if (isElementLoaded(enableBtn,5)) {
 				click(enableBtn);
-				if (validateDisableLocationAlertPage()) {
+				if (validateEnableLocationAlertPage()) {
 					click(enableBtn);
-					waitForSeconds(2);
+					waitForSeconds(10);
 				}
 				click(backBtnInLocationDetailsPage);
 				waitForSeconds(15);
@@ -672,7 +692,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(locationDetailsLinks.get(0));
 			click(editLocationBtn);
 			locationNameInput.clear();
-			locationNameInput.sendKeys(locationName+"Update");
+			locationNameInput.sendKeys(locationName+"update");
 			setLocationName(locationName);
 			locationId.clear();
 			locationId.sendKeys(getLocationName());
@@ -682,6 +702,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.pass("Location update done");
 		}
 	}
+
 	public enum smartCardData {
 		createNum("Create"),
 		enableNum("Enable"),
@@ -697,6 +718,123 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
+	@Override
+	public boolean verifyUpdateLocationResult(String locationName) throws Exception {
+		searchLocation(locationName);
+		if (locationsName.getText().contains(locationName)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public HashMap<String,String> getLocationInfo(String locationName) {
+		HashMap<String,String> locationInfoDetails =  new HashMap<>();
+
+		if (isElementEnabled(searchInput,10)) {
+			searchInput.sendKeys(locationName);
+			searchInput.sendKeys(Keys.ENTER);
+			waitForSeconds(5);
+			if (locationRows.size() > 0) {
+//				locationInfoDetails.put("locationGroupIcon",locationRows.get(0).findElement(By.cssSelector("td:nth-child(1) >div")).getAttribute("ng-src").toString());
+				locationInfoDetails.put("locationName",locationRows.get(0).findElement(By.cssSelector("button[type='button']")).getText());
+				locationInfoDetails.put("locationStatus",locationRows.get(0).findElement(By.cssSelector("td:nth-child(4) > lg-eg-status ")).getAttribute("type"));
+				locationInfoDetails.put("locationEffectiveDate",locationRows.get(0).findElement(By.cssSelector("td:nth-child(5)")).getText());
+				locationInfoDetails.put("locationCity",locationRows.get(0).findElement(By.cssSelector("td:nth-child(6) ")).getText());
+				locationInfoDetails.put("locationDistrict",locationRows.get(0).findElement(By.cssSelector("td:nth-child(7) ")).getText());
+
+				return locationInfoDetails;
+			}else
+				SimpleUtils.fail(locationName+"can't been searched",true);
+
+		}
+		return null;
+	}
+
+	@FindBy(css = "select[aria-label=\"Location Group Setting\"]")
+	private WebElement locationGroupSelect;
+	@FindBy(css = "input-field[value=\"'Select parent location'\"] > ng-form > div.input-choose.ng-scope > span")
+	private WebElement selectParentLocation;
+
+	@Override
+	public void addChildLocation(String childlocationName, String locationName, String searchCharactor, int index, String childRelationship) throws Exception {
+		if (isElementEnabled(addLocationBtn,5)) {
+			click(addLocationBtn);
+			locationNameInput.sendKeys(childlocationName);
+			setLocationName(childlocationName);
+			selectByVisibleText(locationGroupSelect,newLocationParas.get(childRelationship));
+			click(selectParentLocation);
+			selectLocationOrDistrict(locationName,index);
+			locationId.sendKeys(getLocationName());
+			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
+			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
+			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
+			city.sendKeys(newLocationParas.get("City"));
+			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
+			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
+			phoneNumber.sendKeys(newLocationParas.get("Phone_Number"));
+			emailAddress.sendKeys(newLocationParas.get("Email_Address"));
+			click(selectOneInSourceLocation);
+			selectLocationOrDistrict(searchCharactor,index);
+			if (isElementEnabled(configTypeSelect,5)) {
+				selectByVisibleText(configTypeSelect,newLocationParas.get("Configuration_Type"));
+			}
+			click(effectiveDateSelect);
+			click(firstDay.get(0));
+			scrollToBottom();
+			click(createLocationBtn);
+			waitForSeconds(10);
+			SimpleUtils.pass("Child location creation done");
+
+		}else
+			SimpleUtils.fail("New location page load failed",false);
+	}
+
+	@Override
+	public void addParentLocation(String locationName, String searchCharactor, int index, String parentRelationship, String value) throws Exception {
+		if (isElementEnabled(addLocationBtn,5)) {
+			click(addLocationBtn);
+			locationNameInput.sendKeys(locationName);
+			setLocationName(locationName);
+			selectByVisibleText(locationGroupSelect,newLocationParas.get(parentRelationship));
+			click(getDriver().findElement(By.cssSelector("input[aria-label=\""+value+"\"] ")));
+			locationId.sendKeys(getLocationName());
+			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
+			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
+			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
+			city.sendKeys(newLocationParas.get("City"));
+			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
+			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
+			phoneNumber.sendKeys(newLocationParas.get("Phone_Number"));
+			emailAddress.sendKeys(newLocationParas.get("Email_Address"));
+			click(selectOneInSourceLocation);
+			selectLocationOrDistrict(searchCharactor,index);
+			if (isElementEnabled(configTypeSelect,5)) {
+				selectByVisibleText(configTypeSelect,newLocationParas.get("Configuration_Type"));
+			}
+			click(selectOneInChooseDistrict);
+			selectLocationOrDistrict(searchCharactor,index);
+			click(effectiveDateSelect);
+			click(firstDay.get(0));
+			scrollToBottom();
+			click(createLocationBtn);
+			waitForSeconds(10);
+			SimpleUtils.pass("location creation done");
+
+		}else
+			SimpleUtils.fail("New location page load failed",false);
+	}
+
+	@Override
+	public boolean verifyLGIconShowWellOrNot(String locationName, int childLocationNum) {
+		if (locationRows.size()>0 && locationRows.size()==childLocationNum+1) {
+
+			String parentLGIcon = locationRows.get(0).findElement(By.cssSelector("td:nth-child(1) >div")).getAttribute("ng-src").toString();
+		}
+		return false;
+	}
 
 
 }

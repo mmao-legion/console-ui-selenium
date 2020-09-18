@@ -123,4 +123,5 @@ public interface TeamPage {
 																		 HashMap<String, List<String>> selectedDateNTime, HashMap<Integer, String> indexAndTimes) throws Exception;
 	public void updateBusinessProfilePicture(String filePath) throws Exception;
 	public void rejectAllTheTimeOffRequests() throws Exception;
+	public boolean verifyThereIsLocationColumnForMSLocationGroup() throws Exception;
 }

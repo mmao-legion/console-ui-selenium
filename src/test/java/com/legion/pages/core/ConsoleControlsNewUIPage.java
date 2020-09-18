@@ -2949,7 +2949,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 
-	@FindBy(css = "lg-button[label=\"Edit\"]")
+	@FindBy(css = "lg-button[class=\"lg-form-section-action ng-scope ng-isolate-scope\"]")
 	private WebElement userAndRolesEditUserBtn;
 
 	@FindBy(css = "form-section[on-action=\"editUser()\"]")
@@ -3076,13 +3076,14 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement managerLocationInputFiled;
 	@FindBy(css = "tr[ng-repeat=\"item in $ctrl.filtered\"]")
 	private List<WebElement> locationListRows;
-	@FindBy(css = "lg-button[label=\"Okay\"]")
+	@FindBy(css = "lg-button[label=\"OK\"")
 	private WebElement okayBtnInManagerLocationWin;
 	@FindBy(xpath = "//lg-table-fixed-header/h2[1]/div/input-field")
 	private WebElement selectAllCheckBoxInManaLocationWin;
-	@FindBy(className = "lg-user-locations__item-name")
+	@FindBy(className = "lg-user-locations-new__item-name")
 	private List<WebElement> defaultLocationsForOneUser;
-
+	@FindBy(css = ".lg-select-list__thumbnail-wrapper>input-field[type=\"checkbox\"]")
+	private List<WebElement> locationCheckBoxs;
 
 	@Override
 	public void verifyUpdateUserAndRolesOneUserLocationInfo(String userFirstName) throws Exception {
@@ -3100,22 +3101,18 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 						click(managerLocationBtn);
 						searchLocation(userFirstName);
 						click(selectAllCheckBoxInManaLocationWin);
-						List<WebElement> locationCheckBoxs = locationListRows.get(0).findElements(By.cssSelector("input-field[type=\"checkbox\"]"));
 						if (locationCheckBoxs.size()>0) {
-							for (WebElement locationCheckBox: locationCheckBoxs) {
-								if (isElementLoaded(locationCheckBox) && !locationCheckBox.getAttribute("class").contains("not-empty")) {
-									click(locationCheckBox);
-										if (isElementLoaded(okayBtnInManagerLocationWin)) {
-											click(okayBtnInManagerLocationWin);
-									}
+							for (int i = 2; i <5 ; i++) {
+								if (isElementLoaded(locationCheckBoxs.get(i)) && !locationCheckBoxs.get(i).getAttribute("class").contains("not-empty")) {
+									click(locationCheckBoxs.get(i));
 								}
 							}
-
+							scrollToBottom();
+							click(okayBtnInManagerLocationWin);
 						}else
 							SimpleUtils.fail("There is no location ",true);
-						}else
+					}else
 						SimpleUtils.fail("Manager location button load failed ",true);
-
 
 						List<String> locationAfterUpdated = getUserLocationsList();
 						if (locationAfterUpdated.equals(defaultLocation)) {

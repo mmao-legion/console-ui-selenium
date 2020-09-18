@@ -1,10 +1,10 @@
 package com.legion.pages;
 
-import com.legion.tests.core.LocationsTest;
+import java.util.HashMap;
 
 public interface LocationsPage {
 
-    public void clickModelSwitchIconInDashboardPage();
+    public void clickModelSwitchIconInDashboardPage(String value);
 
     public boolean isOpsPortalPageLoaded() throws Exception;
 
@@ -39,4 +39,15 @@ public interface LocationsPage {
     public void enableLocation(String disableLocationName) throws Exception;
 
     public void updateLocation(String locationName) throws Exception;
+
+    public boolean verifyUpdateLocationResult(String locationName) throws Exception;
+
+    public HashMap<String,String> getLocationInfo(String locationName);
+
+    public void addChildLocation(String childlocationName, String locationName, String searchCharactor, int index, String childRelationship) throws Exception;
+
+    public void addParentLocation(String locationName, String searchCharactor, int index, String parentRelationship, String value) throws Exception;
+
+    public boolean verifyLGIconShowWellOrNot(String locationName, int childLocationNum);;
+
 }
