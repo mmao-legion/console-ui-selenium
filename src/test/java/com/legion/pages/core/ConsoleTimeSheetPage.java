@@ -312,7 +312,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy(css = "a.lg-filter__clear-active")
 	private WebElement clearLocationFilter;
 
-	@FindBy(css = "div.lg-timesheet-carousel__table div")
+	@FindBy(css = ".lg-timesheet-carousel__table-row--cell")
 	private List<WebElement> alertsSmartCardValue;
 
 	@FindBy(css = "div.lg-timesheet-table__grid-column--left.ng-binding")

@@ -255,7 +255,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	@Override
 	public void verifyClickOnActivityCloseButton() throws Exception {
 		waitForSeconds(2);
-		if (isElementLoaded(closeActivityFeedBtn, 10)) {
+		if (isElementLoaded(closeActivityFeedBtn, 15)) {
 			click(closeActivityFeedBtn);
 			SimpleUtils.pass("Click on Activity Close Button Successfully!");
 		}else {
@@ -570,8 +570,10 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
     //Added By Julie
     @FindBy (className = "notification-bell-popup-header-container")
     public WebElement notificationBellPopupHeader;
-    @FindBy (className = "notification-bell-popup-notifications-container")
-    public WebElement notificationsContainer;
+    @FindBy (className = ".notification-bell-popup-notifications-container.empty")
+    public WebElement notificationsContainerEmpty;
+	@FindBy (className = ".notification-bell-popup-notifications-container")
+	public WebElement notificationsContainer;
 
     @Override
     public boolean isActivityBellIconLoaded() throws Exception {
@@ -600,7 +602,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
             if (filterTitle.getText().contains("Shift Swap")) {
                 if (notificationsContainer.getText().contains("requested to swap shifts") || notificationsContainer.getText().contains("agreed to cover")) {
                     SimpleUtils.pass("The content of shift swap activity displays successfully");
-                } else if ( notificationsContainer.getText().toLowerCase().contains("no activities available for the selected filter")) {
+                } else if ( notificationsContainerEmpty.getText().toLowerCase().contains("No activities available for the selected filter")) {
                     SimpleUtils.pass("No activities available for the selected filter");
                 } else SimpleUtils.fail("The content of shift swap activity displays incorrectly", true);
             } else SimpleUtils.fail("The content of Shift Swap Activity is incorrect", true);

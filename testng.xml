@@ -82,7 +82,7 @@
                     <include name="verifyTheTeamFunctionalityInActivate" />
                     <include name="verifyTheTeamFunctionalityInTerminate" />
                     <include name="verifyTheTeamFunctionalityInCoverageAsStoreManager" />
-                    <include name="verifyTheTeamFunctionalityInTimeOffAsStoreManager" />
+                    <include name="verifyTheTeamFunctionalityInTimeOffAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -184,9 +184,9 @@
                     <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyActivityOfClaimOpenShiftAsTeamMember" />
                     <include name="verifyActivityOfPublishUpdateSchedule" />
-                    <include name="verifyTheNotificationForCancelTimeOffAsStoreManager"/>
+                    <include name="verifyTheNotificationForCancelTimeOffAsInternalAdmin"/>
                     <include name="verifyNoNotificationForActivateTMAsStoreManager"/>
-                    <include name="verifyTheNotificationForRequestTimeOffAsStoreManager"/>
+                    <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin"/>
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin"/>
                     <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin"/>

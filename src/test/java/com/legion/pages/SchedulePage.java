@@ -127,10 +127,10 @@ public interface SchedulePage {
 	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception;
 	public void verifyScheduledHourNTMCountIsCorrect() throws Exception;
 	public void complianceShiftSmartCard() throws Exception;
-	public void viewProfile();
+	public void viewProfile() throws Exception;
 	public void changeWorkerRole() throws Exception;
 	public void assignTeamMember() throws Exception;
-	public void convertToOpenShift();
+	public void convertToOpenShift() throws Exception;
 	public void beforeEdit();
 	public void selectTeamMembersOptionForOverlappingSchedule() throws Exception;
 	public boolean getScheduleOverlappingStatus()throws Exception;
@@ -311,7 +311,7 @@ public interface SchedulePage {
 
 	public int getOTShiftCount();
 
-	public void saveSchedule();
+	public void saveSchedule() throws Exception;
 
 	public void validateXButtonForEachShift() throws Exception;
 

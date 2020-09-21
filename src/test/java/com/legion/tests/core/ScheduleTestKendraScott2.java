@@ -1394,7 +1394,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify assign TM warning: TM status is inactive")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyAssignTMWarningWhenTMIsInactiveAsStoreManager(String browser, String username, String password, String location) throws Exception {
+	public void verifyAssignTMWarningWhenTMIsInactiveAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		// Prepare a TM who is inactive
 		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 		controlsNewUIPage.clickOnControlsConsoleMenu();

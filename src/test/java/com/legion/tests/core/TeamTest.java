@@ -258,7 +258,7 @@ public class TeamTest extends TestBase{
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team Functionality Time Off")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInTimeOffAsStoreManager(String browser, String username, String password, String location) throws Exception {
+	public void verifyTheTeamFunctionalityInTimeOffAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		// Login with Store Manager Credentials
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);

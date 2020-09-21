@@ -2021,6 +2021,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    public void unCheckFilters() throws Exception {
+        if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+            click(filterButton);
+        waitForSeconds(2);
+        for (WebElement filterElement : filters) {
+            if (isElementLoaded(filterElement, 5)) {
+                WebElement filterCheckBox = filterElement.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+                String elementClasses = filterCheckBox.getAttribute("class").toLowerCase();
+                if (elementClasses.contains("ng-not-empty"))
+                    click(filterElement);
+            }
+        }
+    }
+
     public void checkFilters(ArrayList<WebElement> filterElements) {
         if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
             click(filterButton);
@@ -3532,8 +3546,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public float checkEnterBudgetWindowLoadedForNonDG() throws Exception {
         float budgetHour = 0;
         String title = "Enter Budget";
-        if (isElementLoaded(generateModalTitle, 5) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
-                && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
+        if (isElementLoaded(generateModalTitle, 15) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
+                && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
             editTheBudgetForNondgFlow();
             waitForSeconds(3);
             try {
@@ -3555,7 +3569,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String finish = "FINISH";
         if (isElementLoaded(nextButtonOnCreateSchedule) && nextButtonOnCreateSchedule.getText().equals(finish)) {
             clickTheElement(nextButtonOnCreateSchedule);
-            waitForSeconds(6);
+            waitForSeconds(10);
             if (areListElementVisible(shiftsWeekView, 15) && shiftsWeekView.size() > 0) {
                 SimpleUtils.pass("Create the schedule successfully!");
             }else {
@@ -3664,8 +3678,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(generateSheduleButton,10)) {
             moveToElementAndClick(generateSheduleButton);
             openBudgetPopUp();
-            if (isElementLoaded(generateModalTitle, 5) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
-            && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
+            if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
+            && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
                 editTheOperatingHours(new ArrayList<>());
                 waitForSeconds(3);
                 clickTheElement(nextButtonOnCreateSchedule);
@@ -4938,7 +4952,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    public void viewProfile() {
+    public void viewProfile() throws Exception {
         int counter = 0;
         if (areListElementVisible(imageSize, 5)) {
             for (int i = 0; i < imageSize.size(); i++) {
@@ -4974,7 +4988,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    public void saveSchedule() {
+    public void saveSchedule() throws Exception {
         if (isElementEnabled(scheduleSaveBtn)) {
             clickTheElement(scheduleSaveBtn);
         } else {
@@ -4985,10 +4999,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-        if (isElementEnabled(okAfterSaveConfirmationPopup)) {
+        /*if (isElementEnabled(okAfterSaveConfirmationPopup)) {
             click(okAfterSaveConfirmationPopup);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
+        }*/
+        if (isElementLoaded(msgOnTop, 15) && msgOnTop.getText().contains("Success")) {
+            SimpleUtils.pass("Save the Schedule Successfully!");
+        } else {
+            SimpleUtils.fail("Save Schedule Failed!", false);
         }
     }
 
@@ -5011,7 +5030,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    public void convertToOpenShift() {
+    public void convertToOpenShift() throws Exception {
         String TMWorkerRole = null;
         String shiftDuration = null;
         String TMName = null;
@@ -7779,7 +7798,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(currentWeeks, 10)) {
             for (int i = 0; i < currentWeeks.size(); i++) {
                 click(currentWeeks.get(i));
-                if (isElementLoaded(filterButton, 5)) {
+                if (isElementLoaded(filterButton, 15)) {
                     String selectedValue = filterButton.findElement(By.cssSelector("input-field[placeholder=\"None\"] input")).getAttribute("value");
                     if (selectedFilter.equalsIgnoreCase(selectedValue)) {
                         SimpleUtils.pass("Selected Filter is persist on Week: " + currentWeeks.get(i).getText());
@@ -7804,13 +7823,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public String selectOneFilter() throws Exception {
         String selectedFilter = null;
         if (areListElementVisible(filters, 10)) {
-            ArrayList<WebElement> filterElements = new ArrayList<>();
-            filterElements.addAll(filters);
-            unCheckFilters(filterElements);
-            int randomIndex = (new Random()).nextInt(filters.size());
-            WebElement filterCheckBox = filters.get(randomIndex).findElement(By.cssSelector("input[type=\"checkbox\"]"));
-            selectedFilter = filters.get(randomIndex).findElement(By.className("input-label")) == null ? "" : filters.get(randomIndex).findElement(By.className("input-label")).getText();
-            click(filterCheckBox);
+            unCheckFilters();
+            WebElement filterCheckBox = filters.get(0).findElement(By.cssSelector("input[type=\"checkbox\"]"));
+            waitForSeconds(3);
+            clickTheElement(filterCheckBox);
+            waitForSeconds(3);
+            selectedFilter = filters.get(0).findElement(By.className("input-label")) == null ? "" : filters.get(0).findElement(By.className("input-label")).getText();
             String elementClass = filterCheckBox.getAttribute("class").toLowerCase();
             if (elementClass.contains("ng-not-empty")) {
                 SimpleUtils.pass("Check the filter: " + selectedFilter + " Successfully!");
@@ -8071,8 +8089,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public boolean isSpecificSmartCardLoaded(String cardName) throws Exception {
         boolean isLoaded = false;
-        waitForSeconds(6);
-        if (areListElementVisible(smartCards, 5)) {
+        waitForSeconds(8);
+        if (areListElementVisible(smartCards, 15)) {
             for (WebElement smartCard : smartCards) {
                 WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
                 if (title != null && title.getText().trim().equalsIgnoreCase(cardName)) {

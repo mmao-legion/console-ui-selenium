@@ -96,6 +96,7 @@ public class ActivityTest extends TestBase {
         schedulePage.deleteTMShiftInWeekView("Unassigned");
         schedulePage.saveSchedule();
         // Add the new shifts for swap team members
+        Thread.sleep(5000);
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.addNewShiftsByNames(swapNames);
         schedulePage.saveSchedule();
@@ -1070,7 +1071,7 @@ public class ActivityTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM is requesting time off")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyTheNotificationForRequestTimeOffAsStoreManager(String browser, String username, String password, String location) throws Exception {
+    public void verifyTheNotificationForRequestTimeOffAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         // Login with Store Manager Credentials
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -1115,7 +1116,9 @@ public class ActivityTest extends TestBase {
 
         // Login as Store Manager again to check message and reject
         String RequstTimeOff = "requested";
-        loginToLegionAndVerifyIsLoginDone(username, password, location);
+        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                , String.valueOf(storeManagerCredentials[0][2]));
         String respondUserName = profileNewUIPage.getNickNameFromProfile();
         ActivityPage activityPage = pageFactory.createConsoleActivityPage();
         activityPage.verifyClickOnActivityIcon();
@@ -1143,7 +1146,8 @@ public class ActivityTest extends TestBase {
         loginPage.logOut();
 
         // Login as Store Manager again to check message and approve
-        loginToLegionAndVerifyIsLoginDone(username, password, location);
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                , String.valueOf(storeManagerCredentials[0][2]));
         activityPage.verifyClickOnActivityIcon();
         activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
         activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
@@ -1168,7 +1172,7 @@ public class ActivityTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM cancels time off request")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyTheNotificationForCancelTimeOffAsStoreManager(String browser, String username, String password, String location) throws Exception {
+    public void verifyTheNotificationForCancelTimeOffAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         // Login with Store Manager Credentials
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -1215,7 +1219,9 @@ public class ActivityTest extends TestBase {
 
         // Login as Store Manager again to check message
         String RequstTimeOff = "cancelled";
-        loginToLegionAndVerifyIsLoginDone(username, password, location);
+        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                , String.valueOf(storeManagerCredentials[0][2]));
         ActivityPage activityPage = pageFactory.createConsoleActivityPage();
         activityPage.verifyClickOnActivityIcon();
         activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
