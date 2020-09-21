@@ -243,7 +243,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 
 		// Make sure schedule is published
 		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
 		if(isActiveWeekGenerated){
@@ -258,7 +258,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 		String timeFromDashboard = dashboardPage.getCurrentTimeFromDashboard();
 
 		schedulePage = dashboardPage.goToTodayForNewUI();
-		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(
+		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(
 				ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
 		// Verify View Today's schedule button is working and navigating to the schedule page[Current date in day view]
 		schedulePage.isScheduleForCurrentDayInDayView(dateFromDashboard);

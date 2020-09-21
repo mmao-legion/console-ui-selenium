@@ -10,7 +10,7 @@ public interface SchedulePage {
 	public void clickOnScheduleConsoleMenuItem();
 	public void goToSchedulePage() throws Exception;
 	public boolean isSchedulePage() throws Exception;
-	public Boolean varifyActivatedSubTab(String SubTabText) throws Exception;
+	public Boolean verifyActivatedSubTab(String SubTabText) throws Exception;
 	public void goToSchedule() throws Exception;
 	public void goToProjectedSales() throws Exception;
 	public void goToStaffingGuidance() throws Exception;
@@ -418,7 +418,7 @@ public interface SchedulePage {
 	public void unGenerateActiveScheduleFromCurrentWeekOnward(int loopCount) throws Exception;
 	public List<String> getOverviewData() throws Exception;
 	public void addOpenShiftWithLastDay(String workRole) throws Exception;
-	public void deleteOpenShiftWithLastDay() throws Exception;
+	public void deleteLatestOpenShift() throws Exception;
 	public void addManualShiftWithLastDay(String workRole, String tmName) throws Exception;
 	public HashMap<String, String> getTheHoursNTheCountOfTMsForEachWeekDays() throws Exception;
 	public HashMap<String, List<String>> getTheContentOfShiftsForEachWeekDay() throws Exception;

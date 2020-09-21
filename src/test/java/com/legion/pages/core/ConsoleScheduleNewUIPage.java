@@ -876,7 +876,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     @Override
-    public Boolean varifyActivatedSubTab(String SubTabText) throws Exception {
+    public Boolean verifyActivatedSubTab(String SubTabText) throws Exception {
         if (isElementLoaded(activatedSubTabElement)) {
             if (activatedSubTabElement.getText().equalsIgnoreCase(SubTabText)) {
                 return true;
@@ -1133,7 +1133,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void clickOnScheduleSubTab(String subTabString) throws Exception {
-        if (ScheduleSubTabsElement.size() != 0 && !varifyActivatedSubTab(subTabString)) {
+        if (ScheduleSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
             for (WebElement ScheduleSubTabElement : ScheduleSubTabsElement) {
                 if (ScheduleSubTabElement.getText().equalsIgnoreCase(subTabString)) {
                     click(ScheduleSubTabElement);
@@ -1143,7 +1143,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
         }
 
-        if (varifyActivatedSubTab(subTabString)) {
+        if (verifyActivatedSubTab(subTabString)) {
             SimpleUtils.pass("Schedule Page: '" + subTabString + "' tab loaded Successfully!");
         } else {
             SimpleUtils.fail("Schedule Page: '" + subTabString + "' tab not loaded Successfully!", true);
@@ -2847,7 +2847,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void convertAllUnAssignedShiftToOpenShift() throws Exception {
-        if (varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue())) {
+        if (verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue())) {
             clickOnWeekView();
             clickOnEditButton();
             for (WebElement unAssignedShift : getUnAssignedShifts()) {
@@ -3351,7 +3351,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 switchToManagerView();
             } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
                 checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
-                SimpleUtils.pass("Schedule Generated Successfuly!");
+                SimpleUtils.pass("Schedule Generated Successfully!");
                 switchToManagerView();
             } else {
                 SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
@@ -4001,96 +4001,89 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return result;
     }
 
-    @FindBy (css = "div[ng-repeat=\"day in dates\"]")
+    @FindBy (css = ".sch-calendar-day-dimension")
     private List<WebElement> scheduleDays;
     @Override
     public void verifyDayHasShifts(String day) throws Exception {
         if (areListElementVisible(scheduleDays,10)){
-            if (day.toLowerCase().contains("sunday")){
-                for (WebElement e : scheduleDays){
-                    if (e.getAttribute("class").contains("0")){
-                        if (areListElementVisible(e.findElements(By.cssSelector(".week-schedule-shift-place.ng-scope")))){
+            if (day.toLowerCase().contains("sunday")) {
+                for (WebElement e : scheduleDays) {
+                    if (e.getAttribute("class").contains("0")) {
+                        String data = e.getAttribute("data-day");
+                        if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")), 10))
                             SimpleUtils.pass("On Sunday there are shifts!");
-                            break;
-                        } else {
-                            SimpleUtils.fail("There are no shifts on Sunday!",false);
-                            break;
-                        }
+                        else
+                            SimpleUtils.fail("There are no shifts on Sunday!", false);
+                        break;
                     }
                 }
             } else if (day.toLowerCase().contains("monday")){
                 for (WebElement e : scheduleDays){
                     if (e.getAttribute("class").contains("1")){
-                        if (areListElementVisible(e.findElements(By.cssSelector(".week-schedule-shift-place.ng-scope")))){
-                            SimpleUtils.pass("On Monday there are shifts!");
-                            break;
-                        } else {
-                            SimpleUtils.fail("There are no shifts on Monday!",false);
-                            break;
-                        }
+                        String data = e.getAttribute("data-day");
+                        if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")),10))
+                            SimpleUtils.pass("On Sunday there are shifts!");
+                        else
+                            SimpleUtils.fail("There are no shifts on Sunday!",false);
+                        break;
                     }
                 }
             } else if (day.toLowerCase().contains("tuesday")){
                 for (WebElement e : scheduleDays){
                     if (e.getAttribute("class").contains("2")){
-                        if (areListElementVisible(e.findElements(By.cssSelector(".week-schedule-shift-place.ng-scope")))){
-                            SimpleUtils.pass("On Tuesday there are shifts!");
-                            break;
-                        } else {
-                            SimpleUtils.fail("There are no shifts on Tuesday!",false);
-                            break;
+                        String data = e.getAttribute("data-day");
+                        if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")),10))
+                            SimpleUtils.pass("On Sunday there are shifts!");
+                        else
+                            SimpleUtils.fail("There are no shifts on Sunday!",false);
+                        break;
                         }
                     }
                 }
             } else if (day.toLowerCase().contains("wednesday")){
                 for (WebElement e : scheduleDays){
                     if (e.getAttribute("class").contains("3")){
-                        if (areListElementVisible(e.findElements(By.cssSelector(".week-schedule-shift-place.ng-scope")))){
-                            SimpleUtils.pass("On Wednesday there are shifts!");
-                            break;
-                        } else {
-                            SimpleUtils.fail("There are no shifts on Wednesday!",false);
-                            break;
-                        }
+                        String data = e.getAttribute("data-day");
+                        if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")),10))
+                            SimpleUtils.pass("On Sunday there are shifts!");
+                        else
+                            SimpleUtils.fail("There are no shifts on Sunday!",false);
+                        break;
                     }
                 }
             } else if (day.toLowerCase().contains("thursday")){
                 for (WebElement e : scheduleDays){
                     if (e.getAttribute("class").contains("4")){
-                        if (areListElementVisible(e.findElements(By.cssSelector(".week-schedule-shift-place.ng-scope")))){
-                            SimpleUtils.pass("On Thursday there are shifts!");
-                            break;
-                        } else {
-                            SimpleUtils.fail("There are no shifts on Thursday!",false);
-                            break;
-                        }
+                        String data = e.getAttribute("data-day");
+                        if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")),10))
+                            SimpleUtils.pass("On Sunday there are shifts!");
+                        else
+                            SimpleUtils.fail("There are no shifts on Sunday!",false);
+                        break;
                     }
                 }
             } else if (day.toLowerCase().contains("friday")){
                 for (WebElement e : scheduleDays){
                     if (e.getAttribute("class").contains("5")){
-                        if (areListElementVisible(e.findElements(By.cssSelector(".week-schedule-shift-place.ng-scope")))){
-                            SimpleUtils.pass("On Friday there are shifts!");
-                            break;
-                        } else {
-                            SimpleUtils.fail("There are no shifts on Friday!",false);
-                            break;
-                        }
+                        String data = e.getAttribute("data-day");
+                        if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")),10))
+                            SimpleUtils.pass("On Sunday there are shifts!");
+                        else
+                            SimpleUtils.fail("There are no shifts on Sunday!",false);
+                        break;
                     }
                 }
             } else if (day.toLowerCase().contains("saturday")){
                 for (WebElement e : scheduleDays){
                     if (e.getAttribute("class").contains("6")){
-                        if (areListElementVisible(e.findElements(By.cssSelector(".week-schedule-shift-place.ng-scope")))){
-                            SimpleUtils.pass("On Saturday there are shifts!");
-                            break;
-                        } else {
-                            SimpleUtils.fail("There are no shifts on Saturday!",false);
-                            break;
-                        }
+                        String data = e.getAttribute("data-day");
+                        if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")),10))
+                            SimpleUtils.pass("On Sunday there are shifts!");
+                        else
+                            SimpleUtils.fail("There are no shifts on Sunday!",false);
+                        break;
                     }
                 }
-            }
         } else {
             SimpleUtils.fail("No schedule day loaded in schedule page!",false);
         }
@@ -7016,7 +7009,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> selectBtns;
     @FindBy(css = ".modal-content .sch-day-view-shift-outer")
     private List<WebElement> swapRequestShifts;
-    @FindBy(css = "[label=\"Accept\"]")
+    @FindBy(css = "[label=\"Accept\"] button")
     private List<WebElement> acceptButtons;
     @FindBy(css = "[label=\"I agree\"]")
     private WebElement agreeButton;
@@ -7073,7 +7066,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String title = "Confirm Shift Swap";
         String expectedMessage = "Success! Accepted successfully";
         if (areListElementVisible(acceptButtons, 5) && acceptButtons.size() > 0) {
-            click(acceptButtons.get(0));
+            clickTheElement(acceptButtons.get(0));
             SimpleUtils.assertOnFail(title + " not loaded Successfully!", isPopupWindowLoaded(title), false);
             if (isElementLoaded(agreeButton, 5)) {
                 click(agreeButton);
@@ -9516,11 +9509,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(consoleSchedulePageTabElement, 5)) {
             clickTheElement(consoleSchedulePageTabElement);
             clickTheElement(ScheduleSubMenu);
-            if (isElementLoaded(printButton, 10)) {
-                SimpleUtils.pass("Schedule New UI load successfully");
-            } else {
-                SimpleUtils.fail("Schedule New UI load failed", true);
-            }
+            if (verifyActivatedSubTab("Schedule"))
+                SimpleUtils.pass("Schedule Page: 'Schedule' tab loaded Successfully!");
+            else
+                SimpleUtils.fail("Schedule Page: 'Schedule' tab not loaded Successfully!", true);
         }
     }
 
@@ -10049,24 +10041,28 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void deleteOpenShiftWithLastDay() throws Exception {
+    public void deleteLatestOpenShift() throws Exception {
         boolean isDeleted = false;
-        if (areListElementVisible(blueIconsOfOpenShift, 5) && blueIconsOfOpenShift.size() > 0) {
-            clickTheElement(blueIconsOfOpenShift.get(blueIconsOfOpenShift.size() - 1));
-            if (isElementLoaded(deleteShift, 10)) {
-                clickTheElement(deleteShift);
-                if (isElementLoaded(deleteBtnInDeleteWindows, 10)) {
-                    click(deleteBtnInDeleteWindows);
-                    SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
-                    isDeleted = true;
-                } else
-                    SimpleUtils.fail("delete confirm button load failed", false);
-            } else
-                SimpleUtils.fail("delete item for this TM load failed", false);
-        }
-        if (!isDeleted) {
+        if (isElementLoaded(createNewShiftWeekView, 5) && areListElementVisible(blueIconsOfOpenShift,5)) {
+            for (int i = blueIconsOfOpenShift.size() - 1; i >= 0; i--) {
+                moveToElementAndClick(blueIconsOfOpenShift.get(i));
+                if (isPopOverLayoutLoaded()) {
+                    clickTheElement(deleteShift);
+                    if (isDeleteShiftShowWell()) {
+                        click(deleteBtnInDeleteWindows);
+                        if (isElementLoaded(deleteShiftImg, 5)) {
+                            isDeleted = true;
+                            SimpleUtils.pass("Schedule Week View: Existing shift: \" + Open Shift + \" deleted successfully");
+                            break;
+                        }
+                    }
+                }
+            }
+        } else
+            SimpleUtils.fail("Delete shift button not found for Week Day: '" +
+                    getActiveWeekText() + "'", true);
+        if (!isDeleted)
             SimpleUtils.fail("Failed to delete the open shift on Last Day!", false);
-        }
     }
 
     @Override
@@ -10093,8 +10089,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 click(btnAssignAnyway);
             clickOnOfferOrAssignBtn();
         } else
-            SimpleUtils.fail("Day View Schedule edit mode, add new shift button not found for Week Day: '" +
-                    getActiveWeekText() + "'", false);
+            SimpleUtils.fail("Failed to load 'Create New Shift' label, maybe it is not in edit mode", false);
     }
 
     @Override
@@ -10305,11 +10300,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     WebElement dataDay = day.findElement(By.xpath("./../.."));
                     String data = dataDay.getAttribute("data-day");
                     List<WebElement> shifts = MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift"));
-                    System.out.println(shifts.size());
                     if (shifts.size() > 0) {
-                        System.out.println(shifts.size());
                         int randomIndex = (new Random()).nextInt(shifts.size());
-                        System.out.println(randomIndex);
                         WebElement shiftImg = shifts.get(randomIndex).findElement(By.cssSelector(".rows span img"));
                         moveToElementAndClick(shiftImg);
                         if (isPopOverLayoutLoaded()) {
