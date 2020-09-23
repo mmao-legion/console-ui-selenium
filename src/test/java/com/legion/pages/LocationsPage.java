@@ -1,5 +1,6 @@
 package com.legion.pages;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface LocationsPage {
@@ -42,7 +43,7 @@ public interface LocationsPage {
 
     public boolean verifyUpdateLocationResult(String locationName) throws Exception;
 
-    public HashMap<String,String> getLocationInfo(String locationName);
+    public ArrayList<HashMap<String, String>> getLocationInfo(String locationName);
 
     public void addChildLocation(String childlocationName, String locationName, String searchCharactor, int index, String childRelationship) throws Exception;
 

@@ -119,11 +119,11 @@ public class LocationsTest extends TestBase {
 //            SimpleUtils.pass("Create new location successfully");
 //        }else
 //            SimpleUtils.fail("Create new location failed or can't search created location",true);
-        HashMap<String, String> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+        ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict(locationInfoDetails.get("locationDistrict"));
-        locationSelectorPage.changeLocation(locationInfoDetails.get("locationName"));
+        locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
+        locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
 
     }
 
@@ -158,11 +158,11 @@ public class LocationsTest extends TestBase {
 //            SimpleUtils.pass("Create new mock location successfully");
 //        }else
 //            SimpleUtils.fail("Create new location failed or can't search created location",true);
-        HashMap<String, String> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+        ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict(locationInfoDetails.get("locationDistrict"));
-        locationSelectorPage.changeLocation(locationInfoDetails.get("locationName"));
+        locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
+        locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
     }
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
@@ -194,11 +194,11 @@ public class LocationsTest extends TestBase {
 //            SimpleUtils.pass("Create new mock location successfully");
 //        }else
 //            SimpleUtils.fail("Create new location failed or can't search created location",true);
-        HashMap<String, String> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+        ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict(locationInfoDetails.get("locationDistrict"));
-        locationSelectorPage.changeLocation(locationInfoDetails.get("locationName"));
+        locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
+        locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
     }
 
     @Automated(automated = "Automated")
@@ -292,6 +292,7 @@ public class LocationsTest extends TestBase {
         String currentTime =  dfs.format(new Date());
         String locationName = "LGMSAuto" +currentTime;
         int index =0;
+        int childLocationNum = 1;
         String searchCharactor = "No touch";
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -312,16 +313,14 @@ public class LocationsTest extends TestBase {
         String  childRelationship = "Part of a location group";
         locationsPage.addChildLocation(childLocationName,locationName,searchCharactor,index,childRelationship);
         //get location's  info
-        HashMap<String, String> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+        ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
         //check location group navigation
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict(locationInfoDetails.get("locationDistrict"));
-//        if (!locationSelectorPage.searchLocationIsExist(childLocationName)) {
-//            SimpleUtils.pass("Right behavior:MS child location should not show in location navigation bar");
-//        }else
-//            SimpleUtils.fail("Error behavior:MS child location show in location navigation bar",true);
-        locationSelectorPage.changeLocation(locationInfoDetails.get("locationName"));
+        locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
+        for (int i = 0; i <childLocationNum ; i++) {
+            locationSelectorPage.changeLocation(locationInfoDetails.get(i).get("locationName"));
+        }
 
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();
@@ -342,7 +341,7 @@ public class LocationsTest extends TestBase {
         String currentTime =  dfs.format(new Date());
         String locationName = "LGPTPAuto" +currentTime;
         int index =0;
-        int childLocationNum = 1;
+        int childLocationNum = 2;
         String searchCharactor = "No touch";
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -361,7 +360,7 @@ public class LocationsTest extends TestBase {
         locationsPage.addParentLocation(locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.PTP.getValue());
         try {
             for (int i = 0; i <childLocationNum ; i++) {
-                String childLocationName = "childLocationForMS" +currentTime;
+                String childLocationName = "childLocationForMS" + i +currentTime;
                 String  childRelationship = "Part of a location group";
                 locationsPage.addChildLocation(childLocationName,locationName,searchCharactor,index,childRelationship);
             }
@@ -371,26 +370,18 @@ public class LocationsTest extends TestBase {
 
 
         //get location's  info
-        HashMap<String, String> locationInfoDetails =locationsPage.getLocationInfo(locationName);
-        if (locationsPage.verifyLGIconShowWellOrNot(locationName,childLocationNum)) {
-
-        }
+        ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+//        if (locationsPage.verifyLGIconShowWellOrNot(locationName,childLocationNum)) {
+//
+//        }
         //check location group navigation
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict(locationInfoDetails.get("locationDistrict"));
-//        if (!locationSelectorPage.searchLocationIsExist(childLocationName)) {
-//            SimpleUtils.pass("Right behavior:MS child location should not show in location navigation bar");
-//        }else
-//            SimpleUtils.fail("Error behavior:MS child location show in location navigation bar",true);
-        locationSelectorPage.changeLocation(locationInfoDetails.get("locationName"));
+        locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        if (teamPage.verifyThereIsLocationColumnForMSLocationGroup()) {
-            SimpleUtils.pass("Location column in Team Tab is showing for MS location group");
-        }else
-            SimpleUtils.fail("There is no location column in Team Tab for MS location group",true);
+        for (int i = 0; i <childLocationNum+1 ; i++) {
+            locationSelectorPage.changeLocation(locationInfoDetails.get(i).get("locationName"));
+        }
 
     }
 

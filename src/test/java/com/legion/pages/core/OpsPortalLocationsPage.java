@@ -728,26 +728,32 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public HashMap<String,String> getLocationInfo(String locationName) {
-		HashMap<String,String> locationInfoDetails =  new HashMap<>();
+	public ArrayList<HashMap<String, String>> getLocationInfo(String locationName) {
+		ArrayList<HashMap<String,String>> locationinfo = new ArrayList<>();
 
-		if (isElementEnabled(searchInput,10)) {
+
+		if (isElementEnabled(searchInput, 10)) {
 			searchInput.sendKeys(locationName);
 			searchInput.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
 			if (locationRows.size() > 0) {
-//				locationInfoDetails.put("locationGroupIcon",locationRows.get(0).findElement(By.cssSelector("td:nth-child(1) >div")).getAttribute("ng-src").toString());
-				locationInfoDetails.put("locationName",locationRows.get(0).findElement(By.cssSelector("button[type='button']")).getText());
-				locationInfoDetails.put("locationStatus",locationRows.get(0).findElement(By.cssSelector("td:nth-child(4) > lg-eg-status ")).getAttribute("type"));
-				locationInfoDetails.put("locationEffectiveDate",locationRows.get(0).findElement(By.cssSelector("td:nth-child(5)")).getText());
-				locationInfoDetails.put("locationCity",locationRows.get(0).findElement(By.cssSelector("td:nth-child(6) ")).getText());
-				locationInfoDetails.put("locationDistrict",locationRows.get(0).findElement(By.cssSelector("td:nth-child(7) ")).getText());
 
-				return locationInfoDetails;
+				for (WebElement row : locationRows) {
+					HashMap<String, String> locationInfoInEachRow = new HashMap<>();
+					locationInfoInEachRow.put("locationName", row.findElement(By.cssSelector("button[type='button']")).getText());
+					locationInfoInEachRow.put("locationStatus", row.findElement(By.cssSelector("td:nth-child(4) > lg-eg-status ")).getAttribute("type"));
+					locationInfoInEachRow.put("locationEffectiveDate", row.findElement(By.cssSelector("td:nth-child(5)")).getText());
+					locationInfoInEachRow.put("locationCity", row.findElement(By.cssSelector("td:nth-child(6) ")).getText());
+					locationInfoInEachRow.put("locationDistrict", row.findElement(By.cssSelector("td:nth-child(7) ")).getText());
+					locationinfo.add(locationInfoInEachRow);
+				}
+
+
+				return locationinfo;
 			}else
-				SimpleUtils.fail(locationName+"can't been searched",true);
+				SimpleUtils.fail(locationName + "can't been searched", true);
+			}
 
-		}
 		return null;
 	}
 
@@ -829,9 +835,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public boolean verifyLGIconShowWellOrNot(String locationName, int childLocationNum) {
+		HashMap<String,Object> locationGroupIcons =  new HashMap<>();
 		if (locationRows.size()>0 && locationRows.size()==childLocationNum+1) {
+			for (int i = 0; i <locationRows.size() ; i++) {
+				locationGroupIcons.put("locationGroupIcon",locationRows.get(i).findElement(By.cssSelector("td:nth-child(1) >div")).getAttribute("src"));
+			}
+			return true;
 
-			String parentLGIcon = locationRows.get(0).findElement(By.cssSelector("td:nth-child(1) >div")).getAttribute("ng-src").toString();
 		}
 		return false;
 	}
