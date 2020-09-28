@@ -660,7 +660,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public HashMap<String, Integer> getScheduleBufferHours() throws Exception {
 		HashMap<String, Integer> bufferHours = new HashMap<String, Integer>();
-		Thread.sleep(2000);
+		Thread.sleep(5000);
 		if (controlsAdvanceButtons.size() > 0) {
 			click(controlsAdvanceButtons.get(0));
 			bufferHours.put("openingBufferHours", Integer.valueOf(
@@ -4961,7 +4961,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	public void turnGFEToggleOnOrOff(boolean isTurnOn) throws Exception {
 		String gfe = "Manager can send Good Faith Estimate.";
 		// Wait for the default settings loaded
-		waitForSeconds(5);
+		waitForSeconds(8);
 		if (areListElementVisible(predictableScheduleSectionToggles,10) && predictableScheduleSectionToggles.size() > 0){
 			if (isTurnOn){
 				for (WebElement predictableSection : predictableScheduleSectionToggles) {
@@ -5013,7 +5013,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void turnVSLToggleOnOrOff(boolean isTurnOn) throws Exception {
-		if (areListElementVisible(predictableScheduleSectionToggles,5) && predictableScheduleSectionToggles.size()>1){
+		// Wait for the default settings loaded
+		waitForSeconds(8);
+		if (areListElementVisible(predictableScheduleSectionToggles,15) && predictableScheduleSectionToggles.size()>1){
 			if (isTurnOn){
 				if (predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("input")).getAttribute("class").contains("ng-empty")){
 					click(predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("span")));
@@ -5134,7 +5136,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public String selectAnyActiveTM() throws Exception {
 		String activeUser = "";
-		if (areListElementVisible(usersAndRolesAllUsersRows, 10)) {
+		if (areListElementVisible(usersAndRolesAllUsersRows, 20)) {
 			for (WebElement user : usersAndRolesAllUsersRows) {
 				WebElement name = user.findElement(By.cssSelector("lg-button button span span"));
 				WebElement status = user.findElement(By.tagName("lg-eg-status"));

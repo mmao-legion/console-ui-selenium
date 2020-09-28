@@ -979,7 +979,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
         WebElement scheduleWeekViewButton = MyThreadLocal.getDriver().
                 findElement(By.cssSelector("div.lg-button-group-last"));
-        if (isElementLoaded(scheduleWeekViewButton,5)) {
+        if (isElementLoaded(scheduleWeekViewButton,15)) {
             if (!scheduleWeekViewButton.getAttribute("class").toString().contains("selected"))//selected
             {
                 click(scheduleWeekViewButton);
@@ -2024,13 +2024,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void unCheckFilters() throws Exception {
         if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
             click(filterButton);
-        waitForSeconds(2);
-        for (WebElement filterElement : filters) {
-            if (isElementLoaded(filterElement, 5)) {
+        if (areListElementVisible(filters, 10)) {
+            for (WebElement filterElement : filters) {
+                waitForSeconds(2);
                 WebElement filterCheckBox = filterElement.findElement(By.cssSelector("input[type=\"checkbox\"]"));
                 String elementClasses = filterCheckBox.getAttribute("class").toLowerCase();
                 if (elementClasses.contains("ng-not-empty"))
-                    click(filterElement);
+                    clickTheElement(filterCheckBox);
             }
         }
     }
@@ -3686,6 +3686,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 checkEnterBudgetWindowLoadedForNonDG();
                 selectWhichWeekToCopyFrom("SUGGESTED");
                 clickOnFinishButtonOnCreateSchedulePage();
+                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+                    checkoutSchedule();
+                }
             }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
                 if (isElementEnabled(checkOutTheScheduleButton, 20)) {
@@ -5393,6 +5396,31 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement timeDuration;
     @FindBy(className = "sch-calendar-day-label")
     private List<WebElement> weekDayLabels;
+    @FindBy(className = "week-schedule-shift")
+    private List<WebElement> weekShifts;
+
+    @Override
+    public List<String> getTheShiftInfoByIndex(int index) throws Exception {
+        List<String> shiftInfo = new ArrayList<>();
+        if (areListElementVisible(weekShifts, 10) && index < weekShifts.size()) {
+            String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
+            String name = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText();
+            WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
+            clickTheElement(infoIcon);
+            if (isElementLoaded(shiftDuration, 10)) {
+                String shiftTime = shiftDuration.getText();
+                shiftInfo.add(name);
+                shiftInfo.add(dayIndex);
+                shiftInfo.add(shiftTime);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
+        }
+        if (shiftInfo.size() != 3) {
+            SimpleUtils.fail("Failed to get the user name, day index and shift time!", false);
+        }
+        return shiftInfo;
+    }
 
     @Override
     public void unGenerateActiveScheduleFromCurrentWeekOnward(int loopCount) throws Exception {
@@ -5416,6 +5444,23 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }else {
             SimpleUtils.fail("Current Weeks' elements not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void selectWorkingDaysOnNewShiftPageByIndex(int index) throws Exception {
+        clearAllSelectedDays();
+        if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+            if (index < weekDays.size()) {
+                if (!weekDays.get(index).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
+                    click(weekDays.get(index));
+                    SimpleUtils.report("Select day: " + weekDays.get(index).getText() + " Successfully!");
+                }
+            }else {
+                SimpleUtils.fail("There is index that out of range: " + index + ", the max value is 6!", false);
+            }
+        }else{
+            SimpleUtils.fail("Weeks Days failed to load!", true);
         }
     }
 
@@ -5492,10 +5537,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     SimpleUtils.pass("Get the index of " + swapData2[2] + ", the index is: " + i);
                 }
             }
-            WebElement weekScheduleCol1 = getDriver().findElement(By.className("week-schedule-day-col-" + swapRequestIndex1));
-            WebElement weekScheduleCol2 = getDriver().findElement(By.className("week-schedule-day-col-" + swapRequestIndex2));
-            List<WebElement> workerNames1 = weekScheduleCol1.findElements(By.className("week-schedule-worker-name"));
-            List<WebElement> workerNames2 = weekScheduleCol2.findElements(By.className("week-schedule-worker-name"));
+
+            List<WebElement> workerNames1 = getDriver().findElements(By.cssSelector("[data-day-index=\"" + swapRequestIndex1 + "\"] .week-schedule-shift-wrapper .week-schedule-worker-name"));
+            List<WebElement> workerNames2 = getDriver().findElements(By.cssSelector("[data-day-index=\"" + swapRequestIndex2 + "\"] .week-schedule-shift-wrapper .week-schedule-worker-name"));
             for (WebElement workerName1 : workerNames1) {
                 if (workerName1.getText().equals(swapData1[0])) {
                     SimpleUtils.fail("Swap failed, still can find the swap Name: " + swapData1[0] + " at: " + swapData1[2], false);
@@ -5677,6 +5721,32 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }else{
             SimpleUtils.fail("Weeks Days failed to load!", true);
+        }
+    }
+
+    @Override
+    public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception {
+        String scheduled = "Scheduled";
+        boolean isWarningShown = false;
+        if (isElementLoaded(textSearch, 15) && isElementLoaded(searchIcon, 15)) {
+            textSearch.sendKeys(userName);
+            click(searchIcon);
+            if (areListElementVisible(searchResults, 15)) {
+                for (WebElement searchResult : searchResults) {
+                    WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-display-name"));
+                    WebElement status = searchResult.findElement(By.className("worker-edit-availability-status"));
+                    if (workerName != null && optionCircle != null && workerName.getText().toLowerCase().trim().equals(userName.trim().toLowerCase())) {
+                        if (status.getText().contains(scheduled) && status.getText().contains(shiftTime)) {
+                            SimpleUtils.pass("Assign TM Warning: " + status.getText() + " shows correctly!");
+                            isWarningShown = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if (!isWarningShown) {
+            SimpleUtils.fail("Assign TM Warning: Expected warning \"" + scheduled + " " + shiftTime + "\" not show!", false);
         }
     }
 
@@ -7496,7 +7566,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement cancelClaimBtn;
     @FindBy(css = "img[src*='shift-info']")
     private List<WebElement> infoIcons;
-    @FindBy(css = ".sch-shift-hover div:nth-child(3)>div")
+    @FindBy(css = ".sch-shift-hover div:nth-child(3)>div.ng-binding")
     private WebElement shiftDuration;
     @FindBy(className = "shift-info")
     private WebElement shiftDetail;
@@ -7817,12 +7887,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String selectedFilter = null;
         if (areListElementVisible(filters, 10)) {
             unCheckFilters();
-            WebElement filterCheckBox = filters.get(0).findElement(By.cssSelector("input[type=\"checkbox\"]"));
-            waitForSeconds(3);
-            clickTheElement(filterCheckBox);
-            waitForSeconds(3);
-            selectedFilter = filters.get(0).findElement(By.className("input-label")) == null ? "" : filters.get(0).findElement(By.className("input-label")).getText();
+            waitForSeconds(2);
+            WebElement filterCheckBox = filters.get(1).findElement(By.cssSelector("input[type=\"checkbox\"]"));
             String elementClass = filterCheckBox.getAttribute("class").toLowerCase();
+            if (elementClass.contains("ng-empty")) {
+                clickTheElement(filterCheckBox);
+                waitForSeconds(2);
+                elementClass = filterCheckBox.getAttribute("class").toLowerCase();
+            }
+            selectedFilter = filters.get(1).findElement(By.className("input-label")) == null ? "" : filters.get(1).findElement(By.className("input-label")).getText();
             if (elementClass.contains("ng-not-empty")) {
                 SimpleUtils.pass("Check the filter: " + selectedFilter + " Successfully!");
             }else {
@@ -8291,7 +8364,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
             else
             {
-                click(editScheduleButton);
+                clickTheElement(editScheduleButton);
                 // Validate Save and cancel buttons are enabled!
                 if(checkSaveButton() && checkCancelButton()) {
                     SimpleUtils.pass("Save and Cancel buttons are enabled ");

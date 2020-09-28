@@ -449,4 +449,7 @@ public interface SchedulePage {
 	public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception;
 	public void selectAShiftToAssignTM(String username) throws Exception;
 	public void verifyInactiveMessageNWarning(String username, String date) throws Exception;
+	public List<String> getTheShiftInfoByIndex(int index) throws Exception;
+	public void selectWorkingDaysOnNewShiftPageByIndex(int index) throws Exception;
+	public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception;
 }

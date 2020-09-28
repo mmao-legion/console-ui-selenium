@@ -2887,4 +2887,19 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void verifyInactiveMessageNWarning(String username, String date) throws Exception {
 
     }
+
+    @Override
+    public List<String> getTheShiftInfoByIndex(int index) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void selectWorkingDaysOnNewShiftPageByIndex(int index) throws Exception {
+
+    }
+
+    @Override
+    public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception {
+
+    }
 }

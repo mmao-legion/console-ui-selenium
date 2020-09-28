@@ -1019,7 +1019,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             } else {
                 SimpleUtils.fail("Open Shifts: The second point failed to switch to the current week", true);
             }
-            click(openShiftsCarouselIndicators.get(2));
+            clickTheElement(openShiftsCarouselIndicators.get(2));
             if (openShiftsWeek.getText().toUpperCase().contains(nextWeek)) {
                 SimpleUtils.pass("Open Shifts: The third point switches to the next week successfully");
             } else {

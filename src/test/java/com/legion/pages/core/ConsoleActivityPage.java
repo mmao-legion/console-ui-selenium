@@ -391,6 +391,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 					isFound = true;
 					//check the detail
 					if (timeOffAction.equals("requested")) {
+						waitForSeconds(3);
 						WebElement detail = activityCard.findElement(By.cssSelector("div[ng-if=\"canShowDetails()\"]"));
 						if (isElementLoaded(detail, 10)) {
 							click(detail);
@@ -487,6 +488,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
                     actualMessage = activityCards.get(0).findElement(By.className("notification-content-message")).getText();
                     if (actualMessage != null && actualMessage.equals(expectedMessage)) {
                         SimpleUtils.pass("Find Card: " + actualMessage + " Successfully!");
+                        waitForSeconds(3);
                         WebElement detail = activityCards.get(0).findElement(By.cssSelector("div[ng-if=\"canShowDetails()\"]"));
                         if (isElementLoaded(detail,10)){
                             click(detail);
@@ -598,7 +600,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 
     @Override
     public void verifyTheContentOfShiftSwapActivity() throws Exception {
-        if (isElementLoaded(filterTitle,10) && isElementLoaded(notificationsContainer, 10)) {
+    	waitForSeconds(3);
+        if (isElementLoaded(filterTitle,10) && (isElementLoaded(notificationsContainer, 10) || isElementLoaded(notificationsContainerEmpty, 10))) {
             if (filterTitle.getText().contains("Shift Swap")) {
                 if (notificationsContainer.getText().contains("requested to swap shifts") || notificationsContainer.getText().contains("agreed to cover")) {
                     SimpleUtils.pass("The content of shift swap activity displays successfully");
