@@ -3538,8 +3538,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     }
                 }
             }
-        } else {
-            SimpleUtils.fail("Create Schedule Non dg: Available Copy weeks not loaded Successfully!", false);
         }
     }
 
@@ -3575,8 +3573,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }else {
                 SimpleUtils.fail("Not able to generate the schedule successfully for non dg flow!", false);
             }
-        }else {
-            SimpleUtils.fail("'FINISH' button not loaded Successfully!", false);
         }
     }
 
@@ -3686,6 +3682,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 checkEnterBudgetWindowLoadedForNonDG();
                 selectWhichWeekToCopyFrom("SUGGESTED");
                 clickOnFinishButtonOnCreateSchedulePage();
+                waitForSeconds(10);
                 if (isElementEnabled(checkOutTheScheduleButton, 20)) {
                     checkoutSchedule();
                 }
@@ -7710,7 +7707,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public void verifyThePopupMessageOnTop(String expectedMessage) throws Exception {
-        if (isElementLoaded(msgOnTop, 10)) {
+        if (isElementLoaded(msgOnTop, 20)) {
             String message = msgOnTop.getText();
             if (message.contains(expectedMessage)) {
                 SimpleUtils.pass("Verified Message shows correctly!");
@@ -9256,8 +9253,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 unCheckFilters(jobTitleFilters);
                 String jobTitle = jobTitleFilter.getText();
                 SimpleUtils.report("Data for job title: '" + jobTitle + "' as bellow");
-                click(jobTitleFilter);
-                click(filterButton);
+                clickTheElement(jobTitleFilter);
+                clickTheElement(filterButton);
                 String cardHoursAndWagesText = "";
                 HashMap<String, Float> hoursAndWagesCardData = getScheduleLabelHoursAndWages();
                 for (Entry<String, Float> hoursAndWages : hoursAndWagesCardData.entrySet()) {
@@ -9516,7 +9513,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception {
-        clickOnWeekView();
         if (areListElementVisible(weekScheduleShiftsOfWeekView, 10) && weekScheduleShiftsOfWeekView.size() != 0) {
             for (int i = 0; i < weekScheduleShiftsOfWeekView.size(); i++) {
                 if (weekScheduleShiftsOfWeekView.get(i).findElement(By.cssSelector(".week-schedule-worker-name")).getText().contains(teamMemberName)) {
@@ -9944,7 +9940,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void validateTheAvailabilityOfInfoIcon() throws Exception {
         if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20)) {
             if (hoverIcons.size() != 0) {
-                if (getDriver().findElements(By.xpath("//*[@class=\"right-shift-box\"]//*[@popover-placement=\"top\"]")).size() == hoverIcons.size())
+                if (getDriver().findElements(By.xpath("//*[@class=\"right-shift-box\"]/div/div[1]")).size() == hoverIcons.size())
                     SimpleUtils.pass("My Schedule Page: Info icon is present at the right side of a shift successfully");
                 else
                     SimpleUtils.fail("My Schedule Page: Info icon isn't present at the right side of a shift", true);

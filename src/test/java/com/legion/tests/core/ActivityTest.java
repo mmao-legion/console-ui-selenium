@@ -760,7 +760,7 @@ public class ActivityTest extends TestBase {
         activityPage.verifyClickOnActivityCloseButton();
 
         //make update schedule activity to add one open shift
-        schedulePage.clickOnDayView();
+        //schedulePage.clickOnDayView();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteTMShiftInWeekView("Unassigned");
         // This method is used for the old UI

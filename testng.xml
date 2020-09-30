@@ -133,6 +133,7 @@
                     <include name="verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager" />
                     <include name="verifyAssignTMWarningWhenTMIsInactiveAsStoreManager" />
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
+                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

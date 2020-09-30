@@ -118,7 +118,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	@Override
 	public void verifyClickOnActivityIcon() throws Exception {
 		if (isElementLoaded(activityBell, 10)) {
-			click(activityBell);
+			clickTheElement(activityBell);
 			if (areListElementVisible(activityFilters, 10)) {
 				SimpleUtils.pass("Click on Activity Bell icon Successfully!");
 			}else {
@@ -254,7 +254,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	}
 	@Override
 	public void verifyClickOnActivityCloseButton() throws Exception {
-		waitForSeconds(2);
+		waitForSeconds(10);
 		if (isElementLoaded(closeActivityFeedBtn, 15)) {
 			click(closeActivityFeedBtn);
 			SimpleUtils.pass("Click on Activity Close Button Successfully!");
@@ -572,9 +572,9 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
     //Added By Julie
     @FindBy (className = "notification-bell-popup-header-container")
     public WebElement notificationBellPopupHeader;
-    @FindBy (className = ".notification-bell-popup-notifications-container.empty")
+    @FindBy (css = ".notification-bell-popup-notifications-container.empty")
     public WebElement notificationsContainerEmpty;
-	@FindBy (className = ".notification-bell-popup-notifications-container")
+	@FindBy (css = ".notification-bell-popup-notifications-container")
 	public WebElement notificationsContainer;
 
     @Override
