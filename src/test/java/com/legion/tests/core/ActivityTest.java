@@ -1125,7 +1125,7 @@ public class ActivityTest extends TestBase {
         activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
         activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
         activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Reject.getValue());
-        activityPage.closeActivityWindow();
+        //activityPage.closeActivityWindow();
         loginPage.logOut();
 
         // Login as Team Member to create time off
@@ -1152,7 +1152,7 @@ public class ActivityTest extends TestBase {
         activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
         activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
         activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Approve.getValue());
-        activityPage.closeActivityWindow();
+        //activityPage.closeActivityWindow();
         loginPage.logOut();
 
         // Login as Team Member to cancel all time off
@@ -1330,6 +1330,7 @@ public class ActivityTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         // Set availability policy
+        Thread.sleep(5000);
         ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
         controlsPage.gotoControlsPage();
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
@@ -1393,6 +1394,12 @@ public class ActivityTest extends TestBase {
         controlsPage.gotoControlsPage();
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+        dashboardPage.navigateToDashboard();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
         controlsNewUIPage.clickOnControlsSchedulingPolicies();
         SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
         controlsNewUIPage.clickOnGlobalLocationButton();
@@ -1454,8 +1461,15 @@ public class ActivityTest extends TestBase {
         controlsPage.gotoControlsPage();
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+        dashboardPage.navigateToDashboard();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
         controlsNewUIPage.clickOnControlsSchedulingPolicies();
         SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+
         controlsNewUIPage.clickOnGlobalLocationButton();
         String isApprovalRequired = "Required for all changes";
         controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);

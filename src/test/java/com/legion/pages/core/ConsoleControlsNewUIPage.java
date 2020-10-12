@@ -660,7 +660,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public HashMap<String, Integer> getScheduleBufferHours() throws Exception {
 		HashMap<String, Integer> bufferHours = new HashMap<String, Integer>();
-		Thread.sleep(5000);
+		waitForSeconds(8);
 		if (controlsAdvanceButtons.size() > 0) {
 			click(controlsAdvanceButtons.get(0));
 			bufferHours.put("openingBufferHours", Integer.valueOf(

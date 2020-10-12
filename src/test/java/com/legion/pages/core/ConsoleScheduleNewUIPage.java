@@ -188,6 +188,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "[ng-click=\"regenerateFromOverview()\"]")
     private WebElement generateSheduleButton;
 
+    @FindBy(css = "[ng-click=\"regenerateFromManagerView()\"]")
+    private WebElement reGenerateScheduleButton;
+
     @FindBy(css = "[label='Generate Schedule']")
     private WebElement generateSheduleForEnterBudgetBtn;
 
@@ -1196,11 +1199,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public Boolean isWeekGenerated() throws Exception {
-        if (isElementEnabled(generateSheduleButton, 3)) {
+        if (isElementEnabled(generateSheduleButton, 5)) {
                 return false;
-        }else if(isElementEnabled(generateScheduleBtn, 3)){
+        }else if(isElementEnabled(generateScheduleBtn, 5)){
             return false;
         }else if(isElementLoaded(publishSheduleButton, 5)) {
+            return true;
+        }else if(isElementLoaded(reGenerateScheduleButton, 5)) {
             return true;
         }
         if(areListElementVisible(shiftsWeekView,3)){
@@ -1392,6 +1397,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public Boolean isGenerateButtonLoadedForManagerView() throws Exception {
         if (isElementLoaded(generateScheduleBtn,2)) {
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean isReGenerateButtonLoadedForManagerView() throws Exception {
+        if (isElementLoaded(reGenerateScheduleButton, 10)) {
             return true;
         }
         return false;
@@ -3797,18 +3809,24 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if(isElementEnabled(activScheduleType,5)){
             if(activScheduleType.getText().equalsIgnoreCase("Suggested")){
                 click(scheduleTypeManager);
-                if(isGenerateButtonLoadedForManagerView()){
-                    click(generateScheduleBtn);
+                if(isReGenerateButtonLoadedForManagerView()){
+                    click(reGenerateScheduleButton);
                     generateScheduleFromCreateNewScheduleWindow(activeWeekText);
+                    if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+                        checkoutSchedule();
+                    }
                 } else if (isElementLoaded(publishSheduleButton, 5)) {
                     SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
                 } else{
                     SimpleUtils.fail("Generate button or Publish Button not found on page",false);
                 }
             }else{
-                if(isGenerateButtonLoadedForManagerView()){
-                    click(generateScheduleBtn);
+                if(isReGenerateButtonLoadedForManagerView()){
+                    click(reGenerateScheduleButton);
                     generateScheduleFromCreateNewScheduleWindow(activeWeekText);
+                    if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+                        checkoutSchedule();
+                    }
                 } else if (isElementLoaded(publishSheduleButton, 5)) {
                     SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
                 } else{
@@ -4997,7 +5015,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }*/
-        if (isElementLoaded(msgOnTop, 15) && msgOnTop.getText().contains("Success")) {
+        if (isElementLoaded(msgOnTop, 30) && msgOnTop.getText().contains("Success")) {
             SimpleUtils.pass("Save the Schedule Successfully!");
         } else {
             SimpleUtils.fail("Save Schedule Failed!", false);
@@ -7466,7 +7484,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public int verifyClickOnAnyShift() throws Exception {
         List<String> expectedRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
         int index = 100;
-        if (areListElementVisible(tmIcons, 5)) {
+        if (areListElementVisible(tmIcons, 15)) {
             for (int i = 0; i < tmIcons.size(); i++) {
                 scrollToElement(tmIcons.get(i));
                 waitForSeconds(1);

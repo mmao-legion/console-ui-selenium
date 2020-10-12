@@ -28,6 +28,7 @@ public class TeamTest extends TestBase{
 	private static Map<String, String> newTMDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember.json");
 	private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
 	private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
+	private static HashMap<String, String> propertyLocationTimeZone = JsonUtil.getPropertiesFromJsonFile("src/test/resources/LocationTimeZone.json");
 
 	@Override
 	  @BeforeMethod()
@@ -263,7 +264,7 @@ public class TeamTest extends TestBase{
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		// Get the current month, year and date
-		String currentMonthYearDate = getTimeZoneFromControlsAndGetDate();
+		String currentMonthYearDate = getTimeZoneFromControlsAndGetDate(location);
 		// Set time off policy
 		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
 		controlsPage.gotoControlsPage();
@@ -436,21 +437,13 @@ public class TeamTest extends TestBase{
 		teamPage.rejectAllTheTimeOffRequests();
 	}
 
-	public String getTimeZoneFromControlsAndGetDate() throws Exception {
+	public String getTimeZoneFromControlsAndGetDate(String location) throws Exception {
 		String timeZone = "";
 		String currentDate = "";
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		if (controlsNewUIPage.isControlsPageLoaded()){
-			controlsNewUIPage.clickOnControlsLocationProfileSection();
-			if (controlsNewUIPage.isControlsLocationProfileLoaded()){
-				timeZone = controlsNewUIPage.getTimeZoneFromLocationDetailsPage();
-				if (timeZone != null && !timeZone.isEmpty()){
-					SimpleDateFormat format = new SimpleDateFormat("MMMM yyyy dd");
-					currentDate = SimpleUtils.getCurrentDateMonthYearWithTimeZone(timeZone, format);
-				}
-			}
+		timeZone = propertyLocationTimeZone.get(location);
+		if (timeZone != null && !timeZone.isEmpty()){
+			SimpleDateFormat format = new SimpleDateFormat("MMMM yyyy dd");
+			currentDate = SimpleUtils.getCurrentDateMonthYearWithTimeZone(timeZone, format);
 		}
 		return currentDate;
 	}

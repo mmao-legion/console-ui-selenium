@@ -248,11 +248,11 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		public void coverage() {
 			// TODO Auto-generated method stub
 			try {
-				if(isElementLoaded(goToCoverageTab))
+				if(isElementLoaded(goToCoverageTab, 10))
 				{
+					clickTheElement(goToCoverageTab);
 					SimpleUtils.pass("Coverage tab present on Team Page");
-					goToCoverageTab.click();
-					if(isElementLoaded(coverageLoading)){
+					if(isElementLoaded(coverageLoading, 20)){
 						SimpleUtils.pass("Coverage Loaded Successfully for current week "+ currentWeek.getText());
 					}else{
 						SimpleUtils.fail("Coverage not-loaded for "+ currentWeek.getText(),false);
@@ -264,6 +264,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				SimpleUtils.fail("Click on Coverage tab failed!", false);
 			}
 		}
   		
@@ -432,7 +433,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			if(isElementLoaded(toDoBtnToClose, 5)) {
 				waitForSeconds(3);
 				moveToElementAndClick(toDoBtnToClose);
-				waitForSeconds(1);
+				waitForSeconds(3);
 				if(!isToDoWindowOpened())
 					SimpleUtils.pass("Team Page: 'ToDo' popup window closed successfully.");
 				else
