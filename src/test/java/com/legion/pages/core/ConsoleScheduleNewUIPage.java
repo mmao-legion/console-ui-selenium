@@ -6886,7 +6886,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (areListElementVisible(weatherTemperatures, 8)) {
                         String weatherWeekTest = getWeatherDayOfWeek();
                         SimpleUtils.report("Weather smart card is displayed for a week from mon to sun" + weatherWeekTest);
-                        for (ConsoleScheduleNewUIPage_copy.DayOfWeek e : ConsoleScheduleNewUIPage_copy.DayOfWeek.values()) {
+                        for (ConsoleScheduleNewUIPage.DayOfWeek e : ConsoleScheduleNewUIPage.DayOfWeek.values()) {
                             if (weatherWeekTest.contains(e.toString())) {
                                 SimpleUtils.pass("Weather smartcard include one week weather");
                             } else {
