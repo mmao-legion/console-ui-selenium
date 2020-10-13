@@ -22,7 +22,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         PageFactory.initElements(getDriver(), this);
     }
 
-    @FindBy(css = ".widgetButton")
+    @FindBy(css = "[label=\"Edit\"]")
     private WebElement editBtn;
 
     @FindBy (css = ".edit-dashboard-text")
@@ -90,10 +90,10 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             if (isElementLoaded(editDasboardText,5)){
                 SimpleUtils.pass("Edit mode load successfully!");
             } else {
-                SimpleUtils.fail("Edit mode fail to load!", true);
+                SimpleUtils.fail("Edit mode fail to load!", false);
             }
         } else{
-            SimpleUtils.fail("Edit button fail to load!", true);
+            SimpleUtils.fail("Edit button fail to load!", false);
         }
     }
 

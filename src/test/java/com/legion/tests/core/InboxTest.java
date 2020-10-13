@@ -414,7 +414,7 @@ public class InboxTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Verify the content of week summary when selecting different tm")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin(String browser, String username, String password, String location) throws Exception{

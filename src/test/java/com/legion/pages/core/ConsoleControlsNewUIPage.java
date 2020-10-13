@@ -1600,6 +1600,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void updateCanWorkerRequestTimeOff(String canWorkerRequestTimeOffValue) throws Exception {
 		scrollToBottom();
+		// Wait for data loaded
+		waitForSeconds(15);
 		if (isElementLoaded(canWorkerRequestTimeOffBtnGroup)) {
 			WebElement canWorkerRequestTimeOffBtnGroupDiv = canWorkerRequestTimeOffBtnGroup.findElement(
 					By.cssSelector("div.lg-button-group"));
@@ -4875,7 +4877,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public HashMap<String, Integer> getOvertimePayDataFromControls() {
-		waitForSeconds(15); // to wait data load completed
+		waitForSeconds(20); // to wait data load completed
 		HashMap<String, Integer> overtimePayData = new HashMap<String, Integer>();
 		String[] overtimeWeeklyData = overtimeWeeklyText.getText().split(" ");
 		String[] overtimeDailyData = overtimeDailyText.getText().split(" ");
@@ -4936,7 +4938,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void updateAvailabilityManagementIsApprovalRequired(String option) throws Exception {
 		// Wait for the values loaded
-		waitForSeconds(5);
+		waitForSeconds(15);
 		WebElement confSelect = isApprovalRequiredToChangeAvailability.findElement(By.cssSelector("select"));
 		if(isElementLoaded(confSelect)) {
 			//WebElement input = isApprovalRequiredToChangeAvailability.findElement(By.xpath("//input-field"));
@@ -4961,7 +4963,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	public void turnGFEToggleOnOrOff(boolean isTurnOn) throws Exception {
 		String gfe = "Manager can send Good Faith Estimate.";
 		// Wait for the default settings loaded
-		waitForSeconds(8);
+		waitForSeconds(15);
 		if (areListElementVisible(predictableScheduleSectionToggles,10) && predictableScheduleSectionToggles.size() > 0){
 			if (isTurnOn){
 				for (WebElement predictableSection : predictableScheduleSectionToggles) {
@@ -5014,7 +5016,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void turnVSLToggleOnOrOff(boolean isTurnOn) throws Exception {
 		// Wait for the default settings loaded
-		waitForSeconds(8);
+		waitForSeconds(15);
 		if (areListElementVisible(predictableScheduleSectionToggles,15) && predictableScheduleSectionToggles.size()>1){
 			if (isTurnOn){
 				if (predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("input")).getAttribute("class").contains("ng-empty")){

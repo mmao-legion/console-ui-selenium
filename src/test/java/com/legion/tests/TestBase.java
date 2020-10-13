@@ -308,6 +308,9 @@ public abstract class TestBase {
         loginPage.loginToLegionWithCredential(username, Password);
         loginPage.verifyNewTermsOfServicePopUp();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
+            locationSelectorPage.changeDistrict("Budget");
+        }
         locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, location);

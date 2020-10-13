@@ -1514,13 +1514,15 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	//added by Haya
 	@FindBy(css="user-profile-section[editing-locked]")
 	private WebElement myAvailability;
+	@FindBy(css="i.fa-lock")
+	private WebElement lockIcon;
+
 	@Override
 	public boolean isMyAvailabilityLockedNewUI() throws Exception
 	{
 		if(isElementLoaded(myAvailability,10)) {
 			waitForSeconds(5);
-			String lockLable = myAvailability.findElement(By.cssSelector("div[class=\"user-profile-section__header\"] span")).getText();
-			if (lockLable.toLowerCase().contains("locked")){
+			if (isElementLoaded(lockIcon, 5)){
 				return true;
 			}
 		}else{

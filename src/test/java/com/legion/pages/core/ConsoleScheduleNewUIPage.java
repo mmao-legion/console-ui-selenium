@@ -308,7 +308,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement btnSave;
 
     @FindBy(css = "div.sch-day-view-shift-delete")
-    private List<WebElement> shiftDeleteBtn;
+    private WebElement shiftDeleteBtn;
 
     @FindBy(xpath = "//div[contains(text(),'Delete')]")
     private List<WebElement> shiftDeleteGutterText;
@@ -2725,20 +2725,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	}
 
 
-	public void deleteShift(){
-		if(shiftDeleteBtn.size()!=0){
-			for(int i=0;i<shiftDeleteBtn.size();i++){
-				click(shiftDeleteBtn.get(i));
-			}
+	public void deleteShift() throws Exception {
+		if(isElementLoaded(shiftDeleteBtn, 5)){
+			clickTheElement(shiftDeleteBtn);
 		}else{
 			SimpleUtils.fail("Delete button is not available on Shift container",false);
 		}
 	}
 
-	public void deleteAllShiftsInDayView(){
+	public void deleteAllShiftsInDayView() throws Exception {
         if (areListElementVisible(dayViewAvailableShifts,10)){
-            for (WebElement e: dayViewAvailableShifts) {
-                moveToElementAndClick(e);
+            int count = dayViewAvailableShifts.size();
+            for (int i = 0; i < count; i++) {
+                List<WebElement> tempShifts = getDriver().findElements(By.className("sch-day-view-shift-outer"));
+                moveToElementAndClick(tempShifts.get(i));
                 deleteShift();
             }
         }
@@ -3333,8 +3333,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.pass("Schedule Update and Generate button clicked Successfully!");
             if (isElementEnabled(checkOutTheScheduleButton)) {
                 checkoutSchedule();
-            } else {
-                SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
             }
         } else {
             SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
@@ -3580,6 +3578,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(nextButtonOnCreateSchedule) && nextButtonOnCreateSchedule.getText().equals(finish)) {
             clickTheElement(nextButtonOnCreateSchedule);
             waitForSeconds(10);
+            if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+                checkoutSchedule();
+            }
             if (areListElementVisible(shiftsWeekView, 15) && shiftsWeekView.size() > 0) {
                 SimpleUtils.pass("Create the schedule successfully!");
             }else {
@@ -3694,10 +3695,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 checkEnterBudgetWindowLoadedForNonDG();
                 selectWhichWeekToCopyFrom("SUGGESTED");
                 clickOnFinishButtonOnCreateSchedulePage();
-                waitForSeconds(10);
-                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
-                    checkoutSchedule();
-                }
+                switchToManagerViewToCheckForSecondGenerate();
             }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
                 if (isElementEnabled(checkOutTheScheduleButton, 20)) {
@@ -3832,6 +3830,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 } else{
                     SimpleUtils.fail("Generate button or Publish not found on page",false);
                 }
+            }
+            waitForSeconds(5);
+            if (areListElementVisible(shiftsWeekView, 15) && shiftsWeekView.size() > 0) {
+                SimpleUtils.pass("Create the schedule successfully!");
+            }else {
+                SimpleUtils.fail("Not able to generate the schedule successfully for non dg flow!", false);
             }
         }else{
             SimpleUtils.fail("Schedule Type " + scheduleTypeManager.getText() + " is disabled",false);
@@ -9053,32 +9057,22 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void validateXButtonForEachShift() throws Exception{
         String deletedInfo = "Deleted";
         int shiftCount = shiftsInDayView.size();
-        for (WebElement shift:shiftsInDayView){
-            if(isElementEnabled(shift,5)){
-                click(shift);
-                if(isElementEnabled(btnDelete,5))
-                {
+        if (areListElementVisible(shiftsInDayView, 5)) {
+            for (int i = 0; i < shiftsInDayView.size(); i++) {
+                List<WebElement> tempShifts = getDriver().findElements(By.cssSelector("div[ng-repeat=\"shift in filteredShifts\"]"));
+                click(tempShifts.get(i));
+                if (isElementEnabled(btnDelete, 5)) {
                     SimpleUtils.pass(": X button is present for selected Shift");
                     click(btnDelete);
-                    String deletedShiftInfo = shift.findElement(By.cssSelector("div.sch-day-view-right-gutter-text")).getText();
+                    String deletedShiftInfo = tempShifts.get(i).findElement(By.cssSelector("div.sch-day-view-right-gutter-text")).getText();
                     if (deletedShiftInfo.contains(deletedInfo)) {
-                        SimpleUtils.pass( "can delete shift by X button");
+                        SimpleUtils.pass("can delete shift by X button");
                         break;
-                    }else {
-                        SimpleUtils.fail("delete shift failed by X button, no deleted guter text!",true);
+                    } else {
+                        SimpleUtils.fail("delete shift failed by X button, no deleted guter text!", true);
                     }
-                    /*for (int i = 0; i < gutterText.size(); i++) {
-                        String deletedShiftInfo = gutterText.get(i).getText();
-                        if (deletedShiftInfo.contains(deletedInfo)) {
-                            SimpleUtils.pass( "can delete shift by X button");
-                            break;
-                        }else
-                            SimpleUtils.fail("delete shift failed by X button",true);
-                    }  */
-                   break;
-                }
-                else SimpleUtils.fail("X button is not present for ",true);
-
+                    break;
+                } else SimpleUtils.fail("X button is not present for ", true);
             }
         }
        saveSchedule();

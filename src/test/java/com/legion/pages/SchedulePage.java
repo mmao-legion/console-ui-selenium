@@ -69,8 +69,8 @@ public interface SchedulePage {
 	public void getAvailableStatus() throws Exception;
 	public void clickOnOfferOrAssignBtn() throws Exception;
 	public void clickOnShiftContainer(int index) throws Exception;
-	public void deleteShift();
-	public void deleteAllShiftsInDayView();
+	public void deleteShift() throws Exception;
+	public void deleteAllShiftsInDayView() throws Exception;
 	public void deleteShiftGutterText();
 	public boolean getScheduleStatus() throws Exception;
 	public boolean inActiveWeekDayClosed(int dayIndex) throws Exception;

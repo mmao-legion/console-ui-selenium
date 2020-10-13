@@ -67,7 +67,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
         if (isElementLoaded(createAnnouncementIcon,10)) {
             waitForSeconds(5);
             clickTheElement(createAnnouncementIcon);
-            if (isElementLoaded(announcementType,5)) {
+            if (isElementLoaded(announcementType,15)) {
                 selectByVisibleText(announcementType, "Good Faith Estimate");
                 if (areListElementVisible(weekDaysInGFE,5))
                     SimpleUtils.pass("Inbox: A new announcement with type \"Good Faith Estimate\" is selected successfully");

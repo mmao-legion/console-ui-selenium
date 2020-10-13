@@ -1077,9 +1077,15 @@ public class ActivityTest extends TestBase {
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         // Set time off policy
         ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        controlsPage.gotoControlsPage();
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsPage.gotoControlsPage();
         SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+        dashboardPage.navigateToDashboard();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
         controlsNewUIPage.clickOnControlsSchedulingPolicies();
         SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
         controlsNewUIPage.updateCanWorkerRequestTimeOff("Yes");
@@ -1517,7 +1523,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Validate the activity of claim open shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyActivityOfClaimOpenShiftAsTeamMember(String browser, String username, String password, String location) throws Exception {

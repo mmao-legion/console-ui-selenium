@@ -374,7 +374,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
         @Automated(automated = "Automated")
 		@Owner(owner = "Estelle")
-		@Enterprise(name = "KendraScott2_Enterprise")
+		@Enterprise(name = "Coffee_Enterprise")
 		@TestName(description = "Verify the Schedule functionality  Schedule Smartcard")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyScheduleFunctionalityScheduleSmartCard(String username, String password, String browser, String location)
@@ -476,7 +476,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Estelle")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the Schedule functionality  Day View")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyScheduleFunctionalityDayView(String username, String password, String browser, String location)
@@ -635,7 +635,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Estelle")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the Schedule functionality  Job Title Filter Functionality")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void viewAndFilterScheduleWithGroupByJobTitleInWeekView(String username, String password, String browser, String location)
@@ -1116,7 +1116,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the budget hour in DM view schedule page for non dg flow")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1138,7 +1138,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		float budgetHoursInSchedule = schedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose);
 
 		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-		locationSelectorPage.changeDistrictDirect("Demo District");
+		locationSelectorPage.changeDistrictDirect();
 
 		ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
 		float budgetedHoursInDMViewSchedule = scheduleDMViewPage.getBudgetedHourOfScheduleInDMViewByLocation(location);
@@ -1254,7 +1254,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	// Add the new test cases for "Schedule Not Published"
 	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "verify smart card for compliance violation")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1299,7 +1299,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "verify smart card for compliance violation -republish")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1480,7 +1480,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Haya")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "verify Assign TM warning: TM status is on time off")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager(String browser, String username, String password, String location) throws Exception {

@@ -255,8 +255,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	@Override
 	public void verifyClickOnActivityCloseButton() throws Exception {
 		waitForSeconds(10);
-		if (isElementLoaded(closeActivityFeedBtn, 15)) {
-			click(closeActivityFeedBtn);
+		if (isElementLoaded(activityBell, 15)) {
+			click(activityBell);
 			SimpleUtils.pass("Click on Activity Close Button Successfully!");
 		}else {
 			SimpleUtils.fail("Activity Close Button failed to load!", false);

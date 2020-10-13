@@ -334,8 +334,15 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
     }
 
-    public void changeDistrictDirect(String districtName) {
+    @FindBy(css = "[search-hint=\"Search District\"] [placeholder=\"Select...\"] .input-faked")
+    private WebElement selectedDistrict;
+
+    public void changeDistrictDirect() throws Exception {
         waitForSeconds(4);
+        String districtName = null;
+        if (isElementLoaded(selectedDistrict, 5)) {
+            districtName = selectedDistrict.getText();
+        }
         try {
             Boolean isDistrictMatched = false;
             if (isChangeDistrictButtonLoaded()) {

@@ -1,5 +1,6 @@
 package com.legion.pages.core;
 
+import com.legion.pages.BasePage;
 import com.legion.pages.ScheduleDMViewPage;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
@@ -11,7 +12,7 @@ import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
-public class ConsoleScheduleDMViewPage implements ScheduleDMViewPage {
+public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMViewPage {
 
     @FindBy(css = ".analytics-new-table-group-row-open")
     private List<WebElement>  SchedulesInDMView;
@@ -24,7 +25,7 @@ public class ConsoleScheduleDMViewPage implements ScheduleDMViewPage {
     {
         float budgetedHours = 0;
         boolean isLocationMatched = false;
-        if (SchedulesInDMView !=null && SchedulesInDMView.size() != 0){
+        if (areListElementVisible(SchedulesInDMView, 10) && SchedulesInDMView.size() != 0){
             for (WebElement schedule : SchedulesInDMView){
                 WebElement locationInDMView = schedule.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_UNTOUCHED\"]"));
                 if (locationInDMView != null){
