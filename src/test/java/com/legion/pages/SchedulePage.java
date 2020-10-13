@@ -469,4 +469,9 @@ public interface SchedulePage {
 	public void verifyEditMealBreakTimeFunctionality(boolean isSavedChange) throws Exception;
 	public void editAndVerifyShiftTime(boolean isSaveChange) throws Exception;
 	public String selectTeamMembers() throws Exception;
+	public void clickOnAnalyzeBtn() throws Exception;
+	public void verifyScheduleVersion(String version) throws Exception;
+	public void closeAnalyzeWindow() throws Exception;
+	public void verifyVersionInSaveMessage(String version) throws Exception;
+	public void clickOnManagerButton() throws Exception;
 }

@@ -11097,6 +11097,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+
     public void switchSearchTMAndRecommendedTMsTab() {
         if (areListElementVisible(selectTeamMembersOption, 10)) {
             if (selectTeamMembersOption.get(0).getAttribute("class").contains("select")) {
@@ -11108,6 +11109,93 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         } else {
             SimpleUtils.fail("Select Team Member options are not available", false);
+        }
+    }
+
+    @FindBy(css = "lg-button[label=\"Analyze\"]")
+    private WebElement analyzeBtn;
+    @FindBy(css="div[ng-click=\"selectedTab = 'history'\"]")
+    private WebElement schedulelHistoryTab;
+    @Override
+    public void clickOnAnalyzeBtn() throws Exception {
+        if (isElementLoaded(analyzeBtn,15)){
+            click(analyzeBtn);
+            SimpleUtils.pass("Clicked analyze button!");
+            if (isElementLoaded(schedulelHistoryTab,15)){
+                click(schedulelHistoryTab);
+                SimpleUtils.pass("Clicked schedulelHistoryTab!");
+            } else {
+                SimpleUtils.fail("There is no schedulelHistoryTab!", false);
+            }
+        } else {
+            SimpleUtils.fail("There is no Analyze button!", false);
+        }
+    }
+
+    @FindBy(css = ".sch-schedule-analyze__grey tr")
+    private List<WebElement> scheduleVersionInfo;
+
+    @Override
+    public void verifyScheduleVersion(String version) throws Exception {
+        if (areListElementVisible(scheduleVersionInfo,15) && areListElementVisible(scheduleVersionInfo.get(scheduleVersionInfo.size()-1).findElements(By.tagName("td")),15)){
+            String versionText = scheduleVersionInfo.get(scheduleVersionInfo.size()-1).findElements(By.tagName("td")).get(0).getText().split("\n")[0];
+            if ("".equals(versionText)){
+                versionText = scheduleVersionInfo.get(scheduleVersionInfo.size()-1).findElements(By.tagName("td")).get(1).getText().split("\n")[0];
+            }
+            if(version.equalsIgnoreCase(versionText)){
+                SimpleUtils.pass("version info is correct!");
+            }else {
+                SimpleUtils.fail("There is schedulelHistoryTab!", false);
+            }
+        } else {
+            SimpleUtils.fail("There is no schedulel version info!", false);
+        }
+    }
+
+    @FindBy(css = "lg-close.dismiss")
+    private WebElement closeAnalyzeBtn;
+    @Override
+    public void closeAnalyzeWindow() throws Exception {
+        if (isElementLoaded(closeAnalyzeBtn,15)){
+            click(closeAnalyzeBtn);
+            SimpleUtils.pass("Clicked close button!");
+        } else {
+            SimpleUtils.fail("There is no close button!", false);
+        }
+    }
+
+    @FindBy(css = ".save-schedule-confirm-message2")
+    private WebElement saveMessage;
+    @Override
+    public void verifyVersionInSaveMessage(String version) throws Exception {
+        if (isElementEnabled(scheduleSaveBtn)) {
+            clickTheElement(scheduleSaveBtn);
+        } else {
+            SimpleUtils.fail("Schedule save button not found", false);
+        }
+        waitForSeconds(3);
+        String a= saveMessage.getText();
+        if (isElementLoaded(saveMessage,15) && a.contains(version)){
+            SimpleUtils.pass("version info is correct!");
+        } else {
+            SimpleUtils.fail("There is no save message or the version is incorrect!", false);
+        }
+        if (isElementEnabled(saveOnSaveConfirmationPopup)) {
+            clickTheElement(saveOnSaveConfirmationPopup);
+        } else {
+            SimpleUtils.fail("Schedule save button not found", false);
+        }
+    }
+
+    @FindBy(xpath = "//span[text()=\"Manager\"]")
+    private WebElement managerTab;
+    @Override
+    public void clickOnManagerButton() throws Exception {
+        if (isElementEnabled(managerTab, 5)) {
+            click(managerTab);
+            SimpleUtils.pass("Manager button is clickable");
+        }else {
+            SimpleUtils.fail("There is no Manager button!",true);
         }
     }
 }

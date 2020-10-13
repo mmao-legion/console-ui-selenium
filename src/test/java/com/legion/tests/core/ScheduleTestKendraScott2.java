@@ -1726,5 +1726,59 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.clickOnCreateOrNextBtn();
 		schedulePage.verifyScheduledWarningWhenAssigning(firstShiftInfo.get(0), firstShiftInfo.get(2));
 	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Assign TM warning: TM is from another store and is already scheduled at this store")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyVersionNumberAndEditsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		schedulePage.navigateToNextWeek();
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+
+		//verify version number in analyze page
+
+		schedulePage.clickOnAnalyzeBtn();
+		String version0 = "Suggested Schedule";
+		String version1 = "0.1";
+		String version2 = "1.1";
+		schedulePage.verifyScheduleVersion(version0);
+		schedulePage.closeAnalyzeWindow();
+		//make edits and save
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickOnDayViewAddNewShiftButton();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.verifyVersionInSaveMessage(version1);
+		//suggested tab
+		schedulePage.clickOnSuggestedButton();
+		SimpleUtils.assertOnFail("Changes not publish smart card is loaded in suggested page!",!schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
+		schedulePage.clickOnManagerButton();
+		SimpleUtils.assertOnFail("Changes not publish smart card is not loaded in Manager page!",schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
+		schedulePage.clickOnAnalyzeBtn();
+		schedulePage.verifyScheduleVersion(version1);
+		schedulePage.closeAnalyzeWindow();
+		schedulePage.publishActiveSchedule();
+		schedulePage.clickOnAnalyzeBtn();
+		schedulePage.verifyScheduleVersion(version2);
+	}
 }
 

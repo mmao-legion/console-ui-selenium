@@ -2913,7 +2913,17 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void switchSearchTMAndRecommendedTMsTab() throws Exception  {
+    public void clickOnAnalyzeBtn() throws Exception {
+
+    }
+
+    @Override
+    public void switchSearchTMAndRecommendedTMsTab() throws Exception {
+
+    }
+
+    @Override
+    public void verifyScheduleVersion(String version) throws Exception {
 
     }
 
@@ -2948,7 +2958,17 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void closeAnalyzeWindow() throws Exception {
+
+    }
+
+    @Override
     public void verifyShiftTime(String shiftTime) throws Exception {
+
+    }
+
+    @Override
+    public void verifyVersionInSaveMessage(String version) throws Exception {
 
     }
 
@@ -2980,5 +3000,10 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @Override
     public String selectTeamMembers() throws Exception {
         return null;
+    }
+
+    @Override
+    public void clickOnManagerButton() throws Exception {
+
     }
 }
