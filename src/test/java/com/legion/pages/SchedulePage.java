@@ -272,7 +272,7 @@ public interface SchedulePage {
 	public void selectSaveButton()		throws Exception;
 	public boolean isScheduleFinalized() throws Exception;
 	public boolean isProfileIconsEnable() throws Exception;
-	public void clickOnProfileIcon() throws Exception;
+	public WebElement clickOnProfileIcon() throws Exception;
 	public boolean isViewProfileEnable() throws Exception;
 	public boolean isViewOpenShiftEnable() throws Exception;
 	public boolean isChangeRoleEnable() throws Exception;
@@ -331,7 +331,7 @@ public interface SchedulePage {
 
 	public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView) throws Exception;
 
-	public boolean verifyConvertToOpenPopUpDisplay() throws Exception;
+	public boolean verifyConvertToOpenPopUpDisplay(String firstNameOfTM) throws Exception;
 
 	public void convertToOpenShiftDirectly();
 
@@ -452,4 +452,21 @@ public interface SchedulePage {
 	public List<String> getTheShiftInfoByIndex(int index) throws Exception;
 	public void selectWorkingDaysOnNewShiftPageByIndex(int index) throws Exception;
 	public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception;
+	public void validateScheduleTableWhenSelectAnyOfGroupByOptions() throws Exception;
+	public void clickOnEditButtonOnSchedulePage() throws Exception;
+	public void changeWorkRoleInPrompt(boolean isApplyChange) throws Exception;
+	public void switchSearchTMAndRecommendedTMsTab() throws Exception;
+	public String convertToOpenShiftAndOfferToSpecificTMs() throws Exception;
+	public void clickOnEditShiftTime() throws Exception;
+	public void verifyEditShiftTimePopUpDisplay() throws Exception;
+	public List<String> editShiftTime() throws Exception;
+	public void clickOnCancelEditShiftTimeButton() throws Exception;
+	public void clickOnUpdateEditShiftTimeButton() throws Exception;
+	public void verifyShiftTime(String shiftTime) throws Exception;
+	public String getShiftTime();
+	public void  verifyDeleteShiftCancelButton() throws Exception;
+	public void verifyDeleteMealBreakFunctionality() throws Exception;
+	public void verifyEditMealBreakTimeFunctionality(boolean isSavedChange) throws Exception;
+	public void editAndVerifyShiftTime(boolean isSaveChange) throws Exception;
+	public String selectTeamMembers() throws Exception;
 }

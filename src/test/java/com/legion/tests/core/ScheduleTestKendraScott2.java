@@ -423,55 +423,112 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		if(!isActiveWeekGenerated){
 			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
+		//In week view, Group by All filter have 4 filters:1.Group by all  2. Group by work role  3. Group by TM 4.Group by job title
+		schedulePage.validateGroupBySelectorSchedulePage();
+		//Selecting any of them, check the schedule table
+		schedulePage.validateScheduleTableWhenSelectAnyOfGroupByOptions();
+
 		//Edit button should be clickable
 		//While click on edit button,if Schedule is finalized then prompt is available and Prompt is in proper alignment and correct msg info.
 		//Edit anyway and cancel button is clickable
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();;
-		//In week view, Group by All filter have 3 filters:1.Group by all  2. Group by work role  3. Group by TM 4.Group by job title
-		schedulePage.validateGroupBySelectorSchedulePage();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
 		//click on the context of any TM, 1. View profile 2. Change shift role  3.Assign TM 4.  Convert to open shift is enabled for current and future week day 5.Edit meal break time 6. Delete shift
 		schedulePage.selectNextWeekSchedule();
 		boolean isActiveWeekGenerated2 = schedulePage.isWeekGenerated();
 		if(!isActiveWeekGenerated2){
 			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickOnEditButtonOnSchedulePage();
 		schedulePage.deleteTMShiftInWeekView("Unassigned");
 		schedulePage.saveSchedule();
 		schedulePage.publishActiveSchedule();
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			//"After Click on view profile,then particular TM profile is displayed :1. Personal details 2. Work Preferences 3. Availability
-			SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , schedulePage.verifyContextOfTMDisplay(), false);
-     		schedulePage.clickOnViewProfile();
-			schedulePage.verifyPersonalDetailsDisplayed();
-			schedulePage.verifyWorkPreferenceDisplayed();
-			schedulePage.verifyAvailabilityDisplayed();
-			schedulePage.closeViewProfileContainer();
-			//"After Click on the Change shift role, one prompt is enabled:various work role any one of them can be selected"
-			schedulePage.clickOnProfileIcon();
-//			schedulePage.clickOnChangeRole();
-//			schedulePage.verifyChangeRoleFunctionality();
-			//After Click on Assign TM-Select TMs window is opened,Recommended and search TM tab is enabled
-		    schedulePage.clickonAssignTM();
-			schedulePage.verifyRecommendedAndSearchTMEnabled();
-			//Search and select any TM,Click on the assign: new Tm is updated on the schedule table
-			schedulePage.verifySelectTeamMembersOption();
-			schedulePage.clickOnOfferOrAssignBtn();
-			//Click on the Convert to open shift, checkbox is available to offer the shift to any specific TM[optional] Cancel /yes
-			//if checkbox is unselected then, shift is convert to open
-		    schedulePage.clickOnProfileIcon();
-		    schedulePage.clickOnConvertToOpenShift();
-			if (schedulePage.verifyConvertToOpenPopUpDisplay()) {
-				schedulePage.convertToOpenShiftDirectly();
-			}
-//			schedulePage.convertToOpenShift();
-			//After Click on Edit Meal Break Time, the Edit Meal break windows is pop up which include: 1.profile info 2.add meal break button 3.Specify meal break time period 4 cancel ,continue button
-//			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			schedulePage.verifyMealBreakTimeDisplayAndFunctionality();
-			//if checkbox is selected then, shift is offered to selected TM
-//			schedulePage.verifyConvertToOpenShiftBySelectedSpecificTM();//existing RoleViolation need to enhancement
-			//verify delete shift
-			schedulePage.verifyDeleteShift();
+		schedulePage.clickOnEditButtonOnSchedulePage();
+		SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , schedulePage.verifyContextOfTMDisplay(), false);
+
+		//"After Click on view profile,then particular TM profile is displayed :1. Personal details 2. Work Preferences 3. Availability
+		schedulePage.clickOnViewProfile();
+		schedulePage.verifyPersonalDetailsDisplayed();
+		schedulePage.verifyWorkPreferenceDisplayed();
+		schedulePage.verifyAvailabilityDisplayed();
+		schedulePage.closeViewProfileContainer();
+
+		//"After Click on the Change shift role, one prompt is enabled:various work role any one of them can be selected"
+		schedulePage.clickOnProfileIcon();
+		schedulePage.clickOnChangeRole();
+		schedulePage.verifyChangeRoleFunctionality();
+		//check the work role by click Apply button
+		schedulePage.changeWorkRoleInPrompt(true);
+		//check the work role by click Cancel button
+		schedulePage.changeWorkRoleInPrompt(false);
+
+		//After Click on Assign TM-Select TMs window is opened,Recommended and search TM tab is enabled
+		schedulePage.clickOnProfileIcon();
+		schedulePage.clickonAssignTM();
+		schedulePage.verifyRecommendedAndSearchTMEnabled();
+
+		//Search and select any TM,Click on the assign: new Tm is updated on the schedule table
+		//Select new TM from Search Team Member tab
+		WebElement selectedShift = null;
+		selectedShift = schedulePage.clickOnProfileIcon();
+//		String idtest= selectedShift.getAttribute("id").toString();
+//		String name1 = selectedShift.findElement(By.className("week-schedule-worker-name")).getText();
+		schedulePage.clickonAssignTM();
+		String firstNameOfSelectedTM = schedulePage.selectTeamMembers();
+		schedulePage.clickOnOfferOrAssignBtn();
+//		String name = selectedShift.findElement(By.className("week-schedule-worker-name")).getText();
+		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" , firstNameOfSelectedTM.equals(selectedShift.findElement(By.className("week-schedule-worker-name")).getText()), false);
+		//Select new TM from Recommended TMs tab
+		selectedShift = schedulePage.clickOnProfileIcon();
+		schedulePage.clickonAssignTM();
+		schedulePage.switchSearchTMAndRecommendedTMsTab();
+		String firstNameOfSelectedTM2 = schedulePage.selectTeamMembers();
+		schedulePage.clickOnOfferOrAssignBtn();
+		String name2 = selectedShift.findElement(By.className("week-schedule-worker-name")).getText();
+		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" , firstNameOfSelectedTM2.equals(selectedShift.findElement(By.className("week-schedule-worker-name")).getText()), false);
+
+		//Click on the Convert to open shift, checkbox is available to offer the shift to any specific TM[optional] Cancel /yes
+		//if checkbox is unselected then, shift is convert to open
+		selectedShift = schedulePage.clickOnProfileIcon();
+		schedulePage.clickOnConvertToOpenShift();
+		if (schedulePage.verifyConvertToOpenPopUpDisplay(selectedShift.findElement(By.className("week-schedule-worker-name")).getText())) {
+			schedulePage.convertToOpenShiftDirectly();
+		}
+        //if checkbox is select then select team member page will display
+		selectedShift = schedulePage.clickOnProfileIcon();
+		schedulePage.clickOnConvertToOpenShift();
+		if (schedulePage.verifyConvertToOpenPopUpDisplay(selectedShift.findElement(By.className("week-schedule-worker-name")).getText())) {
+			schedulePage.convertToOpenShiftAndOfferToSpecificTMs();
+		}
+
+		//After click on Edit Shift Time, the Edit Shift window will display
+		schedulePage.clickOnProfileIcon();
+//		String test = selectedShift.getAttribute("id").toString();
+		schedulePage.clickOnEditShiftTime();
+		schedulePage.verifyEditShiftTimePopUpDisplay();
+		schedulePage.clickOnCancelEditShiftTimeButton();
+		//Edit shift time and click update button
+		schedulePage.editAndVerifyShiftTime(true);
+		//Edit shift time and click Cancel button
+		schedulePage.editAndVerifyShiftTime(false);
+
+
+		//After click on Edit Meal Break Time, the Edit Meal Break window will display
+		schedulePage.verifyMealBreakTimeDisplayAndFunctionality();
+		//Verify Delete Meal Break
+		schedulePage.verifyDeleteMealBreakFunctionality();
+		//Edit meal break time and click update button
+		schedulePage.verifyEditMealBreakTimeFunctionality(true);
+		//Edit meal break time and click cancel button
+		schedulePage.verifyEditMealBreakTimeFunctionality(false);
+
+		//verify cancel button
+		schedulePage.verifyDeleteShiftCancelButton();
+
+		//verify delete shift
+		schedulePage.verifyDeleteShift();
+
+
 	}
 
 	@Automated(automated = "Automated")

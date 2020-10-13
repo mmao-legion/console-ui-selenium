@@ -1,24 +1,18 @@
 package com.legion.pages.core;
 
-import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
-import static com.legion.utils.MyThreadLocal.getDriver;
-
+import com.legion.pages.BasePage;
+import com.legion.pages.SchedulePage;
 import com.legion.utils.MyThreadLocal;
-
+import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import com.legion.pages.BasePage;
-import com.legion.pages.SchedulePage;
-import com.legion.utils.SimpleUtils;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import static com.legion.utils.MyThreadLocal.getCurrentTestMethodName;
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
@@ -35,7 +29,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     private List<WebElement> scheduleDraftWages;
 
     @FindBy (xpath = "//span[contains(text(),'Schedule')]")
-	private WebElement ScheduleSubMenu;
+    private WebElement ScheduleSubMenu;
 
     @FindBy(css = "div[helper-text-position='top'] span.legend-label")
     private WebElement published;
@@ -213,7 +207,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     private WebElement budgetOnbudgetSmartCard;
 
     @FindBy (css = "div.console-navigation-item-label.Schedule")
-	private WebElement consoleSchedulePageTabElement;
+    private WebElement consoleSchedulePageTabElement;
 
     @FindBy (css = "week-schedule[legacy='legacyObjectForNewSchedule']")
     private WebElement scheduleTableWeekView;
@@ -225,7 +219,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     private List<WebElement> scheduleTableWeekViewWorkerDetail;
 
     @FindBy (css = "div.lg-button-group-first")
-	private WebElement scheduleDayView;
+    private WebElement scheduleDayView;
 
     @FindBy (css = "div.lg-button-group-last")
     private WebElement scheduleWeekView;
@@ -955,7 +949,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void selectWorkRole(String workRoles) throws Exception {
         // TODO Auto-generated method stub
 
-	}
+    }
 
     @Override
     public void clickRadioBtnStaffingOption(String staffingOption) throws Exception {
@@ -1371,7 +1365,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
                         click(returnToOverviewTab);
                     }
                 }catch (Exception e) {
-                        SimpleUtils.fail("!!!",true);
+                    SimpleUtils.fail("!!!",true);
                 }
             }
 
@@ -1381,8 +1375,8 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 
     @Override
-	public void noBudgetDisplayWhenBudgetNotEntered(String nextWeekView, int weekCount) {
-		// TODO Auto-generated method stub
+    public void noBudgetDisplayWhenBudgetNotEntered(String nextWeekView, int weekCount) {
+        // TODO Auto-generated method stub
 
         String valueWhenBudgetNotEntered = "-- Hours";
 
@@ -1424,8 +1418,8 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 
         }
-		
-	}
+
+    }
 
     @Override
     public void budgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount, int tolerance) {
@@ -1434,16 +1428,16 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 
     @Override
-	public String getsmartCardTextByLabel(String cardLabel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public String getsmartCardTextByLabel(String cardLabel) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public String getWeatherTemperature() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String getWeatherTemperature() throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 
 //	@Override
@@ -1581,114 +1575,114 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
 
     @Override
-	public void validatingGenrateSchedule() throws Exception {
+    public void validatingGenrateSchedule() throws Exception {
         // TODO Auto-generated method stub
     }
-//added by Gunjan
-	@Override
-	public boolean loadSchedule() throws Exception {
-		// TODO Auto-generated method stub
-		boolean flag=false;
-		if(isElementLoaded(ScheduleSubMenu)){
-			click(ScheduleSubMenu);
-			SimpleUtils.pass("Clicked on Schedule Sub Menu... ");
-			if(isElementLoaded(scheduleDayView)){
-				click(scheduleDayView);
-				SimpleUtils.pass("Clicked on Day View of Schedule Tab");
-				if(isElementLoaded(smartcard)){
-					flag = true;
-					SimpleUtils.pass("Smartcard Section in Day View Loaded Successfully!");
-				}else{
-					SimpleUtils.fail("Smartcard Section in Day View Not Loaded Successfully!", true);
-				}
-				if(isElementLoaded(scheduleTableDayView)){
-					flag = true;
-					SimpleUtils.pass("Schedule in Day View Loaded Successfully!");
-				}else{
-					SimpleUtils.fail("Schedule in Day View Not Loaded Successfully!", true);
-				}
-			}else{
-				SimpleUtils.fail("Day View button not found in Schedule Sub Tab",false);
-			}
-			if(isElementLoaded(scheduleWeekView,10)){
-				click(scheduleWeekView);
-				SimpleUtils.pass("Clicked on Week View of Schedule Tab");
-				if(isElementLoaded(smartcard,10)){
-					flag = true;
-					SimpleUtils.pass("Smartcard Section in Week View Loaded Successfully!");
-				}else{
-					SimpleUtils.fail("Smartcard Section in Week View Not Loaded Successfully!", true);
-				}
-				if(isElementLoaded(scheduleTableWeekView,10)){
-					flag = true;
-					SimpleUtils.pass("Schedule in Week View Loaded Successfully!");
-				}else{
-					SimpleUtils.fail("Schedule in Week View Not Loaded Successfully!", false);
-				}
-			}else{
-				SimpleUtils.pass("Week View button not found in Schedule Sub Tab");
-			}
-		}else{
-			SimpleUtils.fail("Schedule Sub Menu Tab Not Found", false);
-		}
-		return flag;
-	}
+    //added by Gunjan
+    @Override
+    public boolean loadSchedule() throws Exception {
+        // TODO Auto-generated method stub
+        boolean flag=false;
+        if(isElementLoaded(ScheduleSubMenu)){
+            click(ScheduleSubMenu);
+            SimpleUtils.pass("Clicked on Schedule Sub Menu... ");
+            if(isElementLoaded(scheduleDayView)){
+                click(scheduleDayView);
+                SimpleUtils.pass("Clicked on Day View of Schedule Tab");
+                if(isElementLoaded(smartcard)){
+                    flag = true;
+                    SimpleUtils.pass("Smartcard Section in Day View Loaded Successfully!");
+                }else{
+                    SimpleUtils.fail("Smartcard Section in Day View Not Loaded Successfully!", true);
+                }
+                if(isElementLoaded(scheduleTableDayView)){
+                    flag = true;
+                    SimpleUtils.pass("Schedule in Day View Loaded Successfully!");
+                }else{
+                    SimpleUtils.fail("Schedule in Day View Not Loaded Successfully!", true);
+                }
+            }else{
+                SimpleUtils.fail("Day View button not found in Schedule Sub Tab",false);
+            }
+            if(isElementLoaded(scheduleWeekView,10)){
+                click(scheduleWeekView);
+                SimpleUtils.pass("Clicked on Week View of Schedule Tab");
+                if(isElementLoaded(smartcard,10)){
+                    flag = true;
+                    SimpleUtils.pass("Smartcard Section in Week View Loaded Successfully!");
+                }else{
+                    SimpleUtils.fail("Smartcard Section in Week View Not Loaded Successfully!", true);
+                }
+                if(isElementLoaded(scheduleTableWeekView,10)){
+                    flag = true;
+                    SimpleUtils.pass("Schedule in Week View Loaded Successfully!");
+                }else{
+                    SimpleUtils.fail("Schedule in Week View Not Loaded Successfully!", false);
+                }
+            }else{
+                SimpleUtils.pass("Week View button not found in Schedule Sub Tab");
+            }
+        }else{
+            SimpleUtils.fail("Schedule Sub Menu Tab Not Found", false);
+        }
+        return flag;
+    }
 
 
-	@Override
-	public HashMap<String, Integer> getScheduleBufferHours() throws Exception {
-		return null;
-		// TODO Auto-generated method stub
+    @Override
+    public HashMap<String, Integer> getScheduleBufferHours() throws Exception {
+        return null;
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public boolean isComlianceReviewRequiredForActiveWeek() throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean isComlianceReviewRequiredForActiveWeek() throws Exception {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	@Override
-	public void unGenerateActiveScheduleScheduleWeek() throws Exception {
-		// TODO Auto-generated method stub
+    @Override
+    public void unGenerateActiveScheduleScheduleWeek() throws Exception {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public boolean isStoreClosedForActiveWeek() throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean isStoreClosedForActiveWeek() throws Exception {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	@Override
-	public int getScheduleShiftIntervalCountInAnHour() throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int getScheduleShiftIntervalCountInAnHour() throws Exception {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public void toggleSummaryView() throws Exception {
-		// TODO Auto-generated method stub
+    @Override
+    public void toggleSummaryView() throws Exception {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public boolean isSummaryViewLoaded() throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean isSummaryViewLoaded() throws Exception {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	@Override
-	public void updateScheduleOperatingHours(String day, String startTime, String endTime) throws Exception {
-		// TODO Auto-generated method stub
+    @Override
+    public void updateScheduleOperatingHours(String day, String startTime, String endTime) throws Exception {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
     @Override
     public void verifyScheduledHourNTMCountIsCorrect() throws Exception {
@@ -2134,8 +2128,8 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void clickOnProfileIcon() throws Exception {
-
+    public WebElement clickOnProfileIcon() throws Exception {
+        return null;
     }
 
     @Override
@@ -2321,7 +2315,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public boolean verifyConvertToOpenPopUpDisplay() throws Exception {
+    public boolean verifyConvertToOpenPopUpDisplay(String firstNameOfTM) throws Exception {
         return false;
     }
 
@@ -2553,9 +2547,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyShiftRequestStatus(String expectedStatus) throws Exception {
-      
+
     }
-  
+
     @Override
     public void dragRollerElementTillTextMatched(WebElement rollerElement, String textToMatch, boolean startHrsSlider) throws Exception {
 
@@ -2767,7 +2761,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     public void createScheduleByCopyFromOtherWeek(String weekInfo) throws Exception {
-        
+
     }
     public void clickCreateScheduleBtn() throws Exception {
 
@@ -2899,7 +2893,92 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void validateScheduleTableWhenSelectAnyOfGroupByOptions() throws Exception {
+
+    }
+
+    @Override
+    public void clickOnEditButtonOnSchedulePage() throws Exception {
+
+    }
+
+    @Override
     public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception {
 
+    }
+
+    @Override
+    public void changeWorkRoleInPrompt(boolean isApplyChange) throws Exception {
+
+    }
+
+    @Override
+    public void switchSearchTMAndRecommendedTMsTab() throws Exception  {
+
+    }
+
+    @Override
+    public String convertToOpenShiftAndOfferToSpecificTMs() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void clickOnEditShiftTime() throws Exception{
+
+    }
+
+    @Override
+    public void verifyEditShiftTimePopUpDisplay() throws Exception {
+
+    }
+
+    @Override
+    public List<String> editShiftTime() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void clickOnCancelEditShiftTimeButton() throws Exception{
+
+    }
+
+    @Override
+    public void clickOnUpdateEditShiftTimeButton() throws Exception{
+
+    }
+
+    @Override
+    public void verifyShiftTime(String shiftTime) throws Exception {
+
+    }
+
+    @Override
+    public String getShiftTime() {
+        return null;
+    }
+
+    @Override
+    public void  verifyDeleteShiftCancelButton() throws Exception {
+
+    }
+
+    @Override
+    public void verifyDeleteMealBreakFunctionality() throws Exception {
+
+    }
+
+    @Override
+    public void verifyEditMealBreakTimeFunctionality(boolean isSavedChange) throws Exception {
+
+    }
+
+    @Override
+    public void editAndVerifyShiftTime(boolean isSaveChange) throws Exception{
+
+    }
+
+    @Override
+    public String selectTeamMembers() throws Exception {
+        return null;
     }
 }
