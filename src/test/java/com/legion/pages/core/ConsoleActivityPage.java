@@ -445,8 +445,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 
     @Override
     public void closeActivityWindow() throws Exception {
-        if (isElementLoaded(closeActivityFeedBtn, 10)) {
-            click(closeActivityFeedBtn);
+        if (isElementLoaded(activityBell, 10)) {
+            click(activityBell);
         }else {
             SimpleUtils.fail("Close button is not Loaded Successfully!", false);
         }

@@ -1863,7 +1863,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public HashMap<String, ArrayList<WebElement>> getAvailableFilters() {
         HashMap<String, ArrayList<WebElement>> scheduleFilters = new HashMap<String, ArrayList<WebElement>>();
         try {
-            if (isElementLoaded(filterButton,10)) {
+            if (isElementLoaded(filterButton,15)) {
                 if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
                     click(filterButton);
                 for (WebElement scheduleFilterElement : scheduleFilterElements) {
@@ -8505,10 +8505,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if(isScheduleFinalized())
             {
                 click(editScheduleButton);
-                String warningMessage = "Editing finalized schedule\n" +
-                        "Editing a finalized schedule after the 3-day advance notice period may incur a schedule change premium.";
+                String warningMessage1 = "Editing finalized schedule\n" + "Editing a finalized schedule after the ";
+                String warningMessage2 = "-day advance notice period may incur a schedule change premium.";
                 String editFinalizedScheduleWarning = editFinalizedScheduleWarningTitle.getText() + "\n" + editFinalizedScheduleWarningMessage.getText();
-                if(isElementLoaded(popupAlertPremiumPay,5) && editFinalizedScheduleWarning.equals(warningMessage)) {
+                if(isElementLoaded(popupAlertPremiumPay,5) && editFinalizedScheduleWarning.contains(warningMessage1) &&
+                editFinalizedScheduleWarning.contains(warningMessage2)) {
                     SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
                     // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
                     if(isElementEnabled(btnEditAnyway,5) && isElementEnabled(btnCancelOnAlertPopup,5)){

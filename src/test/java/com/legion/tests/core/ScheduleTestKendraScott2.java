@@ -406,7 +406,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	
 	@Automated(automated = "Automated")
-	@Owner(owner = "Estelle")
+	@Owner(owner = "Estelle/Mary")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Schedule functionality > Week View")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
@@ -723,7 +723,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Estelle")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the Schedule functionality  Job Title Filter Functionality")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void viewAndFilterScheduleWithGroupByJobTitleInDayView(String username, String password, String browser, String location)
