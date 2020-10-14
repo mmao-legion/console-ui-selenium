@@ -8497,6 +8497,32 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         {
             // Validate what happens next to the Edit!
             // When Status is finalized, look for extra popup.
+            click(editScheduleButton);
+            if(isElementLoaded(popupAlertPremiumPay,5) ) {
+                SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
+                // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
+                if(isElementEnabled(btnEditAnyway,5) && isElementEnabled(btnCancelOnAlertPopup,5)){
+                    SimpleUtils.pass("CANCEL And EDIT ANYWAY Buttons are enabled on Alert Pop up");
+                    SimpleUtils.report("Click on EDIT ANYWAY button and check for next save and cancel buttons");
+                    click(btnEditAnyway);
+                } else {
+                    SimpleUtils.fail("CANCEL And EDIT ANYWAY Buttons are not enabled on Alert Popup ",false);
+                }
+            }
+            waitForSeconds(3);
+            if(checkSaveButton() && checkCancelButton()) {
+                SimpleUtils.pass("Save and Cancel buttons are enabled ");
+            } else{
+                SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
+            }
+        }else{
+            generateOrUpdateAndGenerateSchedule();
+        }
+
+/*        if(checkEditButton())
+        {
+            // Validate what happens next to the Edit!
+            // When Status is finalized, look for extra popup.
             if(isScheduleFinalized())
             {
                 click(editScheduleButton);
@@ -8532,7 +8558,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
             }
         }else
-            generateOrUpdateAndGenerateSchedule();
+            generateOrUpdateAndGenerateSchedule(); */
     }
 
     @Override
@@ -11190,6 +11216,48 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.pass("Manager button is clickable");
         }else {
             SimpleUtils.fail("There is no Manager button!",true);
+        }
+    }
+
+    @Override
+    public void verifyAllShiftsAssigned() throws Exception {
+        if (areListElementVisible(blueIconsOfOpenShift,20)){
+            SimpleUtils.fail("There are shifts not assigned!",false);
+        } else {
+            SimpleUtils.pass("All shifts are assigned!");
+        }
+    }
+
+    @Override
+    public void clickProfileIconOfShift(WebElement shift) throws Exception {
+        if(isElementLoaded(shift,15)){
+            click(shift.findElement(By.cssSelector(".worker-image-optimized img")));
+            SimpleUtils.pass("clicked shift icon!");
+        } else {
+            SimpleUtils.fail("There is no shift you want",false);
+        }
+    }
+
+    @FindBy(xpath = "//span[text()=\"View Status\"]")
+    private WebElement viewStatusBtn;
+    @Override
+    public void clickViewStatusBtn() throws Exception {
+        if(isElementLoaded(viewStatusBtn,15)){
+            click(viewStatusBtn);
+            SimpleUtils.pass("clicked view status button!");
+        } else {
+            SimpleUtils.fail("view status button is not loaded!",false);
+        }
+    }
+
+    @FindBy(css = "div.tma-scroll-table tr")
+    private List<WebElement> numberOfOffersMade;
+    @Override
+    public void verifyListOfOfferNotNull() throws Exception {
+        if (areListElementVisible(numberOfOffersMade,20)){
+            SimpleUtils.pass("There is a offer list which is not null!");
+        } else {
+            SimpleUtils.fail("Theoffer list is null!",false);
         }
     }
 }

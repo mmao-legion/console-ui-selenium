@@ -1780,5 +1780,43 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.clickOnAnalyzeBtn();
 		schedulePage.verifyScheduleVersion(version2);
 	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Assign TM warning: TM is from another store and is already scheduled at this store")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyOffersGeneratedForOpenShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		schedulePage.navigateToNextWeek();
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+
+		//verify shifts are auto assigned.
+		schedulePage.verifyAllShiftsAssigned();
+		//schedulePage.clickOnEditButton();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		WebElement selectedShift = schedulePage.clickOnProfileIcon();
+		schedulePage.clickOnConvertToOpenShift();
+		schedulePage.convertToOpenShiftDirectly();
+		schedulePage.saveSchedule();
+		schedulePage.publishActiveSchedule();
+		schedulePage.clickProfileIconOfShift(selectedShift);
+		schedulePage.clickViewStatusBtn();
+		schedulePage.verifyListOfOfferNotNull();
+	}
 }
 

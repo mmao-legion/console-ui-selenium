@@ -3006,4 +3006,24 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void clickOnManagerButton() throws Exception {
 
     }
+
+    @Override
+    public void verifyAllShiftsAssigned() throws Exception {
+
+    }
+
+    @Override
+    public void clickProfileIconOfShift(WebElement shift) throws Exception {
+
+    }
+
+    @Override
+    public void clickViewStatusBtn() throws Exception {
+
+    }
+
+    @Override
+    public void verifyListOfOfferNotNull() throws Exception {
+
+    }
 }

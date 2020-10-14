@@ -474,4 +474,8 @@ public interface SchedulePage {
 	public void closeAnalyzeWindow() throws Exception;
 	public void verifyVersionInSaveMessage(String version) throws Exception;
 	public void clickOnManagerButton() throws Exception;
+	public void verifyAllShiftsAssigned() throws Exception;
+	public void clickProfileIconOfShift(WebElement shift) throws Exception;
+	public void clickViewStatusBtn() throws Exception;
+	public void verifyListOfOfferNotNull() throws Exception;
 }
