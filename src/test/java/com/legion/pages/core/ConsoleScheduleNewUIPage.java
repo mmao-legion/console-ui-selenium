@@ -2668,30 +2668,30 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public String searchAndGetTMName(String searchInput) throws Exception {
         String[] searchAssignTeamMember = searchInput.split(",");
-        String selectedTM = null;
+        String selectedTMName = null;
         if (isElementLoaded(textSearch, 10) && isElementLoaded(searchIcon, 10)) {
             for (int i = 0; i < searchAssignTeamMember.length; i++) {
                 String[] searchTM = searchAssignTeamMember[i].split("\\.");
                 textSearch.sendKeys(searchTM[0]);
                 click(searchIcon);
                 waitForSeconds(5);
-                if (selectAndGetTheSelectedTM()!=null) {
-                    setTeamMemberName(searchAssignTeamMember[i]);
-                    selectedTM = selectAndGetTheSelectedTM().findElement(By.className("worker-edit-search-worker-name")).getText().split("\n")[0];
+                WebElement selectedTM = selectAndGetTheSelectedTM();
+                if (selectedTM != null) {
+                    selectedTMName = selectedTM.findElement(By.className("worker-edit-search-worker-name")).getText().split("\n")[0];
                     break;
                 } else {
                     textSearch.clear();
                 }
             }
 
-            if (selectedTM == null) {
+            if (selectedTMName == null) {
                 SimpleUtils.fail("Not able to found Available TMs in SearchResult", false);
             }
 
         } else {
             SimpleUtils.fail("Search text not editable and icon are not clickable", false);
         }
-        return selectedTM;
+        return selectedTMName;
     }
 
     public WebElement selectAndGetTheSelectedTM() throws Exception {
@@ -2702,20 +2702,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Available")
                         || scheduleSearchTeamMemberStatus.get(i).getText().contains("Unknown")){
                     click(radionBtnSearchTeamMembers.get(i));
-                    if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Role Violation")){
-                        displayAlertPopUpForRoleViolation();
-                    }
                     if (isElementEnabled(confirmWindow, 5)) {
                         click(okBtnOnConfirm);
                     }
-                    setWorkerRole(searchWorkerRole.get(i).getText());
-                    setWorkerLocation(searchWorkerLocation.get(i).getText());
                     selectedTM = searchTMRows.get(i);
                     break;
                 }
             }
             if (selectedTM == null) {
-                SimpleUtils.fail("Not able to found Available status in SearchResult", false);
+                SimpleUtils.fail("Not able to found Available status in SearchResult", true);
             }
         }else{
             SimpleUtils.fail("Not able to found Available status in SearchResult", false);
@@ -8440,7 +8435,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if(isElementLoaded(groupBySelector,5)) {
             //validate the schedule table when group by Work Role
             selectGroupByFilter(scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
-            if (areListElementVisible(workRoleIcons, 10) && workRoleIcons.size() > 1) {
+            if (areListElementVisible(workRoleIcons, 10) && workRoleIcons.size() > 0) {
                 SimpleUtils.pass("In Week view: Shifts in schedule table are grouped by work role");
             } else {
                 SimpleUtils.fail("In Week view: Shifts in schedule table are failed group by work role ", true);
@@ -8456,7 +8451,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
             //validate the schedule table when group by Job Title
             selectGroupByFilter(scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
-            if (areListElementVisible(jobTitleNames, 10) && jobTitleNames.size() > 1) {
+            if (areListElementVisible(jobTitleNames, 10) && jobTitleNames.size() > 0) {
                 SimpleUtils.pass("In Week view: Shifts in schedule table are grouped by job title");
             } else {
                 SimpleUtils.fail("In Week view: Shifts in schedule table are failed group by job title ", true);
@@ -9049,7 +9044,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public boolean validateVariousWorkRolePrompt() throws Exception{
         if(isElementEnabled(schWorkerInfoPrompt,5)){
-            SimpleUtils.pass("Various Work Role Prompt is displayed ");
+             SimpleUtils.pass("Various Work Role Prompt is displayed ");
             if (areListElementVisible(shiftRoleList, 5) && shiftRoleList.size() >0) {
                 for (WebElement shiftRole : shiftRoleList) {
                     click(shiftRole);
@@ -9124,7 +9119,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
 
             //check the shift role
-            if (!isElementEnabled(changeRole)) {
+            if (!isElementEnabled(changeRole, 5)) {
                 click(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
             }
             clickOnChangeRole();
@@ -9465,8 +9460,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public void convertToOpenShiftDirectly(){
-        waitForSeconds(3);
         click(btnYesOpenSchedule);
+        waitForSeconds(3);
         SimpleUtils.pass("can convert to open shift by yes button directly");
 
     }
@@ -9479,12 +9474,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             selectedTMName = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
             clickOnOfferOrAssignBtn();
             SimpleUtils.pass("Shift been convert to open shift and offer to Specific TM successfully");
-            return selectedTMName;
         } else {
             SimpleUtils.fail("Buttons on convert To Open PopUp windows load failed", false);
-            return selectedTMName;
         }
-
+        return selectedTMName;
     }
 
     @Override
