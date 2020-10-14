@@ -134,6 +134,7 @@
                     <include name="verifyAssignTMWarningWhenTMIsInactiveAsStoreManager" />
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin" />
+                    <include name="verifySearchBarOnSchedulePageAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

@@ -478,4 +478,11 @@ public interface SchedulePage {
 	public void clickProfileIconOfShift(WebElement shift) throws Exception;
 	public void clickViewStatusBtn() throws Exception;
 	public void verifyListOfOfferNotNull() throws Exception;
+	public void clickOnOpenSearchBoxButton() throws Exception;
+	public void verifyGhostTextInSearchBox () throws Exception;
+	public List<WebElement> searchShiftOnSchedulePage(String searchText) throws Exception;
+	public void verifySearchResult (String firstNameOfTM, String lastNameOfTM, String workRole, String jobTitle, List<WebElement> searchResults) throws Exception;
+	public void clickOnCloseSearchBoxButton() throws Exception;
+	public void verifySearchBoxNotDisplayInDayView() throws Exception;
+	public int getRandomIndexOfShift();
 }

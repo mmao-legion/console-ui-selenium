@@ -3026,4 +3026,39 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void verifyListOfOfferNotNull() throws Exception {
 
     }
+
+    @Override
+    public void clickOnOpenSearchBoxButton() throws Exception {
+
+    }
+
+    @Override
+    public void verifyGhostTextInSearchBox () throws Exception{
+
+    }
+
+    @Override
+    public List<WebElement> searchShiftOnSchedulePage(String searchText) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifySearchResult (String firstNameOfTM, String lastNameOfTM, String workRole, String jobTitle, List<WebElement> searchResults) throws Exception {
+
+    }
+
+    @Override
+    public void clickOnCloseSearchBoxButton() throws Exception {
+
+    }
+
+    @Override
+    public void verifySearchBoxNotDisplayInDayView() throws Exception {
+
+    }
+
+    @Override
+    public int getRandomIndexOfShift() {
+        return 0;
+    }
 }

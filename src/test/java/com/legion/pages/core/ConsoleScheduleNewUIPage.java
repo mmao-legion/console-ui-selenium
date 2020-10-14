@@ -5509,27 +5509,51 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(className = "week-schedule-shift")
     private List<WebElement> weekShifts;
 
+
     @Override
     public List<String> getTheShiftInfoByIndex(int index) throws Exception {
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 10) && index < weekShifts.size()) {
             String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
-            String name = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText();
+            String firstName = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText();
+            String lastName = getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
+            String jobTitle = weekShifts.get(index).findElement(By.className("week-schedule-role-name")).getText();
             WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
             clickTheElement(infoIcon);
+            String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
             if (isElementLoaded(shiftDuration, 10)) {
                 String shiftTime = shiftDuration.getText();
-                shiftInfo.add(name);
+                shiftInfo.add(firstName);
                 shiftInfo.add(dayIndex);
                 shiftInfo.add(shiftTime);
+                shiftInfo.add(jobTitle);
+                shiftInfo.add(workRole);
+                shiftInfo.add(lastName);
             }
+            //To close the info popup
+            click(weekShifts.get(index));
         } else {
             SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
         }
-        if (shiftInfo.size() != 3) {
-            SimpleUtils.fail("Failed to get the user name, day index and shift time!", false);
+        if (shiftInfo.size() != 6) {
+            SimpleUtils.fail("Failed to get the shift info!", false);
         }
         return shiftInfo;
+    }
+
+    public String getTMDetailNameFromProfilePage(WebElement shift) throws Exception {
+        String tmDetailName = null;
+        click(shift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+        clickOnViewProfile();
+        if (isElementEnabled(tmpProfileContainer, 5)) {
+            if (isElementEnabled(personalDetailsName, 5)) {
+                tmDetailName = personalDetailsName.getText();
+            } else
+                SimpleUtils.fail("TM detail name fail to load!", false);
+        } else
+            SimpleUtils.fail("Profile page fail to load!", false);
+        click(closeViewProfileContainer);
+        return tmDetailName;
     }
 
     @Override
@@ -7676,6 +7700,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> infoIcons;
     @FindBy(css = ".sch-shift-hover div:nth-child(3)>div.ng-binding")
     private WebElement shiftDuration;
+    @FindBy(css = ".shift-hover-subheading.ng-binding")
+    private WebElement shiftJobTitleAsWorkRole;
     @FindBy(className = "shift-info")
     private WebElement shiftDetail;
     @FindBy(className = "lg-toast")
@@ -9134,8 +9160,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     click(applyButtonChangeRole);
                     if (isElementEnabled(roleViolationAlter, 5)) {
                         click(roleViolationAlterOkButton);
-                        click(clickedShift);
                     }
+                    click(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
                     SimpleUtils.pass("Apply button has been clicked ");
                 } else {
                     click(cancelButtonChangeRole);
@@ -9474,8 +9500,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String textOnConvertToOpenPopUp = "Are you sure you want to make this an Open Shift?\n" +
                 firstNameOfTM + " will be losing this shift. Legion will automatically offer the shift to matching team members.\n" +
                 "I want to offer to specific team members";
-        String test = titleOfConvertToOpenShiftPopup.getText()+ "\n" + descriptionOfConvertToOpenShiftPopup.getText() + "\n" + textOfManualOpenShift.getText();
-
         if (isElementLoaded(titleOfConvertToOpenShiftPopup,5) && isElementLoaded(radioBtnManualOpenShift,5)
                 && isElementLoaded(btnCancelOpenSchedule,5) && isElementLoaded(btnYesOpenSchedule,5)
                 && textOnConvertToOpenPopUp.equals(titleOfConvertToOpenShiftPopup.getText()+ "\n" + descriptionOfConvertToOpenShiftPopup.getText() + "\n" + textOfManualOpenShift.getText())) {
@@ -11260,4 +11284,163 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Theoffer list is null!",false);
         }
     }
-}
+
+    @FindBy(css = "[ng-click=\"openSearchBox()\"]")
+    private WebElement openSearchBoxButton;
+
+    @FindBy(css = "[ng-click=\"closeSearchBox()\"]")
+    private WebElement closeSearchBoxButton;
+
+    @FindBy(css = "input[placeholder=\"Search by Employee Name, Work Role or Title\"]")
+    private WebElement searchBox;
+
+    @FindBy(css = "input[placeholder=\"Search by Employee Name, Work Role or Title\"]")
+    private WebElement textInSearchBox;
+
+    @FindBy(css = "div[ng-show=\"!forbidModeChange\"]")
+    private WebElement switchDayViewAndWeeKViewButton;
+
+
+
+    public void verifyGhostTextInSearchBox () throws Exception{
+        if (isElementEnabled(searchBox, 5)) {
+            String ghostText = "Search by Employee Name, Work Role or Title";
+//            if (textInSearchBox.getAttribute("value").equals(ghostText)) {
+//                SimpleUtils.pass("The ghost text in search box display correctly");
+//            } else
+//                SimpleUtils.fail("The ghost text in search box display incorrectly",true);
+
+        } else {
+            SimpleUtils.fail("Search box on schedule page load fail!",false);
+        }
+    }
+
+    public void clickOnOpenSearchBoxButton() throws Exception {
+        if (isElementEnabled(openSearchBoxButton, 5)) {
+            click(openSearchBoxButton);
+            if (isElementEnabled(searchBox, 5)) {
+                SimpleUtils.pass("Search box is opened successfully");
+            } else {
+                SimpleUtils.fail("Search box is not opened successfully", false);
+            }
+
+        }else {
+            SimpleUtils.fail("There is no Open search box button!",false);
+        }
+    }
+
+    public void clickOnCloseSearchBoxButton() throws Exception {
+        if (isElementEnabled(closeSearchBoxButton, 5)) {
+            click(closeSearchBoxButton);
+            if (!isElementEnabled(searchBox, 5)) {
+                SimpleUtils.pass("Search box is closed successfully");
+            } else {
+                SimpleUtils.fail("Search box is not closed successfully", true);
+            }
+        }else {
+            SimpleUtils.fail("There is no Close search box button!",true);
+        }
+    }
+
+    public List<WebElement> searchShiftOnSchedulePage(String searchText) throws Exception {
+        List<WebElement> searchResult = null;
+        if (isElementEnabled(searchBox, 5)) {
+            searchBox.clear();
+            waitForSeconds(3);
+            searchBox.sendKeys(searchText);
+            waitForSeconds(3);
+            if (areListElementVisible(weekShifts, 5) && weekShifts.size() >0) {
+                searchResult = weekShifts;
+            } else
+                SimpleUtils.fail("Cannot search on schedule page!",false);
+        } else {
+            SimpleUtils.fail("Search box on schedule page load fail!",false);
+        }
+        return searchResult;
+    }
+
+    public void verifySearchResult (String firstNameOfTM, String lastNameOfTM, String workRole, String jobTitle, List<WebElement> searchResults) throws Exception {
+        if (searchResults !=null && searchResults.size()>0) {
+            if (firstNameOfTM != null) {
+                for (int i=0; i< searchResults.size(); i++) {
+                    String[] tmDetailName = getTMDetailNameFromProfilePage(searchResults.get(i)).split(" ");
+                    if (firstNameOfTM.equals(tmDetailName[0])|| firstNameOfTM.equals(tmDetailName[1])) {
+                        SimpleUtils.pass("The search result display correctly when search by TM first name");
+                    } else {
+                        SimpleUtils.fail("The search result incorrect when search by TM first name",true);
+                        break;
+                    }
+                }
+            } else if (lastNameOfTM != null) {
+                for (int i=0; i< searchResults.size(); i++) {
+                    String[] tmDetailName = getTMDetailNameFromProfilePage(searchResults.get(i)).split(" ");
+                    if (lastNameOfTM.equals(tmDetailName[0]) || lastNameOfTM.equals(tmDetailName[1])) {
+                        SimpleUtils.pass("The search result display correctly when search by TM last name");
+                    } else {
+                        SimpleUtils.fail("The search result incorrect when search by TM last name",true);
+                        break;
+                    }
+                }
+            }
+            else if (workRole != null) {
+                for (int i=0; i <searchResults.size(); i++) {
+                    if (workRole.equals(getShiftInfoFromInfoPopUp(searchResults.get(i)).get(0))) {
+                        SimpleUtils.pass("The search result display correctly when search by Work Role");
+                    } else {
+                        SimpleUtils.fail("The search result incorrect when search by Work Role",true);
+                        break;
+                    }
+                }
+            } else if (jobTitle != null) {
+                for (int i=0; i <searchResults.size(); i++) {
+                    if (jobTitle.equals(searchResults.get(i).findElement(By.cssSelector(".week-schedule-role-name")).getText())) {
+                        SimpleUtils.pass("The search result display correctly when search by Job Title");
+                    } else {
+                        SimpleUtils.fail("The search result incorrect when search by Job Title",true);
+                        break;
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Verify texts all are null!",true);
+            }
+        } else {
+            SimpleUtils.fail("There is no search result!",true);
+        }
+    }
+
+    public List<String> getShiftInfoFromInfoPopUp(WebElement shift) {
+        List<String> shiftInfo = new ArrayList<>();;
+        if (shift != null) {
+            click(shift.findElement(By.className("week-schedule-shit-open-popover")));
+        } else {
+            SimpleUtils.fail("Selected shift is null!",true);
+        }
+        if (isElementEnabled(popOverContent, 5)) {
+            String[] jobTitleAndWorkRole = popOverContent.findElement(By.cssSelector(".shift-hover-subheading.ng-binding")).getText().split("as");
+            //add job title
+            shiftInfo.add(jobTitleAndWorkRole[0].trim());
+            //add work role
+            shiftInfo.add(jobTitleAndWorkRole[1].trim());
+        }
+        return shiftInfo;
+    }
+
+    public void verifySearchBoxNotDisplayInDayView() throws Exception {
+        if (!switchDayViewAndWeeKViewButton.getAttribute("class").contains("hide")) {
+            clickOnDayView();
+            if (!isElementEnabled(openSearchBoxButton, 5) || !isElementEnabled(searchBox, 5)) {
+                SimpleUtils.pass("Search box is not display in Day View");
+            } else
+                SimpleUtils.fail("Search box should not display in Day View", true);
+        }
+    }
+
+    public int getRandomIndexOfShift() {
+        int randomIndex = 0;
+        if (areListElementVisible(weekShifts, 5) && weekShifts.size() >0 ){
+            randomIndex = (new Random()).nextInt(weekShifts.size());
+        } else
+            SimpleUtils.fail("There is no shift display on schedule page", true);
+        return randomIndex;
+    }
+ }
