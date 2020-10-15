@@ -2898,11 +2898,6 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void clickOnEditButtonOnSchedulePage() throws Exception {
-
-    }
-
-    @Override
     public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception {
 
     }

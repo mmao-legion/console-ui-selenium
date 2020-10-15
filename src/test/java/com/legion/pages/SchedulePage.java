@@ -453,7 +453,6 @@ public interface SchedulePage {
 	public void selectWorkingDaysOnNewShiftPageByIndex(int index) throws Exception;
 	public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception;
 	public void validateScheduleTableWhenSelectAnyOfGroupByOptions() throws Exception;
-	public void clickOnEditButtonOnSchedulePage() throws Exception;
 	public void changeWorkRoleInPrompt(boolean isApplyChange) throws Exception;
 	public void switchSearchTMAndRecommendedTMsTab() throws Exception;
 	public String convertToOpenShiftAndOfferToSpecificTMs() throws Exception;
