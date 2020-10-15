@@ -1334,22 +1334,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-
-    @Override
-    public void clickOnEditButtonOnSchedulePage() throws Exception {
-        if (isElementEnabled(editScheduleButton,5)) {
-            click(editScheduleButton);
-            if (isElementLoaded(editAnywayPopupButton, 2)) {
-                click(editAnywayPopupButton);
-                SimpleUtils.pass("Schedule edit shift page loaded successfully!");
-            } else {
-                SimpleUtils.pass("Schedule edit shift page loaded successfully for Draft or Publish Status");
-            }
-        } else {
-            SimpleUtils.pass("Schedule Edit button is not enabled Successfully!");
-        }
-    }
-
     public void clickOnSuggestedButton() throws Exception {
         if (isElementEnabled(scheduleTypeSystem, 5)) {
             click(scheduleTypeSystem);
@@ -9161,6 +9145,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (isElementEnabled(roleViolationAlter, 5)) {
                         click(roleViolationAlterOkButton);
                     }
+                    //to close the popup
+                    click(clickedShift);
+
                     click(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
                     SimpleUtils.pass("Apply button has been clicked ");
                 } else {
@@ -9294,7 +9281,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     public void verifyEditShiftTimePopUpDisplay() throws Exception {
-
         if (isElementEnabled(editShiftTimePopUp, 5)) {
             if (isElementEnabled(shiftInfoContainer, 5) && isElementEnabled(shiftStartAndEndTimeContainer, 5)
                     && isElementEnabled(cancelButtonInEditShiftTimeWindow, 5) && isElementEnabled(updateButtonInEditShiftTimeWindow, 5)) {
@@ -9308,33 +9294,28 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public List<String> editShiftTime() throws Exception {
-
-
+        List<String> shiftTimes= new ArrayList<>();
         if (isElementEnabled(shiftStartAndEndTimeContainer, 5) && isElementEnabled(shiftStartTimeButton, 5)
                 && isElementEnabled(shiftEndTimeButton, 5) && isElementEnabled(shiftTimeInEditShiftWindow, 5)) {
 
             String shiftTimeBeforeUpdate = shiftTimeInEditShiftWindow.getText();
-            List<String> shiftTime = new ArrayList<>();
-            shiftTime.add(0, shiftTimeBeforeUpdate);
+            shiftTimes.add(0, shiftTimeBeforeUpdate);
             moveDayViewCards(shiftEndTimeButton, -80);
             String shiftTimeAfterUpdate = shiftTimeInEditShiftWindow.getText();
             if (!shiftTimeBeforeUpdate.equals(shiftTimeAfterUpdate)) {
                 SimpleUtils.pass("Edit Shift Time successfully");
-                shiftTime.add(1, shiftTimeAfterUpdate);
-                return shiftTime;
+                shiftTimes.add(1, shiftTimeAfterUpdate);
             } else {
                 SimpleUtils.fail("Shift Time doesn't change", true);
-                return shiftTime;
             }
 
         } else {
             SimpleUtils.fail("Edit Shift Time container load failed", true);
-            return null;
         }
+        return shiftTimes;
     }
 
     public void verifyShiftTime(String shiftTime) throws Exception {
-
         if (isElementEnabled(shiftStartAndEndTimeContainer, 5)) {
             if (shiftTimeInEditShiftWindow.getText().equals(shiftTime)) {
                 SimpleUtils.pass("Edit Shift Time PopUp window load successfully");
@@ -9349,11 +9330,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String shiftTime = null;
         if (isElementEnabled(shiftStartAndEndTimeContainer, 5) && isElementEnabled(shiftTimeInEditShiftWindow,  5)) {
             shiftTime = shiftTimeInEditShiftWindow.getText();
-            return shiftTime;
         } else {
             SimpleUtils.fail("Edit Shift Time load failed", true);
-            return  shiftTime;
         }
+        return shiftTime;
     }
 
     @Override
@@ -11305,6 +11285,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifyGhostTextInSearchBox () throws Exception{
         if (isElementEnabled(searchBox, 5)) {
             String ghostText = "Search by Employee Name, Work Role or Title";
+            String test = textInSearchBox.getAttribute("value");
+            String test2 = textInSearchBox.getAttribute("value");
 //            if (textInSearchBox.getAttribute("value").equals(ghostText)) {
 //                SimpleUtils.pass("The ghost text in search box display correctly");
 //            } else
@@ -11409,7 +11391,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public List<String> getShiftInfoFromInfoPopUp(WebElement shift) {
-        List<String> shiftInfo = new ArrayList<>();;
+        List<String> shiftInfo = new ArrayList<>();
         if (shift != null) {
             click(shift.findElement(By.className("week-schedule-shit-open-popover")));
         } else {

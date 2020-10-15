@@ -441,11 +441,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		if(!isActiveWeekGenerated2){
 			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
-		schedulePage.clickOnEditButtonOnSchedulePage();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		schedulePage.deleteTMShiftInWeekView("Unassigned");
 		schedulePage.saveSchedule();
 		schedulePage.publishActiveSchedule();
-		schedulePage.clickOnEditButtonOnSchedulePage();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , schedulePage.verifyContextOfTMDisplay(), false);
 
 		//"After Click on view profile,then particular TM profile is displayed :1. Personal details 2. Work Preferences 3. Availability
