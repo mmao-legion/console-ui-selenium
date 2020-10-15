@@ -11285,12 +11285,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifyGhostTextInSearchBox () throws Exception{
         if (isElementEnabled(searchBox, 5)) {
             String ghostText = "Search by Employee Name, Work Role or Title";
-            String test = textInSearchBox.getAttribute("value");
-            String test2 = textInSearchBox.getAttribute("value");
-//            if (textInSearchBox.getAttribute("value").equals(ghostText)) {
-//                SimpleUtils.pass("The ghost text in search box display correctly");
-//            } else
-//                SimpleUtils.fail("The ghost text in search box display incorrectly",true);
+            if (textInSearchBox.getAttribute("placeholder").equals(ghostText)) {
+                SimpleUtils.pass("The ghost text in search box display correctly");
+            } else
+                SimpleUtils.fail("The ghost text in search box display incorrectly",true);
 
         } else {
             SimpleUtils.fail("Search box on schedule page load fail!",false);
