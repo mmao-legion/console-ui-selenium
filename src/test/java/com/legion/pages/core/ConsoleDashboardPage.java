@@ -545,11 +545,14 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = ".lgn-action-button-success")
 	private WebElement OKButton;
 
-	@FindBy(css = ".quick-profile")
+	@FindBy(css = "sub-content-box[box-title=\"User Profile\"]")
 	private WebElement personalDetails;
 
-	@FindBy(css = ".quick-engagement")
-	private WebElement engagementDetails;
+	@FindBy(css = "sub-content-box[box-title=\"HR Profile Information\"]")
+	private WebElement hrProfileInfo;
+
+	@FindBy(css = "sub-content-box[box-title=\"Legion Information\"]")
+	private WebElement legionInfo;
 
 	@FindBy(xpath = "//span[contains(text(),'My Shift Preferences')]")
 	private WebElement myShiftPreferences;
@@ -846,11 +849,11 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public void validateTheDataOfMyProfile() throws Exception {
 		clickOnSubMenuOnProfile("My Profile");
-		if (isElementLoaded(personalDetails, 20) && isElementLoaded(engagementDetails, 20)) {
-			if (personalDetails.isDisplayed() && engagementDetails.isDisplayed())
-				SimpleUtils.pass("My Profile: It shows the TM's personal and engagement details successfully");
+		if (isElementLoaded(personalDetails, 20) && isElementLoaded(hrProfileInfo, 20)&& isElementLoaded(legionInfo, 20)) {
+			if (personalDetails.isDisplayed() && hrProfileInfo.isDisplayed())
+				SimpleUtils.pass("My Profile: It shows the TM's profile information details successfully");
 		} else {
-			SimpleUtils.fail("My Profile: Failed to show the TM's personal and engagement", true);
+			SimpleUtils.fail("My Profile: Failed to show the TM's profile information", true);
 		}
 	}
 
