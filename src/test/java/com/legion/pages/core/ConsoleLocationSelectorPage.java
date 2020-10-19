@@ -83,7 +83,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public Boolean isChangeLocationButtonLoaded() throws Exception
     {
-        if(isElementLoaded(locationSelectorButton,10)) {
+        if(isElementLoaded(locationSelectorButton,20)) {
             return true;
         }
         return false;
@@ -97,40 +97,42 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         waitForSeconds(4);
         try {
             Boolean isLocationMatched = false;
-            activeConsoleName = activeConsoleMenuItem.getText();
-            setScreenshotConsoleName(activeConsoleName);
-            if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
-                if (isChangeLocationButtonLoaded()) {
-                    if (isLocationSelected(locationName)) {
-                        SimpleUtils.pass("Given Location '" + locationName + "' already selected!");
-                    } else {
-                        click(locationSelectorButton);
-                        if (areListElementVisible(availableLocationCardsName, 10) || isElementLoaded(locationDropDownButton)) {
-                            if (availableLocationCardsName.size() != 0) {
-                                for (WebElement locationCardName : availableLocationCardsName) {
-                                    if (locationCardName.getText().contains(locationName)) {
-                                        isLocationMatched = true;
-                                        click(locationCardName);
-                                        SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
-                                        break;
+            if (isElementLoaded(activeConsoleMenuItem, 15)) {
+                activeConsoleName = activeConsoleMenuItem.getText();
+                setScreenshotConsoleName(activeConsoleName);
+                if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
+                    if (isChangeLocationButtonLoaded()) {
+                        if (isLocationSelected(locationName)) {
+                            SimpleUtils.pass("Given Location '" + locationName + "' already selected!");
+                        } else {
+                            click(locationSelectorButton);
+                            if (areListElementVisible(availableLocationCardsName, 10) || isElementLoaded(locationDropDownButton)) {
+                                if (availableLocationCardsName.size() != 0) {
+                                    for (WebElement locationCardName : availableLocationCardsName) {
+                                        if (locationCardName.getText().contains(locationName)) {
+                                            isLocationMatched = true;
+                                            click(locationCardName);
+                                            SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
+                                            break;
+                                        }
                                     }
-                                }
-                            if (!isLocationMatched) {
-                                if (isElementLoaded(dashboardLocationsPopupCancelButton)) {
-                                    click(dashboardLocationsPopupCancelButton);
-                                }
-                                SimpleUtils.fail("Location does not match with '" + locationName + "'", true);
-                            }
+                                    if (!isLocationMatched) {
+                                        if (isElementLoaded(dashboardLocationsPopupCancelButton)) {
+                                            click(dashboardLocationsPopupCancelButton);
+                                        }
+                                        SimpleUtils.fail("Location does not match with '" + locationName + "'", true);
+                                    }
 
+                                }
                             }
                         }
                     }
-                }
-            } else {
-                WebElement dashboardConsoleMenu = SimpleUtils.getSubTabElement(consoleMenuItems, dashboardConsoleMenuText);
-                if (isElementLoaded(dashboardConsoleMenu)) {
-                    click(dashboardConsoleMenu);
-                    changeLocation(locationName);
+                } else {
+                    WebElement dashboardConsoleMenu = SimpleUtils.getSubTabElement(consoleMenuItems, dashboardConsoleMenuText);
+                    if (isElementLoaded(dashboardConsoleMenu)) {
+                        click(dashboardConsoleMenu);
+                        changeLocation(locationName);
+                    }
                 }
             }
         }

@@ -3860,7 +3860,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         }
                     }
                     clickTheElement(operatingHoursSaveBtn);
-                    if (isElementEnabled(operatingHoursEditBtn, 5)) {
+                    if (isElementEnabled(operatingHoursEditBtn, 15)) {
                         SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
                     }else {
                         SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
