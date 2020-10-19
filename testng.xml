@@ -131,9 +131,12 @@
                     <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager" />
-                    <include name="verifyAssignTMWarningWhenTMIsInactiveAsStoreManager" />
+                    <!-- <include name="verifyAssignTMWarningWhenTMIsInactiveAsStoreManager" />-->
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin" />
+                    <include name="verifySearchBarOnSchedulePageAsInternalAdmin" />
+                    <include name="verifyVersionNumberAndEditsAsInternalAdmin" />
+                    <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

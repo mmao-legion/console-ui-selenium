@@ -453,7 +453,6 @@ public interface SchedulePage {
 	public void selectWorkingDaysOnNewShiftPageByIndex(int index) throws Exception;
 	public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception;
 	public void validateScheduleTableWhenSelectAnyOfGroupByOptions() throws Exception;
-	public void clickOnEditButtonOnSchedulePage() throws Exception;
 	public void changeWorkRoleInPrompt(boolean isApplyChange) throws Exception;
 	public void switchSearchTMAndRecommendedTMsTab() throws Exception;
 	public String convertToOpenShiftAndOfferToSpecificTMs() throws Exception;
@@ -474,4 +473,15 @@ public interface SchedulePage {
 	public void closeAnalyzeWindow() throws Exception;
 	public void verifyVersionInSaveMessage(String version) throws Exception;
 	public void clickOnManagerButton() throws Exception;
+	public void verifyAllShiftsAssigned() throws Exception;
+	public void clickProfileIconOfShift(WebElement shift) throws Exception;
+	public void clickViewStatusBtn() throws Exception;
+	public void verifyListOfOfferNotNull() throws Exception;
+	public void clickOnOpenSearchBoxButton() throws Exception;
+	public void verifyGhostTextInSearchBox () throws Exception;
+	public List<WebElement> searchShiftOnSchedulePage(String searchText) throws Exception;
+	public void verifySearchResult (String firstNameOfTM, String lastNameOfTM, String workRole, String jobTitle, List<WebElement> searchResults) throws Exception;
+	public void clickOnCloseSearchBoxButton() throws Exception;
+	public void verifySearchBoxNotDisplayInDayView() throws Exception;
+	public int getRandomIndexOfShift();
 }
