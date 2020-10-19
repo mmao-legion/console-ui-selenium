@@ -43,9 +43,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
         //T1838595 Validate the edit functionality on My Profile page.
-        boolean isEditingProfileSection = profileNewUIPage.isEditingProfileSectionLoaded();
-        SimpleUtils.assertOnFail("Profile Page:  Editing Profile Section not loaded.", isEditingProfileSection, true);
-        profileNewUIPage.validateTheEditFunctionalityOnMyProfile("Sammie", "Garden Rd 2-8", "Los_Angeles", "CA", "214121");
+        profileNewUIPage.validateTheEditFunctionalityOnMyProfile("Sammie", "Garden Rd 2-8", "Los_Angeles", "California", "214121");
 
         //T1838596 Validate the feature of Change password.
         profileNewUIPage.validateTheFeatureOfChangePassword(password);
@@ -54,7 +52,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
         String newPassword = profileNewUIPage.getNewPassword(password);
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
-        loginToLegionAndVerifyIsLoginDone(username, newPassword, location);
+        loginToLegionAndVerifyIsLoginDone(username,newPassword,location);
         dashboardPage.clickOnSubMenuOnProfile("My Profile");
         profileNewUIPage.validateTheFeatureOfChangePassword(newPassword);
     }

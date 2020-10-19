@@ -2818,7 +2818,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 	// Added by Nora: For Profile Section
-	@FindBy (css = "[ng-click=\"editProfile()\"]")
+	@FindBy (css = "work-preference-management .user-profile-section button")
 	private WebElement editProfileButton;
 	@FindBy (css = "[ng-click=\"editEngagement()\"]")
 	private WebElement editEngagementBtn;
@@ -2841,14 +2841,14 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void updateBusinessProfilePicture(String filePath) throws Exception {
-		if(isElementLoaded(editProfileButton,10)){
-			click(editProfileButton);
+		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),10)){
+			click(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
 			if (isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1), 5)) {
 				getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(filePath);
 				// wait for the picture to be loaded
 				waitForSeconds(5);
-				scrollToElement(saveTMButton);
-				click(saveTMButton);
+				scrollToElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
+				click(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
 			}else {
 				SimpleUtils.fail("Business Profile Image input element isn't enabled!", true);
 			}

@@ -134,7 +134,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 		String fileName = "UsersCredentials.json";
 		fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
 		HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-		Object[][] internalAdminCredentials = userCredentials.get("InternalAdmin");
+		Object[][] internalAdminCredentials = userCredentials.get("StoreManager");
 		loginToLegionAndVerifyIsLoginDone(String.valueOf(internalAdminCredentials[0][0]), String.valueOf(internalAdminCredentials[0][1])
 				, String.valueOf(internalAdminCredentials[0][2]));
 
