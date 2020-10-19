@@ -280,7 +280,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void selectTimeOffReason(String reasonLabel) throws Exception
 	{
 		boolean isTimeOffReasonSelected = false;
-		if(timeOffReasons.size() > 0) {
+		if(areListElementVisible(timeOffReasons, 20)) {
 			for(WebElement timeOffReason : timeOffReasons) {
 				if(timeOffReason.getText().toLowerCase().contains(reasonLabel.toLowerCase())) {
 					click(timeOffReason);
@@ -1516,6 +1516,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement myAvailability;
 	@FindBy(css="i.fa-lock")
 	private WebElement lockIcon;
+	@FindBy(css="user-profile-section[editing-locked] div[class=\"user-profile-section__header\"] span")
+	private WebElement editBtn;
 
 	@Override
 	public boolean isMyAvailabilityLockedNewUI() throws Exception
@@ -1536,8 +1538,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void updateMyAvailability(String hoursType, int sliderIndex,
 										String leftOrRightSliderArrow, double durationhours, String repeatChanges) throws Exception
 	{
-		WebElement editBtn = myAvailability.findElement(By.cssSelector("div[class=\"user-profile-section__header\"] span"));
-		if (isElementLoaded(editBtn,10)){
+		if (isElementLoaded(editBtn,15)){
 			click(editBtn);
 			updatePreferredOrBusyHoursDurationNew(sliderIndex,durationhours,leftOrRightSliderArrow, hoursType);
 			saveMyAvailabilityEditMode(repeatChanges);
