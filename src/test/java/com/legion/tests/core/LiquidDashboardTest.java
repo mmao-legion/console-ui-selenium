@@ -10,6 +10,7 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
@@ -1098,5 +1099,30 @@ public class LiquidDashboardTest extends TestBase {
         //approvalRateOnTimesheet is a total approval rate number on smart card in timesheet page.
         int approvalRateOnTimesheet = timeSheetPage.getApprovalRateFromTimesheetByLocation(location);
         SimpleUtils.assertOnFail("Timesheet Approval Rate widget: values on timesheet approval rate widget and those in timesheet page are not consistent!",approvalRateOnTimesheet==approvalRateOnWidget,true);
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "verify there is no open shift on starting soon widget")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyNoOpenShiftOnStartingSoonWidgetAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+        liquidDashboardPage.switchOnWidget(widgetType.Starting_Soon.getValue());
+
+        HashMap<String, String> upComingShifts = new HashMap<>();
+        boolean areShiftsLoaded = dashboardPage.isStartingSoonLoaded();
+        if (areShiftsLoaded) {
+            upComingShifts = dashboardPage.getUpComingShifts();
+            if (upComingShifts.containsKey("Open shift") || upComingShifts.containsValue("Open shift")){
+                SimpleUtils.fail("There should not be open shift displayed!",false);
+            } else {
+                SimpleUtils.pass("No open shift diaplayed on the widget!");
+            }
+        }else {
+            SimpleUtils.report("No upcoming shifts loaded!");
+        }
     }
 }
