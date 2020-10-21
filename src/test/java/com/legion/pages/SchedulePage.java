@@ -485,4 +485,8 @@ public interface SchedulePage {
 	public void verifySearchBoxNotDisplayInDayView() throws Exception;
 	public int getRandomIndexOfShift();
 	public void goToSpecificWeekByDate(String date) throws Exception;
+	public void clearAllSelectedDays() throws Exception;
+	public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception;
+	public void dragOneAvatarToAnother(int startIndex, String firstName, int endIndex) throws Exception;
+	public int getTheIndexOfTheDayInWeekView(String date) throws Exception;
 }

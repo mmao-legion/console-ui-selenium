@@ -174,7 +174,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     //parameter option: helpful links and so on
     private boolean verifyIfSpecificWidgetDisplayed(String widgetTitle) throws Exception{
         waitForSeconds(10);
-        if (areListElementVisible(widgetsInDashboardPage,10)){
+        if (areListElementVisible(widgetsInDashboardPage,20)){
             for (WebElement widgetTemp : widgetsInDashboardPage){
                 if(widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains(widgetsNameWrapper(widgetTitle))){
                     if (widgetsNameWrapper(widgetTitle).equalsIgnoreCase("timesheet approval")){

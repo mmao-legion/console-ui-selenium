@@ -5599,7 +5599,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    private void clearAllSelectedDays() throws Exception {
+    public void clearAllSelectedDays() throws Exception {
         if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
             for (WebElement weekDay : weekDays) {
                 if (weekDay.getAttribute("class").contains("week-day-multi-picker-day-selected")) {
@@ -5880,6 +5880,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                                 if (workerName.getText().toLowerCase().trim().equals(name.trim().toLowerCase())) {
                                     click(optionCircle);
                                     SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                                    waitForSeconds(2);
                                     if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().equalsIgnoreCase("ASSIGN ANYWAY")) {
                                         click(btnAssignAnyway);
                                         SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
@@ -7646,7 +7647,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public boolean isPopOverLayoutLoaded() throws Exception {
         boolean isLoaded = false;
-        if (isElementLoaded(popOverLayout, 10)) {
+        if (isElementLoaded(popOverLayout, 15)) {
             isLoaded = true;
             SimpleUtils.pass("Pop over layout loaded Successfully!");
         }
@@ -11451,6 +11452,89 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             }
         }
+    }
+
+    @Override
+    public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception {
+        List<Integer> indexes = new ArrayList<>();
+        int selectedCount = 0;
+        if (count > 7) {
+            SimpleUtils.fail("Create New Shift: There are total 7 days, the count: " + count + " is larger than 7", false);
+        }
+        if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+            for (int i = 0; i < 7; i++) {
+                if (weekDays.get(i).getAttribute("class").contains("week-day-multi-picker-day-disabled")) {
+                    SimpleUtils.report("Day: " + weekDays.get(i).getText() + " is disabled!");
+                } else {
+                    if (cannotSelectedDate == null || cannotSelectedDate == "") {
+                        if (!weekDays.get(i).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
+                            click(weekDays.get(i));
+                            SimpleUtils.report("Select day: " + weekDays.get(i).getText() + " Successfully!");
+                        }
+                        selectedCount++;
+                    } else {
+                        int date = Integer.parseInt(weekDays.get(i).getText().substring(weekDays.get(i).getText().length() - 2));
+                        int cannotDate = Integer.parseInt(cannotSelectedDate.substring(cannotSelectedDate.length() - 2));
+                        if (date != cannotDate) {
+                            if (!weekDays.get(i).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
+                                click(weekDays.get(i));
+                                SimpleUtils.report("Select day: " + weekDays.get(i).getText() + " Successfully!");
+                            }
+                            selectedCount++;
+                            indexes.add(i);
+                        }
+                    }
+                    if (selectedCount == count) {
+                        SimpleUtils.pass("Create New Shift: Select " + count + " days Successfully!");
+                        break;
+                    }
+                }
+            }
+            if (selectedCount != count) {
+                SimpleUtils.fail("Create New Shift: Failed to select " + count + " days! Actual is: " + selectedCount + " days!", false);
+            }
+        }else{
+            SimpleUtils.fail("Weeks Days failed to load!", true);
+        }
+        return indexes;
+    }
+
+    @Override
+    public void dragOneAvatarToAnother(int startIndex, String firstName, int endIndex) throws Exception {
+        List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
+        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
+        if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0) {
+            for (WebElement start : startElements) {
+                WebElement name = start.findElement(By.className("week-schedule-worker-name"));
+                WebElement startAvatar = start.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
+                if (name != null && startAvatar != null && name.getText().equalsIgnoreCase(firstName)) {
+                    WebElement endAvatar = endElements.get(0).findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
+                    if (endAvatar != null) {
+                        mouseHoverDragandDrop(startAvatar, endAvatar);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public int getTheIndexOfTheDayInWeekView(String date) throws Exception {
+        int index = -1;
+        if (areListElementVisible(schCalendarDateLabel, 10)) {
+            for (int i = 0; i < schCalendarDateLabel.size(); i++) {
+                if (schCalendarDateLabel.get(i).getText().contains(date)) {
+                    index = i;
+                    SimpleUtils.pass("Get the index of " + date + ", the index is: " + i);
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Schedule Week View: Week day labels are failed to load!", false);
+        }
+        if (index == -1) {
+            SimpleUtils.fail("Failed to get the index of the day: " + date, false);
+        }
+        return index;
     }
 
     private List<String> getYearsFromCalendarMonthYearText() throws Exception {

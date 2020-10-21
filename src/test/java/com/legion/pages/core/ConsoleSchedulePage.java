@@ -3061,4 +3061,24 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void goToSpecificWeekByDate(String date) throws Exception {
 
     }
+
+    @Override
+    public void clearAllSelectedDays() throws Exception {
+
+    }
+
+    @Override
+    public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void dragOneAvatarToAnother(int startIndex, String firstName, int endIndex) throws Exception {
+
+    }
+
+    @Override
+    public int getTheIndexOfTheDayInWeekView(String date) throws Exception {
+        return 0;
+    }
 }

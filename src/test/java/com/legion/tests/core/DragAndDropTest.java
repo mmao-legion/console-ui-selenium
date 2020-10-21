@@ -43,10 +43,11 @@ public class DragAndDropTest extends TestBase {
         teamPage.goToTeam();
         teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
         String userName = teamPage.selectATeamMemberToViewProfile();
+        String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         String myTimeOffLabel = "Time Off";
         profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
-        profileNewUIPage.cancelAllTimeOff();
+        teamPage.rejectAllTheTimeOffRequests();
         profileNewUIPage.clickOnCreateTimeOffBtn();
         SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
         String timeOffReasonLabel = "JURY DUTY";
@@ -74,9 +75,22 @@ public class DragAndDropTest extends TestBase {
 
         // Edit schedule to create the new shift for new TM
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView(userName);
+        schedulePage.deleteTMShiftInWeekView(userName.contains(" ") ? userName.split(" ")[0] : userName);
         schedulePage.clickOnDayViewAddNewShiftButton();
-        //schedulePage.createShiftForTMNotForOneDay(userName, timeOffDate);
+        schedulePage.customizeNewShiftPage();
+        schedulePage.clearAllSelectedDays();
+        List<Integer> indexes = schedulePage.selectDaysByCountAndCannotSelectedDate(1, timeOffDate);
+        schedulePage.selectWorkRole("MOD");
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByName(firstName);
+        schedulePage.clickOnOfferOrAssignBtn();
+
+        // Drag the shift to the time off day
+        int endIndex = schedulePage.getTheIndexOfTheDayInWeekView(timeOffDate.substring(timeOffDate.length() - 2));
+        schedulePage.dragOneAvatarToAnother(indexes.get(0), firstName, endIndex);
+
+        //TODO: verify the warning model pops up, blocked by bug: https://legiontech.atlassian.net/browse/SCH-544
     }
 
 }
