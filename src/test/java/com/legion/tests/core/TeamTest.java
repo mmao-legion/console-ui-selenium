@@ -317,6 +317,7 @@ public class TeamTest extends TestBase{
 		profileNewUIPage.verifyAlignmentOfAMAndPMAfterDeSelectAllDay();
 		// Verify Time off request can be requested
 		profileNewUIPage.clickOnSaveTimeOffRequestBtn();
+		Thread.sleep(3000);
 		// Verify count of Pending/approved/Rejected is being increased and decreased accordingly
 		int currentPendingCount = profileNewUIPage.getTimeOffCountByStatusLabel(pendingLabel);
 		if (currentPendingCount - previousPendingCount == 1) {

@@ -292,8 +292,6 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			else
 				SimpleUtils.fail("Controls Page: Time Off Reason '"+ reasonLabel +"' not found.", false);
 		}
-		else
-			SimpleUtils.fail("Controls Page: 'Time Off Reasons' not loaded.", false);
 	}
 	
 	
@@ -1895,6 +1893,16 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		startNEndDates.add(timeOffStartDateWithYear);
 		startNEndDates.add(timeOffEndDateWithYear);
 		return startNEndDates;
+	}
+
+	@Override
+	public String selectStartAndEndDateAtSameDay() throws Exception {
+		selectDate(10);
+		selectDate(10);
+		HashMap<String, String> timeOffDateWithYear = getTimeOffDateWithYear(10, 10);
+		String timeOffStartDateWithYear = timeOffDateWithYear.get("startDateWithYearTimeOff");
+		SimpleUtils.report("Create Time Off on: " + timeOffStartDateWithYear);
+		return timeOffStartDateWithYear;
 	}
 
 	@Override

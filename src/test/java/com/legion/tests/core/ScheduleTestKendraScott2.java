@@ -23,8 +23,6 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 
-import javax.xml.bind.Element;
-
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 
@@ -1772,7 +1770,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.verifyVersionInSaveMessage(version1);
 		//suggested tab
 		schedulePage.clickOnSuggestedButton();
+		Thread.sleep(3000);
 		SimpleUtils.assertOnFail("Changes not publish smart card is loaded in suggested page!",!schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
+		Thread.sleep(3000);
 		schedulePage.clickOnManagerButton();
 		SimpleUtils.assertOnFail("Changes not publish smart card is not loaded in Manager page!",schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
 		schedulePage.clickOnAnalyzeBtn();

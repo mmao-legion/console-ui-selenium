@@ -3056,4 +3056,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public int getRandomIndexOfShift() {
         return 0;
     }
+
+    @Override
+    public void goToSpecificWeekByDate(String date) throws Exception {
+
+    }
 }

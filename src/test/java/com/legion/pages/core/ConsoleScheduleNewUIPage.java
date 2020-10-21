@@ -1336,7 +1336,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public void clickOnSuggestedButton() throws Exception {
         if (isElementEnabled(scheduleTypeSystem, 5)) {
-            click(scheduleTypeSystem);
+            clickTheElement(scheduleTypeSystem);
             SimpleUtils.pass("legion button is clickable");
         }else {
             SimpleUtils.fail("the schedule is not generated, generated schedule firstly",true);
@@ -3626,21 +3626,25 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public float checkEnterBudgetWindowLoadedForNonDG() throws Exception {
         float budgetHour = 0;
         String title = "Enter Budget";
-        if (isElementLoaded(generateModalTitle, 15) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
-                && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
-            editTheBudgetForNondgFlow();
-            waitForSeconds(3);
-            try {
-                List<WebElement> trs = enterBudgetTable.findElements(By.tagName("tr"));
-                if (areListElementVisible(trs, 5) && trs.size() > 0) {
-                    WebElement budget = trs.get(trs.size() - 1).findElement(By.cssSelector("th:nth-child(4)"));
-                    budgetHour = Float.parseFloat(budget == null ? "" : budget.getText());
-                    SimpleUtils.report("Enter Budget Window: Get the budget hour: " + budgetHour);
+        try {
+            if (isElementLoaded(generateModalTitle, 15) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
+                    && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
+                editTheBudgetForNondgFlow();
+                waitForSeconds(3);
+                try {
+                    List<WebElement> trs = enterBudgetTable.findElements(By.tagName("tr"));
+                    if (areListElementVisible(trs, 5) && trs.size() > 0) {
+                        WebElement budget = trs.get(trs.size() - 1).findElement(By.cssSelector("th:nth-child(4)"));
+                        budgetHour = Float.parseFloat(budget == null ? "" : budget.getText());
+                        SimpleUtils.report("Enter Budget Window: Get the budget hour: " + budgetHour);
+                    }
+                } catch (Exception e) {
+                    // Nothing
                 }
-            } catch (Exception e) {
-                // Nothing
+                clickTheElement(nextButtonOnCreateSchedule);
             }
-            clickTheElement(nextButtonOnCreateSchedule);
+        } catch (Exception e) {
+            // do nothing
         }
         return budgetHour;
     }
@@ -3882,9 +3886,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if(isReGenerateButtonLoadedForManagerView()){
                     click(reGenerateScheduleButton);
                     generateScheduleFromCreateNewScheduleWindow(activeWeekText);
-                    if (isElementEnabled(checkOutTheScheduleButton, 20)) {
-                        checkoutSchedule();
-                    }
                 } else if (isElementLoaded(publishSheduleButton, 5)) {
                     SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
                 } else{
@@ -3894,14 +3895,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if(isReGenerateButtonLoadedForManagerView()){
                     click(reGenerateScheduleButton);
                     generateScheduleFromCreateNewScheduleWindow(activeWeekText);
-                    if (isElementEnabled(checkOutTheScheduleButton, 20)) {
-                        checkoutSchedule();
-                    }
                 } else if (isElementLoaded(publishSheduleButton, 5)) {
                     SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
                 } else{
                     SimpleUtils.fail("Generate button or Publish not found on page",false);
                 }
+            }
+            if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+                checkoutSchedule();
             }
             waitForSeconds(5);
             if (areListElementVisible(shiftsWeekView, 15) && shiftsWeekView.size() > 0) {
@@ -5086,11 +5087,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-        /*if (isElementEnabled(okAfterSaveConfirmationPopup)) {
-            click(okAfterSaveConfirmationPopup);
-        } else {
-            SimpleUtils.fail("Schedule save button not found", false);
-        }*/
         if (isElementLoaded(msgOnTop, 30) && msgOnTop.getText().contains("Success")) {
             SimpleUtils.pass("Save the Schedule Successfully!");
         } else {
@@ -5527,7 +5523,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public String getTMDetailNameFromProfilePage(WebElement shift) throws Exception {
         String tmDetailName = null;
-        click(shift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+        clickTheElement(shift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
         clickOnViewProfile();
         if (isElementEnabled(tmpProfileContainer, 5)) {
             if (isElementEnabled(personalDetailsName, 5)) {
@@ -9637,6 +9633,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (isElementEnabled(btnDelete, 5)) {
                     SimpleUtils.pass(": X button is present for selected Shift");
                     click(btnDelete);
+                    // To avoid stale element issue
+                    tempShifts = getDriver().findElements(By.cssSelector("div[ng-repeat=\"shift in filteredShifts\"]"));
                     String deletedShiftInfo = tempShifts.get(i).findElement(By.cssSelector("div.sch-day-view-right-gutter-text")).getText();
                     if (deletedShiftInfo.contains(deletedInfo)) {
                         SimpleUtils.pass("can delete shift by X button");
@@ -10098,7 +10096,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception {
-        clickOnWeekView();
+        //clickOnWeekView();
         if (areListElementVisible(weekScheduleShiftsOfWeekView, 10) && weekScheduleShiftsOfWeekView.size() != 0) {
             for (int i = 0; i < weekScheduleShiftsOfWeekView.size(); i++) {
                 if (weekScheduleShiftsOfWeekView.get(i).findElement(By.cssSelector(".week-schedule-worker-name")).getText().contains(teamMemberName)) {
@@ -11235,7 +11233,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void clickProfileIconOfShift(WebElement shift) throws Exception {
         if(isElementLoaded(shift,15)){
-            click(shift.findElement(By.cssSelector(".worker-image-optimized img")));
+            clickTheElement(shift.findElement(By.cssSelector(".worker-image-optimized img")));
             SimpleUtils.pass("clicked shift icon!");
         } else {
             SimpleUtils.fail("There is no shift you want",false);
@@ -11422,5 +11420,56 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else
             SimpleUtils.fail("There is no shift display on schedule page", true);
         return randomIndex;
+    }
+
+    // Added by Nora: Drag & Drop
+    @FindBy (className = "day-week-picker-date")
+    private WebElement calMonthYear;
+
+    @Override
+    public void goToSpecificWeekByDate(String date) throws Exception {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd");
+        Date switchDate = dateFormat.parse(date);
+        if (areListElementVisible(currentWeeks, 10) && isElementLoaded(calendarNavigationNextWeekArrow, 10)) {
+            for (int i = 0; i < currentWeeks.size(); i++) {
+                click(currentWeeks.get(i));
+                List<String> years = getYearsFromCalendarMonthYearText();
+                String activeWeek = getActiveWeekText();
+                String[] items = activeWeek.split(" ");
+                String weekStartText = years.get(0) + " " + items[3] + " " + items[4];
+                String weekEndText = (years.size() == 2 ? years.get(1) : years.get(0)) + " " + items[6] + " " + items[7];
+                Date weekStartDate = dateFormat.parse(weekStartText);
+                Date weekEndDate = dateFormat.parse(weekEndText);
+                boolean isBetween = SimpleUtils.isDateInTimeDuration(switchDate, weekStartDate, weekEndDate);
+                if (isBetween) {
+                    SimpleUtils.report("Schedule Page: Navigate to week: " + activeWeek + ", it contains the day: " + date);
+                    break;
+                }
+                if (i == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
+                    click(calendarNavigationNextWeekArrow);
+                    goToSpecificWeekByDate(date);
+                }
+            }
+        }
+    }
+
+    private List<String> getYearsFromCalendarMonthYearText() throws Exception {
+        List<String> years = new ArrayList<>();
+        if (isElementLoaded(calMonthYear, 5)) {
+            if (calMonthYear.getText().contains("-")) {
+                String[] monthAndYear = calMonthYear.getText().split("-");
+                if (monthAndYear.length == 2) {
+                    if (monthAndYear[0].trim().length() > 4)
+                        years.add(monthAndYear[0].trim().substring(monthAndYear[0].trim().length() - 4));
+                    if (monthAndYear[1].trim().length() > 4)
+                        years.add(monthAndYear[1].trim().substring(monthAndYear[1].trim().length() - 4));
+                }
+            }else {
+                years.add(calMonthYear.getText().trim().substring(calMonthYear.getText().trim().length() - 4));
+            }
+        }else {
+            SimpleUtils.fail("Calendar month and year not loaded successfully!", false);
+        }
+        return years;
     }
  }

@@ -113,6 +113,8 @@ public interface ProfileNewUIPage {
 
 	public List<String> selectStartAndEndDate() throws Exception;
 
+	public String selectStartAndEndDateAtSameDay() throws Exception;
+
 	public boolean areAllDayCheckboxesLoaded() throws Exception;
 
 	public void deSelectAllDayCheckboxes() throws Exception;

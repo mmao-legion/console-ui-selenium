@@ -484,4 +484,5 @@ public interface SchedulePage {
 	public void clickOnCloseSearchBoxButton() throws Exception;
 	public void verifySearchBoxNotDisplayInDayView() throws Exception;
 	public int getRandomIndexOfShift();
+	public void goToSpecificWeekByDate(String date) throws Exception;
 }
