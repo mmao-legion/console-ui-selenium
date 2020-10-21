@@ -1130,7 +1130,7 @@ public class ActivityTest extends TestBase {
         activityPage.verifyClickOnActivityIcon();
         activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
         activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
-        activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Reject.getValue());
+        activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Approve.getValue());
         //activityPage.closeActivityWindow();
         loginPage.logOut();
 
@@ -1157,20 +1157,9 @@ public class ActivityTest extends TestBase {
         activityPage.verifyClickOnActivityIcon();
         activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
         activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
-        activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Approve.getValue());
+        activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Reject.getValue());
         //activityPage.closeActivityWindow();
         loginPage.logOut();
-
-        // Login as Team Member to cancel all time off
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                , String.valueOf(teamMemberCredentials[0][2]));
-        pageFactory.createProfileNewUIPage();
-        profileNewUIPage.clickOnUserProfileImage();
-        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
-        SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
-        profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
-        profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
-        profileNewUIPage.cancelAllTimeOff();
     }
 
     @Automated(automated ="Automated")
