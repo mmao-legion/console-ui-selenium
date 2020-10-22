@@ -2112,8 +2112,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     //added by haya
     private boolean newVerifyActiveWeekDailyScheduleHoursInWeekView() throws Exception {
-        Float weekDaysScheduleHours = (float) 0;
-        Float activeWeekScheduleHoursOnCard = (float) 0;
+        Float weekDaysScheduleHours = 0.0f;
+        Float activeWeekScheduleHoursOnCard = 0.0f;
         activeWeekScheduleHoursOnCard = getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.scheduledHours.getValue());
         if (weekDaySummeryHoursAndTeamMembers.size() != 0) {
             for (WebElement weekDayHoursAndTMs : weekDaySummeryHoursAndTeamMembers) {
@@ -3839,7 +3839,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             clickTheElement(operatingHoursEditBtn);
             if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
                 SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
-                if (areListElementVisible(operatingHoursDayLists, 5)) {
+                if (areListElementVisible(operatingHoursDayLists, 15)) {
                     for (WebElement dayList : operatingHoursDayLists) {
                         WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
                         if (weekDay != null) {
@@ -3934,7 +3934,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             clickTheElement(operatingHoursEditBtn);
             if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
                 SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
-                if (areListElementVisible(operatingHoursDayLists, 5)) {
+                if (areListElementVisible(operatingHoursDayLists, 15)) {
                     for (WebElement dayList : operatingHoursDayLists) {
                         WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
                         WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
@@ -5493,7 +5493,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public List<String> getTheShiftInfoByIndex(int index) throws Exception {
         List<String> shiftInfo = new ArrayList<>();
-        if (areListElementVisible(weekShifts, 10) && index < weekShifts.size()) {
+        if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
             String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
             String firstName = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText();
             String lastName = getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
@@ -7050,12 +7050,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public HashMap<String, Float> getScheduleBudgetedHoursInScheduleSmartCard() throws Exception {
-
-        if (isElementLoaded(scheduleSmartCard,10) ){
             /*
             wait schedule smart card data load
             */
-            waitForSeconds(10);
+        waitForSeconds(10);
+        if (isElementLoaded(scheduleSmartCard,20) ){
             HashMap<String, Float> hoursWagesText = getScheduleLabelHoursAndWages();
             return hoursWagesText;
         }
@@ -11511,9 +11510,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     WebElement endAvatar = endElements.get(0).findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
                     if (endAvatar != null) {
                         mouseHoverDragandDrop(startAvatar, endAvatar);
+                        break;
+                    } else {
+                        SimpleUtils.fail("Schedule Page: Failed to find the avatar element!", false);
                     }
                 }
             }
+        } else {
+            SimpleUtils.fail("Schedule Page: Failed to find the shift elements for index: " + startIndex + " or " + endIndex, false);
         }
     }
 

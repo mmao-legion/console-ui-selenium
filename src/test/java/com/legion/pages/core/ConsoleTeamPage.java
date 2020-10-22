@@ -2841,7 +2841,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void updateBusinessProfilePicture(String filePath) throws Exception {
-		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),10)){
+		if(isElementLoaded(profileSection, 10) && isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),10)){
 			click(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
 			if (isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1), 5)) {
 				getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(filePath);

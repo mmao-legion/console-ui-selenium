@@ -1008,18 +1008,21 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
          */
         if (areListElementVisible(openShiftsCarouselIndicators, 5) && openShiftsCarouselIndicators.size() == 3) {
             clickTheElement(openShiftsCarouselIndicators.get(0));
+            waitForSeconds(2);
             if (openShiftsWeek.getText().toUpperCase().contains(lastWeek)) {
                 SimpleUtils.pass("Open Shifts: The first point switches to the last week successfully");
             } else {
                 SimpleUtils.fail("Open Shifts: The first point failed to switch to the last week", true);
             }
             clickTheElement(openShiftsCarouselIndicators.get(1));
+            waitForSeconds(2);
             if (openShiftsWeek.getText().toUpperCase().contains(currentWeek)) {
                 SimpleUtils.pass("Open Shifts: The second point switches to the current week successfully");
             } else {
                 SimpleUtils.fail("Open Shifts: The second point failed to switch to the current week", true);
             }
             clickTheElement(openShiftsCarouselIndicators.get(2));
+            waitForSeconds(2);
             if (openShiftsWeek.getText().toUpperCase().contains(nextWeek)) {
                 SimpleUtils.pass("Open Shifts: The third point switches to the next week successfully");
             } else {
@@ -1030,24 +1033,28 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         }
         if (isElementLoaded(openShiftsLeftArrow, 5) && isElementLoaded(openShiftsRightArrow, 5)) {
             click(openShiftsLeftArrow);
+            waitForSeconds(2);
             if (openShiftsWeek.getText().toUpperCase().contains(currentWeek)) {
                 SimpleUtils.pass("Open Shifts: The left arrow switches to the current week successfully");
             } else {
                 SimpleUtils.fail("Open Shifts: The left arrow failed to switch to the current week", true);
             }
             click(openShiftsLeftArrow);
+            waitForSeconds(2);
             if (openShiftsWeek.getText().toUpperCase().contains(lastWeek)) {
                 SimpleUtils.pass("Open Shifts: The left arrow switches to the last week successfully");
             } else {
                 SimpleUtils.fail("Open Shifts: The left arrow failed to switch to the last week", true);
             }
             click(openShiftsRightArrow);
+            waitForSeconds(2);
             if (openShiftsWeek.getText().toUpperCase().contains(currentWeek)) {
                 SimpleUtils.pass("Open Shifts: The right arrow switches to the current week successfully");
             } else {
                 SimpleUtils.fail("Open Shifts: The right arrow failed to switch to the current week", true);
             }
             click(openShiftsRightArrow);
+            waitForSeconds(2);
             if (openShiftsWeek.getText().toUpperCase().contains(nextWeek)) {
                 SimpleUtils.pass("Open Shifts: The right arrow switches to the next week successfully");
             } else {

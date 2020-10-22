@@ -34,6 +34,66 @@ public class DragAndDropTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
     @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the box interaction color and message for TM status: Scheduled at home location")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        // Select one team member to view profile
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        String userName = teamPage.selectATeamMemberToViewProfile();
+        String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
+
+        // Go to Schedule page, Schedule tab
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+        // Create schedule if it is not created
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (!isWeekGenerated){
+            schedulePage.createScheduleForNonDGFlowNewUI();
+        }
+
+        // Edit the Schedule
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+        // Delete all the shifts that are assigned to the team member on Step #1
+        schedulePage.deleteTMShiftInWeekView(firstName);
+
+        // Create new shift for this TM on Monday and Tuesday
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.clearAllSelectedDays();
+        List<Integer> dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
+        schedulePage.selectWorkRole("MOD");
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByName(firstName);
+        schedulePage.clickOnOfferOrAssignBtn();
+
+        // Save the Schedule
+        schedulePage.saveSchedule();
+        List<Integer> shiftIndexes = schedulePage.getAddedShiftIndexes(firstName);
+        SimpleUtils.assertOnFail("Failed to add two shifts!", shiftIndexes != null && shiftIndexes.size() == 2, false);
+        List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
+
+        // Edit the Schedule
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+        // Drag the TM's avatar on Monday to another TM's shift on Tuesday
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the box interaction color and message for TM status: Time Off")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyWarningModelForTimeOffAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -75,7 +135,7 @@ public class DragAndDropTest extends TestBase {
 
         // Edit schedule to create the new shift for new TM
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView(userName.contains(" ") ? userName.split(" ")[0] : userName);
+        schedulePage.deleteTMShiftInWeekView(firstName);
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
         schedulePage.clearAllSelectedDays();
