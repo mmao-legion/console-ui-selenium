@@ -489,4 +489,9 @@ public interface SchedulePage {
 	public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception;
 	public void dragOneAvatarToAnother(int startIndex, String firstName, int endIndex) throws Exception;
 	public int getTheIndexOfTheDayInWeekView(String date) throws Exception;
+    public HashMap<String,WebElement> dragOneAvatarToAnotherSpecificAvatar(int startIndexOfTheDay, String user1, int endIndexOfTheDay, String user2) throws Exception;
+    public void verifyMessageInConfirmPage(String expectedMassage) throws Exception;
+    public void selectSwapOrAssignOption(String action) throws Exception;
+    public void clickConfirmBtnOnDragAndDropConfirmPage() throws Exception;
+    public void verifyShiftsSwaped(HashMap<String,WebElement> shiftsSwaped) throws Exception;
 }
