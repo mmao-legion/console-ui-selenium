@@ -3081,4 +3081,29 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public int getTheIndexOfTheDayInWeekView(String date) throws Exception {
         return 0;
     }
+
+    @Override
+    public HashMap<String,WebElement> dragOneAvatarToAnotherSpecificAvatar(int startIndexOfTheDay, String user1, int endIndexOfTheDay, String user2) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyMessageInConfirmPage(String expectedMassage) throws Exception {
+
+    }
+
+    @Override
+    public void selectSwapOrAssignOption(String action) throws Exception {
+
+    }
+
+    @Override
+    public void clickConfirmBtnOnDragAndDropConfirmPage() throws Exception {
+
+    }
+
+    @Override
+    public void verifyShiftsSwaped(HashMap<String,WebElement> shifsSwaped) throws Exception {
+
+    }
 }
