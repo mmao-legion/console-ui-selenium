@@ -494,4 +494,5 @@ public interface SchedulePage {
     public void selectSwapOrAssignOption(String action) throws Exception;
     public void clickConfirmBtnOnDragAndDropConfirmPage() throws Exception;
     public void verifyShiftsSwaped(HashMap<String,WebElement> shiftsSwaped) throws Exception;
+	public WebElement getShiftById(String id) throws Exception;
 }

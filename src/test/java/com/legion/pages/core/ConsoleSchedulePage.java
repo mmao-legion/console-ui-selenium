@@ -3106,4 +3106,8 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void verifyShiftsSwaped(HashMap<String,WebElement> shifsSwaped) throws Exception {
 
     }
+    @Override
+    public WebElement getShiftById(String id) throws Exception {
+        return null;
+    }
 }

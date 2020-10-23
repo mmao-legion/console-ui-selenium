@@ -2694,10 +2694,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             }
             if (selectedTM == null) {
-                SimpleUtils.fail("Not able to found Available status in SearchResult", true);
+                SimpleUtils.report("Not able to found Available TMs");
             }
         }else{
-            SimpleUtils.fail("Not able to found Available status in SearchResult", false);
+            SimpleUtils.fail("Not able to found Available status in SearchResult", true);
         }
 
         return selectedTM;
@@ -9181,6 +9181,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         click(roleViolationAlterOkButton);
                     }
                     //to close the popup
+                    waitForSeconds(5);
                     click(clickedShift);
 
                     click(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
@@ -11696,4 +11697,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("shifts failed to swap!",false);
         }
     }
-}
+
+    public WebElement getShiftById(String id) throws Exception {
+        waitForSeconds(5);
+        WebElement shift = null;
+        if (id != null && !id.equals("")) {
+            String css = "[data-shift-id=\""+ id+"\"]";
+            shift = MyThreadLocal.getDriver().findElement(By.cssSelector(css));
+            if (isElementLoaded(shift, 5)) {
+                SimpleUtils.pass("Get one shift by the id successfully");
+            } else
+                SimpleUtils.fail("Cannot find shift by the id !",false);
+        } else {
+            SimpleUtils.fail("The shift id is null or empty!",false);
+        }
+        return shift;
+    }
+ }

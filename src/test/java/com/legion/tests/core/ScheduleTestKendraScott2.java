@@ -471,21 +471,19 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//Select new TM from Search Team Member tab
 		WebElement selectedShift = null;
 		selectedShift = schedulePage.clickOnProfileIcon();
-//		String idtest= selectedShift.getAttribute("id").toString();
-//		String name1 = selectedShift.findElement(By.className("week-schedule-worker-name")).getText();
+		String selectedShiftId= selectedShift.getAttribute("id").toString();
 		schedulePage.clickonAssignTM();
 		String firstNameOfSelectedTM = schedulePage.selectTeamMembers();
 		schedulePage.clickOnOfferOrAssignBtn();
-//		String name = selectedShift.findElement(By.className("week-schedule-worker-name")).getText();
-		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" , firstNameOfSelectedTM.equals(selectedShift.findElement(By.className("week-schedule-worker-name")).getText()), false);
+		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" , firstNameOfSelectedTM.equals(schedulePage.getShiftById(selectedShiftId).findElement(By.className("week-schedule-worker-name")).getText()), false);
 		//Select new TM from Recommended TMs tab
 		selectedShift = schedulePage.clickOnProfileIcon();
+		String selectedShiftId2 = selectedShift.getAttribute("id").toString();
 		schedulePage.clickonAssignTM();
 		schedulePage.switchSearchTMAndRecommendedTMsTab();
 		String firstNameOfSelectedTM2 = schedulePage.selectTeamMembers();
 		schedulePage.clickOnOfferOrAssignBtn();
-		String name2 = selectedShift.findElement(By.className("week-schedule-worker-name")).getText();
-		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" , firstNameOfSelectedTM2.equals(selectedShift.findElement(By.className("week-schedule-worker-name")).getText()), false);
+		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" , firstNameOfSelectedTM2.equals(schedulePage.getShiftById(selectedShiftId2).findElement(By.className("week-schedule-worker-name")).getText()), false);
 
 		//Click on the Convert to open shift, checkbox is available to offer the shift to any specific TM[optional] Cancel /yes
 		//if checkbox is unselected then, shift is convert to open
@@ -503,7 +501,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 		//After click on Edit Shift Time, the Edit Shift window will display
 		schedulePage.clickOnProfileIcon();
-//		String test = selectedShift.getAttribute("id").toString();
 		schedulePage.clickOnEditShiftTime();
 		schedulePage.verifyEditShiftTimePopUpDisplay();
 		schedulePage.clickOnCancelEditShiftTimeButton();
