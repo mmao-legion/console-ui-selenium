@@ -45,10 +45,29 @@ public interface LocationsPage {
 
     public ArrayList<HashMap<String, String>> getLocationInfo(String locationName);
 
-    public void addChildLocation(String childlocationName, String locationName, String searchCharactor, int index, String childRelationship) throws Exception;
+    public void addChildLocation(String locationType, String childlocationName, String locationName, String searchCharactor, int index, String childRelationship) throws Exception;
 
-    public void addParentLocation(String locationName, String searchCharactor, int index, String parentRelationship, String value) throws Exception;
+    public void addParentLocation(String locationType, String locationName, String searchCharactor, int index, String parentRelationship, String value) throws Exception;
 
     public boolean verifyLGIconShowWellOrNot(String locationName, int childLocationNum);;
 
+    public void changeOneLocationToNone(String locationToNone) throws Exception;
+
+    public void updateChangePTPLocationToNone(String childLocationWhichRemoved) throws Exception;
+
+    public void searchLocation(String lgmsLocationName) throws Exception;
+
+    public void addParentLocationForNsoType(String locationType, String locationName, String searchCharactor, int index, String parentRelationship, String value) throws Exception;
+
+    public void addChildLocationForNSO(String locationType, String childLocationName, String locationName, String searchCharactor, int index, String childRelationship) throws Exception;
+
+    public void checkThereIsNoLocationGroupSettingFieldWhenLocationTypeIsMock() throws Exception;
+
+    public void changeOneLocationToParent(String locationName, String locationRelationship, String locationGroupType) throws Exception;
+
+    public void changeOneLocationToChild(String locationName, String locationRelationship, String parentLocation) throws Exception;
+
+    public void updateParentLocationDistrict(String searchCharacter, int index);
+
+    public void disableEnableLocation(String locationName, String action) throws Exception;
 }

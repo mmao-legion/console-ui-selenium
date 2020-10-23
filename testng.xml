@@ -13,14 +13,29 @@
         <classes>
             <class name="com.legion.tests.core.LocationsTest">
                 <methods>
-<!--                    <include name="verifyCreateRegularLocationWithMandatoryFields" />-->
+                    <include name="verifyCreateRegularLocationWithMandatoryFields" />
                     <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
                     <include name="verifyCreateMockLocationAndNavigate" />
                     <include name="verifyCreateNSOLocationAndNavigate" />
                     <include name="verifyDisableEnableLocationFunction" />
                     <include name="verifyImportLocationDistrict" />
                     <include name="verifyExportLocationDistrict" />
-                    <include name="verifyMSLocationGroupFunction" />
+                    <include name="verifyCreateMSLocationGroupWithRegularTypeFunction" />
+                    <include name="verifyUpdateMSLocationGroupDistrictFunction" />
+                    <include name="verifyDisableEnableParentLocationInLGMS" />
+                    <include name="verifyCreateP2PLocationGroupWithRegularTypeFunction" />
+                    <include name="verifyUpdateP2PLocationGroupDistrictFunction" />
+                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
+                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />
+                    <include name="verifyNoLocationGroupSettingForMock" />
+<!--                    <include name="verifyChangeChildLocationToNoneFunction" />-->
+<!--                    <include name="verifyChangeMSParentLocationToNoneFunction" />-->
+<!--                    <include name="verifyChangeP2PParentLocationToNoneFunction" />-->
+                    <include name="verifyChangeNoneLocationToChild" />
+                    <include name="verifyChangeNoneLocationToP2PParent" />
+                    <include name="verifyChangeNoneLocationToMSParent" />
+
+
 
                 </methods>
             </class>

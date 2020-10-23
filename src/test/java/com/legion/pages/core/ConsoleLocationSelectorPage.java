@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.legion.utils.JsonUtil;
+import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -107,7 +108,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                     } else {
                         click(locationSelectorButton);
                         if (areListElementVisible(availableLocationCardsName, 10) || isElementLoaded(locationDropDownButton)) {
-                            if (availableLocationCardsName.size() != 0) {
+                            //updated by Estelle because the default location dropdown list show more than 50 location ,it's not efficient for navigation latest logic
+                            searchLocationAndSelect(locationName);
+                            if (availableLocationCardsName.size() != 0 && availableLocationCardsName.size()>5) {
                                 for (WebElement locationCardName : availableLocationCardsName) {
                                     if (locationCardName.getText().contains(locationName)) {
                                         isLocationMatched = true;
@@ -116,15 +119,15 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                         break;
                                     }
                                 }
-                            if (!isLocationMatched) {
-                                searchLocationAndSelect(locationName);
-                                if (isElementLoaded(dashboardLocationsPopupCancelButton)) {
-                                    click(dashboardLocationsPopupCancelButton);
-                                }
-                                SimpleUtils.fail("Location does not match with '" + locationName + "'", true);
-                            }
+//                            if (!isLocationMatched) {
+//                                if (isElementLoaded(dashboardLocationsPopupCancelButton)) {
+//                                    click(dashboardLocationsPopupCancelButton);
+//                                }
+//                                SimpleUtils.fail("Location does not match with '" + locationName + "'", true);
+//                            }
 
-                            }
+                            }else
+                                SimpleUtils.report("No mapping data for this location,maybe it's disabled or child location for Master Slave ");
                         }
                     }
                 }
@@ -149,10 +152,8 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         if (isElementLoaded(locationSearchInput,5)) {
             locationSearchInput.sendKeys(locationName);
             locationSearchInput.sendKeys(Keys.ENTER);
-            click(availableLocationCardsName.get(-1));
         }else
-            click(locationSelectorButton);
-            searchLocationAndSelect(locationName);
+           SimpleUtils.fail("Location search input filed load failed",true);
     }
 
     @Override

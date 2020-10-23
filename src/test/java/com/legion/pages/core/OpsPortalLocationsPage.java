@@ -486,7 +486,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				searchInput.sendKeys(Keys.ENTER);
 				waitForSeconds(3);
 				if (locationRows.size()>0) {
-					SimpleUtils.pass("Locations: " + locationRows.size() + " location(s) found with name ");
+					SimpleUtils.pass("Locations: " + locationRows.size() + " location(s) found  ");
 					break;
 				} else {
 					searchInput.clear();
@@ -530,7 +530,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				if (locationStatusAfterSecondSearch.get(0).equals("DISABLED")) {
 					SimpleUtils.pass("Disable location successfully");
 				}
-				}else
+			}else
 					SimpleUtils.report("This location has disabled");
 			}else
 			SimpleUtils.fail("Location can not be clickable",true);
@@ -731,8 +731,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public ArrayList<HashMap<String, String>> getLocationInfo(String locationName) {
 		ArrayList<HashMap<String,String>> locationinfo = new ArrayList<>();
 
-
 		if (isElementEnabled(searchInput, 10)) {
+			searchInput.clear();
 			searchInput.sendKeys(locationName);
 			searchInput.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
@@ -763,9 +763,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement selectParentLocation;
 
 	@Override
-	public void addChildLocation(String childlocationName, String locationName, String searchCharactor, int index, String childRelationship) throws Exception {
+	public void addChildLocation(String locationType, String childlocationName, String locationName, String searchCharactor, int index, String childRelationship) throws Exception {
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
+			selectByVisibleText(locationTypeSelector,locationType);
 			locationNameInput.sendKeys(childlocationName);
 			setLocationName(childlocationName);
 			selectByVisibleText(locationGroupSelect,newLocationParas.get(childRelationship));
@@ -798,9 +799,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public void addParentLocation(String locationName, String searchCharactor, int index, String parentRelationship, String value) throws Exception {
+	public void addParentLocation(String locationType, String locationName, String searchCharactor, int index, String parentRelationship, String value) throws Exception {
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
+			selectByVisibleText(locationTypeSelector,locationType);
 			locationNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			selectByVisibleText(locationGroupSelect,newLocationParas.get(parentRelationship));
@@ -834,6 +836,204 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
+	public void addParentLocationForNsoType(String locationType, String locationName, String searchCharactor, int index, String parentRelationship, String value) throws Exception {
+		if (isElementEnabled(addLocationBtn,5)) {
+			click(addLocationBtn);
+			selectByVisibleText(locationTypeSelector,locationType);
+			locationNameInput.sendKeys(locationName);
+			setLocationName(locationName);
+			selectByVisibleText(locationGroupSelect,newLocationParas.get(parentRelationship));
+			click(getDriver().findElement(By.cssSelector("input[aria-label=\""+value+"\"] ")));
+			locationId.sendKeys(getLocationName());
+			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
+			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
+			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
+			city.sendKeys(newLocationParas.get("City"));
+			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
+			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
+			phoneNumber.sendKeys(newLocationParas.get("Phone_Number"));
+			emailAddress.sendKeys(newLocationParas.get("Email_Address"));
+			click(selectOneInSourceLocation);
+			selectLocationOrDistrict(searchCharactor,index);
+			if (isElementEnabled(configTypeSelect,5)) {
+				selectByVisibleText(configTypeSelect,newLocationParas.get("Configuration_Type"));
+			}
+			click(selectOneInChooseDistrict);
+			selectLocationOrDistrict(searchCharactor,index);
+			click(effectiveDateSelect);
+			click(previousMonthBtn.get(0));
+			click(firstDay.get(0));
+
+			click(launchDateSelecter);
+			click(previousMonthBtn.get(1));
+			click(firstDay.get(1));
+			waitForSeconds(2);
+			click(selectOneComparableLocation);
+			selectLocationOrDistrict(searchCharactor,index);
+			waitForSeconds(2);
+			scrollToBottom();
+			click(comparableStoreDateSelecter);
+			click(firstDay.get(2));
+			itemsAndTransactionInoutField.get(0).sendKeys("1");
+			itemsAndTransactionInoutField.get(1).sendKeys("1");
+
+			click(createLocationBtn);
+			waitForSeconds(20);
+			SimpleUtils.pass("New location creation done");
+
+		}else
+			SimpleUtils.fail("New location creation page load failed",true);
+	}
+
+	@Override
+	public void addChildLocationForNSO(String locationType, String childLocationName, String locationName, String searchCharactor, int index, String childRelationship) throws Exception {
+		if (isElementEnabled(addLocationBtn,5)) {
+			click(addLocationBtn);
+			selectByVisibleText(locationTypeSelector,locationType);
+			locationNameInput.sendKeys(childLocationName);
+			setLocationName(childLocationName);
+			selectByVisibleText(locationGroupSelect,newLocationParas.get(childRelationship));
+			click(selectParentLocation);
+			selectLocationOrDistrict(locationName,index);
+			locationId.sendKeys(getLocationName());
+			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
+			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
+			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
+			city.sendKeys(newLocationParas.get("City"));
+			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
+			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
+			phoneNumber.sendKeys(newLocationParas.get("Phone_Number"));
+			emailAddress.sendKeys(newLocationParas.get("Email_Address"));
+			click(selectOneInSourceLocation);
+			selectLocationOrDistrict(searchCharactor,index);
+			if (isElementEnabled(configTypeSelect,5)) {
+				selectByVisibleText(configTypeSelect,newLocationParas.get("Configuration_Type"));
+			}
+
+			click(effectiveDateSelect);
+			click(previousMonthBtn.get(0));
+			click(firstDay.get(0));
+
+			click(launchDateSelecter);
+			click(previousMonthBtn.get(1));
+			click(firstDay.get(1));
+			waitForSeconds(2);
+			click(selectOneComparableLocation);
+			selectLocationOrDistrict(searchCharactor,index);
+			waitForSeconds(2);
+			scrollToBottom();
+			click(comparableStoreDateSelecter);
+			click(firstDay.get(2));
+			itemsAndTransactionInoutField.get(0).sendKeys("1");
+			itemsAndTransactionInoutField.get(1).sendKeys("1");
+
+			click(createLocationBtn);
+			waitForSeconds(20);
+			SimpleUtils.pass("New location creation done");
+
+		}else
+			SimpleUtils.fail("New location creation page load failed",true);
+	}
+
+	@Override
+	public void checkThereIsNoLocationGroupSettingFieldWhenLocationTypeIsMock() throws Exception {
+		if (isElementEnabled(addLocationBtn, 5)) {
+			click(addLocationBtn);
+			selectByVisibleText(locationTypeSelector, newLocationParas.get("Location_Type_Mock"));
+			if (isElementEnabled(locationGroupSelect,5) ) {
+				SimpleUtils.fail("Location Group Setting filed show,it's not expect behavior",true);
+			}else
+				SimpleUtils.pass("There is no Location Group Setting filed  after select mock");
+
+		}else
+			SimpleUtils.fail("Add location btn load failed",true);
+	}
+
+	@Override
+	public void changeOneLocationToParent(String locationName, String locationRelationship, String locationGroupType) throws Exception {
+		if (locationRows.size() > 0) {
+			List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
+			click(locationDetailsLinks.get(0));
+			click(editLocationBtn);
+			selectByVisibleText(locationGroupSelect, locationRelationship);
+			click(getDriver().findElement(By.cssSelector("input[aria-label=\""+locationGroupType+"\"] ")));
+			scrollToBottom();
+			click(saveBtnInUpdateLocationPage);
+			waitForSeconds(5);
+			SimpleUtils.pass("Location update done");
+		}else
+			SimpleUtils.fail("No search result",true);
+		waitForSeconds(10);
+		searchLocation(locationName);
+		if (verifyIsThisLocationGroup()) {
+			SimpleUtils.pass("Change None location to parent successfully");
+		}else
+			SimpleUtils.fail("Change location to parent Location failed",true);
+	}
+
+	@Override
+	public void changeOneLocationToChild(String locationName, String locationRelationship, String parentLocation) throws Exception {
+		if (locationRows.size() > 0) {
+			List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
+			click(locationDetailsLinks.get(0));
+			click(editLocationBtn);
+			selectByVisibleText(locationGroupSelect, locationRelationship);
+			click(selectParentLocation);
+			selectLocationOrDistrict(parentLocation,1);
+			locationId.sendKeys(parentLocation);
+			scrollToBottom();
+			click(saveBtnInUpdateLocationPage);
+			waitForSeconds(5);
+			SimpleUtils.pass("Location update done");
+		}else
+			SimpleUtils.fail("No search result",true);
+		waitForSeconds(10);
+		searchLocation(locationName);
+		if (!verifyIsThisLocationGroup()) {
+			SimpleUtils.pass("Change None location to child successfully");
+		}else
+			SimpleUtils.fail("Change location to child Location failed",true);
+	}
+
+	@Override
+	public void updateParentLocationDistrict(String searchCharacter, int index) {
+		if (locationRows.size() > 0) {
+			List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
+			click(locationDetailsLinks.get(0));
+			click(editLocationBtn);
+			click(selectOneInChooseDistrict);
+			selectLocationOrDistrict(searchCharacter,index);
+			scrollToBottom();
+			click(saveBtnInUpdateLocationPage);
+			waitForSeconds(5);
+			SimpleUtils.pass("Location update done");
+		}else
+			SimpleUtils.fail("No search result",true);
+
+	}
+
+	@Override
+	public void disableEnableLocation(String locationName, String action) throws Exception {
+		searchInput.clear();
+		searchLocation(locationName);
+		if (locationRows.size() > 0) {
+			List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
+			click(locationDetailsLinks.get(0));
+			click(getDriver().findElement(By.cssSelector("lg-button[label=\""+action+"\"] ")));
+			click(getDriver().findElement(By.cssSelector("lg-button[label=\""+action+"\"] ")));
+			waitForSeconds(3);
+			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/lg-button[1]/button")).getText().equals(action)) {
+				SimpleUtils.pass(action+" " +locationName +" successfully");
+			}else
+				SimpleUtils.fail(action+" " +locationName +" successfully",true);
+			click(backBtnInLocationDetailsPage);
+		}else
+			SimpleUtils.fail("No search result",true);
+	}
+
+	@Override
 	public boolean verifyLGIconShowWellOrNot(String locationName, int childLocationNum) {
 		HashMap<String,Object> locationGroupIcons =  new HashMap<>();
 		if (locationRows.size()>0 && locationRows.size()==childLocationNum+1) {
@@ -844,6 +1044,60 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 		}
 		return false;
+	}
+
+
+	@FindBy(css = "lg-button[label=\"Ok\"]")
+	private WebElement okBtnInLocationGroupConfirmPage;
+
+	@Override
+	public void changeOneLocationToNone(String locationToNone) throws Exception {
+		//update parent location to None
+		if (locationRows.size()>0) {
+			if (verifyIsThisLocationGroup()) {
+				for (WebElement eachRow: locationRows
+					 ) {
+					if (eachRow.findElement(By.cssSelector("button[type='button']")).getText().contains(locationToNone)) {
+						click(eachRow.findElement(By.cssSelector("button[type='button']")));
+					}
+				}
+//				List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
+//				click(locationDetailsLinks.get(0));
+				click(editLocationBtn);
+				selectByVisibleText(locationGroupSelect, "None");
+				click(okBtnInLocationGroupConfirmPage);
+				scrollToBottom();
+				click(saveBtnInUpdateLocationPage);
+			}else
+				SimpleUtils.fail("It's not a parent location",true);
+		}
+		waitForSeconds(10);
+		searchLocation(locationToNone);
+		if (!verifyIsThisLocationGroup()) {
+			SimpleUtils.pass(locationToNone+" was updated to None");
+		}else
+			SimpleUtils.fail("Update failed",true);
+
+	}
+
+	private boolean verifyIsThisLocationGroup() {
+		ArrayList<String> iconInfoOfLG = new ArrayList<>();
+
+		List<WebElement> locationIcon = getDriver().findElements(By.cssSelector(".group-type-icon >img"));
+		for (WebElement icon:locationIcon
+			 ) {
+			iconInfoOfLG.add(icon.getAttribute("ng-src"));
+		}
+		if (iconInfoOfLG.contains("img/legion/lgComponents/group.svg") ) {
+			return true;
+		}else
+			return false;
+
+	}
+
+	@Override
+	public void updateChangePTPLocationToNone(String LGPTPLocationName) {
+
 	}
 
 
