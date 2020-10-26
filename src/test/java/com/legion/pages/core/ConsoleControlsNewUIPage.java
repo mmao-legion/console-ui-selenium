@@ -5386,6 +5386,55 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		locationDetailInfo = locationAddressStr + ", " + cityStr + ", " + stateStr + ", " + zipCodeStr;
 		return locationDetailInfo;
 	}
+
+	@FindBy(css = "form-section[form-title=\"Clopening\"] .lg-question-input")
+	private List<WebElement> clopeningSectionToggles;
+
+	@FindBy(css = "button.lg-icon-button--confirm")
+	private WebElement confirmSettingsChangeButton;
+
+
+	@Override
+	public void turnONClopeningToggleAndSetHours(int clopeningHours) throws Exception {
+
+		String clopeningMessage1 = "An employee should have at least";
+		String clopeningMessage2 = "hours of break between consecutive closing and opening shifts";
+
+		if (areListElementVisible(clopeningSectionToggles,10) && clopeningSectionToggles.size() > 0){
+			for (WebElement clopeningSectionToggle : clopeningSectionToggles) {
+				WebElement toggle = clopeningSectionToggle.findElement(By.className("switch"));
+				WebElement text = clopeningSectionToggle.findElement(By.className("lg-question-input__text"));
+				if (toggle != null && text != null && text.getText().contains(clopeningMessage1) && text.getText().contains(clopeningMessage2)) {
+					//turn on Clopening toggle
+					if (toggle.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
+						scrollToElement(toggle);
+						waitForSeconds(1);
+						click(toggle);
+						displaySuccessMessage();
+						SimpleUtils.pass("Clopening toggle is turned on!");
+					} else {
+						SimpleUtils.report("Clopening toggle is already on!");
+					}
+
+					// set Clopening value
+					WebElement clopeningHoursInput = clopeningSectionToggle.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]"));
+					if (isElementLoaded(clopeningHoursInput, 5) && clopeningHoursInput != null) {
+						clopeningHoursInput.clear();
+						clopeningHoursInput.sendKeys(String.valueOf(clopeningHours));
+						if (isElementLoaded(confirmSettingsChangeButton, 5)) {
+							click(confirmSettingsChangeButton);
+						} else
+							SimpleUtils.fail("Confirm clopening change button load fail !", false);
+						displaySuccessMessage();
+						SimpleUtils.pass("Set clopening hours successfully!");
+					}
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("Clopening settings load failed!", false);
+		}
+	}
 }
 
 
