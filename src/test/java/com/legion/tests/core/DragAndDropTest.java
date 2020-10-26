@@ -157,9 +157,9 @@ public class DragAndDropTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the box interaction color and message for TM status: Time Off")
+    @TestName(description = "Validate the box interaction color and message for TM status: overtime")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyWarningModelForOvertimeAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifySwapWarningModelForOvertimeAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -173,16 +173,13 @@ public class DragAndDropTest extends TestBase {
 
         // Navigate to next week
         schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
 
         // create the schedule if not created
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
         if (isWeekGenerated){
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
-        //schedulePage.createScheduleForNonDGFlowNewUI();
-        schedulePage.createScheduleForNonDGFlowNewUIWithGivingParameters("Wednesday", "08:00AM", "08:00PM");
+        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "08:00PM");
         // Edit schedule to create the new shifts for new TM1 and TM2
         String TM1 = "John";
         String TM2 = "Pat";
@@ -213,12 +210,21 @@ public class DragAndDropTest extends TestBase {
         schedulePage.saveSchedule();
 
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        HashMap<String, WebElement> shifsSwaped = schedulePage.dragOneAvatarToAnotherSpecificAvatar(1,TM1,0,TM2);
+        schedulePage.dragOneAvatarToAnotherSpecificAvatar(1,TM1,0,TM2);
+        List<String> swapData = schedulePage.getShiftSwapDataFromConfirmPage("swap");
         String expectedMessage = "John will incur 1 hours of overtime";
         schedulePage.verifyMessageInConfirmPage(expectedMessage);
         schedulePage.selectSwapOrAssignOption("swap");
         schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
-        schedulePage.verifyShiftsSwaped(shifsSwaped);
-    }
+        schedulePage.verifyShiftsAreSwapped(swapData);
 
+        schedulePage.dragOneAvatarToAnotherSpecificAvatar(1,TM2,0,TM1);
+        schedulePage.dragOneAvatarToAnotherSpecificAvatar(1,TM1,0,TM2);
+        swapData = schedulePage.getShiftSwapDataFromConfirmPage("assign");
+        schedulePage.selectSwapOrAssignOption("assign");
+        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+        if (schedulePage.verifyDayHasShiftByName(0,TM1)==2 && schedulePage.verifyDayHasShiftByName(1,TM1)==1){
+            SimpleUtils.pass("assign successfully!");
+        }
+    }
 }

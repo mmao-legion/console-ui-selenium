@@ -3083,7 +3083,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public HashMap<String,WebElement> dragOneAvatarToAnotherSpecificAvatar(int startIndexOfTheDay, String user1, int endIndexOfTheDay, String user2) throws Exception {
+    public HashMap<String,Integer> dragOneAvatarToAnotherSpecificAvatar(int startIndexOfTheDay, String user1, int endIndexOfTheDay, String user2) throws Exception {
         return null;
     }
 
@@ -3103,11 +3103,23 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void verifyShiftsSwaped(HashMap<String,WebElement> shifsSwaped) throws Exception {
-
-    }
-    @Override
     public WebElement getShiftById(String id) throws Exception {
         return null;
+    }
+
+
+    @Override
+    public List<String> getShiftSwapDataFromConfirmPage(String action) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception {
+
+    }
+
+    @Override
+    public int verifyDayHasShiftByName(int indexOfDay, String name) throws Exception {
+        return 0;
     }
 }

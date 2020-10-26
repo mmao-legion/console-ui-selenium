@@ -428,6 +428,7 @@ public interface SchedulePage {
 	public void clickCreateScheduleBtn() throws Exception;
 	public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception;
 	public void createScheduleForNonDGFlowNewUIWithGivingParameters(String day, String startTime, String endTime) throws Exception;
+	public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception;
 	public void goToToggleSummaryView() throws Exception;
 	public void verifyOperatingHrsInToggleSummary(String day, String startTime, String endTime) throws Exception;
 	public void verifyDayHasShifts(String day) throws Exception;
@@ -489,10 +490,11 @@ public interface SchedulePage {
 	public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception;
 	public void dragOneAvatarToAnother(int startIndex, String firstName, int endIndex) throws Exception;
 	public int getTheIndexOfTheDayInWeekView(String date) throws Exception;
-    public HashMap<String,WebElement> dragOneAvatarToAnotherSpecificAvatar(int startIndexOfTheDay, String user1, int endIndexOfTheDay, String user2) throws Exception;
+    public HashMap<String,Integer> dragOneAvatarToAnotherSpecificAvatar(int startIndexOfTheDay, String user1, int endIndexOfTheDay, String user2) throws Exception;
     public void verifyMessageInConfirmPage(String expectedMassage) throws Exception;
     public void selectSwapOrAssignOption(String action) throws Exception;
     public void clickConfirmBtnOnDragAndDropConfirmPage() throws Exception;
-    public void verifyShiftsSwaped(HashMap<String,WebElement> shiftsSwaped) throws Exception;
 	public WebElement getShiftById(String id) throws Exception;
+	public List<String> getShiftSwapDataFromConfirmPage(String action) throws Exception;
+	public int verifyDayHasShiftByName(int indexOfDay, String name) throws Exception;
 }
