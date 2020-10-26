@@ -8092,9 +8092,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void checkAndUnCheckTheFilters() throws Exception {
         if (areListElementVisible(filters, 10)) {
-            ArrayList<WebElement> filterElements = new ArrayList<>();
-            filterElements.addAll(filters);
-            unCheckFilters(filterElements);
+            unCheckFilters();
             for (WebElement filter : filters) {
                 String filterName = filter.findElement(By.className("input-label")) == null ? "" : filter.findElement(By.className("input-label")).getText();
                 WebElement filterCheckBox = filter.findElement(By.cssSelector("input[type=\"checkbox\"]"));
@@ -11499,7 +11497,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (count > 7) {
             SimpleUtils.fail("Create New Shift: There are total 7 days, the count: " + count + " is larger than 7", false);
         }
-        if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+        if (areListElementVisible(weekDays, 15) && weekDays.size() == 7) {
             for (int i = 0; i < 7; i++) {
                 if (weekDays.get(i).getAttribute("class").contains("week-day-multi-picker-day-disabled")) {
                     SimpleUtils.report("Day: " + weekDays.get(i).getText() + " is disabled!");
@@ -11510,9 +11508,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             SimpleUtils.report("Select day: " + weekDays.get(i).getText() + " Successfully!");
                         }
                         selectedCount++;
+                        indexes.add(i);
                     } else {
-                        int date = Integer.parseInt(weekDays.get(i).getText().substring(weekDays.get(i).getText().length() - 2));
-                        int cannotDate = Integer.parseInt(cannotSelectedDate.substring(cannotSelectedDate.length() - 2));
+                        int date = Integer.parseInt(weekDays.get(i).getText().substring(weekDays.get(i).getText().length() - 2).trim());
+                        int cannotDate = Integer.parseInt(cannotSelectedDate.substring(cannotSelectedDate.length() - 2).trim());
                         if (date != cannotDate) {
                             if (!weekDays.get(i).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
                                 click(weekDays.get(i));
@@ -11532,28 +11531,37 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 SimpleUtils.fail("Create New Shift: Failed to select " + count + " days! Actual is: " + selectedCount + " days!", false);
             }
         }else{
-            SimpleUtils.fail("Weeks Days failed to load!", true);
+            SimpleUtils.fail("Weeks Days failed to load!", false);
         }
         return indexes;
     }
 
     @Override
     public void dragOneAvatarToAnother(int startIndex, String firstName, int endIndex) throws Exception {
+        boolean isDragged = false;
         List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
         List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
         if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0) {
             for (WebElement start : startElements) {
-                WebElement name = start.findElement(By.className("week-schedule-worker-name"));
+                WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
                 WebElement startAvatar = start.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
-                if (name != null && startAvatar != null && name.getText().equalsIgnoreCase(firstName)) {
-                    WebElement endAvatar = endElements.get(0).findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
-                    if (endAvatar != null) {
-                        mouseHoverDragandDrop(startAvatar, endAvatar);
-                        break;
-                    } else {
-                        SimpleUtils.fail("Schedule Page: Failed to find the avatar element!", false);
+                if (startName != null && startAvatar != null && startName.getText().equalsIgnoreCase(firstName)) {
+                    for (WebElement end : endElements) {
+                        WebElement endAvatar = end.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
+                        WebElement endName = end.findElement(By.className("week-schedule-worker-name"));
+                        if (endAvatar != null && endName != null && !endName.getText().equalsIgnoreCase(firstName) &&
+                        !endName.getText().equalsIgnoreCase("Open")) {
+                            mouseHoverDragandDrop(startAvatar, endAvatar);
+                            SimpleUtils.report("Drag&Drop: Drag " + firstName + " to " + endName.getText() + " Successfully!");
+                            isDragged = true;
+                            break;
+                        }
                     }
+                    break;
                 }
+            }
+            if (!isDragged) {
+                SimpleUtils.fail("Failed to drag the user: " + firstName + " to another Successfully!", false);
             }
         } else {
             SimpleUtils.fail("Schedule Page: Failed to find the shift elements for index: " + startIndex + " or " + endIndex, false);
@@ -11565,9 +11573,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         int index = -1;
         if (areListElementVisible(schCalendarDateLabel, 10)) {
             for (int i = 0; i < schCalendarDateLabel.size(); i++) {
-                if (schCalendarDateLabel.get(i).getText().contains(date)) {
+                if (schCalendarDateLabel.get(i).getText().contains(date.trim())) {
                     index = i;
-                    SimpleUtils.pass("Get the index of " + date + ", the index is: " + i);
+                    SimpleUtils.pass("Get the index of Date" + date + ", the index is: " + i);
                     break;
                 }
             }
