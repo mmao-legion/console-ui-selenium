@@ -3127,4 +3127,14 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public String getWeekDayTextByIndex(int index) throws Exception {
         return null;
     }
+
+    @Override
+    public void selectDaysByIndex(int index1, int index2, int index3) throws Exception {
+
+    }
+
+    @Override
+    public boolean verifySwapAndAssignWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception {
+        return false;
+    }
 }

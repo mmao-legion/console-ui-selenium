@@ -7,6 +7,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
@@ -20,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 public class DragAndDropTest extends TestBase {
+
+    private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
 
     @Override
     @BeforeMethod()
@@ -253,7 +256,81 @@ public class DragAndDropTest extends TestBase {
         SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
         controlsNewUIPage.clickOnControlsComplianceSection();
         SimpleUtils.assertOnFail("Compliance page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
-
+        //turn on clopening toggle and set hours
         controlsNewUIPage.turnONClopeningToggleAndSetHours(12);
+
+        // Go to Schedule page, Schedule tab
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+        // Create schedule if it is not created
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated){
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "11:00PM");
+        // Edit the Schedule
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+        //Get two random TM name from shifts
+        List<String> shiftInfo1 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+        String firstNameOfTM1 = shiftInfo1.get(0);
+        String workRoleOfTM1 = shiftInfo1.get(4);
+        List<String> shiftInfo2 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+        String firstNameOfTM2 = shiftInfo2.get(0);
+        String workRoleOfTM2 = shiftInfo2.get(4);
+        // Delete all the shifts that are assigned to the team member
+        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
+
+        // Create new shift for TM1 on Monday and Wednesday
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.clearAllSelectedDays();
+//        schedulePage.selectSpecificWorkDay(1);
+        schedulePage.selectDaysByIndex(0, 0, 2);
+        schedulePage.selectWorkRole(workRoleOfTM1);
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByName(firstNameOfTM1);
+        schedulePage.clickOnOfferOrAssignBtn();
+
+        //Create new shift for TM2 on Tuesday
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME_2"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME_2"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.clearAllSelectedDays();
+//        schedulePage.selectSpecificWorkDay(1);
+        schedulePage.selectDaysByIndex(1, 1, 1);
+        schedulePage.selectWorkRole(workRoleOfTM2);
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByName(firstNameOfTM2);
+        schedulePage.clickOnOfferOrAssignBtn();
+
+        // Save the Schedule
+        schedulePage.saveSchedule();
+
+        // Edit the Schedule and try to drag TM1 on Monday to TM2 on Tuesday
+        String clopeningWarningMessage = " will incur clopening";
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM1,1,firstNameOfTM2);
+        SimpleUtils.assertOnFail("Clopening message display successfully on swap section!",
+                schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "swap"), false);
+        SimpleUtils.assertOnFail("Clopening message display successfully on assign section!",
+                schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "assign"), false);
+
+        // Swap TM1 and TM2, check the TMs been swapped successfully
+        schedulePage.selectSwapOrAssignOption("swap");
+        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+        schedulePage.verifyDayHasShiftByName(1, firstNameOfTM1);
+        schedulePage.verifyDayHasShiftByName(0, firstNameOfTM2);
+        schedulePage.saveSchedule();
     }
 }

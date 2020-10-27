@@ -5627,7 +5627,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    private void selectDaysByIndex(int index1, int index2, int index3) throws Exception {
+    public void selectDaysByIndex(int index1, int index2, int index3) throws Exception {
         if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
             if (index1 < weekDays.size() && index2 < weekDays.size() && index3 < weekDays.size()) {
                 if (!weekDays.get(index1).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
@@ -11705,10 +11705,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         List<WebElement> swapResults = new ArrayList<>();
         if (isElementLoaded(swapSectionInfo, 5) && isElementLoaded(assignSectionInfo, 5)) {
             if (action.equalsIgnoreCase("swap")){
-                swapSectionInfo.findElements(By.cssSelector("swap-modal-shift"));
+                swapResults = swapSectionInfo.findElements(By.cssSelector("swap-modal-shift"));
             }
-            if (action.equalsIgnoreCase("swap")){
-                assignSectionInfo.findElements(By.cssSelector("swap-modal-shift"));
+            if (action.equalsIgnoreCase("assign")){
+                swapResults = assignSectionInfo.findElements(By.cssSelector("swap-modal-shift"));
             }
 
             if (swapResults != null && swapResults.size() > 0) {
@@ -11766,5 +11766,41 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("The shift id is null or empty!",false);
         }
         return shift;
+    }
+
+    @FindBy(css = "div[ng-repeat=\"error in swapError\"]")
+    private List<WebElement> warningMessagesInSwap;
+    @FindBy(css = "div[ng-repeat=\"error in assignError\"]")
+    private List<WebElement> warningMessagesInAssign;
+
+    @Override
+    public boolean verifySwapAndAssignWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception {
+        boolean canFindTheExpectedMessage = false;
+        if (action.equals("swap")){
+            if (areListElementVisible(warningMessagesInSwap,15) && warningMessagesInSwap.size()>0){
+                for (int i=0; i<warningMessagesInSwap.size();i++){
+                    if (warningMessagesInSwap.get(i).getText().contains(expectedMessage)){
+                        canFindTheExpectedMessage = true;
+                        SimpleUtils.pass("The expected message can be find successfully");
+                    }
+                }
+            } else {
+                SimpleUtils.report("There is no warning message in swap section");
+            }
+        } else if(action.equals("assign")) {
+            if (areListElementVisible(warningMessagesInAssign,15) && warningMessagesInAssign.size()>0){
+                for (int i=0; i<warningMessagesInAssign.size(); i++){
+                    if (warningMessagesInAssign.get(i).getText().contains(expectedMessage) && errorMessageInAssign.getText().contains(expectedMessage)){
+                        canFindTheExpectedMessage =true;
+                        SimpleUtils.pass("The expected message can be find successfully");
+                    }
+                }
+            }else {
+                SimpleUtils.report("There is no warning message in assign section");
+            }
+        } else
+            SimpleUtils.fail("No this action on drag&drop confirm page", true);
+
+        return canFindTheExpectedMessage;
     }
  }
