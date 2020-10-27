@@ -11783,6 +11783,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (warningMessagesInSwap.get(i).getText().contains(expectedMessage)) {
                         canFindTheExpectedMessage = true;
                         SimpleUtils.pass("The expected message can be find successfully");
+                        break;
                     }
                 }
             } else {
@@ -11794,6 +11795,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (warningMessagesInAssign.get(i).getText().contains(expectedMessage) && errorMessageInAssign.getText().contains(expectedMessage)) {
                         canFindTheExpectedMessage = true;
                         SimpleUtils.pass("The expected message can be find successfully");
+                        break;
                     }
                 }
             } else {

@@ -96,7 +96,8 @@ public class DragAndDropTest extends TestBase {
         String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday);
         String expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
                 + ". This shift will be converted to an open shift";
-        schedulePage.verifyMessageInConfirmPage(expectedMessage,"");
+        schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage,"swap");
+        schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage,"assign");
         List<String> swapData = schedulePage.getShiftSwapDataFromConfirmPage("swap");
         schedulePage.selectSwapOrAssignOption("swap");
         schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
