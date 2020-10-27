@@ -178,6 +178,15 @@ public class DragAndDropTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        String userName1 = teamPage.selectATeamMemberToViewProfile();
+        String TM1 = userName1.contains(" ") ? userName1.split(" ")[0] : userName1;
+        teamPage.goToTeam();
+        String userName2 = teamPage.selectATeamMemberToViewProfile();
+        String TM2 = userName2.contains(" ") ? userName2.split(" ")[0] : userName2;
+
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         schedulePage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -196,8 +205,8 @@ public class DragAndDropTest extends TestBase {
         }
         schedulePage.createScheduleForNonDGFlowNewUI();
         // Edit schedule to create the new shifts for new TM1 and TM2
-        String TM1 = "John";
-        String TM2 = "Pat";
+        //String TM1 = "John";
+        //String TM2 = "Pat";
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteTMShiftInWeekView(TM1);
         schedulePage.deleteTMShiftInWeekView(TM2);
@@ -227,7 +236,8 @@ public class DragAndDropTest extends TestBase {
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.dragOneAvatarToAnotherSpecificAvatar(1,TM1,0,TM2);
         List<String> swapData = schedulePage.getShiftSwapDataFromConfirmPage("swap");
-        String expectedMessage = "John will incur 1 hours of overtime";
+        String expectedMessage = TM1+" will incur 1 hours of overtime";
+        SimpleUtils.report(expectedMessage);
         schedulePage.verifyMessageInConfirmPage(expectedMessage, expectedMessage);
         schedulePage.selectSwapOrAssignOption("swap");
         schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
@@ -235,13 +245,14 @@ public class DragAndDropTest extends TestBase {
 
         //verify cancel button
         schedulePage.dragOneAvatarToAnotherSpecificAvatar(1,TM2,0,TM1);
+        schedulePage.selectSwapOrAssignOption("swap");
+        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
         schedulePage.dragOneAvatarToAnotherSpecificAvatar(1,TM1,0,TM2);
         schedulePage.clickCancelBtnOnDragAndDropConfirmPage();
         if (schedulePage.verifyDayHasShiftByName(0,TM1)==1 && schedulePage.verifyDayHasShiftByName(1,TM1)==1){
             SimpleUtils.pass("cancel successfully!");
         }
 
-        schedulePage.dragOneAvatarToAnotherSpecificAvatar(1,TM2,0,TM1);
         schedulePage.dragOneAvatarToAnotherSpecificAvatar(1,TM1,0,TM2);
         schedulePage.selectSwapOrAssignOption("assign");
         schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();

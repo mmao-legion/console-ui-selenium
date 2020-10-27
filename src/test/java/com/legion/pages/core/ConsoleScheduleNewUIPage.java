@@ -11643,14 +11643,30 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @FindBy(css = "div[ng-repeat=\"error in swapError\"]")
-    private WebElement errorMessageInSwap;
+    private List<WebElement> errorMessagesInSwap;
+    @FindBy(css = "div[ng-repeat=\"error in assignError\"]")
+    private List<WebElement> errorMessagesInAssign;
+    //========
     @FindBy(css = "div[ng-repeat=\"error in assignError\"]")
     private WebElement errorMessageInAssign;
 
     @Override
     public void verifyMessageInConfirmPage(String expectedMassageInSwap, String expectedMassageInAssign) throws Exception {
-        if (isElementLoaded(errorMessageInSwap,15) && isElementLoaded(errorMessageInAssign,15) && errorMessageInSwap.getText().contains(expectedMassageInSwap) && errorMessageInAssign.getText().contains(expectedMassageInAssign)){
-            SimpleUtils.pass("errorMessageInSwap: "+errorMessageInSwap.getText()+"\nerrorMessageInAssign: "+errorMessageInAssign.getText());
+        String errorMessageForSwap = null;
+        String errorMessageInAssign = null;
+        if (areListElementVisible(errorMessagesInSwap,15) && areListElementVisible(errorMessagesInAssign,15)){
+            for (WebElement element: errorMessagesInSwap){
+                errorMessageForSwap = errorMessageForSwap+element.getText();
+            }
+            for (WebElement element: errorMessagesInAssign){
+                errorMessageInAssign = errorMessageInAssign+element.getText();
+            }
+            if (errorMessageForSwap.contains(expectedMassageInSwap) && errorMessageInAssign.contains(expectedMassageInAssign)){
+                SimpleUtils.pass("errorMessageInSwap: "+errorMessageForSwap+"\nerrorMessageInAssign: "+errorMessageInAssign);
+            }else{
+                SimpleUtils.fail("warning message for overtime when drag and drop is not expected!",false);
+            }
+
         } else {
             SimpleUtils.fail("No warning message for overtime when drag and drop",false);
         }
