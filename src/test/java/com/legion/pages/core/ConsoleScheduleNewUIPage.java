@@ -5625,7 +5625,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    private void selectDaysByIndex(int index1, int index2, int index3) throws Exception {
+    public void selectDaysByIndex(int index1, int index2, int index3) throws Exception {
         if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
             if (index1 < weekDays.size() && index2 < weekDays.size() && index3 < weekDays.size()) {
                 if (!weekDays.get(index1).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
