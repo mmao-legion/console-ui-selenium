@@ -11808,7 +11808,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else if (action.equals("assign")) {
             if (areListElementVisible(warningMessagesInAssign, 15) && warningMessagesInAssign.size() > 0) {
                 for (int i = 0; i < warningMessagesInAssign.size(); i++) {
-                    if (warningMessagesInAssign.get(i).getText().contains(expectedMessage) && errorMessageInAssign.getText().contains(expectedMessage)) {
+                    if (warningMessagesInAssign.get(i).getText().contains(expectedMessage)) {
                         canFindTheExpectedMessage = true;
                         SimpleUtils.pass("The expected message can be find successfully");
                         break;
