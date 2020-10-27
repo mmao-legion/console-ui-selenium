@@ -2252,7 +2252,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (isConsoleMessageError())
                 SimpleUtils.fail("Schedule Can not be publish because of Action Require for week: '" + getActiveWeekText() + "'", false);
             else {
-                click(publishSheduleButton);
+                clickTheElement(publishSheduleButton);
                 if (isElementLoaded(publishConfirmBtn)) {
                     click(publishConfirmBtn);
                     SimpleUtils.pass("Schedule published successfully for week: '" + getActiveWeekText() + "'");
@@ -5512,6 +5512,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             String firstName = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText();
             String lastName = getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
             String jobTitle = weekShifts.get(index).findElement(By.className("week-schedule-role-name")).getText();
+            String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
             WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
             clickTheElement(infoIcon);
             String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
@@ -5523,13 +5524,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 shiftInfo.add(jobTitle);
                 shiftInfo.add(workRole);
                 shiftInfo.add(lastName);
+                shiftInfo.add(shiftTimeWeekView);
             }
             //To close the info popup
             click(weekShifts.get(index));
         } else {
             SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
         }
-        if (shiftInfo.size() != 6) {
+        if (shiftInfo.size() != 7) {
             SimpleUtils.fail("Failed to get the shift info!", false);
         }
         return shiftInfo;
@@ -11116,13 +11118,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement dialogWarningModel;
     @FindBy(css = ".tma-dismiss-button")
     private WebElement closeSelectTMWindowBtn;
+    @FindBy(css = "div[label=\"'OK'\"]")
+    private WebElement okButton;
+
     @Override
     public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception {
-        String expectedMessageOnWarningModel = nickName.toLowerCase()+" is approved for time off.\n\nplease cancel the approved time off before assigning.";
-        if (isElementLoaded(dialogWarningModel,5) && isElementLoaded(dialogWarningModel.findElement(By.cssSelector("div.lgn-alert-message")),5)){
-            String s =dialogWarningModel.findElement(By.cssSelector("div.lgn-alert-message")).getText();
-            if (dialogWarningModel.findElement(By.cssSelector("div.lgn-alert-message")).getText().toLowerCase().contains(expectedMessageOnWarningModel) && isElementLoaded(dialogWarningModel.findElement(By.cssSelector("div[label=\"'OK'\"]")),5)){
-                click(dialogWarningModel.findElement(By.cssSelector("div[label=\"'OK'\"]")));
+        String expectedMessageOnWarningModel1 = nickName.toLowerCase()+" is approved for time off.";
+        String expectedMessageOnWarningModel2 = "please cancel the approved time off before assigning";
+        if (isElementLoaded(alertMessage,15)) {
+            String s = alertMessage.getText();
+            if (s.toLowerCase().contains(expectedMessageOnWarningModel1) && s.toLowerCase().contains(expectedMessageOnWarningModel2)
+                    && isElementLoaded(okButton,5)){
+                click(okButton);
                 SimpleUtils.pass("There is a warning model with one button labeled OK! and the message is expected!");
                 if (isElementLoaded(closeSelectTMWindowBtn,5)){
                     click(closeSelectTMWindowBtn);
@@ -11441,6 +11448,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement calMonthYear;
 
     @Override
+    public String getWeekDayTextByIndex(int index) throws Exception {
+        String weekDayText = null;
+        if (index < 0 || index > 6) {
+            SimpleUtils.fail("The parameter index: " + index + " is out of range!", false);
+        }
+        if (areListElementVisible(weekDayLabels, 10)) {
+            weekDayText = weekDayLabels.get(index).getText();
+        } else {
+            SimpleUtils.fail("Schedule Week View: week day labels failed to load!", false);
+        }
+        return weekDayText;
+    }
+
+    @Override
     public void goToSpecificWeekByDate(String date) throws Exception {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd");
         Date switchDate = dateFormat.parse(date);
@@ -11625,6 +11646,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement errorMessageInSwap;
     @FindBy(css = "div[ng-repeat=\"error in assignError\"]")
     private WebElement errorMessageInAssign;
+
     @Override
     public void verifyMessageInConfirmPage(String expectedMassage) throws Exception {
         if (isElementLoaded(errorMessageInSwap,15) && isElementLoaded(errorMessageInAssign,15) && errorMessageInSwap.getText().contains(expectedMassage) && errorMessageInAssign.getText().contains(expectedMassage)){

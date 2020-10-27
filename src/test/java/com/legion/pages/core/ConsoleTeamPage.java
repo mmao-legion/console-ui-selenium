@@ -692,7 +692,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	public void rejectAllTheTimeOffRequests() throws Exception {
 		if(areListElementVisible(approvedTimeOffRequests,10) && approvedTimeOffRequests.size() > 0) {
 			for(WebElement timeOffRequest : approvedTimeOffRequests) {
-				click(timeOffRequest);
+				clickTheElement(timeOffRequest);
 				if(isElementLoaded(timeOffRejectBtn,5)) {
 					scrollToElement(timeOffRejectBtn);
 					click(timeOffRejectBtn);

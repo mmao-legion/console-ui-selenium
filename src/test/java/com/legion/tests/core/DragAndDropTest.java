@@ -88,6 +88,16 @@ public class DragAndDropTest extends TestBase {
 
         // Drag the TM's avatar on Monday to another TM's shift on Tuesday
         schedulePage.dragOneAvatarToAnother(dayIndexes.get(0), firstName, dayIndexes.get(1));
+
+        String weekday = schedulePage.getWeekDayTextByIndex(Integer.parseInt(shiftInfo.get(1)));
+        String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday);
+        String expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
+                + ". This shift will be converted to an open shift";
+        schedulePage.verifyMessageInConfirmPage(expectedMessage);
+        List<String> swapData = schedulePage.getShiftSwapDataFromConfirmPage("swap");
+        schedulePage.selectSwapOrAssignOption("swap");
+        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+        schedulePage.verifyShiftsAreSwapped(swapData);
     }
 
     @Automated(automated ="Automated")
@@ -144,12 +154,15 @@ public class DragAndDropTest extends TestBase {
         schedulePage.clickOnCreateOrNextBtn();
         schedulePage.searchTeamMemberByName(firstName);
         schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
 
         // Drag the shift to the time off day
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         int endIndex = schedulePage.getTheIndexOfTheDayInWeekView(timeOffDate.substring(timeOffDate.length() - 2));
         schedulePage.dragOneAvatarToAnother(indexes.get(0), firstName, endIndex);
 
-        //TODO: verify the warning model pops up, blocked by bug: https://legiontech.atlassian.net/browse/SCH-544
+        // Verify the warning model pops up and Click on OK button
+        schedulePage.verifyWarningModelForAssignTMOnTimeOff(firstName);
     }
 
     @Automated(automated ="Automated")

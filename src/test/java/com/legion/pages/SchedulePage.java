@@ -497,4 +497,5 @@ public interface SchedulePage {
 	public WebElement getShiftById(String id) throws Exception;
 	public List<String> getShiftSwapDataFromConfirmPage(String action) throws Exception;
 	public int verifyDayHasShiftByName(int indexOfDay, String name) throws Exception;
+	public String getWeekDayTextByIndex(int index) throws Exception;
 }
