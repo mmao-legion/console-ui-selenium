@@ -107,6 +107,91 @@ public class DragAndDropTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
     @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the box interaction color and message when TM is from another store and is already scheduled at this store ")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        String anotherLocation = "NY CENTRAL";
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeLocation(anotherLocation);
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        // Select one team member to view profile
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        String userName = teamPage.selectATeamMemberToViewProfile();
+        String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
+
+        // Go to Dashboard page
+        dashboardPage.navigateToDashboard();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        // Change the location to the original location
+        locationSelectorPage.changeLocation(location);
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        // Go to Schedule page, Schedule tab
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+        // Create schedule if it is not created
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (!isWeekGenerated){
+            schedulePage.createScheduleForNonDGFlowNewUI();
+        }
+
+        // Edit the Schedule
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+        // Delete all the shifts that are assigned to the team member on Step #1
+        schedulePage.deleteTMShiftInWeekView(firstName);
+
+        // Create new shift for this TM on Monday and Tuesday
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.clearAllSelectedDays();
+        List<Integer> dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
+        schedulePage.selectWorkRole("MOD");
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByName(firstName);
+        schedulePage.clickOnOfferOrAssignBtn();
+
+        // Save the Schedule
+        schedulePage.saveSchedule();
+        List<Integer> shiftIndexes = schedulePage.getAddedShiftIndexes(firstName);
+        SimpleUtils.assertOnFail("Failed to add two shifts!", shiftIndexes != null && shiftIndexes.size() == 2, false);
+        List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
+
+        // Edit the Schedule
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+        // Drag the TM's avatar on Monday to another TM's shift on Tuesday
+        schedulePage.dragOneAvatarToAnother(dayIndexes.get(0), firstName, dayIndexes.get(1));
+
+        String weekday = schedulePage.getWeekDayTextByIndex(Integer.parseInt(shiftInfo.get(1)));
+        String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday);
+        String expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
+                + ". This shift will be converted to an open shift";
+        schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage,"swap");
+        schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage,"assign");
+        List<String> swapData = schedulePage.getShiftSwapDataFromConfirmPage("swap");
+        schedulePage.selectSwapOrAssignOption("swap");
+        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+        schedulePage.verifyShiftsAreSwapped(swapData);
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the box interaction color and message for TM status: Time Off")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyWarningModelForTimeOffAsInternalAdmin(String browser, String username, String password, String location) throws Exception {

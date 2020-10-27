@@ -264,6 +264,7 @@
                 <methods>
                     <include name="verifyWarningModelForTimeOffAsInternalAdmin"/>
                     <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" />
+                    <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
