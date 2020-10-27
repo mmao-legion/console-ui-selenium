@@ -498,4 +498,5 @@ public interface SchedulePage {
 	public List<String> getShiftSwapDataFromConfirmPage(String action) throws Exception;
 	public int verifyDayHasShiftByName(int indexOfDay, String name) throws Exception;
 	public void selectDaysByIndex(int index1, int index2, int index3) throws Exception;
+	public boolean verifySwapAndAssignWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception;
 }

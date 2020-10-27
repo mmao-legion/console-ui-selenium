@@ -303,11 +303,21 @@ public class DragAndDropTest extends TestBase {
 
         // Save the Schedule
         schedulePage.saveSchedule();
-//        List<Integer> shiftIndexes = schedulePage.getAddedShiftIndexes(firstName);
-//        SimpleUtils.assertOnFail("Failed to add two shifts!", shiftIndexes != null && shiftIndexes.size() == 2, false);
-//        List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
 
-        // Edit the Schedule
+        // Edit the Schedule and try to drag TM1 on Monday to TM2 on Tuesday
+        String clopeningWarningMessage = " will incur clopening";
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM1,1,firstNameOfTM2);
+        SimpleUtils.assertOnFail("Clopening message display successfully on swap section!",
+                schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "swap"), false);
+        SimpleUtils.assertOnFail("Clopening message display successfully on assign section!",
+                schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "assign"), false);
+
+        // Swap TM1 and TM2, check the TMs been swapped successfully
+        schedulePage.selectSwapOrAssignOption("swap");
+        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+        schedulePage.verifyDayHasShiftByName(1, firstNameOfTM1);
+        schedulePage.verifyDayHasShiftByName(0, firstNameOfTM2);
+        schedulePage.saveSchedule();
     }
 }
