@@ -2,6 +2,7 @@ package com.legion.pages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public interface LocationsPage {
 
@@ -70,4 +71,18 @@ public interface LocationsPage {
     public void updateParentLocationDistrict(String searchCharacter, int index);
 
     public void disableEnableLocation(String locationName, String action) throws Exception;
+
+    public void goToSubDistrictsInLocationsPage() throws Exception;
+
+    public void searchDistrict(String searchInputText) throws Exception;
+
+    public int getTotalEnabledDistrictsCount() throws Exception;
+
+    public List<Integer> getSearchDistrictsResultsCount(String searchInputText) throws Exception;
+
+    public void validateTheAddDistrictBtn() throws Exception;
+
+    public void clickModelSwitchIconInOpsPage();
+
+    public List<String> getLocationsInDistrict(String searchInputText) throws Exception;
 }

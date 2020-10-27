@@ -68,7 +68,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void clickModelSwitchIconInDashboardPage(String value) {
 		if (isElementEnabled(modeSwitchIcon,10)) {
 			click(modeSwitchIcon);
-			waitForSeconds(3);
+			waitForSeconds(5);
 			if (modelSwitchOption.size() != 0) {
 				for (WebElement subOption : modelSwitchOption) {
 					if (subOption.getText().equalsIgnoreCase(value)) {
@@ -98,7 +98,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void clickOnLocationsTab() throws Exception {
-		if(isElementLoaded(goToLocationsButton,10)){
+		if(isElementLoaded(goToLocationsButton,15)){
 			click(goToLocationsButton);
 			SimpleUtils.pass("Locations tab is clickable");
 		}else
@@ -1098,6 +1098,192 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void updateChangePTPLocationToNone(String LGPTPLocationName) {
 
+	}
+
+	// Added by Fiona
+	// sub dsitrict page
+	@FindBy(css = "lg-button[label=\"Add District\"]")
+	private WebElement addDistrictButton;
+
+	@FindBy(css = "input[placeholder=\"You can search by name,id.\"]")
+	private WebElement districtSearchInputBox;
+
+	@FindBy(css = ".lg-search-icon")
+	private WebElement searchDistrictBtn;
+
+	@FindBy(css = ".lg-pagination__pages.ng-binding")
+	private WebElement pageNumberText;
+
+	@FindBy(xpath = "//table/tbody/tr[2]/td[1]/lg-button/button/span/span")
+	private WebElement districtName;
+
+	@FindBy(css = "tr[ng-repeat=\"district in filteredDistricts\"]")
+	private List<WebElement> districtsRows;
+
+	@FindBy(css = ".lg-pagination__pages.ng-binding select")
+	private WebElement pageNumSelector;
+
+	@FindBy(css = "tbody > tr:nth-child(2) > td.number.ng-binding")
+	private WebElement enableDistrcit;
+
+	@FindBy(css = "lg-select[search-hint='Search Location'] div.input-faked")
+	private WebElement locationSelectorButton;
+
+	@FindBy(css = "lg-button[label=\"Edit District\"]")
+	private WebElement editDistrictBtn;
+
+	@FindBy(css = "lg-button[label=\"Manage\"]")
+	private  WebElement managementLocationBtn;
+
+	@FindBy(css = "table.lg-table tbody")
+	private WebElement locationsInManageLocationPopup;
+
+	@Override
+	public void clickModelSwitchIconInOpsPage() {
+		if (isElementEnabled(modeSwitchIcon, 10)) {
+			click(modeSwitchIcon);
+			waitForSeconds(3);
+			click(consoleTitleMenu);
+			switchToNewWindow();
+			if (isElementEnabled(locationSelectorButton, 5)) {
+				SimpleUtils.pass("switch to Console page successfully");
+			} else
+				SimpleUtils.fail("switch to Console portal failed", false);
+		} else
+			SimpleUtils.fail("mode switch img load failed", false);
+	}
+
+
+	@Override
+	public void goToSubDistrictsInLocationsPage() throws Exception {
+		if (isElementLoaded(districtsInLocations, 20)) {
+			click(districtsInLocations);
+			if (isElementEnabled(addDistrictButton, 20)) {
+				SimpleUtils.pass("sub-district page load successfully");
+			} else
+				SimpleUtils.fail("sub-dsitrict page load failed", false);
+		} else
+			SimpleUtils.fail("locations tab load failed in location overview page", false);
+	}
+
+	@Override
+	public void validateTheAddDistrictBtn() throws Exception {
+		if (isElementLoaded(addDistrictButton, 5)) {
+			SimpleUtils.pass("Add new district button shows well");
+		} else {
+			SimpleUtils.pass("Add new district button doesn't show");
+		}
+	}
+
+
+	@Override
+	public void searchDistrict(String searchInputText) throws Exception {
+		if (isElementLoaded(districtSearchInputBox, 10)) {
+			clickTheElement(districtSearchInputBox);
+			districtSearchInputBox.sendKeys(searchInputText);
+			districtSearchInputBox.sendKeys(Keys.ENTER);
+			waitForSeconds(3);
+			if (districtsRows.size() > 0) {
+				SimpleUtils.pass("Can search out location by using " + searchInputText);
+			} else {
+				SimpleUtils.pass("Can't search out any locations by using " + searchInputText);
+				districtSearchInputBox.clear();
+			}
+		} else {
+			SimpleUtils.fail("Search input is not clickable", true);
+		}
+	}
+
+	//get total enabled status district count
+	@Override
+	public int getTotalEnabledDistrictsCount() throws Exception {
+		waitForSeconds(10);
+		int enableDistrcitCount = 0;
+		//get enable districts count from smart card
+		if (isElementLoaded(enableDistrcit, 15)) {
+			if (!enableDistrcit.getText().isEmpty()) {
+				enableDistrcitCount = Integer.parseInt(enableDistrcit.getText().trim());
+				SimpleUtils.pass("The count of enabled status districts shows in district samrt card: " + enableDistrcitCount);
+			}
+		} else {
+			SimpleUtils.pass("District smart card loaded failed");
+		}
+		return enableDistrcitCount;
+	}
+
+	// Search district with characters and return the districts count, which maybe include disabled ditricts
+	@Override
+	public List<Integer> getSearchDistrictsResultsCount(String searchInputText) throws Exception {
+
+		List<Integer> searchResultsList = new ArrayList<Integer>();
+		String[] searchLocationCha = searchInputText.split(",");
+		int searchedDistrictsCount = 0;
+
+		if (isElementLoaded(districtSearchInputBox, 15)) {
+			for (int i = 0; i < searchLocationCha.length; i++) {
+
+				searchDistrict(searchLocationCha[i]);
+
+				//Get the total count of search results
+				String totalResultsPages = null;
+				String[] pageText = pageNumberText.getText().trim().split(" ");
+				if (pageText.length > 0 && !pageText[1].isEmpty()) {
+					totalResultsPages = pageText[1];
+					selectByVisibleText(pageNumSelector, totalResultsPages);
+					if (districtsRows.size() > 0) {
+						int maxPageNumber = Integer.parseInt(totalResultsPages);
+						searchedDistrictsCount = (maxPageNumber - 1) * 10 + districtsRows.size();
+						SimpleUtils.pass("Districts: " + searchedDistrictsCount + " district(s) found by " + searchLocationCha[i]);
+						searchResultsList.add(searchedDistrictsCount);
+						districtSearchInputBox.clear();
+					} else {
+						SimpleUtils.pass("Can Not search out any locations");
+					}
+				} else {
+					SimpleUtils.pass("District list page number load failed");
+				}
+			}
+		} else {
+			SimpleUtils.fail("District search input box is not clickable", true);
+		}
+		return searchResultsList;
+	}
+
+	@Override
+	public List<String> getLocationsInDistrict(String districtName) throws Exception {
+		List<WebElement> locationsInManageLocation = new ArrayList<>();
+		List<String> locations = new ArrayList<>();
+		if (isElementLoaded(districtSearchInputBox, 15)) {
+			if (districtName != null && !districtName.isEmpty()) {
+				districtSearchInputBox.clear();
+				searchDistrict(districtName);
+				waitForSeconds(10);
+				if (districtsRows.size() > 0) {
+					click(districtsRows.get(0).findElement(By.cssSelector("lg-button")));
+					waitUntilElementIsVisible(editDistrictBtn);
+					click(editDistrictBtn);
+					click(managementLocationBtn);
+					if(isElementLoaded(locationsInManageLocationPopup,5)){
+						SimpleUtils.pass("Manage location popup window is showing Now");
+						locationsInManageLocation = locationsInManageLocationPopup.findElements(By.cssSelector("div.lg-select-list__name span"));
+						for(WebElement location:locationsInManageLocation){
+							String locationName = location.getText();
+							locations.add(locationName);
+						}
+						SimpleUtils.pass("There is " + locations.size() + " locations in " + districtName);
+					}else{
+						SimpleUtils.pass("Manage location popup window is not showing");
+					}
+				} else {
+					SimpleUtils.pass("Can Not search out any locations");
+				}
+			}else{
+				SimpleUtils.pass("Search test is empty!");
+			}
+		}else{
+			SimpleUtils.pass("District search input box is not loaded!");
+		}
+		return locations;
 	}
 
 

@@ -15,4 +15,9 @@ public interface LocationSelectorPage {
 	public void verifyClickChangeLocationButton() throws Exception;
 	public void verifyTheContentOfDetailLocations() throws Exception;
 	public void verifyTheFunctionOfSearchTextBox(List<String> testStrings) throws Exception;
+	public void isDMView() throws Exception;
+	public void isSMView() throws Exception;
+	public List<Integer> searchDistrict(String searchInputText) throws Exception;
+	public void verifyClickChangeDistrictButton() throws Exception;
+	public List<String> searchLocation(String searchInputText) throws Exception;
 }

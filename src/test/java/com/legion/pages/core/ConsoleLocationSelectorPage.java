@@ -3,6 +3,8 @@ package com.legion.pages.core;
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.utils.MyThreadLocal.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -73,6 +75,8 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     private WebElement searchDistrictInput;
     @FindBy(className = "lg-search-icon")
     private WebElement searchIcon;
+    @FindBy(css="lg-select[search-hint=\"Search Location\"]")
+    private WebElement locationButton;
 
     String dashboardConsoleMenuText = "Dashboard";
     private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
@@ -363,5 +367,163 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }else
             click(locationSelectorButton);
         searchDistrictAndSelect(districtName);
+    }
+
+    //added by Fiona
+    //get the default location value
+
+    public String getCurrentUserDefaultLocation() throws Exception
+    {
+        String defaultLocation = "";
+        if(isChangeLocationButtonLoaded()){
+            defaultLocation=locationSelectorButton.getText();
+        }else {
+            SimpleUtils.fail("Default Location not appear on Dashboard!", false);
+        }
+        return defaultLocation;
+    }
+
+    //Check the navigation bar - location fiels shows as 'All locations' or not?
+    @Override
+    public void isDMView() throws Exception {
+        String locationFieldsText = "All Locations";
+        if(getCurrentUserDefaultLocation().contains(locationFieldsText)){
+            SimpleUtils.pass("Dashboard page shows as DM view!");
+        }else {
+            SimpleUtils.fail("Dashboard page shows as NOT DM view!",true);
+        }
+    }
+    @Override
+    public void isSMView() throws Exception {
+        String locationFieldsText = "All Locations";
+        if(getCurrentUserDefaultLocation().contains(locationFieldsText)){
+            SimpleUtils.fail("Dashboard page shows as NOT SM view!",true);
+        }else {
+            SimpleUtils.pass("Dashboard page shows as SM view!");
+        }
+    }
+
+    @FindBy(css = "lg-search-options[search-hint='Search District'] div.lg-search-options__scroller div.cachedDisrictInfo")
+    private WebElement districCountInDropdownList;
+
+    @FindBy(css = "lg-search-options[search-hint='Search District'] div.lg-search-options__scroller div[ng-repeat]")
+    private List<WebElement> districDetailsInDropdownList;
+
+    @Override
+    public void verifyClickChangeDistrictButton() throws Exception {
+        if (isElementLoaded(districtSelectorButton, 10)){
+            click(districtSelectorButton);
+            if (isElementLoaded(districtDropDownButton, 10)){
+                SimpleUtils.pass("The district list layout shows!");
+                if (isElementLoaded(searchDistrictInput, 5) && isElementLoaded(districCountInDropdownList, 5)){
+                    SimpleUtils.pass("List of districts and search textbox show.");
+                }
+                else{
+                    SimpleUtils.fail("List of districts and search textbox don't show.", true);
+                }
+            }
+            else{
+                SimpleUtils.fail("The district list layout doesn't show!", true);
+            }
+        }
+    }
+
+    @Override
+    public List<Integer> searchDistrict(String searchInputText) throws Exception {
+        List<Integer> searchedDistrictCount = new ArrayList<>();
+        try {
+            String[] searchLocationCha = searchInputText.split(",");
+            if(isChangeDistrictButtonLoaded()) {
+                verifyClickChangeDistrictButton();
+                if (searchLocationCha.length > 0) {
+                    for (int i =0; i<searchLocationCha.length; i++){
+                        searchDistrictInput.sendKeys(searchLocationCha[i]);
+                        searchDistrictInput.sendKeys(Keys.ENTER);
+                        waitForSeconds(4);
+                        List<String> districtCountList = Arrays.asList(districCountInDropdownList.getText().trim().split(" "));
+                        int displayDistrictCount = Integer.parseInt(districtCountList.get(2));
+                        int totalDistrictCount = Integer.parseInt(districtCountList.get(4));
+
+                        if(totalDistrictCount > 50){
+                            if(searchLocationCha[i].contains("*")){
+                                searchedDistrictCount.add(totalDistrictCount);
+                                SimpleUtils.pass("User can search " + totalDistrictCount + " district using " + searchLocationCha[i] + "in navigation.");
+                            }else{
+                                for (WebElement detailDistrict : districDetailsInDropdownList) {
+                                    String districtName = detailDistrict.getText();
+                                    if (districtName.toLowerCase().contains(searchLocationCha[i].toLowerCase())) {
+                                        SimpleUtils.pass("Verified " + districtName + " contains test string: " + searchLocationCha[i]);
+                                    } else {
+                                        SimpleUtils.fail("Verify failed, " + districtName + " doesn't contain test string: " + searchLocationCha[i], true);
+                                    }
+                                }
+                                searchedDistrictCount.add(totalDistrictCount);
+                                SimpleUtils.pass("User can search " + totalDistrictCount + " district using " + searchLocationCha[i] + "in navigation.");
+                            }
+                        }else{
+                            if(searchLocationCha[i].contains("*")){
+                                searchedDistrictCount.add(displayDistrictCount);
+                                SimpleUtils.pass("User can search " + displayDistrictCount + " district using " + searchLocationCha[i] + "in navigation.");
+                            }else{
+                                for (WebElement detailDistrict : districDetailsInDropdownList) {
+                                    String districtName = detailDistrict.getText();
+                                    if (districtName.toLowerCase().contains(searchLocationCha[i].toLowerCase())) {
+                                        SimpleUtils.pass("Verified " + districtName + " contains test string: " + searchLocationCha[i] + "The serach results is correct");
+                                    } else {
+                                        SimpleUtils.fail("Verify failed, " + districtName + " doesn't contain test string: " + searchLocationCha[i], true);
+                                    }
+                                }
+                                searchedDistrictCount.add(displayDistrictCount);
+                                SimpleUtils.pass("User can search " + displayDistrictCount + " district using " + searchLocationCha[i] + "in navigation.");
+                            }
+                        }
+                    }
+                } else {
+                    SimpleUtils.fail("Test string is empty!", true);
+                }
+            }
+            else{
+                SimpleUtils.fail("Change Location Button does't Load Successfully!", true);
+            }
+        }
+        catch(Exception e){
+            SimpleUtils.fail("Verify the function of Search TextBox failed!", true);
+        }
+        return searchedDistrictCount;
+    }
+
+    @Override
+    public List<String> searchLocation(String searchInputText) throws Exception {
+        List<String> locations = null;
+        try {
+            locations = new ArrayList<>();
+            if (isChangeLocationButtonLoaded()) {
+                click(locationButton);
+                if (!searchInputText.isEmpty() && searchInputText != null) {
+                    click(searchTextbox);
+                    searchTextbox.sendKeys(searchInputText);
+                    searchTextbox.sendKeys(Keys.ENTER);
+                    waitForSeconds(4);
+                    if (isElementLoaded(locationItems, 10)) {
+                        List<WebElement> locationList = locationItems.findElements(By.cssSelector("div.lg-search-options__option"));
+                        for (WebElement location : locationList) {
+                            String locationName = location.getText();
+                            locations.add(locationName);
+                            SimpleUtils.pass("Location: " + locationName + " is showing.");
+                        }
+                        SimpleUtils.pass("In this District, totally have " + locations.size() + " locations!");
+                    } else {
+                        SimpleUtils.pass("There is no locations in selected district");
+                    }
+                } else {
+                    SimpleUtils.fail("Test string is empty!", true);
+                }
+            } else {
+                SimpleUtils.fail("Change Location Button does't Load Successfully!", true);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Verify the function of Search TextBox failed!", true);
+        }
+        return locations;
     }
 }

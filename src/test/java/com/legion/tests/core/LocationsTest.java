@@ -927,4 +927,26 @@ public class LocationsTest extends TestBase {
         String parentLocation = "LGMS";
         locationsPage.changeOneLocationToChild(locationName,locationRelationship,parentLocation);
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify the create new button on the district landing page.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAddNewDistricBtnAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        //check locations item
+        locationsPage.validateItemsInLocations();
+        //go to sub-district tab
+        locationsPage.goToSubDistrictsInLocationsPage();
+        locationsPage.validateTheAddDistrictBtn();
+    }
 }
