@@ -20,21 +20,30 @@
                     <include name="verifyDisableEnableLocationFunction" />
                     <include name="verifyImportLocationDistrict" />
                     <include name="verifyExportLocationDistrict" />
+
                     <include name="verifyCreateMSLocationGroupWithRegularTypeFunction" />
                     <include name="verifyUpdateMSLocationGroupDistrictFunction" />
-                    <include name="verifyDisableEnableParentLocationInLGMS" />
+                    <include name="verifyDisableEnableParentChildLocationInLGMS" />
+
                     <include name="verifyCreateP2PLocationGroupWithRegularTypeFunction" />
                     <include name="verifyUpdateP2PLocationGroupDistrictFunction" />
-                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
-                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />
-                    <include name="verifyNoLocationGroupSettingForMock" />
-<!--                    <include name="verifyChangeChildLocationToNoneFunction" />-->
-<!--                    <include name="verifyChangeMSParentLocationToNoneFunction" />-->
-<!--                    <include name="verifyChangeP2PParentLocationToNoneFunction" />-->
+                    <include name="verifyDisableEnableParentChildLocationInLGP2P" />
+
                     <include name="verifyChangeNoneLocationToChild" />
                     <include name="verifyChangeNoneLocationToP2PParent" />
                     <include name="verifyChangeNoneLocationToMSParent" />
                     <include name="verifyAddNewDistricBtnAsInternalAdmin" />
+
+                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
+                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />
+                    <include name="verifyNoLocationGroupSettingForMock" />
+
+                    <include name="verifyChangeChildLocationToNoneFunction" />
+                    <include name="verifyChangeP2PToMS" />
+                    <include name="verifyChangeMSToP2P" />
+                    <include name="verifyChangeMSParentLocationToNoneFunction" />
+                    <include name="verifyChangeP2PParentLocationToNoneFunction" />
+
 
 
 

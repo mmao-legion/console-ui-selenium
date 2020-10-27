@@ -85,4 +85,8 @@ public interface LocationsPage {
     public void clickModelSwitchIconInOpsPage();
 
     public List<String> getLocationsInDistrict(String searchInputText) throws Exception;
+
+    public boolean isItMSLG();
+
+    public void changeLGToMSOrP2P(String value) throws Exception;
 }

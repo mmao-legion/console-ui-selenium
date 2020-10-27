@@ -1034,6 +1034,43 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
+	public boolean isItMSLG() {
+		ArrayList<String> iconInfoOfLG = new ArrayList<>();
+
+		List<WebElement> locationIcon = getDriver().findElements(By.cssSelector(".group-type-icon >img"));
+		for (WebElement icon:locationIcon
+		) {
+			iconInfoOfLG.add(icon.getAttribute("ng-src"));
+		}
+		if (iconInfoOfLG.contains("img/legion/lgComponents/group.svg") && iconInfoOfLG.contains("img/legion/lgComponents/group-master-slave.svg") ) {
+			return true;
+		}else
+			return false;
+
+	}
+
+	@Override
+	public void changeLGToMSOrP2P(String value) throws Exception {
+		if (locationRows.size() > 0) {
+			List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
+			click(locationDetailsLinks.get(0));
+			click(editLocationBtn);
+			click(getDriver().findElement(By.cssSelector("input[aria-label=\""+value+"\"] ")));
+			scrollToBottom();
+			click(saveBtnInUpdateLocationPage);
+			waitForSeconds(5);
+			SimpleUtils.pass("Location update done");
+		}else
+			SimpleUtils.fail("No search result",true);
+		waitForSeconds(10);
+//		searchLocation(locationName);
+//		if (!isItMSLG()) {
+//			SimpleUtils.pass("Change None location to parent successfully");
+//		}else
+//			SimpleUtils.fail("Change location to parent Location failed",true);
+	}
+
+	@Override
 	public boolean verifyLGIconShowWellOrNot(String locationName, int childLocationNum) {
 		HashMap<String,Object> locationGroupIcons =  new HashMap<>();
 		if (locationRows.size()>0 && locationRows.size()==childLocationNum+1) {
