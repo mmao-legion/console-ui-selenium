@@ -5399,7 +5399,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 		String clopeningMessage1 = "An employee should have at least";
 		String clopeningMessage2 = "hours of break between consecutive closing and opening shifts";
-
+		waitForSeconds(10);
 		if (areListElementVisible(clopeningSectionToggles,10) && clopeningSectionToggles.size() > 0){
 			for (WebElement clopeningSectionToggle : clopeningSectionToggles) {
 				WebElement toggle = clopeningSectionToggle.findElement(By.className("switch"));

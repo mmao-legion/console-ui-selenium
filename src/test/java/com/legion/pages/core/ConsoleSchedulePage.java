@@ -3122,4 +3122,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public int verifyDayHasShiftByName(int indexOfDay, String name) throws Exception {
         return 0;
     }
+
+    @Override
+    public void selectDaysByIndex(int index1, int index2, int index3) throws Exception {
+
+    }
 }
