@@ -11648,8 +11648,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement errorMessageInAssign;
 
     @Override
-    public void verifyMessageInConfirmPage(String expectedMassage) throws Exception {
-        if (isElementLoaded(errorMessageInSwap,15) && isElementLoaded(errorMessageInAssign,15) && errorMessageInSwap.getText().contains(expectedMassage) && errorMessageInAssign.getText().contains(expectedMassage)){
+    public void verifyMessageInConfirmPage(String expectedMassageInSwap, String expectedMassageInAssign) throws Exception {
+        if (isElementLoaded(errorMessageInSwap,15) && isElementLoaded(errorMessageInAssign,15) && errorMessageInSwap.getText().contains(expectedMassageInSwap) && errorMessageInAssign.getText().contains(expectedMassageInAssign)){
             SimpleUtils.pass("errorMessageInSwap: "+errorMessageInSwap.getText()+"\nerrorMessageInAssign: "+errorMessageInAssign.getText());
         } else {
             SimpleUtils.fail("No warning message for overtime when drag and drop",false);
@@ -11768,6 +11768,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return shift;
     }
 
+
     @FindBy(css = "div[ng-repeat=\"error in swapError\"]")
     private List<WebElement> warningMessagesInSwap;
     @FindBy(css = "div[ng-repeat=\"error in assignError\"]")
@@ -11776,10 +11777,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public boolean verifySwapAndAssignWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception {
         boolean canFindTheExpectedMessage = false;
-        if (action.equals("swap")){
-            if (areListElementVisible(warningMessagesInSwap,15) && warningMessagesInSwap.size()>0){
-                for (int i=0; i<warningMessagesInSwap.size();i++){
-                    if (warningMessagesInSwap.get(i).getText().contains(expectedMessage)){
+        if (action.equals("swap")) {
+            if (areListElementVisible(warningMessagesInSwap, 15) && warningMessagesInSwap.size() > 0) {
+                for (int i = 0; i < warningMessagesInSwap.size(); i++) {
+                    if (warningMessagesInSwap.get(i).getText().contains(expectedMessage)) {
                         canFindTheExpectedMessage = true;
                         SimpleUtils.pass("The expected message can be find successfully");
                     }
@@ -11787,20 +11788,32 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             } else {
                 SimpleUtils.report("There is no warning message in swap section");
             }
-        } else if(action.equals("assign")) {
-            if (areListElementVisible(warningMessagesInAssign,15) && warningMessagesInAssign.size()>0){
-                for (int i=0; i<warningMessagesInAssign.size(); i++){
-                    if (warningMessagesInAssign.get(i).getText().contains(expectedMessage) && errorMessageInAssign.getText().contains(expectedMessage)){
-                        canFindTheExpectedMessage =true;
+        } else if (action.equals("assign")) {
+            if (areListElementVisible(warningMessagesInAssign, 15) && warningMessagesInAssign.size() > 0) {
+                for (int i = 0; i < warningMessagesInAssign.size(); i++) {
+                    if (warningMessagesInAssign.get(i).getText().contains(expectedMessage) && errorMessageInAssign.getText().contains(expectedMessage)) {
+                        canFindTheExpectedMessage = true;
                         SimpleUtils.pass("The expected message can be find successfully");
                     }
                 }
-            }else {
+            } else {
                 SimpleUtils.report("There is no warning message in assign section");
             }
         } else
             SimpleUtils.fail("No this action on drag&drop confirm page", true);
 
         return canFindTheExpectedMessage;
+    }
+
+    @FindBy(css = "div.modal-instance-button")
+    private WebElement cancelBtnOnDragAndDropConfirmPage;
+    @Override
+    public void clickCancelBtnOnDragAndDropConfirmPage() throws Exception {
+        if (isElementLoaded(cancelBtnOnDragAndDropConfirmPage,15) ){
+            click(cancelBtnOnDragAndDropConfirmPage);
+            SimpleUtils.pass("cancel button is clicked successfully!");
+        } else {
+            SimpleUtils.fail("cancel button is disabled!",false);
+        }
     }
  }

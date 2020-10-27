@@ -96,7 +96,7 @@ public class DragAndDropTest extends TestBase {
         String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday);
         String expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
                 + ". This shift will be converted to an open shift";
-        schedulePage.verifyMessageInConfirmPage(expectedMessage);
+        schedulePage.verifyMessageInConfirmPage(expectedMessage,"");
         List<String> swapData = schedulePage.getShiftSwapDataFromConfirmPage("swap");
         schedulePage.selectSwapOrAssignOption("swap");
         schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
@@ -193,7 +193,7 @@ public class DragAndDropTest extends TestBase {
         if (isWeekGenerated){
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
-        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "08:00PM");
+        schedulePage.createScheduleForNonDGFlowNewUI();
         // Edit schedule to create the new shifts for new TM1 and TM2
         String TM1 = "John";
         String TM2 = "Pat";
@@ -227,14 +227,21 @@ public class DragAndDropTest extends TestBase {
         schedulePage.dragOneAvatarToAnotherSpecificAvatar(1,TM1,0,TM2);
         List<String> swapData = schedulePage.getShiftSwapDataFromConfirmPage("swap");
         String expectedMessage = "John will incur 1 hours of overtime";
-        schedulePage.verifyMessageInConfirmPage(expectedMessage);
+        schedulePage.verifyMessageInConfirmPage(expectedMessage, expectedMessage);
         schedulePage.selectSwapOrAssignOption("swap");
         schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
         schedulePage.verifyShiftsAreSwapped(swapData);
 
+        //verify cancel button
         schedulePage.dragOneAvatarToAnotherSpecificAvatar(1,TM2,0,TM1);
         schedulePage.dragOneAvatarToAnotherSpecificAvatar(1,TM1,0,TM2);
-        swapData = schedulePage.getShiftSwapDataFromConfirmPage("assign");
+        schedulePage.clickCancelBtnOnDragAndDropConfirmPage();
+        if (schedulePage.verifyDayHasShiftByName(0,TM1)==1 && schedulePage.verifyDayHasShiftByName(1,TM1)==1){
+            SimpleUtils.pass("cancel successfully!");
+        }
+
+        schedulePage.dragOneAvatarToAnotherSpecificAvatar(1,TM2,0,TM1);
+        schedulePage.dragOneAvatarToAnotherSpecificAvatar(1,TM1,0,TM2);
         schedulePage.selectSwapOrAssignOption("assign");
         schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
         if (schedulePage.verifyDayHasShiftByName(0,TM1)==2 && schedulePage.verifyDayHasShiftByName(1,TM1)==1){

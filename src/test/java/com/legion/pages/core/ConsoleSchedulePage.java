@@ -3088,7 +3088,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void verifyMessageInConfirmPage(String expectedMassage) throws Exception {
+    public void verifyMessageInConfirmPage(String expectedMassageInSwap, String expectedMassageInAssign) throws Exception {
 
     }
 
@@ -3136,5 +3136,10 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @Override
     public boolean verifySwapAndAssignWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception {
         return false;
+    }
+
+    @Override
+    public void clickCancelBtnOnDragAndDropConfirmPage() throws Exception {
+
     }
 }

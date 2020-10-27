@@ -491,7 +491,7 @@ public interface SchedulePage {
 	public void dragOneAvatarToAnother(int startIndex, String firstName, int endIndex) throws Exception;
 	public int getTheIndexOfTheDayInWeekView(String date) throws Exception;
     public HashMap<String,Integer> dragOneAvatarToAnotherSpecificAvatar(int startIndexOfTheDay, String user1, int endIndexOfTheDay, String user2) throws Exception;
-    public void verifyMessageInConfirmPage(String expectedMassage) throws Exception;
+    public void verifyMessageInConfirmPage(String expectedMassageInSwap, String expectedMassageInAssign) throws Exception;
     public void selectSwapOrAssignOption(String action) throws Exception;
     public void clickConfirmBtnOnDragAndDropConfirmPage() throws Exception;
 	public WebElement getShiftById(String id) throws Exception;
@@ -500,4 +500,5 @@ public interface SchedulePage {
 	public String getWeekDayTextByIndex(int index) throws Exception;
 	public void selectDaysByIndex(int index1, int index2, int index3) throws Exception;
 	public boolean verifySwapAndAssignWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception;
+	public void clickCancelBtnOnDragAndDropConfirmPage() throws Exception;
 }
