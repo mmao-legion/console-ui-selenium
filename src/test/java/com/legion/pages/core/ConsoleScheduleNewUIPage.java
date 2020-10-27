@@ -11683,10 +11683,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         List<WebElement> swapResults = new ArrayList<>();
         if (isElementLoaded(swapSectionInfo, 5) && isElementLoaded(assignSectionInfo, 5)) {
             if (action.equalsIgnoreCase("swap")){
-                swapSectionInfo.findElements(By.cssSelector("swap-modal-shift"));
+                swapResults = swapSectionInfo.findElements(By.cssSelector("swap-modal-shift"));
             }
-            if (action.equalsIgnoreCase("swap")){
-                assignSectionInfo.findElements(By.cssSelector("swap-modal-shift"));
+            if (action.equalsIgnoreCase("assign")){
+                swapResults = assignSectionInfo.findElements(By.cssSelector("swap-modal-shift"));
             }
 
             if (swapResults != null && swapResults.size() > 0) {
