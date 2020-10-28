@@ -1,6 +1,5 @@
 package com.legion.tests.core;
 
-import com.google.inject.internal.cglib.core.$WeakCacheKey;
 import com.legion.pages.*;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -397,6 +396,7 @@ public class DragAndDropTest extends TestBase {
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
         schedulePage.clearAllSelectedDays();
+//        schedulePage.selectSpecificWorkDay(1);
         schedulePage.selectDaysByIndex(0, 0, 2);
         schedulePage.selectWorkRole(workRoleOfTM1);
         schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
@@ -410,6 +410,7 @@ public class DragAndDropTest extends TestBase {
         schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME_2"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
         schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME_2"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
         schedulePage.clearAllSelectedDays();
+//        schedulePage.selectSpecificWorkDay(1);
         schedulePage.selectDaysByIndex(1, 1, 1);
         schedulePage.selectWorkRole(workRoleOfTM2);
         schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
@@ -435,24 +436,5 @@ public class DragAndDropTest extends TestBase {
         schedulePage.verifyDayHasShiftByName(1, firstNameOfTM1);
         schedulePage.verifyDayHasShiftByName(0, firstNameOfTM2);
         schedulePage.saveSchedule();
-
-        //check compliance smart card display
-        SimpleUtils.assertOnFail("Compliance smart card display successfully!",
-                schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
-        schedulePage.clickViewShift();
-
-        //check the violation on the info popup
-        List<WebElement> shiftsOfTuesday = schedulePage.getOneDayShiftByName(1, firstNameOfTM1);
-        SimpleUtils.assertOnFail("Get compliance shift failed",shiftsOfTuesday.size()>0, false);
-
-        List<WebElement> shiftsOfWednesday = schedulePage.getOneDayShiftByName(2, firstNameOfTM1);
-        SimpleUtils.assertOnFail("Get compliance shift failed",shiftsOfWednesday.size()>0, false);
-
-        SimpleUtils.assertOnFail("Clopening comliance message display failed",
-                schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfTuesday.get(shiftsOfTuesday.size()-1)).contains("Clopening"), false);
-
-        SimpleUtils.assertOnFail("Clopening comliance message display failed",
-                schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfWednesday.get(0)).contains("Clopening"), false);
-
     }
 }
