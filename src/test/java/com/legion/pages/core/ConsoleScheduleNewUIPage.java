@@ -773,7 +773,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     //compliance elements
-    @FindBy(css = "[ng-if=\"compliance\"]")
+    @FindBy(css = "[ng-if=\"scheduleSmartCard.complianceViolations && hasSchedule()\"] div.card-carousel-card")
     private WebElement complianceSmartcardHeader;
 
     @FindBy(css = ".fa-flag.sch-red")
@@ -11833,5 +11833,50 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("cancel button is disabled!",false);
         }
+    }
+
+    @Override
+    public List<WebElement> getOneDayShiftByName(int indexOfDay, String name) throws Exception {
+        int count = 0;
+        List<WebElement> shiftsOfOneTM = new ArrayList<>();;
+        List<WebElement> shifts = getDriver().findElements(By.cssSelector("[data-day-index=\"" + indexOfDay + "\"] .week-schedule-shift-wrapper"));
+        if (shifts != null && shifts.size() > 0) {
+            for (WebElement shift : shifts) {
+                WebElement name1 = shift.findElement(By.className("week-schedule-worker-name"));
+                if (name1 != null && name1.getText().equalsIgnoreCase(name)) {
+                    shiftsOfOneTM.add(shift);
+                    SimpleUtils.pass("shift exists on this day!");
+                    count++;
+                }
+            }
+            if(count==0){
+                SimpleUtils.report("No shifts on the day for the TM: " + name);
+            }
+        } else {
+            SimpleUtils.fail("No shifts on the day",false);
+        }
+        return shiftsOfOneTM;
+    }
+
+    @FindBy(css = "span.ot-hours-text")
+    private List<WebElement> complianceMessageInInfoIconPopup;
+
+    @Override
+    public List<String> getComplianceMessageFromInfoIconPopup(WebElement shift) throws Exception {
+        List<String> complianceMessages = new ArrayList<>();
+        if (isElementLoaded(shift, 5)){
+            click(shift.findElement(By.cssSelector("img.week-schedule-shit-open-popover")));
+            if (isElementLoaded(popOverContent, 5)){
+                if (areListElementVisible(complianceMessageInInfoIconPopup, 5) && complianceMessageInInfoIconPopup.size()>0){
+                    for (int i=0; i< complianceMessageInInfoIconPopup.size(); i++){
+                        complianceMessages.add(complianceMessageInInfoIconPopup.get(i).getText());
+                    }
+                } else
+                    SimpleUtils.report("There is no compliance message in info icon popup");
+            } else
+                SimpleUtils.fail("Info icon popup fail to load", false);
+        } else
+            SimpleUtils.fail("Shift fail to load", false);
+        return complianceMessages;
     }
  }
