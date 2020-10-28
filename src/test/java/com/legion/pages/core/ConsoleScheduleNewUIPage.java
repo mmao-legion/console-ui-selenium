@@ -11793,7 +11793,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public boolean verifySwapAndAssignWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception {
         boolean canFindTheExpectedMessage = false;
-        if (action.equals("swap")) {
+        if (action.equalsIgnoreCase("swap")) {
             if (areListElementVisible(warningMessagesInSwap, 15) && warningMessagesInSwap.size() > 0) {
                 for (int i = 0; i < warningMessagesInSwap.size(); i++) {
                     if (warningMessagesInSwap.get(i).getText().contains(expectedMessage)) {
@@ -11805,7 +11805,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             } else {
                 SimpleUtils.report("There is no warning message in swap section");
             }
-        } else if (action.equals("assign")) {
+        } else if (action.equalsIgnoreCase("assign")) {
             if (areListElementVisible(warningMessagesInAssign, 15) && warningMessagesInAssign.size() > 0) {
                 for (int i = 0; i < warningMessagesInAssign.size(); i++) {
                     if (warningMessagesInAssign.get(i).getText().contains(expectedMessage)) {
