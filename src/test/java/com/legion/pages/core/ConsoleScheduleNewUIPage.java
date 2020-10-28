@@ -5528,7 +5528,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     shiftInfo.add(shiftTimeWeekView);
                 }
                 //To close the info popup
-                click(weekShifts.get(index));
+                click(weekShifts.get(0));
             } else {
                 SimpleUtils.report("This is an Open Shift");
                 return shiftInfo;
@@ -11934,4 +11934,50 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Schedule Page: Failed to find the shift elements for index: " + startIndex + " or " + endIndex, false);
         }
     }
+
+    @FindBy(css = "div.lgn-alert-modal")
+    private WebElement warningMode;
+
+
+    @FindBy(css = "span.lgn-alert-message")
+    private List<WebElement> warningMessagesInWarningMode;
+
+    @FindBy(className = "lgn-action-button-success")
+    private WebElement okBtnInWarningMode;
+
+    @Override
+    public boolean ifWarningModeDisplay() throws Exception {
+        if(isElementLoaded(warningMode, 5)) {
+            SimpleUtils.pass("Warning mode is loaded successfully");
+            return true;
+        } else {
+            SimpleUtils.report("Warning mode fail to load");
+            return false;
+        }
+    }
+
+    @Override
+    public String getWarningMessageInDragShiftWarningMode() throws Exception {
+        String warningMessage = "";
+        if(areListElementVisible(warningMessagesInWarningMode, 5) && warningMessagesInWarningMode.size()>0) {
+            for (WebElement warningMessageInWarningMode: warningMessagesInWarningMode){
+                warningMessage = warningMessage + warningMessageInWarningMode.getText()+"\n";
+            }
+        } else{
+            SimpleUtils.fail("Warning message fail to load", false);
+        }
+        return warningMessage;
+    }
+
+    @Override
+    public void clickOnOkButtonInWarningMode() throws Exception {
+        if(isElementLoaded(okBtnInWarningMode, 5)) {
+            click(okBtnOnConfirm);
+            SimpleUtils.pass("Click on Ok button on warning successfully");
+        } else {
+            SimpleUtils.fail("Ok button fail to load", false);
+        }
+    }
+
+
  }

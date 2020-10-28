@@ -602,11 +602,13 @@ public class DragAndDropTest extends TestBase {
         schedulePage.saveSchedule();
         schedulePage.publishActiveSchedule();
 
-        dashboardPage = pageFactory.createConsoleDashboardPage();
+//        DashboardPage dashboardPage2 = pageFactory.createConsoleDashboardPage();
+        dashboardPage.navigateToDashboard();
+        locationSelectorPage.changeLocation("AUSTIN DOWNTOWN");
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
         // Go to Schedule page, Schedule tab
-        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//        SchedulePage schedulePage2 = pageFactory.createConsoleScheduleNewUIPage();
         schedulePage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                 schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
@@ -615,8 +617,8 @@ public class DragAndDropTest extends TestBase {
                 schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
         // Create schedule if it is not created
-        isWeekGenerated = schedulePage.isWeekGenerated();
-        if (isWeekGenerated){
+        boolean isWeekGenerated2 = schedulePage.isWeekGenerated();
+        if (isWeekGenerated2){
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
         schedulePage.createScheduleForNonDGFlowNewUI();
@@ -628,7 +630,7 @@ public class DragAndDropTest extends TestBase {
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
         schedulePage.clearAllSelectedDays();
-        schedulePage.selectSpecificWorkDay(2);
+        schedulePage.selectDaysByIndex(1, 1, 1);
         schedulePage.selectWorkRole(workRoleOfTM1);
         schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
         schedulePage.clickOnCreateOrNextBtn();
@@ -638,5 +640,6 @@ public class DragAndDropTest extends TestBase {
 
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.dragOneShiftToAnotherDay(1, firstNameOfTM1, 0);
+        String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
     }
 }

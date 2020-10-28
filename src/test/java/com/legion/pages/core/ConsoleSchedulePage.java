@@ -3162,4 +3162,19 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
 
     }
+
+    @Override
+    public boolean ifWarningModeDisplay() throws Exception {
+        return false;
+    }
+
+    @Override
+    public String getWarningMessageInDragShiftWarningMode() throws Exception{
+        return null;
+    }
+
+    @Override
+    public void clickOnOkButtonInWarningMode() throws Exception {
+
+    }
 }
