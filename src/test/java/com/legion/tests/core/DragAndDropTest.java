@@ -102,6 +102,31 @@ public class DragAndDropTest extends TestBase {
         schedulePage.selectSwapOrAssignOption("swap");
         schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
         schedulePage.verifyShiftsAreSwapped(swapData);
+
+        // Delete the shifts for this TM
+        schedulePage.deleteTMShiftInWeekView(firstName);
+
+        // Prepare the shift for this TM again
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.clearAllSelectedDays();
+        dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
+        schedulePage.selectWorkRole("MOD");
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByName(firstName);
+        schedulePage.clickOnOfferOrAssignBtn();
+
+        // Save the Schedule
+        schedulePage.saveSchedule();
+        shiftIndexes = schedulePage.getAddedShiftIndexes(firstName);
+        SimpleUtils.assertOnFail("Failed to add two shifts!", shiftIndexes != null && shiftIndexes.size() == 2, false);
+        shiftInfo = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
+
+        // Edit the Schedule
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+        // Drag the TM's shift on Monday to another TM's shift on Tuesday
     }
 
     @Automated(automated ="Automated")

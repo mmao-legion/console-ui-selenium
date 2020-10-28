@@ -1032,14 +1032,14 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             SimpleUtils.fail("Open Shifts: The carousel indicators failed to load or load incorrectly", true);
         }
         if (isElementLoaded(openShiftsLeftArrow, 5) && isElementLoaded(openShiftsRightArrow, 5)) {
-            click(openShiftsLeftArrow);
+            clickTheElement(openShiftsLeftArrow);
             waitForSeconds(2);
             if (openShiftsWeek.getText().toUpperCase().contains(currentWeek)) {
                 SimpleUtils.pass("Open Shifts: The left arrow switches to the current week successfully");
             } else {
                 SimpleUtils.fail("Open Shifts: The left arrow failed to switch to the current week", true);
             }
-            click(openShiftsLeftArrow);
+            clickTheElement(openShiftsLeftArrow);
             waitForSeconds(2);
             if (openShiftsWeek.getText().toUpperCase().contains(lastWeek)) {
                 SimpleUtils.pass("Open Shifts: The left arrow switches to the last week successfully");
