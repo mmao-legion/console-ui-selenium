@@ -5508,26 +5508,31 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public List<String> getTheShiftInfoByIndex(int index) throws Exception {
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
-            String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
             String firstName = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText();
-            String lastName = getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
-            String jobTitle = weekShifts.get(index).findElement(By.className("week-schedule-role-name")).getText();
-            String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
-            WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
-            clickTheElement(infoIcon);
-            String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
-            if (isElementLoaded(shiftDuration, 10)) {
-                String shiftTime = shiftDuration.getText();
-                shiftInfo.add(firstName);
-                shiftInfo.add(dayIndex);
-                shiftInfo.add(shiftTime);
-                shiftInfo.add(jobTitle);
-                shiftInfo.add(workRole);
-                shiftInfo.add(lastName);
-                shiftInfo.add(shiftTimeWeekView);
+            if (!firstName.equalsIgnoreCase("Open")) {
+                String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
+                String lastName = getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
+                String jobTitle = weekShifts.get(index).findElement(By.className("week-schedule-role-name")).getText();
+                String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
+                WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
+                clickTheElement(infoIcon);
+                String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
+                if (isElementLoaded(shiftDuration, 10)) {
+                    String shiftTime = shiftDuration.getText();
+                    shiftInfo.add(firstName);
+                    shiftInfo.add(dayIndex);
+                    shiftInfo.add(shiftTime);
+                    shiftInfo.add(jobTitle);
+                    shiftInfo.add(workRole);
+                    shiftInfo.add(lastName);
+                    shiftInfo.add(shiftTimeWeekView);
+                }
+                //To close the info popup
+                click(weekShifts.get(index));
+            } else {
+                SimpleUtils.report("This is an Open Shift");
+                return shiftInfo;
             }
-            //To close the info popup
-            click(weekShifts.get(index));
         } else {
             SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
         }
@@ -11903,5 +11908,30 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else
             SimpleUtils.fail("Shift fail to load", false);
         return complianceMessages;
+    }
+
+
+    @Override
+    public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
+        boolean isDragged = false;
+        List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
+        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
+        WebElement weekDay = getDriver().findElement(By.cssSelector("[data-day-index=\""+endIndex+"\"] .sch-calendar-day-label"));
+        if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0 && weekDay!=null) {
+            for (WebElement start : startElements) {
+                WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
+                if (startName != null && startName.getText().equalsIgnoreCase(firstName)) {
+                    mouseHoverDragandDrop(start, endElements.get(0));
+                    SimpleUtils.report("Drag&Drop: Drag " + firstName + " to " + weekDay.getText() + " days Successfully!");
+                    isDragged = true;
+                    break;
+                }
+            }
+            if (!isDragged) {
+                SimpleUtils.fail("Failed to drag the user: " + firstName + " to another Successfully!", false);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: Failed to find the shift elements for index: " + startIndex + " or " + endIndex, false);
+        }
     }
  }
