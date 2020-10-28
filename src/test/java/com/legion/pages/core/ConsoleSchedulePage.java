@@ -3147,4 +3147,14 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public List<String> getOpenShiftInfoByIndex(int index) throws Exception {
         return null;
     }
+
+    @Override
+    public List<WebElement> getOneDayShiftByName(int indexOfDay, String name) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<String> getComplianceMessageFromInfoIconPopup(WebElement shift) throws Exception {
+        return null;
+    }
 }

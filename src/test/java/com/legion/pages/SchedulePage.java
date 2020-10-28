@@ -502,4 +502,6 @@ public interface SchedulePage {
 	public boolean verifySwapAndAssignWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception;
 	public void clickCancelBtnOnDragAndDropConfirmPage() throws Exception;
 	public List<String> getOpenShiftInfoByIndex(int index) throws Exception;
+	public List<WebElement> getOneDayShiftByName(int indexOfDay, String name) throws Exception;
+	public List<String> getComplianceMessageFromInfoIconPopup(WebElement shift) throws Exception;
 }
