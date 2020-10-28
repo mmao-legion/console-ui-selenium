@@ -3142,4 +3142,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void clickCancelBtnOnDragAndDropConfirmPage() throws Exception {
 
     }
+
+    @Override
+    public List<String> getOpenShiftInfoByIndex(int index) throws Exception {
+        return null;
+    }
 }

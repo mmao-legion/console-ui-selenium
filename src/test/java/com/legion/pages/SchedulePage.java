@@ -501,4 +501,5 @@ public interface SchedulePage {
 	public void selectDaysByIndex(int index1, int index2, int index3) throws Exception;
 	public boolean verifySwapAndAssignWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception;
 	public void clickCancelBtnOnDragAndDropConfirmPage() throws Exception;
+	public List<String> getOpenShiftInfoByIndex(int index) throws Exception;
 }

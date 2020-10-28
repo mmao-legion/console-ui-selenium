@@ -11033,6 +11033,31 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return false;
     }
 
+    @Override
+    public List<String> getOpenShiftInfoByIndex(int index) throws Exception {
+        List<String> openShiftInfo = new ArrayList<>();
+        if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
+            String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
+            WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
+            clickTheElement(infoIcon);
+            String workRole = shiftJobTitleAsWorkRole.getText().trim();
+            if (isElementLoaded(shiftDuration, 10)) {
+                String shiftTime = shiftDuration.getText();
+                openShiftInfo.add(shiftTime);
+                openShiftInfo.add(workRole);
+                openShiftInfo.add(shiftTimeWeekView);
+            }
+            //To close the info popup
+            click(weekShifts.get(index));
+        } else {
+            SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
+        }
+        if (openShiftInfo.size() != 3) {
+            SimpleUtils.fail("Failed to get open shift info!", false);
+        }
+        return openShiftInfo;
+    }
+
     //added by haya.  return a List has 4 week's data including last week
     @FindBy (css = ".row-fx.schedule-table-row.ng-scope")
     private List<WebElement> rowDataInOverviewPage;
