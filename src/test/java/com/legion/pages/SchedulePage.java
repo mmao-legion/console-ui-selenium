@@ -503,4 +503,5 @@ public interface SchedulePage {
 	public void clickCancelBtnOnDragAndDropConfirmPage() throws Exception;
 	public List<WebElement> getOneDayShiftByName(int indexOfDay, String name) throws Exception;
 	public List<String> getComplianceMessageFromInfoIconPopup(WebElement shift) throws Exception;
+	public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception;
 }

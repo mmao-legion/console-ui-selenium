@@ -3152,4 +3152,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public List<String> getComplianceMessageFromInfoIconPopup(WebElement shift) throws Exception {
         return null;
     }
+
+    @Override
+    public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
+
+    }
 }
