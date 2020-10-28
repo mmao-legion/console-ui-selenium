@@ -773,7 +773,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     //compliance elements
-    @FindBy(css = "[ng-if=\"compliance\"]")
+    @FindBy(css = "[ng-if=\"scheduleSmartCard.complianceViolations && hasSchedule()\"] div.card-carousel-card")
     private WebElement complianceSmartcardHeader;
 
     @FindBy(css = ".fa-flag.sch-red")
@@ -5508,26 +5508,31 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public List<String> getTheShiftInfoByIndex(int index) throws Exception {
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
-            String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
             String firstName = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText();
-            String lastName = getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
-            String jobTitle = weekShifts.get(index).findElement(By.className("week-schedule-role-name")).getText();
-            String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
-            WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
-            clickTheElement(infoIcon);
-            String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
-            if (isElementLoaded(shiftDuration, 10)) {
-                String shiftTime = shiftDuration.getText();
-                shiftInfo.add(firstName);
-                shiftInfo.add(dayIndex);
-                shiftInfo.add(shiftTime);
-                shiftInfo.add(jobTitle);
-                shiftInfo.add(workRole);
-                shiftInfo.add(lastName);
-                shiftInfo.add(shiftTimeWeekView);
+            if (!firstName.equalsIgnoreCase("Open")) {
+                String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
+                String lastName = getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
+                String jobTitle = weekShifts.get(index).findElement(By.className("week-schedule-role-name")).getText();
+                String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
+                WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
+                clickTheElement(infoIcon);
+                String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
+                if (isElementLoaded(shiftDuration, 10)) {
+                    String shiftTime = shiftDuration.getText();
+                    shiftInfo.add(firstName);
+                    shiftInfo.add(dayIndex);
+                    shiftInfo.add(shiftTime);
+                    shiftInfo.add(jobTitle);
+                    shiftInfo.add(workRole);
+                    shiftInfo.add(lastName);
+                    shiftInfo.add(shiftTimeWeekView);
+                }
+                //To close the info popup
+                click(weekShifts.get(0));
+            } else {
+                SimpleUtils.report("This is an Open Shift");
+                return shiftInfo;
             }
-            //To close the info popup
-            click(weekShifts.get(index));
         } else {
             SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
         }
@@ -11793,7 +11798,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public boolean verifySwapAndAssignWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception {
         boolean canFindTheExpectedMessage = false;
-        if (action.equals("swap")) {
+        if (action.equalsIgnoreCase("swap")) {
             if (areListElementVisible(warningMessagesInSwap, 15) && warningMessagesInSwap.size() > 0) {
                 for (int i = 0; i < warningMessagesInSwap.size(); i++) {
                     if (warningMessagesInSwap.get(i).getText().contains(expectedMessage)) {
@@ -11805,7 +11810,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             } else {
                 SimpleUtils.report("There is no warning message in swap section");
             }
-        } else if (action.equals("assign")) {
+        } else if (action.equalsIgnoreCase("assign")) {
             if (areListElementVisible(warningMessagesInAssign, 15) && warningMessagesInAssign.size() > 0) {
                 for (int i = 0; i < warningMessagesInAssign.size(); i++) {
                     if (warningMessagesInAssign.get(i).getText().contains(expectedMessage)) {
@@ -11834,4 +11839,120 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("cancel button is disabled!",false);
         }
     }
+
+    @Override
+    public List<WebElement> getOneDayShiftByName(int indexOfDay, String name) throws Exception {
+        int count = 0;
+        List<WebElement> shiftsOfOneTM = new ArrayList<>();;
+        List<WebElement> shifts = getDriver().findElements(By.cssSelector("[data-day-index=\"" + indexOfDay + "\"] .week-schedule-shift-wrapper"));
+        if (shifts != null && shifts.size() > 0) {
+            for (WebElement shift : shifts) {
+                WebElement name1 = shift.findElement(By.className("week-schedule-worker-name"));
+                if (name1 != null && name1.getText().equalsIgnoreCase(name)) {
+                    shiftsOfOneTM.add(shift);
+                    SimpleUtils.pass("shift exists on this day!");
+                    count++;
+                }
+            }
+            if(count==0){
+                SimpleUtils.report("No shifts on the day for the TM: " + name);
+            }
+        } else {
+            SimpleUtils.fail("No shifts on the day",false);
+        }
+        return shiftsOfOneTM;
+    }
+
+    @FindBy(css = "span.ot-hours-text")
+    private List<WebElement> complianceMessageInInfoIconPopup;
+
+    @Override
+    public List<String> getComplianceMessageFromInfoIconPopup(WebElement shift) throws Exception {
+        List<String> complianceMessages = new ArrayList<>();
+        if (isElementLoaded(shift, 5)){
+            click(shift.findElement(By.cssSelector("img.week-schedule-shit-open-popover")));
+            if (isElementLoaded(popOverContent, 5)){
+                if (areListElementVisible(complianceMessageInInfoIconPopup, 5) && complianceMessageInInfoIconPopup.size()>0){
+                    for (int i=0; i< complianceMessageInInfoIconPopup.size(); i++){
+                        complianceMessages.add(complianceMessageInInfoIconPopup.get(i).getText());
+                    }
+                } else
+                    SimpleUtils.report("There is no compliance message in info icon popup");
+            } else
+                SimpleUtils.fail("Info icon popup fail to load", false);
+        } else
+            SimpleUtils.fail("Shift fail to load", false);
+        return complianceMessages;
+    }
+
+
+    @Override
+    public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
+        boolean isDragged = false;
+        List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
+        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
+        WebElement weekDay = getDriver().findElement(By.cssSelector("[data-day-index=\""+endIndex+"\"] .sch-calendar-day-label"));
+        if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0 && weekDay!=null) {
+            for (WebElement start : startElements) {
+                WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
+                if (startName != null && startName.getText().equalsIgnoreCase(firstName)) {
+                    mouseHoverDragandDrop(start, endElements.get(0));
+                    SimpleUtils.report("Drag&Drop: Drag " + firstName + " to " + weekDay.getText() + " days Successfully!");
+                    isDragged = true;
+                    break;
+                }
+            }
+            if (!isDragged) {
+                SimpleUtils.fail("Failed to drag the user: " + firstName + " to another Successfully!", false);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: Failed to find the shift elements for index: " + startIndex + " or " + endIndex, false);
+        }
+    }
+
+    @FindBy(css = "div.lgn-alert-modal")
+    private WebElement warningMode;
+
+
+    @FindBy(css = "span.lgn-alert-message")
+    private List<WebElement> warningMessagesInWarningMode;
+
+    @FindBy(className = "lgn-action-button-success")
+    private WebElement okBtnInWarningMode;
+
+    @Override
+    public boolean ifWarningModeDisplay() throws Exception {
+        if(isElementLoaded(warningMode, 5)) {
+            SimpleUtils.pass("Warning mode is loaded successfully");
+            return true;
+        } else {
+            SimpleUtils.report("Warning mode fail to load");
+            return false;
+        }
+    }
+
+    @Override
+    public String getWarningMessageInDragShiftWarningMode() throws Exception {
+        String warningMessage = "";
+        if(areListElementVisible(warningMessagesInWarningMode, 5) && warningMessagesInWarningMode.size()>0) {
+            for (WebElement warningMessageInWarningMode: warningMessagesInWarningMode){
+                warningMessage = warningMessage + warningMessageInWarningMode.getText()+"\n";
+            }
+        } else{
+            SimpleUtils.fail("Warning message fail to load", false);
+        }
+        return warningMessage;
+    }
+
+    @Override
+    public void clickOnOkButtonInWarningMode() throws Exception {
+        if(isElementLoaded(okBtnInWarningMode, 5)) {
+            click(okBtnOnConfirm);
+            SimpleUtils.pass("Click on Ok button on warning successfully");
+        } else {
+            SimpleUtils.fail("Ok button fail to load", false);
+        }
+    }
+
+
  }

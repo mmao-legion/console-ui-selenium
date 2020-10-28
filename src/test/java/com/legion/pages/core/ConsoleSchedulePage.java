@@ -3142,4 +3142,34 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void clickCancelBtnOnDragAndDropConfirmPage() throws Exception {
 
     }
+
+    @Override
+    public List<WebElement> getOneDayShiftByName(int indexOfDay, String name) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<String> getComplianceMessageFromInfoIconPopup(WebElement shift) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
+
+    }
+
+    @Override
+    public boolean ifWarningModeDisplay() throws Exception {
+        return false;
+    }
+
+    @Override
+    public String getWarningMessageInDragShiftWarningMode() throws Exception{
+        return null;
+    }
+
+    @Override
+    public void clickOnOkButtonInWarningMode() throws Exception {
+
+    }
 }
