@@ -384,10 +384,10 @@ public class DragAndDropTest extends TestBase {
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         controlsNewUIPage.clickOnControlsConsoleMenu();
         SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsComplianceSection();
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
         SimpleUtils.assertOnFail("Compliance page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
         //turn on clopening toggle and set hours
-        controlsNewUIPage.turnONClopeningToggleAndSetHours(12);
+        controlsNewUIPage.selectClopeningHours(12);
 
         // Go to Schedule page, Schedule tab
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();

@@ -5528,7 +5528,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     shiftInfo.add(shiftTimeWeekView);
                 }
                 //To close the info popup
-                click(weekShifts.get(weekShifts.size()-1));
+//                click(weekShifts.get(weekShifts.size()-1));
             } else {
                 SimpleUtils.report("This is an Open Shift");
                 return shiftInfo;

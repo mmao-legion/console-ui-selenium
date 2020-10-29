@@ -272,4 +272,5 @@ public interface ControlsNewUIPage {
 	public String getLocationInfoStringFromDetailPage () throws Exception;
 	public void clickOnBackButtonOnLocationDetailPage() throws Exception;
 	public void turnONClopeningToggleAndSetHours(int clopeningHours) throws Exception;
+	public void selectClopeningHours(int clopeningHour) throws Exception;
 }

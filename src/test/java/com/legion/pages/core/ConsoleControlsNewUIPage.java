@@ -5393,7 +5393,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "button.lg-icon-button--confirm")
 	private WebElement confirmSettingsChangeButton;
 
-
 	@Override
 	public void turnONClopeningToggleAndSetHours(int clopeningHours) throws Exception {
 
@@ -5435,7 +5434,25 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Clopening settings load failed!", false);
 		}
 	}
+
+	@FindBy(css = "[options=\"selections.clopeningHours\"] [ng-attr-id=\"{{$ctrl.inputName}}\"]")
+	private WebElement clopeningHoursSelector;
+
+	@FindBy(css = "[options=\"selections.clopeningHours\"]")
+	private WebElement clopeningHours;
+
+
+
+	@Override
+	public void selectClopeningHours(int clopeningHour) throws Exception {
+		clickOnSchedulingPoliciesShiftAdvanceBtn();
+		String test = clopeningHours.getAttribute("value");
+		if (isElementLoaded(clopeningHoursSelector, 5)) {
+			selectByVisibleText(clopeningHoursSelector, String.valueOf(clopeningHour)+ " hours");
+			displaySuccessMessage();
+			SimpleUtils.pass("Clopening hour been selected successfully");
+		} else
+			SimpleUtils.fail("Clopening Hours selector load fail", false);
+	}
+
 }
-
-
-
