@@ -266,6 +266,7 @@
                     <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" />
                     <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
                     <include name="verifyWarningModelForClopeningAsInternalAdmin" />
+                    <include name="verifyWarningModeWhenTMIsScheduledAtAnotherLocationAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
