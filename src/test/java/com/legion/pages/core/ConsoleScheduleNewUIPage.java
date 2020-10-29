@@ -11888,6 +11888,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
+        waitForSeconds(3);
         boolean isDragged = false;
         List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
         List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
@@ -11969,6 +11970,27 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else
             SimpleUtils.fail("Select days load failed",true);
         return selectedDates;
+    }
+
+    @FindBy(css=".modal-dialog.modal-lgn-md")
+    private WebElement moveAnywayDialog;
+
+    @Override
+    public boolean ifMoveAnywayDialogDisplay() throws Exception {
+        if (isElementLoaded(moveAnywayDialog,10)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void moveAnywayWhenChangeShift() throws Exception {
+        if (isElementLoaded(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")),10)){
+            click(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
+            SimpleUtils.pass("move anyway button clicked!");
+        } else {
+            SimpleUtils.fail("move anyway button fail to load!",false);
+        }
     }
 
  }

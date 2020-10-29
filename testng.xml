@@ -267,6 +267,7 @@
                     <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
                     <include name="verifyWarningModelForClopeningAsInternalAdmin" />
                     <include name="verifyWarningModeWhenTMIsScheduledAtAnotherLocationAsInternalAdmin" />
+                    <!--  <include name="verifySwapWarningModelForOvertimeAsInternalAdmin" /> -->
                 </methods>
             </class>
         </classes>

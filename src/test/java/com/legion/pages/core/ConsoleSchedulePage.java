@@ -3177,4 +3177,14 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception {
         return null;
     }
+
+    @Override
+    public void moveAnywayWhenChangeShift() throws Exception {
+
+    }
+
+    @Override
+    public boolean ifMoveAnywayDialogDisplay() throws Exception {
+        return false;
+    }
 }

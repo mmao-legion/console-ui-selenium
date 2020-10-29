@@ -308,7 +308,7 @@ public class DragAndDropTest extends TestBase {
 
         // Navigate to next week
         schedulePage.navigateToNextWeek();
-
+        schedulePage.navigateToNextWeek();
         // create the schedule if not created
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
         if (isWeekGenerated){
@@ -324,7 +324,6 @@ public class DragAndDropTest extends TestBase {
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.selectWorkRole("EVENT MANAGER");
         schedulePage.clearAllSelectedDays();
-        schedulePage.selectSpecificWorkDay(1);
         schedulePage.selectSpecificWorkDay(2);
         schedulePage.moveSliderAtSomePoint("8", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
         schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
@@ -370,6 +369,50 @@ public class DragAndDropTest extends TestBase {
         if (schedulePage.verifyDayHasShiftByName(0,TM1)==2 && schedulePage.verifyDayHasShiftByName(1,TM1)==1){
             SimpleUtils.pass("assign successfully!");
         }
+        schedulePage.deleteTMShiftInWeekView(TM1);
+        schedulePage.deleteTMShiftInWeekView(TM2);
+        schedulePage.saveSchedule();
+
+        //verify change shift
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.selectWorkRole("EVENT MANAGER");
+        schedulePage.clearAllSelectedDays();
+        //schedulePage.selectDaysByIndex(0, 0, 2);
+        schedulePage.selectSpecificWorkDay(1);
+        schedulePage.moveSliderAtSomePoint("8", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByName(TM1);
+        schedulePage.clickOnOfferOrAssignBtn();
+
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.selectWorkRole("EVENT MANAGER");
+        schedulePage.clearAllSelectedDays();
+        schedulePage.selectDaysByIndex(1, 1, 1);
+        //schedulePage.selectSpecificWorkDay(1);
+        schedulePage.moveSliderAtSomePoint("8", 10, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtSomePoint("8", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByName(TM1);
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.dragOneShiftToAnotherDay(1,TM1,0);
+        if (schedulePage.ifMoveAnywayDialogDisplay()){
+            schedulePage.moveAnywayWhenChangeShift();
+        }
+        schedulePage.saveSchedule();
+        expectedMessage = "1 hrs daily overtime";
+        List<WebElement> shiftsOfFirstDay = schedulePage.getOneDayShiftByName(0, TM1);
+        SimpleUtils.assertOnFail("Get "+TM1+"'s shift failed",shiftsOfFirstDay.size()>0, false);
+        String actualMessage=null;
+        for (String s:schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(shiftsOfFirstDay.size()-1))){
+            actualMessage = actualMessage+s;
+        }
+        SimpleUtils.assertOnFail("overtime comliance message display failed",
+                actualMessage.toString().contains(expectedMessage), false);
     }
 
 
