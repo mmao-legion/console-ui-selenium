@@ -11870,6 +11870,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public List<String> getComplianceMessageFromInfoIconPopup(WebElement shift) throws Exception {
         List<String> complianceMessages = new ArrayList<>();
         if (isElementLoaded(shift, 5)){
+            waitForSeconds(3);
             click(shift.findElement(By.cssSelector("img.week-schedule-shit-open-popover")));
             if (isElementLoaded(popOverContent, 5)){
                 if (areListElementVisible(complianceMessageInInfoIconPopup, 5) && complianceMessageInInfoIconPopup.size()>0){
