@@ -103,6 +103,31 @@ public class DragAndDropTest extends TestBase {
         schedulePage.selectSwapOrAssignOption("swap");
         schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
         schedulePage.verifyShiftsAreSwapped(swapData);
+
+        // Delete the shifts for this TM
+        schedulePage.deleteTMShiftInWeekView(firstName);
+
+        // Prepare the shift for this TM again
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.clearAllSelectedDays();
+        dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
+        schedulePage.selectWorkRole("MOD");
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByName(firstName);
+        schedulePage.clickOnOfferOrAssignBtn();
+
+        // Save the Schedule
+        schedulePage.saveSchedule();
+        shiftIndexes = schedulePage.getAddedShiftIndexes(firstName);
+        SimpleUtils.assertOnFail("Failed to add two shifts!", shiftIndexes != null && shiftIndexes.size() == 2, false);
+        shiftInfo = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
+
+        // Edit the Schedule
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+        // Drag the TM's shift on Monday to another TM's shift on Tuesday
     }
 
     @Automated(automated ="Automated")
@@ -203,6 +228,7 @@ public class DragAndDropTest extends TestBase {
         teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
         String userName = teamPage.selectATeamMemberToViewProfile();
         String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
+        String lastName = userName.contains(" ") ? userName.split(" ")[1] : userName;
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         String myTimeOffLabel = "Time Off";
         profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
@@ -242,7 +268,7 @@ public class DragAndDropTest extends TestBase {
         schedulePage.selectWorkRole("MOD");
         schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
         schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(firstName);
+        schedulePage.searchTeamMemberByName(firstName + " " + lastName.substring(0,1));
         schedulePage.clickOnOfferOrAssignBtn();
         schedulePage.saveSchedule();
 
@@ -253,6 +279,26 @@ public class DragAndDropTest extends TestBase {
 
         // Verify the warning model pops up and Click on OK button
         schedulePage.verifyWarningModelForAssignTMOnTimeOff(firstName);
+
+        // Drag the TM's shift to the day that he/she has time off
+        schedulePage.dragOneShiftToAnotherDay(indexes.get(0), firstName, endIndex);
+
+        // Verify the Warning model pops up with the message
+        schedulePage.verifyWarningModelForAssignTMOnTimeOff(firstName);
+
+        // Verify nothing happens after clicking OK button
+        if (schedulePage.verifyDayHasShiftByName(indexes.get(0),firstName) == 1 && schedulePage.verifyDayHasShiftByName(endIndex,firstName) == 0)
+            SimpleUtils.pass("Nothing happens as expected after clicking OK button");
+        else
+            SimpleUtils.fail("The TM's shift may be assigned unexpected",false);
+        schedulePage.saveSchedule();
+
+        // Clean up data
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        teamPage.searchAndSelectTeamMemberByName(firstName);
+        profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+        teamPage.rejectAllTheTimeOffRequests();
     }
 
     @Automated(automated ="Automated")
@@ -283,7 +329,7 @@ public class DragAndDropTest extends TestBase {
 
         // Navigate to next week
         schedulePage.navigateToNextWeek();
-
+        schedulePage.navigateToNextWeek();
         // create the schedule if not created
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
         if (isWeekGenerated){
@@ -299,7 +345,6 @@ public class DragAndDropTest extends TestBase {
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.selectWorkRole("EVENT MANAGER");
         schedulePage.clearAllSelectedDays();
-        schedulePage.selectSpecificWorkDay(1);
         schedulePage.selectSpecificWorkDay(2);
         schedulePage.moveSliderAtSomePoint("8", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
         schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
@@ -345,6 +390,50 @@ public class DragAndDropTest extends TestBase {
         if (schedulePage.verifyDayHasShiftByName(0,TM1)==2 && schedulePage.verifyDayHasShiftByName(1,TM1)==1){
             SimpleUtils.pass("assign successfully!");
         }
+        schedulePage.deleteTMShiftInWeekView(TM1);
+        schedulePage.deleteTMShiftInWeekView(TM2);
+        schedulePage.saveSchedule();
+
+        //verify change shift
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.selectWorkRole("EVENT MANAGER");
+        schedulePage.clearAllSelectedDays();
+        //schedulePage.selectDaysByIndex(0, 0, 2);
+        schedulePage.selectSpecificWorkDay(1);
+        schedulePage.moveSliderAtSomePoint("8", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByName(TM1);
+        schedulePage.clickOnOfferOrAssignBtn();
+
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.selectWorkRole("EVENT MANAGER");
+        schedulePage.clearAllSelectedDays();
+        schedulePage.selectDaysByIndex(1, 1, 1);
+        //schedulePage.selectSpecificWorkDay(1);
+        schedulePage.moveSliderAtSomePoint("8", 10, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtSomePoint("8", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByName(TM1);
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.dragOneShiftToAnotherDay(1,TM1,0);
+        if (schedulePage.ifMoveAnywayDialogDisplay()){
+            schedulePage.moveAnywayWhenChangeShift();
+        }
+        schedulePage.saveSchedule();
+        expectedMessage = "1 hrs daily overtime";
+        List<WebElement> shiftsOfFirstDay = schedulePage.getOneDayShiftByName(0, TM1);
+        SimpleUtils.assertOnFail("Get "+TM1+"'s shift failed",shiftsOfFirstDay.size()>0, false);
+        String actualMessage=null;
+        for (String s:schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(shiftsOfFirstDay.size()-1))){
+            actualMessage = actualMessage+s;
+        }
+        SimpleUtils.assertOnFail("overtime comliance message display failed",
+                actualMessage.toString().contains(expectedMessage), false);
     }
 
     @Automated(automated ="Automated")
@@ -451,10 +540,10 @@ public class DragAndDropTest extends TestBase {
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         controlsNewUIPage.clickOnControlsConsoleMenu();
         SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsComplianceSection();
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
         SimpleUtils.assertOnFail("Compliance page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
         //turn on clopening toggle and set hours
-        controlsNewUIPage.turnONClopeningToggleAndSetHours(12);
+        controlsNewUIPage.selectClopeningHours(12);
 
         // Go to Schedule page, Schedule tab
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -552,13 +641,13 @@ public class DragAndDropTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the box interaction color and message when TM will incur clopening")
+    @TestName(description = "Validate the box interaction color and message when TM is already scheduled during this time at another location")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDragShiftAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyWarningModeWhenTMIsScheduledAtAnotherLocationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        String anotherLocation = "NY CENTRAL";
+        String anotherLocation = "New York Central Park";
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.changeLocation(anotherLocation);
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -579,6 +668,7 @@ public class DragAndDropTest extends TestBase {
 
         // Edit the Schedule
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
         List<String> shiftInfo = new ArrayList<>();
         while (shiftInfo.size() ==0) {
             shiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
@@ -595,6 +685,8 @@ public class DragAndDropTest extends TestBase {
         schedulePage.clearAllSelectedDays();
         schedulePage.selectSpecificWorkDay(1);
         schedulePage.selectWorkRole(workRoleOfTM1);
+        String timeInfo = schedulePage.getTimeDurationWhenCreateNewShift();
+        String dayInfo = schedulePage.getSelectedDayInfoFromCreateShiftPage().get(0);
         schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
         schedulePage.clickOnCreateOrNextBtn();
         schedulePage.searchTeamMemberByName(firstNameOfTM1);
@@ -637,9 +729,18 @@ public class DragAndDropTest extends TestBase {
         schedulePage.searchTeamMemberByName(firstNameOfTM1);
         schedulePage.clickOnOfferOrAssignBtn();
         schedulePage.saveSchedule();
-
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.dragOneShiftToAnotherDay(1, firstNameOfTM1, 0);
-        String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
+        String expectedWarningMesage = firstNameOfTM1+" is already scheduled to work at" +
+                anotherLocation + " at " + timeInfo + " " + dayInfo.replace("\n",", ") +
+                "\n" + "Please contact " +anotherLocation+" to change assignment.";
+        String actualwarningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
+        expectedWarningMesage.equalsIgnoreCase(actualwarningMessage);
+        schedulePage.clickOnOkButtonInWarningMode();
+        List<WebElement> shiftsOfFirstDay= schedulePage.getOneDayShiftByName(0, firstNameOfTM1);
+        SimpleUtils.assertOnFail("Get compliance shift failed",shiftsOfFirstDay.size()==0, false);
+
+        List<WebElement> shiftsOfSecondDay = schedulePage.getOneDayShiftByName(1, firstNameOfTM1);
+        SimpleUtils.assertOnFail("Get compliance shift failed",shiftsOfSecondDay.size()>0, false);
     }
 }

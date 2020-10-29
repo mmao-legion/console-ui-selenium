@@ -5528,7 +5528,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     shiftInfo.add(shiftTimeWeekView);
                 }
                 //To close the info popup
-                click(weekShifts.get(0));
+//                click(weekShifts.get(weekShifts.size()-1));
             } else {
                 SimpleUtils.report("This is an Open Shift");
                 return shiftInfo;
@@ -5895,10 +5895,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     click(searchIcon);
                     if (areListElementVisible(searchResults, 15)) {
                         for (WebElement searchResult : searchResults) {
-                            WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-display-name"));
+                            WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-name"));
                             WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
                             if (workerName != null && optionCircle != null) {
-                                if (workerName.getText().toLowerCase().trim().equals(name.trim().toLowerCase())) {
+                                if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.trim().toLowerCase())) {
                                     click(optionCircle);
                                     SimpleUtils.report("Select Team Member: " + name + " Successfully!");
                                     waitForSeconds(2);
@@ -11895,6 +11895,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public List<String> getComplianceMessageFromInfoIconPopup(WebElement shift) throws Exception {
         List<String> complianceMessages = new ArrayList<>();
         if (isElementLoaded(shift, 5)){
+            waitForSeconds(3);
             click(shift.findElement(By.cssSelector("img.week-schedule-shit-open-popover")));
             if (isElementLoaded(popOverContent, 5)){
                 if (areListElementVisible(complianceMessageInInfoIconPopup, 5) && complianceMessageInInfoIconPopup.size()>0){
@@ -11913,6 +11914,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
+        waitForSeconds(3);
         boolean isDragged = false;
         List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
         List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
@@ -11979,5 +11981,42 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @FindBy(css = "div.week-day-multi-picker-day-selected")
+    private List<WebElement> selectedDaysOnCreateShiftPage;
+
+    @Override
+    public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception {
+        List<String> selectedDates = new ArrayList<>();
+        if (areListElementVisible(selectedDaysOnCreateShiftPage, 5) && selectedDaysOnCreateShiftPage.size()>0) {
+            for (WebElement selectedDate: selectedDaysOnCreateShiftPage){
+                String test = selectedDate.getText();
+                selectedDates.add(selectedDate.getText());
+            }
+            SimpleUtils.pass("Get selected days info successfully");
+        }else
+            SimpleUtils.fail("Select days load failed",true);
+        return selectedDates;
+    }
+
+    @FindBy(css=".modal-dialog.modal-lgn-md")
+    private WebElement moveAnywayDialog;
+
+    @Override
+    public boolean ifMoveAnywayDialogDisplay() throws Exception {
+        if (isElementLoaded(moveAnywayDialog,10)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void moveAnywayWhenChangeShift() throws Exception {
+        if (isElementLoaded(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")),10)){
+            click(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
+            SimpleUtils.pass("move anyway button clicked!");
+        } else {
+            SimpleUtils.fail("move anyway button fail to load!",false);
+        }
+    }
 
  }
