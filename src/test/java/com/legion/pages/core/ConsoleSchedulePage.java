@@ -3172,4 +3172,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void clickOnOkButtonInWarningMode() throws Exception {
 
     }
+
+    @Override
+    public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception {
+        return null;
+    }
 }

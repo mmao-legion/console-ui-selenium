@@ -507,4 +507,5 @@ public interface SchedulePage {
 	public boolean ifWarningModeDisplay() throws Exception;
 	public String getWarningMessageInDragShiftWarningMode() throws Exception;
 	public void clickOnOkButtonInWarningMode() throws Exception;
+	public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception;
 }

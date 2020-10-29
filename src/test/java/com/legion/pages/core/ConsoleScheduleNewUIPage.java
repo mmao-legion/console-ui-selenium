@@ -5528,7 +5528,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     shiftInfo.add(shiftTimeWeekView);
                 }
                 //To close the info popup
-                click(weekShifts.get(0));
+                click(weekShifts.get(weekShifts.size()-1));
             } else {
                 SimpleUtils.report("This is an Open Shift");
                 return shiftInfo;
@@ -11954,5 +11954,21 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @FindBy(css = "div.week-day-multi-picker-day-selected")
+    private List<WebElement> selectedDaysOnCreateShiftPage;
+
+    @Override
+    public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception {
+        List<String> selectedDates = new ArrayList<>();
+        if (areListElementVisible(selectedDaysOnCreateShiftPage, 5) && selectedDaysOnCreateShiftPage.size()>0) {
+            for (WebElement selectedDate: selectedDaysOnCreateShiftPage){
+                String test = selectedDate.getText();
+                selectedDates.add(selectedDate.getText());
+            }
+            SimpleUtils.pass("Get selected days info successfully");
+        }else
+            SimpleUtils.fail("Select days load failed",true);
+        return selectedDates;
+    }
 
  }

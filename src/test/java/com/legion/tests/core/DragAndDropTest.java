@@ -485,13 +485,13 @@ public class DragAndDropTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the box interaction color and message when TM will incur clopening")
+    @TestName(description = "Validate the box interaction color and message when TM is already scheduled during this time at another location")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDragShiftAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyWarningModeWhenTMIsScheduledAtAnotherLocationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        String anotherLocation = "NY CENTRAL";
+        String anotherLocation = "New York Central Park";
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.changeLocation(anotherLocation);
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -512,6 +512,7 @@ public class DragAndDropTest extends TestBase {
 
         // Edit the Schedule
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
         List<String> shiftInfo = new ArrayList<>();
         while (shiftInfo.size() ==0) {
             shiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
@@ -528,6 +529,8 @@ public class DragAndDropTest extends TestBase {
         schedulePage.clearAllSelectedDays();
         schedulePage.selectSpecificWorkDay(1);
         schedulePage.selectWorkRole(workRoleOfTM1);
+        String timeInfo = schedulePage.getTimeDurationWhenCreateNewShift();
+        String dayInfo = schedulePage.getSelectedDayInfoFromCreateShiftPage().get(0);
         schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
         schedulePage.clickOnCreateOrNextBtn();
         schedulePage.searchTeamMemberByName(firstNameOfTM1);
@@ -570,9 +573,18 @@ public class DragAndDropTest extends TestBase {
         schedulePage.searchTeamMemberByName(firstNameOfTM1);
         schedulePage.clickOnOfferOrAssignBtn();
         schedulePage.saveSchedule();
-
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.dragOneShiftToAnotherDay(1, firstNameOfTM1, 0);
-        String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
+        String expectedWarningMesage = firstNameOfTM1+" is already scheduled to work at" +
+                anotherLocation + " at " + timeInfo + " " + dayInfo.replace("\n",", ") +
+                "\n" + "Please contact " +anotherLocation+" to change assignment.";
+        String actualwarningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
+        expectedWarningMesage.equalsIgnoreCase(actualwarningMessage);
+        schedulePage.clickOnOkButtonInWarningMode();
+        List<WebElement> shiftsOfFirstDay= schedulePage.getOneDayShiftByName(0, firstNameOfTM1);
+        SimpleUtils.assertOnFail("Get compliance shift failed",shiftsOfFirstDay.size()==0, false);
+
+        List<WebElement> shiftsOfSecondDay = schedulePage.getOneDayShiftByName(1, firstNameOfTM1);
+        SimpleUtils.assertOnFail("Get compliance shift failed",shiftsOfSecondDay.size()>0, false);
     }
 }
