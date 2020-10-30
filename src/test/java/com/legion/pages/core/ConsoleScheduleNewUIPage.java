@@ -5529,7 +5529,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     shiftInfo.add(shiftTimeWeekView);
                 }
                 //To close the info popup
-                clickTheElement(weekShifts.get(index)));
+                clickTheElement(weekShifts.get(index));
             } else {
                 SimpleUtils.report("This is an Open Shift");
                 return shiftInfo;
@@ -9266,7 +9266,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void clickOnEditShiftTime() throws Exception{
         if(isElementLoaded(editShiftTime,5))
         {
-            click(editShiftTime);
+            clickTheElement(editShiftTime);
             SimpleUtils.pass("Clicked on Edit Shift Time ");
         }
         else
