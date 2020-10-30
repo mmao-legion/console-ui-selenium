@@ -567,7 +567,11 @@ public class DragAndDropTest extends TestBase {
         List<String> shiftInfo1 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
         String firstNameOfTM1 = shiftInfo1.get(0);
         String workRoleOfTM1 = shiftInfo1.get(4);
-        List<String> shiftInfo2 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+        List<String> shiftInfo2 = new ArrayList<>();
+        while(shiftInfo2.size()==0 || shiftInfo2.get(0).equalsIgnoreCase(firstNameOfTM1) || !shiftInfo2.get(4).equalsIgnoreCase(workRoleOfTM1)){
+            shiftInfo2 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+        }
+
         String firstNameOfTM2 = shiftInfo2.get(0);
         String workRoleOfTM2 = shiftInfo2.get(4);
         // Delete all the shifts that are assigned to the team member
@@ -635,6 +639,55 @@ public class DragAndDropTest extends TestBase {
         SimpleUtils.assertOnFail("Clopening comliance message display failed",
                 schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfWednesday.get(0)).contains("Clopening"), false);
 
+        schedulePage.clickViewShift();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM2,1,firstNameOfTM1);
+
+        SimpleUtils.assertOnFail("Clopening message is not display because there should no clopening !",
+                !schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "swap"), false);
+        SimpleUtils.assertOnFail("Clopening message is not display because there should no clopening !",
+                !schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "assign"), false);
+
+        // Swap TM1 and TM2, check the TMs been swapped successfully
+        schedulePage.selectSwapOrAssignOption("swap");
+        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+        schedulePage.verifyDayHasShiftByName(0, firstNameOfTM1);
+        schedulePage.verifyDayHasShiftByName(1, firstNameOfTM2);
+        schedulePage.saveSchedule();
+
+        // Edit the Schedule and try to drag TM1 on Monday to TM2 on Tuesday
+//        String clopeningWarningMessage = " will incur clopening";
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM1,1,firstNameOfTM2);
+        SimpleUtils.assertOnFail("Clopening message display successfully on swap section!",
+                schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "swap"), false);
+        SimpleUtils.assertOnFail("Clopening message display successfully on assign section!",
+                schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "assign"), false);
+
+        // Swap TM1 and TM2, check the TMs been swapped successfully
+        schedulePage.selectSwapOrAssignOption("swap");
+        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+        schedulePage.verifyDayHasShiftByName(1, firstNameOfTM1);
+        schedulePage.verifyDayHasShiftByName(0, firstNameOfTM2);
+        schedulePage.saveSchedule();
+
+        //check compliance smart card display
+        SimpleUtils.assertOnFail("Compliance smart card display successfully!",
+                schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
+        schedulePage.clickViewShift();
+
+        //check the violation on the info popup
+        shiftsOfTuesday = schedulePage.getOneDayShiftByName(1, firstNameOfTM1);
+        SimpleUtils.assertOnFail("Get compliance shift failed",shiftsOfTuesday.size()>0, false);
+
+        shiftsOfWednesday = schedulePage.getOneDayShiftByName(2, firstNameOfTM1);
+        SimpleUtils.assertOnFail("Get compliance shift failed",shiftsOfWednesday.size()>0, false);
+
+        SimpleUtils.assertOnFail("Clopening comliance message display failed",
+                schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfTuesday.get(shiftsOfTuesday.size()-1)).contains("Clopening"), false);
+
+        SimpleUtils.assertOnFail("Clopening comliance message display failed",
+                schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfWednesday.get(0)).contains("Clopening"), false);
     }
 
 
