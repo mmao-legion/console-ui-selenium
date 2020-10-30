@@ -174,7 +174,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
     
     public void goToTeam() throws Exception
 	{
-    	
+		scrollToTop();
     	if(isElementLoaded(goToTeamButton, 5))
     	{
     		activeConsoleName = teamConsoleName.getText();

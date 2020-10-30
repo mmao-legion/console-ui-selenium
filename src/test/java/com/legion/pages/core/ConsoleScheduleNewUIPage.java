@@ -5529,7 +5529,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     shiftInfo.add(shiftTimeWeekView);
                 }
                 //To close the info popup
-                clickTheElement(weekShifts.get(0));
+                clickTheElement(weekShifts.get(index)));
             } else {
                 SimpleUtils.report("This is an Open Shift");
                 return shiftInfo;
@@ -5896,10 +5896,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     click(searchIcon);
                     if (areListElementVisible(searchResults, 15)) {
                         for (WebElement searchResult : searchResults) {
-                            WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-display-name"));
+                            WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-name"));
                             WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
                             if (workerName != null && optionCircle != null) {
-                                if (workerName.getText().toLowerCase().trim().equals(name.trim().toLowerCase())) {
+                                if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.trim().toLowerCase())) {
                                     click(optionCircle);
                                     SimpleUtils.report("Select Team Member: " + name + " Successfully!");
                                     waitForSeconds(2);
@@ -11039,6 +11039,31 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return false;
     }
 
+    @Override
+    public List<String> getOpenShiftInfoByIndex(int index) throws Exception {
+        List<String> openShiftInfo = new ArrayList<>();
+        if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
+            String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
+            WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
+            clickTheElement(infoIcon);
+            String workRole = shiftJobTitleAsWorkRole.getText().trim();
+            if (isElementLoaded(shiftDuration, 10)) {
+                String shiftTime = shiftDuration.getText();
+                openShiftInfo.add(shiftTime);
+                openShiftInfo.add(workRole);
+                openShiftInfo.add(shiftTimeWeekView);
+            }
+            //To close the info popup
+            click(weekShifts.get(index));
+        } else {
+            SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
+        }
+        if (openShiftInfo.size() != 3) {
+            SimpleUtils.fail("Failed to get open shift info!", false);
+        }
+        return openShiftInfo;
+    }
+
     //added by haya.  return a List has 4 week's data including last week
     @FindBy (css = ".row-fx.schedule-table-row.ng-scope")
     private List<WebElement> rowDataInOverviewPage;
@@ -11872,6 +11897,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public List<String> getComplianceMessageFromInfoIconPopup(WebElement shift) throws Exception {
         List<String> complianceMessages = new ArrayList<>();
         if (isElementLoaded(shift, 5)){
+            waitForSeconds(3);
             click(shift.findElement(By.cssSelector("img.week-schedule-shit-open-popover")));
             if (isElementLoaded(popOverContent, 5)){
                 if (areListElementVisible(complianceMessageInInfoIconPopup, 5) && complianceMessageInInfoIconPopup.size()>0){
@@ -11890,6 +11916,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
+        waitForSeconds(3);
         boolean isDragged = false;
         List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
         List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
@@ -11956,5 +11983,42 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @FindBy(css = "div.week-day-multi-picker-day-selected")
+    private List<WebElement> selectedDaysOnCreateShiftPage;
+
+    @Override
+    public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception {
+        List<String> selectedDates = new ArrayList<>();
+        if (areListElementVisible(selectedDaysOnCreateShiftPage, 5) && selectedDaysOnCreateShiftPage.size()>0) {
+            for (WebElement selectedDate: selectedDaysOnCreateShiftPage){
+                String test = selectedDate.getText();
+                selectedDates.add(selectedDate.getText());
+            }
+            SimpleUtils.pass("Get selected days info successfully");
+        }else
+            SimpleUtils.fail("Select days load failed",true);
+        return selectedDates;
+    }
+
+    @FindBy(css=".modal-dialog.modal-lgn-md")
+    private WebElement moveAnywayDialog;
+
+    @Override
+    public boolean ifMoveAnywayDialogDisplay() throws Exception {
+        if (isElementLoaded(moveAnywayDialog,10)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void moveAnywayWhenChangeShift() throws Exception {
+        if (isElementLoaded(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")),10)){
+            click(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
+            SimpleUtils.pass("move anyway button clicked!");
+        } else {
+            SimpleUtils.fail("move anyway button fail to load!",false);
+        }
+    }
 
  }

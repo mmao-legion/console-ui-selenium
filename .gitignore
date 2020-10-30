@@ -21,4 +21,3 @@ test-output/
 #JRebel files
 **/rebel.xml
 **/rebel-remote.xml
-debug.log

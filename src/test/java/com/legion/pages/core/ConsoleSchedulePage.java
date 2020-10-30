@@ -3144,6 +3144,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public List<String> getOpenShiftInfoByIndex(int index) throws Exception {
+        return null;
+    }
+
+    @Override
     public List<WebElement> getOneDayShiftByName(int indexOfDay, String name) throws Exception {
         return null;
     }
@@ -3171,5 +3176,20 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @Override
     public void clickOnOkButtonInWarningMode() throws Exception {
 
+    }
+
+    @Override
+    public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void moveAnywayWhenChangeShift() throws Exception {
+
+    }
+
+    @Override
+    public boolean ifMoveAnywayDialogDisplay() throws Exception {
+        return false;
     }
 }

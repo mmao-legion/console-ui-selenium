@@ -501,10 +501,14 @@ public interface SchedulePage {
 	public void selectDaysByIndex(int index1, int index2, int index3) throws Exception;
 	public boolean verifySwapAndAssignWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception;
 	public void clickCancelBtnOnDragAndDropConfirmPage() throws Exception;
+	public List<String> getOpenShiftInfoByIndex(int index) throws Exception;
 	public List<WebElement> getOneDayShiftByName(int indexOfDay, String name) throws Exception;
 	public List<String> getComplianceMessageFromInfoIconPopup(WebElement shift) throws Exception;
 	public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception;
 	public boolean ifWarningModeDisplay() throws Exception;
 	public String getWarningMessageInDragShiftWarningMode() throws Exception;
 	public void clickOnOkButtonInWarningMode() throws Exception;
+	public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception;
+	public void moveAnywayWhenChangeShift() throws Exception;
+	public boolean ifMoveAnywayDialogDisplay() throws Exception;
 }
