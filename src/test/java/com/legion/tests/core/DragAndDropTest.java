@@ -128,6 +128,7 @@ public class DragAndDropTest extends TestBase {
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
         // Drag the TM's shift on Monday to another TM's shift on Tuesday
+        schedulePage.dragOneShiftToAnotherDay(dayIndexes.get(0), firstName, dayIndexes.get(1));
     }
 
     @Automated(automated ="Automated")

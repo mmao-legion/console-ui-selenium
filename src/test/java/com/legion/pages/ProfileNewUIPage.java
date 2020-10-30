@@ -160,4 +160,6 @@ public interface ProfileNewUIPage {
 	public void rejectAllTimeOff() throws Exception;
 
 	public String getTimeOffRequestStatusByExplanationText(String timeOffExplanationText) throws Exception;
+
+	public void cancelAllPendingAvailabilityRequest() throws Exception;
 }

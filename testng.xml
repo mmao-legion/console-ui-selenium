@@ -82,7 +82,7 @@
                     <include name="verifyTheTeamFunctionalityInActivate" />
                     <include name="verifyTheTeamFunctionalityInTerminate" />
                     <include name="verifyTheTeamFunctionalityInCoverageAsStoreManager" />
-                    <include name="verifyTheTeamFunctionalityInTimeOffAsInternalAdmin" />
+<!--                    <include name="verifyTheTeamFunctionalityInTimeOffAsInternalAdmin" />-->
                 </methods>
             </class>
         </classes>
@@ -207,7 +207,7 @@
                 <methods>
                     <include name="verifyMyProfileDetailsByUpdatingTheInformationAsTeamMember2" />
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
-                    <include name="verifyCreateNewTimeOffFunctionalityAsTeamMember" />
+<!--                    <include name="verifyCreateNewTimeOffFunctionalityAsTeamMember" />-->
                 </methods>
             </class>
         </classes>

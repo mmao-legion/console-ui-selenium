@@ -84,6 +84,7 @@ public class ActivityTest extends TestBase {
                 schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
 
         schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
         if (isWeekGenerated){
             schedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -905,6 +906,7 @@ public class ActivityTest extends TestBase {
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
         schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
 
         // For Cover Feature
         List<String> swapCoverRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
@@ -928,6 +930,7 @@ public class ActivityTest extends TestBase {
         }
         dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
+        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
         // Validate that smartcard is available to recipient team member
@@ -1290,6 +1293,7 @@ public class ActivityTest extends TestBase {
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
         String myWorkPreferencesLabel = "My Work Preferences";
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+        profileNewUIPage.cancelAllPendingAvailabilityRequest();
         //Update Preferred And Busy Hours
         while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
             profileNewUIPage.clickNextWeek();
@@ -1350,6 +1354,7 @@ public class ActivityTest extends TestBase {
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
         String myWorkPreferencesLabel = "My Work Preferences";
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+        profileNewUIPage.cancelAllPendingAvailabilityRequest();
         //Update Preferred And Busy Hours
         while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
             profileNewUIPage.clickNextWeek();
@@ -1415,6 +1420,7 @@ public class ActivityTest extends TestBase {
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
         String myWorkPreferencesLabel = "My Work Preferences";
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+        profileNewUIPage.cancelAllPendingAvailabilityRequest();
         //Update Preferred And Busy Hours
         while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
             profileNewUIPage.clickNextWeek();
@@ -1483,6 +1489,7 @@ public class ActivityTest extends TestBase {
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
         String myWorkPreferencesLabel = "My Work Preferences";
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+        profileNewUIPage.cancelAllPendingAvailabilityRequest();
         //Update Preferred And Busy Hours
         while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
             profileNewUIPage.clickNextWeek();

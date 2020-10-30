@@ -2114,7 +2114,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private boolean newVerifyActiveWeekDailyScheduleHoursInWeekView() throws Exception {
         Float weekDaysScheduleHours = 0.0f;
         Float activeWeekScheduleHoursOnCard = 0.0f;
-        activeWeekScheduleHoursOnCard = getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.scheduledHours.getValue());
+        activeWeekScheduleHoursOnCard = getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.scheduledHours.getValue())
+        + getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.otherHours.getValue());
         if (weekDaySummeryHoursAndTeamMembers.size() != 0) {
             for (WebElement weekDayHoursAndTMs : weekDaySummeryHoursAndTeamMembers) {
                 float dayScheduleHours = Float.parseFloat(weekDayHoursAndTMs.getText().split("HRs")[0]);
@@ -5528,7 +5529,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     shiftInfo.add(shiftTimeWeekView);
                 }
                 //To close the info popup
-                click(weekShifts.get(0));
+                clickTheElement(weekShifts.get(0));
             } else {
                 SimpleUtils.report("This is an Open Shift");
                 return shiftInfo;
@@ -9241,7 +9242,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void clickOnConvertToOpenShift() throws Exception{
         if(isConvertToOpenEnable())
         {
-            click(convertOpen);
+            clickTheElement(convertOpen);
             SimpleUtils.pass("Clicked on Convert to open shift successfully ");
         } else
             SimpleUtils.fail(" Convert to open shift is disabled or not available to Click ", false);
@@ -11391,7 +11392,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (workRole.equals(getShiftInfoFromInfoPopUp(searchResults.get(i)).get(0))) {
                         SimpleUtils.pass("The search result display correctly when search by Work Role");
                     } else {
-                        SimpleUtils.fail("The search result incorrect when search by Work Role",true);
+                        SimpleUtils.fail("The search result incorrect when search by Work Role, expected: " + workRole
+                                + ", actual is: " + getShiftInfoFromInfoPopUp(searchResults.get(i)).get(0),true);
                         break;
                     }
                 }
