@@ -245,6 +245,7 @@ public interface ControlsNewUIPage {
 
 	public void enableOverRideAssignmentRuleAsYes() throws Exception;
 
+	public void enableOverRideAssignmentRuleAsNo() throws Exception;
 
 	public HashMap<String, Integer> getOvertimePayDataFromControls();
 
