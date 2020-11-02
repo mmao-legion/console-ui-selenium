@@ -511,4 +511,5 @@ public interface SchedulePage {
 	public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception;
 	public void moveAnywayWhenChangeShift() throws Exception;
 	public boolean ifMoveAnywayDialogDisplay() throws Exception;
+	public String getTheMessageOfTMScheduledStatus() throws Exception;
 }

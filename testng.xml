@@ -137,6 +137,7 @@
                     <include name="verifySearchBarOnSchedulePageAsInternalAdmin" />
                     <include name="verifyVersionNumberAndEditsAsInternalAdmin" />
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

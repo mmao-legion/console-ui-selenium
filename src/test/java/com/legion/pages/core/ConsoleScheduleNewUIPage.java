@@ -12021,4 +12021,22 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @FindBy(css = "[ng-class=\"swapStatusClass(worker)\"]")
+    private WebElement tmScheduledStatus;
+
+    @Override
+    public String getTheMessageOfTMScheduledStatus() throws Exception {
+        String messageOfTMScheduledStatus = "";
+        if (isElementLoaded(tmScheduledStatus,5)){
+            if (tmScheduledStatus.getText()!=null && !tmScheduledStatus.getText().equals("")){
+                messageOfTMScheduledStatus = tmScheduledStatus.getText();
+                SimpleUtils.pass("TM scheduled status display as : "+ messageOfTMScheduledStatus);
+            } else {
+                SimpleUtils.fail("TM scheduled status message is empty ", false );
+            }
+        } else {
+            SimpleUtils.fail("TM scheduled status is not loaded!", false);
+        }
+        return messageOfTMScheduledStatus;
+    }
  }

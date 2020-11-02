@@ -640,6 +640,7 @@ public class DragAndDropTest extends TestBase {
         SimpleUtils.assertOnFail("Clopening comliance message display failed",
                 schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfWednesday.get(0)).contains("Clopening"), false);
 
+        // Swap TM1 and TM2 back, check the TMs been swapped successfully
         schedulePage.clickViewShift();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM2,1,firstNameOfTM1);
@@ -649,15 +650,13 @@ public class DragAndDropTest extends TestBase {
         SimpleUtils.assertOnFail("Clopening message is not display because there should no clopening !",
                 !schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "assign"), false);
 
-        // Swap TM1 and TM2, check the TMs been swapped successfully
         schedulePage.selectSwapOrAssignOption("swap");
         schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
         schedulePage.verifyDayHasShiftByName(0, firstNameOfTM1);
         schedulePage.verifyDayHasShiftByName(1, firstNameOfTM2);
         schedulePage.saveSchedule();
 
-        // Edit the Schedule and try to drag TM1 on Monday to TM2 on Tuesday
-//        String clopeningWarningMessage = " will incur clopening";
+        // Edit the Schedule and try to drag TM1 on Monday to TM2 on Tuesday again
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM1,1,firstNameOfTM2);
         SimpleUtils.assertOnFail("Clopening message display successfully on swap section!",
@@ -986,4 +985,6 @@ public class DragAndDropTest extends TestBase {
         controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
         controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
     }
+
+
 }
