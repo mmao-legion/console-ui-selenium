@@ -3194,6 +3194,10 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void verifyShiftIsMovedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
+        
+    }
+
     public String getTheMessageOfTMScheduledStatus() throws Exception {
         return null;
     }

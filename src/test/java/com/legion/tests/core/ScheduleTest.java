@@ -839,6 +839,8 @@ public class ScheduleTest extends TestBase{
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
 				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+
+		schedulePage.navigateToNextWeek();
 		//make publish schedule activity
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
 		if(isActiveWeekGenerated){
@@ -868,6 +870,7 @@ public class ScheduleTest extends TestBase{
 		dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		schedulePage.goToSchedulePageAsTeamMember();
+		schedulePage.navigateToNextWeek();
 		String mySelectedWeek = schedulePage.getSelectedWeek();
 		// Validate the clickability of Team schedule option
 		String subTitle = "Team Schedule";
@@ -1104,6 +1107,7 @@ public class ScheduleTest extends TestBase{
 		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
 				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
 
+		schedulePage.navigateToNextWeek();
 		boolean isWeekGenerated = schedulePage.isWeekGenerated();
 		if (isWeekGenerated){
 			schedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -1129,6 +1133,7 @@ public class ScheduleTest extends TestBase{
 
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		schedulePage.goToSchedulePageAsTeamMember();
+		schedulePage.navigateToNextWeek();
 		String subTitle = "Team Schedule";
 		schedulePage.gotoScheduleSubTabByText(subTitle);
 		// Validate the feature of filter
@@ -1172,6 +1177,7 @@ public class ScheduleTest extends TestBase{
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), true);
 		schedulePage.navigateToNextWeek();
+		schedulePage.navigateToNextWeek();
 
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
 		if(isActiveWeekGenerated){
@@ -1199,6 +1205,7 @@ public class ScheduleTest extends TestBase{
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded() , false);
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		schedulePage.isSchedule();
+		schedulePage.navigateToNextWeek();
 		schedulePage.navigateToNextWeek();
 		// Validate the clickability of claim open text in popup
 		String cardName = "WANT MORE HOURS?";

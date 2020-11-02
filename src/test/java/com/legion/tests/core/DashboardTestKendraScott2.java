@@ -147,6 +147,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 
 		SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePageAdmin.goToConsoleScheduleAndScheduleSubMenu();
+		schedulePageAdmin.navigateToNextWeek();
 		boolean isWeekGenerated = schedulePageAdmin.isWeekGenerated();
 		if (!isWeekGenerated){
 			schedulePageAdmin.createScheduleForNonDGFlowNewUI();
@@ -172,6 +173,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 		dashboardPage.validateDateAndTimeAfterSelectingDifferentLocation();
 		SchedulePage schedulePageTM = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePageTM.clickOnScheduleConsoleMenuItem();
+		schedulePageTM.navigateToNextWeek();
 		List<String> scheduleListTM = new ArrayList<>();
 		if (schedulePageTM.getShiftHoursFromInfoLayout().size() > 0) {
 			for (String tmShiftTime : schedulePageTM.getShiftHoursFromInfoLayout()) {

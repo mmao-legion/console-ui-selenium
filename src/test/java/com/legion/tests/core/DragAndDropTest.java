@@ -121,7 +121,7 @@ public class DragAndDropTest extends TestBase {
         // Save the Schedule
         schedulePage.saveSchedule();
         shiftIndexes = schedulePage.getAddedShiftIndexes(firstName);
-        SimpleUtils.assertOnFail("Failed to add two shifts!", shiftIndexes != null && shiftIndexes.size() == 2, false);
+        SimpleUtils.assertOnFail("Failed to add the shifts!", shiftIndexes != null && shiftIndexes.size() > 0, false);
         shiftInfo = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
 
         // Edit the Schedule
@@ -129,6 +129,25 @@ public class DragAndDropTest extends TestBase {
 
         // Drag the TM's shift on Monday to another TM's shift on Tuesday
         schedulePage.dragOneShiftToAnotherDay(dayIndexes.get(0), firstName, dayIndexes.get(1));
+
+        // Verify the warning model pops up
+        String actualWarning = schedulePage.getWarningMessageInDragShiftWarningMode();
+        expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
+                + ".\nPlease confirm that you want to make this change. " + firstName + "'s current shift will be converted to an open shift.";
+
+        if (actualWarning.contains(expectedMessage)) {
+            SimpleUtils.pass("Changing Shift: the message is correct:\n" + expectedMessage);
+        } else {
+            SimpleUtils.warn("The message is incorrect since there is the bug!");
+        }
+
+        if (schedulePage.ifMoveAnywayDialogDisplay()){
+            schedulePage.moveAnywayWhenChangeShift();
+        } else {
+            SimpleUtils.fail("MOVE ANYWAY dialog failed to load!", false);
+        }
+
+        schedulePage.verifyShiftIsMovedToAnotherDay(dayIndexes.get(0), firstName, dayIndexes.get(1));
     }
 
     @Automated(automated ="Automated")

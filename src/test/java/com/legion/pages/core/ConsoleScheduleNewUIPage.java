@@ -6052,14 +6052,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(createNewShiftWeekView, 10)) {
             clickTheElement(createNewShiftWeekView);
             SimpleUtils.pass("Click on Create New Shift button successfully!");
-        }else {
-            SimpleUtils.report("Create New Shift button not loaded, currently is the old UI!");
-        }
-        if (isElementLoaded(addNewShiftOnDayViewButton, 10)) {
+        }else if (isElementLoaded(addNewShiftOnDayViewButton, 10)) {
             click(addNewShiftOnDayViewButton);
             SimpleUtils.pass("Click on Add New Shift '+' button successfully!");
         }else {
-            SimpleUtils.report("Add New Shift '+' button not loaded, currently is the new UI!");
+            SimpleUtils.report("Add New Shift '+' button and Create New Shift button not loaded!");
         }
     }
 
@@ -7909,7 +7906,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public List<String> getShiftHoursFromInfoLayout() throws Exception {
         List<String> shiftHours = new ArrayList<>();
-        if (areListElementVisible(infoIcons, 5)) {
+        if (areListElementVisible(infoIcons, 15)) {
             for (WebElement infoIcon : infoIcons) {
                 scrollToBottom();
                 click(infoIcon);
@@ -9211,7 +9208,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void clickOnChangeRole() throws Exception {
         if(isElementLoaded(changeRole,5))
         {
-            click(changeRole);
+            clickTheElement(changeRole);
             SimpleUtils.pass("Change Role option is clicked");
         }
         else
@@ -9391,7 +9388,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             clickOnCancelEditShiftTimeButton();
         }
 
-        selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")).click();
+        clickTheElement(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
         clickOnEditShiftTime();
 
         if (isSaveChange) {
@@ -11579,6 +11576,41 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Weeks Days failed to load!", false);
         }
         return indexes;
+    }
+
+    @Override
+    public void verifyShiftIsMovedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
+        boolean isMoved = false;
+        List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
+        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
+        if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0) {
+            for (WebElement start : startElements) {
+                WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
+                if (startName != null) {
+                    if (startName.getText().equalsIgnoreCase(firstName)) {
+                        SimpleUtils.fail("Still can find the TM:" + firstName + " on " + startIndex, false);
+                    }
+                } else {
+                    SimpleUtils.fail("Failed to find the worker name elements!", false);
+                }
+            }
+            for (WebElement end : endElements) {
+                WebElement endName = end.findElement(By.className("week-schedule-worker-name"));
+                if (endName != null) {
+                    if (endName.getText().equalsIgnoreCase(firstName)) {
+                        isMoved = true;
+                        break;
+                    }
+                } else {
+                    SimpleUtils.fail("Failed to find the worker name elements!", false);
+                }
+            }
+            if (!isMoved) {
+                SimpleUtils.fail(firstName + " isn't moved to the day, which index is: " + endIndex, false);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: Failed to find the shift elements for index: " + startIndex + " or " + endIndex, false);
+        }
     }
 
     @Override
