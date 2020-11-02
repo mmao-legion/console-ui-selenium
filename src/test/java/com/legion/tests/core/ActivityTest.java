@@ -147,6 +147,7 @@ public class ActivityTest extends TestBase {
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
         schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
 
         // For Swap Feature
         List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
@@ -181,6 +182,7 @@ public class ActivityTest extends TestBase {
         }
         dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
+        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
         // Validate that swap request smartcard is available to recipient team member
@@ -259,6 +261,7 @@ public class ActivityTest extends TestBase {
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
         schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
 
         // For Swap Feature
         List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
@@ -294,6 +297,7 @@ public class ActivityTest extends TestBase {
         }
         dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
+        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
         // Validate that swap request smartcard is available to recipient team member
@@ -371,6 +375,7 @@ public class ActivityTest extends TestBase {
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
         schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
 
         // For Swap Feature
         List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
@@ -406,6 +411,7 @@ public class ActivityTest extends TestBase {
         }
         dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
+        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
         // Validate that swap request smartcard is available to recipient team member
@@ -446,6 +452,7 @@ public class ActivityTest extends TestBase {
         schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         schedulePage.isSchedule();
+        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
         schedulePage.verifyShiftsAreSwapped(swapData);
     }
@@ -493,6 +500,7 @@ public class ActivityTest extends TestBase {
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
         schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
 
         // For Swap Feature
         List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
@@ -528,6 +536,7 @@ public class ActivityTest extends TestBase {
         }
         dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
+        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
         // Validate that swap request smartcard is available to recipient team member
@@ -718,6 +727,7 @@ public class ActivityTest extends TestBase {
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 
+        schedulePage.navigateToNextWeek();
         //make publish schedule activity
         boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
         if (isActiveWeekGenerated){
@@ -749,7 +759,7 @@ public class ActivityTest extends TestBase {
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-
+        schedulePage.navigateToNextWeek();
 
         // Verify Schedule publish activity are loaded
 
@@ -784,10 +794,6 @@ public class ActivityTest extends TestBase {
         activityPage.verifyClickOnActivityIcon();
         activityPage.clickActivityFilterByIndex(indexOfActivityType.Schedule.getValue(), indexOfActivityType.Schedule.name());
         activityPage.verifyActivityOfUpdateSchedule(requestUserNameSM);
-
-
-
-
     }
 
     @Automated(automated ="Automated")
@@ -1013,6 +1019,7 @@ public class ActivityTest extends TestBase {
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
         schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
 
         // For Cover Feature
         List<String> swapCoverRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
@@ -1035,6 +1042,7 @@ public class ActivityTest extends TestBase {
             dashboardPage.clickOnSwitchToEmployeeView();
         dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
+        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
         // Validate that smartcard is available to recipient team member

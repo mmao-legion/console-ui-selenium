@@ -3192,4 +3192,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public boolean ifMoveAnywayDialogDisplay() throws Exception {
         return false;
     }
+
+    @Override
+    public void verifyShiftIsMovedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
+
+    }
 }

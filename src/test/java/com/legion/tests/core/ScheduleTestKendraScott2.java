@@ -296,6 +296,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		dashboardPage.goToTodayForNewUI();
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.navigateToNextWeek();
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
 		if(!isActiveWeekGenerated){
 			schedulePage.createScheduleForNonDGFlowNewUI();
@@ -419,6 +420,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		schedulePage.navigateToNextWeek();
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
 		if(!isActiveWeekGenerated){
 			schedulePage.createScheduleForNonDGFlowNewUI();
@@ -435,6 +437,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 		//click on the context of any TM, 1. View profile 2. Change shift role  3.Assign TM 4.  Convert to open shift is enabled for current and future week day 5.Edit meal break time 6. Delete shift
 		schedulePage.selectNextWeekSchedule();
+		schedulePage.navigateToNextWeek();
 		boolean isActiveWeekGenerated2 = schedulePage.isWeekGenerated();
 		if(!isActiveWeekGenerated2){
 			schedulePage.createScheduleForNonDGFlowNewUI();
@@ -856,6 +859,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePageAdmin.clickOnScheduleConsoleMenuItem();
 		schedulePageAdmin.clickOnScheduleSubTab("Schedule");
+		schedulePageAdmin.navigateToNextWeek();
 		boolean isWeekGenerated = schedulePage.isWeekGenerated();
 		if (!isWeekGenerated){
 			schedulePage.createScheduleForNonDGFlowNewUI();
@@ -883,6 +887,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		///Log in as team member again to compare the operation hours
 		loginToLegionAndVerifyIsLoginDone(username, password, location);
 		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.navigateToNextWeek();
 		String theEarliestAndLatestTimeInScheduleTable = schedulePage.getTheEarliestAndLatestTimeInScheduleTable();
 		SimpleUtils.report("theEarliestAndLatestOperationHoursInScheduleTable is " + theEarliestAndLatestTimeInScheduleTable);
 		schedulePage.compareOperationHoursBetweenAdminAndTM(theEarliestAndLatestTimeInSummaryView, theEarliestAndLatestTimeInScheduleTable);
@@ -1654,6 +1659,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
 				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
+		schedulePage.navigateToNextWeek();
 		boolean isWeekGenerated = schedulePage.isWeekGenerated();
 		if (!isWeekGenerated){
 			schedulePage.createScheduleForNonDGFlowNewUI();
@@ -1688,6 +1694,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
 				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
+		schedulePage.navigateToNextWeek();
 		boolean isWeekGenerated = schedulePage.isWeekGenerated();
 		if (!isWeekGenerated){
 			schedulePage.createScheduleForNonDGFlowNewUI();
@@ -1709,6 +1716,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
 				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		schedulePage.navigateToNextWeek();
 		isWeekGenerated = schedulePage.isWeekGenerated();
 		if (!isWeekGenerated){
 			schedulePage.createScheduleForNonDGFlowNewUI();
@@ -1836,6 +1845,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
 				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
+		schedulePage.navigateToNextWeek();
 		boolean isWeekGenerated = schedulePage.isWeekGenerated();
 		if (isWeekGenerated){
 			schedulePage.unGenerateActiveScheduleScheduleWeek();
