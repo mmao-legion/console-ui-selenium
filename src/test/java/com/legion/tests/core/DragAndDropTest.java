@@ -128,6 +128,7 @@ public class DragAndDropTest extends TestBase {
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
         // Drag the TM's shift on Monday to another TM's shift on Tuesday
+        schedulePage.dragOneShiftToAnotherDay(dayIndexes.get(0), firstName, dayIndexes.get(1));
     }
 
     @Automated(automated ="Automated")
@@ -639,6 +640,7 @@ public class DragAndDropTest extends TestBase {
         SimpleUtils.assertOnFail("Clopening comliance message display failed",
                 schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfWednesday.get(0)).contains("Clopening"), false);
 
+        // Swap TM1 and TM2 back, check the TMs been swapped successfully
         schedulePage.clickViewShift();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM2,1,firstNameOfTM1);
@@ -648,15 +650,13 @@ public class DragAndDropTest extends TestBase {
         SimpleUtils.assertOnFail("Clopening message is not display because there should no clopening !",
                 !schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "assign"), false);
 
-        // Swap TM1 and TM2, check the TMs been swapped successfully
         schedulePage.selectSwapOrAssignOption("swap");
         schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
         schedulePage.verifyDayHasShiftByName(0, firstNameOfTM1);
         schedulePage.verifyDayHasShiftByName(1, firstNameOfTM2);
         schedulePage.saveSchedule();
 
-        // Edit the Schedule and try to drag TM1 on Monday to TM2 on Tuesday
-//        String clopeningWarningMessage = " will incur clopening";
+        // Edit the Schedule and try to drag TM1 on Monday to TM2 on Tuesday again
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM1,1,firstNameOfTM2);
         SimpleUtils.assertOnFail("Clopening message display successfully on swap section!",
@@ -796,4 +796,195 @@ public class DragAndDropTest extends TestBase {
         List<WebElement> shiftsOfSecondDay = schedulePage.getOneDayShiftByName(1, firstNameOfTM1);
         SimpleUtils.assertOnFail("Get compliance shift failed",shiftsOfSecondDay.size()>0, false);
     }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the box interaction color and message for TM status: role violation, config=yes")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+        controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+        // Navigate to next week
+        schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
+        // create the schedule if not created
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated) {
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        schedulePage.createScheduleForNonDGFlowNewUI();
+        //edit schedule
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView("Open");
+        List<String> shiftInfo = new ArrayList<>();
+        while (shiftInfo.size() == 0) {
+            shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+        }
+        String firstNameOfTM1 = shiftInfo.get(0);
+        String workRoleOfTM1 = shiftInfo.get(4);
+        List<String> shiftInfo2 = new ArrayList<>();
+        while (shiftInfo2.size() == 0 || workRoleOfTM1.equals(shiftInfo2.get(4))) {
+            shiftInfo2 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+        }
+        String firstNameOfTM2 = shiftInfo2.get(0);
+        String workRoleOfTM2 = shiftInfo2.get(4);
+        schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.selectWorkRole(workRoleOfTM2);
+        schedulePage.clearAllSelectedDays();
+        schedulePage.selectDaysByIndex(1, 1, 1);
+        schedulePage.moveSliderAtSomePoint("8", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByName(firstNameOfTM2);
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.dragOneAvatarToAnotherSpecificAvatar(0, firstNameOfTM1, 1, firstNameOfTM2);
+        String expectedViolationMessage = firstNameOfTM1+" should not take a "+workRoleOfTM2+" shift";
+        schedulePage.verifyMessageInConfirmPage(expectedViolationMessage,expectedViolationMessage);
+        List<String> swapData = schedulePage.getShiftSwapDataFromConfirmPage("swap");
+        schedulePage.selectSwapOrAssignOption("swap");
+        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+        schedulePage.verifyShiftsAreSwapped(swapData);
+
+        //assign option
+        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
+        schedulePage.saveSchedule();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.selectWorkRole(workRoleOfTM1);
+        schedulePage.clearAllSelectedDays();
+        schedulePage.selectDaysByIndex(0, 0, 0);
+        schedulePage.moveSliderAtSomePoint("8", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByName(firstNameOfTM1);
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.selectWorkRole(workRoleOfTM2);
+        schedulePage.clearAllSelectedDays();
+        schedulePage.selectDaysByIndex(1, 1, 1);
+        schedulePage.moveSliderAtSomePoint("8", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByName(firstNameOfTM2);
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.dragOneAvatarToAnotherSpecificAvatar(0, firstNameOfTM1, 1, firstNameOfTM2);
+        schedulePage.selectSwapOrAssignOption("assign");
+        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+        if (schedulePage.verifyDayHasShiftByName(0,firstNameOfTM1)==1 && schedulePage.verifyDayHasShiftByName(1,firstNameOfTM1)==1){
+            SimpleUtils.pass("assign successfully!");
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the box interaction color and message for TM status: role violation, config=no")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySwapWarningModelForRoleViolationConfigNoAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+        controlsNewUIPage.enableOverRideAssignmentRuleAsNo();
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), true);
+
+        // Navigate to next week
+        schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
+        // create the schedule if not created
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated) {
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        schedulePage.createScheduleForNonDGFlowNewUI();
+        //edit schedule
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView("Open");
+        List<String> shiftInfo = new ArrayList<>();
+        while (shiftInfo.size() == 0) {
+            shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+        }
+        String firstNameOfTM1 = shiftInfo.get(0);
+        String workRoleOfTM1 = shiftInfo.get(4);
+        List<String> shiftInfo2 = new ArrayList<>();
+        while (shiftInfo2.size() == 0 || workRoleOfTM1.equals(shiftInfo2.get(4))) {
+            shiftInfo2 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+        }
+        String firstNameOfTM2 = shiftInfo2.get(0);
+        String workRoleOfTM2 = shiftInfo2.get(4);
+        schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.selectWorkRole(workRoleOfTM2);
+        schedulePage.clearAllSelectedDays();
+        schedulePage.selectDaysByIndex(1, 1, 1);
+        schedulePage.moveSliderAtSomePoint("8", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByName(firstNameOfTM2);
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.dragOneAvatarToAnotherSpecificAvatar(0, firstNameOfTM1, 1, firstNameOfTM2);
+        String expectedViolationMessage ="This assignment will trigger a role violation\n" +
+                 firstNameOfTM1+" "+shiftInfo.get(5)+" can not take a "+workRoleOfTM2+" shift.\n";
+        String actualwarningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
+        if (expectedViolationMessage.equalsIgnoreCase(actualwarningMessage)){
+            SimpleUtils.pass("violation warning message is expected!");
+        } else {
+            SimpleUtils.fail("violation warning message is not expected!",true);
+        }
+        schedulePage.clickOnOkButtonInWarningMode();
+        if (schedulePage.verifyDayHasShiftByName(0,firstNameOfTM1)==1 && schedulePage.verifyDayHasShiftByName(1,firstNameOfTM2)==1){
+            SimpleUtils.pass("assign successfully!");
+        }
+        schedulePage.saveSchedule();
+
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), true);
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), true);
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+        controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
+    }
+
+
 }

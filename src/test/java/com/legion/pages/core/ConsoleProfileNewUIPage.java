@@ -719,7 +719,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			clickTheElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
 		}
 		waitForSeconds(3);
-		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")), 5)){
+		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")), 15)){
 			SimpleUtils.pass("Profile Page: User profile successfully saved.");
 		} else{
 			SimpleUtils.fail("Profile Page: unable to save User profile.", false);
@@ -2018,6 +2018,21 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> approvedTimeOffRequests;
 	@FindBy(css = "[timeoff=\"timeoff\"] .request-status-Pending")
 	private List<WebElement> pendingTimeOffRequests;
+	@FindBy(css = ".user-profile-section .request-status-Pending")
+	private List<WebElement> pendingAvailabilityRequests;
+
+	@Override
+	public void cancelAllPendingAvailabilityRequest() throws Exception {
+		if (areListElementVisible(pendingAvailabilityRequests, 10)) {
+			for (WebElement pendingRequest : pendingAvailabilityRequests) {
+				clickTheElement(pendingRequest);
+				if (isElementLoaded(cancelButtonOfPendingRequest, 10)) {
+					clickTheElement(cancelButtonOfPendingRequest);
+					SimpleUtils.pass("Cancel the pending availabiltiy request successfully!");
+				}
+			}
+		}
+	}
 
 	@Override
 	public void newApproveOrRejectTimeOffRequestFromToDoList(String timeOffReasonLabel, String timeOffStartDuration,
