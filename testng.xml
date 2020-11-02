@@ -137,6 +137,8 @@
                     <include name="verifySearchBarOnSchedulePageAsInternalAdmin" />
                     <include name="verifyVersionNumberAndEditsAsInternalAdmin" />
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
+                    <include name="verifyAssignTMWarningForScheduleTMFromAnotherLocAndScheduleNotPublishedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -222,17 +224,17 @@
                     <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
                     <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
                     <include name="verifyTheContentOfTimesheetApprovalStatusWidgetAsStoreManager" />
-                    <include name="verifyTheContentOfOpenShiftsAsInternalAdmin" />
-                    <include name="verifySwitchWeekOfOpenShiftsAsStoreManager" />
-                    <include name="dataValidationOfOpenShiftsUnclaimedAsStoreManager" />
-                    <include name="dataValidationOfOpenShiftsClaimedAsTeamMember" />
+                    <!--<include name="verifyTheContentOfOpenShiftsAsInternalAdmin" />-->
+                    <!-- <include name="verifySwitchWeekOfOpenShiftsAsStoreManager" />-->
+                    <!-- <include name="dataValidationOfOpenShiftsUnclaimedAsStoreManager" />-->
+                    <!--<include name="dataValidationOfOpenShiftsClaimedAsTeamMember" />-->
                     <include name="verifyHelpfulLinksWidgetsAsStoreManager" />
                     <include name="verifyTodayForecastWidgetsAsStoreManager" />
                     <include name="verifySchedulesWidgetsAsStoreManager" />
                     <!--<include name="verifyComplianceViolationWidgetsAsStoreManager" /> -->
                     <include name="verifyNoContentOfSwapNCoverWidgetAsInternalAdmin" />
-                    <include name="verifyTimesheetApprovalRateWidgetAsStoreManager" />
-                    <include name="verifyTheContentOfSwapNCoverWidgetAsInternalAdmin" />
+                    <!--<include name="verifyTimesheetApprovalRateWidgetAsStoreManager" />-->
+                    <!--<include name="verifyTheContentOfSwapNCoverWidgetAsInternalAdmin" />-->
                 </methods>
             </class>
         </classes>
@@ -267,6 +269,8 @@
                     <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
                     <include name="verifyWarningModelForClopeningAsInternalAdmin" />
                     <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
+                    <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
+                    <include name="verifySwapWarningModelForRoleViolationConfigNoAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

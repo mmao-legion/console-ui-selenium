@@ -5102,11 +5102,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-/*        if (isElementLoaded(msgOnTop, 30) && msgOnTop.getText().contains("Success")) {
+        if (isElementLoaded(msgOnTop, 30) && msgOnTop.getText().contains("Success")) {
             SimpleUtils.pass("Save the Schedule Successfully!");
         } else {
             SimpleUtils.fail("Save Schedule Failed!", false);
-        }*/
+        }
+        waitForSeconds(3);
     }
 
     public void convertToOpen(int i) {
@@ -12053,4 +12054,56 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
- }
+    @FindBy(css = "[ng-class=\"swapStatusClass(worker)\"]")
+    private WebElement tmScheduledStatus;
+
+    @Override
+    public String getTheMessageOfTMScheduledStatus() throws Exception {
+        String messageOfTMScheduledStatus = "";
+        if (isElementLoaded(tmScheduledStatus,5)){
+            if (tmScheduledStatus.getText()!=null && !tmScheduledStatus.getText().equals("")){
+                messageOfTMScheduledStatus = tmScheduledStatus.getText();
+                SimpleUtils.pass("TM scheduled status display as : "+ messageOfTMScheduledStatus);
+            } else {
+                SimpleUtils.fail("TM scheduled status message is empty ", false );
+            }
+        } else {
+            SimpleUtils.fail("TM scheduled status is not loaded!", false);
+        }
+        return messageOfTMScheduledStatus;
+    }
+
+
+    @Override
+    public void verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished() throws Exception {
+        String expectedMessageOnWarningModel = "cannot be assigned because the schedule has not been published yet at the home location";
+        if (isElementLoaded(alertMessage,15)) {
+            String s = alertMessage.getText();
+            if (s.toLowerCase().contains(expectedMessageOnWarningModel)
+                    && isElementLoaded(okButton,5)){
+                click(okButton);
+                SimpleUtils.pass("There is a warning model with one button labeled OK! and the message is expected!");
+                if (isElementLoaded(closeSelectTMWindowBtn,5)){
+                    click(closeSelectTMWindowBtn);
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no warning model and warning message!", false);
+        }
+    }
+
+    @FindBy(css=".tma-table")
+    private WebElement TMResultsTable;
+    @Override
+    public void verifyTMNotSelected() throws Exception {
+        if (isElementLoaded(TMResultsTable,10)){
+            if (TMResultsTable.findElements(By.cssSelector(".tma-staffing-option-inner-circle")).size()>0
+                    && TMResultsTable.findElements(By.cssSelector(".tma-staffing-option-inner-circle")).get(0).getAttribute("class").contains("ng hide")){
+                SimpleUtils.pass("TM is not selected!");
+            } else {
+                SimpleUtils.fail("TM is selected!",false);
+            }
+        }
+    }
+}
+
