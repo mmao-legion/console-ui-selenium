@@ -84,7 +84,7 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.closeWidget(widgetType.Timesheet_Approval_Status.getValue());
         liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Status.getValue());
 
-
+/*
         //verify switch off Timesheet_Approval_Rate widget
         liquidDashboardPage.switchOffWidget(widgetType.Timesheet_Approval_Rate.getValue());
         //verify switch on Timesheet_Approval_Rate widget
@@ -92,7 +92,7 @@ public class LiquidDashboardTest extends TestBase {
         //verify close Timesheet_Approval_Rate widget
         liquidDashboardPage.closeWidget(widgetType.Timesheet_Approval_Rate.getValue());
         liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Rate.getValue());
-
+*/
 
         //verify switch off Alerts widget
         liquidDashboardPage.switchOffWidget(widgetType.Alerts.getValue());
@@ -102,7 +102,7 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.closeWidget(widgetType.Alerts.getValue());
         liquidDashboardPage.switchOnWidget(widgetType.Alerts.getValue());
 
-
+/*
         //verify switch off Swaps_Covers widget
         liquidDashboardPage.switchOffWidget(widgetType.Swaps_Covers.getValue());
         //verify switch on Swaps_Covers widget
@@ -110,7 +110,7 @@ public class LiquidDashboardTest extends TestBase {
         //verify close Swaps_Covers widget
         liquidDashboardPage.closeWidget(widgetType.Swaps_Covers.getValue());
         liquidDashboardPage.switchOnWidget(widgetType.Swaps_Covers.getValue());
-
+*/
 
         //verify switch off Starting_Soon widget
         liquidDashboardPage.switchOffWidget(widgetType.Starting_Soon.getValue());
@@ -129,7 +129,7 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.closeWidget(widgetType.Schedules.getValue());
         liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
 
-
+/*
         //verify switch off Open_Shifts widget
         liquidDashboardPage.switchOffWidget(widgetType.Open_Shifts.getValue());
         //verify switch on Open_Shifts widget
@@ -137,7 +137,7 @@ public class LiquidDashboardTest extends TestBase {
         //verify close Open_Shifts widget
         liquidDashboardPage.closeWidget(widgetType.Open_Shifts.getValue());
         liquidDashboardPage.switchOnWidget(widgetType.Open_Shifts.getValue());
-
+*/
 
         //verify switch off compliance violation widget
         liquidDashboardPage.switchOffWidget(widgetType.Compliance_Violation.getValue());
@@ -159,12 +159,12 @@ public class LiquidDashboardTest extends TestBase {
         //verify if there is update time info icon
         liquidDashboardPage.saveAndExitEditMode();
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Compliance_Violation.getValue());
-        liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Open_Shifts.getValue());
+        //liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Open_Shifts.getValue());
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Schedules.getValue());
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Starting_Soon.getValue());
-        liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Swaps_Covers.getValue());
+        //liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Swaps_Covers.getValue());
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Alerts.getValue());
-        liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Timesheet_Approval_Rate.getValue());
+        //liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Timesheet_Approval_Rate.getValue());
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Timesheet_Approval_Status.getValue());
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Helpful_Links.getValue());
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Todays_Forecast.getValue());

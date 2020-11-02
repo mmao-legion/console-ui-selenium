@@ -512,4 +512,7 @@ public interface SchedulePage {
 	public void moveAnywayWhenChangeShift() throws Exception;
 	public boolean ifMoveAnywayDialogDisplay() throws Exception;
 	public String getTheMessageOfTMScheduledStatus() throws Exception;
+	public void verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished() throws Exception;
+	public void verifyTMNotSelected() throws Exception;
+	public void verifyAlertMessageIsExpected(String messageExpected) throws Exception;
 }

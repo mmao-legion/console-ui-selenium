@@ -138,6 +138,7 @@
                     <include name="verifyVersionNumberAndEditsAsInternalAdmin" />
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
                     <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
+                    <include name="verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

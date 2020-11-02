@@ -331,7 +331,7 @@ public class DragAndDropTest extends TestBase {
         // Navigate to next week
         schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
-        // create the schedule if not created
+        // recreate the schedule
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
         if (isWeekGenerated){
             schedulePage.unGenerateActiveScheduleScheduleWeek();

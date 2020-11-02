@@ -3197,4 +3197,19 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public String getTheMessageOfTMScheduledStatus() throws Exception {
         return null;
     }
+
+    @Override
+    public void verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished() throws Exception {
+
+    }
+
+    @Override
+    public void verifyTMNotSelected() throws Exception {
+
+    }
+
+    @Override
+    public void verifyAlertMessageIsExpected(String messageExpected) throws Exception {
+
+    }
 }
