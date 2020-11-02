@@ -274,4 +274,5 @@ public interface ControlsNewUIPage {
 	public void clickOnBackButtonOnLocationDetailPage() throws Exception;
 	public void turnONClopeningToggleAndSetHours(int clopeningHours) throws Exception;
 	public void selectClopeningHours(int clopeningHour) throws Exception;
+	public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception;
 }

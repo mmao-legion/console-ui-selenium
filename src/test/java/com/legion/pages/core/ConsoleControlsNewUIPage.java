@@ -5478,4 +5478,24 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Clopening Hours selector load fail", false);
 	}
 
+
+	@FindBy(css = "question-input[question-title=\"Can a manager add another locations' employee in schedule before the employee's home location has published the schedule?\"] input-field")
+	private WebElement canManagerAddAnotherLocationsEmployeeInSchedule;
+
+	@Override
+	public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception {
+
+		//click Global location button
+		clickOnGlobalLocationButton();
+		// Wait for the values loaded
+		waitForSeconds(10);
+		WebElement confSelect = canManagerAddAnotherLocationsEmployeeInSchedule.findElement(By.cssSelector("select"));
+		if(isElementLoaded(confSelect,5)) {
+			selectByVisibleText(confSelect,option);
+			displaySuccessMessage();
+		} else{
+			SimpleUtils.fail("Can a manager add another locations' employee in schedule before the employee's home location has published the schedule? input field not loaded.", false);
+		}
+	}
+
 }
