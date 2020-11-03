@@ -211,6 +211,7 @@
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
 <!--                    <include name="verifyCreateNewTimeOffFunctionalityAsTeamMember" />-->
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
+                    <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
                 </methods>
             </class>
         </classes>

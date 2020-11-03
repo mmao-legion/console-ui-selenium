@@ -2715,6 +2715,12 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy(css = "button.lgn-action-button-light")
 	private WebElement syncTMInfoButton;
 
+	@FindBy(css = "lg-button[ng-click=\"changePassword()\"]")
+	private WebElement changePasswordButton;
+
+
+
+
 
 	public void verifyEditUserProfileButtonIsLoaded() throws Exception {
 		if(isElementLoaded(editUserProfileButton, 5)){
@@ -2827,6 +2833,14 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			}
 		}
 
+	}
+
+	public void verifyContentsInActionsSectionInTMView() throws Exception {
+		if (isElementLoaded(changePasswordButton, 5)){
+			SimpleUtils.pass("User Profile page: The change password button in Actions section display correctly! ");
+		} else{
+			SimpleUtils.fail("User Profile page: The change password button in Actions section display correctly! ", false);
+		}
 	}
 
 }

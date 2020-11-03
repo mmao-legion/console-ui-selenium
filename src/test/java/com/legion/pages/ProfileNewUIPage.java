@@ -188,4 +188,6 @@ public interface ProfileNewUIPage {
 	public void verifyEditUserProfileButtonIsLoaded() throws Exception;
 
 	public void verifySyncTMInfoButtonIsLoaded() throws Exception;
+
+	public void verifyContentsInActionsSectionInTMView() throws Exception;
 }
