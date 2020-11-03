@@ -2666,4 +2666,167 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 		return null;
 	}
+
+	@FindBy(css = "[box-title=\"User Profile\"]")
+	private WebElement userProfileSection;
+
+	@FindBy(css = "[box-title=\"HR Profile Information\"]")
+	private WebElement hrProfileInfoSection;
+
+	@FindBy(css = "[box-title=\"Legion Information\"]")
+	private WebElement legionInfoSection;
+
+	@FindBy(css = "[box-title=\"Actions\"]")
+	private WebElement actionsSection;
+
+	@FindBy(css = "[value=\"tm.worker.pictureUrl\"]")
+	private WebElement primaryAvatarInUserProfileSection;
+
+	@FindBy(css = "[value=\"tm.worker.businessPictureUrl\"]")
+	private WebElement businessAvatarInUserProfileSection;
+
+	@FindBy(css = "div.user-readonly-details")
+	private List<WebElement> userProfileInfoInUserProfileSection;
+
+	@FindBy(css = ".quick-engagement .col-xs-6.label")
+	private List<WebElement> fieldsInHRProfileInformationSection;
+
+	@FindBy(css = "[box-title=\"Legion Information\"] .col-xs-6.label")
+	private List<WebElement> fieldsInLegionInformationSection;
+
+	@FindBy(css = ".information-section.badge-section div")
+	private WebElement badgesSectionInLegionInformationSection;
+
+	@FindBy(css = "lg-button[ng-click=\"invite()\"]")
+	private WebElement inviteToLegionButton;
+
+	@FindBy(css = "div.invitation-status")
+	private WebElement inviteMessageInActionsSection;
+
+	@FindBy(css = "lg-button[ng-click=\"$ctrl.conformation($ctrl.sendUsername)\"]")
+	private WebElement sendUsernameInActionsSection;
+
+	@FindBy(css = "lg-button[ng-click=\"$ctrl.conformation($ctrl.resetPassword)\"]")
+	private WebElement resetPasswordInActionsSection;
+
+	@FindBy(css = "lg-button[ng-click=\"$ctrl.onAction()\"]")
+	private WebElement editUserProfileButton;
+
+	@FindBy(css = "button.lgn-action-button-light")
+	private WebElement syncTMInfoButton;
+
+
+	public void verifyEditUserProfileButtonIsLoaded() throws Exception {
+		if(isElementLoaded(editUserProfileButton, 5)){
+			SimpleUtils.pass("User Profile page: Edit user profile button loaded successfully! ");
+		} else {
+			SimpleUtils.fail("User Profile page: Edit user profile button fail to load!", false);
+		}
+	}
+
+	public void verifySyncTMInfoButtonIsLoaded() throws Exception {
+		if(isElementLoaded(syncTMInfoButton, 5)){
+			SimpleUtils.pass("User Profile page: Sync TM info button loaded successfully! ");
+		} else {
+			SimpleUtils.fail("User Profile page: Sync TM info button button fail to load!", false);
+		}
+	}
+
+	public void verifyUserProfileSectionIsLoaded() throws Exception {
+		if(isElementLoaded(userProfileSection, 5)){
+			SimpleUtils.pass("User Profile page: User Profile section loaded successfully! ");
+		} else {
+			SimpleUtils.fail("User Profile page: User Profile section fail to load!", false);
+		}
+	}
+
+	public void verifyHRProfileInformationSectionIsLoaded() throws Exception {
+		if(isElementLoaded(hrProfileInfoSection, 5)){
+			SimpleUtils.pass("User Profile page: HR Profile Information section loaded successfully! ");
+		} else {
+			SimpleUtils.fail("User Profile page: HR Profile Information section fail to load!", false);
+		}
+	}
+
+	public void verifyLegionInformationSectionIsLoaded() throws Exception {
+		if(isElementLoaded(legionInfoSection, 5)){
+			SimpleUtils.pass("User Profile page: Legion Information section loaded successfully! ");
+		} else {
+			SimpleUtils.fail("User Profile page: Legion Information section fail to load!", false);
+		}
+	}
+
+	public void verifyActionSectionIsLoaded() throws Exception {
+		if(isElementLoaded(actionsSection, 5)){
+			SimpleUtils.pass("User Profile page: Actions section loaded successfully! ");
+		} else {
+			SimpleUtils.fail("User Profile page: Actions section fail to load!", false);
+		}
+	}
+
+	public void verifyFieldsInUserProfileSection() throws Exception {
+		if (isElementLoaded(primaryAvatarInUserProfileSection, 5) &&
+				isElementLoaded(businessAvatarInUserProfileSection, 5) &&
+				areListElementVisible(userProfileInfoInUserProfileSection, 5)
+				&& userProfileInfoInUserProfileSection.size() ==3
+				&& userProfileInfoInUserProfileSection.get(0).findElement(By.cssSelector(".userProfileHeading")).getText().equalsIgnoreCase("Name")
+				&& userProfileInfoInUserProfileSection.get(1).findElement(By.cssSelector(".userProfileHeading")).getText().equalsIgnoreCase("Address")
+				&& userProfileInfoInUserProfileSection.get(2).findElement(By.cssSelector(".userProfileHeading")).getText().equalsIgnoreCase("CONTACT INFORMATION")) {
+			SimpleUtils.pass("User Profile page: The fields in User Profile section display correctly! ");
+		} else
+			SimpleUtils.fail("User Profile page: The fields in User Profile section failed to display !", false);
+	}
+
+	public void verifyFieldsInHRProfileInformationSection() throws Exception {
+		if (areListElementVisible(fieldsInHRProfileInformationSection, 5)
+				&& fieldsInHRProfileInformationSection.size() == 13
+				&& fieldsInHRProfileInformationSection.get(0).getText().equalsIgnoreCase("Name")
+				&& fieldsInHRProfileInformationSection.get(1).getText().equalsIgnoreCase("JOB TITLE")
+				&& fieldsInHRProfileInformationSection.get(2).getText().equalsIgnoreCase("MANAGER NAME")
+				&& fieldsInHRProfileInformationSection.get(3).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("HOME STORE")
+				&& fieldsInHRProfileInformationSection.get(4).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("EMPLOYEE ID")
+				&& fieldsInHRProfileInformationSection.get(5).getText().equalsIgnoreCase("DATE HIRED")
+				&& fieldsInHRProfileInformationSection.get(6).getText().equalsIgnoreCase("EMPLOYMENT TYPE")
+				&& fieldsInHRProfileInformationSection.get(7).getText().equalsIgnoreCase("HOURLY RATE")
+				&& fieldsInHRProfileInformationSection.get(8).getText().equalsIgnoreCase("EMPLOYMENT STATUS")
+				&& fieldsInHRProfileInformationSection.get(9).getText().equalsIgnoreCase("EXEMPT")
+				&& fieldsInHRProfileInformationSection.get(10).getText().equalsIgnoreCase("ADDRESS")
+				&& fieldsInHRProfileInformationSection.get(11).getText().equalsIgnoreCase("MINOR")
+				&& fieldsInHRProfileInformationSection.get(12).getText().equalsIgnoreCase("CONTACT INFORMATION")) {
+			SimpleUtils.pass("User Profile page: The fields in HR Profile Information section display correctly! ");
+		} else
+			SimpleUtils.fail("User Profile page: The fields in HR Profile Information section failed to display !", false);
+	}
+
+	public void verifyFieldsInLegionInformationSection() throws Exception {
+		if (areListElementVisible(fieldsInLegionInformationSection, 5)
+				&& fieldsInLegionInformationSection.size() == 3
+				&& fieldsInLegionInformationSection.get(0).getText().equalsIgnoreCase("STATUS")
+				&& fieldsInLegionInformationSection.get(1).getText().equalsIgnoreCase("SCHEDULING POLICY GROUP")
+				&& fieldsInLegionInformationSection.get(2).findElement(By.cssSelector(".highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("TIMECLOCK PIN")
+				&& isElementLoaded(badgesSectionInLegionInformationSection, 5)
+				&& badgesSectionInLegionInformationSection.getText().equalsIgnoreCase("Badges")) {
+			SimpleUtils.pass("User Profile page: The fields in Legion Information section display correctly! ");
+		} else
+			SimpleUtils.fail("User Profile page: The fields in Legion Information section failed to display !", false);
+	}
+
+	public void verifyContentsInActionsSection() throws Exception {
+		if (isElementLoaded(inviteToLegionButton, 5)){
+			if (isElementLoaded(inviteMessageInActionsSection, 5)
+					&& (inviteMessageInActionsSection.getText().contains("Not invited yet")|| inviteMessageInActionsSection.getText().contains("Invited to onboard"))){
+				SimpleUtils.pass("User Profile page: The invite message in Actions section display correctly! ");
+			} else{
+				SimpleUtils.fail("User Profile page: The invite message in Action section failed to display! ", false);
+			}
+		} else{
+			if (isElementLoaded(sendUsernameInActionsSection, 5) && isElementLoaded(resetPasswordInActionsSection, 5)){
+				SimpleUtils.pass("User Profile page: The Send Username and Reset Password buttons in Actions section display correctly! ");
+			} else {
+				SimpleUtils.fail("User Profile page: The Send Username and Reset Password buttons in Actions section failed to display !", false);
+			}
+		}
+
+	}
+
 }

@@ -168,4 +168,24 @@ public interface ProfileNewUIPage {
 	public void clickOnSaveUserProfileBtn() throws Exception;
 
 	public void clickOnCancelUserProfileBtn() throws Exception;
+
+	public void verifyUserProfileSectionIsLoaded() throws Exception;
+
+	public void verifyHRProfileInformationSectionIsLoaded() throws Exception;
+
+	public void verifyLegionInformationSectionIsLoaded() throws Exception;
+
+	public void verifyActionSectionIsLoaded() throws Exception;
+
+	public void verifyFieldsInUserProfileSection() throws Exception;
+
+	public void verifyFieldsInHRProfileInformationSection() throws Exception;
+
+	public void verifyFieldsInLegionInformationSection() throws Exception;
+
+	public void verifyContentsInActionsSection() throws Exception;
+
+	public void verifyEditUserProfileButtonIsLoaded() throws Exception;
+
+	public void verifySyncTMInfoButtonIsLoaded() throws Exception;
 }
