@@ -686,8 +686,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		//clickOnSaveUserProfileBtn();
 		clickOnCancelUserProfileBtn();
 	}
-	
-	private void clickOnCancelUserProfileBtn() throws Exception {
+
+	@Override
+	public void clickOnCancelUserProfileBtn() throws Exception {
 		if(isElementLoaded(userProfileCancelBtn))
 			click(userProfileCancelBtn);
 		if(!isElementLoaded(profileEditForm))
@@ -701,6 +702,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy (className = "btn-success")
 	private WebElement saveTMBtn;
 
+	@Override
 	public void clickOnEditUserProfilePencilIcon() throws Exception
 	{
 		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),10))
@@ -711,7 +713,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		else
 			SimpleUtils.fail("Profile Page: User profile edit form not loaded.", false);
 	}
-	
+
+	@Override
 	public void clickOnSaveUserProfileBtn() throws Exception
 	{
 		if(isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")), 5)){
@@ -725,6 +728,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("Profile Page: unable to save User profile.", false);
 		}
 	}
+
 	
 	public void updateUserProfileName(String firstName, String lastname, String nickName) throws Exception
 	{

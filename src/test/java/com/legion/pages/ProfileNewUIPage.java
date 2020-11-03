@@ -162,4 +162,10 @@ public interface ProfileNewUIPage {
 	public String getTimeOffRequestStatusByExplanationText(String timeOffExplanationText) throws Exception;
 
 	public void cancelAllPendingAvailabilityRequest() throws Exception;
+
+	public void clickOnEditUserProfilePencilIcon() throws Exception;
+
+	public void clickOnSaveUserProfileBtn() throws Exception;
+
+	public void clickOnCancelUserProfileBtn() throws Exception;
 }
