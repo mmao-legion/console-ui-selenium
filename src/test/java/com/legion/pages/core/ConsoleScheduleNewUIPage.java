@@ -5092,7 +5092,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public void saveSchedule() throws Exception {
-        if (isElementEnabled(scheduleSaveBtn, 5)) {
+        if (isElementEnabled(scheduleSaveBtn, 10)) {
             clickTheElement(scheduleSaveBtn);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
@@ -9496,8 +9496,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String textOnConvertToOpenPopUp = "Are you sure you want to make this an Open Shift?\n" +
                 firstNameOfTM + " will be losing this shift. Legion will automatically offer the shift to matching team members.\n" +
                 "I want to offer to specific team members";
-        if (isElementLoaded(titleOfConvertToOpenShiftPopup,5) && isElementLoaded(radioBtnManualOpenShift,5)
-                && isElementLoaded(btnCancelOpenSchedule,5) && isElementLoaded(btnYesOpenSchedule,5)
+        if (isElementLoaded(titleOfConvertToOpenShiftPopup,10) && isElementLoaded(radioBtnManualOpenShift,10)
+                && isElementLoaded(btnCancelOpenSchedule,10) && isElementLoaded(btnYesOpenSchedule,10)
                 && textOnConvertToOpenPopUp.equals(titleOfConvertToOpenShiftPopup.getText()+ "\n" + descriptionOfConvertToOpenShiftPopup.getText() + "\n" + textOfManualOpenShift.getText())) {
             SimpleUtils.pass("checkbox is available to offer the shift to any specific TM[optional] Cancel /yes");
             return true;
@@ -11217,10 +11217,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if(version.equalsIgnoreCase(versionText)){
                 SimpleUtils.pass("version info is correct!");
             }else {
-                SimpleUtils.fail("There is schedulelHistoryTab!", false);
+                SimpleUtils.fail("There is schedule HistoryTab!", false);
             }
         } else {
-            SimpleUtils.fail("There is no schedulel version info!", false);
+            SimpleUtils.fail("There is no schedule version info!", false);
         }
     }
 
@@ -11254,6 +11254,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         if (isElementEnabled(saveOnSaveConfirmationPopup)) {
             clickTheElement(saveOnSaveConfirmationPopup);
+            if (isElementLoaded(msgOnTop, 30) && msgOnTop.getText().contains("Success")) {
+                SimpleUtils.pass("Save the Schedule Successfully!");
+            } else {
+                SimpleUtils.fail("Save Schedule Failed!", false);
+            }
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
@@ -11283,6 +11288,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void clickProfileIconOfShift(WebElement shift) throws Exception {
         if(isElementLoaded(shift,15)){
+            scrollToElement(shift);
+            waitForSeconds(3);
             clickTheElement(shift.findElement(By.cssSelector(".worker-image-optimized img")));
             SimpleUtils.pass("clicked shift icon!");
         } else {
