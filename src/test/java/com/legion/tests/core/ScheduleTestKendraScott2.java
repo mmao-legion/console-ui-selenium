@@ -1825,7 +1825,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.verifyListOfOfferNotNull();
 	}
 
-
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
 	@Enterprise(name = "KendraScott2_Enterprise")
@@ -2051,6 +2050,108 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.searchTeamMemberByName(firstNameOfTM1);
 		schedulePage.verifyMessageIsExpected("schedule not published");
 		schedulePage.verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished();
+		schedulePage.verifyTMNotSelected();
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Julie")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Assign TM warning: TM is from another store and schedule is not generated at that store")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		// Set this setting "Can a manager add another locations' employee in schedule before the employee's home location has published the schedule?" to "No, home location must publish schedule first"
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+		SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+		controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("No, home location must publish schedule first");
+
+		// Change the location to "NY CENTRAL"
+		dashboardPage.navigateToDashboard();
+		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+		String nyLocation = "NY CENTRAL (Previously New York Central Park)";
+		locationSelectorPage.changeLocation(nyLocation);
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		// Select one team member to view profile
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		String userName = teamPage.selectATeamMemberToViewProfile();
+		String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
+		String lastName = userName.contains(" ") ? userName.split(" ")[1] : userName;
+
+		// Go to schedule page, schedule tab
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		// Navigate to a week
+		schedulePage.navigateToNextWeek();
+		schedulePage.navigateToNextWeek();
+
+		// Ungenerate the schedule if it has generated
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated) {
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+
+		// Select AUSTIN DOWNTOWN location
+		dashboardPage.navigateToDashboard();
+		locationSelectorPage.changeLocation("AUSTIN DOWNTOWN");
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		// Go to Schedule page, Schedule tab
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		// Navigate to a week
+		schedulePage.navigateToNextWeek();
+		schedulePage.navigateToNextWeek();
+
+		// Create the schedule if it is not created
+		boolean isWeekGenerated2 = schedulePage.isWeekGenerated();
+		if (!isWeekGenerated2){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
+
+		// Edit the Schedule
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+		// Create new shift for TM
+		schedulePage.clickOnDayViewAddNewShiftButton();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.selectWorkRole("MOD");
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+
+		// Search TM and verify the message
+		schedulePage.searchText(firstName + " " + lastName.substring(0,1));
+		if (schedulePage.getTheMessageOfTMScheduledStatus().equalsIgnoreCase("Schedule Not Created"))
+			SimpleUtils.pass("TM scheduled status message display correctly");
+		else
+			SimpleUtils.fail("TM scheduled status message failed to display or displays incorrectly",false);
+
+		// Select the team member and verify the pop-up warning message
+		schedulePage.searchTeamMemberByName(firstName + " " + lastName.substring(0,1));
+		String expectedMessage = firstName + " cannot be assigned because the schedule has not been published yet at the home location, " + nyLocation;
+		schedulePage.verifyAlertMessageIsExpected(expectedMessage);
+
+		// Click on OK button and verify that TM is not selected
+		schedulePage.clickOnOkButtonInWarningMode();
 		schedulePage.verifyTMNotSelected();
 	}
 }

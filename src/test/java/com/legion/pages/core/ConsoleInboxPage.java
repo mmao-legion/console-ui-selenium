@@ -519,7 +519,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
             if (messageExpected.equals(messageViewed.getText())){
                 SimpleUtils.pass("Message is consistent!");
             } else {
-                SimpleUtils.fail("Message is insonsistent!",false);
+                SimpleUtils.fail("Message is inconsistent!",false);
             }
         } else {
             SimpleUtils.fail("Message fail to load!",false);

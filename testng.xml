@@ -138,7 +138,7 @@
                     <include name="verifyVersionNumberAndEditsAsInternalAdmin" />
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
                     <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
-                    <include name="verifyAssignTMWarningForScheduleTMFromAnotherLocAndScheduleNotPublishedAsInternalAdmin" />
+                    <include name="verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -210,6 +210,8 @@
                     <include name="verifyMyProfileDetailsByUpdatingTheInformationAsTeamMember2" />
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
 <!--                    <include name="verifyCreateNewTimeOffFunctionalityAsTeamMember" />-->
+                    <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
+                    <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
                 </methods>
             </class>
         </classes>
@@ -224,17 +226,17 @@
                     <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
                     <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
                     <include name="verifyTheContentOfTimesheetApprovalStatusWidgetAsStoreManager" />
-                    <!--<include name="verifyTheContentOfOpenShiftsAsInternalAdmin" />-->
-                    <!-- <include name="verifySwitchWeekOfOpenShiftsAsStoreManager" />-->
-                    <!-- <include name="dataValidationOfOpenShiftsUnclaimedAsStoreManager" />-->
-                    <!--<include name="dataValidationOfOpenShiftsClaimedAsTeamMember" />-->
+                    <include name="verifyTheContentOfOpenShiftsAsInternalAdmin" />
+                    <include name="verifySwitchWeekOfOpenShiftsAsStoreManager" />
+                    <include name="dataValidationOfOpenShiftsUnclaimedAsStoreManager" />
+                    <include name="dataValidationOfOpenShiftsClaimedAsTeamMember" />
                     <include name="verifyHelpfulLinksWidgetsAsStoreManager" />
                     <include name="verifyTodayForecastWidgetsAsStoreManager" />
                     <include name="verifySchedulesWidgetsAsStoreManager" />
                     <!--<include name="verifyComplianceViolationWidgetsAsStoreManager" /> -->
                     <include name="verifyNoContentOfSwapNCoverWidgetAsInternalAdmin" />
-                    <!--<include name="verifyTimesheetApprovalRateWidgetAsStoreManager" />-->
-                    <!--<include name="verifyTheContentOfSwapNCoverWidgetAsInternalAdmin" />-->
+                    <include name="verifyTimesheetApprovalRateWidgetAsStoreManager" />
+                    <include name="verifyTheContentOfSwapNCoverWidgetAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

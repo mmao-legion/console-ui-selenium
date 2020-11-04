@@ -3211,4 +3211,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void verifyTMNotSelected() throws Exception {
 
     }
+
+    @Override
+    public void verifyAlertMessageIsExpected(String messageExpected) throws Exception {
+
+    }
 }
