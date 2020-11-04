@@ -531,4 +531,59 @@ public class TeamTestKendraScott2 extends TestBase{
 		}
 		return currentDate;
 	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the edit mode in New User Profile page")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyEditModeInNewUserProfilePageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		String userName1 = teamPage.selectATeamMemberToViewProfile();
+
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		SimpleUtils.assertOnFail("Profile Page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
+		profileNewUIPage.clickOnEditUserProfilePencilIcon();
+		HashMap<String,String> values = profileNewUIPage.getValuesOfFields();
+		profileNewUIPage.verifyHRProfileSectionIsNotEditable();
+		profileNewUIPage.verifyLegionInfoSectionIsNotEditable();
+		List<String> testEmails = new ArrayList<>(Arrays.asList("123456", "@#$%%", "nora@legion.co"));
+		profileNewUIPage.verifyTheEmailFormatInProfilePage(testEmails);
+		profileNewUIPage.clickOnCancelUserProfileBtn();
+		profileNewUIPage.clickOnEditUserProfilePencilIcon();
+		HashMap<String,String> newValues = new HashMap<String, String>();
+		newValues.put("address1","12_-*&(ag");
+		newValues.put("address2","12_-*&(ag");
+		newValues.put("City","12_-*&(ag");
+		newValues.put("State","Texas");
+		newValues.put("Zip Code","12_-*&(ag");
+		newValues.put("Country","United States");
+		newValues.put("First Name","12_-*&(ag");
+		newValues.put("Last Name","12_-*&(ag");
+		newValues.put("Nickname","12_-*&(ag");
+		newValues.put("Phone","4567890097");
+		//String dynamicSuffix = String.valueOf(System.currentTimeMillis());
+		//newValues.put("E-mail",dynamicSuffix.toString()+"@legion.co");
+		profileNewUIPage.updateAllFields(newValues);
+		profileNewUIPage.clickOnSaveUserProfileBtn();
+		profileNewUIPage.clickOnEditUserProfilePencilIcon();
+		HashMap<String,String> valuesUpdated = profileNewUIPage.getValuesOfFields();
+		SimpleUtils.assertOnFail("profile page fail to update!",newValues.equals(valuesUpdated),true);
+		profileNewUIPage.updateAllFields(values);
+		profileNewUIPage.verifyManageBadgeBtn();
+		profileNewUIPage.verifySelectBadge();
+		profileNewUIPage.cancelBadgeBtn();
+		profileNewUIPage.verifyManageBadgeBtn();
+		profileNewUIPage.verifySelectBadge();
+		profileNewUIPage.saveBadgeBtn();
+		profileNewUIPage.clickOnSaveUserProfileBtn();
+		profileNewUIPage.clickOnEditUserProfilePencilIcon();
+		profileNewUIPage.clickOnCancelUserProfileBtn();
+		//profileNewUIPage.validateTheEditFunctionalityOnMyProfile();
+	}
 }
