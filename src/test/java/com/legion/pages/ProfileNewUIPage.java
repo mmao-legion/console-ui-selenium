@@ -214,4 +214,6 @@ public interface ProfileNewUIPage {
 	public void saveBadgeBtn() throws Exception;
 
 	public void cancelBadgeBtn() throws Exception;
+
+	public boolean ifMatchEmailRegex(String email) throws Exception;
 }

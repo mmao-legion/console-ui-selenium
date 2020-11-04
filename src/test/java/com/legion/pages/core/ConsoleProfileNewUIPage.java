@@ -2910,6 +2910,16 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 	}
 
+	@Override
+	public boolean ifMatchEmailRegex(String email) throws Exception {
+		String regex = "^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}" +
+				"\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,10}))$";
+		if (email.matches(regex)){
+			return true;
+		}
+		return false;
+	}
+
 	private void verifyAlertDialog() throws Exception{
 		if (isElementLoaded(alertDialog,10) && alertDialog.findElement(By.cssSelector(".lgn-alert-message.ng-scope.warning")).getText().contains("Email address invalid")){
 			clickOnOKBtnOnAlert();
@@ -3019,7 +3029,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")),5)) {
 				SimpleUtils.pass("Email field loaded!");
 				String email = profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).getAttribute("value");
-				//results.put("E-mail",profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).getAttribute("value"));
+				results.put("E-mail",profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).getAttribute("value"));
 				//verify it is a mandatory field.
 				profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).clear();
 				isRequiredErrorShowUp("E-Mail");
@@ -3135,19 +3145,6 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			} else {
 				SimpleUtils.fail("No Phone field!",false);
 			}
-
-			// Email
-			/*if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")),5)) {
-				profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).clear();
-				if (values.get("E-mail").equals("") && values.get("E-mail")==null){
-					profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).sendKeys("t1@legion.co");
-				} else {
-					profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).sendKeys(values.get("E-mail"));
-					SimpleUtils.pass("Profile Page: User Profile Contact 'Email' updated with value: '"+values.get("E-mail")+"'.");
-				}
-			} else {
-				SimpleUtils.fail("No Email field!",false);
-			}*/
 		}else{
 			SimpleUtils.fail("Profile section fail to load!",false);
 		}

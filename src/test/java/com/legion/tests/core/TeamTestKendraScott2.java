@@ -544,12 +544,21 @@ public class TeamTestKendraScott2 extends TestBase{
 		TeamPage teamPage = pageFactory.createConsoleTeamPage();
 		teamPage.goToTeam();
 		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		String userName1 = teamPage.selectATeamMemberToViewProfile();
+		teamPage.selectATeamMemberToViewProfile();
 
 		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 		SimpleUtils.assertOnFail("Profile Page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
 		profileNewUIPage.clickOnEditUserProfilePencilIcon();
 		HashMap<String,String> values = profileNewUIPage.getValuesOfFields();
+		while (!profileNewUIPage.ifMatchEmailRegex(values.get("E-mail"))){
+			profileNewUIPage.clickOnCancelUserProfileBtn();
+			teamPage.goToTeam();
+			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+			teamPage.selectATeamMemberToViewProfile();
+			SimpleUtils.assertOnFail("Profile Page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
+			profileNewUIPage.clickOnEditUserProfilePencilIcon();
+			values = profileNewUIPage.getValuesOfFields();
+		}
 		profileNewUIPage.verifyHRProfileSectionIsNotEditable();
 		profileNewUIPage.verifyLegionInfoSectionIsNotEditable();
 		List<String> testEmails = new ArrayList<>(Arrays.asList("123456", "@#$%%", "nora@legion.co"));
@@ -567,8 +576,7 @@ public class TeamTestKendraScott2 extends TestBase{
 		newValues.put("Last Name","12_-*&(ag");
 		newValues.put("Nickname","12_-*&(ag");
 		newValues.put("Phone","4567890097");
-		//String dynamicSuffix = String.valueOf(System.currentTimeMillis());
-		//newValues.put("E-mail",dynamicSuffix.toString()+"@legion.co");
+		newValues.put("E-mail",values.get("E-mail"));
 		profileNewUIPage.updateAllFields(newValues);
 		profileNewUIPage.clickOnSaveUserProfileBtn();
 		profileNewUIPage.clickOnEditUserProfilePencilIcon();
@@ -584,6 +592,5 @@ public class TeamTestKendraScott2 extends TestBase{
 		profileNewUIPage.clickOnSaveUserProfileBtn();
 		profileNewUIPage.clickOnEditUserProfilePencilIcon();
 		profileNewUIPage.clickOnCancelUserProfileBtn();
-		//profileNewUIPage.validateTheEditFunctionalityOnMyProfile();
 	}
 }
