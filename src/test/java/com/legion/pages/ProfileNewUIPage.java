@@ -207,7 +207,7 @@ public interface ProfileNewUIPage {
 
 	public void clickOnOKBtnOnAlert() throws Exception;
 
-	public void verifyManageBadgeBtn() throws Exception;
+	public boolean verifyManageBadgeBtn() throws Exception;
 
 	public void verifySelectBadge() throws Exception;
 

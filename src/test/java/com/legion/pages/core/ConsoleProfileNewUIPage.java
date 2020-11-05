@@ -2874,7 +2874,13 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				areListElementVisible(profileSection.findElements(By.cssSelector("sub-content-box[box-title=\"HR Profile Information\"] select")),5)){
 			SimpleUtils.fail("Fields in HR profile section should not be editable!",false);
 		} else {
-			SimpleUtils.pass("Fields in HR profile section are not editable!");
+			String s = profileSection.findElement(By.cssSelector("sub-content-box[box-title=\"HR Profile Information\"]")).getText();
+			if (s.contains("NAME")&&s.contains("JOB TITLE")&&s.contains("MANAGER NAME")&&s.contains("HOME STORE")&&s.contains("EMPLOYEE ID")&&s.contains("DATE HIRED")&&s.contains("EMPLOYMENT TYPE")
+					&&s.contains("HOURLY RATE")&&s.contains("EMPLOYMENT STATUS")&&s.contains("EXEMPT")&&s.contains("ADDRESS")&&s.contains("MINOR")&&s.contains("CONTACT INFORMATION")){
+				SimpleUtils.pass("Fields in HR profile section are existed and not editable!");
+			} else {
+				SimpleUtils.fail("Some fields you want in HR profile section are not loaded!",false);
+			}
 		}
 	}
 
@@ -2884,7 +2890,12 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				areListElementVisible(profileSection.findElements(By.cssSelector("sub-content-box[box-title=\"Legion Information\"] select")),5)){
 			SimpleUtils.fail("Fields in Legion Information section should not be editable!",false);
 		} else {
-			SimpleUtils.pass("Fields in Legion Information section are not editable!");
+			String s =profileSection.findElement(By.cssSelector("sub-content-box[box-title=\"Legion Information\"]")).getText();
+			if (s.contains("STATUS")&&s.contains("SCHEDULING POLICY GROUP")&&s.contains("TIMECLOCK PIN")){
+				SimpleUtils.pass("Fields in Legion Information section are existed and not editable!");
+			} else {
+				SimpleUtils.fail("Some fields you want in HR profile section are not loaded!",false);
+			}
 		}
 	}
 
@@ -3163,13 +3174,13 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy(css = ".lg-badges button")
 	private WebElement manageBadgeBtn;
 	@Override
-	public void verifyManageBadgeBtn() throws Exception {
+	public boolean verifyManageBadgeBtn() throws Exception {
 		if (isElementLoaded(manageBadgeBtn,10)){
 			scrollToElement(manageBadgeBtn);
 			click(manageBadgeBtn);
-			SimpleUtils.pass("manage button is clicked!");
+			return true;
 		} else {
-			SimpleUtils.fail("No manage badge button!", false);
+			return false;
 		}
 	}
 
