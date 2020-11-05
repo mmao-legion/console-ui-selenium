@@ -2265,7 +2265,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			Random random = new Random();
 			int randomIndex = random.nextInt(teamMemberNames.size());
 			teamMember = teamMemberNames.get(randomIndex).getText();
-			click(teamMemberNames.get(randomIndex));
+			clickTheElement(teamMemberNames.get(randomIndex));
 		} else {
 			SimpleUtils.fail("Team Members are failed to load!", true);
 		}

@@ -2559,12 +2559,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public void verifySelectTeamMembersOption() throws Exception {
-//  		waitForSeconds(4);
-        if (areListElementVisible(recommendedScrollTable, 5)) {
-            if (isElementEnabled(selectRecommendedOption)) {
+        if (isElementEnabled(selectRecommendedOption)) {
+            clickTheElement(selectRecommendedOption);
+            waitForSeconds(3);
+            if (areListElementVisible(recommendedScrollTable, 5)) {
                 String[] txtRecommendedOption = selectRecommendedOption.getText().replaceAll("\\p{P}", "").split(" ");
                 if (Integer.parseInt(txtRecommendedOption[2]) == 0) {
-                    searchText(propertySearchTeamMember.get("AssignTeamMember"));
+                    if (getDriver().getCurrentUrl().contains(parameterMap.get("KendraScott2_Enterprise"))) {
+                        searchText(propertySearchTeamMember.get("AssignTeamMember"));
+                    } else if (getDriver().getCurrentUrl().contains(parameterMap.get("Coffee_Enterprise"))) {
+                        searchText(propertySearchTeamMember.get("TeamLCMember"));
+                    }
                     SimpleUtils.pass(txtRecommendedOption[0] + " Option selected By default for Select Team member option");
                 } else {
                     boolean  scheduleBestMatchStatus = getScheduleBestMatchStatus();
@@ -2573,17 +2578,24 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     }else{
                         if(areListElementVisible(btnSearchteamMember,5)){
                             click(btnSearchteamMember.get(0));
-                            searchText(propertySearchTeamMember.get("AssignTeamMember"));
+                            if (getDriver().getCurrentUrl().contains(parameterMap.get("KendraScott2_Enterprise"))) {
+                                searchText(propertySearchTeamMember.get("AssignTeamMember"));
+                            } else if (getDriver().getCurrentUrl().contains(parameterMap.get("Coffee_Enterprise"))) {
+                                searchText(propertySearchTeamMember.get("TeamLCMember"));
+                            }
                         }
 
                     }
 
                 }
-            } else {
-                SimpleUtils.fail("Recommended option not available on page", false);
+            } else if (areListElementVisible(btnSearchteamMember,5)) {
+                click(btnSearchteamMember.get(0));
+                if (getDriver().getCurrentUrl().contains(parameterMap.get("KendraScott2_Enterprise"))) {
+                    searchText(propertySearchTeamMember.get("AssignTeamMember"));
+                } else if (getDriver().getCurrentUrl().contains(parameterMap.get("Coffee_Enterprise"))) {
+                    searchText(propertySearchTeamMember.get("TeamLCMember"));
+                }
             }
-        } else if (isElementLoaded(textSearch, 5)) {
-            searchText(propertySearchTeamMember.get("AssignTeamMember"));
         } else {
             SimpleUtils.fail("Select Team member option and Recommended options are not available on page", false);
         }
@@ -2720,14 +2732,23 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //                        setWorkerShiftDuration(searchWorkerSchShiftDuration.getText());
                         ScheduleStatus = true;
                         break;
-                    }
-                    click(radionBtnSearchTeamMembers.get(i));
-                    setWorkerRole(searchWorkerRole.get(i).getText());
-                    setWorkerLocation(searchWorkerLocation.get(i).getText());
+                    } else if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Will trigger")) {
+                        clickTheElement(radionBtnSearchTeamMembers.get(i));
+                        if (isElementLoaded(btnAssignAnyway, 10) && btnAssignAnyway.getText().toUpperCase().contains("ASSIGN ANYWAY")) {
+                            clickTheElement(btnAssignAnyway);
+                            waitUntilElementIsInVisible(btnAssignAnyway);
+                        }
+                        ScheduleStatus = true;
+                        break;
+                    } else {
+                        click(radionBtnSearchTeamMembers.get(i));
+                        setWorkerRole(searchWorkerRole.get(i).getText());
+                        setWorkerLocation(searchWorkerLocation.get(i).getText());
 //					setWorkerShiftTime(searchWorkerSchShiftTime.getText());
 //					setWorkerShiftDuration(searchWorkerSchShiftDuration.getText());
-                    ScheduleStatus = true;
-                    break;
+                        ScheduleStatus = true;
+                        break;
+                    }
                 }
             }
         }else{
@@ -2743,12 +2764,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             for(int i=0; i<scheduleStatus.size();i++){
                 if(scheduleBestMatchStatus.get(i).getText().contains("Best")
                         || scheduleStatus.get(i).getText().contains("Unknown") || scheduleStatus.get(i).getText().contains("Available")){
-                    if(searchWorkerName.get(i).getText().contains("Gordon.M") || searchWorkerName.get(i).getText().contains("Jayne.H")){
+                    //if(searchWorkerName.get(i).getText().contains("Gordon.M") || searchWorkerName.get(i).getText().contains("Jayne.H")){
                         click(radionBtnSelectTeamMembers.get(i));
                         setTeamMemberName(searchWorkerName.get(i).getText());
                         ScheduleBestMatchStatus = true;
                         break;
-                    }
+                    //}
                 }
             }
         }else{
@@ -2774,7 +2795,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void clickOnOfferOrAssignBtn() throws Exception{
         if(isElementLoaded(btnOffer,5)){
             scrollToElement(btnOffer);
+            waitForSeconds(3);
             clickTheElement(btnOffer);
+            if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().toUpperCase().equals("ASSIGN ANYWAY")) {
+                clickTheElement(btnAssignAnyway);
+            }
         }else{
             SimpleUtils.fail("Offer Or Assign Button is not clickable", false);
         }
@@ -9641,19 +9666,22 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement btnDelete ;
 
     @FindBy(css = "div[ng-repeat=\"shift in filteredShifts\"]")
+    private List<WebElement> shiftsInDayViewNew;
+    @FindBy(css = ".sch-day-view-shift")
     private List<WebElement> shiftsInDayView;
 
     //update by haya
     public void validateXButtonForEachShift() throws Exception{
         String deletedInfo = "Deleted";
-        int shiftCount = shiftsInDayView.size();
-        if (areListElementVisible(shiftsInDayView, 5)) {
-            for (int i = 0; i < shiftsInDayView.size(); i++) {
+        int shiftCount = 0;
+        if (areListElementVisible(shiftsInDayViewNew, 5)) {
+            shiftCount = shiftsInDayViewNew.size();
+            for (int i = 0; i < shiftsInDayViewNew.size(); i++) {
                 List<WebElement> tempShifts = getDriver().findElements(By.cssSelector("div[ng-repeat=\"shift in filteredShifts\"]"));
                 click(tempShifts.get(i));
                 if (isElementEnabled(btnDelete, 5)) {
                     SimpleUtils.pass(": X button is present for selected Shift");
-                    click(btnDelete);
+                    clickTheElement(btnDelete);
                     // To avoid stale element issue
                     tempShifts = getDriver().findElements(By.cssSelector("div[ng-repeat=\"shift in filteredShifts\"]"));
                     String deletedShiftInfo = tempShifts.get(i).findElement(By.cssSelector("div.sch-day-view-right-gutter-text")).getText();
@@ -9666,6 +9694,27 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     break;
                 } else SimpleUtils.fail("X button is not present for ", true);
             }
+        } else if (areListElementVisible(shiftsInDayView, 5)) {
+            shiftCount = shiftsInDayView.size();
+            for (int i = 0; i < shiftsInDayView.size(); i++) {
+                List<WebElement> tempShifts = getDriver().findElements(By.cssSelector(".sch-day-view-shift"));
+                moveToElementAndClick(tempShifts.get(i));
+                if (isElementEnabled(btnDelete, 5)) {
+                    SimpleUtils.pass(": X button is present for selected Shift");
+                    clickTheElement(btnDelete);
+                    // To avoid stale element issue
+                    String deletedShiftInfo = getDriver().findElements(By.cssSelector("div.sch-day-view-right-gutter-text")).get(i).getText();
+                    if (deletedShiftInfo.contains(deletedInfo)) {
+                        SimpleUtils.pass("can delete shift by X button");
+                        break;
+                    } else {
+                        SimpleUtils.fail("delete shift failed by X button, no deleted guter text!", true);
+                    }
+                    break;
+                } else SimpleUtils.fail("X button is not present for ", true);
+            }
+        } else {
+            SimpleUtils.fail("There is no shifts in day view!", false);
         }
         saveSchedule();
         int shiftCountAftDelete =  scheduleShiftsRows.size();
@@ -9673,7 +9722,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.pass("delete shift successfully by X button");
 
         }else
-            SimpleUtils.fail("delete shift failed by X button",true);
+            SimpleUtils.fail("delete shift failed by X button",false);
     }
 
     @Override

@@ -8,6 +8,15 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
+    <test name="Prepare Settings Test">
+        <classes>
+            <class name="com.legion.tests.core.PrepareSettingsTest">
+                <methods>
+                    <include name="prepareSettingsInControlsAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 
      <test name="Schedule Test">
          <classes>
