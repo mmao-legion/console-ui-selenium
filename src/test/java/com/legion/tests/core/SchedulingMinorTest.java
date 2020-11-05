@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import com.legion.pages.DashboardPage;
+import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.ProfileNewUIPage;
 import com.legion.pages.SchedulePage;
 import com.legion.tests.TestBase;
@@ -11,6 +12,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -38,7 +40,9 @@ public class SchedulingMinorTest extends TestBase {
     public void verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeDistrict("Demo District");
+        locationSelectorPage.changeLocation("Santana Row");
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         schedulePage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -47,6 +51,7 @@ public class SchedulingMinorTest extends TestBase {
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
                 schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
+        schedulePage.navigateToNextWeek();
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
         if (isWeekGenerated){
             schedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -62,18 +67,74 @@ public class SchedulingMinorTest extends TestBase {
         //Create new shift for TM1
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
-        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME_2"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME_2"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-        schedulePage.clearAllSelectedDays();
-        schedulePage.selectDaysByIndex(1, 1, 1);
+
+        //set shift time as 10:00 AM - 1:00 PM
+        schedulePage.moveSliderAtCertainPoint("1", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+
         schedulePage.selectWorkRole("Lift Maintenance");
         schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
         schedulePage.clickOnCreateOrNextBtn();
         schedulePage.searchText(firstNameOfTM1 + " " + lastNameOfTM.substring(0,1));
-        schedulePage.getTheMessageOfTMScheduledStatus();
+        SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting",
+                !schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor"), false);
         schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
-        schedulePage.clickOnAssignAnywayButton();
-        schedulePage.clickOnOfferOrAssignBtn();
+        if(schedulePage.ifWarningModeDisplay()){
+            String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
+            if (!warningMessage.contains("Minor")){
+                SimpleUtils.pass("There is no minor warning message display when shift is not avoid the minor setting");
+            } else
+                SimpleUtils.fail("There should no minor warning message display when shift is not avoid the minor setting", false);
+            schedulePage.clickOnAssignAnywayButton();
+        } else
+            SimpleUtils.pass("There is no minor warning message display when shift is not avoid the minor setting");
 
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+
+        //check the violation in i icon popup of new create shift
+        WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        String test = schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString();
+        if (newAddedShift != null) {
+            SimpleUtils.assertOnFail("Get new added shift failed",!schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor"), false);
+        } else
+            SimpleUtils.fail("Get new added shift failed", false);
+
+        //Create new shift for TM2
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+
+        //set shift time as 10:00 AM - 1:00 PM
+        schedulePage.moveSliderAtCertainPoint("1", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+
+        schedulePage.selectWorkRole("Lift Maintenance");
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchText(firstNameOfTM2 + " " + lastNameOfTM.substring(0,1));
+        SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting",
+                !schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor"), false);
+        schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
+        if(schedulePage.ifWarningModeDisplay()){
+            String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
+            if (!warningMessage.contains("Minor")){
+                SimpleUtils.pass("There is no minor warning message display when shift is not avoid the minor setting");
+            } else
+                SimpleUtils.fail("There should no minor warning message display when shift is not avoid the minor setting", false);
+            schedulePage.clickOnAssignAnywayButton();
+        } else
+            SimpleUtils.pass("There is no minor warning message display when shift is not avoid the minor setting");
+
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+
+        //check the violation in i icon popup of new create shift
+        newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM2).get(0));
+        if (newAddedShift != null) {
+            SimpleUtils.assertOnFail("Get new added shift failed",
+                    !schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor"), false);
+        } else
+            SimpleUtils.fail("Get new added shift failed", false);
     }
 }

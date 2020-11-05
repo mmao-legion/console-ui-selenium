@@ -3226,4 +3226,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void clickOnAssignAnywayButton() throws Exception{
 
     }
+
+    @Override
+    public WebElement getTheShiftByIndex(int index) throws Exception {
+        return null;
+    }
 }

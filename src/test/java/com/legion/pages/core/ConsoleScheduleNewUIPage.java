@@ -12159,5 +12159,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Assign Team Member: 'ASSIGN ANYWAY' button fail to load!", false);
         }
     }
+
+
+    @Override
+    public WebElement getTheShiftByIndex(int index) throws Exception {
+        WebElement shift = null;
+        if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
+            shift = weekShifts.get(index);
+        } else {
+            SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
+        }
+        return shift;
+    }
 }
 

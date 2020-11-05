@@ -518,4 +518,5 @@ public interface SchedulePage {
 	public void verifyAlertMessageIsExpected(String messageExpected) throws Exception;
 	public void clickOnRadioButtonOfSearchedTeamMemberByName(String name) throws Exception;
 	public void clickOnAssignAnywayButton() throws Exception;
+	public WebElement getTheShiftByIndex(int index) throws Exception;
 }
