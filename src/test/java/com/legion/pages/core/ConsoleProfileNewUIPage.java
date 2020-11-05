@@ -239,7 +239,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public boolean isProfilePageLoaded() throws Exception
 	{
-		if(isElementLoaded(profilePageSection)) {
+		if(isElementLoaded(profileSection)) {
 			return true;
 		}
 		return false;
@@ -689,9 +689,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void clickOnCancelUserProfileBtn() throws Exception {
-		if(isElementLoaded(userProfileCancelBtn))
-			click(userProfileCancelBtn);
-		if(!isElementLoaded(profileEditForm))
+		if(isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Cancel\"]")),5))
+			click(profileSection.findElement(By.xpath("//span[text()=\"Cancel\"]")));
+		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]"))))
 			SimpleUtils.pass("Profile Page: User profile Cancel Button clicked.");
 		else
 			SimpleUtils.fail("Profile Page: unable to cancel edit User profile popup.", false);
@@ -2843,4 +2843,386 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 	}
 
+	//added by Haya
+	@FindBy(css = "span[ng-if=\"$ctrl.input.$error.required\"]")
+	private List<WebElement> mandatoryFieldsErrorMessage;
+	@Override
+	public void isRequiredErrorShowUp(String field) throws Exception {
+		if (areListElementVisible(mandatoryFieldsErrorMessage,10) && mandatoryFieldsErrorMessage.size()>0){
+			for (WebElement element: mandatoryFieldsErrorMessage){
+				if (element.getText().contains(field) && isSaveBtnDisabled()){
+					SimpleUtils.pass(field+" is a mandatory field!");
+				}
+			}
+		} else {
+			SimpleUtils.fail("No mandatory fields!", false);
+		}
+	}
+
+	@Override
+	public boolean isSaveBtnDisabled() throws Exception {
+		if(areListElementVisible(profileSection.findElements(By.cssSelector("button[disabled=\"disabled\"]")), 5)){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public void verifyHRProfileSectionIsNotEditable() throws Exception {
+		if (areListElementVisible(profileSection.findElements(By.cssSelector("sub-content-box[box-title=\"HR Profile Information\"] input")),5) ||
+				areListElementVisible(profileSection.findElements(By.cssSelector("sub-content-box[box-title=\"HR Profile Information\"] select")),5)){
+			SimpleUtils.fail("Fields in HR profile section should not be editable!",false);
+		} else {
+			String s = profileSection.findElement(By.cssSelector("sub-content-box[box-title=\"HR Profile Information\"]")).getText();
+			if (s.contains("NAME")&&s.contains("JOB TITLE")&&s.contains("MANAGER NAME")&&s.contains("HOME STORE")&&s.contains("EMPLOYEE ID")&&s.contains("DATE HIRED")&&s.contains("EMPLOYMENT TYPE")
+					&&s.contains("HOURLY RATE")&&s.contains("EMPLOYMENT STATUS")&&s.contains("EXEMPT")&&s.contains("ADDRESS")&&s.contains("MINOR")&&s.contains("CONTACT INFORMATION")){
+				SimpleUtils.pass("Fields in HR profile section are existed and not editable!");
+			} else {
+				SimpleUtils.fail("Some fields you want in HR profile section are not loaded!",false);
+			}
+		}
+	}
+
+	@Override
+	public void verifyLegionInfoSectionIsNotEditable() throws Exception {
+		if (areListElementVisible(profileSection.findElements(By.cssSelector("sub-content-box[box-title=\"Legion Information\"] input")),5) ||
+				areListElementVisible(profileSection.findElements(By.cssSelector("sub-content-box[box-title=\"Legion Information\"] select")),5)){
+			SimpleUtils.fail("Fields in Legion Information section should not be editable!",false);
+		} else {
+			String s =profileSection.findElement(By.cssSelector("sub-content-box[box-title=\"Legion Information\"]")).getText();
+			if (s.contains("STATUS")&&s.contains("SCHEDULING POLICY GROUP")&&s.contains("TIMECLOCK PIN")){
+				SimpleUtils.pass("Fields in Legion Information section are existed and not editable!");
+			} else {
+				SimpleUtils.fail("Some fields you want in HR profile section are not loaded!",false);
+			}
+		}
+	}
+
+	@Override
+	public void verifyTheEmailFormatInProfilePage(List<String> testEmails) throws Exception {
+		String regex = "^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}" +
+				"\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,10}))$";
+		String errorMessage = "Email is invalid.";
+		if (isElementEnabled(profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")), 5) && testEmails.size() > 0) {
+			for (String testEmail : testEmails) {
+				profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).clear();
+				profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).sendKeys(testEmail);
+				if (!testEmail.matches(regex)) {
+					if(isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")), 5)){
+						scrollToElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
+						clickTheElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
+						verifyAlertDialog();
+					}
+				}
+			}
+		}else {
+			SimpleUtils.fail("Email Input failed to load!", true);
+		}
+	}
+
+	@Override
+	public boolean ifMatchEmailRegex(String email) throws Exception {
+		String regex = "^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}" +
+				"\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,10}))$";
+		if (email.matches(regex)){
+			return true;
+		}
+		return false;
+	}
+
+	private void verifyAlertDialog() throws Exception{
+		if (isElementLoaded(alertDialog,10) && alertDialog.findElement(By.cssSelector(".lgn-alert-message.ng-scope.warning")).getText().contains("Email address invalid")){
+			clickOnOKBtnOnAlert();
+			SimpleUtils.pass("Email is valid so can not save successfully!");
+		} else {
+			SimpleUtils.fail("No alert dialog for invalid email format!",false);
+		}
+	}
+
+	@Override
+	public HashMap<String, String> getValuesOfFields() throws Exception{
+		waitForSeconds(3);
+		HashMap<String, String> results= new HashMap<String,String>();
+		if (isElementLoaded(profileSection, 5)) {
+			// Home Address Street Address 1
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")), 5)) {
+				SimpleUtils.pass("Home Address loaded!");
+				results.put("address1",profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).getAttribute("value"));
+			} else {
+				SimpleUtils.fail("No Home Address field!",false);
+			}
+
+			// Home Address Street Address 2
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")), 5)) {
+				SimpleUtils.pass("Home address2 loaded!");
+				results.put("address2",profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).getAttribute("value"));
+			} else {
+				SimpleUtils.fail("No Home address2 field!",false);
+			}
+
+			// City
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")), 5)) {
+				SimpleUtils.pass("City loaded!");
+				results.put("City",profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).getAttribute("value"));
+			} else {
+				SimpleUtils.fail("No City field!",false);
+			}
+
+			// State
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
+				SimpleUtils.pass("State loaded!");
+				Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")));
+				results.put("State",statesDropdown.getFirstSelectedOption().getText());
+				//selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), state);
+			} else {
+				SimpleUtils.fail("No State field!",false);
+			}
+
+			// Zip Code
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")), 5)) {
+				SimpleUtils.pass("Zip Code loaded!");
+				results.put("Zip Code",profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).getAttribute("value"));
+			} else {
+				SimpleUtils.fail("No Zip Code field!",false);
+			}
+
+			// Country
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Country\"] select")), 5)) {
+				SimpleUtils.pass("Country loaded!");
+				Select countryDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"Country\"] select")));
+				results.put("Country",countryDropdown.getFirstSelectedOption().getText());
+			} else {
+				SimpleUtils.fail("No Country field!",false);
+			}
+
+			//First Name
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")),5)) {
+				SimpleUtils.pass("First name field loaded!");
+				results.put("First Name",profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")).getAttribute("value"));
+				//verify it is a mandatory field.
+				profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")).clear();
+				isRequiredErrorShowUp("First Name");
+				profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")).sendKeys(results.get("First Name"));
+			} else {
+				SimpleUtils.fail("No first name field!",false);
+			}
+
+			// Last Name
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")),5)) {
+				SimpleUtils.pass("Last name field loaded!");
+				results.put("Last Name",profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")).getAttribute("value"));
+				//verify it is a mandatory field.
+				profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")).clear();
+				isRequiredErrorShowUp("Last Name");
+				profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")).sendKeys(results.get("Last Name"));
+			} else {
+				SimpleUtils.fail("No last name field!",false);
+			}
+
+			// Nick Name
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Nickname\"] input")),5)) {
+				SimpleUtils.pass("Nick name field loaded!");
+				results.put("Nickname",profileSection.findElement(By.cssSelector("input-field[label=\"Nickname\"] input")).getAttribute("value"));
+			} else {
+				SimpleUtils.fail("No nick name field!",false);
+			}
+
+			// Phone
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Phone\"] input")),5)) {
+				SimpleUtils.pass("Phone field loaded!");
+				results.put("Phone",profileSection.findElement(By.cssSelector("input-field[label=\"Phone\"] input")).getAttribute("value"));
+			} else {
+				SimpleUtils.fail("No Phone field!",false);
+			}
+
+			// Email
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")),5)) {
+				SimpleUtils.pass("Email field loaded!");
+				String email = profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).getAttribute("value");
+				results.put("E-mail",profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).getAttribute("value"));
+				//verify it is a mandatory field.
+				profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).clear();
+				isRequiredErrorShowUp("E-Mail");
+				profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).sendKeys(email);
+			} else {
+				SimpleUtils.fail("No Email field!",false);
+			}
+		}else{
+			SimpleUtils.fail("Profile section fail to load!",false);
+		}
+		return results;
+	}
+
+	@Override
+	public void updateAllFields(HashMap<String, String> values) throws Exception {
+		if (isElementLoaded(profileSection, 5)) {
+			// Home Address Street Address 1
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")), 5)) {
+				profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).clear();
+				profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).sendKeys(values.get("address1"));
+				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' updated with value: '"
+						+ values.get("address1") + "'.");
+			} else {
+				SimpleUtils.fail("No Home Address field!",false);
+			}
+
+			// Home Address Street Address 2
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")), 5)) {
+				profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).clear();
+				profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).sendKeys(values.get("address2"));
+				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' updated with value: '"
+						+ values.get("address2") + "'.");
+			} else {
+				SimpleUtils.fail("No Home address2 field!",false);
+			}
+
+			// City
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")), 5)) {
+				profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).clear();
+				profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).sendKeys(values.get("City"));
+				SimpleUtils.pass("Profile Page: User Profile Home Address 'City' updated with value: '" + values.get("City") + "'.");
+			} else {
+				SimpleUtils.fail("No City field!",false);
+			}
+
+			// State
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
+				selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), values.get("State"));
+				SimpleUtils.pass("Profile Page: User Profile 'State' updated with value: '" + values.get("State") + "'.");
+			} else {
+				SimpleUtils.fail("No State field!",false);
+			}
+
+			// Zip Code
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")), 5)) {
+				profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).clear();
+				profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).sendKeys(values.get("Zip Code"));
+				SimpleUtils.pass("Profile Page: User Profile 'Zip' updated with value: '" + values.get("Zip Code") + "'.");
+			} else {
+				SimpleUtils.fail("No Zip Code field!",false);
+			}
+
+			// Country
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Country\"] select")), 5)) {
+				if (!values.get("Country").equals("")){
+					selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"Country\"] select")), values.get("Country"));
+					SimpleUtils.pass("Profile Page: User Profile 'Country' updated with value: '" + values.get("Country") + "'.");
+				}
+			} else {
+				SimpleUtils.fail("No Country field!",false);
+			}
+
+			//First Name
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")),5)) {
+				profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")).clear();
+				if (values.get("First Name").equals("") && values.get("First Name")==null){
+					profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")).sendKeys("First");
+				} else {
+					profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")).sendKeys(values.get("First Name"));
+					SimpleUtils.pass("Profile Page: User Profile 'First Name' updated with value: '"+values.get("First Name")+"'.");
+				}
+			} else {
+				SimpleUtils.fail("No first name field!",false);
+			}
+
+			// Last Name
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")),5)) {
+				profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")).clear();
+				if (values.get("First Name").equals("") && values.get("First Name")==null){
+					profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")).sendKeys("Last");
+				} else {
+					profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")).sendKeys(values.get("Last Name"));
+					SimpleUtils.pass("Profile Page: User Profile 'Last Name' updated with value: '"+values.get("Last Name")+"'.");
+				}
+			} else {
+				SimpleUtils.fail("No last name field!",false);
+			}
+
+			// Nick Name
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Nickname\"] input")),5)) {
+				profileSection.findElement(By.cssSelector("input-field[label=\"Nickname\"] input")).clear();
+				profileSection.findElement(By.cssSelector("input-field[label=\"Nickname\"] input")).sendKeys(values.get("Nickname"));
+				SimpleUtils.pass("Profile Page: User Profile 'Nick Name' updated with value: '"+values.get("Nickname")+"'.");
+			} else {
+				SimpleUtils.fail("No nick name field!",false);
+			}
+
+			// Phone
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Phone\"] input")),5)) {
+				profileSection.findElement(By.cssSelector("input-field[label=\"Phone\"] input")).clear();
+				profileSection.findElement(By.cssSelector("input-field[label=\"Phone\"] input")).sendKeys(values.get("Phone"));
+				SimpleUtils.pass("Profile Page: User Profile Contact 'Phone' updated with value: '"+values.get("Phone")+"'.");
+			} else {
+				SimpleUtils.fail("No Phone field!",false);
+			}
+		}else{
+			SimpleUtils.fail("Profile section fail to load!",false);
+		}
+	}
+
+	@Override
+	public void clickOnOKBtnOnAlert() throws Exception {
+		if (isElementLoaded(alertDialog.findElement(By.cssSelector("button")),5)){
+			click(alertDialog.findElement(By.cssSelector("button")));
+			SimpleUtils.pass("OK button clicked!");
+		} else {
+			SimpleUtils.fail("No OK button!",false);
+		}
+	}
+
+	@FindBy(css = ".lg-badges button")
+	private WebElement manageBadgeBtn;
+	@Override
+	public boolean verifyManageBadgeBtn() throws Exception {
+		if (isElementLoaded(manageBadgeBtn,10)){
+			scrollToElement(manageBadgeBtn);
+			click(manageBadgeBtn);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@FindBy(css = "div.lgnCheckBox")
+	private List<WebElement> checkBoxOfBadge;
+	@Override
+	public void verifySelectBadge() throws Exception {
+		if (areListElementVisible(checkBoxOfBadge,5)){
+			for (WebElement element: checkBoxOfBadge){
+				if (element.getAttribute("class").contains("checked")){
+					click(element);
+				}
+			}
+			//select the first one
+			click(checkBoxOfBadge.get(0));
+			SimpleUtils.pass("The first badge is selected!");
+		} else {
+			SimpleUtils.fail("No checkbox for badge!",false);
+		}
+	}
+
+	@FindBy(css = ".lgn-action-button-success")
+	private WebElement saveBtnForBadge;
+	@Override
+	public void saveBadgeBtn() throws Exception {
+		if (isElementLoaded(saveBtnForBadge,5)){
+			click(saveBtnForBadge);
+			SimpleUtils.pass("Save button is clicked!");
+		}else{
+			SimpleUtils.fail("Save button is not loaded!", false);
+		}
+	}
+
+	@FindBy(css = ".lgn-action-button-default")
+	private WebElement cancelBtnForBadge;
+	@Override
+	public void cancelBadgeBtn() throws Exception {
+		if (isElementLoaded(cancelBtnForBadge,5)){
+			click(cancelBtnForBadge);
+			SimpleUtils.pass("Save button is clicked!");
+		}else{
+			SimpleUtils.fail("Save button is not loaded!", false);
+		}
+	}
 }

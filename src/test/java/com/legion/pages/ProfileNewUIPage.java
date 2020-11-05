@@ -190,4 +190,30 @@ public interface ProfileNewUIPage {
 	public void verifySyncTMInfoButtonIsLoaded() throws Exception;
 
 	public void verifyContentsInActionsSectionInTMView() throws Exception;
+
+	public void isRequiredErrorShowUp(String field) throws Exception;
+
+	public boolean isSaveBtnDisabled() throws Exception;
+
+	public void verifyHRProfileSectionIsNotEditable() throws Exception;
+
+	public void verifyLegionInfoSectionIsNotEditable() throws Exception;
+
+	public void verifyTheEmailFormatInProfilePage(List<String> testEmails) throws Exception;
+
+	public HashMap<String, String> getValuesOfFields() throws Exception;
+
+	public void updateAllFields(HashMap<String, String> values) throws Exception;
+
+	public void clickOnOKBtnOnAlert() throws Exception;
+
+	public boolean verifyManageBadgeBtn() throws Exception;
+
+	public void verifySelectBadge() throws Exception;
+
+	public void saveBadgeBtn() throws Exception;
+
+	public void cancelBadgeBtn() throws Exception;
+
+	public boolean ifMatchEmailRegex(String email) throws Exception;
 }

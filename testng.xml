@@ -91,6 +91,7 @@
                     <include name="verifyTheTeamFunctionalityInActivate" />
                     <include name="verifyTheTeamFunctionalityInTerminate" />
                     <include name="verifyTheTeamFunctionalityInCoverageAsStoreManager" />
+                    <include name="verifyEditModeInNewUserProfilePageAsInternalAdmin" />
 <!--                    <include name="verifyTheTeamFunctionalityInTimeOffAsInternalAdmin" />-->
                 </methods>
             </class>
@@ -282,6 +283,16 @@
                     <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
                     <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
                     <include name="verifySwapWarningModelForRoleViolationConfigNoAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Scheduling Minor Test">
+        <classes>
+            <class name="com.legion.tests.core.SchedulingMinorTest">
+                <methods>
+                    <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
