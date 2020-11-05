@@ -516,4 +516,6 @@ public interface SchedulePage {
 	public void verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished() throws Exception;
 	public void verifyTMNotSelected() throws Exception;
 	public void verifyAlertMessageIsExpected(String messageExpected) throws Exception;
+	public void clickOnRadioButtonOfSearchedTeamMemberByName(String name) throws Exception;
+	public void clickOnAssignAnywayButton() throws Exception;
 }

@@ -12075,7 +12075,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    @FindBy(css = "[ng-class=\"swapStatusClass(worker)\"]")
+    @FindBy(css = "[search-results=\"workerSearchResult\"] [ng-class=\"swapStatusClass(worker)\"]")
     private WebElement tmScheduledStatus;
 
     @Override
@@ -12124,6 +12124,39 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             } else {
                 SimpleUtils.fail("TM is selected!",false);
             }
+        }
+    }
+
+    @Override
+    public void clickOnRadioButtonOfSearchedTeamMemberByName(String name) throws Exception {
+        if (areListElementVisible(searchResults, 15)) {
+            for (WebElement searchResult : searchResults) {
+                WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-name"));
+                WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
+                if (workerName != null && optionCircle != null) {
+                    if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.trim().toLowerCase())) {
+                        click(optionCircle);
+                        SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                    }
+                }else {
+                    SimpleUtils.fail("Worker name or option circle not loaded Successfully!", false);
+                }
+            }
+        }else {
+            SimpleUtils.fail("Failed to find the team member!", false);
+        }
+
+
+    }
+
+    @Override
+    public void clickOnAssignAnywayButton() throws Exception {
+        waitForSeconds(2);
+        if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().equalsIgnoreCase("ASSIGN ANYWAY")) {
+            click(btnAssignAnyway);
+            SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
+        } else{
+            SimpleUtils.fail("Assign Team Member: 'ASSIGN ANYWAY' button fail to load!", false);
         }
     }
 }

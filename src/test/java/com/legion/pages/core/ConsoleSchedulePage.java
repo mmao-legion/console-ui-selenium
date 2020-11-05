@@ -3216,4 +3216,14 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void verifyAlertMessageIsExpected(String messageExpected) throws Exception {
 
     }
+
+    @Override
+    public void clickOnRadioButtonOfSearchedTeamMemberByName(String name) throws Exception{
+
+    }
+
+    @Override
+    public void clickOnAssignAnywayButton() throws Exception{
+
+    }
 }
