@@ -275,4 +275,6 @@ public interface ControlsNewUIPage {
 	public void turnONClopeningToggleAndSetHours(int clopeningHours) throws Exception;
 	public void selectClopeningHours(int clopeningHour) throws Exception;
 	public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception;
+	public void setSchedulingMinorRuleFor14N15(String from, String to, String parameter1, String parameter2, String parameter3, String parameter4) throws Exception;
+	public void setSchedulingMinorRuleFor16N17(String from, String to, String parameter1, String parameter2, String parameter3, String parameter4) throws Exception;
 }

@@ -5498,4 +5498,270 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 	}
 
+	@FindBy(css = "form-section[form-title=\"Scheduling Minors (Ages 14 & 15)\"]")
+	private WebElement schedulingMinorRuleFor14N15;
+	@FindBy(css = "form-section[form-title=\"Scheduling Minors (Ages 16 & 17)\"]")
+	private WebElement schedulingMinorRuleFor16N17;
+
+	/*
+	 * Parameters:
+	 * from, to: A Minor may be scheduled during $from AM to $to PM only.
+	 * parameter1: A Minor’s schedule must not exceed 30 hours in a week.
+	 * parameter2: A Minor’s schedule must not exceed 6 hours in a weekend and holiday.
+	 * parameter3: A Minor’s schedule must not exceed 3 hours in a weekday.
+	 * parameter4: A Minor must not be scheduled more than 6 days a week.
+	 */
+	@Override
+	public void setSchedulingMinorRuleFor14N15(String from, String to, String parameter1, String parameter2, String parameter3, String parameter4) throws Exception {
+		if (isElementLoaded(schedulingMinorRuleFor14N15,5) && schedulingMinorRuleFor14N15.findElements(By.cssSelector("div.lg-question-input")).size()==4){
+			List<WebElement> parameters = schedulingMinorRuleFor14N15.findElements(By.cssSelector("div.lg-question-input"));
+			if (isElementLoaded(schedulingMinorRuleFor14N15.findElement(By.cssSelector("input-field[label=\"From\"] select")),5)){
+				selectByVisibleText(schedulingMinorRuleFor14N15.findElement(By.cssSelector("input-field[label=\"From\"] select")), from);
+				SimpleUtils.pass("A Minor may be scheduled during X AM to X PM only. updated From with value: '" + from);
+			} else {
+				SimpleUtils.fail("Setting:\"A Minor may be scheduled during X AM to X PM only.\" fail to load!", false);
+			}
+			if (isElementLoaded(schedulingMinorRuleFor14N15.findElement(By.cssSelector("input-field[label=\"To\"] select")),5)){
+				selectByVisibleText(schedulingMinorRuleFor14N15.findElement(By.cssSelector("input-field[label=\"To\"] select")), to);
+				SimpleUtils.pass("A Minor may be scheduled during X AM to X PM only. updated To with value: '" + to);
+			} else {
+				SimpleUtils.fail("Setting:\"A Minor may be scheduled during X AM to X PM only.\" fail to load!", false);
+			}
+			if (parameter1.equalsIgnoreCase("close")){
+				if (parameters.get(0).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-not-empty")){
+					click(parameters.get(0).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned off: A Minor’s schedule must not exceed 30 hours in a week.");
+				}
+			} else {
+				if (parameters.get(0).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-empty")){
+					click(parameters.get(0).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned on: A Minor’s schedule must not exceed 30 hours in a week.");
+					parameters.get(0).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(0).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(parameter1);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter1+": A Minor’s schedule must not exceed 30 hours in a week.");
+				} else {
+					parameters.get(0).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(0).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(parameter1);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter1+": A Minor’s schedule must not exceed 30 hours in a week.");
+				}
+			}
+			if (parameter2.equalsIgnoreCase("close")){
+				if (parameters.get(1).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-not-empty")){
+					click(parameters.get(1).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned off: A Minor’s schedule must not exceed 6 hours in a weekend and holiday.");
+				}
+			} else {
+				if (parameters.get(1).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-empty")){
+					click(parameters.get(1).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned on: A Minor’s schedule must not exceed 6 hours in a weekend and holiday.");
+					parameters.get(1).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(1).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(parameter2);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter2+": A Minor’s schedule must not exceed 6 hours in a weekend and holiday.");
+				} else {
+					parameters.get(1).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(1).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(parameter2);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter2+": A Minor’s schedule must not exceed 6 hours in a weekend and holiday.");
+				}
+			}
+			if (parameter3.equalsIgnoreCase("close")){
+				if (parameters.get(2).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-not-empty")){
+					click(parameters.get(2).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned off: A Minor’s schedule must not exceed 3 hours in a weekday.");
+				}
+			} else {
+				if (parameters.get(2).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-empty")){
+					click(parameters.get(2).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned on: A Minor’s schedule must not exceed 3 hours in a weekday.");
+					parameters.get(2).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(2).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(parameter3);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter3+": A Minor’s schedule must not exceed 3 hours in a weekday.");
+				} else {
+					parameters.get(2).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(2).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(parameter3);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter3+": A Minor’s schedule must not exceed 3 hours in a weekday.");
+				}
+			}
+			if (parameter4.equalsIgnoreCase("close")){
+				if (parameters.get(3).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-not-empty")){
+					click(parameters.get(3).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned off: A Minor must not be scheduled more than 6 days a week.");
+				}
+			} else {
+				if (parameters.get(3).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-empty")){
+					click(parameters.get(3).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned on: A Minor must not be scheduled more than 6 days a week.");
+					parameters.get(3).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(3).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(parameter4);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter4+": A Minor must not be scheduled more than 6 days a week.");
+				} else {
+					parameters.get(3).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(3).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(parameter4);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter4+": A Minor must not be scheduled more than 6 days a week.");
+				}
+			}
+
+
+		} else {
+			SimpleUtils.fail("No scheduling rule for Minors!",false);
+		}
+	}
+
+	@Override
+	public void setSchedulingMinorRuleFor16N17(String from, String to, String parameter1, String parameter2, String parameter3, String parameter4) throws Exception {
+		if (isElementLoaded(schedulingMinorRuleFor16N17,5) && schedulingMinorRuleFor16N17.findElements(By.cssSelector("div.lg-question-input")).size()==4){
+			List<WebElement> parameters = schedulingMinorRuleFor16N17.findElements(By.cssSelector("div.lg-question-input"));
+			if (isElementLoaded(schedulingMinorRuleFor16N17.findElement(By.cssSelector("input-field[label=\"From\"] select")),5)){
+				selectByVisibleText(schedulingMinorRuleFor16N17.findElement(By.cssSelector("input-field[label=\"From\"] select")), from);
+				SimpleUtils.pass("A Minor may be scheduled during X AM to X PM only. updated From with value: '" + from);
+			} else {
+				SimpleUtils.fail("Setting:\"A Minor may be scheduled during X AM to X PM only.\" fail to load!", false);
+			}
+			if (isElementLoaded(schedulingMinorRuleFor16N17.findElement(By.cssSelector("input-field[label=\"To\"] select")),5)){
+				selectByVisibleText(schedulingMinorRuleFor16N17.findElement(By.cssSelector("input-field[label=\"To\"] select")), to);
+				SimpleUtils.pass("A Minor may be scheduled during X AM to X PM only. updated To with value: '" + to);
+			} else {
+				SimpleUtils.fail("Setting:\"A Minor may be scheduled during X AM to X PM only.\" fail to load!", false);
+			}
+			if (parameter1.equalsIgnoreCase("close")){
+				if (parameters.get(0).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-not-empty")){
+					click(parameters.get(0).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned off: A Minor’s schedule must not exceed 30 hours in a week.");
+				}
+			} else {
+				if (parameters.get(0).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-empty")){
+					click(parameters.get(0).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned on: A Minor’s schedule must not exceed 30 hours in a week.");
+					parameters.get(0).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(0).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(parameter1);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter1+": A Minor’s schedule must not exceed 30 hours in a week.");
+				} else {
+					parameters.get(0).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(0).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(parameter1);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter1+": A Minor’s schedule must not exceed 30 hours in a week.");
+				}
+			}
+			if (parameter2.equalsIgnoreCase("close")){
+				if (parameters.get(1).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-not-empty")){
+					click(parameters.get(1).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned off: A Minor’s schedule must not exceed 6 hours in a weekend and holiday.");
+				}
+			} else {
+				if (parameters.get(1).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-empty")){
+					click(parameters.get(1).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned on: A Minor’s schedule must not exceed 6 hours in a weekend and holiday.");
+					parameters.get(1).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(1).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(parameter2);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter2+": A Minor’s schedule must not exceed 6 hours in a weekend and holiday.");
+				} else {
+					parameters.get(1).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(1).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(parameter2);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter2+": A Minor’s schedule must not exceed 6 hours in a weekend and holiday.");
+				}
+			}
+			if (parameter3.equalsIgnoreCase("close")){
+				if (parameters.get(2).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-not-empty")){
+					click(parameters.get(2).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned off: A Minor’s schedule must not exceed 3 hours in a weekday.");
+				}
+			} else {
+				if (parameters.get(2).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-empty")){
+					click(parameters.get(2).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned on: A Minor’s schedule must not exceed 3 hours in a weekday.");
+					parameters.get(2).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(2).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(parameter3);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter3+": A Minor’s schedule must not exceed 3 hours in a weekday.");
+				} else {
+					parameters.get(2).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(2).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(parameter3);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter3+": A Minor’s schedule must not exceed 3 hours in a weekday.");
+				}
+			}
+			if (parameter4.equalsIgnoreCase("close")){
+				if (parameters.get(3).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-not-empty")){
+					click(parameters.get(3).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned off: A Minor must not be scheduled more than 6 days a week.");
+				}
+			} else {
+				if (parameters.get(3).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-empty")){
+					click(parameters.get(3).findElement(By.cssSelector(".slider")));
+					SimpleUtils.pass("Setting turned on: A Minor must not be scheduled more than 6 days a week.");
+					parameters.get(3).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(3).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(parameter4);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter4+": A Minor must not be scheduled more than 6 days a week.");
+				} else {
+					parameters.get(3).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+					parameters.get(3).findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"][ng-class=\\\"{'ng-invalid': $ctrl.invalid}\\\"]")).sendKeys(parameter4);
+					if (isElementLoaded(confirmSaveButton)) {
+						click(confirmSaveButton);
+						preserveTheSetting();
+					}
+					SimpleUtils.pass("Setting set as "+parameter4+": A Minor must not be scheduled more than 6 days a week.");
+				}
+			}
+
+
+		} else {
+			SimpleUtils.fail("No scheduling rule for Minors!",false);
+		}
+	}
 }

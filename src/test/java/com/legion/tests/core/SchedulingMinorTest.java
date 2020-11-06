@@ -2,8 +2,8 @@ package com.legion.tests.core;
 
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LocationSelectorPage;
-import com.legion.pages.ProfileNewUIPage;
 import com.legion.pages.SchedulePage;
+import com.legion.pages.*;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -143,6 +143,25 @@ public class SchedulingMinorTest extends TestBase {
             SimpleUtils.fail("Get new added shift failed! ", false);
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate Scheduling Minors rules (Ages 14 & 15 and Ages 16 & 17) can be edit successfully")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyEditMinorRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+        controlsNewUIPage.clickOnControlsComplianceSection();
+        SimpleUtils.assertOnFail("collaboration page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
+        controlsNewUIPage.setSchedulingMinorRuleFor14N15("9:30 AM", "7:30 PM", "15", "6", "3", "7");
+        controlsNewUIPage.setSchedulingMinorRuleFor16N17("10:00 AM", "7:00 PM", "20", "7", "5", "6");
+    }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
@@ -264,6 +283,7 @@ public class SchedulingMinorTest extends TestBase {
         } else
             SimpleUtils.fail("Get new added shift failed", false);
     }
+
 
 
 }
