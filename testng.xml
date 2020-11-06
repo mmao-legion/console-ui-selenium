@@ -292,7 +292,8 @@
         <classes>
             <class name="com.legion.tests.core.SchedulingMinorTest">
                 <methods>
-                    <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin"/>
+                    <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin" />
+                    <include name="verifyTheWarningMessageAndViolationWhenMinorShiftIsNotDuringTheSettingTimeAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
