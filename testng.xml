@@ -294,6 +294,8 @@
                 <methods>
                     <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin" />
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftIsNotDuringTheSettingTimeAsInternalAdmin" />
+                    <include name="verifyTheWarningMessageAndViolationWhenMinorShiftsExceedTheWeeklyHoursAsInternalAdmin" />
+                    <include name="verifyTheWarningMessageAndViolationWhenMinorShiftDaysExceedTheWeekDaysInSettingAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
