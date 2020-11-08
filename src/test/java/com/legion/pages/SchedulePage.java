@@ -519,4 +519,5 @@ public interface SchedulePage {
 	public void clickOnRadioButtonOfSearchedTeamMemberByName(String name) throws Exception;
 	public void clickOnAssignAnywayButton() throws Exception;
 	public WebElement getTheShiftByIndex(int index) throws Exception;
+	public void editShiftTimeToTheLargest() throws Exception;
 }

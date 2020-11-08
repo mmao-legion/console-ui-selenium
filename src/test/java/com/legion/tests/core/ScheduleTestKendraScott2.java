@@ -1358,7 +1358,15 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		}
 		schedulePage.clickOnDayView();
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.dragOneShiftToMakeItOverTime();
+		if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
+			schedulePage.dragOneShiftToMakeItOverTime();
+		} else if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
+			schedulePage.clickOnProfileIcon();
+			schedulePage.clickOnEditShiftTime();
+			schedulePage.verifyEditShiftTimePopUpDisplay();
+			schedulePage.editShiftTimeToTheLargest();
+			schedulePage.clickOnUpdateEditShiftTimeButton();
+		}
 		schedulePage.saveSchedule();
 		schedulePage.clickOnWeekView();
 		int currentComplianceCount = 0;
@@ -1409,17 +1417,25 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		}
 		schedulePage.clickOnDayView();
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.dragOneShiftToMakeItOverTime();
+		if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
+			schedulePage.dragOneShiftToMakeItOverTime();
+		} else if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
+			schedulePage.clickOnProfileIcon();
+			schedulePage.clickOnEditShiftTime();
+			schedulePage.verifyEditShiftTimePopUpDisplay();
+			schedulePage.editShiftTimeToTheLargest();
+			schedulePage.clickOnUpdateEditShiftTimeButton();
+		}
 		schedulePage.saveSchedule();
 		schedulePage.clickOnWeekView();
 		int currentComplianceCount = 0;
 		if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
 			currentComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
-			if (currentComplianceCount == originalComplianceCount + 1) {
+			if (currentComplianceCount > originalComplianceCount) {
 				SimpleUtils.pass("Schedule Week View: Compliance Count is correct after updating a new overtime shift!");
 			} else {
 				SimpleUtils.fail("Schedule Week View: Compliance Count is incorrect, original is: " + originalComplianceCount + ", current is: "
-						+ currentComplianceCount + ", the difference between two numbers should equal to 1!", false);
+						+ currentComplianceCount + ", the difference between two numbers should equal or larger than 1!", false);
 			}
 		} else {
 			SimpleUtils.fail("Schedule Week View: Compliance smart card failed to show!", false);
@@ -1576,7 +1592,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		profileNewUIPage.cancelAllTimeOff();
 		profileNewUIPage.clickOnCreateTimeOffBtn();
 		SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
-		String timeOffReasonLabel = "JURY DUTY";
+		String timeOffReasonLabel = "VACATION";
 		// select time off reason
 		profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
 		profileNewUIPage.selectStartAndEndDate();
@@ -1604,7 +1620,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.clickOnDayViewAddNewShiftButton();
 		schedulePage.customizeNewShiftPage();
 		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+		if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
+			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+		} else if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
+			schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole_BARISTA"));
+		}
 		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 		schedulePage.clickOnCreateOrNextBtn();
 		schedulePage.searchTeamMemberByName(nickNameFromProfile);

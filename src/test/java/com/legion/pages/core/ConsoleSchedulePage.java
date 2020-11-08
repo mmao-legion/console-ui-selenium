@@ -3231,4 +3231,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public WebElement getTheShiftByIndex(int index) throws Exception {
         return null;
     }
+
+    @Override
+    public void editShiftTimeToTheLargest() throws Exception {
+
+    }
 }

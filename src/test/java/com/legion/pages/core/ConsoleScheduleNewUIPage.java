@@ -8844,6 +8844,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
             clickTheElement(profileIcons.get(randomIndex));
             selectedShift = shifts.get(randomIndex);
+        } else if (areListElementVisible(scheduleTableWeekViewWorkerDetail, 10) && areListElementVisible(dayViewAvailableShifts, 10)) {
+            int randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
+            while (dayViewAvailableShifts.get(randomIndex).findElement(By.className("sch-day-view-shift-worker-name")).getText().contains("Open")){
+                randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
+            }
+            clickTheElement(scheduleTableWeekViewWorkerDetail.get(randomIndex));
+            selectedShift = dayViewAvailableShifts.get(randomIndex);
         } else
             SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
 
@@ -9321,6 +9328,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css="div.slider-section-description-break-time-item-blue")
     private WebElement shiftTimeInEditShiftWindow;
 
+    @FindBy(css=".noUi-marker-large")
+    private List<WebElement> shiftTimeLarges;
+
+    @Override
+    public void editShiftTimeToTheLargest() throws Exception {
+        if (isElementLoaded(shiftStartTimeButton, 10) && isElementLoaded(shiftEndTimeButton, 10)
+        && areListElementVisible(shiftTimeLarges, 10) && shiftTimeLarges.size() == 2) {
+            mouseHoverDragandDrop(shiftStartTimeButton, shiftTimeLarges.get(0));
+            mouseHoverDragandDrop(shiftEndTimeButton, shiftTimeLarges.get(1));
+        } else {
+            SimpleUtils.fail("Shift time elements failed to load!", false);
+        }
+    }
+
 
     public void verifyEditShiftTimePopUpDisplay() throws Exception {
         if (isElementEnabled(editShiftTimePopUp, 5)) {
@@ -9524,11 +9545,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 "I want to offer to specific team members";
         if (isElementLoaded(titleOfConvertToOpenShiftPopup,10) && isElementLoaded(radioBtnManualOpenShift,10)
                 && isElementLoaded(btnCancelOpenSchedule,10) && isElementLoaded(btnYesOpenSchedule,10)
-                && textOnConvertToOpenPopUp.equals(titleOfConvertToOpenShiftPopup.getText()+ "\n" + descriptionOfConvertToOpenShiftPopup.getText() + "\n" + textOfManualOpenShift.getText())) {
+                && textOnConvertToOpenPopUp.contains(titleOfConvertToOpenShiftPopup.getText().trim()+ "\n" + descriptionOfConvertToOpenShiftPopup.getText().trim() + "\n" + textOfManualOpenShift.getText().trim())) {
             SimpleUtils.pass("checkbox is available to offer the shift to any specific TM[optional] Cancel /yes");
             return true;
-        }else
-            SimpleUtils.fail("Convert To Open PopUp windows load failed",true);
+        }else {
+            SimpleUtils.fail("Convert To Open PopUp windows load failed", false);
+        }
         return false;
     }
 
@@ -11351,7 +11373,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void clickProfileIconOfShift(WebElement shift) throws Exception {
         if(isElementLoaded(shift,15)){
-            scrollToElement(shift);
+            scrollToBottom();
             waitForSeconds(3);
             clickTheElement(shift.findElement(By.cssSelector(".worker-image-optimized img")));
             SimpleUtils.pass("clicked shift icon!");
