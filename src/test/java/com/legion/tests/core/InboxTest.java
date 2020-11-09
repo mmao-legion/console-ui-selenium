@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static com.legion.utils.MyThreadLocal.getDriver;
+
 public class InboxTest extends TestBase {
 
     private static HashMap<String, String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
@@ -414,7 +416,7 @@ public class InboxTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the content of week summary when selecting different tm")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -435,7 +437,6 @@ public class InboxTest extends TestBase {
         String nickName1_schedulingPolicyGroup = "";
         controlsPage.gotoControlsPage();
         controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-        //SimpleUtils.assertOnFail("Users and Roles Card failed to load", controlsNewUIPage.isControlsUsersAndRolesLoaded(), false);
         HashMap<String, List<String>> TM1 = controlsNewUIPage.getRandomUserNLocationNSchedulingPolicyGroup();
         Iterator itTM1 = TM1.keySet().iterator();
         while (itTM1.hasNext()) {
@@ -444,7 +445,7 @@ public class InboxTest extends TestBase {
             if (nickName1_Value != null && nickName1_Value.size() == 2) {
                 nickName1_Location = nickName1_Value.get(0);
                 if (nickName1_Location.equals("All Locations"))
-                nickName1_Location = location;
+                    nickName1_Location = location;
                 nickName1_schedulingPolicyGroup = nickName1_Value.get(1);
                 break;
             }
@@ -485,6 +486,12 @@ public class InboxTest extends TestBase {
         controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(nickName2_schedulingPolicyGroup);
         HashMap<String, List<String>> schedulingPolicyGroupData_TM2 = controlsNewUIPage.getDataFromSchedulingPolicyGroups();
 
+        // Get the address of TM
+        controlsPage.gotoControlsPage();
+        controlsNewUIPage.clickOnControlsLocationProfileSection();
+        String nickName1_LocationDetailInfo = controlsNewUIPage.getLocationInfoStringFromDetailPage();
+        String nickName2_LocationDetailInfo = controlsNewUIPage.getLocationInfoStringFromDetailPage();
+
         // Create GFE Announcement and select 2 TMs to get their week summary
         inboxPage.clickOnInboxConsoleMenuItem();
         inboxPage.createGFEAnnouncement();
@@ -494,26 +501,6 @@ public class InboxTest extends TestBase {
         inboxPage.createGFEAnnouncement();
         inboxPage.sendToTM(nickName2);
         HashMap<String, String> contentOfWeekSummary_TM2 = inboxPage.getTheContentOfWeekSummaryInGFE();
-
-        //Get location detail address
-        //Go to global control page
-        controlsNewUIPage.clickOnControlsConsoleMenu();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnGlobalLocationButton();
-
-        //Go to locations tab
-        controlsNewUIPage.clickOnControlsLocationsSection();
-        SimpleUtils.assertOnFail("Locations page not loaded successfully!", controlsNewUIPage.isLocationsPageLoaded(), false);
-        controlsNewUIPage.clickAllDistrictsOrAllLocationsTab(false);
-
-        //Click location and go to detail page get detail info
-        controlsNewUIPage.goToSpecificLocationDetailPageByLocationName(nickName1_Location);
-        String nickName1_LocationDetailInfo = controlsNewUIPage.getLocationInfoStringFromDetailPage();
-
-        controlsNewUIPage.clickOnBackButtonOnLocationDetailPage();
-        controlsNewUIPage.clickAllDistrictsOrAllLocationsTab(false);
-        controlsNewUIPage.goToSpecificLocationDetailPageByLocationName(nickName2_Location);
-        String nickName2_LocationDetailInfo = controlsNewUIPage.getLocationInfoStringFromDetailPage();
 
         // Compare the data to verify the content of week summary when selecting different tm
         SimpleUtils.report("Inbox: Compare a TM with the data from controls");
