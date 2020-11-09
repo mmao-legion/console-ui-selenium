@@ -299,6 +299,7 @@
                     <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin"/>
                     <include name="verifyEditMinorRulesAsInternalAdmin"/>
                     <include name="verifyWarningMessageForExceedWeekendHrsAsInternalAdmin"/>
+                    <include name="verifyTheWarningMessageAndViolationWhenMinorIsUnder14YearsOldAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
