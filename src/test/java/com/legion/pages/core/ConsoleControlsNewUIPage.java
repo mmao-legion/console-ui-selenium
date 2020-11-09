@@ -5067,7 +5067,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = ".lg-user-locations-new__item-name")
 	private List<WebElement> userLocation;
 
-	@FindBy(css = "select[aria-label=\"Scheduling Policy Group\"] option[selected=\"selected\"]")
+	@FindBy(css = "[ng-if=\"tm.engagement.engagementGroup\"]")
 	private WebElement schedulingPolicyGroup;
 
 	@FindBy(css = "[form-title=\"Scheduling Policy Groups\"] lg-tabs lg-tab")
@@ -5110,6 +5110,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(className = "selected-day")
 	private WebElement selectedDayInCalendar;
 
+	@FindBy(xpath = "//span[contains(text(),\"HOME STORE\")]/../../following-sibling::div[1]/div[2]")
+	private WebElement homeStoreLocation;
+
 	@Override
 	public HashMap<String, List<String>> getRandomUserNLocationNSchedulingPolicyGroup() throws Exception {
 		HashMap<String, List<String>> userNLocationNSchedulingPolicyGroup = new HashMap<>();
@@ -5118,8 +5121,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			WebElement userName = usersAndRolesAllUsersRows.get(index).findElement(By.cssSelector("lg-button button span span"));
 			String userNameText = userName.getText();
 			click(userName);
-			if (areListElementVisible(userLocation, 5) && isElementLoaded(schedulingPolicyGroup, 5)) {
-				String userLocationText = userLocation.get(0).getText();
+			if (isElementLoaded(homeStoreLocation, 5) && isElementLoaded(schedulingPolicyGroup, 5)) {
+				String userLocationText = homeStoreLocation.getText().trim();
 				String userSchedulingPolicyGroup = schedulingPolicyGroup.getText();
 				List<String> locationNSchedulingPolicyGroup = new ArrayList<>();
 				locationNSchedulingPolicyGroup.add(userLocationText);
@@ -5351,7 +5354,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy (css = "input[aria-label=\"Zip Code\"]")
 	private WebElement zipCode;
 
-	@FindBy (css = "[value=\"location.state\"] div.select-wrapper")
+	@FindBy (css = "[aria-label=\"State\"] [selected=\"selected\"]")
 	private WebElement state;
 
 	@FindBy (css = ".lg-form-section-action")
@@ -5395,18 +5398,16 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		String stateStr = "";
 		String cityStr = "";
 		String locationAddressStr = "";
-		String zipCodeStr = "";
 
 		if (isElementLoaded(locationAddress, 10) && isElementLoaded(zipCode, 10) &&
-				isElementLoaded(state, 10) && isElementLoaded(city, 10)) {
-			stateStr = state.getAttribute("data-content");
+				isElementLoaded(state, 10)) {
+			stateStr = state.getAttribute("value").split(":")[1];
 			cityStr = city.getAttribute("value");
 			locationAddressStr = locationAddress.getAttribute("value");
-			zipCodeStr = zipCode.getAttribute("value");
 		} else {
 			SimpleUtils.fail("Locations page: Elements in location page not Loaded", false);
 		}
-		locationDetailInfo = locationAddressStr + ", " + cityStr + ", " + stateStr + ", " + zipCodeStr;
+		locationDetailInfo = locationAddressStr + ", " + cityStr + " " + stateStr ;
 		return locationDetailInfo;
 	}
 

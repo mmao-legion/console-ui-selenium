@@ -521,4 +521,5 @@ public interface SchedulePage {
 	public WebElement getTheShiftByIndex(int index) throws Exception;
 	public void editShiftTimeToTheLargest() throws Exception;
 	public void closeCustomizeNewShiftWindow() throws Exception;
+	public List<String> getHolidaysOfCurrentWeek() throws Exception;
 }

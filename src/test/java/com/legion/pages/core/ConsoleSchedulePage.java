@@ -3241,4 +3241,8 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void closeCustomizeNewShiftWindow() throws Exception {
 
     }
+
+    public List<String> getHolidaysOfCurrentWeek() throws Exception {
+        return null;
+    }
 }
