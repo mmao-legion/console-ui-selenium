@@ -292,12 +292,13 @@
         <classes>
             <class name="com.legion.tests.core.SchedulingMinorTest">
                 <methods>
+                    <include name="verifyEditMinorRulesAsInternalAdmin"/>
                     <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin" />
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftIsNotDuringTheSettingTimeAsInternalAdmin" />
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftsExceedTheWeeklyHoursAsInternalAdmin" />
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftDaysExceedTheWeekDaysInSettingAsInternalAdmin" />
                     <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin"/>
-                    <include name="verifyEditMinorRulesAsInternalAdmin"/>
+                    <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
                     <include name="verifyWarningMessageForExceedWeekendHrsAsInternalAdmin"/>
                     <include name="verifyTheWarningMessageAndViolationWhenMinorIsUnder14YearsOldAsInternalAdmin" />
                 </methods>

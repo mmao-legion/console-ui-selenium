@@ -3236,4 +3236,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void editShiftTimeToTheLargest() throws Exception {
 
     }
+
+    @Override
+    public List<String> getHolidaysOfCurrentWeek() throws Exception {
+        return null;
+    }
 }

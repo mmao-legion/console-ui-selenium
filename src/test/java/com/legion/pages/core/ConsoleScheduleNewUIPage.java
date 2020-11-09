@@ -12243,5 +12243,21 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         return shift;
     }
+
+    @FindBy(css = ".modal-dialog")
+    private WebElement holidaySmartCardWindow;
+    @Override
+    public List<String> getHolidaysOfCurrentWeek() throws Exception {
+        List<String> holidays = new ArrayList<String>();
+        if (isElementLoaded(holidaySmartCardWindow,5) && holidaySmartCardWindow.findElements(By.cssSelector(".event-card span")).size()>0){
+            List<WebElement> holidayList = holidaySmartCardWindow.findElements(By.cssSelector(".event-card span"));
+            for (WebElement element: holidayList){
+                holidays.add(element.getText().replace("\n",""));
+            }
+        } else {
+            SimpleUtils.fail("Holiday popup window fail to load!", false);
+        }
+        return holidays;
+    }
 }
 
