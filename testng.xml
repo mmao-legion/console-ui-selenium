@@ -90,7 +90,7 @@
                 <methods>
 <!--                    <include name="verifyTheTeamFunctionalityInActivate" />-->
 <!--                    <include name="verifyTheTeamFunctionalityInTerminate" />-->
-                    <include name="verifyTheTeamFunctionalityInCoverageAsStoreManager" />
+                    <include name="verifyTheTeamFunctionalityInCoverageAsInternalAdmin" />
                     <include name="verifyEditModeInNewUserProfilePageAsInternalAdmin" />
 <!--                    <include name="verifyTheTeamFunctionalityInTimeOffAsInternalAdmin" />-->
                 </methods>
