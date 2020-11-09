@@ -1,9 +1,6 @@
 package com.legion.tests.core;
 
-import com.legion.pages.ControlsNewUIPage;
-import com.legion.pages.ControlsPage;
-import com.legion.pages.DashboardPage;
-import com.legion.pages.SchedulePage;
+import com.legion.pages.*;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -38,6 +35,13 @@ public class PrepareSettingsTest extends TestBase {
     public void prepareSettingsInControlsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        // Go to Team page, reject all the time off request
+//        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+//        teamPage.goToTeam();
+//        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+//        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+//        teamPage.rejectAllTeamMembersTimeOffRequest(profileNewUIPage, 0);
 
         // Set time off policy
         ControlsPage controlsPage = pageFactory.createConsoleControlsPage();

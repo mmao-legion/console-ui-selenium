@@ -536,7 +536,7 @@ public class LiquidDashboardTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Validate the content of Alerts widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheContentOfAlertWidgetAsStoreManager(String browser, String username, String password, String location) throws Exception {

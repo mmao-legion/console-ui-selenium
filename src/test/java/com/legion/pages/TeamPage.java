@@ -20,7 +20,7 @@ public interface TeamPage {
 	public void coverage();
 	public void coverageViewToPastOrFuture(String nextWeekView, int weekCount);
 	public boolean loadTeamTab() throws Exception;
-	public void searchAndSelectTeamMemberByName(String username) throws Exception;
+	public String searchAndSelectTeamMemberByName(String username) throws Exception;
 	public void approvePendingTimeOffRequest() throws Exception;
 	public int getPendingTimeOffRequestCount() throws Exception;
 	public void openToDoPopupWindow() throws Exception;
@@ -124,4 +124,5 @@ public interface TeamPage {
 	public void updateBusinessProfilePicture(String filePath) throws Exception;
 	public void rejectAllTheTimeOffRequests() throws Exception;
 	public List<String> getTMNameList() throws Exception;
+	public void rejectAllTeamMembersTimeOffRequest(ProfileNewUIPage profileNewUIPage, int index) throws Exception;
 }

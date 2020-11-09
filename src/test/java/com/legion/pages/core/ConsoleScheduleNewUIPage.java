@@ -176,7 +176,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(xpath= "//day-week-picker/div/div/div[3]")
     private WebElement calendarNavigationPreviousWeek;
 
-    @FindBy(css = "[ng-click=\"regenerateFromOverview()\"]")
+    @FindBy(css = "[ng-click=\"regenerateFromOverview()\"] button")
     private WebElement generateSheduleButton;
 
     @FindBy(css = "[ng-click=\"regenerateFromManagerView()\"]")
@@ -2123,7 +2123,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }
         float totalShiftSizeForWeek = newCalcTotalScheduledHourForDayInWeekView();
-        if (totalShiftSizeForWeek == activeWeekScheduleHoursOnCard) {
+        if (activeWeekScheduleHoursOnCard - totalShiftSizeForWeek <= 0.05) {
             SimpleUtils.pass("Sum of all the shifts in a week equal to Week Schedule Hours!('" + totalShiftSizeForWeek + "/" + activeWeekScheduleHoursOnCard + "')");
             return true;
         } else {
@@ -3787,7 +3787,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void createScheduleForNonDGFlowNewUI() throws Exception {
         String subTitle = "Confirm Operating Hours";
         if (isElementLoaded(generateSheduleButton,10)) {
-            moveToElementAndClick(generateSheduleButton);
+            clickTheElement(generateSheduleButton);
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
@@ -11374,7 +11374,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void clickProfileIconOfShift(WebElement shift) throws Exception {
         if(isElementLoaded(shift,15)){
             scrollToBottom();
-            waitForSeconds(3);
+            waitForSeconds(5);
             clickTheElement(shift.findElement(By.cssSelector(".worker-image-optimized img")));
             SimpleUtils.pass("clicked shift icon!");
         } else {
@@ -12182,6 +12182,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         } else {
             SimpleUtils.fail("There is no warning model and warning message!", false);
+        }
+    }
+
+    @Override
+    public void closeCustomizeNewShiftWindow() throws Exception {
+        if (isElementLoaded(closeSelectTMWindowBtn, 10)){
+            clickTheElement(closeSelectTMWindowBtn);
+            waitUntilElementIsInVisible(closeSelectTMWindowBtn);
+        } else {
+            SimpleUtils.fail("Customize New Shift window: Close button not loaded Successfully!", false);
         }
     }
 

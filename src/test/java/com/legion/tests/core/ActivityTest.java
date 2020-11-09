@@ -1082,36 +1082,15 @@ public class ActivityTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM is requesting time off")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyTheNotificationForRequestTimeOffAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        // Login with Store Manager Credentials
+    public void verifyTheNotificationForRequestTimeOffAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        // Login as Team Member to create time off
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        // Set time off policy
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-        dashboardPage.navigateToDashboard();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-        controlsNewUIPage.clickOnControlsSchedulingPolicies();
-        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-        controlsNewUIPage.updateCanWorkerRequestTimeOff("Yes");
-        controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
-        controlsNewUIPage.updateShowTimeOffReasons("Yes");
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        loginPage.logOut();
 
-        // Login as Team Member to create time off
         String fileName = "UsersCredentials.json";
         fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                , String.valueOf(teamMemberCredentials[0][2]));
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
         String myProfileLabel = "My Profile";
@@ -1146,8 +1125,7 @@ public class ActivityTest extends TestBase {
         loginPage.logOut();
 
         // Login as Team Member to create time off
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                , String.valueOf(teamMemberCredentials[0][2]));
+        loginToLegionAndVerifyIsLoginDone(username, password, location);
         profileNewUIPage.clickOnUserProfileImage();
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
         SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
@@ -1178,31 +1156,13 @@ public class ActivityTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM cancels time off request")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyTheNotificationForCancelTimeOffAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        // Login with Store Manager Credentials
+    public void verifyTheNotificationForCancelTimeOffAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        // Login as Team member to create the time off request
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        // Set time off policy
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        controlsPage.gotoControlsPage();
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsSchedulingPolicies();
-        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-        controlsNewUIPage.updateCanWorkerRequestTimeOff("Yes");
-        controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
-        controlsNewUIPage.updateShowTimeOffReasons("Yes");
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        loginPage.logOut();
-
-        // Login as Team Member to create time off
         String fileName = "UsersCredentials.json";
         fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                , String.valueOf(teamMemberCredentials[0][2]));
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
         String myProfileLabel = "My Profile";
@@ -1221,6 +1181,7 @@ public class ActivityTest extends TestBase {
         List<String> startNEndDates = profileNewUIPage.selectStartAndEndDate();
         profileNewUIPage.clickOnSaveTimeOffRequestBtn();
         profileNewUIPage.cancelAllTimeOff();
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
 
         // Login as Store Manager again to check message

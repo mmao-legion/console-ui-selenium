@@ -160,6 +160,16 @@ public class DragAndDropTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        SimpleUtils.assertOnFail("Controls Scheduling Policies page not loaded Successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+        controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
+
         String anotherLocation = "NY CENTRAL";
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.changeLocation(anotherLocation);

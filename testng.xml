@@ -128,10 +128,10 @@
                     <include name="verifyProfilePictureFunctionalityAsTeamMember" />
                     <include name="verifyInfoIconFunctionalityAsTeamMember" />
                     <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
-                    <include name="verifyTheContentOfCopyScheduleForNonDGFlowAsInternalAdmin" />
+<!--                    <include name="verifyTheContentOfCopyScheduleForNonDGFlowAsInternalAdmin" />-->
                     <include name="verifyContentAfterChangingOperatingHrsAsInternalAdmin" />
                     <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
-                    <include name="verifyTheContentOfClosedWeekDayScheduleForNonDGFlowAsInternalAdmin" />
+<!--                    <include name="verifyTheContentOfClosedWeekDayScheduleForNonDGFlowAsInternalAdmin" />-->
                     <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
                     <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
                     <include name="verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin" />
@@ -140,7 +140,7 @@
                     <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />
                     <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
-                    <include name="verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager" />
+<!--                    <include name="verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager" />-->
                     <!-- <include name="verifyAssignTMWarningWhenTMIsInactiveAsStoreManager" />-->
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin" />
@@ -240,7 +240,7 @@
 <!--                    <include name="verifySwitchWeekOfOpenShiftsAsStoreManager" />-->
 <!--                    <include name="dataValidationOfOpenShiftsUnclaimedAsStoreManager" />-->
 <!--                    <include name="dataValidationOfOpenShiftsClaimedAsTeamMember" />-->
-                    <include name="verifyHelpfulLinksWidgetsAsStoreManager" />
+<!--                    <include name="verifyHelpfulLinksWidgetsAsStoreManager" />-->
                     <include name="verifyTodayForecastWidgetsAsStoreManager" />
                     <include name="verifySchedulesWidgetsAsStoreManager" />
                     <!--<include name="verifyComplianceViolationWidgetsAsStoreManager" /> -->

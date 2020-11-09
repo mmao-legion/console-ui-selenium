@@ -520,4 +520,5 @@ public interface SchedulePage {
 	public void clickOnAssignAnywayButton() throws Exception;
 	public WebElement getTheShiftByIndex(int index) throws Exception;
 	public void editShiftTimeToTheLargest() throws Exception;
+	public void closeCustomizeNewShiftWindow() throws Exception;
 }

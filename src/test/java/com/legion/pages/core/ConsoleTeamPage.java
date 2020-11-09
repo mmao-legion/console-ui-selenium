@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.legion.pages.ProfileNewUIPage;
 import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.MyThreadLocal;
 import cucumber.api.java.hu.Ha;
@@ -344,7 +345,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 
 		@Override
-		public void searchAndSelectTeamMemberByName(String username) throws Exception {
+		public String searchAndSelectTeamMemberByName(String username) throws Exception {
+	 		String selectedName = "";
 			boolean isTeamMemberFound = false;
 			if(isElementLoaded(teamMemberSearchBox, 10)) {
 				teamMemberSearchBox.clear();
@@ -359,8 +361,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 							WebElement status = tr.findElement(By.cssSelector("span.status"));
 							if (name != null && title != null && status != null) {
 								String nameJobTitleStatus = name.getText() + title.getText() + status.getText();
-								if (nameJobTitleStatus.toLowerCase().contains(username.toLowerCase())) {
-									click(name);
+								if (nameJobTitleStatus.contains(username)) {
+									selectedName = name.getText();
+									clickTheElement(name);
 									isTeamMemberFound = true;
 									SimpleUtils.pass("Team Page: Team Member '" + username + "' selected Successfully.");
 									break;
@@ -376,6 +379,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}
 			if(!isTeamMemberFound)
 				SimpleUtils.report("Team Page: Team Member '"+username+"' not found.");
+			return selectedName;
 		}
 
 		@Override
@@ -2339,6 +2343,22 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			value = newValue;
 		}
 		public String getValue() { return value; }
+	}
+
+	@Override
+	public void rejectAllTeamMembersTimeOffRequest(ProfileNewUIPage profileNewUIPage, int index) throws Exception {
+		if (areListElementVisible(teamMemberNames, 15)) {
+			while (index < teamMemberNames.size()) {
+				clickTheElement(teamMemberNames.get(index));
+				String myTimeOffLabel = "Time Off";
+				profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+				rejectAllTheTimeOffRequests();
+				goToTeam();
+				rejectAllTeamMembersTimeOffRequest(profileNewUIPage, index + 1);
+			}
+		} else {
+			SimpleUtils.fail("Team Members are failed to load!", true);
+		}
 	}
 
 	@Override
