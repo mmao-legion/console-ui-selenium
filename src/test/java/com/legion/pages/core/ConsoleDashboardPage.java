@@ -980,4 +980,19 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 		return dashboardScheduleWeeks;
 	}
+
+	@FindBy(css = "[ng-click=\"$ctrl.onReload(true)\"]")
+	private WebElement refreshButton;
+
+
+	@Override
+	public void clickOnRefreshButton() throws Exception {
+		if (isElementLoaded(refreshButton, 10)) {
+			click(refreshButton);
+			waitForSeconds(15);
+			SimpleUtils.pass("Click on Refresh button Successfully!");
+		} else {
+			SimpleUtils.fail("Refresh button not Loaded!", true);
+		}
+	}
 }

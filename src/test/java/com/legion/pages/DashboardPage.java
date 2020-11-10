@@ -53,4 +53,5 @@ public interface DashboardPage {
     public void clickOnSwitchToEmployeeView() throws Exception;
     public boolean isSwitchToEmployeeViewPresent() throws Exception;
     public List<WebElement> getDashboardScheduleWeeks() throws Exception;
+    public void clickOnRefreshButton() throws Exception;
 }

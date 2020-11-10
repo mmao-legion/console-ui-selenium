@@ -1555,6 +1555,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 		//Verify the Unpublished Edits text on dashboard page
 		dashboardPage.navigateToDashboard();
+		dashboardPage.clickOnRefreshButton();
 		List<WebElement> dashboardScheduleWeeks = dashboardPage.getDashboardScheduleWeeks();
 		if (dashboardScheduleWeeks != null && dashboardScheduleWeeks.size()>0){
 			WebElement warningTextOfCurrentScheduleWeek = dashboardScheduleWeeks.get(1).findElement(By.cssSelector("div.text-small.ng-binding"));
