@@ -109,51 +109,6 @@
         </classes>
     </test>
 
-
-    <test name="Schedule New UI Test">
-        <classes>
-            <class name="com.legion.tests.core.ScheduleTestKendraScott2">
-                <methods>
-                    <include name="verifyScheduleLegionFunctionality" />
-                    <include name="verifyComplianceSmartCardFunctionality" />
-<!--                    <include name="verifyScheduleFunctionalitySchedule" />-->
-                    <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
-                    <include name="verifyScheduleFunctionalityWeekView"/>
-                    <include name="verifyScheduleFunctionalityDayView"/>
-                    <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView"/>
-                    <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView"/>
-                    <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView"/>
-                    <include name="verificationOfMySchedulePageAsTeamMember" />
-                    <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
-                    <include name="verifyProfilePictureFunctionalityAsTeamMember" />
-                    <include name="verifyInfoIconFunctionalityAsTeamMember" />
-                    <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
-<!--                    <include name="verifyTheContentOfCopyScheduleForNonDGFlowAsInternalAdmin" />-->
-                    <include name="verifyContentAfterChangingOperatingHrsAsInternalAdmin" />
-                    <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
-<!--                    <include name="verifyTheContentOfClosedWeekDayScheduleForNonDGFlowAsInternalAdmin" />-->
-                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
-                    <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
-                    <include name="verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin" />
-                    <!-- <include name="verifyContentOfBudgetHoursForNonDGFlowAsInternalAdmin" />-->
-<!--                    <include name="verifyTooltipForDeleteShiftsAsInternalAdmin" />-->
-                    <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />
-                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
-                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
-<!--                    <include name="verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager" />-->
-                    <!-- <include name="verifyAssignTMWarningWhenTMIsInactiveAsStoreManager" />-->
-                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
-                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin" />
-                    <include name="verifySearchBarOnSchedulePageAsInternalAdmin" />
-                    <include name="verifyVersionNumberAndEditsAsInternalAdmin" />
-                    <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
-                    <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
-                    <include name="verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
     <test name="Schedule Test LegionCoffee">
         <classes>
             <class name="com.legion.tests.core.ScheduleTest">
@@ -301,6 +256,50 @@
                     <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
                     <include name="verifyWarningMessageForExceedWeekendHrsAsInternalAdmin"/>
                     <include name="verifyTheWarningMessageAndViolationWhenMinorIsUnder14YearsOldAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Schedule New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleTestKendraScott2">
+                <methods>
+                    <include name="verifyScheduleLegionFunctionality" />
+                    <include name="verifyComplianceSmartCardFunctionality" />
+                    <!--                    <include name="verifyScheduleFunctionalitySchedule" />-->
+                    <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
+                    <include name="verifyScheduleFunctionalityWeekView"/>
+                    <include name="verifyScheduleFunctionalityDayView"/>
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView"/>
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView"/>
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView"/>
+                    <include name="verificationOfMySchedulePageAsTeamMember" />
+                    <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
+                    <include name="verifyProfilePictureFunctionalityAsTeamMember" />
+                    <include name="verifyInfoIconFunctionalityAsTeamMember" />
+                    <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
+                    <!--                    <include name="verifyTheContentOfCopyScheduleForNonDGFlowAsInternalAdmin" />-->
+                    <include name="verifyContentAfterChangingOperatingHrsAsInternalAdmin" />
+                    <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
+                    <!--                    <include name="verifyTheContentOfClosedWeekDayScheduleForNonDGFlowAsInternalAdmin" />-->
+                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
+                    <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
+                    <include name="verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin" />
+                    <!-- <include name="verifyContentOfBudgetHoursForNonDGFlowAsInternalAdmin" />-->
+                    <!--                    <include name="verifyTooltipForDeleteShiftsAsInternalAdmin" />-->
+                    <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />
+                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
+                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
+                    <!--                    <include name="verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager" />-->
+                    <!-- <include name="verifyAssignTMWarningWhenTMIsInactiveAsStoreManager" />-->
+                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
+                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin" />
+                    <include name="verifySearchBarOnSchedulePageAsInternalAdmin" />
+                    <include name="verifyVersionNumberAndEditsAsInternalAdmin" />
+                    <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
+                    <include name="verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
