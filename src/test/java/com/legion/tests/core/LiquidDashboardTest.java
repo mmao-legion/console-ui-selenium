@@ -615,7 +615,7 @@ public class LiquidDashboardTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Verify Today's Forecast widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTodayForecastWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -639,11 +639,21 @@ public class LiquidDashboardTest extends TestBase {
         HashMap <String,Float> insightDataFromForecastPage = forecastPage.getInsightDataInShopperWeekView();
         schedulePage.clickOnScheduleSubTab("Schedule");
         HashMap <String,Float> dataFromSchedule = schedulePage.getScheduleLabelHoursAndWages();
-        if (dataOnWidget.get("demand forecast") <= insightDataFromForecastPage.get("totalShoppers") && dataOnWidget.get("demand forecast") >= insightDataFromForecastPage.get("totalShoppers")){
-            SimpleUtils.pass("Demand Forecast number is correct!");
+        String enterprise = SimpleUtils.getEnterprise(this.enterpriseName);
+        if (enterprise.contains("KendraScott2_Enterprise")){
+            if (dataOnWidget.get("demand forecast") <= insightDataFromForecastPage.get("totalShoppers") && dataOnWidget.get("demand forecast") >= insightDataFromForecastPage.get("totalShoppers")){
+                SimpleUtils.pass("Demand Forecast number is correct!");
+            } else {
+                SimpleUtils.fail("today's forecast widget: Demand Forecast number is not correct!",true);
+            }
         } else {
-            SimpleUtils.fail("today's forecast widget: Demand Forecast number is not correct!",true);
+            if (dataOnWidget.get("demand forecast") <= insightDataFromForecastPage.get("totalItems") && dataOnWidget.get("demand forecast") >= insightDataFromForecastPage.get("totalItems")){
+                SimpleUtils.pass("Demand Forecast number is correct!");
+            } else {
+                SimpleUtils.fail("today's forecast widget: Demand Forecast number is not correct!",true);
+            }
         }
+
         if (dataOnWidget.get("budget") >= dataFromSchedule.get("budgetedHours")&&dataOnWidget.get("budget") <= dataFromSchedule.get("budgetedHours")){
             SimpleUtils.pass("budget number is correct!");
         } else {

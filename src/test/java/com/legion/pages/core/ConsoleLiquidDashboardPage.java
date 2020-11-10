@@ -701,7 +701,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             String tempData = dataOnTodayForecast.getText();
             String[] dataString = dataOnTodayForecast.getText().split("\n");
             if (dataString.length>4){
-                resultData.put("demand forecast",Float.valueOf(dataString[0].replaceAll("Shoppers","").replaceAll(",", "")));
+                resultData.put("demand forecast",Float.valueOf(dataString[0].replaceAll("Shoppers","").replaceAll(",", "").replaceAll("ITEMS","")));
                 resultData.put("budget",Float.valueOf(dataString[2].replaceAll("Hrs","")));
                 resultData.put("scheduled",Float.valueOf(dataString[4].replaceAll("Hrs","")));
             } else {
