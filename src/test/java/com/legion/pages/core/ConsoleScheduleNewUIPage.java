@@ -3421,7 +3421,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //	}
 
     public void checkoutSchedule() {
-        click(checkOutTheScheduleButton);
+        clickTheElement(checkOutTheScheduleButton);
         SimpleUtils.pass("Schedule Generated Successfuly!");
     }
 
@@ -4596,7 +4596,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "img[ng-if='hasViolateCompliance(line, scheduleWeekDay)'] ")
     private List<WebElement> complianceInfoIcon;
 
-    @FindBy(css = "card-carousel-card[ng-if='compliance'] span")
+    @FindBy(css = "card-carousel-card[ng-if*='compliance'] span")
     private WebElement viewShift;
     @FindBy(css = "img[ng-if='hasViolateCompliance(shift)']")
     private List<WebElement> complianceInfoIconDayView;
@@ -6754,8 +6754,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         SimpleUtils.report("weekDefaultEnd is :"+weekDefaultEnd);
         if (SimpleUtils.isNumeric(weekBeginBYCurrentDate.trim()) && SimpleUtils.isNumeric(weekDefaultBegin.trim()) &&
                 SimpleUtils.isNumeric(weekEndBYCurrentDate.trim()) && SimpleUtils.isNumeric(weekDefaultEnd.trim())) {
-            if ((Integer.parseInt(weekBeginBYCurrentDate.trim()) == Integer.parseInt(weekDefaultBegin.trim())) &&
-                    (Integer.parseInt(weekEndBYCurrentDate.trim()) == Integer.parseInt(weekDefaultEnd.trim()))) {
+            if (Math.abs(Integer.parseInt(weekBeginBYCurrentDate.trim()) - Integer.parseInt(weekDefaultBegin.trim())) <= 1 &&
+                    Math.abs(Integer.parseInt(weekEndBYCurrentDate.trim()) - Integer.parseInt(weekDefaultEnd.trim())) <= 1 &&
+                    (Math.abs(Integer.parseInt(weekBeginBYCurrentDate.trim()) - Integer.parseInt(weekDefaultBegin.trim())) ==
+                            Math.abs(Integer.parseInt(weekEndBYCurrentDate.trim()) - Integer.parseInt(weekDefaultEnd.trim())))) {
                 SimpleUtils.pass("Current week is getting open by default");
             } else {
                 SimpleUtils.fail("Current week is not getting open by default", true);

@@ -343,7 +343,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     private WebElement currentWeekOnSchedules;
     @FindBy(css = "lg-alert .slideNumberText")
     private WebElement alertsWeek;
-    @FindBy(css = ".lg-timesheet-carousel__table-cell")
+    @FindBy(css = ".lg-timesheet-carousel__table-row--cell")
     private List<WebElement> alertsCells;
     @FindBy(css = "[label=\"'Timesheet Approval Status'\"] .dms-box-item-title-row span")
     private WebElement timesheetApprovalStatusWeek;

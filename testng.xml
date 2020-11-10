@@ -296,7 +296,7 @@
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin" />
                     <include name="verifySearchBarOnSchedulePageAsInternalAdmin" />
-                    <include name="verifyVersionNumberAndEditsAsInternalAdmin" />
+<!--                    <include name="verifyVersionNumberAndEditsAsInternalAdmin" />-->
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
                     <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
                     <include name="verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin" />
