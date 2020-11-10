@@ -196,9 +196,9 @@
 <!--                    <include name="dataValidationOfOpenShiftsUnclaimedAsStoreManager" />-->
 <!--                    <include name="dataValidationOfOpenShiftsClaimedAsTeamMember" />-->
 <!--                    <include name="verifyHelpfulLinksWidgetsAsStoreManager" />-->
-                    <include name="verifyTodayForecastWidgetsAsStoreManager" />
-                    <include name="verifySchedulesWidgetsAsStoreManager" />
-                    <!--<include name="verifyComplianceViolationWidgetsAsStoreManager" /> -->
+                    <!--                    <include name="verifyTodayForecastWidgetsAsStoreManager" />-->
+                                        <include name="verifySchedulesWidgetsAsStoreManager" />
+                                        <!--<include name="verifyComplianceViolationWidgetsAsStoreManager" /> -->
 <!--                    <include name="verifyNoContentOfSwapNCoverWidgetAsInternalAdmin" />-->
 <!--                    <include name="verifyTimesheetApprovalRateWidgetAsStoreManager" />-->
 <!--                    <include name="verifyTheContentOfSwapNCoverWidgetAsInternalAdmin" />-->
