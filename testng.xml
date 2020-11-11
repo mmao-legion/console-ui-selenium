@@ -156,9 +156,9 @@
                     <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyActivityOfClaimOpenShiftAsTeamMember" />
                     <include name="verifyActivityOfPublishUpdateSchedule" />
-                    <include name="verifyTheNotificationForCancelTimeOffAsInternalAdmin"/>
+                    <include name="verifyTheNotificationForCancelTimeOffAsTeamMember"/>
 <!--                    <include name="verifyNoNotificationForActivateTMAsStoreManager"/>-->
-                    <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin"/>
+                    <include name="verifyTheNotificationForRequestTimeOffAsTeamMember"/>
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin"/>
                     <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin"/>
@@ -252,7 +252,6 @@
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftIsNotDuringTheSettingTimeAsInternalAdmin" />
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftsExceedTheWeeklyHoursAsInternalAdmin" />
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftDaysExceedTheWeekDaysInSettingAsInternalAdmin" />
-                    <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin"/>
                     <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
                     <include name="verifyWarningMessageForExceedWeekendHrsAsInternalAdmin"/>
                     <include name="verifyTheWarningMessageAndViolationWhenMinorIsUnder14YearsOldAsInternalAdmin" />
