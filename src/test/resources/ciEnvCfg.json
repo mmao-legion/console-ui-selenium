@@ -11,6 +11,7 @@
   "Tech_Enterprise" : "LegionTech",
   "Reverted_Enterprise" : "LegionReverted",
   "KendraScott2_Enterprise" : "KendraScott2",
+  "OP_Enterprise" : "OP",
   "DEFAULT_USERNAME" : "admin2.a",
   "DEFAULT_PASSWORD" : "admin2.a",
   "ENVIRONMENT" : "QA",
