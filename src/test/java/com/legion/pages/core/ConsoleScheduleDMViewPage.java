@@ -17,6 +17,10 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     @FindBy(css = ".analytics-new-table-group-row-open")
     private List<WebElement>  SchedulesInDMView;
 
+
+    @FindBy(css = "[jj-switch-when=\\\"cells.CELL_BUDGET_HOURS\\\"]")
+    private List<WebElement>  budgetHours;
+
     public ConsoleScheduleDMViewPage() {
         PageFactory.initElements(getDriver(), this);
     }
@@ -32,7 +36,10 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                     String locationNameInDMView = locationInDMView.getText();
                     if (locationNameInDMView !=null && locationNameInDMView.equals(location)){
                         isLocationMatched = true;
-                        budgetedHours = Float.parseFloat(schedule.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")).getText());
+                        if (areListElementVisible(budgetHours, 5)){
+                            budgetedHours = Float.parseFloat(schedule.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")).getText());
+                        } else
+                            budgetedHours = Float.parseFloat(schedule.findElements(By.cssSelector("[ng-switch=\"headerIndexes[$index]\"]")).get(2).getText());
                         break;
                     }
                 } else{
