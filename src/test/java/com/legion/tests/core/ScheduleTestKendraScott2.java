@@ -9,6 +9,7 @@ import com.legion.pages.*;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
@@ -2090,6 +2091,43 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.verifyMessageIsExpected("schedule not published");
 		schedulePage.verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished();
 		schedulePage.verifyTMNotSelected();
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "SCH-2016: verify shifts display normally after switch to day view")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyShiftsDisplayNormallyInDayViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+		// Navigate to a week
+		schedulePage.navigateToNextWeek();
+		schedulePage.navigateToNextWeek();
+		// create the schedule if not created
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "08:00PM");
+		schedulePage.verifyDayHasShifts("Sunday");
+		schedulePage.verifyDayHasShifts("Monday");
+		schedulePage.verifyDayHasShifts("Tuesday");
+		schedulePage.verifyDayHasShifts("Wednesday");
+		schedulePage.verifyDayHasShifts("Thursday");
+		schedulePage.verifyDayHasShifts("Friday");
+		schedulePage.verifyDayHasShifts("Saturday");
+		schedulePage.clickOnDayView();
+		List<WebElement> shiftsInDayView = schedulePage.getAvailableShiftsInDayView();
+		SimpleUtils.assertOnFail("Day view shifts don't diaplay successfully!", !shiftsInDayView.isEmpty(), false);
 	}
 
 	@Automated(automated = "Automated")
