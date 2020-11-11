@@ -1,5 +1,5 @@
 {
-  "CHROME_DRIVER_PATH": "/Users/fenghuanli/Documents/drivers/chromedriver",
+  "CHROME_DRIVER_PATH": "D:\\Automation\\ui\\driver\\chromedriver_win32\\chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "/usr/local/bin/geckodriver",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://rc-enterprise.dev.legion.work/",
