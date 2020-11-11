@@ -239,7 +239,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public boolean isProfilePageLoaded() throws Exception
 	{
-		if(isElementLoaded(profileSection)) {
+		if(isElementLoaded(profileSection, 15)) {
 			return true;
 		}
 		return false;

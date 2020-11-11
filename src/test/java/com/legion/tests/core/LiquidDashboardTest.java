@@ -526,6 +526,8 @@ public class LiquidDashboardTest extends TestBase {
         dashboardPage.navigateToDashboard();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
+        dashboardPage.clickOnRefreshButton();
+
         boolean areShiftsLoaded = dashboardPage.isStartingSoonLoaded();
         if (!areShiftsLoaded) {
             SimpleUtils.pass("There are no shifts after ungenerating the schedule from current week onward!");

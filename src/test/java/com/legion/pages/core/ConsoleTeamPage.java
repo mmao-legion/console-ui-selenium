@@ -3235,18 +3235,26 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 																		LinkedHashMap<String, List<String>> regularHours) throws Exception {
 		HashMap<Integer, List<String>> timeOffs = new HashMap<>();
 		List<String> weekTimeOffCounts = null;
-		if (isElementLoaded(noTimeOff, 5)) {
-			timeOffs = generateTheDefaultTimeOffTableByRegularHours(indexAndTimes, regularHours);
+		try {
+			if (isElementLoaded(noTimeOff, 5)) {
+				timeOffs = generateTheDefaultTimeOffTableByRegularHours(indexAndTimes, regularHours);
+			}
+		} catch (Exception e) {
+			// Do nothing
 		}
 		if (areListElementVisible(timeOffRows, 10)) {
 			for (int i = 0; i < timeOffRows.size(); i++) {
-				String className = timeOffRows.get(i).getAttribute("class");
+				// Avoid stale element issue
+				String className = getDriver().findElements(By.cssSelector("[class=\"coverage-row row-fx ng-scope coverage-timeoff\"]")).get(i).getAttribute("class");
 				if (!className.contains("ng-hide")) {
+					timeOffRows = getDriver().findElements(By.cssSelector("[class=\"coverage-row row-fx ng-scope coverage-timeoff\"]"));
 					List<WebElement> timeOffCounts = timeOffRows.get(i).findElements(By.className("coverage-cell"));
 					if (areListElementVisible(timeOffCounts, 5)) {
 						weekTimeOffCounts = new ArrayList<>();
-						for (WebElement timeOffCount : timeOffCounts) {
-							weekTimeOffCounts.add(timeOffCount.getText());
+						timeOffCounts = timeOffRows.get(i).findElements(By.className("coverage-cell"));
+						for (int j = 0; j < timeOffCounts.size(); j++) {
+							weekTimeOffCounts.add(getDriver().findElements(By.cssSelector("[class=\"coverage-row row-fx ng-scope coverage-timeoff\"]")).
+									get(i).findElements(By.className("coverage-cell")).get(j).getText());
 						}
 						timeOffs.put(i, weekTimeOffCounts);
 					} else {

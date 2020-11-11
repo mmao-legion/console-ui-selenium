@@ -4868,17 +4868,17 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		LinkedHashMap<String, List<String>> regularHours = new LinkedHashMap<>();
 		List<String> startNEndTime = null;
 		if (areListElementVisible(weekDays, 30)) {
-			for (WebElement weekDay : weekDays) {
-				WebElement day = weekDay.findElement(By.className("ellipsis"));
-				List<WebElement> workTimes = weekDay.findElements(By.className("work-time"));
+			for (int i = 0; i < weekDays.size(); i++) {
+				WebElement day = getDriver().findElements(By.cssSelector("#day\\.dayOfTheWeek .pills-row")).get(i).findElement(By.className("ellipsis"));
+				List<WebElement> workTimes = getDriver().findElements(By.cssSelector("#day\\.dayOfTheWeek .pills-row")).get(i).findElements(By.className("work-time"));
 				if (day != null && workTimes != null && workTimes.size() == 2) {
 					String startTime = workTimes.get(0).getText();
 					String endTime = workTimes.get(1).getText();
 					startNEndTime = new ArrayList<>();
 					startNEndTime.add(startTime);
 					startNEndTime.add(endTime);
-					regularHours.put(day.getText(), startNEndTime);
-					SimpleUtils.report("Get time for: " + day.getText() + ", time is: " + startTime + " - " + endTime);
+					regularHours.put(getDriver().findElements(By.cssSelector("#day\\.dayOfTheWeek .pills-row")).get(i).findElement(By.className("ellipsis")).getText(), startNEndTime);
+					SimpleUtils.report("Get time for: " + getDriver().findElements(By.cssSelector("#day\\.dayOfTheWeek .pills-row")).get(i).findElement(By.className("ellipsis")).getText() + ", time is: " + startTime + " - " + endTime);
 				}
 			}
 		}
@@ -5136,6 +5136,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public HashMap<String, List<String>> getDataFromSchedulingPolicyGroups() throws Exception {
+		// wait for data loaded
+		waitForSeconds(10);
 		HashMap<String, List<String>> dataFromSchedulingPolicyGroups = new HashMap<>();
 		WebElement currentTab = null;
 		if (areListElementVisible(schedulingPolicyGroupsTabContent, 5)) {

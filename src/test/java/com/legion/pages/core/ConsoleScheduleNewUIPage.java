@@ -2824,7 +2824,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
 	public void deleteShift() throws Exception {
-		if(isElementLoaded(shiftDeleteBtn, 5)){
+		if(isElementLoaded(shiftDeleteBtn, 10)){
 			clickTheElement(shiftDeleteBtn);
 		}else{
 			SimpleUtils.fail("Delete button is not available on Shift container",false);
@@ -9945,7 +9945,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             float totalShiftsWorkTime = getActiveShiftHoursInDayView();
             SimpleUtils.report("Active Day Total Work Time Data: " + totalShiftsWorkTime);
             if (availableJobTitleList.contains(jobTitle.toLowerCase().trim())) {
-                if (activeDayScheduleHoursOnCard == totalShiftsWorkTime) {
+                if (activeDayScheduleHoursOnCard - totalShiftsWorkTime <= 0.05) {
                     SimpleUtils.pass("Schedule Hours in smart card  equal to total Active Schedule Hours by job title filter ");
                 }else
                     SimpleUtils.fail("the job tile filter hours not equal to schedule hours in schedule samrtcard",true);

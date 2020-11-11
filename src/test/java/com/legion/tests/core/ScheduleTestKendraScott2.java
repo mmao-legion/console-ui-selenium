@@ -396,9 +396,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			List<WebElement> scheduleOverViewWeeks =  scheduleOverviewPage.getOverviewScheduleWeeks();
 			overviewData = scheduleOverviewPage.getWeekHoursByWeekElement(scheduleOverViewWeeks.get(0));
 			SimpleUtils.report("overview data :"+scheduleOverviewPage.getWeekHoursByWeekElement(scheduleOverViewWeeks.get(0)));
-			if (overviewData.get("guidanceHours").equals(scheduleSmartCardHoursWages.get("budgetedHours"))
-					& overviewData.get("scheduledHours").equals(scheduleSmartCardHoursWages.get("scheduledHours"))
-					& overviewData.get("otherHours").equals(scheduleSmartCardHoursWages.get("otherHours"))) {
+			if (Math.abs(overviewData.get("guidanceHours") - (scheduleSmartCardHoursWages.get("budgetedHours"))) <= 0.05
+					&& Math.abs(overviewData.get("scheduledHours") - (scheduleSmartCardHoursWages.get("scheduledHours"))) <= 0.05
+					&& Math.abs(overviewData.get("otherHours") - (scheduleSmartCardHoursWages.get("otherHours"))) <= 0.05) {
 				SimpleUtils.pass("Schedule/Budgeted smartcard-is showing the values in Hours and wages, it is displaying the same data as overview page have for the current week .");
 			}else {
 				SimpleUtils.fail("Scheduled Hours and Overview Schedule Hours not same",true);

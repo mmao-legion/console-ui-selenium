@@ -988,7 +988,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public void clickOnRefreshButton() throws Exception {
 		if (isElementLoaded(refreshButton, 10)) {
-			click(refreshButton);
+			clickTheElement(refreshButton);
 			waitForSeconds(15);
 			SimpleUtils.pass("Click on Refresh button Successfully!");
 		} else {
