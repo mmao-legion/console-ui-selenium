@@ -365,6 +365,8 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                             }
                             SimpleUtils.fail("District does not matched with '" + districtName + "'", true);
                         }
+                        //to close the district dropdown list
+                        click(districtSelectorButton);
                     }
                 }
             }

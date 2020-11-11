@@ -118,4 +118,7 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public InboxPage createConsoleInboxPage() { return new ConsoleInboxPage(); }
+
+	@Override
+	public CinemarkMinorPage createConsoleCinemarkMinorPage() { return new ConsoleCinemarkMinorPage(); }
 }

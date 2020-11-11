@@ -3614,8 +3614,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 waitForSeconds(1);
                 clickTheElement(nextButtonOnCreateSchedule);
                 budgetHours = checkEnterBudgetWindowLoadedForNonDG();
+                if (isElementEnabled(checkOutTheScheduleButton)) {
+                    checkoutSchedule();
+                }
                 selectWhichWeekToCopyFrom(weekInfo);
                 clickOnFinishButtonOnCreateSchedulePage();
+
             } else {
                 SimpleUtils.fail("Not able to generate schedule Successfully!", false);
             }
