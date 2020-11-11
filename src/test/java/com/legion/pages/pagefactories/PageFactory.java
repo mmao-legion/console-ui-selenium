@@ -55,4 +55,6 @@ public interface PageFactory {
     ScheduleDMViewPage createScheduleDMViewPage();
 
     InboxPage createConsoleInboxPage();
+
+    CinemarkMinorPage createConsoleCinemarkMinorPage();
 }
