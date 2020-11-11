@@ -44,7 +44,7 @@
                     <include name="verifyChangeMSParentLocationToNoneFunction" />
                     <include name="verifyChangeP2PParentLocationToNoneFunction" />
 
-
+                    <include name="verifyDistrictFunction" />
 
 
                 </methods>
