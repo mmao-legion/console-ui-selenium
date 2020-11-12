@@ -1,5 +1,5 @@
 {
-  "CHROME_DRIVER_PATH": "/src/test/resources/Dirver/chromedriver.exe",
+  "CHROME_DRIVER_PATH": "/var/lib/jenkins/workspace/QA Jobs/src/test/resources/Dirver/chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "/usr/local/bin/geckodriver",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://rc-enterprise.dev.legion.work/",
