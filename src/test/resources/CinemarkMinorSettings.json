@@ -1,0 +1,26 @@
+{
+  "MinorScheduleWeek14&15": [
+    ["School Week","4","15" ],
+    ["Non-School Week", "5", "16"],
+    ["Summer Week", "", ""]
+  ],
+  "MinorScheduleDay14&15": [
+    ["School today, school tomorrow","8:00 AM","4:00 PM", "4"],
+    ["School today, no school tomorrow", "", "", ""],
+    ["No school today, no school tomorrow", "", "", ""],
+    ["No school today, school tomorrow", "", "", ""],
+    ["Summer day", "", "", ""]
+  ],
+  "MinorScheduleWeek16&17": [
+    ["School Week","4","15" ],
+    ["Non-School Week", "5", "16"],
+    ["Summer Week", "", ""]
+  ],
+  "MinorScheduleDay16&17": [
+    ["School today, school tomorrow","8:00 AM","4:00 PM", "4"],
+    ["School today, no school tomorrow", "", "", ""],
+    ["No school today, no school tomorrow", "", "", ""],
+    ["No school today, school tomorrow", "", "", ""],
+    ["Summer day", "", "", ""]
+  ]
+}

@@ -3398,7 +3398,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void clickOnJobTitleFilter() throws Exception {
 		if (isElementLoaded(openFilterBtn, 5)) {
-			click(openFilterBtn);
+			clickTheElement(openFilterBtn);
 			if (isFilterLayoutLoaded()) {
 				SimpleUtils.pass("Click the open filter button Successfully!");
 			}else {
