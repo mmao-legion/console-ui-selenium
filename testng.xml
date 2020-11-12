@@ -336,6 +336,18 @@
         </classes>
     </test>
 
+    <test name="Cinemark Minor Test">
+        <classes>
+            <class name="com.legion.tests.core.CinemarkMinorTest">
+                <methods>
+                    <include name="verifyMinorFieldIsDisplayedOnTMProfileAsInternalAdmin" />
+                    <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />
+                    <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
     <test name="Schedule New UI Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">

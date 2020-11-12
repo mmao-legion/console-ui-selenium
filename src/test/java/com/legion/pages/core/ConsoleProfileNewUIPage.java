@@ -2603,7 +2603,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 	}
 
-	public Boolean pendingRequestCanBeCancelled() throws Exception {
+	public boolean pendingRequestCanBeCancelled() throws Exception {
 		Boolean pendingRequestCanBeCancelled = false;
 		for (int i = 0; i < timeOffRequestRows.size(); i++) {
 			WebElement requestStatus = timeOffRequestRows.get(i).findElement(By.cssSelector("span.request-status"));
@@ -2643,6 +2643,144 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.pass("Profile Page: Unable to save 'My Shift Preference' data.");
 		} else
 			SimpleUtils.fail("Profile Page: 'My Shift Preference' edit container 'Save' button not loaded.", false);
+	}
+
+	@FindBy(xpath = "//span[contains(text(),\"MINOR\")]")
+	private WebElement minorField;
+
+	@FindBy(xpath = "//span[contains(text(),\"MINOR\")]/../../following-sibling::div[1]/div[2]")
+	private WebElement minorValue;
+
+	@FindBy(css = ".lg-toast__highlight-text")
+	private WebElement popupMessage;
+
+
+	@Override
+	public boolean isMINORDisplayed() throws Exception {
+		Boolean isMINORDisplayed = false;
+		if(isElementLoaded(minorField,10))
+			isMINORDisplayed = true;
+		else
+			SimpleUtils.fail("Profile Page: MINOR field failed to load",false);
+		return isMINORDisplayed;
+	}
+
+	@Override
+	public boolean isMINORYesOrNo() throws Exception {
+		Boolean isMINORYesOrNo = false;
+		if(isElementLoaded(minorValue,10)) {
+			if (minorValue.getText().contains("Yes"))
+				isMINORYesOrNo = true;
+		} else
+			SimpleUtils.fail("Profile Page: MINOR value failed to load",false);
+		return isMINORYesOrNo;
+	}
+
+	@Override
+	public void verifyMINORField(boolean isMinor) throws Exception {
+		if (isMINORDisplayed())
+			SimpleUtils.pass("Profile Page: Minor filed is displayed on TM Profile");
+		else
+			SimpleUtils.fail("Profile Page: Minor filed failed to display on TM Profile",false);
+		if (isMINORYesOrNo()) {
+			if (isMinor == true)
+				SimpleUtils.pass("Profile Page: When this tm is minor, it shows \"Yes\" successfully");
+			else
+				SimpleUtils.fail("Profile Page: When this tm is minor, it failed to display \"Yes\"", false);
+		} else {
+			if (isMinor == false)
+				SimpleUtils.pass("Profile Page: When this tm is minor, it shows \"No\" successfully");
+			else
+				SimpleUtils.fail("Profile Page: When this tm is minor, it failed to display \"No\"", false);
+		}
+	}
+
+	@FindBy(css = "[ng-if=\"tm.isMinor\"] .profile-heading")
+	private WebElement schoolCalendar;
+
+	@FindBy(css = "[options=\"schoolCalendars\"]")
+	private WebElement schoolCalendarOptions;
+
+	@FindBy(css = "[options=\"schoolCalendars\"] select option")
+	private List<WebElement> schoolCalendarList;
+
+	@FindBy(css = "[label=\"Save\"] button")
+	private List<WebElement> saveBtnsOfProfile;
+
+	@FindBy(xpath = "//lg-button[@ng-click=\"$ctrl.onAction()\"]/button")
+	private WebElement editBtnOfProfile;
+
+	@FindBy(xpath = "//div[contains(text(),\"NAME\")]/../span")
+	private WebElement nameOfProfile;
+
+	@Override
+	public void verifySMCanSelectACalendarForMinor() throws Exception {
+		if (isElementLoaded(schoolCalendar,5)) {
+			SimpleUtils.pass("Profile Page: There should be \"School Calendar\" section loaded");
+			if (isElementLoaded(editBtnOfProfile,5)) {
+				click(editBtnOfProfile);
+				if (isElementLoaded(schoolCalendarOptions,5) && schoolCalendarList.size() > 1) {
+					click(schoolCalendarOptions);
+					int index = (new Random()).nextInt(schoolCalendarList.size() - 1) + 1;
+					if (!schoolCalendarList.get(index).getText().trim().equals("None")) {
+						click(schoolCalendarList.get(index));
+						SimpleUtils.pass("Profile Page: The calendars all are loaded and can be selected");
+					}
+					if (areListElementVisible(saveBtnsOfProfile,5)) {
+						clickTheElement(saveBtnsOfProfile.get(0));
+						if (isElementLoaded(popupMessage,5) && popupMessage.getText().contains("Success"))
+							SimpleUtils.pass("Profile Page: The selected calendar is saved successfully");
+						else
+							SimpleUtils.fail("Profile Page: No success message when saving the profile",false);
+					} else
+						SimpleUtils.fail("Profile Page: The selected calendar failed to save",false);
+				} else
+					SimpleUtils.fail("Profile Page: No calendar can be selected, please create one firstly",false);
+			} else
+					SimpleUtils.fail("Profile Page: \"Edit\" button failed to load",false);
+			} else
+				SimpleUtils.fail("Profile Page: Cannot find \"School Calendar\" section for a minor",false);
+	}
+
+	@Override
+	public void selectAGivenCalendarForMinor(String givenCalendar) throws Exception {
+		Boolean isGivenCalendarSelected = false;
+		if (isElementLoaded(editBtnOfProfile,5)) {
+			clickTheElement(editBtnOfProfile);
+			if (isElementLoaded(schoolCalendarOptions,5) && schoolCalendarList.size() > 1) {
+				click(schoolCalendarOptions);
+				for (WebElement calendar : schoolCalendarList) {
+					if (calendar.getText().trim().equalsIgnoreCase(givenCalendar)) {
+						click(calendar);
+						isGivenCalendarSelected = true;
+						break;
+					}
+				}
+				if (isGivenCalendarSelected)
+					SimpleUtils.pass("Profile Page: The given calendar is selected successfully");
+				else
+					SimpleUtils.fail("Profile Page: The given calendar failed to select",false);
+				if (areListElementVisible(saveBtnsOfProfile,5)) {
+					clickTheElement(saveBtnsOfProfile.get(0));
+					if (isElementLoaded(popupMessage,5) && popupMessage.getText().contains("Success"))
+						SimpleUtils.pass("Profile Page: The selected calendar is saved successfully");
+					else
+						SimpleUtils.fail("Profile Page: No success message when saving the profile",false);
+				} else
+					SimpleUtils.fail("Profile Page: The selected calendar failed to save",false);
+			} else
+				SimpleUtils.fail("Profile Page: No calendar can be selected, please create one firstly",false);
+		} else
+			SimpleUtils.fail("Profile Page: \"Edit\" button failed to load",false);
+	}
+
+	@Override
+	public String getUserProfileName() throws Exception {
+		String userProfileName = "";
+		if (isElementLoaded(nameOfProfile, 5)) {
+			userProfileName = nameOfProfile.getText().replaceAll("\"", "").trim();
+		}
+		return userProfileName;
 	}
 
 	//added by Haya
