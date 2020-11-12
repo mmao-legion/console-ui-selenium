@@ -216,4 +216,16 @@ public interface ProfileNewUIPage {
 	public void cancelBadgeBtn() throws Exception;
 
 	public boolean ifMatchEmailRegex(String email) throws Exception;
+
+	public boolean isMINORDisplayed() throws Exception;
+
+	public boolean isMINORYesOrNo() throws Exception;
+
+	public void verifyMINORField(boolean isMinor) throws Exception;
+
+	public void verifySMCanSelectACalendarForMinor() throws Exception;
+
+	public void selectAGivenCalendarForMinor(String givenCalendar) throws Exception;
+
+	public String getUserProfileName() throws Exception;
 }
