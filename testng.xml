@@ -52,23 +52,23 @@
         </classes>
     </test>
 
-    <test name="Navigation Test">
-        <classes>
-            <class name="com.legion.tests.core.NewNavigationFlowTest">
-                <methods>
-                    <include name="verifyLocationProfilePageInControls" />
-                    <include name="verifyManagerLocationForOneUserInControlsInControls" />
-                    <include name="verifyLocationListFunctionInTimesheet" />
-                    <include name="verifyLegionBasicNavigationFunctionIn" />
-                    <include name="verifyDashboardViewAsInternalAdmin" />
-                    <include name="verifyDashboardViewAsDistrictManager" />
-                    <include name="verifyDashboardViewAsStoreManager" />
-                    <include name="verifyNavigationBarSearchDistrictFunctionInternalAdmin" />
-                    <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+<!--    <test name="Navigation Test">-->
+<!--        <classes>-->
+<!--            <class name="com.legion.tests.core.NewNavigationFlowTest">-->
+<!--                <methods>-->
+<!--                    <include name="verifyLocationProfilePageInControls" />-->
+<!--                    <include name="verifyManagerLocationForOneUserInControlsInControls" />-->
+<!--                    <include name="verifyLocationListFunctionInTimesheet" />-->
+<!--                    <include name="verifyLegionBasicNavigationFunctionIn" />-->
+<!--                    <include name="verifyDashboardViewAsInternalAdmin" />-->
+<!--                    <include name="verifyDashboardViewAsDistrictManager" />-->
+<!--                    <include name="verifyDashboardViewAsStoreManager" />-->
+<!--                    <include name="verifyNavigationBarSearchDistrictFunctionInternalAdmin" />-->
+<!--                    <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
 <!--    <test name="Location Group Test">-->
 <!--        <classes>-->
 <!--            <class name="com.legion.tests.core.LocationsGroupTest">-->
