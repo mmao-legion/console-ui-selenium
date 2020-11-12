@@ -2,9 +2,13 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.LoginPage;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.SessionId;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -12,8 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.HashMap;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.setScreenshotConsoleName;
+import static com.legion.utils.MyThreadLocal.*;
 
 public class ConsoleLoginPage extends BasePage implements LoginPage {
     //todo Manideep to replace it with Legion Console-UI login page he has

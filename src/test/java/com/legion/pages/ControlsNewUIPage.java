@@ -277,4 +277,8 @@ public interface ControlsNewUIPage {
 	public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception;
 	public void setSchedulingMinorRuleFor14N15(String from, String to, String parameter1, String parameter2, String parameter3, String parameter4) throws Exception;
 	public void setSchedulingMinorRuleFor16N17(String from, String to, String parameter1, String parameter2, String parameter3, String parameter4) throws Exception;
+	public void searchUserByFirstName(String userFirstName) throws Exception;
+	public void verifyUpdateUserAndRolesOneUserLocationInfo(String userFirstName) throws Exception;
+	public void clickOnLocationsTabInGlobalModel() throws Exception;
+	public List<String> getAllLocationsInGlobalModel() throws Exception;
 }

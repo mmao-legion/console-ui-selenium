@@ -1,9 +1,9 @@
 {
-  "CHROME_DRIVER_PATH": "/usr/local/bin/chromedriver",
+  "CHROME_DRIVER_PATH": "D:\\Automation\\ui\\driver\\chromedriver_win32\\chromedriver1.exe",
   "FIREFOX_DRIVER_PATH": "/usr/local/bin/geckodriver",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://rc-enterprise.dev.legion.work/",
-  "Screenshot_Path": "/home/circleci/project/screenshots",
+  "Screenshot_Path": "/Users/fenghuanli/Documents/project/screenshots",
   "ENTERPRISE" : "LegionCoffee2",
   "Coffee_Enterprise" : "LegionCoffee",
   "LegionTech_Enterprise" : "LegionTech",
@@ -11,7 +11,8 @@
   "Tech_Enterprise" : "LegionTech",
   "Reverted_Enterprise" : "LegionReverted",
   "KendraScott2_Enterprise" : "KendraScott2",
-  "OP_Enterprise" : "OP",
+  "DGStage_Enterprise" : "dgstage",
+  "Op_Enterprise" : "op",
   "DEFAULT_USERNAME" : "admin2.a",
   "DEFAULT_PASSWORD" : "admin2.a",
   "ENVIRONMENT" : "QA",
@@ -31,6 +32,6 @@
   "deviceName" : "Gionee X1",
   "platformVersion" : "7.0",
   "isParallelBrowser" : "false",
-  "Download_File_Default_Dir" : "/home/circleci/project/downloads",
-  "isHeadlessBrowser" : "true"
+  "Download_File_Default_Dir" : "/Users/fenghuanli/Documents/project/downloads",
+  "isHeadlessBrowser" : "false"
 }

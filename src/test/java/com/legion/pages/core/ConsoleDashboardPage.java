@@ -53,24 +53,24 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	private WebElement dashboardSection;
 
 	@FindBy(className="console-navigation-item")
-	private List<WebElement>consoleNavigationMenuItems;
+	private List<WebElement>consoleNavigationMenuItems; //fiona will using
 
-	@FindBy (css = "#legion-app navigation div:nth-child(4)")
+	@FindBy (css = "#legion-app navigation div:nth-child(4)")//fiona using
 	private WebElement scheduleConsoleName;
 	
 	@FindBy(className="home-dashboard")
 	private WebElement legionDashboardSection;
 	    
-	@FindBy (css = "div.console-navigation-item-label.Dashboard")
+	@FindBy (css = "div.console-navigation-item-label.Dashboard")  //fiona will using
 	private WebElement dashboardConsoleName;
 	
-	@FindBy (css = "div.console-navigation-item-label.Controls")
+	@FindBy (css = "div.console-navigation-item-label.Controls")//fiona using
 	private WebElement controlsConsoleName;
 	
 	@FindBy (css = ".lg-location-chooser__global.ng-scope")
 	private WebElement globalIconControls;
 	
-	@FindBy (css = ".center.ng-scope")
+	@FindBy (css = ".center.ng-scope")//fiona using
 	private WebElement controlsPage;
 
 	@FindBy (css = "div.col-sm-8.text-left")
@@ -201,7 +201,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 
 
-	@Override
+	@Override//fiona using
 	public void navigateToDashboard() throws Exception {
 		// TODO Auto-generated method stub
 		if(isElementLoaded(dashboardConsoleName)){
@@ -995,4 +995,63 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.fail("Refresh button not Loaded!", true);
 		}
 	}
+	//added by Estelle
+
+	@FindBy(css = "div.console-navigation-item-label.Dashboard")
+	private WebElement dashboardConsoleMenu;
+	@Override
+	public void clickOnDashboardConsoleMenu() throws Exception {
+		if(isElementLoaded(dashboardConsoleMenu))
+			click(dashboardConsoleMenu);
+		else
+			SimpleUtils.fail("Dashboard Console Menu not loaded Successfully!", false);
+	}
+
+	//added by Estelle
+
+	@Override
+	public String getCurrentLocation() throws Exception {
+		if (isElementLoaded(currentLocation,5)) {
+			return   currentLocation.getText();
+		}
+		return null;
+	}
+
+	@FindBy(css = "[ng-if=\"$ctrl.parentLocation\"]")
+	private WebElement currentDistrict;
+	@Override
+	public String getCurrentDistrict() throws Exception {
+		if (isElementLoaded(currentDistrict,5)) {
+			return   currentDistrict.getText();
+		}
+		return null;
+	}
+
+	@Override
+	public boolean IsThereDistrictNavigationForLegionBasic() throws Exception {
+		if (isElementLoaded(currentDistrict,5)) {
+			return true;
+		}
+		return false;
+	}
+
+	@FindBy(css = "div[ng-class=\"{'lg-search-options__subLabel': !option.subLabel}\"]")
+	private List<WebElement> locationsListInDashboardPage;
+	@Override
+	public List<String> getLocationListInDashboard() {
+		click(currentLocation);
+		waitForSeconds(3);
+			if (locationsListInDashboardPage.size()>0) {
+				List<String> locationList = new ArrayList<String>();
+				for (WebElement location: locationsListInDashboardPage
+					 ) {
+					locationList.add(location.getText().split("\n")[0]);
+				}
+				return locationList;
+			}
+		return null;
+	}
+
+
+
 }

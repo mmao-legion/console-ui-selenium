@@ -125,4 +125,5 @@ public interface TeamPage {
 	public void rejectAllTheTimeOffRequests() throws Exception;
 	public List<String> getTMNameList() throws Exception;
 	public void rejectAllTeamMembersTimeOffRequest(ProfileNewUIPage profileNewUIPage, int index) throws Exception;
+	public boolean verifyThereIsLocationColumnForMSLocationGroup() throws Exception;
 }

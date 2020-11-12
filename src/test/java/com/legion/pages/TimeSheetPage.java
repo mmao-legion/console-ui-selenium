@@ -149,4 +149,5 @@ public interface TimeSheetPage {
 	public int getApprovalRateFromTimesheetByLocation(String location) throws Exception;
 	public void verifyCurrentWeekIsSelectedByDefault(String currentWeek) throws Exception;
 
+	public String verifyLocationList() throws Exception;
 }

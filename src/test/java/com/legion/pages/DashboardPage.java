@@ -54,4 +54,9 @@ public interface DashboardPage {
     public boolean isSwitchToEmployeeViewPresent() throws Exception;
     public List<WebElement> getDashboardScheduleWeeks() throws Exception;
     public void clickOnRefreshButton() throws Exception;
+    public void clickOnDashboardConsoleMenu() throws Exception;
+    public String getCurrentLocation() throws Exception;
+    public String  getCurrentDistrict() throws Exception;
+    public boolean IsThereDistrictNavigationForLegionBasic() throws Exception;
+    public List<String> getLocationListInDashboard();
 }

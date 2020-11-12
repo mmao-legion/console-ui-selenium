@@ -3451,6 +3451,15 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		return isClear;
 	}
 
+@FindBy(css = "div[ng-if=\"showLocation\"]")
+private WebElement locationColumn;
+	@Override
+	public boolean verifyThereIsLocationColumnForMSLocationGroup() throws Exception {
+		if (isElementLoaded(locationColumn,5)) {
+			return true;
+		}else
+			return  false;
+	}
 //    public boolean isTeam() throws Exception
 //	{
 //    	if(isElementLoaded(rosterBodyElement))

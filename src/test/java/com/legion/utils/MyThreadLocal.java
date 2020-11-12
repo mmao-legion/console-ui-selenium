@@ -64,6 +64,11 @@ public class MyThreadLocal {
 	public static final ThreadLocal<Integer> sectionID = new ThreadLocal<>();
 	public static final ThreadLocal<Integer> budgetTolerance = new ThreadLocal<>();
 	public static final ThreadLocal<String> testRailReporting = new ThreadLocal<>();
+	public static final ThreadLocal<String> location = new ThreadLocal<>();
+	public static final ThreadLocal<String> LGMSLocationName = new ThreadLocal<>();
+	public static final ThreadLocal<String> LGPTPLocationName = new ThreadLocal<>();
+	public static final ThreadLocal<String> LGMSNsoLocationName = new ThreadLocal<>();
+	public static final ThreadLocal<String> LGPTPNsoLocationName = new ThreadLocal<>();
 
 	public static void setScreenshotLocation(String value) { screenshotLoc.set(value); }
 
@@ -410,6 +415,26 @@ public class MyThreadLocal {
 		return platformname.get();
 	}
 
+	//set/get location info
+	public static void setLocationName(String locationName) { location.set(locationName); }
 
+	public static String getLocationName() { return location.get(); }
+
+	public static void setLGMSLocationName(String value) { LGMSLocationName.set(value); }
+
+	public static String getLGMSLocationName() { return LGMSLocationName.get(); }
+
+	public static void setLGPTPLocationName(String value) { LGPTPLocationName.set(value); }
+
+	public static String getLGPTPLocationName() { return LGPTPLocationName.get(); }
+
+	//NSO location info
+	public static void setLGMSNsoLocationName(String value) { LGMSNsoLocationName.set(value); }
+
+	public static String getLGMSNsoLocationName() { return LGMSNsoLocationName.get(); }
+
+	public static void setLGPTPNsoLocationName(String value) { LGPTPNsoLocationName.set(value); }
+
+	public static String getLGPTPNsoLocationName() { return LGPTPNsoLocationName.get(); }
 
 }

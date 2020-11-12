@@ -2,6 +2,7 @@ package com.legion.tests;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.Status;
+import com.jayway.restassured.response.Response;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.pagefactories.ConsoleWebPageFactory;
@@ -23,7 +24,9 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import org.json.JSONException;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -34,6 +37,7 @@ import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.SessionId;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.Reporter;
@@ -52,7 +56,10 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static com.jayway.restassured.RestAssured.baseURI;
+import static com.jayway.restassured.RestAssured.given;
 import static com.legion.utils.MyThreadLocal.*;
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 //import org.apache.log4j.Logger;
 
@@ -196,6 +203,7 @@ public abstract class TestBase {
             if (getDriverType().equalsIgnoreCase(propertyMap.get("CHROME"))) {
                 System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
                 ChromeOptions options = new ChromeOptions();
+
                 if(propertyMap.get("isHeadlessBrowser").equalsIgnoreCase("true")){
 //                    options.addArguments("headless");
                     options.addArguments( "--headless","--disable-gpu", "--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage" );
@@ -290,6 +298,7 @@ public abstract class TestBase {
         try {
             getDriver().get(getURL() + "legion/?enterprise=" + getEnterprise() + " ");
             getDriver().manage().window().maximize();
+
         } catch (TimeoutException te) {
             try {
                 getDriver().navigate().refresh();
@@ -373,6 +382,76 @@ public abstract class TestBase {
         options.setCapability("silent", true);
         System.setProperty("webdriver.chrome.silentOutput", "true");
         setDriver(new ChromeDriver(options));
+    }
+
+    public  static void switchToNewWindow() {
+        String winHandleBefore =getDriver().getWindowHandle();
+        for(String winHandle : getDriver().getWindowHandles()) {
+            if (winHandle.equals(winHandleBefore)) {
+                continue;
+            }
+            getDriver().switchTo().window(winHandle);
+            break;
+        }
+    }
+
+    public static void disableSwitch(String switchName,String enterpriseName) {
+
+        Response response = given().params("enterpriseName","op","sourceSystem","legion","passwordPlainText","AutoTesting.AD1","userName","AutoTesting.AD1")
+                .when().get("https://staging-enterprise.dev.legion.work/legion/authentication/login").then().statusCode(200).extract().response();
+        String sessionId = response.header("sessionid");
+        //get ABSwitch to confirm the switch is on or off
+        Response response2= given().log().all().header("sessionId",sessionId).param("switchName", switchName).when().get("https://staging-enterprise.dev.legion.work/legion/business/queryABSwitch").then().log().all().extract().response();
+        String enabled = response2.jsonPath().get("records.enabled[0]").toString();
+
+        if (enabled.equals("true")) {
+
+            //disable location group switch
+            HashMap<String, Object> recordContext = new HashMap<>();
+            recordContext.put( "name", switchName);
+            recordContext.put("resource", "Business");
+            recordContext.put("value", enterpriseName);
+            recordContext.put("controlValue", "");
+            recordContext.put("enabled", false);
+            recordContext.put("adminOnly", false);
+            HashMap<String, Object>  jsonAsMap = new HashMap<>();
+            jsonAsMap.put("level", "Enterprise");
+            jsonAsMap.put("valid", true);
+            jsonAsMap.put("record",recordContext);
+            Response responseAfterDisable= given().log().all().headers("sessionId",sessionId,"Content-Type","application/json").body(jsonAsMap)
+                    .when().post("https://staging-enterprise.dev.legion.work/legion/business/updateABSwitch").then().log().all().extract().response();
+            responseAfterDisable.then().statusCode(200);
+
+        }
+    }
+
+    public static void enableSwitch(String switchName,String enterpriseName) {
+        Response response = given().params("enterpriseName","dgstage","sourceSystem","legion","passwordPlainText","admin2.a","userName","admin2.a")
+                .when().get("https://rc-enterprise.dev.legion.work/legion/authentication/login").then().statusCode(200).extract().response();
+        String sessionId = response.header("sessionid");
+        //get ABSwitch to confirm the switch is on or off
+        Response response2= given().log().all().header("sessionId",sessionId).param("switchName", switchName).when().get("https://rc-enterprise.dev.legion.work/legion/business/queryABSwitch").then().log().all().extract().response();
+        String enabled = response2.jsonPath().get("records.enabled[0]").toString();
+
+        if (enabled.equals("false")) {
+
+            //disable location group switch
+            HashMap<String, Object> recordContext = new HashMap<>();
+            recordContext.put( "name", switchName);
+            recordContext.put("resource", "Business");
+            recordContext.put("value", enterpriseName);
+            recordContext.put("controlValue", "");
+            recordContext.put("enabled", true);
+            recordContext.put("adminOnly", false);
+            HashMap<String, Object>  jsonAsMap = new HashMap<>();
+            jsonAsMap.put("level", "Enterprise");
+            jsonAsMap.put("valid", true);
+            jsonAsMap.put("record",recordContext);
+            Response responseAfterDisable= given().log().all().headers("sessionId",sessionId,"Content-Type","application/json").body(jsonAsMap)
+                    .when().post("https://rc-enterprise.dev.legion.work/legion/business/updateABSwitch").then().log().all().extract().response();
+            responseAfterDisable.then().statusCode(200);
+
+        }
     }
 
 
