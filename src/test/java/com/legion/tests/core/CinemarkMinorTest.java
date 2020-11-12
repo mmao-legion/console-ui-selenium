@@ -31,6 +31,9 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify Minor filed is displayed on TM Profile")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyMinorFieldIsDisplayedOnTMProfileAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();
         teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();

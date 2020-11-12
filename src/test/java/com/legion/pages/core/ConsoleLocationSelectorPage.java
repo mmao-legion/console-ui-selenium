@@ -98,9 +98,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public void changeLocation(String locationName)
     {
-        waitForSeconds(8);
-        getDriver().navigate().refresh();
-        waitForSeconds(4);
+        //waitForSeconds(8);
+        //getDriver().navigate().refresh();
+        waitForSeconds(2);
         try {
             Boolean isLocationMatched = false;
             activeConsoleName = activeConsoleMenuItem.getText();
@@ -112,9 +112,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                     } else {
                         click(locationSelectorButton);
                         if (areListElementVisible(availableLocationCardsName, 10) || isElementLoaded(locationDropDownButton)) {
-                            //updated by Estelle because the default location dropdown list show more than 50 location ,it's not efficient for navigation latest logic
-                            searchLocationAndSelect(locationName);
-                            if (availableLocationCardsName.size() != 0 && availableLocationCardsName.size()>5) {
+                            if (availableLocationCardsName.size() > 0) {
                                 for (WebElement locationCardName : availableLocationCardsName) {
                                     if (locationCardName.getText().contains(locationName)) {
                                         isLocationMatched = true;
@@ -123,13 +121,25 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                         break;
                                     }
                                 }
-//                            if (!isLocationMatched) {
-//                                if (isElementLoaded(dashboardLocationsPopupCancelButton)) {
-//                                    click(dashboardLocationsPopupCancelButton);
-//                                }
-//                                SimpleUtils.fail("Location does not match with '" + locationName + "'", true);
-//                            }
-
+                                if (!isLocationMatched) {
+                                    //updated by Estelle because the default location dropdown list show more than 50 location ,it's not efficient for navigation latest logic
+                                    searchLocationAndSelect(locationName);
+                                    waitForSeconds(3);
+                                    availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
+                                    if (availableLocationCardsName.size() > 0) {
+                                        for (WebElement locationCardName : availableLocationCardsName) {
+                                            if (locationCardName.getText().contains(locationName)) {
+                                                isLocationMatched = true;
+                                                click(locationCardName);
+                                                SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (!isLocationMatched) {
+                                    SimpleUtils.fail("Location does not match with '" + locationName + "'", true);
+                                }
                             }else
                                 SimpleUtils.report("No mapping data for this location,maybe it's disabled or child location for Master Slave ");
                         }
@@ -309,6 +319,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         return false;
     }
 
+    @FindBy(css = "[label=\"Refresh\"]")
+    private WebElement refreshButton;
+
     @Override
     public void changeDistrict(String districtName) {
         waitForSeconds(4);
@@ -327,20 +340,33 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                 for (WebElement locationCardName : availableLocationCardsName) {
                                     if (locationCardName.getText().contains(districtName)) {
                                         isDistrictMatched = true;
-                                        click(locationCardName);
+                                        clickTheElement(locationCardName);
                                         SimpleUtils.pass("District changed successfully to '" + districtName + "'");
                                         break;
                                     }
                                 }
                                 if (!isDistrictMatched) {
-                                    searchDistrictAndSelect(districtName);
-                                    if (isElementLoaded(dashboardLocationsPopupCancelButton)) {
-                                        click(dashboardLocationsPopupCancelButton);
+                                    //updated by Estelle because the default location dropdown list show more than 50 location ,it's not efficient for navigation latest logic
+                                    searchLocationAndSelect(districtName);
+                                    waitForSeconds(3);
+                                    availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
+                                    if (availableLocationCardsName.size() > 0) {
+                                        for (WebElement locationCardName : availableLocationCardsName) {
+                                            if (locationCardName.getText().contains(districtName)) {
+                                                isDistrictMatched = true;
+                                                click(locationCardName);
+                                                SimpleUtils.pass("District changed successfully to '" + districtName + "'");
+                                                break;
+                                            }
+                                        }
                                     }
+                                }
+                                if (!isDistrictMatched) {
                                     SimpleUtils.fail("District does matched with '" + districtName + "'", true);
                                 }
                             }
                         }
+                        verifyDMDashboardIsFinishedRefreshing();
                     }
                 }
             } else {
@@ -353,6 +379,14 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
         catch(Exception e) {
             SimpleUtils.fail("Unable to change District!", true);
+        }
+    }
+
+    private void verifyDMDashboardIsFinishedRefreshing() throws Exception {
+        if (isElementLoaded(refreshButton, 30)) {
+            SimpleUtils.pass("DM Dashbord is finished refreshing!");
+        } else {
+            SimpleUtils.fail("DM Dashboard: Refresh button is not loaded Successfully!", false);
         }
     }
 
@@ -403,10 +437,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         if (isElementLoaded(districtSearchInput,5)) {
             districtSearchInput.sendKeys(districtName);
             districtSearchInput.sendKeys(Keys.ENTER);
-            click(availableLocationCardsName.get(-1));
-        }else
-            click(locationSelectorButton);
-        searchDistrictAndSelect(districtName);
+        }else {
+            SimpleUtils.fail("Search District input failed to load!", false);
+        }
     }
 
     //added by Fiona

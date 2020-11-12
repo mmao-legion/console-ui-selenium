@@ -78,6 +78,7 @@ public abstract class TestBase {
     String TestID = null;
 //  public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
+    public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/DistrictsForDifferentEnterprises.json");
     private static ExtentReports extent = ExtentReportManager.getInstance();
     public static AndroidDriver<MobileElement> driver;
     public static String versionString;
@@ -317,12 +318,25 @@ public abstract class TestBase {
         loginPage.loginToLegionWithCredential(username, Password);
         loginPage.verifyNewTermsOfServicePopUp();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
-            locationSelectorPage.changeDistrict("Budget");
-        }
+        changeDistrictAccordingToEnterprise(locationSelectorPage);
         locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, location);
+    }
+
+    private void changeDistrictAccordingToEnterprise(LocationSelectorPage locationSelectorPage) {
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
+            locationSelectorPage.changeDistrict(districtsMap.get("Coffee_Enterprise"));
+        }
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
+            locationSelectorPage.changeDistrict(districtsMap.get("KendraScott2_Enterprise"));
+        }
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("OP_Enterprise"))) {
+            locationSelectorPage.changeDistrict(districtsMap.get("OP_Enterprise"));
+        }
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("DGStage_Enterprise"))) {
+            locationSelectorPage.changeDistrict(districtsMap.get("DGStage_Enterprise"));
+        }
     }
 
     public abstract void firstTest(Method testMethod, Object[] params) throws Exception;
