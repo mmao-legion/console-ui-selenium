@@ -3474,7 +3474,7 @@ private WebElement locationColumn;
 	@FindBy(xpath = "//label[text()=\"School Session End*\"]/../div[@class=\"session-information-date-input\"]")
 	private WebElement schoolSessionEndInput;
 
-	@FindBy(css = "[value=\"calendarName\"]")
+	@FindBy(css = "[value=\"calendarName\"] input")
 	private WebElement calendarNameInput;
 
 	@FindBy(css = "[value=\"schoolCalendarUrl\"] input")
@@ -3491,6 +3491,15 @@ private WebElement locationColumn;
 
 	@FindBy(css = ".set-session-modal")
 	private WebElement setSessionStartAndEndTimeWindow;
+
+	@FindBy(css = "div.big-calendar")
+	private WebElement bigCalendar;
+
+	@FindBy(css = "[month=\"sessionStart\"] .real-day")
+	private List<WebElement> daysInSessionStart;
+
+	@FindBy(css = "[month=\"sessionEnd\"] .real-day")
+	private List<WebElement> daysInSessionEnd;
 
 	@Override
 	public void clickOnTeamSubTab(String subTabString) throws Exception {
@@ -3524,9 +3533,18 @@ private WebElement locationColumn;
 	@Override
 	public void verifyCreateNewCalendar() throws Exception {
 		clickOnCreateNewCalendarButton();
-		if (areListElementVisible(schoolDays,5) && areListElementVisible(nonSchoolDays,5) && !areListElementVisible(summerDays,5)) {
+		if (isElementLoaded(bigCalendar,5) && areListElementVisible(schoolDays,5) && areListElementVisible(nonSchoolDays) && nonSchoolDays.size() > 103)
+			SimpleUtils.pass("School Calendars Page: A new calendar appears with school days and non school day, weekend is non school day and holiday is non school day");
+		else
+			SimpleUtils.fail("School Calendars Page: Calendar not loaded or loaded unexpectedly",false);
+		if (isMandatoryElement(schoolSessionStartInput) && isMandatoryElement(schoolSessionEndInput))
+			SimpleUtils.pass("School Calendars Page: School Session Start field and School Session End field are mandatory fields");
+		else
+			SimpleUtils.fail("School Calendars Page: School Session Start field and School Session End field are not mandatory fields",false);
+        clickOnSchoolSessionStart();
+		selectRandomDayInSessionStart();
+		selectRandomDayInSessionEnd();
 
-		}
 	}
 
 	@Override
@@ -3534,11 +3552,11 @@ private WebElement locationColumn;
 		if (isElementLoaded(schoolSessionStartInput,5)) {
 			clickTheElement(schoolSessionStartInput);
 			if (isElementLoaded(setSessionStartAndEndTimeWindow,5))
-				SimpleUtils.pass("Team Page: Click on School Session Start input successfully");
+				SimpleUtils.pass("School Calendars Page: Click on School Session Start input successfully");
 			else
-				SimpleUtils.fail("Team Page: Failed to click on School Session Start input",false);
+				SimpleUtils.fail("School Calendars Page: Failed to click on School Session Start input",false);
 		} else
-			SimpleUtils.fail("Team Page: School Session Start input field failed to load",false);
+			SimpleUtils.fail("School Calendars Page: School Session Start input field failed to load",false);
 	}
 
 	@Override
@@ -3546,11 +3564,11 @@ private WebElement locationColumn;
 		if (isElementLoaded(schoolSessionEndInput,5)) {
 			clickTheElement(schoolSessionEndInput);
 			if (isElementLoaded(setSessionStartAndEndTimeWindow,5))
-				SimpleUtils.pass("Team Page: Click on School Session Start input successfully");
+				SimpleUtils.pass("School Calendars Page: Click on School Session Start input successfully");
 			else
-				SimpleUtils.fail("Team Page: Failed to click on School Session Start input",false);
+				SimpleUtils.fail("School Calendars Page: Failed to click on School Session Start input",false);
 		} else
-			SimpleUtils.fail("Team Page: School Session End input field failed to load",false);
+			SimpleUtils.fail("School Calendars Page:School Session End input field failed to load",false);
 	}
 
 	@Override
@@ -3559,11 +3577,37 @@ private WebElement locationColumn;
 			calendarNameInput.sendKeys(calendarName);
 			WebElement calendarInput = calendarNameInput.findElement(By.className("input-faked"));
 			if (isElementLoaded(calendarInput) && calendarInput.getText().equals(calendarName))
-				SimpleUtils.pass("Team Page: Input customized calendar name" + calendarName + " successfully");
+				SimpleUtils.pass("School Calendars Page: Input customized calendar name" + calendarName + " successfully");
 			else
-				SimpleUtils.fail("Team Page: Failed to input customized calendar name",false);
+				SimpleUtils.fail("School Calendars Page: Failed to input customized calendar name",false);
 		} else
-			SimpleUtils.fail("Team Page: Calendar Name input field failed to load",false);
+			SimpleUtils.fail("School Calendars Page: Calendar Name input field failed to load",false);
+	}
+
+	@Override
+	public void selectRandomDayInSessionStart() throws Exception {
+		if (areListElementVisible(daysInSessionStart,5)) {
+			int index = (new Random()).nextInt(daysInSessionStart.size());
+			click(daysInSessionStart.get(index));
+			if (daysInSessionStart.get(index).getAttribute("class").contains("in-range"))
+				SimpleUtils.pass("School Calendars Page: Session start random day is selected successfully");
+			else
+				SimpleUtils.fail("School Calendars Page: Session start random day failed to select",false);
+		} else
+			SimpleUtils.fail("School Calendars Page: Session start days failed to load",false);
+	}
+
+	@Override
+	public void selectRandomDayInSessionEnd() throws Exception {
+		if (areListElementVisible(daysInSessionEnd,5)) {
+			int index = (new Random()).nextInt(daysInSessionEnd.size());
+			click(daysInSessionEnd.get(index));
+			if (daysInSessionEnd.get(index).getAttribute("class").contains("in-range"))
+				SimpleUtils.pass("School Calendars Page: Session start random day is selected successfully");
+			else
+				SimpleUtils.fail("School Calendars Page: Session start random day failed to select",false);
+		} else
+			SimpleUtils.fail("School Calendars Page: Session start days failed to load",false);
 	}
 
 	// Added by Nora: For Cinemark Minors

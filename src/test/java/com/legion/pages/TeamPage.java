@@ -134,4 +134,6 @@ public interface TeamPage {
 	public void inputCalendarName(String calendarName) throws Exception;
 	public void clickOnCreateNewCalendarButton() throws Exception;
 	public void selectSchoolSessionStartNEndDate(int nextSatIndex) throws Exception;
+	public void selectRandomDayInSessionStart() throws Exception;
+	public void selectRandomDayInSessionEnd() throws Exception;
 }
