@@ -340,9 +340,9 @@
         <classes>
             <class name="com.legion.tests.core.CinemarkMinorTest">
                 <methods>
-                    <include name="verifyMinorFieldIsDisplayedOnTMProfileAsInternalAdmin" />
                     <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />
                     <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" />
+                    <include name=" verifyCreateCalendarAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
