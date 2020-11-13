@@ -11251,6 +11251,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
+    public String getAllTheWarningMessageOfTMWhenAssign() throws Exception {
+        String messageOfTMScheduledStatus = "";
+        if (isElementLoaded(messageForSelectTM,5)){
+            messageOfTMScheduledStatus = messageForSelectTM.getText();
+        }
+        return messageOfTMScheduledStatus;
+    }
+
     @FindBy(css = ".modal-dialog.modal-lgn-md")
     private WebElement dialogWarningModel;
     @FindBy(css = ".tma-dismiss-button")

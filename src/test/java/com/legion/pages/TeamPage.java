@@ -126,6 +126,7 @@ public interface TeamPage {
 	public List<String> getTMNameList() throws Exception;
 	public void rejectAllTeamMembersTimeOffRequest(ProfileNewUIPage profileNewUIPage, int index) throws Exception;
 	public boolean verifyThereIsLocationColumnForMSLocationGroup() throws Exception;
+	public boolean isCalendarTabLoad() throws Exception;
 	public void clickOnTeamSubTab(String subTabString) throws Exception;
 	public boolean verifyActivatedSubTab(String SubTabText) throws Exception;
 	public void verifyCreateNewCalendar() throws Exception;
@@ -138,4 +139,6 @@ public interface TeamPage {
 	public void clickOnSaveSchoolCalendarBtn() throws Exception;
 	public void deleteCalendarByName(String calendarName) throws Exception;
 	public void setTheCalendarForMinors(List<String> minorNames, String calendarName, ProfileNewUIPage profileNewUIPage) throws Exception;
+	public void selectRandomDayInSessionStart() throws Exception;
+	public void selectRandomDayInSessionEnd() throws Exception;
 }
