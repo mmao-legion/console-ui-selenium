@@ -3557,7 +3557,7 @@ private WebElement locationColumn;
 	public void inputCalendarName(String calendarName) throws Exception {
 		if (isElementLoaded(calendarNameInput,5)) {
 			calendarNameInput.sendKeys(calendarName);
-			WebElement calendarInput = calendarNameInput.findElement(By.className("input-faked");
+			WebElement calendarInput = calendarNameInput.findElement(By.className("input-faked"));
 			if (isElementLoaded(calendarInput) && calendarInput.getText().equals(calendarName))
 				SimpleUtils.pass("Team Page: Input customized calendar name" + calendarName + " successfully");
 			else
