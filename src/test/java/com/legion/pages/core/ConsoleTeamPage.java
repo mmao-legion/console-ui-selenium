@@ -3468,6 +3468,30 @@ private WebElement locationColumn;
 	@FindBy(css = ".sub-navigation-view-link.active")
 	private WebElement activatedSubTabElement;
 
+	@FindBy(xpath = "//label[text()=\"School Session Start*\"]/../div[@class=\"session-information-date-input\"]")
+	private WebElement schoolSessionStartInput;
+
+	@FindBy(xpath = "//label[text()=\"School Session End*\"]/../div[@class=\"session-information-date-input\"]")
+	private WebElement schoolSessionEndInput;
+
+	@FindBy(css = "[value=\"calendarName\"]")
+	private WebElement calendarNameInput;
+
+	@FindBy(css = "[value=\"schoolCalendarUrl\"] input")
+	private WebElement schoolCalendarURLInput;
+
+	@FindBy(css = ".summer-day")
+	private List<WebElement> summerDays;
+
+	@FindBy(css = ".non-school-day")
+	private List<WebElement> nonSchoolDays;
+
+	@FindBy(css = ".school-day")
+	private List<WebElement> schoolDays;
+
+	@FindBy(css = ".set-session-modal")
+	private WebElement setSessionStartAndEndTimeWindow;
+
 	@Override
 	public void clickOnTeamSubTab(String subTabString) throws Exception {
 		if (TeamSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
@@ -3495,6 +3519,51 @@ private WebElement locationColumn;
 			SimpleUtils.fail("Team Page not loaded successfully", true);
 		}
 		return false;
+	}
+
+	@Override
+	public void verifyCreateNewCalendar() throws Exception {
+		clickOnCreateNewCalendarButton();
+		if (areListElementVisible(schoolDays,5) && areListElementVisible(nonSchoolDays,5) && !areListElementVisible(summerDays,5)) {
+
+		}
+	}
+
+	@Override
+	public void clickOnSchoolSessionStart() throws Exception {
+		if (isElementLoaded(schoolSessionStartInput,5)) {
+			clickTheElement(schoolSessionStartInput);
+			if (isElementLoaded(setSessionStartAndEndTimeWindow,5))
+				SimpleUtils.pass("Team Page: Click on School Session Start input successfully");
+			else
+				SimpleUtils.fail("Team Page: Failed to click on School Session Start input",false);
+		} else
+			SimpleUtils.fail("Team Page: School Session Start input field failed to load",false);
+	}
+
+	@Override
+	public void clickOnSchoolSessionEnd() throws Exception {
+		if (isElementLoaded(schoolSessionEndInput,5)) {
+			clickTheElement(schoolSessionEndInput);
+			if (isElementLoaded(setSessionStartAndEndTimeWindow,5))
+				SimpleUtils.pass("Team Page: Click on School Session Start input successfully");
+			else
+				SimpleUtils.fail("Team Page: Failed to click on School Session Start input",false);
+		} else
+			SimpleUtils.fail("Team Page: School Session End input field failed to load",false);
+	}
+
+	@Override
+	public void inputCalendarName(String calendarName) throws Exception {
+		if (isElementLoaded(calendarNameInput,5)) {
+			calendarNameInput.sendKeys(calendarName);
+			WebElement calendarInput = calendarNameInput.findElement(By.className("input-faked");
+			if (isElementLoaded(calendarInput) && calendarInput.getText().equals(calendarName))
+				SimpleUtils.pass("Team Page: Input customized calendar name" + calendarName + " successfully");
+			else
+				SimpleUtils.fail("Team Page: Failed to input customized calendar name",false);
+		} else
+			SimpleUtils.fail("Team Page: Calendar Name input field failed to load",false);
 	}
 
 	// Added by Nora: For Cinemark Minors

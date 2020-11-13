@@ -128,6 +128,10 @@ public interface TeamPage {
 	public boolean verifyThereIsLocationColumnForMSLocationGroup() throws Exception;
 	public void clickOnTeamSubTab(String subTabString) throws Exception;
 	public boolean verifyActivatedSubTab(String SubTabText) throws Exception;
+	public void verifyCreateNewCalendar() throws Exception;
+	public void clickOnSchoolSessionStart() throws Exception;
+	public void clickOnSchoolSessionEnd() throws Exception;
+	public void inputCalendarName(String calendarName) throws Exception;
 	public void clickOnCreateNewCalendarButton() throws Exception;
 	public void selectSchoolSessionStartNEndDate(int nextSatIndex) throws Exception;
 }

@@ -69,6 +69,9 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify SM will have ability to select a calendar for the minor from a dropdown menu within the profile")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySMCanSelectACalendarForMinorAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
@@ -102,6 +105,9 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the default value of a minor without a calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
@@ -192,13 +198,19 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the default value of a minor without a calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateCalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();
         teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+        // Go to School Calendars sub tab
         teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
         SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
                 teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
+        //
     }
 
     //Haya
