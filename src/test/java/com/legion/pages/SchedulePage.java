@@ -522,5 +522,6 @@ public interface SchedulePage {
 	public void editShiftTimeToTheLargest() throws Exception;
 	public void closeCustomizeNewShiftWindow() throws Exception;
 	public List<String> getHolidaysOfCurrentWeek() throws Exception;
+	public String getAllTheWarningMessageOfTMWhenAssign() throws Exception;
 	public int getTheIndexOfCurrentDayInDayView() throws Exception;
 }
