@@ -37,6 +37,18 @@ public class CinemarkMinorTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+
+        schedulePage.clickOnDayView();
+        int currentDayIndex = schedulePage.getTheIndexOfCurrentDayInDayView();
+        int nextSatIndex = 6 - currentDayIndex + 6;
+
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
@@ -48,6 +60,7 @@ public class CinemarkMinorTest extends TestBase {
                 teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
         teamPage.clickOnCreateNewCalendarButton();
+        teamPage.selectSchoolSessionStartNEndDate(nextSatIndex);
     }
 
     @Automated(automated = "Automated")
