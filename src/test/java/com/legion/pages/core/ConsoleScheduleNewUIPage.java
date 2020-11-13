@@ -5126,7 +5126,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-        if (isElementEnabled(saveOnSaveConfirmationPopup)) {
+        if (isElementEnabled(saveOnSaveConfirmationPopup, 10)) {
             clickTheElement(saveOnSaveConfirmationPopup);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);

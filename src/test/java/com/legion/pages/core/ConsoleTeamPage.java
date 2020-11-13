@@ -3419,7 +3419,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void clickOnClearFilterBtn() throws Exception {
-		if (isElementLoaded(clearFilterBtn, 5)) {
+		if (isElementLoaded(clearFilterBtn, 15)) {
 			click(clearFilterBtn);
 			if (isClearFilterSuccessFully()) {
 				SimpleUtils.pass("Clear Filter Successfully!");

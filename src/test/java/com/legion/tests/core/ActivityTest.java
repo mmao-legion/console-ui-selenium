@@ -1521,7 +1521,7 @@ public class ActivityTest extends TestBase {
         schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());   schedulePage.navigateToNextWeek();
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());  
         //to generate schedule  if current week is not generated
         schedulePage.navigateToNextWeek();
         boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
