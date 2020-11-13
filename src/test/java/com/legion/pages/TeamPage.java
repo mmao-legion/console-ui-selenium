@@ -128,4 +128,5 @@ public interface TeamPage {
 	public boolean verifyThereIsLocationColumnForMSLocationGroup() throws Exception;
 	public void clickOnTeamSubTab(String subTabString) throws Exception;
 	public boolean verifyActivatedSubTab(String SubTabText) throws Exception;
+	public void clickOnCreateNewCalendarButton() throws Exception;
 }

@@ -3496,6 +3496,25 @@ private WebElement locationColumn;
 		}
 		return false;
 	}
+
+	// Added by Nora: For Cinemark Minors
+	@FindBy(css = "[label=\"Create New Calendar\"]")
+	private WebElement createNewCalendarBtn;
+
+	@Override
+	public void clickOnCreateNewCalendarButton() throws Exception {
+		if (isElementLoaded(createNewCalendarBtn, 10)) {
+			clickTheElement(createNewCalendarBtn);
+			if (isElementLoaded(cancelEditButton, 5) && isElementLoaded(savePreferButton, 5)) {
+				SimpleUtils.pass("School Calendars Page: Click on 'Create New Calendar' button successfully!");
+			} else {
+				SimpleUtils.fail("School Calendars Page: Click on 'Create New Calendar' button failed, Cancel and Save buttons are not loaded!", false);
+			}
+		} else {
+			SimpleUtils.fail("School Calendars Page: 'Create New Calendar' not loaded Successfully!", false);
+		}
+	}
+
 //    public boolean isTeam() throws Exception
 //	{
 //    	if(isElementLoaded(rosterBodyElement))

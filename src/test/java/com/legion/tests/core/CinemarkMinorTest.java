@@ -29,6 +29,28 @@ public class CinemarkMinorTest extends TestBase {
     }
 
     @Automated(automated = "Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "OP_Enterprise")
+    @TestName(description = "Prepare the calendar for all the minors")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void prepareTheCalendarForAllMinors(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+
+        teamPage.clickOnCreateNewCalendarButton();
+    }
+
+    @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "OP_Enterprise")
     @TestName(description = "Verify SM will have ability to select a calendar for the minor from a dropdown menu within the profile")
