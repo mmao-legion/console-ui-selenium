@@ -3245,4 +3245,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public List<String> getHolidaysOfCurrentWeek() throws Exception {
         return null;
     }
+
+    @Override
+    public String getAllTheWarningMessageOfTMWhenAssign() throws Exception {
+        return null;
+    }
 }

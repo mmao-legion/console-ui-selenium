@@ -3460,7 +3460,18 @@ private WebElement locationColumn;
 		}else
 			return  false;
 	}
-//    public boolean isTeam() throws Exception
+
+	@FindBy(xpath = "//span[contains(text(),'School Calendars')]")
+	private WebElement schoolCalendarTab;
+	@Override
+	public boolean isCalendarTabLoad() throws Exception {
+		if (isElementLoaded(schoolCalendarTab,10)){
+			return true;
+		}
+		return false;
+	}
+
+	//    public boolean isTeam() throws Exception
 //	{
 //    	if(isElementLoaded(rosterBodyElement))
 //    	{
