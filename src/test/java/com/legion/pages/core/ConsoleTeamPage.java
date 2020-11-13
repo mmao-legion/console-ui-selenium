@@ -3460,6 +3460,42 @@ private WebElement locationColumn;
 		}else
 			return  false;
 	}
+
+	// Added by Julie
+	@FindBy(css = ".sub-navigation-view-link")
+	private List<WebElement> TeamSubTabsElement;
+
+	@FindBy(css = ".sub-navigation-view-link.active")
+	private WebElement activatedSubTabElement;
+
+	@Override
+	public void clickOnTeamSubTab(String subTabString) throws Exception {
+		if (TeamSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
+			for (WebElement TeamSubTabElement : TeamSubTabsElement) {
+				if (TeamSubTabElement.getText().equalsIgnoreCase(subTabString)) {
+					click(TeamSubTabElement);
+					waitForSeconds(3);
+				}
+			}
+		}
+		if (verifyActivatedSubTab(subTabString)) {
+			SimpleUtils.pass("Team Page: '" + subTabString + "' tab loaded Successfully!");
+		} else {
+			SimpleUtils.fail("Team Page: '" + subTabString + "' tab not loaded Successfully!", true);
+		}
+	}
+
+	@Override
+	public boolean verifyActivatedSubTab(String SubTabText) throws Exception {
+		if (isElementLoaded(activatedSubTabElement,5)) {
+			if (activatedSubTabElement.getText().equalsIgnoreCase(SubTabText)) {
+				return true;
+			}
+		} else {
+			SimpleUtils.fail("Team Page not loaded successfully", true);
+		}
+		return false;
+	}
 //    public boolean isTeam() throws Exception
 //	{
 //    	if(isElementLoaded(rosterBodyElement))
