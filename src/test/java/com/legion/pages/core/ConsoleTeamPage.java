@@ -3515,6 +3515,11 @@ private WebElement locationColumn;
 		}
 	}
 
+	@Override
+	public void selectSchoolSessionStartNEndDate(int nextSatIndex) throws Exception {
+
+	}
+
 //    public boolean isTeam() throws Exception
 //	{
 //    	if(isElementLoaded(rosterBodyElement))
