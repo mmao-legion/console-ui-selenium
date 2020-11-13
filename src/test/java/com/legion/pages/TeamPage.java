@@ -134,4 +134,8 @@ public interface TeamPage {
 	public void inputCalendarName(String calendarName) throws Exception;
 	public void clickOnCreateNewCalendarButton() throws Exception;
 	public void selectSchoolSessionStartNEndDate(int nextSatIndex) throws Exception;
+	public void clickOnSaveSchoolSessionCalendarBtn() throws Exception;
+	public void clickOnSaveSchoolCalendarBtn() throws Exception;
+	public void deleteCalendarByName(String calendarName) throws Exception;
+	public void setTheCalendarForMinors(List<String> minorNames, String calendarName, ProfileNewUIPage profileNewUIPage) throws Exception;
 }

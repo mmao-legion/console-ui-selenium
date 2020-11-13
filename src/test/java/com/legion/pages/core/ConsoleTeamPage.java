@@ -29,7 +29,6 @@ import com.legion.pages.TeamPage;
 import com.legion.tests.core.TeamTestKendraScott2.timeOffRequestAction;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
-import org.openqa.selenium.support.ui.Select;
 
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -3474,7 +3473,7 @@ private WebElement locationColumn;
 	@FindBy(xpath = "//label[text()=\"School Session End*\"]/../div[@class=\"session-information-date-input\"]")
 	private WebElement schoolSessionEndInput;
 
-	@FindBy(css = "[value=\"calendarName\"]")
+	@FindBy(css = "[value=\"calendarName\"] input")
 	private WebElement calendarNameInput;
 
 	@FindBy(css = "[value=\"schoolCalendarUrl\"] input")
@@ -3557,8 +3556,7 @@ private WebElement locationColumn;
 	public void inputCalendarName(String calendarName) throws Exception {
 		if (isElementLoaded(calendarNameInput,5)) {
 			calendarNameInput.sendKeys(calendarName);
-			WebElement calendarInput = calendarNameInput.findElement(By.className("input-faked");
-			if (isElementLoaded(calendarInput) && calendarInput.getText().equals(calendarName))
+			if (calendarNameInput.getAttribute("value").equals(calendarName))
 				SimpleUtils.pass("Team Page: Input customized calendar name" + calendarName + " successfully");
 			else
 				SimpleUtils.fail("Team Page: Failed to input customized calendar name",false);
@@ -3569,6 +3567,78 @@ private WebElement locationColumn;
 	// Added by Nora: For Cinemark Minors
 	@FindBy(css = "[label=\"Create New Calendar\"]")
 	private WebElement createNewCalendarBtn;
+	@FindBy(css = ".set-session-modal-body-arrow-right")
+	private List<WebElement> rightArrows;
+	@FindBy(css = ".modal-instance-button.confirm")
+	private WebElement saveSchoolSessionBtn;
+	@FindBy(css = "[label=\"Delete\"]")
+	private WebElement deleteCalendarBtn;
+	@FindBy(css = "[label=\"Edit\"]")
+	private WebElement editCalendarBtn;
+	@FindBy(css = ".calendar-overview-title")
+	private List<WebElement> calendarTitles;
+	@FindBy(className = "school-calendars-header-title")
+	private WebElement schoolCalendarHearder;
+	@FindBy(css = ".calendar-cell")
+	private List<WebElement> calendarCells;
+	@FindBy(css = "[options=\"schoolCalendars\"] select")
+	private WebElement schoolCalendarSelect;
+
+	@Override
+	public void setTheCalendarForMinors(List<String> minorNames, String calendarName, ProfileNewUIPage profileNewUIPage) throws Exception {
+		if (minorNames != null && minorNames.size() > 0) {
+			for (String minorName : minorNames) {
+				searchAndSelectTeamMemberByName(minorName);
+				profileNewUIPage.selectAGivenCalendarForMinor(calendarName);
+				goToTeam();
+				verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+			}
+		}
+	}
+
+	@Override
+	public void deleteCalendarByName(String calendarName) throws Exception {
+		if (areListElementVisible(calendarTitles, 10)) {
+			for (WebElement title : calendarTitles) {
+				if (title.getText().trim().equalsIgnoreCase(calendarName)) {
+					clickTheElement(title);
+					if (areListElementVisible(calendarCells,  10) && isElementLoaded(deleteCalendarBtn, 10)) {
+						clickTheElement(deleteCalendarBtn);
+						if (isElementLoaded(confirmButton, 10) && confirmButton.getText().trim().equalsIgnoreCase("DELETE ANYWAY")) {
+							clickTheElement(confirmButton);
+							waitForSeconds(3);
+							if (isElementLoaded(schoolCalendarHearder, 10)) {
+								SimpleUtils.pass("Delete the school calendar Successfully!");
+								break;
+							} else {
+								SimpleUtils.fail("Failed to delete the school calendar: " + calendarName, false);
+							}
+						} else {
+							SimpleUtils.fail("School Calendar: DELETE ANYWAY button not loaded Successfully!", false);
+						}
+					} else {
+						SimpleUtils.fail("Delete Calendar button not loaded Successfully!", false);
+					}
+				}
+			}
+		} else {
+			SimpleUtils.report("School Calendar: There is no calendars!");
+		}
+	}
+
+	@Override
+	public void clickOnSaveSchoolCalendarBtn() throws Exception {
+		if (isElementLoaded(savePreferButton, 5) && isElementEnabled(savePreferButton, 5)) {
+			clickTheElement(savePreferButton);
+			if (isElementLoaded(deleteCalendarBtn, 10) && isElementLoaded(editCalendarBtn, 10)) {
+				SimpleUtils.pass("School Calendar: Save the calendar Successfully!");
+			} else {
+				SimpleUtils.fail("School Calendar: Failed to save the school calendar!", false);
+			}
+		} else {
+			SimpleUtils.fail("School Calendars Page: Save Calendar button not loaded Successfully!", false);
+		}
+	}
 
 	@Override
 	public void clickOnCreateNewCalendarButton() throws Exception {
@@ -3586,7 +3656,28 @@ private WebElement locationColumn;
 
 	@Override
 	public void selectSchoolSessionStartNEndDate(int nextSatIndex) throws Exception {
+		goToTheCurrentMonth();
+		selectDate(nextSatIndex);
+		selectDate(100);
+	}
 
+	@Override
+	public void clickOnSaveSchoolSessionCalendarBtn() throws Exception {
+		if (isElementLoaded(saveSchoolSessionBtn, 5)) {
+			clickTheElement(saveSchoolSessionBtn);
+			waitUntilElementIsInVisible(saveSchoolSessionBtn);
+		} else {
+			SimpleUtils.fail("School Calendar Page: Save School Session button not loaded Successfully!", false);
+		}
+	}
+
+	private void goToTheCurrentMonth() throws Exception {
+		while (!isElementLoaded(todayHighlighted, 5)) {
+			if (areListElementVisible(rightArrows, 5) && rightArrows.size() > 0) {
+				clickTheElement(rightArrows.get(0));
+				goToTheCurrentMonth();
+			}
+		}
 	}
 
 //    public boolean isTeam() throws Exception

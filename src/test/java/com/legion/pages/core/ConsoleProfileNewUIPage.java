@@ -2744,34 +2744,29 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.fail("Profile Page: Cannot find \"School Calendar\" section for a minor",false);
 	}
 
+	@FindBy(css = "[options=\"schoolCalendars\"] select")
+	private WebElement schoolCalendarSelect;
+	@FindBy(css = ".profile-assigned-school")
+	private WebElement assignedCalendar;
+
 	@Override
 	public void selectAGivenCalendarForMinor(String givenCalendar) throws Exception {
-		Boolean isGivenCalendarSelected = false;
 		if (isElementLoaded(editBtnOfProfile,5)) {
 			clickTheElement(editBtnOfProfile);
-			if (isElementLoaded(schoolCalendarOptions,5) && schoolCalendarList.size() > 1) {
-				click(schoolCalendarOptions);
-				for (WebElement calendar : schoolCalendarList) {
-					if (calendar.getText().trim().equalsIgnoreCase(givenCalendar)) {
-						click(calendar);
-						isGivenCalendarSelected = true;
-						break;
-					}
-				}
-				if (isGivenCalendarSelected)
+			selectByVisibleText(schoolCalendarSelect, givenCalendar);
+			if (areListElementVisible(saveBtnsOfProfile,5)) {
+				clickTheElement(saveBtnsOfProfile.get(0));
+				if (isElementLoaded(popupMessage,5) && popupMessage.getText().contains("Success"))
+					SimpleUtils.pass("Profile Page: The selected calendar is saved successfully");
+				else
+					SimpleUtils.fail("Profile Page: No success message when saving the profile",false);
+				waitForSeconds(3);
+				if (isElementLoaded(assignedCalendar, 10) && assignedCalendar.getText().trim().equalsIgnoreCase(givenCalendar))
 					SimpleUtils.pass("Profile Page: The given calendar is selected successfully");
 				else
 					SimpleUtils.fail("Profile Page: The given calendar failed to select",false);
-				if (areListElementVisible(saveBtnsOfProfile,5)) {
-					clickTheElement(saveBtnsOfProfile.get(0));
-					if (isElementLoaded(popupMessage,5) && popupMessage.getText().contains("Success"))
-						SimpleUtils.pass("Profile Page: The selected calendar is saved successfully");
-					else
-						SimpleUtils.fail("Profile Page: No success message when saving the profile",false);
-				} else
-					SimpleUtils.fail("Profile Page: The selected calendar failed to save",false);
 			} else
-				SimpleUtils.fail("Profile Page: No calendar can be selected, please create one firstly",false);
+				SimpleUtils.fail("Profile Page: The selected calendar failed to save",false);
 		} else
 			SimpleUtils.fail("Profile Page: \"Edit\" button failed to load",false);
 	}

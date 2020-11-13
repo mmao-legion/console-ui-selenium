@@ -11,14 +11,19 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CinemarkMinorTest extends TestBase {
+
+    private static HashMap<String, String> minorsProperty = JsonUtil.getPropertiesFromJsonFile("src/test/resources/CinemarkMinorsData.json");
 
     @Override
     @BeforeMethod()
@@ -33,7 +38,7 @@ public class CinemarkMinorTest extends TestBase {
     @Enterprise(name = "OP_Enterprise")
     @TestName(description = "Prepare the calendar for all the minors")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void prepareTheCalendarForAllMinors(String browser, String username, String password, String location) throws Exception {
+    public void prepareTheCalendarForAllMinorsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -58,9 +63,25 @@ public class CinemarkMinorTest extends TestBase {
         teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
         SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
                 teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+        String calendarName  = "Start Next Saturday";
 
+        teamPage.deleteCalendarByName(calendarName);
         teamPage.clickOnCreateNewCalendarButton();
+        teamPage.clickOnSchoolSessionStart();
         teamPage.selectSchoolSessionStartNEndDate(nextSatIndex);
+        teamPage.clickOnSaveSchoolSessionCalendarBtn();
+        teamPage.inputCalendarName(calendarName);
+        teamPage.clickOnSaveSchoolCalendarBtn();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+        List<String> minorNames = new ArrayList<>();
+        minorNames.add(minorsProperty.get("Minor13"));
+        minorNames.add(minorsProperty.get("Minor14"));
+        minorNames.add(minorsProperty.get("Minor15"));
+        minorNames.add(minorsProperty.get("Minor16"));
+
+        teamPage.setTheCalendarForMinors(minorNames, calendarName, profileNewUIPage);
     }
 
     @Automated(automated = "Automated")
