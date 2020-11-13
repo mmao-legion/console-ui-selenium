@@ -150,10 +150,11 @@ public class CinemarkMinorTest extends TestBase {
         teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
         List<String> minorNames = new ArrayList<>();
-        minorNames.add(minorsProperty.get("Minor13"));
-        minorNames.add(minorsProperty.get("Minor14"));
-        minorNames.add(minorsProperty.get("Minor15"));
-        minorNames.add(minorsProperty.get("Minor16"));
+        minorNames.add(cinemarkMinors.get("Minor13"));
+        minorNames.add(cinemarkMinors.get("Minor14"));
+        minorNames.add(cinemarkMinors.get("Minor15"));
+        minorNames.add(cinemarkMinors.get("Minor16"));
+        minorNames.add(cinemarkMinors.get("Minor17"));
 
         teamPage.setTheCalendarForMinors(minorNames, calendarName, profileNewUIPage);
     }
