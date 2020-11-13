@@ -5126,7 +5126,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-        if (isElementEnabled(saveOnSaveConfirmationPopup)) {
+        if (isElementEnabled(saveOnSaveConfirmationPopup, 10)) {
             clickTheElement(saveOnSaveConfirmationPopup);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
@@ -5533,6 +5533,23 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> weekDayLabels;
     @FindBy(className = "week-schedule-shift")
     private List<WebElement> weekShifts;
+
+    @Override
+    public int getTheIndexOfCurrentDayInDayView() throws Exception {
+        int index = 7;
+        if (areListElementVisible(dayPickerAllDaysInDayView, 10)) {
+            for (int i = 0; i < dayPickerAllDaysInDayView.size(); i++) {
+                if (dayPickerAllDaysInDayView.get(i).getAttribute("class").contains("day-week-picker-period-active")) {
+                    index = i;
+                    SimpleUtils.pass("Schedule Day view: Get the current day index: " + index);
+                }
+            }
+        }
+        if (index == 7) {
+            SimpleUtils.fail("Schedule Day view: Failed to get the index of CurrentDay", false);
+        }
+        return index;
+    }
 
 
     @Override

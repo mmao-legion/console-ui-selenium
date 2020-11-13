@@ -3250,4 +3250,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public String getAllTheWarningMessageOfTMWhenAssign() throws Exception {
         return null;
     }
+
+    @Override
+    public int getTheIndexOfCurrentDayInDayView() throws Exception {
+        return 0;
+    }
 }

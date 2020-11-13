@@ -62,6 +62,22 @@ public class TeamTest extends TestBase{
 	        }
 	        public String getValue() { return value; }
 		}
+
+	public enum TeamPageSubTabText {
+		Roster("ROSTER"),
+		Coverage("COVERAGE"),
+		SchoolCalendars("SCHOOL CALENDARS");
+
+		private final String value;
+
+		TeamPageSubTabText(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
 	
 	 @Automated(automated = "Manual")
 	 @Owner(owner = "Gunjan")
