@@ -1157,7 +1157,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "tr[ng-repeat=\"district in filteredDistricts\"]")
 	private List<WebElement> districtsRows;
 
-	@FindBy(css = ".lg-pagination__pages.ng-binding select")
+	@FindBy(css = "select[ng-attr-aria-label=\"{{$ctrl.label}}\"]")
 	private WebElement pageNumSelector;
 
 	@FindBy(css = "tbody > tr:nth-child(2) > td.number.ng-binding")
@@ -1215,17 +1215,23 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void searchDistrict(String searchInputText) throws Exception {
+		String[] searchLocationCha = searchInputText.split(",");
 		if (isElementLoaded(districtSearchInputBox, 10)) {
-			clickTheElement(districtSearchInputBox);
-			districtSearchInputBox.sendKeys(searchInputText);
-			districtSearchInputBox.sendKeys(Keys.ENTER);
-			waitForSeconds(3);
-			if (districtsRows.size() > 0) {
-				SimpleUtils.pass("Can search out location by using " + searchInputText);
-			} else {
-				SimpleUtils.pass("Can't search out any locations by using " + searchInputText);
+
+			for (int i = 0; i < searchLocationCha.length; i++) {
 				districtSearchInputBox.clear();
+				districtSearchInputBox.sendKeys(searchInputText);
+				districtSearchInputBox.sendKeys(Keys.ENTER);
+				waitForSeconds(3);
+				if (districtsRows.size() > 0) {
+					SimpleUtils.pass("Can search out district by using " + searchInputText);
+					break;
+				} else {
+					SimpleUtils.report("Can't search out any district by using " + searchInputText);
+					districtSearchInputBox.clear();
+				}
 			}
+
 		} else {
 			SimpleUtils.fail("Search input is not clickable", true);
 		}
@@ -1274,7 +1280,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						searchResultsList.add(searchedDistrictsCount);
 						districtSearchInputBox.clear();
 					} else {
-						SimpleUtils.pass("Can Not search out any locations");
+						SimpleUtils.pass("Can Not search out any district");
 					}
 				} else {
 					SimpleUtils.pass("District list page number load failed");
@@ -1323,6 +1329,219 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return locations;
 	}
 
+
+	//added by Estelle for district
+    @FindBy (css = "a[ng-click=\"$ctrl.back()\"]")
+	private WebElement backBtnInDistrictListPage;
+	@FindBy (css = "div.card-carousel-fixed")
+	private WebElement smartCardInDistrictListPage;
+	@FindBy (css = ".lg-pagination__arrow--left")
+	private WebElement pageLeftBtnInDistrict;
+	@FindBy (css = ".lg-pagination__arrow--right")
+	private WebElement pageRightBtnInDistrict;
+
+	@Override
+	public boolean verifyDistrictListShowWellOrNot() throws Exception {
+		waitForSeconds(5);//to wait the district load well
+		if (isElementLoaded(backBtnInDistrictListPage,3) && isElementLoaded(addDistrictButton,3)
+		&& isElementLoaded(districtSearchInputBox,3) && isElementLoaded(smartCardInDistrictListPage,3)
+		&& isElementLoaded(pageLeftBtnInDistrict,3) && isElementLoaded(pageRightBtnInDistrict,3)
+		) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void verifyBackBtnFunction() throws Exception {
+		if (isElementLoaded(backBtnInDistrictListPage,3) ) {
+			click(backBtnInDistrictListPage);
+			if (isElementLoaded(enterPriseProfileInLocations,3)) {
+				SimpleUtils.pass("Back button in district list page work well");
+			}else
+				SimpleUtils.fail("Back button in district page doesn't work",true);
+		}
+	}
+
+
+	@Override
+	public void verifyPaginationFunction() throws Exception {
+		if (isElementLoaded(pageNumSelector,3)) {
+           String iniPageText = pageNumberText.getText().trim();
+			String maxPageNumber = iniPageText.substring(iniPageText.length()-1);
+			for (int i = 1; i < Integer.valueOf(maxPageNumber); i++) {
+				selectByVisibleText(pageNumSelector,String.valueOf(i));
+				if (i <= Integer.valueOf(maxPageNumber)) {
+					SimpleUtils.pass("Page Select work well");
+				}else
+					SimpleUtils.fail("Page select doesn't work",true);
+			}
+		}else
+			SimpleUtils.fail("Page select load failed",true);
+
+	}
+
+	@Override
+	public void verifySearchFunction(String[] searchInfo) throws Exception {
+		if (isElementEnabled(districtSearchInputBox,3)) {
+			for (String info:searchInfo) {
+				searchDistrict(info);
+			}
+		}else
+			SimpleUtils.fail("District search input element load failed",false);
+	}
+
+	@FindBy( css =".console-detail")
+	private WebElement districtDetailsPage;
+	@FindBy( css ="input[aria-label=\"district Name\"]")
+	private WebElement districtNameInput;
+	@FindBy( css ="input[aria-label=\"district Id\"]")
+	private WebElement districtIdInput;
+	@FindBy( css ="select[aria-label=\"District Manager\"]")
+	private WebElement districtManagerSelector;
+	@FindBy( css ="input-field[label=\"District Manager Phone\"]")
+	private WebElement districtManagerPhone;
+	@FindBy( css ="input-field[label=\"District Manager Email\"]")
+	private WebElement districtManagerEmail;
+	@FindBy( css ="lg-button[label=\"Upload image\"]")
+	private WebElement uploadImageBtn;
+	@FindBy( css ="lg-button[label=\"Manage\"]")
+	private WebElement ManagerBtnInDistrictCreationPage;
+	@FindBy( css ="lg-button[label=\"Create district\"]")
+	private WebElement createDistrictBtnInDistrictCreationPage;
+	@FindBy( css ="lg-button[label=\"Cancel district\"]")
+	private WebElement CancelDistrictBtnInDistrictCreationPage;
+
+	@Override
+	public void addNewDistrict(String districtName, String districtId, String districtManager,String searchChara,int index) throws Exception {
+		click(addDistrictButton);
+		if (districtCreateLandingPageShowWell()) {
+			districtNameInput.sendKeys(districtName);
+			districtIdInput.sendKeys(districtId);
+			selectByVisibleText(districtManagerSelector,districtManager);
+			click(ManagerBtnInDistrictCreationPage);
+			managerDistrictLocations(searchChara,index);
+			click(createDistrictBtnInDistrictCreationPage);
+			SimpleUtils.report("District creation done");
+			waitForSeconds(10);
+		}else
+			SimpleUtils.fail("District landing page load failed",true);
+	}
+
+	private boolean districtCreateLandingPageShowWell() {
+
+		if (isElementEnabled(districtNameInput,3)&&isElementEnabled(districtIdInput,3)
+		&& isElementEnabled(districtManagerSelector,3) && isElementEnabled(districtManagerPhone,3)
+		&& isElementEnabled(districtManagerEmail,3) && isElementEnabled(ManagerBtnInDistrictCreationPage,3)) {
+			return true;
+		}
+		return false;
+	}
+
+	private void managerDistrictLocations(String searchChara,int index) {
+		if (isElementEnabled(selectALocationTitle,5)) {
+			searchInputInSelectALocation.sendKeys(searchChara);
+			searchInputInSelectALocation.sendKeys(Keys.ENTER);
+			waitForSeconds(5);
+			if (locationRowsInSelectLocation.size()>0) {
+				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"checkbox\"]"));
+				click(firstRow);
+				click(okBtnInSelectLocation);
+			}else
+				SimpleUtils.report("Search location result is 0");
+
+		}else
+			SimpleUtils.fail("Select a location window load failed",true);
+
+	}
+
+	@FindBy(css = ".modal-dialog")
+	private WebElement districtIdChangePopUpWin;
+	@Override
+	public void updateDistrict(String districtName, String districtId, String districtManager, String searchChara, int index) {
+
+		if (districtsRows.size() > 0) {
+			List<WebElement> districtDetailsLinks = districtsRows.get(0).findElements(By.cssSelector("button[type='button']"));
+			click(districtDetailsLinks.get(0));
+			click(editDistrictBtn);
+			districtNameInput.clear();
+			districtNameInput.sendKeys(districtName+"update");
+			districtIdInput.clear();
+			if (isElementEnabled(districtIdChangePopUpWin,3)) {
+				click(okBtnInImportLocationPage);
+			}else
+				SimpleUtils.fail("District id change window not show",true);
+			managerDistrictLocations(searchChara,index);
+			scrollToBottom();
+			click(saveBtnInUpdateLocationPage);
+			waitForSeconds(10);
+			SimpleUtils.pass("District update done");
+		}else
+			SimpleUtils.fail("No search result",true);
+
+	}
+
+
+
+	public ArrayList<HashMap<String, String>> getDistrictInfo(String districtName) {
+		ArrayList<HashMap<String,String>> districtInfo = new ArrayList<>();
+
+		if (isElementEnabled(districtSearchInputBox, 10)) {
+			districtSearchInputBox.clear();
+			districtSearchInputBox.sendKeys(districtName);
+			districtSearchInputBox.sendKeys(Keys.ENTER);
+			waitForSeconds(5);
+			if (districtsRows.size() > 0) {
+
+				for (WebElement district : districtsRows) {
+					HashMap<String, String> districtInfoInEachRow = new HashMap<>();
+					districtInfoInEachRow.put("districtName", district.findElement(By.cssSelector("button[type='button']")).getText());
+					districtInfoInEachRow.put("districtStatus", district.findElement(By.cssSelector("td:nth-child(3) > lg-eg-status ")).getAttribute("type"));
+					districtInfoInEachRow.put("numOfLocations", district.findElement(By.cssSelector("td:nth-child(4)")).getText());
+					districtInfo.add(districtInfoInEachRow);
+				}
+
+
+				return districtInfo;
+			}else
+				SimpleUtils.fail(districtName + "can't been searched", true);
+		}
+
+		return null;
+	}
+
+	@Override
+	public void addNewDistrictWithoutLocation(String districtName, String districtId, String districtManager) throws Exception {
+		click(addDistrictButton);
+		if (districtCreateLandingPageShowWell()) {
+			districtNameInput.sendKeys(districtName);
+			districtIdInput.sendKeys(districtId);
+			selectByVisibleText(districtManagerSelector,districtManager);
+			click(createDistrictBtnInDistrictCreationPage);
+			SimpleUtils.report("District creation done");
+			waitForSeconds(10);
+		}else
+			SimpleUtils.fail("District landing page load failed",true);
+	}
+
+	@Override
+	public void disableEnableDistrict(String districtName, String action) throws Exception {
+		districtSearchInputBox.clear();
+		searchDistrict(districtName);
+		if (districtsRows.size() > 0) {
+			List<WebElement> districtDetailsLinks = districtsRows.get(0).findElements(By.cssSelector("button[type='button']"));
+			click(districtDetailsLinks.get(0));
+			click(getDriver().findElement(By.cssSelector("lg-button[label=\""+action+"\"] ")));
+			click(getDriver().findElement(By.cssSelector("lg-button[label=\""+action+"\"] ")));
+			waitForSeconds(3);
+			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/lg-button[1]/button")).getText().equals(action)) {
+				SimpleUtils.pass(action+" " +districtName +" successfully");
+			}else
+				SimpleUtils.fail(action+" " +districtName +" successfully",true);
+			click(backBtnInLocationDetailsPage);
+		}else
+			SimpleUtils.fail("No search result",true);
+	}
 
 }
 
