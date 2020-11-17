@@ -3255,4 +3255,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public int getTheIndexOfCurrentDayInDayView() throws Exception {
         return 0;
     }
+
+    @Override
+    public void selectWeekDaysByDayName(String dayName) throws Exception {
+
+    }
 }

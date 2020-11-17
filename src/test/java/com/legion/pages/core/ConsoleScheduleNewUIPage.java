@@ -12302,5 +12302,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         return holidays;
     }
+
+    @Override
+    public void selectWeekDaysByDayName(String dayName) throws Exception {
+        boolean isDayNameExist = false;
+        if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+            for(int i=0; i< weekDays.size(); i++){
+                String weekDayName = weekDays.get(i).getText().split("\n")[0];
+                if (weekDayName.equalsIgnoreCase(dayName)){
+                    click(weekDays.get(i));
+                    SimpleUtils.report("Select day: " + weekDays.get(i).getText() + " Successfully!");
+                    isDayNameExist = true;
+                    break;
+                }
+            }
+            if (!isDayNameExist) {
+                SimpleUtils.fail("This is a wrong day name: "+ dayName+ "The correct day names should be: Mon, TUE, WED, THU, FRI, SAT, SUN", true);
+            }
+        }else{
+            SimpleUtils.fail("Weeks Days failed to load!", true);
+        }
+    }
 }
 

@@ -524,4 +524,5 @@ public interface SchedulePage {
 	public List<String> getHolidaysOfCurrentWeek() throws Exception;
 	public String getAllTheWarningMessageOfTMWhenAssign() throws Exception;
 	public int getTheIndexOfCurrentDayInDayView() throws Exception;
+	public void selectWeekDaysByDayName(String dayName) throws Exception;
 }
