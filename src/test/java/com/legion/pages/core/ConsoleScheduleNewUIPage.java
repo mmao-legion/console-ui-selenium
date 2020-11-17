@@ -1193,7 +1193,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public Boolean isWeekGenerated() throws Exception {
-        if (isElementEnabled(generateSheduleButton, 5)) {
+        if (isElementEnabled(generateSheduleButton, 5) && generateSheduleButton.getText().equalsIgnoreCase("Create schedule")) {
             return false;
         }else if(isElementEnabled(generateScheduleBtn, 5)){
             return false;
@@ -3913,6 +3913,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if(isElementEnabled(activScheduleType,5)){
             if(activScheduleType.getText().equalsIgnoreCase("Suggested")){
                 click(scheduleTypeManager);
+                waitForSeconds(3);
                 if(isReGenerateButtonLoadedForManagerView()){
                     click(reGenerateScheduleButton);
                     generateScheduleFromCreateNewScheduleWindow(activeWeekText);
