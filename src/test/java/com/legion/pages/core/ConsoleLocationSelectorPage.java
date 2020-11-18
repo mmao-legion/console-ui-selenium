@@ -334,8 +334,10 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                     if (isDistrictSelected(districtName)) {
                         SimpleUtils.pass("Given District '" + districtName + "' already selected!");
                     } else {
-                        click(districtSelectorButton);
-                        if (isElementLoaded(districtDropDownButton)) {
+                        if(isElementLoaded(districtSelectorButton, 10)){
+                            click(districtSelectorButton);
+                        }
+                        if (isElementLoaded(districtDropDownButton, 5)) {
                             if (availableLocationCardsName.size() != 0) {
                                 for (WebElement locationCardName : availableLocationCardsName) {
                                     if (locationCardName.getText().contains(districtName)) {
@@ -347,7 +349,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                 }
                                 if (!isDistrictMatched) {
                                     //updated by Estelle because the default location dropdown list show more than 50 location ,it's not efficient for navigation latest logic
-                                    searchLocationAndSelect(districtName);
+                                    searchDistrictAndSelect(districtName);
                                     waitForSeconds(3);
                                     availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
                                     if (availableLocationCardsName.size() > 0) {

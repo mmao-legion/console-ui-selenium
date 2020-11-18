@@ -512,6 +512,8 @@ public class CinemarkMinorTest extends TestBase {
         if (isWeekGenerated){
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
+        List<String> toCloseDays = new ArrayList<>();
+        schedulePage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
         schedulePage.createScheduleForNonDGFlowNewUI();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get("Minor14");
@@ -676,7 +678,9 @@ public class CinemarkMinorTest extends TestBase {
         if (isWeekGenerated){
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
-        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+        List<String> toCloseDays = new ArrayList<>();
+        schedulePage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
+        schedulePage.createScheduleForNonDGFlowNewUI();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get("Minor17");
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
@@ -840,6 +844,8 @@ public class CinemarkMinorTest extends TestBase {
         if (isWeekGenerated){
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
+        List<String> toCloseDays = new ArrayList<>();
+        schedulePage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
         schedulePage.createScheduleForNonDGFlowNewUI();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get("Minor14");
@@ -1118,6 +1124,337 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.moveSliderAtCertainPoint("9", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
         schedulePage.clearAllSelectedDays();
         schedulePage.selectWeekDaysByDayName("Fri");
+        schedulePage.selectWorkRole("MOD");
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchText(firstNameOfTM1);
+        SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting! ",
+                !schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor"), false);
+        schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
+        if(schedulePage.ifWarningModeDisplay()){
+            String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
+            if (!warningMessage.contains("Minor")){
+                SimpleUtils.pass("There is no minor warning message display when shift is not avoid the minor setting! ");
+            } else
+                SimpleUtils.fail("There should no minor warning message display when shift is not avoid the minor setting! ", false);
+            schedulePage.clickOnAssignAnywayButton();
+        } else
+            SimpleUtils.pass("There is no minor warning message display when shift is not avoid the minor setting! ");
+
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+
+        //check the violation in i icon popup of new create shift
+        newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        if (newAddedShift != null) {
+            SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting! ",
+                    !schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor"), false);
+        } else
+            SimpleUtils.fail("Get new added shift failed! ", false);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "OP_Enterprise")
+    @TestName(description = "Verify the no School today and no school tomorrow  settings for the Minors of Age 14 or 15")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+        schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated){
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        List<String> toCloseDays = new ArrayList<>();
+        schedulePage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
+        schedulePage.createScheduleForNonDGFlowNewUI();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        String firstNameOfTM1 = cinemarkMinors.get("Minor14");
+        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        schedulePage.saveSchedule();
+
+        //Create new shift with shift time is not during the minor setting for TM1
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+
+        //set shift time as 8:00 AM - 3:00 PM
+        schedulePage.moveSliderAtCertainPoint("3", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtCertainPoint("8", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.clearAllSelectedDays();
+        schedulePage.selectWeekDaysByDayName("Sat");
+        schedulePage.selectWorkRole("Associates");
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchText(firstNameOfTM1);
+
+        //check the message in warning mode
+        if(schedulePage.ifWarningModeDisplay()){
+            String warningMessage1 = "As a minor, "+firstNameOfTM1+" should be scheduled from 9AM - 6PM";
+            String warningMessage2 = "Please confirm that you want to make this change.";
+            if (schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
+                    && schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
+                SimpleUtils.pass("The message in warning mode display correctly! ");
+            } else
+                SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
+            schedulePage.clickOnAssignAnywayButton();
+        } else
+            SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
+
+
+        //check the violation message in Status column
+        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs 9AM - 6PM! ",
+                schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs 9AM - 6PM"), false);
+
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+
+        //check the violation in i icon popup of new create shift
+        WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        if (newAddedShift != null) {
+            SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
+                    schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor hrs 9AM - 6PM"), false);
+        } else
+            SimpleUtils.fail("Get new added shift failed! ", false);
+
+        //Create new shift with shift hours is more than minor setting for TM1
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+
+        //set shift time as 9:00 AM - 6:00 PM
+        schedulePage.moveSliderAtCertainPoint("6", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtCertainPoint("9", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.clearAllSelectedDays();
+        schedulePage.selectWeekDaysByDayName("Sat");
+        schedulePage.selectWorkRole("Associates");
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchText(firstNameOfTM1);
+
+        //check the message in warning mode
+        if(schedulePage.ifWarningModeDisplay()){
+            String warningMessage1 = "As a minor, "+firstNameOfTM1+"'s daily schedule should not exceed 7 hours";
+            String warningMessage2 = "Please confirm that you want to make this change.";
+            if (schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
+                    && schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
+                SimpleUtils.pass("The message in warning mode display correctly! ");
+            } else
+                SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
+            schedulePage.clickOnAssignAnywayButton();
+        } else
+            SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
+
+        //check the violation message in Status column
+        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor daily max 7 hrs! ",
+                schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor daily max 7 hrs"), false);
+
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+
+        //check the violation in i icon popup of new create shift
+        newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        if (newAddedShift != null) {
+            SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
+                    schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor daily max 7 hrs"), false);
+        } else
+            SimpleUtils.fail("Get new added shift failed", false);
+
+
+        //Create new shift that not avoid the minor settings for TM1
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+
+        //set shift time as 11:00 AM - 4:00 PM
+        schedulePage.moveSliderAtCertainPoint("3", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtCertainPoint("9", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.clearAllSelectedDays();
+        schedulePage.selectWeekDaysByDayName("Sat");
+        schedulePage.selectWorkRole("Associates");
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchText(firstNameOfTM1);
+        SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting! ",
+                !schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor"), false);
+        schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
+        if(schedulePage.ifWarningModeDisplay()){
+            String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
+            if (!warningMessage.contains("Minor")){
+                SimpleUtils.pass("There is no minor warning message display when shift is not avoid the minor setting! ");
+            } else
+                SimpleUtils.fail("There should no minor warning message display when shift is not avoid the minor setting! ", false);
+            schedulePage.clickOnAssignAnywayButton();
+        } else
+            SimpleUtils.pass("There is no minor warning message display when shift is not avoid the minor setting! ");
+
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+
+        //check the violation in i icon popup of new create shift
+        newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        if (newAddedShift != null) {
+            SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting! ",
+                    !schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor"), false);
+        } else
+            SimpleUtils.fail("Get new added shift failed! ", false);
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "OP_Enterprise")
+    @TestName(description = "Verify the no School today and no school tomorrow  settings for the Minors of Age 16 or 17")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+        schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated){
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        List<String> toCloseDays = new ArrayList<>();
+        schedulePage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
+        schedulePage.createScheduleForNonDGFlowNewUI();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        String firstNameOfTM1 = cinemarkMinors.get("Minor17");
+        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        schedulePage.saveSchedule();
+
+        //Create new shift with shift time is not during the minor setting for TM1
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+
+        //set shift time as 8:00 AM - 1:00 PM
+        schedulePage.moveSliderAtCertainPoint("1", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtCertainPoint("8", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.clearAllSelectedDays();
+        schedulePage.selectWeekDaysByDayName("Sat");
+        schedulePage.selectWorkRole("MOD");
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchText(firstNameOfTM1);
+
+        //check the message in warning mode
+        if(schedulePage.ifWarningModeDisplay()){
+            String warningMessage1 = "As a minor, "+firstNameOfTM1+" should be scheduled from 9:30AM - 7PM";
+            String warningMessage2 = "Please confirm that you want to make this change.";
+            if (schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
+                    && schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
+                SimpleUtils.pass("The message in warning mode display correctly! ");
+            } else
+                    SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
+            schedulePage.clickOnAssignAnywayButton();
+        } else
+            SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
+
+
+        //check the violation message in Status column
+        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs 9:30AM - 7PM! ",
+                schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs 9:30AM - 7PM"), false);
+
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+
+        //check the violation in i icon popup of new create shift
+        WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        if (newAddedShift != null) {
+            SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
+                    schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor hrs 9:30AM - 7PM"), false);
+        } else
+            SimpleUtils.fail("Get new added shift failed! ", false);
+
+        //Create new shift with shift hours is more than minor setting for TM1
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+
+        //set shift time as 10:00 AM - 7:00 PM
+        schedulePage.moveSliderAtCertainPoint("7", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.clearAllSelectedDays();
+        schedulePage.selectWeekDaysByDayName("Sat");
+        schedulePage.selectWorkRole("MOD");
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchText(firstNameOfTM1);
+
+        //check the message in warning mode
+        if(schedulePage.ifWarningModeDisplay()){
+            String warningMessage1 = "As a minor, "+firstNameOfTM1+"'s daily schedule should not exceed 7 hours";
+            String warningMessage2 = "Please confirm that you want to make this change.";
+            if (schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
+                    && schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
+                SimpleUtils.pass("The message in warning mode display correctly! ");
+            } else
+                SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
+            schedulePage.clickOnAssignAnywayButton();
+        } else
+            SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
+
+        //check the violation message in Status column
+        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor daily max 7 hrs! ",
+                schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor daily max 7 hrs"), false);
+
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+
+        //check the violation in i icon popup of new create shift
+        newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        if (newAddedShift != null) {
+            SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
+                    schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor daily max 7 hrs"), false);
+        } else
+            SimpleUtils.fail("Get new added shift failed", false);
+
+
+        //Create new shift that not avoid the minor settings for TM1
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+
+        //set shift time as 10:00 AM - 2:00 PM
+        schedulePage.moveSliderAtCertainPoint("2", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.clearAllSelectedDays();
+        schedulePage.selectWeekDaysByDayName("Sat");
         schedulePage.selectWorkRole("MOD");
         schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
         schedulePage.clickOnCreateOrNextBtn();
