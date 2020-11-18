@@ -525,4 +525,5 @@ public interface SchedulePage {
 	public String getAllTheWarningMessageOfTMWhenAssign() throws Exception;
 	public int getTheIndexOfCurrentDayInDayView() throws Exception;
 	public void selectWeekDaysByDayName(String dayName) throws Exception;
+	public void editOperatingHoursOnScheduleOldUIPage(String startTime, String endTime, List<String> weekDaysToClose) throws Exception;
 }

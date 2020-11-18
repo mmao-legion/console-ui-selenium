@@ -3260,4 +3260,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void selectWeekDaysByDayName(String dayName) throws Exception {
 
     }
+
+    @Override
+    public void editOperatingHoursOnScheduleOldUIPage(String startTime, String endTime, List<String> weekDaysToClose) throws Exception {
+
+    }
 }

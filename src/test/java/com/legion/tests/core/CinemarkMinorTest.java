@@ -19,6 +19,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -656,7 +657,7 @@ public class CinemarkMinorTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "OP_Enterprise")
-    @TestName(description = "Verify the School today and school tomorrow  settings for the Minors of Age 14 or 15")
+    @TestName(description = "Verify the School today and school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -820,7 +821,7 @@ public class CinemarkMinorTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "OP_Enterprise")
-    @TestName(description = "Verify the School today and school tomorrow  settings for the Minors of Age 14 or 15")
+    @TestName(description = "Verify the School today and no school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -984,7 +985,7 @@ public class CinemarkMinorTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "OP_Enterprise")
-    @TestName(description = "Verify the School today and school tomorrow  settings for the Minors of Age 14 or 15")
+    @TestName(description = "Verify the School today and no school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1003,6 +1004,8 @@ public class CinemarkMinorTest extends TestBase {
         if (isWeekGenerated){
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
+        List<String> toCloseDays = new ArrayList<>();
+        schedulePage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
         schedulePage.createScheduleForNonDGFlowNewUI();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get("Minor17");
