@@ -308,7 +308,8 @@ public class CinemarkMinorTest extends TestBase {
         SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
                 teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        //
+        // Verify the fields during creating calendar
+        teamPage.verifyCreateNewCalendar();
     }
 
     //Haya

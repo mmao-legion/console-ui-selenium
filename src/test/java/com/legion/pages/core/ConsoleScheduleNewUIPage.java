@@ -5914,7 +5914,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         boolean isWarningShown = false;
         if (isElementLoaded(textSearch, 15) && isElementLoaded(searchIcon, 15)) {
             textSearch.sendKeys(userName);
-            click(searchIcon);
+            clickTheElement(searchIcon);
             if (areListElementVisible(searchResults, 15)) {
                 for (WebElement searchResult : searchResults) {
                     WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-display-name"));
@@ -8846,14 +8846,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @FindBy(xpath = "//div[@ng-if=\"!forceShowOpen && showWorkerImage(shift)\"]/worker-image/div/div")
+    private List<WebElement> profileIconsDayView;
+
     @Override
     public boolean isProfileIconsEnable() throws Exception {
-        if(areListElementVisible(profileIcons,5)){
+        if(areListElementVisible(profileIcons,10)){
+            SimpleUtils.pass("Profile Icon is present for selected Employee");
+            return true;
+        } else if (areListElementVisible(profileIconsDayView,10)) {
             SimpleUtils.pass("Profile Icon is present for selected Employee");
             return true;
         }
         else {
-            SimpleUtils.fail("Profile Icon is not present for selected Employee", true);
+            SimpleUtils.fail("Profile Icon is not present for selected Employee", false);
             return false;
         }
     }
@@ -9952,8 +9958,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             unCheckFilters(jobTitleFilters);
             String jobTitle = jobTitleFilter.getText();
             SimpleUtils.report("Data for job title: '" + jobTitle + "' as bellow");
-            clickTheElement(jobTitleFilter);
-            clickTheElement(filterButton);
+            click(jobTitleFilter);
+            click(filterButton);
             String cardHoursAndWagesText = "";
             HashMap<String, Float> hoursAndWagesCardData = getScheduleLabelHoursAndWages();
             for (Entry<String, Float> hoursAndWages : hoursAndWagesCardData.entrySet()) {
@@ -9970,7 +9976,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (activeDayScheduleHoursOnCard - totalShiftsWorkTime <= 0.05) {
                     SimpleUtils.pass("Schedule Hours in smart card  equal to total Active Schedule Hours by job title filter ");
                 }else
-                    SimpleUtils.fail("the job tile filter hours not equal to schedule hours in schedule samrtcard",true);
+                    SimpleUtils.fail("the job tile filter hours not equal to schedule hours in schedule samrtcard",false);
             }else
                 SimpleUtils.report( "there is no data for this job title: '" + jobTitle + "'");
         }
@@ -11541,7 +11547,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         SimpleUtils.pass("The search result display correctly when search by Work Role");
                     } else {
                         SimpleUtils.fail("The search result incorrect when search by Work Role, expected: " + workRole
-                                + ", actual is: " + getShiftInfoFromInfoPopUp(searchResults.get(i)).get(0),true);
+                                + ", actual is: " + getShiftInfoFromInfoPopUp(searchResults.get(i)).get(0),false);
                         break;
                     }
                 }
@@ -11550,7 +11556,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (jobTitle.equals(searchResults.get(i).findElement(By.cssSelector(".week-schedule-role-name")).getText())) {
                         SimpleUtils.pass("The search result display correctly when search by Job Title");
                     } else {
-                        SimpleUtils.fail("The search result incorrect when search by Job Title",true);
+                        SimpleUtils.fail("The search result incorrect when search by Job Title",false);
                         break;
                     }
                 }

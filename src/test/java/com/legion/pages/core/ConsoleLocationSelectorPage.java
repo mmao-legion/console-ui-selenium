@@ -98,9 +98,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public void changeLocation(String locationName)
     {
-        //waitForSeconds(8);
-        //getDriver().navigate().refresh();
-        waitForSeconds(2);
+        waitForSeconds(8);
+        getDriver().navigate().refresh();
+        waitForSeconds(4);
         try {
             Boolean isLocationMatched = false;
             activeConsoleName = activeConsoleMenuItem.getText();

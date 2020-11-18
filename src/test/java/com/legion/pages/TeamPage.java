@@ -141,4 +141,12 @@ public interface TeamPage {
 	public void setTheCalendarForMinors(List<String> minorNames, String calendarName, ProfileNewUIPage profileNewUIPage) throws Exception;
 	public void selectRandomDayInSessionStart() throws Exception;
 	public void selectRandomDayInSessionEnd() throws Exception;
+	public String selectRandomDayInSessionStart() throws Exception;
+	public String selectRandomDayInSessionEnd() throws Exception;
+	public void clickOnSaveCalendar() throws Exception;
+	public void verifyDatesInCalendar(String startDate, String EndDate) throws Exception;
+	public void checkNextYearInEditMode() throws Exception;
+	public void checkPriorYearInEditMode() throws Exception;
+	public void clickOnPriorYearInEditMode() throws Exception;
+	public boolean verifyMandatoryElement(WebElement element) throws Exception;
 }
