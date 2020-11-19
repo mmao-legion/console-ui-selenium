@@ -139,8 +139,6 @@ public interface TeamPage {
 	public void clickOnSaveSchoolCalendarBtn() throws Exception;
 	public void deleteCalendarByName(String calendarName) throws Exception;
 	public void setTheCalendarForMinors(List<String> minorNames, String calendarName, ProfileNewUIPage profileNewUIPage) throws Exception;
-	public void selectRandomDayInSessionStart() throws Exception;
-	public void selectRandomDayInSessionEnd() throws Exception;
 	public String selectRandomDayInSessionStart() throws Exception;
 	public String selectRandomDayInSessionEnd() throws Exception;
 	public void clickOnSaveCalendar() throws Exception;
