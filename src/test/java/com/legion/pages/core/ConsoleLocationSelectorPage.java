@@ -77,6 +77,8 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     private WebElement searchIcon;
     @FindBy(css="lg-select[search-hint=\"Search Location\"]")
     private WebElement locationButton;
+    @FindBy(css="[class=\"lg-search-options\"]")
+    private List<WebElement> districtAndLocationDropDownList;
 
     String dashboardConsoleMenuText = "Dashboard";
     private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
@@ -94,13 +96,11 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
         return false;
     }
-    
+
     @Override
     public void changeLocation(String locationName)
     {
-        waitForSeconds(8);
-        getDriver().navigate().refresh();
-        waitForSeconds(4);
+        waitForSeconds(2);
         try {
             Boolean isLocationMatched = false;
             activeConsoleName = activeConsoleMenuItem.getText();
@@ -110,13 +110,19 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                     if (isLocationSelected(locationName)) {
                         SimpleUtils.pass("Given Location '" + locationName + "' already selected!");
                     } else {
-                        click(locationSelectorButton);
-                        if (areListElementVisible(availableLocationCardsName, 10) || isElementLoaded(locationDropDownButton)) {
-                            if (availableLocationCardsName.size() > 0) {
-                                for (WebElement locationCardName : availableLocationCardsName) {
-                                    if (locationCardName.getText().contains(locationName)) {
+                        if (isElementLoaded(locationSelectorButton, 10)){
+                            click(locationSelectorButton);
+                        }
+                        List<WebElement> locationItems = new ArrayList<>();
+                        if (areListElementVisible(districtAndLocationDropDownList, 5) && districtAndLocationDropDownList.size() == 2){
+                            locationItems = districtAndLocationDropDownList.get(1).findElements(By.cssSelector("div.lg-search-options__option"));
+                        }
+                        if (areListElementVisible(locationItems, 10) || isElementLoaded(locationDropDownButton)) {
+                            if (locationItems.size() > 0) {
+                                for (WebElement locationItem : locationItems) {
+                                    if (locationItem.getText().contains(locationName)) {
                                         isLocationMatched = true;
-                                        click(locationCardName);
+                                        click(locationItem);
                                         SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
                                         break;
                                     }
@@ -125,12 +131,13 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                     //updated by Estelle because the default location dropdown list show more than 50 location ,it's not efficient for navigation latest logic
                                     searchLocationAndSelect(locationName);
                                     waitForSeconds(3);
-                                    availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
-                                    if (availableLocationCardsName.size() > 0) {
-                                        for (WebElement locationCardName : availableLocationCardsName) {
-                                            if (locationCardName.getText().contains(locationName)) {
+//                                    availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
+                                    locationItems = districtAndLocationDropDownList.get(1).findElements(By.cssSelector("div.lg-search-options__option"));
+                                    if (locationItems.size() > 0) {
+                                        for (WebElement locationItem : locationItems) {
+                                            if (locationItem.getText().contains(locationName)) {
                                                 isLocationMatched = true;
-                                                click(locationCardName);
+                                                click(locationItem);
                                                 SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
                                                 break;
                                             }
@@ -153,9 +160,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                 }
             }
         }
-    	catch(Exception e) {
-    		SimpleUtils.fail("Unable to change location!", true);
-    	}
+        catch(Exception e) {
+            SimpleUtils.fail("Unable to change location!", true);
+        }
 
     }
 
