@@ -18,10 +18,7 @@ import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class CinemarkMinorTest extends TestBase {
 
@@ -293,11 +290,12 @@ public class CinemarkMinorTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "OP_Enterprise")
-    @TestName(description = "Verify the default value of a minor without a calendar")
+    @TestName(description = "Verify create calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateCalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+       int randomDigits = (new Random()).nextInt(100);
 
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();
@@ -308,8 +306,49 @@ public class CinemarkMinorTest extends TestBase {
         SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
                 teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        // Verify the fields during creating calendar
-        teamPage.verifyCreateNewCalendar();
+        // Click on Create New Calendar button
+        teamPage.clickOnCreateNewCalendarButton();
+
+        // Check the School Session Start field and School Session End field
+        teamPage.verifyCreateCalendarLoaded();
+        teamPage.verifySessionStartNEndIsMandatory();
+
+        // Click on School Session Start
+        teamPage.clickOnSchoolSessionStart();
+
+        // Select random start and end day and verify they display correctly
+        String startDate = teamPage.selectRandomDayInSessionStart(); //08-25-2020
+        String endDate = teamPage.selectRandomDayInSessionEnd(); //05-31-2021
+
+        // Save after setting session start and end time
+        teamPage.clickOnSaveSchoolSessionCalendarBtn();
+
+        // Verify dates will be color coded by start and end time
+        teamPage.verifyDatesInCalendar(startDate,endDate);
+
+        // Input calendar name
+        String calendarName = "Calendar " + randomDigits;
+        teamPage.inputCalendarName(calendarName);
+
+        // Verify calendar for the next year will show the same calendar name until enter the start and end date, the calendar is editable
+        teamPage.checkNextYearInEditMode();
+
+        // Verify the year display when going back to current calendar
+        teamPage.clickOnPriorYearInEditMode();
+
+        // Verify that cannot go to prior year
+        teamPage.checkPriorYearInEditMode();
+
+        // Verify the calendar can be saved successfully
+        teamPage.clickOnSaveCalendar();
+
+        // Clean up data
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+        teamPage.deleteCalendarByName(calendarName);
     }
 
     //Haya

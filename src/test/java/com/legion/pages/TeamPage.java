@@ -129,7 +129,6 @@ public interface TeamPage {
 	public boolean isCalendarTabLoad() throws Exception;
 	public void clickOnTeamSubTab(String subTabString) throws Exception;
 	public boolean verifyActivatedSubTab(String SubTabText) throws Exception;
-	public void verifyCreateNewCalendar() throws Exception;
 	public void clickOnSchoolSessionStart() throws Exception;
 	public void clickOnSchoolSessionEnd() throws Exception;
 	public void inputCalendarName(String calendarName) throws Exception;
@@ -147,4 +146,6 @@ public interface TeamPage {
 	public void checkPriorYearInEditMode() throws Exception;
 	public void clickOnPriorYearInEditMode() throws Exception;
 	public boolean verifyMandatoryElement(WebElement element) throws Exception;
+	public void verifySessionStartNEndIsMandatory() throws Exception;
+	public void verifyCreateCalendarLoaded() throws Exception;
 }

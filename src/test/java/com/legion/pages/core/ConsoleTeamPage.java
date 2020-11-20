@@ -1,25 +1,12 @@
 package com.legion.pages.core;
 
-import java.lang.reflect.Array;
-import java.net.SocketImpl;
-import java.nio.file.WatchEvent;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.legion.pages.ProfileNewUIPage;
-import com.legion.utils.FileDownloadVerify;
-import com.legion.utils.MyThreadLocal;
-import cucumber.api.java.hu.Ha;
-import cucumber.api.java.it.Ma;
-import cucumber.api.java.sl.In;
-import freemarker.template.SimpleDate;
-import net.bytebuddy.TypeCache;
-import net.sourceforge.htmlunit.corejs.javascript.EcmaError;
-import org.apache.xerces.parsers.IntegratedParserConfiguration;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.FindBy;
@@ -3567,28 +3554,19 @@ private WebElement locationColumn;
 	}
 
 	@Override
-	public void verifyCreateNewCalendar() throws Exception {
-		clickOnCreateNewCalendarButton();
+	public void verifyCreateCalendarLoaded() throws Exception {
 		if (isElementLoaded(bigCalendar,5) && areListElementVisible(nonSchoolDays,5) && nonSchoolDays.size() > 103)
 			SimpleUtils.pass("School Calendars Page: A new calendar appears with school days and non school day, weekend is non school day and holiday is non school day");
 		else
 			SimpleUtils.fail("School Calendars Page: Calendar not loaded or loaded unexpectedly",false);
+	}
+
+	@Override
+	public void verifySessionStartNEndIsMandatory() throws Exception {
 		if (verifyMandatoryElement(schoolSessionStartInput) && verifyMandatoryElement(schoolSessionEndInput))
 			SimpleUtils.pass("School Calendars Page: School Session Start field and School Session End field are mandatory fields");
 		else
 			SimpleUtils.fail("School Calendars Page: School Session Start field and School Session End field are not mandatory fields",false);
-        clickOnSchoolSessionStart();
-		String startDate = selectRandomDayInSessionStart(); //08-25-2020
-		System.out.println("startDate is "+startDate);
-		String endDate = selectRandomDayInSessionEnd(); //05-31-2021
-		System.out.println("endDate is "+endDate);
-		verifyDatesInCalendar(startDate,endDate);
-        click(saveBtnInSessionStartEnd);
-		inputCalendarName("Calendar" + currentDay);
-		checkNextYearInEditMode();
-		clickOnPriorYearInEditMode();
-		checkPriorYearInEditMode();
-		clickOnSaveCalendar();
 	}
 
 	@Override
@@ -3673,13 +3651,12 @@ private WebElement locationColumn;
 
 	@Override
 	public void verifyDatesInCalendar(String startDate, String EndDate) throws Exception {
-		if(areListElementVisible(summerDays,5)) {
+		if (areListElementVisible(summerDays,5)) {
 			DateFormat df = new SimpleDateFormat( "MM-dd-yyyy");
 			Date start = df.parse(startDate);
 			Date end = df.parse(EndDate);
 		    Long betweenDays = (end.getTime() - start.getTime()) / (1000L*3600L*24L);
-			System.out.println("betweenDays is " + betweenDays);
-			if (summerDays.size() == 365 - betweenDays - 2)
+			if (summerDays.size() == 364 - betweenDays)
 				SimpleUtils.pass("School Calendars Page: Summer days are consistent with user entered dates");
 			else
 				SimpleUtils.fail("School Calendars Page: Summer days are inconsistent with user entered dates",false);
@@ -3691,8 +3668,8 @@ private WebElement locationColumn;
 	public void checkNextYearInEditMode() throws Exception {
 		if (isElementLoaded(nextYearArrow,5)) {
            clickTheElement(nextYearArrow);
-           if (schoolSessionStartInput.getText().isEmpty() && schoolSessionEndInput.getText().isEmpty() && !calendarNameInput.getText().isEmpty()
-				   && savePreferButton.findElement(By.tagName("button")).getAttribute("disabled").equals("disabled"))
+           if (schoolSessionStartInput.getText().isEmpty() && schoolSessionEndInput.getText().isEmpty() && !calendarNameInput.getAttribute("value").isEmpty()
+				   && calendarNameInput.getTagName().equals("input"))
 			   SimpleUtils.pass("School Calendars Page: Calendar for the next year in edit mode will only show calendar name, the calendar is editable");
 		   else
 			   SimpleUtils.fail("School Calendars Page: Calendar for the next year in edit mode is incorrect",false);
@@ -3711,10 +3688,9 @@ private WebElement locationColumn;
 	@Override
 	public void clickOnPriorYearInEditMode() throws Exception {
 		if (isElementLoaded(priorYearArrow,5)) {
-			System.out.println("schoolCalendarYearSwitcher.getText() is "+schoolCalendarYearSwitcher.getText());
-			String yearStart = schoolCalendarYearSwitcher.getText().contains("-")? schoolCalendarYearSwitcher.getText().split("-")[0]:schoolCalendarYearSwitcher.getText();
+			String yearStart = schoolCalendarYearSwitcher.getText().contains("-")? schoolCalendarYearSwitcher.getText().split("-")[0].trim():schoolCalendarYearSwitcher.getText();
 			clickTheElement(priorYearArrow);
-			String yearEnd = schoolCalendarYearSwitcher.getText().contains("-")? schoolCalendarYearSwitcher.getText().split("-")[1].replaceAll("\\D+", ""):schoolCalendarYearSwitcher.getText();
+			String yearEnd = schoolCalendarYearSwitcher.getText().contains("-")? schoolCalendarYearSwitcher.getText().split("-")[1].trim().replaceAll("\\D+", ""):schoolCalendarYearSwitcher.getText();
 			if (yearStart.equals(yearEnd))
 				SimpleUtils.pass("School Calendars Page: Go to prior year successfully ");
 			else
@@ -3728,9 +3704,7 @@ private WebElement locationColumn;
 		boolean isMandatory = false;
 		if (isElementLoaded(element, 5)) {
 			if (element != null) {
-				System.out.println(element.getText().isEmpty());
-				System.out.println(savePreferButton.isEnabled());
-				if (element.getText().isEmpty() && !savePreferButton.isEnabled()) {
+				if (element.getText().isEmpty() && savePreferButton.getAttribute("ng-attr-disabled").equals("!canSaveCalendar()")) {
 					isMandatory= true;
 				}
 			}
