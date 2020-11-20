@@ -349,6 +349,10 @@
                     <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
                     <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
                     <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
                 </methods>
             </class>
         </classes>
