@@ -9575,7 +9575,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 "I want to offer to specific team members";
         if (isElementLoaded(titleOfConvertToOpenShiftPopup,10) && isElementLoaded(radioBtnManualOpenShift,10)
                 && isElementLoaded(btnCancelOpenSchedule,10) && isElementLoaded(btnYesOpenSchedule,10)
-                && textOnConvertToOpenPopUp.contains(titleOfConvertToOpenShiftPopup.getText().trim()+ "\n" + descriptionOfConvertToOpenShiftPopup.getText().trim() + "\n" + textOfManualOpenShift.getText().trim())) {
+                && textOnConvertToOpenPopUp.contains(titleOfConvertToOpenShiftPopup.getText().trim())
+                && textOnConvertToOpenPopUp.contains(descriptionOfConvertToOpenShiftPopup.getText().trim())
+                && textOnConvertToOpenPopUp.contains(textOfManualOpenShift.getText().trim())) {
             SimpleUtils.pass("checkbox is available to offer the shift to any specific TM[optional] Cancel /yes");
             return true;
         }else {
