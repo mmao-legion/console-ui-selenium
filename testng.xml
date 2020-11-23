@@ -360,6 +360,9 @@
                     <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
  <!--                   <include name="verifyTheNonSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />   bug:  SCH-2291:The minor violation for Non school week display incorrectly-->
                     <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTurnOffMinorRuleAsInternalAdmin" />
+                    <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" />
+                    <include name="verifyAccessToEditCalendarsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

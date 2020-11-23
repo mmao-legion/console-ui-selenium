@@ -2828,7 +2828,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void selectUsersAndRolesSubTabByLabel(String label) throws Exception {
 		boolean isTabFound = false;
-		if (subTabs.size() > 0) {
+		if (areListElementVisible(subTabs,10) && subTabs.size() > 0) {
 			for (WebElement subTab : subTabs) {
 				if (subTab.getText().toLowerCase().contains(label.toLowerCase())) {
 					click(subTab);
@@ -5703,5 +5703,73 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				SimpleUtils.pass("Setting set as "+parameter+": A Minor must not be scheduled more than 6 days a week.");
 			}
 		}
+	}
+
+	@FindBy(css = "collapsible[block-title=\"key\"]")
+	private List<WebElement> accessSections;
+	@Override
+	public void verifyRolePermissionExists(String section, String permission) throws Exception {
+		if (areListElementVisible(accessSections,10)){
+			for (WebElement accessSection : accessSections){
+				if (accessSection.findElement(By.cssSelector(".collapsible-title-text")).getText().equalsIgnoreCase(section)){
+					if (!accessSection.findElement(By.cssSelector(".collapsible")).getAttribute("class").contains("open")){
+						click(accessSection);
+					}
+					List<WebElement> permissions = accessSection.findElements(By.cssSelector(".lg-table tr.ng-scope"));
+					for (WebElement permissionTemp : permissions){
+						String s = permissionTemp.findElements(By.tagName("td")).get(0).getText();
+						if (permissionTemp.getText().toLowerCase().contains(permission.toLowerCase())){
+							SimpleUtils.pass("Found permission: "+ permission);
+						}
+					}
+				}
+			}
+		} else {
+			SimpleUtils.fail("No access item loaded!", false);
+		}
+	}
+
+	@Override
+	public void turnOnOrOffSpecificPermissionForSM(String section, String permission, String action) throws Exception {
+		if (areListElementVisible(accessSections,10)){
+			for (WebElement accessSection : accessSections){
+				if (accessSection.findElement(By.cssSelector(".collapsible-title-text")).getText().equalsIgnoreCase(section)){
+					if (!accessSection.findElement(By.cssSelector(".collapsible")).getAttribute("class").contains("open")){
+						click(accessSection);
+					}
+					List<WebElement> permissions = accessSection.findElements(By.cssSelector(".lg-table tbody tr[ng-repeat=\"permission in value\"]"));
+					for (WebElement permissionTemp : permissions){
+						String s = permissionTemp.findElement(By.cssSelector("td.ng-binding")).getText();
+						//String a = accessSection.findElements(By.cssSelector(".lg-table tr.ng-scope td.ng-binding")).get(0).getAttribute("text");
+						if (s!=null && s.toLowerCase().contains(permission.toLowerCase())){
+							SimpleUtils.pass("Found permission: "+ permission);
+							List<WebElement> permissionInputs = permissionTemp.findElements(By.cssSelector("input[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]"));
+							if (permissionInputs.size()>4 && permissionInputs.get(4).getAttribute("class").contains("ng-not-empty")){
+								if (action.equalsIgnoreCase("on")){
+									SimpleUtils.pass(permission + " already on!");
+								} else {
+									click(permissionInputs.get(4));
+									SimpleUtils.pass(permission + " unChecked!");
+								}
+							} else {
+								if (action.equalsIgnoreCase("off")){
+									SimpleUtils.pass(permission + " already off!");
+								} else {
+									click(permissionInputs.get(4));
+									SimpleUtils.pass(permission + " Checked!");
+								}
+							}
+						}
+					}
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("No access item loaded!", false);
+		}
+	}
+
+	private void test() throws Exception{
+
 	}
 }
