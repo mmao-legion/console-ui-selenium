@@ -784,6 +784,10 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.clickOnOfferOrAssignBtn();
         schedulePage.saveSchedule();
 
+        //check the compliance smart card
+        SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
+                schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
+        schedulePage.clickViewShift();
         //check the violation in i icon popup of new create shift
         WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
         if (newAddedShift != null) {
@@ -792,6 +796,7 @@ public class CinemarkMinorTest extends TestBase {
         } else
             SimpleUtils.fail("Get new added shift failed! ", false);
 
+        schedulePage.verifyClearFilterFunction();
         //Create new shift with shift hours is more than minor setting for TM1
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
@@ -832,7 +837,10 @@ public class CinemarkMinorTest extends TestBase {
 
         schedulePage.clickOnOfferOrAssignBtn();
         schedulePage.saveSchedule();
-
+        //check the compliance smart card
+        SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
+                schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
+        schedulePage.clickViewShift();
         //check the violation in i icon popup of new create shift
         newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
         if (newAddedShift != null) {
@@ -841,7 +849,7 @@ public class CinemarkMinorTest extends TestBase {
         } else
             SimpleUtils.fail("Get new added shift failed", false);
 
-
+        schedulePage.verifyClearFilterFunction();
         //Create new shift that not avoid the minor settings for TM1
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
@@ -1078,6 +1086,10 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.clickOnOfferOrAssignBtn();
         schedulePage.saveSchedule();
 
+        //check the compliance smart card
+        SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
+                schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
+        schedulePage.clickViewShift();
         //check the violation in i icon popup of new create shift
         WebElement newAddedShift = schedulePage.getOneDayShiftByName(needCreateShiftsNumber1, firstNameOfTM1).get(0);
         if (newAddedShift != null) {
@@ -1087,8 +1099,8 @@ public class CinemarkMinorTest extends TestBase {
             SimpleUtils.fail("Get new added shift failed! ", false);
 
         //to close the i icon popup
-        schedulePage.getComplianceMessageFromInfoIconPopup(schedulePage.getOneDayShiftByName(0, firstNameOfTM1).get(0));
-
+        schedulePage.publishActiveSchedule();
+        schedulePage.verifyClearFilterFunction();
         //Create new shift with shift hours is more than minor setting for TM1
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
@@ -1142,6 +1154,9 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.saveSchedule();
 
         //check the violation in i icon popup of new create shift
+        SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
+                schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
+        schedulePage.clickViewShift();
         newAddedShift = schedulePage.getOneDayShiftByName(needCreateShiftsNumber2, firstNameOfTM1).get(0);
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
