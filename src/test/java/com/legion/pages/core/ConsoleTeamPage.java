@@ -3526,7 +3526,8 @@ private WebElement locationColumn;
 
 	@Override
 	public void clickOnTeamSubTab(String subTabString) throws Exception {
-		if (TeamSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
+		waitForSeconds(3);
+		if (areListElementVisible(TeamSubTabsElement,10) && TeamSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
 			for (WebElement TeamSubTabElement : TeamSubTabsElement) {
 				if (TeamSubTabElement.getText().equalsIgnoreCase(subTabString)) {
 					click(TeamSubTabElement);
@@ -3828,7 +3829,15 @@ private WebElement locationColumn;
 		}
 	}
 
-//	{
+	@Override
+	public boolean isCreateCalendarBtnLoaded() throws Exception {
+		if (isElementLoaded(createNewCalendarBtn, 10)) {
+			return true;
+		}
+		return false;
+	}
+
+	//	{
 //    	if(isElementLoaded(rosterBodyElement))
 //    	{
 //    		return true;

@@ -170,7 +170,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
 
     @Override
     public void clickOnBtn(String button) throws Exception {
-        if (button.equalsIgnoreCase("edit")){
+        if (button.equalsIgnoreCase("edit template")){
             if(isElementLoaded(getDriver().findElement(By.cssSelector("lg-button[ng-click=\"editTemplate()\"]")), 15))
             {
                 click(getDriver().findElement(By.cssSelector("lg-button[ng-click=\"editTemplate()\"]")));

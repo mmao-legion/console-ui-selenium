@@ -148,4 +148,5 @@ public interface TeamPage {
 	public boolean verifyMandatoryElement(WebElement element) throws Exception;
 	public void verifySessionStartNEndIsMandatory() throws Exception;
 	public void verifyCreateCalendarLoaded() throws Exception;
+	public boolean isCreateCalendarBtnLoaded() throws Exception;
 }
