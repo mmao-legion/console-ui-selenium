@@ -11544,9 +11544,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             }
             else if (workRole != null) {
+                String[] workRoleWords = workRole.split(" ");
                 for (int i=0; i <searchResults.size(); i++) {
-                    if (workRole.equals(getShiftInfoFromInfoPopUp(searchResults.get(i)).get(0))) {
+                    scrollToElement(searchResults.get(i));
+                    String shiftWorkRole = getShiftInfoFromInfoPopUp(searchResults.get(i)).get(1);
+                    String shiftJobTitle = searchResults.get(i).findElement(By.cssSelector(".week-schedule-role-name")).getText();
+                    if (workRole.equals(shiftWorkRole)|| workRole.equals(shiftJobTitle)) {
                         SimpleUtils.pass("The search result display correctly when search by Work Role");
+                    } else if(workRoleWords.length>1) {
+                        for (int j=0; j< workRoleWords.length; j++){
+                            if (shiftWorkRole.contains(workRoleWords[j])){
+                                SimpleUtils.pass("The search result display correctly when search by Work Role");
+                                break;
+                            }
+                        }
                     } else {
                         SimpleUtils.fail("The search result incorrect when search by Work Role, expected: " + workRole
                                 + ", actual is: " + getShiftInfoFromInfoPopUp(searchResults.get(i)).get(0),false);
@@ -11554,9 +11565,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     }
                 }
             } else if (jobTitle != null) {
+                String[] jobTitleWords = jobTitle.split(" ");
                 for (int i=0; i <searchResults.size(); i++) {
-                    if (jobTitle.equals(searchResults.get(i).findElement(By.cssSelector(".week-schedule-role-name")).getText())) {
+                    scrollToElement(searchResults.get(i));
+                    String shiftWorkRole = getShiftInfoFromInfoPopUp(searchResults.get(i)).get(1);
+                    String shiftJobTitle = searchResults.get(i).findElement(By.cssSelector(".week-schedule-role-name")).getText();
+                    if (jobTitle.equals(shiftJobTitle)|| jobTitle.equals(shiftWorkRole)) {
                         SimpleUtils.pass("The search result display correctly when search by Job Title");
+                    } else if(jobTitleWords.length>1) {
+                        for (int j=0; j< jobTitleWords.length; j++){
+                            if (shiftWorkRole.contains(jobTitleWords[j])){
+                                SimpleUtils.pass("The search result display correctly when search by Job Title");
+                                break;
+                            }
+                        }
                     } else {
                         SimpleUtils.fail("The search result incorrect when search by Job Title",false);
                         break;
