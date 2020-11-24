@@ -3265,4 +3265,10 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void editOperatingHoursOnScheduleOldUIPage(String startTime, String endTime, List<String> weekDaysToClose) throws Exception {
 
     }
+
+    @Override
+    public void navigateToTheRightestSmartCard() throws Exception {
+
+    }
+
 }

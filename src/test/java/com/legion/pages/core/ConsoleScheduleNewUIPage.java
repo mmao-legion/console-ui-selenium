@@ -8296,7 +8296,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(cardLinks, 5)) {
             for (WebElement cardLink : cardLinks) {
                 if (cardLink.getText().equalsIgnoreCase(linkName)) {
-                    click(cardLink);
+                    clickTheElement(cardLink);
                     SimpleUtils.pass("Click the link: " + linkName + " Successfully!");
                     break;
                 }
@@ -11174,6 +11174,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         } else {
             SimpleUtils.fail("The alert message for selecting TM failed to loaded", false);
+        }
+    }
+
+    @FindBy(css = ".card-carousel-arrow-right.available")
+    private WebElement arrowRightAvailable;
+
+    @Override
+    public void navigateToTheRightestSmartCard() throws Exception {
+        while (isElementLoaded(arrowRightAvailable, 5)) {
+            click(arrowRightAvailable);
         }
     }
 

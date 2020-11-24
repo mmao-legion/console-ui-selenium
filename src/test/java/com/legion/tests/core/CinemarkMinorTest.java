@@ -182,13 +182,14 @@ public class CinemarkMinorTest extends TestBase {
             profileNewUIPage.verifyMINORField(false);
 
         // Search out a TM who is a minor
-        do {
-            teamPage.goToTeam();
-            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-            teamPage.selectATeamMemberToViewProfile();
-            teamPage.isProfilePageLoaded();
-        }
-        while (!profileNewUIPage.isMINORYesOrNo());
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        String minorName = teamPage.searchAndSelectTeamMemberByName(cinemarkMinors.get("Minor14"));
+        teamPage.isProfilePageLoaded();
+        if (minorName != "")
+            SimpleUtils.pass("Team Page: search out one minor to View Profile successfully");
+        else
+            SimpleUtils.fail("Team Page: Failed to search out one minor to View Profile",false);
 
         // Verify SM can select a calendar from a dropdown menu within the profile
         profileNewUIPage.verifySMCanSelectACalendarForMinor();
@@ -202,89 +203,112 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
-        // Search out a TM who is a minor
-        do {
-            teamPage.goToTeam();
-            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-            teamPage.selectATeamMemberToViewProfile();
-            teamPage.isProfilePageLoaded();
-        }
-        while (!profileNewUIPage.isMINORYesOrNo());
+        // Get Cinemark minor settings from Jason file
+        String schoolWeekMaxScheduleHrs = cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[1];
+        String nonSchoolWeekMaxScheduleHrs = cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1];
 
-        // Get minor name from user profile page
-        String minorName = profileNewUIPage.getUserProfileName();
-        String firstName = minorName.contains(" ")? minorName.split(" ")[0] : minorName;
-        String lastName = minorName.contains(" ")? minorName.split(" ")[1] : minorName;
+        // Search out a TM who is a minor and get minor name to enter profile page
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        teamPage.searchAndSelectTeamMemberByName(cinemarkMinors.get("Minor14"));
+        teamPage.isProfilePageLoaded();
 
         // Edit, select "None" from the calendar dropdown menu, and save the profile
         profileNewUIPage.selectAGivenCalendarForMinor("None");
 
-        // Go to Schedule page, get the current holiday information if have
+        // Go to Schedule page and navigate to a week
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         schedulePage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+//        schedulePage.navigateToNextWeek();
+//        schedulePage.navigateToNextWeek();
 
-        schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
-        boolean isWeekGenerated = schedulePage.isWeekGenerated();
-        if (isWeekGenerated){
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
-        }
-        schedulePage.goToScheduleNewUI();
+        // Get the current holiday information if have
         String holidaySmartCard = "HOLIDAYS";
         List<String> holidays = null;
         if (schedulePage.isSpecificSmartCardLoaded(holidaySmartCard)) {
+            schedulePage.navigateToTheRightestSmartCard();
             schedulePage.clickLinkOnSmartCardByName("View All");
             holidays = schedulePage.getHolidaysOfCurrentWeek();
             // Close popup window
             schedulePage.closeAnalyzeWindow();
         }
 
-        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "9:00PM");
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView(firstName);
+        // Ungenerate the schedule if it is created or published
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated){
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
 
         // Create new shift for the minor at weekday, weekend and holiday if have
+        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "05:00AM", "11:00PM");
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor14"));
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
         schedulePage.clearAllSelectedDays();
-        schedulePage.selectDaysByIndex(0,0,0);
-
-        // Set shift time as 10:00 AM - 6:00 PM
-        schedulePage.moveSliderAtCertainPoint("6", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-        schedulePage.selectWorkRole("Lift Maintenance");
+        schedulePage.selectSpecificWorkDay(7);
+        schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtCertainPoint("6", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.selectWorkRole("Associate");
         schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
         schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(firstName + " " + lastName.substring(0,1));
-        schedulePage.verifyMessageIsExpected("minor daily max 6 hrs");
-        schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstName);
-        if(schedulePage.ifWarningModeDisplay()){
-            String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
-            if (warningMessage.contains("daily schedule should not exceed 6 hours")){
-                SimpleUtils.pass("Minor warning message for exceed the weekend or holiday hours displays");
-            } else {
-                SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays", false);
+        schedulePage.searchTeamMemberByName(cinemarkMinors.get("Minor14"));
+        schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(cinemarkMinors.get("Minor14"));
+        schedulePage.clickOnAssignAnywayButton();
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+
+        // Get holidays index if have
+        ArrayList<Integer> holidayIndexes = new ArrayList<>();
+        ArrayList<Integer> weekdayIndexes = new ArrayList<>();
+        if (holidays!= null) {
+            for (int index = 0; index < 5; index ++) {
+                for (String s: holidays) {
+                    if (s.contains(schedulePage.getWeekDayTextByIndex(index)))
+                        holidayIndexes.add(index);
+                    else
+                        weekdayIndexes.add(index);
+                }
             }
-            schedulePage.clickOnAssignAnywayButton();
-        } else {
-            SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays",false);
+        } else
+            weekdayIndexes.add(0);
+
+        // Validate weekday should apply the settings of school day
+        WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(weekdayIndexes.get(0)));
+        if (newAddedShift != null && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
+            SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
+        else
+            SimpleUtils.fail("Get new added shift failed", false);
+
+        // Validate weekend should apply the settings of non school day
+        newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(5));
+        if (newAddedShift != null && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
+            SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
+        else
+            SimpleUtils.fail("Get new added shift failed", false);
+
+
+        // Validate holiday should apply the settings of non school day
+        if (holidays != null) {
+            newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(holidayIndexes.get(0)));
+            if (newAddedShift != null) {
+                if (holidayIndexes.size() == 5 && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + nonSchoolWeekMaxScheduleHrs + " hrs"))
+                    SimpleUtils.pass("Schedule Page: Holiday applies the settings of non school day");
+                else if (holidayIndexes.size() < 5 && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
+                    SimpleUtils.pass("Schedule Page: Holiday applies the settings of non school day");
+                else
+                    SimpleUtils.fail("Schedule Page: Holiday does not apply the settings of non school day",false);
+            } else
+                SimpleUtils.fail("Get new added shift failed", false);
         }
-
-        // Weekday should apply the settings of school day
-
-        // Weekend should apply the settings of non school day
-
-        // Holiday should apply the settings of non school day
-
     }
 
     @Automated(automated = "Automated")
@@ -295,7 +319,7 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyCreateCalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-       int randomDigits = (new Random()).nextInt(100);
+        int randomDigits = (new Random()).nextInt(100);
 
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();
