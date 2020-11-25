@@ -229,8 +229,8 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                 schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-//        schedulePage.navigateToNextWeek();
-//        schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
 
         // Get the current holiday information if have
         String holidaySmartCard = "HOLIDAYS";
@@ -369,12 +369,74 @@ public class CinemarkMinorTest extends TestBase {
         teamPage.clickOnSaveCalendar();
 
         // Clean up data
+        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+        teamPage.deleteCalendarByName(calendarName);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "OP_Enterprise")
+    @TestName(description = "Verify school calendar list")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifySchoolCalendarListAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        int random1 = (new Random()).nextInt(100);
+        int random2 = (new Random()).nextInt(100);
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();
         teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
         teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
         SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
                 teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
-        teamPage.deleteCalendarByName(calendarName);
+
+        // Create a new calendar via Admin
+        teamPage.createNewCalendarByName("Calendar" + random1);
+
+       // Create another new calendar via Admin
+        teamPage.createNewCalendarByName("Calendar" + random2);
+
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+
+        // Login as Store Manager
+        String fileName = "UsersCredentials.json";
+        fileName = SimpleUtils.getEnterprise("OP_Enterprise") + fileName;
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                , String.valueOf(storeManagerCredentials[0][2]));
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        int random3 = (new Random()).nextInt(100);
+        int random4 = (new Random()).nextInt(100);
+
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+
+        // Create a new calendar via Store Manager
+        teamPage.createNewCalendarByName("Calendar" + random3);
+
+        // Create another new calendar via Store Manager
+        teamPage.createNewCalendarByName("Calendar" + random4);
+
+        // Check the School Calendars list
+       if (teamPage.isCalendarDisplayedByName("Calendar" + random1) && teamPage.isCalendarDisplayedByName("Calendar" + random2)
+       && teamPage.isCalendarDisplayedByName("Calendar" + random3) && teamPage.isCalendarDisplayedByName("Calendar" + random4))
+           SimpleUtils.pass("School Calendar: All the calendars have been created display in the list");
+       else
+           SimpleUtils.fail("School Calendar: All the calendars have been created don't display in the list",false);
+
+        // Clean up data
+        teamPage.deleteCalendarByName("Calendar" + random1);
+        teamPage.deleteCalendarByName("Calendar" + random2);
+        teamPage.deleteCalendarByName("Calendar" + random3);
+        teamPage.deleteCalendarByName("Calendar" + random4);
     }
 
     //Haya

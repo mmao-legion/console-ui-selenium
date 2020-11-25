@@ -149,4 +149,6 @@ public interface TeamPage {
 	public void verifySessionStartNEndIsMandatory() throws Exception;
 	public void verifyCreateCalendarLoaded() throws Exception;
 	public boolean isCreateCalendarBtnLoaded() throws Exception;
+	public void createNewCalendarByName(String calendarName) throws Exception;
+	public boolean isCalendarDisplayedByName(String calendarName) throws Exception;
 }
