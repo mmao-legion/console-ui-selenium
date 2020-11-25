@@ -3731,6 +3731,92 @@ private WebElement locationColumn;
 	private List<WebElement> calendarCells;
 	@FindBy(css = "[options=\"schoolCalendars\"] select")
 	private WebElement schoolCalendarSelect;
+	@FindBy(css = "[label=\"Save\"]")
+	private WebElement saveButton;
+	@FindBy(css = ".school-day")
+	private List<WebElement> schoolDays;
+	@FindBy(css = ".session-information-and-calendar-wrapper")
+	private WebElement calendarWrapper;
+
+	@Override
+	public void verifyClickedDayIsHighlighted() throws Exception {
+		if (areListElementVisible(schoolDays, 10)) {
+			WebElement firstSchoolDay = schoolDays.get(0);
+			moveToElementAndClick(firstSchoolDay);
+			waitForSeconds(2);
+			if (firstSchoolDay.getAttribute("class").contains("non-school-day")) {
+				SimpleUtils.pass("Edit Calendar: Clicked Day is highlighted!");
+			} else {
+				SimpleUtils.fail("Edit Calendar: Clicked Day is not highlighted!", false);
+			}
+		}
+	}
+
+	@Override
+	public boolean isEditCalendarModeLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(cancelEditButton, 5) && isElementLoaded(saveButton, 5)) {
+			isLoaded = true;
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void clickOnEditAnywayButton() throws Exception {
+		if (isElementLoaded(confirmButton, 5) && confirmButton.getText().equalsIgnoreCase("EDIT ANYWAY")) {
+			clickTheElement(confirmButton);
+		} else {
+			SimpleUtils.fail("EDIT ANYWAY button failed to load!", false);
+		}
+	}
+
+	@Override
+	public void verifyEditCalendarAlertModelPopsUp() throws Exception {
+		String expectedMessage = "Please note: Editing this school calendar will affect schedules of all Team Members that are currently assigned to this calendar.";
+		if (isElementLoaded(confirmPopupWindow, 10) && isElementLoaded(popupMessage, 10)) {
+			if (popupMessage.getText().trim().equals(expectedMessage) && isElementLoaded(cancelButton, 5) && isElementLoaded(confirmButton, 5)
+			&& confirmButton.getText().equalsIgnoreCase("EDIT ANYWAY")) {
+				SimpleUtils.pass("Click On Edit Calendar button successfully, Alert message and buttons loaded Successfully!");
+			} else {
+				SimpleUtils.fail("Edit Calendar: Alert message or buttons are incorrect!", false);
+			}
+		} else {
+			SimpleUtils.fail("Edit Calendar: Alert model failed to load!", false);
+		}
+	}
+
+	@Override
+	public void verifySchoolSessionPageLoaded() throws Exception {
+		if (isElementLoaded(calendarWrapper, 10)) {
+			SimpleUtils.pass("School Session Calendar page loaded Successfully!");
+		} else {
+			SimpleUtils.fail("School Session Calendar page not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void clickOnEditCalendarButton() throws Exception {
+		if (isElementLoaded(editCalendarBtn, 10)) {
+			clickTheElement(editCalendarBtn);
+		} else {
+			SimpleUtils.fail("School Calendars page: Edit button failed to load!", false);
+		}
+	}
+
+	@Override
+	public void clickTheCalendarByRandom() throws Exception {
+		if (areListElementVisible(calendarTitles, 10)) {
+			int randomIndex = (new Random()).nextInt(calendarTitles.size());
+			String calendarName = calendarTitles.get(randomIndex).getText();
+			SimpleUtils.report("School Calendars Page: select calendar: " + calendarName);
+			clickTheElement(calendarTitles.get(randomIndex));
+			if (isElementLoaded(deleteCalendarBtn, 10) && isElementLoaded(editCalendarBtn, 10)) {
+				SimpleUtils.pass("Click on the calendar: " + calendarName + " Successfully!");
+			}
+		} else {
+			SimpleUtils.report("School Calendar: There is no calendars!");
+		}
+	}
 
 	@Override
 	public void setTheCalendarForMinors(List<String> minorNames, String calendarName, ProfileNewUIPage profileNewUIPage) throws Exception {

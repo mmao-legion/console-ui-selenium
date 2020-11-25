@@ -82,6 +82,9 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @FindBy (className = "widgetCommonText")
     private WebElement welcomeText;
 
+    @FindBy (className = "widgetScrollText")
+    private WebElement widgetScrollText;
+
     @Override
     public void enterEditMode() throws Exception {
         scrollToTop();
@@ -261,7 +264,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     public void saveAndExitEditMode() throws Exception{
         if (isElementLoaded(saveBtn,10)){
             clickTheElement(saveBtn);
-            if (isElementLoaded(welcomeText, 15)) {
+            if (isElementLoaded(welcomeText, 15) || isElementLoaded(widgetScrollText, 15)) {
                 SimpleUtils.pass("Edit Dashboard Page: Click on Save button Successfully!");
             }else {
                 SimpleUtils.fail("Edit Dashboard Page: Click on Save button failed, Dashboard welcome text not loaded Successfully!", false);

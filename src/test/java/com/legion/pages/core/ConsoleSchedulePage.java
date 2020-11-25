@@ -3008,7 +3008,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void clickProfileIconOfShift(WebElement shift) throws Exception {
+    public void clickProfileIconOfShiftByIndex(int index) throws Exception {
 
     }
 
@@ -3264,5 +3264,10 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @Override
     public void editOperatingHoursOnScheduleOldUIPage(String startTime, String endTime, List<String> weekDaysToClose) throws Exception {
 
+    }
+
+    @Override
+    public int getTheIndexOfEditedShift() throws Exception {
+        return 0;
     }
 }

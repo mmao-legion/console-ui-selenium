@@ -267,8 +267,6 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void clickOnCreateTimeOffBtn() throws Exception {
-		scrollToTop();
-		waitForSeconds(3);
 		if(isElementLoaded(newTimeOffBtn, 5)) {
 			click(newTimeOffBtn);
 			SimpleUtils.pass("Controls Page: 'Create Time Off' button Clicked.");

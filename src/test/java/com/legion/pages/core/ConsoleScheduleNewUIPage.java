@@ -11,6 +11,7 @@ import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -11412,15 +11413,33 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void clickProfileIconOfShift(WebElement shift) throws Exception {
-        if(isElementLoaded(shift,15)){
-            scrollToBottom();
-            waitForSeconds(5);
-            clickTheElement(shift.findElement(By.cssSelector(".worker-image-optimized img")));
+    public void clickProfileIconOfShiftByIndex(int index) throws Exception {
+        if(areListElementVisible(weekShifts, 15) && index < weekShifts.size()){
+            clickTheElement(weekShifts.get(index).findElement(By.cssSelector(".worker-image-optimized img")));
             SimpleUtils.pass("clicked shift icon!");
         } else {
             SimpleUtils.fail("There is no shift you want",false);
         }
+    }
+
+    @Override
+    public int getTheIndexOfEditedShift() throws Exception {
+        int index = -1;
+        if (areListElementVisible(weekShifts, 10)) {
+            for (int i = 0; i < weekShifts.size(); i++) {
+                try {
+                    WebElement editedShift = weekShifts.get(i).findElement(By.cssSelector("[src*=\"edited-shift-week.png\"]"));
+                    index = i;
+                    SimpleUtils.pass("Schedule Week View: Get the index of the edited shift successfully: " + i);
+                    break;
+                } catch (NoSuchElementException e) {
+                    continue;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Schedule Week View: There are no shifts loaded!", false);
+        }
+        return index;
     }
 
     @FindBy(xpath = "//span[text()=\"View Status\"]")

@@ -354,6 +354,7 @@
                     <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
                     <include name="verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
                     <include name="verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyAddDatesForBreaksAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

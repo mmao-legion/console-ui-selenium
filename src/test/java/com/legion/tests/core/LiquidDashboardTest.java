@@ -688,14 +688,13 @@ public class LiquidDashboardTest extends TestBase {
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         List<String> resultListInOverview = schedulePage.getOverviewData();
         if (resultListOnWidget.size()==resultListInOverview.size()){
-            boolean falg = false;
             for (int i=0;i<resultListInOverview.size();i++){
-                falg = resultListInOverview.get(i).equals(resultListOnWidget.get(i));
-            }
-            if (falg){
-                SimpleUtils.pass("Schedules widget: Values on widget are consistent with the one in overview");
-            } else {
-                SimpleUtils.fail("Schedules widget: Values on widget are not consistent with the one in overview!",true);
+                boolean flag = resultListInOverview.get(i).equals(resultListOnWidget.get(i));
+                if (flag){
+                    SimpleUtils.pass("Schedules widget: Values on widget are consistent with the one in overview");
+                } else {
+                    SimpleUtils.fail("Schedules widget: Values on widget are not consistent with the one in overview!",false);
+                }
             }
 
         } else {

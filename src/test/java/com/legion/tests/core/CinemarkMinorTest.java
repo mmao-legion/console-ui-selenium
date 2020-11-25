@@ -159,6 +159,54 @@ public class CinemarkMinorTest extends TestBase {
     }
 
     @Automated(automated = "Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "OP_Enterprise")
+    @TestName(description = "Verify add dates for breaks")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAddDatesForBreaksAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+
+        teamPage.clickTheCalendarByRandom();
+        teamPage.verifySchoolSessionPageLoaded();
+        teamPage.clickOnEditCalendarButton();
+        teamPage.verifyEditCalendarAlertModelPopsUp();
+        teamPage.clickOnEditAnywayButton();
+        SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
+
+        // Verify the clicked days are highlighted as "Non School Day" color
+        teamPage.verifyClickedDayIsHighlighted();
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "OP_Enterprise")
+    @TestName(description = "Verify view details of  calendars and edit")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyViewDetailsAndEditAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+
+        teamPage.clickTheCalendarByRandom();
+    }
+
+    @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "OP_Enterprise")
     @TestName(description = "Verify SM will have ability to select a calendar for the minor from a dropdown menu within the profile")

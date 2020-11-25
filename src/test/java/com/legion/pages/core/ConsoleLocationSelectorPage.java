@@ -375,7 +375,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                 }
                             }
                         }
-                        verifyDMDashboardIsFinishedRefreshing();
+                        //verifyDMDashboardIsFinishedRefreshing();
                     }
                 }
             } else {

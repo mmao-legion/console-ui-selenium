@@ -388,15 +388,6 @@ public class TeamTest extends TestBase{
 		controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursType);
 		LinkedHashMap<String, List<String>> regularHours = controlsNewUIPage.getRegularWorkingHours();
 
-		// Set time off policy
-		controlsPage.gotoControlsPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-		controlsNewUIPage.clickOnControlsSchedulingPolicies();
-		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-		controlsNewUIPage.updateCanWorkerRequestTimeOff("Yes");
-		controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
-		controlsNewUIPage.updateShowTimeOffReasons("Yes");
-
 		TeamPage teamPage = pageFactory.createConsoleTeamPage();
 		HashMap<Integer, String> indexAndTimes = teamPage.generateIndexAndRelatedTimes(regularHours);
 		teamPage.goToTeam();

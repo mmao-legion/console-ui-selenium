@@ -746,7 +746,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the Schedule functionality  Job Title Filter Functionality")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView(String username, String password, String browser, String location)
+	public void viewAndFilterScheduleWithGroupByJobTitleInDayView(String username, String password, String browser, String location)
 			throws Exception {
 
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -775,7 +775,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Schedule functionality  Job Title Filter Functionality")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void viewAndFilteverifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdminrScheduleWithGroupByJobTitleFilterCombinationInWeekView(String username, String password, String browser, String location)
+	public void viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView(String username, String password, String browser, String location)
 			throws Exception {
 
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1855,12 +1855,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.verifyAllShiftsAssigned();
 		//schedulePage.clickOnEditButton();
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		WebElement selectedShift = schedulePage.clickOnProfileIcon();
+		schedulePage.clickOnProfileIcon();
 		schedulePage.clickOnConvertToOpenShift();
 		schedulePage.convertToOpenShiftDirectly();
+		int index = schedulePage.getTheIndexOfEditedShift();
 		schedulePage.saveSchedule();
 		schedulePage.publishActiveSchedule();
-		schedulePage.clickProfileIconOfShift(selectedShift);
+		schedulePage.clickProfileIconOfShiftByIndex(index);
 		schedulePage.clickViewStatusBtn();
 		schedulePage.verifyListOfOfferNotNull();
 	}

@@ -148,4 +148,11 @@ public interface TeamPage {
 	public boolean verifyMandatoryElement(WebElement element) throws Exception;
 	public void verifySessionStartNEndIsMandatory() throws Exception;
 	public void verifyCreateCalendarLoaded() throws Exception;
+	public void clickTheCalendarByRandom() throws Exception;
+	public void clickOnEditCalendarButton() throws Exception;
+	public void verifyEditCalendarAlertModelPopsUp() throws Exception;
+	public void clickOnEditAnywayButton() throws Exception;
+	public boolean isEditCalendarModeLoaded() throws Exception;
+	public void verifyClickedDayIsHighlighted() throws Exception;
+	public void verifySchoolSessionPageLoaded() throws Exception;
 }

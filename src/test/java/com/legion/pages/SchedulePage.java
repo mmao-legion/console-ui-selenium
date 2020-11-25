@@ -475,7 +475,7 @@ public interface SchedulePage {
 	public void verifyVersionInSaveMessage(String version) throws Exception;
 	public void clickOnManagerButton() throws Exception;
 	public void verifyAllShiftsAssigned() throws Exception;
-	public void clickProfileIconOfShift(WebElement shift) throws Exception;
+	public void clickProfileIconOfShiftByIndex(int index) throws Exception;
 	public void clickViewStatusBtn() throws Exception;
 	public void verifyListOfOfferNotNull() throws Exception;
 	public void clickOnOpenSearchBoxButton() throws Exception;
@@ -526,4 +526,5 @@ public interface SchedulePage {
 	public int getTheIndexOfCurrentDayInDayView() throws Exception;
 	public void selectWeekDaysByDayName(String dayName) throws Exception;
 	public void editOperatingHoursOnScheduleOldUIPage(String startTime, String endTime, List<String> weekDaysToClose) throws Exception;
+	public int getTheIndexOfEditedShift() throws Exception;
 }
