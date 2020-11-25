@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.legion.pages.ProfileNewUIPage;
+import com.legion.tests.core.TeamTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.Color;
@@ -3526,7 +3527,8 @@ private WebElement locationColumn;
 
 	@Override
 	public void clickOnTeamSubTab(String subTabString) throws Exception {
-		if (TeamSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
+		waitForSeconds(3);
+		if (areListElementVisible(TeamSubTabsElement,10) && TeamSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
 			for (WebElement TeamSubTabElement : TeamSubTabsElement) {
 				if (TeamSubTabElement.getText().equalsIgnoreCase(subTabString)) {
 					click(TeamSubTabElement);
@@ -3544,7 +3546,7 @@ private WebElement locationColumn;
 	@Override
 	public boolean verifyActivatedSubTab(String SubTabText) throws Exception {
 		if (isElementLoaded(activatedSubTabElement,5)) {
-			if (activatedSubTabElement.getText().equalsIgnoreCase(SubTabText)) {
+			if (activatedSubTabElement.getText().trim().equalsIgnoreCase(SubTabText)) {
 				return true;
 			}
 		} else {
@@ -3710,6 +3712,36 @@ private WebElement locationColumn;
 			}
 		}
 		return isMandatory;
+	}
+
+	@Override
+	public void createNewCalendarByName(String calendarName) throws Exception {
+		clickOnCreateNewCalendarButton();
+        clickOnSchoolSessionStart();
+		selectRandomDayInSessionStart();
+		selectRandomDayInSessionEnd();
+		clickOnSaveSchoolSessionCalendarBtn();
+		inputCalendarName(calendarName);
+		clickOnSaveCalendar();
+		clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+	}
+
+	@Override
+	public boolean isCalendarDisplayedByName(String calendarName) throws Exception {
+		boolean isCalendarDisplayed = false;
+		if (areListElementVisible(calendarTitles, 10)) {
+			for (WebElement title : calendarTitles) {
+				if (title.getText().trim().equalsIgnoreCase(calendarName)) {
+					isCalendarDisplayed = true;
+					SimpleUtils.pass("School Calendars Page: The calendar " + calendarName + " displays in the calendar list");
+					break;
+				}
+			}
+			if (!isCalendarDisplayed)
+				SimpleUtils.fail("School Calendars Page: Cannot find the calendar " + calendarName + " in the calendar list",false);
+		} else
+			SimpleUtils.fail("School Calendar: There is no calendars!",false);
+		return isCalendarDisplayed;
 	}
 
 	// Added by Nora: For Cinemark Minors
@@ -3914,7 +3946,15 @@ private WebElement locationColumn;
 		}
 	}
 
-//	{
+	@Override
+	public boolean isCreateCalendarBtnLoaded() throws Exception {
+		if (isElementLoaded(createNewCalendarBtn, 10)) {
+			return true;
+		}
+		return false;
+	}
+
+	//	{
 //    	if(isElementLoaded(rosterBodyElement))
 //    	{
 //    		return true;

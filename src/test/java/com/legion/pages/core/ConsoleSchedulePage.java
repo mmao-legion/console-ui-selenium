@@ -3270,4 +3270,10 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public int getTheIndexOfEditedShift() throws Exception {
         return 0;
     }
+
+    @Override
+    public void navigateToTheRightestSmartCard() throws Exception {
+
+    }
+
 }

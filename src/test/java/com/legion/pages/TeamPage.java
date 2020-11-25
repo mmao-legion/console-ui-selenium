@@ -155,4 +155,7 @@ public interface TeamPage {
 	public boolean isEditCalendarModeLoaded() throws Exception;
 	public void verifyClickedDayIsHighlighted() throws Exception;
 	public void verifySchoolSessionPageLoaded() throws Exception;
+	public boolean isCreateCalendarBtnLoaded() throws Exception;
+	public void createNewCalendarByName(String calendarName) throws Exception;
+	public boolean isCalendarDisplayedByName(String calendarName) throws Exception;
 }
