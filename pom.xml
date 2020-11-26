@@ -26,7 +26,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <legion.testng.file>testng.xml</legion.testng.file>
+                <suiteFile>testng.xml</suiteFile>
             </properties>
         </profile>
         <profile>
@@ -250,7 +250,8 @@
                 <configuration>
                     <parallel>classes</parallel>
                     <suiteXmlFiles>
-                        <suiteXmlFile>${legion.testng.file}</suiteXmlFile>
+                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                        <suiteXmlFile>testng1.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <forkCount>5</forkCount>
                     <reuseForks>true</reuseForks>

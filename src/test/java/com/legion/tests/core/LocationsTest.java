@@ -1241,4 +1241,36 @@ public class LocationsTest extends TestBase {
 
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "verify internal location picture")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyInternalLocationPicFunction(String browser, String username, String password, String location) throws Exception {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+        String currentTime =  dfs.format(new Date()).trim();
+        String locationName = "AutoCreate" +currentTime;
+        int index =0;
+        String searchCharactor = "No touch";
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        //check locations item
+        locationsPage.validateItemsInLocations();
+        //go to enterprise profile to get enterprise logo and default pic
+        HashMap<String, String> enterpriseInfo = locationsPage.getEnterpriseLogoAndDefaultLocationInfo();
+        locationsPage.verifyBackBtnFunction();
+        //go to sub-locations tab
+        locationsPage.goToSubLocationsInLocationsPage();
+
+        //add new regular location
+        locationsPage.addNewRegularLocationWithMandatoryFields(locationName);
+
+    }
+
 }

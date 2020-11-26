@@ -449,7 +449,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(firstDay.get(0));
 
 			click(launchDateSelecter);
-			click(previousMonthBtn.get(1));
+//			click(previousMonthBtn.get(1));
 			click(firstDay.get(1));
 			waitForSeconds(2);
 			click(selectOneComparableLocation);
@@ -1541,6 +1541,26 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(backBtnInLocationDetailsPage);
 		}else
 			SimpleUtils.fail("No search result",true);
+	}
+
+	//added by Estelle to verify internal location picture
+	@FindBy(css="form-section[form-title=\"Default Location Picture\"]")
+	private WebElement defaultLocationForm;
+	@FindBy(css="form-section[form-title=\"Enterprise Logo\"]")
+	private WebElement enterpriseLogoForm;
+	@Override
+	public HashMap<String, String> getEnterpriseLogoAndDefaultLocationInfo() {
+		HashMap<String, String> enterpriseLogoAndDefaultLocationInfo= new HashMap<>();
+		if (isElementEnabled(enterPriseProfileInLocations,3)) {
+			click(enterPriseProfileInLocations);
+			if (isElementEnabled(defaultLocationForm,3)&&isElementEnabled(enterpriseLogoForm,3)) {
+				enterpriseLogoAndDefaultLocationInfo.put("Enterprise logo",enterpriseLogoForm.findElement(By.cssSelector("ng-transclude > content-box > ng-transclude > image-input > div > ng-form > div > img")).getAttribute("src"));
+				enterpriseLogoAndDefaultLocationInfo.put("Default location pircture",defaultLocationForm.findElement(By.cssSelector("ng-transclude > content-box > ng-transclude > image-input > div > ng-form > div > img")).getAttribute("src"));
+			return enterpriseLogoAndDefaultLocationInfo;
+			}else
+				SimpleUtils.fail("Enterprise logo info and default location picture load failed",false);
+		}
+		return null;
 	}
 
 }

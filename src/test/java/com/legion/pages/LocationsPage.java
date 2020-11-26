@@ -107,4 +107,6 @@ public interface LocationsPage {
     public void addNewDistrictWithoutLocation(String districtName, String districtId, String districtManager) throws Exception;
 
     public void disableEnableDistrict(String districtName, String action) throws Exception;
+
+    public HashMap<String, String> getEnterpriseLogoAndDefaultLocationInfo();
 }
