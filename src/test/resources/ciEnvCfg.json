@@ -1,5 +1,5 @@
 {
-  "CHROME_DRIVER_PATH": "src/test/resources/Driver/chromedriver.exe",
+  "CHROME_DRIVER_PATH": "D:\\Automation\\ui\\console-ui-selenium\\src\\test\\resources\\Driver\\chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "/usr/local/bin/geckodriver",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://rc-enterprise.dev.legion.work/",
@@ -21,8 +21,8 @@
   "CHROME" : "Chrome",
   "FIREFOX" : "Firefox",
   "console_logs" : "false",
-  "close_browser" : "false",
-  "show_report" : "false",
+  "close_browser" : "true",
+  "show_report" : "true",
   "VERSION" : "68",
   "OS" : "WINDOW",
   "scheduleWeekCount" : "6",
@@ -33,5 +33,5 @@
   "platformVersion" : "7.0",
   "isParallelBrowser" : "false",
   "Download_File_Default_Dir" : "/Users/fenghuanli/Documents/project/downloads",
-  "isHeadlessBrowser" : "false"
+  "isHeadlessBrowser" : "true"
 }
