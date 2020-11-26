@@ -28,6 +28,7 @@ public class TeamTest extends TestBase{
 	private static Map<String, String> newTMDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember.json");
 	private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
 	private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
+	private static HashMap<String, String> propertyLocationTimeZone = JsonUtil.getPropertiesFromJsonFile("src/test/resources/LocationTimeZone.json");
 
 	@Override
 	  @BeforeMethod()
@@ -61,6 +62,22 @@ public class TeamTest extends TestBase{
 	        }
 	        public String getValue() { return value; }
 		}
+
+	public enum TeamPageSubTabText {
+		Roster("ROSTER"),
+		Coverage("COVERAGE"),
+		SchoolCalendars("SCHOOL CALENDARS");
+
+		private final String value;
+
+		TeamPageSubTabText(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
 	
 	 @Automated(automated = "Manual")
 	 @Owner(owner = "Gunjan")
@@ -258,12 +275,12 @@ public class TeamTest extends TestBase{
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team Functionality Time Off")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInTimeOffAsStoreManager(String browser, String username, String password, String location) throws Exception {
+	public void verifyTheTeamFunctionalityInTimeOffAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		// Login with Store Manager Credentials
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		// Get the current month, year and date
-		String currentMonthYearDate = getTimeZoneFromControlsAndGetDate();
+		String currentMonthYearDate = getTimeZoneFromControlsAndGetDate(location);
 		// Set time off policy
 		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
 		controlsPage.gotoControlsPage();
@@ -288,7 +305,6 @@ public class TeamTest extends TestBase{
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 		String nickName = profileNewUIPage.getNickNameFromProfile();
-		profileNewUIPage.clickOnUserProfileImage();
 		String myProfileLabel = "My Profile";
 		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
 		SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
@@ -317,6 +333,7 @@ public class TeamTest extends TestBase{
 		profileNewUIPage.verifyAlignmentOfAMAndPMAfterDeSelectAllDay();
 		// Verify Time off request can be requested
 		profileNewUIPage.clickOnSaveTimeOffRequestBtn();
+		Thread.sleep(3000);
 		// Verify count of Pending/approved/Rejected is being increased and decreased accordingly
 		int currentPendingCount = profileNewUIPage.getTimeOffCountByStatusLabel(pendingLabel);
 		if (currentPendingCount - previousPendingCount == 1) {
@@ -356,7 +373,7 @@ public class TeamTest extends TestBase{
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team Functionality Coverage")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInCoverageAsStoreManager(String browser, String username, String password, String location) throws Exception {
+	public void verifyTheTeamFunctionalityInCoverageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		String workingHoursType = "Regular";
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("Dashboard page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -370,15 +387,6 @@ public class TeamTest extends TestBase{
 		SimpleUtils.assertOnFail("Working Hours Card not loaded Successfully!", controlsNewUIPage.isControlsWorkingHoursLoaded(), false);
 		controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursType);
 		LinkedHashMap<String, List<String>> regularHours = controlsNewUIPage.getRegularWorkingHours();
-
-		// Set time off policy
-		controlsPage.gotoControlsPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-		controlsNewUIPage.clickOnControlsSchedulingPolicies();
-		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-		controlsNewUIPage.updateCanWorkerRequestTimeOff("Yes");
-		controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
-		controlsNewUIPage.updateShowTimeOffReasons("Yes");
 
 		TeamPage teamPage = pageFactory.createConsoleTeamPage();
 		HashMap<Integer, String> indexAndTimes = teamPage.generateIndexAndRelatedTimes(regularHours);
@@ -437,21 +445,13 @@ public class TeamTest extends TestBase{
 		teamPage.rejectAllTheTimeOffRequests();
 	}
 
-	public String getTimeZoneFromControlsAndGetDate() throws Exception {
+	public String getTimeZoneFromControlsAndGetDate(String location) throws Exception {
 		String timeZone = "";
 		String currentDate = "";
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		if (controlsNewUIPage.isControlsPageLoaded()){
-			controlsNewUIPage.clickOnControlsLocationProfileSection();
-			if (controlsNewUIPage.isControlsLocationProfileLoaded()){
-				timeZone = controlsNewUIPage.getTimeZoneFromLocationDetailsPage();
-				if (timeZone != null && !timeZone.isEmpty()){
-					SimpleDateFormat format = new SimpleDateFormat("MMMM yyyy dd");
-					currentDate = SimpleUtils.getCurrentDateMonthYearWithTimeZone(timeZone, format);
-				}
-			}
+		timeZone = propertyLocationTimeZone.get(location);
+		if (timeZone != null && !timeZone.isEmpty()){
+			SimpleDateFormat format = new SimpleDateFormat("MMMM yyyy dd");
+			currentDate = SimpleUtils.getCurrentDateMonthYearWithTimeZone(timeZone, format);
 		}
 		return currentDate;
 	}

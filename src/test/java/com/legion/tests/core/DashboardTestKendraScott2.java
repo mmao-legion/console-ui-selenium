@@ -60,7 +60,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheDisplayLocationWithSelectedLocation(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 		locationSelectorPage.verifyTheDisplayLocationWithSelectedLocationConsistent();
 	}
@@ -72,7 +72,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheClickActionOnChangeLocationButton(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 		locationSelectorPage.verifyClickChangeLocationButton();
 	}
@@ -84,7 +84,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheContentDisplayedInChangeLocationLayout(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 		locationSelectorPage.verifyTheContentOfDetailLocations();
 	}
@@ -96,7 +96,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheFunctionOfSearchTextBox(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.verifyDashboardPageLoadedProperly();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		List<String> testStrings = new ArrayList<>(Arrays.asList("s", "h", "W"));
 		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 		locationSelectorPage.verifyTheFunctionOfSearchTextBox(testStrings);
@@ -147,12 +147,14 @@ public class DashboardTestKendraScott2 extends TestBase{
 
 		SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePageAdmin.goToConsoleScheduleAndScheduleSubMenu();
+		schedulePageAdmin.navigateToNextWeek();
 		boolean isWeekGenerated = schedulePageAdmin.isWeekGenerated();
 		if (!isWeekGenerated){
 			schedulePageAdmin.createScheduleForNonDGFlowNewUI();
 		}
 		schedulePageAdmin.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		schedulePageAdmin.deleteTMShiftInWeekView(nickName);
+		schedulePageAdmin.deleteTMShiftInWeekView("Unassigned");
 		schedulePageAdmin.clickOnDayViewAddNewShiftButton();
 		schedulePageAdmin.customizeNewShiftPage();
 		schedulePageAdmin.selectWorkRole("MOD");
@@ -171,6 +173,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 		dashboardPage.validateDateAndTimeAfterSelectingDifferentLocation();
 		SchedulePage schedulePageTM = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePageTM.clickOnScheduleConsoleMenuItem();
+		schedulePageTM.navigateToNextWeek();
 		List<String> scheduleListTM = new ArrayList<>();
 		if (schedulePageTM.getShiftHoursFromInfoLayout().size() > 0) {
 			for (String tmShiftTime : schedulePageTM.getShiftHoursFromInfoLayout()) {
@@ -242,7 +245,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 
 		// Make sure schedule is published
 		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
 		if(isActiveWeekGenerated){
@@ -257,7 +260,7 @@ public class DashboardTestKendraScott2 extends TestBase{
 		String timeFromDashboard = dashboardPage.getCurrentTimeFromDashboard();
 
 		schedulePage = dashboardPage.goToTodayForNewUI();
-		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(
+		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(
 				ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
 		// Verify View Today's schedule button is working and navigating to the schedule page[Current date in day view]
 		schedulePage.isScheduleForCurrentDayInDayView(dateFromDashboard);

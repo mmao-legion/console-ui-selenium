@@ -51,4 +51,10 @@ public interface PageFactory {
     LocationsPage createOpsPortalLocationsPage();
 
     LiquidDashboardPage createConsoleLiquidDashboardPage();
+
+    ScheduleDMViewPage createScheduleDMViewPage();
+
+    InboxPage createConsoleInboxPage();
+
+    CinemarkMinorPage createConsoleCinemarkMinorPage();
 }

@@ -79,7 +79,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy (css = "div.col-sm-4.text-left")
 	private WebElement startingSoon;
 
-	@FindBy (css = "div.header-avatar")
+	@FindBy (css = ".header-avatar>img")
 	private WebElement iconProfile;
 
 	@FindBy (css = "li[ng-if='canShowTimeoffs']")
@@ -181,7 +181,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	checkElementVisibility(goToTodayScheduleButton);
     	SimpleUtils.pass("Dashboard Page Loaded Successfully!");
     	activeConsoleName = scheduleConsoleName.getText();
-    	click(goToTodayScheduleButton);
+    	clickTheElement(goToTodayScheduleButton);
         return new ConsoleScheduleNewUIPage();
     }
     
@@ -303,7 +303,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	public void clickOnProfileIconOnDashboard() throws Exception {
 		if(isElementEnabled(iconProfile,5)){
-			click(iconProfile);
+			moveToElementAndClick(iconProfile);
 			SimpleUtils.pass("Able to click on profile icon Successfully!!");
 		}else{
 			SimpleUtils.fail("Profile icon is not clickable",false);
@@ -467,7 +467,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				shifts.put(name, role);
 			}
 		}else {
-			SimpleUtils.fail("Up Coming shifts failed to load!", true);
+			SimpleUtils.report("Up Coming shifts are not loaded!");
 		}
 		return shifts;
 	}
@@ -515,7 +515,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	//Added by Julie
-	@FindBy( css = ".col-sm-4 > .header-company-icon > img")
+	@FindBy( css = ".header-company-icon.fl-right .company-icon-img")
 	private WebElement companyIconImg;
 
 	@FindBy(css = ".user-profile-section__title.ng-binding")
@@ -527,7 +527,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "[ng-show*=\"showLocation()\"]")
 	private WebElement showLocation;
 
-	@FindBy(css = "lg-picker-input > div > input-field > ng-form > div")
+	@FindBy(css = "[search-hint=\"Search Location\"] input-field[placeholder=\"Select...\"] div.input-faked")
 	private WebElement currentLocation;
 
 	@FindBy(css = ".lg-search-options__option")
@@ -545,11 +545,14 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = ".lgn-action-button-success")
 	private WebElement OKButton;
 
-	@FindBy(css = ".quick-profile")
+	@FindBy(css = "sub-content-box[box-title=\"User Profile\"]")
 	private WebElement personalDetails;
 
-	@FindBy(css = ".quick-engagement")
-	private WebElement engagementDetails;
+	@FindBy(css = "sub-content-box[box-title=\"HR Profile Information\"]")
+	private WebElement hrProfileInfo;
+
+	@FindBy(css = "sub-content-box[box-title=\"Legion Information\"]")
+	private WebElement legionInfo;
 
 	@FindBy(xpath = "//span[contains(text(),'My Shift Preferences')]")
 	private WebElement myShiftPreferences;
@@ -571,6 +574,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@FindBy(css = ".col-sm-5 .count-block-rejected")
 	private WebElement rejected;
+
+	@FindBy(css = "header-user-switch-menu[ng-show=\"showMenu\"]")
+	private WebElement switchMenu;
 
 	private static HashMap<String, String> propertyLocationTimeZone = JsonUtil.getPropertiesFromJsonFile("src/test/resources/LocationTimeZone.json");
 
@@ -645,7 +651,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateThePresenceOfLogo() throws Exception {
 		if (isElementLoaded(companyIconImg, 5)) {
 			if (companyIconImg.isDisplayed()) {
-				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[1]/img")).equals(companyIconImg)) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[2]//img[contains(@class,'company-icon-img')]")).equals(companyIconImg)) {
 					SimpleUtils.pass("Dashboard Page: Logo is present at right corner of page successfully");
 				} else {
 					SimpleUtils.fail("Dashboard Page: Logo isn't present at right corner of page", true);
@@ -764,7 +770,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateTheVisibilityOfProfilePicture() throws Exception {
 		if (isElementLoaded(iconProfile, 5)) {
 			if (iconProfile.isDisplayed()) {
-				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[2]")).equals(iconProfile)) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[1]/img")).equals(iconProfile)) {
 					SimpleUtils.pass("Profile picture is visible at right corner of the page successfully");
 				} else {
 					SimpleUtils.fail("Profile picture isn't visible at right corner of the page", true);
@@ -779,7 +785,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateProfilePictureIconClickable() throws Exception {
-		clickOnProfileIconOnDashboard();
+		if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+			clickOnProfileIconOnDashboard();
+		}
 		if (areListElementVisible(goToProfile, 10)) {
 			if (goToProfile.size() != 0) {
 				SimpleUtils.pass("Profile Page: Dropdown list opens after clicking on profile picture icon");
@@ -793,7 +801,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateTheVisibilityOfProfile() throws Exception {
-		clickOnProfileIconOnDashboard();
+		if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+			clickOnProfileIconOnDashboard();
+		}
 		if (areListElementVisible(goToProfile, 10)) {
 			if (goToProfile.size() == 3) {
 				SimpleUtils.pass("Profile Page: Dropdown list has three rows successfully");
@@ -814,12 +824,20 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateProfileDropdownClickable() throws Exception {
+		if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+			clickOnProfileIconOnDashboard();
+		}
 		if (areListElementVisible(goToProfile, 10) && goToProfile.size() != 0) {
 			for (int i = 0; i < goToProfile.size(); i++) {
-				click(goToProfile.get(i));
+				clickTheElement(goToProfile.get(i));
 				SimpleUtils.pass("Profile Page: " + goToProfile.get(i).getText() + " is clickable successfully");
 				if (isElementLoaded(alertDialog, 5)) {
 					click(OKButton);
+					if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+						clickOnProfileIconOnDashboard();
+					}
+				}
+				if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
 					clickOnProfileIconOnDashboard();
 				}
 			}
@@ -831,24 +849,26 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public void validateTheDataOfMyProfile() throws Exception {
 		clickOnSubMenuOnProfile("My Profile");
-		if (isElementLoaded(personalDetails, 20) && isElementLoaded(engagementDetails, 20)) {
-			if (personalDetails.isDisplayed() && engagementDetails.isDisplayed())
-				SimpleUtils.pass("My Profile: It shows the TM's personal and engagement details successfully");
+		if (isElementLoaded(personalDetails, 20) && isElementLoaded(hrProfileInfo, 20)&& isElementLoaded(legionInfo, 20)) {
+			if (personalDetails.isDisplayed() && hrProfileInfo.isDisplayed())
+				SimpleUtils.pass("My Profile: It shows the TM's profile information details successfully");
 		} else {
-			SimpleUtils.fail("My Profile: Failed to show the TM's personal and engagement", true);
+			SimpleUtils.fail("My Profile: Failed to show the TM's profile information", true);
 		}
 	}
 
 	@Override
 	public void clickOnSubMenuOnProfile(String subMenu) throws Exception {
-		clickOnProfileIconOnDashboard();
+		if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+			clickOnProfileIconOnDashboard();
+		}
 		if (areListElementVisible(goToProfile,10) && goToProfile.size() != 0 ) {
 			for(WebElement e : goToProfile) {
 				if(e.getText().toLowerCase().contains(subMenu.toLowerCase())) {
-					click(e);
+					clickTheElement(e);
 					if (isElementLoaded(alertDialog, 5))
 						click(OKButton);
-					else click(companyIconImg);
+					else clickTheElement(companyIconImg);
 					SimpleUtils.pass("Able to click on '"+ subMenu+"' link Successfully!!");
 					break;
 				}
@@ -934,7 +954,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public boolean isSwitchToEmployeeViewPresent() throws Exception {
-		clickOnProfileIconOnDashboard();
 		if (isElementLoaded(switchToEmployeeView, 10))
 			return true;
 		else
@@ -951,6 +970,31 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 	}
 
+	@FindBy(css = "div.row-fx.schedule-table-row.ng-scope")
+	private List<WebElement> dashboardScheduleWeeks;
+
+	@Override
+	public List<WebElement> getDashboardScheduleWeeks() {
+		if(areListElementVisible(dashboardScheduleWeeks,10)){
+			return dashboardScheduleWeeks;
+		}
+		return dashboardScheduleWeeks;
+	}
+
+	@FindBy(css = "[ng-click=\"$ctrl.onReload(true)\"]")
+	private WebElement refreshButton;
+
+
+	@Override
+	public void clickOnRefreshButton() throws Exception {
+		if (isElementLoaded(refreshButton, 10)) {
+			clickTheElement(refreshButton);
+			waitForSeconds(15);
+			SimpleUtils.pass("Click on Refresh button Successfully!");
+		} else {
+			SimpleUtils.fail("Refresh button not Loaded!", true);
+		}
+	}
 	//added by Estelle
 
 	@FindBy(css = "div.console-navigation-item-label.Dashboard")

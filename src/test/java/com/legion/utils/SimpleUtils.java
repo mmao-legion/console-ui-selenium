@@ -6,7 +6,6 @@ import com.legion.test.testrail.APIException;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.tests.testframework.ScreenshotManager;
-import cucumber.api.java8.Da;
 import org.apache.commons.lang.time.DateUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -41,6 +40,7 @@ public class SimpleUtils {
     static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/ciEnvCfg.json");
 //	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
 	static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
+	static HashMap<String,String> testSuites = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestSuitesFile.json");
 
 	static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
 
@@ -290,8 +290,27 @@ public class SimpleUtils {
 		}
 		return enterpriseName;
 	}
+/*
+	public static String getTestSuiteID (String testSuiteName) {
+		String result = null;
+		if (Strings.isNullOrEmpty(testSuiteName)) {
+			result = testSuites.get(testSuiteName);
+		}
+		return result != null ? result : MyThreadLocal.getTestSuiteID();
+	}
 
-
+	public static String getTestSuiteID (Method testMethod) {
+		TestSuiteName testSuiteName = testMethod.getAnnotation(TestSuiteName.class);
+		String id = null;
+		if (testSuiteName != null ) {
+			id = SimpleUtils.getTestSuiteID(testSuiteName.testSuiteName());
+		}
+		else {
+			id = SimpleUtils.getDefaultEnterprise();
+		}
+		return id;
+	}
+*/
 	public static void sortHashMapbykey(HashMap<String, Object[][]> hashMap)
 	{
 		TreeMap<String, Object[][]> sorted = new TreeMap<>();
@@ -374,6 +393,38 @@ public class SimpleUtils {
 			convertSuccess = false;
 		}
 		return convertSuccess;
+	}
+
+	public enum weekDayNames {
+		Mon("Monday"),
+		Tue("Tuesday"),
+		Wed("Wednesday"),
+		Thu("Thursday"),
+		Fri("Friday"),
+		Sat("Saturday"),
+		Sun("Sunday");
+		private final String value;
+
+		weekDayNames(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
+
+	public static String getFullWeekDayName(String shortName) {
+		String fullName = "";
+		weekDayNames[] shortNames = weekDayNames.values();
+		for (int i = 0; i < shortNames.length; i++) {
+			if (shortNames[i].name().equalsIgnoreCase(shortName)) {
+				fullName = shortNames[i].value;
+				SimpleUtils.report("Get the full name of " + shortName + ", is: " + fullName);
+				break;
+			}
+		}
+		return fullName;
 	}
 
 	public static boolean isTimeBetweenStartNEndTime(String nowStartDate, String nowEndDate, String startDate, String endDate) throws Exception {
@@ -548,7 +599,7 @@ public class SimpleUtils {
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
 		int projectId = Integer.valueOf(testRailConfig.get("TEST_RAIL_PROJECT_ID"));
-		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+		int suiteId = Integer.valueOf(MyThreadLocal.getTestSuiteID());
 		String addResultString = "add_section/"+projectId;
 
 		try {
@@ -669,7 +720,7 @@ public class SimpleUtils {
 	{
 		JSONArray testCasesList;
 		JSONObject jsonTestCase;
-		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+		int suiteId = Integer.valueOf(MyThreadLocal.getTestSuiteID());
 		int testCaseID = 0;
 		try {
 			testCasesList = (JSONArray) client.sendGet("get_cases/"+projectID+"/&suite_id="+suiteId+"&section_id="+sectionID);
@@ -694,7 +745,7 @@ public class SimpleUtils {
 	{
 		JSONArray testCasesList  = new JSONArray();
 		JSONObject jsonTestCase;
-		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+		int suiteId = Integer.valueOf(MyThreadLocal.getTestSuiteID());
 		int testCaseID = 0;
 		try {
 			testCasesList = (JSONArray) client.sendGet("get_cases/"+projectID+"/&suite_id="+suiteId+"&section_id="+sectionID);
@@ -792,7 +843,7 @@ public class SimpleUtils {
 			String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 			String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
 			String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
-			String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");
+			String testRailSuiteID = MyThreadLocal.getTestSuiteID();
 			try {
 				// Make a connection with TestRail Server
 				APIClient client = new APIClient(testRailURL);
@@ -843,7 +894,8 @@ public class SimpleUtils {
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
 		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
-		String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");
+		String testRailSuiteID = MyThreadLocal.getTestSuiteID();
+		//String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");
 		try {
 			// Make a connection with TestRail Server
 			APIClient client = new APIClient(testRailURL);
@@ -866,7 +918,7 @@ public class SimpleUtils {
 		JSONObject jsonSectionName;
 		JSONArray sectionNameList;
 //		JSONObject testCaseId;
-		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+		int suiteId = Integer.valueOf(MyThreadLocal.getTestSuiteID());
 		int testCaseID = 0;
 		List<Integer> testCaseIDList = new ArrayList<>();
 		try {
@@ -1181,7 +1233,7 @@ public class SimpleUtils {
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
 		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
 		String testRailSuiteName = testRailConfig.get("TEST_RUN_SUITE_NAME");
-		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+		int suiteId = Integer.valueOf(MyThreadLocal.getTestSuiteID());
 //		int suiteId = Integer.valueOf(testRailConfig.get("TEST_CASE_SUITE_ID"));
 
 		int TestRailRunId = 0;
@@ -1325,7 +1377,7 @@ public class SimpleUtils {
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
 		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
-		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+		int suiteId = Integer.valueOf(MyThreadLocal.getTestSuiteID());
 
 		int TestRailRunId = 0;
 		int count = 0;
@@ -1390,7 +1442,7 @@ public class SimpleUtils {
 					System.err.println(e.getMessage());
 				}
 				data.put("suite_id", suiteId);
-				data.put("name", "Automation Smoke"+"" +strDate);
+				data.put("name", "Automation Smoke "+MyThreadLocal.getTestSuiteName() +strDate);
 				data.put("include_all", false);
 				data.put("case_ids", cases);
 				JSONObject c = (JSONObject) client.sendPost(addResultString, data);
@@ -1417,7 +1469,7 @@ public class SimpleUtils {
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
 		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
-		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+		int suiteId = Integer.valueOf(MyThreadLocal.getTestSuiteID());
 
 		int TestRailRunId = 0;
 		int count = 0;
@@ -1445,7 +1497,7 @@ public class SimpleUtils {
 				System.err.println(e.getMessage());
 			}
 			data.put("suite_id", suiteId);
-			data.put("name", "Automation Smoke"+"" +strDate);
+			data.put("name", "Automation Smoke "+MyThreadLocal.getTestSuiteName() +strDate);
 			data.put("include_all", false);
 			data.put("case_ids", cases);
 			JSONObject c = (JSONObject) client.sendPost(addResultString, data);
@@ -1472,7 +1524,7 @@ public class SimpleUtils {
 			}
 
 //			context.setAttribute("TestRailId", getTestRailRunId());
-			context.setAttribute("TestRailId", getTestRailRun());
+			context.setAttribute("TestRailId", getTestRailRunId());
 		} catch (IOException ioException) {
 			System.err.println(ioException.getMessage());
 		} catch (APIException aPIException) {
@@ -1491,7 +1543,7 @@ public class SimpleUtils {
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
 		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
-		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+		int suiteId = Integer.valueOf(MyThreadLocal.getTestSuiteID());
 		String addResultString = "add_attachment_to_result_for_case/"+testCaseId+"";
 
 		try {
@@ -1554,7 +1606,7 @@ public class SimpleUtils {
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
 		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
-		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+		int suiteId = Integer.valueOf(MyThreadLocal.getTestSuiteID());
 
 		String testRailId = context.getAttribute("TestRailId").toString()
 				.replace("[","").replace("]","").replace(" ","");
@@ -1594,7 +1646,7 @@ public class SimpleUtils {
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
 		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
 		String testRailSuiteName = testRailConfig.get("TEST_RUN_SUITE_NAME");
-		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+		int suiteId = Integer.valueOf(MyThreadLocal.getTestSuiteID());
 //		int suiteId = Integer.valueOf(testRailConfig.get("TEST_CASE_SUITE_ID"));
 		int TestRailRunId = 0;
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -1633,12 +1685,13 @@ public class SimpleUtils {
 //				}
 //				data.put("title", testName);
 			data.put("suite_id", suiteId);
-			data.put("name", "Automation Smoke"+"" +strDate);
+			data.put("name", "Automation Smoke "+MyThreadLocal.getTestSuiteName() +strDate);
 			data.put("include_all", true);
 			String responseReq = JSONValue.toJSONString(data);
 			JSONObject jSONObject = (JSONObject) client.sendPost(addResultString, data);
 			long longTestRailRunId = (Long) jSONObject.get("id");
 			TestRailRunId = (int) longTestRailRunId;
+			//add test rail run ID=================================
 			setTestRailRunId(TestRailRunId);
 			List<Integer> testRailId =  new ArrayList<Integer>();
 			List<Integer> testRailIdMaster =  new ArrayList<Integer>();
@@ -1681,7 +1734,7 @@ public class SimpleUtils {
 			}else{
 				setTestRailRun(testRailId);
 			}
-			context.setAttribute("TestRailId", getTestRailRun());
+			context.setAttribute("TestRailId", getTestRailRunId());
 		} catch (IOException ioException) {
 			System.err.println(ioException.getMessage());
 		} catch (APIException aPIException) {
@@ -1691,7 +1744,6 @@ public class SimpleUtils {
 
 	}
 
-
 	public static int addNUpdateTestCaseIntoTestRun()
 	{
 		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
@@ -1699,7 +1751,8 @@ public class SimpleUtils {
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
 		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
 		String testRailSuiteName = testRailConfig.get("TEST_RUN_SUITE_NAME");
-		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+		int suiteId = Integer.valueOf(MyThreadLocal.getTestSuiteID());
+		//int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
 //		int suiteId = Integer.valueOf(testRailConfig.get("TEST_CASE_SUITE_ID"));
 
 		int TestRailRunId = 0;
@@ -1783,7 +1836,7 @@ public class SimpleUtils {
 		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
 		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
 		String testRailSuiteName = testRailConfig.get("TEST_RUN_SUITE_NAME");
-		int suiteId = Integer.valueOf(testRailConfig.get("TEST_RAIL_SUITE_ID"));
+		int suiteId = Integer.valueOf(MyThreadLocal.getTestSuiteID());
 		String addResultString = "get_runs/" + testRailProjectID;
         JSONObject jsonTestRailName;
         List<Integer> testCaseIDList = new ArrayList<>();
@@ -1875,19 +1928,19 @@ public class SimpleUtils {
 		return true;
 	}
 
-	public static boolean compareHashMapByEntrySet(HashMap<String,String> map1, HashMap<String, String> map2){
+	public static boolean compareHashMapByEntrySet(HashMap<String, List<String>> map1, HashMap<String, List<String>> map2){
 		if(map1.size()!=map2.size()){
 			return false;
 		}
-		String tmp1;
-		String tmp2;
+		List<String> tmp1;
+		List<String> tmp2;
 		boolean isSame = false;
-		for(Map.Entry<String, String> entry : map1.entrySet()){
+		for(Map.Entry<String, List<String>> entry : map1.entrySet()){
 			if(map2.containsKey(entry.getKey())){
 				tmp1 = entry.getValue();
 				tmp2 = map2.get(entry.getKey());
 				if(tmp1 != null && tmp2 != null){
-					if(tmp1.equals(tmp2)){
+					if(tmp1.containsAll(tmp2) && tmp2.containsAll(tmp1)){
 						isSame = true;
 						continue;
 					}else{

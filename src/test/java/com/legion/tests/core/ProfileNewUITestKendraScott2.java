@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleProfileNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -43,9 +44,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
         //T1838595 Validate the edit functionality on My Profile page.
-        boolean isEditingProfileSection = profileNewUIPage.isEditingProfileSectionLoaded();
-        SimpleUtils.assertOnFail("Profile Page:  Editing Profile Section not loaded.", isEditingProfileSection, true);
-        profileNewUIPage.validateTheEditFunctionalityOnMyProfile("Sammie", "Garden Rd 2-8", "Los_Angeles", "CA", "214121");
+        profileNewUIPage.validateTheEditFunctionalityOnMyProfile("Sammie", "Garden Rd 2-8", "Los_Angeles", "California", "214121");
 
         //T1838596 Validate the feature of Change password.
         profileNewUIPage.validateTheFeatureOfChangePassword(password);
@@ -54,7 +53,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
         String newPassword = profileNewUIPage.getNewPassword(password);
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
-        loginToLegionAndVerifyIsLoginDone(username, newPassword, location);
+        loginToLegionAndVerifyIsLoginDone(username,newPassword,location);
         dashboardPage.clickOnSubMenuOnProfile("My Profile");
         profileNewUIPage.validateTheFeatureOfChangePassword(newPassword);
     }
@@ -69,7 +68,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), true);
         dashboardPage.clickOnSubMenuOnProfile("My Work Preferences");
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-        SimpleUtils.assertOnFail("Profile Page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), true);
+        //SimpleUtils.assertOnFail("Profile Page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
 
         //T1838598 Validate the update of shift preferences.
         profileNewUIPage.validateTheUpdateOfShiftPreferences(true, false);
@@ -164,4 +163,75 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
         //T1838602 Validate the functionality of time off cancellation.
         profileNewUIPage.validateTheFunctionalityOfTimeOffCancellation();
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify the content of new profile page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheContentOfNewProfilePageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        // Select one team member to view profile
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        teamPage.selectATeamMemberToViewProfile();
+
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        //Verify User Profile Section is loaded
+        profileNewUIPage.verifyUserProfileSectionIsLoaded();
+        //Verify HR Profile Information Section is loaded
+        profileNewUIPage.verifyHRProfileInformationSectionIsLoaded();
+        //Verify Legion Information Section is loaded
+        profileNewUIPage.verifyLegionInformationSectionIsLoaded();
+        //Verify Actions Section is loaded
+        profileNewUIPage.verifyActionSectionIsLoaded();
+        //Verify the fields in User Profile Section are display correctly
+        profileNewUIPage.verifyFieldsInUserProfileSection();
+        //Verify the fields in HR Profile Information Section are display correctly
+        profileNewUIPage.verifyFieldsInHRProfileInformationSection();
+        //Verify the fields in Legion Information Section are display correctly
+        profileNewUIPage.verifyFieldsInLegionInformationSection();
+        //Verify the contents in Actions Section are display correctly
+        profileNewUIPage.verifyContentsInActionsSection();
+        //Verify Edit and Sync TM Info buttons are display correctly
+        profileNewUIPage.verifyEditUserProfileButtonIsLoaded();
+        profileNewUIPage.verifySyncTMInfoButtonIsLoaded();
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify the content of new profile page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheContentOfNewProfilePageInTMViewAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        // Select one team member to view profile
+        dashboardPage.clickOnSubMenuOnProfile("My Profile");
+
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        //Verify User Profile Section is loaded
+        profileNewUIPage.verifyUserProfileSectionIsLoaded();
+        //Verify HR Profile Information Section is loaded
+        profileNewUIPage.verifyHRProfileInformationSectionIsLoaded();
+        //Verify Legion Information Section is loaded
+        profileNewUIPage.verifyLegionInformationSectionIsLoaded();
+        //Verify Actions Section is loaded
+        profileNewUIPage.verifyActionSectionIsLoaded();
+        //Verify the fields in User Profile Section are display correctly
+        profileNewUIPage.verifyFieldsInUserProfileSection();
+        //Verify the fields in HR Profile Information Section are display correctly
+        profileNewUIPage.verifyFieldsInHRProfileInformationSection();
+        //Verify the fields in Legion Information Section are display correctly
+        profileNewUIPage.verifyFieldsInLegionInformationSection();
+        //Verify the contents in Actions Section are display correctly
+        profileNewUIPage.verifyContentsInActionsSectionInTMView();
+        //Verify Edit button is display correctly
+        profileNewUIPage.verifyEditUserProfileButtonIsLoaded();
+    }
+
 }

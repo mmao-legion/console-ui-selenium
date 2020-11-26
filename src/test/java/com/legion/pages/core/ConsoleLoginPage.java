@@ -23,7 +23,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     
     /* Aug 03- Zorang Team- Variables declaration*/
     
-    @FindBy(css="input[placeholder *='Usernam']")
+    @FindBy(css="input[placeholder*='Usernam']")
     private WebElement userNameField;
     
     @FindBy(css="[ng-model='password']")
@@ -64,7 +64,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     	passwordField.clear();
     	userNameField.sendKeys(userName);
 		passwordField.sendKeys(Password);
-		click(loginButton);
+		clickTheElement(loginButton);
     }
     
     public boolean isLoginDone() throws Exception
@@ -83,7 +83,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     {
     	if(isElementLoaded(logoutButton))
     	{
-    		click(logoutButton);
+    		clickTheElement(logoutButton);
     	}
     }
     

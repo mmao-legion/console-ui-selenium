@@ -535,8 +535,8 @@ public class BasePage {
     }
 
     public void selectByVisibleText(WebElement element, String text) throws Exception {
-        if (isElementLoaded(element, 5)) {
-            click(element);
+        if (isElementLoaded(element, 10)) {
+            clickTheElement(element);
             Select select = new Select(element);
             List<WebElement> options = select.getOptions();
             List<String> optionTexts = new ArrayList<>();

@@ -112,4 +112,13 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public LiquidDashboardPage createConsoleLiquidDashboardPage() { return new ConsoleLiquidDashboardPage(); }
+
+	@Override
+	public ScheduleDMViewPage createScheduleDMViewPage() { return new ConsoleScheduleDMViewPage(); }
+
+	@Override
+	public InboxPage createConsoleInboxPage() { return new ConsoleInboxPage(); }
+
+	@Override
+	public CinemarkMinorPage createConsoleCinemarkMinorPage() { return new ConsoleCinemarkMinorPage(); }
 }
