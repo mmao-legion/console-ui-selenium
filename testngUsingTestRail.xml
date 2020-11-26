@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite verbose ="0" thread-count="10" name="LegionTest">
     <suite-files>
-        <suite-file path="testngCinemarkMinor.xml"></suite-file>
-        <suite-file path="testngLiquidDashboard.xml"></suite-file>
+        <suite-file path="TestNGSuiteFile/testngCinemarkMinor.xml"></suite-file>
+        <suite-file path="TestNGSuiteFile/testngLiquidDashboard.xml"></suite-file>
     </suite-files>
 </suite>
