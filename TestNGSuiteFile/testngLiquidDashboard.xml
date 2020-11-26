@@ -3,20 +3,34 @@
 <suite verbose ="0" thread-count="10" name="LegionTest">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="yes"/>
-    <parameter name="testSuiteName" value="Cinemark Minors"/>
+    <parameter name="testSuiteName" value="Liquid Dashboard"/>
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-    <test name="Cinemark Minor Test">
+    <test name="LiquidDashboard Test">
         <classes>
-            <class name="com.legion.tests.core.CinemarkMinorTest">
+            <class name="com.legion.tests.core.LiquidDashboardTest">
                 <methods>
-                    <include name="verifyAccessToEditCalendarsAsInternalAdmin" />
-                    <include name="verifyTurnOffMinorRuleAsInternalAdmin" />
-                    <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" />
+                    <include name="verifyCommonUIOfWidgetsAsStoreManager" />
+                    <!--                    <include name="verifyTheContentOfStartingSoonWidgetAsInternalAdmin" />-->
+                    <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
+                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
+                    <!--                    <include name="verifyTheContentOfTimesheetApprovalStatusWidgetAsStoreManager" />-->
+                    <!--                    <include name="verifyTheContentOfOpenShiftsAsInternalAdmin" />-->
+                    <!--                    <include name="verifySwitchWeekOfOpenShiftsAsStoreManager" />-->
+                    <!--                    <include name="dataValidationOfOpenShiftsUnclaimedAsStoreManager" />-->
+                    <!--                    <include name="dataValidationOfOpenShiftsClaimedAsTeamMember" />-->
+                    <!--                    <include name="verifyHelpfulLinksWidgetsAsStoreManager" />-->
+                    <!--                    <include name="verifyTodayForecastWidgetsAsStoreManager" />-->
+                    <include name="verifySchedulesWidgetsAsStoreManager" />
+                    <!--<include name="verifyComplianceViolationWidgetsAsStoreManager" /> -->
+                    <!--                    <include name="verifyNoContentOfSwapNCoverWidgetAsInternalAdmin" />-->
+                    <!--                    <include name="verifyTimesheetApprovalRateWidgetAsStoreManager" />-->
+                    <!--                    <include name="verifyTheContentOfSwapNCoverWidgetAsInternalAdmin" />-->
                 </methods>
             </class>
         </classes>
     </test>
+
 </suite>

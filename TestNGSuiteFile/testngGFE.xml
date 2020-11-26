@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite verbose ="0" thread-count="10" name="LegionTest">
+    <parameter name="environment" value="QA"/>
+    <parameter name="testRail" value="yes"/>
+    <parameter name="testSuiteName" value="GFE"/>
+    <listeners>
+        <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
+    </listeners>
+
+    <test name="Inbox Test">
+        <classes>
+            <class name="com.legion.tests.core.InboxTest">
+                <methods>
+                    <include name="verifyGFEReportsAreAbleToExportAsInternalAdmin"/>
+                    <include name="verifyTheContentOfOperationHoursAndTheFirstDayOfWeekAsInternalAdmin" />
+                    <include name="verifyVSLInfoShowsOrNotAsInternalAdmin" />
+                    <include name="verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin" />
+                    <!--      <include name="verifyTurnOffGFEAsInternalAdmin" /> -->
+                    <include name="verifyTurnOnGFEAsInternalAdmin" />
+                    <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
+                    <include name="verifyContentOfGFEAsInternalAdmin" />
+                    <include name="verifyVSLInfoAsInternalAdmin" />
+                    <!--                    <include name="verifyTheColumnAndCountOfGFEReportAsInternalAdmin" />-->
+                    <include name="verifyTheMostRecentGFEIsInReportAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>

@@ -410,7 +410,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Estelle/Mary")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the Schedule functionality > Week View")
+	@TestName(description = "Verify the Schedule functionality - Week View - Context Menu")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyScheduleFunctionalityWeekView(String username, String password, String browser, String location)
 			throws Exception {

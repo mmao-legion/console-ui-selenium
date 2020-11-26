@@ -1442,7 +1442,7 @@ public class SimpleUtils {
 					System.err.println(e.getMessage());
 				}
 				data.put("suite_id", suiteId);
-				data.put("name", "Automation Smoke "+MyThreadLocal.getTestSuiteName() +strDate);
+				data.put("name", "Automation Smoke "+ MyThreadLocal.getTestSuiteName() + " " + strDate);
 				data.put("include_all", false);
 				data.put("case_ids", cases);
 				JSONObject c = (JSONObject) client.sendPost(addResultString, data);
@@ -1497,7 +1497,7 @@ public class SimpleUtils {
 				System.err.println(e.getMessage());
 			}
 			data.put("suite_id", suiteId);
-			data.put("name", "Automation Smoke "+MyThreadLocal.getTestSuiteName() +strDate);
+			data.put("name", "Automation Smoke "+ MyThreadLocal.getTestSuiteName() + " " + strDate);
 			data.put("include_all", false);
 			data.put("case_ids", cases);
 			JSONObject c = (JSONObject) client.sendPost(addResultString, data);
@@ -1685,7 +1685,7 @@ public class SimpleUtils {
 //				}
 //				data.put("title", testName);
 			data.put("suite_id", suiteId);
-			data.put("name", "Automation Smoke "+MyThreadLocal.getTestSuiteName() +strDate);
+			data.put("name", "Automation Smoke "+ MyThreadLocal.getTestSuiteName() + " " + strDate);
 			data.put("include_all", true);
 			String responseReq = JSONValue.toJSONString(data);
 			JSONObject jSONObject = (JSONObject) client.sendPost(addResultString, data);
