@@ -252,7 +252,6 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>testng.xml</suiteXmlFile>
                         <suiteXmlFile>testng1.xml</suiteXmlFile>
-                        <suiteXmlFile>sanitytest.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <forkCount>5</forkCount>
                     <reuseForks>true</reuseForks>

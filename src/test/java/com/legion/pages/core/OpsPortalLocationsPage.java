@@ -209,8 +209,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			city.sendKeys(newLocationParas.get("City"));
 			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			if (isElementEnabled(configTypeSelect,5)) {
 				selectByVisibleText(configTypeSelect,newLocationParas.get("Configuration_Type"));
@@ -260,8 +260,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			city.sendKeys(newLocationParas.get("City"));
 			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
 			phoneNumber.sendKeys(newLocationParas.get("Phone_Number"));
@@ -431,8 +431,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			city.sendKeys(newLocationParas.get("City"));
 			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
 			phoneNumber.sendKeys(newLocationParas.get("Phone_Number"));
@@ -776,8 +776,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			city.sendKeys(newLocationParas.get("City"));
 			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
 			phoneNumber.sendKeys(newLocationParas.get("Phone_Number"));
@@ -811,8 +811,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			city.sendKeys(newLocationParas.get("City"));
 			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
 			phoneNumber.sendKeys(newLocationParas.get("Phone_Number"));
@@ -848,8 +848,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			city.sendKeys(newLocationParas.get("City"));
 			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
 			phoneNumber.sendKeys(newLocationParas.get("Phone_Number"));
@@ -900,8 +900,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			city.sendKeys(newLocationParas.get("City"));
 			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
 			phoneNumber.sendKeys(newLocationParas.get("Phone_Number"));
