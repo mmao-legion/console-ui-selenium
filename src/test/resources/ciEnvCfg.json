@@ -1,5 +1,6 @@
 {
-  "CHROME_DRIVER_PATH": "src/test/resources/Driver/chromedriver.exe",
+
+  "CHROME_DRIVER_PATH": "/usr/local/bin/chromedriver",
   "FIREFOX_DRIVER_PATH": "/usr/local/bin/geckodriver",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://rc-enterprise.dev.legion.work/",
@@ -33,5 +34,5 @@
   "platformVersion" : "7.0",
   "isParallelBrowser" : "false",
   "Download_File_Default_Dir" : "/Users/fenghuanli/Documents/project/downloads",
-  "isHeadlessBrowser" : "true"
+  "isHeadlessBrowser" : "false"
 }
