@@ -1,6 +1,6 @@
 {
 
-  "CHROME_DRIVER_PATH": "Chrome",
+  "CHROME_DRIVER_PATH": "src/test/resources/Driver/chromedriverLinux",
   "FIREFOX_DRIVER_PATH": "/usr/local/bin/geckodriver",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://rc-enterprise.dev.legion.work/",
