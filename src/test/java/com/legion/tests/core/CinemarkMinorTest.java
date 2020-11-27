@@ -697,7 +697,7 @@ public class CinemarkMinorTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "OP_Enterprise")
-    @TestName(description = "Verify turn on minor rule")
+    @TestName(description = "Verify turn on minor rule and set rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOnAndSetMinorRuleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -866,7 +866,7 @@ public class CinemarkMinorTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "OP_Enterprise")
-    @TestName(description = "Verify the no School today and no school tomorrow  settings for the Minors of Age 14 or 15")
+    @TestName(description = "Verify the no School today and school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         String minorName = "Minor14";
