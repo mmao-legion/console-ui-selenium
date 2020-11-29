@@ -588,7 +588,10 @@ public class LiquidDashboardTest extends TestBase {
     @TestName(description = "verify Helpful Links")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyHelpfulLinksWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.pass("test1");
+        SimpleUtils.fail("test2", false);
+        SimpleUtils.pass("test3");
+        /*        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
         // Verifiy Edit mode Dashboard loaded
@@ -610,7 +613,7 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.saveAndExitEditMode();
         //verify links
         liquidDashboardPage.verifyLinks();
-    }
+*/    }
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
@@ -705,7 +708,7 @@ public class LiquidDashboardTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the content of Open Shifts widget")
+    @TestName(description = "Validate the content of Open Shifts Widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheContentOfOpenShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1018,7 +1021,7 @@ public class LiquidDashboardTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Verify compliance violation widget")
+    @TestName(description = "Validate Compliance Widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyComplianceViolationWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1091,7 +1094,7 @@ public class LiquidDashboardTest extends TestBase {
 
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify Timesheet Approval Rate widget")
+    @TestName(description = "Validate Timesheet Approval Rate widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTimesheetApprovalRateWidgetAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

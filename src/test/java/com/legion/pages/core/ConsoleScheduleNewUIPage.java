@@ -9608,24 +9608,44 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return selectedTMName;
     }
 
+    public boolean isEditMealBreakEnabled() throws Exception {
+        clickOnProfileIcon();
+        boolean isEditMealBreakEnabled = false;
+        if(isElementLoaded(editMealBreakTime,5) )
+        {
+            if(editMealBreakTime.getText().equalsIgnoreCase("Edit Meal Break Time")){
+                isEditMealBreakEnabled = true;
+                SimpleUtils.report("Edit Meal Break function is enabled! ");
+            } else{
+                SimpleUtils.report("We can only view breaks!");
+            }
+        }
+        else
+            SimpleUtils.fail("Edit Meal Break Time is disabled or not available to Click ", false);
+        return isEditMealBreakEnabled;
+    }
+
     @Override
-    public void verifyMealBreakTimeDisplayAndFunctionality() throws Exception {
+    public void verifyMealBreakTimeDisplayAndFunctionality(boolean isEditMealBreakEnabled) throws Exception {
         clickOnProfileIcon();
         clickOnEditMeaLBreakTime();
-        if (isMealBreakTimeWindowDisplayWell()) {
-            click(addMealBreakButton);
-            click(continueBtnInMealBreakButton);
-            SimpleUtils.pass("add meal break time successfully");
-
+        if (isMealBreakTimeWindowDisplayWell(isEditMealBreakEnabled)) {
+            if (isEditMealBreakEnabled){
+                click(addMealBreakButton);
+                click(continueBtnInMealBreakButton);
+                SimpleUtils.pass("add meal break time successfully");
+            } else {
+                click(continueBtnInMealBreakButton);
+            }
         }else
-            SimpleUtils.fail("add meal break failed",true);
+            SimpleUtils.report("add meal break failed");
     }
 
     @Override
     public void verifyDeleteMealBreakFunctionality() throws Exception {
         WebElement selectedShift = clickOnProfileIcon();
         clickOnEditMeaLBreakTime();
-        if (isMealBreakTimeWindowDisplayWell()) {
+        if (isMealBreakTimeWindowDisplayWell(true)) {
             while (!areListElementVisible(deleteMealBreakButtons, 5) && deleteMealBreakButtons.size()>0) {
                 click(cannelBtnInMealBreakButton);
                 selectedShift = clickOnProfileIcon();
@@ -9643,7 +9663,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
         click(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
         clickOnEditMeaLBreakTime();
-        if (isMealBreakTimeWindowDisplayWell()) {
+        if (isMealBreakTimeWindowDisplayWell(true)) {
             if (!areListElementVisible(deleteMealBreakButtons, 5)) {
                 SimpleUtils.pass("Delete meal break times successfully");
             } else {
@@ -9661,7 +9681,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
         WebElement selectedShift = clickOnProfileIcon();
         clickOnEditMeaLBreakTime();
-        if (isMealBreakTimeWindowDisplayWell()) {
+        if (isMealBreakTimeWindowDisplayWell(true)) {
             if (mealBreakBar.getAttribute("class").contains("disabled")) {
                 click(addMealBreakButton);
                 click(continueBtnInMealBreakButton);
@@ -9687,7 +9707,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
         click(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
         clickOnEditMeaLBreakTime();
-        if (isMealBreakTimeWindowDisplayWell()) {
+        if (isMealBreakTimeWindowDisplayWell(true)) {
             if (isSavedChange) {
                 if (mealBreakTimes.get(0).getText().equals(mealBreakTimeAfterEdit)) {
                     SimpleUtils.pass("Edit meal break times successfully");
@@ -9705,16 +9725,25 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    private boolean isMealBreakTimeWindowDisplayWell() throws Exception {
-
-        if (isElementLoaded(editMealBreakTitle,5) && isElementLoaded(addMealBreakButton,5) &&
-                isElementLoaded(cannelBtnInMealBreakButton,5) && isElementLoaded(continueBtnInMealBreakButton,5)
-                && isElementLoaded(sliderInMealBreakButton,5) && isElementEnabled(shiftInfoContainer, 5)) {
-            SimpleUtils.pass("the Edit Meal break windows is pop up which include: 1.profile info 2.add meal break button 3.Specify meal break time period 4 cancel ,continue button");
-            return  true;
-        }else
-            SimpleUtils.fail("edit meal break time windows load failed",true);
-        return false;
+    private boolean isMealBreakTimeWindowDisplayWell(boolean isEditMealBreakEnabled) throws Exception {
+        if (isEditMealBreakEnabled){
+            if (isElementLoaded(editMealBreakTitle,5) && isElementLoaded(addMealBreakButton,5) &&
+                    isElementLoaded(cannelBtnInMealBreakButton,5) && isElementLoaded(continueBtnInMealBreakButton,5)
+                    && isElementLoaded(sliderInMealBreakButton,5) && isElementEnabled(shiftInfoContainer, 5)) {
+                SimpleUtils.pass("the Edit Meal break windows is pop up which include: 1.profile info 2.add meal break button 3.Specify meal break time period 4 cancel ,continue button");
+                return  true;
+            }else
+                SimpleUtils.fail("edit meal break time windows load failed",true);
+            return false;
+        } else {
+            if (isElementLoaded(editMealBreakTitle,5) && isElementLoaded(continueBtnInMealBreakButton,5)
+                    && isElementLoaded(sliderInMealBreakButton,5) && isElementEnabled(shiftInfoContainer, 5)) {
+                SimpleUtils.pass("the Edit Meal break windows is pop up which include: 1.profile info 2.Specify meal break time period 3 continue button");
+                return  true;
+            }else
+                SimpleUtils.fail("edit meal break time windows load failed",true);
+            return false;
+        }
     }
 
     @FindBy(css = "div.sch-day-view-shift-delete")

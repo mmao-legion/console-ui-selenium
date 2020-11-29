@@ -492,14 +492,16 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//Click on the Convert to open shift, checkbox is available to offer the shift to any specific TM[optional] Cancel /yes
 		//if checkbox is unselected then, shift is convert to open
 		selectedShift = schedulePage.clickOnProfileIcon();
+		String tmFirstName = selectedShift.findElement(By.className("week-schedule-worker-name")).getText();
 		schedulePage.clickOnConvertToOpenShift();
-		if (schedulePage.verifyConvertToOpenPopUpDisplay(selectedShift.findElement(By.className("week-schedule-worker-name")).getText())) {
+		if (schedulePage.verifyConvertToOpenPopUpDisplay(tmFirstName)) {
 			schedulePage.convertToOpenShiftDirectly();
 		}
         //if checkbox is select then select team member page will display
 		selectedShift = schedulePage.clickOnProfileIcon();
+		tmFirstName = selectedShift.findElement(By.className("week-schedule-worker-name")).getText();
 		schedulePage.clickOnConvertToOpenShift();
-		if (schedulePage.verifyConvertToOpenPopUpDisplay(selectedShift.findElement(By.className("week-schedule-worker-name")).getText())) {
+		if (schedulePage.verifyConvertToOpenPopUpDisplay(tmFirstName)) {
 			schedulePage.convertToOpenShiftAndOfferToSpecificTMs();
 		}
 
@@ -513,23 +515,24 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//Edit shift time and click Cancel button
 		schedulePage.editAndVerifyShiftTime(false);
 
-
-		//After click on Edit Meal Break Time, the Edit Meal Break window will display
-		schedulePage.verifyMealBreakTimeDisplayAndFunctionality();
-		//Verify Delete Meal Break
-		schedulePage.verifyDeleteMealBreakFunctionality();
-		//Edit meal break time and click update button
-		schedulePage.verifyEditMealBreakTimeFunctionality(true);
-		//Edit meal break time and click cancel button
-		schedulePage.verifyEditMealBreakTimeFunctionality(false);
+		//Verify Edit/View Meal Break
+		if (schedulePage.isEditMealBreakEnabled()){
+			//After click on Edit Meal Break Time, the Edit Meal Break window will display
+			schedulePage.verifyMealBreakTimeDisplayAndFunctionality(true);
+			//Verify Delete Meal Break
+			schedulePage.verifyDeleteMealBreakFunctionality();
+			//Edit meal break time and click update button
+			schedulePage.verifyEditMealBreakTimeFunctionality(true);
+			//Edit meal break time and click cancel button
+			schedulePage.verifyEditMealBreakTimeFunctionality(false);
+		} else
+			schedulePage.verifyMealBreakTimeDisplayAndFunctionality(false);
 
 		//verify cancel button
 		schedulePage.verifyDeleteShiftCancelButton();
 
 		//verify delete shift
 		schedulePage.verifyDeleteShift();
-
-
 	}
 
 	@Automated(automated = "Automated")
