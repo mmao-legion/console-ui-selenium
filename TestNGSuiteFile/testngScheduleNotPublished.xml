@@ -8,7 +8,7 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-    <test name="Schedule New UI Test">
+    <test name="Schedule Not Published Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>

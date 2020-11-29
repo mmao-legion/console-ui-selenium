@@ -221,7 +221,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the content of Shift Swap activity when TM automatic to request to swap the shif")
+    @TestName(description = "Validate the content of Shift Swap activity when TM automatic to request to swap the shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheContentOfShiftSwapActivityWithoutApprovalAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         prepareTheSwapShiftsAsInternalAdmin(browser, username, password, location);
@@ -715,7 +715,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the activity of publish or update schedule")
+    @TestName(description = "Validate the Schedule section when manager published a schedule")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyActivityOfPublishUpdateSchedule(String browser, String username, String password, String location) throws Exception {
 
@@ -1231,7 +1231,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the notification when TM updates availability from a week onwards.Set \"Is manager approval required when an employee changes availability?\" to \"Not required\" ")
+    @TestName(description = "Verify the notification when TM updates availability from a week onwards")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         // Login with Store Manager Credentials
@@ -1291,7 +1291,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the notification when TM updates availability from a week onwards.Set \"Is manager approval required when an employee changes availability?\" to \"Not required\" ")
+    @TestName(description = "Verify the notification when TM updates availability from a week onwards")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         // Login with Store Manager Credentials
@@ -1352,7 +1352,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the notification when TM updates availability from a week onwards.Set \"Is manager approval required when an employee changes availability?\" to \"Required for all changes\" ")
+    @TestName(description = "Verify the notification when TM updates availability from a week onwards")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         // Login with Store Manager Credentials
@@ -1420,7 +1420,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the notification when TM updates availability from a week onwards.Set \"Is manager approval required when an employee changes availability?\" to \"Required for all changes\" ")
+    @TestName(description = "Verify the notification when TM updates availability from a week onwards")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         // Login with Store Manager Credentials
@@ -1489,7 +1489,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the activity of claim open shift")
+    @TestName(description = "Validate the functioning of Approve button on pending Approval for Claimed Open shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyActivityOfClaimOpenShiftAsTeamMember(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

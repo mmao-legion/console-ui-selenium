@@ -668,7 +668,7 @@ public class LiquidDashboardTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify Schedules widget")
+    @TestName(description = "verify value on Schedules widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySchedulesWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -678,6 +678,10 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.enterEditMode();
         liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
         liquidDashboardPage.saveAndExitEditMode();
+
+        // Refresh the dashboard to get the value updated
+        dashboardPage.clickOnRefreshButton();
+
         //verify view schedules link
         List<String> resultListOnWidget = liquidDashboardPage.getDataOnSchedulesWidget();
         liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Schedules.getValue(),linkNames.View_Schedules.getValue());
@@ -693,7 +697,6 @@ public class LiquidDashboardTest extends TestBase {
                     SimpleUtils.fail("Schedules widget: Values on widget are not consistent with the one in overview!",false);
                 }
             }
-
         } else {
             SimpleUtils.fail("Schedules widget: something wrong with the number of week displayed!",true);
         }

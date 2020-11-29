@@ -297,7 +297,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the edit mode in New User Profile page")
+    @TestName(description = "Verify the edit mode in New User Profile page in TM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyEditModeInNewUserProfilePageAsTeamMember(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

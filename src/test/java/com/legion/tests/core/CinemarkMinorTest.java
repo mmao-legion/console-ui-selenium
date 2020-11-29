@@ -204,7 +204,59 @@ public class CinemarkMinorTest extends TestBase {
         SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
                 teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
+        // Verify the visibility of calendars on School Calendars page
+        teamPage.verifyTheCalendarListLoaded();
+        // Verify the content of each calendar
+        teamPage.verifyTheContentOnEachCalendarList();
+        // Verify the visibility of the detailed calendar page
         teamPage.clickTheCalendarByRandom();
+        teamPage.verifySchoolSessionPageLoaded();
+        // Verify the content on detailed calendar page
+        teamPage.verifyTheContentOnDetailedCalendarPage();
+        // Verify the functionality of Edit button
+        teamPage.clickOnEditCalendarButton();
+        teamPage.verifyEditCalendarAlertModelPopsUp();
+        teamPage.clickOnEditAnywayButton();
+        SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
+
+        // Verify the functionality of Save button
+        teamPage.clickOnSaveSchoolCalendarBtn();
+        // Verify the functionality of "School Schedules" button
+        teamPage.clickOnSchoolSchedulesButton();
+        teamPage.verifyTheCalendarListLoaded();
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "OP_Enterprise")
+    @TestName(description = "Verify delete calendar")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDeleteCalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+
+        // Verify the visibility of calendars on School Calendars page
+        teamPage.verifyTheCalendarListLoaded();
+
+        teamPage.clickTheCalendarByRandom();
+        teamPage.verifySchoolSessionPageLoaded();
+
+        // Verify the presence of DELETE button
+        // Verify the functionality of DELETE button
+        teamPage.clickOnDeleteCalendarButton();
+        // Verify the functionality of CANCEL button
+        teamPage.clickOnCancelButtonOnPopup();
+        // Verify the functionality of DELETE ANYWAY button
+        teamPage.clickOnDELETEANYWAYButton();
+        teamPage.verifyTheCalendarListLoaded();
     }
 
     @Automated(automated = "Automated")

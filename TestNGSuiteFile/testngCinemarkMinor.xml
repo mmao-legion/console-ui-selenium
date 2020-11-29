@@ -37,6 +37,8 @@
                     <include name="verifyTurnOffMinorRuleAsInternalAdmin" />
                     <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" />
                     <include name="verifyAccessToEditCalendarsAsInternalAdmin" />
+                    <include name="verifyViewDetailsAndEditAsInternalAdmin" />
+                    <include name="verifyDeleteCalendarAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

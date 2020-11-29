@@ -154,7 +154,7 @@ public class DragAndDropTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the box interaction color and message when TM is from another store and is already scheduled at this store ")
+    @TestName(description = "Validate the box interaction color and message when TM is from another store and is already scheduled at this store")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -169,6 +169,9 @@ public class DragAndDropTest extends TestBase {
         controlsNewUIPage.clickOnGlobalLocationButton();
         controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
         controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
+
+        dashboardPage.navigateToDashboard();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
         String anotherLocation = "NY CENTRAL";
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -831,7 +834,7 @@ public class DragAndDropTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the box interaction color and message for TM status: role violation, config=yes")
+    @TestName(description = "Validate Assignment rule violation with Yes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -934,7 +937,7 @@ public class DragAndDropTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the box interaction color and message for TM status: role violation, config=no")
+    @TestName(description = "Validate Assignment rule violation with No")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySwapWarningModelForRoleViolationConfigNoAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

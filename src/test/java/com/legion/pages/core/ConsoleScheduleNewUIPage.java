@@ -9226,9 +9226,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     }
                     //to close the popup
                     waitForSeconds(5);
-                    click(clickedShift);
+                    clickTheElement(clickedShift);
 
-                    click(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+                    clickTheElement(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
                     SimpleUtils.pass("Apply button has been clicked ");
                 } else {
                     click(cancelButtonChangeRole);
