@@ -2,19 +2,16 @@ package com.legion.tests.core;
 
 import com.legion.pages.*;
 import com.legion.tests.TestBase;
-import com.legion.tests.annotations.Automated;
-import com.legion.tests.annotations.Enterprise;
-import com.legion.tests.annotations.Owner;
-import com.legion.tests.annotations.TestName;
+import com.legion.tests.annotations.*;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.*;
+
 
 public class LiquidDashboardTest extends TestBase {
     @Override
@@ -588,10 +585,13 @@ public class LiquidDashboardTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify Helpful Links widget")
+    @TestName(description = "verify Helpful Links")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyHelpfulLinksWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.pass("test1");
+        SimpleUtils.fail("test2", false);
+        SimpleUtils.pass("test3");
+        /*        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
         // Verifiy Edit mode Dashboard loaded
@@ -613,7 +613,7 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.saveAndExitEditMode();
         //verify links
         liquidDashboardPage.verifyLinks();
-    }
+*/    }
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
@@ -671,7 +671,7 @@ public class LiquidDashboardTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify Schedules widget")
+    @TestName(description = "verify value on Schedules widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySchedulesWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -681,6 +681,10 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.enterEditMode();
         liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
         liquidDashboardPage.saveAndExitEditMode();
+
+        // Refresh the dashboard to get the value updated
+        dashboardPage.clickOnRefreshButton();
+
         //verify view schedules link
         List<String> resultListOnWidget = liquidDashboardPage.getDataOnSchedulesWidget();
         liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Schedules.getValue(),linkNames.View_Schedules.getValue());
@@ -688,16 +692,14 @@ public class LiquidDashboardTest extends TestBase {
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         List<String> resultListInOverview = schedulePage.getOverviewData();
         if (resultListOnWidget.size()==resultListInOverview.size()){
-            boolean falg = false;
             for (int i=0;i<resultListInOverview.size();i++){
-                falg = resultListInOverview.get(i).equals(resultListOnWidget.get(i));
+                boolean flag = resultListInOverview.get(i).equals(resultListOnWidget.get(i));
+                if (flag){
+                    SimpleUtils.pass("Schedules widget: Values on widget are consistent with the one in overview");
+                } else {
+                    SimpleUtils.fail("Schedules widget: Values on widget are not consistent with the one in overview!",false);
+                }
             }
-            if (falg){
-                SimpleUtils.pass("Schedules widget: Values on widget are consistent with the one in overview");
-            } else {
-                SimpleUtils.fail("Schedules widget: Values on widget are not consistent with the one in overview!",true);
-            }
-
         } else {
             SimpleUtils.fail("Schedules widget: something wrong with the number of week displayed!",true);
         }
@@ -706,7 +708,7 @@ public class LiquidDashboardTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the content of Open Shifts widget")
+    @TestName(description = "Validate the content of Open Shifts Widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheContentOfOpenShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1019,7 +1021,7 @@ public class LiquidDashboardTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Verify compliance violation widget")
+    @TestName(description = "Validate Compliance Widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyComplianceViolationWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1092,7 +1094,7 @@ public class LiquidDashboardTest extends TestBase {
 
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify Timesheet Approval Rate widget")
+    @TestName(description = "Validate Timesheet Approval Rate widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTimesheetApprovalRateWidgetAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

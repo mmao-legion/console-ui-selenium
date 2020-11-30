@@ -148,8 +148,22 @@ public interface TeamPage {
 	public boolean verifyMandatoryElement(WebElement element) throws Exception;
 	public void verifySessionStartNEndIsMandatory() throws Exception;
 	public void verifyCreateCalendarLoaded() throws Exception;
+	public void clickTheCalendarByRandom() throws Exception;
+	public void clickOnEditCalendarButton() throws Exception;
+	public void verifyEditCalendarAlertModelPopsUp() throws Exception;
+	public void clickOnEditAnywayButton() throws Exception;
+	public boolean isEditCalendarModeLoaded() throws Exception;
+	public void verifyClickedDayIsHighlighted() throws Exception;
+	public void verifySchoolSessionPageLoaded() throws Exception;
 	public boolean isCreateCalendarBtnLoaded() throws Exception;
 	public void createNewCalendarByName(String calendarName) throws Exception;
 	public boolean isCalendarDisplayedByName(String calendarName) throws Exception;
 	public void clickOnCancelEditCalendarBtn() throws Exception;
+	public void verifyTheCalendarListLoaded() throws Exception;
+	public void verifyTheContentOnEachCalendarList() throws Exception;
+	public void verifyTheContentOnDetailedCalendarPage() throws Exception;
+	public void clickOnSchoolSchedulesButton() throws Exception;
+	public void	clickOnDeleteCalendarButton() throws Exception;
+	public void clickOnCancelButtonOnPopup() throws Exception;
+	public void clickOnDELETEANYWAYButton() throws Exception;
 }

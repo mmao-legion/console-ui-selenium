@@ -3774,6 +3774,168 @@ private WebElement locationColumn;
 	private List<WebElement> calendarCells;
 	@FindBy(css = "[options=\"schoolCalendars\"] select")
 	private WebElement schoolCalendarSelect;
+	@FindBy(css = "[label=\"Save\"]")
+	private WebElement saveButton;
+	@FindBy(css = ".school-day")
+	private List<WebElement> schoolDays;
+	@FindBy(css = ".session-information-and-calendar-wrapper")
+	private WebElement calendarWrapper;
+	@FindBy(css = ".calendar-overview")
+	private List<WebElement> calendarList;
+	@FindBy(css = ".school-calendars-year-switcher")
+	private WebElement schoolYear;
+	@FindBy(css = ".calendar-block")
+	private List<WebElement> calendarBlocks;
+	@FindBy(className = "school-calendars-linkback")
+	private WebElement schoolCalendarsBackBtn;
+	@FindBy(css = "span.lgn-alert-message.warning")
+	private WebElement warningOnPopup;
+
+	@Override
+	public void clickOnSchoolSchedulesButton() throws Exception {
+		if (isElementLoaded(schoolCalendarsBackBtn, 5)) {
+			clickTheElement(schoolCalendarsBackBtn);
+		} else {
+			SimpleUtils.fail("Calendar page: School Calendars Back button not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void verifyTheContentOnDetailedCalendarPage() throws Exception {
+		if (isElementLoaded(schoolCalendarHeader, 5)) {
+			SimpleUtils.pass("Calendar: " + schoolCalendarHeader.getText() + " page loaded Successfully!");
+		} else {
+			SimpleUtils.fail("Calendar title failed to load!", false);
+		}
+		if (isElementLoaded(schoolYear,  5)) {
+			SimpleUtils.pass("Calendar: " + schoolCalendarHeader.getText() + ", school year: " + schoolYear.getText() + " loaded Successfully!");
+		} else {
+			SimpleUtils.fail("Calendar: School Year element not loaded Successfully!", false);
+		}
+		if (isElementLoaded(deleteCalendarBtn, 5) && isElementLoaded(editCalendarBtn, 5)) {
+			SimpleUtils.pass("Calendar: Delete and Edit buttons loaded Successfully!");
+		} else {
+			SimpleUtils.fail("Calendar: Delete and Edit buttons not loaded Successfully!", false);
+		}
+		if (areListElementVisible(calendarBlocks, 5) && calendarBlocks.size() == 12) {
+			SimpleUtils.pass("Calendar: 12 Months loaded Successfully!");
+		} else {
+			SimpleUtils.fail("Calendar: 12 Months not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void verifyTheContentOnEachCalendarList() throws Exception {
+		if (areListElementVisible(calendarList, 10)) {
+			SimpleUtils.pass("Calendars are loaded Successfully!");
+			for (WebElement calendar : calendarList) {
+				WebElement title = calendar.findElement(By.cssSelector(".calendar-overview-title"));
+				List<WebElement> infos = calendar.findElements(By.cssSelector(".calendar-overview-info-title"));
+				WebElement lastUpdateInfo = calendar.findElement(By.cssSelector(".calendar-overview-info-img"));
+				if (title != null && infos != null && lastUpdateInfo != null) {
+					if (infos.size() == 3 && infos.get(0).getText().equals("SCHOOL SESSION START") &&
+					infos.get(1).getText().equals("SCHOOL SESSION END") && infos.get(2).getText().equals("SCHOOL CALENDAR URL")) {
+						SimpleUtils.pass("School Calendar: " + title.getText() + ", verified the content is correct!");
+					} else {
+						SimpleUtils.fail("School Calendar: " + title.getText() + ", the content is incorrect!", false);
+					}
+				} else {
+					SimpleUtils.fail("School Calendar: the content is incorrect!", false);
+				}
+			}
+		} else {
+			SimpleUtils.report("School Calendars: There is no calendars on this page!");
+		}
+	}
+
+	@Override
+	public void verifyTheCalendarListLoaded() throws Exception {
+		if (areListElementVisible(calendarList, 10)) {
+			SimpleUtils.pass("Calendars are loaded Successfully!");
+		} else {
+			SimpleUtils.report("School Calendars: There is no calendars on this page!");
+		}
+	}
+
+	@Override
+	public void verifyClickedDayIsHighlighted() throws Exception {
+		if (areListElementVisible(schoolDays, 10)) {
+			WebElement firstSchoolDay = schoolDays.get(0);
+			moveToElementAndClick(firstSchoolDay);
+			waitForSeconds(2);
+			if (firstSchoolDay.getAttribute("class").contains("non-school-day")) {
+				SimpleUtils.pass("Edit Calendar: Clicked Day is highlighted!");
+			} else {
+				SimpleUtils.fail("Edit Calendar: Clicked Day is not highlighted!", false);
+			}
+		}
+	}
+
+	@Override
+	public boolean isEditCalendarModeLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(cancelEditButton, 5) && isElementLoaded(saveButton, 5)) {
+			isLoaded = true;
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void clickOnEditAnywayButton() throws Exception {
+		if (isElementLoaded(confirmButton, 5) && confirmButton.getText().equalsIgnoreCase("EDIT ANYWAY")) {
+			clickTheElement(confirmButton);
+		} else {
+			SimpleUtils.fail("EDIT ANYWAY button failed to load!", false);
+		}
+	}
+
+	@Override
+	public void verifyEditCalendarAlertModelPopsUp() throws Exception {
+		String expectedMessage = "Please note: Editing this school calendar will affect schedules of all Team Members that are currently assigned to this calendar.";
+		if (isElementLoaded(confirmPopupWindow, 10) && isElementLoaded(popupMessage, 10)) {
+			if (popupMessage.getText().trim().equals(expectedMessage) && isElementLoaded(cancelButton, 5) && isElementLoaded(confirmButton, 5)
+			&& confirmButton.getText().equalsIgnoreCase("EDIT ANYWAY")) {
+				SimpleUtils.pass("Click On Edit Calendar button successfully, Alert message and buttons loaded Successfully!");
+			} else {
+				SimpleUtils.fail("Edit Calendar: Alert message or buttons are incorrect!", false);
+			}
+		} else {
+			SimpleUtils.fail("Edit Calendar: Alert model failed to load!", false);
+		}
+	}
+
+	@Override
+	public void verifySchoolSessionPageLoaded() throws Exception {
+		if (isElementLoaded(calendarWrapper, 10)) {
+			SimpleUtils.pass("School Session Calendar page loaded Successfully!");
+		} else {
+			SimpleUtils.fail("School Session Calendar page not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void clickOnEditCalendarButton() throws Exception {
+		if (isElementLoaded(editCalendarBtn, 10)) {
+			clickTheElement(editCalendarBtn);
+		} else {
+			SimpleUtils.fail("School Calendars page: Edit button failed to load!", false);
+		}
+	}
+
+	@Override
+	public void clickTheCalendarByRandom() throws Exception {
+		if (areListElementVisible(calendarTitles, 10)) {
+			int randomIndex = (new Random()).nextInt(calendarTitles.size());
+			String calendarName = calendarTitles.get(randomIndex).getText();
+			SimpleUtils.report("School Calendars Page: select calendar: " + calendarName);
+			clickTheElement(calendarTitles.get(randomIndex));
+			if (isElementLoaded(deleteCalendarBtn, 10) && isElementLoaded(editCalendarBtn, 10)) {
+				SimpleUtils.pass("Click on the calendar: " + calendarName + " Successfully!");
+			}
+		} else {
+			SimpleUtils.report("School Calendar: There is no calendars!");
+		}
+	}
 
 	@Override
 	public void setTheCalendarForMinors(List<String> minorNames, String calendarName, ProfileNewUIPage profileNewUIPage) throws Exception {
@@ -3784,6 +3946,46 @@ private WebElement locationColumn;
 				goToTeam();
 				verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 			}
+		}
+	}
+
+	@Override
+	public void clickOnCancelButtonOnPopup() throws Exception {
+		if (isElementLoaded(cancelButton, 5)) {
+			clickTheElement(cancelButton);
+			SimpleUtils.pass("Click the Cancel button on Popup Successfully!");
+			waitUntilElementIsInVisible(cancelButton);
+		} else {
+			SimpleUtils.fail("Cancel button not loaded Successfully on popup!", false);
+		}
+	}
+
+	@Override
+	public void	clickOnDeleteCalendarButton() throws Exception {
+		String warningMessage = "Please note: Deleting this school calendar will affect schedules of all Team Members that are currently assigned to this calendar.";
+		if (isElementLoaded(deleteCalendarBtn, 10)) {
+			clickTheElement(deleteCalendarBtn);
+			if (isElementLoaded(confirmButton, 10) && confirmButton.getText().trim().equalsIgnoreCase("DELETE ANYWAY") && isElementLoaded(cancelButton, 5)
+			&& isElementLoaded(warningOnPopup, 5) && warningOnPopup.getText().contains(warningMessage)) {
+				SimpleUtils.pass("Click on DELETE calendar button Successfully, warning message pops up!");
+			}
+		} else {
+			SimpleUtils.fail("Delete Calendar button not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void clickOnDELETEANYWAYButton() throws Exception {
+		if (isElementLoaded(confirmButton, 10) && confirmButton.getText().trim().equalsIgnoreCase("DELETE ANYWAY")) {
+			clickTheElement(confirmButton);
+			waitForSeconds(3);
+			if (isElementLoaded(schoolCalendarHeader, 10)) {
+				SimpleUtils.pass("Delete the school calendar Successfully!");
+			} else {
+				SimpleUtils.fail("Failed to delete the school calendar!", false);
+			}
+		} else {
+			SimpleUtils.fail("School Calendar: DELETE ANYWAY button not loaded Successfully!", false);
 		}
 	}
 

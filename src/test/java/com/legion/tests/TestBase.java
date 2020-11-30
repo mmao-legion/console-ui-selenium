@@ -80,10 +80,12 @@ public abstract class TestBase {
     public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
     public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/DistrictsForDifferentEnterprises.json");
     private static ExtentReports extent = ExtentReportManager.getInstance();
+    static HashMap<String,String> testSuites = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestSuitesFile.json");
     public static AndroidDriver<MobileElement> driver;
     public static String versionString;
     public static int version;
     public String enterpriseName;
+    public static String testSuiteIDTemp = "0";
     public static String pth=System.getProperty("user.dir");
     public static String reportFilePath=pth+"/Reports/";
     public static String screenshotFilePath=pth+"/screenshots/";
@@ -94,10 +96,12 @@ public abstract class TestBase {
     public static final int TEST_CASE_PASSED_STATUS = 1;
     public static final int TEST_CASE_FAILED_STATUS = 5;
 
-    @Parameters({ "platform", "executionon", "runMode","testRail"})
+    @Parameters({ "platform", "executionon", "runMode","testRail","testSuiteName"})
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
-                            @Optional String runMode, @Optional String testRail) throws Exception {
+                            @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, ITestContext context) throws Exception {
+        MyThreadLocal.setTestSuiteID(testSuites.get(testSuiteName));
+        MyThreadLocal.setTestSuiteName(testSuiteName);
         if(platform!= null && executionon!= null && runMode!= null){
             if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice")
                     && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){
@@ -156,10 +160,15 @@ public abstract class TestBase {
                 + " " + method.getName() + " : " + testName + ""
                 + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
         extent.setSystemInfo(method.getName(), enterpriseName.toString());
-        setTestRailRunId(0);
+        //setTestRailRunId(0);
+        if (MyThreadLocal.getTestSuiteID()==null){
+            setTestRailRunId(0);
+        }
         List<Integer> testRailId =  new ArrayList<Integer>();
         setTestRailRun(testRailId);
-        if(getTestRailReporting()!=null){
+
+        if(getTestRailReporting()!=null && !testSuiteIDTemp.equalsIgnoreCase(MyThreadLocal.getTestSuiteID())){
+            testSuiteIDTemp = MyThreadLocal.getTestSuiteID();
             SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
         }
         setCurrentMethod(method);

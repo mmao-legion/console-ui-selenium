@@ -2224,7 +2224,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void verifyMealBreakTimeDisplayAndFunctionality() {
+    public void verifyMealBreakTimeDisplayAndFunctionality(boolean isEditMealBreakEnabled) {
 
     }
 
@@ -3008,7 +3008,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void clickProfileIconOfShift(WebElement shift) throws Exception {
+    public void clickProfileIconOfShiftByIndex(int index) throws Exception {
 
     }
 
@@ -3267,8 +3267,18 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public int getTheIndexOfEditedShift() throws Exception {
+        return 0;
+    }
+
+    @Override
     public void navigateToTheRightestSmartCard() throws Exception {
 
+    }
+
+    @Override
+    public boolean isEditMealBreakEnabled() throws Exception {
+        return false;
     }
 
 }

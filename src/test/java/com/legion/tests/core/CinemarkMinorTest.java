@@ -7,10 +7,7 @@ import com.legion.pages.SchedulePage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.*;
 import com.legion.tests.TestBase;
-import com.legion.tests.annotations.Automated;
-import com.legion.tests.annotations.Enterprise;
-import com.legion.tests.annotations.Owner;
-import com.legion.tests.annotations.TestName;
+import com.legion.tests.annotations.*;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -19,6 +16,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.*;
+
+import static com.legion.utils.MyThreadLocal.setTestSuiteID;
 
 public class CinemarkMinorTest extends TestBase {
 
@@ -158,6 +157,106 @@ public class CinemarkMinorTest extends TestBase {
         minorNames.add(cinemarkMinors.get("Minor17"));
 
         teamPage.setTheCalendarForMinors(minorNames, calendarName, profileNewUIPage);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "OP_Enterprise")
+    @TestName(description = "Verify add dates for breaks")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAddDatesForBreaksAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+
+        teamPage.clickTheCalendarByRandom();
+        teamPage.verifySchoolSessionPageLoaded();
+        teamPage.clickOnEditCalendarButton();
+        teamPage.verifyEditCalendarAlertModelPopsUp();
+        teamPage.clickOnEditAnywayButton();
+        SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
+
+        // Verify the clicked days are highlighted as "Non School Day" color
+        teamPage.verifyClickedDayIsHighlighted();
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "OP_Enterprise")
+    @TestName(description = "Verify view details of  calendars and edit")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyViewDetailsAndEditAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+
+        // Verify the visibility of calendars on School Calendars page
+        teamPage.verifyTheCalendarListLoaded();
+        // Verify the content of each calendar
+        teamPage.verifyTheContentOnEachCalendarList();
+        // Verify the visibility of the detailed calendar page
+        teamPage.clickTheCalendarByRandom();
+        teamPage.verifySchoolSessionPageLoaded();
+        // Verify the content on detailed calendar page
+        teamPage.verifyTheContentOnDetailedCalendarPage();
+        // Verify the functionality of Edit button
+        teamPage.clickOnEditCalendarButton();
+        teamPage.verifyEditCalendarAlertModelPopsUp();
+        teamPage.clickOnEditAnywayButton();
+        SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
+
+        // Verify the functionality of Save button
+        teamPage.clickOnSaveSchoolCalendarBtn();
+        // Verify the functionality of "School Schedules" button
+        teamPage.clickOnSchoolSchedulesButton();
+        teamPage.verifyTheCalendarListLoaded();
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "OP_Enterprise")
+    @TestName(description = "Verify delete calendar")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDeleteCalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+
+        // Verify the visibility of calendars on School Calendars page
+        teamPage.verifyTheCalendarListLoaded();
+
+        teamPage.clickTheCalendarByRandom();
+        teamPage.verifySchoolSessionPageLoaded();
+
+        // Verify the presence of DELETE button
+        // Verify the functionality of DELETE button
+        teamPage.clickOnDeleteCalendarButton();
+        // Verify the functionality of CANCEL button
+        teamPage.clickOnCancelButtonOnPopup();
+        // Verify the functionality of DELETE ANYWAY button
+        teamPage.clickOnDELETEANYWAYButton();
+        teamPage.verifyTheCalendarListLoaded();
     }
 
     @Automated(automated = "Automated")
@@ -522,7 +621,7 @@ public class CinemarkMinorTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "OP_Enterprise")
-    @TestName(description = "Verify set minor rule as empty")
+    @TestName(description = "verify turn on minor rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -588,13 +687,12 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.clickOnCreateOrNextBtn();
         schedulePage.searchText(cinemarkMinors.get("Minor17"));
         SimpleUtils.assertOnFail("Minor warning should not work when setting is empty", !schedulePage.getAllTheWarningMessageOfTMWhenAssign().contains("Minor"), false);
-
     }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "OP_Enterprise")
-    @TestName(description = "Verify admin can configure the access to edit calendars")
+    @TestName(description = "Admin can configure the access to edit calendars")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccessToEditCalendarsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -673,7 +771,7 @@ public class CinemarkMinorTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "OP_Enterprise")
-    @TestName(description = "Verify turn on minor rule")
+    @TestName(description = "Verify turn on minor rule and set rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOnAndSetMinorRuleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -842,7 +940,7 @@ public class CinemarkMinorTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "OP_Enterprise")
-    @TestName(description = "Verify the no School today and no school tomorrow  settings for the Minors of Age 14 or 15")
+    @TestName(description = "Verify the no School today and school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         String minorName = "Minor14";

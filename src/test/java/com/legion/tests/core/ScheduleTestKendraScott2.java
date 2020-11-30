@@ -410,7 +410,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Estelle/Mary")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the Schedule functionality > Week View")
+	@TestName(description = "Verify the Schedule functionality - Week View - Context Menu")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyScheduleFunctionalityWeekView(String username, String password, String browser, String location)
 			throws Exception {
@@ -492,14 +492,16 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//Click on the Convert to open shift, checkbox is available to offer the shift to any specific TM[optional] Cancel /yes
 		//if checkbox is unselected then, shift is convert to open
 		selectedShift = schedulePage.clickOnProfileIcon();
+		String tmFirstName = selectedShift.findElement(By.className("week-schedule-worker-name")).getText();
 		schedulePage.clickOnConvertToOpenShift();
-		if (schedulePage.verifyConvertToOpenPopUpDisplay(selectedShift.findElement(By.className("week-schedule-worker-name")).getText())) {
+		if (schedulePage.verifyConvertToOpenPopUpDisplay(tmFirstName)) {
 			schedulePage.convertToOpenShiftDirectly();
 		}
         //if checkbox is select then select team member page will display
 		selectedShift = schedulePage.clickOnProfileIcon();
+		tmFirstName = selectedShift.findElement(By.className("week-schedule-worker-name")).getText();
 		schedulePage.clickOnConvertToOpenShift();
-		if (schedulePage.verifyConvertToOpenPopUpDisplay(selectedShift.findElement(By.className("week-schedule-worker-name")).getText())) {
+		if (schedulePage.verifyConvertToOpenPopUpDisplay(tmFirstName)) {
 			schedulePage.convertToOpenShiftAndOfferToSpecificTMs();
 		}
 
@@ -513,23 +515,24 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//Edit shift time and click Cancel button
 		schedulePage.editAndVerifyShiftTime(false);
 
-
-		//After click on Edit Meal Break Time, the Edit Meal Break window will display
-		schedulePage.verifyMealBreakTimeDisplayAndFunctionality();
-		//Verify Delete Meal Break
-		schedulePage.verifyDeleteMealBreakFunctionality();
-		//Edit meal break time and click update button
-		schedulePage.verifyEditMealBreakTimeFunctionality(true);
-		//Edit meal break time and click cancel button
-		schedulePage.verifyEditMealBreakTimeFunctionality(false);
+		//Verify Edit/View Meal Break
+		if (schedulePage.isEditMealBreakEnabled()){
+			//After click on Edit Meal Break Time, the Edit Meal Break window will display
+			schedulePage.verifyMealBreakTimeDisplayAndFunctionality(true);
+			//Verify Delete Meal Break
+			schedulePage.verifyDeleteMealBreakFunctionality();
+			//Edit meal break time and click update button
+			schedulePage.verifyEditMealBreakTimeFunctionality(true);
+			//Edit meal break time and click cancel button
+			schedulePage.verifyEditMealBreakTimeFunctionality(false);
+		} else
+			schedulePage.verifyMealBreakTimeDisplayAndFunctionality(false);
 
 		//verify cancel button
 		schedulePage.verifyDeleteShiftCancelButton();
 
 		//verify delete shift
 		schedulePage.verifyDeleteShift();
-
-
 	}
 
 	@Automated(automated = "Automated")
@@ -746,7 +749,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the Schedule functionality  Job Title Filter Functionality")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView(String username, String password, String browser, String location)
+	public void viewAndFilterScheduleWithGroupByJobTitleInDayView(String username, String password, String browser, String location)
 			throws Exception {
 
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -775,7 +778,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Schedule functionality  Job Title Filter Functionality")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void viewAndFilteverifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdminrScheduleWithGroupByJobTitleFilterCombinationInWeekView(String username, String password, String browser, String location)
+	public void viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView(String username, String password, String browser, String location)
 			throws Exception {
 
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1515,7 +1518,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "verify the Unpublished Edits text on dashboard and overview page")
+	@TestName(description = "verify the Unpublished Edits on dashboard and overview page")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1855,12 +1858,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.verifyAllShiftsAssigned();
 		//schedulePage.clickOnEditButton();
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		WebElement selectedShift = schedulePage.clickOnProfileIcon();
+		schedulePage.clickOnProfileIcon();
 		schedulePage.clickOnConvertToOpenShift();
 		schedulePage.convertToOpenShiftDirectly();
+		int index = schedulePage.getTheIndexOfEditedShift();
 		schedulePage.saveSchedule();
 		schedulePage.publishActiveSchedule();
-		schedulePage.clickProfileIconOfShift(selectedShift);
+		schedulePage.clickProfileIconOfShiftByIndex(index);
 		schedulePage.clickViewStatusBtn();
 		schedulePage.verifyListOfOfferNotNull();
 	}
@@ -2133,7 +2137,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Assign TM warning: TM is from another store and schedule is not generated at that store")
+	@TestName(description = "Verify assign TM warning: If SM wants to schedule a TM from another location and schedule hasn’t been generated")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
