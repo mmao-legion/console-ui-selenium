@@ -3528,7 +3528,7 @@ private WebElement locationColumn;
 	@Override
 	public void clickOnTeamSubTab(String subTabString) throws Exception {
 		waitForSeconds(3);
-		if (areListElementVisible(TeamSubTabsElement,10) && TeamSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
+		if (areListElementVisible(TeamSubTabsElement,10) && TeamSubTabsElement.size() != 0) {
 			for (WebElement TeamSubTabElement : TeamSubTabsElement) {
 				if (TeamSubTabElement.getText().equalsIgnoreCase(subTabString)) {
 					click(TeamSubTabElement);
@@ -3737,11 +3737,22 @@ private WebElement locationColumn;
 					break;
 				}
 			}
-			if (!isCalendarDisplayed)
-				SimpleUtils.fail("School Calendars Page: Cannot find the calendar " + calendarName + " in the calendar list",false);
 		} else
 			SimpleUtils.fail("School Calendar: There is no calendars!",false);
 		return isCalendarDisplayed;
+	}
+
+	@Override
+	public void clickOnCancelEditCalendarBtn() throws Exception {
+		if (isElementLoaded(cancelEditButton, 5)) {
+			click(cancelEditButton);
+			if (isElementLoaded(schoolCalendarHeader,5))
+				SimpleUtils.pass("School Calendars Page: Click on 'Cancel' button successfully!");
+			else
+				SimpleUtils.fail("School Calendars Page: Click on 'Cancel' button does not return to calendar list page",false);
+		} else {
+			SimpleUtils.fail("School Calendars Page: Failed to load Cancel button", false);
+		}
 	}
 
 	// Added by Nora: For Cinemark Minors
@@ -3758,7 +3769,7 @@ private WebElement locationColumn;
 	@FindBy(css = ".calendar-overview-title")
 	private List<WebElement> calendarTitles;
 	@FindBy(className = "school-calendars-header-title")
-	private WebElement schoolCalendarHearder;
+	private WebElement schoolCalendarHeader;
 	@FindBy(css = ".calendar-cell")
 	private List<WebElement> calendarCells;
 	@FindBy(css = "[options=\"schoolCalendars\"] select")
@@ -3787,7 +3798,7 @@ private WebElement locationColumn;
 						if (isElementLoaded(confirmButton, 10) && confirmButton.getText().trim().equalsIgnoreCase("DELETE ANYWAY")) {
 							clickTheElement(confirmButton);
 							waitForSeconds(3);
-							if (isElementLoaded(schoolCalendarHearder, 10)) {
+							if (isElementLoaded(schoolCalendarHeader, 10)) {
 								SimpleUtils.pass("Delete the school calendar Successfully!");
 								break;
 							} else {

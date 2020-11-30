@@ -151,4 +151,5 @@ public interface TeamPage {
 	public boolean isCreateCalendarBtnLoaded() throws Exception;
 	public void createNewCalendarByName(String calendarName) throws Exception;
 	public boolean isCalendarDisplayedByName(String calendarName) throws Exception;
+	public void clickOnCancelEditCalendarBtn() throws Exception;
 }
