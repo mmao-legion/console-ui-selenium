@@ -1156,4 +1156,173 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		return flag;
 	}
 
+	@FindBy(css = "lg-button[label=\"Edit\"]")
+	private WebElement editForecastBtn;
+	@FindBy(css = "lg-button[label=\"Cancel\"]")
+	private WebElement cancelEditForecastBtn;
+	@FindBy(css = "lg-button[label=\"Save\"]")
+	private WebElement saveForecastBtn;
+	@Override
+	public void verifyAndClickEditBtn() {
+		try{
+			if (isElementLoaded(editForecastBtn,10)){
+				click(editForecastBtn);
+				SimpleUtils.pass("Edit button is clicked!");
+				if (isElementLoaded(getDriver().findElement(By.xpath("//span[contains(text(),'Edited Forecast')]")),10)){
+					SimpleUtils.pass("Edit Forecast button is loaded!");
+				} else {
+					SimpleUtils.fail("Edit forecast is not loaded!", false);
+				}
+			} else {
+				SimpleUtils.fail("Edit button is not loaded!", false);
+			}
+		} catch(Exception e){
+			System.err.println();
+		}
+	}
+
+	@Override
+	public void verifyAndClickCancelBtn() {
+		try{
+			if (isElementLoaded(cancelEditForecastBtn,10)){
+				click(cancelEditForecastBtn);
+				SimpleUtils.pass("cancelEditForecastBtn  button is clicked!");
+			} else {
+				SimpleUtils.fail("cancelEditForecastBtn button is not loaded!", false);
+			}
+		} catch(Exception e){
+			System.err.println();
+		}
+	}
+
+	@Override
+	public void verifyAndClickSaveBtn() {
+		try{
+			if (isElementLoaded(saveForecastBtn,10)){
+				click(saveForecastBtn);
+				SimpleUtils.pass("saveForecastBtn button is clicked!");
+			} else {
+				SimpleUtils.fail("saveForecastBtn button is not loaded!", false);
+			}
+		} catch(Exception e){
+			System.err.println();
+		}
+	}
+
+	@FindBy(css = "g[id*=\"bar-edit-handle-wrapper\"]")
+	private List<WebElement> forecastBars;
+
+	//index value range: 0-6
+	@Override
+	public void verifyDoubleClickAndUpdateForecastBarValue(String index, String value) {
+		try{
+			if (areListElementVisible(forecastBars,10)){
+				for (WebElement bar: forecastBars){
+					if (bar.getAttribute("id").contains(index)){
+						doubleClick(bar);
+						SimpleUtils.pass("the bar has been clicked!");
+						updateForecastValue(value);
+					}
+				}
+			} else {
+				SimpleUtils.fail("forecastBars are not loaded!", false);
+			}
+		} catch(Exception e){
+			System.err.println();
+		}
+	}
+
+	@FindBy(css = ".modal-dialog")
+	private WebElement updateForecastValueDialog;
+	private void updateForecastValue(String value){
+		try{
+			if (isElementLoaded(updateForecastValueDialog, 10)) {
+				updateForecastValueDialog.findElement(By.tagName("input")).clear();
+				updateForecastValueDialog.findElement(By.tagName("input")).sendKeys(value);
+				click(updateForecastValueDialog.findElement(By.cssSelector("lg-button[label=\"OK\"]")));
+				SimpleUtils.pass("New value has been updated");
+			} else {
+				SimpleUtils.fail("updateForecastValueDialog is not loaded!", false);
+			}
+		} catch(Exception e){
+			System.err.println();
+		}
+	}
+
+	@FindBy(css = ".forecast-prediction-tooltip")
+	private WebElement tooltipForForecastBar;
+	@Override
+	public String getTooltipInfo(String index) {
+		String info = "";
+		try{
+			if (areListElementVisible(forecastBars,10)){
+				for (WebElement bar: forecastBars){
+					if (bar.getAttribute("id").contains(index)){
+						moveToElementAndClick(bar);
+					}
+				}
+			} else {
+				SimpleUtils.fail("forecastBars are not loaded!", false);
+			}
+			if (isElementLoaded(tooltipForForecastBar,10)){
+				//String s = "2 Wed Forecast 527 Legion 527 Edited Comparison N/A Actual";
+				info = tooltipForForecastBar.getText().replace("\n", " ");
+			} else {
+				SimpleUtils.fail("tooltipForForecastBar is not loaded!", false);
+			}
+		} catch(Exception e){
+			System.err.println();
+		}
+		return info;
+	}
+
+	@FindBy(css = "g[transform=\"translate(0,200)\"] g.tick")
+	private List<WebElement> ticksForForecastGraph;
+	@Override
+	public String getTickByIndex(int index) {
+		String tick = null;
+		try{
+			if (areListElementVisible(ticksForForecastGraph, 10)){
+				tick = ticksForForecastGraph.get(index).getText();
+			}
+		} catch(Exception e){
+			System.err.println();
+		}
+		return tick;
+	}
+
+	@Override
+	public void verifyWarningEditingForecast() {
+		String message = " You're in a process of editing forecast. Please, Save or Cancel edits.";
+		try{
+			if (isElementLoaded(updateForecastValueDialog, 10) && updateForecastValueDialog.findElement(By.cssSelector(".lgn-alert-message")).getText().contains(message)) {
+				SimpleUtils.pass("Warning message for leaving edit forecast mode is correct!");
+				click(updateForecastValueDialog.findElement(By.cssSelector(".lgn-action-button")));
+			} else {
+				SimpleUtils.fail("updateForecastValueDialog is not loaded!", false);
+			}
+		} catch(Exception e){
+			System.err.println();
+		}
+	}
+
+	@Override
+	public String getLegionPeakShopperFromForecastGraph() {
+		int legionPeakShooperInTooltip =0;
+		String dayIndex = "";
+		try{
+			for (int i =1; i<7; i++){
+				String legionPeakShooperTemp = getTooltipInfo(String.valueOf(i)).split(" ")[3];
+				if (legionPeakShooperTemp!=null && !legionPeakShooperTemp.equals("") && Integer.parseInt(legionPeakShooperTemp)>legionPeakShooperInTooltip){
+					legionPeakShooperInTooltip = Integer.parseInt(legionPeakShooperTemp);
+					dayIndex = getTooltipInfo(String.valueOf(i));
+				}
+			}
+
+		} catch(Exception e){
+			System.err.println();
+		}
+		return dayIndex + " " + legionPeakShooperInTooltip;
+	}
+
 }

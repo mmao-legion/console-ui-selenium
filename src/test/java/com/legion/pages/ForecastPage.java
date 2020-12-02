@@ -52,4 +52,12 @@ public interface ForecastPage<pubic> {
 	public boolean verifyIsWeekForecastVisibleAndOpenByDefault() throws Exception;
 
 	public boolean verifyIsShopperTypeSelectedByDefaultAndLaborTabIsClickable() throws Exception;
+	public void verifyAndClickEditBtn();
+	public void verifyAndClickCancelBtn();
+	public void verifyAndClickSaveBtn();
+	public void verifyDoubleClickAndUpdateForecastBarValue(String index, String value);
+	public String getTooltipInfo(String index);
+	public String getTickByIndex(int index);
+	public void verifyWarningEditingForecast();
+	public String getLegionPeakShopperFromForecastGraph();
 }

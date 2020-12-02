@@ -264,5 +264,43 @@ public class ForecastTest extends TestBase{
 
 		}
 
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify Edit Forecast in Week view")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyEditForecastInWeekViewViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		ForecastPage forecastPage  = pageFactory.createForecastPage();
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
+		//verify edit forecast button
+		String index = "3";
+		String value = "510";
+		String weekDayInfo = forecastPage.getTickByIndex(Integer.parseInt(index));
+		String editedValueInfo = value+" Edited";
+		forecastPage.verifyAndClickEditBtn();
+		forecastPage.verifyAndClickCancelBtn();
+		forecastPage.verifyAndClickEditBtn();
+		forecastPage.verifyDoubleClickAndUpdateForecastBarValue(index, value);
+		String tooltipInfo = forecastPage.getTooltipInfo(index);
+		boolean flag = tooltipInfo.contains("Actual")||tooltipInfo.contains("Last Year")||tooltipInfo.contains("Recent Trend");
+		SimpleUtils.assertOnFail("Info on tooltip is incorrect!",tooltipInfo.contains(weekDayInfo+" Forecast")&&tooltipInfo.contains(editedValueInfo)&&tooltipInfo.contains("Comparison")&&flag,false);
+		forecastPage.verifyAndClickSaveBtn();
+		tooltipInfo = forecastPage.getTooltipInfo(index);
+		SimpleUtils.assertOnFail("Edited value is not saved!",tooltipInfo.contains(value),false);
+		forecastPage.verifyAndClickEditBtn();
+		schedulePage.navigateToNextWeek();
+		forecastPage.verifyWarningEditingForecast();
+		String peakValueInfo = forecastPage.getLegionPeakShopperFromForecastGraph();
+		//forecastPage.getInsightDataInShopperWeekView().getsmart
+	}
 
 }

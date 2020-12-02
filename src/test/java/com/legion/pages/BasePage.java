@@ -52,6 +52,16 @@ public class BasePage {
         }
     }
 
+    public void doubleClick(WebElement element, boolean... shouldWait) {
+        try {
+            waitUntilElementIsVisible(element);
+            Actions actions = new Actions(getDriver());
+            actions.doubleClick(element).perform();
+        } catch (TimeoutException te) {
+            ExtentTestManager.getTest().log(Status.WARNING,te);
+        }
+    }
+
     public void moveToElementAndClick(WebElement element, boolean... shouldWait) {
         try {
             waitUntilElementIsVisible(element);
