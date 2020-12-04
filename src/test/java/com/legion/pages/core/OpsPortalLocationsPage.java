@@ -170,7 +170,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement selectALocationTitle;
 	@FindBy(css="div.lg-tab-toolbar__search >lg-search >input-field>ng-form>input")
 	private WebElement searchInputInSelectALocation;
-	@FindBy(css="tr[ng-repeat=\"item in $ctrl.currentPageItems\"]")
+	@FindBy(css="tr[ng-repeat=\"item in $ctrl.currentPageItems track by $index\"]")
 	private List<WebElement> locationRowsInSelectLocation;
 
 	@FindBy(css="tr[ng-repeat=\"location in filteredCollection\"]")
@@ -274,6 +274,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(selectOneInChooseDistrict);
 			selectLocationOrDistrict(searchCharactor,index);
 			click(effectiveDateSelect);
+			click(previousMonthBtn.get(0));
 			click(firstDay.get(0));
 			scrollToBottom();
 			click(createLocationBtn);
@@ -289,7 +290,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (isElementEnabled(selectALocationTitle,5)) {
 				searchInputInSelectALocation.sendKeys(searchCharactor);
 				searchInputInSelectALocation.sendKeys(Keys.ENTER);
-				waitForSeconds(5);
+				waitForSeconds(10);
 				if (locationRowsInSelectLocation.size()>0) {
 				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"radio\"]"));
 				click(firstRow);
@@ -374,9 +375,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Import location page show well");
 			}else
 				SimpleUtils.fail("Import location page load failed",true);
-			uploaderFileInputBtn.sendKeys("C:\\Users\\DMF\\Desktop\\template\\Import_LocationGroup_Example.csv");
+			uploaderFileInputBtn.sendKeys("D:\\Automation\\console-ui-selenium\\src\\test\\resources\\LocationImportTemplate.csv");
 			waitForSeconds(5);
 			click(importBtnInImportLocationPage);
+			waitForSeconds(10);
 			click(okBtnInImportLocationPage);
 			SimpleUtils.pass("File import action done");
 
