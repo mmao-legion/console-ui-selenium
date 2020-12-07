@@ -1,6 +1,7 @@
 package com.legion.pages;
 
 import java.util.HashMap;
+import java.util.List;
 
 public interface ForecastPage<pubic> {
 
@@ -52,4 +53,32 @@ public interface ForecastPage<pubic> {
 	public boolean verifyIsWeekForecastVisibleAndOpenByDefault() throws Exception;
 
 	public boolean verifyIsShopperTypeSelectedByDefaultAndLaborTabIsClickable() throws Exception;
+	public void verifyAndClickEditBtn();
+	public void verifyAndClickCancelBtn();
+	public void verifyAndClickSaveBtn();
+	public void verifyDoubleClickAndUpdateForecastBarValue(String index, String value);
+	public String getTooltipInfo(String index);
+	public String getTickByIndex(int index);
+	public void verifyWarningEditingForecast();
+	public String getLegionPeakShopperFromForecastGraph();
+	public void clickOnDayView() throws Exception;
+	public void verifyEditBtnVisible() throws Exception;
+	public void verifyContentInEditMode() throws Exception;
+	public void navigateToOtherDay() throws Exception;
+	public void verifyTooltipWhenMouseEachBarGraph() throws Exception;
+	public void verifyPeakShoppersPeakTimeTotalShoppersLegionDataInDayView () throws Exception;
+	public void verifyDraggingBarGraph() throws Exception;
+	public void verifyContentOfSpecifyAValueLayout(String index, String value) throws Exception;
+	public void verifyDoubleClickBarGraph(String index) throws Exception;
+	public String getLegionValueFromBarTooltip(int index) throws Exception;
+	public void verifyAndClickCloseBtn() throws Exception;
+	public void verifyAndClickOKBtn() throws Exception;
+	public String getEditedValueFromBarTooltip(int index) throws Exception;
+	public String getPercentageFromBarTooltip(int index) throws Exception;
+	public void verifyConfirmMessageWhenSaveForecast(String dayOrWeek, String activeDayOrWeekText) throws Exception;
+	public String getActiveDayText() throws Exception;
+	public void clickOnCancelBtnOnConfirmPopup() throws Exception;
+	public void clickOnSaveBtnOnConfirmPopup() throws Exception;
+	public void verifyPeakShoppersPeakTimeTotalShoppersEditedDataInDayView () throws Exception;
+	public List<String> getTooltipInfoWhenView() throws Exception;
 }

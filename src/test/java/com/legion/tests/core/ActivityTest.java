@@ -854,7 +854,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the content of shift swap activity when there is no TM request to cover/swap shift")
+    @TestName(description = "Validate the content of Shift Swap activity when TM request to swap the shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheContentOfShiftSwapActivityAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -975,7 +975,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the content of Shift Swap activity when TM request to cover the shift")
+    @TestName(description = "Validate the functioning of Reject button on pending Reject for Cover the shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         // Configuration in controls :Is approval by Manager required when an employee claims a shift swap or cover request?-Always
@@ -1198,7 +1198,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify there is no notification when TM has been activated")
+    @TestName(description = "Verify there is no notification when TM has been activated for auto scheduling")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNoNotificationForActivateTMAsStoreManager(String browser, String username, String password, String location) throws Exception {
         // Login with Store Manager Credentials, Add a team member and activate it.
@@ -1231,7 +1231,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the notification when TM updates availability from a week onwards")
+    @TestName(description = "Verify the notification when TM updates availability from a week onwards with config Not required")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         // Login with Store Manager Credentials
@@ -1291,7 +1291,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the notification when TM updates availability from a week onwards")
+    @TestName(description = "Verify the notification when TM updates availability for a specific week with config Not required")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         // Login with Store Manager Credentials
@@ -1352,7 +1352,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the notification when TM updates availability from a week onwards")
+    @TestName(description = "Verify the notification when TM requests availability for a specific week")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         // Login with Store Manager Credentials
@@ -1420,7 +1420,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the notification when TM updates availability from a week onwards")
+    @TestName(description = "Verify the notification when TM requests availability from a week onwards")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         // Login with Store Manager Credentials
@@ -1489,7 +1489,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the functioning of Approve button on pending Approval for Claimed Open shift")
+    @TestName(description = "Validate activity for claim the open shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyActivityOfClaimOpenShiftAsTeamMember(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

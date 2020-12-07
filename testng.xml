@@ -208,6 +208,7 @@
                         <include name="verifyShopperForecastFunctionality"/>
                         <include name="validateWeatherSmartCardOnForecastPage"/>
                         <include name="verifyScheduleFunctionalityForecast"/>
+                        <include name="verifyEditForecastInDayViewViewAsInternalAdmin"/>
                     </methods>
                 </class>
             </classes>
@@ -345,6 +346,7 @@
                     <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />
                     <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" />
                     <include name="verifySchoolCalendarListAsInternalAdmin" />
+                    <include name="verifyCreateCalendarAsInternalAdmin" />
                     <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
                     <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
                     <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />

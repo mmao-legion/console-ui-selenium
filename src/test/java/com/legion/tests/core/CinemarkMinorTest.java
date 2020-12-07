@@ -431,10 +431,10 @@ public class CinemarkMinorTest extends TestBase {
         SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
                 teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        // Click on Create New Calendar button
+        // Click on Create New Calendar button, verify the Cancel and Save button display correctly
         teamPage.clickOnCreateNewCalendarButton();
 
-        // Check the School Session Start field and School Session End field
+        // Verify the Session Start and Session End fields are mandatory fields
         teamPage.verifyCreateCalendarLoaded();
         teamPage.verifySessionStartNEndIsMandatory();
 
@@ -451,8 +451,8 @@ public class CinemarkMinorTest extends TestBase {
         // Verify dates will be color coded by start and end time
         teamPage.verifyDatesInCalendar(startDate,endDate);
 
-        // Input calendar name
-        String calendarName = "Calendar " + randomDigits;
+        // Input calendar name, and verify the calendar name can be edited and changed
+        String calendarName = "Calendar" + randomDigits;
         teamPage.inputCalendarName(calendarName);
 
         // Verify calendar for the next year will show the same calendar name until enter the start and end date, the calendar is editable
@@ -464,14 +464,36 @@ public class CinemarkMinorTest extends TestBase {
         // Verify that cannot go to prior year
         teamPage.checkPriorYearInEditMode();
 
-        // Verify the calendar can be saved successfully
+        // Verify the calendar can be saved
         teamPage.clickOnSaveCalendar();
 
-        // Clean up data
+        // Verify the new created calendar will list in the calendar list
+        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+        if (teamPage.isCalendarDisplayedByName("Calendar" + randomDigits))
+            SimpleUtils.pass("School Calendar: Calendar just created is in the list");
+        else
+            SimpleUtils.fail("School Calendar: ACalendar just created is not in the list",false);
+
+        // Verify the calendar can be deleted
         teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
         SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
                 teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
         teamPage.deleteCalendarByName(calendarName);
+
+        // Verify the the change for calendar will not been saved after click Cancel button
+        teamPage.clickOnCreateNewCalendarButton();
+        teamPage.clickOnSchoolSessionStart();
+        teamPage.selectRandomDayInSessionStart();
+        teamPage.selectRandomDayInSessionEnd();
+        teamPage.clickOnSaveSchoolSessionCalendarBtn();
+        teamPage.inputCalendarName("CancelledCalendar");
+        teamPage.clickOnCancelEditCalendarBtn();
+        if (!teamPage.isCalendarDisplayedByName("CancelledCalendar"))
+            SimpleUtils.pass("School Calendar: Create action is cancelled, there will not be this calendar in the list");
+        else
+            SimpleUtils.fail("School Calendar: Create action failed to cancel",false);
     }
 
     @Automated(automated = "Automated")

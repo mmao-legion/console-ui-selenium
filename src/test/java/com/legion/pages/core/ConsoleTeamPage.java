@@ -3532,7 +3532,7 @@ private WebElement locationColumn;
 	@Override
 	public void clickOnTeamSubTab(String subTabString) throws Exception {
 		waitForSeconds(3);
-		if (areListElementVisible(TeamSubTabsElement,10) && TeamSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
+		if (areListElementVisible(TeamSubTabsElement,10) && TeamSubTabsElement.size() != 0) {
 			for (WebElement TeamSubTabElement : TeamSubTabsElement) {
 				if (TeamSubTabElement.getText().equalsIgnoreCase(subTabString)) {
 					click(TeamSubTabElement);
@@ -3741,11 +3741,22 @@ private WebElement locationColumn;
 					break;
 				}
 			}
-			if (!isCalendarDisplayed)
-				SimpleUtils.fail("School Calendars Page: Cannot find the calendar " + calendarName + " in the calendar list",false);
 		} else
 			SimpleUtils.fail("School Calendar: There is no calendars!",false);
 		return isCalendarDisplayed;
+	}
+
+	@Override
+	public void clickOnCancelEditCalendarBtn() throws Exception {
+		if (isElementLoaded(cancelEditButton, 5)) {
+			click(cancelEditButton);
+			if (isElementLoaded(schoolCalendarHeader,5))
+				SimpleUtils.pass("School Calendars Page: Click on 'Cancel' button successfully!");
+			else
+				SimpleUtils.fail("School Calendars Page: Click on 'Cancel' button does not return to calendar list page",false);
+		} else {
+			SimpleUtils.fail("School Calendars Page: Failed to load Cancel button", false);
+		}
 	}
 
 	// Added by Nora: For Cinemark Minors
