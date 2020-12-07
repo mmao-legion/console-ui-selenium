@@ -980,7 +980,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(scheduleWeekViewButton,15)) {
             if (!scheduleWeekViewButton.getAttribute("class").toString().contains("selected"))//selected
             {
-                click(scheduleWeekViewButton);
+                clickTheElement(scheduleWeekViewButton);
             }
             SimpleUtils.pass("Schedule page week view loaded successfully!");
         } else {
@@ -1059,14 +1059,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
         HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
-        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class='card-carousel-card card-carousel-card-primary card-carousel-card-table']"));
+        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class='card-carousel-card card-carousel-card-primary card-carousel-card-table ']"));
         if(isElementEnabled(budgetedScheduledLabelsDivElement))
         {
 //			Thread.sleep(2000);
             String scheduleWagesAndHoursCardText = budgetedScheduledLabelsDivElement.getText();
             String [] tmp =  scheduleWagesAndHoursCardText.split("\n");
             String[] scheduleWagesAndHours = new String[5];
-            if (tmp.length>5) {
+            if (tmp.length>6) {
                 scheduleWagesAndHours[0] = tmp[0];
                 scheduleWagesAndHours[1] = tmp[1];
                 scheduleWagesAndHours[2] = tmp[2];
@@ -3661,7 +3661,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (isElementLoaded(generateModalTitle, 15) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
                 editTheBudgetForNondgFlow();
-                waitForSeconds(3);
+                waitForSeconds(8);
                 try {
                     List<WebElement> trs = enterBudgetTable.findElements(By.tagName("tr"));
                     if (areListElementVisible(trs, 5) && trs.size() > 0) {
@@ -9400,11 +9400,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 SimpleUtils.pass("Edit Shift Time successfully");
                 shiftTimes.add(1, shiftTimeAfterUpdate);
             } else {
-                SimpleUtils.fail("Shift Time doesn't change", true);
+                SimpleUtils.fail("Shift Time doesn't change", false);
             }
 
         } else {
-            SimpleUtils.fail("Edit Shift Time container load failed", true);
+            SimpleUtils.fail("Edit Shift Time container load failed", false);
         }
         return shiftTimes;
     }

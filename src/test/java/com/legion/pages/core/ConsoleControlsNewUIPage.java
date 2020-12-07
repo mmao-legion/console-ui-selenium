@@ -663,6 +663,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		waitForSeconds(8);
 		if (controlsAdvanceButtons.size() > 0) {
 			click(controlsAdvanceButtons.get(0));
+			waitForSeconds(2);
 			bufferHours.put("openingBufferHours", Integer.valueOf(
 					openingBufferHours.findElement(By.cssSelector("input[type=\"number\"]")).getAttribute("value")));
 			bufferHours.put("closingBufferHours", Integer.valueOf(

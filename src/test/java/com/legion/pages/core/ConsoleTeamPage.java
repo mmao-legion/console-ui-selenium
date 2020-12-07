@@ -345,10 +345,14 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 						WebElement tr = teamMember.findElement(By.className("tr"));
 						if (tr != null) {
 							WebElement name = tr.findElement(By.cssSelector("span.name"));
-							WebElement title = tr.findElement(By.cssSelector("span.title"));
+							List<WebElement> titles = tr.findElements(By.cssSelector("span.title"));
 							WebElement status = tr.findElement(By.cssSelector("span.status"));
-							if (name != null && title != null && status != null) {
-								String nameJobTitleStatus = name.getText() + title.getText() + status.getText();
+							String title = "";
+							if (name != null && titles != null && status != null && titles.size() > 0) {
+								for (WebElement titleElement : titles) {
+									title += titleElement.getText();
+								}
+								String nameJobTitleStatus = name.getText() + title + status.getText();
 								if (nameJobTitleStatus.contains(username)) {
 									selectedName = name.getText();
 									clickTheElement(name);
