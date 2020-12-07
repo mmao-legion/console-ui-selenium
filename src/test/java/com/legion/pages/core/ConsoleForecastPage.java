@@ -2,20 +2,15 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ForecastPage;
-import com.legion.pages.SchedulePage;
-import com.legion.tests.core.ScheduleNewUITest;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import javax.xml.crypto.dsig.SignatureMethod;
-import java.net.SocketImpl;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -781,6 +776,13 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 						insightData.put(peakShopperDay.split(" ")[2],peakday);
 						insightData.put(peakShopperDay.split(" ")[3],actualPeakday);
 					}
+					else if(peakShopperDay.toLowerCase().contains("peak time"))
+					{
+						Float peaktime=null;
+						Float actualPeaktime=null;
+						insightData.put(peakShopperDay.split(" ")[2],peaktime);
+						insightData.put(peakShopperDay.split(" ")[4],actualPeaktime);
+					}
 					else if(peakShopperDay.toLowerCase().contains("total items"))
 					{
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
@@ -808,11 +810,18 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 					{
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"peakShoppers");
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+								"editedPeakShoppers");
 					}
 					else if(peakShopperDay.toLowerCase().contains("peak day"))
 					{
 						Float peakday=null;
 						insightData.put(peakShopperDay.split(" ")[2],peakday);
+					}
+					else if(peakShopperDay.toLowerCase().contains("peak time"))
+					{
+						insightData.put("peakTime", Float.valueOf(peakShopperDay.split(" ")[2].replace(":",".")));
+						insightData.put("editedPeakTime", Float.valueOf(peakShopperDay.split(" ")[4].replace(":",".")));
 					}
 					else if(peakShopperDay.toLowerCase().contains("total items"))
 					{
@@ -823,6 +832,8 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 					{
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"totalShoppers");
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+								"editedTotalShoppers");
 					}
 	//				else {
 	//				SimpleUtils.fail("this data is not which i wanted,ig",true);
@@ -1222,6 +1233,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 						doubleClick(bar);
 						SimpleUtils.pass("the bar has been clicked!");
 						updateForecastValue(value);
+						break;
 					}
 				}
 			} else {
@@ -1255,10 +1267,11 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	public String getTooltipInfo(String index) {
 		String info = "";
 		try{
-			if (areListElementVisible(forecastBars,10)){
-				for (WebElement bar: forecastBars){
-					if (bar.getAttribute("id").contains(index)){
+			if (areListElementVisible(forecastBarsPath,10)){
+				for (WebElement bar: forecastBarsPath){
+					if (bar.findElement(By.xpath("./..")).getAttribute("id").contains(index)){
 						moveToElementAndClick(bar);
+						break;
 					}
 				}
 			} else {
@@ -1293,13 +1306,14 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 	@Override
 	public void verifyWarningEditingForecast() {
-		String message = " You're in a process of editing forecast. Please, Save or Cancel edits.";
+		String message = "You're in a process of editing forecast. Please, Save or Cancel edits.";
 		try{
-			if (isElementLoaded(updateForecastValueDialog, 10) && updateForecastValueDialog.findElement(By.cssSelector(".lgn-alert-message")).getText().contains(message)) {
+			if (isElementLoaded(updateForecastValueDialog, 10) && updateForecastValueDialog.findElement(By.cssSelector(".lgn-alert-message")).getText().contains(message)
+			&& updateForecastValueDialog.findElement(By.cssSelector(".lgn-action-button")).getText().equals("OK")) {
 				SimpleUtils.pass("Warning message for leaving edit forecast mode is correct!");
 				click(updateForecastValueDialog.findElement(By.cssSelector(".lgn-action-button")));
 			} else {
-				SimpleUtils.fail("updateForecastValueDialog is not loaded!", false);
+				SimpleUtils.fail("Forecast Page: The alert warning dialog is not loaded or loaded incorrectly!", false);
 			}
 		} catch(Exception e){
 			System.err.println();
@@ -1308,13 +1322,13 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 	@Override
 	public String getLegionPeakShopperFromForecastGraph() {
-		int legionPeakShooperInTooltip =0;
+		int legionPeakShopperInTooltip =0;
 		String dayIndex = "";
 		try{
 			for (int i =1; i<7; i++){
-				String legionPeakShooperTemp = getTooltipInfo(String.valueOf(i)).split(" ")[3];
-				if (legionPeakShooperTemp!=null && !legionPeakShooperTemp.equals("") && Integer.parseInt(legionPeakShooperTemp)>legionPeakShooperInTooltip){
-					legionPeakShooperInTooltip = Integer.parseInt(legionPeakShooperTemp);
+				String legionPeakShopperTemp = getTooltipInfo(String.valueOf(i)).split(" ")[3];
+				if (legionPeakShopperTemp!=null && !legionPeakShopperTemp.equals("") && Integer.parseInt(legionPeakShopperTemp)>legionPeakShopperInTooltip){
+					legionPeakShopperInTooltip = Integer.parseInt(legionPeakShopperTemp);
 					dayIndex = getTooltipInfo(String.valueOf(i));
 				}
 			}
@@ -1322,7 +1336,412 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		} catch(Exception e){
 			System.err.println();
 		}
-		return dayIndex + " " + legionPeakShooperInTooltip;
+		return dayIndex + " " + legionPeakShopperInTooltip;
 	}
 
+	// Added by Julie
+	@FindBy (css = "[ng-if=\"isEdit\"].pull-right")
+	private WebElement noteInEditMode;
+
+	@FindBy (css = "span.lgn-alert-message")
+	private WebElement alertMessage;
+
+	@FindBy(css = "g[id*=\"bar-edit-handle-wrapper\"] path")
+	private List<WebElement> forecastBarsPath;
+
+	@FindBy(css = ".lg-modal__title-icon")
+	private WebElement dialogTitle;
+
+	@FindBy(className = "dismiss")
+	private WebElement closeButton;
+
+	@FindBy(css = "[label=\"OK\"]")
+	private WebElement OKButton;
+
+	@FindBy(css = "[label=\"Cancel\"]")
+	private WebElement CancelButton;
+
+	@FindBy(xpath = "//label[contains(text(),\"Shoppers*\")]")
+	private WebElement shoppersInDialog;
+
+	@FindBy(css = "ng-form.ng-valid-step input")
+	private WebElement valueOfShoppers;
+
+	@FindBy (css = ".save-forecast-confirm__graph g g")
+	private List<WebElement> barGraphsInConfirmModal;
+
+	@FindBy (css = "[ng-click=\"$dismiss()\"]")
+	private WebElement cancelBtnInConfirmModal;
+
+	@FindBy (css = "[ng-click=\"confirm()\"]")
+	private WebElement saveBtnInConfirmModal;
+
+	@FindBy (css = "rect.transparent-area")
+	private List<WebElement> bars;
+
+	@Override
+	public void clickOnDayView() throws Exception {
+		if (isElementLoaded(dayViewButton, 10)) {
+			if (!dayViewButton.findElement(By.xpath("./..")).getAttribute("class").contains("lg-button-group-selected")) {
+				waitForSeconds(5);
+				clickTheElement(dayViewButton);
+			}
+			SimpleUtils.pass("Forecast Page: Day View loaded successfully");
+		} else {
+			SimpleUtils.fail("Forecast Page: Day View button failed to load", false);
+		}
+	}
+
+	@Override
+	public void verifyEditBtnVisible() throws Exception {
+		if (isElementLoaded(editForecastBtn,10) && editForecastBtn.isDisplayed())
+			SimpleUtils.pass("Forecast Page: Edit button is visible");
+		else
+			SimpleUtils.fail("Forecast Page: Edit button failed to load",false);
+	}
+
+	@Override
+	public void verifyContentInEditMode() throws Exception {
+		if (isElementLoaded(getDriver().findElement(By.xpath("//span[contains(text(),'Edited Forecast')]")),10))
+			SimpleUtils.pass("Forecast Page: Edit Forecast button shows after clicking on Edit button");
+		else
+			SimpleUtils.fail("Forecast Page: Edit forecast failed to load", false);
+		if (isElementLoaded(saveForecastBtn,5) && isElementLoaded(cancelEditForecastBtn,5))
+			SimpleUtils.pass("Forecast Page: Save and Cancel buttons show after clicking on Edit button");
+		else
+			SimpleUtils.fail("Forecast Page: Save and Cancel buttons failed to load",false);
+		String noteMessage = "Ctrl+click to select multiple bars, double-click to enter the exact value";
+		if (isElementLoaded(noteInEditMode,5) && noteInEditMode.getText().equals(noteMessage))
+			SimpleUtils.pass("Forecast Page: The note \"Ctrl+click to select multiple bars, double-click to enter the exact value\" shows after clicking on Edit button");
+		else
+			SimpleUtils.fail("Forecast Page: The note failed to load",false);
+	}
+
+	@Override
+	public void navigateToOtherDay() throws Exception {
+		if (areListElementVisible(dayViewOfDatePicker,5)) {
+			for (WebElement day: dayViewOfDatePicker) {
+				if (!day.getAttribute("class").contains("day-week-picker-period-active")) {
+					click(day);
+					SimpleUtils.pass("Forecast Page: Navigate to other day");
+					break;
+				}
+			}
+		} else
+			SimpleUtils.fail("Forecast Page: Dates in day view failed to load",false);
+	}
+
+	@Override
+	public void verifyTooltipWhenMouseEachBarGraph() throws Exception {
+		String tooltip = "";
+		String tick = "";
+		boolean isTooltipCorrect = false;
+		if (isElementLoaded(insightSmartCard, 5) & isElementLoaded(barChartInProjected, 5)) {
+			for (int i = 0; i < forecastBarsPath.size(); i++) {
+				scrollToElement(forecastBarsPath.get(i));
+				mouseToElement(forecastBarsPath.get(i));
+				/*
+				 *wait for tooltip data to load
+				 * */
+				waitForSeconds(2);
+				if (isElementLoaded(tooltipForForecastBar,10)){
+					// tooltip = "8:00 Forecast 12 Legion 12 Edited Comparison N/A Actual";
+					tooltip = tooltipForForecastBar.getText().replace("\n", " ");
+				} else {
+					SimpleUtils.fail("Forecast Page: Tooltip failed to load in edit mode", false);
+				}
+				tick = getTickByIndex(i);
+				if (!tick.isEmpty()) {
+					if (tooltip.contains(tick + " Forecast") && (tooltip.contains("Legion") || tooltip.contains("Current")) && tooltip.contains("Edited") && tooltip.contains("Comparison") && tooltip.contains("Actual"))
+						isTooltipCorrect = true;
+					else {
+						isTooltipCorrect = false;
+						break;
+					}
+				} else {
+					if (tooltip.contains(tick.replace("00","30") + " Forecast") && (tooltip.contains("Legion") || tooltip.contains("Current")) && tooltip.contains("Edited") && tooltip.contains("Comparison") && tooltip.contains("Actual"))
+						isTooltipCorrect = true;
+					else {
+						isTooltipCorrect = false;
+						break;
+					}
+				}
+			}
+			if (isTooltipCorrect)
+				SimpleUtils.pass("Forecast Page: Tooltip is expected in edit mode");
+			else
+				SimpleUtils.fail("Forecast Page: Tooltip is unexpected in edit mode",false);
+		} else
+			SimpleUtils.fail("Forecast Page: The page failed to load",false);
+	}
+
+	@Override
+	public void verifyPeakShoppersPeakTimeTotalShoppersLegionDataInDayView () throws Exception {
+		HashMap<String, Float> insightDataInWeek = getInsightDataInShopperWeekView();
+		List<String> dataInBar = getForecastBarGraphData();
+		Float peakShoppersLegionInBar = 0.0f;
+		Float totalShoppersLegionInBar = 0.0f;
+		Float peakTimeLegionInBar = 0.0f;
+		String legionInBar = "";
+
+		for (int i = 0; i < dataInBar.size(); i++) {
+			if (!dataInBar.get(i).isEmpty()) {
+				// 12 pm Forecast 12 Legion 12 Edited Comparison 0 Actual
+				if (dataInBar.get(i).split(" ").length > 8) {
+					legionInBar = dataInBar.get(i).replace(" pm",":00").split(" ")[2];
+					String timeInBar = dataInBar.get(i).split(" ")[0];
+					totalShoppersLegionInBar += Float.valueOf(legionInBar);
+					if (peakShoppersLegionInBar <= Float.valueOf(legionInBar)) {
+						peakShoppersLegionInBar = Float.valueOf(legionInBar);
+						peakTimeLegionInBar = Float.valueOf(timeInBar.replace(":","."));
+					}
+				}
+			}
+		}
+		SimpleUtils.report("Forecast Page: Peak shoppers of Legion in bar graph: " + peakShoppersLegionInBar);
+		SimpleUtils.report("Forecast Page: Peak time of legion in bar graph: " + peakTimeLegionInBar);
+		SimpleUtils.report("Forecast Page: Total shoppers of legion in bar graph: " + totalShoppersLegionInBar);
+		Float peakShopperLegionInInsightCard = insightDataInWeek.get("peakShoppers");
+		Float peakTimeLegionInInsightCard = insightDataInWeek.get("peakTime");
+		Float totalShoppersLegionInInsightCard = insightDataInWeek.get("totalShoppers");
+		SimpleUtils.report("Forecast Page: Peak shoppers of Legion in smart card: " + peakShopperLegionInInsightCard);
+		SimpleUtils.report("Forecast Page: Peak time of legion in smart card: " + peakTimeLegionInInsightCard);
+		SimpleUtils.report("Forecast Page: Total shoppers of legion in smart card: " + totalShoppersLegionInInsightCard);
+		if (totalShoppersLegionInInsightCard.equals(totalShoppersLegionInBar) & peakShopperLegionInInsightCard.equals(peakShoppersLegionInBar)
+				&& peakTimeLegionInInsightCard.equals(peakTimeLegionInBar)) {
+			SimpleUtils.pass("Forecast Page: In smart card, total shoppers, peak shoppers and peak time are matching with bar graph");
+		} else {
+			//SimpleUtils.warn("SCH-2394: Tooltip displays \"Current\" not \"Legion\" after editing forecast");
+			SimpleUtils.fail("Forecast Page: In smart card, total shoppers, peak shoppers and peak time are not matching with bar graph",false);
+		}
+	}
+
+	@Override
+	public void verifyDraggingBarGraph() throws Exception {
+		if (areListElementVisible(forecastBarsPath,10)) {
+			int index = (new Random()).nextInt(forecastBarsPath.size() - 2);
+			scrollToElement(forecastBarsPath.get(index));
+			moveElement(forecastBarsPath.get(index), 20);
+			if (!forecastBarsPath.get(index).findElement(By.xpath("./..")).getAttribute("transform").contains("(0, 0)"))
+				SimpleUtils.pass("Forecast Page: Bar graph is draggable");
+			else
+				SimpleUtils.fail("Forecast Page: Bar graph is not draggable",false);
+		} else
+			SimpleUtils.fail("Forecast Page: Forecast bars failed to load",false);
+	}
+
+	@Override
+	public void verifyDoubleClickBarGraph(String index) throws Exception {
+		if (areListElementVisible(forecastBars,10)) {
+			for (WebElement bar: forecastBars) {
+				if (bar.getAttribute("id").contains(index)) {
+					doubleClick(bar);
+					SimpleUtils.pass("Forecast Page: Bar graph can be double clicked");
+					if (isElementLoaded(updateForecastValueDialog, 10))
+						SimpleUtils.pass("Forecast Page: Specify a Value layout pops up");
+					else
+						SimpleUtils.fail("Forecast Page: Specify a Value layout does not pop up", false);
+					break;
+				}
+			}
+		} else
+			SimpleUtils.fail("Forecast Page: Forecast Bars failed to load", false);
+	}
+
+	@Override
+	public String getLegionValueFromBarTooltip(int index) throws Exception {
+		String legionInBar = "";
+		String tooltip = "";
+		tooltip = getTooltipInfoWhenView().get(index);
+		if (tooltip.split(" ").length > 6)
+			legionInBar = tooltip.replace(" pm",":00").split(" ")[2];
+		return legionInBar;
+	}
+
+	@Override
+	public void verifyContentOfSpecifyAValueLayout(String index, String value) throws Exception {
+		if (isElementLoaded(updateForecastValueDialog, 10)) {
+			SimpleUtils.report("The value Of Shoppers is " + valueOfShoppers.getAttribute("value"));
+			if (dialogTitle.getText().contains("Specify a value for") && isElementLoaded(closeButton,5)
+					&& isElementLoaded(shoppersInDialog,5) && valueOfShoppers.getAttribute("value").equals(value)
+					&& isElementLoaded(OKButton,5) && isElementLoaded(cancelEditForecastBtn,5))
+				SimpleUtils.pass("Forecast Page: The following content is loaded:\n" +
+						"- Specify a value\n" +
+						"- Shoppers*\n" +
+						"- Value of the Shoppers\n" +
+						"- Cancel, Save buttons\n" +
+						"- Close button");
+		} else
+			SimpleUtils.fail("Forecast Page: Specify a value dialog failed to load", false);
+	}
+
+	@Override
+	public void verifyAndClickCloseBtn() throws Exception {
+		if (isElementLoaded(updateForecastValueDialog, 10)) {
+			if (isElementLoaded(closeButton,5)) {
+				click(closeButton);
+				if (!isElementLoaded(updateForecastValueDialog, 10))
+					SimpleUtils.pass("Forecast Page: Close button is clickable in specify a value dialog");
+				else
+					SimpleUtils.fail("Forecast Page: Close button is not clickable in specify a value dialog",false);
+			} else
+				SimpleUtils.fail("Forecast Page: Close button on pop up failed to load",false);
+		} else
+			SimpleUtils.fail("Forecast Page: Specify a value dialog failed to load", false);
+	}
+
+	@Override
+	public void verifyAndClickOKBtn() throws Exception {
+		if (isElementLoaded(updateForecastValueDialog, 10)) {
+			if (isElementLoaded(closeButton,5)) {
+				click(OKButton);
+				if (!isElementLoaded(updateForecastValueDialog, 10))
+					SimpleUtils.pass("Forecast Page: OK button is clickable in specify a value dialog");
+				else
+					SimpleUtils.fail("Forecast Page: OK button is not clickable in specify a value dialog",false);
+			} else
+				SimpleUtils.fail("Forecast Page: OK button on pop up failed to load",false);
+		} else
+			SimpleUtils.fail("Forecast Page: Specify a value dialog failed to load", false);
+	}
+
+	@Override
+	public String getEditedValueFromBarTooltip(int index) throws Exception {
+		String editedInBar = "";
+		String tooltip = "";
+		tooltip = getTooltipInfo(String.valueOf(index));
+		// 12 pm Forecast 12 Legion 12 Edited Comparison 0 Actual
+		if (tooltip.split(" ").length > 8)
+			editedInBar = tooltip.replace(" pm",":00").split(" ")[4];
+		return editedInBar;
+	}
+
+	@Override
+	public String getPercentageFromBarTooltip(int index) throws Exception {
+		String percentage = "";
+		String tooltip = "";
+		tooltip = getTooltipInfo(String.valueOf(index));
+		// 9:30 Forecast 5 Legion 2 Edited ↓60% Comparison N/A Actual
+		if (tooltip.split(" ").length > 8 && tooltip.contains("%"))
+			percentage = tooltip.replace(" pm",":00").split(" ")[6];
+		return percentage;
+	}
+
+	@Override
+	public String getActiveDayText() throws Exception {
+		WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
+		if (isElementLoaded(activeWeek,5))
+			return activeWeek.getText().replace("\n", ", ");
+		return "";
+	}
+
+	@Override
+	public void verifyConfirmMessageWhenSaveForecast(String dayOrWeek, String activeDayOrWeekText) throws Exception {
+		if (isElementLoaded(updateForecastValueDialog, 10)) {
+			String confirmMessage = updateForecastValueDialog.getText().replace("\n"," ");
+			if (confirmMessage.contains("Are you sure you want to save changes to this Forecast?") && confirmMessage.contains("Staffing Guidance will be regenerated")
+					&& confirmMessage.contains("%") && isElementLoaded(cancelBtnInConfirmModal,5) && isElementLoaded(saveBtnInConfirmModal,5)
+					&& barGraphsInConfirmModal.get(0).getText().contains("Shoppers Current") && barGraphsInConfirmModal.get(1).getText().contains("Shoppers Edited")
+					&& confirmMessage.contains("Forecast for the " + dayOrWeek.toLowerCase() + " of " + activeDayOrWeekText))
+				SimpleUtils.pass("Forecast Page: The following content is loaded:\n" +
+						"- Are you sure you want to save changes to this Forecast?\n" +
+						"- Current bar graph\n" +
+						"- Edited bar graph\n" +
+						"- Percentage\n" +
+						"- Forecast for the day of Sunday, Dec 6\n" +
+						"- Staffing Guidance will be regenerated.\n" +
+						"- Cancel and Save buttons");
+			else
+				//SimpleUtils.fail("Forecast Page: The content in confirm modal failed to load or loaded incorrectly",false);
+				SimpleUtils.warn("SCH-2438: Typo for Shoppers in confirm message");
+		} else
+			SimpleUtils.fail("Forecast Page: The confirm modal failed to load", false);
+	}
+
+	@Override
+	public void clickOnCancelBtnOnConfirmPopup() throws Exception {
+		if (isElementLoaded(cancelBtnInConfirmModal,5)) {
+			click(cancelBtnInConfirmModal);
+			if (!isElementLoaded(cancelBtnInConfirmModal,5))
+			SimpleUtils.pass("Forecast Page: Cancel button is clickable on the confirm pop up");
+			else
+				SimpleUtils.fail("Forecast Page: Cancel button is not clickable on the confirm pop up",false);
+		} else
+			SimpleUtils.fail("Forecast Page: Cancel button on confirm modal failed to load", false);
+	}
+
+	@Override
+	public void clickOnSaveBtnOnConfirmPopup() throws Exception {
+		if (isElementLoaded(saveBtnInConfirmModal,5)) {
+			click(saveBtnInConfirmModal);
+			if (!isElementLoaded(saveBtnInConfirmModal,5))
+				SimpleUtils.pass("Forecast Page: Save button is clickable on the confirm pop up");
+			else
+				SimpleUtils.fail("Forecast Page: Save button is not clickable on the confirm pop up",false);
+		} else
+			SimpleUtils.fail("Forecast Page: Save button on confirm modal failed to load", false);
+	}
+
+	@Override
+	public void verifyPeakShoppersPeakTimeTotalShoppersEditedDataInDayView () throws Exception {
+		HashMap<String, Float> insightDataInWeek = getInsightDataInShopperWeekView();
+		List<String> dataInBar = getForecastBarGraphData();
+		Float peakShoppersEditedInBar = 0.0f;
+		Float peakTimeEditedInBar = 0.0f;
+		Float totalShoppersEditedInBar = 0.0f;
+		String forecastInBar = "";
+
+		for (int i = 0; i < dataInBar.size(); i++) {
+			if (!dataInBar.get(i).isEmpty()) {
+				// 8:00 Forecast 12 Legion 12 Edited Comparison 0 Actual
+				if (dataInBar.get(i).split(" ").length > 6) {
+					forecastInBar = dataInBar.get(i).replace(" pm",":00").split(" ")[2];
+					String timeInBar = dataInBar.get(i).split(" ")[0];
+					totalShoppersEditedInBar += Float.valueOf(forecastInBar);
+					System.out.println("totalShoppersEditedInBar is " + totalShoppersEditedInBar);
+					if (peakShoppersEditedInBar <= Float.valueOf(forecastInBar)) {
+						peakShoppersEditedInBar = Float.valueOf(forecastInBar);
+						System.out.println("peakShoppersEditedInBar is " + peakShoppersEditedInBar);
+						peakTimeEditedInBar = Float.valueOf(timeInBar.replace(":","."));
+						System.out.println("peakTimeEditedInBar is " + peakTimeEditedInBar);
+					}
+				}
+			}
+		}
+		SimpleUtils.report("Forecast Page: Peak shoppers of Forecast in bar graph: " + peakShoppersEditedInBar);
+		SimpleUtils.report("Forecast Page: Peak time of Forecast in bar graph: " + peakTimeEditedInBar);
+		SimpleUtils.report("Forecast Page: Total shoppers of Forecast in bar graph: " + totalShoppersEditedInBar);
+		Float peakShopperEditedInInsightCard = insightDataInWeek.get("editedPeakShoppers");
+		Float peakTimeEditedInInsightCard = insightDataInWeek.get("editedPeakTime");
+		Float totalShoppersEditedInInsightCard = insightDataInWeek.get("editedTotalShoppers");
+		SimpleUtils.report("Forecast Page: Peak shoppers of Edited in smart card: " + peakShopperEditedInInsightCard);
+		SimpleUtils.report("Forecast Page: Peak time of Edited in smart card: " + peakTimeEditedInInsightCard);
+		SimpleUtils.report("Forecast Page: Total shoppers of Edited in smart card: " + totalShoppersEditedInInsightCard);
+		if (totalShoppersEditedInInsightCard.equals(totalShoppersEditedInBar) & peakShopperEditedInInsightCard.equals(peakShoppersEditedInBar)
+				&& peakTimeEditedInInsightCard.equals(peakTimeEditedInBar)) {
+			SimpleUtils.pass("Forecast Page: In smart card, total shoppers, peak shoppers and peak time are matching with bar graph after saving");
+		} else {
+			//SimpleUtils.warn("SCH-2394: Tooltip displays \"Current\" not \"Legion\" after editing forecast");
+			SimpleUtils.fail("Forecast Page: In smart card, total shoppers, peak shoppers and peak time are not matching with bar graph after saving",false);
+		}
+	}
+
+	@Override
+	public List<String> getTooltipInfoWhenView() throws Exception {
+		List<String> info = new ArrayList<>();
+		if (areListElementVisible(bars, 10)) {
+			for (int i = 0; i < bars.size(); i++) {
+				scrollToElement(bars.get(i));
+				mouseToElement(bars.get(i));
+				if (isElementLoaded(tooltipForForecastBar, 10)) {
+					// 7:30 Forecast 1 Legion 1 Edited Comparison N/A Actual
+					// 7:30 Forecast 1 Forecast Comparison N/A Actual
+					info.add(tooltipForForecastBar.getText().replace("\n", " "));
+				} else
+					info.add(getTickByIndex(i) + " Forecast 0 Forecast Comparison N/A Actual");
+			}
+		} else
+			SimpleUtils.fail("Forecast Page: Bars failed to load", false);
+		return info;
+	}
 }

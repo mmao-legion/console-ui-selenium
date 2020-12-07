@@ -837,6 +837,17 @@ public class BasePage {
     public void clickTheElement(WebElement element) {
         ((JavascriptExecutor) getDriver()).executeScript("arguments[0].click();", element);
     }
+
+    public void moveElement(WebElement webElement, int yOffSet)
+    {
+        Actions builder = new Actions(MyThreadLocal.getDriver());
+        builder.moveToElement(webElement)
+                .clickAndHold()
+                .moveByOffset(0, yOffSet)
+                .release()
+                .build()
+                .perform();
+    }
 //
 //
 //     public void assertIsDisplay(Map<String,String> map){

@@ -208,6 +208,7 @@
                         <include name="verifyShopperForecastFunctionality"/>
                         <include name="validateWeatherSmartCardOnForecastPage"/>
                         <include name="verifyScheduleFunctionalityForecast"/>
+                        <include name="verifyEditForecastInDayViewViewAsInternalAdmin"/>
                     </methods>
                 </class>
             </classes>
