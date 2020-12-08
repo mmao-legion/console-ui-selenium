@@ -278,7 +278,7 @@ public class NewNavigationFlowTest extends TestBase {
 
         //change district to show all locations
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict("District-k");
+        locationSelectorPage.changeDistrict("No touch no delete");
 
         String searchDistrictText = "*";
         String currentDistrict = dashboardPage.getCurrentDistrict();

@@ -100,7 +100,7 @@ public interface LocationsPage {
 
     public void addNewDistrict(String districtName, String districtId, String districtManager,String searchChara,int index) throws Exception;
 
-    public void updateDistrict(String districtName, String districtId, String districtManager, String searchChara, int index);
+    public void updateDistrict(String districtName, String districtId, String searchChara, int index);
 
     public ArrayList<HashMap<String, String>> getDistrictInfo(String districtName);
 

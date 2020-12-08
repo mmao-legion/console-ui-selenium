@@ -1160,11 +1160,10 @@ public class LocationsTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAddOrUpdateDistrictFunction(String browser, String username, String password, String location) throws Exception {
         SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-        String currentTime =  dfs.format(new Date());
-        String districtName = "AutoCreate_"+currentTime;
+        String currentTime =  dfs.format(new Date()).trim();
+        String districtName = currentTime;
         String districtId = currentTime;
-        String districtManager = "Estelle Yan";
-        String searchChara = "*";
+        String searchChara = "Auto";
         int index = 0;
 
 
@@ -1180,9 +1179,9 @@ public class LocationsTest extends TestBase {
         locationsPage.validateItemsInLocations();
         //go to sub-district  tab
         locationsPage.goToSubDistrictsInLocationsPage();
-        locationsPage.addNewDistrict( districtName, districtId, districtManager,searchChara,index);
+//        locationsPage.addNewDistrict( districtName, districtId, districtManager,searchChara,index);
         locationsPage.searchDistrict(districtName);
-        locationsPage.updateDistrict(districtName,districtId,districtManager,searchChara,index);
+        locationsPage.updateDistrict(districtName,districtId,searchChara,index);
 
 
     }
@@ -1195,7 +1194,7 @@ public class LocationsTest extends TestBase {
     public void verifyDisableEnableDistrictFunction(String browser, String username, String password, String location) throws Exception {
         SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
         String currentTime =  dfs.format(new Date()).trim();
-        String districtName = "AutoCreate_"+currentTime;
+        String districtName = currentTime;
         String districtId = currentTime;
         String districtManager = "Estelle Yan";
         String disableAction = "Disable";

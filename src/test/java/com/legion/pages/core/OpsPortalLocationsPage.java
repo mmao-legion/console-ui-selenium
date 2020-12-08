@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
+import static com.legion.tests.TestBase.propertyMap;
 import static com.legion.tests.TestBase.switchToNewWindow;
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -188,8 +189,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css="input-field[label=\"Effective date\"]")
 	private WebElement effectiveDateSelect;
-	@FindBy(xpath = "//lg-single-calendar/div[2]/div[8]/div[7]")
-	private List<WebElement> firstDay;
+	@FindBy(css = "div.lg-single-calendar-date-wrapper")
+	private WebElement firstDay;
 	@FindBy(css = "a[ng-click=\"$ctrl.changeMonth(-1)\"]")
 	private List<WebElement> previousMonthBtn;
 
@@ -216,7 +217,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				selectByVisibleText(configTypeSelect,newLocationParas.get("Configuration_Type"));
 			}
 			click(effectiveDateSelect);
-			click(firstDay.get(0));
+			click(firstDay.findElement(By.cssSelector("div:nth-child(8)")));
 			scrollToBottom();
 			click(createLocationBtn);
 			waitForSeconds(5);
@@ -275,7 +276,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectLocationOrDistrict(searchCharactor,index);
 			click(effectiveDateSelect);
 			click(previousMonthBtn.get(0));
-			click(firstDay.get(0));
+			click(firstDay.findElement(By.cssSelector("div:nth-child(8)")));
 			scrollToBottom();
 			click(createLocationBtn);
 			waitForSeconds(5);
@@ -290,7 +291,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (isElementEnabled(selectALocationTitle,5)) {
 				searchInputInSelectALocation.sendKeys(searchCharactor);
 				searchInputInSelectALocation.sendKeys(Keys.ENTER);
-				waitForSeconds(10);
+				waitForSeconds(5);
 				if (locationRowsInSelectLocation.size()>0) {
 				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"radio\"]"));
 				click(firstRow);
@@ -378,7 +379,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			uploaderFileInputBtn.sendKeys("D:\\Automation\\console-ui-selenium\\src\\test\\resources\\LocationImportTemplate.csv");
 			waitForSeconds(5);
 			click(importBtnInImportLocationPage);
-			waitForSeconds(10);
+			waitForSeconds(15);
 			click(okBtnInImportLocationPage);
 			SimpleUtils.pass("File import action done");
 
@@ -448,21 +449,23 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectLocationOrDistrict(searchCharactor,index);
 			click(effectiveDateSelect);
 			click(previousMonthBtn.get(0));
-			click(firstDay.get(0));
+			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Effective date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(8)")));
 
 			click(launchDateSelecter);
-//			click(previousMonthBtn.get(1));
-			click(firstDay.get(1));
+			click(previousMonthBtn.get(1));
+			scrollToBottom();
+			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Launch date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(9)")));
 			waitForSeconds(2);
 			click(selectOneComparableLocation);
 			selectLocationOrDistrict(searchCharactor,index);
 			waitForSeconds(2);
-			scrollToBottom();
+
 			click(comparableStoreDateSelecter);
-			click(firstDay.get(2));
+			click(previousMonthBtn.get(2));
+			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"End Comparable-store date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(10)")));
 			itemsAndTransactionInoutField.get(0).sendKeys("1");
 			itemsAndTransactionInoutField.get(1).sendKeys("1");
-
+			scrollToBottom();
 			click(createLocationBtn);
 			waitForSeconds(20);
 			SimpleUtils.pass("New location creation done");
@@ -595,8 +598,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM");
 			dfs.setTimeZone(timeZone);
 			String currentTime =  dfs.format(new Date());
-			String downloadPath = "C:\\Users\\DMF\\Downloads";//when someone run ,need to change this path
-			Assert.assertTrue(FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "LEG-"+currentTime), "Download successfully");
+			String downloadPath = propertyMap.get("Download_File_Default_Dir");//when someone run ,need to change this path
+			Assert.assertTrue(FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "LEG-"), "Download successfully");
 
 		}else
 			SimpleUtils.fail("Export button load failed",true);
@@ -638,7 +641,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM");
 			dfs.setTimeZone(timeZone);
 			String currentTime =  dfs.format(new Date());
-			String downloadPath = "C:\\Users\\DMF\\Downloads";//when someone run ,need to change this path
+			String downloadPath = propertyMap.get("Download_File_Default_Dir");//when someone run ,need to change this path
 			Assert.assertTrue(FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "LEG-"+currentTime), "Download successfully");
 
 		}else
@@ -790,7 +793,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				selectByVisibleText(configTypeSelect,newLocationParas.get("Configuration_Type"));
 			}
 			click(effectiveDateSelect);
-			click(firstDay.get(0));
+			click(previousMonthBtn.get(0));
+			click(firstDay.findElement(By.cssSelector("div:nth-child(8)")));
 			scrollToBottom();
 			click(createLocationBtn);
 			waitForSeconds(10);
@@ -827,7 +831,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(selectOneInChooseDistrict);
 			selectLocationOrDistrict(searchCharactor,index);
 			click(effectiveDateSelect);
-			click(firstDay.get(0));
+			click(previousMonthBtn.get(0));
+			click(firstDay.findElement(By.cssSelector("div:nth-child(8)")));
 			scrollToBottom();
 			click(createLocationBtn);
 			waitForSeconds(10);
@@ -865,21 +870,23 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectLocationOrDistrict(searchCharactor,index);
 			click(effectiveDateSelect);
 			click(previousMonthBtn.get(0));
-			click(firstDay.get(0));
+			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Effective date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(8)")));
 
 			click(launchDateSelecter);
 			click(previousMonthBtn.get(1));
-			click(firstDay.get(1));
+			scrollToBottom();
+			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Launch date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(9)")));
 			waitForSeconds(2);
 			click(selectOneComparableLocation);
 			selectLocationOrDistrict(searchCharactor,index);
 			waitForSeconds(2);
-			scrollToBottom();
+
 			click(comparableStoreDateSelecter);
-			click(firstDay.get(2));
+			click(previousMonthBtn.get(2));
+			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"End Comparable-store date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(10)")));
 			itemsAndTransactionInoutField.get(0).sendKeys("1");
 			itemsAndTransactionInoutField.get(1).sendKeys("1");
-
+			scrollToBottom();
 			click(createLocationBtn);
 			waitForSeconds(20);
 			SimpleUtils.pass("New location creation done");
@@ -916,21 +923,23 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 			click(effectiveDateSelect);
 			click(previousMonthBtn.get(0));
-			click(firstDay.get(0));
+			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Effective date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(8)")));
 
 			click(launchDateSelecter);
 			click(previousMonthBtn.get(1));
-			click(firstDay.get(1));
+			scrollToBottom();
+			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Launch date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(9)")));
 			waitForSeconds(2);
 			click(selectOneComparableLocation);
 			selectLocationOrDistrict(searchCharactor,index);
 			waitForSeconds(2);
-			scrollToBottom();
+
 			click(comparableStoreDateSelecter);
-			click(firstDay.get(2));
+			click(previousMonthBtn.get(2));
+			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"End Comparable-store date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(10)")));
 			itemsAndTransactionInoutField.get(0).sendKeys("1");
 			itemsAndTransactionInoutField.get(1).sendKeys("1");
-
+			scrollToBottom();
 			click(createLocationBtn);
 			waitForSeconds(20);
 			SimpleUtils.pass("New location creation done");
@@ -1229,7 +1238,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					SimpleUtils.pass("Can search out district by using " + searchInputText);
 					break;
 				} else {
-					SimpleUtils.report("Can't search out any district by using " + searchInputText);
+					SimpleUtils.fail("Can't search out any district by using " + searchInputText,false);
+					waitForSeconds(5);
 					districtSearchInputBox.clear();
 				}
 			}
@@ -1420,7 +1430,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (districtCreateLandingPageShowWell()) {
 			districtNameInput.sendKeys(districtName);
 			districtIdInput.sendKeys(districtId);
-			selectByVisibleText(districtManagerSelector,districtManager);
+			selectByIndex(districtManagerSelector,0);
+			waitForSeconds(3);
 			click(ManagerBtnInDistrictCreationPage);
 			managerDistrictLocations(searchChara,index);
 			click(createDistrictBtnInDistrictCreationPage);
@@ -1439,28 +1450,31 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 		return false;
 	}
-
+	@FindBy(css = ".lg-modal__title")
+	private WebElement selectDistrictPopUpWins;
+	@FindBy(css = "input[placeholder=\"Search by district name\"]")
+	private WebElement searchDistrictInputInSelectDistrictPopUpWins;
 	private void managerDistrictLocations(String searchChara,int index) {
-		if (isElementEnabled(selectALocationTitle,5)) {
+		if (isElementEnabled(selectALocationTitle, 5)) {
 			searchInputInSelectALocation.sendKeys(searchChara);
 			searchInputInSelectALocation.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
-			if (locationRowsInSelectLocation.size()>0) {
-				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"checkbox\"]"));
-				click(firstRow);
+			if (locationRowsInSelectLocation.size() > 0) {
+				for (int i = 0; i < locationRowsInSelectLocation.size(); i++) {
+					WebElement firstRow = locationRowsInSelectLocation.get(i).findElement(By.cssSelector("input[type=\"checkbox\"]"));
+					click(firstRow);
+				}
 				click(okBtnInSelectLocation);
-			}else
-				SimpleUtils.report("Search location result is 0");
+			} else
+				SimpleUtils.fail("Select a location window load failed", true);
 
-		}else
-			SimpleUtils.fail("Select a location window load failed",true);
-
+		}
 	}
-
 	@FindBy(css = ".modal-dialog")
 	private WebElement districtIdChangePopUpWin;
+
 	@Override
-	public void updateDistrict(String districtName, String districtId, String districtManager, String searchChara, int index) {
+	public void updateDistrict(String districtName, String districtId,  String searchChara, int index) {
 
 		if (districtsRows.size() > 0) {
 			List<WebElement> districtDetailsLinks = districtsRows.get(0).findElements(By.cssSelector("button[type='button']"));
@@ -1469,14 +1483,30 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			districtNameInput.clear();
 			districtNameInput.sendKeys(districtName+"update");
 			districtIdInput.clear();
+			waitForSeconds(2);
 			if (isElementEnabled(districtIdChangePopUpWin,3)) {
 				click(okBtnInImportLocationPage);
+				districtIdInput.sendKeys(districtName+"update");
 			}else
 				SimpleUtils.fail("District id change window not show",true);
+			click(ManagerBtnInDistrictCreationPage);
 			managerDistrictLocations(searchChara,index);
 			scrollToBottom();
 			click(saveBtnInUpdateLocationPage);
 			waitForSeconds(10);
+			if (isElementEnabled(selectDistrictPopUpWins, 5)) {
+				searchDistrictInputInSelectDistrictPopUpWins.sendKeys("No touch no delete");
+				searchDistrictInputInSelectDistrictPopUpWins.sendKeys(Keys.ENTER);
+				waitForSeconds(5);
+				if (locationRowsInSelectLocation.size() > 0) {
+					for (int i = 0; i < locationRowsInSelectLocation.size(); i++) {
+						WebElement firstRow = locationRowsInSelectLocation.get(i).findElement(By.cssSelector("input[type=\"radio\"]"));
+						click(firstRow);
+					}
+					click(okBtnInSelectLocation);
+				}
+			} else
+				SimpleUtils.report("Search location result is 0");
 			SimpleUtils.pass("District update done");
 		}else
 			SimpleUtils.fail("No search result",true);
@@ -1518,7 +1548,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (districtCreateLandingPageShowWell()) {
 			districtNameInput.sendKeys(districtName);
 			districtIdInput.sendKeys(districtId);
-			selectByVisibleText(districtManagerSelector,districtManager);
+			selectByIndex(districtManagerSelector,0);
 			click(createDistrictBtnInDistrictCreationPage);
 			SimpleUtils.report("District creation done");
 			waitForSeconds(10);
