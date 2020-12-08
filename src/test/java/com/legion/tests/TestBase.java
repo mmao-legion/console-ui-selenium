@@ -184,11 +184,10 @@ public abstract class TestBase {
         //todo replace Chrome driver initializaton with what Manideep has
         DesiredCapabilities capabilities = null;
         String url = "";
-
-        capabilities = SimpleUtils.initCapabilities(getDriverType(), getVersion(), getOS());
         url = SimpleUtils.getURL();
         // Initialize browser
         if (propertyMap.get("isGridEnabled").equalsIgnoreCase("false")) {
+            capabilities = SimpleUtils.initCapabilities(getDriverType(), getVersion(), getOS());
             if (getDriverType().equalsIgnoreCase(propertyMap.get("INTERNET_EXPLORER"))) {
                 InternetExplorerOptions options = new InternetExplorerOptions()
                         .requireWindowFocus()
@@ -227,36 +226,27 @@ public abstract class TestBase {
 
         } else {
             // Launch remote browser and set it as the current thread
-            ChromeOptions options = new ChromeOptions();
-            createRemoteChrome(options,url);
+            createRemoteChrome(url);
         }
         }
 
 
-    private void createRemoteChrome(ChromeOptions options,String url){
-        options.addArguments("disable-infobars");
-        options.addArguments("test-type", "new-window", "disable-extensions","start-maximized");
-        Map<String, Object> prefs = new HashMap<>();
-        prefs.put("credentials_enable_service", false);
-        prefs.put("password_manager_enabled", false);
-        String downloadPath =  Paths.get("target").toAbsolutePath().toString();
-        prefs.put("download.default_directory", downloadPath);
-        options.setExperimentalOption("prefs", prefs);
-        options.addArguments("disable-logging", "silent", "ignore-certificate-errors");
-        options.setExperimentalOption("useAutomationExtension", false);
-        options.setExperimentalOption("excludeSwitches",
-                Collections.singletonList("enable-automation"));
-        options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-        options.setCapability(ChromeOptions.CAPABILITY, options);
-        options.setCapability("chrome.switches", Arrays.asList("--disable-extensions", "--disable-logging",
-                "--ignore-certificate-errors", "--log-level=0", "--silent"));
-        options.setCapability("silent", true);
-//        options.setCapability("zal:name",tname);
-        options.setCapability("idleTimeout", 200);
-        System.setProperty("webdriver.chrome.silentOutput", "true");
+    private void createRemoteChrome(String url){
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setCapability("browserName", "chrome");
+//        caps.setCapability("version", "77.0");
+        caps.setCapability("platform", "WINDOWS");
+
+        caps.setCapability("network", true);
+        caps.setCapability("visual", true);
+        caps.setCapability("video", true);
+        caps.setCapability("console", true);
+
+//        caps.setCapability("selenium_version","4.0.0-alpha-2");
+        caps.setCapability("chrome.driver","87.0");
         Assert.assertNotNull(url,"Error grid url is not configured, please review it in envCFg.json file and add it.");
         try {
-            setDriver(new RemoteWebDriver(new URL(url),options));
+            setDriver(new RemoteWebDriver(new URL(url),caps));
 
             pageFactory = createPageFactory();
             LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
