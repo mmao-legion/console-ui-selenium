@@ -57,25 +57,6 @@ public class LocationsTest extends TestBase {
         loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
     }
 
-    @AfterMethod(alwaysRun = true)
-    protected void tearDown(Method method, ITestResult result) throws IOException {
-        ExtentTestManager.getTest().info("tearDown started");
-        if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
-            try {
-                getDriver().manage().deleteAllCookies();
-                getDriver().quit();
-            } catch (Exception exp) {
-                Reporter.log("Error closing browser");
-            }
-        }
-
-        if (getVerificationMap() != null) {
-            getVerificationMap().clear();
-        }
-        ExtentTestManager.getTest().info("tearDown finished");
-//        extent.flush();
-//        stopServer();
-    }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")

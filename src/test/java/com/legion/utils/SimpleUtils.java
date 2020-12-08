@@ -68,8 +68,8 @@ public class SimpleUtils {
 	 * //todo will set up a remote selenium server on localhost. for now return null
 	 */
 	public static String getURL() {
-
-		return null;
+		String uRL = parameterMap.get("URL");
+		return uRL;
 	}
 
 	public static void fail(String message, boolean continueExecution, String... severity) {

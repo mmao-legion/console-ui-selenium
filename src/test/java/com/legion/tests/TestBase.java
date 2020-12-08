@@ -11,10 +11,7 @@ import com.legion.pages.pagefactories.mobile.MobilePageFactory;
 import com.legion.pages.pagefactories.mobile.MobileWebPageFactory;
 import com.legion.test.testrail.APIException;
 import com.legion.tests.annotations.Enterprise;
-import com.legion.tests.testframework.ExtentReportManager;
-import com.legion.tests.testframework.ExtentTestManager;
-import com.legion.tests.testframework.LegionWebDriverEventListener;
-import com.legion.tests.testframework.ScreenshotManager;
+import com.legion.tests.testframework.*;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -38,6 +35,7 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
+import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.Reporter;
@@ -50,6 +48,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.rmi.UnexpectedException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -189,7 +188,7 @@ public abstract class TestBase {
         capabilities = SimpleUtils.initCapabilities(getDriverType(), getVersion(), getOS());
         url = SimpleUtils.getURL();
         // Initialize browser
-        if (url == null) {
+        if (propertyMap.get("isGridEnabled").equalsIgnoreCase("false")) {
             if (getDriverType().equalsIgnoreCase(propertyMap.get("INTERNET_EXPLORER"))) {
                 InternetExplorerOptions options = new InternetExplorerOptions()
                         .requireWindowFocus()
@@ -201,21 +200,20 @@ public abstract class TestBase {
 
             }
             if (getDriverType().equalsIgnoreCase(propertyMap.get("CHROME"))) {
-                System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
+                System.setProperty("webdriver.chrome.driver", propertyMap.get("CHROME_DRIVER_PATH"));
                 ChromeOptions options = new ChromeOptions();
-
-                if(propertyMap.get("isHeadlessBrowser").equalsIgnoreCase("true")){
+                if (propertyMap.get("isHeadlessBrowser").equalsIgnoreCase("true")) {
 //                    options.addArguments("headless");
-                    options.addArguments( "--headless","--disable-gpu", "--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage" );
+                    options.addArguments("--headless", "--disable-gpu", "--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage");
                     options.addArguments("window-size=1200x600");
                     runScriptOnHeadlessOrBrowser(options);
-                }else{
+                } else {
                     runScriptOnHeadlessOrBrowser(options);
                 }
 
             }
             if (getDriverType().equalsIgnoreCase(propertyMap.get("FIREFOX"))) {
-                System.setProperty("webdriver.gecko.driver",propertyMap.get("FIREFOX_DRIVER_PATH"));
+                System.setProperty("webdriver.gecko.driver", propertyMap.get("FIREFOX_DRIVER_PATH"));
                 FirefoxProfile profile = new FirefoxProfile();
                 profile.setAcceptUntrustedCertificates(true);
                 FirefoxOptions options = new FirefoxOptions();
@@ -227,17 +225,46 @@ public abstract class TestBase {
             LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
             getDriver().register(webDriverEventListener);
 
-        }
-        else {
+        } else {
             // Launch remote browser and set it as the current thread
-            setDriver(new RemoteWebDriver(
-                    new URL(url),
-                    capabilities));
+            ChromeOptions options = new ChromeOptions();
+            createRemoteChrome(options,url);
+        }
         }
 
 
-    }
+    private void createRemoteChrome(ChromeOptions options,String url){
+        options.addArguments("disable-infobars");
+        options.addArguments("test-type", "new-window", "disable-extensions","start-maximized");
+        Map<String, Object> prefs = new HashMap<>();
+        prefs.put("credentials_enable_service", false);
+        prefs.put("password_manager_enabled", false);
+        String downloadPath =  Paths.get("target").toAbsolutePath().toString();
+        prefs.put("download.default_directory", downloadPath);
+        options.setExperimentalOption("prefs", prefs);
+        options.addArguments("disable-logging", "silent", "ignore-certificate-errors");
+        options.setExperimentalOption("useAutomationExtension", false);
+        options.setExperimentalOption("excludeSwitches",
+                Collections.singletonList("enable-automation"));
+        options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+        options.setCapability(ChromeOptions.CAPABILITY, options);
+        options.setCapability("chrome.switches", Arrays.asList("--disable-extensions", "--disable-logging",
+                "--ignore-certificate-errors", "--log-level=0", "--silent"));
+        options.setCapability("silent", true);
+//        options.setCapability("zal:name",tname);
+        options.setCapability("idleTimeout", 200);
+        System.setProperty("webdriver.chrome.silentOutput", "true");
+        Assert.assertNotNull(url,"Error grid url is not configured, please review it in envCFg.json file and add it.");
+        try {
+            setDriver(new RemoteWebDriver(new URL(url),options));
 
+            pageFactory = createPageFactory();
+            LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
+            getDriver().register(webDriverEventListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private PageFactory createPageFactory() {
         return new ConsoleWebPageFactory();
