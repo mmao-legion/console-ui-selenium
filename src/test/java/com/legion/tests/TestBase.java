@@ -235,7 +235,7 @@ public abstract class TestBase {
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("browserName", "chrome");
 //        caps.setCapability("version", "77.0");
-        caps.setCapability("platform", "WINDOWS");
+        caps.setCapability("platform", "LINUX");
 
         caps.setCapability("network", true);
         caps.setCapability("visual", true);
