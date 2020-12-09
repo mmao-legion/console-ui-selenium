@@ -58,9 +58,10 @@ public interface ForecastPage<pubic> {
 	public void verifyAndClickSaveBtn();
 	public void verifyDoubleClickAndUpdateForecastBarValue(String index, String value);
 	public String getTooltipInfo(String index);
+	//public List<String>  getTooltipInfos();
 	public String getTickByIndex(int index);
 	public void verifyWarningEditingForecast();
-	public String getLegionPeakShopperFromForecastGraph();
+	public void verifyLegionPeakShopperFromForecastGraphInWeekView();
 	public void clickOnDayView() throws Exception;
 	public void verifyEditBtnVisible() throws Exception;
 	public void verifyContentInEditMode() throws Exception;

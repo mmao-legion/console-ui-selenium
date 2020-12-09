@@ -16,10 +16,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 
 import static java.lang.Math.abs;
 
@@ -282,25 +279,33 @@ public class ForecastTest extends TestBase{
 		SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
 				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
 		//verify edit forecast button
-		String index = "3";
+		int index = 3;
 		String value = "510";
-		String weekDayInfo = forecastPage.getTickByIndex(Integer.parseInt(index));
+		String weekDayInfo = forecastPage.getTickByIndex(index);
 		String editedValueInfo = value+" Edited";
 		forecastPage.verifyAndClickEditBtn();
 		forecastPage.verifyAndClickCancelBtn();
 		forecastPage.verifyAndClickEditBtn();
-		forecastPage.verifyDoubleClickAndUpdateForecastBarValue(index, value);
-		String tooltipInfo = forecastPage.getTooltipInfo(index);
+
+		//verify double click graph bar
+		forecastPage.verifyDoubleClickAndUpdateForecastBarValue(String.valueOf(index), value);
+		String tooltipInfo =forecastPage.getTooltipInfo(String.valueOf(index));
 		boolean flag = tooltipInfo.contains("Actual")||tooltipInfo.contains("Last Year")||tooltipInfo.contains("Recent Trend");
 		SimpleUtils.assertOnFail("Info on tooltip is incorrect!",tooltipInfo.contains(weekDayInfo+" Forecast")&&tooltipInfo.contains(editedValueInfo)&&tooltipInfo.contains("Comparison")&&flag,false);
+		//Save forecast and check the value.
 		forecastPage.verifyAndClickSaveBtn();
-		tooltipInfo = forecastPage.getTooltipInfo(index);
+		tooltipInfo =forecastPage.getTooltipInfo(String.valueOf(index));
 		SimpleUtils.assertOnFail("Edited value is not saved!",tooltipInfo.contains(value),false);
 		forecastPage.verifyAndClickEditBtn();
 		schedulePage.navigateToNextWeek();
 		forecastPage.verifyWarningEditingForecast();
-		String peakValueInfo = forecastPage.getLegionPeakShopperFromForecastGraph();
-		//forecastPage.getInsightDataInShopperWeekView().getsmart
+		forecastPage.verifyLegionPeakShopperFromForecastGraphInWeekView();
+		//Verify graph bars are draggable.
+		forecastPage.verifyDraggingBarGraph();
+		//Save forecast and check the value.
+		forecastPage.verifyAndClickSaveBtn();
+		forecastPage.verifyLegionPeakShopperFromForecastGraphInWeekView();
+		forecastPage.verifyAndClickCancelBtn();
 	}
 
 	@Automated(automated = "Automated")
