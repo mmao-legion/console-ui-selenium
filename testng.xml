@@ -209,6 +209,7 @@
                         <include name="validateWeatherSmartCardOnForecastPage"/>
                         <include name="verifyScheduleFunctionalityForecast"/>
                         <include name="verifyEditForecastInDayViewViewAsInternalAdmin"/>
+                        <include name="verifyEditForecastInWeekViewViewAsInternalAdmin"/>
                     </methods>
                 </class>
             </classes>
