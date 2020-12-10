@@ -309,4 +309,88 @@ public class DashboardTestKendraScott2 extends TestBase{
 		}
 	}
 
+	@Automated(automated ="Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the left navigation menu on login using admin access")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		//check dashboard page display correctly
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		//Check DashBoard console menu is display
+		SimpleUtils.assertOnFail("DashBoard console menu not loaded Successfully!",dashboardPage.isDashboardConsoleMenuDisplay(), false);
+		dashboardPage.verifyHeaderNavigationMessage("Dashboard");
+
+		//Check Legion logo is display
+		SimpleUtils.assertOnFail("Legion logo not loaded Successfully!",dashboardPage.isLegionLogoDisplay() , false);
+
+		//Check District selector is display
+		SimpleUtils.assertOnFail("District selector not loaded Successfully!",dashboardPage.IsThereDistrictNavigationForLegionBasic() , false);
+		//Check District dropdown is display after click District selector
+		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+		locationSelectorPage.verifyClickChangeDistrictButton();
+
+		//Check Team console menu is display
+		SimpleUtils.assertOnFail("Team console menu not loaded Successfully!",dashboardPage.isTeamConsoleMenuDisplay() , false);
+		//Check Team page is display after click Team tab
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		dashboardPage.verifyHeaderNavigationMessage("Team");
+
+		//Check Schedule console menu is display
+		SimpleUtils.assertOnFail("Schedule console menu not loaded Successfully!",dashboardPage.isScheduleConsoleMenuDisplay() , false);
+		//Check Schedule overview page is display after click Schedule tab
+		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+		scheduleOverviewPage.loadScheduleOverview();
+		dashboardPage.verifyHeaderNavigationMessage("Schedule");
+
+		//Check Analytics console menu is display
+		SimpleUtils.assertOnFail("Analytics console menu not loaded Successfully!",dashboardPage.isAnalyticsConsoleMenuDisplay() , false);
+		//Check Analytics page is display after click Analytics tab
+		AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+		analyticsPage.clickOnAnalyticsConsoleMenu();
+		SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+		dashboardPage.verifyHeaderNavigationMessage("Analytics");
+
+		//Check Inbox console menu is display
+		SimpleUtils.assertOnFail("Inbox console menu not loaded Successfully!",dashboardPage.isInboxConsoleMenuDisplay() , false);
+		//Check Inbox page is display after click Inbox tab
+		InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+		inboxPage.clickOnInboxConsoleMenuItem();
+		SimpleUtils.assertOnFail("Inbox console menu not loaded Successfully!",inboxPage.isAnnouncementListPanelDisplay() , false);
+		dashboardPage.verifyHeaderNavigationMessage("Inbox");
+
+		//Check Admin console menu is display
+		SimpleUtils.assertOnFail("Admin console menu not loaded Successfully!",dashboardPage.isAdminConsoleMenuDisplay() , false);
+		//Check Admin page is display after click Admin tab
+		dashboardPage.clickOnAdminConsoleMenu();
+		dashboardPage.verifyAdminPageIsLoaded();
+		dashboardPage.verifyHeaderNavigationMessage("Admin");
+
+		//Check Integration console menu is display
+		SimpleUtils.assertOnFail("Integration console menu not loaded Successfully!",dashboardPage.isIntegrationConsoleMenuDisplay() , false);
+		//Check Integration page is display after click Integration tab
+		dashboardPage.clickOnIntegrationConsoleMenu();
+		dashboardPage.verifyIntegrationPageIsLoaded();
+		dashboardPage.verifyHeaderNavigationMessage("Integration");
+
+		//Check Controls console menu is display
+		SimpleUtils.assertOnFail("Control console menu not loaded Successfully!",dashboardPage.isControlsConsoleMenuDisplay(), false);
+		//Check Controls page is display after click Controls tab
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		controlsNewUIPage.clickOnControlsConsoleMenu();
+		controlsNewUIPage.isControlsPageLoaded();
+		dashboardPage.verifyHeaderNavigationMessage("Controls");
+
+		//Check Logout console menu is display
+		SimpleUtils.assertOnFail("Logout console menu not loaded Successfully!",dashboardPage.isLogoutConsoleMenuDisplay(), false);
+		//Check Login page is display after click Logout tab
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+		loginPage.verifyLoginPageIsLoaded();
+
+
+	}
 }

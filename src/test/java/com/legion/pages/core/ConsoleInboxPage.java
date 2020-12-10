@@ -1,5 +1,6 @@
 package com.legion.pages.core;
 
+import com.google.inject.internal.cglib.core.$ReflectUtils;
 import com.legion.pages.BasePage;
 import com.legion.pages.InboxPage;
 import com.legion.utils.SimpleUtils;
@@ -758,4 +759,23 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
             SimpleUtils.fail("There is no tooltip for VSL!", false);
         }
     }
+
+
+    @FindBy(css = "div[class=\"row announcements-list ng-scope\"]")
+    private WebElement announcementListPanel;
+    @Override
+    public boolean isAnnouncementListPanelDisplay() throws Exception {
+        boolean isAnnouncementListPanelDisplay = false;
+        try{
+            if(isElementLoaded(announcementListPanel, 5)) {
+                isAnnouncementListPanelDisplay = true;
+                SimpleUtils.report("Announcement List Panel is loaded Successfully!");
+            } else
+                SimpleUtils.report("Announcement List Panel not loaded Successfully!");
+        } catch(Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+        return isAnnouncementListPanelDisplay;
+    }
+
 }

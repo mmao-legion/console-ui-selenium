@@ -336,7 +336,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public boolean isControlsPageLoaded() throws Exception {
-		if (isElementLoaded(controlsPageHeaderLabel))
+		if (isElementLoaded(controlsPageHeaderLabel, 10))
 			if (controlsPageHeaderLabel.getText().toLowerCase().contains(timeSheetHeaderLabel.toLowerCase())) {
 				SimpleUtils.pass("Controls Page loaded Successfully!");
 				return true;
