@@ -84,8 +84,8 @@ public abstract class TestBase {
     public static AndroidDriver<MobileElement> driver;
     public static String versionString;
     public static int version;
+    public static  int flagForTestRun = 0;
     public String enterpriseName;
-    public static String testSuiteIDTemp = "0";
     public static String pth=System.getProperty("user.dir");
     public static String reportFilePath=pth+"/Reports/";
     public static String screenshotFilePath=pth+"/screenshots/";
@@ -102,6 +102,7 @@ public abstract class TestBase {
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, ITestContext context) throws Exception {
         MyThreadLocal.setTestSuiteID(testSuites.get(testSuiteName));
         MyThreadLocal.setTestSuiteName(testSuiteName);
+        MyThreadLocal.setTestCaseIDList(new ArrayList<Integer>());
         if(platform!= null && executionon!= null && runMode!= null){
             if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice")
                     && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){
@@ -161,14 +162,13 @@ public abstract class TestBase {
                 + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
         extent.setSystemInfo(method.getName(), enterpriseName.toString());
         //setTestRailRunId(0);
-        if (MyThreadLocal.getTestSuiteID()==null){
+        if (MyThreadLocal.getTestRailRunId()==null){
             setTestRailRunId(0);
         }
         List<Integer> testRailId =  new ArrayList<Integer>();
         setTestRailRun(testRailId);
 
-        if(getTestRailReporting()!=null && !testSuiteIDTemp.equalsIgnoreCase(MyThreadLocal.getTestSuiteID())){
-            testSuiteIDTemp = MyThreadLocal.getTestSuiteID();
+        if(getTestRailReporting()!=null){
             SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
         }
         setCurrentMethod(method);
