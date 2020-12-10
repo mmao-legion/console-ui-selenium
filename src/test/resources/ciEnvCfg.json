@@ -3,7 +3,7 @@
   "CHROME_DRIVER_PATH": "src/test/resources/Driver/chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "/usr/local/bin/geckodriver",
   "DEVURL": "https://mobilestage.legion.work/",
-  "QAURL": "https://staging-enterprise.dev.legion.work/",
+  "QAURL": "https://rc-enterprise.dev.legion.work/",
   "Screenshot_Path": "/Users/fenghuanli/Documents/project/screenshots",
   "ENTERPRISE" : "LegionCoffee2",
   "Coffee_Enterprise" : "LegionCoffee",
@@ -35,6 +35,6 @@
   "isParallelBrowser" : "false",
   "Download_File_Default_Dir" : "C:\\Users\\hydsoft\\Downloads",
   "isHeadlessBrowser" : "false",
-  "isGridEnabled" : "false",
-  "URL" : "http://localhost:4455/wd/hub"
+  "isGridEnabled" : "true",
+  "URL" : "http://localhost:4444/wd/hub"
 }

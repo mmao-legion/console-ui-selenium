@@ -100,7 +100,7 @@ public class NewNavigationFlowTest extends TestBase {
         String currentDistrict = dashboardPage.getCurrentDistrict();
         //change district to show all locations
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict("SanityTest");
+        locationSelectorPage.changeDistrict("No touch no delete");
 
         TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
 

@@ -1071,7 +1071,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
 		HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
 		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class='card-carousel-card card-carousel-card-primary card-carousel-card-table']"));
-		if(isElementEnabled(budgetedScheduledLabelsDivElement))
+		if(isElementEnabled(budgetedScheduledLabelsDivElement,5))
 		{
 //			Thread.sleep(2000);
 			String scheduleWagesAndHoursCardText = budgetedScheduledLabelsDivElement.getText();

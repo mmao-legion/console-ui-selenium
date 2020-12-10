@@ -234,12 +234,12 @@ public abstract class TestBase {
     private void createRemoteChrome(String url){
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("browserName", "chrome");
-//        caps.setCapability("version", "77.0");
+        caps.setCapability("version", "5.4");
         caps.setCapability("platform", "LINUX");
 
-        caps.setCapability("network", true);
-        caps.setCapability("visual", true);
-        caps.setCapability("video", true);
+//        caps.setCapability("network", true);
+//        caps.setCapability("visual", true);
+//        caps.setCapability("video", true);
         caps.setCapability("console", true);
 
 //        caps.setCapability("selenium_version","4.0.0-alpha-2");
