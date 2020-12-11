@@ -59,4 +59,21 @@ public interface DashboardPage {
     public String  getCurrentDistrict() throws Exception;
     public boolean IsThereDistrictNavigationForLegionBasic() throws Exception;
     public List<String> getLocationListInDashboard();
+    public boolean isLegionLogoDisplay() throws Exception;
+    public boolean isDashboardConsoleMenuDisplay() throws Exception;
+    public boolean isTeamConsoleMenuDisplay() throws Exception;
+    public boolean isScheduleConsoleMenuDisplay() throws Exception;
+    public boolean isAnalyticsConsoleMenuDisplay() throws Exception;
+    public boolean isInboxConsoleMenuDisplay() throws Exception;
+    public boolean isAdminConsoleMenuDisplay() throws Exception;
+    public void clickOnAdminConsoleMenu() throws Exception;
+    public boolean isIntegrationConsoleMenuDisplay() throws Exception;
+    public void clickOnIntegrationConsoleMenu() throws Exception;
+    public boolean isControlsConsoleMenuDisplay() throws Exception;
+    public boolean isLogoutConsoleMenuDisplay() throws Exception;
+    public boolean isTimesheetConsoleMenuDisplay() throws Exception;
+    public void verifyAdminPageIsLoaded() throws Exception;
+    public void verifyIntegrationPageIsLoaded() throws Exception;
+    public void verifyHeaderNavigationMessage(String headerNavigationMessage) throws Exception;
+    public void closeNewFeatureEnhancementsPopup() throws Exception;
 }

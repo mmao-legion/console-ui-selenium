@@ -1052,6 +1052,298 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return null;
 	}
 
+	@FindBy(css = "img[class=\"widgetMainImage\"]")
+	private WebElement legionLogoImg;
 
+	@Override
+	public boolean isLegionLogoDisplay() throws Exception {
+		boolean isLegionLogoDisplay = false;
+		try{
+			if(isElementLoaded(legionLogoImg, 5)) {
+				isLegionLogoDisplay = true;
+				SimpleUtils.report("Legion logo is loaded Successfully!");
+			} else
+				SimpleUtils.report("Legion logo not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isLegionLogoDisplay;
+	}
+
+
+	@Override
+	public boolean isDashboardConsoleMenuDisplay() throws Exception {
+		boolean isDashboardConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(dashboardConsoleMenu, 5)) {
+				isDashboardConsoleMenuDisplay = true;
+				SimpleUtils.report("Dashboard Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Dashboard Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isDashboardConsoleMenuDisplay;
+	}
+
+	@FindBy(css = "div.console-navigation-item-label.Team")
+	private WebElement teamConsoleMenu;
+	@Override
+	public boolean isTeamConsoleMenuDisplay() throws Exception {
+		boolean isTeamConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(teamConsoleMenu, 5)) {
+				isTeamConsoleMenuDisplay = true;
+				SimpleUtils.report("Team Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Team Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isTeamConsoleMenuDisplay;
+	}
+
+	@FindBy(css = "div.console-navigation-item-label.Schedule")
+	private WebElement scheduleConsoleMenu;
+
+	@Override
+	public boolean isScheduleConsoleMenuDisplay() throws Exception {
+		boolean isScheduleConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(scheduleConsoleMenu, 5)) {
+				isScheduleConsoleMenuDisplay = true;
+				SimpleUtils.report("Schedule Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Schedule Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isScheduleConsoleMenuDisplay;
+	}
+
+
+	@FindBy(css = "div.console-navigation-item-label.Analytics")
+	private WebElement analyticsConsoleMenu;
+
+	@Override
+	public boolean isAnalyticsConsoleMenuDisplay() throws Exception {
+		boolean isAnalyticsConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(analyticsConsoleMenu, 5)) {
+				isAnalyticsConsoleMenuDisplay = true;
+				SimpleUtils.report("Analytics Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Analytics Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isAnalyticsConsoleMenuDisplay;
+	}
+
+
+	@FindBy(css = "div.console-navigation-item-label.Inbox")
+	private WebElement inboxConsoleMenu;
+
+	@Override
+	public boolean isInboxConsoleMenuDisplay() throws Exception {
+		boolean isInboxConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(inboxConsoleMenu, 5)) {
+				isInboxConsoleMenuDisplay = true;
+				SimpleUtils.report("Inbox Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Inbox Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isInboxConsoleMenuDisplay;
+	}
+
+
+	@FindBy(css = "div.console-navigation-item-label.Admin")
+	private WebElement adminConsoleMenu;
+
+	@Override
+	public boolean isAdminConsoleMenuDisplay() throws Exception {
+		boolean isAdminConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(adminConsoleMenu, 5)) {
+				isAdminConsoleMenuDisplay = true;
+				SimpleUtils.report("Admin Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Admin Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isAdminConsoleMenuDisplay;
+	}
+
+	@Override
+	public void clickOnAdminConsoleMenu() throws Exception {
+		try{
+			if(isElementLoaded(adminConsoleMenu, 5)) {
+				click(adminConsoleMenu);
+				SimpleUtils.report("Admin Console Menu been clicked Successfully!");
+			} else
+				SimpleUtils.report("Admin Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+	@FindBy(css = "div.console-navigation-item-label.Integration")
+	private WebElement integrationConsoleMenu;
+
+	@Override
+	public boolean isIntegrationConsoleMenuDisplay() throws Exception {
+		boolean isIntegrationConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(integrationConsoleMenu, 5)) {
+				isIntegrationConsoleMenuDisplay = true;
+				SimpleUtils.report("Integration Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Integration Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isIntegrationConsoleMenuDisplay;
+	}
+
+	@Override
+	public void clickOnIntegrationConsoleMenu() throws Exception {
+		try{
+			if(isElementLoaded(integrationConsoleMenu,5)) {
+				click(integrationConsoleMenu);
+				SimpleUtils.report("Integration Console Menu been clicked Successfully!");
+			} else
+				SimpleUtils.report("Integration Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+	@FindBy(css = "div.console-navigation-item-label.Controls")
+	private WebElement controlsConsoleMenu;
+
+	@Override
+	public boolean isControlsConsoleMenuDisplay() throws Exception {
+		boolean isControlsConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(controlsConsoleMenu, 5)) {
+				isControlsConsoleMenuDisplay = true;
+				SimpleUtils.report("Controls Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Controls Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isControlsConsoleMenuDisplay;
+	}
+
+
+	@FindBy(css = "div.console-navigation-item-label.Logout")
+	private WebElement logoutConsoleMenu;
+
+	@Override
+	public boolean isLogoutConsoleMenuDisplay() throws Exception {
+		boolean isLogoutConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(logoutConsoleMenu, 5)) {
+				isLogoutConsoleMenuDisplay = true;
+				SimpleUtils.report("Logout Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Logout Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isLogoutConsoleMenuDisplay;
+	}
+
+
+	@FindBy(css = "div.console-navigation-item-label.Timesheet")
+	private WebElement timesheetConsoleMenu;
+
+	@Override
+	public boolean isTimesheetConsoleMenuDisplay() throws Exception {
+		boolean isTimesheetConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(timesheetConsoleMenu, 5)) {
+				isTimesheetConsoleMenuDisplay = true;
+				SimpleUtils.report("Timesheet Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Timesheet Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isTimesheetConsoleMenuDisplay;
+	}
+
+	@FindBy(css = "div[ng-if=\"hasViewAdminPermission()\"]")
+	private WebElement adminPanel;
+	@FindBy(css = "div[ng-show=\"subNavigation.canShowSelf\"]")
+	private WebElement subNavigation;
+
+	@Override
+	public void verifyAdminPageIsLoaded() throws Exception {
+		try{
+			if(isElementLoaded(adminPanel,5)
+					&& isElementLoaded(subNavigation, 5)) {
+				SimpleUtils.pass("Admin page is loaded Successfully!");
+			} else
+				SimpleUtils.fail("Admin page not loaded Successfully!", false);
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@FindBy(css = "table[ng-if=\"configs.length\"]")
+	private WebElement integrationConfigTable;
+	@Override
+	public void verifyIntegrationPageIsLoaded() throws Exception {
+		try{
+			if(isElementLoaded(integrationConfigTable, 5)
+					&&isElementLoaded(subNavigation, 5)) {
+				SimpleUtils.pass("Admin page is loaded Successfully!");
+			} else
+				SimpleUtils.fail("Admin page not loaded Successfully!", false);
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@FindBy(css = "div.header-navigation-label")
+	private WebElement headerNavigation;
+
+	@Override
+	public void verifyHeaderNavigationMessage(String headerNavigationMessage) throws Exception {
+		try{
+			if(isElementLoaded(headerNavigation, 5)
+					&&headerNavigation.getText().equalsIgnoreCase(headerNavigationMessage)) {
+				SimpleUtils.pass("Header navigation message display correctly! ");
+			} else
+				SimpleUtils.fail("Header navigation message not display correctly!", false);
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+	@FindBy(css = "[class=\"wm-ignore-css-reset\"]")
+	private WebElement closeNewFeatureEnhancementsButton;
+
+	@Override
+	public void closeNewFeatureEnhancementsPopup() throws Exception {
+		try{
+			if(isElementLoaded(closeNewFeatureEnhancementsButton, 5)) {
+				click(closeNewFeatureEnhancementsButton);
+				SimpleUtils.pass("New Feature Enhancements Popup been closed successfully! ");
+			} else
+				SimpleUtils.report("New Feature Enhancements Popup is not loaded!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
 
 }

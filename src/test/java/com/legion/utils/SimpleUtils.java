@@ -43,6 +43,7 @@ public class SimpleUtils {
 	static HashMap<String,String> testSuites = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestSuitesFile.json");
 
 	static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
+	public static String testSuiteIDTemp = "0";
 
 	private static HashMap< String,Object[][]> userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/legionUsers.json");
 
@@ -901,9 +902,11 @@ public class SimpleUtils {
 			APIClient client = new APIClient(testRailURL);
 			client.setUser(testRailUser);
 			client.setPassword(testRailPassword);
-			testCaseIDList = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client);
+			testCaseIDList = MyThreadLocal.getTestCaseIDList();
+			testCaseIDList.addAll(getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client));
+			MyThreadLocal.setTestCaseIDList(testCaseIDList);
 //				addNUpdateTestCaseIntoTestRun1(testName,sectionID,testCaseID,context);
-			addNUpdateTestCaseIntoTestRunSample(testName,context);
+			addNUpdateTestCaseIntoTestRunSample(testName,context,testCaseIDList);
 		}catch(Exception e){
 			System.err.println(e.getMessage());
 		}
@@ -1639,7 +1642,7 @@ public class SimpleUtils {
 	}
 
 
-	public static int addNUpdateTestCaseIntoTestRunSample(String testName, ITestContext context)
+	public static int addNUpdateTestCaseIntoTestRunSample(String testName, ITestContext context, List<Integer> testCaseIDList)
 	{
 		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
 		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
@@ -1653,7 +1656,15 @@ public class SimpleUtils {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date =null;
 		String strDate = null;
-		String addResultString = "add_run/" + testRailProjectID;
+		String addResultString = "";
+		String name = "";
+		if(!testSuiteIDTemp.equalsIgnoreCase(MyThreadLocal.getTestSuiteID())){
+			testSuiteIDTemp = MyThreadLocal.getTestSuiteID();
+			addResultString = "add_run/" + testRailProjectID;
+		} else {
+			addResultString = "update_run/" + MyThreadLocal.getTestRailRunId();
+		}
+
 		try {
 			// Make a connection with TestRail Server
 			APIClient client = new APIClient(testRailURL);
@@ -1684,9 +1695,12 @@ public class SimpleUtils {
 //					cases.add(singleCase);
 //				}
 //				data.put("title", testName);
+			//data.put("suite_id", suiteId);
+			data.put("include_all", false);
 			data.put("suite_id", suiteId);
-			data.put("name", "Automation Smoke "+ MyThreadLocal.getTestSuiteName() + " " + strDate);
-			data.put("include_all", true);
+			name = "Automation Smoke "+ MyThreadLocal.getTestSuiteName() + " " + strDate;
+			data.put("name", name);
+			data.put("case_ids", testCaseIDList);
 			String responseReq = JSONValue.toJSONString(data);
 			JSONObject jSONObject = (JSONObject) client.sendPost(addResultString, data);
 			long longTestRailRunId = (Long) jSONObject.get("id");

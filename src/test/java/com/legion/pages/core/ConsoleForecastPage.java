@@ -1212,6 +1212,9 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			if (isElementLoaded(saveForecastBtn,10)){
 				click(saveForecastBtn);
 				SimpleUtils.pass("saveForecastBtn button is clicked!");
+				if (isElementLoaded(updateForecastValueDialog.findElement(By.cssSelector(".modal-instance-button.confirm")),10)){
+					click(updateForecastValueDialog.findElement(By.cssSelector(".modal-instance-button.confirm")));
+				}
 			} else {
 				SimpleUtils.fail("saveForecastBtn button is not loaded!", false);
 			}
@@ -1222,6 +1225,8 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 	@FindBy(css = "g[id*=\"bar-edit-handle-wrapper\"]")
 	private List<WebElement> forecastBars;
+	@FindBy(css = "svg[id=\"forecast-prediction\"] g g:not(.tick):not([fill=\"none\"])")
+	private List<WebElement> forecastBarsInViewMode;
 
 	//index value range: 0-6
 	@Override
@@ -1268,20 +1273,73 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		String info = "";
 		try{
 			if (areListElementVisible(forecastBarsPath,10)){
-				for (WebElement bar: forecastBarsPath){
-					if (bar.findElement(By.xpath("./..")).getAttribute("id").contains(index)){
-						moveToElementAndClick(bar);
+				for (WebElement bar: forecastBarsPath){//.findElement(By.xpath("./.."))
+					if (bar.getAttribute("id").contains(index)){
+						scrollToElement(bar);
+						mouseToElement(bar);
+						waitForSeconds(2);
 						break;
 					}
+				}
+				if (isElementLoaded(tooltipForForecastBar,20)){
+					//String s = "2 Wed Forecast 527 Legion 527 Edited Comparison N/A Actual";
+					info = tooltipForForecastBar.getText().replace("\n", " ");
+				} else {
+					//info = "x x Forecast 0 Legion 0 Edited Comparison N/A Actual";
+					SimpleUtils.fail("tooltipForForecastBar is not loaded!", false);
+				}
+			}else if (areListElementVisible(forecastBarsInViewMode,10)){
+				for (WebElement bar: forecastBarsInViewMode){//.findElement(By.xpath("./.."))
+					if (bar.getAttribute("id").contains(index)){
+						scrollToElement(bar);
+						mouseToElement(bar);
+						waitForSeconds(2);
+						break;
+					}
+				}
+				if (isElementLoaded(tooltipForForecastBar,20)){
+					//String s = "2 Wed Forecast 527 Legion 527 Edited Comparison N/A Actual";
+					info = tooltipForForecastBar.getText().replace("\n", " ");
+				} else {
+					SimpleUtils.fail("tooltipForForecastBar is not loaded!", false);
 				}
 			} else {
 				SimpleUtils.fail("forecastBars are not loaded!", false);
 			}
-			if (isElementLoaded(tooltipForForecastBar,10)){
-				//String s = "2 Wed Forecast 527 Legion 527 Edited Comparison N/A Actual";
-				info = tooltipForForecastBar.getText().replace("\n", " ");
+		} catch(Exception e){
+			System.err.println();
+		}
+		return info;
+	}
+
+	//@Override
+	private List<String> getTooltipInfos() {
+		List<String> info = new ArrayList<>();
+		try{
+			if (areListElementVisible(forecastBarsPath,10)){
+				for (WebElement bar: forecastBarsPath){//.findElement(By.xpath("./.."))
+					scrollToElement(bar);
+					mouseToElement(bar);
+					if (isElementLoaded(tooltipForForecastBar,20)){
+						//String s = "x x Forecast 0 Legion 0 Edited Comparison N/A Actual";
+						info.add(tooltipForForecastBar.getText().replace("\n", " "));
+					} else {
+						SimpleUtils.fail("tooltipForForecastBar is not loaded!", false);
+					}
+				}
+			} else if (areListElementVisible(forecastBarsInViewMode,10)){
+				for (WebElement bar: forecastBarsInViewMode){//.findElement(By.xpath("./.."))
+					scrollToElement(bar);
+					mouseToElement(bar);
+					if (isElementLoaded(tooltipForForecastBar,20)){
+						//String s = "2 Wed Forecast 527 Legion 527 Edited Comparison N/A Actual";
+						info.add(tooltipForForecastBar.getText().replace("\n", " "));
+					} else {
+						SimpleUtils.fail("tooltipForForecastBar is not loaded!", false);
+					}
+				}
 			} else {
-				SimpleUtils.fail("tooltipForForecastBar is not loaded!", false);
+				SimpleUtils.fail("forecastBars are not loaded!", false);
 			}
 		} catch(Exception e){
 			System.err.println();
@@ -1321,24 +1379,68 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	}
 
 	@Override
-	public String getLegionPeakShopperFromForecastGraph() {
-		int legionPeakShopperInTooltip =0;
-		String dayIndex = "";
+	public void verifyLegionPeakShopperFromForecastGraphInWeekView() {
 		try{
-			for (int i =1; i<7; i++){
-				String legionPeakShopperTemp = getTooltipInfo(String.valueOf(i)).split(" ")[3];
-				if (legionPeakShopperTemp!=null && !legionPeakShopperTemp.equals("") && Integer.parseInt(legionPeakShopperTemp)>legionPeakShopperInTooltip){
-					legionPeakShopperInTooltip = Integer.parseInt(legionPeakShopperTemp);
-					dayIndex = getTooltipInfo(String.valueOf(i));
+			float legionPeakShopperInTooltip =0;
+			float total =0;
+			List<String> tooltipInfos = getTooltipInfos();
+			HashMap<String, Float> insightDataInWeek = getInsightDataInShopperWeekView();
+			String dayIndex = "";
+			for (int i =0; i<tooltipInfos.size(); i++){
+				String legionPeakShopperTemp = tooltipInfos.get(i).split(" ")[3];
+				total = total + Float.parseFloat(legionPeakShopperTemp);
+				if (legionPeakShopperTemp!=null && !legionPeakShopperTemp.equals("") && Float.parseFloat(legionPeakShopperTemp)>legionPeakShopperInTooltip){
+					legionPeakShopperInTooltip = Float.parseFloat(legionPeakShopperTemp);
+					dayIndex = tooltipInfos.get(i).split(" ")[1];
 				}
 			}
-
+			if (insightDataInWeek.containsKey(getDayCompletedInfo(dayIndex))){
+				SimpleUtils.pass("Peak day info is correct!");
+			} else {
+				SimpleUtils.fail("Peak day info is incorrect! Value from tooltips: "+dayIndex, false);
+			}
+			if (insightDataInWeek.get("peakShoppers")==legionPeakShopperInTooltip){
+				SimpleUtils.pass("peakShoppers info is correct!");
+			} else {
+				SimpleUtils.fail("peakShoppers info is incorrect! Value from tooltips: "+legionPeakShopperInTooltip, false);
+			}
+			if (insightDataInWeek.get("totalShoppers")==total){
+				SimpleUtils.pass("totalShoppers info is correct!");
+			} else {
+				SimpleUtils.fail("totalShoppers info is incorrect! Value from tooltips: "+total, false);
+			}
 		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(),false);
 			System.err.println();
 		}
-		return dayIndex + " " + legionPeakShopperInTooltip;
 	}
 
+
+	private String getDayCompletedInfo(String abbreviationDay){
+		String result= null;
+		if (abbreviationDay.equalsIgnoreCase("sun")){
+			result = "Sunday";
+		}
+		if (abbreviationDay.equalsIgnoreCase("mon")){
+			result = "Monday";
+		}
+		if (abbreviationDay.equalsIgnoreCase("tue")){
+			result = "Tuesday";
+		}
+		if (abbreviationDay.equalsIgnoreCase("wed")){
+			result = "Wednesday";
+		}
+		if (abbreviationDay.equalsIgnoreCase("thu")){
+			result = "Thursday";
+		}
+		if (abbreviationDay.equalsIgnoreCase("fri")){
+			result = "Friday";
+		}
+		if (abbreviationDay.equalsIgnoreCase("sat")){
+			result = "Saturday";
+		}
+		return result;
+	}
 	// Added by Julie
 	@FindBy (css = "[ng-if=\"isEdit\"].pull-right")
 	private WebElement noteInEditMode;

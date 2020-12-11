@@ -40,5 +40,6 @@ public interface InboxPage {
     public void addComment(String comment) throws Exception;
     public void verifyComment(String comment, String name) throws Exception;
     public void verifyVSLTooltip() throws Exception;
+    public boolean isAnnouncementListPanelDisplay() throws Exception;
 
 }

@@ -529,4 +529,5 @@ public interface SchedulePage {
 	public int getTheIndexOfEditedShift() throws Exception;
 	public void navigateToTheRightestSmartCard() throws Exception;
 	public boolean isEditMealBreakEnabled() throws Exception;
+	public void verifyTMSchedulePanelDisplay() throws Exception;
 }
