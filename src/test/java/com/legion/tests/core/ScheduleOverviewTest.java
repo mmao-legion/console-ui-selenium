@@ -141,7 +141,9 @@ public class ScheduleOverviewTest extends TestBase{
 		//	user can click on Schedule week which will navigate to Schedule page
 		scheduleOverviewPage.clickOnCurrentWeekToOpenSchedule();
 		SimpleUtils.pass("user can click on Schedule week which will navigate to Schedule page");
-		if (schedulePage.isGenerateButtonLoaded()){
+
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (!isWeekGenerated){
 			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
 		HashMap<String, Float> scheduleSmartCardHoursWages = schedulePage.getScheduleBudgetedHoursInScheduleSmartCard();
