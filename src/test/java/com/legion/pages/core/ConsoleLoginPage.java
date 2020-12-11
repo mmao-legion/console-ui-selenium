@@ -81,7 +81,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     
     public void logOut() throws Exception
     {
-    	if(isElementLoaded(logoutButton))
+    	if(isElementLoaded(logoutButton, 10))
     	{
     		clickTheElement(logoutButton);
     	}

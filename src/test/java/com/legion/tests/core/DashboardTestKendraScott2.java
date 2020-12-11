@@ -16,6 +16,8 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
+import static com.legion.utils.MyThreadLocal.getDriver;
+
 public class DashboardTestKendraScott2 extends TestBase{
 	
 	private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
@@ -345,6 +347,13 @@ public class DashboardTestKendraScott2 extends TestBase{
 		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 		scheduleOverviewPage.loadScheduleOverview();
 		dashboardPage.verifyHeaderNavigationMessage("Schedule");
+
+		//Check TimeSheet console menu is display
+		if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))){
+			SimpleUtils.assertOnFail("Schedule console menu not loaded Successfully!",dashboardPage.isTimesheetConsoleMenuDisplay() , false);
+			TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+			SimpleUtils.assertOnFail("Schedule console menu not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+		}
 
 		//Check Analytics console menu is display
 		SimpleUtils.assertOnFail("Analytics console menu not loaded Successfully!",dashboardPage.isAnalyticsConsoleMenuDisplay() , false);
