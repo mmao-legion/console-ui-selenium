@@ -1328,4 +1328,22 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
+
+
+	@FindBy(css = "[class=\"wm-ignore-css-reset\"]")
+	private WebElement closeNewFeatureEnhancementsButton;
+
+	@Override
+	public void closeNewFeatureEnhancementsPopup() throws Exception {
+		try{
+			if(isElementLoaded(closeNewFeatureEnhancementsButton, 5)) {
+				click(closeNewFeatureEnhancementsButton);
+				SimpleUtils.pass("New Feature Enhancements Popup been closed successfully! ");
+			} else
+				SimpleUtils.report("New Feature Enhancements Popup is not loaded!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
 }

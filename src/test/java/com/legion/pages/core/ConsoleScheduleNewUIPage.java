@@ -12486,5 +12486,21 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Operating Hours not loaded Successfully!", false);
         }
     }
+
+
+
+    @FindBy(css = "[ng-class=\"{'schedule-view-small-padding': controlPanel.isGenerateSchedleView}\"]")
+    private WebElement tmSchedulePanel;
+    @Override
+    public void verifyTMSchedulePanelDisplay() throws Exception {
+        try{
+            if(isElementLoaded(tmSchedulePanel, 5)){
+                SimpleUtils.pass("TM schedule panel is loaded successfully! ");
+            } else
+                SimpleUtils.fail("TM schedule panel not loaded successfully! ", false);
+        }catch(Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
 

@@ -3281,4 +3281,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         return false;
     }
 
+    @Override
+    public void verifyTMSchedulePanelDisplay() throws Exception {
+
+    }
+
 }

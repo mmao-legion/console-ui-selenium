@@ -75,4 +75,5 @@ public interface DashboardPage {
     public void verifyAdminPageIsLoaded() throws Exception;
     public void verifyIntegrationPageIsLoaded() throws Exception;
     public void verifyHeaderNavigationMessage(String headerNavigationMessage) throws Exception;
+    public void closeNewFeatureEnhancementsPopup() throws Exception;
 }
