@@ -242,7 +242,7 @@ public abstract class TestBase {
         caps.setCapability("video", true);
         caps.setCapability("console", true);
 
-//        caps.setCapability("selenium_version","4.0.0-alpha-2");
+        caps.setCapability("selenium_version","3.141.59");
         caps.setCapability("chrome.driver","87.0");
         Assert.assertNotNull(url,"Error grid url is not configured, please review it in envCFg.json file and add it.");
         try {
