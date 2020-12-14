@@ -148,19 +148,23 @@ public class SchedulingMinorTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate Scheduling Minors rules (Ages 14 & 15 and Ages 16 & 17) can be edit successfully")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyEditMinorRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+    public void verifyEditMinorRulesAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
 
-        controlsNewUIPage.clickOnControlsComplianceSection();
-        SimpleUtils.assertOnFail("collaboration page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
-        controlsNewUIPage.setSchedulingMinorRuleFor14N15("9:30 AM", "7:30 PM", "15", "6", "3", "7");
-        controlsNewUIPage.setSchedulingMinorRuleFor16N17("10:00 AM", "7:00 PM", "20", "7", "5", "6");
+            controlsNewUIPage.clickOnControlsComplianceSection();
+            SimpleUtils.assertOnFail("collaboration page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
+            controlsNewUIPage.setSchedulingMinorRuleFor14N15("9:30 AM", "7:30 PM", "15", "6", "3", "7");
+            controlsNewUIPage.setSchedulingMinorRuleFor16N17("10:00 AM", "7:00 PM", "20", "7", "5", "6");
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -168,130 +172,134 @@ public class SchedulingMinorTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the warning message and violation when minor's shift exceed the weekend or holiday hours")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyWarningMessageForExceedWeekendHrsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict("Demo District");
-        locationSelectorPage.changeLocation("Santana Row");
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+    public void verifyWarningMessageForExceedWeekendHrsAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict("Demo District");
+            locationSelectorPage.changeLocation("Santana Row");
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-        schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
-        boolean isWeekGenerated = schedulePage.isWeekGenerated();
-        if (isWeekGenerated){
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
-        }
-        String holidaySmartCard = "HOLIDAYS";
-        List<String> holidays = null;
-        if (schedulePage.isSpecificSmartCardLoaded(holidaySmartCard)){
-            schedulePage.clickLinkOnSmartCardByName("View All");
-            holidays = schedulePage.getHolidaysOfCurrentWeek();
-            //close popup window
-            schedulePage.closeAnalyzeWindow();
-        }
-        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "9:00PM");
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        String firstNameOfTM1 = "Minor14";
-        String firstNameOfTM2 = "Minor16";
-        String lastNameOfTM = "RC";
-        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
-        schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
-        //Create new shift for TM1
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.clearAllSelectedDays();
-        schedulePage.selectDaysByIndex(0,0,0);
-        //set shift time as 10:00 AM - 6:00 PM
-        schedulePage.moveSliderAtCertainPoint("6", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-        schedulePage.selectWorkRole("Lift Maintenance");
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(firstNameOfTM1 + " " + lastNameOfTM.substring(0,1));
-        schedulePage.verifyMessageIsExpected("minor daily max 6 hrs");
-        schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
-        if(schedulePage.ifWarningModeDisplay()){
-            String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
-            if (warningMessage.contains("daily schedule should not exceed 6 hours")){
-                SimpleUtils.pass("Minor warning message for exceed the weekend or holiday hours displays");
-            } else {
-                SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays", false);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.clickOnAssignAnywayButton();
-        } else {
-            SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays",false);
-        }
-        schedulePage.clickOnOfferOrAssignBtn();
-        schedulePage.saveSchedule();
-        WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
-        String test = schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString();
-        if (newAddedShift != null) {
-            SimpleUtils.assertOnFail("Get new added shift failed",schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor daily max 6 hrs"), false);
-        } else {
-            SimpleUtils.fail("Get new added shift failed", false);
-        }
+            String holidaySmartCard = "HOLIDAYS";
+            List<String> holidays = null;
+            if (schedulePage.isSpecificSmartCardLoaded(holidaySmartCard)){
+                schedulePage.clickLinkOnSmartCardByName("View All");
+                holidays = schedulePage.getHolidaysOfCurrentWeek();
+                //close popup window
+                schedulePage.closeAnalyzeWindow();
+            }
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "9:00PM");
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            String firstNameOfTM1 = "Minor14";
+            String firstNameOfTM2 = "Minor16";
+            String lastNameOfTM = "RC";
+            schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+            schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            //Create new shift for TM1
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.clearAllSelectedDays();
+            schedulePage.selectDaysByIndex(0,0,0);
+            //set shift time as 10:00 AM - 6:00 PM
+            schedulePage.moveSliderAtCertainPoint("6", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchTeamMemberByName(firstNameOfTM1 + " " + lastNameOfTM.substring(0,1));
+            schedulePage.verifyMessageIsExpected("minor daily max 6 hrs");
+            schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
+            if(schedulePage.ifWarningModeDisplay()){
+                String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
+                if (warningMessage.contains("daily schedule should not exceed 6 hours")){
+                    SimpleUtils.pass("Minor warning message for exceed the weekend or holiday hours displays");
+                } else {
+                    SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays", false);
+                }
+                schedulePage.clickOnAssignAnywayButton();
+            } else {
+                SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays",false);
+            }
+            schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.saveSchedule();
+            WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+            String test = schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString();
+            if (newAddedShift != null) {
+                SimpleUtils.assertOnFail("Get new added shift failed",schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor daily max 6 hrs"), false);
+            } else {
+                SimpleUtils.fail("Get new added shift failed", false);
+            }
 
 
-        //Create new shift for TM2, check create shift on holiday
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.clearAllSelectedDays();
-        if (holidays!=null){
-            //i: 1-5 weekday
-            int index =1;
-            boolean flag = false;
-            for (;index<=5; index++){
-                for (String s: holidays){
-                    if (s.contains(schedulePage.getWeekDayTextByIndex(index))){
-                        flag = true;
+            //Create new shift for TM2, check create shift on holiday
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.clearAllSelectedDays();
+            if (holidays!=null){
+                //i: 1-5 weekday
+                int index =1;
+                boolean flag = false;
+                for (;index<=5; index++){
+                    for (String s: holidays){
+                        if (s.contains(schedulePage.getWeekDayTextByIndex(index))){
+                            flag = true;
+                        }
+                    }
+                    if (flag){
+                        break;
                     }
                 }
-                if (flag){
-                    break;
-                }
-            }
-            schedulePage.selectDaysByIndex(index,index,index);
-        } else {
-            schedulePage.selectDaysByIndex(0,0,0);
-        }
-
-
-        //set shift time as 10:00 AM - 6:00 PM
-        schedulePage.moveSliderAtCertainPoint("6", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-        schedulePage.selectWorkRole("Lift Maintenance");
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(firstNameOfTM2 + " " + lastNameOfTM.substring(0,1));
-        schedulePage.verifyMessageIsExpected("minor daily max 7 hrs");
-        schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
-        if(schedulePage.ifWarningModeDisplay()){
-            String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
-            if (warningMessage.contains("daily schedule should not exceed 7 hours")){
-                SimpleUtils.pass("Minor warning message for exceed the weekend or holiday hours displays");
+                schedulePage.selectDaysByIndex(index,index,index);
             } else {
-                SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays", false);
+                schedulePage.selectDaysByIndex(0,0,0);
             }
-            schedulePage.clickOnAssignAnywayButton();
-        } else {
-            SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays",false);
-        }
-        schedulePage.clickOnOfferOrAssignBtn();
-        schedulePage.saveSchedule();
-        newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM2).get(0));
-        if (newAddedShift != null) {
-            SimpleUtils.assertOnFail("Get new added shift failed",
-                    schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor daily max 7 hrs"), false);
-        } else {
-            SimpleUtils.fail("Get new added shift failed", false);
+
+
+            //set shift time as 10:00 AM - 6:00 PM
+            schedulePage.moveSliderAtCertainPoint("6", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchTeamMemberByName(firstNameOfTM2 + " " + lastNameOfTM.substring(0,1));
+            schedulePage.verifyMessageIsExpected("minor daily max 7 hrs");
+            schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
+            if(schedulePage.ifWarningModeDisplay()){
+                String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
+                if (warningMessage.contains("daily schedule should not exceed 7 hours")){
+                    SimpleUtils.pass("Minor warning message for exceed the weekend or holiday hours displays");
+                } else {
+                    SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays", false);
+                }
+                schedulePage.clickOnAssignAnywayButton();
+            } else {
+                SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays",false);
+            }
+            schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.saveSchedule();
+            newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM2).get(0));
+            if (newAddedShift != null) {
+                SimpleUtils.assertOnFail("Get new added shift failed",
+                        schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor daily max 7 hrs"), false);
+            } else {
+                SimpleUtils.fail("Get new added shift failed", false);
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
@@ -300,127 +308,131 @@ public class SchedulingMinorTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the warning message and violation when minor's shift exceed the weekday hours")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict("Demo District");
-        locationSelectorPage.changeLocation("Santana Row");
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+    public void verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict("Demo District");
+            locationSelectorPage.changeLocation("Santana Row");
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-        schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
-        boolean isWeekGenerated = schedulePage.isWeekGenerated();
-        if (isWeekGenerated){
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
-        }
-        String holidaySmartCard = "HOLIDAYS";
-        List<String> holidays = null;
-        if (schedulePage.isSpecificSmartCardLoaded(holidaySmartCard)){
-            schedulePage.clickLinkOnSmartCardByName("View All");
-            holidays = schedulePage.getHolidaysOfCurrentWeek();
-            //close popup window
-            schedulePage.closeAnalyzeWindow();
-        }
-        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "9:00PM");
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        String firstNameOfTM1 = "Minor14";
-        String firstNameOfTM2 = "Minor16";
-        String lastNameOfTM = "RC";
-        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
-        schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
-        //Create new shift for TM1
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.clearAllSelectedDays();
-        int index =1;
-        if (holidays!=null){
-            //i: 1-5 weekday
-            boolean flag = false;
-            for (;index<=5; index++){
-                for (String s: holidays){
-                    if (s.contains(schedulePage.getWeekDayTextByIndex(index))){
-                        flag = true;
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            String holidaySmartCard = "HOLIDAYS";
+            List<String> holidays = null;
+            if (schedulePage.isSpecificSmartCardLoaded(holidaySmartCard)){
+                schedulePage.clickLinkOnSmartCardByName("View All");
+                holidays = schedulePage.getHolidaysOfCurrentWeek();
+                //close popup window
+                schedulePage.closeAnalyzeWindow();
+            }
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "9:00PM");
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            String firstNameOfTM1 = "Minor14";
+            String firstNameOfTM2 = "Minor16";
+            String lastNameOfTM = "RC";
+            schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+            schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            //Create new shift for TM1
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.clearAllSelectedDays();
+            int index =1;
+            if (holidays!=null){
+                //i: 1-5 weekday
+                boolean flag = false;
+                for (;index<=5; index++){
+                    for (String s: holidays){
+                        if (s.contains(schedulePage.getWeekDayTextByIndex(index))){
+                            flag = true;
+                        }
+                    }
+                    if (!flag){
+                        break;
                     }
                 }
-                if (!flag){
-                    break;
+            }
+            schedulePage.selectDaysByIndex(index,index,index);
+            //set shift time as 10:00 AM - 6:00 PM
+            schedulePage.moveSliderAtCertainPoint("4", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchTeamMemberByName(firstNameOfTM1 + " " + lastNameOfTM.substring(0,1));
+            schedulePage.verifyMessageIsExpected("minor daily max 3 hrs");
+            schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
+            if(schedulePage.ifWarningModeDisplay()){
+                String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
+                if (warningMessage.contains("daily schedule should not exceed 3 hours")){
+                    SimpleUtils.pass("Minor warning message for exceed the weekend or holiday hours displays");
+                } else {
+                    SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays", false);
                 }
-            }
-        }
-        schedulePage.selectDaysByIndex(index,index,index);
-        //set shift time as 10:00 AM - 6:00 PM
-        schedulePage.moveSliderAtCertainPoint("4", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-        schedulePage.selectWorkRole("Lift Maintenance");
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(firstNameOfTM1 + " " + lastNameOfTM.substring(0,1));
-        schedulePage.verifyMessageIsExpected("minor daily max 3 hrs");
-        schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
-        if(schedulePage.ifWarningModeDisplay()){
-            String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
-            if (warningMessage.contains("daily schedule should not exceed 3 hours")){
-                SimpleUtils.pass("Minor warning message for exceed the weekend or holiday hours displays");
+                schedulePage.clickOnAssignAnywayButton();
             } else {
-                SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays", false);
+                SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays",false);
             }
-            schedulePage.clickOnAssignAnywayButton();
-        } else {
-            SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays",false);
-        }
-        schedulePage.clickOnOfferOrAssignBtn();
-        schedulePage.saveSchedule();
-        WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
-        String test = schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString();
-        if (newAddedShift != null) {
-            SimpleUtils.assertOnFail("Get new added shift failed",schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor daily max 3 hrs"), false);
-        } else {
-            SimpleUtils.fail("Get new added shift failed", false);
-        }
-
-
-        //Create new shift for TM2
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.clearAllSelectedDays();
-        schedulePage.selectDaysByIndex(index,index,index);
-
-        //set shift time as 10:00 AM - 6:00 PM
-        schedulePage.moveSliderAtCertainPoint("4", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-        schedulePage.selectWorkRole("Lift Maintenance");
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(firstNameOfTM2 + " " + lastNameOfTM.substring(0,1));
-        schedulePage.verifyMessageIsExpected("minor daily max 5 hrs");
-        schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
-        if(schedulePage.ifWarningModeDisplay()){
-            String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
-            if (warningMessage.contains("daily schedule should not exceed 5 hours")){
-                SimpleUtils.pass("Minor warning message for exceed the weekend or holiday hours displays");
+            schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.saveSchedule();
+            WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+            String test = schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString();
+            if (newAddedShift != null) {
+                SimpleUtils.assertOnFail("Get new added shift failed",schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor daily max 3 hrs"), false);
             } else {
-                SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays", false);
+                SimpleUtils.fail("Get new added shift failed", false);
             }
-            schedulePage.clickOnAssignAnywayButton();
-        } else {
-            SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays",false);
-        }
-        schedulePage.clickOnOfferOrAssignBtn();
-        schedulePage.saveSchedule();
-        newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM2).get(0));
-        if (newAddedShift != null) {
-            SimpleUtils.assertOnFail("Get new added shift failed",
-                    schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor daily max 5 hrs"), false);
-        } else {
-            SimpleUtils.fail("Get new added shift failed", false);
+
+
+            //Create new shift for TM2
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.clearAllSelectedDays();
+            schedulePage.selectDaysByIndex(index,index,index);
+
+            //set shift time as 10:00 AM - 6:00 PM
+            schedulePage.moveSliderAtCertainPoint("4", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchTeamMemberByName(firstNameOfTM2 + " " + lastNameOfTM.substring(0,1));
+            schedulePage.verifyMessageIsExpected("minor daily max 5 hrs");
+            schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
+            if(schedulePage.ifWarningModeDisplay()){
+                String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
+                if (warningMessage.contains("daily schedule should not exceed 5 hours")){
+                    SimpleUtils.pass("Minor warning message for exceed the weekend or holiday hours displays");
+                } else {
+                    SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays", false);
+                }
+                schedulePage.clickOnAssignAnywayButton();
+            } else {
+                SimpleUtils.fail("There is no minor warning message display when shift exceed the weekend or holiday hours displays",false);
+            }
+            schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.saveSchedule();
+            newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM2).get(0));
+            if (newAddedShift != null) {
+                SimpleUtils.assertOnFail("Get new added shift failed",
+                        schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor daily max 5 hrs"), false);
+            } else {
+                SimpleUtils.fail("Get new added shift failed", false);
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
