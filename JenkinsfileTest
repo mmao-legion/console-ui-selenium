@@ -9,9 +9,9 @@ pipeline {
     stage('Ops Portal') {
          steps{
          catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-            sh 'mvn clean test -Dsurefire.suiteXmlFiles=testng1.xml'
+            sh 'mvn clean test -Dsurefire.suiteXmlFiles=testng1.xml -Dlegion.report.title="Hydsoft test" -Dlegion.report=ops portal2 test'
          }
-     publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'test-output/AutomationReport', reportFiles: 'htmlReporter.html', reportName: 'OpsPortal_Report', reportTitles: 'Locations Tests'])
+     publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'test-output/AutomationReport', reportFiles: 'index.html', reportName: 'OpsPortal_Report', reportTitles: 'Locations Tests'])
         }
     }
 
