@@ -57,29 +57,30 @@ public class LiquidDashboardTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify UI for common widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyCommonUIOfWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-        // Verifiy Edit mode Dashboard loaded
-        liquidDashboardPage.enterEditMode();
+    public void verifyCommonUIOfWidgetsAsStoreManager(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+            // Verifiy Edit mode Dashboard loaded
+            liquidDashboardPage.enterEditMode();
 
-        //verify switch off Todays_Forcast widget
-        liquidDashboardPage.switchOffWidget(widgetType.Todays_Forecast.getValue());
-        //verify switch on Todays_Forcast widget
-        liquidDashboardPage.switchOnWidget(widgetType.Todays_Forecast.getValue());
-        //verify close Todays_Forcast widget
-        liquidDashboardPage.closeWidget(widgetType.Todays_Forecast.getValue());
-        liquidDashboardPage.switchOnWidget(widgetType.Todays_Forecast.getValue());
+            //verify switch off Todays_Forcast widget
+            liquidDashboardPage.switchOffWidget(widgetType.Todays_Forecast.getValue());
+            //verify switch on Todays_Forcast widget
+            liquidDashboardPage.switchOnWidget(widgetType.Todays_Forecast.getValue());
+            //verify close Todays_Forcast widget
+            liquidDashboardPage.closeWidget(widgetType.Todays_Forecast.getValue());
+            liquidDashboardPage.switchOnWidget(widgetType.Todays_Forecast.getValue());
 
 
-        //verify switch off Timesheet_Approval_Status widget
-        liquidDashboardPage.switchOffWidget(widgetType.Timesheet_Approval_Status.getValue());
-        //verify switch on Timesheet_Approval_Status widget
-        liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Status.getValue());
-        //verify close Timesheet_Approval_Status widget
-        liquidDashboardPage.closeWidget(widgetType.Timesheet_Approval_Status.getValue());
-        liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Status.getValue());
+            //verify switch off Timesheet_Approval_Status widget
+            liquidDashboardPage.switchOffWidget(widgetType.Timesheet_Approval_Status.getValue());
+            //verify switch on Timesheet_Approval_Status widget
+            liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Status.getValue());
+            //verify close Timesheet_Approval_Status widget
+            liquidDashboardPage.closeWidget(widgetType.Timesheet_Approval_Status.getValue());
+            liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Status.getValue());
 
 /*
         //verify switch off Timesheet_Approval_Rate widget
@@ -91,13 +92,13 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Rate.getValue());
 */
 
-        //verify switch off Alerts widget
-        liquidDashboardPage.switchOffWidget(widgetType.Alerts.getValue());
-        //verify switch on Alerts widget
-        liquidDashboardPage.switchOnWidget(widgetType.Alerts.getValue());
-        //verify close Alerts widget
-        liquidDashboardPage.closeWidget(widgetType.Alerts.getValue());
-        liquidDashboardPage.switchOnWidget(widgetType.Alerts.getValue());
+            //verify switch off Alerts widget
+            liquidDashboardPage.switchOffWidget(widgetType.Alerts.getValue());
+            //verify switch on Alerts widget
+            liquidDashboardPage.switchOnWidget(widgetType.Alerts.getValue());
+            //verify close Alerts widget
+            liquidDashboardPage.closeWidget(widgetType.Alerts.getValue());
+            liquidDashboardPage.switchOnWidget(widgetType.Alerts.getValue());
 
 /*
         //verify switch off Swaps_Covers widget
@@ -109,22 +110,22 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.switchOnWidget(widgetType.Swaps_Covers.getValue());
 */
 
-        //verify switch off Starting_Soon widget
-        liquidDashboardPage.switchOffWidget(widgetType.Starting_Soon.getValue());
-        //verify switch on Starting_Soon widget
-        liquidDashboardPage.switchOnWidget(widgetType.Starting_Soon.getValue());
-        //verify close Starting_Soon widget
-        liquidDashboardPage.closeWidget(widgetType.Starting_Soon.getValue());
-        liquidDashboardPage.switchOnWidget(widgetType.Starting_Soon.getValue());
+            //verify switch off Starting_Soon widget
+            liquidDashboardPage.switchOffWidget(widgetType.Starting_Soon.getValue());
+            //verify switch on Starting_Soon widget
+            liquidDashboardPage.switchOnWidget(widgetType.Starting_Soon.getValue());
+            //verify close Starting_Soon widget
+            liquidDashboardPage.closeWidget(widgetType.Starting_Soon.getValue());
+            liquidDashboardPage.switchOnWidget(widgetType.Starting_Soon.getValue());
 
 
-        //verify switch off Schedules widget
-        liquidDashboardPage.switchOffWidget(widgetType.Schedules.getValue());
-        //verify switch on Schedules widget
-        liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
-        //verify close Schedules widget
-        liquidDashboardPage.closeWidget(widgetType.Schedules.getValue());
-        liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
+            //verify switch off Schedules widget
+            liquidDashboardPage.switchOffWidget(widgetType.Schedules.getValue());
+            //verify switch on Schedules widget
+            liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
+            //verify close Schedules widget
+            liquidDashboardPage.closeWidget(widgetType.Schedules.getValue());
+            liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
 
 /*
         //verify switch off Open_Shifts widget
@@ -136,38 +137,41 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.switchOnWidget(widgetType.Open_Shifts.getValue());
 */
 
-        //verify switch off compliance violation widget
-        liquidDashboardPage.switchOffWidget(widgetType.Compliance_Violation.getValue());
-        //verify switch on compliance violation widget
-        liquidDashboardPage.switchOnWidget(widgetType.Compliance_Violation.getValue());
-        //verify close compliance violation widget
-        liquidDashboardPage.closeWidget(widgetType.Compliance_Violation.getValue());
-        liquidDashboardPage.switchOnWidget(widgetType.Compliance_Violation.getValue());
+            //verify switch off compliance violation widget
+            liquidDashboardPage.switchOffWidget(widgetType.Compliance_Violation.getValue());
+            //verify switch on compliance violation widget
+            liquidDashboardPage.switchOnWidget(widgetType.Compliance_Violation.getValue());
+            //verify close compliance violation widget
+            liquidDashboardPage.closeWidget(widgetType.Compliance_Violation.getValue());
+            liquidDashboardPage.switchOnWidget(widgetType.Compliance_Violation.getValue());
 
-        //verify switch off helpful links widget
-        liquidDashboardPage.switchOffWidget(widgetType.Helpful_Links.getValue());
-        //verify switch on helpful links widget
-        liquidDashboardPage.switchOnWidget(widgetType.Helpful_Links.getValue());
-        //verify close helpful links widget
-        liquidDashboardPage.closeWidget(widgetType.Helpful_Links.getValue());
-        liquidDashboardPage.switchOnWidget(widgetType.Helpful_Links.getValue());
-        //verify back button to get out of manage page
-        liquidDashboardPage.verifyBackBtn();
-        //verify if there is update time info icon
-        liquidDashboardPage.saveAndExitEditMode();
-        liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Compliance_Violation.getValue());
-        //liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Open_Shifts.getValue());
-        liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Schedules.getValue());
-        liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Starting_Soon.getValue());
-        //liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Swaps_Covers.getValue());
-        liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Alerts.getValue());
-        //liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Timesheet_Approval_Rate.getValue());
-        liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Timesheet_Approval_Status.getValue());
-        liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Helpful_Links.getValue());
-        liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Todays_Forecast.getValue());
-        //verify search input
-        liquidDashboardPage.enterEditMode();
-        liquidDashboardPage.verifySearchInput(widgetType.Helpful_Links.getValue());
+            //verify switch off helpful links widget
+            liquidDashboardPage.switchOffWidget(widgetType.Helpful_Links.getValue());
+            //verify switch on helpful links widget
+            liquidDashboardPage.switchOnWidget(widgetType.Helpful_Links.getValue());
+            //verify close helpful links widget
+            liquidDashboardPage.closeWidget(widgetType.Helpful_Links.getValue());
+            liquidDashboardPage.switchOnWidget(widgetType.Helpful_Links.getValue());
+            //verify back button to get out of manage page
+            liquidDashboardPage.verifyBackBtn();
+            //verify if there is update time info icon
+            liquidDashboardPage.saveAndExitEditMode();
+            liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Compliance_Violation.getValue());
+            //liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Open_Shifts.getValue());
+            liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Schedules.getValue());
+            liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Starting_Soon.getValue());
+            //liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Swaps_Covers.getValue());
+            liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Alerts.getValue());
+            //liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Timesheet_Approval_Rate.getValue());
+            liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Timesheet_Approval_Status.getValue());
+            liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Helpful_Links.getValue());
+            liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Todays_Forecast.getValue());
+            //verify search input
+            liquidDashboardPage.enterEditMode();
+            liquidDashboardPage.verifySearchInput(widgetType.Helpful_Links.getValue());
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated ="Automated")
@@ -587,84 +591,89 @@ public class LiquidDashboardTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "verify Helpful Links")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyHelpfulLinksWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
-        SimpleUtils.pass("test1");
-        SimpleUtils.fail("test2", false);
-        SimpleUtils.pass("test3");
-        /*        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-        // Verifiy Edit mode Dashboard loaded
-        liquidDashboardPage.enterEditMode();
-        liquidDashboardPage.switchOnWidget(widgetType.Helpful_Links.getValue());
-        //verify there are 5 link at most
-        liquidDashboardPage.verifyEditLinkOfHelpfulLinks();
-        liquidDashboardPage.deleteAllLinks();
-        liquidDashboardPage.saveLinks();
-        liquidDashboardPage.verifyNoLinksOnHelpfulLinks();
-        liquidDashboardPage.verifyEditLinkOfHelpfulLinks();
-        liquidDashboardPage.deleteAllLinks();
-        for (int i=0;i<6;i++){ //the 6th is to verify no add link button
-            liquidDashboardPage.addLinkOfHelpfulLinks();
+    public void verifyHelpfulLinksWidgetsAsStoreManager(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+            // Verifiy Edit mode Dashboard loaded
+            liquidDashboardPage.enterEditMode();
+            liquidDashboardPage.switchOnWidget(widgetType.Helpful_Links.getValue());
+            //verify there are 5 link at most
+            liquidDashboardPage.verifyEditLinkOfHelpfulLinks();
+            liquidDashboardPage.deleteAllLinks();
+            liquidDashboardPage.saveLinks();
+            liquidDashboardPage.verifyNoLinksOnHelpfulLinks();
+            liquidDashboardPage.verifyEditLinkOfHelpfulLinks();
+            liquidDashboardPage.deleteAllLinks();
+            for (int i=0;i<6;i++){ //the 6th is to verify no add link button
+                liquidDashboardPage.addLinkOfHelpfulLinks();
+            }
+            liquidDashboardPage.saveLinks();
+            liquidDashboardPage.verifyEditLinkOfHelpfulLinks();
+            liquidDashboardPage.cancelLinks();
+            liquidDashboardPage.saveAndExitEditMode();
+            //verify links
+            liquidDashboardPage.verifyLinks();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
-        liquidDashboardPage.saveLinks();
-        liquidDashboardPage.verifyEditLinkOfHelpfulLinks();
-        liquidDashboardPage.cancelLinks();
-        liquidDashboardPage.saveAndExitEditMode();
-        //verify links
-        liquidDashboardPage.verifyLinks();
-*/    }
+    }
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Verify Today's Forecast widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyTodayForecastWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-        if (!liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Todays_Forecast.getValue())) {
-            // Verify Edit mode Dashboard loaded
-            liquidDashboardPage.enterEditMode();
-            liquidDashboardPage.switchOnWidget(widgetType.Todays_Forecast.getValue());
-            liquidDashboardPage.saveAndExitEditMode();
-        }
-        //verify there is a graph
-        liquidDashboardPage.verifyIsGraphExistedOnWidget();
-        HashMap <String,Float> dataOnWidget = liquidDashboardPage.getDataOnTodayForecast();
-        //verify view forecast link
-        liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Todays_Forecast.getValue(),linkNames.View_Forecast.getValue());
-        //verify value on widget
-        ForecastPage forecastPage = pageFactory.createForecastPage();
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        HashMap <String,Float> insightDataFromForecastPage = forecastPage.getInsightDataInShopperWeekView();
-        schedulePage.clickOnScheduleSubTab("Schedule");
-        HashMap <String,Float> dataFromSchedule = schedulePage.getScheduleLabelHoursAndWages();
-        String enterprise = SimpleUtils.getEnterprise(this.enterpriseName);
-        if (enterprise.contains("KendraScott2_Enterprise")){
-            if (dataOnWidget.get("demand forecast") <= insightDataFromForecastPage.get("totalShoppers") && dataOnWidget.get("demand forecast") >= insightDataFromForecastPage.get("totalShoppers")){
-                SimpleUtils.pass("Demand Forecast number is correct!");
-            } else {
-                SimpleUtils.fail("today's forecast widget: Demand Forecast number is not correct!",true);
+    public void verifyTodayForecastWidgetsAsStoreManager(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+            if (!liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Todays_Forecast.getValue())) {
+                // Verify Edit mode Dashboard loaded
+                liquidDashboardPage.enterEditMode();
+                liquidDashboardPage.switchOnWidget(widgetType.Todays_Forecast.getValue());
+                liquidDashboardPage.saveAndExitEditMode();
             }
-        } else {
-            if (dataOnWidget.get("demand forecast") <= insightDataFromForecastPage.get("totalItems") && dataOnWidget.get("demand forecast") >= insightDataFromForecastPage.get("totalItems")){
-                SimpleUtils.pass("Demand Forecast number is correct!");
+            //verify there is a graph
+            liquidDashboardPage.verifyIsGraphExistedOnWidget();
+            HashMap <String,Float> dataOnWidget = liquidDashboardPage.getDataOnTodayForecast();
+            //verify view forecast link
+            liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Todays_Forecast.getValue(),linkNames.View_Forecast.getValue());
+            //verify value on widget
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            HashMap <String,Float> insightDataFromForecastPage = forecastPage.getInsightDataInShopperWeekView();
+            schedulePage.clickOnScheduleSubTab("Schedule");
+            HashMap <String,Float> dataFromSchedule = schedulePage.getScheduleLabelHoursAndWages();
+            String enterprise = SimpleUtils.getEnterprise(this.enterpriseName);
+            if (enterprise.contains("KendraScott2_Enterprise")){
+                if (dataOnWidget.get("demand forecast") <= insightDataFromForecastPage.get("totalShoppers") && dataOnWidget.get("demand forecast") >= insightDataFromForecastPage.get("totalShoppers")){
+                    SimpleUtils.pass("Demand Forecast number is correct!");
+                } else {
+                    SimpleUtils.fail("today's forecast widget: Demand Forecast number is not correct!",true);
+                }
             } else {
-                SimpleUtils.fail("today's forecast widget: Demand Forecast number is not correct!",true);
+                if (dataOnWidget.get("demand forecast") <= insightDataFromForecastPage.get("totalItems") && dataOnWidget.get("demand forecast") >= insightDataFromForecastPage.get("totalItems")){
+                    SimpleUtils.pass("Demand Forecast number is correct!");
+                } else {
+                    SimpleUtils.fail("today's forecast widget: Demand Forecast number is not correct!",true);
+                }
             }
-        }
 
-        if (dataOnWidget.get("budget") >= dataFromSchedule.get("budgetedHours")&&dataOnWidget.get("budget") <= dataFromSchedule.get("budgetedHours")){
-            SimpleUtils.pass("budget number is correct!");
-        } else {
-            SimpleUtils.fail("today's forecast widget: budget number is not correct!",true);
-        }
-        if (dataOnWidget.get("scheduled") <= dataFromSchedule.get("scheduledHours")&&dataOnWidget.get("scheduled") >= dataFromSchedule.get("scheduledHours")){
-            SimpleUtils.pass("scheduledHours number is correct!");
-        } else {
-            SimpleUtils.fail("today's forecast widget: scheduledHours number is not correct!",true);
+            if (dataOnWidget.get("budget") >= dataFromSchedule.get("budgetedHours")&&dataOnWidget.get("budget") <= dataFromSchedule.get("budgetedHours")){
+                SimpleUtils.pass("budget number is correct!");
+            } else {
+                SimpleUtils.fail("today's forecast widget: budget number is not correct!",true);
+            }
+            if (dataOnWidget.get("scheduled") <= dataFromSchedule.get("scheduledHours")&&dataOnWidget.get("scheduled") >= dataFromSchedule.get("scheduledHours")){
+                SimpleUtils.pass("scheduledHours number is correct!");
+            } else {
+                SimpleUtils.fail("today's forecast widget: scheduledHours number is not correct!",true);
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
@@ -673,35 +682,39 @@ public class LiquidDashboardTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "verify value on Schedules widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifySchedulesWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-        // Verify Edit mode Dashboard loaded
-        liquidDashboardPage.enterEditMode();
-        liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
-        liquidDashboardPage.saveAndExitEditMode();
+    public void verifySchedulesWidgetsAsStoreManager(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+            // Verify Edit mode Dashboard loaded
+            liquidDashboardPage.enterEditMode();
+            liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
+            liquidDashboardPage.saveAndExitEditMode();
 
-        // Refresh the dashboard to get the value updated
-        dashboardPage.clickOnRefreshButton();
+            // Refresh the dashboard to get the value updated
+            dashboardPage.clickOnRefreshButton();
 
-        //verify view schedules link
-        List<String> resultListOnWidget = liquidDashboardPage.getDataOnSchedulesWidget();
-        liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Schedules.getValue(),linkNames.View_Schedules.getValue());
-        //verify value on widget
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        List<String> resultListInOverview = schedulePage.getOverviewData();
-        if (resultListOnWidget.size()==resultListInOverview.size()){
-            for (int i=0;i<resultListInOverview.size();i++){
-                boolean flag = resultListInOverview.get(i).equals(resultListOnWidget.get(i));
-                if (flag){
-                    SimpleUtils.pass("Schedules widget: Values on widget are consistent with the one in overview");
-                } else {
-                    SimpleUtils.fail("Schedules widget: Values on widget are not consistent with the one in overview!",false);
+            //verify view schedules link
+            List<String> resultListOnWidget = liquidDashboardPage.getDataOnSchedulesWidget();
+            liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Schedules.getValue(),linkNames.View_Schedules.getValue());
+            //verify value on widget
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            List<String> resultListInOverview = schedulePage.getOverviewData();
+            if (resultListOnWidget.size()==resultListInOverview.size()){
+                for (int i=0;i<resultListInOverview.size();i++){
+                    boolean flag = resultListInOverview.get(i).equals(resultListOnWidget.get(i));
+                    if (flag){
+                        SimpleUtils.pass("Schedules widget: Values on widget are consistent with the one in overview");
+                    } else {
+                        SimpleUtils.fail("Schedules widget: Values on widget are not consistent with the one in overview!",false);
+                    }
                 }
+            } else {
+                SimpleUtils.fail("Schedules widget: something wrong with the number of week displayed!",true);
             }
-        } else {
-            SimpleUtils.fail("Schedules widget: something wrong with the number of week displayed!",true);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
@@ -1023,72 +1036,76 @@ public class LiquidDashboardTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Validate Compliance Widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyComplianceViolationWidgetsAsStoreManager(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-        // Verify Edit mode Dashboard loaded
-        liquidDashboardPage.enterEditMode();
-        liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
-        liquidDashboardPage.switchOnWidget(widgetType.Compliance_Violation.getValue());
-        liquidDashboardPage.saveAndExitEditMode();
-        //get the values on widget: violations, total hrs, locations.
-        List<String> resultListOnWidget = liquidDashboardPage.getDataOnComplianceViolationWidget();
-        //verify week info on widget
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        //gp to schedule, get week info of current week, last week and next week.
-        liquidDashboardPage.clickFirstWeekOnSchedulesGoToSchedule();
-        String startDayOfLastWeek = "";
-        if (schedulePage.getActiveWeekText().split("-").length>1){
-            startDayOfLastWeek = schedulePage.getActiveWeekText().split(" - ")[1];
-        }
-        schedulePage.navigateToNextWeek();
-        String startDayOfCurrentWeek = "";
-        if (schedulePage.getActiveWeekText().split("-").length>1){
-            startDayOfCurrentWeek = schedulePage.getActiveWeekText().split(" - ")[1];
-        }
-        schedulePage.navigateToNextWeek();
-        String startDayOfNextWeek = "";
-        if (schedulePage.getActiveWeekText().split("-").length>1){
-            startDayOfNextWeek = schedulePage.getActiveWeekText().split(" - ")[1];
-        }
-
-        //go back to dashboard to verify week info on widget is consistent with the ones in schedule.
-        dashboardPage.navigateToDashboard();
-        liquidDashboardPage.verifyWeekInfoOnWidget(widgetType.Compliance_Violation.getValue(),startDayOfCurrentWeek);
-        //click on carousel to navigate to last week and next week to verify
-        liquidDashboardPage.clickOnCarouselOnWidget(widgetType.Compliance_Violation.getValue(),"left");
-        liquidDashboardPage.verifyWeekInfoOnWidget(widgetType.Compliance_Violation.getValue(),startDayOfLastWeek);
-        liquidDashboardPage.clickOnCarouselOnWidget(widgetType.Compliance_Violation.getValue(),"left");
-        liquidDashboardPage.verifyWeekInfoOnWidget(widgetType.Compliance_Violation.getValue(),startDayOfNextWeek);
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        loginPage.logOut();
-
-        //login as admin, go to DM view, go to compliance page to get the actual value.
-        String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
-        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] teamMemberCredentials = userCredentials.get("InternalAdmin");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                , String.valueOf(teamMemberCredentials[0][2]));
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict("PANDA district");
-        liquidDashboardPage.goToCompliancePage();
-        List<String> resultListInCompliancePage = liquidDashboardPage.getDataInCompliancePage(location);
-        //verify if values are right
-        if (resultListOnWidget.size()==resultListInCompliancePage.size()){
-            boolean falg = false;
-            for (int i=0;i<resultListInCompliancePage.size();i++){
-                falg = resultListInCompliancePage.get(i).equals(resultListOnWidget.get(i));
+    public void verifyComplianceViolationWidgetsAsStoreManager(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+            // Verify Edit mode Dashboard loaded
+            liquidDashboardPage.enterEditMode();
+            liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
+            liquidDashboardPage.switchOnWidget(widgetType.Compliance_Violation.getValue());
+            liquidDashboardPage.saveAndExitEditMode();
+            //get the values on widget: violations, total hrs, locations.
+            List<String> resultListOnWidget = liquidDashboardPage.getDataOnComplianceViolationWidget();
+            //verify week info on widget
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            //gp to schedule, get week info of current week, last week and next week.
+            liquidDashboardPage.clickFirstWeekOnSchedulesGoToSchedule();
+            String startDayOfLastWeek = "";
+            if (schedulePage.getActiveWeekText().split("-").length>1){
+                startDayOfLastWeek = schedulePage.getActiveWeekText().split(" - ")[1];
             }
-            if (falg){
-                SimpleUtils.pass("compliance violation widget: Values on widget are consistent with the ones in compliance page");
+            schedulePage.navigateToNextWeek();
+            String startDayOfCurrentWeek = "";
+            if (schedulePage.getActiveWeekText().split("-").length>1){
+                startDayOfCurrentWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+            }
+            schedulePage.navigateToNextWeek();
+            String startDayOfNextWeek = "";
+            if (schedulePage.getActiveWeekText().split("-").length>1){
+                startDayOfNextWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+            }
+
+            //go back to dashboard to verify week info on widget is consistent with the ones in schedule.
+            dashboardPage.navigateToDashboard();
+            liquidDashboardPage.verifyWeekInfoOnWidget(widgetType.Compliance_Violation.getValue(),startDayOfCurrentWeek);
+            //click on carousel to navigate to last week and next week to verify
+            liquidDashboardPage.clickOnCarouselOnWidget(widgetType.Compliance_Violation.getValue(),"left");
+            liquidDashboardPage.verifyWeekInfoOnWidget(widgetType.Compliance_Violation.getValue(),startDayOfLastWeek);
+            liquidDashboardPage.clickOnCarouselOnWidget(widgetType.Compliance_Violation.getValue(),"left");
+            liquidDashboardPage.verifyWeekInfoOnWidget(widgetType.Compliance_Violation.getValue(),startDayOfNextWeek);
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
+            //login as admin, go to DM view, go to compliance page to get the actual value.
+            String fileName = "UsersCredentials.json";
+            fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            Object[][] teamMemberCredentials = userCredentials.get("InternalAdmin");
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                    , String.valueOf(teamMemberCredentials[0][2]));
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict("PANDA district");
+            liquidDashboardPage.goToCompliancePage();
+            List<String> resultListInCompliancePage = liquidDashboardPage.getDataInCompliancePage(location);
+            //verify if values are right
+            if (resultListOnWidget.size()==resultListInCompliancePage.size()){
+                boolean falg = false;
+                for (int i=0;i<resultListInCompliancePage.size();i++){
+                    falg = resultListInCompliancePage.get(i).equals(resultListOnWidget.get(i));
+                }
+                if (falg){
+                    SimpleUtils.pass("compliance violation widget: Values on widget are consistent with the ones in compliance page");
+                } else {
+                    SimpleUtils.fail("compliance violation widget: Values on widget are not consistent with the ones in compliance page!",true);
+                }
+
             } else {
-                SimpleUtils.fail("compliance violation widget: Values on widget are not consistent with the ones in compliance page!",true);
+                SimpleUtils.fail("compliance violation widget: something wrong with the number of compliance violation displayed!",true);
             }
-
-        } else {
-            SimpleUtils.fail("compliance violation widget: something wrong with the number of compliance violation displayed!",true);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
@@ -1096,23 +1113,27 @@ public class LiquidDashboardTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate Timesheet Approval Rate widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyTimesheetApprovalRateWidgetAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-        // turn on timesheet approval rate widget.
-        liquidDashboardPage.enterEditMode();
-        liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Rate.getValue());
-        liquidDashboardPage.saveAndExitEditMode();
-        //verify view timesheets link
-        //approvalRateOnWidget is a summary number of the 3 values on this widget.
-        int approvalRateOnWidget = liquidDashboardPage.getApprovalRateOnTARWidget();
-        liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Timesheet_Approval_Rate.getValue(),linkNames.View_TimeSheets.getValue());
-        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
-        SimpleUtils.assertOnFail("Timesheet Approval Rate widget: timesheet page fail to load!", timeSheetPage.isTimeSheetPageLoaded(),false);
-        //approvalRateOnTimesheet is a total approval rate number on smart card in timesheet page.
-        int approvalRateOnTimesheet = timeSheetPage.getApprovalRateFromTimesheetByLocation(location);
-        SimpleUtils.assertOnFail("Timesheet Approval Rate widget: values on timesheet approval rate widget and those in timesheet page are not consistent!",approvalRateOnTimesheet==approvalRateOnWidget,true);
+    public void verifyTimesheetApprovalRateWidgetAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+            // turn on timesheet approval rate widget.
+            liquidDashboardPage.enterEditMode();
+            liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Rate.getValue());
+            liquidDashboardPage.saveAndExitEditMode();
+            //verify view timesheets link
+            //approvalRateOnWidget is a summary number of the 3 values on this widget.
+            int approvalRateOnWidget = liquidDashboardPage.getApprovalRateOnTARWidget();
+            liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Timesheet_Approval_Rate.getValue(),linkNames.View_TimeSheets.getValue());
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            SimpleUtils.assertOnFail("Timesheet Approval Rate widget: timesheet page fail to load!", timeSheetPage.isTimeSheetPageLoaded(),false);
+            //approvalRateOnTimesheet is a total approval rate number on smart card in timesheet page.
+            int approvalRateOnTimesheet = timeSheetPage.getApprovalRateFromTimesheetByLocation(location);
+            SimpleUtils.assertOnFail("Timesheet Approval Rate widget: values on timesheet approval rate widget and those in timesheet page are not consistent!",approvalRateOnTimesheet==approvalRateOnWidget,true);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated ="Automated")
@@ -1120,23 +1141,27 @@ public class LiquidDashboardTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "verify there is no open shift on starting soon widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyNoOpenShiftOnStartingSoonWidgetAsStoreManager(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-        liquidDashboardPage.switchOnWidget(widgetType.Starting_Soon.getValue());
+    public void verifyNoOpenShiftOnStartingSoonWidgetAsStoreManager(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+            liquidDashboardPage.switchOnWidget(widgetType.Starting_Soon.getValue());
 
-        HashMap<String, String> upComingShifts = new HashMap<>();
-        boolean areShiftsLoaded = dashboardPage.isStartingSoonLoaded();
-        if (areShiftsLoaded) {
-            upComingShifts = dashboardPage.getUpComingShifts();
-            if (upComingShifts.containsKey("Open shift") || upComingShifts.containsValue("Open shift")){
-                SimpleUtils.fail("There should not be open shift displayed!",false);
-            } else {
-                SimpleUtils.pass("No open shift diaplayed on the widget!");
+            HashMap<String, String> upComingShifts = new HashMap<>();
+            boolean areShiftsLoaded = dashboardPage.isStartingSoonLoaded();
+            if (areShiftsLoaded) {
+                upComingShifts = dashboardPage.getUpComingShifts();
+                if (upComingShifts.containsKey("Open shift") || upComingShifts.containsValue("Open shift")){
+                    SimpleUtils.fail("There should not be open shift displayed!",false);
+                } else {
+                    SimpleUtils.pass("No open shift diaplayed on the widget!");
+                }
+            }else {
+                SimpleUtils.report("No upcoming shifts loaded!");
             }
-        }else {
-            SimpleUtils.report("No upcoming shifts loaded!");
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 }
