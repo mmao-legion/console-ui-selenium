@@ -60,6 +60,9 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> timeOffStartTime = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeOffEndTime = new ThreadLocal<>();
 	public static final ThreadLocal<String> testSuiteID = new ThreadLocal<>();
+	public static final ThreadLocal<Boolean> testCaseExistsFlag = new ThreadLocal<>();
+	public static final ThreadLocal<String> testPlanID = new ThreadLocal<>();
+	public static final ThreadLocal<String> testEntryID = new ThreadLocal<>();
 	public static final ThreadLocal<List<Integer>> testCaseIDList = new ThreadLocal<>();
 	public static final ThreadLocal<String> testSuiteName = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeDuration = new ThreadLocal<>();
@@ -127,6 +130,18 @@ public class MyThreadLocal {
 	public static void setTestSuiteID(String value) { testSuiteID.set(value); }
 
 	public static String getTestSuiteID() { return testSuiteID.get(); }
+
+	public static void setTestCaseExistsFlag(boolean value) { testCaseExistsFlag.set(value); }
+
+	public static boolean getTestCaseExistsFlag() { return testCaseExistsFlag.get(); }
+
+	public static void setTestPlanID(String value) { testPlanID.set(value); }
+
+	public static String getTestPlanID() { return testPlanID.get(); }
+
+	public static void setTestEntryID(String value) { testEntryID.set(value); }
+
+	public static String getTestEntryID() { return testEntryID.get(); }
 
 	public static void setTestCaseIDList(List<Integer> value) { testCaseIDList.set(value); }
 

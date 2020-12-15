@@ -101,8 +101,9 @@ public abstract class TestBase {
     public void startServer(@Optional String platform, @Optional String executionon,
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, ITestContext context) throws Exception {
         MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
-        //MyThreadLocal.setTestSuiteName(testSuiteName);
-        MyThreadLocal.setTestCaseIDList(new ArrayList<Integer>());
+        if (MyThreadLocal.getTestCaseIDList()==null){
+            MyThreadLocal.setTestCaseIDList(new ArrayList<Integer>());
+        }
         if(platform!= null && executionon!= null && runMode!= null){
             if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice")
                     && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){

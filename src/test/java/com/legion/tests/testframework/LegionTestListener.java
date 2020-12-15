@@ -5,6 +5,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.markuputils.ExtentColor;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.testng.*;
 
@@ -75,11 +76,11 @@ import static com.legion.utils.MyThreadLocal.*;
 		@Override
 		public void onFinish(ITestContext context) {
 			// TODO Auto-generated method stub
-			if(getTestRailReporting()!=null){
+/*if(getTestRailReporting()!=null){
 				SimpleUtils.addNUpdateTestCaseIntoTestRun();
 				SimpleUtils.addTestResultIntoTestRailN(1,5,context);
 			}
-		}
+*/		}
 
 		@Override
 		public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {

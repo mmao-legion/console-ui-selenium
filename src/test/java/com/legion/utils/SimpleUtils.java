@@ -37,8 +37,8 @@ import static org.testng.AssertJUnit.assertTrue;
  */
 public class SimpleUtils {
 
-    static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/ciEnvCfg.json");
-//	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
+//    static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/ciEnvCfg.json");
+	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
 	static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
 
 	static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
@@ -74,7 +74,7 @@ public class SimpleUtils {
 
 	public static void fail(String message, boolean continueExecution, String... severity) {
 //		SimpleUtils.addTestResultIntoTestRail(5, message);
-		if(getTestRailReporting()!=null){
+		if(getTestRailReporting()!=null&&MyThreadLocal.getTestCaseExistsFlag()){
 			SimpleUtils.addTestResultIntoTestRailN(5, message);
 		}
 		if (continueExecution) {
@@ -236,7 +236,7 @@ public class SimpleUtils {
 
 		ExtentTestManager.getTest().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
 				+ "</div>");
-		if(getTestRailReporting()!=null){
+		if(getTestRailReporting()!=null&&MyThreadLocal.getTestCaseExistsFlag()){
 			SimpleUtils.addTestResultIntoTestRailN(1, message);
 		}
 
@@ -246,7 +246,7 @@ public class SimpleUtils {
 
 		ExtentTestManager.getTest().log(Status.INFO,"<div class=\"row\" style=\"background-color:#0000FF; color:white; padding: 7px 5px;\">" + message
 				+ "</div>");
-		if(getTestRailReporting()!=null){
+		if(getTestRailReporting()!=null&&MyThreadLocal.getTestCaseExistsFlag()){
 			SimpleUtils.addTestResultIntoTestRailN(6, message);
 		}
 	}
@@ -255,7 +255,7 @@ public class SimpleUtils {
 
 		ExtentTestManager.getTest().log(Status.WARNING,"<div class=\"row\" style=\"background-color:#FFA500; color:white; padding: 7px 5px;\">" + message
 				+ "</div>");
-		if(getTestRailReporting()!=null){
+		if(getTestRailReporting()!=null&&MyThreadLocal.getTestCaseExistsFlag()){
 			SimpleUtils.addTestResultIntoTestRailN(6, message);
 		}
 	}
@@ -888,6 +888,7 @@ public class SimpleUtils {
 	{
 		int testCaseID = 0;
 		List<Integer> testCaseIDList = new ArrayList<>();
+		List<Integer> testCasesToAdd = new ArrayList<>();
 //	    String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
 		String addResultString = "add_case/"+sectionID;
 		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
@@ -902,8 +903,14 @@ public class SimpleUtils {
 			client.setUser(testRailUser);
 			client.setPassword(testRailPassword);
 			testCaseIDList = MyThreadLocal.getTestCaseIDList();
-			testCaseIDList.addAll(getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client));
-			MyThreadLocal.setTestCaseIDList(testCaseIDList);
+			testCasesToAdd = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client);
+			if (testCasesToAdd.isEmpty()){
+				MyThreadLocal.setTestCaseExistsFlag(false);
+			} else {
+				MyThreadLocal.setTestCaseExistsFlag(true);
+				testCaseIDList.addAll(testCasesToAdd);
+				MyThreadLocal.setTestCaseIDList(testCaseIDList);
+			}
 //				addNUpdateTestCaseIntoTestRun1(testName,sectionID,testCaseID,context);
 			addNUpdateTestCaseIntoTestRunSample(testName,context,testCaseIDList);
 		}catch(Exception e){
@@ -912,7 +919,6 @@ public class SimpleUtils {
 
 		return testCaseIDList;
 	}
-
 
 	public static List<Integer> getTestCaseIDFromTitle(String title, int projectID, APIClient client)
 	{
@@ -1697,7 +1703,7 @@ public class SimpleUtils {
 			//data.put("suite_id", suiteId);
 			data.put("include_all", false);
 			data.put("suite_id", suiteId);
-			name = "Automation - Regression " + strDate;
+			name = "Automation - Regression---debug " + strDate;
 			data.put("name", name);
 			data.put("case_ids", testCaseIDList);
 			String responseReq = JSONValue.toJSONString(data);
