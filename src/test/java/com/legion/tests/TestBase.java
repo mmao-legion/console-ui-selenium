@@ -80,7 +80,7 @@ public abstract class TestBase {
     public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
     public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/DistrictsForDifferentEnterprises.json");
     private static ExtentReports extent = ExtentReportManager.getInstance();
-    static HashMap<String,String> testSuites = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestSuitesFile.json");
+    static HashMap<String,String> testRailCfg = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
     public static AndroidDriver<MobileElement> driver;
     public static String versionString;
     public static int version;
@@ -100,8 +100,8 @@ public abstract class TestBase {
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, ITestContext context) throws Exception {
-        MyThreadLocal.setTestSuiteID(testSuites.get(testSuiteName));
-        MyThreadLocal.setTestSuiteName(testSuiteName);
+        MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
+        //MyThreadLocal.setTestSuiteName(testSuiteName);
         MyThreadLocal.setTestCaseIDList(new ArrayList<Integer>());
         if(platform!= null && executionon!= null && runMode!= null){
             if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice")

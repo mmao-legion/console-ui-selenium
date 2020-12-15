@@ -40,7 +40,6 @@ public class SimpleUtils {
     static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/ciEnvCfg.json");
 //	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
 	static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
-	static HashMap<String,String> testSuites = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestSuitesFile.json");
 
 	static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
 	public static String testSuiteIDTemp = "0";
@@ -1445,7 +1444,7 @@ public class SimpleUtils {
 					System.err.println(e.getMessage());
 				}
 				data.put("suite_id", suiteId);
-				data.put("name", "Automation Smoke "+ MyThreadLocal.getTestSuiteName() + " " + strDate);
+				data.put("name", "Automation - Regression " + strDate);
 				data.put("include_all", false);
 				data.put("case_ids", cases);
 				JSONObject c = (JSONObject) client.sendPost(addResultString, data);
@@ -1500,7 +1499,7 @@ public class SimpleUtils {
 				System.err.println(e.getMessage());
 			}
 			data.put("suite_id", suiteId);
-			data.put("name", "Automation Smoke "+ MyThreadLocal.getTestSuiteName() + " " + strDate);
+			data.put("name", "Automation Smoke - Regression " + strDate);
 			data.put("include_all", false);
 			data.put("case_ids", cases);
 			JSONObject c = (JSONObject) client.sendPost(addResultString, data);
@@ -1698,7 +1697,7 @@ public class SimpleUtils {
 			//data.put("suite_id", suiteId);
 			data.put("include_all", false);
 			data.put("suite_id", suiteId);
-			name = "Automation Smoke "+ MyThreadLocal.getTestSuiteName() + " " + strDate;
+			name = "Automation - Regression " + strDate;
 			data.put("name", name);
 			data.put("case_ids", testCaseIDList);
 			String responseReq = JSONValue.toJSONString(data);

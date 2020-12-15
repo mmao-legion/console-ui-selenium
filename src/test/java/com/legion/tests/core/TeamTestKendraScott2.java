@@ -441,7 +441,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the Team functionality Work Preferences")
+	@TestName(description = "Verify the Team functionality > Work Preferences")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

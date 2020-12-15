@@ -371,7 +371,7 @@ public class TeamTest extends TestBase{
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the Team Functionality Coverage")
+	@TestName(description = "Verify the Team Functionality > Coverage")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInCoverageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		String workingHoursType = "Regular";

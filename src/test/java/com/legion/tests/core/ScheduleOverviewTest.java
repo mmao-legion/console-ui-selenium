@@ -108,7 +108,7 @@ public class ScheduleOverviewTest extends TestBase{
 	@Automated(automated ="Automated")
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "Coffee_Enterprise")
-	@TestName(description = "Verify the Schedule functionality  Overview")
+	@TestName(description = "Verify the Schedule functionality > Overview")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyScheduleFunctionalityOverviewAsStoreManager(String username, String password, String browser, String location) throws Exception {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
