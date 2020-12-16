@@ -1094,13 +1094,8 @@ public class ActivityTest extends TestBase {
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String requestUserName = profileNewUIPage.getNickNameFromProfile();
-            String myProfileLabel = "My Profile";
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
-            SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
-            String aboutMeLabel = "About Me";
-            profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
             String myTimeOffLabel = "My Time Off";
-            profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
             profileNewUIPage.cancelAllTimeOff();
             profileNewUIPage.clickOnCreateTimeOffBtn();
             SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
@@ -1128,10 +1123,7 @@ public class ActivityTest extends TestBase {
             // Login as Team Member to create time off
             loginToLegionAndVerifyIsLoginDone(username, password, location);
             profileNewUIPage.clickOnUserProfileImage();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
-            SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
-            profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
-            profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
             profileNewUIPage.cancelAllTimeOff();
             profileNewUIPage.clickOnCreateTimeOffBtn();
             SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);

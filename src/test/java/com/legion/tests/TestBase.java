@@ -27,6 +27,7 @@ import org.json.JSONException;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -311,6 +312,12 @@ public abstract class TestBase {
             getDriver().manage().window().maximize();
 
         } catch (TimeoutException te) {
+            try {
+                getDriver().navigate().refresh();
+            } catch (TimeoutException te1) {
+                SimpleUtils.fail("Page failed to load", false);
+            }
+        } catch (WebDriverException we) {
             try {
                 getDriver().navigate().refresh();
             } catch (TimeoutException te1) {

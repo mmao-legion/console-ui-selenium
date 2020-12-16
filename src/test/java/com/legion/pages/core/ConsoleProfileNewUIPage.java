@@ -267,9 +267,6 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void clickOnCreateTimeOffBtn() throws Exception {
-		getDriver().navigate().refresh();
-		String timeOff = "Time Off";
-		selectProfilePageSubSectionByLabel(timeOff);
 		if(isElementLoaded(newTimeOffBtn, 10)) {
 			click(newTimeOffBtn);
 			SimpleUtils.pass("Controls Page: 'Create Time Off' button Clicked.");
@@ -2174,7 +2171,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		String nickName = "";
 		try{
 			if(isElementLoaded(userProfileImage, 5)){
-				click(userProfileImage);
+				clickTheElement(userProfileImage);
 				if (isElementLoaded(userNickName, 5)) {
 					nickName = userNickName.getText();
 				}
