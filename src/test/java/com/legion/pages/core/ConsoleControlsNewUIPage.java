@@ -5078,4 +5078,14 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 
 	}
+	//added by Fiona
+	//get current location on controls landing page
+	@FindBy(css = "div.controlsNavigation lg-select[search-hint=\"Search Location\"] input-field div")
+	private WebElement currentLocationInControls;
+	public String getCurrentLocationInControls() throws Exception{
+		if (isElementLoaded(currentLocationInControls,5)) {
+			return   currentLocationInControls.getText();
+		}
+		return null;
+	}
 }
