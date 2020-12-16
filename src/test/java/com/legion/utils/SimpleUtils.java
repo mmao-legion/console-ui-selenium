@@ -37,8 +37,8 @@ import static org.testng.AssertJUnit.assertTrue;
  */
 public class SimpleUtils {
 
-//    static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/ciEnvCfg.json");
-	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
+    static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/ciEnvCfg.json");
+//	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
 	static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
 
 	static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
@@ -1703,7 +1703,11 @@ public class SimpleUtils {
 			//data.put("suite_id", suiteId);
 			data.put("include_all", false);
 			data.put("suite_id", suiteId);
-			name = "Automation - Regression " + strDate;
+			if (MyThreadLocal.getTestRailRunName()==null||MyThreadLocal.getTestRailRunName().equals("")){
+				name = "Automation - Regression " + strDate;
+			} else {
+				name = MyThreadLocal.getTestRailRunName()+ " " + strDate;
+			}
 			data.put("name", name);
 			data.put("case_ids", testCaseIDList);
 			String responseReq = JSONValue.toJSONString(data);
