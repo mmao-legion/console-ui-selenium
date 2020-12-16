@@ -1703,7 +1703,11 @@ public class SimpleUtils {
 			//data.put("suite_id", suiteId);
 			data.put("include_all", false);
 			data.put("suite_id", suiteId);
-			name = "Automation - Regression " + strDate;
+			if (MyThreadLocal.getTestRailRunName()==null||MyThreadLocal.getTestRailRunName().equals("")){
+				name = "Automation - Regression " + strDate;
+			} else {
+				name = MyThreadLocal.getTestRailRunName()+ " " + strDate;
+			}
 			data.put("name", name);
 			data.put("case_ids", testCaseIDList);
 			String responseReq = JSONValue.toJSONString(data);
