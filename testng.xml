@@ -130,6 +130,12 @@
 					   <include name="verifyTheDataSourceForBudgetScheduledOther"/>
                        <include name="verifyDashboardFunctionalityAsTeamMember" />
 <!--                        <include name="verifyDashboardFunctionality" />-->
+                        <include name="verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin" />
+                        <include name="verifyTheLeftNavigationMenuOnLoginUsingSMAccessAsStoreManager" />
+                        <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamLead" />
+                        <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamMember" />
+                        <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsDistrictManager" />
+                        <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsCustomerAdmin" />
 					</methods>
 				</class>
 		   </classes>
