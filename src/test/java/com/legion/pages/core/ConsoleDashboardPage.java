@@ -1008,6 +1008,17 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return null;
 	}
 
+	//add by Fiona
+	@FindBy(css = "lg-select[search-hint='Search Location'] label+div")
+	private WebElement dmViewCurrentLocation;
+	@Override
+	public String getCurrentLocationInDMView() throws Exception {
+		if (isElementLoaded(dmViewCurrentLocation,5)) {
+			return   dmViewCurrentLocation.getText();
+		}
+		return null;
+	}
+
 
 
 }

@@ -261,4 +261,5 @@ public interface ControlsNewUIPage {
 	public void verifyUpdateUserAndRolesOneUserLocationInfo(String userFirstName) throws Exception;
 	public void clickOnLocationsTabInGlobalModel() throws Exception;
 	public List<String> getAllLocationsInGlobalModel() throws Exception;
+	public String getCurrentLocationInControls() throws Exception;
 }

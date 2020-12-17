@@ -215,7 +215,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate navigation bar view for store manager")
+    @TestName(description = "Validate navigation bar for SM user")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDashboardViewAsStoreManager(String browser, String username, String password, String location) throws Exception {
 
@@ -229,7 +229,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate search district function on navigation bar on dahsboard page")
+    @TestName(description = "Validate search function for location")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNavigationBarSearchDistrictFunctionInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
@@ -270,7 +270,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate search location function on navigation bar on dahsboard page")
+    @TestName(description = "Validate search function for location")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNavigationBarSearchLocationFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -317,5 +317,72 @@ public class NewNavigationFlowTest extends TestBase {
             SimpleUtils.pass("Locations in navigation bar are NOT matched with which in dsitrict.");
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validated navigation bar show after switch to other tabs and then return to dashboard page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        String districtName="OMDistrict1";
+        String locationName="OMLocation11";
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
+
+        locationSelectorPage.changeDistrict(districtName);
+        locationSelectorPage.changeLocation(locationName);
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        if(teamPage.loadTeamTab()){
+            String teamPageDistrcit = dashboardPage.getCurrentDistrict();
+            String teamPageLocation = dashboardPage.getCurrentLocationInDMView();
+            if(teamPageDistrcit.equals(districtName) && teamPageLocation.equals(locationName)){
+                SimpleUtils.pass("The navigation bar shows well on team page");
+            }else{
+                SimpleUtils.fail("The navigation bar shows incorrect on team page",true);
+            }
+        }
+
+        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+        if(scheduleOverviewPage.loadScheduleOverview()){
+            String schedulePageDistrcit = dashboardPage.getCurrentDistrict();
+            String schedulePageLocation = dashboardPage.getCurrentLocationInDMView();
+            if(schedulePageDistrcit.equals(districtName) && schedulePageLocation.equals(locationName)){
+                SimpleUtils.pass("The navigation bar shows well on schedule page");
+            }else{
+                SimpleUtils.fail("The navigation bar shows incorrect on schedule page",true);
+            }
+        }
+
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        if(controlsNewUIPage.isControlsPageLoaded()){
+            Thread.sleep(5000);
+            String controlsPageLocation = controlsNewUIPage.getCurrentLocationInControls();
+            if(controlsPageLocation.equals(locationName)){
+                SimpleUtils.pass("The navigation bar shows well on controls page");
+            }else{
+                SimpleUtils.fail("The navigation bar shows incorrect on controls page",true);
+                SimpleUtils.report("The locations filed on controls page is: " + controlsPageLocation);
+            }
+        }
+
+        dashboardPage.navigateToDashboard();
+        if(dashboardPage.isDashboardPageLoaded()){
+            String dashboardPageDistrict = dashboardPage.getCurrentDistrict();
+            String dashboardPageLocation = dashboardPage.getCurrentLocationInDMView();
+            if(dashboardPageDistrict.equals(districtName) && dashboardPageLocation.equals(locationName)){
+                SimpleUtils.pass("The navigation bar shows well after back to dashboard page");
+            }else{
+                SimpleUtils.fail("The navigation bar shows incorrect after back to controls page",true);
+            }
+        }
+    }
+
+
+
 
 }
