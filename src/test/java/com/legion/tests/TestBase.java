@@ -242,7 +242,7 @@ public abstract class TestBase {
         caps.setCapability("video", true);
         caps.setCapability("console", true);
 
-        caps.setCapability("selenium_version","3.141.59");
+//        caps.setCapability("selenium_version","3.141.59");
         caps.setCapability("chrome.driver","87.0");
         Assert.assertNotNull(url,"Error grid url is not configured, please review it in envCFg.json file and add it.");
         try {
@@ -286,19 +286,25 @@ public abstract class TestBase {
 
 
     public static void visitPage(Method testMethod){
+
         setEnvironment(propertyMap.get("ENVIRONMENT"));
         Enterprise e = testMethod.getAnnotation(Enterprise.class);
         String enterpriseName = null;
-        if (e != null ) {
+        if (System.getProperty("enterprise")!=null) {
+            enterpriseName = System.getProperty("enterprise");
+        }else if(e != null ){
             enterpriseName = SimpleUtils.getEnterprise(e.name());
-        }
-        else {
+        }else{
             enterpriseName = SimpleUtils.getDefaultEnterprise();
         }
         setEnterprise(enterpriseName);
         switch (getEnvironment()){
             case "QA":
-                setURL(propertyMap.get("QAURL"));
+                if (System.getProperty("env")!=null) {
+                    setURL(System.getProperty("env"));
+                }else {
+                    setURL(propertyMap.get("QAURL"));
+                }
                 loadURL();
                 break;
             case "DEV":

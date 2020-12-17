@@ -413,4 +413,6 @@ public interface SchedulePage {
 	public boolean displayAlertPopUp() throws Exception;
 
 	public void displayAlertPopUpForRoleViolation() throws Exception;
+
+	public boolean isSuggestedScheduleGegerated();
 }

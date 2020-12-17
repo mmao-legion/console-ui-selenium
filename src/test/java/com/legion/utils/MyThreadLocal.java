@@ -69,6 +69,7 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> LGPTPLocationName = new ThreadLocal<>();
 	public static final ThreadLocal<String> LGMSNsoLocationName = new ThreadLocal<>();
 	public static final ThreadLocal<String> LGPTPNsoLocationName = new ThreadLocal<>();
+	public static final ThreadLocal<String> job = new ThreadLocal<>();
 
 	public static void setScreenshotLocation(String value) { screenshotLoc.set(value); }
 
@@ -436,5 +437,10 @@ public class MyThreadLocal {
 	public static void setLGPTPNsoLocationName(String value) { LGPTPNsoLocationName.set(value); }
 
 	public static String getLGPTPNsoLocationName() { return LGPTPNsoLocationName.get(); }
+
+	//added by Estelle for jobs
+	public static void setJobName(String jobName) { job.set(jobName); }
+
+	public static String getJobName() { return job.get(); }
 
 }
