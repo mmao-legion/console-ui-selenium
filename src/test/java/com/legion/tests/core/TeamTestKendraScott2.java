@@ -253,7 +253,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the Team Functionality In Update Info")
+	@TestName(description = "Verify the Team Functionality > In Update Info")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInUpdateInfo(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -286,7 +286,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the Team functionality In Roster")
+	@TestName(description = "Verify the Team functionality>In Roster")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInRoster(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -332,7 +332,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the Team functionality In Transfer")
+	@TestName(description = "Verify the Team functionality>In Transfer")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInTransfer(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -370,7 +370,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the Team Functionality In Badges")
+	@TestName(description = "Verify the Team functionality > In Badges")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInBadges(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -395,7 +395,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the Team Functionality Invite Team Member")
+	@TestName(description = "Verify the Team Functionality > Invite Team Member")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInInviteTeamMember(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -482,7 +482,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the Team Functionality Profile section")
+	@TestName(description = "Verify the Team Functionality > Profile section")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInProfileSectionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		// Login with Internal Admin Credentials

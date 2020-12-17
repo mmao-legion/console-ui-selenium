@@ -290,7 +290,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the Schedule functionality  Legion")
+	@TestName(description = "Verify the Schedule functionality > Legion")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyScheduleLegionFunctionality(String username, String password, String browser, String location)
 			throws Exception {
@@ -359,7 +359,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		@Automated(automated = "Automated")
 		@Owner(owner = "Estelle")
 		@Enterprise(name = "KendraScott2_Enterprise")
-		@TestName(description = "Verify the Schedule functionality  Compliance Smartcard")
+		@TestName(description = "Verify the Schedule functionality > Compliance smartcard")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyComplianceSmartCardFunctionality(String username, String password, String browser, String location)
 				throws Exception {
@@ -377,7 +377,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
         @Automated(automated = "Automated")
 		@Owner(owner = "Estelle")
 		@Enterprise(name = "Coffee_Enterprise")
-		@TestName(description = "Verify the Schedule functionality  Schedule Smartcard")
+		@TestName(description = "Verify the Schedule functionality > Schedule smartcard")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyScheduleFunctionalityScheduleSmartCard(String username, String password, String browser, String location)
 				throws Exception {
@@ -538,7 +538,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "Coffee_Enterprise")
-	@TestName(description = "Verify the Schedule functionality  Day View")
+	@TestName(description = "Verify the Schedule functionality > Day View")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyScheduleFunctionalityDayView(String username, String password, String browser, String location)
 			throws Exception {

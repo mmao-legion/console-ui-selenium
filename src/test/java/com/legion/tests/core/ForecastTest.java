@@ -77,7 +77,7 @@ public class ForecastTest extends TestBase{
 		@Automated(automated = "Automated")
 		@Owner(owner = "Estelle")
 		@Enterprise(name = "KendraScott2_Enterprise")
-		@TestName(description = "Verify the Schedule functionality  Shopper Forecast")
+		@TestName(description = "Verify the Schedule functionality > Shopper Forecast")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyShopperForecastFunctionality(String username, String password, String browser, String location)
 				throws Exception {
@@ -213,7 +213,7 @@ public class ForecastTest extends TestBase{
 		@Automated(automated = "Automated")
 		@Owner(owner = "Estelle")
 		@Enterprise(name = "KendraScott2_Enterprise")
-		@TestName(description = "Verify the Schedule functionality forecast")
+		@TestName(description = "Verify the Schedule functionality > Forecast")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyScheduleFunctionalityForecast(String username, String password, String browser, String location)
 				throws Exception {
@@ -237,7 +237,7 @@ public class ForecastTest extends TestBase{
 		@Automated(automated = "Automated")
 		@Owner(owner = "Estelle")
 		@Enterprise(name = "KendraScott2_Enterprise")
-		@TestName(description = "Verify the Schedule functionality  Labor Forecast")
+		@TestName(description = "Verify the Schedule functionality > Labor Forecast")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyScheduleLaborForeCastFunctionality(String username, String password, String browser, String location)
 				throws Exception {

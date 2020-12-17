@@ -1134,7 +1134,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (ScheduleSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
             for (WebElement ScheduleSubTabElement : ScheduleSubTabsElement) {
                 if (ScheduleSubTabElement.getText().equalsIgnoreCase(subTabString)) {
-                    click(ScheduleSubTabElement);
+                    clickTheElement(ScheduleSubTabElement);
                     waitForSeconds(3);
                 }
             }
@@ -7290,7 +7290,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(0).getText() + "' Successfully!");
                 }
             }else {
-                click(currentWeeks.get(currentWeekIndex + 1));
+                clickTheElement(currentWeeks.get(currentWeekIndex + 1));
                 SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(currentWeekIndex + 1).getText() + "' Successfully!");
             }
         }else {
@@ -8354,7 +8354,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void goToSchedulePageAsTeamMember() throws Exception {
         if (isElementLoaded(goToScheduleButton, 5)) {
-            click(goToScheduleButton);
+            clickTheElement(goToScheduleButton);
             if (areListElementVisible(ScheduleSubTabsElement, 5)) {
                 SimpleUtils.pass("Navigate to schedule page successfully!");
             }else {
@@ -8573,7 +8573,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         {
             // Validate what happens next to the Edit!
             // When Status is finalized, look for extra popup.
-            click(editScheduleButton);
+            clickTheElement(editScheduleButton);
             if(isElementLoaded(popupAlertPremiumPay,5) ) {
                 SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
                 // Validate CANCEL and EDIT ANYWAY Buttons are enabled.

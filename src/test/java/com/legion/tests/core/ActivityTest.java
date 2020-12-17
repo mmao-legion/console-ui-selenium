@@ -715,7 +715,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the Schedule section when manager published a schedule")
+    @TestName(description = "Validate the activity of publish or update schedule")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyActivityOfPublishUpdateSchedule(String browser, String username, String password, String location) throws Exception {
 
