@@ -36,11 +36,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Override
 	@BeforeMethod()
-	public void firstTest(Method testMethod, Object[] params) throws Exception {
-		this.createDriver((String) params[0], "69", "Window");
-		visitPage(testMethod);
-		loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
-
+	public void firstTest(Method testMethod, Object[] params) {
+		try {
+			this.createDriver((String) params[0], "69", "Window");
+			visitPage(testMethod);
+			loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	@Automated(automated = "Manual")
@@ -2174,6 +2177,27 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickOnDayView();
 			List<WebElement> shiftsInDayView = schedulePage.getAvailableShiftsInDayView();
 			SimpleUtils.assertOnFail("Day view shifts don't diaplay successfully!", !shiftsInDayView.isEmpty(), false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the functionality for Schedule Copy Restrictions")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheFunctionalityForScheduleCopyRestrictionsAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+			controlsPage.gotoControlsPage();
+			controlsPage.clickGlobalSettings();
+
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			controlsNewUIPage.clickOnControlsSchedulingPolicies();
+			controlsNewUIPage.enableOrDisableScheduleCopyRestriction("yes");
+			controlsNewUIPage.setViolationLimit("2");
+			controlsNewUIPage.setBudgetOverageLimit("10");
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
