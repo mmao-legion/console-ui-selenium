@@ -33,6 +33,12 @@ public interface ControlsNewUIPage {
 
 	public void clickOnControlsSchedulingPolicies() throws Exception;
 
+	public void enableOrDisableScheduleCopyRestriction(String yesOrNo) throws Exception;
+
+	public void setViolationLimit(String value) throws Exception;
+
+	public void setBudgetOverageLimit(String value) throws Exception;
+
 	public boolean isBudgetSmartcardEnabled() throws Exception;
 
 	public void enableDisableBudgetSmartcard(boolean enable) throws Exception;

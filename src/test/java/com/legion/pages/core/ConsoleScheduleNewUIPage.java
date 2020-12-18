@@ -980,7 +980,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(scheduleWeekViewButton,15)) {
             if (!scheduleWeekViewButton.getAttribute("class").toString().contains("selected"))//selected
             {
-                click(scheduleWeekViewButton);
+                clickTheElement(scheduleWeekViewButton);
             }
             SimpleUtils.pass("Schedule page week view loaded successfully!");
         } else {
@@ -1059,14 +1059,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
         HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
-        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class='card-carousel-card card-carousel-card-primary card-carousel-card-table']"));
+        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class='card-carousel-card card-carousel-card-primary card-carousel-card-table ']"));
         if(isElementEnabled(budgetedScheduledLabelsDivElement))
         {
 //			Thread.sleep(2000);
             String scheduleWagesAndHoursCardText = budgetedScheduledLabelsDivElement.getText();
             String [] tmp =  scheduleWagesAndHoursCardText.split("\n");
             String[] scheduleWagesAndHours = new String[5];
-            if (tmp.length>5) {
+            if (tmp.length>6) {
                 scheduleWagesAndHours[0] = tmp[0];
                 scheduleWagesAndHours[1] = tmp[1];
                 scheduleWagesAndHours[2] = tmp[2];
@@ -1134,7 +1134,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (ScheduleSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
             for (WebElement ScheduleSubTabElement : ScheduleSubTabsElement) {
                 if (ScheduleSubTabElement.getText().equalsIgnoreCase(subTabString)) {
-                    click(ScheduleSubTabElement);
+                    clickTheElement(ScheduleSubTabElement);
                     waitForSeconds(3);
                 }
             }
@@ -3661,7 +3661,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (isElementLoaded(generateModalTitle, 15) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
                 editTheBudgetForNondgFlow();
-                waitForSeconds(3);
+                waitForSeconds(15);
                 try {
                     List<WebElement> trs = enterBudgetTable.findElements(By.tagName("tr"));
                     if (areListElementVisible(trs, 5) && trs.size() > 0) {
@@ -7290,7 +7290,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(0).getText() + "' Successfully!");
                 }
             }else {
-                click(currentWeeks.get(currentWeekIndex + 1));
+                clickTheElement(currentWeeks.get(currentWeekIndex + 1));
                 SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(currentWeekIndex + 1).getText() + "' Successfully!");
             }
         }else {
@@ -8354,7 +8354,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void goToSchedulePageAsTeamMember() throws Exception {
         if (isElementLoaded(goToScheduleButton, 5)) {
-            click(goToScheduleButton);
+            clickTheElement(goToScheduleButton);
             if (areListElementVisible(ScheduleSubTabsElement, 5)) {
                 SimpleUtils.pass("Navigate to schedule page successfully!");
             }else {
@@ -8573,7 +8573,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         {
             // Validate what happens next to the Edit!
             // When Status is finalized, look for extra popup.
-            click(editScheduleButton);
+            clickTheElement(editScheduleButton);
             if(isElementLoaded(popupAlertPremiumPay,5) ) {
                 SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
                 // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
@@ -9226,9 +9226,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     }
                     //to close the popup
                     waitForSeconds(5);
-                    click(clickedShift);
+                    clickTheElement(clickedShift);
 
-                    click(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+                    clickTheElement(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
                     SimpleUtils.pass("Apply button has been clicked ");
                 } else {
                     click(cancelButtonChangeRole);
@@ -9400,11 +9400,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 SimpleUtils.pass("Edit Shift Time successfully");
                 shiftTimes.add(1, shiftTimeAfterUpdate);
             } else {
-                SimpleUtils.fail("Shift Time doesn't change", true);
+                SimpleUtils.fail("Shift Time doesn't change", false);
             }
 
         } else {
-            SimpleUtils.fail("Edit Shift Time container load failed", true);
+            SimpleUtils.fail("Edit Shift Time container load failed", false);
         }
         return shiftTimes;
     }
@@ -9608,24 +9608,44 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return selectedTMName;
     }
 
+    public boolean isEditMealBreakEnabled() throws Exception {
+        clickOnProfileIcon();
+        boolean isEditMealBreakEnabled = false;
+        if(isElementLoaded(editMealBreakTime,5) )
+        {
+            if(editMealBreakTime.getText().equalsIgnoreCase("Edit Meal Break Time")){
+                isEditMealBreakEnabled = true;
+                SimpleUtils.report("Edit Meal Break function is enabled! ");
+            } else{
+                SimpleUtils.report("We can only view breaks!");
+            }
+        }
+        else
+            SimpleUtils.fail("Edit Meal Break Time is disabled or not available to Click ", false);
+        return isEditMealBreakEnabled;
+    }
+
     @Override
-    public void verifyMealBreakTimeDisplayAndFunctionality() throws Exception {
+    public void verifyMealBreakTimeDisplayAndFunctionality(boolean isEditMealBreakEnabled) throws Exception {
         clickOnProfileIcon();
         clickOnEditMeaLBreakTime();
-        if (isMealBreakTimeWindowDisplayWell()) {
-            click(addMealBreakButton);
-            click(continueBtnInMealBreakButton);
-            SimpleUtils.pass("add meal break time successfully");
-
+        if (isMealBreakTimeWindowDisplayWell(isEditMealBreakEnabled)) {
+            if (isEditMealBreakEnabled){
+                click(addMealBreakButton);
+                click(continueBtnInMealBreakButton);
+                SimpleUtils.pass("add meal break time successfully");
+            } else {
+                click(continueBtnInMealBreakButton);
+            }
         }else
-            SimpleUtils.fail("add meal break failed",true);
+            SimpleUtils.report("add meal break failed");
     }
 
     @Override
     public void verifyDeleteMealBreakFunctionality() throws Exception {
         WebElement selectedShift = clickOnProfileIcon();
         clickOnEditMeaLBreakTime();
-        if (isMealBreakTimeWindowDisplayWell()) {
+        if (isMealBreakTimeWindowDisplayWell(true)) {
             while (!areListElementVisible(deleteMealBreakButtons, 5) && deleteMealBreakButtons.size()>0) {
                 click(cannelBtnInMealBreakButton);
                 selectedShift = clickOnProfileIcon();
@@ -9643,7 +9663,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
         click(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
         clickOnEditMeaLBreakTime();
-        if (isMealBreakTimeWindowDisplayWell()) {
+        if (isMealBreakTimeWindowDisplayWell(true)) {
             if (!areListElementVisible(deleteMealBreakButtons, 5)) {
                 SimpleUtils.pass("Delete meal break times successfully");
             } else {
@@ -9661,7 +9681,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
         WebElement selectedShift = clickOnProfileIcon();
         clickOnEditMeaLBreakTime();
-        if (isMealBreakTimeWindowDisplayWell()) {
+        if (isMealBreakTimeWindowDisplayWell(true)) {
             if (mealBreakBar.getAttribute("class").contains("disabled")) {
                 click(addMealBreakButton);
                 click(continueBtnInMealBreakButton);
@@ -9687,7 +9707,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
         click(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
         clickOnEditMeaLBreakTime();
-        if (isMealBreakTimeWindowDisplayWell()) {
+        if (isMealBreakTimeWindowDisplayWell(true)) {
             if (isSavedChange) {
                 if (mealBreakTimes.get(0).getText().equals(mealBreakTimeAfterEdit)) {
                     SimpleUtils.pass("Edit meal break times successfully");
@@ -9705,16 +9725,25 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    private boolean isMealBreakTimeWindowDisplayWell() throws Exception {
-
-        if (isElementLoaded(editMealBreakTitle,5) && isElementLoaded(addMealBreakButton,5) &&
-                isElementLoaded(cannelBtnInMealBreakButton,5) && isElementLoaded(continueBtnInMealBreakButton,5)
-                && isElementLoaded(sliderInMealBreakButton,5) && isElementEnabled(shiftInfoContainer, 5)) {
-            SimpleUtils.pass("the Edit Meal break windows is pop up which include: 1.profile info 2.add meal break button 3.Specify meal break time period 4 cancel ,continue button");
-            return  true;
-        }else
-            SimpleUtils.fail("edit meal break time windows load failed",true);
-        return false;
+    private boolean isMealBreakTimeWindowDisplayWell(boolean isEditMealBreakEnabled) throws Exception {
+        if (isEditMealBreakEnabled){
+            if (isElementLoaded(editMealBreakTitle,5) && isElementLoaded(addMealBreakButton,5) &&
+                    isElementLoaded(cannelBtnInMealBreakButton,5) && isElementLoaded(continueBtnInMealBreakButton,5)
+                    && isElementLoaded(sliderInMealBreakButton,5) && isElementEnabled(shiftInfoContainer, 5)) {
+                SimpleUtils.pass("the Edit Meal break windows is pop up which include: 1.profile info 2.add meal break button 3.Specify meal break time period 4 cancel ,continue button");
+                return  true;
+            }else
+                SimpleUtils.fail("edit meal break time windows load failed",true);
+            return false;
+        } else {
+            if (isElementLoaded(editMealBreakTitle,5) && isElementLoaded(continueBtnInMealBreakButton,5)
+                    && isElementLoaded(sliderInMealBreakButton,5) && isElementEnabled(shiftInfoContainer, 5)) {
+                SimpleUtils.pass("the Edit Meal break windows is pop up which include: 1.profile info 2.Specify meal break time period 3 continue button");
+                return  true;
+            }else
+                SimpleUtils.fail("edit meal break time windows load failed",true);
+            return false;
+        }
     }
 
     @FindBy(css = "div.sch-day-view-shift-delete")
@@ -12455,6 +12484,22 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }else{
             SimpleUtils.fail("Operating Hours not loaded Successfully!", false);
+        }
+    }
+
+
+
+    @FindBy(css = "[ng-class=\"{'schedule-view-small-padding': controlPanel.isGenerateSchedleView}\"]")
+    private WebElement tmSchedulePanel;
+    @Override
+    public void verifyTMSchedulePanelDisplay() throws Exception {
+        try{
+            if(isElementLoaded(tmSchedulePanel, 5)){
+                SimpleUtils.pass("TM schedule panel is loaded successfully! ");
+            } else
+                SimpleUtils.fail("TM schedule panel not loaded successfully! ", false);
+        }catch(Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 }

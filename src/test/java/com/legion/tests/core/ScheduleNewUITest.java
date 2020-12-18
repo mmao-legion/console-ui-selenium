@@ -136,6 +136,7 @@ public class ScheduleNewUITest extends TestBase {
 
 	public enum SchedulePageSubTabText {
 		Overview("OVERVIEW"),
+		Forecast("FORECAST"),
 		ProjectedSales("PROJECTED SALES"),
 		StaffingGuidance("STAFFING GUIDANCE"),
 		Schedule("SCHEDULE"),

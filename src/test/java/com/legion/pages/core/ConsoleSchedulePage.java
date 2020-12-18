@@ -2224,7 +2224,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void verifyMealBreakTimeDisplayAndFunctionality() {
+    public void verifyMealBreakTimeDisplayAndFunctionality(boolean isEditMealBreakEnabled) {
 
     }
 
@@ -3273,6 +3273,16 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @Override
     public void navigateToTheRightestSmartCard() throws Exception {
+
+    }
+
+    @Override
+    public boolean isEditMealBreakEnabled() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void verifyTMSchedulePanelDisplay() throws Exception {
 
     }
 

@@ -295,7 +295,7 @@ public interface SchedulePage {
 
 	public void verifyChangeRoleFunctionality() throws Exception;
 
-	public void verifyMealBreakTimeDisplayAndFunctionality() throws Exception;
+	public void verifyMealBreakTimeDisplayAndFunctionality(boolean isEditMealBreakEnabled) throws Exception;
 
 	public void verifyDeleteShift() throws Exception;
 
@@ -528,4 +528,6 @@ public interface SchedulePage {
 	public void editOperatingHoursOnScheduleOldUIPage(String startTime, String endTime, List<String> weekDaysToClose) throws Exception;
 	public int getTheIndexOfEditedShift() throws Exception;
 	public void navigateToTheRightestSmartCard() throws Exception;
+	public boolean isEditMealBreakEnabled() throws Exception;
+	public void verifyTMSchedulePanelDisplay() throws Exception;
 }

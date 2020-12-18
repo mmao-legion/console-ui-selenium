@@ -607,8 +607,11 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             for (WebElement widget : widgets) {
                 try {
                     WebElement widgetTitle = widget.findElement(By.cssSelector(".dms-box-title"));
-                    if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetName.toLowerCase()) ||
-                            widgetTitle.getText().toLowerCase().trim().contains(startingTomorrow.toLowerCase().trim()))) {
+                    if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetName.toLowerCase()))) {
+                        isLoaded = true;
+                        break;
+                    } else if (widgetTitle != null && widgetName.toLowerCase().equals("starting soon") &&
+                            widgetTitle.getText().toLowerCase().trim().contains(startingTomorrow.toLowerCase().trim())) {
                         isLoaded = true;
                         break;
                     }
@@ -623,6 +626,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @Override
     public String getTheStartOfCurrentWeekFromSchedulesWidget() throws Exception {
         String currentWeek = "";
+        waitForSeconds(3);
         if (isElementLoaded(currentWeekOnSchedules, 10)) {
             if (currentWeekOnSchedules.getText().contains("—")) {
                 currentWeek = currentWeekOnSchedules.getText().split("—")[0];

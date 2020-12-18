@@ -52,6 +52,16 @@ public class BasePage {
         }
     }
 
+    public void doubleClick(WebElement element, boolean... shouldWait) {
+        try {
+            waitUntilElementIsVisible(element);
+            Actions actions = new Actions(getDriver());
+            actions.doubleClick(element).perform();
+        } catch (TimeoutException te) {
+            ExtentTestManager.getTest().log(Status.WARNING,te);
+        }
+    }
+
     public void moveToElementAndClick(WebElement element, boolean... shouldWait) {
         try {
             waitUntilElementIsVisible(element);
@@ -826,6 +836,17 @@ public class BasePage {
 
     public void clickTheElement(WebElement element) {
         ((JavascriptExecutor) getDriver()).executeScript("arguments[0].click();", element);
+    }
+
+    public void moveElement(WebElement webElement, int yOffSet)
+    {
+        Actions builder = new Actions(MyThreadLocal.getDriver());
+        builder.moveToElement(webElement)
+                .clickAndHold()
+                .moveByOffset(0, yOffSet)
+                .release()
+                .build()
+                .perform();
     }
 //
 //

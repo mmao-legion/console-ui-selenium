@@ -345,10 +345,14 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 						WebElement tr = teamMember.findElement(By.className("tr"));
 						if (tr != null) {
 							WebElement name = tr.findElement(By.cssSelector("span.name"));
-							WebElement title = tr.findElement(By.cssSelector("span.title"));
+							List<WebElement> titles = tr.findElements(By.cssSelector("span.title"));
 							WebElement status = tr.findElement(By.cssSelector("span.status"));
-							if (name != null && title != null && status != null) {
-								String nameJobTitleStatus = name.getText() + title.getText() + status.getText();
+							String title = "";
+							if (name != null && titles != null && status != null && titles.size() > 0) {
+								for (WebElement titleElement : titles) {
+									title += titleElement.getText();
+								}
+								String nameJobTitleStatus = name.getText() + title + status.getText();
 								if (nameJobTitleStatus.contains(username)) {
 									selectedName = name.getText();
 									clickTheElement(name);
@@ -3528,7 +3532,7 @@ private WebElement locationColumn;
 	@Override
 	public void clickOnTeamSubTab(String subTabString) throws Exception {
 		waitForSeconds(3);
-		if (areListElementVisible(TeamSubTabsElement,10) && TeamSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
+		if (areListElementVisible(TeamSubTabsElement,10) && TeamSubTabsElement.size() != 0) {
 			for (WebElement TeamSubTabElement : TeamSubTabsElement) {
 				if (TeamSubTabElement.getText().equalsIgnoreCase(subTabString)) {
 					click(TeamSubTabElement);
@@ -3737,11 +3741,22 @@ private WebElement locationColumn;
 					break;
 				}
 			}
-			if (!isCalendarDisplayed)
-				SimpleUtils.fail("School Calendars Page: Cannot find the calendar " + calendarName + " in the calendar list",false);
 		} else
 			SimpleUtils.fail("School Calendar: There is no calendars!",false);
 		return isCalendarDisplayed;
+	}
+
+	@Override
+	public void clickOnCancelEditCalendarBtn() throws Exception {
+		if (isElementLoaded(cancelEditButton, 5)) {
+			click(cancelEditButton);
+			if (isElementLoaded(schoolCalendarHeader,5))
+				SimpleUtils.pass("School Calendars Page: Click on 'Cancel' button successfully!");
+			else
+				SimpleUtils.fail("School Calendars Page: Click on 'Cancel' button does not return to calendar list page",false);
+		} else {
+			SimpleUtils.fail("School Calendars Page: Failed to load Cancel button", false);
+		}
 	}
 
 	// Added by Nora: For Cinemark Minors
@@ -3758,7 +3773,7 @@ private WebElement locationColumn;
 	@FindBy(css = ".calendar-overview-title")
 	private List<WebElement> calendarTitles;
 	@FindBy(className = "school-calendars-header-title")
-	private WebElement schoolCalendarHearder;
+	private WebElement schoolCalendarHeader;
 	@FindBy(css = ".calendar-cell")
 	private List<WebElement> calendarCells;
 	@FindBy(css = "[options=\"schoolCalendars\"] select")
@@ -3769,6 +3784,82 @@ private WebElement locationColumn;
 	private List<WebElement> schoolDays;
 	@FindBy(css = ".session-information-and-calendar-wrapper")
 	private WebElement calendarWrapper;
+	@FindBy(css = ".calendar-overview")
+	private List<WebElement> calendarList;
+	@FindBy(css = ".school-calendars-year-switcher")
+	private WebElement schoolYear;
+	@FindBy(css = ".calendar-block")
+	private List<WebElement> calendarBlocks;
+	@FindBy(className = "school-calendars-linkback")
+	private WebElement schoolCalendarsBackBtn;
+	@FindBy(css = "span.lgn-alert-message.warning")
+	private WebElement warningOnPopup;
+
+	@Override
+	public void clickOnSchoolSchedulesButton() throws Exception {
+		if (isElementLoaded(schoolCalendarsBackBtn, 5)) {
+			clickTheElement(schoolCalendarsBackBtn);
+		} else {
+			SimpleUtils.fail("Calendar page: School Calendars Back button not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void verifyTheContentOnDetailedCalendarPage() throws Exception {
+		if (isElementLoaded(schoolCalendarHeader, 5)) {
+			SimpleUtils.pass("Calendar: " + schoolCalendarHeader.getText() + " page loaded Successfully!");
+		} else {
+			SimpleUtils.fail("Calendar title failed to load!", false);
+		}
+		if (isElementLoaded(schoolYear,  5)) {
+			SimpleUtils.pass("Calendar: " + schoolCalendarHeader.getText() + ", school year: " + schoolYear.getText() + " loaded Successfully!");
+		} else {
+			SimpleUtils.fail("Calendar: School Year element not loaded Successfully!", false);
+		}
+		if (isElementLoaded(deleteCalendarBtn, 5) && isElementLoaded(editCalendarBtn, 5)) {
+			SimpleUtils.pass("Calendar: Delete and Edit buttons loaded Successfully!");
+		} else {
+			SimpleUtils.fail("Calendar: Delete and Edit buttons not loaded Successfully!", false);
+		}
+		if (areListElementVisible(calendarBlocks, 5) && calendarBlocks.size() == 12) {
+			SimpleUtils.pass("Calendar: 12 Months loaded Successfully!");
+		} else {
+			SimpleUtils.fail("Calendar: 12 Months not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void verifyTheContentOnEachCalendarList() throws Exception {
+		if (areListElementVisible(calendarList, 10)) {
+			SimpleUtils.pass("Calendars are loaded Successfully!");
+			for (WebElement calendar : calendarList) {
+				WebElement title = calendar.findElement(By.cssSelector(".calendar-overview-title"));
+				List<WebElement> infos = calendar.findElements(By.cssSelector(".calendar-overview-info-title"));
+				WebElement lastUpdateInfo = calendar.findElement(By.cssSelector(".calendar-overview-info-img"));
+				if (title != null && infos != null && lastUpdateInfo != null) {
+					if (infos.size() == 3 && infos.get(0).getText().equals("SCHOOL SESSION START") &&
+					infos.get(1).getText().equals("SCHOOL SESSION END") && infos.get(2).getText().equals("SCHOOL CALENDAR URL")) {
+						SimpleUtils.pass("School Calendar: " + title.getText() + ", verified the content is correct!");
+					} else {
+						SimpleUtils.fail("School Calendar: " + title.getText() + ", the content is incorrect!", false);
+					}
+				} else {
+					SimpleUtils.fail("School Calendar: the content is incorrect!", false);
+				}
+			}
+		} else {
+			SimpleUtils.report("School Calendars: There is no calendars on this page!");
+		}
+	}
+
+	@Override
+	public void verifyTheCalendarListLoaded() throws Exception {
+		if (areListElementVisible(calendarList, 10)) {
+			SimpleUtils.pass("Calendars are loaded Successfully!");
+		} else {
+			SimpleUtils.report("School Calendars: There is no calendars on this page!");
+		}
+	}
 
 	@Override
 	public void verifyClickedDayIsHighlighted() throws Exception {
@@ -3863,6 +3954,46 @@ private WebElement locationColumn;
 	}
 
 	@Override
+	public void clickOnCancelButtonOnPopup() throws Exception {
+		if (isElementLoaded(cancelButton, 5)) {
+			clickTheElement(cancelButton);
+			SimpleUtils.pass("Click the Cancel button on Popup Successfully!");
+			waitUntilElementIsInVisible(cancelButton);
+		} else {
+			SimpleUtils.fail("Cancel button not loaded Successfully on popup!", false);
+		}
+	}
+
+	@Override
+	public void	clickOnDeleteCalendarButton() throws Exception {
+		String warningMessage = "Please note: Deleting this school calendar will affect schedules of all Team Members that are currently assigned to this calendar.";
+		if (isElementLoaded(deleteCalendarBtn, 10)) {
+			clickTheElement(deleteCalendarBtn);
+			if (isElementLoaded(confirmButton, 10) && confirmButton.getText().trim().equalsIgnoreCase("DELETE ANYWAY") && isElementLoaded(cancelButton, 5)
+			&& isElementLoaded(warningOnPopup, 5) && warningOnPopup.getText().contains(warningMessage)) {
+				SimpleUtils.pass("Click on DELETE calendar button Successfully, warning message pops up!");
+			}
+		} else {
+			SimpleUtils.fail("Delete Calendar button not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void clickOnDELETEANYWAYButton() throws Exception {
+		if (isElementLoaded(confirmButton, 10) && confirmButton.getText().trim().equalsIgnoreCase("DELETE ANYWAY")) {
+			clickTheElement(confirmButton);
+			waitForSeconds(3);
+			if (isElementLoaded(schoolCalendarHeader, 10)) {
+				SimpleUtils.pass("Delete the school calendar Successfully!");
+			} else {
+				SimpleUtils.fail("Failed to delete the school calendar!", false);
+			}
+		} else {
+			SimpleUtils.fail("School Calendar: DELETE ANYWAY button not loaded Successfully!", false);
+		}
+	}
+
+	@Override
 	public void deleteCalendarByName(String calendarName) throws Exception {
 		if (areListElementVisible(calendarTitles, 10)) {
 			for (WebElement title : calendarTitles) {
@@ -3873,7 +4004,7 @@ private WebElement locationColumn;
 						if (isElementLoaded(confirmButton, 10) && confirmButton.getText().trim().equalsIgnoreCase("DELETE ANYWAY")) {
 							clickTheElement(confirmButton);
 							waitForSeconds(3);
-							if (isElementLoaded(schoolCalendarHearder, 10)) {
+							if (isElementLoaded(schoolCalendarHeader, 10)) {
 								SimpleUtils.pass("Delete the school calendar Successfully!");
 								break;
 							} else {
