@@ -3175,13 +3175,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			List<String> userLocationListContext = new ArrayList<String>();
 			for (WebElement location:defaultLocationsForOneUser) {
 				userLocationListContext.add(location.getText());
-				if(null ==userLocationListContext && userLocationListContext.size()<=0){
+				if(userLocationListContext ==null && userLocationListContext.size()<=0){
 					SimpleUtils.report("userLocationListContext is null！");
 				}else{
-
 					StringBuilder sb = new StringBuilder();
-
-
 					for(int i=0;i<userLocationListContext.size();i++){
 						if(i<userLocationListContext.size()-1){
 							sb.append(userLocationListContext.get(i));
@@ -3190,9 +3187,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 							sb.append(userLocationListContext.get(i));
 						}
 					}
-
 					resultString = sb.toString();
-					System.out.println("最后拼接的字符串结果：" + resultString);
 				}
 				return resultString;
 			}
