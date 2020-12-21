@@ -5116,7 +5116,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 		return null;
 	}
-}
 
 	//Added by Haya
 	@FindBy(css = "form-section[form-title=\"Predictable Schedule\"] .lg-question-input")
