@@ -388,7 +388,7 @@
                     <!--                    <include name="verifyScheduleFunctionalitySchedule" />-->
                     <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
                     <include name="verifyScheduleFunctionalityWeekView"/>
-                    <include name="verifyScheduleFunctionalityDayView"/>
+                    <include name="verifyScheduleFunctionalityDayViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView"/>

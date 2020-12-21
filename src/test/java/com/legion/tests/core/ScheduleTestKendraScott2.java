@@ -542,8 +542,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the Schedule functionality > Day View")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyScheduleFunctionalityDayView(String username, String password, String browser, String location)
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyScheduleFunctionalityDayViewAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
