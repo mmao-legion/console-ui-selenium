@@ -11,10 +11,7 @@ import com.legion.pages.pagefactories.mobile.MobilePageFactory;
 import com.legion.pages.pagefactories.mobile.MobileWebPageFactory;
 import com.legion.test.testrail.APIException;
 import com.legion.tests.annotations.Enterprise;
-import com.legion.tests.testframework.ExtentReportManager;
-import com.legion.tests.testframework.ExtentTestManager;
-import com.legion.tests.testframework.LegionWebDriverEventListener;
-import com.legion.tests.testframework.ScreenshotManager;
+import com.legion.tests.testframework.*;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -39,6 +36,7 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
+import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.Reporter;
@@ -51,6 +49,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.rmi.UnexpectedException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -198,11 +197,10 @@ public abstract class TestBase {
         //todo replace Chrome driver initializaton with what Manideep has
         DesiredCapabilities capabilities = null;
         String url = "";
-
-        capabilities = SimpleUtils.initCapabilities(getDriverType(), getVersion(), getOS());
         url = SimpleUtils.getURL();
         // Initialize browser
-        if (url == null) {
+        if (propertyMap.get("isGridEnabled").equalsIgnoreCase("false")) {
+            capabilities = SimpleUtils.initCapabilities(getDriverType(), getVersion(), getOS());
             if (getDriverType().equalsIgnoreCase(propertyMap.get("INTERNET_EXPLORER"))) {
                 InternetExplorerOptions options = new InternetExplorerOptions()
                         .requireWindowFocus()
@@ -214,21 +212,20 @@ public abstract class TestBase {
 
             }
             if (getDriverType().equalsIgnoreCase(propertyMap.get("CHROME"))) {
-                System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
+                System.setProperty("webdriver.chrome.driver", propertyMap.get("CHROME_DRIVER_PATH"));
                 ChromeOptions options = new ChromeOptions();
-
-                if(propertyMap.get("isHeadlessBrowser").equalsIgnoreCase("true")){
+                if (propertyMap.get("isHeadlessBrowser").equalsIgnoreCase("true")) {
 //                    options.addArguments("headless");
-                    options.addArguments( "--headless","--disable-gpu", "--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage" );
+                    options.addArguments("--headless", "--disable-gpu", "--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage");
                     options.addArguments("window-size=1200x600");
                     runScriptOnHeadlessOrBrowser(options);
-                }else{
+                } else {
                     runScriptOnHeadlessOrBrowser(options);
                 }
 
             }
             if (getDriverType().equalsIgnoreCase(propertyMap.get("FIREFOX"))) {
-                System.setProperty("webdriver.gecko.driver",propertyMap.get("FIREFOX_DRIVER_PATH"));
+                System.setProperty("webdriver.gecko.driver", propertyMap.get("FIREFOX_DRIVER_PATH"));
                 FirefoxProfile profile = new FirefoxProfile();
                 profile.setAcceptUntrustedCertificates(true);
                 FirefoxOptions options = new FirefoxOptions();
@@ -240,17 +237,37 @@ public abstract class TestBase {
             LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
             getDriver().register(webDriverEventListener);
 
-        }
-        else {
+        } else {
             // Launch remote browser and set it as the current thread
-            setDriver(new RemoteWebDriver(
-                    new URL(url),
-                    capabilities));
+            createRemoteChrome(url);
+        }
         }
 
 
-    }
+    private void createRemoteChrome(String url){
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setCapability("browserName", "chrome");
+//        caps.setCapability("version", "5.4.0-1029-aws");
+        caps.setCapability("platform", "LINUX");
 
+        caps.setCapability("network", true);
+        caps.setCapability("visual", true);
+        caps.setCapability("video", true);
+        caps.setCapability("console", true);
+
+//        caps.setCapability("selenium_version","3.141.59");
+        caps.setCapability("chrome.driver","87.0");
+        Assert.assertNotNull(url,"Error grid url is not configured, please review it in envCFg.json file and add it.");
+        try {
+            setDriver(new RemoteWebDriver(new URL(url),caps));
+
+            pageFactory = createPageFactory();
+            LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
+            getDriver().register(webDriverEventListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private PageFactory createPageFactory() {
         return new ConsoleWebPageFactory();
@@ -282,19 +299,25 @@ public abstract class TestBase {
 
 
     public static void visitPage(Method testMethod){
+
         setEnvironment(propertyMap.get("ENVIRONMENT"));
         Enterprise e = testMethod.getAnnotation(Enterprise.class);
         String enterpriseName = null;
-        if (e != null ) {
+        if (System.getProperty("enterprise")!=null) {
+            enterpriseName = System.getProperty("enterprise");
+        }else if(e != null ){
             enterpriseName = SimpleUtils.getEnterprise(e.name());
-        }
-        else {
+        }else{
             enterpriseName = SimpleUtils.getDefaultEnterprise();
         }
         setEnterprise(enterpriseName);
         switch (getEnvironment()){
             case "QA":
-                setURL(propertyMap.get("QAURL"));
+                if (System.getProperty("env")!=null) {
+                    setURL(System.getProperty("env"));
+                }else {
+                    setURL(propertyMap.get("QAURL"));
+                }
                 loadURL();
                 break;
             case "DEV":

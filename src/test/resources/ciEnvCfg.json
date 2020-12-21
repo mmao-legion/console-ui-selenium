@@ -3,7 +3,7 @@
   "FIREFOX_DRIVER_PATH": "/usr/local/bin/geckodriver",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://rc-enterprise.dev.legion.work/",
-  "Screenshot_Path": "/Users/fenghuanli/Documents/project/screenshots",
+  "Screenshot_Path": "/home/circleci/project/screenshots",
   "ENTERPRISE" : "LegionCoffee2",
   "Coffee_Enterprise" : "LegionCoffee",
   "LegionTech_Enterprise" : "LegionTech",
@@ -32,7 +32,7 @@
   "deviceName" : "Gionee X1",
   "platformVersion" : "7.0",
   "isParallelBrowser" : "false",
-  "Download_File_Default_Dir" : "C:\\Users\\hydsoft\\Downloads",
+  "Download_File_Default_Dir" : "/home/circleci/project/downloads",
   "isHeadlessBrowser" : "false",
   "isGridEnabled" : "true",
   "URL" : "http://localhost:4455/wd/hub"

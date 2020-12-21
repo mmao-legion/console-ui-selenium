@@ -59,6 +59,7 @@ public interface DashboardPage {
     public String  getCurrentDistrict() throws Exception;
     public boolean IsThereDistrictNavigationForLegionBasic() throws Exception;
     public List<String> getLocationListInDashboard();
+    public String getCurrentLocationInDMView() throws Exception;
     public boolean isLegionLogoDisplay() throws Exception;
     public boolean isDashboardConsoleMenuDisplay() throws Exception;
     public boolean isTeamConsoleMenuDisplay() throws Exception;

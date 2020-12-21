@@ -45,7 +45,11 @@
                     <include name="verifyChangeMSParentLocationToNoneFunction" />
                     <include name="verifyChangeP2PParentLocationToNoneFunction" />
 
-                    <include name="verifyDistrictFunction" />
+                    <!--                    District test cases-->
+                    <include name="verifyDistrictListPageLoading" />
+                    <include name="verifySearchDistrictFunction" />
+                    <include name="verifyAddOrUpdateDistrictFunction" />
+                    <include name="verifyDisableEnableDistrictFunction" />
 
 
                 </methods>
@@ -70,15 +74,6 @@
             </class>
         </classes>
     </test>
-<!--    <test name="Location Group Test">-->
-<!--        <classes>-->
-<!--            <class name="com.legion.tests.core.LocationsGroupTest">-->
-<!--                <methods>-->
-<!--                    -->
-<!--                </methods>-->
-<!--            </class>-->
-<!--        </classes>-->
-<!--    </test>-->
 
 <!--======================================================End - This is OP tests===================================================-->
 

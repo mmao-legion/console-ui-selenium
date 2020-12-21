@@ -114,6 +114,9 @@ public class ConsoleWebPageFactory implements PageFactory {
 	public LiquidDashboardPage createConsoleLiquidDashboardPage() { return new ConsoleLiquidDashboardPage(); }
 
 	@Override
+	public JobsPage createOpsPortalJobsPage() { return new OpsPortalJobsPage();}
+
+	@Override
 	public ScheduleDMViewPage createScheduleDMViewPage() { return new ConsoleScheduleDMViewPage(); }
 
 	@Override

@@ -287,6 +287,7 @@ public interface ControlsNewUIPage {
 	public void verifyUpdateUserAndRolesOneUserLocationInfo(String userFirstName) throws Exception;
 	public void clickOnLocationsTabInGlobalModel() throws Exception;
 	public List<String> getAllLocationsInGlobalModel() throws Exception;
+	public String getCurrentLocationInControls() throws Exception;
 	public void verifyRolePermissionExists(String section, String permission) throws Exception;
 	public void turnOnOrOffSpecificPermissionForSM(String section, String permission, String action) throws Exception;
 }
