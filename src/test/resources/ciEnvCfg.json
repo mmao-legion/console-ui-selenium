@@ -1,5 +1,6 @@
 {
   "CHROME_DRIVER_PATH": "D:\\Automation\\ui\\driver\\chromedriver_win32\\chromedriver.exe",
+  "CHROME_DRIVER_PATH": "src/test/resources/Driver/chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "/usr/local/bin/geckodriver",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://rc-enterprise.dev.legion.work/",
@@ -20,9 +21,9 @@
   "INTERNET_EXPLORER" : "Internet Explorer",
   "CHROME" : "Chrome",
   "FIREFOX" : "Firefox",
-  "console_logs" : "false",
+  "console_logs" : "true",
   "close_browser" : "false",
-  "show_report" : "false",
+  "show_report" : "true",
   "VERSION" : "68",
   "OS" : "WINDOW",
   "scheduleWeekCount" : "6",

@@ -107,8 +107,8 @@ public class ScheduleOverviewTest extends TestBase{
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Estelle")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the Schedule functionality  Overview")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "Verify the Schedule functionality > Overview")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyScheduleFunctionalityOverviewAsStoreManager(String username, String password, String browser, String location) throws Exception {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -141,13 +141,15 @@ public class ScheduleOverviewTest extends TestBase{
 		//	user can click on Schedule week which will navigate to Schedule page
 		scheduleOverviewPage.clickOnCurrentWeekToOpenSchedule();
 		SimpleUtils.pass("user can click on Schedule week which will navigate to Schedule page");
-		if (schedulePage.isGenerateButtonLoaded()){
+
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (!isWeekGenerated){
 			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
 		HashMap<String, Float> scheduleSmartCardHoursWages = schedulePage.getScheduleBudgetedHoursInScheduleSmartCard();
-		if (overviewData.get("guidanceHours").equals(scheduleSmartCardHoursWages.get("budgetedHours"))
-				& overviewData.get("scheduledHours").equals(scheduleSmartCardHoursWages.get("scheduledHours"))
-				& overviewData.get("otherHours").equals(scheduleSmartCardHoursWages.get("otherHours"))) {
+		if ((scheduleSmartCardHoursWages.get("budgetedHours") - overviewData.get("guidanceHours") <= 0.05)
+				& (scheduleSmartCardHoursWages.get("scheduledHours") - overviewData.get("scheduledHours") <= 0.05)
+				& (scheduleSmartCardHoursWages.get("otherHours") - overviewData.get("otherHours") <= 0.05)) {
 			SimpleUtils.pass("Schedule/Budgeted smartcard-is showing the values in Hours and wages, it is displaying the same data as overview page have for the current week .");
 		}else {
 			SimpleUtils.fail("Scheduled Hours and Overview Schedule Hours not same",true);
@@ -173,7 +175,7 @@ public class ScheduleOverviewTest extends TestBase{
 				String scheduleStatusAftGenerated = null;
 				scheduleOverviewPage.clickOnGuidanceBtnOnOverview(i);
 				Thread.sleep(5000);
-				if(schedulePage.isGenerateButtonLoaded())
+				if(!schedulePage.isWeekGenerated())
 				{
 					schedulePage.createScheduleForNonDGFlowNewUI();
 					schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());

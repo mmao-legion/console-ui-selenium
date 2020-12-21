@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -77,10 +78,13 @@ public abstract class TestBase {
     String TestID = null;
 //  public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
+    public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/DistrictsForDifferentEnterprises.json");
     private static ExtentReports extent = ExtentReportManager.getInstance();
+    static HashMap<String,String> testRailCfg = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
     public static AndroidDriver<MobileElement> driver;
     public static String versionString;
     public static int version;
+    public static  int flagForTestRun = 0;
     public String enterpriseName;
     public static String pth=System.getProperty("user.dir");
     public static String reportFilePath=pth+"/Reports/";
@@ -92,10 +96,15 @@ public abstract class TestBase {
     public static final int TEST_CASE_PASSED_STATUS = 1;
     public static final int TEST_CASE_FAILED_STATUS = 5;
 
-    @Parameters({ "platform", "executionon", "runMode","testRail"})
+    @Parameters({ "platform", "executionon", "runMode","testRail","testSuiteName","testRailRunName"})
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
-                            @Optional String runMode, @Optional String testRail) throws Exception {
+                            @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
+        MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
+        MyThreadLocal.setTestRailRunName(testRailRunName);
+        if (MyThreadLocal.getTestCaseIDList()==null){
+            MyThreadLocal.setTestCaseIDList(new ArrayList<Integer>());
+        }
         if(platform!= null && executionon!= null && runMode!= null){
             if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice")
                     && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){
@@ -154,9 +163,13 @@ public abstract class TestBase {
                 + " " + method.getName() + " : " + testName + ""
                 + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
         extent.setSystemInfo(method.getName(), enterpriseName.toString());
-        setTestRailRunId(0);
+        //setTestRailRunId(0);
+        if (MyThreadLocal.getTestRailRunId()==null){
+            setTestRailRunId(0);
+        }
         List<Integer> testRailId =  new ArrayList<Integer>();
         setTestRailRun(testRailId);
+
         if(getTestRailReporting()!=null){
             SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
         }
@@ -328,6 +341,12 @@ public abstract class TestBase {
             } catch (TimeoutException te1) {
                 SimpleUtils.fail("Page failed to load", false);
             }
+        } catch (WebDriverException we) {
+            try {
+                getDriver().navigate().refresh();
+            } catch (TimeoutException te1) {
+                SimpleUtils.fail("Page failed to load", false);
+            }
         }
     }
 
@@ -340,9 +359,25 @@ public abstract class TestBase {
         loginPage.loginToLegionWithCredential(username, Password);
         loginPage.verifyNewTermsOfServicePopUp();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        changeDistrictAccordingToEnterprise(locationSelectorPage);
         locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, location);
+    }
+
+    private void changeDistrictAccordingToEnterprise(LocationSelectorPage locationSelectorPage) {
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
+            locationSelectorPage.changeDistrict(districtsMap.get("Coffee_Enterprise"));
+        }
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
+            locationSelectorPage.changeDistrict(districtsMap.get("KendraScott2_Enterprise"));
+        }
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("OP_Enterprise"))) {
+            locationSelectorPage.changeDistrict(districtsMap.get("OP_Enterprise"));
+        }
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("DGStage_Enterprise"))) {
+            locationSelectorPage.changeDistrict(districtsMap.get("DGStage_Enterprise"));
+        }
     }
 
     public abstract void firstTest(Method testMethod, Object[] params) throws Exception;

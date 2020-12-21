@@ -1,23 +1,13 @@
 package com.legion.pages.core;
 
-import java.lang.reflect.Array;
-import java.net.SocketImpl;
-import java.nio.file.WatchEvent;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.legion.utils.FileDownloadVerify;
-import com.legion.utils.MyThreadLocal;
-import cucumber.api.java.hu.Ha;
-import cucumber.api.java.it.Ma;
-import cucumber.api.java.sl.In;
-import freemarker.template.SimpleDate;
-import net.bytebuddy.TypeCache;
-import net.sourceforge.htmlunit.corejs.javascript.EcmaError;
-import org.apache.xerces.parsers.IntegratedParserConfiguration;
+import com.legion.pages.ProfileNewUIPage;
+import com.legion.tests.core.TeamTest;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.FindBy;
@@ -28,7 +18,6 @@ import com.legion.pages.TeamPage;
 import com.legion.tests.core.TeamTestKendraScott2.timeOffRequestAction;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
-import org.openqa.selenium.support.ui.Select;
 
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -165,17 +154,20 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
     @FindBy(css="button.lgn-action-button-success")
     private WebElement confirmTimeOffApprovalBtn;
 
+    @FindBy(className = "day-week-picker-period-active")
+	private WebElement currentWeek;
+
 	 public ConsoleTeamPage() {
 		PageFactory.initElements(getDriver(), this);
     }
     
     public void goToTeam() throws Exception
 	{
-    	
-    	if(isElementLoaded(goToTeamButton))
+		scrollToTop();
+    	if(isElementLoaded(goToTeamButton, 5))
     	{
     		activeConsoleName = teamConsoleName.getText();
-    		click(goToTeamButton);
+    		clickTheElement(goToTeamButton);
     	}else{
     		SimpleUtils.fail("Team button not present on the page",false);
     	}
@@ -245,14 +237,14 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		public void coverage() {
 			// TODO Auto-generated method stub
 			try {
-				if(isElementLoaded(goToCoverageTab))
+				if(isElementLoaded(goToCoverageTab, 10))
 				{
+					clickTheElement(goToCoverageTab);
 					SimpleUtils.pass("Coverage tab present on Team Page");
-					goToCoverageTab.click();
-					if(isElementLoaded(coverageLoading)){
-						SimpleUtils.pass("Coverage Loaded Successfully for current week "+coverageTitle.getText());
+					if(isElementLoaded(coverageLoading, 20)){
+						SimpleUtils.pass("Coverage Loaded Successfully for current week "+ currentWeek.getText());
 					}else{
-						SimpleUtils.fail("Coverage not-loaded for "+coverageTitle.getText(),false);
+						SimpleUtils.fail("Coverage not-loaded for "+ currentWeek.getText(),false);
 					}
 
 				}else{
@@ -261,6 +253,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				SimpleUtils.fail("Click on Coverage tab failed!", false);
 			}
 		}
   		
@@ -340,7 +333,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 
 		@Override
-		public void searchAndSelectTeamMemberByName(String username) throws Exception {
+		public String searchAndSelectTeamMemberByName(String username) throws Exception {
+	 		String selectedName = "";
 			boolean isTeamMemberFound = false;
 			if(isElementLoaded(teamMemberSearchBox, 10)) {
 				teamMemberSearchBox.clear();
@@ -351,12 +345,17 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 						WebElement tr = teamMember.findElement(By.className("tr"));
 						if (tr != null) {
 							WebElement name = tr.findElement(By.cssSelector("span.name"));
-							WebElement title = tr.findElement(By.cssSelector("span.title"));
+							List<WebElement> titles = tr.findElements(By.cssSelector("span.title"));
 							WebElement status = tr.findElement(By.cssSelector("span.status"));
-							if (name != null && title != null && status != null) {
-								String nameJobTitleStatus = name.getText() + title.getText() + status.getText();
-								if (nameJobTitleStatus.toLowerCase().contains(username.toLowerCase())) {
-									click(name);
+							String title = "";
+							if (name != null && titles != null && status != null && titles.size() > 0) {
+								for (WebElement titleElement : titles) {
+									title += titleElement.getText();
+								}
+								String nameJobTitleStatus = name.getText() + title + status.getText();
+								if (nameJobTitleStatus.contains(username)) {
+									selectedName = name.getText();
+									clickTheElement(name);
 									isTeamMemberFound = true;
 									SimpleUtils.pass("Team Page: Team Member '" + username + "' selected Successfully.");
 									break;
@@ -372,6 +371,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}
 			if(!isTeamMemberFound)
 				SimpleUtils.report("Team Page: Team Member '"+username+"' not found.");
+			return selectedName;
 		}
 
 		@Override
@@ -429,7 +429,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			if(isElementLoaded(toDoBtnToClose, 5)) {
 				waitForSeconds(3);
 				moveToElementAndClick(toDoBtnToClose);
-				waitForSeconds(1);
+				waitForSeconds(3);
 				if(!isToDoWindowOpened())
 					SimpleUtils.pass("Team Page: 'ToDo' popup window closed successfully.");
 				else
@@ -438,7 +438,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		}
 
 		public boolean isToDoWindowOpened() throws Exception{
-			if(isElementLoaded(toDoPopUpWindow,10) && areListElementVisible(todoCards,10)) {
+			if(isElementLoaded(toDoPopUpWindow,25) && areListElementVisible(todoCards,25)) {
 				if(toDoPopUpWindow.getAttribute("class").contains("is-shown"))
 					return true;
 			}
@@ -558,7 +558,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private List<WebElement> alertMessages;
 	@FindBy (css = "div.lgn-alert-message")
 	private WebElement popupMessage;
-	@FindBy (css = "div:nth-child(7) > div.value")
+	//@FindBy (css = "div:nth-child(7) > div.value")
+	@FindBy (css = ".quick-engagement div:nth-child(7) > div.value")
 	private WebElement homeStoreLocation;
 	@FindBy (css = "pre.change-location-msg")
 	private WebElement changeLocationMsg;
@@ -664,6 +665,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement manualOnBoardButton;
 	@FindBy (css = "div.loan-to-calendar i.next-month")
 	private WebElement endDateNextMonthArrow;
+	@FindBy (css = "div.loan-from-calendar i.next-month")
+	private WebElement startDateNextMonthArrow;
 	@FindBy (css = "[ng-src*=\"home-location\"]")
 	private WebElement homeStoreImg;
 	@FindBy (css = "div.personal-details-panel div.invitation-status")
@@ -685,7 +688,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	public void rejectAllTheTimeOffRequests() throws Exception {
 		if(areListElementVisible(approvedTimeOffRequests,10) && approvedTimeOffRequests.size() > 0) {
 			for(WebElement timeOffRequest : approvedTimeOffRequests) {
-				click(timeOffRequest);
+				clickTheElement(timeOffRequest);
 				if(isElementLoaded(timeOffRejectBtn,5)) {
 					scrollToElement(timeOffRejectBtn);
 					click(timeOffRejectBtn);
@@ -824,7 +827,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		if(areListElementVisible(teamMembers, 60)){
 			SimpleUtils.pass("Team Page is Loaded Successfully!");
 		}else{
-			SimpleUtils.fail("Team Page isn't Loaded Successfully", true);
+			SimpleUtils.fail("Team Page isn't Loaded Successfully", false);
 		}
 	}
 
@@ -1094,10 +1097,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			if (locationCard.getAttribute(attribute) != null && !locationCard.getAttribute(attribute).isEmpty()){
 				SimpleUtils.pass("Select one Location successfully!");
 			}else{
-				SimpleUtils.fail("Failed to select the Location!", true);
+				SimpleUtils.fail("Failed to select the Location!", false);
 			}
 		}else{
-			SimpleUtils.fail("Location Cards Failed to load!", true);
+			SimpleUtils.fail("Location Cards Failed to load!", false);
 		}
 		return selectedLocation;
 	}
@@ -1203,6 +1206,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		String className = "selected-day";
 		int currentDayIndex = 0;
 		int maxIndex = 0;
+		int randomIndex = 0;
 		Random random = new Random();
 		if (areListElementVisible(startDaysOnCalendar, 10)) {
 			/*
@@ -1210,9 +1214,16 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			 */
 			currentDayIndex = getSpecificDayIndex(currentDay);
 			maxIndex = startDaysOnCalendar.size() - 1;
-			int randomIndex = currentDayIndex + random.nextInt(maxIndex - currentDayIndex);
+			if (currentDayIndex < maxIndex) {
+				randomIndex = currentDayIndex + 1;
+			}else {
+				if (isElementLoaded(endDateNextMonthArrow, 5)) {
+					click(endDateNextMonthArrow);
+					randomIndex = 7 + random.nextInt(startDaysOnCalendar.size() - 1 - 7);
+				}
+			}
 			WebElement randomElement = startDaysOnCalendar.get(randomIndex);
-			click(randomElement);
+			click(startDaysOnCalendar.get(randomIndex));
 			if (randomElement.getAttribute("class").contains(className)) {
 				SimpleUtils.pass("Select a start date successfully!");
 			} else {
@@ -1227,9 +1238,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			 */
 			if (isElementLoaded(endDateNextMonthArrow, 5)) {
 				click(endDateNextMonthArrow);
+				click(endDateNextMonthArrow);
 			}
 			maxIndex = endDaysOnCalendar.size() - 1;
-			int randomIndex = 7 + random.nextInt(maxIndex - 7);
+			randomIndex = 7 + random.nextInt(maxIndex - 7);
 			WebElement randomElement = endDaysOnCalendar.get(randomIndex);
 			click(randomElement);
 			if (randomElement.getAttribute("class").contains(className)) {
@@ -1348,11 +1360,41 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		}
 	}
 
+	@FindBy(css = "form-section[on-action=\"editProfile()\"]")
+	private WebElement profileSection;
+
 	@Override
 	public String verifyTheFunctionOfEditBadges() throws Exception {
 		String badges = "BADGES";
 		String badgeID = "";
-		if (isElementLoaded(badgeTitle, 5)) {
+		if (isElementLoaded(profileSection,5) && isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),5)){
+			click(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
+			SimpleUtils.pass("enter edit profile mode!");
+			waitForSeconds(3);
+			WebElement manageBadge = profileSection.findElement(By.cssSelector(".ManageButton"));
+			scrollToElement(manageBadge);
+			moveToElementAndClick(manageBadge);
+			if (isManageBadgesLoaded()) {
+				badgeID = selectTheBadgeByRandom();
+				confirmButton.click();
+				if (isElementLoaded(badgeIcon, 5)) {
+					WebElement badge = badgeIcon.findElement(By.id(badgeID));
+					if (badge != null) {
+						SimpleUtils.pass("Select the badges successfully!");
+					}else{
+						SimpleUtils.fail("The selected badge doesn't show!", true);
+					}
+				}else {
+					SimpleUtils.fail("Badges failed to load on Profile page!", true);
+				}
+			}
+			moveToElementAndClick(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
+		} else {
+			SimpleUtils.fail("Edit button is not loaded!",true);
+		}
+
+
+		/*if (isElementLoaded(badgeTitle, 5)) {
 			if (badgeTitle.getText().equals(badges)) {
 				WebElement editBadge = badgeTitle.findElement(By.tagName("i"));
 				click(editBadge);
@@ -1375,7 +1417,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}
 		}else{
 			SimpleUtils.fail("BADGES failed to load!", true);
-		}
+		} */
 		return badgeID;
 	}
 
@@ -1651,7 +1693,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 	@Override
-	public void verifyTMCountIsCorrectOnRoster() throws Exception {
+	public int verifyTMCountIsCorrectOnRoster() throws Exception {
 		int count = 0;
 		if (areListElementVisible(teamMemberNames, 5) && isElementLoaded(tmCount, 5)) {
 			String countOnRoster = tmCount.getText().substring(tmCount.getText().indexOf("(") + 1, tmCount.getText().indexOf(")"));
@@ -1668,6 +1710,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		}else {
 			SimpleUtils.fail("Team Members and team count failed to load!", true);
 		}
+		return count;
 	}
 
 	@Override
@@ -1861,8 +1904,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void clickOnActivateButton() throws Exception {
-		if (isElementLoaded(activateButton, 10)) {
-			click(activateButton);
+		if (isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Activate\"]")), 10)) {
+			click(profileSection.findElement(By.xpath("//span[text()=\"Activate\"]")));
 		} else {
 			SimpleUtils.fail("Activate button failed to load on Profile Tab!", false);
 		}
@@ -1938,14 +1981,24 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void verifyTheStatusOfTeamMember(String expectedStatus) throws Exception {
-		if (isElementLoaded(tmStatus, 10)) {
-			if (expectedStatus.equals(tmStatus.getText())) {
-				SimpleUtils.pass("Team member's status is correct!");
-			}else {
-				SimpleUtils.fail("Team member's status is incorrect!", true);
+		if (teamMembers.size() > 0){
+			for (WebElement teamMember : teamMembers){
+				WebElement tr = teamMember.findElement(By.className("tr"));
+				if (tr != null) {
+					WebElement status = tr.findElement(By.cssSelector("span.status"));
+					if (status != null) {
+						if (expectedStatus.equals(status.getText())) {
+							SimpleUtils.pass("Team member's status is correct!");
+						}else {
+							SimpleUtils.fail("Team member's status is incorrect!", true);
+						}
+					}else {
+						SimpleUtils.fail("Failed to find the Status!", true);
+					}
+				}else {
+					SimpleUtils.fail("Failed to find the tr element!", true);
+				}
 			}
-		}else {
-			SimpleUtils.fail("Status Element failed to load!", true);
 		}
 	}
 
@@ -2130,6 +2183,19 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 	@Override
+	public List<String> getTMNameList() throws Exception {
+		List<String> nameList = new ArrayList<>();
+		if (areListElementVisible(teamMemberNames, 10)) {
+			for (WebElement name : teamMemberNames) {
+				nameList.add(name.getText());
+			}
+		} else {
+			SimpleUtils.fail("Roster Page: Team members' name list not loaded Successfully!", false);
+		}
+		return nameList;
+	}
+
+	@Override
 	public void verifyTheFunctionOfCancelTerminate() throws Exception {
 		String cancelMsg = "Successfully cancelled removal of Team Member from Roster.";
 		String actualMsg = "";
@@ -2153,7 +2219,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public boolean isManualOnBoardButtonLoaded() throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(manualOnBoardButton, 15)) {
+		if (isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Manual Onboard\"]")), 15)) {
 			isLoaded = true;
 			SimpleUtils.pass("Manual Onboard Button Loaded Successfully!");
 		}else{
@@ -2162,17 +2228,19 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		return isLoaded;
 	}
 
+	@FindBy (xpath = "//button[text()=\"CONFIRM\"]")
+	private WebElement confirmBtn;
 	@Override
 	public void manualOnBoardTeamMember() throws Exception {
 		String successfulMsg = "Team member successfully On-boarded.";
 		String actualMsg = "";
-		if (isElementLoaded(manualOnBoardButton, 5)) {
-			click(manualOnBoardButton);
+		if (isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Manual Onboard\"]")), 5)) {
+			click(profileSection.findElement(By.xpath("//span[text()=\"Manual Onboard\"]")));
 		}else {
 			SimpleUtils.fail("Manual OnBoard button failed to load!", true);
 		}
-		if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
-			click(confirmButton);
+		if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmBtn, 15)) {
+			click(confirmBtn);
 			if (isElementLoaded(popupMessage, 15)) {
 				actualMsg = popupMessage.getText();
 				if (successfulMsg.equals(actualMsg)) {
@@ -2193,7 +2261,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			Random random = new Random();
 			int randomIndex = random.nextInt(teamMemberNames.size());
 			teamMember = teamMemberNames.get(randomIndex).getText();
-			click(teamMemberNames.get(randomIndex));
+			clickTheElement(teamMemberNames.get(randomIndex));
 		} else {
 			SimpleUtils.fail("Team Members are failed to load!", true);
 		}
@@ -2267,6 +2335,22 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			value = newValue;
 		}
 		public String getValue() { return value; }
+	}
+
+	@Override
+	public void rejectAllTeamMembersTimeOffRequest(ProfileNewUIPage profileNewUIPage, int index) throws Exception {
+		if (areListElementVisible(teamMemberNames, 15)) {
+			while (index < teamMemberNames.size()) {
+				clickTheElement(teamMemberNames.get(index));
+				String myTimeOffLabel = "Time Off";
+				profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+				rejectAllTheTimeOffRequests();
+				goToTeam();
+				rejectAllTeamMembersTimeOffRequest(profileNewUIPage, index + 1);
+			}
+		} else {
+			SimpleUtils.fail("Team Members are failed to load!", true);
+		}
 	}
 
 	@Override
@@ -2471,7 +2555,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void clickSaveShiftPrefBtn() throws Exception {
 		if (isElementLoaded(savePreferButton, 5)) {
-			click(savePreferButton);
+			clickTheElement(savePreferButton);
 		}else {
 			SimpleUtils.fail("Save edit shit preferences button failed to load!", true);
 		}
@@ -2746,7 +2830,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 	// Added by Nora: For Profile Section
-	@FindBy (css = "[ng-click=\"editProfile()\"]")
+	@FindBy (css = "work-preference-management .user-profile-section button")
 	private WebElement editProfileButton;
 	@FindBy (css = "[ng-click=\"editEngagement()\"]")
 	private WebElement editEngagementBtn;
@@ -2769,18 +2853,19 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void updateBusinessProfilePicture(String filePath) throws Exception {
-		if (isElementLoaded(editProfileButton, 5)) {
-			click(editProfileButton);
-			if (isElementEnabled(businessImageInput, 5)) {
-				businessImageInput.sendKeys(filePath);
+		if(isElementLoaded(profileSection, 10) && isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),10)){
+			click(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
+			if (isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1), 5)) {
+				getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(filePath);
 				// wait for the picture to be loaded
 				waitForSeconds(5);
-				clickTheSaveTMButton();
+				scrollToElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
+				click(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
 			}else {
 				SimpleUtils.fail("Business Profile Image input element isn't enabled!", true);
 			}
-		}else {
-			SimpleUtils.fail("Edit Profile Button failed to load!", true);
+		} else {
+			SimpleUtils.fail("Edit button is not loaded!",true);
 		}
 	}
 
@@ -2908,6 +2993,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				selectedDate = dateHiredInput.getAttribute("value");
 				SimpleUtils.report("Select the hired date: " + selectedDate);
 			}
+			isElementLoadedAndPrintTheMessage(employeeIDInput, "Employee ID Input");
+			if (employeeIDInput.getAttribute("value").isEmpty()) {
+				employeeIDInput.sendKeys("E" + new Random().nextInt(200) + new Random().nextInt(200) + new Random().nextInt(200));
+			}
 			isElementLoadedAndPrintTheMessage(engagementStatusSelect, "Engagement Status Select");
 			selectByVisibleText(engagementStatusSelect, tmDetails.get("ENGAGEMENT_STATUS"));
 			isElementLoadedAndPrintTheMessage(hourlySelect, "Hourly Select");
@@ -2928,7 +3017,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
 		SimpleDateFormat format2 = new SimpleDateFormat("MMM dd, yyyy");
 		if (areListElementVisible(engagementTexts, 5) && areListElementVisible(nextEngagementTexts, 5)) {
-			if (engagementTexts.size() == 4 && nextEngagementTexts.size() == 4) {
+			if (engagementTexts.size() >= 4 && nextEngagementTexts.size() >= 4) {
 				String actualDate = engagementTexts.get(0).getText();
 				String engagementStatus = nextEngagementTexts.get(0).getText();
 				String hourly = nextEngagementTexts.get(1).getText();
@@ -3138,18 +3227,26 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 																		LinkedHashMap<String, List<String>> regularHours) throws Exception {
 		HashMap<Integer, List<String>> timeOffs = new HashMap<>();
 		List<String> weekTimeOffCounts = null;
-		if (isElementLoaded(noTimeOff, 5)) {
-			timeOffs = generateTheDefaultTimeOffTableByRegularHours(indexAndTimes, regularHours);
+		try {
+			if (isElementLoaded(noTimeOff, 5)) {
+				timeOffs = generateTheDefaultTimeOffTableByRegularHours(indexAndTimes, regularHours);
+			}
+		} catch (Exception e) {
+			// Do nothing
 		}
 		if (areListElementVisible(timeOffRows, 10)) {
 			for (int i = 0; i < timeOffRows.size(); i++) {
-				String className = timeOffRows.get(i).getAttribute("class");
+				// Avoid stale element issue
+				String className = getDriver().findElements(By.cssSelector("[class=\"coverage-row row-fx ng-scope coverage-timeoff\"]")).get(i).getAttribute("class");
 				if (!className.contains("ng-hide")) {
+					timeOffRows = getDriver().findElements(By.cssSelector("[class=\"coverage-row row-fx ng-scope coverage-timeoff\"]"));
 					List<WebElement> timeOffCounts = timeOffRows.get(i).findElements(By.className("coverage-cell"));
 					if (areListElementVisible(timeOffCounts, 5)) {
 						weekTimeOffCounts = new ArrayList<>();
-						for (WebElement timeOffCount : timeOffCounts) {
-							weekTimeOffCounts.add(timeOffCount.getText());
+						timeOffCounts = timeOffRows.get(i).findElements(By.className("coverage-cell"));
+						for (int j = 0; j < timeOffCounts.size(); j++) {
+							weekTimeOffCounts.add(getDriver().findElements(By.cssSelector("[class=\"coverage-row row-fx ng-scope coverage-timeoff\"]")).
+									get(i).findElements(By.className("coverage-cell")).get(j).getText());
 						}
 						timeOffs.put(i, weekTimeOffCounts);
 					} else {
@@ -3293,7 +3390,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void clickOnJobTitleFilter() throws Exception {
 		if (isElementLoaded(openFilterBtn, 5)) {
-			click(openFilterBtn);
+			clickTheElement(openFilterBtn);
 			if (isFilterLayoutLoaded()) {
 				SimpleUtils.pass("Click the open filter button Successfully!");
 			}else {
@@ -3314,7 +3411,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void clickOnClearFilterBtn() throws Exception {
-		if (isElementLoaded(clearFilterBtn, 5)) {
+		if (isElementLoaded(clearFilterBtn, 15)) {
 			click(clearFilterBtn);
 			if (isClearFilterSuccessFully()) {
 				SimpleUtils.pass("Clear Filter Successfully!");
@@ -3355,8 +3452,640 @@ private WebElement locationColumn;
 		}else
 			return  false;
 	}
-//    public boolean isTeam() throws Exception
-//	{
+
+	@FindBy(xpath = "//span[contains(text(),'School Calendars')]")
+	private WebElement schoolCalendarTab;
+	@Override
+	public boolean isCalendarTabLoad() throws Exception {
+		if (isElementLoaded(schoolCalendarTab, 10)) {
+			return true;
+		}
+		return false;
+	}
+	// Added by Julie
+	@FindBy(css = ".sub-navigation-view-link")
+	private List<WebElement> TeamSubTabsElement;
+
+	@FindBy(css = ".sub-navigation-view-link.active")
+	private WebElement activatedSubTabElement;
+
+	@FindBy(xpath = "//label[text()=\"School Session Start*\"]/../div[@class=\"session-information-date-input\"]")
+	private WebElement schoolSessionStartInput;
+
+	@FindBy(xpath = "//label[text()=\"School Session End*\"]/../div[@class=\"session-information-date-input\"]")
+	private WebElement schoolSessionEndInput;
+
+	@FindBy(css = "[value=\"calendarName\"] input")
+	private WebElement calendarNameInput;
+
+	@FindBy(css = "[value=\"schoolCalendarUrl\"] input")
+	private WebElement schoolCalendarURLInput;
+
+	@FindBy(css = ".summer-day")
+	private List<WebElement> summerDays;
+
+	@FindBy(css = ".non-school-day")
+	private List<WebElement> nonSchoolDays;
+
+	@FindBy(css = ".set-session-modal")
+	private WebElement setSessionStartAndEndTimeWindow;
+
+	@FindBy(css = "div.big-calendar")
+	private WebElement bigCalendar;
+
+	@FindBy(css = "[month=\"sessionStart\"] .real-day")
+	private List<WebElement> daysInSessionStart;
+
+	@FindBy(css = "[month=\"sessionEnd\"] .real-day")
+	private List<WebElement> daysInSessionEnd;
+
+	@FindBy(css = ".in-range")
+	private List<WebElement> daysInRange;
+
+	@FindBy(css = ".ranged-calendar__month-name")
+	private List<WebElement> rangedCalendars;
+
+	@FindBy(css = ".confirm")
+	private WebElement saveBtnInSessionStartEnd;
+
+	@FindBy(css = ".lg-toast")
+	private WebElement popMessage;
+
+	@FindBy(css = ".set-session-modal-body-times-time-start span")
+	private WebElement startDateInSessionStartEnd;
+
+	@FindBy(xpath = "//div[@class=\"set-session-modal-body-times\"]/div[2]/span")
+	private WebElement endDateInSessionStartEnd;
+
+	@FindBy(css = ".calendar-month-name")
+	private List<WebElement> calendarMonths;
+
+	@FindBy(css = "i.fa-chevron-right[ng-click=\"changeCalendarYear(1)\"]")
+	private WebElement nextYearArrow;
+
+	@FindBy(css = "i.fa-chevron-left[ng-click=\"changeCalendarYear(-1)\"]")
+	private WebElement priorYearArrow;
+
+	@FindBy(css = ".school-calendars-year-switcher")
+	private WebElement schoolCalendarYearSwitcher;
+
+	@Override
+	public void clickOnTeamSubTab(String subTabString) throws Exception {
+		waitForSeconds(3);
+		if (areListElementVisible(TeamSubTabsElement,10) && TeamSubTabsElement.size() != 0) {
+			for (WebElement TeamSubTabElement : TeamSubTabsElement) {
+				if (TeamSubTabElement.getText().equalsIgnoreCase(subTabString)) {
+					click(TeamSubTabElement);
+					waitForSeconds(3);
+				}
+			}
+		}
+		if (verifyActivatedSubTab(subTabString)) {
+			SimpleUtils.pass("Team Page: '" + subTabString + "' tab loaded Successfully!");
+		} else {
+			SimpleUtils.fail("Team Page: '" + subTabString + "' tab not loaded Successfully!", true);
+		}
+	}
+
+	@Override
+	public boolean verifyActivatedSubTab(String SubTabText) throws Exception {
+		if (isElementLoaded(activatedSubTabElement,5)) {
+			if (activatedSubTabElement.getText().trim().equalsIgnoreCase(SubTabText)) {
+				return true;
+			}
+		} else {
+			SimpleUtils.fail("Team Page not loaded successfully", true);
+		}
+		return false;
+	}
+
+	@Override
+	public void verifyCreateCalendarLoaded() throws Exception {
+		if (isElementLoaded(bigCalendar,5) && areListElementVisible(nonSchoolDays,5) && nonSchoolDays.size() > 103)
+			SimpleUtils.pass("School Calendars Page: A new calendar appears with school days and non school day, weekend is non school day and holiday is non school day");
+		else
+			SimpleUtils.fail("School Calendars Page: Calendar not loaded or loaded unexpectedly",false);
+	}
+
+	@Override
+	public void verifySessionStartNEndIsMandatory() throws Exception {
+		if (verifyMandatoryElement(schoolSessionStartInput) && verifyMandatoryElement(schoolSessionEndInput))
+			SimpleUtils.pass("School Calendars Page: School Session Start field and School Session End field are mandatory fields");
+		else
+			SimpleUtils.fail("School Calendars Page: School Session Start field and School Session End field are not mandatory fields",false);
+	}
+
+	@Override
+	public void clickOnSchoolSessionStart() throws Exception {
+		if (isElementLoaded(schoolSessionStartInput,5)) {
+			clickTheElement(schoolSessionStartInput);
+			if (isElementLoaded(setSessionStartAndEndTimeWindow,5))
+				SimpleUtils.pass("School Calendars Page: Click on School Session Start input successfully");
+			else
+				SimpleUtils.fail("School Calendars Page: Failed to click on School Session Start input",false);
+		} else
+			SimpleUtils.fail("School Calendars Page: School Session Start input field failed to load",false);
+	}
+
+	@Override
+	public void clickOnSchoolSessionEnd() throws Exception {
+		if (isElementLoaded(schoolSessionEndInput,5)) {
+			clickTheElement(schoolSessionEndInput);
+			if (isElementLoaded(setSessionStartAndEndTimeWindow,5))
+				SimpleUtils.pass("School Calendars Page: Click on School Session Start input successfully");
+			else
+				SimpleUtils.fail("School Calendars Page: Failed to click on School Session Start input",false);
+		} else
+			SimpleUtils.fail("School Calendars Page:School Session End input field failed to load",false);
+	}
+
+	@Override
+	public void inputCalendarName(String calendarName) throws Exception {
+		if (isElementLoaded(calendarNameInput,5)) {
+			calendarNameInput.sendKeys(calendarName);
+			if (calendarNameInput.getAttribute("value").equals(calendarName))
+				SimpleUtils.pass("School Calendars Page: Input customized calendar name" + calendarName + " successfully");
+			else
+				SimpleUtils.fail("School Calendars Page: Failed to input customized calendar name",false);
+		} else
+			SimpleUtils.fail("School Calendars Page: Calendar Name input field failed to load",false);
+	}
+
+	@Override
+	public String selectRandomDayInSessionStart() throws Exception {
+		String startDate = "";
+		if (areListElementVisible(daysInSessionStart,5)) {
+			int index = (new Random()).nextInt(daysInSessionStart.size());
+			click(daysInSessionStart.get(index));
+			if (daysInSessionStart.get(index).getAttribute("class").contains("in-range") && isElementLoaded(startDateInSessionStartEnd,5)) {
+				SimpleUtils.pass("School Calendars Page: Session start random day is selected successfully");
+				startDate = startDateInSessionStartEnd.getText();
+			} else
+				SimpleUtils.fail("School Calendars Page: Session start random day failed to select",false);
+		} else
+			SimpleUtils.fail("School Calendars Page: Session start days failed to load",false);
+		return startDate;
+	}
+
+	@Override
+	public String selectRandomDayInSessionEnd() throws Exception {
+		String endDate = "";
+		if (areListElementVisible(daysInSessionEnd,5)) {
+			int index = (new Random()).nextInt(daysInSessionEnd.size());
+			click(daysInSessionEnd.get(index));
+			if (daysInSessionEnd.get(index).getAttribute("class").contains("in-range") && isElementLoaded(endDateInSessionStartEnd,5)) {
+				SimpleUtils.pass("School Calendars Page: Session end random day is selected successfully");
+				endDate = endDateInSessionStartEnd.getText();
+			} else
+				SimpleUtils.fail("School Calendars Page: Session start random day failed to select",false);
+		} else
+			SimpleUtils.fail("School Calendars Page: Session start days failed to load",false);
+		return endDate;
+	}
+
+	@Override
+	public void clickOnSaveCalendar() throws Exception {
+		if (isElementLoaded(savePreferButton,5)) {
+			clickTheElement(savePreferButton);
+			if (isElementLoaded(popMessage,5) && popMessage.getText().contains("Success"))
+				SimpleUtils.pass("School Calendars Page: School Calendar is saved successfully");
+			else
+				SimpleUtils.fail("School Calendars Page: School Calendar failed to save",false);
+		} else
+			SimpleUtils.fail("School Calendars Page: School Session End input field failed to load",false);
+	}
+
+	@Override
+	public void verifyDatesInCalendar(String startDate, String EndDate) throws Exception {
+		if (areListElementVisible(summerDays,5)) {
+			DateFormat df = new SimpleDateFormat( "MM-dd-yyyy");
+			Date start = df.parse(startDate);
+			Date end = df.parse(EndDate);
+		    Long betweenDays = (end.getTime() - start.getTime()) / (1000L*3600L*24L);
+			if (summerDays.size() == 364 - betweenDays)
+				SimpleUtils.pass("School Calendars Page: Summer days are consistent with user entered dates");
+			else
+				SimpleUtils.fail("School Calendars Page: Summer days are inconsistent with user entered dates",false);
+		} else
+			SimpleUtils.fail("School Calendars Page: Summer days failed to load",false);
+	}
+
+	@Override
+	public void checkNextYearInEditMode() throws Exception {
+		if (isElementLoaded(nextYearArrow,5)) {
+           clickTheElement(nextYearArrow);
+           if (schoolSessionStartInput.getText().isEmpty() && schoolSessionEndInput.getText().isEmpty() && !calendarNameInput.getAttribute("value").isEmpty()
+				   && calendarNameInput.getTagName().equals("input"))
+			   SimpleUtils.pass("School Calendars Page: Calendar for the next year in edit mode will only show calendar name, the calendar is editable");
+		   else
+			   SimpleUtils.fail("School Calendars Page: Calendar for the next year in edit mode is incorrect",false);
+		} else
+			SimpleUtils.fail("School Calendars Page: Next year arrow failed to load",false);
+	}
+
+	@Override
+	public void checkPriorYearInEditMode() throws Exception {
+		if (priorYearArrow.getAttribute("class").contains("invisible")) {
+			SimpleUtils.pass("School Calendars Page: Prior year arrow is invisible in edit mode as expected");
+		} else
+			SimpleUtils.fail("School Calendars Page: Prior year arrow is displayed unexpectedly",false);
+	}
+
+	@Override
+	public void clickOnPriorYearInEditMode() throws Exception {
+		if (isElementLoaded(priorYearArrow,5)) {
+			String yearStart = schoolCalendarYearSwitcher.getText().contains("-")? schoolCalendarYearSwitcher.getText().split("-")[0].trim():schoolCalendarYearSwitcher.getText();
+			clickTheElement(priorYearArrow);
+			String yearEnd = schoolCalendarYearSwitcher.getText().contains("-")? schoolCalendarYearSwitcher.getText().split("-")[1].trim().replaceAll("\\D+", ""):schoolCalendarYearSwitcher.getText();
+			if (yearStart.equals(yearEnd))
+				SimpleUtils.pass("School Calendars Page: Go to prior year successfully ");
+			else
+				SimpleUtils.fail("School Calendars Page: Failed to go to prior year",false);
+		} else
+			SimpleUtils.fail("School Calendars Page: Prior year arrow failed to load",false);
+	}
+
+	@Override
+	public boolean verifyMandatoryElement(WebElement element) throws Exception {
+		boolean isMandatory = false;
+		if (isElementLoaded(element, 5)) {
+			if (element != null) {
+				if (element.getText().isEmpty() && savePreferButton.getAttribute("ng-attr-disabled").equals("!canSaveCalendar()")) {
+					isMandatory= true;
+				}
+			}
+		}
+		return isMandatory;
+	}
+
+	@Override
+	public void createNewCalendarByName(String calendarName) throws Exception {
+		clickOnCreateNewCalendarButton();
+        clickOnSchoolSessionStart();
+		selectRandomDayInSessionStart();
+		selectRandomDayInSessionEnd();
+		clickOnSaveSchoolSessionCalendarBtn();
+		inputCalendarName(calendarName);
+		clickOnSaveCalendar();
+		clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+	}
+
+	@Override
+	public boolean isCalendarDisplayedByName(String calendarName) throws Exception {
+		boolean isCalendarDisplayed = false;
+		if (areListElementVisible(calendarTitles, 10)) {
+			for (WebElement title : calendarTitles) {
+				if (title.getText().trim().equalsIgnoreCase(calendarName)) {
+					isCalendarDisplayed = true;
+					SimpleUtils.pass("School Calendars Page: The calendar " + calendarName + " displays in the calendar list");
+					break;
+				}
+			}
+		} else
+			SimpleUtils.fail("School Calendar: There is no calendars!",false);
+		return isCalendarDisplayed;
+	}
+
+	@Override
+	public void clickOnCancelEditCalendarBtn() throws Exception {
+		if (isElementLoaded(cancelEditButton, 5)) {
+			click(cancelEditButton);
+			if (isElementLoaded(schoolCalendarHeader,5))
+				SimpleUtils.pass("School Calendars Page: Click on 'Cancel' button successfully!");
+			else
+				SimpleUtils.fail("School Calendars Page: Click on 'Cancel' button does not return to calendar list page",false);
+		} else {
+			SimpleUtils.fail("School Calendars Page: Failed to load Cancel button", false);
+		}
+	}
+
+	// Added by Nora: For Cinemark Minors
+	@FindBy(css = "[label=\"Create New Calendar\"]")
+	private WebElement createNewCalendarBtn;
+	@FindBy(css = ".set-session-modal-body-arrow-right")
+	private List<WebElement> rightArrows;
+	@FindBy(css = ".modal-instance-button.confirm")
+	private WebElement saveSchoolSessionBtn;
+	@FindBy(css = "[label=\"Delete\"]")
+	private WebElement deleteCalendarBtn;
+	@FindBy(css = "[label=\"Edit\"]")
+	private WebElement editCalendarBtn;
+	@FindBy(css = ".calendar-overview-title")
+	private List<WebElement> calendarTitles;
+	@FindBy(className = "school-calendars-header-title")
+	private WebElement schoolCalendarHeader;
+	@FindBy(css = ".calendar-cell")
+	private List<WebElement> calendarCells;
+	@FindBy(css = "[options=\"schoolCalendars\"] select")
+	private WebElement schoolCalendarSelect;
+	@FindBy(css = "[label=\"Save\"]")
+	private WebElement saveButton;
+	@FindBy(css = ".school-day")
+	private List<WebElement> schoolDays;
+	@FindBy(css = ".session-information-and-calendar-wrapper")
+	private WebElement calendarWrapper;
+	@FindBy(css = ".calendar-overview")
+	private List<WebElement> calendarList;
+	@FindBy(css = ".school-calendars-year-switcher")
+	private WebElement schoolYear;
+	@FindBy(css = ".calendar-block")
+	private List<WebElement> calendarBlocks;
+	@FindBy(className = "school-calendars-linkback")
+	private WebElement schoolCalendarsBackBtn;
+	@FindBy(css = "span.lgn-alert-message.warning")
+	private WebElement warningOnPopup;
+
+	@Override
+	public void clickOnSchoolSchedulesButton() throws Exception {
+		if (isElementLoaded(schoolCalendarsBackBtn, 5)) {
+			clickTheElement(schoolCalendarsBackBtn);
+		} else {
+			SimpleUtils.fail("Calendar page: School Calendars Back button not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void verifyTheContentOnDetailedCalendarPage() throws Exception {
+		if (isElementLoaded(schoolCalendarHeader, 5)) {
+			SimpleUtils.pass("Calendar: " + schoolCalendarHeader.getText() + " page loaded Successfully!");
+		} else {
+			SimpleUtils.fail("Calendar title failed to load!", false);
+		}
+		if (isElementLoaded(schoolYear,  5)) {
+			SimpleUtils.pass("Calendar: " + schoolCalendarHeader.getText() + ", school year: " + schoolYear.getText() + " loaded Successfully!");
+		} else {
+			SimpleUtils.fail("Calendar: School Year element not loaded Successfully!", false);
+		}
+		if (isElementLoaded(deleteCalendarBtn, 5) && isElementLoaded(editCalendarBtn, 5)) {
+			SimpleUtils.pass("Calendar: Delete and Edit buttons loaded Successfully!");
+		} else {
+			SimpleUtils.fail("Calendar: Delete and Edit buttons not loaded Successfully!", false);
+		}
+		if (areListElementVisible(calendarBlocks, 5) && calendarBlocks.size() == 12) {
+			SimpleUtils.pass("Calendar: 12 Months loaded Successfully!");
+		} else {
+			SimpleUtils.fail("Calendar: 12 Months not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void verifyTheContentOnEachCalendarList() throws Exception {
+		if (areListElementVisible(calendarList, 10)) {
+			SimpleUtils.pass("Calendars are loaded Successfully!");
+			for (WebElement calendar : calendarList) {
+				WebElement title = calendar.findElement(By.cssSelector(".calendar-overview-title"));
+				List<WebElement> infos = calendar.findElements(By.cssSelector(".calendar-overview-info-title"));
+				WebElement lastUpdateInfo = calendar.findElement(By.cssSelector(".calendar-overview-info-img"));
+				if (title != null && infos != null && lastUpdateInfo != null) {
+					if (infos.size() == 3 && infos.get(0).getText().equals("SCHOOL SESSION START") &&
+					infos.get(1).getText().equals("SCHOOL SESSION END") && infos.get(2).getText().equals("SCHOOL CALENDAR URL")) {
+						SimpleUtils.pass("School Calendar: " + title.getText() + ", verified the content is correct!");
+					} else {
+						SimpleUtils.fail("School Calendar: " + title.getText() + ", the content is incorrect!", false);
+					}
+				} else {
+					SimpleUtils.fail("School Calendar: the content is incorrect!", false);
+				}
+			}
+		} else {
+			SimpleUtils.report("School Calendars: There is no calendars on this page!");
+		}
+	}
+
+	@Override
+	public void verifyTheCalendarListLoaded() throws Exception {
+		if (areListElementVisible(calendarList, 10)) {
+			SimpleUtils.pass("Calendars are loaded Successfully!");
+		} else {
+			SimpleUtils.report("School Calendars: There is no calendars on this page!");
+		}
+	}
+
+	@Override
+	public void verifyClickedDayIsHighlighted() throws Exception {
+		if (areListElementVisible(schoolDays, 10)) {
+			WebElement firstSchoolDay = schoolDays.get(0);
+			moveToElementAndClick(firstSchoolDay);
+			waitForSeconds(2);
+			if (firstSchoolDay.getAttribute("class").contains("non-school-day")) {
+				SimpleUtils.pass("Edit Calendar: Clicked Day is highlighted!");
+			} else {
+				SimpleUtils.fail("Edit Calendar: Clicked Day is not highlighted!", false);
+			}
+		}
+	}
+
+	@Override
+	public boolean isEditCalendarModeLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(cancelEditButton, 5) && isElementLoaded(saveButton, 5)) {
+			isLoaded = true;
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void clickOnEditAnywayButton() throws Exception {
+		if (isElementLoaded(confirmButton, 5) && confirmButton.getText().equalsIgnoreCase("EDIT ANYWAY")) {
+			clickTheElement(confirmButton);
+		} else {
+			SimpleUtils.fail("EDIT ANYWAY button failed to load!", false);
+		}
+	}
+
+	@Override
+	public void verifyEditCalendarAlertModelPopsUp() throws Exception {
+		String expectedMessage = "Please note: Editing this school calendar will affect schedules of all Team Members that are currently assigned to this calendar.";
+		if (isElementLoaded(confirmPopupWindow, 10) && isElementLoaded(popupMessage, 10)) {
+			if (popupMessage.getText().trim().equals(expectedMessage) && isElementLoaded(cancelButton, 5) && isElementLoaded(confirmButton, 5)
+			&& confirmButton.getText().equalsIgnoreCase("EDIT ANYWAY")) {
+				SimpleUtils.pass("Click On Edit Calendar button successfully, Alert message and buttons loaded Successfully!");
+			} else {
+				SimpleUtils.fail("Edit Calendar: Alert message or buttons are incorrect!", false);
+			}
+		} else {
+			SimpleUtils.fail("Edit Calendar: Alert model failed to load!", false);
+		}
+	}
+
+	@Override
+	public void verifySchoolSessionPageLoaded() throws Exception {
+		if (isElementLoaded(calendarWrapper, 10)) {
+			SimpleUtils.pass("School Session Calendar page loaded Successfully!");
+		} else {
+			SimpleUtils.fail("School Session Calendar page not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void clickOnEditCalendarButton() throws Exception {
+		if (isElementLoaded(editCalendarBtn, 10)) {
+			clickTheElement(editCalendarBtn);
+		} else {
+			SimpleUtils.fail("School Calendars page: Edit button failed to load!", false);
+		}
+	}
+
+	@Override
+	public void clickTheCalendarByRandom() throws Exception {
+		if (areListElementVisible(calendarTitles, 10)) {
+			int randomIndex = (new Random()).nextInt(calendarTitles.size());
+			String calendarName = calendarTitles.get(randomIndex).getText();
+			SimpleUtils.report("School Calendars Page: select calendar: " + calendarName);
+			clickTheElement(calendarTitles.get(randomIndex));
+			if (isElementLoaded(deleteCalendarBtn, 10) && isElementLoaded(editCalendarBtn, 10)) {
+				SimpleUtils.pass("Click on the calendar: " + calendarName + " Successfully!");
+			}
+		} else {
+			SimpleUtils.report("School Calendar: There is no calendars!");
+		}
+	}
+
+	@Override
+	public void setTheCalendarForMinors(List<String> minorNames, String calendarName, ProfileNewUIPage profileNewUIPage) throws Exception {
+		if (minorNames != null && minorNames.size() > 0) {
+			for (String minorName : minorNames) {
+				searchAndSelectTeamMemberByName(minorName);
+				profileNewUIPage.selectAGivenCalendarForMinor(calendarName);
+				goToTeam();
+				verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+			}
+		}
+	}
+
+	@Override
+	public void clickOnCancelButtonOnPopup() throws Exception {
+		if (isElementLoaded(cancelButton, 5)) {
+			clickTheElement(cancelButton);
+			SimpleUtils.pass("Click the Cancel button on Popup Successfully!");
+			waitUntilElementIsInVisible(cancelButton);
+		} else {
+			SimpleUtils.fail("Cancel button not loaded Successfully on popup!", false);
+		}
+	}
+
+	@Override
+	public void	clickOnDeleteCalendarButton() throws Exception {
+		String warningMessage = "Please note: Deleting this school calendar will affect schedules of all Team Members that are currently assigned to this calendar.";
+		if (isElementLoaded(deleteCalendarBtn, 10)) {
+			clickTheElement(deleteCalendarBtn);
+			if (isElementLoaded(confirmButton, 10) && confirmButton.getText().trim().equalsIgnoreCase("DELETE ANYWAY") && isElementLoaded(cancelButton, 5)
+			&& isElementLoaded(warningOnPopup, 5) && warningOnPopup.getText().contains(warningMessage)) {
+				SimpleUtils.pass("Click on DELETE calendar button Successfully, warning message pops up!");
+			}
+		} else {
+			SimpleUtils.fail("Delete Calendar button not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void clickOnDELETEANYWAYButton() throws Exception {
+		if (isElementLoaded(confirmButton, 10) && confirmButton.getText().trim().equalsIgnoreCase("DELETE ANYWAY")) {
+			clickTheElement(confirmButton);
+			waitForSeconds(3);
+			if (isElementLoaded(schoolCalendarHeader, 10)) {
+				SimpleUtils.pass("Delete the school calendar Successfully!");
+			} else {
+				SimpleUtils.fail("Failed to delete the school calendar!", false);
+			}
+		} else {
+			SimpleUtils.fail("School Calendar: DELETE ANYWAY button not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void deleteCalendarByName(String calendarName) throws Exception {
+		if (areListElementVisible(calendarTitles, 10)) {
+			for (WebElement title : calendarTitles) {
+				if (title.getText().trim().equalsIgnoreCase(calendarName)) {
+					clickTheElement(title);
+					if (areListElementVisible(calendarCells,  10) && isElementLoaded(deleteCalendarBtn, 10)) {
+						clickTheElement(deleteCalendarBtn);
+						if (isElementLoaded(confirmButton, 10) && confirmButton.getText().trim().equalsIgnoreCase("DELETE ANYWAY")) {
+							clickTheElement(confirmButton);
+							waitForSeconds(3);
+							if (isElementLoaded(schoolCalendarHeader, 10)) {
+								SimpleUtils.pass("Delete the school calendar Successfully!");
+								break;
+							} else {
+								SimpleUtils.fail("Failed to delete the school calendar: " + calendarName, false);
+							}
+						} else {
+							SimpleUtils.fail("School Calendar: DELETE ANYWAY button not loaded Successfully!", false);
+						}
+					} else {
+						SimpleUtils.fail("Delete Calendar button not loaded Successfully!", false);
+					}
+				}
+			}
+		} else {
+			SimpleUtils.report("School Calendar: There is no calendars!");
+		}
+	}
+
+	@Override
+	public void clickOnSaveSchoolCalendarBtn() throws Exception {
+		if (isElementLoaded(savePreferButton, 5) && isElementEnabled(savePreferButton, 5)) {
+			clickTheElement(savePreferButton);
+			if (isElementLoaded(deleteCalendarBtn, 10) && isElementLoaded(editCalendarBtn, 10)) {
+				SimpleUtils.pass("School Calendar: Save the calendar Successfully!");
+			} else {
+				SimpleUtils.fail("School Calendar: Failed to save the school calendar!", false);
+			}
+		} else {
+			SimpleUtils.fail("School Calendars Page: Save Calendar button not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void clickOnCreateNewCalendarButton() throws Exception {
+		if (isElementLoaded(createNewCalendarBtn, 10)) {
+			clickTheElement(createNewCalendarBtn);
+			if (isElementLoaded(cancelEditButton, 5) && isElementLoaded(savePreferButton, 5)) {
+				SimpleUtils.pass("School Calendars Page: Click on 'Create New Calendar' button successfully!");
+			} else {
+				SimpleUtils.fail("School Calendars Page: Click on 'Create New Calendar' button failed, Cancel and Save buttons are not loaded!", false);
+			}
+		} else {
+			SimpleUtils.fail("School Calendars Page: 'Create New Calendar' not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void selectSchoolSessionStartNEndDate(int nextSatIndex) throws Exception {
+		goToTheCurrentMonth();
+		selectDate(nextSatIndex);
+		selectDate(100);
+	}
+
+	@Override
+	public void clickOnSaveSchoolSessionCalendarBtn() throws Exception {
+		if (isElementLoaded(saveSchoolSessionBtn, 5)) {
+			clickTheElement(saveSchoolSessionBtn);
+			waitUntilElementIsInVisible(saveSchoolSessionBtn);
+		} else {
+			SimpleUtils.fail("School Calendar Page: Save School Session button not loaded Successfully!", false);
+		}
+	}
+
+	private void goToTheCurrentMonth() throws Exception {
+		while (!isElementLoaded(todayHighlighted, 5)) {
+			if (areListElementVisible(rightArrows, 5) && rightArrows.size() > 0) {
+				clickTheElement(rightArrows.get(0));
+				goToTheCurrentMonth();
+			}
+		}
+	}
+
+	@Override
+	public boolean isCreateCalendarBtnLoaded() throws Exception {
+		if (isElementLoaded(createNewCalendarBtn, 10)) {
+			return true;
+		}
+		return false;
+	}
+
+	//	{
 //    	if(isElementLoaded(rosterBodyElement))
 //    	{
 //    		return true;
