@@ -413,8 +413,6 @@ public interface SchedulePage {
 	void addNewShiftsByNames(List<String> names) throws Exception;
 	boolean displayAlertPopUp() throws Exception;
 
-	void displayAlertPopUpForRoleViolation() throws Exception;
-
 	public void displayAlertPopUpForRoleViolation() throws Exception;
 
 	public void unGenerateActiveScheduleFromCurrentWeekOnward(int loopCount) throws Exception;
