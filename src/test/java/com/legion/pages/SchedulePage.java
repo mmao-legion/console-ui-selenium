@@ -412,9 +412,6 @@ public interface SchedulePage {
 
 	void addNewShiftsByNames(List<String> names) throws Exception;
 	boolean displayAlertPopUp() throws Exception;
-
-	void displayAlertPopUpForRoleViolation() throws Exception;
-
 	public void displayAlertPopUpForRoleViolation() throws Exception;
 
 	public void unGenerateActiveScheduleFromCurrentWeekOnward(int loopCount) throws Exception;
@@ -532,4 +529,5 @@ public interface SchedulePage {
 	public void navigateToTheRightestSmartCard() throws Exception;
 	public boolean isEditMealBreakEnabled() throws Exception;
 	public void verifyTMSchedulePanelDisplay() throws Exception;
+
 }
