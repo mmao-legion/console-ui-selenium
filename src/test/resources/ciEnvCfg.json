@@ -1,5 +1,4 @@
 {
-
   "CHROME_DRIVER_PATH": "src/test/resources/Driver/chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "/usr/local/bin/geckodriver",
   "DEVURL": "https://mobilestage.legion.work/",
