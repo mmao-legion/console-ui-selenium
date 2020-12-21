@@ -1,5 +1,4 @@
 {
-  "CHROME_DRIVER_PATH": "D:\\Automation\\ui\\driver\\chromedriver_win32\\chromedriver.exe",
   "CHROME_DRIVER_PATH": "src/test/resources/Driver/chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "/usr/local/bin/geckodriver",
   "DEVURL": "https://mobilestage.legion.work/",
@@ -36,5 +35,5 @@
   "Download_File_Default_Dir" : "/home/circleci/project/downloads",
   "isHeadlessBrowser" : "false",
   "isGridEnabled" : "true",
-  "URL" : "http://localhost:4455/wd/hub"
+  "URL" : "http://localhost:4444/wd/hub"
 }
