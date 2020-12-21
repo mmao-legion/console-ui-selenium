@@ -568,6 +568,21 @@ public class BasePage {
         }
     }
 
+    public void selectByIndex(WebElement element, int index) throws Exception {
+        if (isElementLoaded(element, 5)) {
+            click(element);
+            Select select = new Select(element);
+            List<WebElement> options = select.getOptions();
+            if (options.size() > 0) {
+               select.selectByIndex(index);
+            } else {
+                SimpleUtils.fail("Select options are empty!", true);
+            }
+        }else {
+            SimpleUtils.fail("Select Element failed to load!", true);
+        }
+    }
+
     public void selectDate(int daysFromToday) {
         LocalDate now = LocalDate.now();
         LocalDate wanted = LocalDate.now().plusDays(daysFromToday);

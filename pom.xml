@@ -17,6 +17,9 @@
         <datatable.version>1.0.3</datatable.version>
         <tag-expressions.version>1.1.1</tag-expressions.version>
         <gherkin.version>5.1.0</gherkin.version>
+        <enterprise>op</enterprise>
+        <env>https://rc-enterprise.dev.legion.work/</env>
+
     </properties>
 
     <profiles>
@@ -26,7 +29,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <legion.testng.file>testng.xml</legion.testng.file>
+                <xmlFileName>testng.xml</xmlFileName>
             </properties>
         </profile>
         <profile>
@@ -223,6 +226,13 @@
             <version>1.4.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.22</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -243,8 +253,13 @@
                 <configuration>
                     <parallel>classes</parallel>
                     <suiteXmlFiles>
-                        <suiteXmlFile>${legion.testng.file}</suiteXmlFile>
+                        <suiteXmlFile>${xmlFileName}</suiteXmlFile>
                     </suiteXmlFiles>
+
+                    <systemPropertyVariables>
+                        <env>${env}</env>
+                        <enterprise>${enterprise}</enterprise>
+                    </systemPropertyVariables>
                     <forkCount>5</forkCount>
                     <reuseForks>true</reuseForks>
                     <redirectTestOutputToFile>false</redirectTestOutputToFile>

@@ -3070,7 +3070,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 	//added by Estelle for update one user's location info
-	@FindBy(css = "lg-button[label=\"Manage Locations\"]")
+	@FindBy(css = "lg-button[label=\"Manage Locations\"] > button")
 	private WebElement managerLocationBtn;
 	@FindBy(css = "[modal-title=\"Manage Locations\"]")
 	private WebElement managerLocationPopUpTitle;
@@ -3098,7 +3098,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				click(userDetailsLinks.get(0));
 				if (isElementLoaded(userAndRolesEditUserBtn)) {
 					click(userAndRolesEditUserBtn);
-					List<String> defaultLocation = getUserLocationsList();
+					String defaultLocation = getUserLocationsList();
+					scrollToBottom();
 					if (isElementLoaded(managerLocationBtn)) {
 						click(managerLocationBtn);
 						searchLocation(userFirstName);
@@ -3111,15 +3112,17 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 							}
 							scrollToBottom();
 							click(okayBtnInManagerLocationWin);
+							waitForSeconds(5);
 						}else
 							SimpleUtils.fail("There is no location ",true);
 					}else
 						SimpleUtils.fail("Manager location button load failed ",true);
 
-						List<String> locationAfterUpdated = getUserLocationsList();
+						String  locationAfterUpdated = getUserLocationsList();
 						if (locationAfterUpdated.equals(defaultLocation)) {
 							SimpleUtils.pass("User's location was updated successfully");
-						}
+						}else
+							SimpleUtils.fail("Manager location failed for this user",false);
 					}else
 					SimpleUtils.fail("User profile edit button load failed ",true);
 
@@ -3161,6 +3164,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	public void searchLocation(String userFirstName) throws Exception {
 			if (isElementLoaded(managerLocationPopUpTitle,5)) {
 				managerLocationInputFiled.sendKeys(userFirstName);
+				managerLocationInputFiled.sendKeys(Keys.ENTER);
 				SimpleUtils.pass("Manager Location: '" + locationListRows.size() + "' location(s) found with name '"
 						+ userFirstName + "'");
 
@@ -3168,11 +3172,26 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				SimpleUtils.fail("search input field load failed",false);
 		}
 
-		public List<String> getUserLocationsList(){
+		public String getUserLocationsList(){
+			String resultString = "";
 			List<String> userLocationListContext = new ArrayList<String>();
 			for (WebElement location:defaultLocationsForOneUser) {
 				userLocationListContext.add(location.getText());
-				return userLocationListContext;
+				if(userLocationListContext ==null && userLocationListContext.size()<=0){
+					SimpleUtils.report("userLocationListContext is null！");
+				}else{
+					StringBuilder sb = new StringBuilder();
+					for(int i=0;i<userLocationListContext.size();i++){
+						if(i<userLocationListContext.size()-1){
+							sb.append(userLocationListContext.get(i));
+							sb.append(",");
+						}else{
+							sb.append(userLocationListContext.get(i));
+						}
+					}
+					resultString = sb.toString();
+				}
+				return resultString;
 			}
 
 			return null;
@@ -5087,6 +5106,17 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 
 	}
+	//added by Fiona
+	//get current location on controls landing page
+	@FindBy(css = "div.controlsNavigation lg-select[search-hint=\"Search Location\"] input-field div")
+	private WebElement currentLocationInControls;
+	public String getCurrentLocationInControls() throws Exception{
+		if (isElementLoaded(currentLocationInControls,5)) {
+			return   currentLocationInControls.getText();
+		}
+		return null;
+	}
+}
 
 	//Added by Haya
 	@FindBy(css = "form-section[form-title=\"Predictable Schedule\"] .lg-question-input")
