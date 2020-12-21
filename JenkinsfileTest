@@ -14,5 +14,5 @@ pipeline {
      publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'test-output/AutomationReport', reportFiles: 'htmlReporter.html', reportName: 'Automation_Report', reportTitles: 'Automation Result'])
         }
     }
-
-  }
+}
+}
