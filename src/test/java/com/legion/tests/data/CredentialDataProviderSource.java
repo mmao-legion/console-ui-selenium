@@ -17,7 +17,7 @@ public class CredentialDataProviderSource {
     @DataProvider(name = "legionTeamCredentialsByEnterprise", parallel = false)
     public static Object[][] firstCredentialsByEnterprise(Method testMethod) {
         String fileName = "UsersCredentials.json";
-        if (System.getProperty("enterprise")!=null) {
+        if (System.getProperty("enterprise")!=null && !System.getProperty("enterprise").isEmpty()) {
             fileName = System.getProperty("enterprise")+fileName;
         }else
             fileName=SimpleUtils.getEnterprise(testMethod)+fileName;
@@ -40,7 +40,11 @@ public class CredentialDataProviderSource {
      @DataProvider(name = "legionTeamCredentialsByRoles", parallel = false)
      public static Object[][] credentialsByRoles (Method testMethod) {
          String fileName = "UsersCredentials.json";
-         fileName=SimpleUtils.getEnterprise(testMethod)+fileName;
+         if (System.getProperty("enterprise")!=null && !System.getProperty("enterprise").isEmpty()) {
+             fileName = System.getProperty("enterprise")+fileName;
+         }else {
+             fileName = SimpleUtils.getEnterprise(testMethod) + fileName;
+         }
          HashMap<String, Object[][]> userCredentials = SimpleUtils
         		 .getEnvironmentBasedUserCredentialsFromJson(fileName);
          
