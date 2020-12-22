@@ -19,8 +19,9 @@ public class CredentialDataProviderSource {
         String fileName = "UsersCredentials.json";
         if (System.getProperty("enterprise")!=null && !System.getProperty("enterprise").isEmpty()) {
             fileName = System.getProperty("enterprise")+fileName;
-        }else
-            fileName=SimpleUtils.getEnterprise(testMethod)+fileName;
+        }else {
+            fileName = SimpleUtils.getEnterprise(testMethod) + fileName;
+        }
         TreeMap<String, Object[][]> userCredentials = new TreeMap<>(); 
         userCredentials.putAll(SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName)); 
         for(Map.Entry<String, Object[][]> entry : userCredentials.entrySet())
