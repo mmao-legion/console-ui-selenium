@@ -584,11 +584,16 @@ public class BasePage {
     }
 
     public void selectDate(int daysFromToday) {
+        int numClicks = -1;
         LocalDate now = LocalDate.now();
         LocalDate wanted = LocalDate.now().plusDays(daysFromToday);
         WebElement btnNextMonth = null;
         List<String> listMonthText = new ArrayList<>();
-        int numClicks = wanted.getMonthValue() - now.getMonthValue();
+        if (wanted.getYear() == now.getYear()) {
+            numClicks = wanted.getMonthValue() - now.getMonthValue();
+        } else {
+            numClicks = 12 + wanted.getMonthValue() - now.getMonthValue();
+        }
         if (numClicks < 0) {
             numClicks = daysFromToday / 30;
         }
