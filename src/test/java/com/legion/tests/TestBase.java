@@ -373,8 +373,8 @@ public abstract class TestBase {
         if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
             locationSelectorPage.changeDistrict(districtsMap.get("KendraScott2_Enterprise"));
         }
-        if (getDriver().getCurrentUrl().contains(propertyMap.get("OP_Enterprise"))) {
-            locationSelectorPage.changeDistrict(districtsMap.get("OP_Enterprise"));
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+            locationSelectorPage.changeDistrict(districtsMap.get("Op_Enterprise"));
         }
         if (getDriver().getCurrentUrl().contains(propertyMap.get("DGStage_Enterprise"))) {
             locationSelectorPage.changeDistrict(districtsMap.get("DGStage_Enterprise"));
