@@ -35,5 +35,5 @@
   "Download_File_Default_Dir" : "/home/circleci/project/downloads",
   "isHeadlessBrowser" : "false",
   "isGridEnabled" : "true",
-  "URL" : "http://localhost:4455/wd/hub"
+  "URL" : "http://localhost:4444/wd/hub"
 }
