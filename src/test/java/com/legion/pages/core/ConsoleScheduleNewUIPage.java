@@ -1059,7 +1059,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@Override
 	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
 		HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
-		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class='card-carousel-card card-carousel-card-primary card-carousel-card-table']"));
+		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector(".card-carousel-card.card-carousel-card-primary.card-carousel-card-table"));
 		if(isElementEnabled(budgetedScheduledLabelsDivElement,5))
 		{
 //			Thread.sleep(2000);
@@ -3661,7 +3661,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (isElementLoaded(generateModalTitle, 15) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
                 editTheBudgetForNondgFlow();
-                waitForSeconds(15);
+                waitForSeconds(18);
                 try {
                     List<WebElement> trs = enterBudgetTable.findElements(By.tagName("tr"));
                     if (areListElementVisible(trs, 5) && trs.size() > 0) {
@@ -3673,6 +3673,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     // Nothing
                 }
                 clickTheElement(nextButtonOnCreateSchedule);
+            }
+            if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+                checkoutSchedule();
             }
         } catch (Exception e) {
             // do nothing
@@ -3792,6 +3795,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void createScheduleForNonDGFlowNewUI() throws Exception {
         String subTitle = "Confirm Operating Hours";
         if (isElementLoaded(generateSheduleButton,10)) {
+            waitForSeconds(3);
             clickTheElement(generateSheduleButton);
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
@@ -3943,7 +3947,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 SimpleUtils.fail("Not able to generate the schedule successfully for non dg flow!", false);
             }
         }else{
-            SimpleUtils.fail("Schedule Type " + scheduleTypeManager.getText() + " is disabled",false);
+            SimpleUtils.report("Schedule Type " + scheduleTypeManager.getText() + " is disabled");
         }
     }
 
@@ -7284,7 +7288,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             }
             if (currentWeekIndex == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
-                click(calendarNavigationNextWeekArrow);
+                clickTheElement(calendarNavigationNextWeekArrow);
                 if (areListElementVisible(currentWeeks, 5)) {
                     clickTheElement(currentWeeks.get(0));
                     SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(0).getText() + "' Successfully!");
@@ -9937,7 +9941,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             clickTheElement(image);
                             if (isElementLoaded(deleteShift, 5)) {
                                 clickTheElement(deleteShift);
-                                if (isElementLoaded(deleteBtnInDeleteWindows, 3)) {
+                                if (isElementLoaded(deleteBtnInDeleteWindows, 10)) {
                                     click(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
                                 } else

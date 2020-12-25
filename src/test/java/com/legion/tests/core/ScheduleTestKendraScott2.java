@@ -811,7 +811,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verification of My Schedule Page when login through TM View")
+	@TestName(description = "Verification of My Schedule Page")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verificationOfMySchedulePageAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -848,7 +848,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verification of To and Fro navigation of week picker when login through TM View")
+	@TestName(description = "Verification of To and Fro navigation of week picker")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verificationOfToAndFroNavigationOfWeekPickerAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -947,7 +947,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify Info icon functionality when login through TM View")
+	@TestName(description = "Verify Info icon functionality")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyInfoIconFunctionalityAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -967,7 +967,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verification of Open Shift Schedule Smart Card when login through TM View")
+	@TestName(description = "Verification of Open Shift Schedule Smart Card")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyOpenShiftScheduleSmartCardAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -1926,7 +1926,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
 				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-		schedulePage.navigateToNextWeek();
 		boolean isWeekGenerated = schedulePage.isWeekGenerated();
 		if (isWeekGenerated){
 			schedulePage.unGenerateActiveScheduleScheduleWeek();
