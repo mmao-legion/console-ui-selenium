@@ -115,6 +115,7 @@ public interface SchedulePage {
 	public boolean loadSchedule() throws Exception;
 	public void generateOrUpdateAndGenerateSchedule() throws Exception;
 	public void createScheduleForNonDGFlowNewUI() throws Exception;
+	public void editTheOperatingHours(List<String> weekDaysToClose) throws Exception;
 	public HashMap<String, Integer> getScheduleBufferHours() throws Exception;
 	public boolean isComlianceReviewRequiredForActiveWeek() throws Exception;
 	public void unGenerateActiveScheduleScheduleWeek() throws Exception;
@@ -426,6 +427,7 @@ public interface SchedulePage {
 	public int getComplianceShiftCountFromSmartCard(String cardName) throws Exception;
 	public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose) throws Exception;
 	public void clickCreateScheduleBtn() throws Exception;
+	public void clickBackBtnAndExitCreateScheduleWindow() throws Exception;
 	public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception;
 	public void createScheduleForNonDGFlowNewUIWithGivingParameters(String day, String startTime, String endTime) throws Exception;
 	public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception;
@@ -530,4 +532,8 @@ public interface SchedulePage {
 	public void navigateToTheRightestSmartCard() throws Exception;
 	public boolean isEditMealBreakEnabled() throws Exception;
 	public void verifyTMSchedulePanelDisplay() throws Exception;
+	public void verifyPreviousWeekWhenCreateAndCopySchedule(String weekInfo, boolean shouldBeSelected) throws Exception;
+	public void clickNextBtnOnCreateScheduleWindow() throws Exception;
+	public float getStaffingGuidanceHrs() throws Exception;
+	public void verifyTooltipForCopyScheduleWeek(String weekInfo) throws Exception;
 }
