@@ -139,7 +139,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	//new location page
-	@FindBy(css = "input[aria-label=\"location Name\"]")
+	@FindBy(css = "input[aria-label=\"Location Name\"]")
 	private WebElement locationNameInput;
 	@FindBy(css = "span[class *=locationDefault]")
 	private WebElement mockLocationName;
@@ -159,11 +159,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement stateSelect;
 	@FindBy(css="input[aria-label=\"Zip Code\"]")
 	private WebElement zipCode;
-	@FindBy(css="input[aria-label=\"primary contact\"]")
+	@FindBy(css="input[aria-label=\"Primary Contact\"]")
 	private WebElement primaryContact;
-	@FindBy(css="input[aria-label=\"Phone number\"]")
+	@FindBy(css="input[aria-label=\"Phone Number\"]")
 	private WebElement phoneNumber;
-	@FindBy(css="input[aria-label=\"Email address\"]")
+	@FindBy(css="input[aria-label=\"Email Address\"]")
 	private WebElement emailAddress;
 	@FindBy(css="input-field[label=\"Source Location\"] > ng-form > div.input-choose > span")
 	private WebElement selectOneInSourceLocation;
@@ -187,14 +187,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "select[aria-label=\"Configuration Type\"]")
 	private WebElement configTypeSelect;
 
-	@FindBy(css="input-field[label=\"Effective date\"]")
+	@FindBy(css="input-field[label=\"Effective Date\"]")
 	private WebElement effectiveDateSelect;
 	@FindBy(css = "div.lg-single-calendar-date-wrapper")
 	private WebElement firstDay;
 	@FindBy(css = "a[ng-click=\"$ctrl.changeMonth(-1)\"]")
 	private List<WebElement> previousMonthBtn;
 
-	@FindBy(css="lg-button[label=\"Create location\"]")
+	@FindBy(css="lg-button[label=\"Create Location\"]")
 	private WebElement createLocationBtn;
 	@FindBy(css="lg-button[label=\"Cancel\"]")
 	private WebElement cancelBtn;
@@ -449,7 +449,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectLocationOrDistrict(searchCharactor,index);
 			click(effectiveDateSelect);
 			click(previousMonthBtn.get(0));
-			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Effective date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(8)")));
+			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Effective Date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(8)")));
 
 			click(launchDateSelecter);
 			click(previousMonthBtn.get(1));

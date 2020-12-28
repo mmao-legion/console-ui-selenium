@@ -13,11 +13,33 @@
         <classes>
             <class name="com.legion.tests.core.LocationsTest">
                 <methods>
-                    <include name="verifyCreateRegularLocationWithMandatoryFields" />
+                    <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
+                    <include name="verifyCreateMockLocationAndNavigate" />
+                    <include name="verifyCreateNSOLocationAndNavigate" />
+                    <include name="verifyDisableEnableLocationFunction" />
+                    <include name="verifyCreateMSLocationGroupWithRegularTypeFunction" />
+                    <include name="verifyCreateP2PLocationGroupWithRegularTypeFunction" />
+                    <include name="verifyChangeNoneLocationToChild" />
+                    <include name="verifyChangeNoneLocationToP2PParent" />
+                    <include name="verifyChangeNoneLocationToMSParent" />
+                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
+                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />
+                    <include name="verifySearchDistrictFunction" />
+                    <include name="verifyAddOrUpdateDistrictFunction" />
+                    <include name="verifyDisableEnableDistrictFunction" />
                 </methods>
             </class>
         </classes>
     </test>
 
-
+    <test name="Job Test">
+        <classes>
+            <class name="com.legion.tests.core.JobTest">
+                <methods>
+                    <include name="verifyJobSearchFunction" />
+                    <include name="verifyCreateScheduleJobFunction" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> 

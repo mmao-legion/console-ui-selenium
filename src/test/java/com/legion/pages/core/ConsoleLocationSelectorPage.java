@@ -130,7 +130,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                 if (!isLocationMatched) {
                                     //updated by Estelle because the default location dropdown list show more than 50 location ,it's not efficient for navigation latest logic
                                     searchLocationAndSelect(locationName);
-                                    waitForSeconds(3);
+                                    waitForSeconds(10);
 //                                    availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
                                     locationItems = districtAndLocationDropDownList.get(1).findElements(By.cssSelector("div.lg-search-options__option"));
                                     if (locationItems.size() > 0) {
