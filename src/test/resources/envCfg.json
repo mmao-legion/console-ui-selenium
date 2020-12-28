@@ -43,5 +43,7 @@
  "legion.cucumber.extent.report.name" : "TA_Report",
  "legion.cucumber.extent.report.path" : "legion_bdd_report",
  "legion.cucumber.extent.report.theme" : "dark",
- "legion.cucumber.extent.report.title" : "Legion Cucumber Report"
+ "legion.cucumber.extent.report.title" : "Legion Cucumber Report",
+ "isGridEnabled" : "false",
+ "URL" : "http://localhost:4455/wd/hub"
 }
