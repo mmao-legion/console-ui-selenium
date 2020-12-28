@@ -80,7 +80,7 @@
             <class name="com.legion.tests.core.ForecastTest">
                 <methods>
                     <include name="verifyScheduleLaborForeCastFunctionality"/>
-                    <include name="verifyShopperForecastFunctionality"/>
+<!--                    <include name="verifyShopperForecastFunctionality"/>-->
                     <include name="validateWeatherSmartCardOnForecastPage"/>
                     <include name="verifyScheduleFunctionalityForecast"/>
                 </methods>
@@ -100,12 +100,14 @@
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
                     <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
-                    <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />
+<!--                    <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />-->
                     <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyActivityOfClaimOpenShiftAsTeamMember" />
                     <include name="verifyActivityOfPublishUpdateSchedule" />
                     <include name="verifyTheNotificationForCancelTimeOffAsTeamMember"/>
                     <include name="verifyTheNotificationForRequestTimeOffAsTeamMember"/>
+                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
@@ -129,7 +131,7 @@
                 <methods>
                     <include name="verifyCommonUIOfWidgetsAsStoreManager" />
                     <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
-                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
+<!--                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" />-->
                     <include name="verifySchedulesWidgetsAsStoreManager" />
                 </methods>
             </class>
@@ -161,7 +163,7 @@
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
                     <include name="verifySearchBarOnSchedulePageAsInternalAdmin" />
-                    <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
+<!--                    <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />-->
                     <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
                     <include name="verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin" />
                 </methods>

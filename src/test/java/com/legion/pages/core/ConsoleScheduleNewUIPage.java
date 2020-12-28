@@ -2256,14 +2256,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             else {
                 clickTheElement(publishSheduleButton);
                 if (isElementLoaded(publishConfirmBtn)) {
-                    click(publishConfirmBtn);
+                    clickTheElement(publishConfirmBtn);
                     SimpleUtils.pass("Schedule published successfully for week: '" + getActiveWeekText() + "'");
                     // It will pop up a window: Welcome to Legion!
                     if (isElementLoaded(closeButton, 5)) {
-                        click(closeButton);
+                        clickTheElement(closeButton);
                     }
                     if (isElementLoaded(successfulPublishOkBtn)) {
-                        click(successfulPublishOkBtn);
+                        clickTheElement(successfulPublishOkBtn);
                     }
                     if (isElementLoaded(publishSheduleButton, 5)) {
                         // Wait for the Publish button to disappear.
@@ -5155,11 +5155,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public void saveSchedule() throws Exception {
         if (isElementEnabled(scheduleSaveBtn, 10)) {
+             scrollToTop();
+             waitForSeconds(3);
             clickTheElement(scheduleSaveBtn);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-        if (isElementEnabled(saveOnSaveConfirmationPopup, 10)) {
+        if (isElementEnabled(saveOnSaveConfirmationPopup, 3)) {
             clickTheElement(saveOnSaveConfirmationPopup);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
@@ -6814,7 +6816,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             Math.abs(Integer.parseInt(weekEndBYCurrentDate.trim()) - Integer.parseInt(weekDefaultEnd.trim())))) {
                 SimpleUtils.pass("Current week is getting open by default");
             } else {
-                SimpleUtils.fail("Current week is not getting open by default", true);
+                SimpleUtils.fail("Current week is not getting open by default", false);
             }
         }else {
             SimpleUtils.fail("The date is not the numeric format!", false);

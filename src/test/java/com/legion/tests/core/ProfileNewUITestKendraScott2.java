@@ -33,7 +33,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify My Profile details by updating the information when login through TM View")
+    @TestName(description = "Verify My Profile details by updating the information")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyMyProfileDetailsByUpdatingTheInformationAsTeamMember2(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -59,7 +59,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify My Profile details by updating the information when login through TM View")
+    @TestName(description = "Verify Work Preference details by updating the information")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -79,7 +79,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify My Profile details by updating the information when login through TM View")
+    @TestName(description = "Verify Create New Time Off functionality")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateNewTimeOffFunctionalityAsTeamMember(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

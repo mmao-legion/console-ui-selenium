@@ -930,7 +930,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify Profile picture functionality when login through TM View")
+	@TestName(description = "Verify Profile picture functionality")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyProfilePictureFunctionalityAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
