@@ -62,10 +62,14 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@TestName(description = "Validate the Store Company Location")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheDisplayLocationWithSelectedLocation(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-		locationSelectorPage.verifyTheDisplayLocationWithSelectedLocationConsistent();
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.verifyTheDisplayLocationWithSelectedLocationConsistent();
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	@Automated(automated = "Automated")

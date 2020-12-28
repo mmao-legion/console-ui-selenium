@@ -2859,8 +2859,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(filePath);
 				// wait for the picture to be loaded
 				waitForSeconds(5);
-				scrollToElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
-				click(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
+				scrollToElement(getDriver().findElement(By.cssSelector("lg-button[label=\"Save\"]")));
+				clickTheElement(getDriver().findElement(By.cssSelector("lg-button[label=\"Save\"]")));
 			}else {
 				SimpleUtils.fail("Business Profile Image input element isn't enabled!", true);
 			}

@@ -377,10 +377,11 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
      * */
     public void verifyTheNotificationForReqestTimeOff(String requestUserName, String startTime, String endTime,String timeOffAction) throws Exception {
         boolean isFound = false;
-    	String expectedMessage = requestUserName +" "+timeOffAction+" time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
-        if (timeOffAction.toLowerCase().contains("cancel")){
+        String expectedCancelInfo = "Cancelled on ";
+    	String expectedMessage = requestUserName +" requested time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
+        /*if (timeOffAction.toLowerCase().contains("cancel")){
             expectedMessage = requestUserName +" "+timeOffAction+" the time off request for "+ startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
-        }
+        }*/
         String actualMessage = "";
         waitForSeconds(5);
         if (areListElementVisible(activityCards, 15)) {
@@ -389,6 +390,15 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 				if (actualMessage != null && actualMessage.equals(expectedMessage)) {
 					SimpleUtils.pass("Find Card: " + actualMessage + " Successfully!");
 					isFound = true;
+					if (timeOffAction.toLowerCase().contains("cancel")) {
+						waitForSeconds(3);
+						String cancelInfo = activityCard.findElement(By.cssSelector(".notification-approved")).getText();
+						if (cancelInfo.equalsIgnoreCase(expectedCancelInfo)) {
+							SimpleUtils.pass("Cancel Info load!");
+						} else {
+							SimpleUtils.fail("Cancel Info is not loaded!", true);
+						}
+					}
 					//check the detail
 					if (timeOffAction.equals("requested")) {
 						waitForSeconds(3);
