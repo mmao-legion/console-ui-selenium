@@ -115,6 +115,8 @@ public interface SchedulePage {
 	public boolean loadSchedule() throws Exception;
 	public void generateOrUpdateAndGenerateSchedule() throws Exception;
 	public void createScheduleForNonDGFlowNewUI() throws Exception;
+	public void clickOnFinishButtonOnCreateSchedulePage() throws Exception;
+	public void selectWhichWeekToCopyFrom(String weekInfo) throws Exception;
 	public void editTheOperatingHours(List<String> weekDaysToClose) throws Exception;
 	public HashMap<String, Integer> getScheduleBufferHours() throws Exception;
 	public boolean isComlianceReviewRequiredForActiveWeek() throws Exception;
@@ -434,6 +436,7 @@ public interface SchedulePage {
 	public void goToToggleSummaryView() throws Exception;
 	public void verifyOperatingHrsInToggleSummary(String day, String startTime, String endTime) throws Exception;
 	public void verifyDayHasShifts(String day) throws Exception;
+	public List<String> getDayShifts(String index) throws Exception;
 	public void verifyNoShiftsForSpecificWeekDay(List<String> weekDaysToClose) throws Exception;
 	public void verifyStoreIsClosedForSpecificWeekDay(List<String> weekDaysToClose) throws Exception;
 	public void verifyClosedDaysInToggleSummaryView(List<String> weekDaysToClose) throws Exception;
@@ -536,4 +539,6 @@ public interface SchedulePage {
 	public void clickNextBtnOnCreateScheduleWindow() throws Exception;
 	public float getStaffingGuidanceHrs() throws Exception;
 	public void verifyTooltipForCopyScheduleWeek(String weekInfo) throws Exception;
+	public String convertDateStringFormat(String dateString) throws Exception;
+	public void verifyDifferentOperatingHours(String weekInfo) throws Exception;
 }

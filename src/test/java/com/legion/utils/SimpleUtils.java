@@ -1943,7 +1943,8 @@ public class SimpleUtils {
 	}
 
 	public static boolean isNumeric(String str){
-		Pattern pattern = Pattern.compile("[0-9]*");
+		//Pattern pattern = Pattern.compile("^[0-9]*");
+		Pattern pattern = Pattern.compile("^[0-9]+((\\.[0-9]{1,2})|[0-9]{0,2})$");
 		Matcher isNum = pattern.matcher(str.trim());
 		if( !isNum.matches() ){
 			return false;

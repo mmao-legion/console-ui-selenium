@@ -69,5 +69,10 @@ public class PrepareSettingsTest extends TestBase {
         controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
         SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
         controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("Yes, anytime");
+
+        controlsPage.gotoControlsPage();
+        controlsPage.clickGlobalSettings();
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        controlsNewUIPage.enableOrDisableScheduleCopyRestriction("no");
     }
 }

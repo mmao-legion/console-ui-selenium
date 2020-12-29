@@ -5864,12 +5864,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				clickTheElement(confirmSaveButton);
 			}
 			displaySuccessMessage();
-			if (scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Budget overage limit\"] .input-faked.ng-binding")).getAttribute("innerText").contains(value)){
-				SimpleUtils.pass("Budget overage limit is set as "+value);
-			} else {
-				SimpleUtils.fail("Violation limit value fail to save!", false);
+			if (!value.equals("0")){
+				if (scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Budget overage limit\"] .input-faked.ng-binding")).getAttribute("innerText").contains(value)){
+					SimpleUtils.pass("Budget overage limit is set as "+value);
+				} else {
+					SimpleUtils.fail("Violation limit value fail to save!", false);
+				}
 			}
-
 		} else {
 			SimpleUtils.fail("Budget overage limit fail to load!", false);
 		}

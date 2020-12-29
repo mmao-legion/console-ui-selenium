@@ -3632,6 +3632,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return budgetHours;
     }
 
+    @Override
     public void selectWhichWeekToCopyFrom(String weekInfo) throws Exception {
         if (areListElementVisible(createModalWeeks, 10)) {
             SimpleUtils.pass("Copy Schedule page loaded Successfully!");
@@ -3685,6 +3686,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return budgetHour;
     }
 
+    @Override
     public void clickOnFinishButtonOnCreateSchedulePage() throws Exception {
         String finish = "FINISH";
         if (isElementLoaded(nextButtonOnCreateSchedule) && nextButtonOnCreateSchedule.getText().equals(finish)) {
@@ -4259,6 +4261,29 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("No schedule day loaded in schedule page!",false);
         }
+    }
+
+    @Override
+    public List<String> getDayShifts(String index) throws Exception {
+        List<String> result = new ArrayList<>();
+        if (areListElementVisible(scheduleDays,10)){
+            for (WebElement e : scheduleDays) {
+                if (e.getAttribute("class").contains(index)) {
+                    String data = e.getAttribute("data-day");
+                    if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")), 10)){
+                        List<WebElement> shifts = MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift"));
+                        for (WebElement shift : shifts){
+                            result.add(shift.getText());
+                        }
+                        SimpleUtils.pass("On Sunday there are shifts!");
+                    }
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("No schedule day loaded in schedule page!",false);
+        }
+        return result;
     }
 
     public void checkOutGenerateScheduleBtn(WebElement checkOutTheScheduleButton) {
@@ -12545,14 +12570,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         //Need to prepare 2 previous week to check.
         if (areListElementVisible(previousWeeks, 10) && previousWeeks.size()>=2){
             for (WebElement element: previousWeeks){
-                String weekDayInfo = null;
-                String[] items = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1].split(" - ");
-                if (items.length==2){
-                    weekDayInfo = convertDateString(items[0]) + " - " +convertDateString(items[1]);
-                } else {
-                    SimpleUtils.fail("week day info format is not expected!", false);
-                }
-
+                String weekDayInfo = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1];
                 if (weekInfo.equalsIgnoreCase(weekDayInfo)){
                     if (shouldBeSelected == !element.findElement(By.cssSelector(".generate-modal-week")).getAttribute("class").contains("disabled")){
                         SimpleUtils.pass("Should the week:"+weekInfo+" be selected is correct!");
@@ -12566,15 +12584,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    private String convertDateString(String dateString) throws Exception{
-        String result = null;
-        // dateString format: JAN 02, will convert 02 to 2, return JAN 2
+    @Override
+    public String convertDateStringFormat(String dateString) throws Exception{
+        String result = dateString;
+        // dateString format: JAN 2 - JAN 9, will convert 2 to 02, 9 to 09, return JAN 02 - JAN 09
         String[] items = dateString.split(" ");
-        if (items.length == 2 && SimpleUtils.isNumeric(items[1])) {
-            items[1] = Integer.toString(Integer.parseInt(items[1]));
-            result = items[0] + " " + items[1];
-        }else {
-            SimpleUtils.fail("Split String: '" + dateString + "' failed!", false);
+        if (items.length==5 && SimpleUtils.isNumeric(items[1]) && SimpleUtils.isNumeric(items[4])){
+            if (Integer.parseInt(items[1])<10 ){
+                items[1] = Integer.toString(Integer.parseInt(items[1]));
+                result = items[0] + " 0" + items[1] + " " + items[2] + " " + items[3];
+            } else {
+                result = items[0] + " " + items[1] + " " + items[2] + " " + items[3];
+            }
+            if (Integer.parseInt(items[4])<10){
+                items[4] = Integer.toString(Integer.parseInt(items[4]));
+                result = result + " 0" + items[4];
+            } else {
+                result = result + " " + items[4];
+            }
+        } else {
+            SimpleUtils.fail("week day info format is not expected! Split String: " + dateString + " failed!", false);
         }
         return result;
     }
@@ -12597,13 +12626,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         //Need to prepare 2 previous week to check.
         if (areListElementVisible(previousWeeks, 10) && previousWeeks.size()>=2){
             for (WebElement element: previousWeeks){
-                String weekDayInfo = null;
-                String[] items = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1].split(" - ");
-                if (items.length==2){
-                    weekDayInfo = convertDateString(items[0]) + " - " +convertDateString(items[1]);
-                } else {
-                    SimpleUtils.fail("week day info format is not expected!", false);
-                }
+                String weekDayInfo = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1];
                 if (weekInfo.equalsIgnoreCase(weekDayInfo)){
                     mouseHover(element);
                     String tooltipText = "Policy: Max. 2 violations and 0% over budget";
@@ -12611,6 +12634,27 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         SimpleUtils.pass("Tooltip is expected!");
                     } else {
                         SimpleUtils.fail("Tooltip should display when mouse hover the week!", false);
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no previous week to copy", false);
+        }
+    }
+
+    @FindBy(css = ".generate-modal-week-violations-different-hours")
+    private WebElement differrentOperatingHoursInfo;
+    @Override
+    public void verifyDifferentOperatingHours(String weekInfo) throws Exception {
+        if (areListElementVisible(previousWeeks, 10) && previousWeeks.size()>=2){
+            for (WebElement element: previousWeeks){
+                String weekDayInfo = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1];
+                if (weekInfo.equalsIgnoreCase(weekDayInfo)){
+                    String differentOperatingHrsInfo = "*Different operating hours";
+                    if (isElementLoaded(differrentOperatingHoursInfo,5) && differrentOperatingHoursInfo.getText().contains(differentOperatingHrsInfo)){
+                        SimpleUtils.pass("Differrent Operating Hours info is expected!");
+                    } else {
+                        SimpleUtils.fail("Differrent Operating Hours info is not loaded!", false);
                     }
                 }
             }
