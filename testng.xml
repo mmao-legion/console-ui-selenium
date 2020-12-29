@@ -415,6 +415,8 @@
                     <include name="verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin" />
                     <include name="verifyTheFunctionalityForScheduleCopyRestrictionsAsInternalAdmin" />
                     <include name="verifyViolationLimitAndBudgetOverageLimitAsInternalAdmin" />
+                    <include name="verifyTurnOffCopyRestrictionAsInternalAdmin" />
+                    <include name="verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
