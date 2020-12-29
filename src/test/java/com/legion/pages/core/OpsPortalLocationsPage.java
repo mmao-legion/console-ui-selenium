@@ -321,9 +321,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-	@FindBy(css = "select[aria-label=\"location Type\"]")
+	@FindBy(css = "select[aria-label=\"Location Type\"]")
 	private WebElement locationTypeSelector;
-	@FindBy(css="input-field[label=\"Select Base Location to Mock \"] > ng-form > div.input-choose > span")
+	@FindBy(css=" input-field:nth-child(2) > ng-form > div.input-choose.ng-scope > span")
 	private WebElement selectOneInBaseLocation;
 	@FindBy(css="lg-button[label=\"Leave this page\"]")
 	private WebElement leaveThisPageBtn;
@@ -376,7 +376,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Import location page show well");
 			}else
 				SimpleUtils.fail("Import location page load failed",true);
-			uploaderFileInputBtn.sendKeys("D:\\Automation\\console-ui-selenium\\src\\test\\resources\\LocationImportTemplate.csv");
+			uploaderFileInputBtn.sendKeys("src/test/resources/LocationImportTemplate.csv");
 			waitForSeconds(5);
 			click(importBtnInImportLocationPage);
 			waitForSeconds(15);
@@ -764,7 +764,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "select[aria-label=\"Location Group Setting\"]")
 	private WebElement locationGroupSelect;
-	@FindBy(css = "input-field[value=\"'Select parent location'\"] > ng-form > div.input-choose.ng-scope > span")
+	@FindBy(css = "inline-input:nth-child(2) > ng-transclude > div > input-field > ng-form > div.input-choose.ng-scope > span")
 	private WebElement selectParentLocation;
 
 	@Override
@@ -870,7 +870,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectLocationOrDistrict(searchCharactor,index);
 			click(effectiveDateSelect);
 			click(previousMonthBtn.get(0));
-			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Effective date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(8)")));
+			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Effective Date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(8)")));
 
 			click(launchDateSelecter);
 			click(previousMonthBtn.get(1));
@@ -923,7 +923,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 			click(effectiveDateSelect);
 			click(previousMonthBtn.get(0));
-			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Effective date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(8)")));
+			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Effective Date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(8)")));
 
 			click(launchDateSelecter);
 			click(previousMonthBtn.get(1));
@@ -1103,26 +1103,27 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		//update parent location to None
 		if (locationRows.size()>0) {
 			if (verifyIsThisLocationGroup()) {
-				for (WebElement eachRow: locationRows
-					 ) {
-					if (eachRow.findElement(By.cssSelector("button[type='button']")).getText().contains(locationToNone)) {
-						click(eachRow.findElement(By.cssSelector("button[type='button']")));
-					}
-				}
-//				List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
-//				click(locationDetailsLinks.get(0));
+//				for (WebElement eachRow: locationRows
+//					 ) {
+//					if (eachRow.findElement(By.cssSelector("button[type='button']")).getText().contains(locationToNone)) {
+//						click(eachRow.findElement(By.cssSelector("button[type='button']")));
+//					}
+//				}
+				List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
+				click(locationDetailsLinks.get(0));
 				click(editLocationBtn);
 				selectByVisibleText(locationGroupSelect, "None");
+				waitForSeconds(3);
 				click(okBtnInLocationGroupConfirmPage);
 				scrollToBottom();
 				click(saveBtnInUpdateLocationPage);
 			}else
-				SimpleUtils.fail("It's not a parent location",true);
+				SimpleUtils.fail("It's not a parent location",false);
 		}
 		waitForSeconds(10);
 		searchLocation(locationToNone);
 		if (!verifyIsThisLocationGroup()) {
-			SimpleUtils.pass(locationToNone+" was updated to None");
+			SimpleUtils.pass(locationToNone+" was updated to None successfully");
 		}else
 			SimpleUtils.fail("Update failed",true);
 
@@ -1405,9 +1406,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy( css =".console-detail")
 	private WebElement districtDetailsPage;
-	@FindBy( css ="input[aria-label=\"district Name\"]")
+	@FindBy( css ="input[aria-label=\"District Name\"]")
 	private WebElement districtNameInput;
-	@FindBy( css ="input[aria-label=\"district Id\"]")
+	@FindBy( css ="input[aria-label=\"District Id\"]")
 	private WebElement districtIdInput;
 	@FindBy( css ="select[aria-label=\"District Manager\"]")
 	private WebElement districtManagerSelector;
@@ -1419,9 +1420,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement uploadImageBtn;
 	@FindBy( css ="lg-button[label=\"Manage\"]")
 	private WebElement ManagerBtnInDistrictCreationPage;
-	@FindBy( css ="lg-button[label=\"Create district\"]")
+	@FindBy( css ="lg-button[label=\"Create District\"]")
 	private WebElement createDistrictBtnInDistrictCreationPage;
-	@FindBy( css ="lg-button[label=\"Cancel district\"]")
+	@FindBy( css ="lg-button[label=\"Cancel\"]")
 	private WebElement CancelDistrictBtnInDistrictCreationPage;
 
 	@Override
@@ -1548,9 +1549,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (districtCreateLandingPageShowWell()) {
 			districtNameInput.sendKeys(districtName);
 			districtIdInput.sendKeys(districtId);
-			selectByIndex(districtManagerSelector,0);
+			selectByIndex(districtManagerSelector,1);
+			scrollToBottom();
 			click(createDistrictBtnInDistrictCreationPage);
-			SimpleUtils.report("District creation done");
+
+			SimpleUtils.report("District creation done  :"+districtName);
 			waitForSeconds(10);
 		}else
 			SimpleUtils.fail("District landing page load failed",true);
