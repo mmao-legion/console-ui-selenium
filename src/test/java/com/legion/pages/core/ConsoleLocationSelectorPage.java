@@ -339,7 +339,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         waitForSeconds(4);
         try {
             Boolean isDistrictMatched = false;
-            activeConsoleName = activeConsoleMenuItem.getText();
+            if (isElementLoaded(activeConsoleMenuItem, 10)) {
+                activeConsoleName = activeConsoleMenuItem.getText();
+            }
             setScreenshotConsoleName(activeConsoleName);
             if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
                 if (isChangeDistrictButtonLoaded()) {

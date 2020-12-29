@@ -163,7 +163,7 @@
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
                     <include name="verifySearchBarOnSchedulePageAsInternalAdmin" />
-<!--                    <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />-->
+                    <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
                     <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
                     <include name="verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin" />
                 </methods>

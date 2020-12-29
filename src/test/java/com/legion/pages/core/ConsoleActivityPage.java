@@ -391,7 +391,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 					SimpleUtils.pass("Find Card: " + actualMessage + " Successfully!");
 					isFound = true;
 					if (timeOffAction.toLowerCase().contains("cancel")) {
-						waitForSeconds(3);
+						waitForSeconds(5);
 						String cancelInfo = activityCard.findElement(By.cssSelector(".notification-approved")).getText();
 						if (cancelInfo.equalsIgnoreCase(expectedCancelInfo)) {
 							SimpleUtils.pass("Cancel Info load!");

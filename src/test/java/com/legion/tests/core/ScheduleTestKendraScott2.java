@@ -1811,7 +1811,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Haya")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify scheule version")
+	@TestName(description = "Verify version number in Analyze page and edits persist when navigating to Suggested and back to Manager")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyVersionNumberAndEditsAsInternalAdmin(String browser, String username, String password, String location) {
 		try {
