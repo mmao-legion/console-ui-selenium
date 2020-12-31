@@ -393,10 +393,10 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 					if (timeOffAction.toLowerCase().contains("cancel")) {
 						waitForSeconds(5);
 						String cancelInfo = activityCard.findElement(By.cssSelector(".notification-approved")).getText();
-						if (cancelInfo.equalsIgnoreCase(expectedCancelInfo)) {
+						if (cancelInfo.contains(expectedCancelInfo)) {
 							SimpleUtils.pass("Cancel Info load!");
 						} else {
-							SimpleUtils.fail("Cancel Info is not loaded!", true);
+							SimpleUtils.fail("Cancel Info is not loaded!", false);
 						}
 					}
 					//check the detail
@@ -408,7 +408,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 							click(detail);
 							SimpleUtils.pass("detail load!");
 						} else {
-							SimpleUtils.fail("detail is not loaded!", true);
+							SimpleUtils.fail("detail is not loaded!", false);
 						}
 					}
 					break;
