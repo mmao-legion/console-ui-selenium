@@ -539,37 +539,42 @@ public class InboxTest extends TestBase {
     @TestName(description = "Verify turn off GFE ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOffGFEAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        controlsNewUIPage.clickOnControlsConsoleMenu();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsComplianceSection();
-        SimpleUtils.assertOnFail("Compliance page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsComplianceSection();
+            SimpleUtils.assertOnFail("Compliance page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
 
-        controlsNewUIPage.turnGFEToggleOnOrOff(false);
+            controlsNewUIPage.turnGFEToggleOnOrOff(false);
 
-        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
-        inboxPage.clickOnInboxConsoleMenuItem();
-        inboxPage.checkCreateAnnouncementPageWithGFETurnOnOrTurnOff(false);
+            InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+            inboxPage.clickOnInboxConsoleMenuItem();
+            inboxPage.checkCreateAnnouncementPageWithGFETurnOnOrTurnOff(false);
 
-        // Go to Analytics page
-        AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
-        analyticsPage.clickOnAnalyticsConsoleMenu();
-        SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+            // Go to Analytics page
+            AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+            analyticsPage.clickOnAnalyticsConsoleMenu();
+            SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
 
-        String gfe = "Good Faith Estimate";
-        if (!analyticsPage.isSpecificReportLoaded(gfe)){
-            SimpleUtils.pass("Analytics: GFE report is not displayed in all locations tab, because GFE is turned off");
-        } else{
-            SimpleUtils.fail("Analytics: GFE report should not display in all locations tab, because GFE is turned off", true);
+            String gfe = "Good Faith Estimate";
+            if (!analyticsPage.isSpecificReportLoaded(gfe)){
+                SimpleUtils.pass("Analytics: GFE report is not displayed in all locations tab, because GFE is turned off");
+            } else{
+                SimpleUtils.fail("Analytics: GFE report should not display in all locations tab, because GFE is turned off", true);
+            }
+            analyticsPage.switchAllLocationsOrSingleLocation(false);
+            if (!analyticsPage.isSpecificReportLoaded(gfe)){
+                SimpleUtils.pass("Analytics: GFE report is not displayed in location: " + location +" tab, because GFE is turned off");
+            } else{
+                SimpleUtils.fail("Analytics: GFE report should not display in location: " + location +" tab, because GFE is turned off", true);
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
-        analyticsPage.switchAllLocationsOrSingleLocation(false);
-        if (!analyticsPage.isSpecificReportLoaded(gfe)){
-            SimpleUtils.pass("Analytics: GFE report is not displayed in location: " + location +" tab, because GFE is turned off");
-        } else{
-            SimpleUtils.fail("Analytics: GFE report should not display in location: " + location +" tab, because GFE is turned off", true);
-        }
+
 
     }
 
@@ -579,38 +584,43 @@ public class InboxTest extends TestBase {
     @TestName(description = "Verify turn on GFE ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOnGFEAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        controlsNewUIPage.clickOnControlsConsoleMenu();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsComplianceSection();
-        SimpleUtils.assertOnFail("Compliance page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsComplianceSection();
+            SimpleUtils.assertOnFail("Compliance page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
 
-        controlsNewUIPage.turnGFEToggleOnOrOff(true);
+            controlsNewUIPage.turnGFEToggleOnOrOff(true);
 
-        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
-        inboxPage.clickOnInboxConsoleMenuItem();
+            InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+            inboxPage.clickOnInboxConsoleMenuItem();
 
-        inboxPage.checkCreateAnnouncementPageWithGFETurnOnOrTurnOff(true);
+            inboxPage.checkCreateAnnouncementPageWithGFETurnOnOrTurnOff(true);
 
-        // Go to Analytics page
-        AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
-        analyticsPage.clickOnAnalyticsConsoleMenu();
-        SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+            // Go to Analytics page
+            AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+            analyticsPage.clickOnAnalyticsConsoleMenu();
+            SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
 
-        String gfe = "Good Faith Estimate";
-        if (analyticsPage.isSpecificReportLoaded(gfe)){
-            SimpleUtils.pass("Analytics: GFE report loaded successfully in all location tab");
-        } else{
-            SimpleUtils.fail("Analytics: Analytics: GFE report failed to load in all location tab", true);
+            String gfe = "Good Faith Estimate";
+            if (analyticsPage.isSpecificReportLoaded(gfe)){
+                SimpleUtils.pass("Analytics: GFE report loaded successfully in all location tab");
+            } else{
+                SimpleUtils.fail("Analytics: Analytics: GFE report failed to load in all location tab", true);
+            }
+            analyticsPage.switchAllLocationsOrSingleLocation(false);
+            if (analyticsPage.isSpecificReportLoaded(gfe)){
+                SimpleUtils.pass("Analytics: GFE report loaded successfully in location: " +location+ " tab");
+            } else{
+                SimpleUtils.fail("Analytics: Analytics: GFE report failed to load in location: " + location+ "tab", true);
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
-        analyticsPage.switchAllLocationsOrSingleLocation(false);
-        if (analyticsPage.isSpecificReportLoaded(gfe)){
-            SimpleUtils.pass("Analytics: GFE report loaded successfully in location: " +location+ " tab");
-        } else{
-            SimpleUtils.fail("Analytics: Analytics: GFE report failed to load in location: " + location+ "tab", true);
-        }
+
     }
 
     @Automated(automated = "Automated")
@@ -619,21 +629,25 @@ public class InboxTest extends TestBase {
     @TestName(description = "Verify the template loaded when selecting GFE ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        controlsNewUIPage.clickOnControlsConsoleMenu();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsComplianceSection();
-        SimpleUtils.assertOnFail("Compliance page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsComplianceSection();
+            SimpleUtils.assertOnFail("Compliance page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
 
-        controlsNewUIPage.turnGFEToggleOnOrOff(true);
+            controlsNewUIPage.turnGFEToggleOnOrOff(true);
 
-        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
-        inboxPage.clickOnInboxConsoleMenuItem();
+            InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+            inboxPage.clickOnInboxConsoleMenuItem();
 
-        inboxPage.createGFEAnnouncement();
-        inboxPage.checkCreateGFEPage();
+            inboxPage.createGFEAnnouncement();
+            inboxPage.checkCreateGFEPage();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     //Added by Haya

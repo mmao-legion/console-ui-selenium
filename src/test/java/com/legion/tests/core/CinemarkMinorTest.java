@@ -860,18 +860,20 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the School today and school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-
-        String minorName = "Minor14";
-        String shiftTime1 = "7,1";
-        String shiftTime2 = "9,4";
-        String shiftTime3 = "8,2";
-        String workRole = "Associates";
-        String scheduleFromToTime = "8AM - 4PM";
-        String scheduleMaxHours = "6";
-        String selectWeekDayName = "Mon";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
-                workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
-
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "7,1";
+            String shiftTime2 = "9,4";
+            String shiftTime3 = "8,2";
+            String workRole = "Associates";
+            String scheduleFromToTime = "8AM - 4PM";
+            String scheduleMaxHours = "6";
+            String selectWeekDayName = "Mon";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
+                    workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -881,18 +883,20 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the School today and school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-
-
-        String minorName = "Minor17";
-        String shiftTime1 = "8,1";
-        String shiftTime2 = "9,4";
-        String shiftTime3 = "9,2";
-        String workRole = "MOD";
-        String scheduleFromToTime = "8:30AM - 4PM";
-        String scheduleMaxHours = "5";
-        String selectWeekDayName = "Mon";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
-                scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "8,1";
+            String shiftTime2 = "9,4";
+            String shiftTime3 = "9,2";
+            String workRole = "MOD";
+            String scheduleFromToTime = "8:30AM - 4PM";
+            String scheduleMaxHours = "5";
+            String selectWeekDayName = "Mon";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
+                    scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -902,17 +906,20 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the School today and no school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "8,3";
-        String shiftTime2 = "9,5";
-        String shiftTime3 = "11,4";
-        String workRole = "Associates";
-        String scheduleFromToTime = "8:30AM - 5PM";
-        String scheduleMaxHours = "5";
-        String selectWeekDayName = "Fri";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
-                workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
-
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "8,3";
+            String shiftTime2 = "9,5";
+            String shiftTime3 = "11,4";
+            String workRole = "Associates";
+            String scheduleFromToTime = "8:30AM - 5PM";
+            String scheduleMaxHours = "5";
+            String selectWeekDayName = "Fri";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
+                    workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -922,17 +929,20 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the School today and no school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-
-        String minorName = "Minor17";
-        String shiftTime1 = "8,1";
-        String shiftTime2 = "9,5";
-        String shiftTime3 = "9,2";
-        String workRole = "MOD";
-        String scheduleFromToTime = "9AM - 5PM";
-        String scheduleMaxHours = "6";
-        String selectWeekDayName = "Fri";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
-                scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "8,1";
+            String shiftTime2 = "9,5";
+            String shiftTime3 = "9,2";
+            String workRole = "MOD";
+            String scheduleFromToTime = "9AM - 5PM";
+            String scheduleMaxHours = "6";
+            String selectWeekDayName = "Fri";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
+                    scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -941,16 +951,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the no School today and no school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "8,3";
-        String shiftTime2 = "9,6";
-        String shiftTime3 = "9,3";
-        String workRole = "Associates";
-        String scheduleFromToTime = "9AM - 6PM";
-        String scheduleMaxHours = "7";
-        String selectWeekDayName = "Sat";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
-                workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "8,3";
+            String shiftTime2 = "9,6";
+            String shiftTime3 = "9,3";
+            String workRole = "Associates";
+            String scheduleFromToTime = "9AM - 6PM";
+            String scheduleMaxHours = "7";
+            String selectWeekDayName = "Sat";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
+                    workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
     }
 
 
@@ -960,17 +975,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the no School today and no school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "8,1";
+            String shiftTime2 = "10,7";
+            String shiftTime3 = "10,2";
+            String workRole = "MOD";
+            String scheduleFromToTime = "9:30AM - 7PM";
+            String scheduleMaxHours = "7";
+            String selectWeekDayName = "Sat";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
+                    scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
 
-        String minorName = "Minor17";
-        String shiftTime1 = "8,1";
-        String shiftTime2 = "10,7";
-        String shiftTime3 = "10,2";
-        String workRole = "MOD";
-        String scheduleFromToTime = "9:30AM - 7PM";
-        String scheduleMaxHours = "7";
-        String selectWeekDayName = "Sat";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
-                scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
     }
 
 
@@ -980,15 +999,20 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the no School today and school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "8,3";
-        String shiftTime2 = "10,9";
-        String shiftTime3 = "10,4";
-        String workRole = "Associates";
-        String scheduleFromToTime = "9:30AM - 9PM";
-        String scheduleMaxHours = "9";
-        String selectWeekDayName = "Sun";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "8,3";
+            String shiftTime2 = "10,9";
+            String shiftTime3 = "10,4";
+            String workRole = "Associates";
+            String scheduleFromToTime = "9:30AM - 9PM";
+            String scheduleMaxHours = "9";
+            String selectWeekDayName = "Sun";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
     }
 
 
@@ -998,16 +1022,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the no School today and school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor17";
-        String shiftTime1 = "8,1";
-        String shiftTime2 = "10,8";
-        String shiftTime3 = "10,2";
-        String workRole = "MOD";
-        String scheduleFromToTime = "10AM - 8PM";
-        String scheduleMaxHours = "8";
-        String selectWeekDayName = "Sun";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
-    }
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "8,1";
+            String shiftTime2 = "10,8";
+            String shiftTime3 = "10,2";
+            String workRole = "MOD";
+            String scheduleFromToTime = "10AM - 8PM";
+            String scheduleMaxHours = "8";
+            String selectWeekDayName = "Sun";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+      }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
@@ -1015,14 +1044,19 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the summer day settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "8,3";
-        String shiftTime2 = "10,10";
-        String shiftTime3 = "10,4";
-        String workRole = "Associates";
-        String scheduleFromToTime = "10AM - 10PM";
-        String scheduleMaxHours = "10";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "8,3";
+            String shiftTime2 = "10,10";
+            String shiftTime3 = "10,4";
+            String workRole = "Associates";
+            String scheduleFromToTime = "10AM - 10PM";
+            String scheduleMaxHours = "10";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -1032,14 +1066,19 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the summer day  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor17";
-        String shiftTime1 = "8,1";
-        String shiftTime2 = "11,10";
-        String shiftTime3 = "11,7";
-        String workRole = "MOD";
-        String scheduleFromToTime = "10:30AM - 10PM";
-        String scheduleMaxHours = "9";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "8,1";
+            String shiftTime2 = "11,10";
+            String shiftTime3 = "11,7";
+            String workRole = "MOD";
+            String scheduleFromToTime = "10:30AM - 10PM";
+            String scheduleMaxHours = "9";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -1226,17 +1265,22 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the school week settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "10,1";
-        String shiftTime2 = "10,4";
-        int needCreateShiftsNumber1 = 4;
-        int needCreateShiftsNumber2 = 2;
-        String workRole = "Associates";
-        String maxOfDays = "4";
-        String maxOfScheduleHours = "15";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, true, false);
-    }
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "10,1";
+            String shiftTime2 = "10,4";
+            int needCreateShiftsNumber1 = 4;
+            int needCreateShiftsNumber2 = 2;
+            String workRole = "Associates";
+            String maxOfDays = "4";
+            String maxOfScheduleHours = "15";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, true, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+     }
 
 
     @Automated(automated = "Automated")
@@ -1245,16 +1289,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the non school week settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNonSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "11,1";
-        String shiftTime2 = "10,4";
-        int needCreateShiftsNumber1 = 5;
-        int needCreateShiftsNumber2 = 2;
-        String workRole = "Associates";
-        String maxOfDays = "5";
-        String maxOfScheduleHours = "16";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, true);
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "11,1";
+            String shiftTime2 = "10,4";
+            int needCreateShiftsNumber1 = 5;
+            int needCreateShiftsNumber2 = 2;
+            String workRole = "Associates";
+            String maxOfDays = "5";
+            String maxOfScheduleHours = "16";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, true);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -1264,16 +1313,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the summer week settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "11,1";
-        String shiftTime2 = "10,5";
-        int needCreateShiftsNumber1 = 6;
-        int needCreateShiftsNumber2 = 2;
-        String workRole = "Associates";
-        String maxOfDays = "6";
-        String maxOfScheduleHours = "17";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, false);
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "11,1";
+            String shiftTime2 = "10,5";
+            int needCreateShiftsNumber1 = 6;
+            int needCreateShiftsNumber2 = 2;
+            String workRole = "Associates";
+            String maxOfDays = "6";
+            String maxOfScheduleHours = "17";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -1282,16 +1336,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the school week  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor17";
-        String shiftTime1 = "11,1";
-        String shiftTime2 = "11,4";
-        int needCreateShiftsNumber1 = 6;
-        int needCreateShiftsNumber2 = 3;
-        String workRole = "Mod";
-        String maxOfDays = "6";
-        String maxOfScheduleHours = "18";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, true, false);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "11,1";
+            String shiftTime2 = "11,4";
+            int needCreateShiftsNumber1 = 6;
+            int needCreateShiftsNumber2 = 3;
+            String workRole = "Mod";
+            String maxOfDays = "6";
+            String maxOfScheduleHours = "18";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, true, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -1300,16 +1359,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the non school week  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNonSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor17";
-        String shiftTime1 = "11,1";
-        String shiftTime2 = "11,4";
-        int needCreateShiftsNumber1 = 4;
-        int needCreateShiftsNumber2 = 3;
-        String workRole = "Mod";
-        String maxOfDays = "4";
-        String maxOfScheduleHours = "16";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, true);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "11,1";
+            String shiftTime2 = "11,4";
+            int needCreateShiftsNumber1 = 4;
+            int needCreateShiftsNumber2 = 3;
+            String workRole = "Mod";
+            String maxOfDays = "4";
+            String maxOfScheduleHours = "16";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, true);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -1318,16 +1382,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the summer week settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor17";
-        String shiftTime1 = "11,1";
-        String shiftTime2 = "11,5";
-        int needCreateShiftsNumber1 = 5;
-        int needCreateShiftsNumber2 = 3;
-        String workRole = "Mod";
-        String maxOfDays = "5";
-        String maxOfScheduleHours = "17";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, false);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "11,1";
+            String shiftTime2 = "11,5";
+            int needCreateShiftsNumber1 = 5;
+            int needCreateShiftsNumber2 = 3;
+            String workRole = "Mod";
+            String maxOfDays = "5";
+            String maxOfScheduleHours = "17";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     public void verifyWeekOvertimeViolationsForMinors(String minorName, String shiftTime1, String shiftTime2, String workRole,

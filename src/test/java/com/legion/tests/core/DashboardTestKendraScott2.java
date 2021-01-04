@@ -338,7 +338,12 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@TestName(description = "Verify the left navigation menu on login using admin access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("Admin");
+		try{
+			verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("Admin");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+
 	}
 
 	@Automated(automated = "Automated")
@@ -347,7 +352,11 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@TestName(description = "Verify the left navigation menu on login using admin access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheLeftNavigationMenuOnLoginUsingSMAccessAsStoreManager(String browser, String username, String password, String location) throws Exception {
-		verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("StoreManager");
+		try{
+			verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("StoreManager");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	@Automated(automated = "Automated")
@@ -356,7 +365,11 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@TestName(description = "Verify the left navigation menu on login using admin access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamLead(String browser, String username, String password, String location) throws Exception {
-		verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("TeamLead");
+		try{
+			verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("TeamLead");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	@Automated(automated = "Automated")
@@ -365,9 +378,14 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@TestName(description = "Verify the left navigation menu on login using admin access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamMember(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		dashboardPage.closeNewFeatureEnhancementsPopup();
-		verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("TeamMember");
+		try{
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			dashboardPage.closeNewFeatureEnhancementsPopup();
+			verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("TeamMember");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+
 	}
 
 	@Automated(automated = "Automated")
@@ -376,7 +394,11 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@TestName(description = "Verify the left navigation menu on login using admin access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsDistrictManager(String browser, String username, String password, String location) throws Exception {
-		verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("DistrictManager");
+		try{
+			verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("DistrictManager");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	@Automated(automated = "Automated")
@@ -385,7 +407,11 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@TestName(description = "Verify the left navigation menu on login using admin access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsCustomerAdmin(String browser, String username, String password, String location) throws Exception {
-		verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("CustomerAdmin");
+		try{
+			verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("CustomerAdmin");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	private void verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess(String userRole) throws Exception {
