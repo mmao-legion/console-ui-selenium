@@ -36,11 +36,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Override
 	@BeforeMethod()
-	public void firstTest(Method testMethod, Object[] params) throws Exception {
-		this.createDriver((String) params[0], "69", "Window");
-		visitPage(testMethod);
-		loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
-
+	public void firstTest(Method testMethod, Object[] params) {
+		try {
+			this.createDriver((String) params[0], "69", "Window");
+			visitPage(testMethod);
+			loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	@Automated(automated = "Manual")
@@ -290,7 +293,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the Schedule functionality  Legion")
+	@TestName(description = "Verify the Schedule functionality > Legion")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyScheduleLegionFunctionality(String username, String password, String browser, String location)
 			throws Exception {
@@ -359,7 +362,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		@Automated(automated = "Automated")
 		@Owner(owner = "Estelle")
 		@Enterprise(name = "KendraScott2_Enterprise")
-		@TestName(description = "Verify the Schedule functionality  Compliance Smartcard")
+		@TestName(description = "Verify the Schedule functionality > Compliance smartcard")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyComplianceSmartCardFunctionality(String username, String password, String browser, String location)
 				throws Exception {
@@ -377,7 +380,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
         @Automated(automated = "Automated")
 		@Owner(owner = "Estelle")
 		@Enterprise(name = "Coffee_Enterprise")
-		@TestName(description = "Verify the Schedule functionality  Schedule Smartcard")
+		@TestName(description = "Verify the Schedule functionality > Schedule smartcard")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyScheduleFunctionalityScheduleSmartCard(String username, String password, String browser, String location)
 				throws Exception {
@@ -538,9 +541,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "Coffee_Enterprise")
-	@TestName(description = "Verify the Schedule functionality  Day View")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyScheduleFunctionalityDayView(String username, String password, String browser, String location)
+	@TestName(description = "Verify the Schedule functionality > Day View")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyScheduleFunctionalityDayViewAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -792,6 +795,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		 *  Navigate to Schedule week view
 		 */
 		boolean isWeekView = true;
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (!isWeekGenerated){
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
+
 		schedulePage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
 		schedulePage.filterScheduleByWorkRoleAndJobTitle(isWeekView);
 		schedulePage.filterScheduleByShiftTypeAndJobTitle(isWeekView);
@@ -803,7 +811,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verification of My Schedule Page when login through TM View")
+	@TestName(description = "Verification of My Schedule Page")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verificationOfMySchedulePageAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		try {
@@ -844,7 +852,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verification of To and Fro navigation of week picker when login through TM View")
+	@TestName(description = "Verification of To and Fro navigation of week picker")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verificationOfToAndFroNavigationOfWeekPickerAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		try {
@@ -930,7 +938,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify Profile picture functionality when login through TM View")
+	@TestName(description = "Verify Profile picture functionality")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyProfilePictureFunctionalityAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		try {
@@ -951,7 +959,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify Info icon functionality when login through TM View")
+	@TestName(description = "Verify Info icon functionality")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyInfoIconFunctionalityAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		try {
@@ -975,7 +983,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verification of Open Shift Schedule Smart Card when login through TM View")
+	@TestName(description = "Verification of Open Shift Schedule Smart Card")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyOpenShiftScheduleSmartCardAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		try {
@@ -1004,86 +1012,90 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@TestName(description = "Verify the content of copy schedule for non dg flow")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheContentOfCopyScheduleForNonDGFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (isWeekGenerated) {
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
-		}
-		schedulePage.createScheduleForNonDGFlowNewUI();
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.deleteTMShiftInWeekView("Unassigned");
-		schedulePage.saveSchedule();
-		schedulePage.publishActiveSchedule();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("Unassigned");
+			schedulePage.saveSchedule();
+			schedulePage.publishActiveSchedule();
 
-		// Get the hours and the count of the tms for each day, ex: "37.5 Hrs 5TMs"
-		HashMap<String, String> hoursNTMsCountFirstWeek = schedulePage.getTheHoursNTheCountOfTMsForEachWeekDays();
-		HashMap<String, List<String>> shiftsForEachDayFirstWeek = schedulePage.getTheContentOfShiftsForEachWeekDay();
-		HashMap<String, String> budgetNScheduledHoursFirstWeek = schedulePage.getBudgetNScheduledHoursFromSmartCard();
-		String cardName = "COMPLIANCE";
-		boolean isComplianceCardLoadedFirstWeek = schedulePage.isSpecificSmartCardLoaded(cardName);
-		int complianceShiftCountFirstWeek = 0;
-		if (isComplianceCardLoadedFirstWeek) {
-			complianceShiftCountFirstWeek = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
-		}
-		String firstWeekInfo = schedulePage.getActiveWeekText();
-		if (firstWeekInfo.length() > 11) {
-			firstWeekInfo = firstWeekInfo.trim().substring(10);
-			if (firstWeekInfo.contains("-")) {
-				String[] temp = firstWeekInfo.split("-");
-				if (temp.length == 2 && temp[0].contains(" ") && temp[1].contains(" ")) {
-					firstWeekInfo = temp[0].trim().split(" ")[0] + " " + (temp[0].trim().split(" ")[1].length() == 1 ? "0" + temp[0].trim().split(" ")[1] : temp[0].trim().split(" ")[1])
-							+ " - " + temp[1].trim().split(" ")[0] + " " + (temp[1].trim().split(" ")[1].length() == 1 ? "0" + temp[1].trim().split(" ")[1] : temp[1].trim().split(" ")[1]);
+			// Get the hours and the count of the tms for each day, ex: "37.5 Hrs 5TMs"
+			HashMap<String, String> hoursNTMsCountFirstWeek = schedulePage.getTheHoursNTheCountOfTMsForEachWeekDays();
+			HashMap<String, List<String>> shiftsForEachDayFirstWeek = schedulePage.getTheContentOfShiftsForEachWeekDay();
+			HashMap<String, String> budgetNScheduledHoursFirstWeek = schedulePage.getBudgetNScheduledHoursFromSmartCard();
+			String cardName = "COMPLIANCE";
+			boolean isComplianceCardLoadedFirstWeek = schedulePage.isSpecificSmartCardLoaded(cardName);
+			int complianceShiftCountFirstWeek = 0;
+			if (isComplianceCardLoadedFirstWeek) {
+				complianceShiftCountFirstWeek = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+			}
+			String firstWeekInfo = schedulePage.getActiveWeekText();
+			if (firstWeekInfo.length() > 11) {
+				firstWeekInfo = firstWeekInfo.trim().substring(10);
+				if (firstWeekInfo.contains("-")) {
+					String[] temp = firstWeekInfo.split("-");
+					if (temp.length == 2 && temp[0].contains(" ") && temp[1].contains(" ")) {
+						firstWeekInfo = temp[0].trim().split(" ")[0] + " " + (temp[0].trim().split(" ")[1].length() == 1 ? "0" + temp[0].trim().split(" ")[1] : temp[0].trim().split(" ")[1])
+								+ " - " + temp[1].trim().split(" ")[0] + " " + (temp[1].trim().split(" ")[1].length() == 1 ? "0" + temp[1].trim().split(" ")[1] : temp[1].trim().split(" ")[1]);
+					}
 				}
 			}
-		}
 
-		schedulePage.navigateToNextWeek();
-		schedulePage.isSchedule();
-		isWeekGenerated = schedulePage.isWeekGenerated();
-		if (isWeekGenerated) {
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
-		}
-		List<String> weekDaysToClose = new ArrayList<>();
-		schedulePage.createScheduleForNonDGByWeekInfo(firstWeekInfo, weekDaysToClose);
+			schedulePage.navigateToNextWeek();
+			schedulePage.isSchedule();
+			isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			List<String> weekDaysToClose = new ArrayList<>();
+			schedulePage.createScheduleForNonDGByWeekInfo(firstWeekInfo, weekDaysToClose);
 
-		HashMap<String, String> hoursNTMsCountSecondWeek = schedulePage.getTheHoursNTheCountOfTMsForEachWeekDays();
-		HashMap<String, List<String>> shiftsForEachDaySecondWeek = schedulePage.getTheContentOfShiftsForEachWeekDay();
-		HashMap<String, String> budgetNScheduledHoursSecondWeek = schedulePage.getBudgetNScheduledHoursFromSmartCard();
-		boolean isComplianceCardLoadedSecondWeek = schedulePage.isSpecificSmartCardLoaded(cardName);
-		int complianceShiftCountSecondWeek = 0;
-		if (isComplianceCardLoadedFirstWeek) {
-			complianceShiftCountSecondWeek = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
-		}
+			HashMap<String, String> hoursNTMsCountSecondWeek = schedulePage.getTheHoursNTheCountOfTMsForEachWeekDays();
+			HashMap<String, List<String>> shiftsForEachDaySecondWeek = schedulePage.getTheContentOfShiftsForEachWeekDay();
+			HashMap<String, String> budgetNScheduledHoursSecondWeek = schedulePage.getBudgetNScheduledHoursFromSmartCard();
+			boolean isComplianceCardLoadedSecondWeek = schedulePage.isSpecificSmartCardLoaded(cardName);
+			int complianceShiftCountSecondWeek = 0;
+			if (isComplianceCardLoadedFirstWeek) {
+				complianceShiftCountSecondWeek = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+			}
 
-		if (hoursNTMsCountFirstWeek.equals(hoursNTMsCountSecondWeek)) {
-			SimpleUtils.pass("Verified the scheduled hour and TMs of each week day are consistent with the copied schedule!");
-		} else {
-			SimpleUtils.fail("Verified the scheduled hour and TMs of each week day are inconsistent with the copied schedule", true);
-		}
-		if (SimpleUtils.compareHashMapByEntrySet(shiftsForEachDayFirstWeek, shiftsForEachDaySecondWeek)) {
-			SimpleUtils.pass("Verified the shifts of each week day are consistent with the copied schedule!");
-		} else {
-			SimpleUtils.fail("Verified the shifts of each week day are inconsistent with the copied schedule!", true);
-		}
-		if (budgetNScheduledHoursFirstWeek.get("Scheduled").equals(budgetNScheduledHoursSecondWeek.get("Scheduled"))) {
-			SimpleUtils.pass("The Scheduled hour is consistent with the copied scheudle: " + budgetNScheduledHoursFirstWeek.get("Scheduled"));
-		} else {
-			SimpleUtils.fail("The Scheduled hour is inconsistent, the first week is: " + budgetNScheduledHoursFirstWeek.get("Scheduled")
-					+ ", but second week is: " + budgetNScheduledHoursSecondWeek.get("Scheduled"), true);
-		}
-		if ((isComplianceCardLoadedFirstWeek == isComplianceCardLoadedSecondWeek) && (complianceShiftCountFirstWeek == complianceShiftCountSecondWeek)) {
-			SimpleUtils.pass("Verified Compliance is consistent with the copied schedule");
-		} else {
-			SimpleUtils.fail("Verified Compliance is inconsistent with the copied schedule!", true);
+			if (hoursNTMsCountFirstWeek.equals(hoursNTMsCountSecondWeek)) {
+				SimpleUtils.pass("Verified the scheduled hour and TMs of each week day are consistent with the copied schedule!");
+			} else {
+				SimpleUtils.fail("Verified the scheduled hour and TMs of each week day are inconsistent with the copied schedule", true);
+			}
+			if (SimpleUtils.compareHashMapByEntrySet(shiftsForEachDayFirstWeek, shiftsForEachDaySecondWeek)) {
+				SimpleUtils.pass("Verified the shifts of each week day are consistent with the copied schedule!");
+			} else {
+				SimpleUtils.fail("Verified the shifts of each week day are inconsistent with the copied schedule!", true);
+			}
+			if (budgetNScheduledHoursFirstWeek.get("Scheduled").equals(budgetNScheduledHoursSecondWeek.get("Scheduled"))) {
+				SimpleUtils.pass("The Scheduled hour is consistent with the copied scheudle: " + budgetNScheduledHoursFirstWeek.get("Scheduled"));
+			} else {
+				SimpleUtils.fail("The Scheduled hour is inconsistent, the first week is: " + budgetNScheduledHoursFirstWeek.get("Scheduled")
+						+ ", but second week is: " + budgetNScheduledHoursSecondWeek.get("Scheduled"), true);
+			}
+			if ((isComplianceCardLoadedFirstWeek == isComplianceCardLoadedSecondWeek) && (complianceShiftCountFirstWeek == complianceShiftCountSecondWeek)) {
+				SimpleUtils.pass("Verified Compliance is consistent with the copied schedule");
+			} else {
+				SimpleUtils.fail("Verified Compliance is inconsistent with the copied schedule!", true);
+			}
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
 
@@ -1093,31 +1105,35 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@TestName(description = "Verify the content of closed week day schedule for non dg flow ")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheContentOfClosedWeekDayScheduleForNonDGFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (isWeekGenerated) {
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			List<String> weekDaysToClose = new ArrayList<>(Arrays.asList("Sunday", "Tuesday"));
+			schedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose);
+
+			// Verify that the closed week day should not have any shifts
+			schedulePage.verifyNoShiftsForSpecificWeekDay(weekDaysToClose);
+			// Go to day view, check the closed week day should show "Store is Closed"
+			schedulePage.clickOnDayView();
+			schedulePage.verifyStoreIsClosedForSpecificWeekDay(weekDaysToClose);
+			// Toggle Summary view, verify that the specific week days shows Closed
+			schedulePage.toggleSummaryView();
+			schedulePage.verifyClosedDaysInToggleSummaryView(weekDaysToClose);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
-		List<String> weekDaysToClose = new ArrayList<>(Arrays.asList("Sunday", "Tuesday"));
-		schedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose);
-
-		// Verify that the closed week day should not have any shifts
-		schedulePage.verifyNoShiftsForSpecificWeekDay(weekDaysToClose);
-		// Go to day view, check the closed week day should show "Store is Closed"
-		schedulePage.clickOnDayView();
-		schedulePage.verifyStoreIsClosedForSpecificWeekDay(weekDaysToClose);
-		// Toggle Summary view, verify that the specific week days shows Closed
-		schedulePage.toggleSummaryView();
-		schedulePage.verifyClosedDaysInToggleSummaryView(weekDaysToClose);
 	}
 
 	@Automated(automated = "Automated")
@@ -1168,30 +1184,34 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the content after changing Operating Hours for non dg flow ")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyContentAfterChangingOperatingHrsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		schedulePage.clickOnScheduleSubTab("Schedule");
-		schedulePage.navigateToNextWeek();
-		schedulePage.navigateToNextWeek();
-		if (schedulePage.isWeekGenerated()){
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
+	public void verifyContentAfterChangingOperatingHrsAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			schedulePage.clickOnScheduleSubTab("Schedule");
+			schedulePage.navigateToNextWeek();
+			schedulePage.navigateToNextWeek();
+			if (schedulePage.isWeekGenerated()){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			String day = "Sunday";
+			String startTime = "07:00AM";
+			String endTime = "06:00PM";
+			//set operating hours: Sunday -> start time: 07:00AM, end time: 06:00PM
+			schedulePage.createScheduleForNonDGFlowNewUIWithGivingParameters(day, startTime, endTime);
+			schedulePage.verifyDayHasShifts(day);
+			schedulePage.verifyDayHasShifts("Monday");
+			schedulePage.verifyDayHasShifts("Tuesday");
+			schedulePage.verifyDayHasShifts("Wednesday");
+			schedulePage.verifyDayHasShifts("Thursday");
+			schedulePage.verifyDayHasShifts("Friday");
+			schedulePage.verifyDayHasShifts("Saturday");
+			schedulePage.goToToggleSummaryView();
+			//verify the operating hours in Toggle Summary View
+			schedulePage.verifyOperatingHrsInToggleSummary(day, startTime, endTime);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
-		String day = "Sunday";
-		String startTime = "07:00AM";
-		String endTime = "06:00PM";
-		//set operating hours: Sunday -> start time: 07:00AM, end time: 06:00PM
-		schedulePage.createScheduleForNonDGFlowNewUIWithGivingParameters(day, startTime, endTime);
-		schedulePage.verifyDayHasShifts(day);
-		schedulePage.verifyDayHasShifts("Monday");
-		schedulePage.verifyDayHasShifts("Tuesday");
-		schedulePage.verifyDayHasShifts("Wednesday");
-		schedulePage.verifyDayHasShifts("Thursday");
-		schedulePage.verifyDayHasShifts("Friday");
-		schedulePage.verifyDayHasShifts("Saturday");
-		schedulePage.goToToggleSummaryView();
-		//verify the operating hours in Toggle Summary View
-		schedulePage.verifyOperatingHrsInToggleSummary(day, startTime, endTime);
 	}
 
 	@Automated(automated = "Automated")
@@ -1199,25 +1219,29 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the content after changing Operating Hours for non dg flow - next day")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		schedulePage.clickOnScheduleSubTab("Schedule");
-		schedulePage.navigateToNextWeek();
-		schedulePage.navigateToNextWeek();
-		if (schedulePage.isWeekGenerated()){
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
+	public void verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			schedulePage.clickOnScheduleSubTab("Schedule");
+			schedulePage.navigateToNextWeek();
+			schedulePage.navigateToNextWeek();
+			if (schedulePage.isWeekGenerated()){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			String day = "Sunday";
+			String startTime = "11:00AM";
+			String endTime = "02:00AM";
+			//set operating hours: Sunday -> start time: 11:00AM, end time: 02:00AM
+			schedulePage.createScheduleForNonDGFlowNewUIWithGivingParameters(day, startTime, endTime);
+			//verify the day we set a next day time has shifts.
+			schedulePage.verifyDayHasShifts(day);
+			//verify the operating hours in Toggle Summary View
+			schedulePage.goToToggleSummaryView();
+			schedulePage.verifyOperatingHrsInToggleSummary(day, startTime, endTime);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
-		String day = "Sunday";
-		String startTime = "11:00AM";
-		String endTime = "02:00AM";
-		//set operating hours: Sunday -> start time: 11:00AM, end time: 02:00AM
-		schedulePage.createScheduleForNonDGFlowNewUIWithGivingParameters(day, startTime, endTime);
-		//verify the day we set a next day time has shifts.
-		schedulePage.verifyDayHasShifts(day);
-		//verify the operating hours in Toggle Summary View
-		schedulePage.goToToggleSummaryView();
-		schedulePage.verifyOperatingHrsInToggleSummary(day, startTime, endTime);
 	}
 
 	@Automated(automated = "Automated")
@@ -1226,34 +1250,39 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@TestName(description = "Verify the budget hour in DM view schedule page for non dg flow")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+		try{
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (isWeekGenerated) {
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			float budgetHoursInSchedule = Float.parseFloat(schedulePage.getBudgetNScheduledHoursFromSmartCard().get("Budget"));
+
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.changeDistrictDirect();
+
+			ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+			float budgetedHoursInDMViewSchedule = scheduleDMViewPage.getBudgetedHourOfScheduleInDMViewByLocation(location);
+			if (budgetHoursInSchedule != 0 && budgetHoursInSchedule == budgetedHoursInDMViewSchedule) {
+				SimpleUtils.pass("Verified the budget hour in DM view schedule page is consistent with the value saved in create schedule page!");
+			} else {
+				SimpleUtils.fail("Verified the budget hour in DM view schedule page is consistent with the value saved in create schedule page! The budget hour in DM view schedule page is " +
+						budgetedHoursInDMViewSchedule + ". The value saved in create schedule page is " + budgetHoursInSchedule, false);
+			}
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
-		List<String> weekDaysToClose = new ArrayList<>();
-		float budgetHoursInSchedule = schedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose);
 
-		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-		locationSelectorPage.changeDistrictDirect();
-
-		ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-		float budgetedHoursInDMViewSchedule = scheduleDMViewPage.getBudgetedHourOfScheduleInDMViewByLocation(location);
-		if (budgetHoursInSchedule != 0 && budgetHoursInSchedule == budgetedHoursInDMViewSchedule) {
-			SimpleUtils.pass("Verified the budget hour in DM view schedule page is consistent with the value saved in create schedule page!");
-		} else {
-			SimpleUtils.fail("Verified the budget hour in DM view schedule page is consistent with the value saved in create schedule page! The budget hour in DM view schedule page is " +
-					budgetHoursInSchedule + ". The value saved in create schedule page is " + budgetedHoursInDMViewSchedule, false);
-		}
 	}
 
 
@@ -1262,43 +1291,47 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify smart card for schedule not publish(include past weeks)")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifySmartCardForScheduleNotPublishAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		schedulePage.clickOnScheduleSubTab("Schedule");
-		schedulePage.navigateToNextWeek();
-		schedulePage.navigateToNextWeek();
-		if (schedulePage.isWeekGenerated()){
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
-		}
-		schedulePage.createScheduleForNonDGFlowNewUI();
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		//make edits
-		schedulePage.clickOnDayViewAddNewShiftButton();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.saveSchedule();
-		//generate and save, should not display number of changes, we set it as 0.
-		int changesNotPublished = 0;
-		//Verify changes not publish smart card.
-		SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
-		schedulePage.verifyChangesNotPublishSmartCard(changesNotPublished);
-		schedulePage.verifyLabelOfPublishBtn("Publish");
-		String activeWeek = schedulePage.getActiveWeekText();
-		schedulePage.clickOnScheduleSubTab("Overview");
-		List<String> resultListInOverview = schedulePage.getOverviewData();
-		for (String s : resultListInOverview){
-			String a = s.substring(1,7);
-			if (activeWeek.toLowerCase().contains(a.toLowerCase())){
-				if (s.contains("Unpublished Edits")){
-					SimpleUtils.pass("Warning message in overview page is correct!");
-				} else {
-					SimpleUtils.fail("Warning message is not expected: "+ s.split(",")[4],false);
+	public void verifySmartCardForScheduleNotPublishAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			schedulePage.clickOnScheduleSubTab("Schedule");
+			schedulePage.navigateToNextWeek();
+			schedulePage.navigateToNextWeek();
+			if (schedulePage.isWeekGenerated()){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			//make edits
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.customizeNewShiftPage();
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.saveSchedule();
+			//generate and save, should not display number of changes, we set it as 0.
+			int changesNotPublished = 0;
+			//Verify changes not publish smart card.
+			SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
+			schedulePage.verifyChangesNotPublishSmartCard(changesNotPublished);
+			schedulePage.verifyLabelOfPublishBtn("Publish");
+			String activeWeek = schedulePage.getActiveWeekText();
+			schedulePage.clickOnScheduleSubTab("Overview");
+			List<String> resultListInOverview = schedulePage.getOverviewData();
+			for (String s : resultListInOverview){
+				String a = s.substring(1,7);
+				if (activeWeek.toLowerCase().contains(a.toLowerCase())){
+					if (s.contains("Unpublished Edits")){
+						SimpleUtils.pass("Warning message in overview page is correct!");
+					} else {
+						SimpleUtils.fail("Warning message is not expected: "+ s.split(",")[4],false);
+					}
 				}
 			}
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
 
@@ -1307,53 +1340,57 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify smart card for schedule not publish(include past weeks) - republish")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		schedulePage.clickOnScheduleSubTab("Schedule");
-		schedulePage.navigateToNextWeek();
-		schedulePage.navigateToNextWeek();
-		if (schedulePage.isWeekGenerated()){
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
-		}
-		schedulePage.createScheduleForNonDGFlowNewUI();
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		//make edits and publish
-		schedulePage.clickOnDayViewAddNewShiftButton();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.saveSchedule();
-		schedulePage.publishActiveSchedule();
-		//make edits and save
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.clickOnDayViewAddNewShiftButton();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.saveSchedule();
-		//generate and save, should not display number of changes, we set it as 0.
-		int changesNotPublished = 1;
-		//Verify changes not publish smart card.
-		SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
-		schedulePage.verifyChangesNotPublishSmartCard(changesNotPublished);
-		schedulePage.verifyLabelOfPublishBtn("Republish");
-		String activeWeek = schedulePage.getActiveWeekText();
-		schedulePage.clickOnScheduleSubTab("Overview");
-		List<String> resultListInOverview = schedulePage.getOverviewData();
-		for (String s : resultListInOverview){
-			String a = s.substring(1,7);
-			if (activeWeek.toLowerCase().contains(a.toLowerCase())){
-				if (s.contains("Unpublished Edits")){
-					SimpleUtils.pass("Warning message in overview page is correct!");
-				} else {
-					SimpleUtils.fail("Warning message is not expected: "+ s.split(",")[4],false);
+	public void verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			schedulePage.clickOnScheduleSubTab("Schedule");
+			schedulePage.navigateToNextWeek();
+			schedulePage.navigateToNextWeek();
+			if (schedulePage.isWeekGenerated()){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			//make edits and publish
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.customizeNewShiftPage();
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.saveSchedule();
+			schedulePage.publishActiveSchedule();
+			//make edits and save
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.customizeNewShiftPage();
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.saveSchedule();
+			//generate and save, should not display number of changes, we set it as 0.
+			int changesNotPublished = 1;
+			//Verify changes not publish smart card.
+			SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
+			schedulePage.verifyChangesNotPublishSmartCard(changesNotPublished);
+			schedulePage.verifyLabelOfPublishBtn("Republish");
+			String activeWeek = schedulePage.getActiveWeekText();
+			schedulePage.clickOnScheduleSubTab("Overview");
+			List<String> resultListInOverview = schedulePage.getOverviewData();
+			for (String s : resultListInOverview){
+				String a = s.substring(1,7);
+				if (activeWeek.toLowerCase().contains(a.toLowerCase())){
+					if (s.contains("Unpublished Edits")){
+						SimpleUtils.pass("Warning message in overview page is correct!");
+					} else {
+						SimpleUtils.fail("Warning message is not expected: "+ s.split(",")[4],false);
+					}
 				}
 			}
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
 
@@ -1364,50 +1401,54 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@TestName(description = "verify smart card for compliance violation")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (isWeekGenerated) {
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
-		}
-		schedulePage.createScheduleForNonDGFlowNewUI();
-		String cardName = "COMPLIANCE";
-		int originalComplianceCount = 0;
-		if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
-			originalComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
-		}
-		schedulePage.clickOnDayView();
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
-			schedulePage.dragOneShiftToMakeItOverTime();
-		} else if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
-			schedulePage.clickOnProfileIcon();
-			schedulePage.clickOnEditShiftTime();
-			schedulePage.verifyEditShiftTimePopUpDisplay();
-			schedulePage.editShiftTimeToTheLargest();
-			schedulePage.clickOnUpdateEditShiftTimeButton();
-		}
-		schedulePage.saveSchedule();
-		schedulePage.clickOnWeekView();
-		int currentComplianceCount = 0;
-		if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
-			currentComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
-			if (currentComplianceCount == originalComplianceCount + 1) {
-				SimpleUtils.pass("Schedule Week View: Compliance Count is correct after updating a new overtime shift!");
-			} else {
-				SimpleUtils.fail("Schedule Week View: Compliance Count is incorrect, original is: " + originalComplianceCount + ", current is: "
-				+ currentComplianceCount + ", the difference between two numbers should equal to 1!", false);
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
-		} else {
-			SimpleUtils.fail("Schedule Week View: Compliance smart card failed to show!", false);
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			String cardName = "COMPLIANCE";
+			int originalComplianceCount = 0;
+			if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
+				originalComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+			}
+			schedulePage.clickOnDayView();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
+				schedulePage.dragOneShiftToMakeItOverTime();
+			} else if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
+				schedulePage.clickOnProfileIcon();
+				schedulePage.clickOnEditShiftTime();
+				schedulePage.verifyEditShiftTimePopUpDisplay();
+				schedulePage.editShiftTimeToTheLargest();
+				schedulePage.clickOnUpdateEditShiftTimeButton();
+			}
+			schedulePage.saveSchedule();
+			schedulePage.clickOnWeekView();
+			int currentComplianceCount = 0;
+			if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
+				currentComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+				if (currentComplianceCount == originalComplianceCount + 1) {
+					SimpleUtils.pass("Schedule Week View: Compliance Count is correct after updating a new overtime shift!");
+				} else {
+					SimpleUtils.fail("Schedule Week View: Compliance Count is incorrect, original is: " + originalComplianceCount + ", current is: "
+							+ currentComplianceCount + ", the difference between two numbers should equal to 1!", false);
+				}
+			} else {
+				SimpleUtils.fail("Schedule Week View: Compliance smart card failed to show!", false);
+			}
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
 
@@ -1417,55 +1458,59 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@TestName(description = "verify smart card for compliance violation -republish")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (isWeekGenerated) {
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
-		}
-		schedulePage.createScheduleForNonDGFlowNewUI();
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.deleteTMShiftInWeekView("Unassigned");
-		schedulePage.saveSchedule();
-		schedulePage.publishActiveSchedule();
-
-		String cardName = "COMPLIANCE";
-		int originalComplianceCount = 0;
-		if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
-			originalComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
-		}
-		schedulePage.clickOnDayView();
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
-			schedulePage.dragOneShiftToMakeItOverTime();
-		} else if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
-			schedulePage.clickOnProfileIcon();
-			schedulePage.clickOnEditShiftTime();
-			schedulePage.verifyEditShiftTimePopUpDisplay();
-			schedulePage.editShiftTimeToTheLargest();
-			schedulePage.clickOnUpdateEditShiftTimeButton();
-		}
-		schedulePage.saveSchedule();
-		schedulePage.clickOnWeekView();
-		int currentComplianceCount = 0;
-		if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
-			currentComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
-			if (currentComplianceCount > originalComplianceCount) {
-				SimpleUtils.pass("Schedule Week View: Compliance Count is correct after updating a new overtime shift!");
-			} else {
-				SimpleUtils.fail("Schedule Week View: Compliance Count is incorrect, original is: " + originalComplianceCount + ", current is: "
-						+ currentComplianceCount + ", the difference between two numbers should equal or larger than 1!", false);
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
-		} else {
-			SimpleUtils.report("Schedule Week View: Compliance smart card failed to show! Please check if the TM is exempt!");
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("Unassigned");
+			schedulePage.saveSchedule();
+			schedulePage.publishActiveSchedule();
+
+			String cardName = "COMPLIANCE";
+			int originalComplianceCount = 0;
+			if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
+				originalComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+			}
+			schedulePage.clickOnDayView();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
+				schedulePage.dragOneShiftToMakeItOverTime();
+			} else if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
+				schedulePage.clickOnProfileIcon();
+				schedulePage.clickOnEditShiftTime();
+				schedulePage.verifyEditShiftTimePopUpDisplay();
+				schedulePage.editShiftTimeToTheLargest();
+				schedulePage.clickOnUpdateEditShiftTimeButton();
+			}
+			schedulePage.saveSchedule();
+			schedulePage.clickOnWeekView();
+			int currentComplianceCount = 0;
+			if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
+				currentComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
+				if (currentComplianceCount > originalComplianceCount) {
+					SimpleUtils.pass("Schedule Week View: Compliance Count is correct after updating a new overtime shift!");
+				} else {
+					SimpleUtils.fail("Schedule Week View: Compliance Count is incorrect, original is: " + originalComplianceCount + ", current is: "
+							+ currentComplianceCount + ", the difference between two numbers should equal or larger than 1!", false);
+				}
+			} else {
+				SimpleUtils.report("Schedule Week View: Compliance smart card failed to show! Please check if the TM is exempt!");
+			}
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
 	
@@ -1553,59 +1598,64 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@TestName(description = "verify the Unpublished Edits on dashboard and overview page")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+		try{
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (!isWeekGenerated){
-			schedulePage.createScheduleForNonDGFlowNewUI();
-		}
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.addOpenShiftWithLastDay("MOD");
-		schedulePage.saveSchedule();
-
-		//Verify the Unpublished Edits text on overview page
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-		List<WebElement> schedulesInOverviewPage = scheduleOverviewPage.getOverviewScheduleWeeks();
-		if (schedulesInOverviewPage != null && schedulesInOverviewPage.size()>0){
-			WebElement warningTextOfCurrentScheduleWeek = schedulesInOverviewPage.get(0).findElement(By.cssSelector("div.text-small.ng-binding"));
-			if (warningTextOfCurrentScheduleWeek != null){
-				String warningText = warningTextOfCurrentScheduleWeek.getText();
-				if (warningText !=null && warningText.equals("Unpublished Edits")){
-					SimpleUtils.pass("Verified the Unpublished Edits on Overview page display correctly. ");
-				} else{
-					SimpleUtils.fail("Verified the Unpublished Edits on Overview page display incorrectly. The actual warning text is " + warningText +".", true);
-				}
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (!isWeekGenerated){
+				schedulePage.createScheduleForNonDGFlowNewUI();
 			}
-		} else{
-			SimpleUtils.fail("Overview Page: Schedule weeks not found!" , true);
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.addOpenShiftWithLastDay("MOD");
+			schedulePage.saveSchedule();
+
+			//Verify the Unpublished Edits text on overview page
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+			List<WebElement> schedulesInOverviewPage = scheduleOverviewPage.getOverviewScheduleWeeks();
+			if (schedulesInOverviewPage != null && schedulesInOverviewPage.size()>0){
+				WebElement warningTextOfCurrentScheduleWeek = schedulesInOverviewPage.get(0).findElement(By.cssSelector("div.text-small.ng-binding"));
+				if (warningTextOfCurrentScheduleWeek != null){
+					String warningText = warningTextOfCurrentScheduleWeek.getText();
+					if (warningText !=null && warningText.equals("Unpublished Edits")){
+						SimpleUtils.pass("Verified the Unpublished Edits on Overview page display correctly. ");
+					} else{
+						SimpleUtils.fail("Verified the Unpublished Edits on Overview page display incorrectly. The actual warning text is " + warningText +".", true);
+					}
+				}
+			} else{
+				SimpleUtils.fail("Overview Page: Schedule weeks not found!" , true);
+			}
+
+			//Verify the Unpublished Edits text on dashboard page
+			dashboardPage.navigateToDashboard();
+			dashboardPage.clickOnRefreshButton();
+			List<WebElement> dashboardScheduleWeeks = dashboardPage.getDashboardScheduleWeeks();
+			if (dashboardScheduleWeeks != null && dashboardScheduleWeeks.size()>0){
+				WebElement warningTextOfCurrentScheduleWeek = dashboardScheduleWeeks.get(1).findElement(By.cssSelector("div.text-small.ng-binding"));
+				if (warningTextOfCurrentScheduleWeek != null){
+					String warningText = warningTextOfCurrentScheduleWeek.getText();
+					if (warningText !=null && warningText.equals("Unpublished Edits")){
+						SimpleUtils.pass("Verified the Unpublished Edits text on Dashboard page display correctly. ");
+					} else{
+						SimpleUtils.fail("Verified the Unpublished Edits text on Dashboard page display incorrectly. The actual warning text is " + warningText +".", false);
+					}
+				}
+			} else{
+				SimpleUtils.fail("Dashboard Page: Schedule weeks not found!" , false);
+			}
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
 
-		//Verify the Unpublished Edits text on dashboard page
-		dashboardPage.navigateToDashboard();
-		dashboardPage.clickOnRefreshButton();
-		List<WebElement> dashboardScheduleWeeks = dashboardPage.getDashboardScheduleWeeks();
-		if (dashboardScheduleWeeks != null && dashboardScheduleWeeks.size()>0){
-			WebElement warningTextOfCurrentScheduleWeek = dashboardScheduleWeeks.get(1).findElement(By.cssSelector("div.text-small.ng-binding"));
-			if (warningTextOfCurrentScheduleWeek != null){
-				String warningText = warningTextOfCurrentScheduleWeek.getText();
-				if (warningText !=null && warningText.equals("Unpublished Edits")){
-					SimpleUtils.pass("Verified the Unpublished Edits text on Dashboard page display correctly. ");
-				} else{
-					SimpleUtils.fail("Verified the Unpublished Edits text on Dashboard page display incorrectly. The actual warning text is " + warningText +".", false);
-				}
-			}
-		} else{
-			SimpleUtils.fail("Dashboard Page: Schedule weeks not found!" , false);
-		}
 	}
 
 	@Automated(automated = "Automated")
@@ -1613,69 +1663,73 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "verify Assign TM warning: TM status is on time off")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-		String nickNameFromProfile = profileNewUIPage.getNickNameFromProfile();
-		String myProfileLabel = "My Profile";
-		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
-		SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
-		String aboutMeLabel = "About Me";
-		profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
-		String myTimeOffLabel = "My Time Off";
-		profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
-		profileNewUIPage.cancelAllTimeOff();
-		profileNewUIPage.clickOnCreateTimeOffBtn();
-		SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
-		String timeOffReasonLabel = "VACATION";
-		// select time off reason
-		profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
-		profileNewUIPage.selectStartAndEndDate();
-		profileNewUIPage.clickOnSaveTimeOffRequestBtn();
+	public void verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager(String browser, String username, String password, String location) {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			String nickNameFromProfile = profileNewUIPage.getNickNameFromProfile();
+			String myProfileLabel = "My Profile";
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+			SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
+			String aboutMeLabel = "About Me";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
+			String myTimeOffLabel = "My Time Off";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+			profileNewUIPage.cancelAllTimeOff();
+			profileNewUIPage.clickOnCreateTimeOffBtn();
+			SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
+			String timeOffReasonLabel = "VACATION";
+			// select time off reason
+			profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
+			profileNewUIPage.selectStartAndEndDate();
+			profileNewUIPage.clickOnSaveTimeOffRequestBtn();
 
 
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (!isWeekGenerated){
-			schedulePage.createScheduleForNonDGFlowNewUI();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (!isWeekGenerated){
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			schedulePage.clickOnDayView();
+			//navigate to the time off day
+			for (int i=0; i<6;i++){
+				schedulePage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
+			}
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.customizeNewShiftPage();
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
+				schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+			} else if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
+				schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole_BARISTA"));
+			}
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.searchTeamMemberByName(nickNameFromProfile);
+			schedulePage.verifyMessageIsExpected("time off");
+			schedulePage.verifyWarningModelForAssignTMOnTimeOff(nickNameFromProfile);
+			schedulePage.clickOnCancelButtonOnEditMode();
+
+
+			//go to cancel the time off.
+			profileNewUIPage.getNickNameFromProfile();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+			SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
+			profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
+			profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+			profileNewUIPage.cancelAllTimeOff();
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
-		schedulePage.clickOnDayView();
-		//navigate to the time off day
-		for (int i=0; i<6;i++){
-			schedulePage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
-		}
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.clickOnDayViewAddNewShiftButton();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
-			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
-		} else if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
-			schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole_BARISTA"));
-		}
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.searchTeamMemberByName(nickNameFromProfile);
-		schedulePage.verifyMessageIsExpected("time off");
-		schedulePage.verifyWarningModelForAssignTMOnTimeOff(nickNameFromProfile);
-		schedulePage.clickOnCancelButtonOnEditMode();
-
-
-		//go to cancel the time off.
-		profileNewUIPage.getNickNameFromProfile();
-		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
-		SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
-		profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
-		profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
-		profileNewUIPage.cancelAllTimeOff();
 	}
 
 	@Automated(automated = "Automated")
@@ -1683,38 +1737,42 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify assign TM warning: Assignment rule violation with conf is yes")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyAssignTMWarningForTMHasRoleViolationWithConfYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		//Go to control to set the override assignment rule as Yes.
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		controlsNewUIPage.clickOnControlsSchedulingPolicies();
-		controlsNewUIPage.clickOnGlobalLocationButton();
-		controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
-		controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
+	public void verifyAssignTMWarningForTMHasRoleViolationWithConfYesAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			//Go to control to set the override assignment rule as Yes.
+			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+			controlsPage.gotoControlsPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			controlsNewUIPage.clickOnControlsSchedulingPolicies();
+			controlsNewUIPage.clickOnGlobalLocationButton();
+			controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+			controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
 
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-		schedulePage.navigateToNextWeek();
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (!isWeekGenerated){
-			schedulePage.createScheduleForNonDGFlowNewUI();
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+			schedulePage.navigateToNextWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (!isWeekGenerated){
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.customizeNewShiftPage();
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.searchTeamMemberByName("Keanu");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.clickOnDayViewAddNewShiftButton();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.searchTeamMemberByName("Keanu");
 	}
 
 	@Automated(automated = "Automated")
@@ -1723,32 +1781,36 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@TestName(description = "Assign TM warning: TM status is already Scheduled at Home location")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-		schedulePage.navigateToNextWeek();
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (!isWeekGenerated){
-			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.navigateToNextWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (!isWeekGenerated) {
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			List<String> firstShiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.customizeNewShiftPage();
+			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.selectWorkingDaysOnNewShiftPageByIndex(Integer.parseInt(firstShiftInfo.get(1)));
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.verifyScheduledWarningWhenAssigning(firstShiftInfo.get(0), firstShiftInfo.get(2));
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
-		List<String> firstShiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.clickOnDayViewAddNewShiftButton();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.selectWorkingDaysOnNewShiftPageByIndex(Integer.parseInt(firstShiftInfo.get(1)));
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.verifyScheduledWarningWhenAssigning(firstShiftInfo.get(0), firstShiftInfo.get(2));
 	}
 
 	@Automated(automated = "Automated")
@@ -1757,109 +1819,117 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@TestName(description = "Assign TM warning: TM is from another store and is already scheduled at this store")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		String nearByLocation = "NY CENTRAL";
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		try {
+			String nearByLocation = "NY CENTRAL";
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-		schedulePage.navigateToNextWeek();
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (!isWeekGenerated){
-			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.navigateToNextWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (!isWeekGenerated) {
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			List<String> firstShiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+			if (!schedulePage.isWeekPublished()) {
+				schedulePage.publishActiveSchedule();
+			}
+
+			// Navigate to the near by location to create the shift for this TM from AUSTIN DOWNTOWN
+			dashboardPage.navigateToDashboard();
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.changeLocation(nearByLocation);
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			schedulePage.navigateToNextWeek();
+			isWeekGenerated = schedulePage.isWeekGenerated();
+			if (!isWeekGenerated) {
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.customizeNewShiftPage();
+			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.selectWorkingDaysOnNewShiftPageByIndex(Integer.parseInt(firstShiftInfo.get(1)));
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.verifyScheduledWarningWhenAssigning(firstShiftInfo.get(0), firstShiftInfo.get(2));
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
-		List<String> firstShiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-		if (!schedulePage.isWeekPublished()) {
-			schedulePage.publishActiveSchedule();
-		}
-
-		// Navigate to the near by location to create the shift for this TM from AUSTIN DOWNTOWN
-		dashboardPage.navigateToDashboard();
-		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-		locationSelectorPage.changeLocation(nearByLocation);
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-
-		schedulePage.navigateToNextWeek();
-		isWeekGenerated = schedulePage.isWeekGenerated();
-		if (!isWeekGenerated){
-			schedulePage.createScheduleForNonDGFlowNewUI();
-		}
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.clickOnDayViewAddNewShiftButton();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.selectWorkingDaysOnNewShiftPageByIndex(Integer.parseInt(firstShiftInfo.get(1)));
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.verifyScheduledWarningWhenAssigning(firstShiftInfo.get(0), firstShiftInfo.get(2));
 	}
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Haya")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify scheule version")
+	@TestName(description = "Verify version number in Analyze page and edits persist when navigating to Suggested and back to Manager")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyVersionNumberAndEditsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+	public void verifyVersionNumberAndEditsAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-		schedulePage.navigateToNextWeek();
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (isWeekGenerated){
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
+			schedulePage.navigateToNextWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+
+			//verify version number in analyze page
+
+			schedulePage.clickOnAnalyzeBtn();
+			String version0 = "Suggested Schedule";
+			String version1 = "0.1";
+			String version2 = "1.1";
+			schedulePage.verifyScheduleVersion(version0);
+			schedulePage.closeAnalyzeWindow();
+			//make edits and save
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.customizeNewShiftPage();
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.verifyVersionInSaveMessage(version1);
+			//suggested tab
+			schedulePage.clickOnSuggestedButton();
+			SimpleUtils.assertOnFail("Changes not publish smart card is loaded in suggested page!",!schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
+			schedulePage.clickOnManagerButton();
+			SimpleUtils.assertOnFail("Changes not publish smart card is not loaded in Manager page!",schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
+			schedulePage.clickOnAnalyzeBtn();
+			schedulePage.verifyScheduleVersion(version1);
+			schedulePage.closeAnalyzeWindow();
+			schedulePage.publishActiveSchedule();
+			schedulePage.clickOnAnalyzeBtn();
+			schedulePage.verifyScheduleVersion(version2);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
-		schedulePage.createScheduleForNonDGFlowNewUI();
-
-		//verify version number in analyze page
-
-		schedulePage.clickOnAnalyzeBtn();
-		String version0 = "Suggested Schedule";
-		String version1 = "0.1";
-		String version2 = "1.1";
-		schedulePage.verifyScheduleVersion(version0);
-		schedulePage.closeAnalyzeWindow();
-		//make edits and save
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.clickOnDayViewAddNewShiftButton();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.verifyVersionInSaveMessage(version1);
-		//suggested tab
-		schedulePage.clickOnSuggestedButton();
-		SimpleUtils.assertOnFail("Changes not publish smart card is loaded in suggested page!",!schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
-		schedulePage.clickOnManagerButton();
-		SimpleUtils.assertOnFail("Changes not publish smart card is not loaded in Manager page!",schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
-		schedulePage.clickOnAnalyzeBtn();
-		schedulePage.verifyScheduleVersion(version1);
-		schedulePage.closeAnalyzeWindow();
-		schedulePage.publishActiveSchedule();
-		schedulePage.clickOnAnalyzeBtn();
-		schedulePage.verifyScheduleVersion(version2);
 	}
 
 	@Automated(automated = "Automated")
@@ -1867,38 +1937,42 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "verify offers generated for open shifts.")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyOffersGeneratedForOpenShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+	public void verifyOffersGeneratedForOpenShiftsAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-		schedulePage.navigateToNextWeek();
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (isWeekGenerated){
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
+			schedulePage.navigateToNextWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+
+			//verify shifts are auto assigned.
+			//schedulePage.verifyAllShiftsAssigned();
+			//schedulePage.clickOnEditButton();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.clickOnProfileIcon();
+			schedulePage.clickOnConvertToOpenShift();
+			schedulePage.convertToOpenShiftDirectly();
+			int index = schedulePage.getTheIndexOfEditedShift();
+			schedulePage.saveSchedule();
+			schedulePage.publishActiveSchedule();
+			schedulePage.clickProfileIconOfShiftByIndex(index);
+			schedulePage.clickViewStatusBtn();
+			schedulePage.verifyListOfOfferNotNull();
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
-		schedulePage.createScheduleForNonDGFlowNewUI();
-
-		//verify shifts are auto assigned.
-		schedulePage.verifyAllShiftsAssigned();
-		//schedulePage.clickOnEditButton();
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.clickOnProfileIcon();
-		schedulePage.clickOnConvertToOpenShift();
-		schedulePage.convertToOpenShiftDirectly();
-		int index = schedulePage.getTheIndexOfEditedShift();
-		schedulePage.saveSchedule();
-		schedulePage.publishActiveSchedule();
-		schedulePage.clickProfileIconOfShiftByIndex(index);
-		schedulePage.clickViewStatusBtn();
-		schedulePage.verifyListOfOfferNotNull();
 	}
 
 	@Automated(automated = "Automated")
@@ -1907,64 +1981,68 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@TestName(description = "Verify search bar on schedule page")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifySearchBarOnSchedulePageAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		try{
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-		schedulePage.navigateToNextWeek();
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (isWeekGenerated){
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+
+			//click search button
+			schedulePage.clickOnOpenSearchBoxButton();
+
+			//Check the ghost text inside the Search bar
+			schedulePage.verifyGhostTextInSearchBox();
+
+			//Get the info of first shift
+			List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+			//Search shift by TM names: first name and last name
+			String firstNameOfTM = shiftInfo.get(0);
+			List<WebElement> searchResultOfFirstName = schedulePage.searchShiftOnSchedulePage(firstNameOfTM);
+			schedulePage.verifySearchResult(firstNameOfTM, null, null, null, searchResultOfFirstName);
+
+			String lastNameOfTM = shiftInfo.get(5);
+			List<WebElement> searchResultOfLastName = schedulePage.searchShiftOnSchedulePage(lastNameOfTM);
+			schedulePage.verifySearchResult(null, lastNameOfTM, null, null, searchResultOfLastName);
+
+			//Search shift by work role
+			String workRole = shiftInfo.get(4);
+			List<WebElement> searchResultOfWorkRole = schedulePage.searchShiftOnSchedulePage(workRole);
+			schedulePage.verifySearchResult(null, null, workRole, null, searchResultOfWorkRole);
+
+			//Search shift by job title
+			String jobTitle = shiftInfo.get(3);
+			List<WebElement> searchResultOfJobTitle = schedulePage.searchShiftOnSchedulePage(jobTitle);
+			schedulePage.verifySearchResult(null, null, null, jobTitle, searchResultOfJobTitle);
+
+			//Click X button to close search box
+			schedulePage.clickOnCloseSearchBoxButton();
+
+			//Go to edit mode
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+			//click search button
+			schedulePage.clickOnOpenSearchBoxButton();
+			//Click X button to close search box
+			schedulePage.clickOnCloseSearchBoxButton();
+
+			//The search box will not display in day view
+			schedulePage.verifySearchBoxNotDisplayInDayView();
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
-		schedulePage.createScheduleForNonDGFlowNewUI();
 
-		//click search button
-		schedulePage.clickOnOpenSearchBoxButton();
-
-		//Check the ghost text inside the Search bar
-		schedulePage.verifyGhostTextInSearchBox();
-
-		//Get the info of first shift
-		List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
-		//Search shift by TM names: first name and last name
-		String firstNameOfTM = shiftInfo.get(0);
-		List<WebElement> searchResultOfFirstName = schedulePage.searchShiftOnSchedulePage(firstNameOfTM);
-		schedulePage.verifySearchResult(firstNameOfTM, null, null, null, searchResultOfFirstName);
-
-		String lastNameOfTM = shiftInfo.get(5);
-		List<WebElement> searchResultOfLastName = schedulePage.searchShiftOnSchedulePage(lastNameOfTM);
-		schedulePage.verifySearchResult(null, lastNameOfTM, null, null, searchResultOfLastName);
-
-		//Search shift by work role
-		String workRole = shiftInfo.get(4);
-		List<WebElement> searchResultOfWorkRole = schedulePage.searchShiftOnSchedulePage(workRole);
-		schedulePage.verifySearchResult(null, null, workRole, null, searchResultOfWorkRole);
-
-		//Search shift by job title
-		String jobTitle = shiftInfo.get(3);
-		List<WebElement> searchResultOfJobTitle = schedulePage.searchShiftOnSchedulePage(jobTitle);
-		schedulePage.verifySearchResult(null, null, null, jobTitle, searchResultOfJobTitle);
-
-		//Click X button to close search box
-		schedulePage.clickOnCloseSearchBoxButton();
-
-		//Go to edit mode
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
-		//click search button
-		schedulePage.clickOnOpenSearchBoxButton();
-		//Click X button to close search box
-		schedulePage.clickOnCloseSearchBoxButton();
-
-		//The search box will not display in day view
-		schedulePage.verifySearchBoxNotDisplayInDayView();
 	}
 
 
@@ -1974,83 +2052,88 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@TestName(description = "Verify assign TM message: If SM wants to schedule a TM from another location and schedule hasn’t been generated or published yet")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
 	public void verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		controlsPage.gotoControlsPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-		SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
-		controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("Yes, anytime");
+		try{
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			controlsPage.gotoControlsPage();
+			SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+			controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+			SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+			controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("Yes, anytime");
 
-		dashboardPage.navigateToDashboard();
-		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-		String nyLocation = "NY CENTRAL (Previously New York Central Park)";
-		locationSelectorPage.changeLocation(nyLocation);
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			dashboardPage.navigateToDashboard();
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			String nyLocation = "NY CENTRAL (Previously New York Central Park)";
+			locationSelectorPage.changeLocation(nyLocation);
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-		// Select one team member to view profile
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		String userName = teamPage.selectATeamMemberToViewProfile();
-		String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
+			// Select one team member to view profile
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+			String userName = teamPage.selectATeamMemberToViewProfile();
+			String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
 
-		//Go to schedule page
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+			//Go to schedule page
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-		// Navigate to next week
-		schedulePage.navigateToNextWeek();
+			// Navigate to next week
+			schedulePage.navigateToNextWeek();
 
-		// create the schedule if not created
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (isWeekGenerated) {
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
+			// create the schedule if not created
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+
+			//Select AUSTIN DOWNTOWN location
+			dashboardPage.navigateToDashboard();
+			locationSelectorPage.changeLocation("AUSTIN DOWNTOWN");
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+			schedulePage.navigateToNextWeek();
+
+			boolean isWeekGenerated2 = schedulePage.isWeekGenerated();
+			if (!isWeekGenerated2) {
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			// Edit the Schedule
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			// Delete all the shifts that are assigned to the team member on Step #1
+			schedulePage.deleteTMShiftInWeekView(firstName);
+
+			// Create new shift for this schedule
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.customizeNewShiftPage();
+			schedulePage.clearAllSelectedDays();
+			schedulePage.selectSpecificWorkDay(1);
+			schedulePage.selectWorkRole("MOD");
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.searchTeamMemberByName(firstName);
+			SimpleUtils.assertOnFail("TM scheduled status message display failed",
+					schedulePage.getTheMessageOfTMScheduledStatus().equalsIgnoreCase("Schedule not published") ||
+							schedulePage.getTheMessageOfTMScheduledStatus().equalsIgnoreCase("Schedule Not Created"), false);
+
+			schedulePage.clickOnOfferOrAssignBtn();
+			schedulePage.verifyDayHasShiftByName(0, firstName);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
 
-		//Select AUSTIN DOWNTOWN location
-		dashboardPage.navigateToDashboard();
-		locationSelectorPage.changeLocation("AUSTIN DOWNTOWN");
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-		schedulePage.navigateToNextWeek();
-
-		boolean isWeekGenerated2 = schedulePage.isWeekGenerated();
-		if (!isWeekGenerated2) {
-			schedulePage.createScheduleForNonDGFlowNewUI();
-		}
-		// Edit the Schedule
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		// Delete all the shifts that are assigned to the team member on Step #1
-		schedulePage.deleteTMShiftInWeekView(firstName);
-
-		// Create new shift for this schedule
-		schedulePage.clickOnDayViewAddNewShiftButton();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.clearAllSelectedDays();
-		schedulePage.selectSpecificWorkDay(1);
-		schedulePage.selectWorkRole("MOD");
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.searchTeamMemberByName(firstName);
-		SimpleUtils.assertOnFail("TM scheduled status message display failed",
-				schedulePage.getTheMessageOfTMScheduledStatus().equalsIgnoreCase("Schedule not published") ||
-						schedulePage.getTheMessageOfTMScheduledStatus().equalsIgnoreCase("Schedule Not Created"), false);
-
-		schedulePage.clickOnOfferOrAssignBtn();
-		schedulePage.verifyDayHasShiftByName(0, firstName);
 	}
 
 	@Automated(automated = "Automated")
@@ -2058,75 +2141,79 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify assign TM warning: If SM wants to schedule a TM from another location and schedule hasn’t been published")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyAssignTMWarningForScheduleTMFromAnotherLocAndScheduleNotPublishedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+	public void verifyAssignTMWarningForScheduleTMFromAnotherLocAndScheduleNotPublishedAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		controlsPage.gotoControlsPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-		controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			controlsPage.gotoControlsPage();
+			SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+			controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
 
-		SimpleUtils.assertOnFail("collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
-		controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("No, home location must publish schedule first");
-		dashboardPage.navigateToDashboard();
-		String anotherLocation = "NY CENTRAL";
-		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-		locationSelectorPage.changeLocation(anotherLocation);
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			SimpleUtils.assertOnFail("collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+			controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("No, home location must publish schedule first");
+			dashboardPage.navigateToDashboard();
+			String anotherLocation = "NY CENTRAL";
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.changeLocation(anotherLocation);
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-		// Navigate to a week
-		schedulePage.navigateToNextWeek();
-		schedulePage.navigateToNextWeek();
-		// create the schedule if not created
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (isWeekGenerated){
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
-		}
-		schedulePage.createScheduleForNonDGFlowNewUI();
-		List<String> shiftInfo = new ArrayList<>();
-		while (shiftInfo.size() == 0 || shiftInfo.get(0).equalsIgnoreCase("Open")) {
-			shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-		}
-		String firstNameOfTM1 = shiftInfo.get(0);
-		String workRoleOfTM1 = shiftInfo.get(4);
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
-		schedulePage.saveSchedule();
-		dashboardPage.navigateToDashboard();
-		locationSelectorPage.changeLocation(location);
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-		// Navigate to a week
-		schedulePage.navigateToNextWeek();
-		schedulePage.navigateToNextWeek();
-		// create the schedule if not created
-		isWeekGenerated = schedulePage.isWeekGenerated();
-		if (!isWeekGenerated){
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+			// Navigate to a week
+			schedulePage.navigateToNextWeek();
+			schedulePage.navigateToNextWeek();
+			// create the schedule if not created
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
 			schedulePage.createScheduleForNonDGFlowNewUI();
+			List<String> shiftInfo = new ArrayList<>();
+			while (shiftInfo.size() == 0 || shiftInfo.get(0).equalsIgnoreCase("Open")) {
+				shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+			}
+			String firstNameOfTM1 = shiftInfo.get(0);
+			String workRoleOfTM1 = shiftInfo.get(4);
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+			schedulePage.saveSchedule();
+			dashboardPage.navigateToDashboard();
+			locationSelectorPage.changeLocation(location);
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+			// Navigate to a week
+			schedulePage.navigateToNextWeek();
+			schedulePage.navigateToNextWeek();
+			// create the schedule if not created
+			isWeekGenerated = schedulePage.isWeekGenerated();
+			if (!isWeekGenerated){
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.selectWorkRole(workRoleOfTM1);
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.searchTeamMemberByName(firstNameOfTM1);
+			schedulePage.verifyMessageIsExpected("schedule not published");
+			schedulePage.verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished();
+			schedulePage.verifyTMNotSelected();
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
-		schedulePage.clickOnDayViewAddNewShiftButton();
-		schedulePage.selectWorkRole(workRoleOfTM1);
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.searchTeamMemberByName(firstNameOfTM1);
-		schedulePage.verifyMessageIsExpected("schedule not published");
-		schedulePage.verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished();
-		schedulePage.verifyTMNotSelected();
 	}
 
 	@Automated(automated = "Automated")
@@ -2134,36 +2221,446 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "SCH-2016: verify shifts display normally after switch to day view")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyShiftsDisplayNormallyInDayViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+	public void verifyShiftsDisplayNormallyInDayViewAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-		// Navigate to a week
-		schedulePage.navigateToNextWeek();
-		schedulePage.navigateToNextWeek();
-		// create the schedule if not created
-		boolean isWeekGenerated = schedulePage.isWeekGenerated();
-		if (isWeekGenerated){
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+			// Navigate to a week
+			schedulePage.navigateToNextWeek();
+			schedulePage.navigateToNextWeek();
+			// create the schedule if not created
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "08:00PM");
+			schedulePage.verifyDayHasShifts("Sunday");
+			schedulePage.verifyDayHasShifts("Monday");
+			schedulePage.verifyDayHasShifts("Tuesday");
+			schedulePage.verifyDayHasShifts("Wednesday");
+			schedulePage.verifyDayHasShifts("Thursday");
+			schedulePage.verifyDayHasShifts("Friday");
+			schedulePage.verifyDayHasShifts("Saturday");
+			schedulePage.clickOnDayView();
+			List<WebElement> shiftsInDayView = schedulePage.getAvailableShiftsInDayView();
+			SimpleUtils.assertOnFail("Day view shifts don't diaplay successfully!", !shiftsInDayView.isEmpty(), false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
 		}
-		schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "08:00PM");
-		schedulePage.verifyDayHasShifts("Sunday");
-		schedulePage.verifyDayHasShifts("Monday");
-		schedulePage.verifyDayHasShifts("Tuesday");
-		schedulePage.verifyDayHasShifts("Wednesday");
-		schedulePage.verifyDayHasShifts("Thursday");
-		schedulePage.verifyDayHasShifts("Friday");
-		schedulePage.verifyDayHasShifts("Saturday");
-		schedulePage.clickOnDayView();
-		List<WebElement> shiftsInDayView = schedulePage.getAvailableShiftsInDayView();
-		SimpleUtils.assertOnFail("Day view shifts don't diaplay successfully!", !shiftsInDayView.isEmpty(), false);
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the functionality for Schedule Copy Restrictions")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheFunctionalityForScheduleCopyRestrictionsAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+			controlsPage.gotoControlsPage();
+			controlsPage.clickGlobalSettings();
+
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			controlsNewUIPage.clickOnControlsSchedulingPolicies();
+			controlsNewUIPage.enableOrDisableScheduleCopyRestriction("yes");
+			controlsNewUIPage.setViolationLimit("2");
+			controlsNewUIPage.setBudgetOverageLimit("0");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the functionality of Violation limit and Budget overage limit")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyViolationLimitAndBudgetOverageLimitAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			//Make current week 3 or more violation
+			String pastWeekInfo1 = schedulePage.getActiveWeekText().substring(10);
+			pastWeekInfo1 = schedulePage.convertDateStringFormat(pastWeekInfo1);
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (!isWeekGenerated) {
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			List<String> shiftInfo = new ArrayList<>();
+			while (shiftInfo.size() == 0) {
+				shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+			}
+			String firstNameOfTM1 = shiftInfo.get(0);
+			String workRoleOfTM1 = shiftInfo.get(4);
+			List<String> shiftInfo2 = new ArrayList<>();
+			while (shiftInfo2.size() == 0) {
+				shiftInfo2 = schedulePage.getTheShiftInfoByIndex(0);
+			}
+			String firstNameOfTM2 = shiftInfo2.get(0);
+			schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+			schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.selectWorkRole(workRoleOfTM1);
+			schedulePage.clearAllSelectedDays();
+			schedulePage.selectDaysByIndex(1, 2, 3);
+			schedulePage.moveSliderAtSomePoint("8", 12, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			//schedulePage.moveSliderAtSomePoint("8", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.searchTeamMemberByName(firstNameOfTM1);
+			schedulePage.clickOnOfferOrAssignBtn();
+			schedulePage.saveSchedule();
+			schedulePage.publishActiveSchedule();
+			//Make next week 2 or less violation
+			schedulePage.navigateToNextWeek();
+			String pastWeekInfo2 = schedulePage.getActiveWeekText().substring(10);
+			pastWeekInfo2 = schedulePage.convertDateStringFormat(pastWeekInfo2);
+			isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+			schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.selectWorkRole(workRoleOfTM1);
+			schedulePage.clearAllSelectedDays();
+			//create 2 overtime violation
+			schedulePage.selectDaysByIndex(1, 1, 1);
+			schedulePage.selectDaysByIndex(2, 2, 2);
+			schedulePage.moveSliderAtSomePoint("8", 12, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			//schedulePage.moveSliderAtSomePoint("8", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.searchTeamMemberByName(firstNameOfTM1);
+			schedulePage.clickOnOfferOrAssignBtn();
+			schedulePage.saveSchedule();
+			schedulePage.publishActiveSchedule();
+
+
+			//Make another next week 0 violation
+			schedulePage.navigateToNextWeek();
+			String pastWeekInfo3 = schedulePage.getActiveWeekText().substring(10);
+			pastWeekInfo3 = schedulePage.convertDateStringFormat(pastWeekInfo3);
+			isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.publishActiveSchedule();
+
+			//Go to another next week to check copy restriction.
+			schedulePage.navigateToNextWeek();
+
+			// Ungenerate the schedule if it has generated
+			isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.clickCreateScheduleBtn();
+			schedulePage.clickNextBtnOnCreateScheduleWindow();
+			schedulePage.verifyPreviousWeekWhenCreateAndCopySchedule(pastWeekInfo1, false);
+			schedulePage.verifyPreviousWeekWhenCreateAndCopySchedule(pastWeekInfo2, true);
+			schedulePage.verifyPreviousWeekWhenCreateAndCopySchedule(pastWeekInfo3, true);
+			schedulePage.clickBackBtnAndExitCreateScheduleWindow();
+
+			//Verify budget overage limit
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			//Regenerate current week schedule
+			pastWeekInfo1 = schedulePage.getActiveWeekText().substring(10);
+			pastWeekInfo1 = schedulePage.convertDateStringFormat(pastWeekInfo1);
+			isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			float value1 = schedulePage.getStaffingGuidanceHrs();
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.publishActiveSchedule();
+			//Make next week has higher schedule hours than budget hours
+			schedulePage.navigateToNextWeek();
+			pastWeekInfo2 = schedulePage.getActiveWeekText().substring(10);
+			pastWeekInfo2 = schedulePage.convertDateStringFormat(pastWeekInfo2);
+			isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			float value2 = schedulePage.getStaffingGuidanceHrs();
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			shiftInfo = new ArrayList<>();
+			while (shiftInfo.size() == 0) {
+				shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+			}
+			workRoleOfTM1 = shiftInfo.get(4);
+			schedulePage.publishActiveSchedule();
+
+
+			//Regenerate another next week schedule
+			schedulePage.navigateToNextWeek();
+			pastWeekInfo3 = schedulePage.getActiveWeekText().substring(10);
+			pastWeekInfo3 = schedulePage.convertDateStringFormat(pastWeekInfo3);
+			isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			float value3 = schedulePage.getStaffingGuidanceHrs();
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.publishActiveSchedule();
+
+			//Go to another next week to check copy restriction.
+			schedulePage.navigateToNextWeek();
+
+			// Ungenerate the schedule if it has generated
+			isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			float value4 = schedulePage.getStaffingGuidanceHrs();
+			if (value4>=value3){
+				schedulePage.clickOnScheduleConsoleMenuItem();
+				SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+						schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+				schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+				SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+						schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+				schedulePage.navigateToNextWeek();
+				schedulePage.navigateToNextWeek();
+				int i = Math.round((value4-value3)/7) + 1;
+				schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+				for (int j=0; j<i+1; j++){
+					schedulePage.clickOnDayViewAddNewShiftButton();
+					schedulePage.selectWorkRole(workRoleOfTM1);
+					schedulePage.clearAllSelectedDays();
+					Random r = new Random();
+					int index = r.nextInt(6); // 生成[0,6]区间的整数
+					schedulePage.selectDaysByIndex(index, index, index);
+					schedulePage.moveSliderAtSomePoint("8", 8, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+					schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+					schedulePage.clickOnCreateOrNextBtn();
+					schedulePage.switchSearchTMAndRecommendedTMsTab();
+					schedulePage.selectTeamMembers();
+					schedulePage.clickOnOfferOrAssignBtn();
+				}
+				schedulePage.saveSchedule();
+				schedulePage.publishActiveSchedule();
+				schedulePage.navigateToNextWeek();
+			}
+			schedulePage.clickCreateScheduleBtn();
+			schedulePage.clickNextBtnOnCreateScheduleWindow();
+
+			schedulePage.verifyPreviousWeekWhenCreateAndCopySchedule(pastWeekInfo3, false);
+			schedulePage.verifyTooltipForCopyScheduleWeek(pastWeekInfo3);
+			if (value4>=value2){
+				schedulePage.verifyPreviousWeekWhenCreateAndCopySchedule(pastWeekInfo2,  true);
+			} else {
+				schedulePage.verifyPreviousWeekWhenCreateAndCopySchedule(pastWeekInfo2,  false);
+			}
+			if (value4>=value2){
+				schedulePage.verifyPreviousWeekWhenCreateAndCopySchedule(pastWeekInfo1, true);
+			} else {
+				schedulePage.verifyPreviousWeekWhenCreateAndCopySchedule(pastWeekInfo1, false);
+			}
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify turn off the Schedule Copy Restriction")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTurnOffCopyRestrictionAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+			controlsPage.gotoControlsPage();
+			controlsPage.clickGlobalSettings();
+
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			controlsNewUIPage.clickOnControlsSchedulingPolicies();
+			controlsNewUIPage.enableOrDisableScheduleCopyRestriction("no");
+
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			//Make current week 3 or more violation
+			String pastWeekInfo1 = schedulePage.getActiveWeekText().substring(10);
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (!isWeekGenerated) {
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			List<String> shiftInfo = new ArrayList<>();
+			while (shiftInfo.size() == 0) {
+				shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+			}
+			String firstNameOfTM1 = shiftInfo.get(0);
+			String workRoleOfTM1 = shiftInfo.get(4);
+			schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.selectWorkRole(workRoleOfTM1);
+			schedulePage.clearAllSelectedDays();
+			schedulePage.selectDaysByIndex(1, 2, 3);
+			schedulePage.moveSliderAtSomePoint("8", 12, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.searchTeamMemberByName(firstNameOfTM1);
+			schedulePage.clickOnOfferOrAssignBtn();
+			schedulePage.saveSchedule();
+			schedulePage.publishActiveSchedule();
+			Random r = new Random();
+			int index = r.nextInt(10);
+			List<String> randomShiftInfoFromCopiedWeek = schedulePage.getTheShiftInfoByIndex(index);
+
+			//Go to next week to check copy restriction.
+			schedulePage.navigateToNextWeek();
+
+			// Ungenerate the schedule if it has generated
+			isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.clickCreateScheduleBtn();
+			schedulePage.clickNextBtnOnCreateScheduleWindow();
+			pastWeekInfo1 = schedulePage.convertDateStringFormat(pastWeekInfo1);
+			schedulePage.verifyPreviousWeekWhenCreateAndCopySchedule(pastWeekInfo1, true);
+			schedulePage.selectWhichWeekToCopyFrom(pastWeekInfo1);
+			schedulePage.clickOnFinishButtonOnCreateSchedulePage();
+			schedulePage.verifyDayHasShifts("Sunday");
+			schedulePage.verifyDayHasShifts("Monday");
+			schedulePage.verifyDayHasShifts("Tuesday");
+			schedulePage.verifyDayHasShifts("Wednesday");
+			schedulePage.verifyDayHasShifts("Thursday");
+			schedulePage.verifyDayHasShifts("Friday");
+			schedulePage.verifyDayHasShifts("Saturday");
+			List<String> sameIndexShiftInfoFromThisWeek = schedulePage.getTheShiftInfoByIndex(index);
+
+			if (randomShiftInfoFromCopiedWeek.equals(sameIndexShiftInfoFromThisWeek)){
+				SimpleUtils.pass("The 2 week have the same shifts!");
+			} else {
+				SimpleUtils.fail("Shifts are not the same as copied week!", false);
+			}
+
+			controlsPage.gotoControlsPage();
+			controlsPage.clickGlobalSettings();
+			controlsNewUIPage.clickOnControlsSchedulingPolicies();
+			controlsNewUIPage.enableOrDisableScheduleCopyRestriction("on");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify turn off the Schedule Copy Restriction")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+			controlsPage.gotoControlsPage();
+			controlsPage.clickGlobalSettings();
+
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			controlsNewUIPage.clickOnControlsSchedulingPolicies();
+			controlsNewUIPage.enableOrDisableScheduleCopyRestriction("yes");
+			controlsNewUIPage.setViolationLimit("2");
+			controlsNewUIPage.setBudgetOverageLimit("0");
+
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			String pastWeekInfo1 = schedulePage.getActiveWeekText().substring(10);
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			List<String> shiftInfo = new ArrayList<>();
+			while (shiftInfo.size() == 0) {
+				shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+			}
+			String firstNameOfTM1 = shiftInfo.get(0);
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+			schedulePage.saveSchedule();
+			schedulePage.publishActiveSchedule();
+
+			//Go to next week.
+			schedulePage.navigateToNextWeek();
+			// Ungenerate the schedule if it has generated
+			isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.clickCreateScheduleBtn();
+			schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "10:00AM", "9:00PM");
+			schedulePage.clickNextBtnOnCreateScheduleWindow();
+			pastWeekInfo1 = schedulePage.convertDateStringFormat(pastWeekInfo1);
+			schedulePage.verifyPreviousWeekWhenCreateAndCopySchedule(pastWeekInfo1, true);
+			schedulePage.selectWhichWeekToCopyFrom(pastWeekInfo1);
+			schedulePage.verifyDifferentOperatingHours(pastWeekInfo1);
+			schedulePage.clickOnFinishButtonOnCreateSchedulePage();
+			List<String> shiftsInfos = schedulePage.getDayShifts("0");
+			String startTime = null;
+			String endTime = null;
+			if (shiftsInfos!=null){
+				startTime = shiftsInfos.get(0).split("\n")[0].split(" - ")[0];
+				endTime = shiftsInfos.get(shiftsInfos.size()-1).split("\n")[0].split(" - ")[1];
+			}
+			//compare startTime to 10:00AM
+			String items[] = startTime.substring(0,startTime.length()-2).split(":");
+			if (startTime.contains("pm") ){
+				SimpleUtils.pass("Shift start time is within time range!");
+			} else if (items.length > 0 && SimpleUtils.isNumeric(items[0]) && Integer.parseInt(items[0])>=10){
+				SimpleUtils.pass("Shift start time is within time range!");
+			} else {
+				SimpleUtils.fail("Shift start time is out of time range!", false);
+			}
+			//compare endTime to 9:00PM
+			String items2[] = endTime.substring(0,endTime.length()-2).split(":");
+			if (endTime.contains("am") ){
+				SimpleUtils.pass("Shift end time is within time range!");
+			} else if (items2.length > 0 && SimpleUtils.isNumeric(items2[0]) && Integer.parseInt(items2[0])<=9){
+				SimpleUtils.pass("Shift end time is within time range!");
+			} else {
+				SimpleUtils.fail("Shift end time is out of time range!", false);
+			}
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	@Automated(automated = "Automated")

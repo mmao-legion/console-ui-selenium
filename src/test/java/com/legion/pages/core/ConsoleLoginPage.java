@@ -81,7 +81,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     
     public void logOut() throws Exception
     {
-    	if(isElementLoaded(logoutButton))
+    	if(isElementLoaded(logoutButton, 10))
     	{
     		clickTheElement(logoutButton);
     	}
@@ -127,4 +127,24 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 		}else
 			SimpleUtils.report("There is no new terms of service");
 	}
+
+
+	@FindBy(css = "div[class=\"auth-form\"]")
+	private WebElement loginPanel;
+	@Override
+	public void verifyLoginPageIsLoaded() throws Exception {
+		try{
+			if (isElementLoaded(loginPanel,15)
+					&& isElementLoaded(userNameField,5)
+					&& isElementLoaded(passwordField, 5)
+					&& isElementLoaded(loginButton, 5)) {
+				SimpleUtils.pass("Login page is loaded successfully! ");
+			}else
+				SimpleUtils.fail("Login page not loaded successfully!", false);
+		}catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+
+	}
+
 }

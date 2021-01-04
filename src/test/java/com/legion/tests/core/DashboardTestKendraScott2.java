@@ -16,90 +16,113 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
-public class DashboardTestKendraScott2 extends TestBase{
-	
+import static com.legion.utils.MyThreadLocal.getDriver;
+
+public class DashboardTestKendraScott2 extends TestBase {
+
 	private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
+
 	@Override
-	  @BeforeMethod()
-	  public void firstTest(Method testMethod, Object[] params) throws Exception{
-		  this.createDriver((String)params[0],"69","Window");
-	      visitPage(testMethod);
-	      loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
-	  }
-	
-	@Automated(automated ="Manual")
+	@BeforeMethod()
+	public void firstTest(Method testMethod, Object[] params) throws Exception {
+		try {
+			this.createDriver((String) params[0], "69", "Window");
+			visitPage(testMethod);
+			loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Manual")
 	@Owner(owner = "Gunjan")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "LEG-4961: Should be able to set Location at Global Level")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-    public void navigateToDashboardFromGlobalSetting(String username, String password, String browser, String location) throws Exception { 
-    	SimpleUtils.pass("Navigate to Dashboard Page Successfully!");
-    	SimpleUtils.pass("Click on Settings menu");
-    	SimpleUtils.pass("Go back to Dashboard assert Dashboard loaded Successfully");
-    	SimpleUtils.pass("Click on Settings menu again");
-    	SimpleUtils.pass("Click on Global icon present next to Settings at top left section");
-    	SimpleUtils.pass("Navigate back to Dashboard Page");
-    	SimpleUtils.pass("assert Dashboard page is Loaded Successfully!");	
-    }
-    
-    @Automated(automated ="Manual")
-	@Owner(owner = "Gunjan")
-    @Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "LEG-5231: Team Lead Should not see Today's Forecast and Projected Demand Graph present in Dashboard Section")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-    public void todayForecastAndProjectedDemandGraphTeamLead(String username, String password, String browser, String location) throws Exception { 
-    	SimpleUtils.pass("Login into LegionCooffee2 Application Successfully!");
-    	SimpleUtils.pass("Navigate to Dashboard Page Successfully!");
-    	SimpleUtils.fail("assert Today's Forecast and Projected Demand Graph should not be present for Team lead and Team member",false);	
-    }
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+	public void navigateToDashboardFromGlobalSetting(String username, String password, String browser, String location) throws Exception {
+		SimpleUtils.pass("Navigate to Dashboard Page Successfully!");
+		SimpleUtils.pass("Click on Settings menu");
+		SimpleUtils.pass("Go back to Dashboard assert Dashboard loaded Successfully");
+		SimpleUtils.pass("Click on Settings menu again");
+		SimpleUtils.pass("Click on Global icon present next to Settings at top left section");
+		SimpleUtils.pass("Navigate back to Dashboard Page");
+		SimpleUtils.pass("assert Dashboard page is Loaded Successfully!");
+	}
 
-	@Automated(automated ="Automated")
+	@Automated(automated = "Manual")
+	@Owner(owner = "Gunjan")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "LEG-5231: Team Lead Should not see Today's Forecast and Projected Demand Graph present in Dashboard Section")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+	public void todayForecastAndProjectedDemandGraphTeamLead(String username, String password, String browser, String location) throws Exception {
+		SimpleUtils.pass("Login into LegionCooffee2 Application Successfully!");
+		SimpleUtils.pass("Navigate to Dashboard Page Successfully!");
+		SimpleUtils.fail("assert Today's Forecast and Projected Demand Graph should not be present for Team lead and Team member", false);
+	}
+
+	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate the Store Company Location")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheDisplayLocationWithSelectedLocation(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-		locationSelectorPage.verifyTheDisplayLocationWithSelectedLocationConsistent();
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.verifyTheDisplayLocationWithSelectedLocationConsistent();
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
-	@Automated(automated ="Automated")
+	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate the functionality of Change Location button on click")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheClickActionOnChangeLocationButton(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-		locationSelectorPage.verifyClickChangeLocationButton();
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.verifyClickChangeLocationButton();
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
-	@Automated(automated ="Automated")
+	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate the content getting displayed in the Change Location flyout")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheContentDisplayedInChangeLocationLayout(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-		locationSelectorPage.verifyTheContentOfDetailLocations();
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.verifyTheContentOfDetailLocations();
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
-	@Automated(automated ="Automated")
+	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate the functionality of Search textbox in Change Location flyout")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheFunctionOfSearchTextBox(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		List<String> testStrings = new ArrayList<>(Arrays.asList("s", "h", "W"));
-		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-		locationSelectorPage.verifyTheFunctionOfSearchTextBox(testStrings);
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			List<String> testStrings = new ArrayList<>(Arrays.asList("s", "h", "W"));
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.verifyTheFunctionOfSearchTextBox(testStrings);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	@Automated(automated = "Automated")
@@ -146,6 +169,22 @@ public class DashboardTestKendraScott2 extends TestBase{
 			profileNewUIPage.selectProfilePageSubSectionByLabel("Time Off");
 			profileNewUIPage.rejectAllTimeOff();
 
+			SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePageAdmin.goToConsoleScheduleAndScheduleSubMenu();
+			schedulePageAdmin.navigateToNextWeek();
+			boolean isWeekGenerated = schedulePageAdmin.isWeekGenerated();
+			if (!isWeekGenerated) {
+				schedulePageAdmin.createScheduleForNonDGFlowNewUI();
+			}
+			schedulePageAdmin.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePageAdmin.deleteTMShiftInWeekView(nickName);
+			schedulePageAdmin.deleteTMShiftInWeekView("Unassigned");
+			schedulePageAdmin.clickOnDayViewAddNewShiftButton();
+			schedulePageAdmin.customizeNewShiftPage();
+			schedulePageAdmin.selectWorkRole("MOD");
+			schedulePageAdmin.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+			schedulePageAdmin.clickOnCreateOrNextBtn();
+			schedulePageAdmin.searchTeamMemberByName(nickName);
 			SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
 			schedulePageAdmin.goToConsoleScheduleAndScheduleSubMenu();
 			schedulePageAdmin.navigateToNextWeek();
@@ -224,16 +263,17 @@ public class DashboardTestKendraScott2 extends TestBase{
 
 			//T1838594 Validate the presence of data on Time off page.
 			dashboardPage.validateTheDataOfMyTimeOff();
+
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(),false);
 		}
 	}
 
-	@Automated(automated ="Automated")
+	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify Dashboard functionality")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyDashboardFunctionality(String browser, String username, String password, String location) throws Exception {
 		HashMap<String, String> upComingShifts = new HashMap<>();
 		HashMap<String, String> fourShifts = new HashMap<>();
@@ -249,10 +289,10 @@ public class DashboardTestKendraScott2 extends TestBase{
 
 		// Make sure schedule is published
 		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
-		if(isActiveWeekGenerated){
+		if (isActiveWeekGenerated) {
 			schedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
 		schedulePage.createScheduleForNonDGFlowNewUI();
@@ -264,20 +304,20 @@ public class DashboardTestKendraScott2 extends TestBase{
 		String timeFromDashboard = dashboardPage.getCurrentTimeFromDashboard();
 
 		schedulePage = dashboardPage.goToTodayForNewUI();
-		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(
-				ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(
+				ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 		// Verify View Today's schedule button is working and navigating to the schedule page[Current date in day view]
 		schedulePage.isScheduleForCurrentDayInDayView(dateFromDashboard);
 		HashMap<String, String> hoursOnSchedule = schedulePage.getHoursFromSchedulePage();
 		// Verify scheduled and other hours are matching with the Schedule smart card of Schedule page
-		if(hoursOnDashboard != null && hoursOnSchedule != null){
-			if(hoursOnDashboard.equals(hoursOnSchedule)){
+		if (hoursOnDashboard != null && hoursOnSchedule != null) {
+			if (hoursOnDashboard.equals(hoursOnSchedule)) {
 				SimpleUtils.pass("Data Source for Budget, Scheduled and Other are consistent with the data on schedule page!");
-			}else{
+			} else {
 				SimpleUtils.fail("Data Source for Budget, Scheduled and Other are inconsistent with the data " +
 						"on schedule page!", false);
 			}
-		}else{
+		} else {
 			SimpleUtils.fail("Failed to get the hours!", false);
 		}
 		// Verify that Starting soon shifts and Scheduled hours are not showing when current week's schedule is in Guidance or Draft
@@ -308,9 +348,216 @@ public class DashboardTestKendraScott2 extends TestBase{
 			schedulePage.isSchedule();
 			fourShifts = schedulePage.getFourUpComingShifts(isStartingTomorrow, timeFromDashboard);
 			schedulePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
-		}else {
+		} else {
 			SimpleUtils.fail("Shifts failed to load on Dashboard when the schedule is published!", false);
 		}
 	}
 
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the left navigation menu on login using admin access")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		try{
+			verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("Admin");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the left navigation menu on login using admin access")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheLeftNavigationMenuOnLoginUsingSMAccessAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		try{
+			verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("StoreManager");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the left navigation menu on login using admin access")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamLead(String browser, String username, String password, String location) throws Exception {
+		try{
+			verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("TeamLead");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the left navigation menu on login using admin access")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		try{
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			dashboardPage.closeNewFeatureEnhancementsPopup();
+			verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("TeamMember");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "Verify the left navigation menu on login using admin access")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsDistrictManager(String browser, String username, String password, String location) throws Exception {
+		try{
+			verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("DistrictManager");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "Verify the left navigation menu on login using admin access")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsCustomerAdmin(String browser, String username, String password, String location) throws Exception {
+		try{
+			verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("CustomerAdmin");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	private void verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess(String userRole) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		//Check DashBoard console menu is display
+		SimpleUtils.assertOnFail("DashBoard console menu not loaded Successfully!", dashboardPage.isDashboardConsoleMenuDisplay(), false);
+		//Check dashboard page is display after click Dashboard console menu
+		dashboardPage.clickOnDashboardConsoleMenu();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		dashboardPage.verifyHeaderNavigationMessage("Dashboard");
+
+		//Check Legion logo is display or not
+		if (userRole.contains("Admin") || userRole.contains("StoreManager")
+				|| userRole.contains("DistrictManager") || userRole.contains("CustomerAdmin")) {
+			SimpleUtils.assertOnFail("Legion logo should be loaded!", dashboardPage.isLegionLogoDisplay(), false);
+		} else
+			SimpleUtils.assertOnFail("Legion logo should not be loaded!", !dashboardPage.isLegionLogoDisplay(), false);
+
+		//Check District selector is display or not
+		if (userRole.contains("Admin") || userRole.contains("CustomerAdmin") || userRole.contains("DistrictManager")) {
+			SimpleUtils.assertOnFail("District selector should be loaded!", dashboardPage.IsThereDistrictNavigationForLegionBasic(), false);
+			//Check District dropdown is display after click District selector
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.verifyClickChangeDistrictButton();
+		} else
+			SimpleUtils.assertOnFail("District selector should not be loaded!", !dashboardPage.IsThereDistrictNavigationForLegionBasic(), false);
+
+		//Check Team console menu is display or not
+		if (userRole.contains("TeamMember")) {
+			SimpleUtils.assertOnFail("Team console menu should not loaded!", !dashboardPage.isTeamConsoleMenuDisplay(), false);
+		} else{
+			SimpleUtils.assertOnFail("Team console menu not loaded Successfully!", dashboardPage.isTeamConsoleMenuDisplay(), false);
+			//Check Team page is display after click Team tab
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+			dashboardPage.verifyHeaderNavigationMessage("Team");
+		}
+
+		//Check Schedule console menu is display
+		SimpleUtils.assertOnFail("Schedule console menu not loaded Successfully!", dashboardPage.isScheduleConsoleMenuDisplay(), false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		//Check Schedule overview page is display after click Schedule tab
+		if (userRole.contains("TeamLead") || userRole.contains("TeamMember")) {
+			schedulePage.verifyTMSchedulePanelDisplay();
+		} else {
+			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+			SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", scheduleOverviewPage.loadScheduleOverview(), false);
+		}
+		dashboardPage.verifyHeaderNavigationMessage("Schedule");
+
+		//Check TimeSheet console menu is display or not
+		if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
+			if (userRole.contains("Admin") || userRole.contains("StoreManager")
+					|| userRole.contains("CustomerAdmin") || userRole.contains("DistrictManager")){
+				SimpleUtils.assertOnFail("Timesheet console menu not loaded Successfully!", dashboardPage.isTimesheetConsoleMenuDisplay(), false);
+				TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+				timeSheetPage.clickOnTimeSheetConsoleMenu();
+				SimpleUtils.assertOnFail("Timesheet console page not loaded Successfully!", timeSheetPage.isTimeSheetPageLoaded(), false);
+			} else{
+				SimpleUtils.assertOnFail("Timesheet console menu should not loaded!", !dashboardPage.isTimesheetConsoleMenuDisplay(), false);
+			}
+		}
+
+		//Check Analytics console menu is display or not
+		if (userRole.contains("TeamLead") || userRole.contains("TeamMember")) {
+			SimpleUtils.assertOnFail("Analytics console menu should not be loaded Successfully!",
+					!dashboardPage.isAnalyticsConsoleMenuDisplay(), false);
+		} else {
+			SimpleUtils.assertOnFail("Analytics console menu not loaded Successfully!", dashboardPage.isAnalyticsConsoleMenuDisplay(), false);
+			//Check Analytics page is display after click Analytics tab
+			AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+			analyticsPage.clickOnAnalyticsConsoleMenu();
+			SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+			dashboardPage.verifyHeaderNavigationMessage("Analytics");
+		}
+
+
+		//Check Inbox console menu is display
+		SimpleUtils.assertOnFail("Inbox console menu not loaded Successfully!", dashboardPage.isInboxConsoleMenuDisplay(), false);
+		//Check Inbox page is display after click Inbox tab
+		InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+		inboxPage.clickOnInboxConsoleMenuItem();
+		SimpleUtils.assertOnFail("Inbox console menu not loaded Successfully!", inboxPage.isAnnouncementListPanelDisplay(), false);
+		dashboardPage.verifyHeaderNavigationMessage("Inbox");
+
+		//Check Admin console menu is display
+		if (userRole.equalsIgnoreCase("Admin")){
+			SimpleUtils.assertOnFail("Admin console menu not loaded Successfully!", dashboardPage.isAdminConsoleMenuDisplay(), false);
+			//Check Admin page is display after click Admin tab
+			dashboardPage.clickOnAdminConsoleMenu();
+			dashboardPage.verifyAdminPageIsLoaded();
+			dashboardPage.verifyHeaderNavigationMessage("Admin");
+		} else
+			SimpleUtils.assertOnFail("Admin console menu should not be loaded!", !dashboardPage.isAdminConsoleMenuDisplay(), false);
+
+		//Check Integration console menu is display
+		if (userRole.equalsIgnoreCase("Admin")) {
+			SimpleUtils.assertOnFail("Integration console menu not loaded Successfully!", dashboardPage.isIntegrationConsoleMenuDisplay(), false);
+			//Check Integration page is display after click Integration tab
+			dashboardPage.clickOnIntegrationConsoleMenu();
+			dashboardPage.verifyIntegrationPageIsLoaded();
+			dashboardPage.verifyHeaderNavigationMessage("Integration");
+		} else
+			SimpleUtils.assertOnFail("Integration console menu should not be loaded!", !dashboardPage.isIntegrationConsoleMenuDisplay(), false);
+
+		//Check Controls console menu is display
+		if (userRole.contains("TeamLead") || userRole.contains("TeamMember")){
+			SimpleUtils.assertOnFail("Controls console menu should not be loaded!", !dashboardPage.isControlsConsoleMenuDisplay(), false);
+		} else {
+			SimpleUtils.assertOnFail("Controls console menu not loaded Successfully!", dashboardPage.isControlsConsoleMenuDisplay(), false);
+			//Check Controls page is display after click Controls tab
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			controlsNewUIPage.clickOnControlsConsoleMenu();
+			controlsNewUIPage.isControlsPageLoaded();
+			dashboardPage.verifyHeaderNavigationMessage("Controls");
+		}
+
+		//Check Logout console menu is display
+		SimpleUtils.assertOnFail("Logout console menu not loaded Successfully!", dashboardPage.isLogoutConsoleMenuDisplay(), false);
+		//Check Login page is display after click Logout tab
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+		loginPage.verifyLoginPageIsLoaded();
+	}
 }

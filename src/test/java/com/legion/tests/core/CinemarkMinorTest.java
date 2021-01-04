@@ -29,9 +29,13 @@ public class CinemarkMinorTest extends TestBase {
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception {
-        this.createDriver((String) params[0], "69", "Window");
-        visitPage(testMethod);
-        loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+        try {
+            this.createDriver((String) params[0], "69", "Window");
+            visitPage(testMethod);
+            loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     //The template the location is using.
@@ -113,50 +117,54 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Prepare the calendar for all the minors")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void prepareTheCalendarForAllMinorsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-        schedulePage.clickOnDayView();
-        int currentDayIndex = schedulePage.getTheIndexOfCurrentDayInDayView();
-        int nextSatIndex = 6 - currentDayIndex + 6;
+            schedulePage.clickOnDayView();
+            int currentDayIndex = schedulePage.getTheIndexOfCurrentDayInDayView();
+            int nextSatIndex = 6 - currentDayIndex + 6;
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
-        String calendarName  = "Start Next Saturday";
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            String calendarName = "Start Next Saturday";
 
-        teamPage.deleteCalendarByName(calendarName);
-        teamPage.clickOnCreateNewCalendarButton();
-        teamPage.clickOnSchoolSessionStart();
-        teamPage.selectSchoolSessionStartNEndDate(nextSatIndex);
-        teamPage.clickOnSaveSchoolSessionCalendarBtn();
-        teamPage.inputCalendarName(calendarName);
-        teamPage.clickOnSaveSchoolCalendarBtn();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.deleteCalendarByName(calendarName);
+            teamPage.clickOnCreateNewCalendarButton();
+            teamPage.clickOnSchoolSessionStart();
+            teamPage.selectSchoolSessionStartNEndDate(nextSatIndex);
+            teamPage.clickOnSaveSchoolSessionCalendarBtn();
+            teamPage.inputCalendarName(calendarName);
+            teamPage.clickOnSaveSchoolCalendarBtn();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        List<String> minorNames = new ArrayList<>();
-        minorNames.add(cinemarkMinors.get("Minor13"));
-        minorNames.add(cinemarkMinors.get("Minor14"));
-        minorNames.add(cinemarkMinors.get("Minor15"));
-        minorNames.add(cinemarkMinors.get("Minor16"));
-        minorNames.add(cinemarkMinors.get("Minor17"));
+            List<String> minorNames = new ArrayList<>();
+            minorNames.add(cinemarkMinors.get("Minor13"));
+            minorNames.add(cinemarkMinors.get("Minor14"));
+            minorNames.add(cinemarkMinors.get("Minor15"));
+            minorNames.add(cinemarkMinors.get("Minor16"));
+            minorNames.add(cinemarkMinors.get("Minor17"));
 
-        teamPage.setTheCalendarForMinors(minorNames, calendarName, profileNewUIPage);
+            teamPage.setTheCalendarForMinors(minorNames, calendarName, profileNewUIPage);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -165,26 +173,30 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify add dates for breaks")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAddDatesForBreaksAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        teamPage.clickTheCalendarByRandom();
-        teamPage.verifySchoolSessionPageLoaded();
-        teamPage.clickOnEditCalendarButton();
-        teamPage.verifyEditCalendarAlertModelPopsUp();
-        teamPage.clickOnEditAnywayButton();
-        SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
+            teamPage.clickTheCalendarByRandom();
+            teamPage.verifySchoolSessionPageLoaded();
+            teamPage.clickOnEditCalendarButton();
+            teamPage.verifyEditCalendarAlertModelPopsUp();
+            teamPage.clickOnEditAnywayButton();
+            SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
 
-        // Verify the clicked days are highlighted as "Non School Day" color
-        teamPage.verifyClickedDayIsHighlighted();
+            // Verify the clicked days are highlighted as "Non School Day" color
+            teamPage.verifyClickedDayIsHighlighted();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -193,37 +205,41 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify view details of  calendars and edit")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyViewDetailsAndEditAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        // Verify the visibility of calendars on School Calendars page
-        teamPage.verifyTheCalendarListLoaded();
-        // Verify the content of each calendar
-        teamPage.verifyTheContentOnEachCalendarList();
-        // Verify the visibility of the detailed calendar page
-        teamPage.clickTheCalendarByRandom();
-        teamPage.verifySchoolSessionPageLoaded();
-        // Verify the content on detailed calendar page
-        teamPage.verifyTheContentOnDetailedCalendarPage();
-        // Verify the functionality of Edit button
-        teamPage.clickOnEditCalendarButton();
-        teamPage.verifyEditCalendarAlertModelPopsUp();
-        teamPage.clickOnEditAnywayButton();
-        SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
+            // Verify the visibility of calendars on School Calendars page
+            teamPage.verifyTheCalendarListLoaded();
+            // Verify the content of each calendar
+            teamPage.verifyTheContentOnEachCalendarList();
+            // Verify the visibility of the detailed calendar page
+            teamPage.clickTheCalendarByRandom();
+            teamPage.verifySchoolSessionPageLoaded();
+            // Verify the content on detailed calendar page
+            teamPage.verifyTheContentOnDetailedCalendarPage();
+            // Verify the functionality of Edit button
+            teamPage.clickOnEditCalendarButton();
+            teamPage.verifyEditCalendarAlertModelPopsUp();
+            teamPage.clickOnEditAnywayButton();
+            SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
 
-        // Verify the functionality of Save button
-        teamPage.clickOnSaveSchoolCalendarBtn();
-        // Verify the functionality of "School Schedules" button
-        teamPage.clickOnSchoolSchedulesButton();
-        teamPage.verifyTheCalendarListLoaded();
+            // Verify the functionality of Save button
+            teamPage.clickOnSaveSchoolCalendarBtn();
+            // Verify the functionality of "School Schedules" button
+            teamPage.clickOnSchoolSchedulesButton();
+            teamPage.verifyTheCalendarListLoaded();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -232,31 +248,35 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify delete calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDeleteCalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        // Verify the visibility of calendars on School Calendars page
-        teamPage.verifyTheCalendarListLoaded();
+            // Verify the visibility of calendars on School Calendars page
+            teamPage.verifyTheCalendarListLoaded();
 
-        teamPage.clickTheCalendarByRandom();
-        teamPage.verifySchoolSessionPageLoaded();
+            teamPage.clickTheCalendarByRandom();
+            teamPage.verifySchoolSessionPageLoaded();
 
-        // Verify the presence of DELETE button
-        // Verify the functionality of DELETE button
-        teamPage.clickOnDeleteCalendarButton();
-        // Verify the functionality of CANCEL button
-        teamPage.clickOnCancelButtonOnPopup();
-        // Verify the functionality of DELETE ANYWAY button
-        teamPage.clickOnDELETEANYWAYButton();
-        teamPage.verifyTheCalendarListLoaded();
+            // Verify the presence of DELETE button
+            // Verify the functionality of DELETE button
+            teamPage.clickOnDeleteCalendarButton();
+            // Verify the functionality of CANCEL button
+            teamPage.clickOnCancelButtonOnPopup();
+            // Verify the functionality of DELETE ANYWAY button
+            teamPage.clickOnDELETEANYWAYButton();
+            teamPage.verifyTheCalendarListLoaded();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -582,56 +602,61 @@ public class CinemarkMinorTest extends TestBase {
     @Enterprise(name = "OP_Enterprise")
     @TestName(description = "Verify turn off minor rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTurnOffMinorRuleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+    public void verifyTurnOffMinorRuleAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 
-        //Go to OP page
-        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-        //go to Configuration
-        cinemarkMinorPage.clickConfigurationTabInOP();
-        controlsNewUIPage.clickOnControlsComplianceSection();
-        String templateName = "test"+String.valueOf(System.currentTimeMillis());
-        cinemarkMinorPage.newTemplate(templateName);
-        cinemarkMinorPage.verifyDefaultMinorRuleIsOff("14N15");
-        cinemarkMinorPage.verifyDefaultMinorRuleIsOff("16N17");
-        cinemarkMinorPage.saveOrPublishTemplate(templateAction.Save_As_Draft.getValue());
-        cinemarkMinorPage.findDefaulTemplate(templateName);
-        cinemarkMinorPage.clickOnBtn(buttonGroup.Delete.getValue());
-        cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
+            //Go to OP page
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            //go to Configuration
+            cinemarkMinorPage.clickConfigurationTabInOP();
+            controlsNewUIPage.clickOnControlsComplianceSection();
+            String templateName = "test"+String.valueOf(System.currentTimeMillis());
+            cinemarkMinorPage.newTemplate(templateName);
+            cinemarkMinorPage.verifyDefaultMinorRuleIsOff("14N15");
+            cinemarkMinorPage.verifyDefaultMinorRuleIsOff("16N17");
+            cinemarkMinorPage.saveOrPublishTemplate(templateAction.Save_As_Draft.getValue());
+            cinemarkMinorPage.findDefaulTemplate(templateName);
+            cinemarkMinorPage.clickOnBtn(buttonGroup.Delete.getValue());
+            cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
 
-        cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
-        cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
-        cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
-        cinemarkMinorPage.minorRuleToggle("no","14N15");
-        cinemarkMinorPage.minorRuleToggle("no","16N17");
-        cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
-        cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
+            cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
+            cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
+            cinemarkMinorPage.minorRuleToggle("no","14N15");
+            cinemarkMinorPage.minorRuleToggle("no","16N17");
+            cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
+            cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
 
-        //Back to Console
-        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        String minorLocation = "Test For Minors";
-        locationSelectorPage.changeLocation(minorLocation);
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        SimpleUtils.assertOnFail("School Calendar tab should not be loaded when minot rule turned off", !teamPage.isCalendarTabLoad(), false);
-        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-        cinemarkMinorPage.clickConfigurationTabInOP();
-        controlsNewUIPage.clickOnControlsComplianceSection();
-        cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
-        cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
-        cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
-        cinemarkMinorPage.minorRuleToggle("yes","14N15");
-        cinemarkMinorPage.minorRuleToggle("yes","16N17");
-        cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
-        cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
+            //Back to Console
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            String minorLocation = "Test For Minors";
+            locationSelectorPage.changeLocation(minorLocation);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            SimpleUtils.assertOnFail("School Calendar tab should not be loaded when minot rule turned off", !teamPage.isCalendarTabLoad(), false);
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            cinemarkMinorPage.clickConfigurationTabInOP();
+            controlsNewUIPage.clickOnControlsComplianceSection();
+            cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
+            cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
+            cinemarkMinorPage.minorRuleToggle("yes","14N15");
+            cinemarkMinorPage.minorRuleToggle("yes","16N17");
+            cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
+            cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
     }
 
     @Automated(automated = "Automated")
@@ -640,69 +665,73 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "verify turn on minor rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 
-        //Go to OP page
-        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-        //go to Configuration
-        cinemarkMinorPage.clickConfigurationTabInOP();
-        controlsNewUIPage.clickOnControlsComplianceSection();
+            //Go to OP page
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            //go to Configuration
+            cinemarkMinorPage.clickConfigurationTabInOP();
+            controlsNewUIPage.clickOnControlsComplianceSection();
 
-        //Find the template
-        cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
-        cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
-        cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
-        cinemarkMinorPage.minorRuleToggle("yes","14N15");
+            //Find the template
+            cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
+            cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
+            cinemarkMinorPage.minorRuleToggle("yes","14N15");
 
-        cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.School_Week.getValue(),"","");
-        cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Non_School_Week.getValue(),"","");
-        cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Summer_Week.getValue(),"","");
-        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), " "," ","");
-        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), " "," ","");
-        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), " "," ","");
-        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), " "," ","");
-        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), " "," ","");
+            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.School_Week.getValue(),"","");
+            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Non_School_Week.getValue(),"","");
+            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Summer_Week.getValue(),"","");
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), " "," ","");
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), " "," ","");
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), " "," ","");
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), " "," ","");
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), " "," ","");
 
-        cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
-        cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
+            cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
+            cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
 
-        //Back to Console
-        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        String minorLocation = "Test For Minors";
-        locationSelectorPage.changeLocation(minorLocation);
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-        // Navigate to a week
-        schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
-        // create the schedule if not created
-        boolean isWeekGenerated = schedulePage.isWeekGenerated();
-        if (!isWeekGenerated){
-            schedulePage.createScheduleForNonDGFlowNewUI();
+            //Back to Console
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            String minorLocation = "Test For Minors";
+            locationSelectorPage.changeLocation(minorLocation);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+            // Navigate to a week
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            // create the schedule if not created
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (!isWeekGenerated){
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor17"));
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.clearAllSelectedDays();
+            schedulePage.selectDaysByIndex(0,0,0);
+            schedulePage.selectWorkRole("MOD");
+            schedulePage.moveSliderAtSomePoint("8", 20, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchText(cinemarkMinors.get("Minor17"));
+            SimpleUtils.assertOnFail("Minor warning should not work when setting is empty", !schedulePage.getAllTheWarningMessageOfTMWhenAssign().contains("Minor"), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor17"));
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.clearAllSelectedDays();
-        schedulePage.selectDaysByIndex(0,0,0);
-        schedulePage.selectWorkRole("MOD");
-        schedulePage.moveSliderAtSomePoint("8", 20, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchText(cinemarkMinors.get("Minor17"));
-        SimpleUtils.assertOnFail("Minor warning should not work when setting is empty", !schedulePage.getAllTheWarningMessageOfTMWhenAssign().contains("Minor"), false);
     }
 
     @Automated(automated = "Automated")
@@ -710,78 +739,83 @@ public class CinemarkMinorTest extends TestBase {
     @Enterprise(name = "OP_Enterprise")
     @TestName(description = "Admin can configure the access to edit calendars")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAccessToEditCalendarsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        controlsPage.gotoControlsPage();
-        controlsPage.clickGlobalSettings();
+    public void verifyAccessToEditCalendarsAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            controlsPage.clickGlobalSettings();
 
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-        String accessRoleTab = "Access Roles";
-        controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
-        String permissionSection = "Team";
-        String permission1 = "Team: Manage School Calendars";
-        String permission2 = "Team: View School Calendars";
-        String actionOff = "off";
-        String actionOn = "on";
-        cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
-        controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection, permission1, actionOff);
-        controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection, permission2, actionOff);
-        cinemarkMinorPage.clickOnBtn(buttonGroup.Save.getValue());
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        loginPage.logOut();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            String accessRoleTab = "Access Roles";
+            controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+            String permissionSection = "Team";
+            String permission1 = "Team: Manage School Calendars";
+            String permission2 = "Team: View School Calendars";
+            String actionOff = "off";
+            String actionOn = "on";
+            cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
+            controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection, permission1, actionOff);
+            controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection, permission2, actionOff);
+            cinemarkMinorPage.clickOnBtn(buttonGroup.Save.getValue());
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
 
-        //Log in as SM to check
-        String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("OP_Enterprise")+fileName;
-        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                , String.valueOf(storeManagerCredentials[0][2]));
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        SimpleUtils.assertOnFail("School Calendar tab should not be loaded when SM doesn't have the permission!", !teamPage.isCalendarTabLoad(), false);
-        loginPage.logOut();
+            //Log in as SM to check
+            String fileName = "UsersCredentials.json";
+            fileName = SimpleUtils.getEnterprise("OP_Enterprise")+fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                    , String.valueOf(storeManagerCredentials[0][2]));
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            SimpleUtils.assertOnFail("School Calendar tab should not be loaded when SM doesn't have the permission!", !teamPage.isCalendarTabLoad(), false);
+            loginPage.logOut();
 
-        //Log in as admin, grant the view calendar permission to SM.
-        loginToLegionAndVerifyIsLoginDone(username, password, location);
-        controlsPage.gotoControlsPage();
-        controlsPage.clickGlobalSettings();
+            //Log in as admin, grant the view calendar permission to SM.
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
+            controlsPage.gotoControlsPage();
+            controlsPage.clickGlobalSettings();
 
-        controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-        controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
-        cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
-        controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection, permission2, actionOn);
-        cinemarkMinorPage.clickOnBtn(buttonGroup.Save.getValue());
-        loginPage.logOut();
+            controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+            cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
+            controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection, permission2, actionOn);
+            cinemarkMinorPage.clickOnBtn(buttonGroup.Save.getValue());
+            loginPage.logOut();
 
-        //Log in as SM to check
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                , String.valueOf(storeManagerCredentials[0][2]));
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        teamPage.goToTeam();
-        String calendarTab = "School Calendars";
-        teamPage.clickOnTeamSubTab(calendarTab);
-        SimpleUtils.assertOnFail("School Calendar tab should show up!", teamPage.isCalendarTabLoad(), false);
-        //SimpleUtils.assertOnFail("School Calendar Create New Calendar button should not load!", !teamPage.isCreateCalendarBtnLoaded(), true);
-        if (teamPage.isCreateCalendarBtnLoaded()){
-            SimpleUtils.warn("School Calendar Create New Calendar button should not load!");
+            //Log in as SM to check
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                    , String.valueOf(storeManagerCredentials[0][2]));
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            teamPage.goToTeam();
+            String calendarTab = "School Calendars";
+            teamPage.clickOnTeamSubTab(calendarTab);
+            SimpleUtils.assertOnFail("School Calendar tab should show up!", teamPage.isCalendarTabLoad(), false);
+            //SimpleUtils.assertOnFail("School Calendar Create New Calendar button should not load!", !teamPage.isCreateCalendarBtnLoaded(), true);
+            if (teamPage.isCreateCalendarBtnLoaded()){
+                SimpleUtils.warn("School Calendar Create New Calendar button should not load!");
+            }
+
+            loginPage.logOut();
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
+            controlsPage.gotoControlsPage();
+            controlsPage.clickGlobalSettings();
+
+            controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+            cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
+            controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection, permission1, actionOn);
+            cinemarkMinorPage.clickOnBtn(buttonGroup.Save.getValue());
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
 
-        loginPage.logOut();
-        loginToLegionAndVerifyIsLoginDone(username, password, location);
-        controlsPage.gotoControlsPage();
-        controlsPage.clickGlobalSettings();
-
-        controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-        controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
-        cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
-        controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection, permission1, actionOn);
-        cinemarkMinorPage.clickOnBtn(buttonGroup.Save.getValue());
     }
 
     @Automated(automated = "Automated")
@@ -789,47 +823,50 @@ public class CinemarkMinorTest extends TestBase {
     @Enterprise(name = "OP_Enterprise")
     @TestName(description = "Verify turn on minor rule and set rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTurnOnAndSetMinorRuleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+    public void verifyTurnOnAndSetMinorRuleAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 
-        //Go to OP page
-        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-        //go to Configuration
-        cinemarkMinorPage.clickConfigurationTabInOP();
-        controlsNewUIPage.clickOnControlsComplianceSection();
+            //Go to OP page
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            //go to Configuration
+            cinemarkMinorPage.clickConfigurationTabInOP();
+            controlsNewUIPage.clickOnControlsComplianceSection();
 
-        //Find the template
-        cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
-        cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
-        cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
-        cinemarkMinorPage.minorRuleToggle("yes","14N15");
+            //Find the template
+            cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
+            cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
+            cinemarkMinorPage.minorRuleToggle("yes","14N15");
 
-        cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
-        cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
-        cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
-        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
-        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
-        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
-        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
-        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.Summer_Day.getValue(), cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
-        cinemarkMinorPage.minorRuleToggle("yes","16N17");
-        cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
-        cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
-        cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
-        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
-        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
-        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
-        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
-        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
+            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
+            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
+            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.Summer_Day.getValue(), cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
+            cinemarkMinorPage.minorRuleToggle("yes","16N17");
+            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
+            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
+            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
 
-        cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
-        cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
-
+            cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
+            cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -839,18 +876,20 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the School today and school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-
-        String minorName = "Minor14";
-        String shiftTime1 = "7,1";
-        String shiftTime2 = "9,4";
-        String shiftTime3 = "8,2";
-        String workRole = "Associates";
-        String scheduleFromToTime = "8AM - 4PM";
-        String scheduleMaxHours = "6";
-        String selectWeekDayName = "Mon";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
-                workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
-
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "7,1";
+            String shiftTime2 = "9,4";
+            String shiftTime3 = "8,2";
+            String workRole = "Associates";
+            String scheduleFromToTime = "8AM - 4PM";
+            String scheduleMaxHours = "6";
+            String selectWeekDayName = "Mon";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
+                    workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -860,18 +899,20 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the School today and school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-
-
-        String minorName = "Minor17";
-        String shiftTime1 = "8,1";
-        String shiftTime2 = "9,4";
-        String shiftTime3 = "9,2";
-        String workRole = "MOD";
-        String scheduleFromToTime = "8:30AM - 4PM";
-        String scheduleMaxHours = "5";
-        String selectWeekDayName = "Mon";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
-                scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "8,1";
+            String shiftTime2 = "9,4";
+            String shiftTime3 = "9,2";
+            String workRole = "MOD";
+            String scheduleFromToTime = "8:30AM - 4PM";
+            String scheduleMaxHours = "5";
+            String selectWeekDayName = "Mon";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
+                    scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -881,17 +922,20 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the School today and no school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "8,3";
-        String shiftTime2 = "9,5";
-        String shiftTime3 = "11,4";
-        String workRole = "Associates";
-        String scheduleFromToTime = "8:30AM - 5PM";
-        String scheduleMaxHours = "5";
-        String selectWeekDayName = "Fri";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
-                workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
-
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "8,3";
+            String shiftTime2 = "9,5";
+            String shiftTime3 = "11,4";
+            String workRole = "Associates";
+            String scheduleFromToTime = "8:30AM - 5PM";
+            String scheduleMaxHours = "5";
+            String selectWeekDayName = "Fri";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
+                    workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -901,17 +945,20 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the School today and no school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-
-        String minorName = "Minor17";
-        String shiftTime1 = "8,1";
-        String shiftTime2 = "9,5";
-        String shiftTime3 = "9,2";
-        String workRole = "MOD";
-        String scheduleFromToTime = "9AM - 5PM";
-        String scheduleMaxHours = "6";
-        String selectWeekDayName = "Fri";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
-                scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "8,1";
+            String shiftTime2 = "9,5";
+            String shiftTime3 = "9,2";
+            String workRole = "MOD";
+            String scheduleFromToTime = "9AM - 5PM";
+            String scheduleMaxHours = "6";
+            String selectWeekDayName = "Fri";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
+                    scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -920,16 +967,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the no School today and no school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "8,3";
-        String shiftTime2 = "9,6";
-        String shiftTime3 = "9,3";
-        String workRole = "Associates";
-        String scheduleFromToTime = "9AM - 6PM";
-        String scheduleMaxHours = "7";
-        String selectWeekDayName = "Sat";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
-                workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "8,3";
+            String shiftTime2 = "9,6";
+            String shiftTime3 = "9,3";
+            String workRole = "Associates";
+            String scheduleFromToTime = "9AM - 6PM";
+            String scheduleMaxHours = "7";
+            String selectWeekDayName = "Sat";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
+                    workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
     }
 
 
@@ -939,17 +991,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the no School today and no school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "8,1";
+            String shiftTime2 = "10,7";
+            String shiftTime3 = "10,2";
+            String workRole = "MOD";
+            String scheduleFromToTime = "9:30AM - 7PM";
+            String scheduleMaxHours = "7";
+            String selectWeekDayName = "Sat";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
+                    scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
 
-        String minorName = "Minor17";
-        String shiftTime1 = "8,1";
-        String shiftTime2 = "10,7";
-        String shiftTime3 = "10,2";
-        String workRole = "MOD";
-        String scheduleFromToTime = "9:30AM - 7PM";
-        String scheduleMaxHours = "7";
-        String selectWeekDayName = "Sat";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
-                scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
     }
 
 
@@ -959,15 +1015,20 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the no School today and school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "8,3";
-        String shiftTime2 = "10,9";
-        String shiftTime3 = "10,4";
-        String workRole = "Associates";
-        String scheduleFromToTime = "9:30AM - 9PM";
-        String scheduleMaxHours = "9";
-        String selectWeekDayName = "Sun";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "8,3";
+            String shiftTime2 = "10,9";
+            String shiftTime3 = "10,4";
+            String workRole = "Associates";
+            String scheduleFromToTime = "9:30AM - 9PM";
+            String scheduleMaxHours = "9";
+            String selectWeekDayName = "Sun";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
     }
 
 
@@ -977,16 +1038,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the no School today and school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor17";
-        String shiftTime1 = "8,1";
-        String shiftTime2 = "10,8";
-        String shiftTime3 = "10,2";
-        String workRole = "MOD";
-        String scheduleFromToTime = "10AM - 8PM";
-        String scheduleMaxHours = "8";
-        String selectWeekDayName = "Sun";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
-    }
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "8,1";
+            String shiftTime2 = "10,8";
+            String shiftTime3 = "10,2";
+            String workRole = "MOD";
+            String scheduleFromToTime = "10AM - 8PM";
+            String scheduleMaxHours = "8";
+            String selectWeekDayName = "Sun";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+      }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
@@ -994,14 +1060,19 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the summer day settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "8,3";
-        String shiftTime2 = "10,10";
-        String shiftTime3 = "10,4";
-        String workRole = "Associates";
-        String scheduleFromToTime = "10AM - 10PM";
-        String scheduleMaxHours = "10";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "8,3";
+            String shiftTime2 = "10,10";
+            String shiftTime3 = "10,4";
+            String workRole = "Associates";
+            String scheduleFromToTime = "10AM - 10PM";
+            String scheduleMaxHours = "10";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -1011,14 +1082,19 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the summer day  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor17";
-        String shiftTime1 = "8,1";
-        String shiftTime2 = "11,10";
-        String shiftTime3 = "11,7";
-        String workRole = "MOD";
-        String scheduleFromToTime = "10:30AM - 10PM";
-        String scheduleMaxHours = "9";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "8,1";
+            String shiftTime2 = "11,10";
+            String shiftTime3 = "11,7";
+            String workRole = "MOD";
+            String scheduleFromToTime = "10:30AM - 10PM";
+            String scheduleMaxHours = "9";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -1205,17 +1281,22 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the school week settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "10,1";
-        String shiftTime2 = "10,4";
-        int needCreateShiftsNumber1 = 4;
-        int needCreateShiftsNumber2 = 2;
-        String workRole = "Associates";
-        String maxOfDays = "4";
-        String maxOfScheduleHours = "15";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, true, false);
-    }
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "10,1";
+            String shiftTime2 = "10,4";
+            int needCreateShiftsNumber1 = 4;
+            int needCreateShiftsNumber2 = 2;
+            String workRole = "Associates";
+            String maxOfDays = "4";
+            String maxOfScheduleHours = "15";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, true, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+     }
 
 
     @Automated(automated = "Automated")
@@ -1224,16 +1305,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the non school week settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNonSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "11,1";
-        String shiftTime2 = "10,4";
-        int needCreateShiftsNumber1 = 5;
-        int needCreateShiftsNumber2 = 2;
-        String workRole = "Associates";
-        String maxOfDays = "5";
-        String maxOfScheduleHours = "16";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, true);
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "11,1";
+            String shiftTime2 = "10,4";
+            int needCreateShiftsNumber1 = 5;
+            int needCreateShiftsNumber2 = 2;
+            String workRole = "Associates";
+            String maxOfDays = "5";
+            String maxOfScheduleHours = "16";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, true);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -1243,16 +1329,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the summer week settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "11,1";
-        String shiftTime2 = "10,5";
-        int needCreateShiftsNumber1 = 6;
-        int needCreateShiftsNumber2 = 2;
-        String workRole = "Associates";
-        String maxOfDays = "6";
-        String maxOfScheduleHours = "17";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, false);
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "11,1";
+            String shiftTime2 = "10,5";
+            int needCreateShiftsNumber1 = 6;
+            int needCreateShiftsNumber2 = 2;
+            String workRole = "Associates";
+            String maxOfDays = "6";
+            String maxOfScheduleHours = "17";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -1261,16 +1352,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the school week  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor17";
-        String shiftTime1 = "11,1";
-        String shiftTime2 = "11,4";
-        int needCreateShiftsNumber1 = 6;
-        int needCreateShiftsNumber2 = 3;
-        String workRole = "Mod";
-        String maxOfDays = "6";
-        String maxOfScheduleHours = "18";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, true, false);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "11,1";
+            String shiftTime2 = "11,4";
+            int needCreateShiftsNumber1 = 6;
+            int needCreateShiftsNumber2 = 3;
+            String workRole = "Mod";
+            String maxOfDays = "6";
+            String maxOfScheduleHours = "18";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, true, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -1279,16 +1375,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the non school week  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNonSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor17";
-        String shiftTime1 = "11,1";
-        String shiftTime2 = "11,4";
-        int needCreateShiftsNumber1 = 4;
-        int needCreateShiftsNumber2 = 3;
-        String workRole = "Mod";
-        String maxOfDays = "4";
-        String maxOfScheduleHours = "16";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, true);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "11,1";
+            String shiftTime2 = "11,4";
+            int needCreateShiftsNumber1 = 4;
+            int needCreateShiftsNumber2 = 3;
+            String workRole = "Mod";
+            String maxOfDays = "4";
+            String maxOfScheduleHours = "16";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, true);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -1297,16 +1398,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the summer week settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor17";
-        String shiftTime1 = "11,1";
-        String shiftTime2 = "11,5";
-        int needCreateShiftsNumber1 = 5;
-        int needCreateShiftsNumber2 = 3;
-        String workRole = "Mod";
-        String maxOfDays = "5";
-        String maxOfScheduleHours = "17";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, false);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "11,1";
+            String shiftTime2 = "11,5";
+            int needCreateShiftsNumber1 = 5;
+            int needCreateShiftsNumber2 = 3;
+            String workRole = "Mod";
+            String maxOfDays = "5";
+            String maxOfScheduleHours = "17";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     public void verifyWeekOvertimeViolationsForMinors(String minorName, String shiftTime1, String shiftTime2, String workRole,

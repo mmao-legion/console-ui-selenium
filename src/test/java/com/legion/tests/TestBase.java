@@ -11,10 +11,7 @@ import com.legion.pages.pagefactories.mobile.MobilePageFactory;
 import com.legion.pages.pagefactories.mobile.MobileWebPageFactory;
 import com.legion.test.testrail.APIException;
 import com.legion.tests.annotations.Enterprise;
-import com.legion.tests.testframework.ExtentReportManager;
-import com.legion.tests.testframework.ExtentTestManager;
-import com.legion.tests.testframework.LegionWebDriverEventListener;
-import com.legion.tests.testframework.ScreenshotManager;
+import com.legion.tests.testframework.*;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -27,6 +24,7 @@ import org.json.JSONException;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -38,6 +36,7 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
+import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.Reporter;
@@ -50,6 +49,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.rmi.UnexpectedException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -80,12 +80,12 @@ public abstract class TestBase {
     public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
     public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/DistrictsForDifferentEnterprises.json");
     private static ExtentReports extent = ExtentReportManager.getInstance();
-    static HashMap<String,String> testSuites = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestSuitesFile.json");
+    static HashMap<String,String> testRailCfg = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
     public static AndroidDriver<MobileElement> driver;
     public static String versionString;
     public static int version;
+    public static  int flagForTestRun = 0;
     public String enterpriseName;
-    public static String testSuiteIDTemp = "0";
     public static String pth=System.getProperty("user.dir");
     public static String reportFilePath=pth+"/Reports/";
     public static String screenshotFilePath=pth+"/screenshots/";
@@ -96,12 +96,15 @@ public abstract class TestBase {
     public static final int TEST_CASE_PASSED_STATUS = 1;
     public static final int TEST_CASE_FAILED_STATUS = 5;
 
-    @Parameters({ "platform", "executionon", "runMode","testRail","testSuiteName"})
+    @Parameters({ "platform", "executionon", "runMode","testRail","testSuiteName","testRailRunName"})
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
-                            @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, ITestContext context) throws Exception {
-        MyThreadLocal.setTestSuiteID(testSuites.get(testSuiteName));
-        MyThreadLocal.setTestSuiteName(testSuiteName);
+                            @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
+        MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
+        MyThreadLocal.setTestRailRunName(testRailRunName);
+        if (MyThreadLocal.getTestCaseIDList()==null){
+            MyThreadLocal.setTestCaseIDList(new ArrayList<Integer>());
+        }
         if(platform!= null && executionon!= null && runMode!= null){
             if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice")
                     && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){
@@ -161,14 +164,13 @@ public abstract class TestBase {
                 + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
         extent.setSystemInfo(method.getName(), enterpriseName.toString());
         //setTestRailRunId(0);
-        if (MyThreadLocal.getTestSuiteID()==null){
+        if (MyThreadLocal.getTestRailRunId()==null){
             setTestRailRunId(0);
         }
         List<Integer> testRailId =  new ArrayList<Integer>();
         setTestRailRun(testRailId);
 
-        if(getTestRailReporting()!=null && !testSuiteIDTemp.equalsIgnoreCase(MyThreadLocal.getTestSuiteID())){
-            testSuiteIDTemp = MyThreadLocal.getTestSuiteID();
+        if(getTestRailReporting()!=null){
             SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
         }
         setCurrentMethod(method);
@@ -195,11 +197,10 @@ public abstract class TestBase {
         //todo replace Chrome driver initializaton with what Manideep has
         DesiredCapabilities capabilities = null;
         String url = "";
-
-        capabilities = SimpleUtils.initCapabilities(getDriverType(), getVersion(), getOS());
         url = SimpleUtils.getURL();
         // Initialize browser
-        if (url == null) {
+        if (propertyMap.get("isGridEnabled").equalsIgnoreCase("false")) {
+            capabilities = SimpleUtils.initCapabilities(getDriverType(), getVersion(), getOS());
             if (getDriverType().equalsIgnoreCase(propertyMap.get("INTERNET_EXPLORER"))) {
                 InternetExplorerOptions options = new InternetExplorerOptions()
                         .requireWindowFocus()
@@ -211,21 +212,20 @@ public abstract class TestBase {
 
             }
             if (getDriverType().equalsIgnoreCase(propertyMap.get("CHROME"))) {
-                System.setProperty("webdriver.chrome.driver",propertyMap.get("CHROME_DRIVER_PATH"));
+                System.setProperty("webdriver.chrome.driver", propertyMap.get("CHROME_DRIVER_PATH"));
                 ChromeOptions options = new ChromeOptions();
-
-                if(propertyMap.get("isHeadlessBrowser").equalsIgnoreCase("true")){
+                if (propertyMap.get("isHeadlessBrowser").equalsIgnoreCase("true")) {
 //                    options.addArguments("headless");
-                    options.addArguments( "--headless","--disable-gpu", "--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage" );
+                    options.addArguments("--headless", "--disable-gpu", "--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage");
                     options.addArguments("window-size=1200x600");
                     runScriptOnHeadlessOrBrowser(options);
-                }else{
+                } else {
                     runScriptOnHeadlessOrBrowser(options);
                 }
 
             }
             if (getDriverType().equalsIgnoreCase(propertyMap.get("FIREFOX"))) {
-                System.setProperty("webdriver.gecko.driver",propertyMap.get("FIREFOX_DRIVER_PATH"));
+                System.setProperty("webdriver.gecko.driver", propertyMap.get("FIREFOX_DRIVER_PATH"));
                 FirefoxProfile profile = new FirefoxProfile();
                 profile.setAcceptUntrustedCertificates(true);
                 FirefoxOptions options = new FirefoxOptions();
@@ -237,17 +237,37 @@ public abstract class TestBase {
             LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
             getDriver().register(webDriverEventListener);
 
-        }
-        else {
+        } else {
             // Launch remote browser and set it as the current thread
-            setDriver(new RemoteWebDriver(
-                    new URL(url),
-                    capabilities));
+            createRemoteChrome(url);
+        }
         }
 
 
-    }
+    private void createRemoteChrome(String url){
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setCapability("browserName", "chrome");
+//        caps.setCapability("version", "5.4.0-1029-aws");
+        caps.setCapability("platform", "LINUX");
 
+        caps.setCapability("network", true);
+        caps.setCapability("visual", true);
+        caps.setCapability("video", true);
+        caps.setCapability("console", true);
+
+//        caps.setCapability("selenium_version","3.141.59");
+        caps.setCapability("chrome.driver","87.0");
+        Assert.assertNotNull(url,"Error grid url is not configured, please review it in envCFg.json file and add it.");
+        try {
+            setDriver(new RemoteWebDriver(new URL(url),caps));
+
+            pageFactory = createPageFactory();
+            LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
+            getDriver().register(webDriverEventListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private PageFactory createPageFactory() {
         return new ConsoleWebPageFactory();
@@ -279,19 +299,25 @@ public abstract class TestBase {
 
 
     public static void visitPage(Method testMethod){
+
         setEnvironment(propertyMap.get("ENVIRONMENT"));
         Enterprise e = testMethod.getAnnotation(Enterprise.class);
         String enterpriseName = null;
-        if (e != null ) {
+        if (System.getProperty("enterprise")!=null && !System.getProperty("enterprise").isEmpty()) {
+            enterpriseName = System.getProperty("enterprise");
+        }else if(e != null ){
             enterpriseName = SimpleUtils.getEnterprise(e.name());
-        }
-        else {
+        }else{
             enterpriseName = SimpleUtils.getDefaultEnterprise();
         }
         setEnterprise(enterpriseName);
         switch (getEnvironment()){
             case "QA":
-                setURL(propertyMap.get("QAURL"));
+                if (System.getProperty("env")!=null) {
+                    setURL(System.getProperty("env"));
+                }else {
+                    setURL(propertyMap.get("QAURL"));
+                }
                 loadURL();
                 break;
             case "DEV":
@@ -315,6 +341,12 @@ public abstract class TestBase {
             } catch (TimeoutException te1) {
                 SimpleUtils.fail("Page failed to load", false);
             }
+        } catch (WebDriverException we) {
+            try {
+                getDriver().navigate().refresh();
+            } catch (TimeoutException te1) {
+                SimpleUtils.fail("Page failed to load", false);
+            }
         }
     }
 
@@ -324,6 +356,7 @@ public abstract class TestBase {
     public synchronized void loginToLegionAndVerifyIsLoginDone(String username, String Password, String location) throws Exception
     {
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        SimpleUtils.report(getDriver().getCurrentUrl());
         loginPage.loginToLegionWithCredential(username, Password);
         loginPage.verifyNewTermsOfServicePopUp();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -340,8 +373,8 @@ public abstract class TestBase {
         if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
             locationSelectorPage.changeDistrict(districtsMap.get("KendraScott2_Enterprise"));
         }
-        if (getDriver().getCurrentUrl().contains(propertyMap.get("OP_Enterprise"))) {
-            locationSelectorPage.changeDistrict(districtsMap.get("OP_Enterprise"));
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+            locationSelectorPage.changeDistrict(districtsMap.get("Op_Enterprise"));
         }
         if (getDriver().getCurrentUrl().contains(propertyMap.get("DGStage_Enterprise"))) {
             locationSelectorPage.changeDistrict(districtsMap.get("DGStage_Enterprise"));

@@ -345,10 +345,14 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 						WebElement tr = teamMember.findElement(By.className("tr"));
 						if (tr != null) {
 							WebElement name = tr.findElement(By.cssSelector("span.name"));
-							WebElement title = tr.findElement(By.cssSelector("span.title"));
+							List<WebElement> titles = tr.findElements(By.cssSelector("span.title"));
 							WebElement status = tr.findElement(By.cssSelector("span.status"));
-							if (name != null && title != null && status != null) {
-								String nameJobTitleStatus = name.getText() + title.getText() + status.getText();
+							String title = "";
+							if (name != null && titles != null && status != null && titles.size() > 0) {
+								for (WebElement titleElement : titles) {
+									title += titleElement.getText();
+								}
+								String nameJobTitleStatus = name.getText() + title + status.getText();
 								if (nameJobTitleStatus.contains(username)) {
 									selectedName = name.getText();
 									clickTheElement(name);
@@ -2855,8 +2859,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(filePath);
 				// wait for the picture to be loaded
 				waitForSeconds(5);
-				scrollToElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
-				click(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
+				scrollToElement(getDriver().findElement(By.cssSelector("lg-button[label=\"Save\"]")));
+				clickTheElement(getDriver().findElement(By.cssSelector("lg-button[label=\"Save\"]")));
 			}else {
 				SimpleUtils.fail("Business Profile Image input element isn't enabled!", true);
 			}

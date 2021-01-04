@@ -1679,6 +1679,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void selectWhichWeekToCopyFrom(String weekInfo) throws Exception{
+
+    }
+
+    @Override
     public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception {
         // TODO Auto-generated method stub
         return false;
@@ -3281,4 +3286,58 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         return false;
     }
 
+    @Override
+    public void verifyTMSchedulePanelDisplay() throws Exception {
+
+    }
+
+    @Override
+    public void verifyPreviousWeekWhenCreateAndCopySchedule(String weekInfo, boolean shouldBeSelected) throws Exception {
+
+    }
+
+    @Override
+    public void clickNextBtnOnCreateScheduleWindow() throws Exception {
+
+    }
+
+    @Override
+    public void clickBackBtnAndExitCreateScheduleWindow() throws Exception {
+
+    }
+
+    @Override
+    public void editTheOperatingHours(List<String> weekDaysToClose) throws Exception {
+
+    }
+
+    @Override
+    public float getStaffingGuidanceHrs() throws Exception {
+        return (float) 0;
+    }
+
+    @Override
+    public void verifyTooltipForCopyScheduleWeek(String weekInfo) throws Exception {
+
+    }
+
+    @Override
+    public String convertDateStringFormat(String dateString) throws Exception{
+        return null;
+    }
+
+    @Override
+    public void verifyDifferentOperatingHours(String weekInfo) throws Exception {
+
+    }
+
+    @Override
+    public void clickOnFinishButtonOnCreateSchedulePage() throws Exception{
+
+    }
+
+    @Override
+    public List<String> getDayShifts(String index) throws Exception {
+        return null;
+    }
 }

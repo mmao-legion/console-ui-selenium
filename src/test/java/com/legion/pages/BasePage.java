@@ -568,12 +568,32 @@ public class BasePage {
         }
     }
 
+    public void selectByIndex(WebElement element, int index) throws Exception {
+        if (isElementLoaded(element, 5)) {
+            click(element);
+            Select select = new Select(element);
+            List<WebElement> options = select.getOptions();
+            if (options.size() > 0) {
+               select.selectByIndex(index);
+            } else {
+                SimpleUtils.fail("Select options are empty!", true);
+            }
+        }else {
+            SimpleUtils.fail("Select Element failed to load!", true);
+        }
+    }
+
     public void selectDate(int daysFromToday) {
+        int numClicks = -1;
         LocalDate now = LocalDate.now();
         LocalDate wanted = LocalDate.now().plusDays(daysFromToday);
         WebElement btnNextMonth = null;
         List<String> listMonthText = new ArrayList<>();
-        int numClicks = wanted.getMonthValue() - now.getMonthValue();
+        if (wanted.getYear() == now.getYear()) {
+            numClicks = wanted.getMonthValue() - now.getMonthValue();
+        } else {
+            numClicks = 12 + wanted.getMonthValue() - now.getMonthValue();
+        }
         if (numClicks < 0) {
             numClicks = daysFromToday / 30;
         }
@@ -596,7 +616,7 @@ public class BasePage {
             }
         }
 
-        List<WebElement> mCalendarDates = getDriver().findElements(By.cssSelector("div.ranged-calendar__day.ng-binding.ng-scope.real-day"));
+        List<WebElement> mCalendarDates = getDriver().findElements(By.cssSelector("div.ranged-calendar__day.ng-binding.ng-scope.real-day:not(.can-not-select)"));
         for (WebElement mDate : mCalendarDates) {
             if (Integer.parseInt(mDate.getText()) == wanted.getDayOfMonth()) {
                 mDate.click();

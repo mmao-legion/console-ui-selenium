@@ -6,10 +6,7 @@ import static com.legion.utils.MyThreadLocal.loc;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -198,6 +195,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@FindBy(css = "lg-icon-button[type=\"confirm\"]")
 	private WebElement confirmSaveButton;
+	@FindBy(css = "lg-icon-button[type=\"cancel\"]")
+	private WebElement cancelSaveButton;
 	@FindBy(css = "input-field[placeholder=\"Global\"]")
 	private WebElement globalLocationButton;
 	@FindBy(css = "input-field[value=\"sp.weeklySchedulePreference.publishDayWindowWeek\"]")
@@ -336,7 +335,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public boolean isControlsPageLoaded() throws Exception {
-		if (isElementLoaded(controlsPageHeaderLabel))
+		waitForSeconds(10);
+		if (isElementLoaded(controlsPageHeaderLabel, 10))
 			if (controlsPageHeaderLabel.getText().toLowerCase().contains(timeSheetHeaderLabel.toLowerCase())) {
 				SimpleUtils.pass("Controls Page loaded Successfully!");
 				return true;
@@ -663,6 +663,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		waitForSeconds(8);
 		if (controlsAdvanceButtons.size() > 0) {
 			click(controlsAdvanceButtons.get(0));
+			waitForSeconds(2);
 			bufferHours.put("openingBufferHours", Integer.valueOf(
 					openingBufferHours.findElement(By.cssSelector("input[type=\"number\"]")).getAttribute("value")));
 			bufferHours.put("closingBufferHours", Integer.valueOf(
@@ -3069,7 +3070,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 	//added by Estelle for update one user's location info
-	@FindBy(css = "lg-button[label=\"Manage Locations\"]")
+	@FindBy(css = "lg-button[label=\"Manage Locations\"] > button")
 	private WebElement managerLocationBtn;
 	@FindBy(css = "[modal-title=\"Manage Locations\"]")
 	private WebElement managerLocationPopUpTitle;
@@ -3097,7 +3098,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				click(userDetailsLinks.get(0));
 				if (isElementLoaded(userAndRolesEditUserBtn)) {
 					click(userAndRolesEditUserBtn);
-					List<String> defaultLocation = getUserLocationsList();
+					String defaultLocation = getUserLocationsList();
+					scrollToBottom();
 					if (isElementLoaded(managerLocationBtn)) {
 						click(managerLocationBtn);
 						searchLocation(userFirstName);
@@ -3110,15 +3112,17 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 							}
 							scrollToBottom();
 							click(okayBtnInManagerLocationWin);
+							waitForSeconds(5);
 						}else
 							SimpleUtils.fail("There is no location ",true);
 					}else
 						SimpleUtils.fail("Manager location button load failed ",true);
 
-						List<String> locationAfterUpdated = getUserLocationsList();
+						String  locationAfterUpdated = getUserLocationsList();
 						if (locationAfterUpdated.equals(defaultLocation)) {
 							SimpleUtils.pass("User's location was updated successfully");
-						}
+						}else
+							SimpleUtils.fail("Manager location failed for this user",false);
 					}else
 					SimpleUtils.fail("User profile edit button load failed ",true);
 
@@ -3160,6 +3164,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	public void searchLocation(String userFirstName) throws Exception {
 			if (isElementLoaded(managerLocationPopUpTitle,5)) {
 				managerLocationInputFiled.sendKeys(userFirstName);
+				managerLocationInputFiled.sendKeys(Keys.ENTER);
 				SimpleUtils.pass("Manager Location: '" + locationListRows.size() + "' location(s) found with name '"
 						+ userFirstName + "'");
 
@@ -3167,11 +3172,26 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				SimpleUtils.fail("search input field load failed",false);
 		}
 
-		public List<String> getUserLocationsList(){
+		public String getUserLocationsList(){
+			String resultString = "";
 			List<String> userLocationListContext = new ArrayList<String>();
 			for (WebElement location:defaultLocationsForOneUser) {
 				userLocationListContext.add(location.getText());
-				return userLocationListContext;
+				if(userLocationListContext ==null && userLocationListContext.size()<=0){
+					SimpleUtils.report("userLocationListContext is null！");
+				}else{
+					StringBuilder sb = new StringBuilder();
+					for(int i=0;i<userLocationListContext.size();i++){
+						if(i<userLocationListContext.size()-1){
+							sb.append(userLocationListContext.get(i));
+							sb.append(",");
+						}else{
+							sb.append(userLocationListContext.get(i));
+						}
+					}
+					resultString = sb.toString();
+				}
+				return resultString;
 			}
 
 			return null;
@@ -5086,6 +5106,16 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 
 	}
+	//added by Fiona
+	//get current location on controls landing page
+	@FindBy(css = "div.controlsNavigation lg-select[search-hint=\"Search Location\"] input-field div")
+	private WebElement currentLocationInControls;
+	public String getCurrentLocationInControls() throws Exception{
+		if (isElementLoaded(currentLocationInControls,5)) {
+			return   currentLocationInControls.getText();
+		}
+		return null;
+	}
 
 	//Added by Haya
 	@FindBy(css = "form-section[form-title=\"Predictable Schedule\"] .lg-question-input")
@@ -5766,6 +5796,83 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			}
 		} else {
 			SimpleUtils.fail("No access item loaded!", false);
+		}
+	}
+
+	@FindBy(css = "[form-title=\"Schedule Copy Restrictions\"]")
+	private WebElement scheduleCopyRestrictionSection;
+	@Override
+	public void enableOrDisableScheduleCopyRestriction(String yesOrNo) throws Exception {
+		if (isElementLoaded(scheduleCopyRestrictionSection,10)){
+			scrollToElement(scheduleCopyRestrictionSection);
+			if (yesOrNo.equalsIgnoreCase("yes")){
+				if (isElementLoaded(scheduleCopyRestrictionSection.findElement(By.cssSelector(".lg-button-group-first")),10)){
+					click(scheduleCopyRestrictionSection.findElement(By.cssSelector(".lg-button-group-first")));
+					displaySuccessMessage();
+					SimpleUtils.pass("Turned on Schedule Copy Restriction!");
+				} else {
+					SimpleUtils.fail("Yes button fail to load!", false);
+				}
+			} else if (yesOrNo.equalsIgnoreCase("no")){
+				if (isElementLoaded(scheduleCopyRestrictionSection.findElement(By.cssSelector(".lg-button-group-last")),10)){
+					click(scheduleCopyRestrictionSection.findElement(By.cssSelector(".lg-button-group-last")));
+					displaySuccessMessage();
+					SimpleUtils.pass("Turned off Schedule Copy Restriction!");
+				} else {
+					SimpleUtils.fail("No button fail to load!", false);
+				}
+			} else {
+				SimpleUtils.warn("You have to input the right command: yes or no");
+			}
+		} else {
+			SimpleUtils.fail("Schedule Copy Restriction section is not loaded!", false);
+		}
+	}
+
+	@Override
+	public void setViolationLimit(String value) throws Exception {
+		if (isElementLoaded(scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Violation limit\"]")),10)){
+			waitForSeconds(3);
+			scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Violation limit\"] [ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+			scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Violation limit\"] [ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(value);
+			if (isElementLoaded(cancelSaveButton,10)) {
+				clickTheElement(cancelSaveButton);
+			}
+			scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Violation limit\"] [ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+			scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Violation limit\"] [ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(value);
+			if (isElementLoaded(confirmSaveButton,10)) {
+				clickTheElement(confirmSaveButton);
+			}
+			displaySuccessMessage();
+			if (scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Violation limit\"] .input-faked.ng-binding")).getAttribute("innerText").contains(value)){
+				SimpleUtils.pass("Violation limit is set as "+value);
+			} else {
+				SimpleUtils.fail("Violation limit value fail to save!", false);
+			}
+		} else {
+			SimpleUtils.fail("Violation limit fail to load!", false);
+		}
+	}
+
+	@Override
+	public void setBudgetOverageLimit(String value) throws Exception {
+		if (isElementLoaded(scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Budget overage limit\"]")),10) && isElementLoaded(scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Budget overage limit\"] [include-percent-sign=\"true\"]")),10)){
+			waitForSeconds(3);
+			scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Budget overage limit\"] [ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+			scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Budget overage limit\"] [ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(value);
+			if (isElementLoaded(confirmSaveButton,10)) {
+				clickTheElement(confirmSaveButton);
+			}
+			displaySuccessMessage();
+			if (!value.equals("0")){
+				if (scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Budget overage limit\"] .input-faked.ng-binding")).getAttribute("innerText").contains(value)){
+					SimpleUtils.pass("Budget overage limit is set as "+value);
+				} else {
+					SimpleUtils.fail("Violation limit value fail to save!", false);
+				}
+			}
+		} else {
+			SimpleUtils.fail("Budget overage limit fail to load!", false);
 		}
 	}
 

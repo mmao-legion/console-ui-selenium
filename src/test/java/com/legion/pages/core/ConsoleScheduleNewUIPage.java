@@ -980,7 +980,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(scheduleWeekViewButton,15)) {
             if (!scheduleWeekViewButton.getAttribute("class").toString().contains("selected"))//selected
             {
-                click(scheduleWeekViewButton);
+                clickTheElement(scheduleWeekViewButton);
             }
             SimpleUtils.pass("Schedule page week view loaded successfully!");
         } else {
@@ -1056,17 +1056,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
-    @Override
-    public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
-        HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
-        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class='card-carousel-card card-carousel-card-primary card-carousel-card-table']"));
-        if(isElementEnabled(budgetedScheduledLabelsDivElement))
-        {
+	@Override
+	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
+		HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
+		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector(".card-carousel-card.card-carousel-card-primary.card-carousel-card-table"));
+		if(isElementEnabled(budgetedScheduledLabelsDivElement,5))
+		{
 //			Thread.sleep(2000);
             String scheduleWagesAndHoursCardText = budgetedScheduledLabelsDivElement.getText();
             String [] tmp =  scheduleWagesAndHoursCardText.split("\n");
             String[] scheduleWagesAndHours = new String[5];
-            if (tmp.length>5) {
+            if (tmp.length>6) {
                 scheduleWagesAndHours[0] = tmp[0];
                 scheduleWagesAndHours[1] = tmp[1];
                 scheduleWagesAndHours[2] = tmp[2];
@@ -2257,14 +2257,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             else {
                 clickTheElement(publishSheduleButton);
                 if (isElementLoaded(publishConfirmBtn)) {
-                    click(publishConfirmBtn);
+                    clickTheElement(publishConfirmBtn);
                     SimpleUtils.pass("Schedule published successfully for week: '" + getActiveWeekText() + "'");
                     // It will pop up a window: Welcome to Legion!
                     if (isElementLoaded(closeButton, 5)) {
-                        click(closeButton);
+                        clickTheElement(closeButton);
                     }
                     if (isElementLoaded(successfulPublishOkBtn)) {
-                        click(successfulPublishOkBtn);
+                        clickTheElement(successfulPublishOkBtn);
                     }
                     if (isElementLoaded(publishSheduleButton, 5)) {
                         // Wait for the Publish button to disappear.
@@ -2617,6 +2617,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     newSelectedTM = firstnameOfTM.getText();
                 }
             } else {
+                click(btnSearchteamMember.get(0));
+                newSelectedTM = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
                 SimpleUtils.fail("Recommended option not available on page", false);
             }
         } else if (isElementLoaded(textSearch, 5)) {
@@ -3631,6 +3633,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return budgetHours;
     }
 
+    @Override
     public void selectWhichWeekToCopyFrom(String weekInfo) throws Exception {
         if (areListElementVisible(createModalWeeks, 10)) {
             SimpleUtils.pass("Copy Schedule page loaded Successfully!");
@@ -3662,7 +3665,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (isElementLoaded(generateModalTitle, 15) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
                 editTheBudgetForNondgFlow();
-                waitForSeconds(3);
+                waitForSeconds(18);
                 try {
                     List<WebElement> trs = enterBudgetTable.findElements(By.tagName("tr"));
                     if (areListElementVisible(trs, 5) && trs.size() > 0) {
@@ -3675,12 +3678,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
                 clickTheElement(nextButtonOnCreateSchedule);
             }
+            if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+                checkoutSchedule();
+            }
         } catch (Exception e) {
             // do nothing
         }
         return budgetHour;
     }
 
+    @Override
     public void clickOnFinishButtonOnCreateSchedulePage() throws Exception {
         String finish = "FINISH";
         if (isElementLoaded(nextButtonOnCreateSchedule) && nextButtonOnCreateSchedule.getText().equals(finish)) {
@@ -3792,7 +3799,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void createScheduleForNonDGFlowNewUI() throws Exception {
         String subTitle = "Confirm Operating Hours";
+        waitForSeconds(3);
         if (isElementLoaded(generateSheduleButton,10)) {
+            waitForSeconds(3);
             clickTheElement(generateSheduleButton);
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
@@ -3827,6 +3836,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }else {
             SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void clickNextBtnOnCreateScheduleWindow() throws Exception {
+        if (isElementLoaded(nextButtonOnCreateSchedule, 15)){
+            clickTheElement(nextButtonOnCreateSchedule);
+            checkEnterBudgetWindowLoadedForNonDG();
+        } else {
+            SimpleUtils.fail("There is not next button!", false);
         }
     }
 
@@ -3866,6 +3885,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
     public void editTheOperatingHours(List<String> weekDaysToClose) throws Exception {
         if (isElementLoaded(operatingHoursEditBtn, 10)) {
             clickTheElement(operatingHoursEditBtn);
@@ -3944,7 +3964,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 SimpleUtils.fail("Not able to generate the schedule successfully for non dg flow!", false);
             }
         }else{
-            SimpleUtils.fail("Schedule Type " + scheduleTypeManager.getText() + " is disabled",false);
+            SimpleUtils.report("Schedule Type " + scheduleTypeManager.getText() + " is disabled");
         }
     }
 
@@ -3954,8 +3974,21 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementEnabled(generateSheduleButton,10)) {
             click(generateSheduleButton);
             openBudgetPopUp();
+
         }else {
             SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+        }
+    }
+
+    @FindBy(css = "div[ng-click=\"back()\"]")
+    private WebElement backBtnOnCreateScheduleWindow;
+    @Override
+    public void clickBackBtnAndExitCreateScheduleWindow() throws Exception {
+        if (isElementEnabled(backBtnOnCreateScheduleWindow,10)) {
+            click(backBtnOnCreateScheduleWindow);
+            click(backBtnOnCreateScheduleWindow);
+        }else {
+            SimpleUtils.fail("Back button on create schedule popup window is not loaded Successfully!", false);
         }
     }
 
@@ -4229,6 +4262,29 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("No schedule day loaded in schedule page!",false);
         }
+    }
+
+    @Override
+    public List<String> getDayShifts(String index) throws Exception {
+        List<String> result = new ArrayList<>();
+        if (areListElementVisible(scheduleDays,10)){
+            for (WebElement e : scheduleDays) {
+                if (e.getAttribute("class").contains(index)) {
+                    String data = e.getAttribute("data-day");
+                    if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")), 10)){
+                        List<WebElement> shifts = MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift"));
+                        for (WebElement shift : shifts){
+                            result.add(shift.getText());
+                        }
+                        SimpleUtils.pass("On Sunday there are shifts!");
+                    }
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("No schedule day loaded in schedule page!",false);
+        }
+        return result;
     }
 
     public void checkOutGenerateScheduleBtn(WebElement checkOutTheScheduleButton) {
@@ -5125,11 +5181,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public void saveSchedule() throws Exception {
         if (isElementEnabled(scheduleSaveBtn, 10)) {
+             scrollToTop();
+             waitForSeconds(3);
             clickTheElement(scheduleSaveBtn);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-        if (isElementEnabled(saveOnSaveConfirmationPopup, 10)) {
+        if (isElementEnabled(saveOnSaveConfirmationPopup, 3)) {
             clickTheElement(saveOnSaveConfirmationPopup);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
@@ -6784,7 +6842,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             Math.abs(Integer.parseInt(weekEndBYCurrentDate.trim()) - Integer.parseInt(weekDefaultEnd.trim())))) {
                 SimpleUtils.pass("Current week is getting open by default");
             } else {
-                SimpleUtils.fail("Current week is not getting open by default", true);
+                SimpleUtils.fail("Current week is not getting open by default", false);
             }
         }else {
             SimpleUtils.fail("The date is not the numeric format!", false);
@@ -7285,13 +7343,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             }
             if (currentWeekIndex == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
-                click(calendarNavigationNextWeekArrow);
+                clickTheElement(calendarNavigationNextWeekArrow);
                 if (areListElementVisible(currentWeeks, 5)) {
                     clickTheElement(currentWeeks.get(0));
                     SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(0).getText() + "' Successfully!");
                 }
             }else {
-                click(currentWeeks.get(currentWeekIndex + 1));
+                clickTheElement(currentWeeks.get(currentWeekIndex + 1));
                 SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(currentWeekIndex + 1).getText() + "' Successfully!");
             }
         }else {
@@ -8355,7 +8413,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void goToSchedulePageAsTeamMember() throws Exception {
         if (isElementLoaded(goToScheduleButton, 5)) {
-            click(goToScheduleButton);
+            clickTheElement(goToScheduleButton);
             if (areListElementVisible(ScheduleSubTabsElement, 5)) {
                 SimpleUtils.pass("Navigate to schedule page successfully!");
             }else {
@@ -8574,7 +8632,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         {
             // Validate what happens next to the Edit!
             // When Status is finalized, look for extra popup.
-            click(editScheduleButton);
+            clickTheElement(editScheduleButton);
             if(isElementLoaded(popupAlertPremiumPay,5) ) {
                 SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
                 // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
@@ -9401,11 +9459,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 SimpleUtils.pass("Edit Shift Time successfully");
                 shiftTimes.add(1, shiftTimeAfterUpdate);
             } else {
-                SimpleUtils.fail("Shift Time doesn't change", true);
+                SimpleUtils.fail("Shift Time doesn't change", false);
             }
 
         } else {
-            SimpleUtils.fail("Edit Shift Time container load failed", true);
+            SimpleUtils.fail("Edit Shift Time container load failed", false);
         }
         return shiftTimes;
     }
@@ -9938,7 +9996,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             clickTheElement(image);
                             if (isElementLoaded(deleteShift, 5)) {
                                 clickTheElement(deleteShift);
-                                if (isElementLoaded(deleteBtnInDeleteWindows, 3)) {
+                                if (isElementLoaded(deleteBtnInDeleteWindows, 10)) {
                                     click(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
                                 } else
@@ -12485,6 +12543,124 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }else{
             SimpleUtils.fail("Operating Hours not loaded Successfully!", false);
+        }
+    }
+
+
+
+    @FindBy(css = "[ng-class=\"{'schedule-view-small-padding': controlPanel.isGenerateSchedleView}\"]")
+    private WebElement tmSchedulePanel;
+    @Override
+    public void verifyTMSchedulePanelDisplay() throws Exception {
+        try{
+            if(isElementLoaded(tmSchedulePanel, 5)){
+                SimpleUtils.pass("TM schedule panel is loaded successfully! ");
+            } else
+                SimpleUtils.fail("TM schedule panel not loaded successfully! ", false);
+        }catch(Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @FindBy(css = "div[ng-repeat=\"schedule in previousWeeksSchedules\"]")
+    private List<WebElement> previousWeeks;
+    @FindBy(css = ".schedule-disabled-tooltip")
+    private WebElement scheduleDisabledTooltip;
+    @Override
+    public void verifyPreviousWeekWhenCreateAndCopySchedule(String weekInfo, boolean shouldBeSelected) throws Exception {
+        //Need to prepare 2 previous week to check.
+        if (areListElementVisible(previousWeeks, 10) && previousWeeks.size()>=2){
+            for (WebElement element: previousWeeks){
+                String weekDayInfo = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1];
+                if (weekInfo.equalsIgnoreCase(weekDayInfo)){
+                    if (shouldBeSelected == !element.findElement(By.cssSelector(".generate-modal-week")).getAttribute("class").contains("disabled")){
+                        SimpleUtils.pass("Should the week:"+weekInfo+" be selected is correct!");
+                    } else {
+                        SimpleUtils.fail("Should the week:"+weekInfo+" be selected is not the expected!", false);
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no previous week to copy", false);
+        }
+    }
+
+    @Override
+    public String convertDateStringFormat(String dateString) throws Exception{
+        String result = dateString;
+        // dateString format: JAN 2 - JAN 9, will convert 2 to 02, 9 to 09, return JAN 02 - JAN 09
+        String[] items = dateString.split(" ");
+        if (items.length==5 && SimpleUtils.isNumeric(items[1]) && SimpleUtils.isNumeric(items[4])){
+            if (Integer.parseInt(items[1])<10 ){
+                items[1] = Integer.toString(Integer.parseInt(items[1]));
+                result = items[0] + " 0" + items[1] + " " + items[2] + " " + items[3];
+            } else {
+                result = items[0] + " " + items[1] + " " + items[2] + " " + items[3];
+            }
+            if (Integer.parseInt(items[4])<10){
+                items[4] = Integer.toString(Integer.parseInt(items[4]));
+                result = result + " 0" + items[4];
+            } else {
+                result = result + " " + items[4];
+            }
+        } else {
+            SimpleUtils.fail("week day info format is not expected! Split String: " + dateString + " failed!", false);
+        }
+        return result;
+    }
+
+    @FindBy(css = ".generate-schedule-staffing tr:not([ng-repeat]) th[class=\"text-right ng-binding\"]")
+    private WebElement staffingGuidanceHrs;
+    @Override
+    public float getStaffingGuidanceHrs() throws Exception {
+        float staffingGuidanceHours = 0;
+        if (isElementLoaded(staffingGuidanceHrs,20) && SimpleUtils.isNumeric(staffingGuidanceHrs.getText().replace("\n",""))){
+            staffingGuidanceHours = Float.parseFloat(staffingGuidanceHrs.getText().replace("\n",""));
+        } else {
+            SimpleUtils.fail("There is no Staffing guidance hours!", false);
+        }
+        return staffingGuidanceHours;
+    }
+
+    @Override
+    public void verifyTooltipForCopyScheduleWeek(String weekInfo) throws Exception {
+        //Need to prepare 2 previous week to check.
+        if (areListElementVisible(previousWeeks, 10) && previousWeeks.size()>=2){
+            for (WebElement element: previousWeeks){
+                String weekDayInfo = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1];
+                if (weekInfo.equalsIgnoreCase(weekDayInfo)){
+                    mouseHover(element);
+                    String tooltipText = "Policy: Max. 2 violations and 0% over budget";
+                    if (scheduleDisabledTooltip.getAttribute("style").contains("visible") && tooltipText.equalsIgnoreCase(scheduleDisabledTooltip.getText())){
+                        SimpleUtils.pass("Tooltip is expected!");
+                    } else {
+                        SimpleUtils.fail("Tooltip should display when mouse hover the week!", false);
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no previous week to copy", false);
+        }
+    }
+
+    @FindBy(css = ".generate-modal-week-violations-different-hours")
+    private WebElement differrentOperatingHoursInfo;
+    @Override
+    public void verifyDifferentOperatingHours(String weekInfo) throws Exception {
+        if (areListElementVisible(previousWeeks, 10) && previousWeeks.size()>=2){
+            for (WebElement element: previousWeeks){
+                String weekDayInfo = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1];
+                if (weekInfo.equalsIgnoreCase(weekDayInfo)){
+                    String differentOperatingHrsInfo = "*Different operating hours";
+                    if (isElementLoaded(differrentOperatingHoursInfo,5) && differrentOperatingHoursInfo.getText().contains(differentOperatingHrsInfo)){
+                        SimpleUtils.pass("Differrent Operating Hours info is expected!");
+                    } else {
+                        SimpleUtils.fail("Differrent Operating Hours info is not loaded!", false);
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no previous week to copy", false);
         }
     }
 }

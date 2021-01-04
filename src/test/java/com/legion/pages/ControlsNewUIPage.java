@@ -33,6 +33,12 @@ public interface ControlsNewUIPage {
 
 	public void clickOnControlsSchedulingPolicies() throws Exception;
 
+	public void enableOrDisableScheduleCopyRestriction(String yesOrNo) throws Exception;
+
+	public void setViolationLimit(String value) throws Exception;
+
+	public void setBudgetOverageLimit(String value) throws Exception;
+
 	public boolean isBudgetSmartcardEnabled() throws Exception;
 
 	public void enableDisableBudgetSmartcard(boolean enable) throws Exception;
@@ -281,6 +287,7 @@ public interface ControlsNewUIPage {
 	public void verifyUpdateUserAndRolesOneUserLocationInfo(String userFirstName) throws Exception;
 	public void clickOnLocationsTabInGlobalModel() throws Exception;
 	public List<String> getAllLocationsInGlobalModel() throws Exception;
+	public String getCurrentLocationInControls() throws Exception;
 	public void verifyRolePermissionExists(String section, String permission) throws Exception;
 	public void turnOnOrOffSpecificPermissionForSM(String section, String permission, String action) throws Exception;
 }

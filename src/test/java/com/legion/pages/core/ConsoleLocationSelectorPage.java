@@ -100,10 +100,15 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public void changeLocation(String locationName)
     {
+        // Avoid "New Feature Enhancement" pops up
+        waitForSeconds(6);
+        getDriver().navigate().refresh();
         waitForSeconds(2);
         try {
             Boolean isLocationMatched = false;
-            activeConsoleName = activeConsoleMenuItem.getText();
+            if (isElementLoaded(activeConsoleMenuItem, 10)) {
+                activeConsoleName = activeConsoleMenuItem.getText();
+            }
             setScreenshotConsoleName(activeConsoleName);
             if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
                 if (isChangeLocationButtonLoaded()) {
@@ -334,7 +339,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         waitForSeconds(4);
         try {
             Boolean isDistrictMatched = false;
-            activeConsoleName = activeConsoleMenuItem.getText();
+            if (isElementLoaded(activeConsoleMenuItem, 10)) {
+                activeConsoleName = activeConsoleMenuItem.getText();
+            }
             setScreenshotConsoleName(activeConsoleName);
             if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
                 if (isChangeDistrictButtonLoaded()) {
@@ -486,7 +493,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     }
 
     @FindBy(css = "lg-search-options[search-hint='Search District'] div.lg-search-options__scroller div.cachedDisrictInfo")
-    private WebElement districCountInDropdownList;
+    private WebElement districtCountInDropdownList;
 
     @FindBy(css = "lg-search-options[search-hint='Search District'] div.lg-search-options__scroller div[ng-repeat]")
     private List<WebElement> districDetailsInDropdownList;
@@ -497,7 +504,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             click(districtSelectorButton);
             if (isElementLoaded(districtDropDownButton, 10)){
                 SimpleUtils.pass("The district list layout shows!");
-                if (isElementLoaded(searchDistrictInput, 5) && isElementLoaded(districCountInDropdownList, 5)){
+                if (isElementLoaded(searchDistrictInput, 5) && areListElementVisible(districDetailsInDropdownList, 5)){
                     SimpleUtils.pass("List of districts and search textbox show.");
                 }
                 else{
@@ -522,7 +529,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                         searchDistrictInput.sendKeys(searchLocationCha[i]);
                         searchDistrictInput.sendKeys(Keys.ENTER);
                         waitForSeconds(4);
-                        List<String> districtCountList = Arrays.asList(districCountInDropdownList.getText().trim().split(" "));
+                        List<String> districtCountList = Arrays.asList(districtCountInDropdownList.getText().trim().split(" "));
                         int displayDistrictCount = Integer.parseInt(districtCountList.get(2));
                         int totalDistrictCount = Integer.parseInt(districtCountList.get(4));
 

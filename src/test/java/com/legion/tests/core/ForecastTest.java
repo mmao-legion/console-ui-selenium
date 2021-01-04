@@ -16,10 +16,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 
 import static java.lang.Math.abs;
 
@@ -80,7 +77,7 @@ public class ForecastTest extends TestBase{
 		@Automated(automated = "Automated")
 		@Owner(owner = "Estelle")
 		@Enterprise(name = "KendraScott2_Enterprise")
-		@TestName(description = "Verify the Schedule functionality  Shopper Forecast")
+		@TestName(description = "Verify the Schedule functionality > Shopper Forecast")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyShopperForecastFunctionality(String username, String password, String browser, String location)
 				throws Exception {
@@ -216,7 +213,7 @@ public class ForecastTest extends TestBase{
 		@Automated(automated = "Automated")
 		@Owner(owner = "Estelle")
 		@Enterprise(name = "KendraScott2_Enterprise")
-		@TestName(description = "Verify the Schedule functionality forecast")
+		@TestName(description = "Verify the Schedule functionality > Forecast")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyScheduleFunctionalityForecast(String username, String password, String browser, String location)
 				throws Exception {
@@ -240,7 +237,7 @@ public class ForecastTest extends TestBase{
 		@Automated(automated = "Automated")
 		@Owner(owner = "Estelle")
 		@Enterprise(name = "KendraScott2_Enterprise")
-		@TestName(description = "Verify the Schedule functionality  Labor Forecast")
+		@TestName(description = "Verify the Schedule functionality > Labor Forecast")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyScheduleLaborForeCastFunctionality(String username, String password, String browser, String location)
 				throws Exception {
@@ -266,41 +263,53 @@ public class ForecastTest extends TestBase{
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Haya")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify Edit Forecast in Week view")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyEditForecastInWeekViewViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+	public void verifyEditForecastInWeekViewViewAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-		ForecastPage forecastPage  = pageFactory.createForecastPage();
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
-		//verify edit forecast button
-		String index = "3";
-		String value = "510";
-		String weekDayInfo = forecastPage.getTickByIndex(Integer.parseInt(index));
-		String editedValueInfo = value+" Edited";
-		forecastPage.verifyAndClickEditBtn();
-		forecastPage.verifyAndClickCancelBtn();
-		forecastPage.verifyAndClickEditBtn();
-		forecastPage.verifyDoubleClickAndUpdateForecastBarValue(index, value);
-		String tooltipInfo = forecastPage.getTooltipInfo(index);
-		boolean flag = tooltipInfo.contains("Actual")||tooltipInfo.contains("Last Year")||tooltipInfo.contains("Recent Trend");
-		SimpleUtils.assertOnFail("Info on tooltip is incorrect!",tooltipInfo.contains(weekDayInfo+" Forecast")&&tooltipInfo.contains(editedValueInfo)&&tooltipInfo.contains("Comparison")&&flag,false);
-		forecastPage.verifyAndClickSaveBtn();
-		tooltipInfo = forecastPage.getTooltipInfo(index);
-		SimpleUtils.assertOnFail("Edited value is not saved!",tooltipInfo.contains(value),false);
-		forecastPage.verifyAndClickEditBtn();
-		schedulePage.navigateToNextWeek();
-		forecastPage.verifyWarningEditingForecast();
-		String peakValueInfo = forecastPage.getLegionPeakShopperFromForecastGraph();
-		//forecastPage.getInsightDataInShopperWeekView().getsmart
+			ForecastPage forecastPage  = pageFactory.createForecastPage();
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
+			//verify edit forecast button
+			int index = 3;
+			String value = "510";
+			String weekDayInfo = forecastPage.getTickByIndex(index);
+			String editedValueInfo = value+" Edited";
+			forecastPage.verifyAndClickEditBtn();
+			forecastPage.verifyAndClickCancelBtn();
+			forecastPage.verifyAndClickEditBtn();
+
+			//verify double click graph bar
+			forecastPage.verifyDoubleClickAndUpdateForecastBarValue(String.valueOf(index), value);
+			String tooltipInfo =forecastPage.getTooltipInfo(String.valueOf(index));
+			boolean flag = tooltipInfo.contains("Actual")||tooltipInfo.contains("Last Year")||tooltipInfo.contains("Recent Trend");
+//		SimpleUtils.assertOnFail("Info on tooltip is incorrect!",tooltipInfo.contains(weekDayInfo+" Forecast")&&tooltipInfo.contains(editedValueInfo)&&tooltipInfo.contains("Comparison")&&flag,false);
+			//Save forecast and check the value.
+			forecastPage.verifyAndClickSaveBtn();
+			tooltipInfo =forecastPage.getTooltipInfo(String.valueOf(index));
+//		SimpleUtils.assertOnFail("Edited value is not saved!",tooltipInfo.contains(value),false);
+			forecastPage.verifyAndClickEditBtn();
+			schedulePage.navigateToNextWeek();
+			forecastPage.verifyWarningEditingForecast();
+			forecastPage.verifyLegionPeakShopperFromForecastGraphInWeekView();
+			//Verify graph bars are draggable.
+			forecastPage.verifyDraggingBarGraph();
+			//Save forecast and check the value.
+			forecastPage.verifyAndClickSaveBtn();
+			forecastPage.verifyLegionPeakShopperFromForecastGraphInWeekView();
+			forecastPage.verifyAndClickCancelBtn();
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	@Automated(automated = "Automated")
