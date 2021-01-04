@@ -615,9 +615,9 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
             if (filterTitle.getText().contains("Shift Swap")) {
                 if (notificationsContainer.getText().contains("requested to swap shifts") || notificationsContainer.getText().contains("agreed to cover")) {
                     SimpleUtils.pass("The content of shift swap activity displays successfully");
-                } else if ( notificationsContainerEmpty.getText().toLowerCase().contains("No activities available for the selected filter")) {
+                } else if (notificationsContainerEmpty.getText().contains("No activities available for the selected filter")) {
                     SimpleUtils.pass("No activities available for the selected filter");
-                } else SimpleUtils.fail("The content of shift swap activity displays incorrectly", true);
+                } else SimpleUtils.fail("The content of shift swap activity displays incorrectly", false);
             } else SimpleUtils.fail("The content of Shift Swap Activity is incorrect", true);
         } else SimpleUtils.fail("Shift Swap Activity failed to Load",true);
     }

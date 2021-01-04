@@ -2124,7 +2124,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }
         float totalShiftSizeForWeek = newCalcTotalScheduledHourForDayInWeekView();
-        if (activeWeekScheduleHoursOnCard - totalShiftSizeForWeek <= 0.05) {
+        if (activeWeekScheduleHoursOnCard - totalShiftSizeForWeek <= 0.06) {
             SimpleUtils.pass("Sum of all the shifts in a week equal to Week Schedule Hours!('" + totalShiftSizeForWeek + "/" + activeWeekScheduleHoursOnCard + "')");
             return true;
         } else {
