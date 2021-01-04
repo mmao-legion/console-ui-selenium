@@ -1052,6 +1052,102 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return null;
 	}
 
+   //Added By Julie
+	@FindBy (className = "header-navigation-label")
+	private WebElement headerLabel;
 
+	@FindBy (css = "[search-hint='Search District'] div.lg-select")
+	private WebElement showDistrict;
 
+	//body//div[contains(@class,'home-dashboard')]//div[contains(@class,'text-left')]
+
+	@FindBy (css = ".dashboard-time .text-left")
+	private WebElement districtOnDashboardDM;
+
+	@FindBy (css = ".dashboard-time .text-right")
+	private WebElement weekOnDashboardDM;
+
+	@FindBy (css = ".dms-time-stamp")
+	private WebElement dmsTimeStamp;
+
+	@Override
+	public String getHeaderOnDashboard() throws Exception {
+		String header = "";
+		if (isElementLoaded(headerLabel,5))
+			header = headerLabel.getText();
+		return header;
+	}
+
+	@Override
+	public void verifyHeaderOnDashboard() throws Exception {
+		String header = getHeaderOnDashboard();
+		if (header.equals("Dashboard"))
+			SimpleUtils.pass("Dashboard Page: Header is \"Dashboard\" as expected");
+		else
+			SimpleUtils.fail("Dashboard Page: Header isn't \"Dashboard\"",true);
+	}
+
+	@Override
+	public void validateThePresenceOfDistrict() throws Exception {
+		if (isElementEnabled(districtOnDashboardDM, 10)) {
+			if (districtOnDashboardDM.isDisplayed() && !districtOnDashboardDM.getText().isEmpty() && districtOnDashboardDM.getText() != null) {
+				if (getDriver().findElement(By.xpath("//body//div[contains(@class,'welcome-text')]/following-sibling::div[1]/div[contains(@class,'text-left')]")).equals(districtOnDashboardDM)) {
+					SimpleUtils.pass("Dashboard Page: District shows at left corner below welcome section successfully");
+				} else {
+					SimpleUtils.fail("Dashboard Page: District is not at left corner below welcome section", true);
+				}
+			} else {
+				SimpleUtils.fail("Dashboard Page: District isn't present", true);
+			}
+		} else {
+			SimpleUtils.fail("Dashboard Page: District failed to load", true);
+		}
+	}
+
+	@Override
+	public void validateTheVisibilityOfWeek() throws Exception {
+		if (isElementEnabled(weekOnDashboardDM, 10)) {
+			if (weekOnDashboardDM.isDisplayed() && !weekOnDashboardDM.getText().isEmpty() && weekOnDashboardDM.getText() != null) {
+				if (getDriver().findElement(By.xpath("//body//div[contains(@class,'welcome-text')]/following-sibling::div[1]/div[contains(@class,'text-right')]")).equals(weekOnDashboardDM)) {
+					SimpleUtils.pass("Dashboard Page: Week shows at right corner below welcome section successfully");
+				} else {
+					SimpleUtils.fail("Dashboard Page: Week is not at right corner below welcome section", true);
+				}
+			} else {
+				SimpleUtils.fail("Dashboard Page: Week isn't present", true);
+			}
+		} else {
+			SimpleUtils.fail("Dashboard Page: Week failed to load", true);
+		}
+	}
+
+	@Override
+	public String getDistrictNameOnDashboard() throws Exception {
+		String districtName = "";
+		if (isElementEnabled(districtOnDashboardDM, 10)) {
+			districtName = districtOnDashboardDM.getText();
+			SimpleUtils.pass("Dashboard Page: District name is '" + districtName + "'");
+		} else {
+			SimpleUtils.fail("Dashboard Page: District failed to load", true);
+		}
+		return districtName;
+	}
+
+	@Override
+	public void verifyTheWelcomeMessageOfDM(String userName) throws Exception {
+		String time = dmsTimeStamp.getText().contains(",")? dmsTimeStamp.getText().split(",")[1]:dmsTimeStamp.getText();
+		String greetingTime = getTimePeriod(time.toLowerCase());
+		String expectedText = "Good " + greetingTime + ", " + userName + "." + "\n" + "Welcome to Legion" + "\n" + "Your Complete Workforce Engagement Solution";
+		String actualText = "";
+		if(isElementLoaded(detailWelcomeText, 5)){
+			actualText = detailWelcomeText.getText();
+			if (actualText.equals(expectedText)) {
+				SimpleUtils.pass("Dashboard Page: Verified Welcome Text is as expected!");
+			} else {
+				SimpleUtils.fail("Dashboard Page: Verify Welcome Text failed! Expected is: " + expectedText + "\n" + "Actual is: " + actualText, true);
+			}
+		} else{
+			SimpleUtils.fail("Dashboard Page: Welcome Text Section doesn't Load successfully!", true);
+		}
+	}
 }

@@ -332,52 +332,56 @@ public class InboxTest extends TestBase {
     @TestName(description = "Verify the content of operating hours and the first day of week are correct")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheContentOfOperationHrsAndTheFirstDayOfWeekAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+        try {
+            InboxPage inboxPage = pageFactory.createConsoleInboxPage();
 
-        // Make sure that GFE is turned on
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsComplianceSection();
-        SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
-        controlsNewUIPage.turnGFEToggleOnOrOff(true);
+            // Make sure that GFE is turned on
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsComplianceSection();
+            SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
+            controlsNewUIPage.turnGFEToggleOnOrOff(true);
 
-        // Get Regular hours from Controls-> Working hours -> Regular
-        String workingHoursType = "Regular";
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsWorkingHoursCard();
-        SimpleUtils.assertOnFail("Working Hours Card failed to load", controlsNewUIPage.isControlsWorkingHoursLoaded(), false);
-        controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursType);
-        LinkedHashMap<String, List<String>> regularHoursFromControls = controlsNewUIPage.getRegularWorkingHours();
+            // Get Regular hours from Controls-> Working hours -> Regular
+            String workingHoursType = "Regular";
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsWorkingHoursCard();
+            SimpleUtils.assertOnFail("Working Hours Card failed to load", controlsNewUIPage.isControlsWorkingHoursLoaded(), false);
+            controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursType);
+            LinkedHashMap<String, List<String>> regularHoursFromControls = controlsNewUIPage.getRegularWorkingHours();
 
-        // Get the first day of week that schedule begins from Controls -> Scheduling Policies -> Schedules
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsSchedulingPolicies();
-        SimpleUtils.assertOnFail("Schedule Policy Card failed to load", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-        String firstDayOfWeekFromControls = controlsNewUIPage.getSchedulingPoliciesFirstDayOfWeek();
+            // Get the first day of week that schedule begins from Controls -> Scheduling Policies -> Schedules
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Schedule Policy Card failed to load", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            String firstDayOfWeekFromControls = controlsNewUIPage.getSchedulingPoliciesFirstDayOfWeek();
 
-        // Create a GFE announcement to verify its content of operation hours and the first day of week
-        inboxPage.clickOnInboxConsoleMenuItem();
-        inboxPage.createGFEAnnouncement();
-        String theFirstDayOfWeekFromGFE = inboxPage.getGFEFirstDayOfWeek();
-        LinkedHashMap<String, List<String>> GFEWorkingHours = inboxPage.getGFEWorkingHours();
+            // Create a GFE announcement to verify its content of operation hours and the first day of week
+            inboxPage.clickOnInboxConsoleMenuItem();
+            inboxPage.createGFEAnnouncement();
+            String theFirstDayOfWeekFromGFE = inboxPage.getGFEFirstDayOfWeek();
+            LinkedHashMap<String, List<String>> GFEWorkingHours = inboxPage.getGFEWorkingHours();
 
-        // Compare the first day of week
-        SimpleUtils.report("The first day of week from controls is: " + firstDayOfWeekFromControls);
-        SimpleUtils.report("The first day of week from GFE is: " + theFirstDayOfWeekFromGFE);
-        if (firstDayOfWeekFromControls.toUpperCase().contains(theFirstDayOfWeekFromGFE))
-            SimpleUtils.pass("Inbox page: The first day of the week in GFE is consistent with the setting in Control -> Scheduling Policies -> What day of the week does your schedule begin?");
-        else
-            SimpleUtils.fail("Inbox page: The first day of the week in GFE is inconsistent with the setting in Control -> Scheduling Policies -> What day of the week does your schedule begin?",false);
+            // Compare the first day of week
+            SimpleUtils.report("The first day of week from controls is: " + firstDayOfWeekFromControls);
+            SimpleUtils.report("The first day of week from GFE is: " + theFirstDayOfWeekFromGFE);
+            if (firstDayOfWeekFromControls.toUpperCase().contains(theFirstDayOfWeekFromGFE))
+                SimpleUtils.pass("Inbox page: The first day of the week in GFE is consistent with the setting in Control -> Scheduling Policies -> What day of the week does your schedule begin?");
+            else
+                SimpleUtils.fail("Inbox page: The first day of the week in GFE is inconsistent with the setting in Control -> Scheduling Policies -> What day of the week does your schedule begin?",false);
 
-        // Compare the operation days and hours
-        if (inboxPage.compareGFEWorkingHrsWithRegularWorkingHrs(GFEWorkingHours, regularHoursFromControls))
-            SimpleUtils.pass("Inbox page: Operation days and hours in GFE is consistent with the setting in Controls -> Working Hours -> Regular");
-        else
-            SimpleUtils.fail("Inbox page: Operation days and hours in GFE is inconsistent with the setting in Controls -> Working Hours -> Regular",false);
+            // Compare the operation days and hours
+            if (inboxPage.compareGFEWorkingHrsWithRegularWorkingHrs(GFEWorkingHours, regularHoursFromControls))
+                SimpleUtils.pass("Inbox page: Operation days and hours in GFE is consistent with the setting in Controls -> Working Hours -> Regular");
+            else
+                SimpleUtils.fail("Inbox page: Operation days and hours in GFE is inconsistent with the setting in Controls -> Working Hours -> Regular",false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -386,32 +390,36 @@ public class InboxTest extends TestBase {
     @TestName(description = "Verify VSL info shows or not")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyVSLInfoShowsOrNotAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+        try {
+            InboxPage inboxPage = pageFactory.createConsoleInboxPage();
 
-        // Make sure that GFE is turned on
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsComplianceSection();
-        SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
-        controlsNewUIPage.turnGFEToggleOnOrOff(true);
+            // Make sure that GFE is turned on
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsComplianceSection();
+            SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
+            controlsNewUIPage.turnGFEToggleOnOrOff(true);
 
-        // Turn on VSL to verify VSL info
-        controlsNewUIPage.turnVSLToggleOnOrOff(true);
-        inboxPage.clickOnInboxConsoleMenuItem();
-        inboxPage.createGFEAnnouncement();
-        inboxPage.verifyVSLInfo(true);
+            // Turn on VSL to verify VSL info
+            controlsNewUIPage.turnVSLToggleOnOrOff(true);
+            inboxPage.clickOnInboxConsoleMenuItem();
+            inboxPage.createGFEAnnouncement();
+            inboxPage.verifyVSLInfo(true);
 
-        // Turn off VSL to verify VSL info
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsComplianceSection();
-        SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
-        controlsNewUIPage.turnVSLToggleOnOrOff(false);
-        inboxPage.clickOnInboxConsoleMenuItem();
-        inboxPage.createGFEAnnouncement();
-        inboxPage.verifyVSLInfo(false);
+            // Turn off VSL to verify VSL info
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsComplianceSection();
+            SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
+            controlsNewUIPage.turnVSLToggleOnOrOff(false);
+            inboxPage.clickOnInboxConsoleMenuItem();
+            inboxPage.createGFEAnnouncement();
+            inboxPage.verifyVSLInfo(false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -420,100 +428,104 @@ public class InboxTest extends TestBase {
     @TestName(description = "Verify the content of week summary when selecting different tm")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
-        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+        try {
+            InboxPage inboxPage = pageFactory.createConsoleInboxPage();
 
-        // Make sure that GFE is turned on
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsComplianceSection();
-        SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
-        controlsNewUIPage.turnGFEToggleOnOrOff(true);
+            // Make sure that GFE is turned on
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsComplianceSection();
+            SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
+            controlsNewUIPage.turnGFEToggleOnOrOff(true);
 
-        // Get 1 TM from Controls-> Users and Roles and get their data from scheduling policy group setting
-        String nickName1 = "";
-        String nickName1_Location = "";
-        String nickName1_schedulingPolicyGroup = "";
-        controlsPage.gotoControlsPage();
-        controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-        HashMap<String, List<String>> TM1 = controlsNewUIPage.getRandomUserNLocationNSchedulingPolicyGroup();
-        Iterator itTM1 = TM1.keySet().iterator();
-        while (itTM1.hasNext()) {
-            nickName1 = itTM1.next().toString();
-            List<String> nickName1_Value = TM1.get(nickName1);
-            if (nickName1_Value != null && nickName1_Value.size() == 2) {
-                nickName1_Location = nickName1_Value.get(0);
-                if (nickName1_Location.equals("All Locations"))
-                    nickName1_Location = location;
-                nickName1_schedulingPolicyGroup = nickName1_Value.get(1);
-                break;
+            // Get 1 TM from Controls-> Users and Roles and get their data from scheduling policy group setting
+            String nickName1 = "";
+            String nickName1_Location = "";
+            String nickName1_schedulingPolicyGroup = "";
+            controlsPage.gotoControlsPage();
+            controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            HashMap<String, List<String>> TM1 = controlsNewUIPage.getRandomUserNLocationNSchedulingPolicyGroup();
+            Iterator itTM1 = TM1.keySet().iterator();
+            while (itTM1.hasNext()) {
+                nickName1 = itTM1.next().toString();
+                List<String> nickName1_Value = TM1.get(nickName1);
+                if (nickName1_Value != null && nickName1_Value.size() == 2) {
+                    nickName1_Location = nickName1_Value.get(0);
+                    if (nickName1_Location.equals("All Locations"))
+                        nickName1_Location = location;
+                    nickName1_schedulingPolicyGroup = nickName1_Value.get(1);
+                    break;
+                }
             }
-        }
-        if (nickName1.contains(" "))
-            nickName1 = nickName1.split(" ")[0] + " " + nickName1.split(" ")[1].substring(0, 1) + ".";
-        controlsPage.gotoControlsPage();
-        controlsNewUIPage.clickOnControlsSchedulingPolicies();
-        SimpleUtils.assertOnFail("Scheduling Policies Card failed to load", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-        controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(nickName1_schedulingPolicyGroup);
-        HashMap<String, List<String>> schedulingPolicyGroupData_TM1 = controlsNewUIPage.getDataFromSchedulingPolicyGroups();
+            if (nickName1.contains(" "))
+                nickName1 = nickName1.split(" ")[0] + " " + nickName1.split(" ")[1].substring(0, 1) + ".";
+            controlsPage.gotoControlsPage();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Scheduling Policies Card failed to load", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(nickName1_schedulingPolicyGroup);
+            HashMap<String, List<String>> schedulingPolicyGroupData_TM1 = controlsNewUIPage.getDataFromSchedulingPolicyGroups();
 
-        // Get another TM from Controls-> Users and Roles and get their data from scheduling policy group setting
-        String nickName2 = "";
-        String nickName2_Location = "";
-        String nickName2_schedulingPolicyGroup = "";
-        controlsPage.gotoControlsPage();
-        controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            // Get another TM from Controls-> Users and Roles and get their data from scheduling policy group setting
+            String nickName2 = "";
+            String nickName2_Location = "";
+            String nickName2_schedulingPolicyGroup = "";
+            controlsPage.gotoControlsPage();
+            controlsNewUIPage.clickOnControlsUsersAndRolesSection();
 
-        HashMap<String, List<String>> TM2 = controlsNewUIPage.getRandomUserNLocationNSchedulingPolicyGroup();
-        Iterator itTM2 = TM2.keySet().iterator();
-        while (itTM2.hasNext()) {
-            nickName2 = itTM2.next().toString();
-            List<String> nickName2_Value = TM2.get(nickName2);
-            if (nickName2_Value != null && nickName2_Value.size() == 2) {
-                nickName2_Location = nickName2_Value.get(0);
-                if (nickName2_Location.equals("All Locations"))
-                    nickName2_Location = location;
-                nickName2_schedulingPolicyGroup = nickName2_Value.get(1);
-                break;
+            HashMap<String, List<String>> TM2 = controlsNewUIPage.getRandomUserNLocationNSchedulingPolicyGroup();
+            Iterator itTM2 = TM2.keySet().iterator();
+            while (itTM2.hasNext()) {
+                nickName2 = itTM2.next().toString();
+                List<String> nickName2_Value = TM2.get(nickName2);
+                if (nickName2_Value != null && nickName2_Value.size() == 2) {
+                    nickName2_Location = nickName2_Value.get(0);
+                    if (nickName2_Location.equals("All Locations"))
+                        nickName2_Location = location;
+                    nickName2_schedulingPolicyGroup = nickName2_Value.get(1);
+                    break;
+                }
             }
+            if (nickName2.contains(" "))
+                nickName2 = nickName2.split(" ")[0] + " " + nickName2.split(" ")[1].substring(0, 1) + ".";
+            controlsPage.gotoControlsPage();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Scheduling Policies Card failed to load", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(nickName2_schedulingPolicyGroup);
+            HashMap<String, List<String>> schedulingPolicyGroupData_TM2 = controlsNewUIPage.getDataFromSchedulingPolicyGroups();
+
+            // Get the address of TM
+            controlsPage.gotoControlsPage();
+            controlsNewUIPage.clickOnControlsLocationProfileSection();
+            String nickName1_LocationDetailInfo = controlsNewUIPage.getLocationInfoStringFromDetailPage();
+            String nickName2_LocationDetailInfo = controlsNewUIPage.getLocationInfoStringFromDetailPage();
+
+            // Create GFE Announcement and select 2 TMs to get their week summary
+            inboxPage.clickOnInboxConsoleMenuItem();
+            inboxPage.createGFEAnnouncement();
+            inboxPage.sendToTM(nickName1);
+            HashMap<String, String> contentOfWeekSummary_TM1 = inboxPage.getTheContentOfWeekSummaryInGFE();
+            inboxPage.clickOnInboxConsoleMenuItem();
+            inboxPage.createGFEAnnouncement();
+            inboxPage.sendToTM(nickName2);
+            HashMap<String, String> contentOfWeekSummary_TM2 = inboxPage.getTheContentOfWeekSummaryInGFE();
+
+            // Compare the data to verify the content of week summary when selecting different tm
+            SimpleUtils.report("Inbox: Compare a TM with the data from controls");
+            if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM1, schedulingPolicyGroupData_TM1) && contentOfWeekSummary_TM1.get("Location").equals(nickName1_LocationDetailInfo))
+                SimpleUtils.pass("Inbox: The content of week summary is consistent with the data from controls when selecting a tm");
+            else
+                SimpleUtils.fail("Inbox: The content of week summary is inconsistent with the data from controls when selecting a tm",true);
+
+            SimpleUtils.report("Inbox: Compare another TM with the data from controls");
+            if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM2, schedulingPolicyGroupData_TM2) && contentOfWeekSummary_TM2.get("Location").equals(nickName2_LocationDetailInfo))
+                SimpleUtils.pass("Inbox: The content of week summary is consistent with the data from controls when selecting another tm");
+            else
+                SimpleUtils.fail("Inbox: The content of week summary is inconsistent with the data from controls when selecting another tm",true);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
         }
-        if (nickName2.contains(" "))
-            nickName2 = nickName2.split(" ")[0] + " " + nickName2.split(" ")[1].substring(0, 1) + ".";
-        controlsPage.gotoControlsPage();
-        controlsNewUIPage.clickOnControlsSchedulingPolicies();
-        SimpleUtils.assertOnFail("Scheduling Policies Card failed to load", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-        controlsNewUIPage.selectSchdulingPolicyGroupsTabByLabel(nickName2_schedulingPolicyGroup);
-        HashMap<String, List<String>> schedulingPolicyGroupData_TM2 = controlsNewUIPage.getDataFromSchedulingPolicyGroups();
-
-        // Get the address of TM
-        controlsPage.gotoControlsPage();
-        controlsNewUIPage.clickOnControlsLocationProfileSection();
-        String nickName1_LocationDetailInfo = controlsNewUIPage.getLocationInfoStringFromDetailPage();
-        String nickName2_LocationDetailInfo = controlsNewUIPage.getLocationInfoStringFromDetailPage();
-
-        // Create GFE Announcement and select 2 TMs to get their week summary
-        inboxPage.clickOnInboxConsoleMenuItem();
-        inboxPage.createGFEAnnouncement();
-        inboxPage.sendToTM(nickName1);
-        HashMap<String, String> contentOfWeekSummary_TM1 = inboxPage.getTheContentOfWeekSummaryInGFE();
-        inboxPage.clickOnInboxConsoleMenuItem();
-        inboxPage.createGFEAnnouncement();
-        inboxPage.sendToTM(nickName2);
-        HashMap<String, String> contentOfWeekSummary_TM2 = inboxPage.getTheContentOfWeekSummaryInGFE();
-
-        // Compare the data to verify the content of week summary when selecting different tm
-        SimpleUtils.report("Inbox: Compare a TM with the data from controls");
-        if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM1, schedulingPolicyGroupData_TM1) && contentOfWeekSummary_TM1.get("Location").equals(nickName1_LocationDetailInfo))
-            SimpleUtils.pass("Inbox: The content of week summary is consistent with the data from controls when selecting a tm");
-        else
-            SimpleUtils.fail("Inbox: The content of week summary is inconsistent with the data from controls when selecting a tm",true);
-
-        SimpleUtils.report("Inbox: Compare another TM with the data from controls");
-        if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM2, schedulingPolicyGroupData_TM2) && contentOfWeekSummary_TM2.get("Location").equals(nickName2_LocationDetailInfo))
-            SimpleUtils.pass("Inbox: The content of week summary is consistent with the data from controls when selecting another tm");
-        else
-            SimpleUtils.fail("Inbox: The content of week summary is inconsistent with the data from controls when selecting another tm",true);
     }
 
     //Added by Marym

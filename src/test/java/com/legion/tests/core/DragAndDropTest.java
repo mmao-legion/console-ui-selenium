@@ -477,91 +477,95 @@ public class DragAndDropTest extends TestBase {
     @TestName(description = "Validate the box interaction color and message when SM tries to assign TM to an open shift that overlaps a time TM is already assigned to")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        // Select one team member to view profile
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        String userName = teamPage.selectATeamMemberToViewProfile();
-        String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
+            // Select one team member to view profile
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            String userName = teamPage.selectATeamMemberToViewProfile();
+            String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
 
-        // Go to Schedule page, Schedule tab, navigate to next week
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-        schedulePage.navigateToNextWeek();
+            // Go to Schedule page, Schedule tab, navigate to next week
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            schedulePage.navigateToNextWeek();
 
-        // Create schedule if it is not created
-        boolean isWeekGenerated = schedulePage.isWeekGenerated();
-        if (!isWeekGenerated){
-            schedulePage.createScheduleForNonDGFlowNewUI();
+            // Create schedule if it is not created
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (!isWeekGenerated){
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            // Edit the Schedule
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            // Delete all the shifts that are assigned to the team member on Step #1
+            schedulePage.deleteTMShiftInWeekView(firstName);
+            schedulePage.deleteTMShiftInWeekView("Open");
+
+            // Create 2 new shifts for this TM on Monday and Tuesday
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.clearAllSelectedDays();
+            List<Integer> dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
+            schedulePage.selectWorkRole("MOD");
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchTeamMemberByName(firstName);
+            schedulePage.clickOnOfferOrAssignBtn();
+
+            // Create an open shift on Tuesday
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.clearAllSelectedDays();
+            if (dayIndexes.size() == 2)
+                schedulePage.selectWorkingDaysOnNewShiftPageByIndex(dayIndexes.get(1));
+            else
+                schedulePage.selectWorkingDaysOnNewShiftPageByIndex(1);
+            schedulePage.selectWorkRole("MOD");
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+
+            // Save the Schedule
+            schedulePage.saveSchedule();
+            List<Integer> shiftIndexes = schedulePage.getAddedShiftIndexes(firstName);
+            SimpleUtils.assertOnFail("Failed to add two shifts for the TM!", shiftIndexes != null && shiftIndexes.size() == 2, false);
+            List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
+            List<Integer> openShiftIndexes = schedulePage.getAddedShiftIndexes("Open");
+            SimpleUtils.assertOnFail("Failed to add an open shift!", openShiftIndexes != null && openShiftIndexes.size() == 1, false);
+            List<String> openShiftInfo = schedulePage.getOpenShiftInfoByIndex(openShiftIndexes.get(0));
+
+            // Edit the Schedule
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            // Drag the TM's avatar on Monday to the open shift on Tuesday
+            schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstName,1,"Open");
+            String weekday = schedulePage.getWeekDayTextByIndex(Integer.parseInt(shiftInfo.get(1)));
+            String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday);
+            String expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
+                    + ". This shift will be converted to an open shift";
+            schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage,"assign");
+            schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+
+            // Verify the shift is assigned
+            List<String> shiftInfoAfterDrag = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
+            List<String> openShiftInfoAfterDrag = schedulePage.getOpenShiftInfoByIndex(openShiftIndexes.get(0));
+
+            if (shiftInfoAfterDrag.get(2).equals(openShiftInfo.get(0)) && shiftInfoAfterDrag.get(4).equals(openShiftInfo.get(1)) && openShiftInfoAfterDrag.get(0).equals(shiftInfo.get(2)))
+                SimpleUtils.pass("Assign a TM to an open shift that overlaps a time TM is already assigned to successfully!");
+            else
+                SimpleUtils.fail("Failed to assign a TM to an open shift that overlaps a time TM is already assigned to",false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
         }
-
-        // Edit the Schedule
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
-        // Delete all the shifts that are assigned to the team member on Step #1
-        schedulePage.deleteTMShiftInWeekView(firstName);
-        schedulePage.deleteTMShiftInWeekView("Open");
-
-        // Create 2 new shifts for this TM on Monday and Tuesday
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.clearAllSelectedDays();
-        List<Integer> dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
-        schedulePage.selectWorkRole("MOD");
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(firstName);
-        schedulePage.clickOnOfferOrAssignBtn();
-
-        // Create an open shift on Tuesday
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.clearAllSelectedDays();
-        if (dayIndexes.size() == 2)
-            schedulePage.selectWorkingDaysOnNewShiftPageByIndex(dayIndexes.get(1));
-        else
-            schedulePage.selectWorkingDaysOnNewShiftPageByIndex(1);
-        schedulePage.selectWorkRole("MOD");
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-
-        // Save the Schedule
-        schedulePage.saveSchedule();
-        List<Integer> shiftIndexes = schedulePage.getAddedShiftIndexes(firstName);
-        SimpleUtils.assertOnFail("Failed to add two shifts for the TM!", shiftIndexes != null && shiftIndexes.size() == 2, false);
-        List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
-        List<Integer> openShiftIndexes = schedulePage.getAddedShiftIndexes("Open");
-        SimpleUtils.assertOnFail("Failed to add an open shift!", openShiftIndexes != null && openShiftIndexes.size() == 1, false);
-        List<String> openShiftInfo = schedulePage.getOpenShiftInfoByIndex(openShiftIndexes.get(0));
-
-        // Edit the Schedule
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
-        // Drag the TM's avatar on Monday to the open shift on Tuesday
-        schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstName,1,"Open");
-        String weekday = schedulePage.getWeekDayTextByIndex(Integer.parseInt(shiftInfo.get(1)));
-        String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday);
-        String expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
-                + ". This shift will be converted to an open shift";
-        schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage,"assign");
-        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
-
-        // Verify the shift is assigned
-        List<String> shiftInfoAfterDrag = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
-        List<String> openShiftInfoAfterDrag = schedulePage.getOpenShiftInfoByIndex(openShiftIndexes.get(0));
-
-        if (shiftInfoAfterDrag.get(2).equals(openShiftInfo.get(0)) && shiftInfoAfterDrag.get(4).equals(openShiftInfo.get(1)) && openShiftInfoAfterDrag.get(0).equals(shiftInfo.get(2)))
-            SimpleUtils.pass("Assign a TM to an open shift that overlaps a time TM is already assigned to successfully!");
-         else
-            SimpleUtils.fail("Failed to assign a TM to an open shift that overlaps a time TM is already assigned to",false);
     }
 
     @Automated(automated = "Automated")

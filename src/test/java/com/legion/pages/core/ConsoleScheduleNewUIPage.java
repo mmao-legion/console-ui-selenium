@@ -1134,7 +1134,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (ScheduleSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
             for (WebElement ScheduleSubTabElement : ScheduleSubTabsElement) {
                 if (ScheduleSubTabElement.getText().equalsIgnoreCase(subTabString)) {
-                    click(ScheduleSubTabElement);
+                    waitForSeconds(5);
+                    clickTheElement(ScheduleSubTabElement);
                     waitForSeconds(3);
                 }
             }

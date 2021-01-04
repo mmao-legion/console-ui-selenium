@@ -608,4 +608,119 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
         return locations;
     }
+
+    // Added by Julie
+    @FindBy (css = "[ng-class=\"{'lg-new-location-chooser__highlight' : $ctrl.location && $ctrl.parentLocation}\"]")
+    private WebElement currentLocationName;
+
+    @FindBy (css = ".wm-visual-design-canvas.walkme-to-remove")
+    private WebElement windowNewFeatureEnhancements;
+
+    @FindBy (css = ".wm-ignore-css-reset path")
+    private WebElement closeBtnInNewFeatureEnhancements;
+
+    @Override
+    public String getLocationNameFromDashboard() throws Exception {
+        String currentLocation = "";
+        if (isElementEnabled(currentLocationName, 5)) {
+            currentLocation = currentLocationName.getText();
+        }
+        return currentLocation;
+    }
+
+    @Override
+    public void verifyTheDisplayDistrictWithSelectedDistrictConsistent(String districtName) throws Exception {
+        if (isDistrictSelected(districtName))
+            SimpleUtils.pass("Dashboard Page: Display district is consistent with the selected district");
+        else
+            SimpleUtils.fail("Dashboard Page: Display district is not consistent with the selected district", true);
+    }
+
+    @Override
+    public void reSelectDistrict(String districtName) throws Exception {
+        waitForSeconds(4);
+        try {
+            Boolean isDistrictMatched = false;
+            activeConsoleName = activeConsoleMenuItem.getText();
+            setScreenshotConsoleName(activeConsoleName);
+            if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
+                        if(isElementLoaded(districtSelectorButton, 10)){
+                            click(districtSelectorButton);
+                        }
+                        if (isElementLoaded(districtDropDownButton, 5)) {
+                            if (availableLocationCardsName.size() != 0) {
+                                for (WebElement locationCardName : availableLocationCardsName) {
+                                    if (locationCardName.getText().contains(districtName)) {
+                                        isDistrictMatched = true;
+                                        clickTheElement(locationCardName);
+                                        if (isElementLoaded(windowNewFeatureEnhancements,5))
+                                            click(closeBtnInNewFeatureEnhancements);
+                                        SimpleUtils.pass("District changed successfully to '" + districtName + "'");
+                                        waitForSeconds(8);
+                                        break;
+                                    }
+                                }
+                                if (!isDistrictMatched) {
+                                    searchDistrictAndSelect(districtName);
+                                    waitForSeconds(3);
+                                    availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
+                                    if (availableLocationCardsName.size() > 0) {
+                                        for (WebElement locationCardName : availableLocationCardsName) {
+                                            if (locationCardName.getText().contains(districtName)) {
+                                                isDistrictMatched = true;
+                                                click(locationCardName);
+                                                SimpleUtils.pass("District changed successfully to '" + districtName + "'");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (!isDistrictMatched) {
+                                    SimpleUtils.fail("District does matched with '" + districtName + "'", true);
+                                }
+                            }
+                        }
+                }
+            } catch(Exception e) {
+            SimpleUtils.fail("Unable to change District!", true);
+        }
+    }
+
+    @Override
+    public void changeAnotherDistrict() throws Exception {
+        waitForSeconds(4);
+        String districtName = selectedDistrict.getText();
+        try {
+            activeConsoleName = activeConsoleMenuItem.getText();
+            setScreenshotConsoleName(activeConsoleName);
+            if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
+                if (isChangeDistrictButtonLoaded()) {
+                        if(isElementLoaded(districtSelectorButton, 10)){
+                            click(districtSelectorButton);
+                        }
+                        if (isElementLoaded(districtDropDownButton, 5)) {
+                            if (availableLocationCardsName.size() != 0) {
+                                for (WebElement locationCardName : availableLocationCardsName) {
+                                    if (!locationCardName.getText().contains(districtName)) {
+                                        clickTheElement(locationCardName);
+                                        SimpleUtils.pass("District changed successfully to '" + locationCardName.getText() + "'");
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                }
+            } else {
+                WebElement dashboardConsoleMenu = SimpleUtils.getSubTabElement(consoleMenuItems, dashboardConsoleMenuText);
+                if (isElementLoaded(dashboardConsoleMenu)) {
+                    click(dashboardConsoleMenu);
+                    changeDistrict(districtName);
+                }
+            }
+        }
+        catch(Exception e) {
+            SimpleUtils.fail("Unable to change District!", true);
+        }
+    }
+
 }
