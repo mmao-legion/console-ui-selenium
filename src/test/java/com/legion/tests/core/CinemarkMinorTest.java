@@ -285,35 +285,39 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify SM will have ability to select a calendar for the minor from a dropdown menu within the profile")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySMCanSelectACalendarForMinorAsStoreManager(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        teamPage.selectATeamMemberToViewProfile();
-        teamPage.isProfilePageLoaded();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.selectATeamMemberToViewProfile();
+            teamPage.isProfilePageLoaded();
 
-        // Verify Minor filed is displayed on TM Profile
-        if (profileNewUIPage.isMINORYesOrNo())
-            profileNewUIPage.verifyMINORField(true);
-        else
-            profileNewUIPage.verifyMINORField(false);
+            // Verify Minor filed is displayed on TM Profile
+            if (profileNewUIPage.isMINORYesOrNo())
+                profileNewUIPage.verifyMINORField(true);
+            else
+                profileNewUIPage.verifyMINORField(false);
 
-        // Search out a TM who is a minor
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        String minorName = teamPage.searchAndSelectTeamMemberByName(cinemarkMinors.get("Minor14"));
-        teamPage.isProfilePageLoaded();
-        if (minorName != "")
-            SimpleUtils.pass("Team Page: search out one minor to View Profile successfully");
-        else
-            SimpleUtils.fail("Team Page: Failed to search out one minor to View Profile",false);
+            // Search out a TM who is a minor
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            String minorName = teamPage.searchAndSelectTeamMemberByName(cinemarkMinors.get("Minor14"));
+            teamPage.isProfilePageLoaded();
+            if (minorName != "")
+                SimpleUtils.pass("Team Page: search out one minor to View Profile successfully");
+            else
+                SimpleUtils.fail("Team Page: Failed to search out one minor to View Profile",false);
 
-        // Verify SM can select a calendar from a dropdown menu within the profile
-        profileNewUIPage.verifySMCanSelectACalendarForMinor();
+            // Verify SM can select a calendar from a dropdown menu within the profile
+            profileNewUIPage.verifySMCanSelectACalendarForMinor();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -322,113 +326,117 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the default value of a minor without a calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
-        // Get Cinemark minor settings from Jason file
-        String schoolWeekMaxScheduleHrs = cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[1];
-        String nonSchoolWeekMaxScheduleHrs = cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1];
+            // Get Cinemark minor settings from Jason file
+            String schoolWeekMaxScheduleHrs = cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[1];
+            String nonSchoolWeekMaxScheduleHrs = cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1];
 
-        // Search out a TM who is a minor and get minor name to enter profile page
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        teamPage.searchAndSelectTeamMemberByName(cinemarkMinors.get("Minor14"));
-        teamPage.isProfilePageLoaded();
+            // Search out a TM who is a minor and get minor name to enter profile page
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.searchAndSelectTeamMemberByName(cinemarkMinors.get("Minor14"));
+            teamPage.isProfilePageLoaded();
 
-        // Edit, select "None" from the calendar dropdown menu, and save the profile
-        profileNewUIPage.selectAGivenCalendarForMinor("None");
+            // Edit, select "None" from the calendar dropdown menu, and save the profile
+            profileNewUIPage.selectAGivenCalendarForMinor("None");
 
-        // Go to Schedule page and navigate to a week
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-        schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
+            // Go to Schedule page and navigate to a week
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
 
-        // Get the current holiday information if have
-        String holidaySmartCard = "HOLIDAYS";
-        List<String> holidays = null;
-        if (schedulePage.isSpecificSmartCardLoaded(holidaySmartCard)) {
-            schedulePage.navigateToTheRightestSmartCard();
-            schedulePage.clickLinkOnSmartCardByName("View All");
-            holidays = schedulePage.getHolidaysOfCurrentWeek();
-            // Close popup window
-            schedulePage.closeAnalyzeWindow();
-        }
-
-        // Ungenerate the schedule if it is created or published
-        boolean isWeekGenerated = schedulePage.isWeekGenerated();
-        if (isWeekGenerated){
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
-        }
-
-        // Create new shift for the minor at weekday, weekend and holiday if have
-        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "05:00AM", "11:00PM");
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor14"));
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.clearAllSelectedDays();
-        schedulePage.selectSpecificWorkDay(7);
-        schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtCertainPoint("6", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-        schedulePage.selectWorkRole("Associate");
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(cinemarkMinors.get("Minor14"));
-        schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(cinemarkMinors.get("Minor14"));
-        schedulePage.clickOnAssignAnywayButton();
-        schedulePage.clickOnOfferOrAssignBtn();
-        schedulePage.saveSchedule();
-
-        // Get holidays index if have
-        ArrayList<Integer> holidayIndexes = new ArrayList<>();
-        ArrayList<Integer> weekdayIndexes = new ArrayList<>();
-        if (holidays!= null) {
-            for (int index = 0; index < 5; index ++) {
-                for (String s: holidays) {
-                    if (s.contains(schedulePage.getWeekDayTextByIndex(index)))
-                        holidayIndexes.add(index);
-                    else
-                        weekdayIndexes.add(index);
-                }
+            // Get the current holiday information if have
+            String holidaySmartCard = "HOLIDAYS";
+            List<String> holidays = null;
+            if (schedulePage.isSpecificSmartCardLoaded(holidaySmartCard)) {
+                schedulePage.navigateToTheRightestSmartCard();
+                schedulePage.clickLinkOnSmartCardByName("View All");
+                holidays = schedulePage.getHolidaysOfCurrentWeek();
+                // Close popup window
+                schedulePage.closeAnalyzeWindow();
             }
-        } else
-            weekdayIndexes.add(0);
 
-        // Validate weekday should apply the settings of school day
-        WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(weekdayIndexes.get(0)));
-        if (newAddedShift != null && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
-            SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
-        else
-            SimpleUtils.fail("Get new added shift failed", false);
+            // Ungenerate the schedule if it is created or published
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
 
-        // Validate weekend should apply the settings of non school day
-        newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(5));
-        if (newAddedShift != null && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
-            SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
-        else
-            SimpleUtils.fail("Get new added shift failed", false);
+            // Create new shift for the minor at weekday, weekend and holiday if have
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "05:00AM", "11:00PM");
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor14"));
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.clearAllSelectedDays();
+            schedulePage.selectSpecificWorkDay(7);
+            schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("6", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.selectWorkRole("Associate");
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchTeamMemberByName(cinemarkMinors.get("Minor14"));
+            schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(cinemarkMinors.get("Minor14"));
+            schedulePage.clickOnAssignAnywayButton();
+            schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.saveSchedule();
 
-
-        // Validate holiday should apply the settings of non school day
-        if (holidays != null) {
-            newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(holidayIndexes.get(0)));
-            if (newAddedShift != null) {
-                if (holidayIndexes.size() == 5 && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + nonSchoolWeekMaxScheduleHrs + " hrs"))
-                    SimpleUtils.pass("Schedule Page: Holiday applies the settings of non school day");
-                else if (holidayIndexes.size() < 5 && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
-                    SimpleUtils.pass("Schedule Page: Holiday applies the settings of non school day");
-                else
-                    SimpleUtils.fail("Schedule Page: Holiday does not apply the settings of non school day",false);
+            // Get holidays index if have
+            ArrayList<Integer> holidayIndexes = new ArrayList<>();
+            ArrayList<Integer> weekdayIndexes = new ArrayList<>();
+            if (holidays!= null) {
+                for (int index = 0; index < 5; index ++) {
+                    for (String s: holidays) {
+                        if (s.contains(schedulePage.getWeekDayTextByIndex(index)))
+                            holidayIndexes.add(index);
+                        else
+                            weekdayIndexes.add(index);
+                    }
+                }
             } else
+                weekdayIndexes.add(0);
+
+            // Validate weekday should apply the settings of school day
+            WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(weekdayIndexes.get(0)));
+            if (newAddedShift != null && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
+                SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
+            else
                 SimpleUtils.fail("Get new added shift failed", false);
+
+            // Validate weekend should apply the settings of non school day
+            newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(5));
+            if (newAddedShift != null && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
+                SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
+            else
+                SimpleUtils.fail("Get new added shift failed", false);
+
+
+            // Validate holiday should apply the settings of non school day
+            if (holidays != null) {
+                newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(holidayIndexes.get(0)));
+                if (newAddedShift != null) {
+                    if (holidayIndexes.size() == 5 && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + nonSchoolWeekMaxScheduleHrs + " hrs"))
+                        SimpleUtils.pass("Schedule Page: Holiday applies the settings of non school day");
+                    else if (holidayIndexes.size() < 5 && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
+                        SimpleUtils.pass("Schedule Page: Holiday applies the settings of non school day");
+                    else
+                        SimpleUtils.fail("Schedule Page: Holiday does not apply the settings of non school day",false);
+                } else
+                    SimpleUtils.fail("Get new added shift failed", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
         }
     }
 
@@ -438,82 +446,86 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify create calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateCalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        int randomDigits = (new Random()).nextInt(100);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            int randomDigits = (new Random()).nextInt(100);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        // Go to School Calendars sub tab
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            // Go to School Calendars sub tab
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        // Click on Create New Calendar button, verify the Cancel and Save button display correctly
-        teamPage.clickOnCreateNewCalendarButton();
+            // Click on Create New Calendar button, verify the Cancel and Save button display correctly
+            teamPage.clickOnCreateNewCalendarButton();
 
-        // Verify the Session Start and Session End fields are mandatory fields
-        teamPage.verifyCreateCalendarLoaded();
-        teamPage.verifySessionStartNEndIsMandatory();
+            // Verify the Session Start and Session End fields are mandatory fields
+            teamPage.verifyCreateCalendarLoaded();
+            teamPage.verifySessionStartNEndIsMandatory();
 
-        // Click on School Session Start
-        teamPage.clickOnSchoolSessionStart();
+            // Click on School Session Start
+            teamPage.clickOnSchoolSessionStart();
 
-        // Select random start and end day and verify they display correctly
-        String startDate = teamPage.selectRandomDayInSessionStart(); //08-25-2020
-        String endDate = teamPage.selectRandomDayInSessionEnd(); //05-31-2021
+            // Select random start and end day and verify they display correctly
+            String startDate = teamPage.selectRandomDayInSessionStart(); //08-25-2020
+            String endDate = teamPage.selectRandomDayInSessionEnd(); //05-31-2021
 
-        // Save after setting session start and end time
-        teamPage.clickOnSaveSchoolSessionCalendarBtn();
+            // Save after setting session start and end time
+            teamPage.clickOnSaveSchoolSessionCalendarBtn();
 
-        // Verify dates will be color coded by start and end time
-        teamPage.verifyDatesInCalendar(startDate,endDate);
+            // Verify dates will be color coded by start and end time
+            teamPage.verifyDatesInCalendar(startDate,endDate);
 
-        // Input calendar name, and verify the calendar name can be edited and changed
-        String calendarName = "Calendar" + randomDigits;
-        teamPage.inputCalendarName(calendarName);
+            // Input calendar name, and verify the calendar name can be edited and changed
+            String calendarName = "Calendar" + randomDigits;
+            teamPage.inputCalendarName(calendarName);
 
-        // Verify calendar for the next year will show the same calendar name until enter the start and end date, the calendar is editable
-        teamPage.checkNextYearInEditMode();
+            // Verify calendar for the next year will show the same calendar name until enter the start and end date, the calendar is editable
+            teamPage.checkNextYearInEditMode();
 
-        // Verify the year display when going back to current calendar
-        teamPage.clickOnPriorYearInEditMode();
+            // Verify the year display when going back to current calendar
+            teamPage.clickOnPriorYearInEditMode();
 
-        // Verify that cannot go to prior year
-        teamPage.checkPriorYearInEditMode();
+            // Verify that cannot go to prior year
+            teamPage.checkPriorYearInEditMode();
 
-        // Verify the calendar can be saved
-        teamPage.clickOnSaveCalendar();
+            // Verify the calendar can be saved
+            teamPage.clickOnSaveCalendar();
 
-        // Verify the new created calendar will list in the calendar list
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
-        if (teamPage.isCalendarDisplayedByName("Calendar" + randomDigits))
-            SimpleUtils.pass("School Calendar: Calendar just created is in the list");
-        else
-            SimpleUtils.fail("School Calendar: ACalendar just created is not in the list",false);
+            // Verify the new created calendar will list in the calendar list
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            if (teamPage.isCalendarDisplayedByName("Calendar" + randomDigits))
+                SimpleUtils.pass("School Calendar: Calendar just created is in the list");
+            else
+                SimpleUtils.fail("School Calendar: ACalendar just created is not in the list",false);
 
-        // Verify the calendar can be deleted
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
-        teamPage.deleteCalendarByName(calendarName);
+            // Verify the calendar can be deleted
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            teamPage.deleteCalendarByName(calendarName);
 
-        // Verify the the change for calendar will not been saved after click Cancel button
-        teamPage.clickOnCreateNewCalendarButton();
-        teamPage.clickOnSchoolSessionStart();
-        teamPage.selectRandomDayInSessionStart();
-        teamPage.selectRandomDayInSessionEnd();
-        teamPage.clickOnSaveSchoolSessionCalendarBtn();
-        teamPage.inputCalendarName("CancelledCalendar");
-        teamPage.clickOnCancelEditCalendarBtn();
-        if (!teamPage.isCalendarDisplayedByName("CancelledCalendar"))
-            SimpleUtils.pass("School Calendar: Create action is cancelled, there will not be this calendar in the list");
-        else
-            SimpleUtils.fail("School Calendar: Create action failed to cancel",false);
+            // Verify the the change for calendar will not been saved after click Cancel button
+            teamPage.clickOnCreateNewCalendarButton();
+            teamPage.clickOnSchoolSessionStart();
+            teamPage.selectRandomDayInSessionStart();
+            teamPage.selectRandomDayInSessionEnd();
+            teamPage.clickOnSaveSchoolSessionCalendarBtn();
+            teamPage.inputCalendarName("CancelledCalendar");
+            teamPage.clickOnCancelEditCalendarBtn();
+            if (!teamPage.isCalendarDisplayedByName("CancelledCalendar"))
+                SimpleUtils.pass("School Calendar: Create action is cancelled, there will not be this calendar in the list");
+            else
+                SimpleUtils.fail("School Calendar: Create action failed to cancel",false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -522,62 +534,66 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify school calendar list")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySchoolCalendarListAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        int random1 = (new Random()).nextInt(100);
-        int random2 = (new Random()).nextInt(100);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            int random1 = (new Random()).nextInt(100);
+            int random2 = (new Random()).nextInt(100);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        // Create a new calendar via Admin
-        teamPage.createNewCalendarByName("Calendar" + random1);
+            // Create a new calendar via Admin
+            teamPage.createNewCalendarByName("Calendar" + random1);
 
-       // Create another new calendar via Admin
-        teamPage.createNewCalendarByName("Calendar" + random2);
+            // Create another new calendar via Admin
+            teamPage.createNewCalendarByName("Calendar" + random2);
 
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        loginPage.logOut();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
 
-        // Login as Store Manager
-        String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("OP_Enterprise") + fileName;
-        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                , String.valueOf(storeManagerCredentials[0][2]));
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        int random3 = (new Random()).nextInt(100);
-        int random4 = (new Random()).nextInt(100);
+            // Login as Store Manager
+            String fileName = "UsersCredentials.json";
+            fileName = SimpleUtils.getEnterprise("OP_Enterprise") + fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                    , String.valueOf(storeManagerCredentials[0][2]));
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            int random3 = (new Random()).nextInt(100);
+            int random4 = (new Random()).nextInt(100);
 
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        // Create a new calendar via Store Manager
-        teamPage.createNewCalendarByName("Calendar" + random3);
+            // Create a new calendar via Store Manager
+            teamPage.createNewCalendarByName("Calendar" + random3);
 
-        // Create another new calendar via Store Manager
-        teamPage.createNewCalendarByName("Calendar" + random4);
+            // Create another new calendar via Store Manager
+            teamPage.createNewCalendarByName("Calendar" + random4);
 
-        // Check the School Calendars list
-       if (teamPage.isCalendarDisplayedByName("Calendar" + random1) && teamPage.isCalendarDisplayedByName("Calendar" + random2)
-       && teamPage.isCalendarDisplayedByName("Calendar" + random3) && teamPage.isCalendarDisplayedByName("Calendar" + random4))
-           SimpleUtils.pass("School Calendar: All the calendars have been created display in the list");
-       else
-           SimpleUtils.fail("School Calendar: All the calendars have been created don't display in the list",false);
+            // Check the School Calendars list
+            if (teamPage.isCalendarDisplayedByName("Calendar" + random1) && teamPage.isCalendarDisplayedByName("Calendar" + random2)
+                    && teamPage.isCalendarDisplayedByName("Calendar" + random3) && teamPage.isCalendarDisplayedByName("Calendar" + random4))
+                SimpleUtils.pass("School Calendar: All the calendars have been created display in the list");
+            else
+                SimpleUtils.fail("School Calendar: All the calendars have been created don't display in the list",false);
 
-        // Clean up data
-        teamPage.deleteCalendarByName("Calendar" + random1);
-        teamPage.deleteCalendarByName("Calendar" + random2);
-        teamPage.deleteCalendarByName("Calendar" + random3);
-        teamPage.deleteCalendarByName("Calendar" + random4);
+            // Clean up data
+            teamPage.deleteCalendarByName("Calendar" + random1);
+            teamPage.deleteCalendarByName("Calendar" + random2);
+            teamPage.deleteCalendarByName("Calendar" + random3);
+            teamPage.deleteCalendarByName("Calendar" + random4);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
     //Haya
