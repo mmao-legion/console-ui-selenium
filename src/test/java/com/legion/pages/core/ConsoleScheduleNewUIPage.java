@@ -4004,7 +4004,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     for (WebElement dayList : operatingHoursDayLists) {
                         WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
                         WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
-                        List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("input[placeholder=\"--:--\"]"));
+                        List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
                         if (checkbox != null && weekDay != null && startNEndTimes != null && startNEndTimes.size() == 2) {
                             if (checkbox.getAttribute("class").contains("ng-empty")) {
                                 SimpleUtils.warn("editOperatingHoursWithGivingPrameters: All seven day of a week should be checked by default when create schedule.");
