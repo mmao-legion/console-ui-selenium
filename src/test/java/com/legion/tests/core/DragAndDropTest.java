@@ -28,9 +28,13 @@ public class DragAndDropTest extends TestBase {
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception{
-        this.createDriver((String)params[0],"83","Window");
-        visitPage(testMethod);
-        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+        try {
+            this.createDriver((String) params[0], "83", "Window");
+            visitPage(testMethod);
+            loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated ="Automated")
@@ -39,116 +43,120 @@ public class DragAndDropTest extends TestBase {
     @TestName(description = "Validate the box interaction color and message for TM status: Scheduled at home location")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        // Select one team member to view profile
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        String userName = teamPage.selectATeamMemberToViewProfile();
-        String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
+            // Select one team member to view profile
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            String userName = teamPage.selectATeamMemberToViewProfile();
+            String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
 
-        // Go to Schedule page, Schedule tab
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            // Go to Schedule page, Schedule tab
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-        // Create schedule if it is not created
-        schedulePage.navigateToNextWeek();
-        boolean isWeekGenerated = schedulePage.isWeekGenerated();
-        if (!isWeekGenerated){
-            schedulePage.createScheduleForNonDGFlowNewUI();
+            // Create schedule if it is not created
+            schedulePage.navigateToNextWeek();
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            // Edit the Schedule
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            // Delete all the shifts that are assigned to the team member on Step #1
+            schedulePage.deleteTMShiftInWeekView(firstName);
+
+            // Create new shift for this TM on Monday and Tuesday
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.clearAllSelectedDays();
+            List<Integer> dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
+            schedulePage.selectWorkRole("MOD");
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchTeamMemberByName(firstName);
+            schedulePage.clickOnOfferOrAssignBtn();
+
+            // Save the Schedule
+            schedulePage.saveSchedule();
+            List<Integer> shiftIndexes = schedulePage.getAddedShiftIndexes(firstName);
+            SimpleUtils.assertOnFail("Failed to add two shifts!", shiftIndexes != null && shiftIndexes.size() == 2, false);
+            List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
+
+            // Edit the Schedule
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            // Drag the TM's avatar on Monday to another TM's shift on Tuesday
+            schedulePage.dragOneAvatarToAnother(dayIndexes.get(0), firstName, dayIndexes.get(1));
+
+            String weekday = schedulePage.getWeekDayTextByIndex(Integer.parseInt(shiftInfo.get(1)));
+            String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday);
+            String expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
+                    + ". This shift will be converted to an open shift";
+            schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage, "swap");
+            schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage, "assign");
+            List<String> swapData = schedulePage.getShiftSwapDataFromConfirmPage("swap");
+            schedulePage.selectSwapOrAssignOption("swap");
+            schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+            schedulePage.verifyShiftsAreSwapped(swapData);
+
+            // Delete the shifts for this TM
+            schedulePage.deleteTMShiftInWeekView(firstName);
+
+            // Prepare the shift for this TM again
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.clearAllSelectedDays();
+            dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
+            schedulePage.selectWorkRole("MOD");
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchTeamMemberByName(firstName);
+            schedulePage.clickOnOfferOrAssignBtn();
+
+            // Save the Schedule
+            schedulePage.saveSchedule();
+            shiftIndexes = schedulePage.getAddedShiftIndexes(firstName);
+            SimpleUtils.assertOnFail("Failed to add the shifts!", shiftIndexes != null && shiftIndexes.size() > 0, false);
+            shiftInfo = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
+
+            // Edit the Schedule
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            // Drag the TM's shift on Monday to another TM's shift on Tuesday
+            schedulePage.dragOneShiftToAnotherDay(dayIndexes.get(0), firstName, dayIndexes.get(1));
+
+            // Verify the warning model pops up
+            String actualWarning = schedulePage.getWarningMessageInDragShiftWarningMode();
+            expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
+                    + ".\nPlease confirm that you want to make this change. " + firstName + "'s current shift will be converted to an open shift.";
+
+            if (actualWarning.contains(expectedMessage)) {
+                SimpleUtils.pass("Changing Shift: the message is correct:\n" + expectedMessage);
+            } else {
+                SimpleUtils.warn("The message is incorrect since there is the bug!");
+            }
+
+            if (schedulePage.ifMoveAnywayDialogDisplay()) {
+                schedulePage.moveAnywayWhenChangeShift();
+            } else {
+                SimpleUtils.fail("MOVE ANYWAY dialog failed to load!", false);
+            }
+
+            schedulePage.verifyShiftIsMovedToAnotherDay(dayIndexes.get(0), firstName, dayIndexes.get(1));
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
-
-        // Edit the Schedule
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
-        // Delete all the shifts that are assigned to the team member on Step #1
-        schedulePage.deleteTMShiftInWeekView(firstName);
-
-        // Create new shift for this TM on Monday and Tuesday
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.clearAllSelectedDays();
-        List<Integer> dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
-        schedulePage.selectWorkRole("MOD");
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(firstName);
-        schedulePage.clickOnOfferOrAssignBtn();
-
-        // Save the Schedule
-        schedulePage.saveSchedule();
-        List<Integer> shiftIndexes = schedulePage.getAddedShiftIndexes(firstName);
-        SimpleUtils.assertOnFail("Failed to add two shifts!", shiftIndexes != null && shiftIndexes.size() == 2, false);
-        List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
-
-        // Edit the Schedule
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
-        // Drag the TM's avatar on Monday to another TM's shift on Tuesday
-        schedulePage.dragOneAvatarToAnother(dayIndexes.get(0), firstName, dayIndexes.get(1));
-
-        String weekday = schedulePage.getWeekDayTextByIndex(Integer.parseInt(shiftInfo.get(1)));
-        String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday);
-        String expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
-                + ". This shift will be converted to an open shift";
-        schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage,"swap");
-        schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage,"assign");
-        List<String> swapData = schedulePage.getShiftSwapDataFromConfirmPage("swap");
-        schedulePage.selectSwapOrAssignOption("swap");
-        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
-        schedulePage.verifyShiftsAreSwapped(swapData);
-
-        // Delete the shifts for this TM
-        schedulePage.deleteTMShiftInWeekView(firstName);
-
-        // Prepare the shift for this TM again
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.clearAllSelectedDays();
-        dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
-        schedulePage.selectWorkRole("MOD");
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(firstName);
-        schedulePage.clickOnOfferOrAssignBtn();
-
-        // Save the Schedule
-        schedulePage.saveSchedule();
-        shiftIndexes = schedulePage.getAddedShiftIndexes(firstName);
-        SimpleUtils.assertOnFail("Failed to add the shifts!", shiftIndexes != null && shiftIndexes.size() > 0, false);
-        shiftInfo = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
-
-        // Edit the Schedule
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
-        // Drag the TM's shift on Monday to another TM's shift on Tuesday
-        schedulePage.dragOneShiftToAnotherDay(dayIndexes.get(0), firstName, dayIndexes.get(1));
-
-        // Verify the warning model pops up
-        String actualWarning = schedulePage.getWarningMessageInDragShiftWarningMode();
-        expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
-                + ".\nPlease confirm that you want to make this change. " + firstName + "'s current shift will be converted to an open shift.";
-
-        if (actualWarning.contains(expectedMessage)) {
-            SimpleUtils.pass("Changing Shift: the message is correct:\n" + expectedMessage);
-        } else {
-            SimpleUtils.warn("The message is incorrect since there is the bug!");
-        }
-
-        if (schedulePage.ifMoveAnywayDialogDisplay()){
-            schedulePage.moveAnywayWhenChangeShift();
-        } else {
-            SimpleUtils.fail("MOVE ANYWAY dialog failed to load!", false);
-        }
-
-        schedulePage.verifyShiftIsMovedToAnotherDay(dayIndexes.get(0), firstName, dayIndexes.get(1));
     }
 
     @Automated(automated ="Automated")
@@ -157,97 +165,101 @@ public class DragAndDropTest extends TestBase {
     @TestName(description = "Validate the box interaction color and message when TM is from another store and is already scheduled at this store")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsSchedulingPolicies();
-        SimpleUtils.assertOnFail("Controls Scheduling Policies page not loaded Successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-        controlsNewUIPage.clickOnGlobalLocationButton();
-        controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
-        controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Controls Scheduling Policies page not loaded Successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            controlsNewUIPage.clickOnGlobalLocationButton();
+            controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+            controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
 
-        dashboardPage.navigateToDashboard();
-        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            dashboardPage.navigateToDashboard();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        String anotherLocation = "NY CENTRAL";
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeLocation(anotherLocation);
-        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            String anotherLocation = "NY CENTRAL";
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeLocation(anotherLocation);
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        // Select one team member to view profile
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        String userName = teamPage.selectATeamMemberToViewProfile();
-        String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
+            // Select one team member to view profile
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            String userName = teamPage.selectATeamMemberToViewProfile();
+            String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
 
-        // Go to Dashboard page
-        dashboardPage.navigateToDashboard();
-        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            // Go to Dashboard page
+            dashboardPage.navigateToDashboard();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        // Change the location to the original location
-        locationSelectorPage.changeLocation(location);
-        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            // Change the location to the original location
+            locationSelectorPage.changeLocation(location);
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        // Go to Schedule page, Schedule tab
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            // Go to Schedule page, Schedule tab
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-        // Create schedule if it is not created
-        schedulePage.navigateToNextWeek();
-        boolean isWeekGenerated = schedulePage.isWeekGenerated();
-        if (!isWeekGenerated){
-            schedulePage.createScheduleForNonDGFlowNewUI();
+            // Create schedule if it is not created
+            schedulePage.navigateToNextWeek();
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            // Edit the Schedule
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            // Delete all the shifts that are assigned to the team member on Step #1
+            schedulePage.deleteTMShiftInWeekView(firstName);
+
+            // Create new shift for this TM on Monday and Tuesday
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.clearAllSelectedDays();
+            List<Integer> dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
+            schedulePage.selectWorkRole("MOD");
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchTeamMemberByName(firstName);
+            schedulePage.clickOnOfferOrAssignBtn();
+
+            // Save the Schedule
+            schedulePage.saveSchedule();
+            List<Integer> shiftIndexes = schedulePage.getAddedShiftIndexes(firstName);
+            SimpleUtils.assertOnFail("Failed to add two shifts!", shiftIndexes != null && shiftIndexes.size() > 0, false);
+            List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
+
+            // Edit the Schedule
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            // Drag the TM's avatar on Monday to another TM's shift on Tuesday
+            schedulePage.dragOneAvatarToAnother(dayIndexes.get(0), firstName, dayIndexes.get(1));
+
+            String weekday = schedulePage.getWeekDayTextByIndex(Integer.parseInt(shiftInfo.get(1)));
+            String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday);
+            String expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
+                    + ". This shift will be converted to an open shift";
+            schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage, "swap");
+            schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage, "assign");
+            List<String> swapData = schedulePage.getShiftSwapDataFromConfirmPage("swap");
+            schedulePage.selectSwapOrAssignOption("swap");
+            schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+            schedulePage.verifyShiftsAreSwapped(swapData);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
-
-        // Edit the Schedule
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
-        // Delete all the shifts that are assigned to the team member on Step #1
-        schedulePage.deleteTMShiftInWeekView(firstName);
-
-        // Create new shift for this TM on Monday and Tuesday
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.clearAllSelectedDays();
-        List<Integer> dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
-        schedulePage.selectWorkRole("MOD");
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(firstName);
-        schedulePage.clickOnOfferOrAssignBtn();
-
-        // Save the Schedule
-        schedulePage.saveSchedule();
-        List<Integer> shiftIndexes = schedulePage.getAddedShiftIndexes(firstName);
-        SimpleUtils.assertOnFail("Failed to add two shifts!", shiftIndexes != null && shiftIndexes.size() > 0, false);
-        List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
-
-        // Edit the Schedule
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
-        // Drag the TM's avatar on Monday to another TM's shift on Tuesday
-        schedulePage.dragOneAvatarToAnother(dayIndexes.get(0), firstName, dayIndexes.get(1));
-
-        String weekday = schedulePage.getWeekDayTextByIndex(Integer.parseInt(shiftInfo.get(1)));
-        String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday);
-        String expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
-                + ". This shift will be converted to an open shift";
-        schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage,"swap");
-        schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage,"assign");
-        List<String> swapData = schedulePage.getShiftSwapDataFromConfirmPage("swap");
-        schedulePage.selectSwapOrAssignOption("swap");
-        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
-        schedulePage.verifyShiftsAreSwapped(swapData);
     }
 
     @Automated(automated ="Automated")
@@ -256,84 +268,88 @@ public class DragAndDropTest extends TestBase {
     @TestName(description = "Validate the box interaction color and message for TM status: Time Off")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyWarningModelForTimeOffAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        String userName = teamPage.selectATeamMemberToViewProfile();
-        String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
-        String lastName = userName.contains(" ") ? userName.split(" ")[1] : userName;
-        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-        String myTimeOffLabel = "Time Off";
-        profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
-        teamPage.rejectAllTheTimeOffRequests();
-        profileNewUIPage.clickOnCreateTimeOffBtn();
-        SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
-        String timeOffReasonLabel = "JURY DUTY";
-        profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
-        String timeOffDate = profileNewUIPage.selectStartAndEndDateAtSameDay();
-        profileNewUIPage.clickOnSaveTimeOffRequestBtn();
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            String userName = teamPage.selectATeamMemberToViewProfile();
+            String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
+            String lastName = userName.contains(" ") ? userName.split(" ")[1] : userName;
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String myTimeOffLabel = "Time Off";
+            profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+            teamPage.rejectAllTheTimeOffRequests();
+            profileNewUIPage.clickOnCreateTimeOffBtn();
+            SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
+            String timeOffReasonLabel = "JURY DUTY";
+            profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
+            String timeOffDate = profileNewUIPage.selectStartAndEndDateAtSameDay();
+            profileNewUIPage.clickOnSaveTimeOffRequestBtn();
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-        // Navigate to the week that contains the date that provided
-        schedulePage.goToSpecificWeekByDate(timeOffDate);
+            // Navigate to the week that contains the date that provided
+            schedulePage.goToSpecificWeekByDate(timeOffDate);
 
-        // Ungenerate and create the schedule
-        boolean isWeekGenerated = schedulePage.isWeekGenerated();
-        if (isWeekGenerated){
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
+            // Ungenerate and create the schedule
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.createScheduleForNonDGFlowNewUI();
+
+            // Edit schedule to create the new shift for new TM
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView(firstName);
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.clearAllSelectedDays();
+            List<Integer> indexes = schedulePage.selectDaysByCountAndCannotSelectedDate(1, timeOffDate);
+            schedulePage.selectWorkRole("MOD");
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchTeamMemberByName(firstName + " " + lastName.substring(0, 1));
+            schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.saveSchedule();
+
+            // Drag the shift to the time off day
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            int endIndex = schedulePage.getTheIndexOfTheDayInWeekView(timeOffDate.substring(timeOffDate.length() - 2));
+            schedulePage.dragOneAvatarToAnother(indexes.get(0), firstName, endIndex);
+
+            // Verify the warning model pops up and Click on OK button
+            schedulePage.verifyWarningModelForAssignTMOnTimeOff(firstName);
+
+            // Drag the TM's shift to the day that he/she has time off
+            schedulePage.dragOneShiftToAnotherDay(indexes.get(0), firstName, endIndex);
+
+            // Verify the Warning model pops up with the message
+            schedulePage.verifyWarningModelForAssignTMOnTimeOff(firstName);
+
+            // Verify nothing happens after clicking OK button
+            if (schedulePage.verifyDayHasShiftByName(indexes.get(0), firstName) == 1 && schedulePage.verifyDayHasShiftByName(endIndex, firstName) == 0)
+                SimpleUtils.pass("Nothing happens as expected after clicking OK button");
+            else
+                SimpleUtils.fail("The TM's shift may be assigned unexpected", false);
+            schedulePage.saveSchedule();
+
+            // Clean up data
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.searchAndSelectTeamMemberByName(firstName);
+            profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+            teamPage.rejectAllTheTimeOffRequests();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
-        schedulePage.createScheduleForNonDGFlowNewUI();
-
-        // Edit schedule to create the new shift for new TM
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView(firstName);
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.clearAllSelectedDays();
-        List<Integer> indexes = schedulePage.selectDaysByCountAndCannotSelectedDate(1, timeOffDate);
-        schedulePage.selectWorkRole("MOD");
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(firstName + " " + lastName.substring(0,1));
-        schedulePage.clickOnOfferOrAssignBtn();
-        schedulePage.saveSchedule();
-
-        // Drag the shift to the time off day
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        int endIndex = schedulePage.getTheIndexOfTheDayInWeekView(timeOffDate.substring(timeOffDate.length() - 2));
-        schedulePage.dragOneAvatarToAnother(indexes.get(0), firstName, endIndex);
-
-        // Verify the warning model pops up and Click on OK button
-        schedulePage.verifyWarningModelForAssignTMOnTimeOff(firstName);
-
-        // Drag the TM's shift to the day that he/she has time off
-        schedulePage.dragOneShiftToAnotherDay(indexes.get(0), firstName, endIndex);
-
-        // Verify the Warning model pops up with the message
-        schedulePage.verifyWarningModelForAssignTMOnTimeOff(firstName);
-
-        // Verify nothing happens after clicking OK button
-        if (schedulePage.verifyDayHasShiftByName(indexes.get(0),firstName) == 1 && schedulePage.verifyDayHasShiftByName(endIndex,firstName) == 0)
-            SimpleUtils.pass("Nothing happens as expected after clicking OK button");
-        else
-            SimpleUtils.fail("The TM's shift may be assigned unexpected",false);
-        schedulePage.saveSchedule();
-
-        // Clean up data
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        teamPage.searchAndSelectTeamMemberByName(firstName);
-        profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
-        teamPage.rejectAllTheTimeOffRequests();
     }
 
     @Automated(automated ="Automated")

@@ -29,9 +29,13 @@ public class InboxTest extends TestBase {
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception{
-        this.createDriver((String)params[0],"83","Window");
-        visitPage(testMethod);
-        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+        try {
+            this.createDriver((String) params[0], "83", "Window");
+            visitPage(testMethod);
+            loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     //Added by Nora
@@ -41,33 +45,37 @@ public class InboxTest extends TestBase {
     @TestName(description = "verify reports will be available for export")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyGFEReportsAreAbleToExportAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        // Go to Controls -> Compliance, turn on the GFE
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsComplianceSection();
-        SimpleUtils.assertOnFail("Controls: Compliance page not loaded Successfully!", controlsNewUIPage.isControlsComplianceLoaded(), false);
-        controlsNewUIPage.turnGFEToggleOnOrOff(true);
+            // Go to Controls -> Compliance, turn on the GFE
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsComplianceSection();
+            SimpleUtils.assertOnFail("Controls: Compliance page not loaded Successfully!", controlsNewUIPage.isControlsComplianceLoaded(), false);
+            controlsNewUIPage.turnGFEToggleOnOrOff(true);
 
-        // Go to Analytics page
-        AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
-        analyticsPage.clickOnAnalyticsConsoleMenu();
-        SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+            // Go to Analytics page
+            AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+            analyticsPage.clickOnAnalyticsConsoleMenu();
+            SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
 
-        analyticsPage.switchAllLocationsOrSingleLocation(false);
-        String gfe = "Good Faith Estimate";
-        if (analyticsPage.isSpecificReportLoaded(gfe)) {
-            analyticsPage.mouseHoverAndExportReportByName(gfe);
-            // Verify whether the file is downloaded or not
-            Thread.sleep(5000);
-            String downloadPath = parameterMap.get("Download_File_Default_Dir");
-            SimpleUtils.assertOnFail("Failed to download the Good Faith Estimate Report!", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "GoodFaithEstimate"), false);
-        } else {
-            SimpleUtils.fail("Analytics: " + gfe + " not loaded Successfully!", false);
+            analyticsPage.switchAllLocationsOrSingleLocation(false);
+            String gfe = "Good Faith Estimate";
+            if (analyticsPage.isSpecificReportLoaded(gfe)) {
+                analyticsPage.mouseHoverAndExportReportByName(gfe);
+                // Verify whether the file is downloaded or not
+                Thread.sleep(5000);
+                String downloadPath = parameterMap.get("Download_File_Default_Dir");
+                SimpleUtils.assertOnFail("Failed to download the Good Faith Estimate Report!", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "GoodFaithEstimate"), false);
+            } else {
+                SimpleUtils.fail("Analytics: " + gfe + " not loaded Successfully!", false);
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
@@ -77,80 +85,84 @@ public class InboxTest extends TestBase {
     @TestName(description = "verify the column and team member details and count of the report")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheColumnAndCountOfGFEReportAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        int rosterCount = teamPage.verifyTMCountIsCorrectOnRoster();
-        List<String> tmNames = teamPage.getTMNameList();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            int rosterCount = teamPage.verifyTMCountIsCorrectOnRoster();
+            List<String> tmNames = teamPage.getTMNameList();
 
-        // Go to Controls -> Compliance, turn on the GFE
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsComplianceSection();
-        SimpleUtils.assertOnFail("Controls: Compliance page not loaded Successfully!", controlsNewUIPage.isControlsComplianceLoaded(), false);
-        controlsNewUIPage.turnGFEToggleOnOrOff(true);
+            // Go to Controls -> Compliance, turn on the GFE
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsComplianceSection();
+            SimpleUtils.assertOnFail("Controls: Compliance page not loaded Successfully!", controlsNewUIPage.isControlsComplianceLoaded(), false);
+            controlsNewUIPage.turnGFEToggleOnOrOff(true);
 
-        // Go to Analytics page
-        AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
-        analyticsPage.clickOnAnalyticsConsoleMenu();
-        SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+            // Go to Analytics page
+            AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+            analyticsPage.clickOnAnalyticsConsoleMenu();
+            SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
 
-        analyticsPage.switchAllLocationsOrSingleLocation(false);
-        String gfe = "Good Faith Estimate";
-        String downloadPath = parameterMap.get("Download_File_Default_Dir");
-        if (analyticsPage.isSpecificReportLoaded(gfe)) {
-            analyticsPage.mouseHoverAndExportReportByName(gfe);
-            // Verify whether the file is downloaded or not
-            Thread.sleep(5000);
-            SimpleUtils.assertOnFail("Failed to download the Good Faith Estimate Report!", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "GoodFaithEstimate"), false);
-        } else {
-            SimpleUtils.fail("Analytics: " + gfe + " not loaded Successfully!", false);
-        }
-        File latestFile = SimpleUtils.getLatestFileFromDirectory(downloadPath);
-        String fileName = latestFile.getName();
-        SimpleUtils.pass("KPI Report exported successfully with file name '"+ fileName +"'.");
-        ArrayList<String> actualHeader = CsvUtils.getHeaderFromCSVFileByPath(downloadPath + "/" + fileName);
-        ArrayList<String> expectedHeader = new ArrayList<>(Arrays.asList("TM first name",
-                "TM last name",
-                "TM Employee ID",
-                "TM Job Title",
-                "Scheduling policy group",
-                "Date & time sent",
-                "Date & time read",
-                "Date & time acknowledged",
-                "Location",
-                "Location ID",
-                "Estimated working Days",
-                "Estimated working hours",
-                "Average hours per week",
-                "Minimum # of shifts per week"));
-        if (actualHeader.containsAll(expectedHeader) && expectedHeader.containsAll(actualHeader)) {
-            SimpleUtils.pass("GFE Report columns are correct!");
-        } else {
-            SimpleUtils.fail("GFE report columns are not correct!", true);
-        }
-        ArrayList<HashMap<String,String>> gfeDetails = CsvUtils.getDataFromCSVFileWithHeader(downloadPath + "/" + fileName);
-        if (gfeDetails != null && gfeDetails.size() > 0 && rosterCount == gfeDetails.size()) {
-            SimpleUtils.pass("Verified the count of TMs in the GFE report is consistent with Roster!");
-            boolean isConsistent = true;
-            for (HashMap<String,String> gfeDetail : gfeDetails) {
-                String name = gfeDetail.get("TM first name") + " " + gfeDetail.get("TM last name");
-                if (!tmNames.contains(name)) {
-                    SimpleUtils.fail(name + " is not exist in the Team Roster!", false);
-                    isConsistent = false;
-                    break;
+            analyticsPage.switchAllLocationsOrSingleLocation(false);
+            String gfe = "Good Faith Estimate";
+            String downloadPath = parameterMap.get("Download_File_Default_Dir");
+            if (analyticsPage.isSpecificReportLoaded(gfe)) {
+                analyticsPage.mouseHoverAndExportReportByName(gfe);
+                // Verify whether the file is downloaded or not
+                Thread.sleep(5000);
+                SimpleUtils.assertOnFail("Failed to download the Good Faith Estimate Report!", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "GoodFaithEstimate"), false);
+            } else {
+                SimpleUtils.fail("Analytics: " + gfe + " not loaded Successfully!", false);
+            }
+            File latestFile = SimpleUtils.getLatestFileFromDirectory(downloadPath);
+            String fileName = latestFile.getName();
+            SimpleUtils.pass("KPI Report exported successfully with file name '" + fileName + "'.");
+            ArrayList<String> actualHeader = CsvUtils.getHeaderFromCSVFileByPath(downloadPath + "/" + fileName);
+            ArrayList<String> expectedHeader = new ArrayList<>(Arrays.asList("TM first name",
+                    "TM last name",
+                    "TM Employee ID",
+                    "TM Job Title",
+                    "Scheduling policy group",
+                    "Date & time sent",
+                    "Date & time read",
+                    "Date & time acknowledged",
+                    "Location",
+                    "Location ID",
+                    "Estimated working Days",
+                    "Estimated working hours",
+                    "Average hours per week",
+                    "Minimum # of shifts per week"));
+            if (actualHeader.containsAll(expectedHeader) && expectedHeader.containsAll(actualHeader)) {
+                SimpleUtils.pass("GFE Report columns are correct!");
+            } else {
+                SimpleUtils.fail("GFE report columns are not correct!", true);
+            }
+            ArrayList<HashMap<String, String>> gfeDetails = CsvUtils.getDataFromCSVFileWithHeader(downloadPath + "/" + fileName);
+            if (gfeDetails != null && gfeDetails.size() > 0 && rosterCount == gfeDetails.size()) {
+                SimpleUtils.pass("Verified the count of TMs in the GFE report is consistent with Roster!");
+                boolean isConsistent = true;
+                for (HashMap<String, String> gfeDetail : gfeDetails) {
+                    String name = gfeDetail.get("TM first name") + " " + gfeDetail.get("TM last name");
+                    if (!tmNames.contains(name)) {
+                        SimpleUtils.fail(name + " is not exist in the Team Roster!", false);
+                        isConsistent = false;
+                        break;
+                    }
                 }
+                if (isConsistent) {
+                    SimpleUtils.pass("Team members are consistent with the Roster!");
+                }
+            } else {
+                SimpleUtils.fail("The count of TMs in the GFE report is inconsistent with Roster", false);
             }
-            if (isConsistent) {
-                SimpleUtils.pass("Team members are consistent with the Roster!");
-            }
-        } else {
-            SimpleUtils.fail("The count of TMs in the GFE report is inconsistent with Roster", false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
@@ -160,168 +172,172 @@ public class InboxTest extends TestBase {
     @TestName(description = "verify reports show the most recent GFE that was provided for each employee")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheMostRecentGFEIsInReportAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded() , false);
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        controlsPage.gotoControlsPage();
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsComplianceSection();
-        //turn on GFE toggle
-        controlsNewUIPage.turnGFEToggleOnOrOff(true);
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        loginPage.logOut();
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsComplianceSection();
+            //turn on GFE toggle
+            controlsNewUIPage.turnGFEToggleOnOrOff(true);
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
 
-        //login as TM to get nickName
-        String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                , String.valueOf(teamMemberCredentials[0][2]));
-        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-        String nickNameOfTM = profileNewUIPage.getNickNameFromProfile();
-        loginPage.logOut();
+            //login as TM to get nickName
+            String fileName = "UsersCredentials.json";
+            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                    , String.valueOf(teamMemberCredentials[0][2]));
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String nickNameOfTM = profileNewUIPage.getNickNameFromProfile();
+            loginPage.logOut();
 
-        //go to Inbox page create GFE announcement.
-        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                , String.valueOf(storeManagerCredentials[0][2]));
-        InboxPage inboxPage = pageFactory.createConsoleInboxPage();
-        inboxPage.clickOnInboxConsoleMenuItem();
-        inboxPage.createGFEAnnouncement();
-        inboxPage.sendToTM(nickNameOfTM);
+            //go to Inbox page create GFE announcement.
+            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                    , String.valueOf(storeManagerCredentials[0][2]));
+            InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+            inboxPage.clickOnInboxConsoleMenuItem();
+            inboxPage.createGFEAnnouncement();
+            inboxPage.sendToTM(nickNameOfTM);
 
-        //change operating hours and working day
-        String dayToClose = "MON";
-        String estimatedWorkingDays = "Sunday, Tuesday, Wednesday, Thursday, Friday, Saturday";
-        String dayToChangeHrs = "SUN";
-        String startTime = "08:00AM";
-        String endTime = "06:00PM";
-        inboxPage.chooseOneDayToClose(dayToClose);
-        inboxPage.changeOperatingHrsOfDay(dayToChangeHrs, startTime, endTime);
-        List<String> selectedOperatingHours = inboxPage.getSelectedOperatingHours();
-        //change week summary info
-        String minimumShifts = "6";
-        String averageHrs = "38";
-        inboxPage.changeWeekSummaryInfo(minimumShifts, averageHrs);
-        inboxPage.clickSendBtn();
-        loginPage.logOut();
+            //change operating hours and working day
+            String dayToClose = "MON";
+            String estimatedWorkingDays = "Sunday, Tuesday, Wednesday, Thursday, Friday, Saturday";
+            String dayToChangeHrs = "SUN";
+            String startTime = "08:00AM";
+            String endTime = "06:00PM";
+            inboxPage.chooseOneDayToClose(dayToClose);
+            inboxPage.changeOperatingHrsOfDay(dayToChangeHrs, startTime, endTime);
+            List<String> selectedOperatingHours = inboxPage.getSelectedOperatingHours();
+            //change week summary info
+            String minimumShifts = "6";
+            String averageHrs = "38";
+            inboxPage.changeWeekSummaryInfo(minimumShifts, averageHrs);
+            inboxPage.clickSendBtn();
+            loginPage.logOut();
 
-        //login as TM to check the gfe
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                , String.valueOf(teamMemberCredentials[0][2]));
-        inboxPage.clickOnInboxConsoleMenuItem();
-        inboxPage.clickFirstGFEInList();
-        inboxPage.clickAcknowledgeBtn();
-        String jsonTimeZone = propertyLocationTimeZone.get(location);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String acknowledgeTime = SimpleUtils.getCurrentDateMonthYearWithTimeZone(jsonTimeZone, sdf);
-        loginPage.logOut();
+            //login as TM to check the gfe
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                    , String.valueOf(teamMemberCredentials[0][2]));
+            inboxPage.clickOnInboxConsoleMenuItem();
+            inboxPage.clickFirstGFEInList();
+            inboxPage.clickAcknowledgeBtn();
+            String jsonTimeZone = propertyLocationTimeZone.get(location);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String acknowledgeTime = SimpleUtils.getCurrentDateMonthYearWithTimeZone(jsonTimeZone, sdf);
+            loginPage.logOut();
 
-        //login as SM to export the report.
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                , String.valueOf(storeManagerCredentials[0][2]));
-        SimpleUtils.assertOnFail("Dashboard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
-        analyticsPage.clickOnAnalyticsConsoleMenu();
-        SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+            //login as SM to export the report.
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                    , String.valueOf(storeManagerCredentials[0][2]));
+            SimpleUtils.assertOnFail("Dashboard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+            analyticsPage.clickOnAnalyticsConsoleMenu();
+            SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
 
-        String gfe = "Good Faith Estimate";
-        String downloadPath = parameterMap.get("Download_File_Default_Dir");
-        if (analyticsPage.isSpecificReportLoaded(gfe)) {
-            analyticsPage.mouseHoverAndExportReportByName(gfe);
-            // Verify whether the file is downloaded or not
-            Thread.sleep(5000);
-            SimpleUtils.assertOnFail("Failed to download the Good Faith Estimate Report!", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "GoodFaithEstimate"), false);
-        } else {
-            SimpleUtils.fail("Analytics: " + gfe + " not loaded Successfully!", false);
-        }
-        File latestFile = SimpleUtils.getLatestFileFromDirectory(downloadPath);
-        String gfeFileName = latestFile.getName();
-        SimpleUtils.pass("KPI Report exported successfully with file name '"+ gfeFileName +"'.");
-        ArrayList<String> actualHeader = CsvUtils.getHeaderFromCSVFileByPath(downloadPath + "/" + gfeFileName);
-        ArrayList<String> expectedHeader = new ArrayList<>(Arrays.asList("TM first name",
-                "TM last name",
-                "TM Employee ID",
-                "TM Job Title",
-                "Scheduling policy group",
-                "Date & time sent",
-                "Date & time read",
-                "Date & time acknowledged",
-                "Location",
-                "Location ID",
-                "Estimated working Days",
-                "Estimated working hours",
-                "Average hours per week",
-                "Minimum # of shifts per week"));
-        if (actualHeader.containsAll(expectedHeader) && expectedHeader.containsAll(actualHeader)) {
-            SimpleUtils.pass("GFE Report columns are correct!");
-        } else {
-            SimpleUtils.fail("GFE report columns are not correct!", true);
-        }
-        ArrayList<HashMap<String,String>> gfeDetails = CsvUtils.getDataFromCSVFileWithHeader(downloadPath + "/" + gfeFileName);
-        if (gfeDetails != null && gfeDetails.size() > 0) {
-            boolean isConsistent = false;
-            for (HashMap<String,String> gfeDetail : gfeDetails) {
-                String firstName = gfeDetail.get("TM first name");
-                if (nickNameOfTM.equalsIgnoreCase(firstName)) {
-                    String actualEstimatedWorkingDays = gfeDetail.get("Estimated working Days");
-                    if (actualEstimatedWorkingDays.startsWith("\"") && actualEstimatedWorkingDays.endsWith("\"")) {
-                        actualEstimatedWorkingDays = actualEstimatedWorkingDays.substring(1, actualEstimatedWorkingDays.length() - 1);
+            String gfe = "Good Faith Estimate";
+            String downloadPath = parameterMap.get("Download_File_Default_Dir");
+            if (analyticsPage.isSpecificReportLoaded(gfe)) {
+                analyticsPage.mouseHoverAndExportReportByName(gfe);
+                // Verify whether the file is downloaded or not
+                Thread.sleep(5000);
+                SimpleUtils.assertOnFail("Failed to download the Good Faith Estimate Report!", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "GoodFaithEstimate"), false);
+            } else {
+                SimpleUtils.fail("Analytics: " + gfe + " not loaded Successfully!", false);
+            }
+            File latestFile = SimpleUtils.getLatestFileFromDirectory(downloadPath);
+            String gfeFileName = latestFile.getName();
+            SimpleUtils.pass("KPI Report exported successfully with file name '" + gfeFileName + "'.");
+            ArrayList<String> actualHeader = CsvUtils.getHeaderFromCSVFileByPath(downloadPath + "/" + gfeFileName);
+            ArrayList<String> expectedHeader = new ArrayList<>(Arrays.asList("TM first name",
+                    "TM last name",
+                    "TM Employee ID",
+                    "TM Job Title",
+                    "Scheduling policy group",
+                    "Date & time sent",
+                    "Date & time read",
+                    "Date & time acknowledged",
+                    "Location",
+                    "Location ID",
+                    "Estimated working Days",
+                    "Estimated working hours",
+                    "Average hours per week",
+                    "Minimum # of shifts per week"));
+            if (actualHeader.containsAll(expectedHeader) && expectedHeader.containsAll(actualHeader)) {
+                SimpleUtils.pass("GFE Report columns are correct!");
+            } else {
+                SimpleUtils.fail("GFE report columns are not correct!", true);
+            }
+            ArrayList<HashMap<String, String>> gfeDetails = CsvUtils.getDataFromCSVFileWithHeader(downloadPath + "/" + gfeFileName);
+            if (gfeDetails != null && gfeDetails.size() > 0) {
+                boolean isConsistent = false;
+                for (HashMap<String, String> gfeDetail : gfeDetails) {
+                    String firstName = gfeDetail.get("TM first name");
+                    if (nickNameOfTM.equalsIgnoreCase(firstName)) {
+                        String actualEstimatedWorkingDays = gfeDetail.get("Estimated working Days");
+                        if (actualEstimatedWorkingDays.startsWith("\"") && actualEstimatedWorkingDays.endsWith("\"")) {
+                            actualEstimatedWorkingDays = actualEstimatedWorkingDays.substring(1, actualEstimatedWorkingDays.length() - 1);
+                        }
+                        if (estimatedWorkingDays.equals(actualEstimatedWorkingDays)) {
+                            SimpleUtils.pass("Analytics Report: Verified \"Estimated working Days\" is consistent: " + estimatedWorkingDays);
+                        } else {
+                            SimpleUtils.fail("Analytics Report: \"Estimated working Days\" is inconsistent, Expected: " + estimatedWorkingDays
+                                    + ", the value in report is: " + actualEstimatedWorkingDays, true);
+                        }
+                        String actualWorkingHours = gfeDetail.get("Estimated working hours");
+                        if (actualWorkingHours.startsWith("\"") && actualWorkingHours.endsWith("\"")) {
+                            actualWorkingHours = actualWorkingHours.substring(1, actualWorkingHours.length() - 1);
+                        }
+                        String expectedOperatingHours = selectedOperatingHours.toString();
+                        if (expectedOperatingHours.startsWith("[") && expectedOperatingHours.endsWith("]")) {
+                            expectedOperatingHours = expectedOperatingHours.substring(1, expectedOperatingHours.length() - 1);
+                        }
+                        if (expectedOperatingHours.equals(actualWorkingHours)) {
+                            SimpleUtils.pass("Analytics Report: Verified \"Estimated working hours\" is consistent: " + actualWorkingHours);
+                        } else {
+                            SimpleUtils.fail("Analytics Report: \"Estimated working hours\" is inconsistent, Expected: " + expectedOperatingHours
+                                    + ", the value in report is: " + actualWorkingHours, true);
+                        }
+                        String actualAverageHour = gfeDetail.get("Average hours per week");
+                        if (Float.parseFloat(averageHrs) == Float.parseFloat(actualAverageHour)) {
+                            SimpleUtils.pass("Analytics Report: Verified \"Average hours per week\" is consistent: " + averageHrs);
+                        } else {
+                            SimpleUtils.fail("Analytics Report: \"Average hours per week\" is inconsistent, Expected: " + averageHrs
+                                    + ", the value in report is: " + actualAverageHour, true);
+                        }
+                        String actualMinShifts = gfeDetail.get("Minimum # of shifts per week");
+                        if (minimumShifts.equals(actualMinShifts)) {
+                            SimpleUtils.pass("Analytics Report: Verified \"Minimum # of shifts per week\" is consistent: " + minimumShifts);
+                        } else {
+                            SimpleUtils.fail("Analytics Report: \"Minimum # of shifts per week\" is inconsistent, Expected: " + minimumShifts
+                                    + ", the value in report is: " + actualMinShifts, true);
+                        }
+                        // Judge the difference of two acknowledge times should be less than 1 minute
+                        String actualAcknowledgeTime = gfeDetail.get("Date & time acknowledged");
+                        if ((sdf.parse(acknowledgeTime).getTime() - sdf.parse(actualAcknowledgeTime).getTime()) < 60 * 1000) {
+                            SimpleUtils.pass("Analytics Report: Verified \"Date & time acknowledged\" is consistent: " + acknowledgeTime +
+                                    "! The difference between the two times should be less than 1 minute!");
+                        } else {
+                            SimpleUtils.fail("Analytics Report: \"Date & time acknowledged\" is inconsistent, Expected: " + acknowledgeTime
+                                    + ", the value in report is: " + actualAcknowledgeTime, false);
+                        }
+                        isConsistent = true;
+                        break;
                     }
-                    if (estimatedWorkingDays.equals(actualEstimatedWorkingDays)) {
-                        SimpleUtils.pass("Analytics Report: Verified \"Estimated working Days\" is consistent: " + estimatedWorkingDays);
-                    } else {
-                        SimpleUtils.fail("Analytics Report: \"Estimated working Days\" is inconsistent, Expected: " + estimatedWorkingDays
-                        + ", the value in report is: " + actualEstimatedWorkingDays, true);
-                    }
-                    String actualWorkingHours = gfeDetail.get("Estimated working hours");
-                    if (actualWorkingHours.startsWith("\"") && actualWorkingHours.endsWith("\"")) {
-                        actualWorkingHours = actualWorkingHours.substring(1, actualWorkingHours.length() - 1);
-                    }
-                    String expectedOperatingHours = selectedOperatingHours.toString();
-                    if (expectedOperatingHours.startsWith("[") && expectedOperatingHours.endsWith("]")) {
-                        expectedOperatingHours = expectedOperatingHours.substring(1, expectedOperatingHours.length() - 1);
-                    }
-                    if (expectedOperatingHours.equals(actualWorkingHours)) {
-                        SimpleUtils.pass("Analytics Report: Verified \"Estimated working hours\" is consistent: " + actualWorkingHours);
-                    } else {
-                        SimpleUtils.fail("Analytics Report: \"Estimated working hours\" is inconsistent, Expected: " + expectedOperatingHours
-                                + ", the value in report is: " + actualWorkingHours, true);
-                    }
-                    String actualAverageHour = gfeDetail.get("Average hours per week");
-                    if (Float.parseFloat(averageHrs) == Float.parseFloat(actualAverageHour)) {
-                        SimpleUtils.pass("Analytics Report: Verified \"Average hours per week\" is consistent: " + averageHrs);
-                    } else {
-                        SimpleUtils.fail("Analytics Report: \"Average hours per week\" is inconsistent, Expected: " + averageHrs
-                                + ", the value in report is: " + actualAverageHour, true);
-                    }
-                    String actualMinShifts = gfeDetail.get("Minimum # of shifts per week");
-                    if (minimumShifts.equals(actualMinShifts)) {
-                        SimpleUtils.pass("Analytics Report: Verified \"Minimum # of shifts per week\" is consistent: " + minimumShifts);
-                    } else {
-                        SimpleUtils.fail("Analytics Report: \"Minimum # of shifts per week\" is inconsistent, Expected: " + minimumShifts
-                                + ", the value in report is: " + actualMinShifts, true);
-                    }
-                    // Judge the difference of two acknowledge times should be less than 1 minute
-                    String actualAcknowledgeTime = gfeDetail.get("Date & time acknowledged");
-                    if ((sdf.parse(acknowledgeTime).getTime() - sdf.parse(actualAcknowledgeTime).getTime()) < 60*1000) {
-                        SimpleUtils.pass("Analytics Report: Verified \"Date & time acknowledged\" is consistent: " + acknowledgeTime +
-                                "! The difference between the two times should be less than 1 minute!");
-                    } else {
-                        SimpleUtils.fail("Analytics Report: \"Date & time acknowledged\" is inconsistent, Expected: " + acknowledgeTime
-                                + ", the value in report is: " + actualAcknowledgeTime, false);
-                    }
-                    isConsistent = true;
-                    break;
                 }
+                if (!isConsistent) {
+                    SimpleUtils.fail("Analytics Report: the most recent GFE in report is incorrect!", false);
+                }
+            } else {
+                SimpleUtils.fail("The count of TMs in the GFE report is inconsistent with Roster", false);
             }
-            if (!isConsistent) {
-                SimpleUtils.fail("Analytics Report: the most recent GFE in report is incorrect!", false);
-            }
-        } else {
-            SimpleUtils.fail("The count of TMs in the GFE report is inconsistent with Roster", false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 

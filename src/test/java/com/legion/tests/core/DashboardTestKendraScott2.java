@@ -25,9 +25,13 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@Override
 	@BeforeMethod()
 	public void firstTest(Method testMethod, Object[] params) throws Exception {
-		this.createDriver((String) params[0], "69", "Window");
-		visitPage(testMethod);
-		loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+		try {
+			this.createDriver((String) params[0], "69", "Window");
+			visitPage(testMethod);
+			loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	@Automated(automated = "Manual")
@@ -78,10 +82,14 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@TestName(description = "Validate the functionality of Change Location button on click")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheClickActionOnChangeLocationButton(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-		locationSelectorPage.verifyClickChangeLocationButton();
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.verifyClickChangeLocationButton();
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	@Automated(automated = "Automated")
@@ -90,10 +98,14 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@TestName(description = "Validate the content getting displayed in the Change Location flyout")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheContentDisplayedInChangeLocationLayout(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-		locationSelectorPage.verifyTheContentOfDetailLocations();
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.verifyTheContentOfDetailLocations();
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	@Automated(automated = "Automated")
@@ -102,11 +114,15 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@TestName(description = "Validate the functionality of Search textbox in Change Location flyout")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheFunctionOfSearchTextBox(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		List<String> testStrings = new ArrayList<>(Arrays.asList("s", "h", "W"));
-		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-		locationSelectorPage.verifyTheFunctionOfSearchTextBox(testStrings);
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			List<String> testStrings = new ArrayList<>(Arrays.asList("s", "h", "W"));
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.verifyTheFunctionOfSearchTextBox(testStrings);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	@Automated(automated = "Automated")

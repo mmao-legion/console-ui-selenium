@@ -29,9 +29,13 @@ public class CinemarkMinorTest extends TestBase {
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception {
-        this.createDriver((String) params[0], "69", "Window");
-        visitPage(testMethod);
-        loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+        try {
+            this.createDriver((String) params[0], "69", "Window");
+            visitPage(testMethod);
+            loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     //The template the location is using.
@@ -113,50 +117,54 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Prepare the calendar for all the minors")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void prepareTheCalendarForAllMinorsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-        schedulePage.clickOnDayView();
-        int currentDayIndex = schedulePage.getTheIndexOfCurrentDayInDayView();
-        int nextSatIndex = 6 - currentDayIndex + 6;
+            schedulePage.clickOnDayView();
+            int currentDayIndex = schedulePage.getTheIndexOfCurrentDayInDayView();
+            int nextSatIndex = 6 - currentDayIndex + 6;
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
-        String calendarName  = "Start Next Saturday";
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            String calendarName = "Start Next Saturday";
 
-        teamPage.deleteCalendarByName(calendarName);
-        teamPage.clickOnCreateNewCalendarButton();
-        teamPage.clickOnSchoolSessionStart();
-        teamPage.selectSchoolSessionStartNEndDate(nextSatIndex);
-        teamPage.clickOnSaveSchoolSessionCalendarBtn();
-        teamPage.inputCalendarName(calendarName);
-        teamPage.clickOnSaveSchoolCalendarBtn();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.deleteCalendarByName(calendarName);
+            teamPage.clickOnCreateNewCalendarButton();
+            teamPage.clickOnSchoolSessionStart();
+            teamPage.selectSchoolSessionStartNEndDate(nextSatIndex);
+            teamPage.clickOnSaveSchoolSessionCalendarBtn();
+            teamPage.inputCalendarName(calendarName);
+            teamPage.clickOnSaveSchoolCalendarBtn();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        List<String> minorNames = new ArrayList<>();
-        minorNames.add(cinemarkMinors.get("Minor13"));
-        minorNames.add(cinemarkMinors.get("Minor14"));
-        minorNames.add(cinemarkMinors.get("Minor15"));
-        minorNames.add(cinemarkMinors.get("Minor16"));
-        minorNames.add(cinemarkMinors.get("Minor17"));
+            List<String> minorNames = new ArrayList<>();
+            minorNames.add(cinemarkMinors.get("Minor13"));
+            minorNames.add(cinemarkMinors.get("Minor14"));
+            minorNames.add(cinemarkMinors.get("Minor15"));
+            minorNames.add(cinemarkMinors.get("Minor16"));
+            minorNames.add(cinemarkMinors.get("Minor17"));
 
-        teamPage.setTheCalendarForMinors(minorNames, calendarName, profileNewUIPage);
+            teamPage.setTheCalendarForMinors(minorNames, calendarName, profileNewUIPage);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -165,26 +173,30 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify add dates for breaks")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAddDatesForBreaksAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        teamPage.clickTheCalendarByRandom();
-        teamPage.verifySchoolSessionPageLoaded();
-        teamPage.clickOnEditCalendarButton();
-        teamPage.verifyEditCalendarAlertModelPopsUp();
-        teamPage.clickOnEditAnywayButton();
-        SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
+            teamPage.clickTheCalendarByRandom();
+            teamPage.verifySchoolSessionPageLoaded();
+            teamPage.clickOnEditCalendarButton();
+            teamPage.verifyEditCalendarAlertModelPopsUp();
+            teamPage.clickOnEditAnywayButton();
+            SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
 
-        // Verify the clicked days are highlighted as "Non School Day" color
-        teamPage.verifyClickedDayIsHighlighted();
+            // Verify the clicked days are highlighted as "Non School Day" color
+            teamPage.verifyClickedDayIsHighlighted();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -193,37 +205,41 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify view details of  calendars and edit")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyViewDetailsAndEditAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        // Verify the visibility of calendars on School Calendars page
-        teamPage.verifyTheCalendarListLoaded();
-        // Verify the content of each calendar
-        teamPage.verifyTheContentOnEachCalendarList();
-        // Verify the visibility of the detailed calendar page
-        teamPage.clickTheCalendarByRandom();
-        teamPage.verifySchoolSessionPageLoaded();
-        // Verify the content on detailed calendar page
-        teamPage.verifyTheContentOnDetailedCalendarPage();
-        // Verify the functionality of Edit button
-        teamPage.clickOnEditCalendarButton();
-        teamPage.verifyEditCalendarAlertModelPopsUp();
-        teamPage.clickOnEditAnywayButton();
-        SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
+            // Verify the visibility of calendars on School Calendars page
+            teamPage.verifyTheCalendarListLoaded();
+            // Verify the content of each calendar
+            teamPage.verifyTheContentOnEachCalendarList();
+            // Verify the visibility of the detailed calendar page
+            teamPage.clickTheCalendarByRandom();
+            teamPage.verifySchoolSessionPageLoaded();
+            // Verify the content on detailed calendar page
+            teamPage.verifyTheContentOnDetailedCalendarPage();
+            // Verify the functionality of Edit button
+            teamPage.clickOnEditCalendarButton();
+            teamPage.verifyEditCalendarAlertModelPopsUp();
+            teamPage.clickOnEditAnywayButton();
+            SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
 
-        // Verify the functionality of Save button
-        teamPage.clickOnSaveSchoolCalendarBtn();
-        // Verify the functionality of "School Schedules" button
-        teamPage.clickOnSchoolSchedulesButton();
-        teamPage.verifyTheCalendarListLoaded();
+            // Verify the functionality of Save button
+            teamPage.clickOnSaveSchoolCalendarBtn();
+            // Verify the functionality of "School Schedules" button
+            teamPage.clickOnSchoolSchedulesButton();
+            teamPage.verifyTheCalendarListLoaded();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -232,31 +248,35 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify delete calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDeleteCalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        // Verify the visibility of calendars on School Calendars page
-        teamPage.verifyTheCalendarListLoaded();
+            // Verify the visibility of calendars on School Calendars page
+            teamPage.verifyTheCalendarListLoaded();
 
-        teamPage.clickTheCalendarByRandom();
-        teamPage.verifySchoolSessionPageLoaded();
+            teamPage.clickTheCalendarByRandom();
+            teamPage.verifySchoolSessionPageLoaded();
 
-        // Verify the presence of DELETE button
-        // Verify the functionality of DELETE button
-        teamPage.clickOnDeleteCalendarButton();
-        // Verify the functionality of CANCEL button
-        teamPage.clickOnCancelButtonOnPopup();
-        // Verify the functionality of DELETE ANYWAY button
-        teamPage.clickOnDELETEANYWAYButton();
-        teamPage.verifyTheCalendarListLoaded();
+            // Verify the presence of DELETE button
+            // Verify the functionality of DELETE button
+            teamPage.clickOnDeleteCalendarButton();
+            // Verify the functionality of CANCEL button
+            teamPage.clickOnCancelButtonOnPopup();
+            // Verify the functionality of DELETE ANYWAY button
+            teamPage.clickOnDELETEANYWAYButton();
+            teamPage.verifyTheCalendarListLoaded();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
