@@ -854,7 +854,7 @@ public class LocationsTest extends TestBase {
             //get search result location info
             ArrayList<HashMap<String, String>> locationInfoDetailsBeforeUpdate =locationsPage.getLocationInfo(LGMSLocationName);
             //verify to change MS child location to None
-            String locationToNone = locationInfoDetailsBeforeUpdate.get(locationInfoDetailsBeforeUpdate.size()-1).get("locationName");
+            String locationToNone = locationInfoDetailsBeforeUpdate.get(1).get("locationName");
             locationsPage.changeOneLocationToNone(locationToNone);
             //search this location group again
             ArrayList<HashMap<String, String>> locationInfoDetailsAftUpdate =locationsPage.getLocationInfo(LGMSLocationName);
@@ -1254,7 +1254,7 @@ public class LocationsTest extends TestBase {
                 locationsPage.validateItemsInLocations();
                 //go to sub-district  tab
                 locationsPage.goToSubDistrictsInLocationsPage();
-            // locationsPage.addNewDistrict( districtName, districtId, districtManager,searchChara,index);
+                locationsPage.addNewDistrictWithoutLocation( districtName, districtId);
                 locationsPage.searchDistrict(districtName);
                 locationsPage.updateDistrict(districtName,districtId,searchChara,index);
         } catch (Exception e){
@@ -1292,7 +1292,7 @@ public class LocationsTest extends TestBase {
             locationsPage.validateItemsInLocations();
             //go to sub-district  tab
             locationsPage.goToSubDistrictsInLocationsPage();
-            locationsPage.addNewDistrictWithoutLocation( districtName, districtId, districtManager);
+            locationsPage.addNewDistrictWithoutLocation( districtName, districtId);
 
             //disable and enable district
             locationsPage.disableEnableDistrict(districtName,disableAction);

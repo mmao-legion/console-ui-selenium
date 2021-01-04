@@ -105,7 +105,7 @@ public class JobTest extends TestBase {
             String jobTitle = currentTime;
             setJobName(jobTitle);
             String commentText = "created by automation scripts";
-            String searchText = "omlocation2";
+            String searchText = "OMLocation2";
             int index = 0;
 
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();

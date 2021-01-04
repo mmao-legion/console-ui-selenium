@@ -92,7 +92,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public boolean isOpsPortalPageLoaded() throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(goToLocationsButton, 10))
+		if (isElementLoaded(goToLocationsButton, 30))
 			isLoaded = true;
 		return isLoaded;
 	}
@@ -1426,12 +1426,12 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement CancelDistrictBtnInDistrictCreationPage;
 
 	@Override
-	public void addNewDistrict(String districtName, String districtId, String districtManager,String searchChara,int index) throws Exception {
+	public void addNewDistrict(String districtName, String districtId, String searchChara,int index) throws Exception {
 		click(addDistrictButton);
 		if (districtCreateLandingPageShowWell()) {
 			districtNameInput.sendKeys(districtName);
 			districtIdInput.sendKeys(districtId);
-			selectByIndex(districtManagerSelector,0);
+			selectByIndex(districtManagerSelector,1);
 			waitForSeconds(3);
 			click(ManagerBtnInDistrictCreationPage);
 			managerDistrictLocations(searchChara,index);
@@ -1544,7 +1544,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public void addNewDistrictWithoutLocation(String districtName, String districtId, String districtManager) throws Exception {
+	public void addNewDistrictWithoutLocation(String districtName, String districtId) throws Exception {
 		click(addDistrictButton);
 		if (districtCreateLandingPageShowWell()) {
 			districtNameInput.sendKeys(districtName);
