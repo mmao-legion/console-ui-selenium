@@ -32,7 +32,7 @@
   "deviceName" : "Gionee X1",
   "platformVersion" : "7.0",
   "isParallelBrowser" : "false",
-  "Download_File_Default_Dir" : "/home/circleci/project/downloads",
+  "Download_File_Default_Dir" : "/var/lib/jenkins/workspace/createRemoteSeleniumGridForHydsoft/chinaQA",
   "isHeadlessBrowser" : "false",
   "isGridEnabled" : "true",
   "URL" : "http://localhost:4455/wd/hub"

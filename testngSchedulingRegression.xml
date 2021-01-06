@@ -46,7 +46,7 @@
         <classes>
             <class name="com.legion.tests.core.TeamTest">
                 <methods>
-                    <include name="verifyTheTeamFunctionalityInCoverageAsInternalAdmin" />
+<!--                    <include name="verifyTheTeamFunctionalityInCoverageAsInternalAdmin" />-->
                     <include name="verifyEditModeInNewUserProfilePageAsInternalAdmin" />
                 </methods>
             </class>

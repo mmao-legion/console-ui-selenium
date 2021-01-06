@@ -3699,7 +3699,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (areListElementVisible(shiftsWeekView, 15) && shiftsWeekView.size() > 0) {
                 SimpleUtils.pass("Create the schedule successfully!");
             }else {
-                SimpleUtils.fail("Not able to generate the schedule successfully for non dg flow!", false);
+                SimpleUtils.fail("Not able to generate the schedule successfully!", false);
             }
         }
     }
