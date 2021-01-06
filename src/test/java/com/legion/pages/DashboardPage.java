@@ -88,4 +88,8 @@ public interface DashboardPage {
     public void validateRefreshPerformance() throws Exception;
     public void validateRefreshWhenNavigationBack() throws Exception;
     public void validateRefreshTimestamp() throws Exception;
+    public boolean isProjectedComplianceWidgetDisplay() throws Exception;
+    public void verifyTheContentInProjectedComplianceWidget() throws Exception;
+    public String getTheTotalViolationHrsFromProjectedComplianceWidget() throws Exception;
+    public void clickOnViewComplianceLink() throws Exception;
 }

@@ -1,5 +1,6 @@
 package com.legion.tests.core;
 
+import com.legion.pages.CompliancePage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.ProfileNewUIPage;
@@ -11,6 +12,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java8.Da;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -111,5 +113,36 @@ public class DMViewTest extends TestBase {
             SimpleUtils.fail(e.getMessage(),false);
         }
     }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Projected Compliance widget on Dashboard in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            SimpleUtils.assertOnFail("Project Compliance widget not loaded successfully", dashboardPage.isProjectedComplianceWidgetDisplay(), false);
+            //Validate the content of Projected Compliance widget
+            dashboardPage.verifyTheContentInProjectedComplianceWidget();
+
+            //Validate the data of Projected Compliance widget
+            String totalViolationHrsFromProjectedComplianceWidget =
+                    dashboardPage.getTheTotalViolationHrsFromProjectedComplianceWidget();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            dashboardPage.clickOnViewComplianceLink();
+            String totalViolationHrsFromCompliancePage =
+                    compliancePage.getTheTotalViolationHrsFromSmartCard().split(" ")[0];
+            SimpleUtils.assertOnFail("Project Compliance widget not loaded successfully",
+                    totalViolationHrsFromProjectedComplianceWidget.equals(totalViolationHrsFromCompliancePage), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.toString(),false);
+        }
+    }
 }

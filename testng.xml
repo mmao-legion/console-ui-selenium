@@ -428,6 +428,7 @@
                 <methods>
                     <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
                     <include name="verifyRefreshFeatureOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
