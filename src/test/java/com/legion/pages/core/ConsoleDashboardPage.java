@@ -79,7 +79,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy (css = "div.col-sm-4.text-left")
 	private WebElement startingSoon;
 
-	@FindBy (css = "div.header-avatar")
+	@FindBy (css = ".header-avatar>img")
 	private WebElement iconProfile;
 
 	@FindBy (css = "li[ng-if='canShowTimeoffs']")
@@ -181,7 +181,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     	checkElementVisibility(goToTodayScheduleButton);
     	SimpleUtils.pass("Dashboard Page Loaded Successfully!");
     	activeConsoleName = scheduleConsoleName.getText();
-    	click(goToTodayScheduleButton);
+    	clickTheElement(goToTodayScheduleButton);
         return new ConsoleScheduleNewUIPage();
     }
     
@@ -303,7 +303,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	public void clickOnProfileIconOnDashboard() throws Exception {
 		if(isElementEnabled(iconProfile,5)){
-			click(iconProfile);
+			moveToElementAndClick(iconProfile);
 			SimpleUtils.pass("Able to click on profile icon Successfully!!");
 		}else{
 			SimpleUtils.fail("Profile icon is not clickable",false);
@@ -467,7 +467,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				shifts.put(name, role);
 			}
 		}else {
-			SimpleUtils.fail("Up Coming shifts failed to load!", true);
+			SimpleUtils.report("Up Coming shifts are not loaded!");
 		}
 		return shifts;
 	}
@@ -515,7 +515,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	//Added by Julie
-	@FindBy( css = ".col-sm-4 > .header-company-icon > img")
+	@FindBy( css = ".header-company-icon.fl-right .company-icon-img")
 	private WebElement companyIconImg;
 
 	@FindBy(css = ".user-profile-section__title.ng-binding")
@@ -527,7 +527,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "[ng-show*=\"showLocation()\"]")
 	private WebElement showLocation;
 
-	@FindBy(css = "lg-picker-input > div > input-field > ng-form > div")
+	@FindBy(css = "[search-hint=\"Search Location\"] input-field[placeholder=\"Select...\"] div.input-faked")
 	private WebElement currentLocation;
 
 	@FindBy(css = ".lg-search-options__option")
@@ -545,11 +545,14 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = ".lgn-action-button-success")
 	private WebElement OKButton;
 
-	@FindBy(css = ".quick-profile")
+	@FindBy(css = "sub-content-box[box-title=\"User Profile\"]")
 	private WebElement personalDetails;
 
-	@FindBy(css = ".quick-engagement")
-	private WebElement engagementDetails;
+	@FindBy(css = "sub-content-box[box-title=\"HR Profile Information\"]")
+	private WebElement hrProfileInfo;
+
+	@FindBy(css = "sub-content-box[box-title=\"Legion Information\"]")
+	private WebElement legionInfo;
 
 	@FindBy(xpath = "//span[contains(text(),'My Shift Preferences')]")
 	private WebElement myShiftPreferences;
@@ -571,6 +574,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@FindBy(css = ".col-sm-5 .count-block-rejected")
 	private WebElement rejected;
+
+	@FindBy(css = "header-user-switch-menu[ng-show=\"showMenu\"]")
+	private WebElement switchMenu;
 
 	private static HashMap<String, String> propertyLocationTimeZone = JsonUtil.getPropertiesFromJsonFile("src/test/resources/LocationTimeZone.json");
 
@@ -645,7 +651,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateThePresenceOfLogo() throws Exception {
 		if (isElementLoaded(companyIconImg, 5)) {
 			if (companyIconImg.isDisplayed()) {
-				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[1]/img")).equals(companyIconImg)) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[2]//img[contains(@class,'company-icon-img')]")).equals(companyIconImg)) {
 					SimpleUtils.pass("Dashboard Page: Logo is present at right corner of page successfully");
 				} else {
 					SimpleUtils.fail("Dashboard Page: Logo isn't present at right corner of page", true);
@@ -764,7 +770,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateTheVisibilityOfProfilePicture() throws Exception {
 		if (isElementLoaded(iconProfile, 5)) {
 			if (iconProfile.isDisplayed()) {
-				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[2]")).equals(iconProfile)) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[1]/img")).equals(iconProfile)) {
 					SimpleUtils.pass("Profile picture is visible at right corner of the page successfully");
 				} else {
 					SimpleUtils.fail("Profile picture isn't visible at right corner of the page", true);
@@ -779,7 +785,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateProfilePictureIconClickable() throws Exception {
-		clickOnProfileIconOnDashboard();
+		if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+			clickOnProfileIconOnDashboard();
+		}
 		if (areListElementVisible(goToProfile, 10)) {
 			if (goToProfile.size() != 0) {
 				SimpleUtils.pass("Profile Page: Dropdown list opens after clicking on profile picture icon");
@@ -793,7 +801,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateTheVisibilityOfProfile() throws Exception {
-		clickOnProfileIconOnDashboard();
+		if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+			clickOnProfileIconOnDashboard();
+		}
 		if (areListElementVisible(goToProfile, 10)) {
 			if (goToProfile.size() == 3) {
 				SimpleUtils.pass("Profile Page: Dropdown list has three rows successfully");
@@ -814,12 +824,20 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateProfileDropdownClickable() throws Exception {
+		if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+			clickOnProfileIconOnDashboard();
+		}
 		if (areListElementVisible(goToProfile, 10) && goToProfile.size() != 0) {
 			for (int i = 0; i < goToProfile.size(); i++) {
-				click(goToProfile.get(i));
+				clickTheElement(goToProfile.get(i));
 				SimpleUtils.pass("Profile Page: " + goToProfile.get(i).getText() + " is clickable successfully");
 				if (isElementLoaded(alertDialog, 5)) {
 					click(OKButton);
+					if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+						clickOnProfileIconOnDashboard();
+					}
+				}
+				if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
 					clickOnProfileIconOnDashboard();
 				}
 			}
@@ -831,24 +849,26 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public void validateTheDataOfMyProfile() throws Exception {
 		clickOnSubMenuOnProfile("My Profile");
-		if (isElementLoaded(personalDetails, 20) && isElementLoaded(engagementDetails, 20)) {
-			if (personalDetails.isDisplayed() && engagementDetails.isDisplayed())
-				SimpleUtils.pass("My Profile: It shows the TM's personal and engagement details successfully");
+		if (isElementLoaded(personalDetails, 20) && isElementLoaded(hrProfileInfo, 20)&& isElementLoaded(legionInfo, 20)) {
+			if (personalDetails.isDisplayed() && hrProfileInfo.isDisplayed())
+				SimpleUtils.pass("My Profile: It shows the TM's profile information details successfully");
 		} else {
-			SimpleUtils.fail("My Profile: Failed to show the TM's personal and engagement", true);
+			SimpleUtils.fail("My Profile: Failed to show the TM's profile information", true);
 		}
 	}
 
 	@Override
 	public void clickOnSubMenuOnProfile(String subMenu) throws Exception {
-		clickOnProfileIconOnDashboard();
+		if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+			clickOnProfileIconOnDashboard();
+		}
 		if (areListElementVisible(goToProfile,10) && goToProfile.size() != 0 ) {
 			for(WebElement e : goToProfile) {
 				if(e.getText().toLowerCase().contains(subMenu.toLowerCase())) {
-					click(e);
+					clickTheElement(e);
 					if (isElementLoaded(alertDialog, 5))
 						click(OKButton);
-					else click(companyIconImg);
+					else clickTheElement(companyIconImg);
 					SimpleUtils.pass("Able to click on '"+ subMenu+"' link Successfully!!");
 					break;
 				}
@@ -934,7 +954,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public boolean isSwitchToEmployeeViewPresent() throws Exception {
-		clickOnProfileIconOnDashboard();
 		if (isElementLoaded(switchToEmployeeView, 10))
 			return true;
 		else
@@ -951,6 +970,31 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 	}
 
+	@FindBy(css = "div.row-fx.schedule-table-row.ng-scope")
+	private List<WebElement> dashboardScheduleWeeks;
+
+	@Override
+	public List<WebElement> getDashboardScheduleWeeks() {
+		if(areListElementVisible(dashboardScheduleWeeks,10)){
+			return dashboardScheduleWeeks;
+		}
+		return dashboardScheduleWeeks;
+	}
+
+	@FindBy(css = "[ng-click=\"$ctrl.onReload(true)\"]")
+	private WebElement refreshButton;
+
+
+	@Override
+	public void clickOnRefreshButton() throws Exception {
+		if (isElementLoaded(refreshButton, 10)) {
+			clickTheElement(refreshButton);
+			waitForSeconds(15);
+			SimpleUtils.pass("Click on Refresh button Successfully!");
+		} else {
+			SimpleUtils.fail("Refresh button not Loaded!", true);
+		}
+	}
 	//added by Estelle
 
 	@FindBy(css = "div.console-navigation-item-label.Dashboard")
@@ -1019,6 +1063,298 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return null;
 	}
 
+	@FindBy(css = "img[class=\"widgetMainImage\"]")
+	private WebElement legionLogoImg;
 
+	@Override
+	public boolean isLegionLogoDisplay() throws Exception {
+		boolean isLegionLogoDisplay = false;
+		try{
+			if(isElementLoaded(legionLogoImg, 5)) {
+				isLegionLogoDisplay = true;
+				SimpleUtils.report("Legion logo is loaded Successfully!");
+			} else
+				SimpleUtils.report("Legion logo not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isLegionLogoDisplay;
+	}
+
+
+	@Override
+	public boolean isDashboardConsoleMenuDisplay() throws Exception {
+		boolean isDashboardConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(dashboardConsoleMenu, 5)) {
+				isDashboardConsoleMenuDisplay = true;
+				SimpleUtils.report("Dashboard Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Dashboard Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isDashboardConsoleMenuDisplay;
+	}
+
+	@FindBy(css = "div.console-navigation-item-label.Team")
+	private WebElement teamConsoleMenu;
+	@Override
+	public boolean isTeamConsoleMenuDisplay() throws Exception {
+		boolean isTeamConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(teamConsoleMenu, 5)) {
+				isTeamConsoleMenuDisplay = true;
+				SimpleUtils.report("Team Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Team Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isTeamConsoleMenuDisplay;
+	}
+
+	@FindBy(css = "div.console-navigation-item-label.Schedule")
+	private WebElement scheduleConsoleMenu;
+
+	@Override
+	public boolean isScheduleConsoleMenuDisplay() throws Exception {
+		boolean isScheduleConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(scheduleConsoleMenu, 5)) {
+				isScheduleConsoleMenuDisplay = true;
+				SimpleUtils.report("Schedule Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Schedule Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isScheduleConsoleMenuDisplay;
+	}
+
+
+	@FindBy(css = "div.console-navigation-item-label.Analytics")
+	private WebElement analyticsConsoleMenu;
+
+	@Override
+	public boolean isAnalyticsConsoleMenuDisplay() throws Exception {
+		boolean isAnalyticsConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(analyticsConsoleMenu, 5)) {
+				isAnalyticsConsoleMenuDisplay = true;
+				SimpleUtils.report("Analytics Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Analytics Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isAnalyticsConsoleMenuDisplay;
+	}
+
+
+	@FindBy(css = "div.console-navigation-item-label.Inbox")
+	private WebElement inboxConsoleMenu;
+
+	@Override
+	public boolean isInboxConsoleMenuDisplay() throws Exception {
+		boolean isInboxConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(inboxConsoleMenu, 5)) {
+				isInboxConsoleMenuDisplay = true;
+				SimpleUtils.report("Inbox Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Inbox Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isInboxConsoleMenuDisplay;
+	}
+
+
+	@FindBy(css = "div.console-navigation-item-label.Admin")
+	private WebElement adminConsoleMenu;
+
+	@Override
+	public boolean isAdminConsoleMenuDisplay() throws Exception {
+		boolean isAdminConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(adminConsoleMenu, 5)) {
+				isAdminConsoleMenuDisplay = true;
+				SimpleUtils.report("Admin Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Admin Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isAdminConsoleMenuDisplay;
+	}
+
+	@Override
+	public void clickOnAdminConsoleMenu() throws Exception {
+		try{
+			if(isElementLoaded(adminConsoleMenu, 5)) {
+				click(adminConsoleMenu);
+				SimpleUtils.report("Admin Console Menu been clicked Successfully!");
+			} else
+				SimpleUtils.report("Admin Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+	@FindBy(css = "div.console-navigation-item-label.Integration")
+	private WebElement integrationConsoleMenu;
+
+	@Override
+	public boolean isIntegrationConsoleMenuDisplay() throws Exception {
+		boolean isIntegrationConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(integrationConsoleMenu, 5)) {
+				isIntegrationConsoleMenuDisplay = true;
+				SimpleUtils.report("Integration Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Integration Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isIntegrationConsoleMenuDisplay;
+	}
+
+	@Override
+	public void clickOnIntegrationConsoleMenu() throws Exception {
+		try{
+			if(isElementLoaded(integrationConsoleMenu,5)) {
+				click(integrationConsoleMenu);
+				SimpleUtils.report("Integration Console Menu been clicked Successfully!");
+			} else
+				SimpleUtils.report("Integration Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+	@FindBy(css = "div.console-navigation-item-label.Controls")
+	private WebElement controlsConsoleMenu;
+
+	@Override
+	public boolean isControlsConsoleMenuDisplay() throws Exception {
+		boolean isControlsConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(controlsConsoleMenu, 5)) {
+				isControlsConsoleMenuDisplay = true;
+				SimpleUtils.report("Controls Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Controls Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isControlsConsoleMenuDisplay;
+	}
+
+
+	@FindBy(css = "div.console-navigation-item-label.Logout")
+	private WebElement logoutConsoleMenu;
+
+	@Override
+	public boolean isLogoutConsoleMenuDisplay() throws Exception {
+		boolean isLogoutConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(logoutConsoleMenu, 5)) {
+				isLogoutConsoleMenuDisplay = true;
+				SimpleUtils.report("Logout Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Logout Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isLogoutConsoleMenuDisplay;
+	}
+
+
+	@FindBy(css = "div.console-navigation-item-label.Timesheet")
+	private WebElement timesheetConsoleMenu;
+
+	@Override
+	public boolean isTimesheetConsoleMenuDisplay() throws Exception {
+		boolean isTimesheetConsoleMenuDisplay = false;
+		try{
+			if(isElementLoaded(timesheetConsoleMenu, 5)) {
+				isTimesheetConsoleMenuDisplay = true;
+				SimpleUtils.report("Timesheet Console Menu is loaded Successfully!");
+			} else
+				SimpleUtils.report("Timesheet Console Menu not loaded Successfully!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+		return isTimesheetConsoleMenuDisplay;
+	}
+
+	@FindBy(css = "div[ng-if=\"hasViewAdminPermission()\"]")
+	private WebElement adminPanel;
+	@FindBy(css = "div[ng-show=\"subNavigation.canShowSelf\"]")
+	private WebElement subNavigation;
+
+	@Override
+	public void verifyAdminPageIsLoaded() throws Exception {
+		try{
+			if(isElementLoaded(adminPanel,5)
+					&& isElementLoaded(subNavigation, 5)) {
+				SimpleUtils.pass("Admin page is loaded Successfully!");
+			} else
+				SimpleUtils.fail("Admin page not loaded Successfully!", false);
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@FindBy(css = "table[ng-if=\"configs.length\"]")
+	private WebElement integrationConfigTable;
+	@Override
+	public void verifyIntegrationPageIsLoaded() throws Exception {
+		try{
+			if(isElementLoaded(integrationConfigTable, 5)
+					&&isElementLoaded(subNavigation, 5)) {
+				SimpleUtils.pass("Admin page is loaded Successfully!");
+			} else
+				SimpleUtils.fail("Admin page not loaded Successfully!", false);
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@FindBy(css = "div.header-navigation-label")
+	private WebElement headerNavigation;
+
+	@Override
+	public void verifyHeaderNavigationMessage(String headerNavigationMessage) throws Exception {
+		try{
+			if(isElementLoaded(headerNavigation, 5)
+					&&headerNavigation.getText().equalsIgnoreCase(headerNavigationMessage)) {
+				SimpleUtils.pass("Header navigation message display correctly! ");
+			} else
+				SimpleUtils.fail("Header navigation message not display correctly!", false);
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+	@FindBy(css = "[class=\"wm-ignore-css-reset\"]")
+	private WebElement closeNewFeatureEnhancementsButton;
+
+	@Override
+	public void closeNewFeatureEnhancementsPopup() throws Exception {
+		try{
+			if(isElementLoaded(closeNewFeatureEnhancementsButton, 5)) {
+				click(closeNewFeatureEnhancementsButton);
+				SimpleUtils.pass("New Feature Enhancements Popup been closed successfully! ");
+			} else
+				SimpleUtils.report("New Feature Enhancements Popup is not loaded!");
+		} catch(Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
 
 }
