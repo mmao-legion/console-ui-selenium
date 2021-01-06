@@ -333,7 +333,7 @@ public class NewNavigationFlowTest extends TestBase {
         SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
 
         locationSelectorPage.changeDistrict(districtName);
-        Thread.sleep(3000);
+        Thread.sleep(4000);
         locationSelectorPage.changeLocation(locationName);
 
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
