@@ -83,4 +83,9 @@ public interface DashboardPage {
     public void verifyIntegrationPageIsLoaded() throws Exception;
     public void verifyHeaderNavigationMessage(String headerNavigationMessage) throws Exception;
     public void closeNewFeatureEnhancementsPopup() throws Exception;
+    public void validateThePresenceOfRefreshButton() throws Exception;
+    public void validateRefreshFunction() throws Exception;
+    public void validateRefreshPerformance() throws Exception;
+    public void validateRefreshWhenNavigationBack() throws Exception;
+    public void validateRefreshTimestamp() throws Exception;
 }

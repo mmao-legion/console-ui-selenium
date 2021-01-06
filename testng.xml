@@ -427,6 +427,7 @@
             <class name="com.legion.tests.core.DMViewTest">
                 <methods>
                     <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
+                    <include name="verifyRefreshFeatureOnDashboardInDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

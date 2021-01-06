@@ -77,4 +77,39 @@ public class DMViewTest extends TestBase {
             SimpleUtils.fail(e.getMessage(),false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Refresh feature on Dashboard in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRefreshFeatureOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            // Validate the presence of Refresh button
+            dashboardPage.validateThePresenceOfRefreshButton();
+
+            // Validate Refresh timestamp
+            dashboardPage.validateRefreshTimestamp();
+
+            // Validate Refresh when navigation back
+            dashboardPage.validateRefreshWhenNavigationBack();
+
+            // Validate Refresh function
+            dashboardPage.validateRefreshFunction();
+
+            // Validate Refresh performance
+            dashboardPage.validateRefreshPerformance();
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
 }
