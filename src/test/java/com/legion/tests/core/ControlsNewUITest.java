@@ -191,7 +191,7 @@ public class ControlsNewUITest extends TestBase{
       SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
   	  schedulePage.clickOnScheduleConsoleMenuItem();
   	  schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-  	  SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+  	  SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
   	  
   	  String budgetSmartcardText = "WEEKLY BUDGET";
   	  boolean isBudgetSmartcardAppeared = schedulePage.isSmartCardAvailableByLabel(budgetSmartcardText);
@@ -207,7 +207,7 @@ public class ControlsNewUITest extends TestBase{
       controlsNewUIPage.enableDisableBudgetSmartcard(enableBudgetSmartcard);
   	  schedulePage.clickOnScheduleConsoleMenuItem();
  	  schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
- 	  SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+ 	  SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
   	  isBudgetSmartcardAppeared = schedulePage.isSmartCardAvailableByLabel(budgetSmartcardText);
 	  SimpleUtils.assertOnFail("Budget Smartcard loaded on 'Schedule' tab even Scheduling policies Disabled Budget Smartcard.",
 			! isBudgetSmartcardAppeared , false);
@@ -235,7 +235,7 @@ public class ControlsNewUITest extends TestBase{
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.clickOnScheduleConsoleMenuItem();
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
 
 		String budgetSmartcardText = "WEEKLY BUDGET";
 		boolean isBudgetSmartcardAppeared = schedulePage.isSmartCardAvailableByLabel(budgetSmartcardText);
@@ -251,7 +251,7 @@ public class ControlsNewUITest extends TestBase{
 		controlsNewUIPage.enableDisableBudgetSmartcard(enableBudgetSmartcard);
 		schedulePage.clickOnScheduleConsoleMenuItem();
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
 		isBudgetSmartcardAppeared = schedulePage.isSmartCardAvailableByLabel(budgetSmartcardText);
 		SimpleUtils.assertOnFail("Budget Smartcard loaded on 'Schedule' tab even Scheduling policies Disabled Budget Smartcard.",
 				! isBudgetSmartcardAppeared , false);
@@ -295,7 +295,7 @@ public class ControlsNewUITest extends TestBase{
       SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
   	  schedulePage.clickOnScheduleConsoleMenuItem();
   	  schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
-  	  SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+  	  SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
   	  ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
   	  int weeksCountToBeCreated = scheduleOverviewPage.getScheduleOverviewWeeksCountCanBeCreatInAdvance();
   	  
@@ -413,7 +413,7 @@ public class ControlsNewUITest extends TestBase{
       schedulePage.clickOnScheduleConsoleMenuItem();
   	  schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
   	  SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!"
-  			,schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+  			,schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
   	  ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
   	  BasePage basePase = new BasePage();
   	  Thread.sleep(1000);
@@ -480,7 +480,7 @@ public class ControlsNewUITest extends TestBase{
       schedulePage.clickOnScheduleConsoleMenuItem();
   	  schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
   	  SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!"
-  			,schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+  			,schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
   	  
   	  ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
   	  Thread.sleep(2000);

@@ -113,6 +113,8 @@ public interface ProfileNewUIPage {
 
 	public List<String> selectStartAndEndDate() throws Exception;
 
+	public String selectStartAndEndDateAtSameDay() throws Exception;
+
 	public boolean areAllDayCheckboxesLoaded() throws Exception;
 
 	public void deSelectAllDayCheckboxes() throws Exception;
@@ -158,4 +160,72 @@ public interface ProfileNewUIPage {
 	public void rejectAllTimeOff() throws Exception;
 
 	public String getTimeOffRequestStatusByExplanationText(String timeOffExplanationText) throws Exception;
+
+	public void cancelAllPendingAvailabilityRequest() throws Exception;
+
+	public void clickOnEditUserProfilePencilIcon() throws Exception;
+
+	public void clickOnSaveUserProfileBtn() throws Exception;
+
+	public void clickOnCancelUserProfileBtn() throws Exception;
+
+	public void verifyUserProfileSectionIsLoaded() throws Exception;
+
+	public void verifyHRProfileInformationSectionIsLoaded() throws Exception;
+
+	public void verifyLegionInformationSectionIsLoaded() throws Exception;
+
+	public void verifyActionSectionIsLoaded() throws Exception;
+
+	public void verifyFieldsInUserProfileSection() throws Exception;
+
+	public void verifyFieldsInHRProfileInformationSection() throws Exception;
+
+	public void verifyFieldsInLegionInformationSection() throws Exception;
+
+	public void verifyContentsInActionsSection() throws Exception;
+
+	public void verifyEditUserProfileButtonIsLoaded() throws Exception;
+
+	public void verifySyncTMInfoButtonIsLoaded() throws Exception;
+
+	public void verifyContentsInActionsSectionInTMView() throws Exception;
+
+	public void isRequiredErrorShowUp(String field) throws Exception;
+
+	public boolean isSaveBtnDisabled() throws Exception;
+
+	public void verifyHRProfileSectionIsNotEditable() throws Exception;
+
+	public void verifyLegionInfoSectionIsNotEditable() throws Exception;
+
+	public void verifyTheEmailFormatInProfilePage(List<String> testEmails) throws Exception;
+
+	public HashMap<String, String> getValuesOfFields() throws Exception;
+
+	public void updateAllFields(HashMap<String, String> values) throws Exception;
+
+	public void clickOnOKBtnOnAlert() throws Exception;
+
+	public boolean verifyManageBadgeBtn() throws Exception;
+
+	public void verifySelectBadge() throws Exception;
+
+	public void saveBadgeBtn() throws Exception;
+
+	public void cancelBadgeBtn() throws Exception;
+
+	public boolean ifMatchEmailRegex(String email) throws Exception;
+
+	public boolean isMINORDisplayed() throws Exception;
+
+	public boolean isMINORYesOrNo() throws Exception;
+
+	public void verifyMINORField(boolean isMinor) throws Exception;
+
+	public void verifySMCanSelectACalendarForMinor() throws Exception;
+
+	public void selectAGivenCalendarForMinor(String givenCalendar) throws Exception;
+
+	public String getUserProfileName() throws Exception;
 }

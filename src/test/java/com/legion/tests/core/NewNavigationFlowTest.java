@@ -51,7 +51,8 @@ public class NewNavigationFlowTest extends TestBase {
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeLocation("verify754");
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         controlsNewUIPage.clickOnControlsConsoleMenu();
         SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
@@ -100,7 +101,7 @@ public class NewNavigationFlowTest extends TestBase {
         String currentDistrict = dashboardPage.getCurrentDistrict();
         //change district to show all locations
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict("No touch no delete");
+//        locationSelectorPage.changeDistrict("No touch no delete");
 
         TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
 
@@ -325,7 +326,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         String districtName="OMDistrict1";
-        String locationName="OMLocation11";
+        String locationName="OMLocation2";
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();

@@ -264,7 +264,7 @@ public class SanityTest extends TestBase{
 		schedulePage.clickOnScheduleConsoleMenuItem();
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!"
-				,schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+				,schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
 
 		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 		BasePage basePase = new BasePage();
@@ -377,7 +377,7 @@ public class SanityTest extends TestBase{
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
-				schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+				schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
 
 		String budgetSmartCardText = "Budget Hours";
 		String scheduleSmartCardText = "SCHEDULE V";
@@ -440,7 +440,7 @@ public class SanityTest extends TestBase{
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
-				schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
 		schedulePage.clickOnWeekView();
 		int scheduleWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
 		for(int index = 0; index < scheduleWeekCount; index++)
@@ -553,7 +553,7 @@ public class SanityTest extends TestBase{
 		schedulePage.clickOnScheduleConsoleMenuItem();
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!"
-				,schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+				,schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
 
 		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 		BasePage basePase = new BasePage();
@@ -594,7 +594,7 @@ public class SanityTest extends TestBase{
 		schedulePage.clickOnScheduleConsoleMenuItem();
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!"
-				,schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+				,schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
 
 		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 		BasePage basePase = new BasePage();
@@ -629,7 +629,7 @@ public class SanityTest extends TestBase{
 		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.clickOnScheduleConsoleMenuItem();
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		//The schedules that are already published should remain unchanged
 		schedulePage.clickOnDayView();
@@ -689,7 +689,7 @@ public class SanityTest extends TestBase{
 		schedulePage.clickOnScheduleConsoleMenuItem();
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!"
-				,schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+				,schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
 		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 		BasePage basePase = new BasePage();
 		Thread.sleep(1000);
@@ -786,7 +786,7 @@ public class SanityTest extends TestBase{
 //		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 //		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
 //		schedulePage.clickOnScheduleSubTab(LoginTest.SchedulePageSubTabText.Overview.getValue());
-//		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
 //		List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
 //		for(int i=0; i <overviewPageScheduledWeeks.size();i++)
 //		{
