@@ -278,7 +278,7 @@ public class NewNavigationFlowTest extends TestBase {
 
         //change district to show all locations
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict("No touch no delete");
+        locationSelectorPage.changeDistrict("add district via con");
 
         String searchDistrictText = "*";
         String currentDistrict = dashboardPage.getCurrentDistrict();
@@ -332,6 +332,7 @@ public class NewNavigationFlowTest extends TestBase {
         SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
 
         locationSelectorPage.changeDistrict(districtName);
+        Thread.sleep(3000);
         locationSelectorPage.changeLocation(locationName);
 
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
