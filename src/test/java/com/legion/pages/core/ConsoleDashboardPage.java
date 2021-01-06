@@ -18,6 +18,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
 
 public class ConsoleDashboardPage extends BasePage implements DashboardPage {
@@ -1449,8 +1451,201 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			} else {
 				SimpleUtils.fail("Dashboard Page: Verify Welcome Text failed! Expected is: " + expectedText + "\n" + "Actual is: " + actualText, true);
 			}
-		} else{
+		} else {
 			SimpleUtils.fail("Dashboard Page: Welcome Text Section doesn't Load successfully!", true);
+		}
+	}
+
+	@Override
+	public void validateThePresenceOfRefreshButton() throws Exception {
+		if (isElementLoaded(refreshButton,10)) {
+			if (refreshButton.isDisplayed() && !refreshButton.getText().isEmpty() && refreshButton.getText() != null) {
+				if (getDriver().findElement(By.xpath("//body//div[contains(@class,'welcome-text')]/preceding-sibling::last-updated-countdown/div/lg-button")).equals(refreshButton)) {
+					SimpleUtils.pass("Dashboard Page: Refresh button shows above welcome section successfully");
+				} else {
+					SimpleUtils.fail("Dashboard Page: Refresh button is not above welcome section", true);
+				}
+			} else {
+				SimpleUtils.fail("Dashboard Page: Refresh button isn't present", true);
+			}
+		} else {
+			SimpleUtils.fail("Dashboard Page: Refresh button failed to load", true);
+		}
+	}
+
+	@FindBy (css = "last-updated-countdown span[ng-if^=\"$ctrl.minutes === 0\"]")
+	private WebElement justUpdated;
+
+	@FindBy (css = "last-updated-countdown span[ng-if^=\"$ctrl.minutes > 0\"]")
+	private WebElement lastUpdated;
+
+	@FindBy (css = "last-updated-countdown span[ng-if^=\"$ctrl.minutes > 0\"] span")
+	private WebElement lastUpdatedMinutes;
+
+	@Override
+	public void validateRefreshFunction() throws Exception {
+		int minutes = 0;
+		if (isElementLoaded(lastUpdatedMinutes,10) ) {
+			minutes = lastUpdatedMinutes.getText().contains(" ")? Integer.valueOf(lastUpdatedMinutes.getText().split(" ")[0]):Integer.valueOf(lastUpdatedMinutes.getText());
+			if (minutes >= 30 ) {
+				if (lastUpdatedMinutes.getAttribute("class").contains("last-updated-countdown-time-orange"))
+					SimpleUtils.pass("Dashboard Page: When the Last Updated time >= 30 mins, the color changes to orange");
+				else
+					SimpleUtils.fail("Dashboard Page: When the Last Updated time >= 30 mins, the color failed to change to orange",false);
+			}
+		}
+		if (isElementLoaded(refreshButton, 10)) {
+			clickTheElement(refreshButton);
+			SimpleUtils.pass("Click on Refresh button Successfully!");
+			if (dashboardSection.getAttribute("class").contains("home-dashboard-loading") && refreshButton.getAttribute("label").equals("Refreshing...")) {
+				SimpleUtils.pass("Dashboard Page: After clicking Refresh button, the background is muted and it shows an indicator 'Refreshing...' that we are processing the info");
+				if (isElementLoaded(justUpdated,60) && !dashboardSection.getAttribute("class").contains("home-dashboard-loading"))
+					SimpleUtils.pass("Dashboard Page: Once the data is done refreshing, the page shows 'JUST UPDATED' and page becomes brighter again");
+				else
+					SimpleUtils.fail("Dashboard Page: When the data is done refreshing, the page doesn't show 'JUST UPDATED' and page doesn't become brighter again",false);
+				if (isElementLoaded(lastUpdated,60) && lastUpdatedMinutes.getAttribute("class").contains("last-updated-countdown-time-blue"))
+					SimpleUtils.pass("Dashboard Page: The Last Updated info provides the minutes last updated in blue");
+				else
+					SimpleUtils.fail("Dashboard Page: The Last Updated info doesn't provide the minutes last updated in blue",false);
+			} else {
+				SimpleUtils.fail("Dashboard Page: After clicking Refresh button, the background isn't muted and it doesn't show 'Refreshing...'",true);
+			}
+		} else {
+			SimpleUtils.fail("Dashboard Page: Refresh button not Loaded!", true);
+		}
+	}
+
+	@Override
+	public void validateRefreshPerformance() throws Exception {
+		if (isElementLoaded(refreshButton, 10)) {
+			clickTheElement(refreshButton);
+			if (refreshButton.getAttribute("label").equals("Refreshing...")) {
+				SimpleUtils.pass("Dashboard Page: After clicking Refresh button, the button becomes 'Refreshing...'");
+				WebElement element = (new WebDriverWait(getDriver(), 60))
+						.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[label=\"Refresh\"]")));
+				if (element.isDisplayed()) {
+					SimpleUtils.pass("Dashboard Page: Page refreshes within 1 minute successfully");
+				} else {
+					SimpleUtils.fail("Dashboard Page: Page doesn't refresh within 1 minute", false);
+				}
+			} else {
+				SimpleUtils.fail("Dashboard Page: After clicking Refresh button, the background isn't muted and it doesn't show 'Refreshing...'",true);
+			}
+		} else {
+			SimpleUtils.fail("Dashboard Page: Refresh button not Loaded!", true);
+		}
+	}
+
+	@Override
+	public void validateRefreshWhenNavigationBack() throws Exception {
+		String timestamp1 = "";
+		String timestamp2 = "";
+		if (isElementLoaded(lastUpdated,5)) {
+			timestamp1 = lastUpdated.getText();
+		} else if (isElementLoaded(justUpdated,5)) {
+			timestamp1 = lastUpdated.getText();
+		} else
+			SimpleUtils.fail("Dashboard Page: Timestamp failed to load",false);
+		click(scheduleConsoleNameInTM);
+		navigateToDashboard();
+		if (isElementLoaded(lastUpdated,5)) {
+			timestamp2 = lastUpdated.getText();
+		} else if (isElementLoaded(justUpdated,5)) {
+			timestamp2 = justUpdated.getText();
+		} else
+			SimpleUtils.fail("Dashboard Page: Timestamp failed to load",false);
+		if (timestamp2.equals(timestamp1) && !timestamp1.equals("") && !refreshButton.getAttribute("label").equals("Refreshing...")) {
+			SimpleUtils.pass("Dashboard Page: It keeps the previous Last Updated time, not refreshing every time");
+		} else {
+			SimpleUtils.fail("Dashboard Page: It doesn't keep the previous Last Updated time",false);
+		}
+	}
+
+	@Override
+	public void validateRefreshTimestamp() throws Exception {
+		String timestamp = "";
+		if (isElementLoaded(justUpdated, 5)) {
+			SimpleUtils.pass("Dashboard Page:  The page just refreshed");
+		} else if (isElementLoaded(lastUpdatedMinutes, 5)) {
+			timestamp = lastUpdatedMinutes.getText();
+			if (timestamp.contains("HOURS") && timestamp.contains(" ")) {
+				timestamp = timestamp.split(" ")[0];
+				if (Integer.valueOf(timestamp) == 1)
+					SimpleUtils.pass("Dashboard Page:  The backstop is 1 hour so that the data is not older than 1 hour stale");
+				else
+					// SimpleUtils.fail("Dashboard Page:  The backstop is older than 1 hour stale",false);
+					SimpleUtils.warn("SCH-2589: [DM View] Refresh time is older than 1 hour stale");
+			}
+			if (timestamp.contains("MINS") && timestamp.contains(" ")) {
+				timestamp = timestamp.split(" ")[0];
+				if (Integer.valueOf(timestamp) < 60 && Integer.valueOf(timestamp) >= 1)
+					SimpleUtils.pass("Dashboard Page:  The backstop is last updated" + timestamp + " ago");
+				else
+					SimpleUtils.fail("Dashboard Page:  The backstop isn't refreshed in 1 hour stale", false);
+			}
+		} else
+			SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
+	}
+
+	@FindBy (css = "div.fl-right.width-48.dms-smart-card-4")
+	private WebElement projectedComplianceWidget;
+
+	@FindBy (css = "div.dms-number-x-large")
+	private WebElement totalViolationHrs;
+
+	@FindBy (css = "div.tc.dms-box-item-title-2.dms-box-item-title-color-light")
+	private WebElement totalViolationHrsMessage;
+
+	@FindBy (css = "div[ng-click=\"viewCompliance()\"]")
+	private WebElement viewComplianceLink;
+
+
+	public boolean isProjectedComplianceWidgetDisplay() throws Exception {
+		boolean isProjectedComplianceWidgetDisplay = false;
+		if(isElementLoaded(projectedComplianceWidget, 5)) {
+			isProjectedComplianceWidgetDisplay = true;
+			SimpleUtils.report("Projected Compliance Widget is loaded Successfully!");
+		} else
+			SimpleUtils.report("Projected Compliance Widget not loaded Successfully!");
+		return isProjectedComplianceWidgetDisplay;
+	}
+
+	public void verifyTheContentInProjectedComplianceWidget() throws Exception {
+		if(isElementLoaded(projectedComplianceWidget, 5)) {
+			WebElement projectedComplianceWidgetTitle = projectedComplianceWidget.findElement(By.cssSelector("div.dms-box-title.dms-box-item-title-row"));
+			if (isElementLoaded(projectedComplianceWidgetTitle, 5)
+					&& projectedComplianceWidgetTitle.getText().equalsIgnoreCase("Projected Compliance")
+					&& isElementLoaded(totalViolationHrs, 5)
+					&& isElementLoaded(totalViolationHrsMessage, 5)
+					&& totalViolationHrsMessage.getText().equalsIgnoreCase("Total Violation Hrs")
+					&& isElementLoaded(viewComplianceLink, 5)
+					&& viewComplianceLink.getText().equalsIgnoreCase("View Compliance")){
+				SimpleUtils.pass("The content in Projected Compliance widget display correctly");
+			} else {
+				SimpleUtils.fail("The content in Projected Compliance widget display incorrectly", false);
+			}
+		} else
+			SimpleUtils.report("Projected Compliance Widget not loaded Successfully!");
+	}
+
+	public String getTheTotalViolationHrsFromProjectedComplianceWidget() throws Exception {
+		String hrsOfTotalViolation = "";
+		if (isElementLoaded(totalViolationHrs, 5)){
+			hrsOfTotalViolation = totalViolationHrs.getText();
+			SimpleUtils.pass("Get the total violation hrs successfully");
+		} else {
+			SimpleUtils.fail("Total violation hours not loaded successfully", false);
+		}
+		return hrsOfTotalViolation;
+	}
+
+	public void clickOnViewComplianceLink() throws Exception {
+		if (isElementLoaded(viewComplianceLink, 5)){
+			scrollToElement(viewComplianceLink);
+			click(viewComplianceLink);
+			SimpleUtils.pass("Click View Compliance link successfully");
+		} else {
+			SimpleUtils.fail("View Compliance link not loaded successfully", false);
 		}
 	}
 }
