@@ -1,7 +1,5 @@
 package com.legion.pages;
 
-import org.openqa.selenium.WebElement;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,29 +50,10 @@ public interface DashboardPage {
     public String getDateFromTimeZoneOfLocation(String pattern) throws Exception;
     public void clickOnSwitchToEmployeeView() throws Exception;
     public boolean isSwitchToEmployeeViewPresent() throws Exception;
-    public List<WebElement> getDashboardScheduleWeeks() throws Exception;
-    public void clickOnRefreshButton() throws Exception;
     public void clickOnDashboardConsoleMenu() throws Exception;
     public String getCurrentLocation() throws Exception;
     public String  getCurrentDistrict() throws Exception;
     public boolean IsThereDistrictNavigationForLegionBasic() throws Exception;
     public List<String> getLocationListInDashboard();
     public String getCurrentLocationInDMView() throws Exception;
-    public boolean isLegionLogoDisplay() throws Exception;
-    public boolean isDashboardConsoleMenuDisplay() throws Exception;
-    public boolean isTeamConsoleMenuDisplay() throws Exception;
-    public boolean isScheduleConsoleMenuDisplay() throws Exception;
-    public boolean isAnalyticsConsoleMenuDisplay() throws Exception;
-    public boolean isInboxConsoleMenuDisplay() throws Exception;
-    public boolean isAdminConsoleMenuDisplay() throws Exception;
-    public void clickOnAdminConsoleMenu() throws Exception;
-    public boolean isIntegrationConsoleMenuDisplay() throws Exception;
-    public void clickOnIntegrationConsoleMenu() throws Exception;
-    public boolean isControlsConsoleMenuDisplay() throws Exception;
-    public boolean isLogoutConsoleMenuDisplay() throws Exception;
-    public boolean isTimesheetConsoleMenuDisplay() throws Exception;
-    public void verifyAdminPageIsLoaded() throws Exception;
-    public void verifyIntegrationPageIsLoaded() throws Exception;
-    public void verifyHeaderNavigationMessage(String headerNavigationMessage) throws Exception;
-    public void closeNewFeatureEnhancementsPopup() throws Exception;
 }

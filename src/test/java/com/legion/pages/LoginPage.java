@@ -13,5 +13,4 @@ public interface LoginPage {
     public void logOut() throws Exception;
     public void verifyLoginDone(boolean isLoginDone, String selectedLocation) throws Exception;
     public void verifyNewTermsOfServicePopUp() throws Exception;
-    public void verifyLoginPageIsLoaded() throws Exception;
 }

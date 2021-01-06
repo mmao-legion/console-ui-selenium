@@ -78,12 +78,11 @@ public class ActivityTest extends TestBase {
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         schedulePage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+                schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
 
-        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
         if (isWeekGenerated){
@@ -94,10 +93,8 @@ public class ActivityTest extends TestBase {
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteTMShiftInWeekView(swapNames.get(0));
         schedulePage.deleteTMShiftInWeekView(swapNames.get(1));
-        schedulePage.deleteTMShiftInWeekView("Unassigned");
         schedulePage.saveSchedule();
         // Add the new shifts for swap team members
-        Thread.sleep(5000);
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.addNewShiftsByNames(swapNames);
         schedulePage.saveSchedule();
@@ -147,7 +144,6 @@ public class ActivityTest extends TestBase {
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
         schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
 
         // For Swap Feature
         List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
@@ -182,7 +178,6 @@ public class ActivityTest extends TestBase {
         }
         dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
-        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
         // Validate that swap request smartcard is available to recipient team member
@@ -221,7 +216,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the content of Shift Swap activity when TM automatic to request to swap the shift")
+    @TestName(description = "Validate the content of Shift Swap activity when TM automatic to request to swap the shif")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheContentOfShiftSwapActivityWithoutApprovalAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         prepareTheSwapShiftsAsInternalAdmin(browser, username, password, location);
@@ -261,7 +256,6 @@ public class ActivityTest extends TestBase {
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
         schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
 
         // For Swap Feature
         List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
@@ -297,7 +291,6 @@ public class ActivityTest extends TestBase {
         }
         dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
-        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
         // Validate that swap request smartcard is available to recipient team member
@@ -375,7 +368,6 @@ public class ActivityTest extends TestBase {
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
         schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
 
         // For Swap Feature
         List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
@@ -411,7 +403,6 @@ public class ActivityTest extends TestBase {
         }
         dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
-        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
         // Validate that swap request smartcard is available to recipient team member
@@ -452,7 +443,6 @@ public class ActivityTest extends TestBase {
         schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         schedulePage.isSchedule();
-        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
         schedulePage.verifyShiftsAreSwapped(swapData);
     }
@@ -500,7 +490,6 @@ public class ActivityTest extends TestBase {
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
         schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
 
         // For Swap Feature
         List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
@@ -536,7 +525,6 @@ public class ActivityTest extends TestBase {
         }
         dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
-        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
         // Validate that swap request smartcard is available to recipient team member
@@ -724,20 +712,23 @@ public class ActivityTest extends TestBase {
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 
-        schedulePage.navigateToNextWeek();
         //make publish schedule activity
         boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
-        if (isActiveWeekGenerated){
+        if(!isActiveWeekGenerated){
+            // generateOrUpdateAndGenerateSchedule() is used for the old UI
+            //schedulePage.generateOrUpdateAndGenerateSchedule();
+            schedulePage.createScheduleForNonDGFlowNewUI();
+            schedulePage.publishActiveSchedule();
+        }else {
             schedulePage.unGenerateActiveScheduleScheduleWeek();
+            // generateOrUpdateAndGenerateSchedule() is used for the old UI
+            //schedulePage.generateOrUpdateAndGenerateSchedule();
+            schedulePage.createScheduleForNonDGFlowNewUI();
+            schedulePage.publishActiveSchedule();
         }
-        schedulePage.createScheduleForNonDGFlowNewUI();
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView("Unassigned");
-        schedulePage.saveSchedule();
-        schedulePage.publishActiveSchedule();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -757,9 +748,9 @@ public class ActivityTest extends TestBase {
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        schedulePage.navigateToNextWeek();
+
 
         // Verify Schedule publish activity are loaded
 
@@ -771,9 +762,8 @@ public class ActivityTest extends TestBase {
         activityPage.verifyClickOnActivityCloseButton();
 
         //make update schedule activity to add one open shift
-        //schedulePage.clickOnDayView();
+        schedulePage.clickOnDayView();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView("Unassigned");
         // This method is used for the old UI
         //schedulePage.clickNewDayViewShiftButtonLoaded();
         schedulePage.clickOnDayViewAddNewShiftButton();
@@ -794,6 +784,10 @@ public class ActivityTest extends TestBase {
         activityPage.verifyClickOnActivityIcon();
         activityPage.clickActivityFilterByIndex(indexOfActivityType.Schedule.getValue(), indexOfActivityType.Schedule.name());
         activityPage.verifyActivityOfUpdateSchedule(requestUserNameSM);
+
+
+
+
     }
 
     @Automated(automated ="Automated")
@@ -831,10 +825,10 @@ public class ActivityTest extends TestBase {
         // Verify Activity Feed as Store Manager Employee View
         dashboardPage.clickOnProfileIconOnDashboard();
         dashboardPage.clickOnSwitchToEmployeeView();
-        if (!activityPage.isActivityBellIconLoaded()) {
-            SimpleUtils.pass("SM Employee view have no access to see Activity Feed successfully");
+        if (activityPage.isActivityBellIconLoaded()) {
+            SimpleUtils.pass("SM Employee view have access to see Activity Feed successfully");
         } else {
-            SimpleUtils.warn("SM Employee view still have access to see Activity Feed unexpectedly since this bug: https://legiontech.atlassian.net/browse/SF-323");
+            SimpleUtils.fail("SM Employee view failed to see Activity Feed",true);
         }
     }
 
@@ -854,7 +848,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the content of Shift Swap activity when TM request to swap the shift")
+    @TestName(description = "Validate the content of shift swap activity when there is no TM request to cover/swap shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheContentOfShiftSwapActivityAsStoreManager(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -912,11 +906,10 @@ public class ActivityTest extends TestBase {
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
         schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
 
         // For Cover Feature
         List<String> swapCoverRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
-        schedulePage.verifyClickOnAnyShift();
+        int index = schedulePage.verifyClickOnAnyShift();
         //String request = "Request to Cover Shift";
         schedulePage.clickTheShiftRequestByName(swapCoverRequests.get(1));
         // Validate the Submit button feature
@@ -936,7 +929,6 @@ public class ActivityTest extends TestBase {
         }
         dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
-        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
         // Validate that smartcard is available to recipient team member
@@ -975,7 +967,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the functioning of Reject button on pending Reject for Cover the shift")
+    @TestName(description = "Validate the content of Shift Swap activity when TM request to cover the shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         // Configuration in controls :Is approval by Manager required when an employee claims a shift swap or cover request?-Always
@@ -1019,7 +1011,6 @@ public class ActivityTest extends TestBase {
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
         schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
 
         // For Cover Feature
         List<String> swapCoverRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
@@ -1037,12 +1028,11 @@ public class ActivityTest extends TestBase {
         loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                 , String.valueOf(credential[0][2]));
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        String coverName = profileNewUIPage.getNickNameFromProfile();
         if (dashboardPage.isSwitchToEmployeeViewPresent())
             dashboardPage.clickOnSwitchToEmployeeView();
+        String coverName = profileNewUIPage.getNickNameFromProfile();
         dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
-        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
         // Validate that smartcard is available to recipient team member
@@ -1082,69 +1072,98 @@ public class ActivityTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM is requesting time off")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyTheNotificationForRequestTimeOffAsTeamMember(String browser, String username, String password, String location) {
-        try {
-            // Login as Team Member to create time off
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+    public void verifyTheNotificationForRequestTimeOffAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        // Login with Store Manager Credentials
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        // Set time off policy
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        controlsPage.gotoControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+        controlsNewUIPage.updateCanWorkerRequestTimeOff("Yes");
+        controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+        controlsNewUIPage.updateShowTimeOffReasons("Yes");
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
 
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String requestUserName = profileNewUIPage.getNickNameFromProfile();
-            String myTimeOffLabel = "My Time Off";
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
-            profileNewUIPage.cancelAllTimeOff();
-            profileNewUIPage.clickOnCreateTimeOffBtn();
-            SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
-            String timeOffReasonLabel = "JURY DUTY";
-            // select time off reason
-            profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
-            profileNewUIPage.selectStartAndEndDate();
-            profileNewUIPage.clickOnSaveTimeOffRequestBtn();
-            loginPage.logOut();
+        // Login as Team Member to create time off
+        String fileName = "UsersCredentials.json";
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String requestUserName = profileNewUIPage.getNickNameFromProfile();
+        profileNewUIPage.clickOnUserProfileImage();
+        String myProfileLabel = "My Profile";
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+        SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
+        String aboutMeLabel = "About Me";
+        profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
+        String myTimeOffLabel = "My Time Off";
+        profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+        profileNewUIPage.cancelAllTimeOff();
+        profileNewUIPage.clickOnCreateTimeOffBtn();
+        SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
+        String timeOffReasonLabel = "JURY DUTY";
+        // select time off reason
+        profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
+        profileNewUIPage.selectStartAndEndDate();
+        profileNewUIPage.clickOnSaveTimeOffRequestBtn();
+        loginPage.logOut();
 
-            // Login as Store Manager again to check message and reject
-            String RequstTimeOff = "requested";
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
-            String respondUserName = profileNewUIPage.getNickNameFromProfile();
-            ActivityPage activityPage = pageFactory.createConsoleActivityPage();
-            activityPage.verifyClickOnActivityIcon();
-            activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
-            activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
-            activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Approve.getValue());
-            //activityPage.closeActivityWindow();
-            loginPage.logOut();
+        // Login as Store Manager again to check message and reject
+        String RequstTimeOff = "requested";
+        loginToLegionAndVerifyIsLoginDone(username, password, location);
+        String respondUserName = profileNewUIPage.getNickNameFromProfile();
+        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
+        activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
+        activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Reject.getValue());
+        activityPage.closeActivityWindow();
+        loginPage.logOut();
 
-            // Login as Team Member to create time off
-            loginToLegionAndVerifyIsLoginDone(username, password, location);
-            profileNewUIPage.clickOnUserProfileImage();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
-            profileNewUIPage.cancelAllTimeOff();
-            profileNewUIPage.clickOnCreateTimeOffBtn();
-            SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
-            //select time off reason
-            profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
-            profileNewUIPage.selectStartAndEndDate();
-            profileNewUIPage.clickOnSaveTimeOffRequestBtn();
-            loginPage.logOut();
+        // Login as Team Member to create time off
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        profileNewUIPage.clickOnUserProfileImage();
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+        SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
+        profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
+        profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+        profileNewUIPage.cancelAllTimeOff();
+        profileNewUIPage.clickOnCreateTimeOffBtn();
+        SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
+        //select time off reason
+        profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
+        profileNewUIPage.selectStartAndEndDate();
+        profileNewUIPage.clickOnSaveTimeOffRequestBtn();
+        loginPage.logOut();
 
-            // Login as Store Manager again to check message and approve
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
-            activityPage.verifyClickOnActivityIcon();
-            activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
-            activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
-            activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Reject.getValue());
-            //activityPage.closeActivityWindow();
-            loginPage.logOut();
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+        // Login as Store Manager again to check message and approve
+        loginToLegionAndVerifyIsLoginDone(username, password, location);
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
+        activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
+        activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Approve.getValue());
+        activityPage.closeActivityWindow();
+        loginPage.logOut();
+
+        // Login as Team Member to cancel all time off
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        pageFactory.createProfileNewUIPage();
+        profileNewUIPage.clickOnUserProfileImage();
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+        SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
+        profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
+        profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+        profileNewUIPage.cancelAllTimeOff();
     }
 
     @Automated(automated ="Automated")
@@ -1152,437 +1171,441 @@ public class ActivityTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM cancels time off request")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyTheNotificationForCancelTimeOffAsTeamMember(String browser, String username, String password, String location) {
-        try {
-            // Login as Team member to create the time off request
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String requestUserName = profileNewUIPage.getNickNameFromProfile();
-            String myProfileLabel = "My Profile";
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
-            SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
-            String aboutMeLabel = "About Me";
-            profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
-            String myTimeOffLabel = "My Time Off";
-            profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
-            String timeOffReasonLabel = "JURY DUTY";
-            profileNewUIPage.cancelAllTimeOff();
-            profileNewUIPage.clickOnCreateTimeOffBtn();
-            SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
-            // select time off reason
-            profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
-            List<String> startNEndDates = profileNewUIPage.selectStartAndEndDate();
-            profileNewUIPage.clickOnSaveTimeOffRequestBtn();
-            profileNewUIPage.cancelAllTimeOff();
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            loginPage.logOut();
+    public void verifyTheNotificationForCancelTimeOffAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        // Login with Store Manager Credentials
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        // Set time off policy
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        controlsPage.gotoControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+        controlsNewUIPage.updateCanWorkerRequestTimeOff("Yes");
+        controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+        controlsNewUIPage.updateShowTimeOffReasons("Yes");
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
 
-            // Login as Store Manager again to check message
-            String RequstTimeOff = "cancelled";
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
-            ActivityPage activityPage = pageFactory.createConsoleActivityPage();
-            activityPage.verifyClickOnActivityIcon();
-            activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
-            activityPage.verifyTheNotificationForReqestTimeOff(requestUserName,getTimeOffStartTime(),getTimeOffEndTime(),RequstTimeOff);
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+        // Login as Team Member to create time off
+        String fileName = "UsersCredentials.json";
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String requestUserName = profileNewUIPage.getNickNameFromProfile();
+        profileNewUIPage.clickOnUserProfileImage();
+        String myProfileLabel = "My Profile";
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+        SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
+        String aboutMeLabel = "About Me";
+        profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
+        String myTimeOffLabel = "My Time Off";
+        profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+        String timeOffReasonLabel = "JURY DUTY";
+        profileNewUIPage.cancelAllTimeOff();
+        profileNewUIPage.clickOnCreateTimeOffBtn();
+        SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
+        // select time off reason
+        profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
+        List<String> startNEndDates = profileNewUIPage.selectStartAndEndDate();
+        profileNewUIPage.clickOnSaveTimeOffRequestBtn();
+        profileNewUIPage.cancelAllTimeOff();
+        loginPage.logOut();
+
+        // Login as Store Manager again to check message
+        String RequstTimeOff = "cancelled";
+        loginToLegionAndVerifyIsLoginDone(username, password, location);
+        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
+        activityPage.verifyTheNotificationForReqestTimeOff(requestUserName,getTimeOffStartTime(),getTimeOffEndTime(),RequstTimeOff);
     }
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify there is no notification when TM has been activated for auto scheduling")
+    @TestName(description = "Verify there is no notification when TM has been activated")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyNoNotificationForActivateTMAsStoreManager(String browser, String username, String password, String location) {
-        try {
-            // Login with Store Manager Credentials, Add a team member and activate it.
-            String onBoarded = "Onboarded";
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            dashboardPage.isDashboardPageLoaded();
-            TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            teamPage.goToTeam();
-            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-            teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-            teamPage.isProfilePageLoaded();
-            String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
-            teamPage.goToTeam();
-            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-            teamPage.searchAndSelectTeamMemberByName(firstName);
-            teamPage.isProfilePageLoaded();
-            teamPage.manualOnBoardTeamMember();
-            teamPage.verifyTheStatusOfTeamMember(onBoarded);
-            teamPage.clickOnActivateButton();
-            teamPage.isActivateWindowLoaded();
-            teamPage.selectADateOnCalendarAndActivate();
+    public void verifyNoNotificationForActivateTMAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        // Login with Store Manager Credentials, Add a team member and activate it.
+        String onBoarded = "Onboarded";
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        dashboardPage.isDashboardPageLoaded();
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+        teamPage.isProfilePageLoaded();
+        String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        teamPage.searchAndSelectTeamMemberByName(firstName);
+        teamPage.isProfilePageLoaded();
+        teamPage.isManualOnBoardButtonLoaded();
+        teamPage.manualOnBoardTeamMember();
+        teamPage.verifyTheStatusOfTeamMember(onBoarded);
+        teamPage.isActivateButtonLoaded();
+        teamPage.clickOnActivateButton();
+        teamPage.isActivateWindowLoaded();
+        teamPage.selectADateOnCalendarAndActivate();
 
-            //to check there is no message for activating TM
-            ActivityPage activityPage = pageFactory.createConsoleActivityPage();
-            activityPage.verifyClickOnActivityIcon();
-            activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());
-            activityPage.verifyNoNotificationForActivateTM();
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+        //to check there is no message for activating TM
+        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());
+        activityPage.verifyNoNotificationForActivateTM();
     }
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the notification when TM updates availability from a week onwards with config Not required")
+    @TestName(description = "Verify the notification when TM updates availability from a week onwards.Set \"Is manager approval required when an employee changes availability?\" to \"Not required\" ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin(String browser, String username, String password, String location) {
-        try {
-            // Login with Store Manager Credentials
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            // Set availability policy
-            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-            controlsPage.gotoControlsPage();
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-            controlsNewUIPage.clickOnControlsSchedulingPolicies();
-            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-            controlsNewUIPage.clickOnGlobalLocationButton();
-            String isApprovalRequired = "Not required";
-            controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            loginPage.logOut();
+    public void verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        // Login with Store Manager Credentials
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        // Set availability policy
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        controlsPage.gotoControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        String isApprovalRequired = "Not required";
+        controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
 
-            //Login as Team Member to change availability
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String requestUserName = profileNewUIPage.getNickNameFromProfile();
-            String myWorkPreferencesLabel = "My Work Preferences";
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-            profileNewUIPage.cancelAllPendingAvailabilityRequest();
-            //Update Preferred And Busy Hours
-            while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
-                profileNewUIPage.clickNextWeek();
-            }
-            String weekInfo = profileNewUIPage.getAvailabilityWeek();
-            int sliderIndex = 1;
-            double hours = -0.5;//move 1 metric 0.5h left
-            String leftOrRightDuration = "Right";
-            String hoursType = "Preferred";
-            String repeatChanges = "repeat forward";
-            profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-                    hours, repeatChanges);
-            loginPage.logOut();
-
-            // Login as Store Manager again to check message
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
-            ActivityPage activityPage = pageFactory.createConsoleActivityPage();
-            activityPage.verifyClickOnActivityIcon();
-            activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());
-            String requestAwailabilityChangeLabel = "request";
-            activityPage.verifyNotificationForUpdateAvailability(requestUserName,isApprovalRequired,requestAwailabilityChangeLabel,weekInfo,repeatChanges);
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
+        //Login as Team Member to change availability
+        String fileName = "UsersCredentials.json";
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String requestUserName = profileNewUIPage.getNickNameFromProfile();
+        profileNewUIPage.clickOnUserProfileImage();
+        String myWorkPreferencesLabel = "My Work Preferences";
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+        //Update Preferred And Busy Hours
+        while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+            profileNewUIPage.clickNextWeek();
         }
+        String weekInfo = profileNewUIPage.getAvailabilityWeek();
+        int sliderIndex = 1;
+        double hours = -0.5;//move 1 metric 0.5h left
+        String leftOrRightDuration = "Right";
+        String hoursType = "Preferred";
+        String repeatChanges = "repeat forward";
+        profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+                hours, repeatChanges);
+        loginPage.logOut();
+
+        // Login as Store Manager again to check message
+        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                , String.valueOf(storeManagerCredentials[0][2]));
+        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());
+        String requestAwailabilityChangeLabel = "request";
+        activityPage.verifyNotificationForUpdateAvailability(requestUserName,isApprovalRequired,requestAwailabilityChangeLabel,weekInfo,repeatChanges);
     }
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the notification when TM updates availability for a specific week with config Not required")
+    @TestName(description = "Verify the notification when TM updates availability from a week onwards.Set \"Is manager approval required when an employee changes availability?\" to \"Not required\" ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin(String browser, String username, String password, String location) {
-        try {
-            // Login with Store Manager Credentials
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            // Set availability policy
-            Thread.sleep(5000);
-            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-            controlsPage.gotoControlsPage();
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-            controlsNewUIPage.clickOnControlsSchedulingPolicies();
-            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-            controlsNewUIPage.clickOnGlobalLocationButton();
-            String isApprovalRequired = "Not required";
-            controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            loginPage.logOut();
+    public void verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        // Login with Store Manager Credentials
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        // Set availability policy
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        controlsPage.gotoControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        String isApprovalRequired = "Not required";
+        controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
 
-            //Login as Team Member to change availability
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String requestUserName = profileNewUIPage.getNickNameFromProfile();
-            String myWorkPreferencesLabel = "My Work Preferences";
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-            profileNewUIPage.cancelAllPendingAvailabilityRequest();
-            //Update Preferred And Busy Hours
-            while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
-                profileNewUIPage.clickNextWeek();
-            }
-            String weekInfo = profileNewUIPage.getAvailabilityWeek();
-            int sliderIndex = 1;
-            double hours = -0.5;//move 1 metric 0.5h left
-            String leftOrRightDuration = "Right"; //move the right bar
-            String hoursType = "Preferred";
-            String repeatChanges = "This week only";
-            profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-                    hours, repeatChanges);
-            loginPage.logOut();
-
-            // Login as Store Manager again to check message
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
-            ActivityPage activityPage = pageFactory.createConsoleActivityPage();
-            activityPage.verifyClickOnActivityIcon();
-            activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());
-            String requestAwailabilityChangeLabel = "request";
-            activityPage.verifyNotificationForUpdateAvailability(requestUserName,isApprovalRequired,requestAwailabilityChangeLabel,weekInfo,repeatChanges);
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
+        //Login as Team Member to change availability
+        String fileName = "UsersCredentials.json";
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String requestUserName = profileNewUIPage.getNickNameFromProfile();
+        profileNewUIPage.clickOnUserProfileImage();
+        String myWorkPreferencesLabel = "My Work Preferences";
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+        //Update Preferred And Busy Hours
+        while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+            profileNewUIPage.clickNextWeek();
         }
+        String weekInfo = profileNewUIPage.getAvailabilityWeek();
+        int sliderIndex = 1;
+        double hours = -0.5;//move 1 metric 0.5h left
+        String leftOrRightDuration = "Right"; //move the right bar
+        String hoursType = "Preferred";
+        String repeatChanges = "This week only";
+        profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+                hours, repeatChanges);
+        loginPage.logOut();
+
+        // Login as Store Manager again to check message
+        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                , String.valueOf(storeManagerCredentials[0][2]));
+        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());
+        String requestAwailabilityChangeLabel = "request";
+        activityPage.verifyNotificationForUpdateAvailability(requestUserName,isApprovalRequired,requestAwailabilityChangeLabel,weekInfo,repeatChanges);
     }
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the notification when TM requests availability for a specific week")
+    @TestName(description = "Verify the notification when TM updates availability from a week onwards.Set \"Is manager approval required when an employee changes availability?\" to \"Required for all changes\" ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin(String browser, String username, String password, String location) {
-        try {
-            // Login with Store Manager Credentials
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            // Set availability policy
-            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-            controlsPage.gotoControlsPage();
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+    public void verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        // Login with Store Manager Credentials
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        // Set availability policy
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        controlsPage.gotoControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        String isApprovalRequired = "Required for all changes";
+        controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
 
-            dashboardPage.navigateToDashboard();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            controlsPage.gotoControlsPage();
-            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-            controlsNewUIPage.clickOnControlsSchedulingPolicies();
-            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-            controlsNewUIPage.clickOnGlobalLocationButton();
-            String isApprovalRequired = "Required for all changes";
-            controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            loginPage.logOut();
-
-            //Login as Team Member to change availability
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String requestUserName = profileNewUIPage.getNickNameFromProfile();
-            String myWorkPreferencesLabel = "My Work Preferences";
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-            profileNewUIPage.cancelAllPendingAvailabilityRequest();
-            //Update Preferred And Busy Hours
-            while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
-                profileNewUIPage.clickNextWeek();
-            }
-            String weekInfo = profileNewUIPage.getAvailabilityWeek();
-            int sliderIndex = 1;
-            double hours = -0.5;//move 1 metric 0.5h left
-            String leftOrRightDuration = "Right";
-            String hoursType = "Preferred";
-            String repeatChanges = "This week only";
-            profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-                    hours, repeatChanges);
-            loginPage.logOut();
-
-            // Login as Store Manager again to check message
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
-            String respondUserName = profileNewUIPage.getNickNameFromProfile();
-            ActivityPage activityPage = pageFactory.createConsoleActivityPage();
-            activityPage.verifyClickOnActivityIcon();
-            activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());
-            String requestAwailabilityChangeLabel = "requested";
-            activityPage.verifyNotificationForUpdateAvailability(requestUserName,isApprovalRequired,requestAwailabilityChangeLabel,weekInfo,repeatChanges);
-            activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Approve.getValue());
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
+        //Login as Team Member to change availability
+        String fileName = "UsersCredentials.json";
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String requestUserName = profileNewUIPage.getNickNameFromProfile();
+        profileNewUIPage.clickOnUserProfileImage();
+        String myWorkPreferencesLabel = "My Work Preferences";
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+        //Update Preferred And Busy Hours
+        while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+            profileNewUIPage.clickNextWeek();
         }
+        String weekInfo = profileNewUIPage.getAvailabilityWeek();
+        int sliderIndex = 1;
+        double hours = -0.5;//move 1 metric 0.5h left
+        String leftOrRightDuration = "Right";
+        String hoursType = "Preferred";
+        String repeatChanges = "This week only";
+        profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+                hours, repeatChanges);
+        loginPage.logOut();
+
+        // Login as Store Manager again to check message
+        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                , String.valueOf(storeManagerCredentials[0][2]));
+        String respondUserName = profileNewUIPage.getNickNameFromProfile();
+        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());
+        String requestAwailabilityChangeLabel = "requested";
+        activityPage.verifyNotificationForUpdateAvailability(requestUserName,isApprovalRequired,requestAwailabilityChangeLabel,weekInfo,repeatChanges);
+        activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Approve.getValue());
     }
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the notification when TM requests availability from a week onwards")
+    @TestName(description = "Verify the notification when TM updates availability from a week onwards.Set \"Is manager approval required when an employee changes availability?\" to \"Required for all changes\" ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin(String browser, String username, String password, String location) {
-        try {
-            // Login with Store Manager Credentials
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            // Set availability policy
-            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-            controlsPage.gotoControlsPage();
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+    public void verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        // Login with Store Manager Credentials
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        // Set availability policy
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        controlsPage.gotoControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        String isApprovalRequired = "Required for all changes";
+        controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
 
-            dashboardPage.navigateToDashboard();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            controlsPage.gotoControlsPage();
-            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-            controlsNewUIPage.clickOnControlsSchedulingPolicies();
-            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-
-            controlsNewUIPage.clickOnGlobalLocationButton();
-            String isApprovalRequired = "Required for all changes";
-            controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            loginPage.logOut();
-
-            //Login as Team Member to change availability
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String requestUserName = profileNewUIPage.getNickNameFromProfile();
-            String myWorkPreferencesLabel = "My Work Preferences";
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-            profileNewUIPage.cancelAllPendingAvailabilityRequest();
-            //Update Preferred And Busy Hours
-            while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
-                profileNewUIPage.clickNextWeek();
-            }
-            String weekInfo = profileNewUIPage.getAvailabilityWeek();
-            int sliderIndex = 1;
-            double hours = -0.5;//move 1 metric 0.5h left
-            String leftOrRightDuration = "Right";
-            String hoursType = "Preferred";
-            String repeatChanges = "repeat forward";
-            profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-                    hours, repeatChanges);
-            loginPage.logOut();
-
-            // Login as Store Manager again to check message
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
-            String respondUserName = profileNewUIPage.getNickNameFromProfile();
-            ActivityPage activityPage = pageFactory.createConsoleActivityPage();
-            activityPage.verifyClickOnActivityIcon();
-            activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());
-            String requestAwailabilityChangeLabel = "requested";
-            activityPage.verifyNotificationForUpdateAvailability(requestUserName,isApprovalRequired,requestAwailabilityChangeLabel,weekInfo,repeatChanges);
-            activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Reject.getValue());
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
+        //Login as Team Member to change availability
+        String fileName = "UsersCredentials.json";
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String requestUserName = profileNewUIPage.getNickNameFromProfile();
+        profileNewUIPage.clickOnUserProfileImage();
+        String myWorkPreferencesLabel = "My Work Preferences";
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+        //Update Preferred And Busy Hours
+        while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+            profileNewUIPage.clickNextWeek();
         }
+        String weekInfo = profileNewUIPage.getAvailabilityWeek();
+        int sliderIndex = 1;
+        double hours = -0.5;//move 1 metric 0.5h left
+        String leftOrRightDuration = "Right";
+        String hoursType = "Preferred";
+        String repeatChanges = "repeat forward";
+        profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+                hours, repeatChanges);
+        loginPage.logOut();
+
+        // Login as Store Manager again to check message
+        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                , String.valueOf(storeManagerCredentials[0][2]));
+        String respondUserName = profileNewUIPage.getNickNameFromProfile();
+        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());
+        String requestAwailabilityChangeLabel = "requested";
+        activityPage.verifyNotificationForUpdateAvailability(requestUserName,isApprovalRequired,requestAwailabilityChangeLabel,weekInfo,repeatChanges);
+        activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Reject.getValue());
     }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate activity for claim the open shift")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyActivityOfClaimOpenShiftAsTeamMember(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-        String teamMemberName = profileNewUIPage.getNickNameFromProfile();
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        loginPage.logOut();
-
+    @TestName(description = "Validate the activity of claim open shift")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyActivityOfClaimOpenShift(String browser, String username, String password, String location) throws Exception {
         String fileName = "UsersCredentials.json";
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
         userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] credential = userCredentials.get("InternalAdmin");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1]), String.valueOf(credential[0][2]));
-
+        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
         // 1.Checking configuration in controls
         String option = "Always";
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         controlsNewUIPage.clickOnControlsConsoleMenu();
         controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
         boolean isScheduleCollaboration = controlsNewUIPage.isControlsScheduleCollaborationLoaded();
         SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
-        //String selectedOption = controlsNewUIPage.getIsApprovalByManagerRequiredWhenEmployeeClaimsOpenShiftSelectedOption();
-        controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
-        // 2.admin create one manual open shift and assign to specific TM
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());  
-        //to generate schedule  if current week is not generated
-        schedulePage.navigateToNextWeek();
-        boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
-        if(!isActiveWeekGenerated){
-            schedulePage.createScheduleForNonDGFlowNewUI();
-        }
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView("Unassigned");
-        schedulePage.deleteTMShiftInWeekView(teamMemberName);
-        schedulePage.saveSchedule();
+        String selectedOption = controlsNewUIPage.getIsApprovalByManagerRequiredWhenEmployeeClaimsOpenShiftSelectedOption();
+        if (!selectedOption.equalsIgnoreCase("Always")) {
+            controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
+        } else {
 
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-        schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(teamMemberName);
-        schedulePage.clickOnOfferOrAssignBtn();
-        schedulePage.saveSchedule();
-        schedulePage.publishActiveSchedule();
+            // 2.admin create one manual open shift and assign to specific TM
+            String teamMemberName = String.valueOf(teamMemberCredentials[0][0]);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.varifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+
+            //to generate schedule  if current week is not generated
+            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            float shiftHoursInWeekForTM = schedulePage.getShiftHoursByTMInWeekView(teamMemberName);
+            if (shiftHoursInWeekForTM == 0) {
+                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                schedulePage.clickOnDayView();
+                //schedulePage.clickOnNextDaySchedule();
+                schedulePage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
+                schedulePage.clickOnDayViewAddNewShiftButton();
+
+                schedulePage.customizeNewShiftPage();
+                schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+                schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+                schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+                schedulePage.clickOnCreateOrNextBtn();
+                schedulePage.selectSpecificTMWhileCreateNewShift(teamMemberName);
+                schedulePage.clickOnOfferOrAssignBtn();
+                schedulePage.saveSchedule();
+                schedulePage.publishActiveSchedule();
+            } else {
+                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                schedulePage.deleteTMShiftInWeekView(teamMemberName);
+                schedulePage.clickOnDayView();
+                schedulePage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
+                schedulePage.clickOnDayViewAddNewShiftButton();
+
+                schedulePage.customizeNewShiftPage();
+                schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+                schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+                schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+                schedulePage.clickOnCreateOrNextBtn();
+                schedulePage.selectSpecificTMWhileCreateNewShift(teamMemberName);
+                schedulePage.clickOnOfferOrAssignBtn();
+                schedulePage.saveSchedule();
+                schedulePage.publishActiveSchedule();
+            }
+
+        }
+
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
 
         // 3.Login with the TM to claim the shift
-        loginToLegionAndVerifyIsLoginDone(username, password, location);
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                , String.valueOf(teamMemberCredentials[0][2]));
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        dashboardPage.goToTodayForNewUI();
-        schedulePage.navigateToNextWeek();
+        SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         schedulePage.isSchedule();
         String cardName = "WANT MORE HOURS?";
         SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(cardName), false);
         String linkName = "View Shifts";
         schedulePage.clickLinkOnSmartCardByName(linkName);
         SimpleUtils.assertOnFail("Open shifts not loaed Successfully!", schedulePage.areShiftsPresent(), false);
+        List<String> shiftHours = schedulePage.getShiftHoursFromInfoLayout();
         List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
-        schedulePage.selectOneShiftIsClaimShift(claimShift);
+        int index = schedulePage.selectOneShiftIsClaimShift(claimShift);
+        schedulePage.clickOnShiftByIndex(index);
         schedulePage.clickTheShiftRequestByName(claimShift.get(0));
         schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
 
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String requestUserName = profileNewUIPage.getNickNameFromProfile();
         loginPage.logOut();
 
         // 4.Login with SM to check activity
@@ -1594,8 +1617,8 @@ public class ActivityTest extends TestBase {
         activityPage.verifyActivityBellIconLoaded();
         activityPage.verifyClickOnActivityIcon();
         activityPage.clickActivityFilterByIndex(indexOfActivityType.ShiftOffer.getValue(), indexOfActivityType.ShiftOffer.name());
-        activityPage.verifyActivityOfShiftOffer(teamMemberName);
-        activityPage.approveOrRejectShiftOfferRequestOnActivity(teamMemberName,approveRejectAction.Approve.getValue());
+        activityPage.verifyActivityOfShiftOffer(requestUserName);
+        activityPage.approveOrRejectShiftOfferRequestOnActivity(requestUserName,approveRejectAction.Approve.getValue());
 
     }
 }

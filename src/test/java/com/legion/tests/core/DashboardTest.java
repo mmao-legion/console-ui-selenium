@@ -80,7 +80,7 @@ public class DashboardTest extends TestBase{
 		String dateFromDashboard = dashboardPage.getCurrentDateFromDashboard();
 		String timeFromDashboard = dashboardPage.getCurrentTimeFromDashboard();
 		schedulePage = dashboardPage.goToTodayForNewUI();
-		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(
+		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.varifyActivatedSubTab(
 				ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , true);
 		// Verify View Today's schedule button is working and navigating to the schedule page[Current date in day view]
 		schedulePage.isScheduleForCurrentDayInDayView(dateFromDashboard);

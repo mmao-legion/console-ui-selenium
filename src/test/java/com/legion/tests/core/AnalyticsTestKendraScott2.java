@@ -77,11 +77,11 @@ public class AnalyticsTestKendraScott2 extends TestBase{
         
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
-        		schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
         
         schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
         SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
-        		schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , false);
+        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , false);
         
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
         List<WebElement> scheduleOverViewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();

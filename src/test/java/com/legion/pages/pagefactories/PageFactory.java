@@ -53,9 +53,4 @@ public interface PageFactory {
     LiquidDashboardPage createConsoleLiquidDashboardPage();
 
     JobsPage createOpsPortalJobsPage();
-    ScheduleDMViewPage createScheduleDMViewPage();
-
-    InboxPage createConsoleInboxPage();
-
-    CinemarkMinorPage createConsoleCinemarkMinorPage();
 }

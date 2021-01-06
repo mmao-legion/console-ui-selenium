@@ -1,12 +1,16 @@
 package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.loc;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -195,8 +199,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@FindBy(css = "lg-icon-button[type=\"confirm\"]")
 	private WebElement confirmSaveButton;
-	@FindBy(css = "lg-icon-button[type=\"cancel\"]")
-	private WebElement cancelSaveButton;
 	@FindBy(css = "input-field[placeholder=\"Global\"]")
 	private WebElement globalLocationButton;
 	@FindBy(css = "input-field[value=\"sp.weeklySchedulePreference.publishDayWindowWeek\"]")
@@ -319,7 +321,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void clickOnControlsConsoleMenu() throws Exception {
 		if (isElementLoaded(controlsConsoleMenuDiv, 10))
-			clickTheElement(controlsConsoleMenuDiv);
+			click(controlsConsoleMenuDiv);
 		else
 			SimpleUtils.fail("Controls Console Menu not loaded Successfully!", false);
 	}
@@ -335,8 +337,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public boolean isControlsPageLoaded() throws Exception {
-		waitForSeconds(10);
-		if (isElementLoaded(controlsPageHeaderLabel, 10))
+		if (isElementLoaded(controlsPageHeaderLabel))
 			if (controlsPageHeaderLabel.getText().toLowerCase().contains(timeSheetHeaderLabel.toLowerCase())) {
 				SimpleUtils.pass("Controls Page loaded Successfully!");
 				return true;
@@ -660,10 +661,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public HashMap<String, Integer> getScheduleBufferHours() throws Exception {
 		HashMap<String, Integer> bufferHours = new HashMap<String, Integer>();
-		waitForSeconds(8);
+		Thread.sleep(2000);
 		if (controlsAdvanceButtons.size() > 0) {
 			click(controlsAdvanceButtons.get(0));
-			waitForSeconds(2);
 			bufferHours.put("openingBufferHours", Integer.valueOf(
 					openingBufferHours.findElement(By.cssSelector("input[type=\"number\"]")).getAttribute("value")));
 			bufferHours.put("closingBufferHours", Integer.valueOf(
@@ -1601,8 +1601,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void updateCanWorkerRequestTimeOff(String canWorkerRequestTimeOffValue) throws Exception {
 		scrollToBottom();
-		// Wait for data loaded
-		waitForSeconds(15);
 		if (isElementLoaded(canWorkerRequestTimeOffBtnGroup)) {
 			WebElement canWorkerRequestTimeOffBtnGroupDiv = canWorkerRequestTimeOffBtnGroup.findElement(
 					By.cssSelector("div.lg-button-group"));
@@ -1790,7 +1788,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	public void preserveTheSetting() throws Exception {
 		if (isElementLoaded(preserveSettingBtn, 5)) {
-			clickTheElement(preserveSettingBtn);
+			click(preserveSettingBtn);
 			displaySuccessMessage();
 		}
 	}
@@ -2829,7 +2827,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void selectUsersAndRolesSubTabByLabel(String label) throws Exception {
 		boolean isTabFound = false;
-		if (areListElementVisible(subTabs,10) && subTabs.size() > 0) {
+		if (subTabs.size() > 0) {
 			for (WebElement subTab : subTabs) {
 				if (subTab.getText().toLowerCase().contains(label.toLowerCase())) {
 					click(subTab);
@@ -3177,10 +3175,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			List<String> userLocationListContext = new ArrayList<String>();
 			for (WebElement location:defaultLocationsForOneUser) {
 				userLocationListContext.add(location.getText());
-				if(userLocationListContext ==null && userLocationListContext.size()<=0){
+				if(null ==userLocationListContext && userLocationListContext.size()<=0){
 					SimpleUtils.report("userLocationListContext is null！");
 				}else{
+
 					StringBuilder sb = new StringBuilder();
+
+
 					for(int i=0;i<userLocationListContext.size();i++){
 						if(i<userLocationListContext.size()-1){
 							sb.append(userLocationListContext.get(i));
@@ -3189,7 +3190,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 							sb.append(userLocationListContext.get(i));
 						}
 					}
+
 					resultString = sb.toString();
+					System.out.println("最后拼接的字符串结果：" + resultString);
 				}
 				return resultString;
 			}
@@ -4377,7 +4380,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 
 	public void displaySuccessMessage() throws Exception {
-		if (isElementLoaded(successMsg, 20)) {
+		if (isElementLoaded(successMsg, 5)) {
 			SimpleUtils.pass("Success pop up displayed successfully.");
 			if (successMsg.getText().contains("Success!")) {
 				SimpleUtils.pass("Success message displayed successfully." + successMsg.getText());
@@ -4786,7 +4789,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void updateSwapAndCoverRequestIsApprovalRequired(String option) throws Exception {
-		waitForSeconds(3);
 		if (isElementLoaded(swapApprovalRequired, 20)) {
 			String selectedValue = swapApprovalRequired.findElement(By.cssSelector("[selected=\"selected\"]")).getText();
 			if (!option.equals(selectedValue)) {
@@ -4810,11 +4812,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			 */
 			waitForSeconds(3);
 			timeZone = timeZoneSelected.getText();
-			if (isElementLoaded(backNavigator, 5)) {
-				clickTheElement(backNavigator);
-			}else {
-				SimpleUtils.fail("Controls: Back Navigator not loaded Successfully!", false);
-			}
 		} else {
 			SimpleUtils.fail("Time Zone Select failed to load!", true);
 		}
@@ -4943,30 +4940,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				if (btnOverrideAssignmentRuleYes.getAttribute("class").contains("selected")) {
 					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button already enabled");
 				} else {
-					clickTheElement(btnOverrideAssignmentRuleYes);
-					Actions actions = new Actions(getDriver());
-					actions.moveByOffset(0, 0).click().build().perform();
-					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button selected!");
-					displaySuccessMessage();
-				}
-			} else {
-				SimpleUtils.fail("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button not loaded!!", false);
-			}
-		}
-	}
-
-	@Override
-	public void enableOverRideAssignmentRuleAsNo() throws Exception {
-		waitForSeconds(3);
-		if (isElementEnabled(btnOverrideAssignmentRule, 5)) {
-			if (isElementEnabled(btnOverrideAssignmentRuleNo, 3)) {
-				if (btnOverrideAssignmentRuleNo.getAttribute("class").contains("selected")) {
-					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button already enabled");
-				} else {
-					scrollToElement(btnOverrideAssignmentRuleNo);
-					click(btnOverrideAssignmentRuleNo);
-					Actions actions = new Actions(getDriver());
-					actions.moveByOffset(0, 0).click().build().perform();
+					click(btnOverrideAssignmentRuleYes);
 					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button selected!");
 					displaySuccessMessage();
 				}
@@ -4996,17 +4970,17 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		LinkedHashMap<String, List<String>> regularHours = new LinkedHashMap<>();
 		List<String> startNEndTime = null;
 		if (areListElementVisible(weekDays, 30)) {
-			for (int i = 0; i < weekDays.size(); i++) {
-				WebElement day = getDriver().findElements(By.cssSelector("#day\\.dayOfTheWeek .pills-row")).get(i).findElement(By.className("ellipsis"));
-				List<WebElement> workTimes = getDriver().findElements(By.cssSelector("#day\\.dayOfTheWeek .pills-row")).get(i).findElements(By.className("work-time"));
+			for (WebElement weekDay : weekDays) {
+				WebElement day = weekDay.findElement(By.className("ellipsis"));
+				List<WebElement> workTimes = weekDay.findElements(By.className("work-time"));
 				if (day != null && workTimes != null && workTimes.size() == 2) {
 					String startTime = workTimes.get(0).getText();
 					String endTime = workTimes.get(1).getText();
 					startNEndTime = new ArrayList<>();
 					startNEndTime.add(startTime);
 					startNEndTime.add(endTime);
-					regularHours.put(getDriver().findElements(By.cssSelector("#day\\.dayOfTheWeek .pills-row")).get(i).findElement(By.className("ellipsis")).getText(), startNEndTime);
-					SimpleUtils.report("Get time for: " + getDriver().findElements(By.cssSelector("#day\\.dayOfTheWeek .pills-row")).get(i).findElement(By.className("ellipsis")).getText() + ", time is: " + startTime + " - " + endTime);
+					regularHours.put(day.getText(), startNEndTime);
+					SimpleUtils.report("Get time for: " + day.getText() + ", time is: " + startTime + " - " + endTime);
 				}
 			}
 		}
@@ -5028,7 +5002,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public HashMap<String, Integer> getOvertimePayDataFromControls() {
-		waitForSeconds(20); // to wait data load completed
+		waitForSeconds(15); // to wait data load completed
 		HashMap<String, Integer> overtimePayData = new HashMap<String, Integer>();
 		String[] overtimeWeeklyData = overtimeWeeklyText.getText().split(" ");
 		String[] overtimeDailyData = overtimeDailyText.getText().split(" ");
@@ -5074,7 +5048,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		if (isElementLoaded(approveByManagerDropDown, 10)) {
 			Select dropdown = new Select(approveByManagerDropDown);
 			dropdown.selectByVisibleText(option);
-			displaySuccessMessage();
 			SimpleUtils.pass("Option is selected successfully");
 		} else {
 			SimpleUtils.fail("Controls - Schedule Collaboration: Open Shift is Approved ByManager While Claim OpenShift dropdown not loaded.", false);
@@ -5088,15 +5061,14 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	//Options: Not required;Required for all changes;Required for reducing availability
 	@Override
 	public void updateAvailabilityManagementIsApprovalRequired(String option) throws Exception {
-		// Wait for the values loaded
-		waitForSeconds(15);
 		WebElement confSelect = isApprovalRequiredToChangeAvailability.findElement(By.cssSelector("select"));
 		if(isElementLoaded(confSelect)) {
 			//WebElement input = isApprovalRequiredToChangeAvailability.findElement(By.xpath("//input-field"));
 			if(isElementLoaded(confSelect,5)) {
 				scrollToElement(confSelect);
 				selectByVisibleText(confSelect,option);
-				displaySuccessMessage();
+				preserveTheSetting();
+				System.out.println(isApprovalRequiredToChangeAvailability.getText());
 			} else{
 				SimpleUtils.fail("Is manager approval required when an employee changes availability? input field not loaded.", false);
 			}
@@ -5115,767 +5087,5 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			return   currentLocationInControls.getText();
 		}
 		return null;
-	}
-
-	//Added by Haya
-	@FindBy(css = "form-section[form-title=\"Predictable Schedule\"] .lg-question-input")
-	private List<WebElement> predictableScheduleSectionToggles;
-
-	@Override
-	public void turnGFEToggleOnOrOff(boolean isTurnOn) throws Exception {
-		String gfe = "Manager can send Good Faith Estimate.";
-		// Wait for the default settings loaded
-		waitForSeconds(15);
-		if (areListElementVisible(predictableScheduleSectionToggles,10) && predictableScheduleSectionToggles.size() > 0){
-			if (isTurnOn){
-				for (WebElement predictableSection : predictableScheduleSectionToggles) {
-					try {
-						WebElement toggle = predictableSection.findElement(By.className("switch"));
-						WebElement text = predictableSection.findElement(By.className("lg-question-input__text"));
-						if (toggle != null && text != null && text.getText().equals(gfe)) {
-							if (toggle.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
-								scrollToElement(toggle);
-								waitForSeconds(1);
-								click(toggle);
-								displaySuccessMessage();
-								SimpleUtils.pass("GFE toggle is turned on!");
-							} else {
-								SimpleUtils.report("GFE toggle is already on!");
-							}
-							break;
-						}
-					} catch (Exception e) {
-						continue;
-					}
-				}
-			} else {
-				for (WebElement predictableSection : predictableScheduleSectionToggles) {
-					try {
-						WebElement toggle = predictableSection.findElement(By.className("switch"));
-						WebElement text = predictableSection.findElement(By.className("lg-question-input__text"));
-						if (toggle != null && text != null && text.getText().equals(gfe)) {
-							if (toggle.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
-								scrollToElement(toggle);
-								waitForSeconds(1);
-								click(toggle);
-								displaySuccessMessage();
-								SimpleUtils.pass("GFE toggle is turned off !");
-							} else {
-								SimpleUtils.report("GFE toggle is already off!");
-							}
-							break;
-						}
-					} catch (Exception e) {
-						continue;
-					}
-				}
-			}
-		} else {
-			SimpleUtils.fail("There is no predictable schedule settings!", false);
-		}
-	}
-
-	@Override
-	public void turnVSLToggleOnOrOff(boolean isTurnOn) throws Exception {
-		// Wait for the default settings loaded
-		waitForSeconds(15);
-		if (areListElementVisible(predictableScheduleSectionToggles,15) && predictableScheduleSectionToggles.size()>1){
-			if (isTurnOn){
-				if (predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("input")).getAttribute("class").contains("ng-empty")){
-					click(predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("span")));
-					displaySuccessMessage();
-					SimpleUtils.pass("GFE toggle is turned on!");
-				} else {
-					SimpleUtils.report("GFE toggle is already on!");
-				}
-			} else {
-				if (predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("input")).getAttribute("class").contains("ng-not-empty")){
-					click(predictableScheduleSectionToggles.get(1).findElement(By.cssSelector("span")));
-					displaySuccessMessage();
-					SimpleUtils.pass("GFE toggle is turned off !");
-				} else {
-					SimpleUtils.report("GFE toggle is already off!");
-				}
-			}
-		} else {
-			SimpleUtils.fail("There is no predictable schedule settings!", false);
-		}
-	}
-
-	// Added By Julie
-	@FindBy(css = ".lg-user-locations-new__item-name")
-	private List<WebElement> userLocation;
-
-	@FindBy(css = "[ng-if=\"tm.engagement.engagementGroup\"]")
-	private WebElement schedulingPolicyGroup;
-
-	@FindBy(css = "[form-title=\"Scheduling Policy Groups\"] lg-tabs lg-tab")
-	private List<WebElement> schedulingPolicyGroupsTabContent;
-
-
-	@FindBy(css = "[label=\"Cancel Deactivate\"] button")
-	private WebElement cancelDeactivateBtn;
-
-	@FindBy(css = "[label=\"Deactivate\"] button")
-	private WebElement deactivateBtn;
-
-	@FindBy(css = "[label=\"Activate\"] button")
-	private WebElement activateBtn;
-
-	@FindBy(css = ".calendar-week.select-day.current-week")
-	private WebElement currentWeekInDeactivateWindow;
-
-	@FindBy(css = ".current-day")
-	private WebElement currentDayInDeactivateWindow;
-
-	@FindBy(className = "save-btn")
-	private WebElement applyOrActivateOrSaveBtn;
-
-	@FindBy(css = "span.lgn-alert-message")
-	private WebElement alertMessage;
-
-	@FindBy(className = "lgn-action-button-success")
-	private WebElement confirmBtn;
-
-	@FindBy(css = "input[placeholder=\"You can search by name, job title, and status.\"]")
-	private WebElement teamMemberSearchBox;
-
-	@FindBy(tagName = "lg-eg-status")
-	private WebElement statusInUserDetails;
-
-	@FindBy(className = "month-header")
-	private WebElement monthInCalendar;
-
-	@FindBy(className = "selected-day")
-	private WebElement selectedDayInCalendar;
-
-	@FindBy(xpath = "//span[contains(text(),\"HOME STORE\")]/../../following-sibling::div[1]/div[2]")
-	private WebElement homeStoreLocation;
-
-	@Override
-	public HashMap<String, List<String>> getRandomUserNLocationNSchedulingPolicyGroup() throws Exception {
-		HashMap<String, List<String>> userNLocationNSchedulingPolicyGroup = new HashMap<>();
-		if (areListElementVisible(usersAndRolesAllUsersRows, 10)) {
-			int index = (new Random()).nextInt(usersAndRolesAllUsersRows.size());
-			WebElement userName = usersAndRolesAllUsersRows.get(index).findElement(By.cssSelector("lg-button button span span"));
-			String userNameText = userName.getText();
-			click(userName);
-			if (isElementLoaded(homeStoreLocation, 5) && isElementLoaded(schedulingPolicyGroup, 5)) {
-				String userLocationText = homeStoreLocation.getText().trim();
-				String userSchedulingPolicyGroup = schedulingPolicyGroup.getText();
-				List<String> locationNSchedulingPolicyGroup = new ArrayList<>();
-				locationNSchedulingPolicyGroup.add(userLocationText);
-				locationNSchedulingPolicyGroup.add(userSchedulingPolicyGroup);
-				userNLocationNSchedulingPolicyGroup.put(userNameText, locationNSchedulingPolicyGroup);
-				SimpleUtils.report("Get TM \"" + userNameText + "\": Location ---  " + userLocationText + ",  Scheduling Policy Group --- " + userSchedulingPolicyGroup);
-			}
-		}
-		return userNLocationNSchedulingPolicyGroup;
-	}
-
-	@Override
-	public HashMap<String, List<String>> getDataFromSchedulingPolicyGroups() throws Exception {
-		// wait for data loaded
-		waitForSeconds(10);
-		HashMap<String, List<String>> dataFromSchedulingPolicyGroups = new HashMap<>();
-		WebElement currentTab = null;
-		if (areListElementVisible(schedulingPolicyGroupsTabContent, 5)) {
-			for (WebElement tab : schedulingPolicyGroupsTabContent) {
-				WebElement tabSelectedOrNot = tab.findElement(By.tagName("ng-transclude"));
-				if (!tabSelectedOrNot.getAttribute("class").contains("ng-hide")) {
-					currentTab = tab;
-					break;
-				}
-			}
-			List<WebElement> questionOptions = currentTab.findElements(By.cssSelector("div div question-input"));
-			for (WebElement e : questionOptions) {
-				List<WebElement> inputFields = e.findElements(By.cssSelector("input-field ng-form input[ng-change=\"$ctrl.handleChange()\"]"));
-				List<String> minNMaxNIdeal = new ArrayList<>();
-				for (WebElement input : inputFields)
-					minNMaxNIdeal.add(input.getAttribute("value"));
-				dataFromSchedulingPolicyGroups.put(e.getAttribute("question-title"), minNMaxNIdeal);
-				SimpleUtils.report("Get tab \"" + currentTab.getAttribute("tab-title") + "\": " + e.getAttribute("question-title") + " --- Minimum & Maximum & Ideal: " + minNMaxNIdeal.get(0) + " & " + minNMaxNIdeal.get(1) + " & " + minNMaxNIdeal.get(2));
-				if (dataFromSchedulingPolicyGroups.size() == 3)
-					break;
-			}
-		}
-		return dataFromSchedulingPolicyGroups;
-	}
-
-	@Override
-	public String selectAnyActiveTM() throws Exception {
-		String activeUser = "";
-		if (areListElementVisible(usersAndRolesAllUsersRows, 20)) {
-			for (WebElement user : usersAndRolesAllUsersRows) {
-				WebElement name = user.findElement(By.cssSelector("lg-button button span span"));
-				WebElement status = user.findElement(By.tagName("lg-eg-status"));
-				if (name != null && status != null) {
-					if (status.getAttribute("type").equalsIgnoreCase("Active")) {
-						activeUser = name.getText();
-						click(name);
-						SimpleUtils.pass("Users and Roles Page: User '" + activeUser + "' selected successfully.");
-						break;
-					}
-				} else
-					SimpleUtils.fail("Users and Roles Page: Failed to find the name and Status!", false);
-			}
-		} else
-			SimpleUtils.fail("Users and Roles Page: Users failed to load or no users", false);
-		return activeUser;
-	}
-
-	@Override
-	public String deactivateActiveTM() throws Exception {
-		String date = "";
-		if (isElementLoaded(cancelDeactivateBtn, 5)) {
-			click(cancelDeactivateBtn);
-			if (alertMessage.getText().contains("should NOT be deactivated?")) {
-				click(confirmBtn);
-			}
-		}
-		if (isElementLoaded(deactivateBtn, 5)) {
-			click(deactivateBtn);
-			if (isElementLoaded(currentDayInDeactivateWindow, 5)) {
-				click(currentDayInDeactivateWindow);
-				if (monthInCalendar.getText().trim().contains(" "))
-					date = monthInCalendar.getText().trim().split(" ")[0] + " " + selectedDayInCalendar.getText().trim() + " " + monthInCalendar.getText().trim().split(" ")[1];
-				Date dateInCalendar = new SimpleDateFormat("MMMM d yyyy").parse(date);
-				date = new SimpleDateFormat("MM/dd/yyyy").format(dateInCalendar);
-				if (applyOrActivateOrSaveBtn.isEnabled()) {
-					click(applyOrActivateOrSaveBtn);
-					SimpleUtils.pass("User Details Page: Select today to deactivate the user successfully");
-					clickTheElement(confirmBtn);
-					waitForSeconds(2);
-					if (statusInUserDetails.getAttribute("Type").contains("Inactive")) {
-						SimpleUtils.pass("User Details Page: Select the current day to deactivate and successfully scheduled deactivation of Team Member");
-					} else
-						SimpleUtils.fail("User Details Page: No successful alert message when deactivating Team Member", false);
-				} else
-					SimpleUtils.fail("User Details Page: APPLY button is disabled to click", false);
-			} else
-				SimpleUtils.fail("User Details Page: Current day in Deactivate Window failed to load", false);
-		} else
-			SimpleUtils.fail("User Details Page: Cannot find 'Deactivate' button", false);
-		return date;
-	}
-
-	@Override
-	public void activateInactiveTM() throws Exception {
-		if (isElementLoaded(activateBtn, 15)) {
-			click(activateBtn);
-			if (isElementLoaded(currentDayInDeactivateWindow, 15)) {
-				click(currentDayInDeactivateWindow);
-				if (applyOrActivateOrSaveBtn.isEnabled()) {
-					click(applyOrActivateOrSaveBtn);
-					waitForSeconds(2);
-					if (statusInUserDetails.getAttribute("Type").contains("Active")) {
-						SimpleUtils.pass("User Details Page: Select the current day to activate and successfully scheduled activation of Team Member");
-					} else
-						SimpleUtils.fail("User Details Page: No successful alert message when activating Team Member", false);
-				} else
-					SimpleUtils.fail("User Details Page: ACTIVATE button is disabled to click", false);
-			} else
-				SimpleUtils.fail("User Details Page: Current day in Deactivate Window failed to load", false);
-		} else
-			SimpleUtils.fail("User Details Page: Cannot find 'Activate' button", false);
-	}
-
-	@Override
-	public void searchAndSelectTeamMemberByName(String username) throws Exception {
-		boolean isTeamMemberFound = false;
-		if (isElementLoaded(teamMemberSearchBox, 10)) {
-			teamMemberSearchBox.clear();
-			teamMemberSearchBox.sendKeys(username);
-			waitForSeconds(2);
-			if (usersAndRolesAllUsersRows.size() > 0) {
-				for (WebElement user : usersAndRolesAllUsersRows) {
-					WebElement name = user.findElement(By.cssSelector("lg-button button span span"));
-					if (name != null) {
-						if (name.getText().equalsIgnoreCase(username)) {
-							clickTheElement(name);
-							isTeamMemberFound = true;
-							SimpleUtils.pass("Users and Roles Page: User '" + username + "' selected successfully.");
-							break;
-						}
-					}
-				}
-			}
-			if (!isTeamMemberFound)
-				SimpleUtils.report("Users and Roles Page: Team Member '" + username + "' not found.");
-		} else
-			SimpleUtils.fail("Users and Roles Page: failed to load search box",false);
-	}
-
-	// Added by Marym
-
-	@FindBy(css = "div.lg-tabs__nav-item")
-	private List<WebElement> allDistrictsAndAllLocationsTabs;
-
-	@FindBy(css = "table.lg-table")
-	private List<WebElement> allDistrictsAndAllLocationsTables;
-
-	@FindBy(css = "[ng-click=\"$ctrl.back()\"]")
-	private WebElement backButtonOnLocationDetailPage;
-
-	@Override
-	public void clickOnBackButtonOnLocationDetailPage() throws Exception {
-		if (isElementLoaded(backButtonOnLocationDetailPage, 5))
-			click(backButtonOnLocationDetailPage);
-		else
-			SimpleUtils.fail("Locations Page: Back button on location detail page not loaded!", false);
-
-		if (areListElementVisible(allDistrictsAndAllLocationsTabs, 10))
-			SimpleUtils.pass("Locations Page: Back to locations page successfully");
-		else
-			SimpleUtils.fail("Locations Page: Locations page not loaded!", false);
-	}
-
-	@Override
-	public void clickOnControlsLocationsSection() throws Exception {
-		if (isElementLoaded(locationsSection, 5))
-			click(locationsSection);
-		else
-			SimpleUtils.fail("Controls Page: Locations Card not Loaded!", false);
-	}
-
-	@Override
-	public boolean isLocationsPageLoaded() throws Exception {
-		if (areListElementVisible(allDistrictsAndAllLocationsTabs, 15)) {
-			SimpleUtils.pass("Controls Page: Locations page loaded successfully");
-			return true;
-		} else {
-			SimpleUtils.fail("Controls Page: Locations page not Loaded", false);
-			return false;
-		}
-	}
-
-	@Override
-	public void clickAllDistrictsOrAllLocationsTab(boolean isClickDistrictsTab) throws Exception {
-		if (areListElementVisible(allDistrictsAndAllLocationsTabs, 15) &&
-				allDistrictsAndAllLocationsTabs.size() >=2 &&
-				areListElementVisible(allDistrictsAndAllLocationsTables, 15) &&
-				allDistrictsAndAllLocationsTables.size() >=2){
-			if (isClickDistrictsTab){
-				if (allDistrictsAndAllLocationsTabs.get(0) != null){
-					click(allDistrictsAndAllLocationsTabs.get(0));
-					if (isElementLoaded(allDistrictsAndAllLocationsTables.get(0))) {
-						SimpleUtils.pass("Locations page: All districts page loaded successfully");
-					} else {
-						SimpleUtils.fail("Locations page: All districts page not Loaded", false);
-					}
-				} else {
-					SimpleUtils.fail("Locations page: All districts tab not Loaded", false);
-				}
-			} else {
-				if (allDistrictsAndAllLocationsTabs.get(1) != null){
-					click(allDistrictsAndAllLocationsTabs.get(1));
-					if (isElementLoaded(allDistrictsAndAllLocationsTables.get(1))) {
-						SimpleUtils.pass("Locations page: All locations page loaded successfully");
-					} else {
-						SimpleUtils.fail("Locations page: All locations page not Loaded", false);
-					}
-				} else {
-					SimpleUtils.fail("Locations page: All locations tab not Loaded", false);
-				}
-			}
-		} else{
-			SimpleUtils.fail("Controls Page: Locations page not Loaded", false);
-		}
-	}
-
-	@FindBy (css = ".lg-table.ng-scope")
-	private List<WebElement> tablesOfDistrictsAndLocations;
-
-	@FindBy (css = "input[aria-label=\"Location Address\"]")
-	private WebElement locationAddress;
-
-	@FindBy (css = "input[aria-label=\"City\"]")
-	private WebElement city;
-
-	@FindBy (css = "input[aria-label=\"Zip Code\"]")
-	private WebElement zipCode;
-
-	@FindBy (css = "[aria-label=\"State\"] [selected=\"selected\"]")
-	private WebElement state;
-
-	@FindBy (css = ".lg-form-section-action")
-	private WebElement editLocationButton;
-
-	@Override
-	public void goToSpecificLocationDetailPageByLocationName (String locationName) throws Exception {
-		boolean isLocationExist = false;
-		if (allDistrictsAndAllLocationsTables != null && allDistrictsAndAllLocationsTables.size()>=2){
-			WebElement tableOfLocations = allDistrictsAndAllLocationsTables.get(1);
-			if (tableOfLocations != null){
-				List<WebElement> locations =  tableOfLocations.findElements(By.cssSelector("[class=\"ng-binding ng-scope\"]"));
-				if (locations != null && locations.size() != 0){
-					for (WebElement location: locations){
-						if(location != null && location.getText().equals(locationName)){
-							isLocationExist = true;
-							click(location);
-							if (isElementLoaded(locationInformationFormSection, 10)) {
-								SimpleUtils.pass("Locations page: Location detail page loaded successfully");
-							} else {
-								SimpleUtils.fail("Locations page: Location detail page fail to load", false);
-							}
-							break;
-						}
-					}
-					if (!isLocationExist) {
-						SimpleUtils.fail("Locations page: The specified location was not found. The specified location name is: " + locationName, false);
-					}
-				}
-			} else {
-				SimpleUtils.fail("Locations page: All locations page not Loaded", false);
-			}
-		} else {
-			SimpleUtils.fail("Controls Page: Locations page not Loaded", false);
-		}
-	}
-
-	@Override
-	public String getLocationInfoStringFromDetailPage () throws Exception {
-		String locationDetailInfo = "";
-		String stateStr = "";
-		String cityStr = "";
-		String locationAddressStr = "";
-
-		if (isElementLoaded(locationAddress, 10) && isElementLoaded(zipCode, 10) &&
-				isElementLoaded(state, 10)) {
-			stateStr = state.getAttribute("value").split(":")[1];
-			cityStr = city.getAttribute("value");
-			locationAddressStr = locationAddress.getAttribute("value");
-		} else {
-			SimpleUtils.fail("Locations page: Elements in location page not Loaded", false);
-		}
-		locationDetailInfo = locationAddressStr + ", " + cityStr + " " + stateStr ;
-		return locationDetailInfo;
-	}
-
-	@FindBy(css = "form-section[form-title=\"Clopening\"] .lg-question-input")
-	private List<WebElement> clopeningSectionToggles;
-
-	@FindBy(css = "button.lg-icon-button--confirm")
-	private WebElement confirmSettingsChangeButton;
-
-	@Override
-	public void turnONClopeningToggleAndSetHours(int clopeningHours) throws Exception {
-
-		String clopeningMessage1 = "An employee should have at least";
-		String clopeningMessage2 = "hours of break between consecutive closing and opening shifts";
-		waitForSeconds(10);
-		if (areListElementVisible(clopeningSectionToggles,10) && clopeningSectionToggles.size() > 0){
-			for (WebElement clopeningSectionToggle : clopeningSectionToggles) {
-				WebElement toggle = clopeningSectionToggle.findElement(By.className("switch"));
-				WebElement text = clopeningSectionToggle.findElement(By.className("lg-question-input__text"));
-				if (toggle != null && text != null && text.getText().contains(clopeningMessage1) && text.getText().contains(clopeningMessage2)) {
-					//turn on Clopening toggle
-					if (toggle.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
-						scrollToElement(toggle);
-						waitForSeconds(1);
-						click(toggle);
-						displaySuccessMessage();
-						SimpleUtils.pass("Clopening toggle is turned on!");
-					} else {
-						SimpleUtils.report("Clopening toggle is already on!");
-					}
-
-					// set Clopening value
-					WebElement clopeningHoursInput = clopeningSectionToggle.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]"));
-					if (isElementLoaded(clopeningHoursInput, 5) && clopeningHoursInput != null) {
-						clopeningHoursInput.clear();
-						clopeningHoursInput.sendKeys(String.valueOf(clopeningHours));
-						if (isElementLoaded(confirmSettingsChangeButton, 5)) {
-							click(confirmSettingsChangeButton);
-						} else
-							SimpleUtils.fail("Confirm clopening change button load fail !", false);
-						displaySuccessMessage();
-						SimpleUtils.pass("Set clopening hours successfully!");
-					}
-					break;
-				}
-			}
-		} else {
-			SimpleUtils.fail("Clopening settings load failed!", false);
-		}
-	}
-
-	@FindBy(css = "[options=\"selections.clopeningHours\"] [ng-attr-id=\"{{$ctrl.inputName}}\"]")
-	private WebElement clopeningHoursSelector;
-
-	@FindBy(css = "[options=\"selections.clopeningHours\"]")
-	private WebElement clopeningHours;
-
-
-
-	@Override
-	public void selectClopeningHours(int clopeningHour) throws Exception {
-		clickOnSchedulingPoliciesShiftAdvanceBtn();
-		String test = clopeningHours.getAttribute("value");
-		if (isElementLoaded(clopeningHoursSelector, 5)) {
-			selectByVisibleText(clopeningHoursSelector, String.valueOf(clopeningHour)+ " hours");
-			displaySuccessMessage();
-			SimpleUtils.pass("Clopening hour been selected successfully");
-		} else
-			SimpleUtils.fail("Clopening Hours selector load fail", false);
-	}
-
-
-	@FindBy(css = "question-input[question-title=\"Can a manager add another locations' employee in schedule before the employee's home location has published the schedule?\"] input-field")
-	private WebElement canManagerAddAnotherLocationsEmployeeInSchedule;
-
-	@Override
-	public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception {
-
-		//click Global location button
-		clickOnGlobalLocationButton();
-		// Wait for the values loaded
-		waitForSeconds(10);
-		WebElement confSelect = canManagerAddAnotherLocationsEmployeeInSchedule.findElement(By.cssSelector("select"));
-		if(isElementLoaded(confSelect,5)) {
-			selectByVisibleText(confSelect,option);
-			displaySuccessMessage();
-		} else{
-			SimpleUtils.fail("Can a manager add another locations' employee in schedule before the employee's home location has published the schedule? input field not loaded.", false);
-		}
-	}
-
-	@FindBy(css = "form-section[form-title=\"Scheduling Minors (Ages 14 & 15)\"]")
-	private WebElement schedulingMinorRuleFor14N15;
-	@FindBy(css = "form-section[form-title=\"Scheduling Minors (Ages 16 & 17)\"]")
-	private WebElement schedulingMinorRuleFor16N17;
-
-	/*
-	 * Parameters:
-	 * from, to: A Minor may be scheduled during $from AM to $to PM only.
-	 * parameter1: A Minor’s schedule must not exceed 30 hours in a week.
-	 * parameter2: A Minor’s schedule must not exceed 6 hours in a weekend and holiday.
-	 * parameter3: A Minor’s schedule must not exceed 3 hours in a weekday.
-	 * parameter4: A Minor must not be scheduled more than 6 days a week.
-	 */
-	@Override
-	public void setSchedulingMinorRuleFor14N15(String from, String to, String parameter1, String parameter2, String parameter3, String parameter4) throws Exception {
-		if (isElementLoaded(schedulingMinorRuleFor14N15,5) && schedulingMinorRuleFor14N15.findElements(By.cssSelector("div.lg-question-input")).size()==4){
-			List<WebElement> parameters = schedulingMinorRuleFor14N15.findElements(By.cssSelector("div.lg-question-input"));
-			if (isElementLoaded(schedulingMinorRuleFor14N15.findElement(By.cssSelector("input-field[label=\"From\"] select")),5)){
-				selectByVisibleText(schedulingMinorRuleFor14N15.findElement(By.cssSelector("input-field[label=\"From\"] select")), from);
-				SimpleUtils.pass("A Minor may be scheduled during X AM to X PM only. updated From with value: '" + from);
-			} else {
-				SimpleUtils.fail("Setting:\"A Minor may be scheduled during X AM to X PM only.\" fail to load!", false);
-			}
-			if (isElementLoaded(schedulingMinorRuleFor14N15.findElement(By.cssSelector("input-field[label=\"To\"] select")),5)){
-				selectByVisibleText(schedulingMinorRuleFor14N15.findElement(By.cssSelector("input-field[label=\"To\"] select")), to);
-				SimpleUtils.pass("A Minor may be scheduled during X AM to X PM only. updated To with value: '" + to);
-			} else {
-				SimpleUtils.fail("Setting:\"A Minor may be scheduled during X AM to X PM only.\" fail to load!", false);
-			}
-			setSchedulingMinorNumericRule(parameter1);
-			setSchedulingMinorNumericRule(parameter2);
-			setSchedulingMinorNumericRule(parameter3);
-			setSchedulingMinorNumericRule(parameter4);
-
-		} else {
-			SimpleUtils.fail("No scheduling rule for Minors!",false);
-		}
-	}
-
-	@Override
-	public void setSchedulingMinorRuleFor16N17(String from, String to, String parameter1, String parameter2, String parameter3, String parameter4) throws Exception {
-		if (isElementLoaded(schedulingMinorRuleFor16N17,5) && schedulingMinorRuleFor16N17.findElements(By.cssSelector("div.lg-question-input")).size()==4){
-			List<WebElement> parameters = schedulingMinorRuleFor16N17.findElements(By.cssSelector("div.lg-question-input"));
-			if (isElementLoaded(schedulingMinorRuleFor16N17.findElement(By.cssSelector("input-field[label=\"From\"] select")),5)){
-				selectByVisibleText(schedulingMinorRuleFor16N17.findElement(By.cssSelector("input-field[label=\"From\"] select")), from);
-				SimpleUtils.pass("A Minor may be scheduled during X AM to X PM only. updated From with value: '" + from);
-			} else {
-				SimpleUtils.fail("Setting:\"A Minor may be scheduled during X AM to X PM only.\" fail to load!", false);
-			}
-			if (isElementLoaded(schedulingMinorRuleFor16N17.findElement(By.cssSelector("input-field[label=\"To\"] select")),5)){
-				selectByVisibleText(schedulingMinorRuleFor16N17.findElement(By.cssSelector("input-field[label=\"To\"] select")), to);
-				SimpleUtils.pass("A Minor may be scheduled during X AM to X PM only. updated To with value: '" + to);
-			} else {
-				SimpleUtils.fail("Setting:\"A Minor may be scheduled during X AM to X PM only.\" fail to load!", false);
-			}
-			setSchedulingMinorNumericRule(parameter1);
-			setSchedulingMinorNumericRule(parameter2);
-			setSchedulingMinorNumericRule(parameter3);
-			setSchedulingMinorNumericRule(parameter4);
-
-		} else {
-			SimpleUtils.fail("No scheduling rule for Minors!",false);
-		}
-	}
-
-	private void setSchedulingMinorNumericRule(String parameter) throws Exception {
-		List<WebElement> parameters = schedulingMinorRuleFor16N17.findElements(By.cssSelector("div.lg-question-input"));
-		if (parameter.equalsIgnoreCase("close")){
-			if (parameters.get(3).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-not-empty")){
-				clickTheElement(parameters.get(3).findElement(By.cssSelector(".slider")));
-				SimpleUtils.pass("Setting turned off: A Minor must not be scheduled more than 6 days a week.");
-			}
-		} else {
-			if (parameters.get(3).findElement(By.cssSelector("lg-switch input")).getAttribute("class").contains("ng-empty")){
-				click(parameters.get(3).findElement(By.cssSelector(".slider")));
-				SimpleUtils.pass("Setting turned on: A Minor must not be scheduled more than 6 days a week.");
-				parameters.get(3).findElement(By.cssSelector("input[type=\"number\"]")).clear();
-				parameters.get(3).findElement(By.cssSelector("input[type=\"number\"]")).sendKeys(parameter);
-				if (isElementLoaded(confirmSaveButton)) {
-					clickTheElement(confirmSaveButton);
-					preserveTheSetting();
-				}
-				SimpleUtils.pass("Setting set as "+parameter+": A Minor must not be scheduled more than 6 days a week.");
-			} else {
-				parameters.get(3).findElement(By.cssSelector("input[type=\"number\"]")).clear();
-				parameters.get(3).findElement(By.cssSelector("input[type=\"number\"]")).sendKeys(parameter);
-				if (isElementLoaded(confirmSaveButton)) {
-					clickTheElement(confirmSaveButton);
-					preserveTheSetting();
-				}
-				SimpleUtils.pass("Setting set as "+parameter+": A Minor must not be scheduled more than 6 days a week.");
-			}
-		}
-	}
-
-	@FindBy(css = "collapsible[block-title=\"key\"]")
-	private List<WebElement> accessSections;
-	@Override
-	public void verifyRolePermissionExists(String section, String permission) throws Exception {
-		if (areListElementVisible(accessSections,10)){
-			for (WebElement accessSection : accessSections){
-				if (accessSection.findElement(By.cssSelector(".collapsible-title-text")).getText().equalsIgnoreCase(section)){
-					if (!accessSection.findElement(By.cssSelector(".collapsible")).getAttribute("class").contains("open")){
-						click(accessSection);
-					}
-					List<WebElement> permissions = accessSection.findElements(By.cssSelector(".lg-table tr.ng-scope"));
-					for (WebElement permissionTemp : permissions){
-						String s = permissionTemp.findElements(By.tagName("td")).get(0).getText();
-						if (permissionTemp.getText().toLowerCase().contains(permission.toLowerCase())){
-							SimpleUtils.pass("Found permission: "+ permission);
-						}
-					}
-				}
-			}
-		} else {
-			SimpleUtils.fail("No access item loaded!", false);
-		}
-	}
-
-	@Override
-	public void turnOnOrOffSpecificPermissionForSM(String section, String permission, String action) throws Exception {
-		if (areListElementVisible(accessSections,10)){
-			for (WebElement accessSection : accessSections){
-				if (accessSection.findElement(By.cssSelector(".collapsible-title-text")).getText().equalsIgnoreCase(section)){
-					if (!accessSection.findElement(By.cssSelector(".collapsible")).getAttribute("class").contains("open")){
-						click(accessSection);
-					}
-					List<WebElement> permissions = accessSection.findElements(By.cssSelector(".lg-table tbody tr[ng-repeat=\"permission in value\"]"));
-					for (WebElement permissionTemp : permissions){
-						String s = permissionTemp.findElement(By.cssSelector("td.ng-binding")).getText();
-						//String a = accessSection.findElements(By.cssSelector(".lg-table tr.ng-scope td.ng-binding")).get(0).getAttribute("text");
-						if (s!=null && s.toLowerCase().contains(permission.toLowerCase())){
-							SimpleUtils.pass("Found permission: "+ permission);
-							List<WebElement> permissionInputs = permissionTemp.findElements(By.cssSelector("input[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]"));
-							if (permissionInputs.size()>4 && permissionInputs.get(4).getAttribute("class").contains("ng-not-empty")){
-								if (action.equalsIgnoreCase("on")){
-									SimpleUtils.pass(permission + " already on!");
-								} else {
-									click(permissionInputs.get(4));
-									SimpleUtils.pass(permission + " unChecked!");
-								}
-							} else {
-								if (action.equalsIgnoreCase("off")){
-									SimpleUtils.pass(permission + " already off!");
-								} else {
-									click(permissionInputs.get(4));
-									SimpleUtils.pass(permission + " Checked!");
-								}
-							}
-						}
-					}
-					break;
-				}
-			}
-		} else {
-			SimpleUtils.fail("No access item loaded!", false);
-		}
-	}
-
-	@FindBy(css = "[form-title=\"Schedule Copy Restrictions\"]")
-	private WebElement scheduleCopyRestrictionSection;
-	@Override
-	public void enableOrDisableScheduleCopyRestriction(String yesOrNo) throws Exception {
-		if (isElementLoaded(scheduleCopyRestrictionSection,10)){
-			scrollToElement(scheduleCopyRestrictionSection);
-			if (yesOrNo.equalsIgnoreCase("yes")){
-				if (isElementLoaded(scheduleCopyRestrictionSection.findElement(By.cssSelector(".lg-button-group-first")),10)){
-					click(scheduleCopyRestrictionSection.findElement(By.cssSelector(".lg-button-group-first")));
-					displaySuccessMessage();
-					SimpleUtils.pass("Turned on Schedule Copy Restriction!");
-				} else {
-					SimpleUtils.fail("Yes button fail to load!", false);
-				}
-			} else if (yesOrNo.equalsIgnoreCase("no")){
-				if (isElementLoaded(scheduleCopyRestrictionSection.findElement(By.cssSelector(".lg-button-group-last")),10)){
-					click(scheduleCopyRestrictionSection.findElement(By.cssSelector(".lg-button-group-last")));
-					displaySuccessMessage();
-					SimpleUtils.pass("Turned off Schedule Copy Restriction!");
-				} else {
-					SimpleUtils.fail("No button fail to load!", false);
-				}
-			} else {
-				SimpleUtils.warn("You have to input the right command: yes or no");
-			}
-		} else {
-			SimpleUtils.fail("Schedule Copy Restriction section is not loaded!", false);
-		}
-	}
-
-	@Override
-	public void setViolationLimit(String value) throws Exception {
-		if (isElementLoaded(scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Violation limit\"]")),10)){
-			waitForSeconds(3);
-			scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Violation limit\"] [ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
-			scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Violation limit\"] [ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(value);
-			if (isElementLoaded(cancelSaveButton,10)) {
-				clickTheElement(cancelSaveButton);
-			}
-			scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Violation limit\"] [ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
-			scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Violation limit\"] [ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(value);
-			if (isElementLoaded(confirmSaveButton,10)) {
-				clickTheElement(confirmSaveButton);
-			}
-			displaySuccessMessage();
-			if (scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Violation limit\"] .input-faked.ng-binding")).getAttribute("innerText").contains(value)){
-				SimpleUtils.pass("Violation limit is set as "+value);
-			} else {
-				SimpleUtils.fail("Violation limit value fail to save!", false);
-			}
-		} else {
-			SimpleUtils.fail("Violation limit fail to load!", false);
-		}
-	}
-
-	@Override
-	public void setBudgetOverageLimit(String value) throws Exception {
-		if (isElementLoaded(scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Budget overage limit\"]")),10) && isElementLoaded(scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Budget overage limit\"] [include-percent-sign=\"true\"]")),10)){
-			waitForSeconds(3);
-			scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Budget overage limit\"] [ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
-			scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Budget overage limit\"] [ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(value);
-			if (isElementLoaded(confirmSaveButton,10)) {
-				clickTheElement(confirmSaveButton);
-			}
-			displaySuccessMessage();
-			if (scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Budget overage limit\"] .input-faked.ng-binding")).getAttribute("innerText").contains(value)){
-				SimpleUtils.pass("Budget overage limit is set as "+value);
-			} else {
-				SimpleUtils.fail("Violation limit value fail to save!", false);
-			}
-
-		} else {
-			SimpleUtils.fail("Budget overage limit fail to load!", false);
-		}
-	}
-
-	private void test() throws Exception{
-
 	}
 }

@@ -33,12 +33,6 @@ public interface ControlsNewUIPage {
 
 	public void clickOnControlsSchedulingPolicies() throws Exception;
 
-	public void enableOrDisableScheduleCopyRestriction(String yesOrNo) throws Exception;
-
-	public void setViolationLimit(String value) throws Exception;
-
-	public void setBudgetOverageLimit(String value) throws Exception;
-
 	public boolean isBudgetSmartcardEnabled() throws Exception;
 
 	public void enableDisableBudgetSmartcard(boolean enable) throws Exception;
@@ -251,7 +245,6 @@ public interface ControlsNewUIPage {
 
 	public void enableOverRideAssignmentRuleAsYes() throws Exception;
 
-	public void enableOverRideAssignmentRuleAsNo() throws Exception;
 
 	public HashMap<String, Integer> getOvertimePayDataFromControls();
 
@@ -264,30 +257,9 @@ public interface ControlsNewUIPage {
 	public void updateOpenShiftApprovedByManagerOption(String option)throws Exception;
 	public void updateAvailabilityManagementIsApprovalRequired(String option) throws Exception;
 	public void updateSwapAndCoverRequestIsApprovalRequired(String option) throws Exception;
-	public void turnGFEToggleOnOrOff(boolean isTurnOn) throws Exception;
-	public void turnVSLToggleOnOrOff(boolean isTurnOn) throws Exception;
-	public HashMap<String, List<String>> getRandomUserNLocationNSchedulingPolicyGroup() throws Exception;
-	public HashMap<String, List<String>> getDataFromSchedulingPolicyGroups() throws Exception;
-	public String selectAnyActiveTM() throws Exception;
-	public String deactivateActiveTM() throws Exception;
-	public void activateInactiveTM() throws Exception;
-	public void searchAndSelectTeamMemberByName(String username) throws Exception;
-	public void clickOnControlsLocationsSection() throws Exception;
-	public boolean isLocationsPageLoaded() throws Exception;
-	public void clickAllDistrictsOrAllLocationsTab(boolean isClickDistrictsTab) throws Exception;
-	public void goToSpecificLocationDetailPageByLocationName (String locationName) throws Exception;
-	public String getLocationInfoStringFromDetailPage () throws Exception;
-	public void clickOnBackButtonOnLocationDetailPage() throws Exception;
-	public void turnONClopeningToggleAndSetHours(int clopeningHours) throws Exception;
-	public void selectClopeningHours(int clopeningHour) throws Exception;
-	public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception;
-	public void setSchedulingMinorRuleFor14N15(String from, String to, String parameter1, String parameter2, String parameter3, String parameter4) throws Exception;
-	public void setSchedulingMinorRuleFor16N17(String from, String to, String parameter1, String parameter2, String parameter3, String parameter4) throws Exception;
 	public void searchUserByFirstName(String userFirstName) throws Exception;
 	public void verifyUpdateUserAndRolesOneUserLocationInfo(String userFirstName) throws Exception;
 	public void clickOnLocationsTabInGlobalModel() throws Exception;
 	public List<String> getAllLocationsInGlobalModel() throws Exception;
 	public String getCurrentLocationInControls() throws Exception;
-	public void verifyRolePermissionExists(String section, String permission) throws Exception;
-	public void turnOnOrOffSpecificPermissionForSM(String section, String permission, String action) throws Exception;
 }

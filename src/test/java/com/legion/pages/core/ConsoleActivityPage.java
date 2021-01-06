@@ -118,7 +118,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	@Override
 	public void verifyClickOnActivityIcon() throws Exception {
 		if (isElementLoaded(activityBell, 10)) {
-			clickTheElement(activityBell);
+			click(activityBell);
 			if (areListElementVisible(activityFilters, 10)) {
 				SimpleUtils.pass("Click on Activity Bell icon Successfully!");
 			}else {
@@ -133,9 +133,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	public void clickActivityFilterByIndex(int index, String filterName) throws Exception {
 		if (areListElementVisible(activityFilters, 10)) {
 			if (index < activityFilters.size()) {
-				clickTheElement(activityFilters.get(index));
-				waitForSeconds(2);
-				if (isElementLoaded(filterTitle, 10)) {
+				click(activityFilters.get(index));
+				if (isElementLoaded(filterTitle, 5)) {
 					if (filterName.equalsIgnoreCase(filterTitle.getText().replaceAll("\\s*", ""))) {
 						SimpleUtils.pass("Switch to :" + filterTitle.getText() + " tab Successfully!");
 					}else {
@@ -254,9 +253,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	}
 	@Override
 	public void verifyClickOnActivityCloseButton() throws Exception {
-		waitForSeconds(10);
-		if (isElementLoaded(activityBell, 15)) {
-			click(activityBell);
+		if (isElementLoaded(closeActivityFeedBtn, 10)) {
+			click(closeActivityFeedBtn);
 			SimpleUtils.pass("Click on Activity Close Button Successfully!");
 		}else {
 			SimpleUtils.fail("Activity Close Button failed to load!", false);
@@ -266,7 +264,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 
 	@Override
 	public void verifyActivityOfShiftOffer(String requestUserName) throws Exception {
-		String expectedMessage = "open shift";
+		String expectedMessage = "requested to swap shifts";
 		waitForSeconds(5);
 		if (areListElementVisible(activityCards, 15)) {
 			WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
@@ -280,7 +278,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 						+ ", " + expectedMessage + "! Actual card is: " + message.getText(), false);
 			}
 		}else {
-			SimpleUtils.fail("Shift Offer Activity failed to Load1", false);
+			SimpleUtils.fail("Shift Swap Activity failed to Load1", false);
 		}
 	}
 
@@ -318,37 +316,35 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 
     @Override
     public void verifyNewBusinessProfileCardShowsOnActivity(String userName, boolean isNewLabelShows) throws Exception {
-		boolean isFound = false;
         String newStatus = "New";
         String expectedMessage = userName + " updated business profile photo.";
         waitForSeconds(5);
         if (areListElementVisible(activityCards, 15)) {
-        	for (WebElement activityCard : activityCards) {
-				WebElement message = activityCard.findElement(By.className("notification-content-message"));
-				if (message != null && message.getText().equals(expectedMessage)) {
-					List<WebElement> actionButtons = activityCard.findElements(By.className("notification-buttons-button"));
-					if (actionButtons != null && actionButtons.size() == 2) {
-						if (actionButtons.get(0).getText().equals("Approve") && actionButtons.get(1).getText().equals("Reject")) {
-							SimpleUtils.pass("Approve and Reject buttons loaded Successfully on Business Profile Update Card!");
-							if (isNewLabelShows) {
-								WebElement newLabel = activityCard.findElement(By.className("notification-new-label"));
-								if (newLabel != null && newLabel.getText().equalsIgnoreCase(newStatus) && message != null) {
-									SimpleUtils.pass("Verified 'New' label shows correctly");
-								} else {
-									SimpleUtils.fail("Failed to find a new business profile update activity!", false);
-								}
-							}
-							isFound = true;
-							break;
-						} else {
-							SimpleUtils.fail("Approve and Reject buttons are not loaded on Business Profile Update Card!", false);
-						}
-					}
-				}
-			}
-        	if (!isFound) {
-				SimpleUtils.fail("Failed to find the card with the message: " + expectedMessage, false);
-			}
+            WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
+            if (isNewLabelShows) {
+                WebElement newLabel = activityCards.get(0).findElement(By.className("notification-new-label"));
+                if (newLabel != null && newLabel.getText().equalsIgnoreCase(newStatus) && message != null) {
+                    SimpleUtils.pass("Verified 'New' label shows correctly");
+                }else {
+                    SimpleUtils.fail("Failed to find a new business profile update activity!", false);
+                }
+            }
+            if (message != null && message.getText().equals(expectedMessage)) {
+                SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
+            }else {
+                SimpleUtils.fail("Failed to find the card with the message: " + expectedMessage
+                        + " Actual card is: " + message.getText(), false);
+            }
+            List<WebElement> actionButtons = activityCards.get(0).findElements(By.className("notification-buttons-button"));
+            if (actionButtons != null && actionButtons.size() == 2) {
+                if (actionButtons.get(0).getText().equals("Approve") && actionButtons.get(1).getText().equals("Reject")) {
+                    SimpleUtils.pass("Approve and Reject buttons loaded Successfully on Business Profile Update Card!");
+                }else {
+                    SimpleUtils.fail("Approve and Reject buttons are not loaded on Business Profile Update Card!", false);
+                }
+            }else {
+                SimpleUtils.fail("Actions buttons and size are incorrect on Business Profile Update Card!", false);
+            }
         }else {
             SimpleUtils.fail("Business Profile Update Activity failed to Load!", false);
         }
@@ -376,40 +372,33 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
      * Verify the notification message and detail for time off request
      * */
     public void verifyTheNotificationForReqestTimeOff(String requestUserName, String startTime, String endTime,String timeOffAction) throws Exception {
-        boolean isFound = false;
-    	String expectedMessage = requestUserName +" "+timeOffAction+" time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
+        String expectedMessage = requestUserName +" "+timeOffAction+" time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
         if (timeOffAction.toLowerCase().contains("cancel")){
             expectedMessage = requestUserName +" "+timeOffAction+" the time off request for "+ startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
         }
         String actualMessage = "";
         waitForSeconds(5);
         if (areListElementVisible(activityCards, 15)) {
-        	for (WebElement activityCard : activityCards) {
-				actualMessage = activityCard.findElement(By.className("notification-content-message")).getText();
-				if (actualMessage != null && actualMessage.equals(expectedMessage)) {
-					SimpleUtils.pass("Find Card: " + actualMessage + " Successfully!");
-					isFound = true;
-					//check the detail
-					if (timeOffAction.equals("requested")) {
-						waitForSeconds(3);
-						WebElement detail = activityCard.findElement(By.cssSelector("div[ng-if=\"canShowDetails()\"]"));
-						if (isElementLoaded(detail, 10)) {
-							click(detail);
-							click(detail);
-							SimpleUtils.pass("detail load!");
-						} else {
-							SimpleUtils.fail("detail is not loaded!", true);
-						}
-					}
-					break;
-				}
-			}
+            actualMessage = activityCards.get(0).findElement(By.className("notification-content-message")).getText();
+            if (actualMessage != null && actualMessage.equals(expectedMessage)) {
+                SimpleUtils.pass("Find Card: " + actualMessage + " Successfully!");
+                //check the detail
+                if (timeOffAction.equals("requested")){
+                    WebElement detail = activityCards.get(0).findElement(By.cssSelector("div[ng-if=\"canShowDetails()\"]"));
+                    if (isElementLoaded(detail,5) && isClickable(detail,5)){
+                        click(detail);
+                        click(detail);
+                        SimpleUtils.pass("detail load!");
+                    }else{
+                        SimpleUtils.fail("detail is not loaded!",true);
+                    }
+                }
+            }else {
+                SimpleUtils.fail("Failed to find the card that is new and contain: " + expectedMessage + "! Actual card is: " + actualMessage, false);
+            }
         }else {
             SimpleUtils.fail("Time Off Request Activity failed to Load!", false);
         }
-        if (!isFound) {
-			SimpleUtils.fail("Failed to find the card that is new and contain: " + expectedMessage + "! Actual card is: " + actualMessage, false);
-		}
     }
 
     @Override
@@ -445,8 +434,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 
     @Override
     public void closeActivityWindow() throws Exception {
-        if (isElementLoaded(activityBell, 10)) {
-            click(activityBell);
+        if (isElementLoaded(closeActivityFeedBtn, 10)) {
+            click(closeActivityFeedBtn);
         }else {
             SimpleUtils.fail("Close button is not Loaded Successfully!", false);
         }
@@ -488,9 +477,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
                     actualMessage = activityCards.get(0).findElement(By.className("notification-content-message")).getText();
                     if (actualMessage != null && actualMessage.equals(expectedMessage)) {
                         SimpleUtils.pass("Find Card: " + actualMessage + " Successfully!");
-                        waitForSeconds(3);
                         WebElement detail = activityCards.get(0).findElement(By.cssSelector("div[ng-if=\"canShowDetails()\"]"));
-                        if (isElementLoaded(detail,10)){
+                        if (isElementLoaded(detail,5) && isClickable(detail,5)){
                             click(detail);
                             verifyAvailabilityNotificationDetail(weekInfo,repeatChange);
                             click(detail);
@@ -572,10 +560,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
     //Added By Julie
     @FindBy (className = "notification-bell-popup-header-container")
     public WebElement notificationBellPopupHeader;
-    @FindBy (css = ".notification-bell-popup-notifications-container.empty")
-    public WebElement notificationsContainerEmpty;
-	@FindBy (css = ".notification-bell-popup-notifications-container")
-	public WebElement notificationsContainer;
+    @FindBy (className = "notification-bell-popup-notifications-container")
+    public WebElement notificationsContainer;
 
     @Override
     public boolean isActivityBellIconLoaded() throws Exception {
@@ -600,12 +586,11 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 
     @Override
     public void verifyTheContentOfShiftSwapActivity() throws Exception {
-    	waitForSeconds(3);
-        if (isElementLoaded(filterTitle,10) && (isElementLoaded(notificationsContainer, 10) || isElementLoaded(notificationsContainerEmpty, 10))) {
+        if (isElementLoaded(filterTitle,10) && isElementLoaded(notificationsContainer, 10)) {
             if (filterTitle.getText().contains("Shift Swap")) {
                 if (notificationsContainer.getText().contains("requested to swap shifts") || notificationsContainer.getText().contains("agreed to cover")) {
                     SimpleUtils.pass("The content of shift swap activity displays successfully");
-                } else if ( notificationsContainerEmpty.getText().toLowerCase().contains("No activities available for the selected filter")) {
+                } else if ( notificationsContainer.getText().toLowerCase().contains("no activities available for the selected filter")) {
                     SimpleUtils.pass("No activities available for the selected filter");
                 } else SimpleUtils.fail("The content of shift swap activity displays incorrectly", true);
             } else SimpleUtils.fail("The content of Shift Swap Activity is incorrect", true);

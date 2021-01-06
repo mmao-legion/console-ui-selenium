@@ -17,10 +17,7 @@ public class CredentialDataProviderSource {
     @DataProvider(name = "legionTeamCredentialsByEnterprise", parallel = false)
     public static Object[][] firstCredentialsByEnterprise(Method testMethod) {
         String fileName = "UsersCredentials.json";
-        if (System.getProperty("enterprise")!=null) {
-            fileName = System.getProperty("enterprise")+fileName;
-        }else
-            fileName=SimpleUtils.getEnterprise(testMethod)+fileName;
+        fileName=SimpleUtils.getEnterprise(testMethod)+fileName;
         TreeMap<String, Object[][]> userCredentials = new TreeMap<>(); 
         userCredentials.putAll(SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName)); 
         for(Map.Entry<String, Object[][]> entry : userCredentials.entrySet())

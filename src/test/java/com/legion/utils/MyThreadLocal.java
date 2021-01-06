@@ -59,11 +59,6 @@ public class MyThreadLocal {
 	public static ThreadLocal<String> screenShotURL = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeOffStartTime = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeOffEndTime = new ThreadLocal<>();
-	public static final ThreadLocal<String> testSuiteID = new ThreadLocal<>();
-	public static final ThreadLocal<String> testRailRunName = new ThreadLocal<>();
-	public static final ThreadLocal<Boolean> testCaseExistsFlag = new ThreadLocal<>();
-	public static final ThreadLocal<List<Integer>> testCaseIDList = new ThreadLocal<>();
-	public static final ThreadLocal<String> testSuiteName = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeDuration = new ThreadLocal<>();
 	public static final ThreadLocal<String> moduleName = new ThreadLocal<>();
 	public static final ThreadLocal<Integer> sectionID = new ThreadLocal<>();
@@ -74,7 +69,6 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> LGPTPLocationName = new ThreadLocal<>();
 	public static final ThreadLocal<String> LGMSNsoLocationName = new ThreadLocal<>();
 	public static final ThreadLocal<String> LGPTPNsoLocationName = new ThreadLocal<>();
-	public static final ThreadLocal<String> job = new ThreadLocal<>();
 
 	public static void setScreenshotLocation(String value) { screenshotLoc.set(value); }
 
@@ -126,26 +120,6 @@ public class MyThreadLocal {
 	public static void setTimeOffEndTime(String value) { timeOffEndTime.set(value); }
 
 	public static String getTimeOffEndTime() { return timeOffEndTime.get(); }
-
-	public static void setTestSuiteID(String value) { testSuiteID.set(value); }
-
-	public static String getTestSuiteID() { return testSuiteID.get(); }
-
-	public static void setTestRailRunName(String value) { testRailRunName.set(value); }
-
-	public static String getTestRailRunName() { return testRailRunName.get(); }
-
-	public static void setTestCaseExistsFlag(boolean value) { testCaseExistsFlag.set(value); }
-
-	public static boolean getTestCaseExistsFlag() { return testCaseExistsFlag.get(); }
-
-	public static void setTestCaseIDList(List<Integer> value) { testCaseIDList.set(value); }
-
-	public static List<Integer> getTestCaseIDList() { return testCaseIDList.get(); }
-
-	public static void setTestSuiteName(String value) { testSuiteName.set(value); }
-
-	public static String getTestSuiteName() { return testSuiteName.get(); }
 
 	public static void setScheduleHoursStartTime(String value) { scheduleHoursStartTime.set(value); }
 
@@ -462,10 +436,5 @@ public class MyThreadLocal {
 	public static void setLGPTPNsoLocationName(String value) { LGPTPNsoLocationName.set(value); }
 
 	public static String getLGPTPNsoLocationName() { return LGPTPNsoLocationName.get(); }
-
-	//added by Estelle for jobs
-	public static void setJobName(String jobName) { job.set(jobName); }
-
-	public static String getJobName() { return job.get(); }
 
 }

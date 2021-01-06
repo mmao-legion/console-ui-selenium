@@ -10,7 +10,7 @@ public interface SchedulePage {
 	public void clickOnScheduleConsoleMenuItem();
 	public void goToSchedulePage() throws Exception;
 	public boolean isSchedulePage() throws Exception;
-	public Boolean verifyActivatedSubTab(String SubTabText) throws Exception;
+	public Boolean varifyActivatedSubTab(String SubTabText) throws Exception;
 	public void goToSchedule() throws Exception;
 	public void goToProjectedSales() throws Exception;
 	public void goToStaffingGuidance() throws Exception;
@@ -54,7 +54,7 @@ public interface SchedulePage {
 	public void clickSaveBtn() throws Exception;
 	public void clickOnVersionSaveBtn() throws Exception;
 	public void clickOnPostSaveBtn() throws Exception;
-    public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView) throws Exception;
+    public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView);
     public void selectGroupByFilter(String optionVisibleText);
     public String getActiveWeekText() throws Exception;
     public ArrayList<WebElement> getAllAvailableShiftsInWeekView();
@@ -69,8 +69,8 @@ public interface SchedulePage {
 	public void getAvailableStatus() throws Exception;
 	public void clickOnOfferOrAssignBtn() throws Exception;
 	public void clickOnShiftContainer(int index) throws Exception;
-	public void deleteShift() throws Exception;
-	public void deleteAllShiftsInDayView() throws Exception;
+	public void deleteShift();
+	public void deleteAllShiftsInDayView();
 	public void deleteShiftGutterText();
 	public boolean getScheduleStatus() throws Exception;
 	public boolean inActiveWeekDayClosed(int dayIndex) throws Exception;
@@ -100,7 +100,6 @@ public interface SchedulePage {
 	public ArrayList<String> getActiveWeekCalendarDates() throws Exception;
 	public void refreshBrowserPage() throws Exception;
 	public void addOpenShiftWithDefaultTime(String workRole) throws Exception;
-	public void addOpenShiftWithFirstDay(String workRole) throws Exception;
 	public boolean isNextWeekAvaibale() throws Exception;
 	public boolean isSmartCardPanelDisplay() throws Exception;
 	public void convertAllUnAssignedShiftToOpenShift() throws Exception;
@@ -127,10 +126,10 @@ public interface SchedulePage {
 	public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception;
 	public void verifyScheduledHourNTMCountIsCorrect() throws Exception;
 	public void complianceShiftSmartCard() throws Exception;
-	public void viewProfile() throws Exception;
+	public void viewProfile();
 	public void changeWorkerRole() throws Exception;
 	public void assignTeamMember() throws Exception;
-	public void convertToOpenShift() throws Exception;
+	public void convertToOpenShift();
 	public void beforeEdit();
 	public void selectTeamMembersOptionForOverlappingSchedule() throws Exception;
 	public boolean getScheduleOverlappingStatus()throws Exception;
@@ -272,7 +271,7 @@ public interface SchedulePage {
 	public void selectSaveButton()		throws Exception;
 	public boolean isScheduleFinalized() throws Exception;
 	public boolean isProfileIconsEnable() throws Exception;
-	public WebElement clickOnProfileIcon() throws Exception;
+	public void clickOnProfileIcon() throws Exception;
 	public boolean isViewProfileEnable() throws Exception;
 	public boolean isViewOpenShiftEnable() throws Exception;
 	public boolean isChangeRoleEnable() throws Exception;
@@ -295,7 +294,7 @@ public interface SchedulePage {
 
 	public void verifyChangeRoleFunctionality() throws Exception;
 
-	public void verifyMealBreakTimeDisplayAndFunctionality(boolean isEditMealBreakEnabled) throws Exception;
+	public void verifyMealBreakTimeDisplayAndFunctionality() throws Exception;
 
 	public void verifyDeleteShift() throws Exception;
 
@@ -311,7 +310,7 @@ public interface SchedulePage {
 
 	public int getOTShiftCount();
 
-	public void saveSchedule() throws Exception;
+	public void saveSchedule();
 
 	public void validateXButtonForEachShift() throws Exception;
 
@@ -331,202 +330,87 @@ public interface SchedulePage {
 
 	public void filterScheduleByShiftTypeAndJobTitle(boolean isWeekView) throws Exception;
 
-	public boolean verifyConvertToOpenPopUpDisplay(String firstNameOfTM) throws Exception;
+	public boolean verifyConvertToOpenPopUpDisplay() throws Exception;
 
-	void convertToOpenShiftDirectly();
+	public void convertToOpenShiftDirectly();
 
 	// Added by Nora
-	void verifyScheduledNOpenFilterLoaded() throws Exception;
-	void checkAndUnCheckTheFilters() throws Exception;
-	void filterScheduleByBothAndNone() throws Exception;
-	String selectOneFilter() throws Exception;
-	void verifySelectedFilterPersistsWhenSelectingOtherWeeks(String selectedFilter) throws Exception;
-	int selectOneShiftIsClaimShift(List<String> claimShift) throws Exception;
-	void verifyClaimShiftOfferNBtnsLoaded() throws Exception;
-	List<String> getShiftHoursFromInfoLayout() throws Exception;
-	void verifyTheShiftHourOnPopupWithScheduleTable(String scheduleShiftTime, String weekDay) throws Exception;
-	String getSpecificShiftWeekDay(int index) throws Exception;
-	void verifyClickAgreeBtnOnClaimShiftOffer() throws Exception;
-	void verifyClickCancelBtnOnClaimShiftOffer() throws Exception;
-	void verifyTheColorOfCancelClaimRequest(String cancelClaim) throws Exception;
-	void verifyReConfirmDialogPopup() throws Exception;
-	void verifyClickNoButton() throws Exception;
-	void verifyClickOnYesButton() throws Exception;
-	void verifyTheFunctionalityOfClearFilter() throws Exception;
+	public void verifyScheduledNOpenFilterLoaded() throws Exception;
+	public void checkAndUnCheckTheFilters() throws Exception;
+	public void filterScheduleByBothAndNone() throws Exception;
+	public String selectOneFilter() throws Exception;
+	public void verifySelectedFilterPersistsWhenSelectingOtherWeeks(String selectedFilter) throws Exception;
+	public int selectOneShiftIsClaimShift(List<String> claimShift) throws Exception;
+	public void verifyClaimShiftOfferNBtnsLoaded() throws Exception;
+	public List<String> getShiftHoursFromInfoLayout() throws Exception;
+	public void verifyTheShiftHourOnPopupWithScheduleTable(String scheduleShiftTime, String weekDay) throws Exception;
+	public String getSpecificShiftWeekDay(int index) throws Exception;
+	public void verifyClickAgreeBtnOnClaimShiftOffer() throws Exception;
+	public void verifyClickCancelBtnOnClaimShiftOffer() throws Exception;
+	public void verifyTheColorOfCancelClaimRequest(String cancelClaim) throws Exception;
+	public void verifyReConfirmDialogPopup() throws Exception;
+	public void verifyClickNoButton() throws Exception;
+	public void verifyClickOnYesButton() throws Exception;
+	public void verifyTheFunctionalityOfClearFilter() throws Exception;
 
-	void validateTheAvailabilityOfScheduleTable(String userName) throws Exception;
+	public void validateTheAvailabilityOfScheduleTable(String userName) throws Exception;
 
-	void validateTheAvailabilityOfScheduleMenu() throws Exception;
+	public void validateTheAvailabilityOfScheduleMenu() throws Exception;
 
-	void validateTheFocusOfSchedule() throws Exception;
+	public void validateTheFocusOfSchedule() throws Exception;
 
-	void validateTheDefaultFilterIsSelectedAsScheduled() throws Exception;
+	public void validateTheDefaultFilterIsSelectedAsScheduled() throws Exception;
 
-	void validateTheFocusOfWeek(String currentDate) throws Exception;
+	public void validateTheFocusOfWeek(String currentDate) throws Exception;
 
-	void validateForwardAndBackwardButtonClickable() throws Exception;
+	public void validateForwardAndBackwardButtonClickable() throws Exception;
 
-	void validateTheDataAccordingToTheSelectedWeek() throws Exception;
+	public void validateTheDataAccordingToTheSelectedWeek() throws Exception;
 
-	void validateTheSevenDaysIsAvailableInScheduleTable() throws Exception;
+	public void validateTheSevenDaysIsAvailableInScheduleTable() throws Exception;
 
-	public String getTheEarliestAndLatestTimeInSummaryView(HashMap<String, Integer> schedulePoliciesBufferHours) throws Exception;
+	public String getTheEarliestAndLatestTimeInSummaryView() throws Exception;
 
-	String getTheEarliestAndLatestTimeInScheduleTable() throws Exception;
+	public String getTheEarliestAndLatestTimeInScheduleTable() throws Exception;
 
-	void compareOperationHoursBetweenAdminAndTM(String theEarliestAndLatestTimeInScheduleSummary, String theEarliestAndLatestTimeInScheduleTable) throws Exception;
+	public void compareOperationHoursBetweenAdminAndTM(String theEarliestAndLatestTimeInScheduleSummary, String theEarliestAndLatestTimeInScheduleTable) throws Exception;
 
-	void validateThatHoursAndDateIsVisibleOfShifts() throws Exception;
+	public void validateThatHoursAndDateIsVisibleOfShifts() throws Exception;
 
-	void validateTheDisabilityOfLocationSelectorOnSchedulePage() throws Exception;
+	public void validateTheDisabilityOfLocationSelectorOnSchedulePage() throws Exception;
 
-	void goToConsoleScheduleAndScheduleSubMenu() throws Exception;
+	public void goToConsoleScheduleAndScheduleSubMenu() throws Exception;
 
-	void validateProfilePictureInAShiftClickable() throws Exception;
+	public void validateProfilePictureInAShiftClickable() throws Exception;
 
-	void validateTheDataOfProfilePopupInAShift() throws Exception;
+	public void validateTheDataOfProfilePopupInAShift() throws Exception;
 
-	void validateTheAvailabilityOfInfoIcon() throws Exception;
+	public void validateTheAvailabilityOfInfoIcon() throws Exception;
 
-	void validateInfoIconClickable() throws Exception;
+	public void validateInfoIconClickable() throws Exception;
 
-	void validateTheAvailabilityOfOpenShiftSmartcard() throws Exception;
+	public void validateTheAvailabilityOfOpenShiftSmartcard() throws Exception;
 
-	void validateViewShiftsClickable() throws Exception;
+	public void validateViewShiftsClickable() throws Exception;
 
-	void validateTheNumberOfOpenShifts() throws Exception;
+	public void validateTheNumberOfOpenShifts() throws Exception;
 
-	void verifyTheAvailabilityOfClaimOpenShiftPopup() throws Exception;
+	public void verifyTheAvailabilityOfClaimOpenShiftPopup() throws Exception;
 
-	List<String> getWeekScheduleShiftTimeListOfMySchedule() throws Exception;
+	public  List<String> getWeekScheduleShiftTimeListOfMySchedule() throws Exception;
 
-	List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception;
+	public List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception;
 
-	void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception;
+	public void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception;
 	
-	void navigateToNextWeek() throws Exception;
+	public void navigateToNextWeek() throws Exception;
 
-	void verifyShiftsAreSwapped(List<String> swapData) throws Exception;
+	public void verifyShiftsAreSwapped(List<String> swapData) throws Exception;
 
-	void clickOnDayViewAddNewShiftButton() throws Exception;
+	public void clickOnDayViewAddNewShiftButton() throws Exception;
 
-	void addNewShiftsByNames(List<String> names) throws Exception;
-	boolean displayAlertPopUp() throws Exception;
+	public void addNewShiftsByNames(List<String> names) throws Exception;
+	public boolean displayAlertPopUp() throws Exception;
+
 	public void displayAlertPopUpForRoleViolation() throws Exception;
-
-	public void unGenerateActiveScheduleFromCurrentWeekOnward(int loopCount) throws Exception;
-	public List<String> getOverviewData() throws Exception;
-	public void addOpenShiftWithLastDay(String workRole) throws Exception;
-	public void deleteLatestOpenShift() throws Exception;
-	public void addManualShiftWithLastDay(String workRole, String tmName) throws Exception;
-	public HashMap<String, String> getTheHoursNTheCountOfTMsForEachWeekDays() throws Exception;
-	public HashMap<String, List<String>> getTheContentOfShiftsForEachWeekDay() throws Exception;
-	public HashMap<String, String> getBudgetNScheduledHoursFromSmartCard() throws Exception;
-	public int getComplianceShiftCountFromSmartCard(String cardName) throws Exception;
-	public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose) throws Exception;
-	public void clickCreateScheduleBtn() throws Exception;
-	public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception;
-	public void createScheduleForNonDGFlowNewUIWithGivingParameters(String day, String startTime, String endTime) throws Exception;
-	public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception;
-	public void goToToggleSummaryView() throws Exception;
-	public void verifyOperatingHrsInToggleSummary(String day, String startTime, String endTime) throws Exception;
-	public void verifyDayHasShifts(String day) throws Exception;
-	public void verifyNoShiftsForSpecificWeekDay(List<String> weekDaysToClose) throws Exception;
-	public void verifyStoreIsClosedForSpecificWeekDay(List<String> weekDaysToClose) throws Exception;
-	public void verifyClosedDaysInToggleSummaryView(List<String> weekDaysToClose) throws Exception;
-	public String getWeekInfoBeforeCreateSchedule() throws Exception;
-	public void verifyTheContentOnEnterBudgetWindow(String weekInfo, String location) throws Exception;
-	public List<String> setAndGetBudgetForNonDGFlow() throws Exception;
-	public HashMap<String, String> verifyNGetBudgetNScheduleWhileCreateScheduleForNonDGFlowNewUI(String weekInfo, String location) throws Exception;
-	public List<String> getBudgetedHoursOnSTAFF() throws Exception;
-	public String getBudgetOnWeeklyBudget() throws Exception;
-	public void verifyChangesNotPublishSmartCard(int changesNotPublished) throws Exception;
-	public void dragOneShiftToMakeItOverTime() throws Exception;
-	public String getChangesOnActionRequired() throws Exception;
-	public String getTooltipOfUnpublishedDeleted() throws Exception;
-	public void verifyLabelOfPublishBtn(String labelExpected) throws  Exception;
-	public void verifyMessageIsExpected(String messageExpected) throws Exception;
-	public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception;
-	public void selectAShiftToAssignTM(String username) throws Exception;
-	public void verifyInactiveMessageNWarning(String username, String date) throws Exception;
-	public List<String> getTheShiftInfoByIndex(int index) throws Exception;
-	public void selectWorkingDaysOnNewShiftPageByIndex(int index) throws Exception;
-	public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception;
-	public void validateScheduleTableWhenSelectAnyOfGroupByOptions() throws Exception;
-	public void changeWorkRoleInPrompt(boolean isApplyChange) throws Exception;
-	public void switchSearchTMAndRecommendedTMsTab() throws Exception;
-	public String convertToOpenShiftAndOfferToSpecificTMs() throws Exception;
-	public void clickOnEditShiftTime() throws Exception;
-	public void verifyEditShiftTimePopUpDisplay() throws Exception;
-	public List<String> editShiftTime() throws Exception;
-	public void clickOnCancelEditShiftTimeButton() throws Exception;
-	public void clickOnUpdateEditShiftTimeButton() throws Exception;
-	public void verifyShiftTime(String shiftTime) throws Exception;
-	public String getShiftTime();
-	public void  verifyDeleteShiftCancelButton() throws Exception;
-	public void verifyDeleteMealBreakFunctionality() throws Exception;
-	public void verifyEditMealBreakTimeFunctionality(boolean isSavedChange) throws Exception;
-	public void editAndVerifyShiftTime(boolean isSaveChange) throws Exception;
-	public String selectTeamMembers() throws Exception;
-	public void clickOnAnalyzeBtn() throws Exception;
-	public void verifyScheduleVersion(String version) throws Exception;
-	public void closeAnalyzeWindow() throws Exception;
-	public void verifyVersionInSaveMessage(String version) throws Exception;
-	public void clickOnManagerButton() throws Exception;
-	public void verifyAllShiftsAssigned() throws Exception;
-	public void clickProfileIconOfShiftByIndex(int index) throws Exception;
-	public void clickViewStatusBtn() throws Exception;
-	public void verifyListOfOfferNotNull() throws Exception;
-	public void clickOnOpenSearchBoxButton() throws Exception;
-	public void verifyGhostTextInSearchBox () throws Exception;
-	public List<WebElement> searchShiftOnSchedulePage(String searchText) throws Exception;
-	public void verifySearchResult (String firstNameOfTM, String lastNameOfTM, String workRole, String jobTitle, List<WebElement> searchResults) throws Exception;
-	public void clickOnCloseSearchBoxButton() throws Exception;
-	public void verifySearchBoxNotDisplayInDayView() throws Exception;
-	public int getRandomIndexOfShift();
-	public void goToSpecificWeekByDate(String date) throws Exception;
-	public void clearAllSelectedDays() throws Exception;
-	public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception;
-	public void dragOneAvatarToAnother(int startIndex, String firstName, int endIndex) throws Exception;
-	public int getTheIndexOfTheDayInWeekView(String date) throws Exception;
-    public HashMap<String,Integer> dragOneAvatarToAnotherSpecificAvatar(int startIndexOfTheDay, String user1, int endIndexOfTheDay, String user2) throws Exception;
-    public void verifyMessageInConfirmPage(String expectedMassageInSwap, String expectedMassageInAssign) throws Exception;
-    public void selectSwapOrAssignOption(String action) throws Exception;
-    public void clickConfirmBtnOnDragAndDropConfirmPage() throws Exception;
-	public WebElement getShiftById(String id) throws Exception;
-	public List<String> getShiftSwapDataFromConfirmPage(String action) throws Exception;
-	public int verifyDayHasShiftByName(int indexOfDay, String name) throws Exception;
-	public String getWeekDayTextByIndex(int index) throws Exception;
-	public void selectDaysByIndex(int index1, int index2, int index3) throws Exception;
-	public boolean verifySwapAndAssignWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception;
-	public void clickCancelBtnOnDragAndDropConfirmPage() throws Exception;
-	public List<String> getOpenShiftInfoByIndex(int index) throws Exception;
-	public List<WebElement> getOneDayShiftByName(int indexOfDay, String name) throws Exception;
-	public List<String> getComplianceMessageFromInfoIconPopup(WebElement shift) throws Exception;
-	public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception;
-	public boolean ifWarningModeDisplay() throws Exception;
-	public String getWarningMessageInDragShiftWarningMode() throws Exception;
-	public void clickOnOkButtonInWarningMode() throws Exception;
-	public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception;
-	public void moveAnywayWhenChangeShift() throws Exception;
-	public boolean ifMoveAnywayDialogDisplay() throws Exception;
-	public void verifyShiftIsMovedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception;
-	public String getTheMessageOfTMScheduledStatus() throws Exception;
-	public void verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished() throws Exception;
-	public void verifyTMNotSelected() throws Exception;
-	public void verifyAlertMessageIsExpected(String messageExpected) throws Exception;
-	public void clickOnRadioButtonOfSearchedTeamMemberByName(String name) throws Exception;
-	public void clickOnAssignAnywayButton() throws Exception;
-	public WebElement getTheShiftByIndex(int index) throws Exception;
-	public void editShiftTimeToTheLargest() throws Exception;
-	public void closeCustomizeNewShiftWindow() throws Exception;
-	public List<String> getHolidaysOfCurrentWeek() throws Exception;
-	public String getAllTheWarningMessageOfTMWhenAssign() throws Exception;
-	public int getTheIndexOfCurrentDayInDayView() throws Exception;
-	public void selectWeekDaysByDayName(String dayName) throws Exception;
-	public void editOperatingHoursOnScheduleOldUIPage(String startTime, String endTime, List<String> weekDaysToClose) throws Exception;
-	public int getTheIndexOfEditedShift() throws Exception;
-	public void navigateToTheRightestSmartCard() throws Exception;
-	public boolean isEditMealBreakEnabled() throws Exception;
-	public void verifyTMSchedulePanelDisplay() throws Exception;
 }

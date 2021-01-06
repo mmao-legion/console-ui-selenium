@@ -23,7 +23,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     
     /* Aug 03- Zorang Team- Variables declaration*/
     
-    @FindBy(css="input[placeholder*='Usernam']")
+    @FindBy(css="input[placeholder *='Usernam']")
     private WebElement userNameField;
     
     @FindBy(css="[ng-model='password']")
@@ -64,7 +64,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     	passwordField.clear();
     	userNameField.sendKeys(userName);
 		passwordField.sendKeys(Password);
-		clickTheElement(loginButton);
+		click(loginButton);
     }
     
     public boolean isLoginDone() throws Exception
@@ -81,9 +81,9 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     
     public void logOut() throws Exception
     {
-    	if(isElementLoaded(logoutButton, 10))
+    	if(isElementLoaded(logoutButton))
     	{
-    		clickTheElement(logoutButton);
+    		click(logoutButton);
     	}
     }
     
@@ -127,24 +127,4 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 		}else
 			SimpleUtils.report("There is no new terms of service");
 	}
-
-
-	@FindBy(css = "div[class=\"auth-form\"]")
-	private WebElement loginPanel;
-	@Override
-	public void verifyLoginPageIsLoaded() throws Exception {
-		try{
-			if (isElementLoaded(loginPanel,15)
-					&& isElementLoaded(userNameField,5)
-					&& isElementLoaded(passwordField, 5)
-					&& isElementLoaded(loginButton, 5)) {
-				SimpleUtils.pass("Login page is loaded successfully! ");
-			}else
-				SimpleUtils.fail("Login page not loaded successfully!", false);
-		}catch(Exception e){
-			SimpleUtils.fail(e.getMessage(), false);
-		}
-
-	}
-
 }

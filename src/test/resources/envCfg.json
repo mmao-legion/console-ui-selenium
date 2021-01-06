@@ -11,7 +11,6 @@
  "Tech_Enterprise" : "LegionTech",
  "Reverted_Enterprise" : "LegionReverted",
  "KendraScott2_Enterprise" : "KendraScott2",
- "OP_Enterprise" : "OP",
  "DGStage_Enterprise" : "DGStage",
  "ChezAldo_Enterprise" : "ChezAldo",
  "ALL_LOCATIONS" : "false",
@@ -43,7 +42,5 @@
  "legion.cucumber.extent.report.name" : "TA_Report",
  "legion.cucumber.extent.report.path" : "legion_bdd_report",
  "legion.cucumber.extent.report.theme" : "dark",
- "legion.cucumber.extent.report.title" : "Legion Cucumber Report",
- "isGridEnabled" : "false",
- "URL" : "http://localhost:4455/wd/hub"
+ "legion.cucumber.extent.report.title" : "Legion Cucumber Report"
 }

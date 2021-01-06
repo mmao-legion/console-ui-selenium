@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -26,7 +25,7 @@ public class CsvUtils {
  		    		isHeader = false;
  		    	}
  		    	else {
- 			    	String str[] = line.trim().split(",(?=([^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)",-1);
+ 			    	String str[] = line.split(",");
  			        for(int i=0;i<str.length;i++) {
  			        	map.put(headerData[i], str[i]);
  			        }
@@ -46,25 +45,4 @@ public class CsvUtils {
         return responseData;
 
     }
-
-    public static ArrayList<String> getHeaderFromCSVFileByPath(String filePathWithName) {
-		ArrayList<String> header = new ArrayList<String>();
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(filePathWithName));
-			String line = "";
-			while((line = br.readLine()) != null){
-				Collections.addAll(header, line.split(","));
-				break;
-			}
-		} catch (JsonGenerationException e) {
-			System.err.println("The CSV configuration file is not valid. Please verify the file.");
-
-		} catch (JsonMappingException  e) {
-			System.err.println("The CSV configuration file is not valid. Please verify the file.");
-
-		} catch (IOException e) {
-			System.err.println("No configuration file available.");
-		}
-		return header;
-	}
 }

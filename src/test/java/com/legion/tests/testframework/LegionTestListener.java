@@ -75,11 +75,11 @@ import static com.legion.utils.MyThreadLocal.*;
 		@Override
 		public void onFinish(ITestContext context) {
 			// TODO Auto-generated method stub
-/*if(getTestRailReporting()!=null){
+			if(getTestRailReporting()!=null){
 				SimpleUtils.addNUpdateTestCaseIntoTestRun();
 				SimpleUtils.addTestResultIntoTestRailN(1,5,context);
 			}
-*/		}
+		}
 
 		@Override
 		public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
