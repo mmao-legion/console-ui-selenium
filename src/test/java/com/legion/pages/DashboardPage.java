@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Yanming
@@ -97,4 +98,8 @@ public interface DashboardPage {
     public void verifyTheContentInProjectedComplianceWidget() throws Exception;
     public String getTheTotalViolationHrsFromProjectedComplianceWidget() throws Exception;
     public void clickOnViewComplianceLink() throws Exception;
+    public void clickOnViewSchedulesLinkInSchedulePublishStatusWidget() throws Exception;
+    public boolean isSchedulePublishStatusWidgetDisplay() throws Exception;
+    public void verifyTheContentInSchedulePublishStatusWidget() throws Exception;
+    public Map<String,Integer> getAllScheduleStatusFromSchedulePublishStatusWidget();
 }
