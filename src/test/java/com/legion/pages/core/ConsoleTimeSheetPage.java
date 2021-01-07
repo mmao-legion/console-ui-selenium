@@ -2722,4 +2722,27 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		    return null;
 	}
 
+	// Added By Julie
+	@FindBy (css = "[ng-attr-style*=\"smartCardData.Timesheet.totalTimesheets\"]")
+	private List<WebElement> ratesOnDMViewSmartCard;
+
+	@Override
+	public List<String> getTimesheetApprovalRateOnDMViewSmartCard() throws Exception {
+		List<String> rates = new ArrayList<>();
+		// wait for the data loaded on smart card
+		waitForSeconds(3);
+		if (areListElementVisible(ratesOnDMViewSmartCard, 5) && ratesOnDMViewSmartCard.size() == 4) {
+			for (WebElement rate : ratesOnDMViewSmartCard) {
+				if (!rate.getText().isEmpty()) {
+					rates.add(rate.getText().trim());
+					SimpleUtils.report("Timesheet Page: Get the rate data: \"" + rate.getText().trim() + "\" on DM View smart card Successfully!");
+				} else {
+					SimpleUtils.fail("Timesheet Page: Failed to get the rate data on DM View smart card", false);
+				}
+			}
+		} else {
+			SimpleUtils.fail("Timesheet Page: The Alerts data not loaded on DM View smart card", false);
+		}
+		return rates;
+	}
 }

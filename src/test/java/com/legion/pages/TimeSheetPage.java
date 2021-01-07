@@ -150,4 +150,5 @@ public interface TimeSheetPage {
 	public void verifyCurrentWeekIsSelectedByDefault(String currentWeek) throws Exception;
 
 	public String verifyLocationList() throws Exception;
+	public List<String> getTimesheetApprovalRateOnDMViewSmartCard() throws Exception;
 }

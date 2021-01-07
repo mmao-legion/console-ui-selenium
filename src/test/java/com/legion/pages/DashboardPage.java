@@ -88,4 +88,9 @@ public interface DashboardPage {
     public void validateRefreshPerformance() throws Exception;
     public void validateRefreshWhenNavigationBack() throws Exception;
     public void validateRefreshTimestamp() throws Exception;
+    public void validateTheContentOnTimesheetApprovalRateWidgetInDMView() throws Exception;
+    public void validateStatusValueOfTimesheetApprovalRateWidget() throws Exception;
+    public List<String> getTimesheetApprovalRateOnDMViewWidget() throws Exception;
+    public void clickOnViewTimesheets() throws Exception;
+    public void validateDataOnTimesheetApprovalRateWidget(List<String> timesheetApprovalRateOnDMViewDashboard, List<String> timesheetApprovalRateFromSmartCardOnDMViewTimesheet) throws Exception;
 }

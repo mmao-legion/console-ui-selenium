@@ -10,6 +10,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.SchedulePage;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
 import cucumber.api.java.hu.Ha;
@@ -1585,5 +1586,106 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			}
 		} else
 			SimpleUtils.fail("Dashboard Page: Timestamp failed to load",false);
+	}
+
+	@FindBy(className = "dms-timesheet-chart-pos")
+	private WebElement timesheetApprovalRateWidgetChart;
+
+	@FindBy(xpath = "//div[contains(text(),'Timesheet Approval Rate')]")
+	private WebElement timesheetApprovalRateWidgetTitle;
+
+	@FindBy(css = "[ng-click=\"viewTimesheet()\"]")
+	private WebElement viewTimesheetsButton;
+
+	@FindBy(css = "timesheet-approval-chart > div > svg > g > text[font-size=\"11\"][text-anchor]")
+	private List<WebElement> timesheetApprovalRateItems;
+
+	@FindBy(css = "timesheet-approval-chart > div > svg > g > text[text-anchor][style]")
+	private List<WebElement> timesheetApprovalRatePercentages;
+
+	@Override
+	public void validateTheContentOnTimesheetApprovalRateWidgetInDMView() throws Exception {
+        /*Timesheet Approval Rate  widget should show:
+         a. Title: Timesheet Approval Rate
+         b. Timesheet approval chart with 0 Hrs, 24 Hrs, 48 Hrs and > 48 Hrs
+         c. Button: View Timesheets*/
+		List<String> textItems = new ArrayList<>(Arrays.asList("0 Hrs", "24 Hrs", "48 Hrs", "> 48 Hrs"));
+		if (isElementLoaded(timesheetApprovalRateWidgetTitle, 5) && timesheetApprovalRateWidgetTitle.getText().contains("Timesheet Approval Rate") && isElementLoaded(timesheetApprovalRateWidgetChart,5)) {
+			SimpleUtils.pass("Dashboard Page: The title and chart on \"Timesheet Approval Rate\" widget are loaded  in DM View");
+		} else {
+			SimpleUtils.fail("Dashboard Page: The widget of \"Timesheet Approval Rate\" failed to load in DM View",false);
+		}
+		if (areListElementVisible(timesheetApprovalRateItems, 5) && timesheetApprovalRateItems.size() == 4) {
+			for (WebElement item : timesheetApprovalRateItems) {
+				if (textItems.contains(item.getText().trim())) {
+					SimpleUtils.pass("Dashboard Page: Verified Text Item: \"" + item.getText().trim() + "\" loaded");
+				} else {
+					SimpleUtils.fail("Dashboard Page: Unexpected text item: \"" + item.getText().trim() + "\" loaded!", false);
+				}
+			}
+		} else {
+			SimpleUtils.fail("Dashboard Page: The Legend Items of \"Timesheet Approval Status\" not loaded", false);
+		}
+		if (isElementLoaded(viewTimesheetsButton, 5)) {
+			SimpleUtils.pass("Dashboard Page: \"View Timesheets\" link loaded successfully on \"Timesheet Approval Rate\" widget");
+		} else {
+			SimpleUtils.fail("Dashboard Page: \"View Timesheets\" link not loaded on \"Timesheet Approval Rate\" widget", false);
+		}
+	}
+
+	@Override
+	public void clickOnViewTimesheets() throws Exception {
+		if (isElementLoaded(viewTimesheetsButton, 5)) {
+			clickTheElement(viewTimesheetsButton);
+			if (timesheetConsoleMenu.findElement(By.xpath("./..")).getAttribute("class").contains("active"))
+				SimpleUtils.pass("Dashboard Page: Click on \"View Timesheets\" link on \"Timesheet Approval Rate\" successfully");
+			else
+				SimpleUtils.fail("Dasboard Page: Failed to click on \"View Timesheets\" link on \"Timesheet Approval Rate\"",false);
+		} else {
+			SimpleUtils.fail("Dashboard Page: \"View Timesheets\" link not loaded on \"Timesheet Approval Rate\"", false);
+		}
+	}
+
+	@Override
+	public void validateStatusValueOfTimesheetApprovalRateWidget() throws Exception {
+		if (areListElementVisible(timesheetApprovalRatePercentages,5) && timesheetApprovalRatePercentages.size() == 3) {
+			for (WebElement percentage: timesheetApprovalRatePercentages) {
+				// mouseHover(percentage);
+				// todo: Locate the tooltip web element and if it loads, it will pass, or else it will fail.
+				SimpleUtils.warn("SCH-2636: [DM Dashboard] The value tooltips should display when hover the mouse on the chart in Timesheet Approval Rate widget");
+			}
+		} else
+			SimpleUtils.fail("Dashboard Page: Percentages on Timesheet Approval Rate widget failed to load",false);
+	}
+
+	@Override
+	public List<String> getTimesheetApprovalRateOnDMViewWidget() throws Exception {
+		List<String> timesheetApprovalRateFromChart = new ArrayList<>();
+		if (areListElementVisible(timesheetApprovalRatePercentages, 5) && timesheetApprovalRatePercentages.size() == 3) {
+			for (WebElement percentage : timesheetApprovalRatePercentages) {
+				if (!percentage.getText().isEmpty()) {
+					timesheetApprovalRateFromChart.add(percentage.getText().trim());
+					SimpleUtils.report("Dashboard Page: Get the percentage Data: \"" + percentage.getText().trim() + "\" on Timesheet Approval Rate widget Successfully!");
+				} else {
+					SimpleUtils.fail("Dashboard Page: Failed to get the percentage data on Timesheet Approval Rate widget", false);
+				}
+			}
+		}else
+			SimpleUtils.fail("Dashboard Page: Percentages on Timesheet Approval Rate widget failed to load",false);
+		return timesheetApprovalRateFromChart;
+	}
+
+	@Override
+	public void validateDataOnTimesheetApprovalRateWidget(List<String> timesheetApprovalRateOnDMViewDashboard, List<String> timesheetApprovalRateFromSmartCardOnDMViewTimesheet) throws Exception {
+		if (timesheetApprovalRateOnDMViewDashboard.size() == 3 && timesheetApprovalRateFromSmartCardOnDMViewTimesheet.size() == 4) {
+			if (timesheetApprovalRateOnDMViewDashboard.get(0).equals(timesheetApprovalRateFromSmartCardOnDMViewTimesheet.get(0))
+					&& timesheetApprovalRateOnDMViewDashboard.get(1).equals(timesheetApprovalRateFromSmartCardOnDMViewTimesheet.get(1))
+					&& timesheetApprovalRateOnDMViewDashboard.get(2).equals(timesheetApprovalRateFromSmartCardOnDMViewTimesheet.get(2))) {
+				SimpleUtils.pass("Dashboard Page: The data in Timesheet approval chart on Dashboard is consistent with the smart card in Timesheet tab");
+			} else {
+				SimpleUtils.fail("Dashboard Page: The data in Timesheet approval chart on Dashboard is inconsistent with the smart card in Timesheet tab",false);
+			}
+		} else
+			SimpleUtils.fail("Dashboard Page: Timesheet Approval Rate get incorrectly",false);
 	}
 }
