@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Yanming
@@ -88,8 +89,18 @@ public interface DashboardPage {
     public void validateRefreshPerformance() throws Exception;
     public void validateRefreshWhenNavigationBack() throws Exception;
     public void validateRefreshTimestamp() throws Exception;
+    public void validateTheContentOnTimesheetApprovalRateWidgetInDMView() throws Exception;
+    public void validateStatusValueOfTimesheetApprovalRateWidget() throws Exception;
+    public List<String> getTimesheetApprovalRateOnDMViewWidget() throws Exception;
+    public void clickOnViewTimesheets() throws Exception;
+    public void validateDataOnTimesheetApprovalRateWidget(List<String> timesheetApprovalRateOnDMViewDashboard, List<String> timesheetApprovalRateFromSmartCardOnDMViewTimesheet) throws Exception;
     public boolean isProjectedComplianceWidgetDisplay() throws Exception;
     public void verifyTheContentInProjectedComplianceWidget() throws Exception;
     public String getTheTotalViolationHrsFromProjectedComplianceWidget() throws Exception;
     public void clickOnViewComplianceLink() throws Exception;
+    public void clickOnViewSchedulesLinkInSchedulePublishStatusWidget() throws Exception;
+    public boolean isSchedulePublishStatusWidgetDisplay() throws Exception;
+    public void verifyTheContentInSchedulePublishStatusWidget() throws Exception;
+    public Map<String,Integer> getAllScheduleStatusFromSchedulePublishStatusWidget();
+    public String getWeekInfoFromDMView() throws Exception;
 }
