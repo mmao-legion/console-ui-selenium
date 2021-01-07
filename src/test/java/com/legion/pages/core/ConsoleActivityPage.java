@@ -134,7 +134,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		if (areListElementVisible(activityFilters, 10)) {
 			if (index < activityFilters.size()) {
 				clickTheElement(activityFilters.get(index));
-				waitForSeconds(2);
+				waitForSeconds(3);
 				if (isElementLoaded(filterTitle, 10)) {
 					if (filterName.equalsIgnoreCase(filterTitle.getText().replaceAll("\\s*", ""))) {
 						SimpleUtils.pass("Switch to :" + filterTitle.getText() + " tab Successfully!");

@@ -712,7 +712,7 @@ public class LiquidDashboardTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "verify value on Schedules widget")
+    @TestName(description = "Verify Schedules widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySchedulesWidgetsAsStoreManager(String browser, String username, String password, String location) {
         try {

@@ -719,7 +719,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "Coffee_Enterprise")
-	@TestName(description = "Verify the Schedule functionality  Job Title Filter Functionality")
+	@TestName(description = "Verify the Schedule functionality > Job Title Filter Functionality > Week View")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void viewAndFilterScheduleWithGroupByJobTitleInWeekView(String username, String password, String browser, String location)
 			throws Exception {
@@ -750,7 +750,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "Coffee_Enterprise")
-	@TestName(description = "Verify the Schedule functionality  Job Title Filter Functionality")
+	@TestName(description = "Verify the Schedule functionality > Job Title Filter Functionality > Day View")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void viewAndFilterScheduleWithGroupByJobTitleInDayView(String username, String password, String browser, String location)
 			throws Exception {
@@ -778,8 +778,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Estelle")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the Schedule functionality  Job Title Filter Functionality")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "Verify the Schedule functionality > Job Title Filter Functionality > Combination")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 	public void viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView(String username, String password, String browser, String location)
 			throws Exception {
@@ -1935,7 +1935,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Haya")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "verify offers generated for open shifts.")
+	@TestName(description = "Verify offers generated for open shift")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyOffersGeneratedForOpenShiftsAsInternalAdmin(String browser, String username, String password, String location) {
 		try {

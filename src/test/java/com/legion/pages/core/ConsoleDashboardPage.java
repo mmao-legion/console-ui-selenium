@@ -1565,9 +1565,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public void validateRefreshTimestamp() throws Exception {
 		String timestamp = "";
-		if (isElementLoaded(justUpdated,5)) {
+		if (isElementLoaded(justUpdated, 5)) {
 			SimpleUtils.pass("Dashboard Page:  The page just refreshed");
-		} else if (isElementLoaded(lastUpdatedMinutes,5)) {
+		} else if (isElementLoaded(lastUpdatedMinutes, 5)) {
 			timestamp = lastUpdatedMinutes.getText();
 			if (timestamp.contains("HOURS") && timestamp.contains(" ")) {
 				timestamp = timestamp.split(" ")[0];
@@ -1575,17 +1575,79 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 					SimpleUtils.pass("Dashboard Page:  The backstop is 1 hour so that the data is not older than 1 hour stale");
 				else
 					// SimpleUtils.fail("Dashboard Page:  The backstop is older than 1 hour stale",false);
-				    SimpleUtils.warn("SCH-2589: [DM View] Refresh time is older than 1 hour stale");
+					SimpleUtils.warn("SCH-2589: [DM View] Refresh time is older than 1 hour stale");
 			}
 			if (timestamp.contains("MINS") && timestamp.contains(" ")) {
 				timestamp = timestamp.split(" ")[0];
 				if (Integer.valueOf(timestamp) < 60 && Integer.valueOf(timestamp) >= 1)
 					SimpleUtils.pass("Dashboard Page:  The backstop is last updated" + timestamp + " ago");
 				else
-					SimpleUtils.fail("Dashboard Page:  The backstop isn't refreshed in 1 hour stale",false);
+					SimpleUtils.fail("Dashboard Page:  The backstop isn't refreshed in 1 hour stale", false);
 			}
 		} else
-			SimpleUtils.fail("Dashboard Page: Timestamp failed to load",false);
+			SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
+	}
+
+	@FindBy (css = "div.fl-right.width-48.dms-smart-card-4")
+	private WebElement projectedComplianceWidget;
+
+	@FindBy (css = "div.dms-number-x-large")
+	private WebElement totalViolationHrs;
+
+	@FindBy (css = "div.tc.dms-box-item-title-2.dms-box-item-title-color-light")
+	private WebElement totalViolationHrsMessage;
+
+	@FindBy (css = "div[ng-click=\"viewCompliance()\"]")
+	private WebElement viewComplianceLink;
+
+
+	public boolean isProjectedComplianceWidgetDisplay() throws Exception {
+		boolean isProjectedComplianceWidgetDisplay = false;
+		if(isElementLoaded(projectedComplianceWidget, 5)) {
+			isProjectedComplianceWidgetDisplay = true;
+			SimpleUtils.report("Projected Compliance Widget is loaded Successfully!");
+		} else
+			SimpleUtils.report("Projected Compliance Widget not loaded Successfully!");
+		return isProjectedComplianceWidgetDisplay;
+	}
+
+	public void verifyTheContentInProjectedComplianceWidget() throws Exception {
+		if(isElementLoaded(projectedComplianceWidget, 5)) {
+			WebElement projectedComplianceWidgetTitle = projectedComplianceWidget.findElement(By.cssSelector("div.dms-box-title.dms-box-item-title-row"));
+			if (isElementLoaded(projectedComplianceWidgetTitle, 5)
+					&& projectedComplianceWidgetTitle.getText().equalsIgnoreCase("Projected Compliance")
+					&& isElementLoaded(totalViolationHrs, 5)
+					&& isElementLoaded(totalViolationHrsMessage, 5)
+					&& totalViolationHrsMessage.getText().equalsIgnoreCase("Total Violation Hrs")
+					&& isElementLoaded(viewComplianceLink, 5)
+					&& viewComplianceLink.getText().equalsIgnoreCase("View Compliance")){
+				SimpleUtils.pass("The content in Projected Compliance widget display correctly");
+			} else {
+				SimpleUtils.fail("The content in Projected Compliance widget display incorrectly", false);
+			}
+		} else
+			SimpleUtils.report("Projected Compliance Widget not loaded Successfully!");
+	}
+
+	public String getTheTotalViolationHrsFromProjectedComplianceWidget() throws Exception {
+		String hrsOfTotalViolation = "";
+		if (isElementLoaded(totalViolationHrs, 5)){
+			hrsOfTotalViolation = totalViolationHrs.getText();
+			SimpleUtils.pass("Get the total violation hrs successfully");
+		} else {
+			SimpleUtils.fail("Total violation hours not loaded successfully", false);
+		}
+		return hrsOfTotalViolation;
+	}
+
+	public void clickOnViewComplianceLink() throws Exception {
+		if (isElementLoaded(viewComplianceLink, 5)){
+			scrollToElement(viewComplianceLink);
+			click(viewComplianceLink);
+			SimpleUtils.pass("Click View Compliance link successfully");
+		} else {
+			SimpleUtils.fail("View Compliance link not loaded successfully", false);
+		}
 	}
 
 	@FindBy(className = "dms-timesheet-chart-pos")

@@ -93,4 +93,8 @@ public interface DashboardPage {
     public List<String> getTimesheetApprovalRateOnDMViewWidget() throws Exception;
     public void clickOnViewTimesheets() throws Exception;
     public void validateDataOnTimesheetApprovalRateWidget(List<String> timesheetApprovalRateOnDMViewDashboard, List<String> timesheetApprovalRateFromSmartCardOnDMViewTimesheet) throws Exception;
+    public boolean isProjectedComplianceWidgetDisplay() throws Exception;
+    public void verifyTheContentInProjectedComplianceWidget() throws Exception;
+    public String getTheTotalViolationHrsFromProjectedComplianceWidget() throws Exception;
+    public void clickOnViewComplianceLink() throws Exception;
 }

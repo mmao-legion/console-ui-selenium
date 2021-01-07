@@ -46,7 +46,7 @@
         <classes>
             <class name="com.legion.tests.core.TeamTest">
                 <methods>
-                    <include name="verifyTheTeamFunctionalityInCoverageAsInternalAdmin" />
+<!--                    <include name="verifyTheTeamFunctionalityInCoverageAsInternalAdmin" />-->
                     <include name="verifyEditModeInNewUserProfilePageAsInternalAdmin" />
                 </methods>
             </class>
@@ -100,7 +100,7 @@
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
                     <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
-<!--                    <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />-->
+                    <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />
                     <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyActivityOfClaimOpenShiftAsTeamMember" />
                     <include name="verifyActivityOfPublishUpdateSchedule" />

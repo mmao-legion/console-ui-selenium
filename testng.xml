@@ -429,6 +429,7 @@
                     <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
                     <include name="verifyRefreshFeatureOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifyTimesheetApprovalRateWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
