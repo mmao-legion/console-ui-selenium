@@ -97,4 +97,5 @@ public interface DashboardPage {
     public void verifyTheContentInProjectedComplianceWidget() throws Exception;
     public String getTheTotalViolationHrsFromProjectedComplianceWidget() throws Exception;
     public void clickOnViewComplianceLink() throws Exception;
+    public String getWeekInfoFromDMView() throws Exception;
 }
