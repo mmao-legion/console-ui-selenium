@@ -102,4 +102,5 @@ public interface DashboardPage {
     public boolean isSchedulePublishStatusWidgetDisplay() throws Exception;
     public void verifyTheContentInSchedulePublishStatusWidget() throws Exception;
     public Map<String,Integer> getAllScheduleStatusFromSchedulePublishStatusWidget();
+    public String getWeekInfoFromDMView() throws Exception;
 }

@@ -1343,6 +1343,16 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	@Override
+	public String getWeekInfoFromDMView() throws Exception {
+		String result = "";
+		if (isElementEnabled(weekOnDashboardDM, 10)) {
+			result = weekOnDashboardDM.getText();
+		} else {
+			SimpleUtils.fail("Dashboard Page: Week failed to load", true);
+		}
+	}
+
+	@Override
 	public String getDistrictNameOnDashboard() throws Exception {
 		String districtName = "";
 		if (isElementEnabled(districtOnDashboardDM, 10)) {
