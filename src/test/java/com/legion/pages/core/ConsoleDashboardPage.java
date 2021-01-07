@@ -1435,6 +1435,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		} else {
 			SimpleUtils.fail("Dashboard Page: Week failed to load", true);
 		}
+		return result;
 	}
 
 	@Override
