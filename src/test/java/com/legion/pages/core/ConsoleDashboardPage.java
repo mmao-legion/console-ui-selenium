@@ -673,7 +673,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		if (dateFromDashboard.equals(dateFromLocation)) {
 			SimpleUtils.pass("Dashboard Page: The date and time on Dashboard is consistent with the timezone of current location");
 		} else {
-			SimpleUtils.fail("Dashboard Page: The date and time on Dashboard is different from the timezone of the current location", true);
+			SimpleUtils.fail("Dashboard Page: The date and time on Dashboard is different from the timezone of the current location", false);
 		}
 
 		click(currentLocation);

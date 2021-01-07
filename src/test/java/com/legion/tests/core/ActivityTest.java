@@ -748,7 +748,7 @@ public class ActivityTest extends TestBase {
             activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(), indexOfActivityType.ProfileUpdate.name());
             activityPage.verifyNewBusinessProfileCardShowsOnActivity(tmName, false);
         } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
+            SimpleUtils.fail(e.toString(), false);
         }
     }
 

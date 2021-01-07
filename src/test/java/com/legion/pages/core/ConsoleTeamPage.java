@@ -26,6 +26,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
 	private static HashMap<String, String> searchDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/searchDetails.json");
 	int teamMemberRecordsCount=0;
+	public static String pth = System.getProperty("user.dir");
 	
 	 @FindBy(css="[class='console-navigation-item-label Team']")
 	 private WebElement goToTeamButton;
@@ -2856,7 +2857,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		if(isElementLoaded(profileSection, 10) && isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),10)){
 			click(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
 			if (isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1), 5)) {
-				getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(filePath);
+				getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(pth + filePath);
 				// wait for the picture to be loaded
 				waitForSeconds(5);
 				scrollToElement(getDriver().findElement(By.cssSelector("lg-button[label=\"Save\"]")));

@@ -166,7 +166,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             }
         }
         catch(Exception e) {
-            SimpleUtils.fail("Unable to change location!", true);
+            SimpleUtils.fail("Unable to change location! Get Exception: " + e.toString(), false);
         }
 
     }

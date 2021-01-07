@@ -42,17 +42,6 @@
        </classes>
    </test>
 
-    <test name="TeamTab Test">
-        <classes>
-            <class name="com.legion.tests.core.TeamTest">
-                <methods>
-<!--                    <include name="verifyTheTeamFunctionalityInCoverageAsInternalAdmin" />-->
-                    <include name="verifyEditModeInNewUserProfilePageAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
     <test name="Overview Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleOverviewTest">
@@ -120,6 +109,7 @@
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
                     <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
+                    <include name="verifyEditModeInNewUserProfilePageAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

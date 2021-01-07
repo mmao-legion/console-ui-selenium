@@ -3635,13 +3635,29 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void selectWhichWeekToCopyFrom(String weekInfo) throws Exception {
+        boolean selectOtherWeek = false;
         if (areListElementVisible(createModalWeeks, 10)) {
             SimpleUtils.pass("Copy Schedule page loaded Successfully!");
             // Wait for 8 seconds to make sure that SUGGESTED SCHEDULE is loaded
             waitForSeconds(8);
             for (WebElement createModalWeek : createModalWeeks) {
                 WebElement weekName = createModalWeek.findElement(By.className("generate-modal-week-name"));
-                if (weekName != null && weekName.getText().toLowerCase().contains(weekInfo.toLowerCase())) {
+                if (!selectOtherWeek) {
+                    if (weekName != null && weekName.getText().toLowerCase().contains(weekInfo.toLowerCase())) {
+                        WebElement weekContainer = createModalWeek.findElement(By.className("generate-modal-week-container"));
+                        if (weekContainer != null) {
+                            WebElement scheduledHours = weekContainer.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
+                            if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
+                                clickTheElement(weekContainer);
+                                SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + "with scheduled hour: " + scheduledHours.getText() + " Successfully!");
+                                break;
+                            } else {
+                                selectOtherWeek = true;
+                                SimpleUtils.warn("Scheduled Hour is 0, due to bug PLT-1082: [RC]Creating schedule keeps spinning and shows 0 scheduled hours! Will select another week as a workaround");
+                            }
+                        }
+                    }
+                } else {
                     WebElement weekContainer = createModalWeek.findElement(By.className("generate-modal-week-container"));
                     if (weekContainer != null) {
                         WebElement scheduledHours = weekContainer.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
@@ -3649,8 +3665,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             clickTheElement(weekContainer);
                             SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + "with scheduled hour: " + scheduledHours.getText() + " Successfully!");
                             break;
-                        }else {
-                            SimpleUtils.report("Scheduled Hour not loaded Successfully!");
                         }
                     }
                 }
