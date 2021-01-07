@@ -22,6 +22,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DMViewTest extends TestBase {
 
@@ -182,6 +183,39 @@ public class DMViewTest extends TestBase {
             SimpleUtils.fail(e.getMessage(),false);
         }
     }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Schedule Publish Status widget on Dashboard in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Validate the Schedule Publish Status widget display on DM dashboard
+            SimpleUtils.assertOnFail("Schedule Publish Status widget not loaded successfully",
+                    dashboardPage.isSchedulePublishStatusWidgetDisplay(), false);
+            //Validate the content of Schedule Publish Status widget
+            dashboardPage.verifyTheContentInSchedulePublishStatusWidget();
+
+            //Validate the data of Schedule Publish Status widget
+            Map<String, Integer> scheduleStatusFromSchedulePublishStatusWidget = dashboardPage.getAllScheduleStatusFromSchedulePublishStatusWidget();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            Map<String, Integer> scheduleStatusFromScheduleDMViewPage = scheduleDMViewPage.getThreeWeeksScheduleStatusFromScheduleDMViewPage();
+            SimpleUtils.assertOnFail("Schedule status on Schedule Publish Status widget and Schedule DM view page are different! ",
+                    scheduleStatusFromSchedulePublishStatusWidget.equals(scheduleStatusFromScheduleDMViewPage), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.toString(),false);
+        }
+    }
 
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
@@ -273,7 +307,7 @@ public class DMViewTest extends TestBase {
                 SimpleUtils.fail("\"Open Shifts\" widget not loaded", true);
             }
 */      } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(),false);
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 }
