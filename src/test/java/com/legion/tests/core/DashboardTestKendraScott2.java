@@ -30,7 +30,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 			visitPage(testMethod);
 			loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
 		} catch (Exception e){
-			SimpleUtils.fail(e.getMessage(), false);
+			SimpleUtils.fail(e.toString(), false);
 		}
 	}
 
