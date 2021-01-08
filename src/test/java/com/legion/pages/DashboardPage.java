@@ -103,4 +103,7 @@ public interface DashboardPage {
     public void verifyTheContentInSchedulePublishStatusWidget() throws Exception;
     public Map<String,Integer> getAllScheduleStatusFromSchedulePublishStatusWidget();
     public String getWeekInfoFromDMView() throws Exception;
+    public boolean isScheduleVsGuidanceByDayWidgetDisplay() throws Exception;
+    public void verifyTheContentOnScheduleVsGuidanceByDayWidget() throws Exception;
+    public void verifyTheHrsUnderOrCoverBudget() throws Exception;
 }

@@ -1374,10 +1374,11 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				SimpleUtils.report("Scheduling Policies: Apply Labor Budget to Schedules buttons are disabled.");
 			} else {
 				List<WebElement> applyLaborBudgetToSchedulesBtns = applyLaborBudgetToSchedules.findElements(
-						By.cssSelector("div[ng-click=\"$ctrl.change(button.value)\"]"));
+						By.cssSelector("div[ng-click=\"!button.disabled && $ctrl.change(button.value)\"]"));
 				if (applyLaborBudgetToSchedulesBtns.size() > 0) {
 					for (WebElement applyLaborBudgetToSchedulesBtn : applyLaborBudgetToSchedulesBtns) {
 						if (applyLaborBudgetToSchedulesBtn.getText().toLowerCase().contains(isLaborBudgetToApply.toLowerCase())) {
+							scrollToElement(applyLaborBudgetToSchedulesBtn);
 							click(applyLaborBudgetToSchedulesBtn);
 							preserveTheSetting();
 						}

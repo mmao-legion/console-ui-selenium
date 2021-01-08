@@ -430,6 +430,8 @@
                     <include name="verifyRefreshFeatureOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifyTimesheetApprovalRateWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

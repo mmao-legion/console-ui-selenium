@@ -310,4 +310,40 @@ public class DMViewTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Schedule vs. Guidance by Day widget on Dashboard in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Set 'Apply labor budget to schedules?' to No
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
+            dashboardPage.clickOnDashboardConsoleMenu();
+
+            //Validate the Schedule Vs Guidance By Day widget is loaded on dashboard
+            SimpleUtils.assertOnFail("Schedule Vs Guidance By Day widget loaded fail! ",
+                    dashboardPage.isScheduleVsGuidanceByDayWidgetDisplay(), false);
+
+            //Validate the content on Schedule Vs Guidance By Day widget display correctly
+            dashboardPage.verifyTheContentOnScheduleVsGuidanceByDayWidget();
+
+            //Validate the hours Under or Cover budget is consistent with the hours on schedule page
+            dashboardPage.verifyTheHrsUnderOrCoverBudget();
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.toString(),false);
+        }
+    }
 }

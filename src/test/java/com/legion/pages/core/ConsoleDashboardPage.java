@@ -8,6 +8,7 @@ import java.util.*;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
+import com.legion.pages.ScheduleDMViewPage;
 import com.legion.pages.SchedulePage;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
@@ -1905,4 +1906,125 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
         click(dashboardConsoleMenu);
         return weeksInfo;
     }
+
+	@FindBy(css = "div[class=\"dms-row21\"]")
+	private WebElement scheduleVsGuidanceByDayWidget;
+
+	@FindBy(css = "div[class=\"dms-box-title dms-box-item-title-row ng-binding col-sm-5\"]")
+	private WebElement scheduleVsGuidanceByDayWidgetTitle;
+
+	@FindBy(css = "div.dms-budgeted")
+	private WebElement budgetedLegend;
+
+	@FindBy(css = "div.dms-scheduled")
+	private WebElement scheduledLegend;
+
+	@FindBy(css = "[class=\"payroll-projection-chart__svg\"] rect")
+	private List<WebElement> scheduleVsGuidanceChartBars;
+
+	@FindBy(css = "[class=\"payroll-projection-chart__svg\"]")
+	private WebElement scheduleVsGuidanceChart;
+
+	@FindBy(css = "div.text-right.dms-legend-text")
+	private WebElement weekInfoOnScheduleVsGuidanceByDayWidget;
+
+	@FindBy(css = "[class=\"dms-row21\"] .dms-caret-large")
+	private WebElement budgetHoursCaret;
+
+	@FindBy(css = "span.dms-box-item-title.dms-box-item-title-row")
+	private WebElement budgetHoursMessageSpan;
+
+
+
+	public boolean isScheduleVsGuidanceByDayWidgetDisplay() throws Exception {
+		boolean isScheduleVsGuidanceByDayWidgetDisplay = false;
+		if (isElementLoaded(scheduleVsGuidanceByDayWidget, 5)) {
+			isScheduleVsGuidanceByDayWidgetDisplay = true;
+			SimpleUtils.report("Schedule Vs Guidance By Day Widget is loaded Successfully!");
+		} else
+			SimpleUtils.report("Schedule Vs Guidance By Day Widget not loaded Successfully!");
+		return isScheduleVsGuidanceByDayWidgetDisplay;
+	}
+
+	public void verifyTheContentOnScheduleVsGuidanceByDayWidget() throws Exception {
+		List<WebElement> legendTexts = scheduleVsGuidanceByDayWidget.findElements(By.cssSelector(".ml-10.dms-legend-text"));
+		WebElement viewSchedulesLink = scheduleVsGuidanceByDayWidget.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]"));
+		if(isElementLoaded(scheduleVsGuidanceByDayWidgetTitle, 5)
+				&& isElementLoaded(budgetedLegend, 5)
+				&& isElementLoaded(scheduledLegend, 5)
+				&& areListElementVisible(legendTexts, 5) && legendTexts.size() ==2
+				&& isElementLoaded(scheduleVsGuidanceChart, 5)
+				&& isElementLoaded(weekInfoOnScheduleVsGuidanceByDayWidget, 5)
+				&& weekInfoOnScheduleVsGuidanceByDayWidget.getText().equalsIgnoreCase(getWeekInfoFromDMView().substring(8))
+				&& areListElementVisible(scheduleVsGuidanceChartBars, 5)
+				&& isElementLoaded(budgetHoursCaret, 5)
+				&& isElementLoaded(viewSchedulesLink, 5)){
+			SimpleUtils.pass("The content on Schedule Vs Guidance By Day Widget display correctly! ");
+		} else
+			SimpleUtils.fail("The content on Schedule Vs Guidance By Day Widget display incorrectly! ", false);
+	}
+
+	public void verifyTheHrsUnderOrCoverBudget() throws Exception {
+
+		if (!areBudgetHoursAndScheduleHoursConsistent()) {
+			if (isElementLoaded(budgetHoursMessageSpan, 5) && isElementLoaded(budgetHoursCaret, 5)){
+				if (budgetHoursMessageSpan.getText().contains("Under")) {
+					if(budgetHoursMessageSpan.getAttribute("class").contains("green")
+							&&budgetHoursCaret.getAttribute("class").contains("green")
+							&&budgetHoursCaret.getAttribute("class").contains("down")){
+						SimpleUtils.pass("Budget hrs message display correctly when scheduled hours under budget!");
+					} else {
+						SimpleUtils.fail("Budget hrs message display incorrectly when scheduled hours under budget!", false);
+					}
+				} else {
+					if(budgetHoursCaret.getAttribute("class").contains("red")
+							&&budgetHoursCaret.getAttribute("class").contains("up")){
+						SimpleUtils.pass("Budget hrs caret and message display correctly when scheduled hours cover budget!");
+					} else {
+						SimpleUtils.fail("Budget hrs message display incorrectly when scheduled hours under budget!", false);
+					}
+				}
+
+				//compare the hours on widget and on schedule page
+				String budgetHoursFromDashboard = budgetHoursMessageSpan.getText().split(" ")[0];
+				click(scheduleConsoleMenu);
+				ScheduleDMViewPage scheduleDMViewPage = new ConsoleScheduleDMViewPage();
+				String budgetHoursFromSchedulePage = scheduleDMViewPage.
+						getTextFromTheChartInLocationSummarySmartCard().get(4).split(" ")[0];
+				if (budgetHoursFromDashboard.equalsIgnoreCase(budgetHoursFromSchedulePage)) {
+					SimpleUtils.pass("Budget hrs display correctly on Schedule Vs Guidance By Day Widget!");
+				} else
+					SimpleUtils.fail("Budget hrs display incorrectly on Schedule Vs Guidance By Day Widget!", false);
+			}
+		} else {
+			if (isElementLoaded(budgetHoursCaret, 5)&& !isElementLoaded(budgetHoursMessageSpan)){
+				SimpleUtils.pass("Budget hrs caret display correctly and no message display because the budget hour and schedule hours are consistent! ");
+			} else
+				SimpleUtils.fail("Budget hrs caret and message display incorrectly when the budget hour and schedule hours are inconsistent!!", false);
+		}
+	}
+
+	public boolean areBudgetHoursAndScheduleHoursConsistent(){
+		boolean areBudgetHoursAndScheduleHoursConsistent = false;
+		if(scheduleVsGuidanceChartBars.get(1).getAttribute("height").toString().
+				equals(scheduleVsGuidanceChartBars.get(2).getAttribute("height").toString())
+				&& scheduleVsGuidanceChartBars.get(3).getAttribute("height").toString().
+				equals(scheduleVsGuidanceChartBars.get(4).getAttribute("height").toString())
+				&& scheduleVsGuidanceChartBars.get(5).getAttribute("height").toString().
+				equals(scheduleVsGuidanceChartBars.get(6).getAttribute("height").toString())
+				&& scheduleVsGuidanceChartBars.get(7).getAttribute("height").toString().
+				equals(scheduleVsGuidanceChartBars.get(8).getAttribute("height").toString())
+				&& scheduleVsGuidanceChartBars.get(9).getAttribute("height").toString().
+				equals(scheduleVsGuidanceChartBars.get(10).getAttribute("height").toString())
+				&& scheduleVsGuidanceChartBars.get(11).getAttribute("height").toString().
+				equals(scheduleVsGuidanceChartBars.get(12).getAttribute("height").toString())
+				&& scheduleVsGuidanceChartBars.get(13).getAttribute("height").toString().
+				equals(scheduleVsGuidanceChartBars.get(14).getAttribute("height").toString())) {
+			areBudgetHoursAndScheduleHoursConsistent = true;
+			SimpleUtils.report("Budget Hours and Schedule Hours are consistent! ");
+		} else {
+			SimpleUtils.report("Budget Hours and Schedule Hours are inconsistent");
+		}
+		return areBudgetHoursAndScheduleHoursConsistent;
+	}
 }

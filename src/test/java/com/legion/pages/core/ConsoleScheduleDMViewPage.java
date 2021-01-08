@@ -9,6 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,5 +111,31 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             }
         }
         return scheduleStatusFromScheduleDMViewPage;
+    }
+
+    @FindBy(css = "[class=\"published-clocked-cols__svg\"] text")
+    private List<WebElement>  textFromTheChartInLocationSummarySmartCard;
+
+    public List<String> getTextFromTheChartInLocationSummarySmartCard(){
+        /*
+            0: the hours on Budget bar
+            1: budget bar message "Budgeted Hrs"
+            2: the hours on Published bar
+            3: published bar message "Published Hrs"
+            4: the hours of under or cover budget
+            5: the caret of under or cover budget
+        */
+
+
+        List<String> textFromChart = new ArrayList<>();
+        if (areListElementVisible(textFromTheChartInLocationSummarySmartCard)&&textFromTheChartInLocationSummarySmartCard.size()!=0){
+            for(int i=0;i<textFromTheChartInLocationSummarySmartCard.size();i++){
+                textFromChart.add(textFromTheChartInLocationSummarySmartCard.get(i).getText());
+            }
+            SimpleUtils.report("Get text from the chart in location summary smart card successfully! ");
+        } else{
+            SimpleUtils.fail("The text on the chart in location summary smart card loaded fail! ", false);
+        }
+        return textFromChart;
     }
 }
