@@ -281,14 +281,16 @@ public class NewNavigationFlowTest extends TestBase {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.changeDistrict("add district via con");
 
-        String searchDistrictText = "*";
+        String searchLocationText = "*";
+        Thread.sleep(4000);
         String currentDistrict = dashboardPage.getCurrentDistrict();
+        SimpleUtils.report(currentDistrict);
 
         List<String> locationsInNavigationBar = new ArrayList<>();
         List<String> locationsInDistrictPage = new ArrayList<>();
 
         //input * to search all locations in specify district
-        locationsInNavigationBar = locationSelectorPage.searchLocation(searchDistrictText);
+        locationsInNavigationBar = locationSelectorPage.searchLocation(searchLocationText);
 
         //go to OPS -> Locations -> District function
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
