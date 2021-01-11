@@ -3340,4 +3340,14 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public List<String> getDayShifts(String index) throws Exception {
         return null;
     }
+
+    @Override
+    public boolean isScheduleDMView() throws Exception {
+        return false;
+    }
+
+    @Override
+    public int getShiftsNumberByName(String name) throws Exception {
+        return 0;
+    }
 }

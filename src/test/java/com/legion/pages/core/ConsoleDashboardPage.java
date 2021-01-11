@@ -2134,4 +2134,59 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.report("Location Summary Widget not loaded Successfully!");
 		return isLocationSummaryWidgetDisplay;
 	}
+
+    @FindBy(css = "div.dms-smart-card-4.fl-left")
+	private WebElement openShiftsWidgetInDMView;
+	@Override
+	public boolean isOpenShiftsWidgetDisplay() throws Exception {
+		boolean result = false;
+		if (isElementLoaded(openShiftsWidgetInDMView, 5)) {
+			result = true;
+		}
+		return result;
+	}
+
+	@Override
+	public void clickViewSchedulesLinkOnOpenShiftsWidget() throws Exception {
+		if (isElementLoaded(openShiftsWidgetInDMView, 5) && isElementLoaded(openShiftsWidgetInDMView.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]")),5)) {
+			click(openShiftsWidgetInDMView.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]")));
+			SimpleUtils.pass("Open Shifts Widget is loaded Successfully!");
+		} else {
+			SimpleUtils.report("Open Shifts Widget not loaded correctly!");
+		}
+	}
+
+	@Override
+	public HashMap<String, Integer> verifyContentOfOpenShiftsWidgetForDMView() throws Exception {
+		HashMap<String, Integer> results = new HashMap<String, Integer>();
+		if (isElementLoaded(openShiftsWidgetInDMView.findElement(By.cssSelector(".dms-box-item-title-row")), 5) && openShiftsWidgetInDMView.findElement(By.cssSelector(".dms-box-item-title-row")).getText().equalsIgnoreCase("open shifts")) {
+			SimpleUtils.pass("Open Shifts title is correct!");
+		} else {
+			SimpleUtils.report("Open Shifts title not loaded correctly!");
+		}
+		if (openShiftsWidgetInDMView.findElements(By.cssSelector(".dms-legend")).size()==2 && openShiftsWidgetInDMView.findElement(By.cssSelector(".dms-legend-text")).getText().toLowerCase().contains("open")
+				&& openShiftsWidgetInDMView.findElement(By.cssSelector(".dms-legend-text")).getText().toLowerCase().contains("assigned")) {
+			SimpleUtils.pass("Open Shifts legends are correct!");
+		} else {
+			SimpleUtils.report("Open Shifts legends are not loaded correctly!");
+		}
+		if (areListElementVisible(openShiftsWidgetInDMView.findElements(By.cssSelector("div.lg-dashboard-charts text")),10)
+				&& openShiftsWidgetInDMView.findElements(By.cssSelector("div.lg-dashboard-charts text")).size() ==2) {
+			String open = openShiftsWidgetInDMView.findElements(By.cssSelector("div.lg-dashboard-charts text")).get(0).getText().replace("%","");
+			String assigned = openShiftsWidgetInDMView.findElements(By.cssSelector("div.lg-dashboard-charts text")).get(1).getText().replace("%","");
+			if (SimpleUtils.isNumeric(open) && SimpleUtils.isNumeric(assigned)){
+				Integer openValue = Integer.parseInt(open);
+				Integer assignedValue = Integer.parseInt(assigned);
+				results.put("open",openValue);
+				results.put("assigned", assignedValue);
+			} else {
+				SimpleUtils.fail("No chart value you want!", false);
+			}
+
+			SimpleUtils.pass("Open Shifts legends are correct!");
+		} else {
+			SimpleUtils.report("Open Shifts legends are not loaded correctly!");
+		}
+		return results;
+	}
 }
