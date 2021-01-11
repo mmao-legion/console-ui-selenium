@@ -15,6 +15,7 @@ import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
 import cucumber.api.java.hu.Ha;
+import cucumber.api.java8.Da;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -903,13 +904,18 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "[ng-click=\"$ctrl.onReload(true)\"]")
 	private WebElement refreshButton;
 
+	@FindBy(css = "[[ng-if=\"$ctrl.minutes >= 0 && $ctrl.date && !$ctrl.loading\"]")
+	private WebElement lastUpdatedIcon;
+
 
 	@Override
 	public void clickOnRefreshButton() throws Exception {
 		if (isElementLoaded(refreshButton, 10)) {
 			clickTheElement(refreshButton);
-			waitForSeconds(15);
-			SimpleUtils.pass("Click on Refresh button Successfully!");
+			if(isElementLoaded(lastUpdatedIcon, 60)){
+				SimpleUtils.pass("Click on Refresh button Successfully!");
+			} else
+				SimpleUtils.fail("Refresh timeout! ", false);
 		} else {
 			SimpleUtils.fail("Refresh button not Loaded!", true);
 		}
@@ -1934,8 +1940,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "span.dms-box-item-title.dms-box-item-title-row")
 	private WebElement budgetHoursMessageSpan;
 
-
-
 	public boolean isScheduleVsGuidanceByDayWidgetDisplay() throws Exception {
 		boolean isScheduleVsGuidanceByDayWidgetDisplay = false;
 		if (isElementLoaded(scheduleVsGuidanceByDayWidget, 5)) {
@@ -1964,7 +1968,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.fail("The content on Schedule Vs Guidance By Day Widget display incorrectly! ", false);
 	}
 
-	public void verifyTheHrsUnderOrCoverBudget() throws Exception {
+	public void verifyTheHrsUnderOrCoverBudgetOnScheduleVsGuidanceByDayWidget() throws Exception {
 
 		if (!areBudgetHoursAndScheduleHoursConsistent()) {
 			if (isElementLoaded(budgetHoursMessageSpan, 5) && isElementLoaded(budgetHoursCaret, 5)){
@@ -2026,5 +2030,108 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.report("Budget Hours and Schedule Hours are inconsistent");
 		}
 		return areBudgetHoursAndScheduleHoursConsistent;
+	}
+
+	@FindBy(css = "div.dms-row1")
+	private WebElement locationSummaryWidget;
+
+	@FindBy(css = "div[class=\"dms-box-title dms-box-item-title-row ng-binding\"]")
+	private WebElement locationSummaryWidgetTitle;
+
+	@FindBy(css = "div.dms-box-item-title.dms-box-item-title-color-light")
+	private List<WebElement> scheduledHoursTitles;
+
+	@FindBy(css = "span.dms-box-item-number-small")
+	private List<WebElement> scheduledHours;
+
+	@FindBy(css = "span.dms-time-stamp")
+	private WebElement projectedHoursAsCurrentTime;
+
+	@FindBy(css = "[ng-if=\"b.withinBudget\"]")
+	private WebElement projectedWithinBudgetCaret;
+
+	@FindBy(css = "[ng-if=\"!b.withinBudget\"]")
+	private WebElement projectedOverBudgetCaret;
+
+
+	@FindBy(css = "span.dms-box-item-title-color-dark")
+	private List<WebElement> projectedWithInOrOverBudgetLocations;
+
+	@FindBy(css = "div.dms-box-item-title-2.pt-15")
+	private List<WebElement> projectedWithInOrOverBudgetMessage;
+
+	public List<String> getTheDataOnLocationSummaryWidget() throws Exception {
+		/*
+		*  0: budgeted Hrs
+		*  1: scheduled Hrs
+		*  2: projected Hrs
+		*  3: projected Within Budget Locations
+		*  4: projected Over Budget Locations
+		*
+		* */
+		List<String> dataOnLocationSummaryWidget = new ArrayList<>();
+		if(areListElementVisible(scheduledHours, 5)
+				&& scheduledHours.size()==3
+				&& areListElementVisible(projectedWithInOrOverBudgetLocations, 5)
+				&& projectedWithInOrOverBudgetLocations.size()==2){
+
+			String budgetedHrs = scheduledHours.get(0).getText();
+			dataOnLocationSummaryWidget.add(budgetedHrs);
+			String scheduledHrs = scheduledHours.get(1).getText();
+			dataOnLocationSummaryWidget.add(scheduledHrs);
+			String projectedHrs = scheduledHours.get(2).getText();
+			dataOnLocationSummaryWidget.add(projectedHrs);
+			String projectedWithinBudgetLocation = projectedWithInOrOverBudgetLocations.get(0).getText();
+			dataOnLocationSummaryWidget.add(projectedWithinBudgetLocation);
+			String projectedOverBudgetLocation = projectedWithInOrOverBudgetLocations.get(1).getText();
+			dataOnLocationSummaryWidget.add(projectedOverBudgetLocation);
+			SimpleUtils.report("Get the data on location summary widget successfully! ");
+		} else
+			SimpleUtils.fail("The data on Location Summary Widget loaded fail! ", false);
+		return dataOnLocationSummaryWidget;
+	}
+
+	public void verifyTheContentOnLocationSummaryWidget() throws Exception {
+		WebElement viewSchedulesLink = locationSummaryWidget.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]"));
+		SimpleDateFormat dateFormat = new SimpleDateFormat();
+		dateFormat.applyPattern("MMM dd, hh:mm a");
+		String currentTimeOnProjectedHrs = "As of "+ SimpleUtils.getCurrentDateMonthYearWithTimeZone("PST", dateFormat);
+		clickOnRefreshButton();
+		String test1 = projectedHoursAsCurrentTime.getText();
+		if(isElementLoaded(locationSummaryWidgetTitle, 5)
+				&& locationSummaryWidgetTitle.getText().contains("Location Summary")
+				&& areListElementVisible(scheduledHoursTitles, 5)
+				&& scheduledHoursTitles.size() == 3
+				&& scheduledHoursTitles.get(0).getText().equalsIgnoreCase("Budgeted")
+				&& scheduledHoursTitles.get(1).getText().equalsIgnoreCase("Scheduled")
+				&& scheduledHoursTitles.get(2).getText().equalsIgnoreCase("Projected")
+				&& areListElementVisible(scheduledHours, 5)
+				&& scheduledHours.size() == 3
+				&& isElementLoaded(projectedHoursAsCurrentTime, 5)
+				&& projectedHoursAsCurrentTime.getText().equalsIgnoreCase(currentTimeOnProjectedHrs)
+				&& isElementLoaded(projectedWithinBudgetCaret, 5)
+				&& projectedWithinBudgetCaret.getAttribute("class").contains("down")
+				&& isElementLoaded(projectedOverBudgetCaret, 5)
+				&& projectedOverBudgetCaret.getAttribute("class").contains("up")
+				&& areListElementVisible(projectedWithInOrOverBudgetLocations, 5)
+				&& projectedWithInOrOverBudgetLocations.size() ==2
+				&& areListElementVisible(projectedWithInOrOverBudgetMessage, 5)
+				&& projectedWithInOrOverBudgetMessage.size() ==2
+				&& projectedWithInOrOverBudgetMessage.get(0).getText().equalsIgnoreCase("Projected Within Budget")
+				&& projectedWithInOrOverBudgetMessage.get(1).getText().equalsIgnoreCase("Projected Over Budget")
+				&& isElementLoaded(viewSchedulesLink, 5)){
+			SimpleUtils.pass("The content on Location Summary Widget display correctly! ");
+		} else
+			SimpleUtils.fail("The content on Location Summary Widget display incorrectly! ", false);
+	}
+
+	public boolean isLocationSummaryWidgetDisplay() throws Exception {
+		boolean isLocationSummaryWidgetDisplay = false;
+		if (isElementLoaded(locationSummaryWidget, 5)) {
+			isLocationSummaryWidgetDisplay = true;
+			SimpleUtils.report("Location Summary Widget is loaded Successfully!");
+		} else
+			SimpleUtils.report("Location Summary Widget not loaded Successfully!");
+		return isLocationSummaryWidgetDisplay;
 	}
 }

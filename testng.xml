@@ -432,6 +432,7 @@
                     <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyLocationSummaryWidgetOnDashboardInDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

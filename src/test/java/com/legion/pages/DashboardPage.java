@@ -105,5 +105,8 @@ public interface DashboardPage {
     public String getWeekInfoFromDMView() throws Exception;
     public boolean isScheduleVsGuidanceByDayWidgetDisplay() throws Exception;
     public void verifyTheContentOnScheduleVsGuidanceByDayWidget() throws Exception;
-    public void verifyTheHrsUnderOrCoverBudget() throws Exception;
+    public void verifyTheHrsUnderOrCoverBudgetOnScheduleVsGuidanceByDayWidget() throws Exception;
+    public List<String> getTheDataOnLocationSummaryWidget() throws Exception;
+    public void verifyTheContentOnLocationSummaryWidget() throws Exception;
+    public boolean isLocationSummaryWidgetDisplay() throws Exception;
 }

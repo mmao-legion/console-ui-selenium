@@ -7,4 +7,6 @@ public interface ScheduleDMViewPage {
     public float getBudgetedHourOfScheduleInDMViewByLocation(String location) throws Exception;
     public Map<String, Integer> getThreeWeeksScheduleStatusFromScheduleDMViewPage() throws Exception;
     public List<String> getTextFromTheChartInLocationSummarySmartCard();
+    public List<String> getLocationNumbersFromLocationSummarySmartCard();
+    public List<Float> getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();
 }

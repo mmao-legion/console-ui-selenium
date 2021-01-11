@@ -20,6 +20,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -340,8 +343,50 @@ public class DMViewTest extends TestBase {
             dashboardPage.verifyTheContentOnScheduleVsGuidanceByDayWidget();
 
             //Validate the hours Under or Cover budget is consistent with the hours on schedule page
-            dashboardPage.verifyTheHrsUnderOrCoverBudget();
+            dashboardPage.verifyTheHrsUnderOrCoverBudgetOnScheduleVsGuidanceByDayWidget();
 
+        } catch (Exception e) {
+            SimpleUtils.fail(e.toString(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Location Summary widget on Dashboard in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationSummaryWidgetOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Validate the Location Summary widget is loaded on dashboard
+            SimpleUtils.assertOnFail("Location Summary widget loaded fail! ",
+                    dashboardPage.isLocationSummaryWidgetDisplay(), false);
+
+            //Validate the content on Location Summary widget display correctly
+            dashboardPage.verifyTheContentOnLocationSummaryWidget();
+
+            //Validate the hours on Location Summary widget is consistent with the hours on schedule page
+            List<String> dataFromLocationSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            List<Float> totalBudgetedScheduledProjectedHour= scheduleDMViewPage.getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();
+            List<String> locationNumbersFromLocationSummarySmartCard= scheduleDMViewPage.getLocationNumbersFromLocationSummarySmartCard();
+            DecimalFormat df1 = new DecimalFormat("0");
+            boolean isBudgetedHrsCorrect = dataFromLocationSummaryWidget.get(0).equals(df1.format(totalBudgetedScheduledProjectedHour.get(0)));
+            boolean isScheduledHrsCorrect = dataFromLocationSummaryWidget.get(1).equals(df1.format(totalBudgetedScheduledProjectedHour.get(1)));
+            boolean isProjectedHrsCorrect = dataFromLocationSummaryWidget.get(2).equals(df1.format(totalBudgetedScheduledProjectedHour.get(2)));
+            boolean isProjectedWithinBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(3).equals(locationNumbersFromLocationSummarySmartCard.get(0));
+            boolean isProjectedOverBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(4).equals(locationNumbersFromLocationSummarySmartCard.get(1));
+            SimpleUtils.assertOnFail("", isBudgetedHrsCorrect && isScheduledHrsCorrect
+                    && isProjectedHrsCorrect && isProjectedWithinBudgetLocationsCorrect
+                    && isProjectedOverBudgetLocationsCorrect, false);
         } catch (Exception e) {
             SimpleUtils.fail(e.toString(),false);
         }
