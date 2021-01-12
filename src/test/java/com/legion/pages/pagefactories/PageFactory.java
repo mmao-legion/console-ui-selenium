@@ -58,4 +58,6 @@ public interface PageFactory {
     InboxPage createConsoleInboxPage();
 
     CinemarkMinorPage createConsoleCinemarkMinorPage();
+
+    AdminPage createConsoleAdminPage();
 }

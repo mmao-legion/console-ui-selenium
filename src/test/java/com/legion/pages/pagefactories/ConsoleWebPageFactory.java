@@ -124,4 +124,7 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public CinemarkMinorPage createConsoleCinemarkMinorPage() { return new ConsoleCinemarkMinorPage(); }
+
+	@Override
+	public AdminPage createConsoleAdminPage() { return new ConsoleAdminPage(); }
 }

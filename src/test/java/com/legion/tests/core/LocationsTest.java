@@ -52,9 +52,16 @@ public class LocationsTest extends TestBase {
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception{
-        this.createDriver((String)params[0],"83","Window");
-        visitPage(testMethod);
-        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+        try {
+          this.createDriver((String)params[0],"83","Window");
+          visitPage(testMethod);
+          loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+          AdminPage adminPage = pageFactory.createConsoleAdminPage();
+          adminPage.goToAdminTab();
+          adminPage.rebuildSearchIndex();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
