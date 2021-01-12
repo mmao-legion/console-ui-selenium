@@ -103,4 +103,13 @@ public interface DashboardPage {
     public void verifyTheContentInSchedulePublishStatusWidget() throws Exception;
     public Map<String,Integer> getAllScheduleStatusFromSchedulePublishStatusWidget();
     public String getWeekInfoFromDMView() throws Exception;
+    public boolean isScheduleVsGuidanceByDayWidgetDisplay() throws Exception;
+    public void verifyTheContentOnScheduleVsGuidanceByDayWidget() throws Exception;
+    public void verifyTheHrsUnderOrCoverBudgetOnScheduleVsGuidanceByDayWidget() throws Exception;
+    public List<String> getTheDataOnLocationSummaryWidget() throws Exception;
+    public void verifyTheContentOnLocationSummaryWidget() throws Exception;
+    public boolean isLocationSummaryWidgetDisplay() throws Exception;
+    public boolean isOpenShiftsWidgetDisplay() throws Exception;
+    public void clickViewSchedulesLinkOnOpenShiftsWidget() throws Exception;
+    public HashMap<String, Integer> verifyContentOfOpenShiftsWidgetForDMView() throws Exception;
 }

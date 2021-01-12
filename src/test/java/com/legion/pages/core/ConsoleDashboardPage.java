@@ -8,12 +8,14 @@ import java.util.*;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
+import com.legion.pages.ScheduleDMViewPage;
 import com.legion.pages.SchedulePage;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
 import cucumber.api.java.hu.Ha;
+import cucumber.api.java8.Da;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -902,13 +904,18 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "[ng-click=\"$ctrl.onReload(true)\"]")
 	private WebElement refreshButton;
 
+	@FindBy(css = "[[ng-if=\"$ctrl.minutes >= 0 && $ctrl.date && !$ctrl.loading\"]")
+	private WebElement lastUpdatedIcon;
+
 
 	@Override
 	public void clickOnRefreshButton() throws Exception {
 		if (isElementLoaded(refreshButton, 10)) {
 			clickTheElement(refreshButton);
-			waitForSeconds(15);
-			SimpleUtils.pass("Click on Refresh button Successfully!");
+			if(isElementLoaded(lastUpdatedIcon, 60)){
+				SimpleUtils.pass("Click on Refresh button Successfully!");
+			} else
+				SimpleUtils.fail("Refresh timeout! ", false);
 		} else {
 			SimpleUtils.fail("Refresh button not Loaded!", true);
 		}
@@ -1905,4 +1912,281 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
         click(dashboardConsoleMenu);
         return weeksInfo;
     }
+
+	@FindBy(css = "div[class=\"dms-row21\"]")
+	private WebElement scheduleVsGuidanceByDayWidget;
+
+	@FindBy(css = "div[class=\"dms-box-title dms-box-item-title-row ng-binding col-sm-5\"]")
+	private WebElement scheduleVsGuidanceByDayWidgetTitle;
+
+	@FindBy(css = "div.dms-budgeted")
+	private WebElement budgetedLegend;
+
+	@FindBy(css = "div.dms-scheduled")
+	private WebElement scheduledLegend;
+
+	@FindBy(css = "[class=\"payroll-projection-chart__svg\"] rect")
+	private List<WebElement> scheduleVsGuidanceChartBars;
+
+	@FindBy(css = "[class=\"payroll-projection-chart__svg\"]")
+	private WebElement scheduleVsGuidanceChart;
+
+	@FindBy(css = "div.text-right.dms-legend-text")
+	private WebElement weekInfoOnScheduleVsGuidanceByDayWidget;
+
+	@FindBy(css = "[class=\"dms-row21\"] .dms-caret-large")
+	private WebElement budgetHoursCaret;
+
+	@FindBy(css = "span.dms-box-item-title.dms-box-item-title-row")
+	private WebElement budgetHoursMessageSpan;
+
+	public boolean isScheduleVsGuidanceByDayWidgetDisplay() throws Exception {
+		boolean isScheduleVsGuidanceByDayWidgetDisplay = false;
+		if (isElementLoaded(scheduleVsGuidanceByDayWidget, 5)) {
+			isScheduleVsGuidanceByDayWidgetDisplay = true;
+			SimpleUtils.report("Schedule Vs Guidance By Day Widget is loaded Successfully!");
+		} else
+			SimpleUtils.report("Schedule Vs Guidance By Day Widget not loaded Successfully!");
+		return isScheduleVsGuidanceByDayWidgetDisplay;
+	}
+
+	public void verifyTheContentOnScheduleVsGuidanceByDayWidget() throws Exception {
+		List<WebElement> legendTexts = scheduleVsGuidanceByDayWidget.findElements(By.cssSelector(".ml-10.dms-legend-text"));
+		WebElement viewSchedulesLink = scheduleVsGuidanceByDayWidget.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]"));
+		if(isElementLoaded(scheduleVsGuidanceByDayWidgetTitle, 5)
+				&& isElementLoaded(budgetedLegend, 5)
+				&& isElementLoaded(scheduledLegend, 5)
+				&& areListElementVisible(legendTexts, 5) && legendTexts.size() ==2
+				&& isElementLoaded(scheduleVsGuidanceChart, 5)
+				&& isElementLoaded(weekInfoOnScheduleVsGuidanceByDayWidget, 5)
+				&& weekInfoOnScheduleVsGuidanceByDayWidget.getText().equalsIgnoreCase(getWeekInfoFromDMView().substring(8))
+				&& areListElementVisible(scheduleVsGuidanceChartBars, 5)
+				&& isElementLoaded(budgetHoursCaret, 5)
+				&& isElementLoaded(viewSchedulesLink, 5)){
+			SimpleUtils.pass("The content on Schedule Vs Guidance By Day Widget display correctly! ");
+		} else
+			SimpleUtils.fail("The content on Schedule Vs Guidance By Day Widget display incorrectly! ", false);
+	}
+
+	public void verifyTheHrsUnderOrCoverBudgetOnScheduleVsGuidanceByDayWidget() throws Exception {
+
+		if (!areBudgetHoursAndScheduleHoursConsistent()) {
+			if (isElementLoaded(budgetHoursMessageSpan, 5) && isElementLoaded(budgetHoursCaret, 5)){
+				if (budgetHoursMessageSpan.getText().contains("Under")) {
+					if(budgetHoursMessageSpan.getAttribute("class").contains("green")
+							&&budgetHoursCaret.getAttribute("class").contains("green")
+							&&budgetHoursCaret.getAttribute("class").contains("down")){
+						SimpleUtils.pass("Budget hrs message display correctly when scheduled hours under budget!");
+					} else {
+						SimpleUtils.fail("Budget hrs message display incorrectly when scheduled hours under budget!", false);
+					}
+				} else {
+					if(budgetHoursCaret.getAttribute("class").contains("red")
+							&&budgetHoursCaret.getAttribute("class").contains("up")){
+						SimpleUtils.pass("Budget hrs caret and message display correctly when scheduled hours cover budget!");
+					} else {
+						SimpleUtils.fail("Budget hrs message display incorrectly when scheduled hours under budget!", false);
+					}
+				}
+
+				//compare the hours on widget and on schedule page
+				String budgetHoursFromDashboard = budgetHoursMessageSpan.getText().split(" ")[0];
+				click(scheduleConsoleMenu);
+				ScheduleDMViewPage scheduleDMViewPage = new ConsoleScheduleDMViewPage();
+				String budgetHoursFromSchedulePage = scheduleDMViewPage.
+						getTextFromTheChartInLocationSummarySmartCard().get(4).split(" ")[0];
+				if (budgetHoursFromDashboard.equalsIgnoreCase(budgetHoursFromSchedulePage)) {
+					SimpleUtils.pass("Budget hrs display correctly on Schedule Vs Guidance By Day Widget!");
+				} else
+					SimpleUtils.fail("Budget hrs display incorrectly on Schedule Vs Guidance By Day Widget!", false);
+			}
+		} else {
+			if (isElementLoaded(budgetHoursCaret, 5)&& !isElementLoaded(budgetHoursMessageSpan)){
+				SimpleUtils.pass("Budget hrs caret display correctly and no message display because the budget hour and schedule hours are consistent! ");
+			} else
+				SimpleUtils.fail("Budget hrs caret and message display incorrectly when the budget hour and schedule hours are inconsistent!!", false);
+		}
+	}
+
+	public boolean areBudgetHoursAndScheduleHoursConsistent(){
+		boolean areBudgetHoursAndScheduleHoursConsistent = false;
+		if(scheduleVsGuidanceChartBars.get(1).getAttribute("height").toString().
+				equals(scheduleVsGuidanceChartBars.get(2).getAttribute("height").toString())
+				&& scheduleVsGuidanceChartBars.get(3).getAttribute("height").toString().
+				equals(scheduleVsGuidanceChartBars.get(4).getAttribute("height").toString())
+				&& scheduleVsGuidanceChartBars.get(5).getAttribute("height").toString().
+				equals(scheduleVsGuidanceChartBars.get(6).getAttribute("height").toString())
+				&& scheduleVsGuidanceChartBars.get(7).getAttribute("height").toString().
+				equals(scheduleVsGuidanceChartBars.get(8).getAttribute("height").toString())
+				&& scheduleVsGuidanceChartBars.get(9).getAttribute("height").toString().
+				equals(scheduleVsGuidanceChartBars.get(10).getAttribute("height").toString())
+				&& scheduleVsGuidanceChartBars.get(11).getAttribute("height").toString().
+				equals(scheduleVsGuidanceChartBars.get(12).getAttribute("height").toString())
+				&& scheduleVsGuidanceChartBars.get(13).getAttribute("height").toString().
+				equals(scheduleVsGuidanceChartBars.get(14).getAttribute("height").toString())) {
+			areBudgetHoursAndScheduleHoursConsistent = true;
+			SimpleUtils.report("Budget Hours and Schedule Hours are consistent! ");
+		} else {
+			SimpleUtils.report("Budget Hours and Schedule Hours are inconsistent");
+		}
+		return areBudgetHoursAndScheduleHoursConsistent;
+	}
+
+	@FindBy(css = "div.dms-row1")
+	private WebElement locationSummaryWidget;
+
+	@FindBy(css = "div[class=\"dms-box-title dms-box-item-title-row ng-binding\"]")
+	private WebElement locationSummaryWidgetTitle;
+
+	@FindBy(css = "div.dms-box-item-title.dms-box-item-title-color-light")
+	private List<WebElement> scheduledHoursTitles;
+
+	@FindBy(css = "span.dms-box-item-number-small")
+	private List<WebElement> scheduledHours;
+
+	@FindBy(css = "span.dms-time-stamp")
+	private WebElement projectedHoursAsCurrentTime;
+
+	@FindBy(css = "[ng-if=\"b.withinBudget\"]")
+	private WebElement projectedWithinBudgetCaret;
+
+	@FindBy(css = "[ng-if=\"!b.withinBudget\"]")
+	private WebElement projectedOverBudgetCaret;
+
+
+	@FindBy(css = "span.dms-box-item-title-color-dark")
+	private List<WebElement> projectedWithInOrOverBudgetLocations;
+
+	@FindBy(css = "div.dms-box-item-title-2.pt-15")
+	private List<WebElement> projectedWithInOrOverBudgetMessage;
+
+	public List<String> getTheDataOnLocationSummaryWidget() throws Exception {
+		/*
+		*  0: budgeted Hrs
+		*  1: scheduled Hrs
+		*  2: projected Hrs
+		*  3: projected Within Budget Locations
+		*  4: projected Over Budget Locations
+		*
+		* */
+		List<String> dataOnLocationSummaryWidget = new ArrayList<>();
+		if(areListElementVisible(scheduledHours, 5)
+				&& scheduledHours.size()==3
+				&& areListElementVisible(projectedWithInOrOverBudgetLocations, 5)
+				&& projectedWithInOrOverBudgetLocations.size()==2){
+
+			String budgetedHrs = scheduledHours.get(0).getText();
+			dataOnLocationSummaryWidget.add(budgetedHrs);
+			String scheduledHrs = scheduledHours.get(1).getText();
+			dataOnLocationSummaryWidget.add(scheduledHrs);
+			String projectedHrs = scheduledHours.get(2).getText();
+			dataOnLocationSummaryWidget.add(projectedHrs);
+			String projectedWithinBudgetLocation = projectedWithInOrOverBudgetLocations.get(0).getText();
+			dataOnLocationSummaryWidget.add(projectedWithinBudgetLocation);
+			String projectedOverBudgetLocation = projectedWithInOrOverBudgetLocations.get(1).getText();
+			dataOnLocationSummaryWidget.add(projectedOverBudgetLocation);
+			SimpleUtils.report("Get the data on location summary widget successfully! ");
+		} else
+			SimpleUtils.fail("The data on Location Summary Widget loaded fail! ", false);
+		return dataOnLocationSummaryWidget;
+	}
+
+	public void verifyTheContentOnLocationSummaryWidget() throws Exception {
+		WebElement viewSchedulesLink = locationSummaryWidget.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]"));
+		SimpleDateFormat dateFormat = new SimpleDateFormat();
+		dateFormat.applyPattern("MMM dd, hh:mm a");
+		String currentTimeOnProjectedHrs = "As of "+ SimpleUtils.getCurrentDateMonthYearWithTimeZone("PST", dateFormat);
+		clickOnRefreshButton();
+		String test1 = projectedHoursAsCurrentTime.getText();
+		if(isElementLoaded(locationSummaryWidgetTitle, 5)
+				&& locationSummaryWidgetTitle.getText().contains("Location Summary")
+				&& areListElementVisible(scheduledHoursTitles, 5)
+				&& scheduledHoursTitles.size() == 3
+				&& scheduledHoursTitles.get(0).getText().equalsIgnoreCase("Budgeted")
+				&& scheduledHoursTitles.get(1).getText().equalsIgnoreCase("Scheduled")
+				&& scheduledHoursTitles.get(2).getText().equalsIgnoreCase("Projected")
+				&& areListElementVisible(scheduledHours, 5)
+				&& scheduledHours.size() == 3
+				&& isElementLoaded(projectedHoursAsCurrentTime, 5)
+				&& projectedHoursAsCurrentTime.getText().equalsIgnoreCase(currentTimeOnProjectedHrs)
+				&& isElementLoaded(projectedWithinBudgetCaret, 5)
+				&& projectedWithinBudgetCaret.getAttribute("class").contains("down")
+				&& isElementLoaded(projectedOverBudgetCaret, 5)
+				&& projectedOverBudgetCaret.getAttribute("class").contains("up")
+				&& areListElementVisible(projectedWithInOrOverBudgetLocations, 5)
+				&& projectedWithInOrOverBudgetLocations.size() ==2
+				&& areListElementVisible(projectedWithInOrOverBudgetMessage, 5)
+				&& projectedWithInOrOverBudgetMessage.size() ==2
+				&& projectedWithInOrOverBudgetMessage.get(0).getText().equalsIgnoreCase("Projected Within Budget")
+				&& projectedWithInOrOverBudgetMessage.get(1).getText().equalsIgnoreCase("Projected Over Budget")
+				&& isElementLoaded(viewSchedulesLink, 5)){
+			SimpleUtils.pass("The content on Location Summary Widget display correctly! ");
+		} else
+			SimpleUtils.fail("The content on Location Summary Widget display incorrectly! ", false);
+	}
+
+	public boolean isLocationSummaryWidgetDisplay() throws Exception {
+		boolean isLocationSummaryWidgetDisplay = false;
+		if (isElementLoaded(locationSummaryWidget, 5)) {
+			isLocationSummaryWidgetDisplay = true;
+			SimpleUtils.report("Location Summary Widget is loaded Successfully!");
+		} else
+			SimpleUtils.report("Location Summary Widget not loaded Successfully!");
+		return isLocationSummaryWidgetDisplay;
+	}
+
+    @FindBy(css = "div.dms-smart-card-4.fl-left")
+	private WebElement openShiftsWidgetInDMView;
+	@Override
+	public boolean isOpenShiftsWidgetDisplay() throws Exception {
+		boolean result = false;
+		if (isElementLoaded(openShiftsWidgetInDMView, 5)) {
+			result = true;
+		}
+		return result;
+	}
+
+	@Override
+	public void clickViewSchedulesLinkOnOpenShiftsWidget() throws Exception {
+		if (isElementLoaded(openShiftsWidgetInDMView, 5) && isElementLoaded(openShiftsWidgetInDMView.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]")),5)) {
+			click(openShiftsWidgetInDMView.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]")));
+			SimpleUtils.pass("Open Shifts Widget is loaded Successfully!");
+		} else {
+			SimpleUtils.report("Open Shifts Widget not loaded correctly!");
+		}
+	}
+
+	@Override
+	public HashMap<String, Integer> verifyContentOfOpenShiftsWidgetForDMView() throws Exception {
+		HashMap<String, Integer> results = new HashMap<String, Integer>();
+		if (isElementLoaded(openShiftsWidgetInDMView.findElement(By.cssSelector(".dms-box-item-title-row")), 5) && openShiftsWidgetInDMView.findElement(By.cssSelector(".dms-box-item-title-row")).getText().equalsIgnoreCase("open shifts")) {
+			SimpleUtils.pass("Open Shifts title is correct!");
+		} else {
+			SimpleUtils.report("Open Shifts title not loaded correctly!");
+		}
+		if (openShiftsWidgetInDMView.findElements(By.cssSelector(".dms-legend")).size()==2 && openShiftsWidgetInDMView.findElement(By.cssSelector(".dms-legend-text")).getText().toLowerCase().contains("open")
+				&& openShiftsWidgetInDMView.findElement(By.cssSelector(".dms-legend-text")).getText().toLowerCase().contains("assigned")) {
+			SimpleUtils.pass("Open Shifts legends are correct!");
+		} else {
+			SimpleUtils.report("Open Shifts legends are not loaded correctly!");
+		}
+		if (areListElementVisible(openShiftsWidgetInDMView.findElements(By.cssSelector("div.lg-dashboard-charts text")),10)
+				&& openShiftsWidgetInDMView.findElements(By.cssSelector("div.lg-dashboard-charts text")).size() ==2) {
+			String open = openShiftsWidgetInDMView.findElements(By.cssSelector("div.lg-dashboard-charts text")).get(0).getText().replace("%","");
+			String assigned = openShiftsWidgetInDMView.findElements(By.cssSelector("div.lg-dashboard-charts text")).get(1).getText().replace("%","");
+			if (SimpleUtils.isNumeric(open) && SimpleUtils.isNumeric(assigned)){
+				Integer openValue = Integer.parseInt(open);
+				Integer assignedValue = Integer.parseInt(assigned);
+				results.put("open",openValue);
+				results.put("assigned", assignedValue);
+			} else {
+				SimpleUtils.fail("No chart value you want!", false);
+			}
+
+			SimpleUtils.pass("Open Shifts legends are correct!");
+		} else {
+			SimpleUtils.report("Open Shifts legends are not loaded correctly!");
+		}
+		return results;
+	}
 }

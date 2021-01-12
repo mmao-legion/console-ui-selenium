@@ -20,6 +20,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -228,8 +231,6 @@ public class DMViewTest extends TestBase {
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            //locationSelectorPage.reSelectDistrict(districtName);
-            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 
             // Create open shift in schedule so that we can verify the content on Open_Shifts Widget
@@ -240,15 +241,11 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
 
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
-            if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            if (schedulePage.isWeekGenerated() && !schedulePage.isWeekPublished()){
+                schedulePage.publishActiveSchedule();
             }
-            schedulePage.createScheduleForNonDGFlowNewUI();
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.addOpenShiftWithLastDay("MOD");
-            schedulePage.saveSchedule();
-            schedulePage.publishActiveSchedule();
+            int openShiftsNumForLoc1 = schedulePage.getShiftsNumberByName("open");
+            int shiftsNumForLoc1 = schedulePage.getShiftsNumberByName("");
             dashboardPage.navigateToDashboard();
             locationSelectorPage.changeLocation("NY CENTRAL");
             schedulePage.clickOnScheduleConsoleMenuItem();
@@ -257,57 +254,120 @@ public class DMViewTest extends TestBase {
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-            isWeekGenerated = schedulePage.isWeekGenerated();
-            if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            if (schedulePage.isWeekGenerated() && !schedulePage.isWeekPublished()){
+                schedulePage.publishActiveSchedule();
             }
-            schedulePage.createScheduleForNonDGFlowNewUI();
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.addOpenShiftWithLastDay("MOD");
-            schedulePage.saveSchedule();
-            schedulePage.publishActiveSchedule();
+            int openShiftsNumForLoc2 = schedulePage.getShiftsNumberByName("open");
+            int shiftsNumForLoc2 = schedulePage.getShiftsNumberByName("");
+            int openRateExpected = 0;
+            if ((shiftsNumForLoc1+shiftsNumForLoc2)!=0){
+                openRateExpected = (openShiftsNumForLoc1+openShiftsNumForLoc2)*100/(shiftsNumForLoc1+shiftsNumForLoc2);
+            }
+            int assignedRateExpected = 100-openRateExpected;
+
             dashboardPage.navigateToDashboard();
             locationSelectorPage.reSelectDistrict(districtName);
 
-            SimpleUtils.assertOnFail("Project Compliance widget not loaded successfully", liquidDashboardPage.isSpecificWidgetLoaded(LiquidDashboardTest.widgetType.Open_Shifts.getValue()), false);
-
+            SimpleUtils.assertOnFail("Open Shifts widget not loaded successfully", dashboardPage.isOpenShiftsWidgetDisplay(), false);
             String currentWeek = dashboardPage.getWeekInfoFromDMView();
 
+            //Get values on open shifts widget and verify the info on Open_Shifts Widget
+            HashMap<String, Integer> valuesOnOpenShiftsWidget = dashboardPage.verifyContentOfOpenShiftsWidgetForDMView();
+
             // Verify navigation to schedule page by "View Schedules" button on Open_Shifts Widget
-            liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(LiquidDashboardTest.widgetType.Open_Shifts.getValue(), LiquidDashboardTest.linkNames.View_Schedules.getValue());
-            SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.isSchedule(), false);
-            if (MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toUpperCase().contains(currentWeek)) {
-                SimpleUtils.pass("Open Shifts: \"View Schedules\" button is to navigate to current week schedule page");
+            dashboardPage.clickViewSchedulesLinkOnOpenShiftsWidget();
+            SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            if (currentWeek.toLowerCase().contains(MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toLowerCase().split("\n")[MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toLowerCase().split("\n").length-1])) {
+                SimpleUtils.pass("Open Shifts: \"View Schedules\" butt591918on is to navigate to current week schedule page");
             } else {
-                SimpleUtils.fail("Open Shifts: \"View Schedules\" button failed to navigate to current week schedule page", true);
+                SimpleUtils.fail("Open Shifts: \"View Schedules\" button failed to navigate to current week schedule page", false);
             }
-
-
-            // Verify the content on Open_Shifts Widget
-            dashboardPage.navigateToDashboard();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            if (liquidDashboardPage.isOpenShiftsPresent()) {
-                liquidDashboardPage.verifyTheContentOfOpenShiftsWidgetLoaded(currentWeek);
+            // Verify the data on Open_Shifts Widget
+            if (openRateExpected == valuesOnOpenShiftsWidget.get("open") && assignedRateExpected == valuesOnOpenShiftsWidget.get("assigned")){
+                SimpleUtils.pass("Data is correct!");
             } else {
-                SimpleUtils.fail("\"Open Shifts\" widget content not loaded", true);
+                SimpleUtils.fail("Data is incorrect!",false);
             }
-
-/*            // Ungenerate the schedule to make sure there are no open shifts on Open_Shifts Widget
-            liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(LiquidDashboardTest.widgetType.Open_Shifts.getValue(), LiquidDashboardTest.linkNames.View_Schedules.getValue());
-            SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.isSchedule(), true);
-            if (schedulePage.isWeekGenerated())
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
-            dashboardPage.navigateToDashboard();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
-            // Verify no content on Open_Shifts Widget
-            if (liquidDashboardPage.isOpenShiftsNoContent()) {
-                liquidDashboardPage.verifyTheContentOfOpenShiftsWidgetLoaded(currentWeek);
-            } else {
-                SimpleUtils.fail("\"Open Shifts\" widget not loaded", true);
-            }
-*/      } catch (Exception e) {
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Schedule vs. Guidance by Day widget on Dashboard in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Set 'Apply labor budget to schedules?' to No
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
+            dashboardPage.clickOnDashboardConsoleMenu();
+
+            //Validate the Schedule Vs Guidance By Day widget is loaded on dashboard
+            SimpleUtils.assertOnFail("Schedule Vs Guidance By Day widget loaded fail! ",
+                    dashboardPage.isScheduleVsGuidanceByDayWidgetDisplay(), false);
+
+            //Validate the content on Schedule Vs Guidance By Day widget display correctly
+            dashboardPage.verifyTheContentOnScheduleVsGuidanceByDayWidget();
+
+            //Validate the hours Under or Cover budget is consistent with the hours on schedule page
+            dashboardPage.verifyTheHrsUnderOrCoverBudgetOnScheduleVsGuidanceByDayWidget();
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.toString(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Location Summary widget on Dashboard in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationSummaryWidgetOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Validate the Location Summary widget is loaded on dashboard
+            SimpleUtils.assertOnFail("Location Summary widget loaded fail! ",
+                    dashboardPage.isLocationSummaryWidgetDisplay(), false);
+
+            //Validate the content on Location Summary widget display correctly
+            dashboardPage.verifyTheContentOnLocationSummaryWidget();
+
+            //Validate the hours on Location Summary widget is consistent with the hours on schedule page
+            List<String> dataFromLocationSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            List<Float> totalBudgetedScheduledProjectedHour= scheduleDMViewPage.getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();
+            List<String> locationNumbersFromLocationSummarySmartCard= scheduleDMViewPage.getLocationNumbersFromLocationSummarySmartCard();
+            DecimalFormat df1 = new DecimalFormat("0");
+            boolean isBudgetedHrsCorrect = dataFromLocationSummaryWidget.get(0).equals(df1.format(totalBudgetedScheduledProjectedHour.get(0)));
+            boolean isScheduledHrsCorrect = dataFromLocationSummaryWidget.get(1).equals(df1.format(totalBudgetedScheduledProjectedHour.get(1)));
+            boolean isProjectedHrsCorrect = dataFromLocationSummaryWidget.get(2).equals(df1.format(totalBudgetedScheduledProjectedHour.get(2)));
+            boolean isProjectedWithinBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(3).equals(locationNumbersFromLocationSummarySmartCard.get(0));
+            boolean isProjectedOverBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(4).equals(locationNumbersFromLocationSummarySmartCard.get(1));
+            SimpleUtils.assertOnFail("", isBudgetedHrsCorrect && isScheduledHrsCorrect
+                    && isProjectedHrsCorrect && isProjectedWithinBudgetLocationsCorrect
+                    && isProjectedOverBudgetLocationsCorrect, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.toString(),false);
         }
     }
 }

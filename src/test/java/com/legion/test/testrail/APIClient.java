@@ -132,7 +132,7 @@ public class APIClient
 		// (GET/POST) and headers (content type and basic auth).
 		HttpURLConnection conn = (HttpURLConnection)url.openConnection();
 		conn.addRequestProperty("Content-Type", "application/json");
-		conn.getHeaderFieldDate("Retry-After",30);
+		//conn.getHeaderFieldDate("Retry-After",30);
 		
 		String auth = getAuthorization(this.m_user, this.m_password);
 		conn.addRequestProperty("Authorization", "Basic " + auth);

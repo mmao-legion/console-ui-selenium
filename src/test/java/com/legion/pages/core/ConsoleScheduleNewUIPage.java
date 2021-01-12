@@ -12678,5 +12678,36 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("There is no previous week to copy", false);
         }
     }
+
+    @FindBy(css = "div.analytics-new-table")
+    private WebElement analyticsTableInScheduleDMViewPage;
+    @Override
+    public boolean isScheduleDMView() throws Exception {
+        boolean result = false;
+        if (isElementLoaded(analyticsTableInScheduleDMViewPage, 5)) {
+            result = true;
+        }
+        return result;
+    }
+
+    @Override
+    public int getShiftsNumberByName(String name) throws Exception {
+        int result = 0;
+        if (areListElementVisible(shiftsWeekView, 15)) {
+            if (name == null && name.equals("")){
+                result = shiftsWeekView.size();
+            } else {
+                for (WebElement shiftWeekView : shiftsWeekView) {
+                    WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
+                    if (workerName != null) {
+                        if (workerName.getText().toLowerCase().contains(name.toLowerCase())) {
+                            result++;
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
 }
 

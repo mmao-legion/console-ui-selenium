@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import net.sourceforge.htmlunit.corejs.javascript.EcmaError;
 import org.openqa.selenium.WebElement;
 
 public interface SchedulePage {
@@ -541,4 +542,6 @@ public interface SchedulePage {
 	public void verifyTooltipForCopyScheduleWeek(String weekInfo) throws Exception;
 	public String convertDateStringFormat(String dateString) throws Exception;
 	public void verifyDifferentOperatingHours(String weekInfo) throws Exception;
+	public boolean isScheduleDMView() throws Exception;
+	public int getShiftsNumberByName(String name) throws Exception;
 }
