@@ -59,6 +59,8 @@ public class LocationsTest extends TestBase {
           AdminPage adminPage = pageFactory.createConsoleAdminPage();
           adminPage.goToAdminTab();
           adminPage.rebuildSearchIndex();
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            dashboardPage.navigateToDashboard();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
