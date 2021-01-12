@@ -2854,19 +2854,24 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void updateBusinessProfilePicture(String filePath) throws Exception {
-		if(isElementLoaded(profileSection, 10) && isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),10)){
-			click(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
-			if (isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1), 5)) {
-				getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(pth + filePath);
-				// wait for the picture to be loaded
-				waitForSeconds(5);
-				scrollToElement(getDriver().findElement(By.cssSelector("lg-button[label=\"Save\"]")));
-				clickTheElement(getDriver().findElement(By.cssSelector("lg-button[label=\"Save\"]")));
-			}else {
-				SimpleUtils.fail("Business Profile Image input element isn't enabled!", true);
+		try {
+			if (isElementLoaded(profileSection, 10) && isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")), 10)) {
+				clickTheElement(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
+				if (isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1), 5)
+				&& areListElementVisible(getDriver().findElements(By.cssSelector("lg-button[label=\"Save\"]")), 5)) {
+					getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(pth + filePath);
+					// wait for the picture to be loaded
+					waitForSeconds(6);
+					clickTheElement(getDriver().findElements(By.cssSelector("lg-button[label=\"Save\"]")).get(0));
+					waitForSeconds(5);
+				} else {
+					SimpleUtils.fail("Business Profile Image input element isn't enabled!", true);
+				}
+			} else {
+				SimpleUtils.fail("Edit button is not loaded!", true);
 			}
-		} else {
-			SimpleUtils.fail("Edit button is not loaded!",true);
+		} catch (Exception e) {
+			SimpleUtils.fail(e.toString(), false);
 		}
 	}
 

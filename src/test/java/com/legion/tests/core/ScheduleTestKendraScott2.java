@@ -321,7 +321,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.goToScheduleNewUI();
 		//Current week is getting open by default
-		schedulePage.currentWeekIsGettingOpenByDefault();
+		schedulePage.currentWeekIsGettingOpenByDefault(location);
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
 		if(!isActiveWeekGenerated){
 			schedulePage.createScheduleForNonDGFlowNewUI();
@@ -562,7 +562,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		//Current week and day is selected by default
-		schedulePage.currentWeekIsGettingOpenByDefault();
+		schedulePage.currentWeekIsGettingOpenByDefault(location);
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
 		if(isActiveWeekGenerated){
 			schedulePage.unGenerateActiveScheduleScheduleWeek();

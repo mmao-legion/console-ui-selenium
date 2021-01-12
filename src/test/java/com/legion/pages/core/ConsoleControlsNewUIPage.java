@@ -4377,14 +4377,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 
 	public void displaySuccessMessage() throws Exception {
-		if (isElementLoaded(successMsg, 20)) {
-			SimpleUtils.pass("Success pop up displayed successfully.");
-			if (successMsg.getText().contains("Success!")) {
-				SimpleUtils.pass("Success message displayed successfully." + successMsg.getText());
-				waitForSeconds(2);
-			} else {
-				SimpleUtils.fail("Success message not displayed successfully.", true);
-			}
+		if (isElementLoaded(successMsg, 20) && successMsg.getText().contains("Success!")) {
+			SimpleUtils.pass("Success message displayed successfully." + successMsg.getText());
+			waitForSeconds(2);
 		} else {
 			SimpleUtils.report("Success pop up not displayed successfully.");
 			waitForSeconds(3);

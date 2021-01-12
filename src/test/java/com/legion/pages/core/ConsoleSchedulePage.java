@@ -1892,7 +1892,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void currentWeekIsGettingOpenByDefault() {
+    public void currentWeekIsGettingOpenByDefault(String location) {
 
     }
 

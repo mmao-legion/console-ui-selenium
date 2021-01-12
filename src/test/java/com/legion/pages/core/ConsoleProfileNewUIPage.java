@@ -689,9 +689,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void clickOnCancelUserProfileBtn() throws Exception {
-		if(isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Cancel\"]")),5))
-			click(profileSection.findElement(By.xpath("//span[text()=\"Cancel\"]")));
-		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]"))))
+		if(areListElementVisible(cancelBtnsOnProfile,5))
+			clickTheElement(cancelBtnsOnProfile.get(0));
+		waitForSeconds(2);
+		if(isElementLoaded(getDriver().findElement(By.cssSelector("[on-action=\"editProfile()\"] lg-button[label=\"Edit\"]")), 10))
 			SimpleUtils.pass("Profile Page: User profile Cancel Button clicked.");
 		else
 			SimpleUtils.fail("Profile Page: unable to cancel edit User profile popup.", false);
@@ -701,6 +702,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement editProfileButton;
 	@FindBy (className = "btn-success")
 	private WebElement saveTMBtn;
+	@FindBy (css = "[label=\"Cancel\"]")
+	private List<WebElement> cancelBtnsOnProfile;
 
 	@Override
 	public void clickOnEditUserProfilePencilIcon() throws Exception
@@ -708,7 +711,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),10))
 			clickTheElement(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
 		//verify if edit profile mode load
-		if(isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")),10))
+		if(areListElementVisible(saveBtnsOfProfile,10))
 			SimpleUtils.pass("Profile Page: User profile edit form loaded successfully.");
 		else
 			SimpleUtils.fail("Profile Page: User profile edit form not loaded.", false);
@@ -717,15 +720,19 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public void clickOnSaveUserProfileBtn() throws Exception
 	{
-		if(isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")), 5)){
-			scrollToElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
-			clickTheElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
-		}
-		waitForSeconds(3);
-		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")), 15)){
-			SimpleUtils.pass("Profile Page: User profile successfully saved.");
-		} else{
-			SimpleUtils.fail("Profile Page: unable to save User profile.", false);
+		try {
+			if (areListElementVisible(saveBtnsOfProfile, 5) && saveBtnsOfProfile.size() > 0) {
+				scrollToElement(saveBtnsOfProfile.get(0));
+				clickTheElement(saveBtnsOfProfile.get(0));
+			}
+			waitForSeconds(3);
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")), 15)) {
+				SimpleUtils.pass("Profile Page: User profile successfully saved.");
+			} else {
+				SimpleUtils.fail("Profile Page: unable to save User profile.", false);
+			}
+		} catch (Exception e) {
+			SimpleUtils.fail(e.toString(), false);
 		}
 	}
 
@@ -825,6 +832,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				else
 					SimpleUtils.fail("Profile Page: User Profile Home Address State: '"+state+"' not found.", true);
 			} */
+			} else if (isElementLoaded(getDriver().findElement(By.cssSelector("input-field[label=\"Province\"] select")), 5)) {
+				selectByVisibleText(getDriver().findElement(By.cssSelector("input-field[label=\"Province\"] select")), state);
 			}
 
 			// Updating Home Address Zip
@@ -3042,9 +3051,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).clear();
 				profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).sendKeys(testEmail);
 				if (!testEmail.matches(regex)) {
-					if(isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")), 5)){
-						scrollToElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
-						clickTheElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
+					if(areListElementVisible(saveBtnsOfProfile, 5)){
+						scrollToElement(saveBtnsOfProfile.get(0));
+						clickTheElement(saveBtnsOfProfile.get(0));
 						verifyAlertDialog();
 					}
 				}
@@ -3108,6 +3117,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")));
 				results.put("State",statesDropdown.getFirstSelectedOption().getText());
 				//selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), state);
+			} else if (isElementLoaded(getDriver().findElement(By.cssSelector("input-field[label=\"Province\"] select")), 5)) {
+				SimpleUtils.pass("Province loaded!");
+				Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"Province\"] select")));
+				results.put("State",statesDropdown.getFirstSelectedOption().getText());
 			} else {
 				SimpleUtils.fail("No State field!",false);
 			}
@@ -3222,6 +3235,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			// State
 			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
 				selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), values.get("State"));
+				SimpleUtils.pass("Profile Page: User Profile 'State' updated with value: '" + values.get("State") + "'.");
+			} else if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Province\"] select")), 5)) {
+				selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"Province\"] select")), values.get("State"));
 				SimpleUtils.pass("Profile Page: User Profile 'State' updated with value: '" + values.get("State") + "'.");
 			} else {
 				SimpleUtils.fail("No State field!",false);

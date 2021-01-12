@@ -316,7 +316,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             profileNewUIPage.clickOnEditUserProfilePencilIcon();
             profileNewUIPage.clickOnCancelUserProfileBtn();
         } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
+            SimpleUtils.fail(e.toString(), false);
         }
     }
 

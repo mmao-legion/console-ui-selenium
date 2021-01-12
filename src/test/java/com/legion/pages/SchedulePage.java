@@ -176,7 +176,7 @@ public interface SchedulePage {
 	public void clickOnSuggestedButton() throws Exception;
 	public void legionIsDisplayingTheSchedul() throws Exception;
 
-	public void currentWeekIsGettingOpenByDefault() throws Exception;
+	public void currentWeekIsGettingOpenByDefault(String location) throws Exception;
 
 	public void goToScheduleNewUI() throws Exception;
 

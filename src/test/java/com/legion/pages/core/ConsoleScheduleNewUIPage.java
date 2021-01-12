@@ -41,6 +41,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private static HashMap<String, String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     private static HashMap<String, String> parametersMap2 = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ControlsPageLocationDetail.json");
     private static HashMap<String, String> propertyOperatingHours = JsonUtil.getPropertiesFromJsonFile("src/test/resources/operatingHours.json");
+    private static HashMap<String, String> propertyTimeZoneMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/LocationTimeZone.json");
 
     public enum scheduleHoursAndWagesData {
         scheduledHours("scheduledHours"),
@@ -6830,8 +6831,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    public void currentWeekIsGettingOpenByDefault() throws Exception {
-        String jsonTimeZoon = parametersMap2.get("Time_Zone");
+    public void currentWeekIsGettingOpenByDefault(String location) throws Exception {
+        String jsonTimeZoon = propertyTimeZoneMap.get(location);
         TimeZone timeZone = TimeZone.getTimeZone(jsonTimeZoon);
         SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
         dfs.setTimeZone(timeZone);
