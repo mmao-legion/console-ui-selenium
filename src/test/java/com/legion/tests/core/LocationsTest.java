@@ -56,11 +56,11 @@ public class LocationsTest extends TestBase {
           this.createDriver((String)params[0],"83","Window");
           visitPage(testMethod);
           loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
-          AdminPage adminPage = pageFactory.createConsoleAdminPage();
-          adminPage.goToAdminTab();
-          adminPage.rebuildSearchIndex();
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            dashboardPage.navigateToDashboard();
+//          AdminPage adminPage = pageFactory.createConsoleAdminPage();
+//          adminPage.goToAdminTab();
+//          adminPage.rebuildSearchIndex();
+//            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//            dashboardPage.navigateToDashboard();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -128,11 +128,11 @@ public class LocationsTest extends TestBase {
             //add new regular location
             locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);
 
-//               //search created location
-//            if (locationsPage.searchNewLocation(locationName)) {
-//                SimpleUtils.pass("Create new location successfully");
-//            }else
-//                SimpleUtils.fail("Create new location failed or can't search created location",true);
+               //search created location
+            if (locationsPage.searchNewLocation(locationName)) {
+                SimpleUtils.pass("Create new location successfully");
+            }else
+                SimpleUtils.fail("Create new location failed or can't search created location",true);
             ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
