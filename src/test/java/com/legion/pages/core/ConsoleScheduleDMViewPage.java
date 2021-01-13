@@ -118,12 +118,22 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
 
     public List<String> getTextFromTheChartInLocationSummarySmartCard(){
         /*
+        Non-TA env:
             0: the hours on Budget bar
             1: budget bar message "Budgeted Hrs"
             2: the hours on Published bar
             3: published bar message "Published Hrs"
             4: the hours of under or cover budget
             5: the caret of under or cover budget
+        TA env:
+            0: the hours on Budget bar
+            1: budget bar message "Budgeted Hrs"
+            2: the hours on Published bar
+            3: published bar message "Published Hrs"
+            4: the hours on Projected bar
+            5: projected bar message "Projected Hrs"
+            6: the hours of under or cover budget
+            7: the caret of under or cover budget
         */
 
         List<String> textFromChart = new ArrayList<>();

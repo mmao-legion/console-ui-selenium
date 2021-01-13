@@ -15,6 +15,7 @@ import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
 import cucumber.api.java.hu.Ha;
+import cucumber.api.java.ro.Si;
 import cucumber.api.java8.Da;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -904,7 +905,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "[ng-click=\"$ctrl.onReload(true)\"]")
 	private WebElement refreshButton;
 
-	@FindBy(css = "[[ng-if=\"$ctrl.minutes >= 0 && $ctrl.date && !$ctrl.loading\"]")
+	@FindBy(css = "[ng-if=\"$ctrl.minutes >= 0 && $ctrl.date && !$ctrl.loading\"]")
 	private WebElement lastUpdatedIcon;
 
 
@@ -2053,12 +2054,53 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "[ng-if=\"!b.withinBudget\"]")
 	private WebElement projectedOverBudgetCaret;
 
-
 	@FindBy(css = "span.dms-box-item-title-color-dark")
 	private List<WebElement> projectedWithInOrOverBudgetLocations;
 
 	@FindBy(css = "div.dms-box-item-title-2.pt-15")
 	private List<WebElement> projectedWithInOrOverBudgetMessage;
+
+	@FindBy(css = "i.dms-caret-small")
+	private WebElement budgetHoursCaretOnLocationSummaryWidget;
+
+	@FindBy(css = "span.dms-box-item-unit-trend")
+	private WebElement budgetHoursMessageOnLocationSummaryWidget;
+
+	public void verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget() throws Exception {
+		if(isElementLoaded(budgetHoursMessageSpan, 5) && isElementLoaded(budgetHoursCaret, 5)){
+			if(isElementLoaded(budgetHoursCaretOnLocationSummaryWidget, 5)
+					&& isElementLoaded(budgetHoursMessageOnLocationSummaryWidget, 5)){
+				//Verify the caret is display correctly
+				if(budgetHoursCaret.getAttribute("class").contains("up")){
+					if (budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("up")
+							&& budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("red")){
+						SimpleUtils.pass("The budget hour caret display correctly! ");
+					} else
+						SimpleUtils.fail("The budget hour caret display incorrectly! ", false);
+				} else {
+					if (budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("down")
+							&& budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("green")){
+						SimpleUtils.pass("The budget hour caret display correctly! ");
+					} else
+						SimpleUtils.fail("The budget hour caret display incorrectly! ", false);
+				}
+
+				//Verify the message display correctly
+				if (budgetHoursMessageOnLocationSummaryWidget.getText().split(" ")[0].
+						equals(budgetHoursMessageSpan.getText().split(" ")[0])) {
+					SimpleUtils.pass("The budget hour message display correctly! ");
+				} else
+					SimpleUtils.fail("The budget hour message display incorrectly! ", false);
+			} else
+				SimpleUtils.fail("The hours over or under budget panel on Location Summary widget loaded fail! ", false);
+		} else{
+			if(!isElementLoaded(budgetHoursCaretOnLocationSummaryWidget, 5)
+					&& !isElementLoaded(budgetHoursMessageOnLocationSummaryWidget, 5)){
+				SimpleUtils.pass("The budget hours message panel is not display on Location Summary widget! ");
+			} else
+				SimpleUtils.fail("The budget hours message panel on Location Summary widget should not display! ", false);
+		}
+	}
 
 	public List<String> getTheDataOnLocationSummaryWidget() throws Exception {
 		/*
@@ -2067,7 +2109,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		*  2: projected Hrs
 		*  3: projected Within Budget Locations
 		*  4: projected Over Budget Locations
-		*
+		*  5: the Hrs Over Or Under Budget
 		* */
 		List<String> dataOnLocationSummaryWidget = new ArrayList<>();
 		if(areListElementVisible(scheduledHours, 5)
@@ -2085,6 +2127,11 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			dataOnLocationSummaryWidget.add(projectedWithinBudgetLocation);
 			String projectedOverBudgetLocation = projectedWithInOrOverBudgetLocations.get(1).getText();
 			dataOnLocationSummaryWidget.add(projectedOverBudgetLocation);
+			String theHrsOverOrUnderBudget = "0 Hrs";
+			if (isElementLoaded(budgetHoursMessageOnLocationSummaryWidget, 5)){
+				theHrsOverOrUnderBudget = budgetHoursMessageOnLocationSummaryWidget.getText();
+			}
+			dataOnLocationSummaryWidget.add(theHrsOverOrUnderBudget);
 			SimpleUtils.report("Get the data on location summary widget successfully! ");
 		} else
 			SimpleUtils.fail("The data on Location Summary Widget loaded fail! ", false);

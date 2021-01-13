@@ -112,4 +112,5 @@ public interface DashboardPage {
     public boolean isOpenShiftsWidgetDisplay() throws Exception;
     public void clickViewSchedulesLinkOnOpenShiftsWidget() throws Exception;
     public HashMap<String, Integer> verifyContentOfOpenShiftsWidgetForDMView() throws Exception;
+    public void verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget() throws Exception;
 }
