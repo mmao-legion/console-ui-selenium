@@ -434,6 +434,8 @@
                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnTAEnvAsInternalAdmin" />
                     <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnNonTAEnvAsInternalAdmin" />
+                    <include name="verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin" />
+                    <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

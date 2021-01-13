@@ -293,6 +293,54 @@ public class DMViewTest extends TestBase {
         }
     }
 
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Schedule functionality in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScheduleFunctionalityForDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Go to the Schedule page in DM view. And to verify the title.
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(districtName);
+            locationSelectorPage.isLocationSelected("All Locations");
+            List<String> locationInDistrict1 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
+            schedulePage.verifySortByColForLocationsInDMView(1);
+            schedulePage.verifySortByColForLocationsInDMView(1);
+            schedulePage.verifySortByColForLocationsInDMView(4);
+            schedulePage.verifySortByColForLocationsInDMView(4);
+            String weekInfo = schedulePage.getActiveWeekText();
+            System.out.println(weekInfo);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToPreviousWeek();
+            schedulePage.navigateToPreviousWeek();
+            System.out.println(schedulePage.getActiveWeekText());
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+            schedulePage.verifySearchLocationInScheduleDMView(location);
+            //Change to another district.
+            dashboardPage.navigateToDashboard();
+            locationSelectorPage.changeAnotherDistrict();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            String anotherDistrictName = dashboardPage.getCurrentDistrict();
+            locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(anotherDistrictName);
+            List<String> locationInDistrict2 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
+            SimpleUtils.assertOnFail("Schedule page fail to update!", !locationInDistrict1.containsAll(locationInDistrict2), false);
+
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage()+"\n"+e.getStackTrace(), false);
+        }
+    }
+
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")

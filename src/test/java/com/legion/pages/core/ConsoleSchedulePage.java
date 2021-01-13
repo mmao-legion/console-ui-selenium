@@ -3350,4 +3350,24 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public int getShiftsNumberByName(String name) throws Exception {
         return 0;
     }
+
+    @Override
+    public List<String> getLocationsInScheduleDMViewLocationsTable() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifySortByColForLocationsInDMView(int index) throws Exception {
+
+    }
+
+    @Override
+    public void verifySearchLocationInScheduleDMView(String location) throws Exception {
+
+    }
+
+    @Override
+    public void navigateToPreviousWeek() throws Exception{
+
+    }
 }
