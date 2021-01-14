@@ -7,6 +7,8 @@ import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.ProfileNewUIPage;
 import com.legion.pages.TimeSheetPage;
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleDMViewPage;
+import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -528,5 +530,61 @@ public class DMViewTest extends TestBase {
                 && isProjectedHrsCorrect && isProjectedWithinBudgetLocationsCorrect
                 && isProjectedOverBudgetLocationsCorrect&&isHrsOfUnderOrCoverBudgetCorrect, false);
 
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify the content between weeks on Schedule in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheContentBetweenWeeksOnScheduleInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Set 'Apply labor budget to schedules?' to Yes
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            //Validate the smart card and schedule table header for previous week
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            scheduleDMViewPage.verifySchedulesTableHeaderNames(true, false);
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(false);
+            schedulePage.navigateToPreviousWeek();
+            scheduleDMViewPage.verifySchedulesTableHeaderNames(true, true);
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(true);
+
+            /*
+            *  comment it because bug: https://legiontech.atlassian.net/browse/LEG-7198
+            *
+            * //Set 'Apply labor budget to schedules?' to No
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
+            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            //Validate the smart card and schedule table header for current week
+            scheduleDMViewPage.verifySchedulesTableHeaderNames(false, false);
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(false);
+            schedulePage.navigateToPreviousWeek();
+            scheduleDMViewPage.verifySchedulesTableHeaderNames(false, true);
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(true);
+            *
+            *
+            *
+            * */
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.toString(),false);
+        }
     }
 }

@@ -222,4 +222,64 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         }
         return totalHours;
     }
+
+    @FindBy(css = "div[class=\"card-carousel-fixed\"]")
+    private WebElement  locationSummarySmartCard;
+
+    @FindBy(css = "[class=\"card-carousel-container\"] div.card-carousel-card")
+    private List<WebElement>  scheduleStatusCards;
+
+    @FindBy(css = "[ng-repeat=\"f in header track by $index\"]")
+    private List<WebElement>  schedulesTableHeaders;
+
+    @FindBy(css = "div.card-carousel-card-primary.card-carousel-card-table")
+    private WebElement  scheduleScoreSmartCard;
+
+
+    public void verifySmartCardsAreLoadedForPastOrFutureWeek(boolean isPastWeek) throws Exception {
+        if(isPastWeek){
+            if(isElementLoaded(scheduleScoreSmartCard, 10)
+                    && isElementLoaded(locationSummarySmartCard, 10)
+                    && areListElementVisible(scheduleStatusCards, 10)){
+                SimpleUtils.pass("All smart cards on Schedule DM view page for Past week loaded successfully! ");
+            } else
+                SimpleUtils.fail("The smart cards on Schedule DM view page for past week loaded fail! ", false);
+        } else {
+            if(!isElementLoaded(scheduleScoreSmartCard, 10)
+                    && isElementLoaded(locationSummarySmartCard, 10)
+                    && areListElementVisible(scheduleStatusCards, 10)){
+                SimpleUtils.pass("All smart cards on Schedule DM view page for Past week loaded successfully! ");
+            } else
+                SimpleUtils.fail("The smart cards on Schedule DM view page for past week loaded fail! ", false);
+        }
+    }
+
+    public void verifySchedulesTableHeaderNames(boolean isApplyBudget, boolean isPastWeek) throws Exception {
+        
+        if(areListElementVisible(schedulesTableHeaders, 10) && schedulesTableHeaders.size() == 7){
+            String[] schedulesTableHeaderNames;
+            if(isApplyBudget){
+                if(!isPastWeek)
+                    schedulesTableHeaderNames = new String[]{"Location", "Schedule Status", "Score",
+                        "Budgeted Hours", "Scheduled Hours", "Projected Hours", "Projected Under/Over Budget"};
+                else
+                    schedulesTableHeaderNames = new String[]{"Location", "Schedule Status", "Score",
+                            "Budgeted Hours", "Scheduled Hours", "Clocked Hours", "Under/Over Budget"};
+            } else {
+                if(!isPastWeek)
+                    schedulesTableHeaderNames = new String[]{"Location", "Schedule Status", "Score",
+                            "Guidance Hours", "Scheduled Hours", "Projected Hours", "Projected Under/Over Budget"};
+                else
+                    schedulesTableHeaderNames = new String[]{"Location", "Schedule Status", "Score",
+                            "Guidance Hours", "Scheduled Hours", "Clocked Hours", "Under/Over Budget"};
+            }
+            for(int i= 0;i<schedulesTableHeaders.size(); i++){
+                if(schedulesTableHeaders.get(i).getText().equals(schedulesTableHeaderNames[i])){
+                    SimpleUtils.pass("Schedule table header: " + schedulesTableHeaders.get(i).getText()+" display correctly! ");
+                } else
+                    SimpleUtils.fail("Schedule table header: " + schedulesTableHeaderNames[i] +" display incorrectly! ", false);
+            }
+        } else
+            SimpleUtils.fail("Schedules Table Headers on Schedule DM view loaded fail! ", false);
+    }
 }

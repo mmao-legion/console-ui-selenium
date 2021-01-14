@@ -438,6 +438,7 @@
                     <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
                     <include name="verifyComplianceViolationsWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifyPayrollProjectionWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyTheContentBetweenWeeksOnScheduleInDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
