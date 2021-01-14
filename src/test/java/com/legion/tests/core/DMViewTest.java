@@ -1,5 +1,6 @@
 package com.legion.tests.core;
 
+import com.legion.pages.*;
 import com.legion.pages.CompliancePage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LocationSelectorPage;
@@ -168,6 +169,8 @@ public class DMViewTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
+            SimpleUtils.assertOnFail("Timesheet Approval Rate widget not loaded successfully", dashboardPage.isTimesheetApprovalRateWidgetDisplay(), false);
+
             // Validate the content on Timesheet Approval Rate widget on TA env
             dashboardPage.validateTheContentOnTimesheetApprovalRateWidgetInDMView();
 
@@ -181,6 +184,86 @@ public class DMViewTest extends TestBase {
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             List<String> timesheetApprovalRateFromSmartCardOnDMViewTimesheet = timeSheetPage.getTimesheetApprovalRateOnDMViewSmartCard();
             dashboardPage.validateDataOnTimesheetApprovalRateWidget(timesheetApprovalRateOnDMViewDashboard, timesheetApprovalRateFromSmartCardOnDMViewTimesheet);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "DGStage_Enterprise")
+    @TestName(description = "Verify Compliance Violations widget on Dashboard in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyComplianceViolationsWidgetOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            SimpleUtils.assertOnFail("Compliance Violations widget not loaded successfully", dashboardPage.isComplianceViolationsWidgetDisplay(), false);
+
+            // Validate the content on Compliance Violations widget on TA env
+            dashboardPage.validateTheContentOnComplianceViolationsWidgetInDMView();
+
+            // Validate the data on Compliance Violations widget on TA env
+            List<String> complianceViolationsOnDMViewDashboard = dashboardPage.getComplianceViolationsOnDMViewWidget();
+            dashboardPage.clickOnViewViolations();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            List<String> complianceViolationsFromOnDMViewCompliance = compliancePage.getComplianceViolationsOnDMViewSmartCard();
+            dashboardPage.validateDataOnComplianceViolationsWidget(complianceViolationsOnDMViewDashboard, complianceViolationsFromOnDMViewCompliance);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "DGStage_Enterprise")
+    @TestName(description = "Verify Compliance Violations widget on Dashboard in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyPayrollProjectionWidgetOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            SimpleUtils.assertOnFail("Payroll Projection widget not loaded successfully", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
+
+            // Validate the content on Payroll Projection widget on TA env
+            dashboardPage.validateTheContentOnPayrollProjectionWidget();
+
+            // Validate the date on Payroll Projection widget on TA env
+            String weekOnPayrollProjectionWidget = dashboardPage.getWeekOnPayrollProjectionWidget();
+            String forecastKPIOnPayrollProjectionWidget = dashboardPage.getBudgetSurplusOnPayrollProjectionWidget();
+            System.out.println(forecastKPIOnPayrollProjectionWidget);
+            dashboardPage.clickOnViewSchedulesOnPayrollProjectWidget();
+            SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            String currentWeekInDMViewSchedule = scheduleDMViewPage.getCurrentWeekInDMView();
+            String forecastKPIInDMViewSchedule = scheduleDMViewPage.getBudgetSurplusInDMView();
+            System.out.println("forecastKPIInDMViewSchedule is " + forecastKPIInDMViewSchedule);
+            dashboardPage.navigateToDashboard();
+            SimpleUtils.assertOnFail("Payroll Projection widget not loaded successfully", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
+            dashboardPage.validateWeekOnPayrollProjectionWidget(weekOnPayrollProjectionWidget, currentWeekInDMViewSchedule);
+            dashboardPage.validateBudgetSurplusOnPayrollProjectionWidget(forecastKPIOnPayrollProjectionWidget, forecastKPIInDMViewSchedule);
+
+            // Validate as of time on Payroll Projection widget on TA env
+            dashboardPage.validateAsOfTimeOnPayrollProjectionWidget();
+
+            // Validate the future Budget Surplus on Payroll Projection widget on TA env
+            dashboardPage.validateTheFutureBudgetSurplusOnPayrollProjectionWidget();
+
+            // Validate hours tooltips of Payroll Projection widget on TA env
+            dashboardPage.validateHoursTooltipsOfPayrollProjectionWidget();
+           // todo due to SCH-2634
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);

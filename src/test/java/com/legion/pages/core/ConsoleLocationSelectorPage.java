@@ -626,6 +626,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy (css = ".wm-ignore-css-reset path")
     private WebElement closeBtnInNewFeatureEnhancements;
 
+    @FindBy(className="welcome-text")
+    private WebElement dashboardWelcomeSection;
+
     @Override
     public String getLocationNameFromDashboard() throws Exception {
         String currentLocation = "";
@@ -662,6 +665,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                         clickTheElement(locationCardName);
                                         if (isElementLoaded(windowNewFeatureEnhancements,5))
                                             click(closeBtnInNewFeatureEnhancements);
+                                        click(dashboardWelcomeSection);
                                         SimpleUtils.pass("District changed successfully to '" + districtName + "'");
                                         waitForSeconds(8);
                                         break;

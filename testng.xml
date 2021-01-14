@@ -436,6 +436,8 @@
                     <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnNonTAEnvAsInternalAdmin" />
                     <include name="verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin" />
                     <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
+                    <include name="verifyComplianceViolationsWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyPayrollProjectionWidgetOnDashboardInDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

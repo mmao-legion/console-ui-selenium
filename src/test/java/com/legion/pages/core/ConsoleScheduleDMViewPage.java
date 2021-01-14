@@ -1,5 +1,6 @@
 package com.legion.pages.core;
 
+import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptExecutor;
 import com.legion.pages.BasePage;
 import com.legion.pages.ScheduleDMViewPage;
 import com.legion.pages.SchedulePage;
@@ -60,6 +61,39 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             SimpleUtils.fail("Get budgeted hours in DM View failed, there is no schedules display in DM view" , false);
         }
         return budgetedHours;
+    }
+
+    // Added By Julie
+    @FindBy(css = ".day-week-picker-period-active>span")
+    private WebElement currentWeek;
+
+    @FindBy(css = "text[text-anchor=\"middle\"][style]")
+    private List<WebElement> budgetSurplus;
+
+    @FindBy(css = "[style=\"font-size: 14px;\"]")
+    private WebElement hours;
+
+    @Override
+    public String getCurrentWeekInDMView() throws Exception {
+        String week = "";
+        if (isElementLoaded(currentWeek,5)) {
+            week = currentWeek.getText();
+            SimpleUtils.pass("Schedule Page: Get current week \"" + week + "\"");
+        } else {
+            SimpleUtils.fail("Schedule Page: Current week failed to load",false);
+        }
+        return week;
+    }
+
+    @Override
+    public String getBudgetSurplusInDMView() throws Exception {
+        String kpi = "";
+        if (areListElementVisible(budgetSurplus,30) && budgetSurplus.size() == 2) {
+            waitForSeconds(5);
+            kpi = budgetSurplus.get(0).getText() + " " + budgetSurplus.get(1).getText();
+        } else
+            SimpleUtils.fail("Schedule Page: Failed to load ",false);
+        return kpi;
     }
 
     @FindBy(css = "span.analytics-new-table-published-status")
