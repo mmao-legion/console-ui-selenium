@@ -3370,4 +3370,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void navigateToPreviousWeek() throws Exception{
 
     }
+
+    @Override
+    public void clickOnLocationNameInDMView(String location) throws Exception {
+
+    }
 }

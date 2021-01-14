@@ -394,7 +394,7 @@ public class DMViewTest extends TestBase {
 
             //Go to the Schedule page in DM view. And to verify the title.
             schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
             locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(districtName);
             locationSelectorPage.isLocationSelected("All Locations");
             List<String> locationInDistrict1 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
@@ -418,11 +418,53 @@ public class DMViewTest extends TestBase {
             String anotherDistrictName = dashboardPage.getCurrentDistrict();
             locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(anotherDistrictName);
             List<String> locationInDistrict2 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
-            SimpleUtils.assertOnFail("Schedule page fail to update!", !locationInDistrict1.containsAll(locationInDistrict2), false);
+            SimpleUtils.assertOnFail("Schedule DM view page fail to update!", !locationInDistrict1.containsAll(locationInDistrict2), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify the availablity of location list and sub location on Schedule in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationListAndSublocationInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Go to the Schedule page in DM view.
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+
+            //Click on a location name and go to the schedule page.
+            schedulePage.clickOnLocationNameInDMView(location);
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            //Validate go back from one location
+            locationSelectorPage.reSelectDistrictInDMView(districtName);
+            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+
+            //Validate click given location and given week
+            schedulePage.navigateToNextWeek();
+            String weekInfo = schedulePage.getActiveWeekText();
+            schedulePage.clickOnLocationNameInDMView(location);
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            SimpleUtils.assertOnFail("Didn't go to the right week!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+
+            //Validate go back from one location and one week
+            locationSelectorPage.reSelectDistrictInDMView(districtName);
+            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            SimpleUtils.assertOnFail("Didn't go back to the right week!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
 
         } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage()+"\n"+e.getStackTrace(), false);
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 

@@ -549,4 +549,5 @@ public interface SchedulePage {
 	public List<String> getLocationsInScheduleDMViewLocationsTable() throws Exception;
 	public void verifySortByColForLocationsInDMView(int index) throws Exception;
 	public void verifySearchLocationInScheduleDMView(String location) throws Exception;
+	public void clickOnLocationNameInDMView(String location) throws Exception;
 }

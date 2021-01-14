@@ -12884,5 +12884,25 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Current weeks' elements not loaded Successfully!", false);
         }
     }
+
+    @Override
+    public void clickOnLocationNameInDMView(String location) throws Exception {
+        boolean flag = false;
+        if (areListElementVisible(locationsInTheList,10)){
+            for (WebElement element: locationsInTheList){
+                if (element.findElement(By.cssSelector("img.analytics-new-table-location~span")).getText().contains(location)){
+                    flag = true;
+                    click(element.findElement(By.cssSelector("img.analytics-new-table-location~span")));
+                    SimpleUtils.pass(location + "clicked!");
+                    break;
+                }
+            }
+            if (!flag){
+                SimpleUtils.fail("No this location: "+ location, false);
+            }
+        } else {
+            SimpleUtils.fail("No location displayed!", false);
+        }
+    }
 }
 
