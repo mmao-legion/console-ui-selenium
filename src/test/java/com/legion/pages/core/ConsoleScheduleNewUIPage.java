@@ -6924,7 +6924,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(LandscapeButton);
             click(printButtonInPrintLayout);
             if(!isElementLoaded(LandscapeButton,6)){
-                String downloadPath = parameterMap.get("Download_File_Default_Dir");
+                String downloadPath = SimpleUtils.fileDownloadPath;
                 Assert.assertTrue(FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekViewSchedulePdf"), "print successfully");
                 SimpleUtils.pass("Landscape print work well");
             }else{
@@ -6945,7 +6945,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(PortraitButton);
             click(printButtonInPrintLayout);
             if(!isElementLoaded(PortraitButton,6)){
-                String downloadPath = parameterMap.get("Download_File_Default_Dir");
+                String downloadPath = SimpleUtils.fileDownloadPath;
                 Assert.assertTrue(FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekViewSchedulePdf"), "print successfully");
                 SimpleUtils.pass("Portrait print work well");
             }else{
@@ -8263,7 +8263,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     click(printButtonInPrintLayout);
                 }
                 waitForSeconds(10);
-                String downloadPath = parameterMap.get("Download_File_Default_Dir");
+                String downloadPath = SimpleUtils.fileDownloadPath;
                 SimpleUtils.assertOnFail("Failed to download the team schedule", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekViewSchedulePdf"), false);
             } else {
                 SimpleUtils.fail("Print icon not loaded Successfully on Schedule page!", false);
