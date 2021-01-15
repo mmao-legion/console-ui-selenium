@@ -3367,6 +3367,26 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public boolean isPublishButtonLoadedOnSchedulePage() throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isRepublishButtonLoadedOnSchedulePage() throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isCreateScheduleBtnLoadedOnSchedulePage() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void clickOnRepublishButtonLoadedOnSchedulePage() throws Exception {
+
+    }
+
+    @Override
     public void navigateToPreviousWeek() throws Exception{
 
     }

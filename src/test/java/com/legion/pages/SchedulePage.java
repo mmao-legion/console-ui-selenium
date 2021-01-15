@@ -550,4 +550,8 @@ public interface SchedulePage {
 	public void verifySortByColForLocationsInDMView(int index) throws Exception;
 	public void verifySearchLocationInScheduleDMView(String location) throws Exception;
 	public void clickOnLocationNameInDMView(String location) throws Exception;
+	public boolean isPublishButtonLoadedOnSchedulePage() throws Exception;
+	public boolean isRepublishButtonLoadedOnSchedulePage() throws Exception;
+	public boolean isCreateScheduleBtnLoadedOnSchedulePage() throws Exception;
+	public void clickOnRepublishButtonLoadedOnSchedulePage() throws Exception;
 }

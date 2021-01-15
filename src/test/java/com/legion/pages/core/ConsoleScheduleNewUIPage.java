@@ -3746,7 +3746,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public HashMap<String, String> getBudgetNScheduledHoursFromSmartCard() throws Exception {
         HashMap<String, String> budgetNScheduledHours = new HashMap<>();
-        if (areListElementVisible(smartCardRows, 5) && smartCardRows.size() == 3) {
+        if (areListElementVisible(smartCardRows, 5) && smartCardRows.size() != 0) {
             List<WebElement> ths = smartCardRows.get(0).findElements(By.tagName("th"));
             List<WebElement> tds = smartCardRows.get(1).findElements(By.tagName("td"));
             if (ths != null && tds != null && ths.size() == 4 && tds.size() == 4) {
@@ -12894,21 +12894,62 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void clickOnLocationNameInDMView(String location) throws Exception {
         boolean flag = false;
-        if (areListElementVisible(locationsInTheList,10)){
-            for (WebElement element: locationsInTheList){
-                if (element.findElement(By.cssSelector("img.analytics-new-table-location~span")).getText().contains(location)){
+        if (areListElementVisible(locationsInTheList, 10)) {
+            for (WebElement element : locationsInTheList) {
+                if (element.findElement(By.cssSelector("img.analytics-new-table-location~span")).getText().contains(location)) {
                     flag = true;
                     click(element.findElement(By.cssSelector("img.analytics-new-table-location~span")));
                     SimpleUtils.pass(location + "clicked!");
                     break;
                 }
             }
-            if (!flag){
-                SimpleUtils.fail("No this location: "+ location, false);
+            if (!flag) {
+                SimpleUtils.fail("No this location: " + location, false);
             }
         } else {
             SimpleUtils.fail("No location displayed!", false);
         }
+    }
+
+    @FindBy(css = "lg-button[label*=\"Republish\"]")
+    private WebElement republishButton;
+
+    public boolean isPublishButtonLoadedOnSchedulePage() throws Exception {
+        boolean isPublishButtonLoaded = false;
+        if (isElementLoaded(publishButton, 4)){
+            isPublishButtonLoaded = true;
+            SimpleUtils.report("Publish button loaded successfully on schedule page! ");
+        } else
+            SimpleUtils.report("Publish button loaded fail on schedule page! ");
+        return isPublishButtonLoaded;
+    }
+
+    public boolean isRepublishButtonLoadedOnSchedulePage() throws Exception {
+        boolean isRepublishButtonLoaded = false;
+        if (isElementLoaded(republishButton, 4)){
+            isRepublishButtonLoaded = true;
+            SimpleUtils.report("Republish button loaded successfully on schedule page! ");
+        } else
+            SimpleUtils.report("Republish button loaded fail on schedule page! ");
+        return isRepublishButtonLoaded;
+    }
+
+    public void clickOnRepublishButtonLoadedOnSchedulePage() throws Exception {
+        if (isElementLoaded(republishButton, 4)){
+            click(republishButton);
+            SimpleUtils.pass("Click Republish button successfully on schedule page! ");
+        } else
+            SimpleUtils.fail("Republish button loaded fail on schedule page! ", false);
+    }
+
+    public boolean isCreateScheduleBtnLoadedOnSchedulePage() throws Exception {
+        boolean isCreateScheduleBtnLoaded = false;
+        if (isElementLoaded(generateSheduleButton, 4)){
+            isCreateScheduleBtnLoaded = true;
+            SimpleUtils.report("Create Schedule button loaded successfully on schedule page! ");
+        } else
+            SimpleUtils.report("Create Schedule button loaded fail on schedule page! ");
+        return isCreateScheduleBtnLoaded;
     }
 }
 

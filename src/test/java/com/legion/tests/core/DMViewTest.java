@@ -675,4 +675,31 @@ public class DMViewTest extends TestBase {
             SimpleUtils.fail(e.toString(),false);
         }
     }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Schedule Status on Schedule in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScheduleStatusOnScheduleDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            scheduleDMViewPage.verifyScheduleStatusOnScheduleDMView("Published");
+            scheduleDMViewPage.verifyScheduleStatusOnScheduleDMView("Not Started");
+            scheduleDMViewPage.verifyScheduleStatusOnScheduleDMView("In Progress");
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.toString(),false);
+        }
+    }
 }
