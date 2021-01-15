@@ -9,15 +9,11 @@
     </listeners>
 
 
-    <test name="Dashboard Test">
+    <test name="Schedule Test LegionCoffee">
         <classes>
-            <class name="com.legion.tests.core.DashboardTestKendraScott2">
+            <class name="com.legion.tests.core.ScheduleTest">
                 <methods>
-                    <include name="verifyTheDisplayLocationWithSelectedLocation"/>
-                    <include name="verifyTheClickActionOnChangeLocationButton"/>
-                    <include name="verifyTheContentDisplayedInChangeLocationLayout"/>
-                    <include name="verifyTheFunctionOfSearchTextBox"/>
-                    <include name="verifyDashboardFunctionalityAsTeamMember" />
+                    <include name="verifyTheTeamScheduleOptionAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

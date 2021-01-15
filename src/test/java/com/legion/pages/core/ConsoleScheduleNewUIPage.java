@@ -7391,7 +7391,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void verifyClickAcceptSwapButton() throws Exception {
         String title = "Confirm Shift Swap";
-        String expectedMessage = "Success! Accepted successfully";
+        String expectedMessage = "Success";
         if (areListElementVisible(acceptButtons, 5) && acceptButtons.size() > 0) {
             clickTheElement(acceptButtons.get(0));
             SimpleUtils.assertOnFail(title + " not loaded Successfully!", isPopupWindowLoaded(title), false);
@@ -8253,17 +8253,21 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyThePrintFunction() throws Exception {
-        if (isPrintIconLoaded()) {
-            clickTheElement(printIcon);
-            // Wait for the schedule to be downloaded
-            if(isElementLoaded(printButtonInPrintLayout, 5)) {
-                click(printButtonInPrintLayout);
+        try {
+            if (isPrintIconLoaded()) {
+                clickTheElement(printIcon);
+                // Wait for the schedule to be downloaded
+                if (isElementLoaded(printButtonInPrintLayout, 5)) {
+                    click(printButtonInPrintLayout);
+                }
+                waitForSeconds(10);
+                String downloadPath = parameterMap.get("Download_File_Default_Dir");
+                SimpleUtils.assertOnFail("Failed to download the team schedule", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekViewSchedulePdf"), false);
+            } else {
+                SimpleUtils.fail("Print icon not loaded Successfully on Schedule page!", false);
             }
-            waitForSeconds(6);
-            String downloadPath = parameterMap.get("Download_File_Default_Dir");
-            SimpleUtils.assertOnFail("Failed to download the team schedule", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekViewSchedulePdf"), false);
-        }else {
-            SimpleUtils.fail("Print icon not loaded Successfully on Schedule page!", false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.toString(), false);
         }
     }
 
