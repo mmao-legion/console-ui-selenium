@@ -1,11 +1,14 @@
 package com.legion.tests.core;
 
+import com.legion.pages.*;
 import com.legion.pages.CompliancePage;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.ProfileNewUIPage;
 import com.legion.pages.TimeSheetPage;
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleDMViewPage;
+import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -168,6 +171,8 @@ public class DMViewTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
+            SimpleUtils.assertOnFail("Timesheet Approval Rate widget not loaded successfully", dashboardPage.isTimesheetApprovalRateWidgetDisplay(), false);
+
             // Validate the content on Timesheet Approval Rate widget on TA env
             dashboardPage.validateTheContentOnTimesheetApprovalRateWidgetInDMView();
 
@@ -181,6 +186,86 @@ public class DMViewTest extends TestBase {
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             List<String> timesheetApprovalRateFromSmartCardOnDMViewTimesheet = timeSheetPage.getTimesheetApprovalRateOnDMViewSmartCard();
             dashboardPage.validateDataOnTimesheetApprovalRateWidget(timesheetApprovalRateOnDMViewDashboard, timesheetApprovalRateFromSmartCardOnDMViewTimesheet);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "DGStage_Enterprise")
+    @TestName(description = "Verify Compliance Violations widget on Dashboard in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyComplianceViolationsWidgetOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            SimpleUtils.assertOnFail("Compliance Violations widget not loaded successfully", dashboardPage.isComplianceViolationsWidgetDisplay(), false);
+
+            // Validate the content on Compliance Violations widget on TA env
+            dashboardPage.validateTheContentOnComplianceViolationsWidgetInDMView();
+
+            // Validate the data on Compliance Violations widget on TA env
+            List<String> complianceViolationsOnDMViewDashboard = dashboardPage.getComplianceViolationsOnDMViewWidget();
+            dashboardPage.clickOnViewViolations();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            List<String> complianceViolationsFromOnDMViewCompliance = compliancePage.getComplianceViolationsOnDMViewSmartCard();
+            dashboardPage.validateDataOnComplianceViolationsWidget(complianceViolationsOnDMViewDashboard, complianceViolationsFromOnDMViewCompliance);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "DGStage_Enterprise")
+    @TestName(description = "Verify Compliance Violations widget on Dashboard in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyPayrollProjectionWidgetOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            SimpleUtils.assertOnFail("Payroll Projection widget not loaded successfully", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
+
+            // Validate the content on Payroll Projection widget on TA env
+            dashboardPage.validateTheContentOnPayrollProjectionWidget();
+
+            // Validate the date on Payroll Projection widget on TA env
+            String weekOnPayrollProjectionWidget = dashboardPage.getWeekOnPayrollProjectionWidget();
+            String forecastKPIOnPayrollProjectionWidget = dashboardPage.getBudgetSurplusOnPayrollProjectionWidget();
+            System.out.println(forecastKPIOnPayrollProjectionWidget);
+            dashboardPage.clickOnViewSchedulesOnPayrollProjectWidget();
+            SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            String currentWeekInDMViewSchedule = scheduleDMViewPage.getCurrentWeekInDMView();
+            String forecastKPIInDMViewSchedule = scheduleDMViewPage.getBudgetSurplusInDMView();
+            System.out.println("forecastKPIInDMViewSchedule is " + forecastKPIInDMViewSchedule);
+            dashboardPage.navigateToDashboard();
+            SimpleUtils.assertOnFail("Payroll Projection widget not loaded successfully", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
+            dashboardPage.validateWeekOnPayrollProjectionWidget(weekOnPayrollProjectionWidget, currentWeekInDMViewSchedule);
+            dashboardPage.validateBudgetSurplusOnPayrollProjectionWidget(forecastKPIOnPayrollProjectionWidget, forecastKPIInDMViewSchedule);
+
+            // Validate as of time on Payroll Projection widget on TA env
+            dashboardPage.validateAsOfTimeOnPayrollProjectionWidget();
+
+            // Validate the future Budget Surplus on Payroll Projection widget on TA env
+            dashboardPage.validateTheFutureBudgetSurplusOnPayrollProjectionWidget();
+
+            // Validate hours tooltips of Payroll Projection widget on TA env
+            dashboardPage.validateHoursTooltipsOfPayrollProjectionWidget();
+           // todo due to SCH-2634
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
@@ -293,6 +378,96 @@ public class DMViewTest extends TestBase {
         }
     }
 
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Schedule functionality in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScheduleFunctionalityForDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Go to the Schedule page in DM view. And to verify the title.
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(districtName);
+            locationSelectorPage.isLocationSelected("All Locations");
+            List<String> locationInDistrict1 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
+            schedulePage.verifySortByColForLocationsInDMView(1);
+            schedulePage.verifySortByColForLocationsInDMView(1);
+            schedulePage.verifySortByColForLocationsInDMView(4);
+            schedulePage.verifySortByColForLocationsInDMView(4);
+            String weekInfo = schedulePage.getActiveWeekText();
+            System.out.println(weekInfo);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToPreviousWeek();
+            schedulePage.navigateToPreviousWeek();
+            System.out.println(schedulePage.getActiveWeekText());
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+            schedulePage.verifySearchLocationInScheduleDMView(location);
+            //Change to another district.
+            dashboardPage.navigateToDashboard();
+            locationSelectorPage.changeAnotherDistrict();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            String anotherDistrictName = dashboardPage.getCurrentDistrict();
+            locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(anotherDistrictName);
+            List<String> locationInDistrict2 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
+            SimpleUtils.assertOnFail("Schedule DM view page fail to update!", !locationInDistrict1.containsAll(locationInDistrict2), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify the availablity of location list and sub location on Schedule in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationListAndSublocationInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Go to the Schedule page in DM view.
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+
+            //Click on a location name and go to the schedule page.
+            schedulePage.clickOnLocationNameInDMView(location);
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            //Validate go back from one location
+            locationSelectorPage.reSelectDistrictInDMView(districtName);
+            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+
+            //Validate click given location and given week
+            schedulePage.navigateToNextWeek();
+            String weekInfo = schedulePage.getActiveWeekText();
+            schedulePage.clickOnLocationNameInDMView(location);
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            SimpleUtils.assertOnFail("Didn't go to the right week!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+
+            //Validate go back from one location and one week
+            locationSelectorPage.reSelectDistrictInDMView(districtName);
+            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            SimpleUtils.assertOnFail("Didn't go back to the right week!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")
@@ -334,7 +509,78 @@ public class DMViewTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify Location Summary widget on Dashboard in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationSummaryWidgetOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyLocationSummaryWidgetOnDashboardInDMViewOnNonTAEnvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            verifyLocationSummaryWidgetOnDashboardInDMView(false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.toString(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify Location Summary widget on Dashboard in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationSummaryWidgetOnDashboardInDMViewOnTAEnvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            verifyLocationSummaryWidgetOnDashboardInDMView(true);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.toString(),false);
+        }
+    }
+
+    private void verifyLocationSummaryWidgetOnDashboardInDMView(boolean isTAEnv) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        String districtName = dashboardPage.getCurrentDistrict();
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.reSelectDistrict(districtName);
+
+        //Validate the Location Summary widget is loaded on dashboard
+        SimpleUtils.assertOnFail("Location Summary widget loaded fail! ",
+                dashboardPage.isLocationSummaryWidgetDisplay(), false);
+
+        //Validate the content on Location Summary widget display correctly
+        dashboardPage.verifyTheContentOnLocationSummaryWidget();
+
+        //Validate the Hrs Over Or Under Budget On Location Summary Widget
+//        dashboardPage.verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget();  //having a bug: https://legiontech.atlassian.net/browse/SCH-2767
+
+        //Validate the hours on Location Summary widget is consistent with the hours on schedule page
+        List<String> dataFromLocationSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+        List<Float> totalBudgetedScheduledProjectedHour= scheduleDMViewPage.getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();
+        List<String> locationNumbersFromLocationSummarySmartCard= scheduleDMViewPage.getLocationNumbersFromLocationSummarySmartCard();
+        List<String> textOnTheChartInLocationSummarySmartCard= scheduleDMViewPage.getTextFromTheChartInLocationSummarySmartCard();
+        DecimalFormat df1 = new DecimalFormat("###.#");
+        boolean isBudgetedHrsCorrect = dataFromLocationSummaryWidget.get(0).equals(df1.format(totalBudgetedScheduledProjectedHour.get(0)));
+        boolean isScheduledHrsCorrect = dataFromLocationSummaryWidget.get(1).equals(df1.format(totalBudgetedScheduledProjectedHour.get(1)));
+        boolean isProjectedHrsCorrect = dataFromLocationSummaryWidget.get(2).equals(df1.format(totalBudgetedScheduledProjectedHour.get(2)));
+        boolean isProjectedWithinBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(3).equals(locationNumbersFromLocationSummarySmartCard.get(0));
+        boolean isProjectedOverBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(4).equals(locationNumbersFromLocationSummarySmartCard.get(1));
+        boolean isHrsOfUnderOrCoverBudgetCorrect = false;
+        if(isTAEnv){
+            isHrsOfUnderOrCoverBudgetCorrect = dataFromLocationSummaryWidget.get(5).equals(textOnTheChartInLocationSummarySmartCard.get(6));
+        } else
+            isHrsOfUnderOrCoverBudgetCorrect = dataFromLocationSummaryWidget.get(5).equals(textOnTheChartInLocationSummarySmartCard.get(4));
+
+        SimpleUtils.assertOnFail("The hours on Location Summary widget is inconsistent with the hours on schedule page! ", isBudgetedHrsCorrect && isScheduledHrsCorrect
+                && isProjectedHrsCorrect && isProjectedWithinBudgetLocationsCorrect
+                && isProjectedOverBudgetLocationsCorrect&&isHrsOfUnderOrCoverBudgetCorrect, false);
+
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify the content between weeks on Schedule in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheContentBetweenWeeksOnScheduleInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -343,29 +589,42 @@ public class DMViewTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
-            //Validate the Location Summary widget is loaded on dashboard
-            SimpleUtils.assertOnFail("Location Summary widget loaded fail! ",
-                    dashboardPage.isLocationSummaryWidgetDisplay(), false);
-
-            //Validate the content on Location Summary widget display correctly
-            dashboardPage.verifyTheContentOnLocationSummaryWidget();
-
-            //Validate the hours on Location Summary widget is consistent with the hours on schedule page
-            List<String> dataFromLocationSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+            //Set 'Apply labor budget to schedules?' to Yes
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
+
+            //Validate the smart card and schedule table header for previous week
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            List<Float> totalBudgetedScheduledProjectedHour= scheduleDMViewPage.getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();
-            List<String> locationNumbersFromLocationSummarySmartCard= scheduleDMViewPage.getLocationNumbersFromLocationSummarySmartCard();
-            DecimalFormat df1 = new DecimalFormat("0");
-            boolean isBudgetedHrsCorrect = dataFromLocationSummaryWidget.get(0).equals(df1.format(totalBudgetedScheduledProjectedHour.get(0)));
-            boolean isScheduledHrsCorrect = dataFromLocationSummaryWidget.get(1).equals(df1.format(totalBudgetedScheduledProjectedHour.get(1)));
-            boolean isProjectedHrsCorrect = dataFromLocationSummaryWidget.get(2).equals(df1.format(totalBudgetedScheduledProjectedHour.get(2)));
-            boolean isProjectedWithinBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(3).equals(locationNumbersFromLocationSummarySmartCard.get(0));
-            boolean isProjectedOverBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(4).equals(locationNumbersFromLocationSummarySmartCard.get(1));
-            SimpleUtils.assertOnFail("", isBudgetedHrsCorrect && isScheduledHrsCorrect
-                    && isProjectedHrsCorrect && isProjectedWithinBudgetLocationsCorrect
-                    && isProjectedOverBudgetLocationsCorrect, false);
+            scheduleDMViewPage.verifySchedulesTableHeaderNames(true, false);
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(false);
+            schedulePage.navigateToPreviousWeek();
+            scheduleDMViewPage.verifySchedulesTableHeaderNames(true, true);
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(true);
+
+            /*
+            *  comment it because bug: https://legiontech.atlassian.net/browse/LEG-7198
+            *
+            * //Set 'Apply labor budget to schedules?' to No
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
+            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            //Validate the smart card and schedule table header for current week
+            scheduleDMViewPage.verifySchedulesTableHeaderNames(false, false);
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(false);
+            schedulePage.navigateToPreviousWeek();
+            scheduleDMViewPage.verifySchedulesTableHeaderNames(false, true);
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(true);
+            *
+            *
+            *
+            * */
+
         } catch (Exception e) {
             SimpleUtils.fail(e.toString(),false);
         }

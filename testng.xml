@@ -432,7 +432,13 @@
                     <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifyLocationSummaryWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnTAEnvAsInternalAdmin" />
+                    <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnNonTAEnvAsInternalAdmin" />
+                    <include name="verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin" />
+                    <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
+                    <include name="verifyComplianceViolationsWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyPayrollProjectionWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyTheContentBetweenWeeksOnScheduleInDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

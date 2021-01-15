@@ -25,4 +25,5 @@ public interface LocationSelectorPage {
 	public void verifyTheDisplayDistrictWithSelectedDistrictConsistent(String districtName) throws Exception;
 	public void reSelectDistrict(String districtName) throws Exception;
 	public void changeAnotherDistrict() throws Exception;
+	public void reSelectDistrictInDMView(String districtName) throws Exception;
 }

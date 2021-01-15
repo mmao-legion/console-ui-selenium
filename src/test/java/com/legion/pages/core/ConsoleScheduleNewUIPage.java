@@ -23,12 +23,14 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.testng.Assert;
 
+import java.io.ObjectStreamField;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -12712,6 +12714,199 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }
         return result;
+    }
+
+    @FindBy(css = "div.analytics-new-table-group-row-open")
+    private List<WebElement> locationsInTheList;
+    @Override
+    public List<String> getLocationsInScheduleDMViewLocationsTable() throws Exception {
+        List<String> locations = new ArrayList<String>();
+        if (areListElementVisible(locationsInTheList,10)){
+            for (WebElement element: locationsInTheList){
+                locations.add(element.findElement(By.cssSelector("img.analytics-new-table-location~span")).getText());
+            }
+        }
+        return locations;
+    }
+
+    //index: 1-6
+    private List<String> getListByCol(int index) throws Exception{
+        List<String> list = new ArrayList<String>();
+        if (index > 0 && index < 8){
+            if (index == 1){
+                list = getLocationsInScheduleDMViewLocationsTable();
+            }
+            if (index == 2){
+                if (areListElementVisible(locationsInTheList,10)){
+                    for (WebElement element: locationsInTheList){
+                        list.add(element.findElement(By.cssSelector("span.analytics-new-table-published-status")).getText());
+                    }
+                }
+            }
+            if (index == 3){
+                if (areListElementVisible(locationsInTheList,10)){
+                    for (WebElement element: locationsInTheList){
+                        list.add(element.findElement(By.cssSelector("span[jj-switch-when=\"cells.CELL_SCORE\"]")).getText());
+                    }
+                }
+            }
+            if (index == 4){
+                if (areListElementVisible(locationsInTheList,10)){
+                    for (WebElement element: locationsInTheList){
+                        list.add(element.findElement(By.cssSelector("span[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")).getText());
+                    }
+                }
+            }
+            if (index == 5){
+                if (areListElementVisible(locationsInTheList,10)){
+                    for (WebElement element: locationsInTheList){
+                        list.add(element.findElement(By.cssSelector("span[jj-switch-when=\"cells.CELL_PUBLISHED_HOURS\"]")).getText());
+                    }
+                }
+            }
+            if (index == 6){
+                if (areListElementVisible(locationsInTheList,10)){
+                    for (WebElement element: locationsInTheList){
+                        list.add(element.findElement(By.cssSelector("span[jj-switch-when=\"cells.CELL_CLOCKED_HOURS\"]")).getText());
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("Index beyond range.", false);
+        }
+        return list;
+    }
+
+    @FindBy(css = "div.analytics-new-table-header")
+    private WebElement locationTableHeader;
+    @Override
+    public void verifySortByColForLocationsInDMView(int index) throws Exception {
+        List<String> listString = new ArrayList<String>();
+        List<Float> listFloat = new ArrayList<Float>();
+        if (index > 0 && index < 7){
+            listString = getListByCol(index);
+            if (locationTableHeader.findElements(By.cssSelector("i.analytics-new-table-header-sorter")).size()==7){
+                click(locationTableHeader.findElements(By.cssSelector("i.analytics-new-table-header-sorter")).get(index-1));
+                if (locationTableHeader.findElements(By.cssSelector("i.analytics-new-table-header-sorter")).get(index-1).getAttribute("class").contains("sorter-up")){
+                    if (transferStringToFloat(listString).size()==listString.size()){
+                        listFloat = transferStringToFloat(listString).stream().sorted(Float::compareTo).collect(Collectors.toList());
+                        if (Math.abs(transferStringToFloat(getListByCol(index)).get(0)-listFloat.get(listFloat.size()-1)) >= 0){
+                            SimpleUtils.pass("Sort result is correct!");
+                        } else {
+                            SimpleUtils.fail("Sort result is incorrect!", false);
+                        }
+                    } else {
+                        listString = listString.stream().sorted(String::compareTo).collect(Collectors.toList());
+                        if (getListByCol(index).get(0).equals(listString.get(0))){
+                            SimpleUtils.pass("Sort result is correct!");
+                        } else {
+                            SimpleUtils.fail("Sort result is incorrect!", false);
+                        }
+                    }
+                } else {
+                    if (transferStringToFloat(listString).size()==listString.size()){
+                        listFloat = transferStringToFloat(listString).stream().sorted(Float::compareTo).collect(Collectors.toList());
+                        if (Math.abs(transferStringToFloat(getListByCol(index)).get(0)-listFloat.get(listFloat.size()-1)) >= 0){
+                            SimpleUtils.pass("Sort result is correct!");
+                        } else {
+                            SimpleUtils.fail("Sort result is incorrect!", false);
+                        }
+                    } else {
+                        listString = listString.stream().sorted(String::compareTo).collect(Collectors.toList());
+                        if (getListByCol(index).get(0).equals(listString.get(listString.size()-1))){
+                            SimpleUtils.pass("Sort result is correct!");
+                        } else {
+                            SimpleUtils.fail("Sort result is incorrect!", false);
+                        }
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Columns are not loaded correctly!", false);
+            }
+        } else {
+            SimpleUtils.fail("Index beyond range.", false);
+        }
+    }
+
+    private List<Float> transferStringToFloat(List<String> listString) throws Exception{
+        List<Float> result = new ArrayList<Float>();
+        boolean flag = true;
+        for (String s : listString){
+            if (!SimpleUtils.isNumeric(s)){
+                flag = false;
+                break;
+            }
+        }
+        if (flag){
+            for (String s : listString){
+                result.add(Float.parseFloat(s));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void verifySearchLocationInScheduleDMView(String location) throws Exception {
+        boolean flag = true;
+        if (isElementLoaded(analyticsTableInScheduleDMViewPage.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")),10)){
+            analyticsTableInScheduleDMViewPage.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+            analyticsTableInScheduleDMViewPage.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(location);
+            for (String s: getLocationsInScheduleDMViewLocationsTable()){
+                flag = flag && s.contains(location);
+            }
+            if (flag){
+                SimpleUtils.pass("Search result is correct!");
+            } else {
+                SimpleUtils.fail("Search result is incorrect!", false);
+            }
+        } else {
+            SimpleUtils.fail("Search box is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void navigateToPreviousWeek() throws Exception {
+        int currentWeekIndex = -1;
+        if (areListElementVisible(currentWeeks, 10)) {
+            for (int i = 0; i < currentWeeks.size(); i++) {
+                String className = currentWeeks.get(i).getAttribute("class");
+                if (className.contains("day-week-picker-period-active")) {
+                    currentWeekIndex = i;
+                }
+            }
+            if (currentWeekIndex == 0 && isElementLoaded(calendarNavigationPreviousWeekArrow, 5)) {
+                clickTheElement(calendarNavigationPreviousWeekArrow);
+                if (areListElementVisible(currentWeeks, 5)) {
+                    clickTheElement(currentWeeks.get(currentWeeks.size()-1));
+                    SimpleUtils.pass("Navigate to previous week: '" + currentWeeks.get(currentWeeks.size()-1).getText() + "' Successfully!");
+                }
+            }else {
+                clickTheElement(currentWeeks.get(currentWeekIndex - 1));
+                SimpleUtils.pass("Navigate to previous week: '" + currentWeeks.get(currentWeekIndex - 1).getText() + "' Successfully!");
+            }
+        }else {
+            SimpleUtils.fail("Current weeks' elements not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void clickOnLocationNameInDMView(String location) throws Exception {
+        boolean flag = false;
+        if (areListElementVisible(locationsInTheList,10)){
+            for (WebElement element: locationsInTheList){
+                if (element.findElement(By.cssSelector("img.analytics-new-table-location~span")).getText().contains(location)){
+                    flag = true;
+                    click(element.findElement(By.cssSelector("img.analytics-new-table-location~span")));
+                    SimpleUtils.pass(location + "clicked!");
+                    break;
+                }
+            }
+            if (!flag){
+                SimpleUtils.fail("No this location: "+ location, false);
+            }
+        } else {
+            SimpleUtils.fail("No location displayed!", false);
+        }
     }
 }
 

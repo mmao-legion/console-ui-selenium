@@ -9,4 +9,8 @@ public interface ScheduleDMViewPage {
     public List<String> getTextFromTheChartInLocationSummarySmartCard();
     public List<String> getLocationNumbersFromLocationSummarySmartCard();
     public List<Float> getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();
+    public String getCurrentWeekInDMView() throws Exception;
+    public String getBudgetSurplusInDMView() throws Exception;
+    public void verifySmartCardsAreLoadedForPastOrFutureWeek(boolean isPastWeek) throws Exception;
+    public void verifySchedulesTableHeaderNames(boolean isApplyBudget, boolean isPastWeek) throws Exception;
 }

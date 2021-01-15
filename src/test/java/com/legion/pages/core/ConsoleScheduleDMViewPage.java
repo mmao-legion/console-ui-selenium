@@ -1,5 +1,6 @@
 package com.legion.pages.core;
 
+import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptExecutor;
 import com.legion.pages.BasePage;
 import com.legion.pages.ScheduleDMViewPage;
 import com.legion.pages.SchedulePage;
@@ -62,6 +63,39 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         return budgetedHours;
     }
 
+    // Added By Julie
+    @FindBy(css = ".day-week-picker-period-active>span")
+    private WebElement currentWeek;
+
+    @FindBy(css = "text[text-anchor=\"middle\"][style]")
+    private List<WebElement> budgetSurplus;
+
+    @FindBy(css = "[style=\"font-size: 14px;\"]")
+    private WebElement hours;
+
+    @Override
+    public String getCurrentWeekInDMView() throws Exception {
+        String week = "";
+        if (isElementLoaded(currentWeek,5)) {
+            week = currentWeek.getText();
+            SimpleUtils.pass("Schedule Page: Get current week \"" + week + "\"");
+        } else {
+            SimpleUtils.fail("Schedule Page: Current week failed to load",false);
+        }
+        return week;
+    }
+
+    @Override
+    public String getBudgetSurplusInDMView() throws Exception {
+        String kpi = "";
+        if (areListElementVisible(budgetSurplus,30) && budgetSurplus.size() == 2) {
+            waitForSeconds(5);
+            kpi = budgetSurplus.get(0).getText() + " " + budgetSurplus.get(1).getText();
+        } else
+            SimpleUtils.fail("Schedule Page: Failed to load ",false);
+        return kpi;
+    }
+
     @FindBy(css = "span.analytics-new-table-published-status")
     private List<WebElement>  scheduleStatusOnScheduleDMViewPage;
 
@@ -118,12 +152,22 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
 
     public List<String> getTextFromTheChartInLocationSummarySmartCard(){
         /*
+        Non-TA env:
             0: the hours on Budget bar
             1: budget bar message "Budgeted Hrs"
             2: the hours on Published bar
             3: published bar message "Published Hrs"
             4: the hours of under or cover budget
             5: the caret of under or cover budget
+        TA env:
+            0: the hours on Budget bar
+            1: budget bar message "Budgeted Hrs"
+            2: the hours on Published bar
+            3: published bar message "Published Hrs"
+            4: the hours on Projected bar
+            5: projected bar message "Projected Hrs"
+            6: the hours of under or cover budget
+            7: the caret of under or cover budget
         */
 
         List<String> textFromChart = new ArrayList<>();
@@ -177,5 +221,65 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             SimpleUtils.fail("Get hours in DM View failed, there is no schedules display in DM view" , false);
         }
         return totalHours;
+    }
+
+    @FindBy(css = "div[class=\"card-carousel-fixed\"]")
+    private WebElement  locationSummarySmartCard;
+
+    @FindBy(css = "[class=\"card-carousel-container\"] div.card-carousel-card")
+    private List<WebElement>  scheduleStatusCards;
+
+    @FindBy(css = "[ng-repeat=\"f in header track by $index\"]")
+    private List<WebElement>  schedulesTableHeaders;
+
+    @FindBy(css = "div.card-carousel-card-primary.card-carousel-card-table")
+    private WebElement  scheduleScoreSmartCard;
+
+
+    public void verifySmartCardsAreLoadedForPastOrFutureWeek(boolean isPastWeek) throws Exception {
+        if(isPastWeek){
+            if(isElementLoaded(scheduleScoreSmartCard, 10)
+                    && isElementLoaded(locationSummarySmartCard, 10)
+                    && areListElementVisible(scheduleStatusCards, 10)){
+                SimpleUtils.pass("All smart cards on Schedule DM view page for Past week loaded successfully! ");
+            } else
+                SimpleUtils.fail("The smart cards on Schedule DM view page for past week loaded fail! ", false);
+        } else {
+            if(!isElementLoaded(scheduleScoreSmartCard, 10)
+                    && isElementLoaded(locationSummarySmartCard, 10)
+                    && areListElementVisible(scheduleStatusCards, 10)){
+                SimpleUtils.pass("All smart cards on Schedule DM view page for Past week loaded successfully! ");
+            } else
+                SimpleUtils.fail("The smart cards on Schedule DM view page for past week loaded fail! ", false);
+        }
+    }
+
+    public void verifySchedulesTableHeaderNames(boolean isApplyBudget, boolean isPastWeek) throws Exception {
+        
+        if(areListElementVisible(schedulesTableHeaders, 10) && schedulesTableHeaders.size() == 7){
+            String[] schedulesTableHeaderNames;
+            if(isApplyBudget){
+                if(!isPastWeek)
+                    schedulesTableHeaderNames = new String[]{"Location", "Schedule Status", "Score",
+                        "Budgeted Hours", "Scheduled Hours", "Projected Hours", "Projected Under/Over Budget"};
+                else
+                    schedulesTableHeaderNames = new String[]{"Location", "Schedule Status", "Score",
+                            "Budgeted Hours", "Scheduled Hours", "Clocked Hours", "Under/Over Budget"};
+            } else {
+                if(!isPastWeek)
+                    schedulesTableHeaderNames = new String[]{"Location", "Schedule Status", "Score",
+                            "Guidance Hours", "Scheduled Hours", "Projected Hours", "Projected Under/Over Budget"};
+                else
+                    schedulesTableHeaderNames = new String[]{"Location", "Schedule Status", "Score",
+                            "Guidance Hours", "Scheduled Hours", "Clocked Hours", "Under/Over Budget"};
+            }
+            for(int i= 0;i<schedulesTableHeaders.size(); i++){
+                if(schedulesTableHeaders.get(i).getText().equals(schedulesTableHeaderNames[i])){
+                    SimpleUtils.pass("Schedule table header: " + schedulesTableHeaders.get(i).getText()+" display correctly! ");
+                } else
+                    SimpleUtils.fail("Schedule table header: " + schedulesTableHeaderNames[i] +" display incorrectly! ", false);
+            }
+        } else
+            SimpleUtils.fail("Schedules Table Headers on Schedule DM view loaded fail! ", false);
     }
 }

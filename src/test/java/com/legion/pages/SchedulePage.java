@@ -410,6 +410,8 @@ public interface SchedulePage {
 	
 	void navigateToNextWeek() throws Exception;
 
+	public void navigateToPreviousWeek() throws Exception;
+
 	void verifyShiftsAreSwapped(List<String> swapData) throws Exception;
 
 	void clickOnDayViewAddNewShiftButton() throws Exception;
@@ -544,4 +546,8 @@ public interface SchedulePage {
 	public void verifyDifferentOperatingHours(String weekInfo) throws Exception;
 	public boolean isScheduleDMView() throws Exception;
 	public int getShiftsNumberByName(String name) throws Exception;
+	public List<String> getLocationsInScheduleDMViewLocationsTable() throws Exception;
+	public void verifySortByColForLocationsInDMView(int index) throws Exception;
+	public void verifySearchLocationInScheduleDMView(String location) throws Exception;
+	public void clickOnLocationNameInDMView(String location) throws Exception;
 }

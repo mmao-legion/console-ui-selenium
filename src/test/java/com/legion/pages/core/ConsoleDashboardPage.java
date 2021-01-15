@@ -3,6 +3,7 @@ package com.legion.pages.core;
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.utils.SimpleUtils.getCurrentDateMonthYearWithTimeZone;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -15,6 +16,7 @@ import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
 import cucumber.api.java.hu.Ha;
+import cucumber.api.java.ro.Si;
 import cucumber.api.java8.Da;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -1557,13 +1559,13 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateTheContentOnTimesheetApprovalRateWidgetInDMView() throws Exception {
-        /*Timesheet Approval Rate  widget should show:
+        /*Timesheet Approval Rate widget should show:
          a. Title: Timesheet Approval Rate
          b. Timesheet approval chart with 0 Hrs, 24 Hrs, 48 Hrs and > 48 Hrs
          c. Button: View Timesheets*/
 		List<String> textItems = new ArrayList<>(Arrays.asList("0 Hrs", "24 Hrs", "48 Hrs", "> 48 Hrs"));
 		if (isElementLoaded(timesheetApprovalRateWidgetTitle, 5) && timesheetApprovalRateWidgetTitle.getText().contains("Timesheet Approval Rate") && isElementLoaded(timesheetApprovalRateWidgetChart,5)) {
-			SimpleUtils.pass("Dashboard Page: The title and chart on \"Timesheet Approval Rate\" widget are loaded  in DM View");
+			SimpleUtils.pass("Dashboard Page: The title and chart on \"Timesheet Approval Rate\" widget are loaded in DM View");
 		} else {
 			SimpleUtils.fail("Dashboard Page: The widget of \"Timesheet Approval Rate\" failed to load in DM View",false);
 		}
@@ -1622,7 +1624,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 					SimpleUtils.fail("Dashboard Page: Failed to get the percentage data on Timesheet Approval Rate widget", false);
 				}
 			}
-		}else
+		} else
 			SimpleUtils.fail("Dashboard Page: Percentages on Timesheet Approval Rate widget failed to load",false);
 		return timesheetApprovalRateFromChart;
 	}
@@ -1639,6 +1641,347 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			}
 		} else
 			SimpleUtils.fail("Dashboard Page: Timesheet Approval Rate get incorrectly",false);
+	}
+
+	@FindBy(xpath = "//div[contains(text(),'Compliance Violations')]")
+	private WebElement complianceViolationsWidgetTitle;
+
+	@FindBy (css = "[ng-repeat=\"cv in scheduleComplianceKPI\"]")
+    private List<WebElement> scheduleComplianceKPIOnComplianceViolationsWidget;
+
+	@FindBy (className = "timesheet-approval-chart__svg")
+	private WebElement timesheetApprovalRateWidget;
+
+	@Override
+	public boolean isTimesheetApprovalRateWidgetDisplay() throws Exception {
+		boolean isTimesheetApprovalRateWidgetDisplay = false;
+		if(isElementLoaded(timesheetApprovalRateWidget, 30) && isElementLoaded(refreshButton, 30)) {
+			isTimesheetApprovalRateWidgetDisplay = true;
+			SimpleUtils.report("Timesheet Approval Rate WidgetDisplay Widget is loaded Successfully!");
+		} else
+			SimpleUtils.report("Timesheet Approval Rate Widget not loaded Successfully!");
+		return isTimesheetApprovalRateWidgetDisplay;
+	}
+
+	@Override
+	public boolean isComplianceViolationsWidgetDisplay() throws Exception {
+		boolean isComplianceViolationsWidgetDisplay = false;
+		if(areListElementVisible(scheduleComplianceKPIOnComplianceViolationsWidget, 30) && isElementLoaded(refreshButton, 30)) {
+			isComplianceViolationsWidgetDisplay = true;
+			SimpleUtils.report("Compliance Violations Widget is loaded Successfully!");
+		} else
+			SimpleUtils.report("Compliance Violations Widget not loaded Successfully!");
+		return isComplianceViolationsWidgetDisplay;
+	}
+
+	@Override
+	public void validateTheContentOnComplianceViolationsWidgetInDMView() throws Exception {
+		 /*Compliance Violation widget should show:
+         a. Title: Compliance Violations
+         b. x Total Hrs
+         c. x Violations
+         d. x Locations
+         e. Button: View Compliance*/
+		if (isElementLoaded(complianceViolationsWidgetTitle, 5) && complianceViolationsWidgetTitle.getText().contains("Compliance Violations")) {
+			SimpleUtils.pass("Dashboard Page: The title on \"Compliance Violations\" widget is loaded in DM View");
+		} else {
+			SimpleUtils.fail("Dashboard Page: The widget of \"Compliance Violations\" failed to load in DM View",false);
+		}
+		if (areListElementVisible(scheduleComplianceKPIOnComplianceViolationsWidget, 5) && scheduleComplianceKPIOnComplianceViolationsWidget.size() == 3) {
+			for (WebElement item : scheduleComplianceKPIOnComplianceViolationsWidget) {
+				if (item.getText().contains("Total Hrs") || item.getText().contains("Violations") || item.getText().contains("Locations")) {
+					SimpleUtils.pass("Dashboard Page: Verified KPI: \"" + item.getText().trim() + "\" loaded");
+				} else {
+					SimpleUtils.fail("Dashboard Page: Unexpected KPI: \"" + item.getText().trim() + "\" loaded!", false);
+				}
+			}
+		} else {
+			SimpleUtils.fail("Dashboard Page: The Legend Items of \"Timesheet Approval Status\" not loaded", false);
+		}
+		if (isElementLoaded(viewComplianceLink, 5)) {
+			SimpleUtils.pass("Dashboard Page: \"View Violations\" link loaded successfully on \"Compliance Violations\" widget");
+		} else {
+			SimpleUtils.fail("Dashboard Page: \"View Violations\" link not loaded on \"Compliance Violations\" widget", false);
+		}
+	}
+
+	@FindBy (css = ".console-navigation-item-label.Compliance")
+	private WebElement complianceConsoleMenu;
+
+	@Override
+	public void clickOnViewViolations() throws Exception {
+		if (isElementLoaded(viewComplianceLink, 5)) {
+			clickTheElement(viewComplianceLink);
+			if (complianceConsoleMenu.findElement(By.xpath("./..")).getAttribute("class").contains("active"))
+				SimpleUtils.pass("Dashboard Page: Click on \"View Violations\" link on \"Compliance Violations\" successfully");
+			else
+				SimpleUtils.fail("Dasboard Page: Failed to click on \"View Violations\" link on \"Compliance Violations\"",false);
+		} else {
+			SimpleUtils.fail("Dashboard Page: \"View Violations\" link not loaded on \"Compliance Violations\"", false);
+		}
+	}
+
+	@Override
+	public List<String> getComplianceViolationsOnDMViewWidget() throws Exception {
+		List<String> complianceViolationsOnDMViewWidget = new ArrayList<>();
+		if (areListElementVisible(scheduleComplianceKPIOnComplianceViolationsWidget, 5) && scheduleComplianceKPIOnComplianceViolationsWidget.size() == 3) {
+			for (WebElement item : scheduleComplianceKPIOnComplianceViolationsWidget) {
+				if (!item.getText().isEmpty()) {
+					complianceViolationsOnDMViewWidget.add(item.getText().trim().replace("\n", " "));
+					SimpleUtils.report("Dashboard Page: Get the data: \"" + item.getText().trim().replace("\n", " ") + "\" on Compliance Violations widget Successfully!");
+				} else {
+					SimpleUtils.fail("Dashboard Page: Failed to get the data on Compliance Violations widget", false);
+				}
+			}
+		} else
+			SimpleUtils.fail("Dashboard Page: Data on Compliance Violations widget failed to load",false);
+		return complianceViolationsOnDMViewWidget;
+	}
+
+	@Override
+	public void validateDataOnComplianceViolationsWidget(List<String> complianceViolationsOnDMViewDashboard, List<String> complianceViolationsFromSmartCardOnDMViewCompliance) throws Exception {
+		if (complianceViolationsOnDMViewDashboard.size() == 3 && complianceViolationsFromSmartCardOnDMViewCompliance.size() == 3) {
+			if (complianceViolationsOnDMViewDashboard.get(0).equals(complianceViolationsFromSmartCardOnDMViewCompliance.get(0))
+					&& complianceViolationsOnDMViewDashboard.get(1).equals(complianceViolationsFromSmartCardOnDMViewCompliance.get(1))
+					&& complianceViolationsOnDMViewDashboard.get(2).equals(complianceViolationsFromSmartCardOnDMViewCompliance.get(2))) {
+				SimpleUtils.pass("Dashboard Page: The data in Compliance Violations on Dashboard is consistent with the smart card in Compliance tab");
+			} else {
+				SimpleUtils.fail("Dashboard Page: The data in Compliance Violations on Dashboard is inconsistent with the smart card in Timesheet tab",false);
+			}
+		} else
+			SimpleUtils.fail("Dashboard Page: Compliance Violations get incorrectly",false);
+	}
+
+	@FindBy(xpath = "//div[contains(text(),'Payroll Projection')]")
+	private WebElement payrollProjectionWidgetTitle;
+
+	@FindBy(css= "[ng-if*=\"forecastKPI.futureBudgetSurplus\"]")
+	private List<WebElement> budgetSurplusOnPayrollProjectionWidget;
+
+	@FindBy (xpath = "//div[contains(text(),'Payroll Projection')]/../../div[contains(@class,\"dms-action-link\")]")
+	private WebElement viewSchedulesLinkOnPayrollProjectionWidget;
+
+	@FindBy (xpath = "//div[contains(text(),'Payroll Projection')]/../..//div[contains(@class, \"dms-box-item-title-color-light\")]")
+	private WebElement noteOnPayrollProjectionWidget;
+
+	@FindBy(xpath = "//div[contains(text(),'Payroll Projection')]/../../div[2]/div")
+	private WebElement legendOnPayrollProjectionWidget;
+
+	@FindBy(css = ".payroll-projection-chart__svg [width=\"20\"]")
+	private List<WebElement> rectsOnPayrollProjectionWidget;
+
+	@FindBy(css = ".dms-payroll-time-legend")
+	private WebElement weekOnPayrollProjectionWidget;
+
+	@FindBy(css = ".payroll-projection-chart__svg text[text-anchor][style]")
+	private WebElement asOfDateTimeOnPayrollProjectionWidget;
+
+	@FindBy(css = ".payroll-projection-chart__svg line[style]")
+	private WebElement asOfLineOnPayrollProjectionWidget;
+
+	@FindBy (className = "payroll-projection-chart__svg")
+	private WebElement payrollProjectionWidget;
+
+
+	@Override
+	public boolean isPayrollProjectionWidgetDisplay() throws Exception {
+		boolean isPayrollProjectionWidgetDisplay = false;
+		if(isElementLoaded(payrollProjectionWidget, 30) && isElementLoaded(refreshButton, 30)) {
+			isPayrollProjectionWidgetDisplay = true;
+			SimpleUtils.report("Payroll Projection Widget is loaded Successfully!");
+		} else
+			SimpleUtils.report("Payroll Projection Widget not loaded Successfully!");
+		return isPayrollProjectionWidgetDisplay;
+	}
+
+	@Override
+	public void clickOnViewSchedulesOnPayrollProjectWidget() throws Exception {
+		if (isElementLoaded(viewSchedulesLinkOnPayrollProjectionWidget, 5)) {
+			clickTheElement(viewSchedulesLinkOnPayrollProjectionWidget);
+			if (scheduleConsoleMenu.findElement(By.xpath("./..")).getAttribute("class").contains("active"))
+				SimpleUtils.pass("Dashboard Page: Click on \"View Schedules\" link on \"Payroll Projection\" successfully");
+			else
+				SimpleUtils.fail("Dashboard Page: Failed to click on \"View Schedules\" link on \"Payroll Projection\"",false);
+		} else {
+			SimpleUtils.fail("Dashboard Page: \"View Schedules\" link not loaded on \"Payroll Projection\"", false);
+		}
+	}
+
+	@Override
+	public void validateTheContentOnPayrollProjectionWidget() throws Exception {
+		 /*Payroll Projection widget should show:
+         a. Title: Payroll Projection
+         b. x Hrs Over/Under Budget in red/green
+         c. Projected for remainder of this week
+         d. 3 legends: Budgeted/Scheduled/Projected
+         e. Payroll projection chart with 7 days
+         f. Current week, e.g. Dec 12 - Dec 18
+         e. Button: View Schedules*/
+		if (isElementLoaded(payrollProjectionWidgetTitle, 5) && payrollProjectionWidgetTitle.getText().contains("Payroll Projection")) {
+			SimpleUtils.pass("Dashboard Page: The title on \"Payroll Projection\" widget is loaded in DM View");
+		} else {
+			SimpleUtils.fail("Dashboard Page: The title on \"Payroll Projection\" widget failed to load in DM View",false);
+		}
+		if (areListElementVisible(budgetSurplusOnPayrollProjectionWidget,10) && budgetSurplusOnPayrollProjectionWidget.size() == 2) {
+			SimpleUtils.pass("Dashboard Page: Budget surplus \"" + budgetSurplusOnPayrollProjectionWidget.get(1).getText() + "\" on \"Payroll Projection\" widget is loaded in DM View");
+		} else {
+			SimpleUtils.fail("Dashboard Page: The Budget surplus on \"Payroll Projection\" widget failed to load in DM View",false);
+		}
+		if (isElementLoaded(noteOnPayrollProjectionWidget, 5) && noteOnPayrollProjectionWidget.getText().contains("Projected for remainder of this week")) {
+			SimpleUtils.pass("Dashboard Page: \"Projected for remainder of this week\" loaded successfully on \"Payroll Projection\" widget");
+		} else {
+			SimpleUtils.fail("Dashboard Page: \"Projected for remainder of this week\" not loaded on \"Payroll Projection\" widget", false);
+		}
+		if (isElementLoaded(legendOnPayrollProjectionWidget, 5) && legendOnPayrollProjectionWidget.getText().contains("Budgeted")
+				&& legendOnPayrollProjectionWidget.getText().contains("Scheduled") && legendOnPayrollProjectionWidget.getText().contains("Projected")) {
+			SimpleUtils.pass("Dashboard Page: Budgeted/Scheduled/Projected legends loaded successfully on \"Payroll Projection\" widget");
+		} else {
+			SimpleUtils.fail("Dashboard Page: Budgeted/Scheduled/Projected legends not loaded on \"Payroll Projection\" widget", false);
+		}
+		if (areListElementVisible(rectsOnPayrollProjectionWidget,5) && rectsOnPayrollProjectionWidget.size() == 21) {
+			SimpleUtils.pass("Dashboard Page: 21 rects with 7 days loaded successfully on \"Payroll Projection\" widget");
+		} else {
+			SimpleUtils.fail("Dashboard Page: 21 rects with 7 days not loaded on \"Payroll Projection\" widget",false);
+		}
+		if (isElementLoaded(weekOnPayrollProjectionWidget, 5) && weekOnDashboardDM.getText().contains(weekOnPayrollProjectionWidget.getText())) {
+			SimpleUtils.pass("Dashboard Page: Current week \""+ weekOnPayrollProjectionWidget.getText() + "\" loaded successfully on \"Payroll Projection\" widget");
+		} else {
+			SimpleUtils.fail("Dashboard Page: Current week not loaded on \"Payroll Projection\" widget", false);
+		}
+		if (isElementLoaded(viewSchedulesLinkOnPayrollProjectionWidget, 5)) {
+			SimpleUtils.pass("Dashboard Page: \"View Schedules\" link loaded successfully on \"Payroll Projection\" widget");
+		} else {
+			SimpleUtils.fail("Dashboard Page: \"View Schedules\" link not loaded on \"Payroll Projection\" widget", false);
+		}
+	}
+
+	@Override
+	public String getWeekOnPayrollProjectionWidget() throws Exception {
+		String week = "";
+		if (isElementLoaded(weekOnPayrollProjectionWidget, 5)) {
+			week = weekOnPayrollProjectionWidget.getText();
+			SimpleUtils.pass("Dashboard Page: Get week \""+ week + "\" on \"Payroll Projection\" widget");
+		} else {
+			SimpleUtils.fail("Dashboard Page: Current week not loaded on \"Payroll Projection\" widget", false);
+		}
+		return week;
+	}
+
+	@Override
+	public void validateWeekOnPayrollProjectionWidget(String weekOnPayrollProjectionWidget, String currentWeekInScheduleTab) throws Exception {
+		if (weekOnPayrollProjectionWidget.contains(" - ")) {
+			if (weekOnPayrollProjectionWidget.split(" - ")[0].contains(" ") && weekOnPayrollProjectionWidget.split(" - ")[1].contains(" ")) {
+				weekOnPayrollProjectionWidget = weekOnPayrollProjectionWidget.split(" - ")[0].split(" ")[0] + " " + weekOnPayrollProjectionWidget.split(" - ")[0].split(" ")[1].replaceFirst("^(0*)", "") + " - "
+				+ weekOnPayrollProjectionWidget.split(" - ")[1].split(" ")[0] + " " + weekOnPayrollProjectionWidget.split(" - ")[1].split(" ")[1].replaceFirst("^(0*)", "");
+			}
+		}
+        SimpleUtils.report("Dashboard Page: The week on Payroll Projection widget is \"" + weekOnPayrollProjectionWidget + "\"");
+		if (currentWeekInScheduleTab.contains("\n")) {
+			currentWeekInScheduleTab = currentWeekInScheduleTab.split("\n")[1];
+		}
+		SimpleUtils.report("Schedule Page: The current week is \"" + currentWeekInScheduleTab + "\" in Schedule tab");
+		if (currentWeekInScheduleTab.equals(weekOnPayrollProjectionWidget)) {
+			SimpleUtils.pass("Dashboard Page: The week on Payroll Projection widget is consistent with the week in Schedule tab");
+		} else {
+			SimpleUtils.fail("Dashboard Page: The week on Payroll Projection widget is inconsistent with the week in Schedule tab",false);
+		}
+	}
+
+	@Override
+	public String getBudgetSurplusOnPayrollProjectionWidget() throws Exception {
+		String budgetSurplus = "";
+		if (areListElementVisible(budgetSurplusOnPayrollProjectionWidget, 10) && budgetSurplusOnPayrollProjectionWidget.size() == 2) {
+			budgetSurplus = budgetSurplusOnPayrollProjectionWidget.get(1).getText();
+			SimpleUtils.pass("Dashboard Page: Get budget surplus \""+ budgetSurplus + "\" on \"Payroll Projection\" widget");
+		} else {
+			SimpleUtils.fail("Dashboard Page: Current budget surplus not loaded on \"Payroll Projection\" widget", false);
+		}
+		return budgetSurplus;
+	}
+
+	@Override
+	public void validateBudgetSurplusOnPayrollProjectionWidget(String budgetSurplusOnPayrollProjectionWidget, String budgetSurplusInScheduleTab) throws Exception {
+		if (budgetSurplusOnPayrollProjectionWidget.contains("Under") && budgetSurplusInScheduleTab.contains("▼")) {
+			budgetSurplusOnPayrollProjectionWidget = budgetSurplusOnPayrollProjectionWidget.contains(" ")? budgetSurplusOnPayrollProjectionWidget.split(" ")[0]:budgetSurplusOnPayrollProjectionWidget;
+			budgetSurplusInScheduleTab = budgetSurplusInScheduleTab.contains(" ")? budgetSurplusInScheduleTab.split(" ")[0]:budgetSurplusInScheduleTab;
+			SimpleUtils.report("Dashboard Page: The hours on Payroll Projection widget is \"" + budgetSurplusOnPayrollProjectionWidget + "\"");
+			SimpleUtils.report("Schedule Page: The hours is \"" + budgetSurplusInScheduleTab + "\" in Schedule tab");
+			if (budgetSurplusOnPayrollProjectionWidget.equals(budgetSurplusInScheduleTab))
+				SimpleUtils.pass("Dashboard Page: The budget surplus on Payroll Projection widget is consistent with the hours in Schedule tab");
+			else
+				//SimpleUtils.fail("Dashboard Page: The budget surplus on Payroll Projection widget is inconsistent with the hours in Schedule tab",false);
+			SimpleUtils.warn("SCH-2767: [DM View] Data accuracy is inconsistent on Dashboard");
+		} else if (budgetSurplusOnPayrollProjectionWidget.contains("Over") && budgetSurplusInScheduleTab.contains("▲")) {
+			budgetSurplusOnPayrollProjectionWidget = budgetSurplusOnPayrollProjectionWidget.contains(" ")? budgetSurplusOnPayrollProjectionWidget.split(" ")[0]:budgetSurplusOnPayrollProjectionWidget;
+			budgetSurplusInScheduleTab = budgetSurplusInScheduleTab.contains(" ")? budgetSurplusInScheduleTab.split(" ")[0]:budgetSurplusInScheduleTab;
+			SimpleUtils.report("Dashboard Page: The hours on Payroll Projection widget is \"" + budgetSurplusOnPayrollProjectionWidget + "\"");
+			SimpleUtils.report("Schedule Page: The hours is \"" + budgetSurplusInScheduleTab + "\" in Schedule tab");
+			if (budgetSurplusOnPayrollProjectionWidget.equals(budgetSurplusInScheduleTab))
+				SimpleUtils.pass("Dashboard Page: The budget surplus on Payroll Projection widget is consistent with the hours in Schedule tab");
+			else
+				//SimpleUtils.fail("Dashboard Page: The budget surplus on Payroll Projection widget is inconsistent with the hours in Schedule tab",false);
+				SimpleUtils.warn("SCH-2767: [DM View] Data accuracy is inconsistent on Dashboard");
+		} else
+			SimpleUtils.fail("Dashboard Page: The budget surplus on dashboard is inconsistent with the one on schedule, whatever the hours or caret",false);
+	}
+
+	@Override
+	public void validateAsOfTimeOnPayrollProjectionWidget() throws Exception {
+		if (isElementLoaded(asOfDateTimeOnPayrollProjectionWidget,5)) {
+			Date asOfDate = null;
+			String asOfDateTime = asOfDateTimeOnPayrollProjectionWidget.getText();
+			//  Dec 10, 01:54 AM
+			try {
+				Calendar cal = Calendar.getInstance();
+				int year = cal.get(Calendar.YEAR);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd, hh:mm a");
+				asOfDate = sdf.parse(year + " " + asOfDateTime.replace("As of ",""));
+				SimpleUtils.pass("Dashboard Page: Dashboard Page: As of date time is \"" + asOfDateTime + "\" on Payroll Projection widget");
+			} catch (Exception e) {
+				SimpleUtils.fail("Dashboard Page: Dashboard Page: As of date time format is \"" + asOfDateTime + "\" unexpectedly on Payroll Projection widget",false);
+			}
+			SimpleDateFormat sdfNew = new SimpleDateFormat("EEE");
+			String asOfWeek = sdfNew.format(asOfDate);
+			if (asOfLineOnPayrollProjectionWidget.findElement(By.xpath("./following-sibling::*[name()='text'][2]")).getText().equals(asOfWeek)) {
+				SimpleUtils.pass("Dashboard Page: As of date time line displays in correct position between bars on Payroll Projection widget");
+			} else {
+				SimpleUtils.fail("Dashboard Page: As of date time line doesn't display in correct position between bars on Payroll Projection widget",false);
+			}
+		} else {
+			SimpleUtils.fail("Dashboard Page: As of date time failed to load on Payroll Projection widget",false);
+		}
+	}
+
+	@Override
+	public void validateTheFutureBudgetSurplusOnPayrollProjectionWidget() throws Exception {
+		if (areListElementVisible(budgetSurplusOnPayrollProjectionWidget,10) && budgetSurplusOnPayrollProjectionWidget.size() ==2) {
+			if (budgetSurplusOnPayrollProjectionWidget.get(0).getAttribute("class").contains("sch-clr-primary-red")) {
+				if (budgetSurplusOnPayrollProjectionWidget.get(1).getText().contains("Hrs Over Budget"))
+					SimpleUtils.pass("Dashboard Page: budget surplus \"" + budgetSurplusOnPayrollProjectionWidget.get(1).getText() + "\" on \"Payroll Projection\" widget is loaded in DM View");
+				else
+					SimpleUtils.fail("Dashboard Page: budget surplus \"" + budgetSurplusOnPayrollProjectionWidget.get(1).getText() + "\" on \"Payroll Projection\" widget failed to load or loaded incorrectly in DM View",false);
+			}
+			if (budgetSurplusOnPayrollProjectionWidget.get(0).getAttribute("class").contains("sch-clr-primary-green")) {
+				if (budgetSurplusOnPayrollProjectionWidget.get(1).getText().contains("Hrs Under Budget"))
+					SimpleUtils.pass("Dashboard Page: budget surplus \"" + budgetSurplusOnPayrollProjectionWidget.get(1).getText() + "\" on \"Payroll Projection\" widget is loaded in DM View");
+				else
+					SimpleUtils.fail("Dashboard Page: budget surplus \"" + budgetSurplusOnPayrollProjectionWidget.get(1).getText() + "\" on \"Payroll Projection\" widget failed to load or loaded incorrectly in DM View",false);
+			}
+		} else {
+			SimpleUtils.fail("Dashboard Page: The budget surplus on \"Payroll Projection\" widget failed to load in DM View",false);
+		}
+	}
+
+	@Override
+	public void validateHoursTooltipsOfPayrollProjectionWidget() throws Exception {
+		if (areListElementVisible(rectsOnPayrollProjectionWidget,5) && rectsOnPayrollProjectionWidget.size() == 21) {
+			for (WebElement rect: rectsOnPayrollProjectionWidget) {
+				// mouseHover(rect);
+				// todo: Locate the tooltip web element and if it loads, it will pass, or else it will fail.
+			}
+			SimpleUtils.warn("SCH-2634: [DM Dashboard] The value tooltips should display when hover the mouse on the chart in Payroll Projection widget");
+		} else
+			SimpleUtils.fail("Dashboard Page: Hours on Timesheet Approval Rate widget failed to load",false);
 	}
 
     @Override
@@ -2053,12 +2396,53 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "[ng-if=\"!b.withinBudget\"]")
 	private WebElement projectedOverBudgetCaret;
 
-
 	@FindBy(css = "span.dms-box-item-title-color-dark")
 	private List<WebElement> projectedWithInOrOverBudgetLocations;
 
 	@FindBy(css = "div.dms-box-item-title-2.pt-15")
 	private List<WebElement> projectedWithInOrOverBudgetMessage;
+
+	@FindBy(css = "i.dms-caret-small")
+	private WebElement budgetHoursCaretOnLocationSummaryWidget;
+
+	@FindBy(css = "span.dms-box-item-unit-trend")
+	private WebElement budgetHoursMessageOnLocationSummaryWidget;
+
+	public void verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget() throws Exception {
+		if(isElementLoaded(budgetHoursMessageSpan, 5) && isElementLoaded(budgetHoursCaret, 5)){
+			if(isElementLoaded(budgetHoursCaretOnLocationSummaryWidget, 5)
+					&& isElementLoaded(budgetHoursMessageOnLocationSummaryWidget, 5)){
+				//Verify the caret is display correctly
+				if(budgetHoursCaret.getAttribute("class").contains("up")){
+					if (budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("up")
+							&& budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("red")){
+						SimpleUtils.pass("The budget hour caret display correctly! ");
+					} else
+						SimpleUtils.fail("The budget hour caret display incorrectly! ", false);
+				} else {
+					if (budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("down")
+							&& budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("green")){
+						SimpleUtils.pass("The budget hour caret display correctly! ");
+					} else
+						SimpleUtils.fail("The budget hour caret display incorrectly! ", false);
+				}
+
+				//Verify the message display correctly
+				if (budgetHoursMessageOnLocationSummaryWidget.getText().split(" ")[0].
+						equals(budgetHoursMessageSpan.getText().split(" ")[0])) {
+					SimpleUtils.pass("The budget hour message display correctly! ");
+				} else
+					SimpleUtils.fail("The budget hour message display incorrectly! ", false);
+			} else
+				SimpleUtils.fail("The hours over or under budget panel on Location Summary widget loaded fail! ", false);
+		} else{
+			if(!isElementLoaded(budgetHoursCaretOnLocationSummaryWidget, 5)
+					&& !isElementLoaded(budgetHoursMessageOnLocationSummaryWidget, 5)){
+				SimpleUtils.pass("The budget hours message panel is not display on Location Summary widget! ");
+			} else
+				SimpleUtils.fail("The budget hours message panel on Location Summary widget should not display! ", false);
+		}
+	}
 
 	public List<String> getTheDataOnLocationSummaryWidget() throws Exception {
 		/*
@@ -2067,7 +2451,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		*  2: projected Hrs
 		*  3: projected Within Budget Locations
 		*  4: projected Over Budget Locations
-		*
+		*  5: the Hrs Over Or Under Budget
 		* */
 		List<String> dataOnLocationSummaryWidget = new ArrayList<>();
 		if(areListElementVisible(scheduledHours, 5)
@@ -2085,6 +2469,11 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			dataOnLocationSummaryWidget.add(projectedWithinBudgetLocation);
 			String projectedOverBudgetLocation = projectedWithInOrOverBudgetLocations.get(1).getText();
 			dataOnLocationSummaryWidget.add(projectedOverBudgetLocation);
+			String theHrsOverOrUnderBudget = "0 Hrs";
+			if (isElementLoaded(budgetHoursMessageOnLocationSummaryWidget, 5)){
+				theHrsOverOrUnderBudget = budgetHoursMessageOnLocationSummaryWidget.getText();
+			}
+			dataOnLocationSummaryWidget.add(theHrsOverOrUnderBudget);
 			SimpleUtils.report("Get the data on location summary widget successfully! ");
 		} else
 			SimpleUtils.fail("The data on Location Summary Widget loaded fail! ", false);
