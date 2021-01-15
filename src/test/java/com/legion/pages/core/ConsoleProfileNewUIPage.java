@@ -814,26 +814,16 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			}
 
 			// Updating Home Address State
-			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
-				selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), state);
-/*			boolean isStateSelected = false;
-			Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")));
-			if(statesDropdown.getFirstSelectedOption().getText().toLowerCase().contains(state.toLowerCase()))
-				SimpleUtils.pass("Profile Page: User Profile Nick Name already updated with value: '"+state+"'.");
-			else {
-				for(WebElement stateOption : statesDropdown.getOptions()) {
-					if(stateOption.getText().toLowerCase().contains(state.toLowerCase())) {
-						click(stateOption);
-						isStateSelected = true;
-					}
+			try {
+				if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
+					selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), state);
+				} else if (isElementLoaded(getDriver().findElement(By.cssSelector("input-field[label=\"Province\"] select")), 5)) {
+					selectByVisibleText(getDriver().findElement(By.cssSelector("input-field[label=\"Province\"] select")), state);
+				} else {
+					SimpleUtils.fail("Profile page: State/Province select failed to load!", false);
 				}
-				if(isStateSelected)
-					SimpleUtils.pass("Profile Page: User Profile Home Address 'State' updated with value: '"+state+"'.");
-				else
-					SimpleUtils.fail("Profile Page: User Profile Home Address State: '"+state+"' not found.", true);
-			} */
-			} else if (isElementLoaded(getDriver().findElement(By.cssSelector("input-field[label=\"Province\"] select")), 5)) {
-				selectByVisibleText(getDriver().findElement(By.cssSelector("input-field[label=\"Province\"] select")), state);
+			} catch (Exception e) {
+				// Do nothing
 			}
 
 			// Updating Home Address Zip
@@ -3111,18 +3101,22 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.fail("No City field!",false);
 			}
 
-			// State
-			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
-				SimpleUtils.pass("State loaded!");
-				Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")));
-				results.put("State",statesDropdown.getFirstSelectedOption().getText());
-				//selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), state);
-			} else if (isElementLoaded(getDriver().findElement(By.cssSelector("input-field[label=\"Province\"] select")), 5)) {
-				SimpleUtils.pass("Province loaded!");
-				Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"Province\"] select")));
-				results.put("State",statesDropdown.getFirstSelectedOption().getText());
-			} else {
-				SimpleUtils.fail("No State field!",false);
+			try {
+				// State
+				if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
+					SimpleUtils.pass("State loaded!");
+					Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")));
+					results.put("State", statesDropdown.getFirstSelectedOption().getText());
+					//selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), state);
+				} else if (isElementLoaded(getDriver().findElement(By.cssSelector("input-field[label=\"Province\"] select")), 5)) {
+					SimpleUtils.pass("Province loaded!");
+					Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"Province\"] select")));
+					results.put("State", statesDropdown.getFirstSelectedOption().getText());
+				} else {
+					SimpleUtils.fail("No State field!", false);
+				}
+			} catch (Exception e) {
+				// Do nothing
 			}
 
 			// Zip Code
@@ -3232,15 +3226,19 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.fail("No City field!",false);
 			}
 
-			// State
-			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
-				selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), values.get("State"));
-				SimpleUtils.pass("Profile Page: User Profile 'State' updated with value: '" + values.get("State") + "'.");
-			} else if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Province\"] select")), 5)) {
-				selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"Province\"] select")), values.get("State"));
-				SimpleUtils.pass("Profile Page: User Profile 'State' updated with value: '" + values.get("State") + "'.");
-			} else {
-				SimpleUtils.fail("No State field!",false);
+			try {
+				// State
+				if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
+					selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), values.get("State"));
+					SimpleUtils.pass("Profile Page: User Profile 'State' updated with value: '" + values.get("State") + "'.");
+				} else if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Province\"] select")), 5)) {
+					selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"Province\"] select")), values.get("State"));
+					SimpleUtils.pass("Profile Page: User Profile 'State' updated with value: '" + values.get("State") + "'.");
+				} else {
+					SimpleUtils.fail("No State field!", false);
+				}
+			} catch (Exception e) {
+				// Do nothing
 			}
 
 			// Zip Code

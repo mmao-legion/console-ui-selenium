@@ -904,7 +904,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "[ng-click=\"$ctrl.onReload(true)\"]")
 	private WebElement refreshButton;
 
-	@FindBy(css = "[[ng-if=\"$ctrl.minutes >= 0 && $ctrl.date && !$ctrl.loading\"]")
+	@FindBy(css = "[ng-if=\"$ctrl.minutes >= 0 && $ctrl.date && !$ctrl.loading\"]")
 	private WebElement lastUpdatedIcon;
 
 

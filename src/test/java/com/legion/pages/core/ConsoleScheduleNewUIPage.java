@@ -8254,7 +8254,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void verifyThePrintFunction() throws Exception {
         if (isPrintIconLoaded()) {
-            click(printIcon);
+            clickTheElement(printIcon);
             // Wait for the schedule to be downloaded
             if(isElementLoaded(printButtonInPrintLayout, 5)) {
                 click(printButtonInPrintLayout);
