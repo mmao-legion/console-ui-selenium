@@ -37,12 +37,13 @@ import static org.testng.AssertJUnit.assertTrue;
  */
 public class SimpleUtils {
 
-    static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/ciEnvCfg.json");
-//	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
+//    static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/ciEnvCfg.json");
+	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
 	static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
 
 	static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
 	public static String testSuiteIDTemp = "0";
+	public static String fileDownloadPath = parameterMap.get("Download_File_Default_Dir");
 
 	private static HashMap< String,Object[][]> userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/legionUsers.json");
 
