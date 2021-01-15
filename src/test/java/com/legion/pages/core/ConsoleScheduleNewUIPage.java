@@ -12720,6 +12720,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> locationsInTheList;
     @Override
     public List<String> getLocationsInScheduleDMViewLocationsTable() throws Exception {
+        waitForSeconds(3);
         List<String> locations = new ArrayList<String>();
         if (areListElementVisible(locationsInTheList,10)){
             for (WebElement element: locationsInTheList){
@@ -12854,6 +12855,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             for (String s: getLocationsInScheduleDMViewLocationsTable()){
                 flag = flag && s.contains(location);
             }
+            analyticsTableInScheduleDMViewPage.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
             if (flag){
                 SimpleUtils.pass("Search result is correct!");
             } else {

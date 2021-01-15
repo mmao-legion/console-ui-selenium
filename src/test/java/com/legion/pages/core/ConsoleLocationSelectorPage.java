@@ -640,6 +640,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
 
     @Override
     public void verifyTheDisplayDistrictWithSelectedDistrictConsistent(String districtName) throws Exception {
+        waitForSeconds(3);
         if (isDistrictSelected(districtName))
             SimpleUtils.pass("Dashboard Page: Display district is consistent with the selected district");
         else
@@ -702,8 +703,6 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         waitForSeconds(4);
         String districtName = selectedDistrict.getText();
         try {
-            activeConsoleName = activeConsoleMenuItem.getText();
-            setScreenshotConsoleName(activeConsoleName);
             if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
                 if (isChangeDistrictButtonLoaded()) {
                         if(isElementLoaded(districtSelectorButton, 10)){
@@ -730,6 +729,33 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             }
         }
         catch(Exception e) {
+            SimpleUtils.fail("Unable to change District!", true);
+        }
+    }
+
+    @Override
+    public void changeAnotherDistrictInDMView() throws Exception {
+        waitForSeconds(4);
+        String districtName = selectedDistrict.getText();
+        try {
+            if (isChangeDistrictButtonLoaded()) {
+                if(isElementLoaded(districtSelectorButton, 10)){
+                    click(districtSelectorButton);
+                }
+                if (isElementLoaded(districtDropDownButton, 5)) {
+                    if (availableLocationCardsName.size() != 0) {
+                        for (WebElement locationCardName : availableLocationCardsName) {
+                            if (!locationCardName.getText().contains(districtName)) {
+                                clickTheElement(locationCardName);
+                                SimpleUtils.pass("District changed successfully to '" + locationCardName.getText() + "'");
+                                waitForSeconds(1);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch(Exception e) {
             SimpleUtils.fail("Unable to change District!", true);
         }
     }
