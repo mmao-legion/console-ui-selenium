@@ -468,6 +468,52 @@ public class DMViewTest extends TestBase {
         }
     }
 
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify Timesheet functionality on Timesheet in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTimesheetFunctionalityInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Go to the Timesheet page in DM view and verify the title of the page.
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            SimpleUtils.assertOnFail("TimeSheet Page not loaded Successfully!",timeSheetPage.isTimeSheetPageLoaded() , false);
+
+            //Verify district selected and displayed with "All locations".
+            locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(districtName);
+            locationSelectorPage.isLocationSelected("All Locations");
+
+            //Validate search function.
+            schedulePage.verifySearchLocationInScheduleDMView(location);
+
+            //Validate changing district.
+            List<String> locationInDistrict1 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
+            locationSelectorPage.changeAnotherDistrictInDMView();
+            String anotherDistrictName = dashboardPage.getCurrentDistrict();
+            locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(anotherDistrictName);
+            List<String> locationInDistrict2 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
+            SimpleUtils.assertOnFail("TimeSheet DM view page fail to update!", !locationInDistrict1.containsAll(locationInDistrict2), false);
+
+            //Validate the clickability of backward button.
+            String weekInfo = schedulePage.getActiveWeekText();
+            schedulePage.navigateToPreviousWeek();
+
+            //Validate the clickability of forward button.
+            schedulePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")

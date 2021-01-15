@@ -26,4 +26,5 @@ public interface LocationSelectorPage {
 	public void reSelectDistrict(String districtName) throws Exception;
 	public void changeAnotherDistrict() throws Exception;
 	public void reSelectDistrictInDMView(String districtName) throws Exception;
+	public void changeAnotherDistrictInDMView() throws Exception;
 }
