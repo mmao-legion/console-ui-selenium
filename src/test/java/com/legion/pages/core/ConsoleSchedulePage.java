@@ -3395,4 +3395,29 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void clickOnLocationNameInDMView(String location) throws Exception {
 
     }
+
+    @Override
+    public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String weekType) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<String> getListByCol(int index) throws Exception{
+        return null;
+    }
+
+    @Override
+    public List<Float> transferStringToFloat(List<String> listString) throws Exception{
+        return null;
+    }
+
+    @Override
+    public void verifyClockedOrProjectedInDMViewTable(String expected) throws Exception {
+
+    }
+
+    @Override
+    public int getIndexOfColInDMViewTable(String colName) throws Exception {
+        return 0;
+    }
 }
