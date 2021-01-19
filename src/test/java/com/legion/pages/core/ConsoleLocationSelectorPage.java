@@ -626,8 +626,8 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy (css = ".wm-ignore-css-reset path")
     private WebElement closeBtnInNewFeatureEnhancements;
 
-    @FindBy(className="welcome-text")
-    private WebElement dashboardWelcomeSection;
+    @FindBy(css=".header-company-icon.fl-right .company-icon-img")
+    private WebElement companyIcon;
 
     @Override
     public String getLocationNameFromDashboard() throws Exception {
@@ -650,51 +650,45 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public void reSelectDistrict(String districtName) throws Exception {
         waitForSeconds(4);
-        try {
-            Boolean isDistrictMatched = false;
-            activeConsoleName = activeConsoleMenuItem.getText();
-            setScreenshotConsoleName(activeConsoleName);
-            if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
-                        if(isElementLoaded(districtSelectorButton, 10)){
-                            click(districtSelectorButton);
-                        }
-                        if (isElementLoaded(districtDropDownButton, 5)) {
-                            if (availableLocationCardsName.size() != 0) {
-                                for (WebElement locationCardName : availableLocationCardsName) {
-                                    if (locationCardName.getText().contains(districtName)) {
-                                        isDistrictMatched = true;
-                                        clickTheElement(locationCardName);
-                                        if (isElementLoaded(windowNewFeatureEnhancements,5))
-                                            click(closeBtnInNewFeatureEnhancements);
-                                        click(dashboardWelcomeSection);
-                                        SimpleUtils.pass("District changed successfully to '" + districtName + "'");
-                                        waitForSeconds(8);
-                                        break;
-                                    }
-                                }
-                                if (!isDistrictMatched) {
-                                    searchDistrictAndSelect(districtName);
-                                    waitForSeconds(3);
-                                    availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
-                                    if (availableLocationCardsName.size() > 0) {
-                                        for (WebElement locationCardName : availableLocationCardsName) {
-                                            if (locationCardName.getText().contains(districtName)) {
-                                                isDistrictMatched = true;
-                                                click(locationCardName);
-                                                SimpleUtils.pass("District changed successfully to '" + districtName + "'");
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                                if (!isDistrictMatched) {
-                                    SimpleUtils.fail("District does matched with '" + districtName + "'", true);
-                                }
+        Boolean isDistrictMatched = false;
+        activeConsoleName = activeConsoleMenuItem.getText();
+        setScreenshotConsoleName(activeConsoleName);
+        if(isElementLoaded(districtSelectorButton, 10)){
+            click(districtSelectorButton);
+        }
+        if (isElementLoaded(districtDropDownButton, 5)) {
+            if (availableLocationCardsName.size() != 0) {
+                for (WebElement locationCardName : availableLocationCardsName) {
+                    if (locationCardName.getText().contains(districtName)) {
+                        isDistrictMatched = true;
+                        clickTheElement(locationCardName);
+                        if (isElementLoaded(windowNewFeatureEnhancements,5))
+                            click(closeBtnInNewFeatureEnhancements);
+                        click(companyIcon);
+                        SimpleUtils.pass("District changed successfully to '" + districtName + "'");
+                        waitForSeconds(8);
+                        break;
+                    }
+                }
+                if (!isDistrictMatched) {
+                    searchDistrictAndSelect(districtName);
+                    waitForSeconds(3);
+                    availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
+                    if (availableLocationCardsName.size() > 0) {
+                        for (WebElement locationCardName : availableLocationCardsName) {
+                            if (locationCardName.getText().contains(districtName)) {
+                                isDistrictMatched = true;
+                                click(locationCardName);
+                                SimpleUtils.pass("District changed successfully to '" + districtName + "'");
+                                break;
                             }
                         }
+                    }
                 }
-            } catch(Exception e) {
-            SimpleUtils.fail("Unable to change District!", true);
+                if (!isDistrictMatched) {
+                    SimpleUtils.fail("District does matched with '" + districtName + "'", true);
+                }
+            }
         }
     }
 

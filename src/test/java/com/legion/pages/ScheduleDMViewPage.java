@@ -14,4 +14,14 @@ public interface ScheduleDMViewPage {
     public void verifySmartCardsAreLoadedForPastOrFutureWeek(boolean isPastWeek) throws Exception;
     public void verifySchedulesTableHeaderNames(boolean isApplyBudget, boolean isPastWeek) throws Exception;
     public void verifyScheduleStatusOnScheduleDMView(String scheduleStatus) throws Exception;
+    public void validateThePresenceOfRefreshButton() throws Exception;
+    public void validateRefreshTimestamp() throws Exception;
+    public void validateRefreshWhenNavigationBack() throws Exception;
+    public void validateRefreshFunction() throws Exception;
+    public void validateRefreshPerformance() throws Exception;
+    public void navigateToSchedule() throws Exception;
+    public void clickOnRefreshButton() throws Exception;
+    public boolean isNotStartedScheduleDisplay() throws Exception;
+    public List<String> getLocationsWithNotStartedSchedules() throws Exception;
+    public String getScheduleStatusForGivenLocation(String location) throws Exception;
 }

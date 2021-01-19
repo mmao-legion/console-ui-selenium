@@ -3,10 +3,14 @@ package com.legion.pages.core;
 import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptExecutor;
 import com.legion.pages.*;
 import com.legion.utils.SimpleUtils;
+import org.apache.commons.collections.list.AbstractLinkedList;
+import org.apache.xpath.operations.Bool;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -94,6 +98,223 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         } else
             SimpleUtils.fail("Schedule Page: Failed to load ",false);
         return kpi;
+    }
+
+    @FindBy(css = "[ng-click=\"$ctrl.onReload(true)\"]")
+    private WebElement refreshButton;
+
+    @FindBy(css = "[ng-if=\"$ctrl.minutes >= 0 && $ctrl.date && !$ctrl.loading\"]")
+    private WebElement lastUpdatedIcon;
+
+    @Override
+    public void clickOnRefreshButton() throws Exception {
+        if (isElementLoaded(refreshButton, 10)) {
+            clickTheElement(refreshButton);
+            if(isElementLoaded(lastUpdatedIcon, 60)){
+                SimpleUtils.pass("Click on Refresh button Successfully!");
+            } else
+                SimpleUtils.fail("Refresh timeout! ", false);
+        } else {
+            SimpleUtils.fail("Refresh button not Loaded!", true);
+        }
+    }
+    @Override
+    public void validateThePresenceOfRefreshButton() throws Exception {
+        if (isElementLoaded(refreshButton,10)) {
+            if (refreshButton.isDisplayed() && !refreshButton.getText().isEmpty() && refreshButton.getText() != null) {
+                if (getDriver().findElement(By.xpath("//body//day-week-picker/following-sibling::last-updated-countdown/div/lg-button")).equals(refreshButton)) {
+                    SimpleUtils.pass("Schedule Page: Refresh button shows near week section successfully");
+                } else {
+                    SimpleUtils.fail("Schedule Page: Refresh button is not above welcome section", true);
+                }
+            } else {
+                SimpleUtils.fail("Schedule Page: Refresh button isn't present", true);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: Refresh button failed to load", true);
+        }
+    }
+
+    @FindBy (css = "last-updated-countdown span[ng-if^=\"$ctrl.minutes === 0\"]")
+    private WebElement justUpdated;
+
+    @FindBy (css = "last-updated-countdown span[ng-if^=\"$ctrl.minutes > 0\"]")
+    private WebElement lastUpdated;
+
+    @FindBy (css = "last-updated-countdown span[ng-if^=\"$ctrl.minutes > 0\"] span")
+    private WebElement lastUpdatedMinutes;
+
+    @FindBy (className = "navigation-menu-compliance-icon")
+    private WebElement complianceConsoleMenu;
+
+    @FindBy (css = ".console-navigation-item-label.Schedule")
+    private WebElement scheduleConsoleMenu;
+
+    @FindBy (css = ".analytics-new.ng-scope")
+    private WebElement scheduleSection;
+
+    @FindBy (xpath = "//span[contains(text(),'Not Started')]")
+    private List<WebElement> notStartedSchedules;
+
+    @FindBy (className = "analytics-new-table-group")
+    private List<WebElement> rowsInAnalyticsTable;
+
+    @Override
+    public void validateRefreshFunction() throws Exception {
+        int minutes = 0;
+        if (isElementLoaded(lastUpdatedMinutes,10) ) {
+            minutes = lastUpdatedMinutes.getText().contains(" ")? Integer.valueOf(lastUpdatedMinutes.getText().split(" ")[0]):Integer.valueOf(lastUpdatedMinutes.getText());
+            if (minutes >= 30 ) {
+                if (lastUpdatedMinutes.getAttribute("class").contains("last-updated-countdown-time-orange"))
+                    SimpleUtils.pass("Schedule Page: When the Last Updated time >= 30 mins, the color changes to orange");
+                else
+                    SimpleUtils.fail("Schedule Page: When the Last Updated time >= 30 mins, the color failed to change to orange",false);
+            }
+        }
+        if (isElementLoaded(refreshButton, 10)) {
+            clickTheElement(refreshButton);
+            SimpleUtils.pass("Schedule Page: Click on Refresh button Successfully!");
+            if (scheduleSection.getAttribute("class").contains("analytics-new-refreshing") && refreshButton.getAttribute("label").equals("Refreshing...")) {
+                SimpleUtils.pass("Schedule Page: After clicking Refresh button, the background is muted and it shows an indicator 'Refreshing...' that we are processing the info");
+                if (isElementLoaded(justUpdated,60) && !scheduleSection.getAttribute("class").contains("home-dashboard-loading"))
+                    SimpleUtils.pass("Schedule Page: Once the data is done refreshing, the page shows 'JUST UPDATED' and page becomes brighter again");
+                else
+                    SimpleUtils.fail("Dashboard Page: When the data is done refreshing, the page doesn't show 'JUST UPDATED' and page doesn't become brighter again",false);
+                if (isElementLoaded(lastUpdated,60) && lastUpdatedMinutes.getAttribute("class").contains("last-updated-countdown-time-blue"))
+                    SimpleUtils.pass("Schedule Page: The Last Updated info provides the minutes last updated in blue");
+                else
+                    SimpleUtils.fail("Schedule Page: The Last Updated info doesn't provide the minutes last updated in blue",false);
+            } else {
+                SimpleUtils.fail("Schedule Page: After clicking Refresh button, the background isn't muted and it doesn't show 'Refreshing...'",true);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: Refresh button not Loaded!", true);
+        }
+    }
+
+    @Override
+    public void validateRefreshPerformance() throws Exception {
+        if (isElementLoaded(refreshButton, 10)) {
+            clickTheElement(refreshButton);
+            if (refreshButton.getAttribute("label").equals("Refreshing...")) {
+                SimpleUtils.pass("Schedule Page: After clicking Refresh button, the button becomes 'Refreshing...'");
+                WebElement element = (new WebDriverWait(getDriver(), 60))
+                        .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[label=\"Refresh\"]")));
+                if (element.isDisplayed()) {
+                    SimpleUtils.pass("Schedule Page: Page refreshes within 1 minute successfully");
+                } else {
+                    SimpleUtils.fail("Schedule Page: Page doesn't refresh within 1 minute", false);
+                }
+            } else {
+                SimpleUtils.fail("Schedule Page: After clicking Refresh button, the background isn't muted and it doesn't show 'Refreshing...'",true);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: Refresh button not Loaded!", true);
+        }
+    }
+
+    @Override
+    public void validateRefreshTimestamp() throws Exception {
+        String timestamp = "";
+        if (isElementLoaded(justUpdated, 5)) {
+            SimpleUtils.pass("Dashboard Page:  The page just refreshed");
+        } else if (isElementLoaded(lastUpdatedMinutes, 5)) {
+            timestamp = lastUpdatedMinutes.getText();
+            if (timestamp.contains("HOURS") && timestamp.contains(" ")) {
+                timestamp = timestamp.split(" ")[0];
+                if (Integer.valueOf(timestamp) == 1)
+                    SimpleUtils.pass("Schedule Page:  The backstop is 1 hour so that the data is not older than 1 hour stale");
+                else
+                    // SimpleUtils.fail("Schedule Page:  The backstop is older than 1 hour stale",false);
+                    SimpleUtils.warn("SCH-2589: [DM View] Refresh time is older than 1 hour stale");
+            }
+            if (timestamp.contains("MINS") && timestamp.contains(" ")) {
+                timestamp = timestamp.split(" ")[0];
+                if (Integer.valueOf(timestamp) < 60 && Integer.valueOf(timestamp) >= 1)
+                    SimpleUtils.pass("Schedule Page:  The backstop is last updated" + timestamp + " ago");
+                else
+                    SimpleUtils.fail("Schedule Page:  The backstop isn't refreshed in 1 hour stale", false);
+            }
+        } else
+            SimpleUtils.fail("Schedule Page: Timestamp failed to load", false);
+    }
+
+    @Override
+    public void navigateToSchedule() throws Exception {
+        if(isElementLoaded(scheduleConsoleMenu, 10)){
+            click(scheduleConsoleMenu);
+        } else {
+            SimpleUtils.fail("Schedule menu in left navigation is not loaded!",false);
+        }
+    }
+
+    @Override
+    public void validateRefreshWhenNavigationBack() throws Exception {
+        String timestamp1 = "";
+        String timestamp2 = "";
+        if (isElementLoaded(lastUpdated, 5)) {
+            timestamp1 = lastUpdated.getText();
+        } else if (isElementLoaded(justUpdated, 5)) {
+            timestamp1 = justUpdated.getText();
+        } else
+            SimpleUtils.fail("Schedule Page: Timestamp failed to load", false);
+        click(complianceConsoleMenu);
+        navigateToSchedule();
+        if (isElementLoaded(lastUpdated, 5)) {
+            timestamp2 = lastUpdated.getText();
+        } else if (isElementLoaded(justUpdated, 5)) {
+            timestamp2 = justUpdated.getText();
+        } else
+            SimpleUtils.fail("Schedule Page: Timestamp failed to load", false);
+        if (timestamp2.equals(timestamp1) && !timestamp1.equals("") && !refreshButton.getAttribute("label").equals("Refreshing...")) {
+            SimpleUtils.pass("Schedule Page: It keeps the previous Last Updated time, not refreshing every time");
+        } else {
+            SimpleUtils.fail("Schedule Page: It doesn't keep the previous Last Updated time", false);
+        }
+    }
+
+    @Override
+    public boolean isNotStartedScheduleDisplay() throws Exception {
+        boolean isNotStartedScheduleDisplay = false;
+        if (areListElementVisible(notStartedSchedules, 10) && notStartedSchedules.size() > 0) {
+            isNotStartedScheduleDisplay = true;
+            SimpleUtils.report("Schedule Page: Not Started Schedules loaded in the current page");
+        }
+        return isNotStartedScheduleDisplay;
+    }
+
+    @Override
+    public List<String> getLocationsWithNotStartedSchedules() throws Exception {
+        List<String> notStartedLocations = new ArrayList<>();
+        WebElement location = null;
+        if (isNotStartedScheduleDisplay()) {
+            for (int i=0; i < notStartedSchedules.size(); i++) {
+                location = notStartedSchedules.get(i).findElement(By.xpath(".//../../preceding-sibling::div[1]/span/span"));
+                notStartedLocations.add(location.getText());
+            }
+            if (notStartedSchedules.size() == notStartedLocations.size())
+                SimpleUtils.pass("Schedule Page: Get all the locations with Not Started Schedules successfully");
+            else
+                SimpleUtils.fail("Schedule Page: Get all the locations with Not Started Schedules incompletely",false);
+        } else
+            SimpleUtils.fail("Schedule Page: There are no \"Not Started\" schedules in the current page",false);
+        return notStartedLocations;
+    }
+
+    @Override
+    public String getScheduleStatusForGivenLocation(String location) throws Exception {
+        String scheduleStatus = "";
+        if (areListElementVisible(rowsInAnalyticsTable,10)) {
+            for (WebElement row : rowsInAnalyticsTable) {
+                if (row.findElement(By.xpath("./div/div[1]/span/img/following-sibling::span")).getText().equals(location)) {
+                    SimpleUtils.pass("Schedule Page: Find location successfully");
+                    scheduleStatus = row.findElement(By.xpath("./div/div[2]/span/span")).getText().trim();
+                    break;
+                }
+            }
+        } else
+            SimpleUtils.fail("Schedule Page: There are no locations in current district or failed to load",false);
+        return scheduleStatus;
     }
 
     @FindBy(css = "span.analytics-new-table-published-status")

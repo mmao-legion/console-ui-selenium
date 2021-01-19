@@ -124,6 +124,7 @@ public class DMViewTest extends TestBase {
             SimpleUtils.fail(e.getMessage(),false);
         }
     }
+
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")
@@ -245,13 +246,11 @@ public class DMViewTest extends TestBase {
             // Validate the date on Payroll Projection widget on TA env
             String weekOnPayrollProjectionWidget = dashboardPage.getWeekOnPayrollProjectionWidget();
             String forecastKPIOnPayrollProjectionWidget = dashboardPage.getBudgetSurplusOnPayrollProjectionWidget();
-            System.out.println(forecastKPIOnPayrollProjectionWidget);
             dashboardPage.clickOnViewSchedulesOnPayrollProjectWidget();
             SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             String currentWeekInDMViewSchedule = scheduleDMViewPage.getCurrentWeekInDMView();
             String forecastKPIInDMViewSchedule = scheduleDMViewPage.getBudgetSurplusInDMView();
-            System.out.println("forecastKPIInDMViewSchedule is " + forecastKPIInDMViewSchedule);
             dashboardPage.navigateToDashboard();
             SimpleUtils.assertOnFail("Payroll Projection widget not loaded successfully", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
             dashboardPage.validateWeekOnPayrollProjectionWidget(weekOnPayrollProjectionWidget, currentWeekInDMViewSchedule);
@@ -271,6 +270,88 @@ public class DMViewTest extends TestBase {
             SimpleUtils.fail(e.getMessage(),false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "DGStage_Enterprise")
+    @TestName(description = "Verify Refresh feature on Dashboard in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRefreshFeatureOnScheduleInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
+
+            // Validate the presence of Refresh button
+            scheduleDMViewPage.validateThePresenceOfRefreshButton();
+
+            // Validate Refresh timestamp
+            scheduleDMViewPage.validateRefreshTimestamp();
+
+            // Validate Refresh when navigation back
+            scheduleDMViewPage.validateRefreshWhenNavigationBack();
+
+            // Validate Refresh function
+            scheduleDMViewPage.validateRefreshFunction();
+
+            // Validate Refresh performance
+            scheduleDMViewPage.validateRefreshPerformance();
+
+            // Validate Refresh function for past weeks
+            schedulePage.navigateToPreviousWeek();
+            scheduleDMViewPage.clickOnRefreshButton();
+            scheduleDMViewPage.validateRefreshFunction();
+
+            // Validate Refresh function for current/future weeks
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            scheduleDMViewPage.clickOnRefreshButton();
+            scheduleDMViewPage.validateRefreshFunction();
+
+            // Validate Refresh reflect schedule change
+            while (!scheduleDMViewPage.isNotStartedScheduleDisplay()) {
+                schedulePage.navigateToNextWeek();
+            }
+            if (scheduleDMViewPage.isNotStartedScheduleDisplay()) {
+                String notStartedLocation = scheduleDMViewPage.getLocationsWithNotStartedSchedules().get(0);
+                schedulePage.clickOnLocationNameInDMView(notStartedLocation);
+                SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                schedulePage.createScheduleForNonDGFlowNewUI();
+                locationSelectorPage.reSelectDistrict(districtName);
+                scheduleDMViewPage.clickOnRefreshButton();
+                String scheduleStatus = scheduleDMViewPage.getScheduleStatusForGivenLocation(notStartedLocation);
+                if (scheduleStatus.equals("In Progress"))
+                    SimpleUtils.pass("Schedule Page: After the first refreshing, it is \"In Progress\" status");
+                else
+                    SimpleUtils.fail("Schedule Page: After the first refreshing, it isn't \"In Progress\" status", false);
+                schedulePage.clickOnLocationNameInDMView(notStartedLocation);
+                SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                schedulePage.publishActiveSchedule();
+                locationSelectorPage.reSelectDistrict(districtName);
+                scheduleDMViewPage.clickOnRefreshButton();
+                scheduleStatus = scheduleDMViewPage.getScheduleStatusForGivenLocation(notStartedLocation);
+                if (scheduleStatus.equals("Published"))
+                    SimpleUtils.pass("Schedule Page: After the second refreshing, it is \"Published\" status");
+                else
+                    SimpleUtils.fail("Schedule Page: After the second refreshing, it isn't \"Published\" status", false);
+            } else
+                SimpleUtils.report("Schedule Page: There are no Not Started schedules in the current and upcoming weeks");
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")

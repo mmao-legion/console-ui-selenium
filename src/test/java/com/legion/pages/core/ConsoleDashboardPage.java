@@ -1414,7 +1414,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 		if (isElementLoaded(refreshButton, 10)) {
 			clickTheElement(refreshButton);
-			SimpleUtils.pass("Click on Refresh button Successfully!");
+			SimpleUtils.pass("Dashboard Page: Click on Refresh button Successfully!");
 			if (dashboardSection.getAttribute("class").contains("home-dashboard-loading") && refreshButton.getAttribute("label").equals("Refreshing...")) {
 				SimpleUtils.pass("Dashboard Page: After clicking Refresh button, the background is muted and it shows an indicator 'Refreshing...' that we are processing the info");
 				if (isElementLoaded(justUpdated,60) && !dashboardSection.getAttribute("class").contains("home-dashboard-loading"))
@@ -2094,7 +2094,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
         if (isElementLoaded(lastUpdated, 5)) {
             timestamp1 = lastUpdated.getText();
         } else if (isElementLoaded(justUpdated, 5)) {
-            timestamp1 = lastUpdated.getText();
+            timestamp1 = justUpdated.getText();
         } else
             SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
         click(scheduleConsoleNameInTM);
