@@ -443,6 +443,9 @@
                     <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />
                     <include name="verifyRefreshFeatureOnScheduleInDMViewAsInternalAdmin" />
                     <include name="verifyScheduleStatusOnScheduleDMViewAsInternalAdmin" />
+                    <include name="verifyLocationSummaryInScheduleDMViewAsInternalAdmin" />
+                    <include name="verifyUnplannedClocksForTimesheetInDMViewAsInternalAdmin" />
+                    <include name="verifyUnplannedClocksSmartCardForTimesheetInDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

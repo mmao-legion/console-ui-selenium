@@ -554,9 +554,11 @@ public interface SchedulePage {
 	public boolean isRepublishButtonLoadedOnSchedulePage() throws Exception;
 	public boolean isCreateScheduleBtnLoadedOnSchedulePage() throws Exception;
 	public void clickOnRepublishButtonLoadedOnSchedulePage() throws Exception;
-	public List<String> getListByCol(int index) throws Exception;
 	public List<Float> transferStringToFloat(List<String> listString) throws Exception;
 	public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String weekType) throws Exception;
 	public void verifyClockedOrProjectedInDMViewTable(String expected) throws Exception;
 	public int getIndexOfColInDMViewTable(String colName) throws Exception;
+	public HashMap<String, Integer> getValueOnUnplannedClocksSummaryCardAndVerifyInfo() throws Exception;
+	public List<String> getListByColInTimesheetDMView(int index) throws Exception;
+	public HashMap<String, Integer> getValueOnUnplannedClocksSmartCardAndVerifyInfo() throws Exception;
 }

@@ -3402,11 +3402,6 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public List<String> getListByCol(int index) throws Exception{
-        return null;
-    }
-
-    @Override
     public List<Float> transferStringToFloat(List<String> listString) throws Exception{
         return null;
     }
@@ -3419,5 +3414,20 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @Override
     public int getIndexOfColInDMViewTable(String colName) throws Exception {
         return 0;
+    }
+
+    @Override
+    public HashMap<String, Integer> getValueOnUnplannedClocksSummaryCardAndVerifyInfo() throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<String> getListByColInTimesheetDMView(int index) throws Exception {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, Integer> getValueOnUnplannedClocksSmartCardAndVerifyInfo() throws Exception {
+        return null;
     }
 }
