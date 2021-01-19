@@ -13,5 +13,7 @@ public interface ScheduleDMViewPage {
     public String getBudgetSurplusInDMView() throws Exception;
     public void verifySmartCardsAreLoadedForPastOrFutureWeek(boolean isPastWeek) throws Exception;
     public void verifySchedulesTableHeaderNames(boolean isApplyBudget, boolean isPastWeek) throws Exception;
-    public void verifyScheduleStatusOnScheduleDMView(String scheduleStatus) throws Exception;
+    public void verifyScheduleStatusAndHoursInScheduleList(String scheduleStatus) throws Exception;
+    public void verifyTheContentOnScheduleStatusCards() throws Exception;
+    public void verifyTheScheduleStatusAccountOnScheduleStatusCards() throws Exception;
 }

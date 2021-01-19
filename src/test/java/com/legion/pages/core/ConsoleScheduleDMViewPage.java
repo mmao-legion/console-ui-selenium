@@ -3,16 +3,15 @@ package com.legion.pages.core;
 import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptExecutor;
 import com.legion.pages.*;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
+import cucumber.api.java.sl.In;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -235,14 +234,147 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     @FindBy(css = "[class=\"card-carousel-container\"] div.card-carousel-card")
     private List<WebElement>  scheduleStatusCards;
 
+    @FindBy(css = "div.card-carousel-card div.analytics-card-color-text-1")
+    private List<WebElement>  numbersOfSpecificStatusSchedule;
+
+    @FindBy(css = "div.card-carousel-card div.analytics-card-color-text-2")
+    private List<WebElement>  specificStatusMessages;
+
+    @FindBy(css = "div.card-carousel-card div.analytics-card-color-text-3")
+    private List<WebElement>  scheduleMessages;
+
+    @FindBy(css = "div.card-carousel-card div.analytics-card-color-text-4")
+    private List<WebElement>  totalScheduleMessages;
+
     @FindBy(css = "[ng-repeat=\"f in header track by $index\"]")
     private List<WebElement>  schedulesTableHeaders;
 
     @FindBy(css = "div.card-carousel-card-primary.card-carousel-card-table")
     private WebElement  scheduleScoreSmartCard;
 
+    public void verifyTheScheduleStatusAccountOnScheduleStatusCards() throws Exception {
+        Map<String, Integer> scheduleStatusAccountFromScheduleStatusCards = getScheduleStatusAccountFromScheduleStatusCards();
+        Map<String, Integer> scheduleStatusFromScheduleDMViewPage = getThreeWeeksScheduleStatusFromScheduleDMViewPage();
+        if(areListElementVisible(schedulesInDMView, 5) && schedulesInDMView.size()>0
+                && scheduleStatusAccountFromScheduleStatusCards.get("notStarted")
+                ==scheduleStatusFromScheduleDMViewPage.get("notStartedNumberForCurrentWeek")
+                && scheduleStatusAccountFromScheduleStatusCards.get("published")
+                ==scheduleStatusFromScheduleDMViewPage.get("publishedForCurrentWeek")
+                && scheduleStatusAccountFromScheduleStatusCards.get("inProgress")
+                ==scheduleStatusFromScheduleDMViewPage.get("inProgressForCurrentWeek")){
+            SimpleUtils.pass("The Specific status schedule numbers display correctly! ");
+        } else
+            SimpleUtils.fail("The Specific status schedule numbers display incorrectly! ", false);
+
+        int scheduleAccount = schedulesInDMView.size();
+
+        if (scheduleStatusAccountFromScheduleStatusCards.get("notStarted") != 0){
+            if(scheduleStatusAccountFromScheduleStatusCards.get("totalNotStartedSchedules") == scheduleAccount){
+                SimpleUtils.pass("The total schedule number on Not Started Schedule card display correctly! ");
+            } else
+                SimpleUtils.fail("The total schedule number on Not Started Schedule card display incorrectly! ", false);
+        } else {
+            if(scheduleStatusAccountFromScheduleStatusCards.get("totalNotStartedSchedules") == 0){
+                SimpleUtils.pass("There is no Not Started Schedule card! ");
+            } else
+                SimpleUtils.fail("The total schedule number of Not Started Schedule card display incorrectly! ", false);
+        }
+
+        if (scheduleStatusAccountFromScheduleStatusCards.get("published") != 0){
+            if(scheduleStatusAccountFromScheduleStatusCards.get("totalPublishedSchedules") == scheduleAccount){
+                SimpleUtils.pass("The total schedule number on Published Schedule card display correctly! ");
+            } else
+                SimpleUtils.fail("The total schedule number on Published Schedule card display incorrectly! ", false);
+        } else {
+            if(scheduleStatusAccountFromScheduleStatusCards.get("totalPublishedSchedules") == 0){
+                SimpleUtils.pass("There is no Published Schedule card! ");
+            } else
+                SimpleUtils.fail("The total schedule number of Published Schedule card display incorrectly! ", false);
+        }
+
+        if (scheduleStatusAccountFromScheduleStatusCards.get("inProgress") != 0){
+            if(scheduleStatusAccountFromScheduleStatusCards.get("totalInProgressSchedules") == scheduleAccount){
+                SimpleUtils.pass("The total schedule number on In Progress Schedule card display correctly! ");
+            } else
+                SimpleUtils.fail("The total schedule number on In Progress Schedule card display incorrectly! ", false);
+        } else {
+            if(scheduleStatusAccountFromScheduleStatusCards.get("totalInProgressSchedules") == 0){
+                SimpleUtils.pass("There is no In Progress Schedule card! ");
+            } else
+                SimpleUtils.fail("The total schedule number of In Progress Schedule card display incorrectly! ", false);
+        }
+    }
+
+    public Map<String, Integer> getScheduleStatusAccountFromScheduleStatusCards(){
+        Map<String, Integer> scheduleStatusAccount = new HashMap<>();
+        scheduleStatusAccount.put("notStarted",0);
+        scheduleStatusAccount.put("published",0);
+        scheduleStatusAccount.put("inProgress",0);
+        scheduleStatusAccount.put("totalNotStartedSchedules",0);
+        scheduleStatusAccount.put("totalPublishedSchedules",0);
+        scheduleStatusAccount.put("totalInProgressSchedules",0);
+
+        if(areListElementVisible(scheduleStatusCards, 5) && scheduleStatusCards.size()>0){
+
+            for (WebElement scheduleStatusCard: scheduleStatusCards){
+                String scheduleStatus = scheduleStatusCard.findElement(By.cssSelector("div.analytics-card-color-text-2")).getText();
+                switch (scheduleStatus){
+                    case "Not Started":
+                        scheduleStatusAccount.put("notStarted",
+                                Integer.parseInt(scheduleStatusCard.findElement(By.cssSelector("div.analytics-card-color-text-1")).getText()));
+                        scheduleStatusAccount.put("totalNotStartedSchedules",
+                                Integer.parseInt(scheduleStatusCard.findElement(By.cssSelector("div.analytics-card-color-text-4")).getText().split(" ")[0]));
+                        break;
+                    case "Published":
+                        scheduleStatusAccount.put("published",
+                                Integer.parseInt(scheduleStatusCard.findElement(By.cssSelector("div.analytics-card-color-text-1")).getText()));
+                        scheduleStatusAccount.put("totalPublishedSchedules",
+                                Integer.parseInt(scheduleStatusCard.findElement(By.cssSelector("div.analytics-card-color-text-4")).getText().split(" ")[0]));
+                        break;
+                    case "In Progress":
+                        scheduleStatusAccount.put("inProgress",
+                                Integer.parseInt(scheduleStatusCard.findElement(By.cssSelector("div.analytics-card-color-text-1")).getText()));
+                        scheduleStatusAccount.put("totalInProgressSchedules",
+                                Integer.parseInt(scheduleStatusCard.findElement(By.cssSelector("div.analytics-card-color-text-4")).getText().split(" ")[0]));
+                        break;
+                }
+                SimpleUtils.pass("Get " +scheduleStatus+ " schedule status account successfully! ");
+            }
+        } else {
+            SimpleUtils.fail("Schedule Status card loaded fail! ", false);
+        }
+        return scheduleStatusAccount;
+    }
+
+    public void verifyTheContentOnScheduleStatusCards() throws Exception {
+        if(areListElementVisible(scheduleStatusCards, 5) && scheduleStatusCards.size()>0){
+            if(areListElementVisible(numbersOfSpecificStatusSchedule, 5)
+                    && numbersOfSpecificStatusSchedule.size() ==scheduleStatusCards.size()
+                    && areListElementVisible(specificStatusMessages, 5)
+                    && specificStatusMessages.size() == scheduleStatusCards.size()
+                    && areListElementVisible(scheduleMessages, 5)
+                    && scheduleMessages.size() == scheduleStatusCards.size()
+                    && areListElementVisible(totalScheduleMessages, 5)
+                    && totalScheduleMessages.size() == scheduleStatusCards.size()) {
+                for (int i=0;i<scheduleStatusCards.size();i++){
+                    if ((specificStatusMessages.get(i).getText().contains("Not Started")
+                            ||specificStatusMessages.get(i).getText().contains("Published")
+                            ||specificStatusMessages.get(i).getText().contains("In Progress"))
+                            && scheduleMessages.get(i).getText().equalsIgnoreCase("Schedules")
+                            && totalScheduleMessages.get(i).getText().contains("total schedules")){
+                        SimpleUtils.pass("The contents on the "+ specificStatusMessages.get(i).getText() +"Schedule Status cards loaded successfully! ");
+                    } else
+                        SimpleUtils.fail("The contents on the "+ (i+1) +"Schedule Status cards loaded fail! ", false);
+                }
+            } else
+                SimpleUtils.fail("The contents on Schedule Status cards loaded fail! ", false);
+        } else {
+            SimpleUtils.fail("Schedule Status card loaded fail! ", false);
+        }
+    }
+
     @Override
-    public void verifyScheduleStatusOnScheduleDMView(String scheduleStatus) throws Exception {
+    public void verifyScheduleStatusAndHoursInScheduleList(String scheduleStatus) throws Exception {
         if (areListElementVisible(schedulesInDMView, 5)
                 && schedulesInDMView.size()>0
                 && areListElementVisible(scheduleStatusOnScheduleDMViewPage, 5)
@@ -265,6 +397,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
 
             //Try to generate/ungenerate the first schedule if there is no the specific status schedule on schedule DM view
             if(!isScheduleExists){
+                theSelectedScheduleLocationName = schedulesInDMView.get(0).findElement(By.cssSelector("[class=\"ng-binding\"]")).getText();
                 click(schedulesInDMView.get(0).findElement(By.className("ng-binding")));
                 if (schedulePage.isWeekGenerated()){
                     schedulePage.unGenerateActiveScheduleScheduleWeek();

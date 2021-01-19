@@ -441,6 +441,7 @@
                     <include name="verifyTheContentBetweenWeeksOnScheduleInDMViewAsInternalAdmin" />
                     <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
                     <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />
+                    <include name="verifyScheduleStatusOnScheduleDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

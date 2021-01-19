@@ -789,10 +789,14 @@ public class DMViewTest extends TestBase {
             schedulePage.clickOnScheduleConsoleMenuItem();
 
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            scheduleDMViewPage.verifyScheduleStatusOnScheduleDMView("Published");
-            scheduleDMViewPage.verifyScheduleStatusOnScheduleDMView("Not Started");
-            scheduleDMViewPage.verifyScheduleStatusOnScheduleDMView("In Progress");
 
+            //Validate the schedule status and hours on schedule list
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList("Published");
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList("Not Started");
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList("In Progress");
+
+            //Validate the numbers on Schedule Status Cards
+            scheduleDMViewPage.verifyTheScheduleStatusAccountOnScheduleStatusCards();
         } catch (Exception e) {
             SimpleUtils.fail(e.toString(),false);
         }
