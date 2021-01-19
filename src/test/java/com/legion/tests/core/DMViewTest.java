@@ -390,7 +390,7 @@ public class DMViewTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify Open Shifts widget on Dashboard in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -463,7 +463,7 @@ public class DMViewTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify Schedule functionality in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyScheduleFunctionalityForDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyScheduleFunctionalityForDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -509,7 +509,7 @@ public class DMViewTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the availablity of location list and sub location on Schedule in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationListAndSublocationInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyLocationListAndSublocationInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -553,7 +553,7 @@ public class DMViewTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Verify Timesheet functionality on Timesheet in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimesheetFunctionalityInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimesheetFunctionalityInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -571,12 +571,12 @@ public class DMViewTest extends TestBase {
             //Verify district selected and displayed with "All locations".
             locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(districtName);
             locationSelectorPage.isLocationSelected("All Locations");
+            List<String> locationInDistrict1 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
 
             //Validate search function.
             schedulePage.verifySearchLocationInScheduleDMView(location);
 
             //Validate changing district.
-            List<String> locationInDistrict1 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
             locationSelectorPage.changeAnotherDistrictInDMView();
             String anotherDistrictName = dashboardPage.getCurrentDistrict();
             locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(anotherDistrictName);
@@ -590,6 +590,101 @@ public class DMViewTest extends TestBase {
             //Validate the clickability of forward button.
             schedulePage.navigateToNextWeek();
             SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify LOCATION SUMMARY on Schedule in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationSummaryInScheduleDMViewAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Go to the Schedule page in DM view.
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+
+            //Validate the content of LOCATION SUMMARY smart card for current/future weeks.
+            HashMap<String, Float> valuesFromLocationSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView("current");
+
+            //Validate the data LOCATION SUMMARY smart card for current/future weeks.
+            SimpleUtils.assertOnFail("Location counts in title are inconsistent!", Math.round(valuesFromLocationSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            SimpleUtils.assertOnFail("Location counts from projected info are inconsistent!", (Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedWithin")) + Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            //verify budgeted hours.
+            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByCol(schedulePage.getIndexOfColInDMViewTable("Budgeted Hours")));
+            float budgetedHrsFromTable = 0;
+            for (Float f: data){
+                budgetedHrsFromTable = budgetedHrsFromTable + f;
+            }
+            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) >= 0, false);
+            //verify scheduled hours
+            data = schedulePage.transferStringToFloat(schedulePage.getListByCol(schedulePage.getIndexOfColInDMViewTable("Scheduled Hours")));
+            float scheduledHrsFromTable = 0;
+            for (Float f: data){
+                scheduledHrsFromTable = scheduledHrsFromTable + f;
+            }
+            SimpleUtils.assertOnFail("Published hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) >= 0, false);
+
+            //Verify difference value between budgeted and projected.
+            data = schedulePage.transferStringToFloat(schedulePage.getListByCol(schedulePage.getIndexOfColInDMViewTable("Projected Hours")));
+            float projectedHours = 0;
+            for (Float f: data){
+                projectedHours = projectedHours + f;
+            }
+            if ((valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)>=0){
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("▼")) - (valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)) >= 0, false);
+            } else {
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("▲")) - (valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)) >= 0, false);
+
+            }
+
+            //Verify currect week Projected Hours displays.
+            schedulePage.verifyClockedOrProjectedInDMViewTable("Projected Hours");
+
+            //Navigate to the past week to verify the info and data.
+            schedulePage.navigateToPreviousWeek();
+            valuesFromLocationSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView("past");
+
+            //Validate the data LOCATION SUMMARY smart card for the past weeks.
+            SimpleUtils.assertOnFail("Location counts in title are inconsistent!", Math.round(valuesFromLocationSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            SimpleUtils.assertOnFail("Location counts from projected info are inconsistent!", (Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedWithin")) + Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            //verify budgeted hours.
+            data = schedulePage.transferStringToFloat(schedulePage.getListByCol(schedulePage.getIndexOfColInDMViewTable("Budgeted Hours")));
+            budgetedHrsFromTable = 0;
+            for (Float f: data){
+                budgetedHrsFromTable = budgetedHrsFromTable + f;
+            }
+            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) >= 0, false);
+            //verify scheduled hours.
+            data = schedulePage.transferStringToFloat(schedulePage.getListByCol(schedulePage.getIndexOfColInDMViewTable("Scheduled Hours")));
+            scheduledHrsFromTable = 0;
+            for (Float f: data){
+                scheduledHrsFromTable = scheduledHrsFromTable + f;
+            }
+            SimpleUtils.assertOnFail("Published hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) >= 0, false);
+            //Verify difference value between budgeted and projected.
+            data = schedulePage.transferStringToFloat(schedulePage.getListByCol(schedulePage.getIndexOfColInDMViewTable("Projected Hours")));
+            projectedHours = 0;
+            for (Float f: data){
+                projectedHours = projectedHours + f;
+            }
+            if ((valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)>=0){
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("▼")) - (valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)) >= 0, false);
+            } else {
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("▲")) - (valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)) >= 0, false);
+
+            }
+            //Verify past week Clocked Hours displays.
+            schedulePage.verifyClockedOrProjectedInDMViewTable("Clocked Hours");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -775,10 +870,14 @@ public class DMViewTest extends TestBase {
             schedulePage.clickOnScheduleConsoleMenuItem();
 
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            scheduleDMViewPage.verifyScheduleStatusOnScheduleDMView("Published");
-            scheduleDMViewPage.verifyScheduleStatusOnScheduleDMView("Not Started");
-            scheduleDMViewPage.verifyScheduleStatusOnScheduleDMView("In Progress");
 
+            //Validate the schedule status and hours on schedule list
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList("Published");
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList("Not Started");
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList("In Progress");
+
+            //Validate the numbers on Schedule Status Cards
+            scheduleDMViewPage.verifyTheScheduleStatusAccountOnScheduleStatusCards();
         } catch (Exception e) {
             SimpleUtils.fail(e.toString(),false);
         }

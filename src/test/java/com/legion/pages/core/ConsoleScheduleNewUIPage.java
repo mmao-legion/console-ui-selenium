@@ -12731,7 +12731,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     //index: 1-6
-    private List<String> getListByCol(int index) throws Exception{
+    @Override
+    public List<String> getListByCol(int index) throws Exception{
         List<String> list = new ArrayList<String>();
         if (index > 0 && index < 8){
             if (index == 1){
@@ -12829,7 +12830,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    private List<Float> transferStringToFloat(List<String> listString) throws Exception{
+    @Override
+    public List<Float> transferStringToFloat(List<String> listString) throws Exception{
         List<Float> result = new ArrayList<Float>();
         boolean flag = true;
         for (String s : listString){
@@ -12855,7 +12857,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             for (String s: getLocationsInScheduleDMViewLocationsTable()){
                 flag = flag && s.contains(location);
             }
-            analyticsTableInScheduleDMViewPage.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
             if (flag){
                 SimpleUtils.pass("Search result is correct!");
             } else {
@@ -12944,12 +12945,142 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public boolean isCreateScheduleBtnLoadedOnSchedulePage() throws Exception {
         boolean isCreateScheduleBtnLoaded = false;
-        if (isElementLoaded(generateSheduleButton, 4)){
+        if (isElementLoaded(generateSheduleButton, 4)) {
             isCreateScheduleBtnLoaded = true;
             SimpleUtils.report("Create Schedule button loaded successfully on schedule page! ");
         } else
             SimpleUtils.report("Create Schedule button loaded fail on schedule page! ");
         return isCreateScheduleBtnLoaded;
+    }
+
+    @FindBy(css = "div.card-carousel-fixed")
+    private WebElement locationSummary;
+    @Override
+    public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String weekType) throws Exception {
+        HashMap<String, Float> result = new HashMap<String, Float>();
+        if (isElementLoaded(locationSummary,10) && locationSummary.findElements(By.cssSelector("text")).size()>=6){
+            if (locationSummary.findElement(By.cssSelector(".card-carousel-card-title")).getText().toLowerCase().contains("location summary")){
+                SimpleUtils.pass("Location Summary smart title displays correctly!");
+                String numOfLocations = locationSummary.findElement(By.cssSelector(".card-carousel-card-title")).getText().split(" ")[0];
+                if (SimpleUtils.isNumeric(numOfLocations)){
+                    result.put("NumOfLocations", Float.valueOf(numOfLocations));
+                } else {
+                    SimpleUtils.fail("Location count in title fail to load!", false);
+                }
+            } else {
+                SimpleUtils.fail("Location Summary smart title diaplays incorrectly!", false);
+            }
+            if (SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(0).getText()) && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(2).getText())){
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(1).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(0).getText()));
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(3).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(2).getText()));
+            } else {
+                SimpleUtils.fail("Budget hours and Published hours display incorrectly!", false);
+            }
+            if (locationSummary.findElements(By.cssSelector("text")).size()==6 && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs",""))){
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(5).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","")));
+                if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▼")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#50b83c")){
+                        SimpleUtils.pass("The color of the value is correct! -> green");
+                    } else {
+                        SimpleUtils.fail("The color of the value is incorrect! ->not green", false);
+                    }
+                } else if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▲")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#ff0000")){
+                        SimpleUtils.pass("The color of the value is correct! -> red");
+                    } else {
+                        SimpleUtils.fail("The color of the value is incorrect! ->not red", false);
+                    }
+                }
+            }
+            if (locationSummary.findElements(By.cssSelector("text")).size()==8
+                    && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(4).getText())
+                    && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(6).getText().replace(" Hrs",""))){
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(5).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(4).getText()));
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(7).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(6).getText().replace(" Hrs","")));
+
+                if (locationSummary.findElements(By.cssSelector("text")).get(7).getText().contains("▼")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(7).getAttribute("fill").contains("#50b83c")){
+                        SimpleUtils.pass("The color of the value is correct! -> green");
+                    } else {
+                        SimpleUtils.fail("The color of the value is incorrect! ->not green", false);
+                    }
+                } else if (locationSummary.findElements(By.cssSelector("text")).get(7).getText().contains("▲")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(7).getAttribute("fill").contains("#ff0000")){
+                        SimpleUtils.pass("The color of the value is correct! -> red");
+                    } else {
+                        SimpleUtils.fail("The color of the value is incorrect! ->not red", false);
+                    }
+                }
+            }
+            if(weekType.toLowerCase().contains("past") || weekType.contains("previous")){
+                if (isElementLoaded(locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")),10)
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Scheduled within\nBudget")
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Scheduled over\nBudget")
+                        && getLocationSummaryDataFromSchedulePage().size() == 3){
+                    String numOfProjectedWithin = getLocationSummaryDataFromSchedulePage().get(1).split(" ")[0];
+                    String numOfProjectedOver = getLocationSummaryDataFromSchedulePage().get(2).split(" ")[0];
+                    if (SimpleUtils.isNumeric(numOfProjectedWithin) && SimpleUtils.isNumeric(numOfProjectedOver)){
+                        result.put("NumOfProjectedWithin", Float.valueOf(numOfProjectedWithin));
+                        result.put("NumOfProjectedOver", Float.valueOf(numOfProjectedOver));
+                    } else {
+                        SimpleUtils.fail("Scheduled Location count in title fail to load!", false);
+                    }
+                    SimpleUtils.pass("Scheduled locations info load successfully!");
+                } else {
+                    SimpleUtils.fail("Scheduled locations info fail to load!", false);
+                }
+            } else {
+                if (isElementLoaded(locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")),10)
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Projected within\nBudget")
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Projected over\nBudget")
+                        && getLocationSummaryDataFromSchedulePage().size() == 3){
+                    String numOfProjectedWithin = getLocationSummaryDataFromSchedulePage().get(1).split(" ")[0];
+                    String numOfProjectedOver = getLocationSummaryDataFromSchedulePage().get(2).split(" ")[0];
+                    if (SimpleUtils.isNumeric(numOfProjectedWithin) && SimpleUtils.isNumeric(numOfProjectedOver)){
+                        result.put("NumOfProjectedWithin", Float.valueOf(numOfProjectedWithin));
+                        result.put("NumOfProjectedOver", Float.valueOf(numOfProjectedOver));
+                    } else {
+                        SimpleUtils.fail("Projected Location count in title fail to load!", false);
+                    }
+                    SimpleUtils.pass("Projected locations info load successfully!");
+                } else {
+                    SimpleUtils.fail("Projected locations info fail to load!", false);
+                }
+            }
+
+        } else {
+            SimpleUtils.fail("Location summary smart card fail to load!", false);
+        }
+        return result;
+    }
+
+    @Override
+    public void verifyClockedOrProjectedInDMViewTable(String expected) throws Exception {
+        if (isElementLoaded(locationTableHeader, 10)){
+            if (locationTableHeader.getText().toLowerCase().contains(expected.toLowerCase())){
+                SimpleUtils.pass(expected + " displays!");
+            } else {
+                SimpleUtils.fail(expected + " doesn't display!", false);
+            }
+        } else {
+            SimpleUtils.fail("Table header fail to load!", false);
+        }
+    }
+
+    @Override
+    public int getIndexOfColInDMViewTable(String colName) throws Exception {
+        int index = 0;
+        if (isElementLoaded(locationTableHeader, 10)){
+            for (String s: locationTableHeader.getText().split("\n")){
+                ++index;
+                if (s.toLowerCase().contains(colName.toLowerCase())){
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Table header fail to load!", false);
+        }
+        return index;
     }
 }
 
