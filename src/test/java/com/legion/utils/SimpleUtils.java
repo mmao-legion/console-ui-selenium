@@ -42,7 +42,6 @@ public class SimpleUtils {
 	static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
 
 	static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
-	public static String testSuiteIDTemp = "0";
 	public static String fileDownloadPath = parameterMap.get("Download_File_Default_Dir");
 
 	private static HashMap< String,Object[][]> userCredentials = JsonUtil.getCredentialsFromJsonFile("src/test/resources/legionUsers.json");
@@ -1664,8 +1663,8 @@ public class SimpleUtils {
 		String strDate = null;
 		String addResultString = "";
 		String name = "";
-		if(!testSuiteIDTemp.equalsIgnoreCase(MyThreadLocal.getTestSuiteID())){
-			testSuiteIDTemp = MyThreadLocal.getTestSuiteID();
+		if(MyThreadLocal.getIfAddNewTestRun()){
+			MyThreadLocal.setIfAddNewTestRun(false);
 			addResultString = "add_run/" + testRailProjectID;
 		} else {
 			addResultString = "update_run/" + MyThreadLocal.getTestRailRunId();

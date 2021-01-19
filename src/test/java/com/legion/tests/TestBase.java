@@ -102,6 +102,7 @@ public abstract class TestBase {
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
         MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
         MyThreadLocal.setTestRailRunName(testRailRunName);
+        MyThreadLocal.setIfAddNewTestRun(true);
         if (MyThreadLocal.getTestCaseIDList()==null){
             MyThreadLocal.setTestCaseIDList(new ArrayList<Integer>());
         }
