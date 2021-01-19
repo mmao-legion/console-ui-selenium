@@ -9442,6 +9442,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css=".noUi-marker-large")
     private List<WebElement> shiftTimeLarges;
 
+    @FindBy(css = ".noUi-marker")
+    private List<WebElement> noUiMakers;
+
+    @FindBy(css = ".noUi-value")
+    private List<WebElement> noUiValues;
+
     @Override
     public void editShiftTimeToTheLargest() throws Exception {
         if (isElementLoaded(shiftStartTimeButton, 10) && isElementLoaded(shiftEndTimeButton, 10)
@@ -9474,7 +9480,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
             String shiftTimeBeforeUpdate = shiftTimeInEditShiftWindow.getText();
             shiftTimes.add(0, shiftTimeBeforeUpdate);
-            moveDayViewCards(shiftEndTimeButton, -80);
+            if (areListElementVisible(noUiMakers, 5) && areListElementVisible(noUiValues, 5) && noUiMakers.size() == noUiValues.size()) {
+                String currentNow = shiftEndTimeButton.getAttribute("aria-valuenow");
+                int currentValue = Integer.parseInt(currentNow.substring(0, currentNow.indexOf('.')));
+                mouseHoverDragandDrop(shiftEndTimeButton, noUiMakers.get(currentValue - 1));
+                waitForSeconds(2);
+            }
             String shiftTimeAfterUpdate = shiftTimeInEditShiftWindow.getText();
             if (!shiftTimeBeforeUpdate.equals(shiftTimeAfterUpdate)) {
                 SimpleUtils.pass("Edit Shift Time successfully");
