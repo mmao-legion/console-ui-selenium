@@ -3367,6 +3367,26 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public boolean isPublishButtonLoadedOnSchedulePage() throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isRepublishButtonLoadedOnSchedulePage() throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isCreateScheduleBtnLoadedOnSchedulePage() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void clickOnRepublishButtonLoadedOnSchedulePage() throws Exception {
+
+    }
+
+    @Override
     public void navigateToPreviousWeek() throws Exception{
 
     }
@@ -3374,5 +3394,40 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @Override
     public void clickOnLocationNameInDMView(String location) throws Exception {
 
+    }
+
+    @Override
+    public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String weekType) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<Float> transferStringToFloat(List<String> listString) throws Exception{
+        return null;
+    }
+
+    @Override
+    public void verifyClockedOrProjectedInDMViewTable(String expected) throws Exception {
+
+    }
+
+    @Override
+    public int getIndexOfColInDMViewTable(String colName) throws Exception {
+        return 0;
+    }
+
+    @Override
+    public HashMap<String, Integer> getValueOnUnplannedClocksSummaryCardAndVerifyInfo() throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<String> getListByColInTimesheetDMView(int index) throws Exception {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, Integer> getValueOnUnplannedClocksSmartCardAndVerifyInfo() throws Exception {
+        return null;
     }
 }
