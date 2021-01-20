@@ -246,18 +246,18 @@ public class SimpleUtils {
 
 		ExtentTestManager.getTest().log(Status.INFO,"<div class=\"row\" style=\"background-color:#0000FF; color:white; padding: 7px 5px;\">" + message
 				+ "</div>");
-		if(getTestRailReporting()!=null&&MyThreadLocal.getTestCaseExistsFlag()){
-			SimpleUtils.addTestResultIntoTestRailN(6, message);
-		}
+//		if(getTestRailReporting()!=null&&MyThreadLocal.getTestCaseExistsFlag()){
+//			SimpleUtils.addTestResultIntoTestRailN(6, message);
+//		}
 	}
 
 	public static void warn(String message) {
 
 		ExtentTestManager.getTest().log(Status.WARNING,"<div class=\"row\" style=\"background-color:#FFA500; color:white; padding: 7px 5px;\">" + message
 				+ "</div>");
-		if(getTestRailReporting()!=null&&MyThreadLocal.getTestCaseExistsFlag()){
-			SimpleUtils.addTestResultIntoTestRailN(6, message);
-		}
+//		if(getTestRailReporting()!=null&&MyThreadLocal.getTestCaseExistsFlag()){
+//			SimpleUtils.addTestResultIntoTestRailN(6, message);
+//		}
 	}
 
 	public static HashMap<String, Object[][]> getEnvironmentBasedUserCredentialsFromJson(String fileName)
@@ -906,6 +906,7 @@ public class SimpleUtils {
 			testCasesToAdd = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client);
 			if (testCasesToAdd.isEmpty()){
 				MyThreadLocal.setTestCaseExistsFlag(false);
+				System.out.println("-------------------Cannot find the test cases for: " + testName + "-------------------");
 			} else {
 				MyThreadLocal.setTestCaseExistsFlag(true);
 				testCaseIDList.addAll(testCasesToAdd);
@@ -1666,6 +1667,7 @@ public class SimpleUtils {
 		if(MyThreadLocal.getIfAddNewTestRun()){
 			MyThreadLocal.setIfAddNewTestRun(false);
 			addResultString = "add_run/" + testRailProjectID;
+			System.out.println("----------------------Add test run for project: " + testRailProjectID + "--------------------");
 		} else {
 			addResultString = "update_run/" + MyThreadLocal.getTestRailRunId();
 		}

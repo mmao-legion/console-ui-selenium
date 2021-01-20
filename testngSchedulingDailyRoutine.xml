@@ -3,7 +3,7 @@
 <suite verbose ="0" thread-count="10" name="LegionTest">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
-    <parameter name="testRailRunName" value="Automation Regression"/>
+    <parameter name="testRailRunName" value="Daily Routine Test Run"/>
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
@@ -22,10 +22,6 @@
         <classes>
             <class name="com.legion.tests.core.DashboardTestKendraScott2">
                 <methods>
-                    <include name="verifyTheDisplayLocationWithSelectedLocation"/>
-                    <include name="verifyTheClickActionOnChangeLocationButton"/>
-                    <include name="verifyTheContentDisplayedInChangeLocationLayout"/>
-                    <include name="verifyTheFunctionOfSearchTextBox"/>
                     <include name="verifyDashboardFunctionalityAsTeamMember" />
                 </methods>
             </class>
@@ -56,7 +52,6 @@
         <classes>
             <class name="com.legion.tests.core.ScheduleTest">
                 <methods>
-                    <include name="verifyTheTeamScheduleOptionAsInternalAdmin" />
                     <include name="verifyTheFeatureOfFilterAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamMember" />
                 </methods>
@@ -69,7 +64,6 @@
             <class name="com.legion.tests.core.ForecastTest">
                 <methods>
                     <include name="verifyScheduleLaborForeCastFunctionality"/>
-<!--                    <include name="verifyShopperForecastFunctionality"/>-->
                     <include name="validateWeatherSmartCardOnForecastPage"/>
                     <include name="verifyScheduleFunctionalityForecast"/>
                 </methods>
@@ -89,7 +83,6 @@
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
                     <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
-<!--                    <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />-->
                     <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyActivityOfClaimOpenShiftAsTeamMember" />
                     <include name="verifyActivityOfPublishUpdateSchedule" />
@@ -109,7 +102,6 @@
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
                     <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
-                    <include name="verifyEditModeInNewUserProfilePageAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -120,8 +112,6 @@
             <class name="com.legion.tests.core.LiquidDashboardTest">
                 <methods>
                     <include name="verifyCommonUIOfWidgetsAsStoreManager" />
-                    <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
-<!--                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" />-->
                     <include name="verifySchedulesWidgetsAsStoreManager" />
                 </methods>
             </class>
@@ -132,11 +122,9 @@
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
-                    <include name="verifyScheduleLegionFunctionality" />
                     <include name="verifyComplianceSmartCardFunctionality" />
                     <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
                     <include name="verifyScheduleFunctionalityWeekView"/>
-                    <include name="verifyScheduleFunctionalityDayViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView"/>
@@ -145,17 +133,12 @@
                     <include name="verifyProfilePictureFunctionalityAsTeamMember" />
                     <include name="verifyInfoIconFunctionalityAsTeamMember" />
                     <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
-                    <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
                     <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
-                    <include name="verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin" />
                     <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />
                     <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
-                    <include name="verifySearchBarOnSchedulePageAsInternalAdmin" />
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
-                    <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
-                    <include name="verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
