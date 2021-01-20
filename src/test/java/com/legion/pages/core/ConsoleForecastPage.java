@@ -892,7 +892,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 				}
 			}else {
 				//SimpleUtils.fail("Refresh button load failed",true);
-				SimpleUtils.warn("Weather smart card is not loaded!");
+				SimpleUtils.report("Weather smart card is not loaded!");
 			}
 		}
 
