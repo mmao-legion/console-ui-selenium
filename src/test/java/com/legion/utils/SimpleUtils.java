@@ -1190,6 +1190,34 @@ public class SimpleUtils {
 		}
 	}
 
+	//Add by Haya
+	public static boolean isTestRunEmpty(long testRailRunId){
+		boolean result = false;
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+		try {
+			// Make a connection with Testrail Server
+			APIClient client = new APIClient(testRailURL);
+			client.setUser(testRailUser);
+			client.setPassword(testRailPassword);
+			JSONObject jSONObject= (JSONObject) client.sendGet("get_run/"+testRailRunId);
+			long testRunPassedCount = (long) jSONObject.get("passed_count");
+			long testRunFailedCount = (long) jSONObject.get("failed_count");
+			long testRunBlockedCount = (long) jSONObject.get("blocked_count");
+			long testRunRetestCount = (long) jSONObject.get("retest_count");
+			long testRunUntestedCount = (long) jSONObject.get("untested_count");
+			if ((testRunPassedCount+testRunFailedCount+testRunBlockedCount+testRunRetestCount+testRunUntestedCount)==0){
+				result = true;
+			}
+		}catch(IOException ioException){
+			System.err.println(ioException.getMessage());
+		} catch(APIException aPIException){
+			System.err.println(aPIException.getMessage());
+		}
+		return result;
+	}
+
 	public static void addTestResultWithTestCaseLinkIntoTestRail(int statusID, String comment)
 	{
 		/*

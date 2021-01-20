@@ -298,6 +298,15 @@ public abstract class TestBase {
 //        stopServer();
     }
 
+    @AfterSuite
+    public void afterSuiteWorker() throws IOException{
+        List<Integer> testRunList = new ArrayList<Integer>();
+        testRunList.add(getTestRailRunId());
+        if (SimpleUtils.isTestRunEmpty(getTestRailRunId())){
+            SimpleUtils.deleteTestRail(testRunList);
+        }
+    }
+
 
     public static void visitPage(Method testMethod){
 
