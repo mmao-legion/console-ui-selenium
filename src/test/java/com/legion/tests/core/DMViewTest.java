@@ -218,6 +218,7 @@ public class DMViewTest extends TestBase {
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             List<String> complianceViolationsFromOnDMViewCompliance = compliancePage.getComplianceViolationsOnDMViewSmartCard();
             dashboardPage.validateDataOnComplianceViolationsWidget(complianceViolationsOnDMViewDashboard, complianceViolationsFromOnDMViewCompliance);
+            //todo SCH-1906： [Dashboard] Compliance violation widget -> the numbers of violation is incorrect
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
@@ -307,16 +308,18 @@ public class DMViewTest extends TestBase {
 
             // Validate Refresh function for past weeks
             schedulePage.navigateToPreviousWeek();
+            scheduleDMViewPage.validateRefreshTimestamp();
             scheduleDMViewPage.clickOnRefreshButton();
             scheduleDMViewPage.validateRefreshFunction();
 
             // Validate Refresh function for current/future weeks
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
+            scheduleDMViewPage.validateRefreshTimestamp();
             scheduleDMViewPage.clickOnRefreshButton();
             scheduleDMViewPage.validateRefreshFunction();
 
-            // Validate Refresh reflect schedule change
+            // Validate Refresh reflects schedule change
             while (!scheduleDMViewPage.isNotStartedScheduleDisplay()) {
                 schedulePage.navigateToNextWeek();
             }
@@ -325,7 +328,10 @@ public class DMViewTest extends TestBase {
                 schedulePage.clickOnLocationNameInDMView(notStartedLocation);
                 SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                         schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                boolean isWeekGenerated = schedulePage.isWeekGenerated();
+                if (!isWeekGenerated) {
+                    schedulePage.createScheduleForNonDGFlowNewUI();
+                }
                 locationSelectorPage.reSelectDistrict(districtName);
                 scheduleDMViewPage.clickOnRefreshButton();
                 String scheduleStatus = scheduleDMViewPage.getScheduleStatusForGivenLocation(notStartedLocation);
@@ -346,6 +352,84 @@ public class DMViewTest extends TestBase {
                     SimpleUtils.fail("Schedule Page: After the second refreshing, it isn't \"Published\" status", false);
             } else
                 SimpleUtils.report("Schedule Page: There are no Not Started schedules in the current and upcoming weeks");
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "DGStage_Enterprise")
+    @TestName(description = "Verify Refresh feature on Dashboard in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRefreshFeatureOnTimesheetInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
+
+            // Validate the presence of Refresh button
+            timeSheetPage.validateThePresenceOfRefreshButton();
+
+            // Validate Refresh timestamp
+            timeSheetPage.validateRefreshTimestamp();
+
+            // Validate Refresh when navigation back
+            timeSheetPage.validateRefreshWhenNavigationBack();
+
+            // Validate Refresh function
+            timeSheetPage.validateRefreshFunction();
+
+            // Validate Refresh performance
+            timeSheetPage.validateRefreshPerformance();
+
+            // Validate Refresh function for past weeks
+            timeSheetPage.navigateToPreviousWeek();
+            timeSheetPage.validateRefreshTimestamp();
+            timeSheetPage.clickOnRefreshButton();
+            timeSheetPage.validateRefreshFunction();
+
+            // Validate Refresh reflects timesheet change
+            String rateWithin24OnSmartCardBeforeChange = timeSheetPage.getTimesheetApprovalRateOnDMViewSmartCard().get(0);
+            String rateInAnalyticsTableBeforeChange = timeSheetPage.getTimesheetApprovalForGivenLocationInDMView(location);
+            timeSheetPage.clickOnGivenLocation(location);
+            if (!timeSheetPage.isWorkerDisplayInTimesheetTable()) {
+                timeSheetPage.navigateToSchedule();
+                SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                boolean isWeekGenerated = schedulePage.isWeekGenerated();
+                if (!isWeekGenerated) {
+                    schedulePage.createScheduleForNonDGFlowNewUI();
+                }
+                schedulePage.publishActiveSchedule();
+                timeSheetPage.clickOnTimeSheetConsoleMenu();
+            }
+            timeSheetPage.approveAnyTimesheet();
+            String rateInTimesheetDueAfterApprove = timeSheetPage.getApprovalRateFromTIMESHEETDUESmartCard();
+            System.out.println("rateInTimesheetDueAfterApprove"+rateInTimesheetDueAfterApprove);
+            dashboardPage.navigateToDashboard();
+            locationSelectorPage.reSelectDistrict(districtName);
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            timeSheetPage.clickOnRefreshButton();
+            String rateWithin24OnSmartCardAfterChange = timeSheetPage.getTimesheetApprovalRateOnDMViewSmartCard().get(0);
+            String rateInAnalyticsTableAfterChange = timeSheetPage.getTimesheetApprovalForGivenLocationInDMView(location);
+            if (rateInTimesheetDueAfterApprove.equals(rateInAnalyticsTableAfterChange)
+                    && !rateWithin24OnSmartCardBeforeChange.equals(rateWithin24OnSmartCardAfterChange)
+            && !rateInAnalyticsTableBeforeChange.equals(rateInAnalyticsTableAfterChange))
+                SimpleUtils.pass("Timesheet Page: The timesheet approval rate on smart card and in analytics table gets updating according to the new change");
+            else
+                // SimpleUtils.fail("",false);
+                SimpleUtils.warn("TA-5015: Approved percentage cannot get updating after approving on TIMESHEET DUE smart card");
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);

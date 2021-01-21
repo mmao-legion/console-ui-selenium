@@ -178,7 +178,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                 if (isElementLoaded(justUpdated,60) && !scheduleSection.getAttribute("class").contains("home-dashboard-loading"))
                     SimpleUtils.pass("Schedule Page: Once the data is done refreshing, the page shows 'JUST UPDATED' and page becomes brighter again");
                 else
-                    SimpleUtils.fail("Dashboard Page: When the data is done refreshing, the page doesn't show 'JUST UPDATED' and page doesn't become brighter again",false);
+                    SimpleUtils.fail("Schedule Page: When the data is done refreshing, the page doesn't show 'JUST UPDATED' and page doesn't become brighter again",false);
                 if (isElementLoaded(lastUpdated,60) && lastUpdatedMinutes.getAttribute("class").contains("last-updated-countdown-time-blue"))
                     SimpleUtils.pass("Schedule Page: The Last Updated info provides the minutes last updated in blue");
                 else
@@ -216,13 +216,13 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     public void validateRefreshTimestamp() throws Exception {
         String timestamp = "";
         if (isElementLoaded(justUpdated, 5)) {
-            SimpleUtils.pass("Dashboard Page:  The page just refreshed");
+            SimpleUtils.pass("Schedule Page: The page just refreshed");
         } else if (isElementLoaded(lastUpdatedMinutes, 5)) {
             timestamp = lastUpdatedMinutes.getText();
             if (timestamp.contains("HOURS") && timestamp.contains(" ")) {
                 timestamp = timestamp.split(" ")[0];
                 if (Integer.valueOf(timestamp) == 1)
-                    SimpleUtils.pass("Schedule Page:  The backstop is 1 hour so that the data is not older than 1 hour stale");
+                    SimpleUtils.pass("Schedule Page: The backstop is 1 hour so that the data is not older than 1 hour stale");
                 else
                     // SimpleUtils.fail("Schedule Page:  The backstop is older than 1 hour stale",false);
                     SimpleUtils.warn("SCH-2589: [DM View] Refresh time is older than 1 hour stale");
@@ -230,9 +230,9 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             if (timestamp.contains("MINS") && timestamp.contains(" ")) {
                 timestamp = timestamp.split(" ")[0];
                 if (Integer.valueOf(timestamp) < 60 && Integer.valueOf(timestamp) >= 1)
-                    SimpleUtils.pass("Schedule Page:  The backstop is last updated" + timestamp + " ago");
+                    SimpleUtils.pass("Schedule Page: The backstop is last updated " + timestamp + " mins ago");
                 else
-                    SimpleUtils.fail("Schedule Page:  The backstop isn't refreshed in 1 hour stale", false);
+                    SimpleUtils.fail("Schedule Page: The backstop isn't refreshed in 1 hour stale", false);
             }
         } else
             SimpleUtils.fail("Schedule Page: Timestamp failed to load", false);
@@ -306,8 +306,8 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         if (areListElementVisible(rowsInAnalyticsTable,10)) {
             for (WebElement row : rowsInAnalyticsTable) {
                 if (row.findElement(By.xpath("./div/div[1]/span/img/following-sibling::span")).getText().equals(location)) {
-                    SimpleUtils.pass("Schedule Page: Find location successfully");
                     scheduleStatus = row.findElement(By.xpath("./div/div[2]/span/span")).getText().trim();
+                    SimpleUtils.pass("Schedule Page: Find the location " + location + " with Schedule Status " + scheduleStatus);
                     break;
                 }
             }

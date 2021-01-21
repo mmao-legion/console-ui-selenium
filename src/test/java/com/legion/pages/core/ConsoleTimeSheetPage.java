@@ -15,12 +15,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.TimeSheetPage;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.text.DateFormat;
 import java.time.Duration;
 
@@ -2744,5 +2747,346 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("Timesheet Page: The Alerts data not loaded on DM View smart card", false);
 		}
 		return rates;
+	}
+
+	// Added By Julie
+	@FindBy(css = "[ng-click=\"$ctrl.onReload(true)\"]")
+	private WebElement refreshButton;
+
+	@FindBy(css = "[ng-if=\"$ctrl.minutes >= 0 && $ctrl.date && !$ctrl.loading\"]")
+	private WebElement lastUpdatedIcon;
+
+	@FindBy (css = "last-updated-countdown span[ng-if^=\"$ctrl.minutes === 0\"]")
+	private WebElement justUpdated;
+
+	@FindBy (css = "last-updated-countdown span[ng-if^=\"$ctrl.minutes > 0\"]")
+	private WebElement lastUpdated;
+
+	@FindBy (css = "last-updated-countdown span[ng-if^=\"$ctrl.minutes > 0\"] span")
+	private WebElement lastUpdatedMinutes;
+
+	@FindBy (className = "navigation-menu-compliance-icon")
+	private WebElement complianceConsoleMenu;
+
+	@FindBy (css = ".console-navigation-item-label.Schedule")
+	private WebElement scheduleConsoleMenu;
+
+	@FindBy (css = ".analytics-new.ng-scope")
+	private WebElement timesheetSection;
+
+	@FindBy (className = "analytics-new-table-group")
+	private List<WebElement> rowsInAnalyticsTable;
+
+	@FindBy (css = ".console-navigation-item-label.Timesheet")
+	private WebElement timesheetConsoleMenu;
+
+	@FindBy (css = ".day-week-picker-period-week")
+	private List<WebElement> currentWeeks;
+
+	@FindBy(className = "day-week-picker-arrow-right")
+	private WebElement calendarNavigationNextWeekArrow;
+
+	@FindBy(className = "day-week-picker-arrow-left")
+	private WebElement calendarNavigationPreviousWeekArrow;
+
+	@FindBy(css = "input-field[value=\"$ctrl.allSelected\"]")
+	private WebElement allSelectedCheckBox;
+
+	@FindBy(css = "input-field[value=\"day.selected\"]")
+	private List<WebElement> daySelectedCheckBox;
+
+	@FindBy(css = "input-field[value=\"worker.selected\"]")
+	private List<WebElement> workerSelectedCheckBox;
+
+	@FindBy(css = "lg-button[label=\"Approve\"] button")
+	private WebElement timesheetApproveBtn;
+
+	@Override
+	public void clickOnRefreshButton() throws Exception {
+		if (isElementLoaded(refreshButton, 10)) {
+			clickTheElement(refreshButton);
+			if(isElementLoaded(lastUpdatedIcon, 60)){
+				SimpleUtils.pass("Click on Refresh button Successfully!");
+			} else
+				SimpleUtils.fail("Refresh timeout! ", false);
+		} else {
+			SimpleUtils.fail("Refresh button not Loaded!", true);
+		}
+	}
+
+	@Override
+	public void validateThePresenceOfRefreshButton() throws Exception {
+		if (isElementLoaded(refreshButton,10)) {
+			if (refreshButton.isDisplayed() && !refreshButton.getText().isEmpty() && refreshButton.getText() != null) {
+				if (getDriver().findElement(By.xpath("//body//day-week-picker/following-sibling::last-updated-countdown/div/lg-button")).equals(refreshButton)) {
+					SimpleUtils.pass("Timesheet Page: Refresh button shows near week section successfully");
+				} else {
+					SimpleUtils.fail("Timesheet Page: Refresh button is not above welcome section", true);
+				}
+			} else {
+				SimpleUtils.fail("Timesheet Page: Refresh button isn't present", true);
+			}
+		} else {
+			SimpleUtils.fail("Timesheet Page: Refresh button failed to load", true);
+		}
+	}
+
+	@Override
+	public void validateRefreshFunction() throws Exception {
+		int minutes = 0;
+		if (isElementLoaded(lastUpdatedMinutes,10) ) {
+			minutes = lastUpdatedMinutes.getText().contains(" ")? Integer.valueOf(lastUpdatedMinutes.getText().split(" ")[0]):Integer.valueOf(lastUpdatedMinutes.getText());
+			if (minutes >= 30 ) {
+				if (lastUpdatedMinutes.getAttribute("class").contains("last-updated-countdown-time-orange"))
+					SimpleUtils.pass("Timesheet Page: When the Last Updated time >= 30 mins, the color changes to orange");
+				else
+					SimpleUtils.fail("Timesheet Page: When the Last Updated time >= 30 mins, the color failed to change to orange",false);
+			}
+		}
+		if (isElementLoaded(refreshButton, 10)) {
+			clickTheElement(refreshButton);
+			SimpleUtils.pass("Timesheet Page: Click on Refresh button Successfully!");
+			if (timesheetSection.getAttribute("class").contains("analytics-new-refreshing") && refreshButton.getAttribute("label").equals("Refreshing...")) {
+				SimpleUtils.pass("Timesheet Page: After clicking Refresh button, the background is muted and it shows an indicator 'Refreshing...' that we are processing the info");
+				if (isElementLoaded(justUpdated,60) && timesheetSection.getAttribute("class").contains("home-dashboard-loading"))
+					SimpleUtils.pass("Timesheet Page: Once the data is done refreshing, the page shows 'JUST UPDATED' and page becomes brighter again");
+				else
+					SimpleUtils.fail("Timesheet Page: When the data is done refreshing, the page doesn't show 'JUST UPDATED' and page doesn't become brighter again",false);
+				if (isElementLoaded(lastUpdated,60) && lastUpdatedMinutes.getAttribute("class").contains("last-updated-countdown-time-blue"))
+					SimpleUtils.pass("Timesheet Page: The Last Updated info provides the minutes last updated in blue");
+				else
+					SimpleUtils.fail("Timesheet Page: The Last Updated info doesn't provide the minutes last updated in blue",false);
+			} else {
+				SimpleUtils.fail("Timesheet Page: After clicking Refresh button, the background isn't muted and it doesn't show 'Refreshing...'",true);
+			}
+		} else {
+			SimpleUtils.fail("Timesheet Page: Refresh button not Loaded!", true);
+		}
+	}
+
+	@Override
+	public void validateRefreshPerformance() throws Exception {
+		if (isElementLoaded(refreshButton, 10)) {
+			clickTheElement(refreshButton);
+			if (refreshButton.getAttribute("label").equals("Refreshing...")) {
+				SimpleUtils.pass("Timesheet Page: After clicking Refresh button, the button becomes 'Refreshing...'");
+				WebElement element = (new WebDriverWait(getDriver(), 60))
+						.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[label=\"Refresh\"]")));
+				if (element.isDisplayed()) {
+					SimpleUtils.pass("Timesheet Page: Page refreshes within 1 minute successfully");
+				} else {
+					SimpleUtils.fail("Timesheet Page: Page doesn't refresh within 1 minute", false);
+				}
+			} else {
+				SimpleUtils.fail("Timesheet Page: After clicking Refresh button, the background isn't muted and it doesn't show 'Refreshing...'",true);
+			}
+		} else {
+			SimpleUtils.fail("Timesheet Page: Refresh button not Loaded!", true);
+		}
+	}
+
+	@Override
+	public void validateRefreshTimestamp() throws Exception {
+		String timestamp = "";
+		if (isElementLoaded(justUpdated, 5)) {
+			SimpleUtils.pass("Timesheet Page: The page just refreshed");
+		} else if (isElementLoaded(lastUpdatedMinutes, 5)) {
+			timestamp = lastUpdatedMinutes.getText();
+			if (timestamp.contains("HOURS") && timestamp.contains(" ")) {
+				timestamp = timestamp.split(" ")[0];
+				if (Integer.valueOf(timestamp) == 1)
+					SimpleUtils.pass("Timesheet Page: The backstop is 1 hour so that the data is not older than 1 hour stale");
+				else
+					// SimpleUtils.fail("Schedule Page: The backstop is older than 1 hour stale",false);
+					SimpleUtils.warn("SCH-2589: [DM View] Refresh time is older than 1 hour stale");
+			}
+			if (timestamp.contains("MINS") && timestamp.contains(" ")) {
+				timestamp = timestamp.split(" ")[0];
+				if (Integer.valueOf(timestamp) < 60 && Integer.valueOf(timestamp) >= 1)
+					SimpleUtils.pass("Timesheet Page: The backstop is last updated " + timestamp + " mins ago");
+				else
+					SimpleUtils.fail("Timesheet Page: The backstop isn't refreshed in 1 hour stale", false);
+			}
+		} else
+			SimpleUtils.fail("Timesheet Page: Timestamp failed to load", false);
+	}
+
+	@Override
+	public void navigateToSchedule() throws Exception {
+		if(isElementLoaded(scheduleConsoleMenu, 10)){
+			click(scheduleConsoleMenu);
+		} else {
+			SimpleUtils.fail("Schedule menu in left navigation is not loaded!",false);
+		}
+	}
+
+	@Override
+	public void validateRefreshWhenNavigationBack() throws Exception {
+		String timestamp1 = "";
+		String timestamp2 = "";
+		if (isElementLoaded(lastUpdated, 5)) {
+			timestamp1 = lastUpdated.getText();
+		} else if (isElementLoaded(justUpdated, 5)) {
+			timestamp1 = justUpdated.getText();
+		} else
+			SimpleUtils.fail("Timesheet Page: Timestamp failed to load", false);
+		navigateToSchedule();
+		clickOnTimeSheetConsoleMenu();
+		if (isElementLoaded(lastUpdated, 5)) {
+			timestamp2 = lastUpdated.getText();
+		} else if (isElementLoaded(justUpdated, 5)) {
+			timestamp2 = justUpdated.getText();
+		} else
+			SimpleUtils.fail("Timesheet Page: Timestamp failed to load", false);
+		if (timestamp2.equals(timestamp1) && !timestamp1.equals("") && !refreshButton.getAttribute("label").equals("Refreshing...")) {
+			SimpleUtils.pass("Timesheet Page: It keeps the previous Last Updated time, not refreshing every time");
+		} else {
+			SimpleUtils.fail("Timesheet Page: It doesn't keep the previous Last Updated time", false);
+		}
+	}
+
+	@Override
+	public void navigateToPreviousWeek() throws Exception {
+		int currentWeekIndex = -1;
+		if (areListElementVisible(currentWeeks, 10)) {
+			for (int i = 0; i < currentWeeks.size(); i++) {
+				String className = currentWeeks.get(i).getAttribute("class");
+				if (className.contains("day-week-picker-period-active")) {
+					currentWeekIndex = i;
+				}
+			}
+			if (currentWeekIndex == 0 && isElementLoaded(calendarNavigationPreviousWeekArrow, 5)) {
+				clickTheElement(calendarNavigationPreviousWeekArrow);
+				if (areListElementVisible(currentWeeks, 5)) {
+					clickTheElement(currentWeeks.get(currentWeeks.size()-1));
+					SimpleUtils.pass("Navigate to previous week: '" + currentWeeks.get(currentWeeks.size()-1).getText() + "' Successfully!");
+				}
+			} else {
+				clickTheElement(currentWeeks.get(currentWeekIndex - 1));
+				SimpleUtils.pass("Navigate to previous week: '" + currentWeeks.get(currentWeekIndex - 1).getText() + "' Successfully!");
+			}
+		} else {
+			SimpleUtils.fail("Current weeks' elements not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void navigateToNextWeek() throws Exception {
+		int currentWeekIndex = -1;
+		if (areListElementVisible(currentWeeks, 10)) {
+			for (int i = 0; i < currentWeeks.size(); i++) {
+				String className = currentWeeks.get(i).getAttribute("class");
+				if (className.contains("day-week-picker-period-active")) {
+					currentWeekIndex = i;
+				}
+			}
+			if (currentWeekIndex == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
+				clickTheElement(calendarNavigationNextWeekArrow);
+				if (areListElementVisible(currentWeeks, 5)) {
+					clickTheElement(currentWeeks.get(0));
+					SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(0).getText() + "' Successfully!");
+				}
+			} else {
+				clickTheElement(currentWeeks.get(currentWeekIndex + 1));
+				SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(currentWeekIndex + 1).getText() + "' Successfully!");
+			}
+		} else {
+			SimpleUtils.fail("Current weeks' elements not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void clickOnGivenLocation(String location) throws Exception {
+		if (areListElementVisible(rowsInAnalyticsTable,10)) {
+			for (WebElement row: rowsInAnalyticsTable) {
+				if (row.findElement(By.xpath("./div/div[1]/span/img/following-sibling::span")).getText().equals(location)) {
+					clickTheElement(row.findElement(By.xpath("./div/div[1]/span/img/following-sibling::span")));
+					SimpleUtils.pass("Timesheet Page: Find location successfully");
+					break;
+				}
+			}
+		} else
+			SimpleUtils.fail("Timesheet Page: There are no locations in current district or failed to load",false);
+	}
+
+	@Override
+	public String getTimesheetApprovalForGivenLocationInDMView(String location) throws Exception {
+		String timesheetApproval = "";
+		if (areListElementVisible(rowsInAnalyticsTable,10)) {
+			for (WebElement row : rowsInAnalyticsTable) {
+				if (row.findElement(By.xpath("./div/div[1]/span/img/following-sibling::span")).getText().equals(location)) {
+					timesheetApproval = row.findElement(By.xpath("./div/div[4]/span")).getText().trim();
+					SimpleUtils.pass("Timesheet Page: Find the location " + location + " with Timesheet Approval " + timesheetApproval);
+					break;
+				}
+			}
+		} else
+			SimpleUtils.fail("Timesheet Page: There are no locations in current district or failed to load",false);
+		return timesheetApproval;
+	}
+
+	@Override
+	public void approveAnyTimesheet() throws Exception {
+		if (areListElementVisible(workerSelectedCheckBox,15)) {
+			int index1 = 0;
+			if (workerSelectedCheckBox.size()>1)
+				index1 = (new Random()).nextInt(workerSelectedCheckBox.size() - 1);
+			click(workerSelectedCheckBox.get(index1).findElement(By.xpath("./../../div[2]")));
+			if (areListElementVisible(daySelectedCheckBox,10)) {
+				int index2 = 0;
+				if (daySelectedCheckBox.size() > 1)
+					index2 = (new Random()).nextInt(daySelectedCheckBox.size() - 1);
+				String id = daySelectedCheckBox.get(index2).findElement(By.xpath("./../..")).getAttribute("id");
+				click(daySelectedCheckBox.get(index2));
+				clickOnApproveButtonInTimesheetTable();
+				WebElement status = getDriver().findElement(By.xpath("//*[@id=\"" + id + "\"]/div[4]/lg-eg-status"));
+				if (status.getAttribute("type").equals("Approved"))
+					SimpleUtils.pass("Timesheet Page: Approve any timesheet successfully");
+				else
+					SimpleUtils.fail("Timesheet Page: Failed to approve any timesheet",false);
+			} else
+				SimpleUtils.fail("Timesheet Page: Timesheet day rows failed to load",false);
+		} else
+			SimpleUtils.fail("Timesheet Page: Workers failed to load",false);
+	}
+
+	@Override
+	public boolean isWorkerDisplayInTimesheetTable() throws Exception {
+		boolean isWorkerDisplay = false;
+		if (areListElementVisible(workerSelectedCheckBox,10) && workerSelectedCheckBox.size() > 0) {
+			isWorkerDisplay = true;
+		}
+		return isWorkerDisplay;
+	}
+
+	@Override
+	public boolean isTimeSheetApproveButtonActive() throws Exception {
+		if (isElementLoaded(timesheetApproveBtn,10)) {
+			if(!timesheetApproveBtn.getCssValue("cursor").contains("not-allowed"))
+				return true;
+		} else
+			SimpleUtils.fail("Timesheet Page: Timesheet Approve button failed to load",false);
+		return false;
+	}
+
+	@Override
+	public void clickOnApproveButtonInTimesheetTable() throws Exception {
+		if (isTimeSheetApproveButtonActive()) {
+			click(timesheetApproveBtn);
+			SimpleUtils.pass("Timesheet Page: Timesheet table 'Approve' button clicked successfully.");
+		} else
+			SimpleUtils.fail("Timesheet Page: Timesheet Approve button failed to load or is inactive", false);
+	}
+
+	@Override
+	public String getApprovalRateFromTIMESHEETDUESmartCard() throws Exception {
+		String rate = "";
+		if (isElementLoaded(timesheetApprovalRate, 5)) {
+			SimpleUtils.pass("Timesheet Page: Get the timesheet approval rate: " + timesheetApprovalRate.getText()
+					+ " successfully");
+			rate = timesheetApprovalRate.getText();
+		} else
+			SimpleUtils.fail("Timesheet Page: Timesheet approval rate not loaded Successfully!", false);
+		return rate;
 	}
 }

@@ -1472,7 +1472,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			if (timestamp.contains("MINS") && timestamp.contains(" ")) {
 				timestamp = timestamp.split(" ")[0];
 				if (Integer.valueOf(timestamp) < 60 && Integer.valueOf(timestamp) >= 1)
-					SimpleUtils.pass("Dashboard Page:  The backstop is last updated" + timestamp + " ago");
+					SimpleUtils.pass("Dashboard Page:  The backstop is last updated " + timestamp + " mins ago");
 				else
 					SimpleUtils.fail("Dashboard Page:  The backstop isn't refreshed in 1 hour stale", false);
 			}
