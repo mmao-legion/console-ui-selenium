@@ -10681,14 +10681,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void validateThatHoursAndDateIsVisibleOfShifts() throws Exception {
         if (areListElementVisible(weekScheduleShiftsTimeOfMySchedule, 20) && areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20) && weekScheduleShiftsDateOfMySchedule.size() == 7) {
             for (int i = 0; i < weekScheduleShiftsDateOfMySchedule.size(); i++) {
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd");
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMM dd");
                 try {
                     String date = weekScheduleShiftsDateOfMySchedule.get(i).getText();
-                    sdf.setLenient(false);
                     sdf.parse(date.trim());
                     SimpleUtils.pass("My Schedule Page: Result Shifts show with shift date " + date.trim() + " successfully");
                 } catch (Exception e) {
-                    SimpleUtils.fail("My Schedule Page: Shifts don't show a legal DateTime type", true);
+                    SimpleUtils.fail("My Schedule Page: Shifts don't show a legal DateTime type", false);
                 }
             }
         } else if (weekScheduleShiftsTimeOfMySchedule.size() == 0) {
