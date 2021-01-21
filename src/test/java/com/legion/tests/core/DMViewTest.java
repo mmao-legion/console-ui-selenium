@@ -704,14 +704,14 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("Location counts in title are inconsistent!", Math.round(valuesFromLocationSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
             SimpleUtils.assertOnFail("Location counts from projected info are inconsistent!", (Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedWithin")) + Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
             //verify budgeted hours.
-            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByCol(schedulePage.getIndexOfColInDMViewTable("Budgeted Hours")));
+            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budgeted Hours")));
             float budgetedHrsFromTable = 0;
             for (Float f: data){
                 budgetedHrsFromTable = budgetedHrsFromTable + f;
             }
             SimpleUtils.assertOnFail("Budgeted hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) >= 0, false);
             //verify scheduled hours
-            data = schedulePage.transferStringToFloat(schedulePage.getListByCol(schedulePage.getIndexOfColInDMViewTable("Scheduled Hours")));
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Scheduled Hours")));
             float scheduledHrsFromTable = 0;
             for (Float f: data){
                 scheduledHrsFromTable = scheduledHrsFromTable + f;
@@ -719,16 +719,16 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("Published hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) >= 0, false);
 
             //Verify difference value between budgeted and projected.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByCol(schedulePage.getIndexOfColInDMViewTable("Projected Hours")));
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Projected Hours")));
             float projectedHours = 0;
             for (Float f: data){
                 projectedHours = projectedHours + f;
             }
-            if ((valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)>=0){
+            if ((valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)>0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("▼")) - (valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)) >= 0, false);
-            } else {
+            }
+            if ((valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)<0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("▲")) - (valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)) >= 0, false);
-
             }
 
             //Verify currect week Projected Hours displays.
@@ -742,21 +742,21 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("Location counts in title are inconsistent!", Math.round(valuesFromLocationSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
             SimpleUtils.assertOnFail("Location counts from projected info are inconsistent!", (Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedWithin")) + Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
             //verify budgeted hours.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByCol(schedulePage.getIndexOfColInDMViewTable("Budgeted Hours")));
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budgeted Hours")));
             budgetedHrsFromTable = 0;
             for (Float f: data){
                 budgetedHrsFromTable = budgetedHrsFromTable + f;
             }
             SimpleUtils.assertOnFail("Budgeted hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) >= 0, false);
             //verify scheduled hours.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByCol(schedulePage.getIndexOfColInDMViewTable("Scheduled Hours")));
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Scheduled Hours")));
             scheduledHrsFromTable = 0;
             for (Float f: data){
                 scheduledHrsFromTable = scheduledHrsFromTable + f;
             }
             SimpleUtils.assertOnFail("Published hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) >= 0, false);
             //Verify difference value between budgeted and projected.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByCol(schedulePage.getIndexOfColInDMViewTable("Projected Hours")));
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Projected Hours")));
             projectedHours = 0;
             for (Float f: data){
                 projectedHours = projectedHours + f;
@@ -769,6 +769,75 @@ public class DMViewTest extends TestBase {
             }
             //Verify past week Clocked Hours displays.
             schedulePage.verifyClockedOrProjectedInDMViewTable("Clocked Hours");
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify Unplanned Clocks on Timesheet in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUnplannedClocksForTimesheetInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Validate the content on Unplanned Clocks summary card.
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            HashMap<String, Integer> valuesFromUnplannedClocksSummaryCard = schedulePage.getValueOnUnplannedClocksSummaryCardAndVerifyInfo();
+            int index = schedulePage.getIndexOfColInDMViewTable("Unplanned Clocks");
+            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            int unplannedClocks = 0;
+            for (Float f: data){
+                unplannedClocks = unplannedClocks + Math.round(f);
+            }
+            SimpleUtils.assertOnFail("Unplanned clocks from summary card and analytic table are inconsistent!", valuesFromUnplannedClocksSummaryCard.get("unplanned clocks")==unplannedClocks, false);
+
+            index = schedulePage.getIndexOfColInDMViewTable("Total Timesheets");
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            int totalTimesheets = 0;
+            for (Float f: data){
+                totalTimesheets = totalTimesheets + Math.round(f);
+            }
+            SimpleUtils.assertOnFail("Total Timesheets from summary card and analytic table are inconsistent!", valuesFromUnplannedClocksSummaryCard.get("total timesheets")==totalTimesheets, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify UNPLANNED CLOCKS smart card on Timesheet in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUnplannedClocksSmartCardForTimesheetInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Validate the content on Unplanned Clocks summary smart card.
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            HashMap<String, Integer> valuesFromUnplannedClocksSummaryCard = schedulePage.getValueOnUnplannedClocksSmartCardAndVerifyInfo();
+            int index = schedulePage.getIndexOfColInDMViewTable("Unplanned Clocks");
+            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            int unplannedClocks = 0;
+            for (Float f: data){
+                unplannedClocks = unplannedClocks + Math.round(f);
+            }
+            SimpleUtils.assertOnFail("Unplanned clocks from summary card and analytic table are inconsistent!", valuesFromUnplannedClocksSummaryCard.get("No Show")==unplannedClocks, false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

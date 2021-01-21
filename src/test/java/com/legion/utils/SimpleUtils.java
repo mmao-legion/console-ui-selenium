@@ -246,18 +246,18 @@ public class SimpleUtils {
 
 		ExtentTestManager.getTest().log(Status.INFO,"<div class=\"row\" style=\"background-color:#0000FF; color:white; padding: 7px 5px;\">" + message
 				+ "</div>");
-		if(getTestRailReporting()!=null&&MyThreadLocal.getTestCaseExistsFlag()){
-			SimpleUtils.addTestResultIntoTestRailN(6, message);
-		}
+//		if(getTestRailReporting()!=null&&MyThreadLocal.getTestCaseExistsFlag()){
+//			SimpleUtils.addTestResultIntoTestRailN(6, message);
+//		}
 	}
 
 	public static void warn(String message) {
 
 		ExtentTestManager.getTest().log(Status.WARNING,"<div class=\"row\" style=\"background-color:#FFA500; color:white; padding: 7px 5px;\">" + message
 				+ "</div>");
-		if(getTestRailReporting()!=null&&MyThreadLocal.getTestCaseExistsFlag()){
-			SimpleUtils.addTestResultIntoTestRailN(6, message);
-		}
+//		if(getTestRailReporting()!=null&&MyThreadLocal.getTestCaseExistsFlag()){
+//			SimpleUtils.addTestResultIntoTestRailN(6, message);
+//		}
 	}
 
 	public static HashMap<String, Object[][]> getEnvironmentBasedUserCredentialsFromJson(String fileName)
@@ -906,6 +906,7 @@ public class SimpleUtils {
 			testCasesToAdd = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client);
 			if (testCasesToAdd.isEmpty()){
 				MyThreadLocal.setTestCaseExistsFlag(false);
+				System.out.println("-------------------Cannot find the test cases for: " + testName + "-------------------");
 			} else {
 				MyThreadLocal.setTestCaseExistsFlag(true);
 				testCaseIDList.addAll(testCasesToAdd);
@@ -1188,6 +1189,34 @@ public class SimpleUtils {
 		} catch(APIException aPIException){
 			System.err.println(aPIException.getMessage());
 		}
+	}
+
+	//Add by Haya
+	public static boolean isTestRunEmpty(long testRailRunId){
+		boolean result = false;
+		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+		try {
+			// Make a connection with Testrail Server
+			APIClient client = new APIClient(testRailURL);
+			client.setUser(testRailUser);
+			client.setPassword(testRailPassword);
+			JSONObject jSONObject= (JSONObject) client.sendGet("get_run/"+testRailRunId);
+			long testRunPassedCount = (long) jSONObject.get("passed_count");
+			long testRunFailedCount = (long) jSONObject.get("failed_count");
+			long testRunBlockedCount = (long) jSONObject.get("blocked_count");
+			long testRunRetestCount = (long) jSONObject.get("retest_count");
+			long testRunUntestedCount = (long) jSONObject.get("untested_count");
+			if ((testRunPassedCount+testRunFailedCount+testRunBlockedCount+testRunRetestCount+testRunUntestedCount)==0){
+				result = true;
+			}
+		}catch(IOException ioException){
+			System.err.println(ioException.getMessage());
+		} catch(APIException aPIException){
+			System.err.println(aPIException.getMessage());
+		}
+		return result;
 	}
 
 	public static void addTestResultWithTestCaseLinkIntoTestRail(int statusID, String comment)
@@ -1666,6 +1695,7 @@ public class SimpleUtils {
 		if(MyThreadLocal.getIfAddNewTestRun()){
 			MyThreadLocal.setIfAddNewTestRun(false);
 			addResultString = "add_run/" + testRailProjectID;
+			System.out.println("----------------------Add test run for project: " + testRailProjectID + "--------------------");
 		} else {
 			addResultString = "update_run/" + MyThreadLocal.getTestRailRunId();
 		}

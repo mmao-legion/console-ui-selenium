@@ -1325,9 +1325,29 @@ public class ActivityTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String requestUserName = profileNewUIPage.getNickNameFromProfile();
+            loginPage.logOut();
+
+            // Login as Internal Admin again
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+            // Go to Team Roster, search the team member
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.searchAndSelectTeamMemberByName(requestUserName);
+            String workPreferencesLabel = "Work Preferences";
+            profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+            profileNewUIPage.approveAllPendingAvailabilityRequest();
+            loginPage.logOut();
+
+            // Login as Team Member again
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                    , String.valueOf(teamMemberCredentials[0][2]));
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            profileNewUIPage.getNickNameFromProfile();
             String myWorkPreferencesLabel = "My Work Preferences";
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-            profileNewUIPage.cancelAllPendingAvailabilityRequest();
             //Update Preferred And Busy Hours
             while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
                 profileNewUIPage.clickNextWeek();
@@ -1390,9 +1410,29 @@ public class ActivityTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String requestUserName = profileNewUIPage.getNickNameFromProfile();
+            loginPage.logOut();
+
+            // Login as Internal Admin again
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+            // Go to Team Roster, search the team member
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.searchAndSelectTeamMemberByName(requestUserName);
+            String workPreferencesLabel = "Work Preferences";
+            profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+            profileNewUIPage.approveAllPendingAvailabilityRequest();
+            loginPage.logOut();
+
+            // Login as Team Member again
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                    , String.valueOf(teamMemberCredentials[0][2]));
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            profileNewUIPage.getNickNameFromProfile();
             String myWorkPreferencesLabel = "My Work Preferences";
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-            profileNewUIPage.cancelAllPendingAvailabilityRequest();
             //Update Preferred And Busy Hours
             while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
                 profileNewUIPage.clickNextWeek();
@@ -1460,9 +1500,29 @@ public class ActivityTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String requestUserName = profileNewUIPage.getNickNameFromProfile();
+            loginPage.logOut();
+
+            // Login as Internal Admin again
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+            // Go to Team Roster, search the team member
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.searchAndSelectTeamMemberByName(requestUserName);
+            String workPreferencesLabel = "Work Preferences";
+            profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+            profileNewUIPage.approveAllPendingAvailabilityRequest();
+            loginPage.logOut();
+
+            // Login as Team Member again
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                    , String.valueOf(teamMemberCredentials[0][2]));
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            profileNewUIPage.getNickNameFromProfile();
             String myWorkPreferencesLabel = "My Work Preferences";
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-            profileNewUIPage.cancelAllPendingAvailabilityRequest();
             //Update Preferred And Busy Hours
             while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
                 profileNewUIPage.clickNextWeek();
@@ -1533,9 +1593,29 @@ public class ActivityTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String requestUserName = profileNewUIPage.getNickNameFromProfile();
+            loginPage.logOut();
+
+            // Login as Internal Admin again
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+            // Go to Team Roster, search the team member
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.searchAndSelectTeamMemberByName(requestUserName);
+            String workPreferencesLabel = "Work Preferences";
+            profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+            profileNewUIPage.approveAllPendingAvailabilityRequest();
+            loginPage.logOut();
+
+            // Login as Team Member again
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                    , String.valueOf(teamMemberCredentials[0][2]));
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            profileNewUIPage.getNickNameFromProfile();
             String myWorkPreferencesLabel = "My Work Preferences";
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-            profileNewUIPage.cancelAllPendingAvailabilityRequest();
             //Update Preferred And Busy Hours
             while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
                 profileNewUIPage.clickNextWeek();

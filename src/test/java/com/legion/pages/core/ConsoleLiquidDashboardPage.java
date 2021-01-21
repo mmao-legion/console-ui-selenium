@@ -192,7 +192,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                 }
             }
         } else {
-            SimpleUtils.fail("Widgets in Dashboard page fail to load!",true);
+            SimpleUtils.fail("Widgets in Dashboard page fail to load!",false);
         }
         return false;
     }

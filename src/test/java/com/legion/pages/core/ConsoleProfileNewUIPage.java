@@ -2023,15 +2023,17 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> pendingTimeOffRequests;
 	@FindBy(css = ".user-profile-section .request-status-Pending")
 	private List<WebElement> pendingAvailabilityRequests;
+	@FindBy(css = ".request-buttons-approve")
+	private WebElement approveAvailabilityButton;
 
 	@Override
-	public void cancelAllPendingAvailabilityRequest() throws Exception {
+	public void approveAllPendingAvailabilityRequest() throws Exception {
 		if (areListElementVisible(pendingAvailabilityRequests, 10)) {
 			for (WebElement pendingRequest : pendingAvailabilityRequests) {
 				clickTheElement(pendingRequest);
-				if (isElementLoaded(cancelButtonOfPendingRequest, 10)) {
-					clickTheElement(cancelButtonOfPendingRequest);
-					SimpleUtils.pass("Cancel the pending availabiltiy request successfully!");
+				if (isElementLoaded(approveAvailabilityButton, 10)) {
+					clickTheElement(approveAvailabilityButton);
+					SimpleUtils.pass("Approve the pending availability request successfully!");
 				}
 			}
 		}
