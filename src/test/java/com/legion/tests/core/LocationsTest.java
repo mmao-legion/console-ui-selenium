@@ -306,7 +306,7 @@ public class LocationsTest extends TestBase {
             locationsPage.clickOnLocationsTab();
             //check locations item
             locationsPage.validateItemsInLocations();
-            //go to sub-locations tab
+            //go to sub-locations
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.verifyExportAllLocationDistrict();
             locationsPage.verifyExportSpecificLocationDistrict(searchCharactor,index);

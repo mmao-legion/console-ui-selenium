@@ -8,20 +8,17 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.ro.Si;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
-import static com.legion.utils.MyThreadLocal.*;
+import static com.legion.utils.MyThreadLocal.setJobName;
 
 
-public class JobTest extends TestBase {
+public class ConfigurationTest extends TestBase {
 
     public enum modelSwitchOperation{
 
@@ -50,36 +47,7 @@ public class JobTest extends TestBase {
         SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
     }
-    @Automated(automated = "Automated")
-    @Owner(owner = "Estelle")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate job landing page show")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyOpenCentralizedScheduleReleaseToYes(String browser, String username, String password, String location) throws Exception {
 
-        try{
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            controlsNewUIPage.clickOnControlsConsoleMenu();
-            controlsNewUIPage.clickOnGlobalLocationButton();
-            controlsNewUIPage.clickOnControlsSchedulingPolicies();
-            // Validate Controls Scheduling Policies Section
-            controlsNewUIPage.clickOnControlsConsoleMenu();
-            controlsNewUIPage.clickOnGlobalLocationButton();
-            controlsNewUIPage.clickOnControlsSchedulingPolicies();
-            boolean isSchedulingPolicies = controlsNewUIPage.isControlsSchedulingPoliciesLoaded();
-            SimpleUtils.assertOnFail("Controls Page: Scheduling Policies Section not Loaded.", isSchedulingPolicies, true);
-            controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
-            //check the centralized schedule release button is yes or no
-            boolean isCentralizedScheduleReleaseYes = controlsNewUIPage.getCentralizedScheduleReleaseValue();
-            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
-            jobsPage.iCanEnterJobsTab();
-            jobsPage.verifyJobLandingPageShowWell();
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-    }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
@@ -134,64 +102,42 @@ public class JobTest extends TestBase {
             String jobTitle = currentTime;
             setJobName(jobTitle);
             String commentText = "created by automation scripts";
-            String searchText = "OMLocation2";
+            String searchText = "omlocation2";
             int index = 0;
 
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.iCanEnterCreateNewJobPage();
+            jobsPage.selectJobType(jobType);
+            jobsPage.selectWeekForJobToTakePlace();
+            jobsPage.clickOkBtnInCreateNewJobPage();
+            jobsPage.inputJobTitle(jobTitle);
+            jobsPage.inputJobComments(commentText);
+            jobsPage.addLocationBtnIsClickable();
+            jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
+            jobsPage.createBtnIsClickable();
+            jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
 //            ArrayList<HashMap<String, String>> jobInfoDetails =jobsPage.iCanGetJobInfo(jobTitle);
-
-
-            //go to schedule page to see current week schedule generated or not
+            //go to schedule page to see the schedule info
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-
-           DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-           SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeDistrict("OMDistrict1");
             locationSelectorPage.changeLocation(searchText);
-
-           SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+            schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-
-            if (schedulePage.isWeekGenerated()){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
-            }else {
-                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-                JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
-                jobsPage.iCanEnterJobsTab();
-                jobsPage.iCanEnterCreateNewJobPage();
-                jobsPage.selectJobType(jobType);
-                jobsPage.selectWeekForJobToTakePlace();
-                jobsPage.clickOkBtnInCreateNewJobPage();
-                jobsPage.inputJobTitle(jobTitle);
-                jobsPage.inputJobComments(commentText);
-                jobsPage.addLocationBtnIsClickable();
-                jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
-                jobsPage.createBtnIsClickable();
-
-            }
-
-
-           locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-           SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-
-
-           locationSelectorPage.changeDistrict("OMDistrict1");
-           locationSelectorPage.changeLocation(searchText);
-
-
-           schedulePage.clickOnScheduleConsoleMenuItem();
-           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-           SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-
             if(!schedulePage.isWeekGenerated()){
                SimpleUtils.pass("Created schedule job doesn't generated the manager schedule");
-
+//                if () {
+//                    SimpleUtils.pass("Created schedule job generated suggested schedule");
+//                }else
+//                    SimpleUtils.fail("Created schedule job generated suggested schedule failed",false);
             }else
                 SimpleUtils.fail("It should not generated schedule in manager tab",false);
        } catch (Exception e){

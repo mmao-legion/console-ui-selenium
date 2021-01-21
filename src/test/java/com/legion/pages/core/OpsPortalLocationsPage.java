@@ -92,7 +92,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public boolean isOpsPortalPageLoaded() throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(goToLocationsButton, 30))
+		if (isElementLoaded(goToLocationsButton, 150))
 			isLoaded = true;
 		return isLoaded;
 	}
