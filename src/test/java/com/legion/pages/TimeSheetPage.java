@@ -151,4 +151,20 @@ public interface TimeSheetPage {
 
 	public String verifyLocationList() throws Exception;
 	public List<String> getTimesheetApprovalRateOnDMViewSmartCard() throws Exception;
+	public void validateThePresenceOfRefreshButton() throws Exception;
+	public void validateRefreshTimestamp() throws Exception;
+	public void validateRefreshWhenNavigationBack() throws Exception;
+	public void validateRefreshFunction() throws Exception;
+	public void validateRefreshPerformance() throws Exception;
+	public void navigateToSchedule() throws Exception;
+	public void clickOnRefreshButton() throws Exception;
+	public void navigateToPreviousWeek() throws Exception;
+	public void navigateToNextWeek() throws Exception;
+	public void clickOnGivenLocation(String location) throws Exception;
+	public String getTimesheetApprovalForGivenLocationInDMView(String location) throws Exception;
+	public boolean isWorkerDisplayInTimesheetTable() throws Exception;
+	public void approveAnyTimesheet() throws Exception;
+	public void clickOnApproveButtonInTimesheetTable() throws Exception;
+	public boolean isTimeSheetApproveButtonActive() throws Exception;
+	public String getApprovalRateFromTIMESHEETDUESmartCard() throws Exception;
 }
