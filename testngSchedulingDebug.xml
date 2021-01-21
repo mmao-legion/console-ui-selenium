@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite verbose ="0" thread-count="10" name="LegionTest">
+    <parameter name="environment" value="QA"/>
+    <parameter name="testRail" value="Yes"/>
+    <parameter name="testRailRunName" value="Automation Run - Debug"/>
+    <listeners>
+        <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
+    </listeners>
+
+    <test name="Prepare Settings Test">
+        <classes>
+            <class name="com.legion.tests.core.PrepareSettingsTest">
+                <methods>
+                    <include name="prepareSettingsInControlsAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+		<test name="Dashboard Test">
+			<classes>
+				<class name="com.legion.tests.core.DashboardTestKendraScott2">
+					<methods>
+                        <include name="verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin" />
+                        <include name="verifyTheLeftNavigationMenuOnLoginUsingSMAccessAsStoreManager" />
+                        <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamLead" />
+                        <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamMember" />
+                        <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsDistrictManager" />
+                        <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsCustomerAdmin" />
+					</methods>
+				</class>
+		   </classes>
+	   </test>
+
+    <test name="TeamTab Test">
+        <classes>
+            <class name="com.legion.tests.core.TeamTest">
+                <methods>
+                    <include name="verifyTheTeamFunctionalityInCoverageAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Schedule Test LegionCoffee">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleTest">
+                <methods>
+                    <include name="verifyTheTeamScheduleOptionAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+        <test name="Forecast Test">
+            <classes>
+                <class name="com.legion.tests.core.ForecastTest">
+                    <methods>
+                        <include name="verifyShopperForecastFunctionality"/>
+                        <include name="verifyEditForecastInDayViewViewAsInternalAdmin"/>
+                        <include name="verifyEditForecastInWeekViewViewAsInternalAdmin"/>
+                    </methods>
+                </class>
+            </classes>
+        </test>
+
+    <test name="Activity Test">
+        <classes>
+            <class name="com.legion.tests.core.ActivityTest">
+                <methods>
+                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin"/>
+                    <include name="verifyApproveCoverRequestOfShiftSwapActivityAsInternalAdmin"/>
+                    <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />
+                    <include name="verifyTheContentOfShiftSwapActivityWithoutApprovalAsInternalAdmin" />
+                    <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin"/>
+                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="LiquidDashboard Test">
+        <classes>
+            <class name="com.legion.tests.core.LiquidDashboardTest">
+                <methods>
+                    <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
+                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Inbox Test">
+        <classes>
+            <class name="com.legion.tests.core.InboxTest">
+                <methods>
+                    <include name="verifyGFEReportsAreAbleToExportAsInternalAdmin"/>
+                    <include name="verifyTheContentOfOperationHoursAndTheFirstDayOfWeekAsInternalAdmin" />
+                    <include name="verifyVSLInfoShowsOrNotAsInternalAdmin" />
+                    <include name="verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin" />
+                    <include name="verifyTurnOnGFEAsInternalAdmin" />
+                    <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
+                    <include name="verifyContentOfGFEAsInternalAdmin" />
+                    <include name="verifyVSLInfoAsInternalAdmin" />
+                    <include name="verifyTheMostRecentGFEIsInReportAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Drag And Drop Test">
+        <classes>
+            <class name="com.legion.tests.core.DragAndDropTest">
+                <methods>
+                    <include name="verifyWarningModelForTimeOffAsInternalAdmin"/>
+                    <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" />
+                    <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
+                    <include name="verifyWarningModelForClopeningAsInternalAdmin" />
+                    <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
+                    <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
+                    <include name="verifySwapWarningModelForRoleViolationConfigNoAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Scheduling Minor Test">
+        <classes>
+            <class name="com.legion.tests.core.SchedulingMinorTest">
+                <methods>
+                    <include name="verifyEditMinorRulesAsInternalAdmin"/>
+                    <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin" />
+                    <include name="verifyTheWarningMessageAndViolationWhenMinorShiftIsNotDuringTheSettingTimeAsInternalAdmin" />
+                    <include name="verifyTheWarningMessageAndViolationWhenMinorShiftsExceedTheWeeklyHoursAsInternalAdmin" />
+                    <include name="verifyTheWarningMessageAndViolationWhenMinorShiftDaysExceedTheWeekDaysInSettingAsInternalAdmin" />
+                    <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
+                    <include name="verifyWarningMessageForExceedWeekendHrsAsInternalAdmin"/>
+                    <include name="verifyTheWarningMessageAndViolationWhenMinorIsUnder14YearsOldAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Cinemark Minor Test">
+        <classes>
+            <class name="com.legion.tests.core.CinemarkMinorTest">
+                <methods>
+                    <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
+                    <include name="verifyMinorFieldIsDisplayedOnTMProfileAsInternalAdmin" />
+                    <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />
+                    <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" />
+                    <include name="verifySchoolCalendarListAsInternalAdmin" />
+                    <include name="verifyCreateCalendarAsInternalAdmin" />
+                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyAddDatesForBreaksAsInternalAdmin" />
+                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+ <!--                   <include name="verifyTheNonSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />   bug:  SCH-2291:The minor violation for Non school week display incorrectly-->
+                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+ <!--                   <include name="verifyTheNonSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />   bug:  SCH-2291:The minor violation for Non school week display incorrectly-->
+                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTurnOffMinorRuleAsInternalAdmin" />
+                    <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" />
+                    <include name="verifyAccessToEditCalendarsAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Schedule New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleTestKendraScott2">
+                <methods>
+                    <include name="verifyScheduleLegionFunctionality" />
+                    <include name="verifyScheduleFunctionalityDayViewAsInternalAdmin"/>
+                    <include name="verifyContentAfterChangingOperatingHrsAsInternalAdmin" />
+                    <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
+                    <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
+                    <include name="verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin" />
+                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin" />
+                    <include name="verifySearchBarOnSchedulePageAsInternalAdmin" />
+                    <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
+                    <include name="verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityForScheduleCopyRestrictionsAsInternalAdmin" />
+                    <include name="verifyViolationLimitAndBudgetOverageLimitAsInternalAdmin" />
+                    <include name="verifyTurnOffCopyRestrictionAsInternalAdmin" />
+                    <include name="verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="DM View Test">
+        <classes>
+            <class name="com.legion.tests.core.DMViewTest">
+                <methods>
+                    <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
+                    <include name="verifyRefreshFeatureOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyTimesheetApprovalRateWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnTAEnvAsInternalAdmin" />
+                    <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnNonTAEnvAsInternalAdmin" />
+                    <include name="verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin" />
+                    <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
+                    <include name="verifyComplianceViolationsWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyPayrollProjectionWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyTheContentBetweenWeeksOnScheduleInDMViewAsInternalAdmin" />
+                    <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
+                    <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />
+                    <include name="verifyRefreshFeatureOnScheduleInDMViewAsInternalAdmin" />
+                    <include name="verifyScheduleStatusOnScheduleDMViewAsInternalAdmin" />
+                    <include name="verifyLocationSummaryInScheduleDMViewAsInternalAdmin" />
+                    <include name="verifyUnplannedClocksForTimesheetInDMViewAsInternalAdmin" />
+                    <include name="verifyUnplannedClocksSmartCardForTimesheetInDMViewAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite> <!-- Suite -->
