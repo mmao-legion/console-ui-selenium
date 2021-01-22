@@ -5452,7 +5452,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void clickAllDistrictsOrAllLocationsTab(boolean isClickDistrictsTab) throws Exception {
 		if (areListElementVisible(allDistrictsAndAllLocationsTabs, 15) &&
-				allDistrictsAndAllLocationsTabs.size() >=2 &&
+				allDistrictsAndAllLocationsTabs.size() >= 2 &&
 				areListElementVisible(allDistrictsAndAllLocationsTables, 15) &&
 				allDistrictsAndAllLocationsTables.size() >=2){
 			if (isClickDistrictsTab){
@@ -5877,5 +5877,24 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	private void test() throws Exception{
 
+	}
+
+	//added by Estelle to verify centralized schedule release
+	@FindBy(css = "yes-no[value=\"sp.enterprisePreference.centralizedScheduleRelease\"]")
+	private WebElement centralizedScheduleRelease;
+
+	@Override
+	public boolean getCentralizedScheduleReleaseValue() throws Exception {
+		if (isElementLoaded(centralizedScheduleRelease)) {
+			WebElement centralizedScheduleReleaseGroup = centralizedScheduleRelease.findElement(
+					By.cssSelector("div.lg-button-group"));
+			if (centralizedScheduleReleaseGroup.getAttribute("class").contains("disabled")) {
+				SimpleUtils.report("Scheduling Policies: Centralized Schedule Release button is disabled.");
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return false;
 	}
 }
