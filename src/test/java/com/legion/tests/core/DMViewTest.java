@@ -25,10 +25,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DMViewTest extends TestBase {
 
@@ -709,14 +706,14 @@ public class DMViewTest extends TestBase {
             for (Float f: data){
                 budgetedHrsFromTable = budgetedHrsFromTable + f;
             }
-            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) >= 0, false);
+            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
             //verify scheduled hours
             data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Scheduled Hours")));
             float scheduledHrsFromTable = 0;
             for (Float f: data){
                 scheduledHrsFromTable = scheduledHrsFromTable + f;
             }
-            SimpleUtils.assertOnFail("Published hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) >= 0, false);
+            SimpleUtils.assertOnFail("Published hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) == 0, false);
 
             //Verify difference value between budgeted and projected.
             data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Projected Hours")));
@@ -725,10 +722,10 @@ public class DMViewTest extends TestBase {
                 projectedHours = projectedHours + f;
             }
             if ((valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)>0){
-                SimpleUtils.assertOnFail("Difference hours is inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("▼")) - (valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)) >= 0, false);
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("▼")) - (valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
             }
             if ((valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)<0){
-                SimpleUtils.assertOnFail("Difference hours is inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("▲")) - (valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)) >= 0, false);
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("▲")) - (valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
             }
 
             //Verify currect week Projected Hours displays.
@@ -747,14 +744,14 @@ public class DMViewTest extends TestBase {
             for (Float f: data){
                 budgetedHrsFromTable = budgetedHrsFromTable + f;
             }
-            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) >= 0, false);
+            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
             //verify scheduled hours.
             data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Scheduled Hours")));
             scheduledHrsFromTable = 0;
             for (Float f: data){
                 scheduledHrsFromTable = scheduledHrsFromTable + f;
             }
-            SimpleUtils.assertOnFail("Published hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) >= 0, false);
+            SimpleUtils.assertOnFail("Published hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) == 0, false);
             //Verify difference value between budgeted and projected.
             data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Projected Hours")));
             projectedHours = 0;
@@ -762,9 +759,9 @@ public class DMViewTest extends TestBase {
                 projectedHours = projectedHours + f;
             }
             if ((valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)>=0){
-                SimpleUtils.assertOnFail("Difference hours is inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("▼")) - (valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)) >= 0, false);
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("▼")) - (valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
             } else {
-                SimpleUtils.assertOnFail("Difference hours is inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("▲")) - (valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)) >= 0, false);
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("▲")) - (valuesFromLocationSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
 
             }
             //Verify past week Clocked Hours displays.
@@ -838,6 +835,208 @@ public class DMViewTest extends TestBase {
                 unplannedClocks = unplannedClocks + Math.round(f);
             }
             SimpleUtils.assertOnFail("Unplanned clocks from summary card and analytic table are inconsistent!", valuesFromUnplannedClocksSummaryCard.get("No Show")==unplannedClocks, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Compliance functionality on Compliance in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Validate the title and info of Compliance page.
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            SimpleUtils.assertOnFail("Compliance Page not loaded Successfully!",compliancePage.isCompliancePageLoaded() , false);
+
+            //Verify district selected and displayed with "All locations".
+            locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(districtName);
+            locationSelectorPage.isLocationSelected("All Locations");
+            List<String> locationInDistrict1 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
+
+            //Validate changing district.
+            locationSelectorPage.changeAnotherDistrictInDMView();
+            String anotherDistrictName = dashboardPage.getCurrentDistrict();
+            locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(anotherDistrictName);
+            List<String> locationInDistrict2 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
+            SimpleUtils.assertOnFail("Compliance DM view page fail to update!", !locationInDistrict1.containsAll(locationInDistrict2), false);
+
+            //Validate search function.
+            locationSelectorPage.reSelectDistrictInDMView(districtName);
+            schedulePage.verifySearchLocationInScheduleDMView(location);
+
+            //Validate the clickability of backward button.
+            String weekInfo = schedulePage.getActiveWeekText();
+            schedulePage.navigateToPreviousWeek();
+
+            //Validate the clickability of forward button.
+            schedulePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Owner(owner = "Haya")
+    @Enterprise(name = "DGStage_Enterprise")
+    @TestName(description = "Verify TOTAL VIOLATION HRS on Compliance in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTotalViolationHrsInComplianceDMViewAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Navigate to Compliance page.
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            SimpleUtils.assertOnFail("Compliance Page not loaded Successfully!",compliancePage.isCompliancePageLoaded() , false);
+
+            //Validate the content of Toatal Violation smart card for current week.
+            HashMap<String, Float> valuesFromToatalViolationCard =  compliancePage.getValuesAndVerifyInfoForTotalViolationSmartCardInDMView();
+
+            //Validate the data Toatal Violation smart card for current week.
+            //Verify total violation hours for current week.
+            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Total Extra Hours")));
+            float totalViolationHrsFromTable = 0;
+            for (Float f: data){
+                totalViolationHrsFromTable = totalViolationHrsFromTable + f;
+            }
+            SimpleUtils.assertOnFail("Total violation hours are inconsistent with analytic table!", (Math.abs(valuesFromToatalViolationCard.get("vioHrsCurrentWeek")) - totalViolationHrsFromTable) == 0, false);
+
+            //Verify diff hours flag.
+            if ((valuesFromToatalViolationCard.get("vioHrsCurrentWeek") - valuesFromToatalViolationCard.get("vioHrsPastWeek"))>0){
+                compliancePage.verifyDiffFlag("down");
+            } else {
+                compliancePage.verifyDiffFlag("up");
+            }
+
+            //Verify total violation hours for last week.
+            schedulePage.navigateToPreviousWeek();
+            HashMap<String, Float> valuesFromToatalViolationCardForLastWeek =  compliancePage.getValuesAndVerifyInfoForTotalViolationSmartCardInDMView();
+            SimpleUtils.assertOnFail("Violation hours for last week are inconsistent!", (Math.abs(valuesFromToatalViolationCard.get("vioHrsPastWeek")) - valuesFromToatalViolationCardForLastWeek.get("vioHrsCurrentWeek")) == 0, false);
+
+            //Verify diff hours.
+            SimpleUtils.assertOnFail("Diff hours with last week is incorrect!", (Math.abs(Math.abs(valuesFromToatalViolationCard.get("vioHrsCurrentWeek")) - valuesFromToatalViolationCard.get("vioHrsPastWeek"))-valuesFromToatalViolationCard.get("diffHrs")) == 0, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Owner(owner = "Haya")
+    @Enterprise(name = "DGStage_Enterprise")
+    @TestName(description = "Verify Locations with Violations on Compliance in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Navigate to Compliance page.
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            SimpleUtils.assertOnFail("Compliance Page not loaded Successfully!",compliancePage.isCompliancePageLoaded() , false);
+
+            //Validate the content on Locations with violation card.
+            HashMap<String, Integer> valuesFromLocationsWithViolationCard = compliancePage.getValueOnLocationsWithViolationCardAndVerifyInfo();
+            int index = schedulePage.getIndexOfColInDMViewTable("Total Extra Hours");
+            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            index = schedulePage.getIndexOfColInDMViewTable("Late Schedule?");
+            List<String> dataFromLateScheduleCol = schedulePage.getListByColInTimesheetDMView(index);
+            List flag = new ArrayList();
+            int totalLocationWithViolation = 0;
+            int locationWithViolationCountFromTotalExtraHrs = 0;
+            int locationWithViolationCountFromLateSchedule = 0;
+            for (int i = 0; i < data.size(); i++){
+                if (!(data.get(i) >0)){
+                    flag.add(i);
+                    locationWithViolationCountFromTotalExtraHrs++;
+                }
+            }
+            locationWithViolationCountFromTotalExtraHrs = data.size() - locationWithViolationCountFromTotalExtraHrs;
+            if (flag.size()>0){
+                for (int i = 0; i < flag.size(); i++){
+                    if (dataFromLateScheduleCol.get(i).equals("yes")){
+                        locationWithViolationCountFromLateSchedule++;
+                    }
+                }
+            }
+            totalLocationWithViolation = locationWithViolationCountFromTotalExtraHrs + locationWithViolationCountFromLateSchedule;
+            SimpleUtils.assertOnFail("Locations With Violation Card and analytic table are inconsistent!", valuesFromLocationsWithViolationCard.get("LocationsWithViolation") == totalLocationWithViolation, false);
+            SimpleUtils.assertOnFail("Locations With Violation Card and analytic table are inconsistent!", valuesFromLocationsWithViolationCard.get("total locations") == totalLocationWithViolation, false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify TOP x VIOLATIONS (HRS) on Compliance in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTopViolationsCardInComplianceDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Navigate to Compliance page.
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            SimpleUtils.assertOnFail("Compliance Page not loaded Successfully!",compliancePage.isCompliancePageLoaded() , false);
+
+            //Validate the content on top violations card.
+            HashMap<String, Float> valuesFromLocationsWithViolationCard = compliancePage.getViolationHrsFromTop1ViolationCardAndVerifyInfo();
+            System.out.println(valuesFromLocationsWithViolationCard);
+
+            float topViolationInOvertimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Overtime"))));
+            float topViolationInClopeningCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clopening"))));
+            float topViolationInMissedMealCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Missed Meal"))));
+            float topViolationInScheduleChangedCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Schedule Changed"))));
+            float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Doubletime"))));
+
+            if (valuesFromLocationsWithViolationCard.containsKey("Overtime (Hrs)")){
+                SimpleUtils.assertOnFail("Overtime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Overtime (Hrs)")-topViolationInOvertimeCol)==0, false);
+            }
+            if (valuesFromLocationsWithViolationCard.containsKey("Clopening (Hrs)")){
+                SimpleUtils.assertOnFail("Clopening (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Clopening (Hrs)")-topViolationInClopeningCol)==0, false);
+            }
+            if (valuesFromLocationsWithViolationCard.containsKey("Overtime (Hrs)")){
+                SimpleUtils.assertOnFail("Missed Meal on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Missed Meal")-topViolationInMissedMealCol)==0, false);
+            }
+            if (valuesFromLocationsWithViolationCard.containsKey("Schedule Changed")){
+                SimpleUtils.assertOnFail("Schedule Changed on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Schedule Changed")-topViolationInScheduleChangedCol)==0, false);
+            }
+            if (valuesFromLocationsWithViolationCard.containsKey("Doubletime (Hrs)")){
+                SimpleUtils.assertOnFail("Doubletime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Doubletime (Hrs)")-topViolationInDoubletimeCol)==0, false);
+            }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
