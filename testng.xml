@@ -128,9 +128,9 @@
                         <include name="verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin" />
                         <include name="verifyTheLeftNavigationMenuOnLoginUsingSMAccessAsStoreManager" />
                         <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamLead" />
-                        <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamMember" />
-                        <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsDistrictManager" />
-                        <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsCustomerAdmin" />
+                        <include name="verifyTheLeftNavigationMenuOnLoginUsingTMAccessAsTeamMember" />
+                        <include name="verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager" />
+                        <include name="verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin" />
 					</methods>
 				</class>
 		   </classes>
