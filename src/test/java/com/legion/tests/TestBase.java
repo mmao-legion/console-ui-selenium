@@ -301,10 +301,12 @@ public abstract class TestBase {
 
     @AfterSuite
     public void afterSuiteWorker() throws IOException{
-        List<Integer> testRunList = new ArrayList<Integer>();
-        testRunList.add(getTestRailRunId());
-        if (SimpleUtils.isTestRunEmpty(getTestRailRunId())){
-            SimpleUtils.deleteTestRail(testRunList);
+        if(getTestRailReporting()!=null){
+            List<Integer> testRunList = new ArrayList<Integer>();
+            testRunList.add(getTestRailRunId());
+            if (SimpleUtils.isTestRunEmpty(getTestRailRunId())){
+                SimpleUtils.deleteTestRail(testRunList);
+            }
         }
     }
 

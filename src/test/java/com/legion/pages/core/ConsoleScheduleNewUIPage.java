@@ -12753,7 +12753,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (locationTableHeader.findElements(By.cssSelector("i.analytics-new-table-header-sorter")).get(index-1).getAttribute("class").contains("sorter-up")){
                     if (transferStringToFloat(listString).size()==listString.size()){
                         listFloat = transferStringToFloat(listString).stream().sorted(Float::compareTo).collect(Collectors.toList());
-                        if (Math.abs(transferStringToFloat(getListByColInTimesheetDMView(index)).get(0)-listFloat.get(listFloat.size()-1)) >= 0){
+                        if (Math.abs(transferStringToFloat(getListByColInTimesheetDMView(index)).get(0)-listFloat.get(listFloat.size()-1)) == 0){
                             SimpleUtils.pass("Sort result is correct!");
                         } else {
                             SimpleUtils.fail("Sort result is incorrect!", false);
@@ -12769,7 +12769,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 } else {
                     if (transferStringToFloat(listString).size()==listString.size()){
                         listFloat = transferStringToFloat(listString).stream().sorted(Float::compareTo).collect(Collectors.toList());
-                        if (Math.abs(transferStringToFloat(getListByColInTimesheetDMView(index)).get(0)-listFloat.get(listFloat.size()-1)) >= 0){
+                        if (Math.abs(transferStringToFloat(getListByColInTimesheetDMView(index)).get(0)-listFloat.get(listFloat.size()-1)) == 0){
                             SimpleUtils.pass("Sort result is correct!");
                         } else {
                             SimpleUtils.fail("Sort result is incorrect!", false);
@@ -13032,7 +13032,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public int getIndexOfColInDMViewTable(String colName) throws Exception {
         int index = 0;
         if (isElementLoaded(locationTableHeader, 10)){
-            for (String s: locationTableHeader.getText().split("\n")){
+            for (String s: locationTableHeader.getText().replace("\n(Hrs)","").split("\n")){
                 ++index;
                 if (s.toLowerCase().contains(colName.toLowerCase())){
                     break;
@@ -13120,5 +13120,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         return result;
     }
+
+
 }
 

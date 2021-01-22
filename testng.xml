@@ -447,6 +447,10 @@
                     <include name="verifyLocationSummaryInScheduleDMViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksForTimesheetInDMViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksSmartCardForTimesheetInDMViewAsInternalAdmin" />
+                    <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyTotalViolationHrsInComplianceDMViewAsInternalAdmin" />
+                    <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
+                    <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
