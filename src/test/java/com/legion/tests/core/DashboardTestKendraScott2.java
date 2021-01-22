@@ -382,7 +382,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the left navigation menu on login using admin access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamMember(String browser, String username, String password, String location) throws Exception {
+	public void verifyTheLeftNavigationMenuOnLoginUsingTMAccessAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		try{
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			dashboardPage.closeNewFeatureEnhancementsPopup();
@@ -398,7 +398,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the left navigation menu on login using admin access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsDistrictManager(String browser, String username, String password, String location) throws Exception {
+	public void verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager(String browser, String username, String password, String location) throws Exception {
 		try{
 			verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("DistrictManager");
 		} catch (Exception e){
@@ -411,7 +411,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the left navigation menu on login using admin access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsCustomerAdmin(String browser, String username, String password, String location) throws Exception {
+	public void verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin(String browser, String username, String password, String location) throws Exception {
 		try{
 			verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("CustomerAdmin");
 		} catch (Exception e){
