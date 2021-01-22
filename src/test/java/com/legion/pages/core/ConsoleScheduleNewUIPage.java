@@ -7015,7 +7015,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     SimpleUtils.fail("This is not current week weather smartcard ", false);
                 }
             } catch (Exception e){
-                SimpleUtils.warn("there is no week weather smartcard!");
+                SimpleUtils.report("there is no week weather smartcard!");
             }
         }else {
             String jsonTimeZoon = parametersMap2.get("Time_Zone");
@@ -7049,7 +7049,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     SimpleUtils.fail("This is not current week weather smartcard ", false);
                 }
             } catch (Exception e){
-                SimpleUtils.warn("there is no week weather smartcard!");
+                SimpleUtils.report("there is no week weather smartcard!");
             }
         }
 

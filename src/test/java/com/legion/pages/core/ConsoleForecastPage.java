@@ -582,7 +582,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 				SimpleUtils.fail("This is not current week weather smartcard ", false);
 			}
 		} catch (Exception e){
-			SimpleUtils.warn("there is no week weather smartcard!");
+			SimpleUtils.report("there is no week weather smartcard!");
 		}
 	}
 
@@ -738,7 +738,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		}else {
 			//SimpleUtils.fail("work roles hours load failed",false);
 			hoursByWorkRole.put(workRole,Float.valueOf(0));
-			SimpleUtils.warn("No data for selected work role!");
+			SimpleUtils.report("No data for selected work role!");
 		}
 
 		return hoursByWorkRole;
