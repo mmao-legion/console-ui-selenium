@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite verbose ="0" thread-count="10" name="LegionTest">
     <parameter name="environment" value="QA"/>
-    <parameter name="testRail" value="no"/>
+    <parameter name="testRail" value="yes"/>
     <parameter name="testRailRunName" value="Automation Run - Debug"/>
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
