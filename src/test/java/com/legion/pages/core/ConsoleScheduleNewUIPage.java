@@ -3682,7 +3682,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (isElementLoaded(generateModalTitle, 15) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
                 editTheBudgetForNondgFlow();
-                waitForSeconds(18);
+                waitForSeconds(10);
                 try {
                     List<WebElement> trs = enterBudgetTable.findElements(By.tagName("tr"));
                     if (areListElementVisible(trs, 5) && trs.size() > 0) {
@@ -3706,8 +3706,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void clickOnFinishButtonOnCreateSchedulePage() throws Exception {
-        String finish = "FINISH";
-        if (isElementLoaded(nextButtonOnCreateSchedule) && nextButtonOnCreateSchedule.getText().equals(finish)) {
+        if (isElementLoaded(nextButtonOnCreateSchedule)) {
             clickTheElement(nextButtonOnCreateSchedule);
             waitForSeconds(10);
             if (isElementEnabled(checkOutTheScheduleButton, 20)) {
@@ -3948,27 +3947,41 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public void switchToManagerViewToCheckForSecondGenerate() throws Exception {
-        String activeWeekText = getActiveWeekText();
-        if(isElementEnabled(activScheduleType,5)){
-            if(activScheduleType.getText().equalsIgnoreCase("Suggested")){
-                click(scheduleTypeManager);
-                waitForSeconds(3);
-                if(isReGenerateButtonLoadedForManagerView()){
-                    click(reGenerateScheduleButton);
-                    generateScheduleFromCreateNewScheduleWindow(activeWeekText);
-                } else if (isElementLoaded(publishSheduleButton, 5)) {
-                    SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
-                } else{
-                    SimpleUtils.fail("Generate button or Publish Button not found on page",false);
+        try {
+            String activeWeekText = getActiveWeekText();
+            if (isScheduleTypeLoaded()) {
+                if (activScheduleType.getText().equalsIgnoreCase("Suggested")) {
+                    click(scheduleTypeManager);
+                    waitForSeconds(3);
+                    if (isReGenerateButtonLoadedForManagerView()) {
+                        click(reGenerateScheduleButton);
+                        generateScheduleFromCreateNewScheduleWindow(activeWeekText);
+                    } else if (isElementLoaded(publishSheduleButton, 5)) {
+                        SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
+                    } else {
+                        SimpleUtils.fail("Generate button or Publish Button not found on page", false);
+                    }
+                } else {
+                    if (isReGenerateButtonLoadedForManagerView()) {
+                        click(reGenerateScheduleButton);
+                        generateScheduleFromCreateNewScheduleWindow(activeWeekText);
+                    } else if (isElementLoaded(publishSheduleButton, 5)) {
+                        SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
+                    } else {
+                        SimpleUtils.fail("Generate button or Publish not found on page", false);
+                    }
                 }
-            }else{
-                if(isReGenerateButtonLoadedForManagerView()){
+            } else {
+                SimpleUtils.report("Schedule Type " + scheduleTypeManager.getText() + " is disabled");
+                getDriver().navigate().refresh();
+                waitForSeconds(5);
+                if (isReGenerateButtonLoadedForManagerView()) {
                     click(reGenerateScheduleButton);
                     generateScheduleFromCreateNewScheduleWindow(activeWeekText);
                 } else if (isElementLoaded(publishSheduleButton, 5)) {
                     SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
-                } else{
-                    SimpleUtils.fail("Generate button or Publish not found on page",false);
+                } else {
+                    SimpleUtils.fail("Generate button or Publish not found on page", false);
                 }
             }
             if (isElementEnabled(checkOutTheScheduleButton, 20)) {
@@ -3977,11 +3990,23 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             waitForSeconds(5);
             if (areListElementVisible(shiftsWeekView, 15) && shiftsWeekView.size() > 0) {
                 SimpleUtils.pass("Create the schedule successfully!");
-            }else {
-                SimpleUtils.fail("Not able to generate the schedule successfully for non dg flow!", false);
+            } else {
+                SimpleUtils.fail("Not able to generate the schedule successfully!", false);
             }
-        }else{
-            SimpleUtils.report("Schedule Type " + scheduleTypeManager.getText() + " is disabled");
+        } catch (Exception e) {
+            // Do nothing
+        }
+    }
+
+    private boolean isScheduleTypeLoaded() {
+        try {
+            if (isElementEnabled(activScheduleType, 10)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
         }
     }
 

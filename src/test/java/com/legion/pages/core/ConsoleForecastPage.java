@@ -148,7 +148,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(css = "span.forecast-prediction-top-legend-entry.ng-binding.ng-scope")
 	private List<WebElement> hoursOfWorkRole;
 
-	@FindBy(xpath = "//lg-filter[@label=\"Work role\"]/div/input-field")
+	@FindBy(css = "[label=\"Work Role\"] input-field[placeholder=\"None\"]")
 	private WebElement filterButton;
 
 	@FindBy(xpath = "//lg-filter[@label=\"Filter\"]/div/input-field")
@@ -624,7 +624,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 		if (isElementLoaded(filterButton, 10)) {
 //			defaultValueIsAll();
-			click(filterButton);
+			clickTheElement(filterButton);
 			clickOnClearFilterInWorkRole();
 //			selectWorkRole();
 		} else {
