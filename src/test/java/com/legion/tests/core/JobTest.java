@@ -53,7 +53,7 @@ public class JobTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate job landing page show")
+    @TestName(description = "Validate to enable centralized schedule release function")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyOpenCentralizedScheduleReleaseToYes(String browser, String username, String password, String location) throws Exception {
 
@@ -202,7 +202,7 @@ public class JobTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate check create schedule  job details page ")
+    @TestName(description = "Validate check create schedule  job details page")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCheckJobDetailsFunction(String browser, String username, String password, String location) throws Exception {
 

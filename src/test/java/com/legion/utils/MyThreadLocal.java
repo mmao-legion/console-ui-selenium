@@ -71,7 +71,9 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> testRailReporting = new ThreadLocal<>();
 	public static final ThreadLocal<String> location = new ThreadLocal<>();
 	public static final ThreadLocal<String> LGMSLocationName = new ThreadLocal<>();
+	public static final ThreadLocal<String> LGMSChildLocationName = new ThreadLocal<>();
 	public static final ThreadLocal<String> LGPTPLocationName = new ThreadLocal<>();
+	public static final ThreadLocal<String> LGPTPChildLocationName = new ThreadLocal<>();
 	public static final ThreadLocal<String> LGMSNsoLocationName = new ThreadLocal<>();
 	public static final ThreadLocal<String> LGPTPNsoLocationName = new ThreadLocal<>();
 	public static final ThreadLocal<String> job = new ThreadLocal<>();
@@ -447,13 +449,15 @@ public class MyThreadLocal {
 	public static String getLocationName() { return location.get(); }
 
 	public static void setLGMSLocationName(String value) { LGMSLocationName.set(value); }
+	public static void setLGMSChildLocationName(String value) { LGMSChildLocationName.set(value); }
 
 	public static String getLGMSLocationName() { return LGMSLocationName.get(); }
+	public static String getLGMSChildLocationName() { return LGMSChildLocationName.get(); }
 
 	public static void setLGPTPLocationName(String value) { LGPTPLocationName.set(value); }
-
+	public static void setLGPTPChildLocationName(String value) { LGPTPChildLocationName.set(value); }
 	public static String getLGPTPLocationName() { return LGPTPLocationName.get(); }
-
+	public static String getLGPTPChildLocationName() { return LGPTPChildLocationName.get(); }
 	//NSO location info
 	public static void setLGMSNsoLocationName(String value) { LGMSNsoLocationName.set(value); }
 

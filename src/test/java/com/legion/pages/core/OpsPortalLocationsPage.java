@@ -754,7 +754,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			searchInput.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
 			if (locationRows.size() > 0) {
-
+				SimpleUtils.pass("Search parent location successfully and show parent and all sub-location ");
 				for (WebElement row : locationRows) {
 					HashMap<String, String> locationInfoInEachRow = new HashMap<>();
 					locationInfoInEachRow.put("locationName", row.findElement(By.cssSelector("button[type='button']")).getText());
@@ -764,8 +764,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					locationInfoInEachRow.put("locationDistrict", row.findElement(By.cssSelector("td:nth-child(7) ")).getText());
 					locationinfo.add(locationInfoInEachRow);
 				}
-
-
 				return locationinfo;
 			}else
 				SimpleUtils.fail(locationName + "can't been searched", true);
@@ -1620,6 +1618,41 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.fail("Enterprise logo info and default location picture load failed",false);
 		}
 		return null;
+	}
+
+
+	//added by Estelle
+	@FindBy(css = "input-field[label=\"Master Slave\"]")
+	private  WebElement msRadio;
+	@FindBy(css = "input-field[label=\"Peer to Peer\"]")
+	private  WebElement p2pRadio;
+	@Override
+	public void verifyTheFiledOfLocationSetting() throws Exception {
+		if (isElementEnabled(addLocationBtn,5)) {
+			click(addLocationBtn);
+			clickTheElement(locationGroupSelect);
+			if (locationGroupSelect.getAttribute("option").contains("None") && locationGroupSelect.getAttribute("option").contains("Part of a location group")&&
+					locationGroupSelect.getAttribute("option").contains("Parent location")) {
+				SimpleUtils.pass("Location group setting field should include:None, Parent location ,Part of a location group");
+				selectByVisibleText(locationGroupSelect,"Parent location");
+				if (isElementEnabled(msRadio,3)&&isElementEnabled(p2pRadio,3)) {
+					SimpleUtils.pass("there are two radio button:Master Slave(default) ,Peer to peer after select parent location");
+					selectByVisibleText(locationGroupSelect,"Part of a location group");
+					if (isElementEnabled(selectParentLocation,3)) {
+						SimpleUtils.pass("there is one link named select parent location after select part of a location group");
+
+						//back to location list page
+						clickTheElement(backBtnInLocationDetailsPage);
+					}else {
+						SimpleUtils.fail("select parent location load failed",false);
+					}
+				}else {
+					SimpleUtils.fail("MS and p2p radio button load failed",false);
+				}
+			}else {
+				SimpleUtils.fail("Location group setting field show wrong",false);
+			}
+		}
 	}
 
 }

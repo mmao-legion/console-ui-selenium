@@ -104,7 +104,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate to create location with mandatory fields")
+    @TestName(description = " create a Type Regular location with effective date as a past date")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateRegularLocationWithAllFieldsAndNavigate(String browser, String username, String password, String location) throws Exception {
         try {
@@ -138,6 +138,13 @@ public class LocationsTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
             locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -146,7 +153,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate to create location with mandatory fields")
+    @TestName(description = "create a Type MOCK location that based on a ENABLED status regular location ")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateMockLocationAndNavigate(String browser, String username, String password, String location) throws Exception {
        try{
@@ -180,14 +187,21 @@ public class LocationsTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
             locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
-        } catch (Exception e){
+           SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+           schedulePage.clickOnScheduleConsoleMenuItem();
+           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+           SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+           SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+                   schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
+       } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate to create NSO location with all fields")
+    @TestName(description = "Create a Type NSO location with below conditions successfully")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateNSOLocationAndNavigate(String browser, String username, String password, String location) throws Exception {
         try{
@@ -228,7 +242,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate to disable location")
+    @TestName(description = "Verify disable the Type Regular locations")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDisableEnableLocationFunction(String browser, String username, String password, String location) throws Exception {
         try{
@@ -258,7 +272,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate to import location")
+    @TestName(description = "Import locations common function")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyImportLocationDistrict(String browser, String username, String password, String location) throws Exception {
         try{
@@ -290,7 +304,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate to export location that include export all and export specific location")
+    @TestName(description = "Export all/specific location function")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyExportLocationDistrict(String browser, String username, String password, String location) throws Exception {
         try{
@@ -316,10 +330,123 @@ public class LocationsTest extends TestBase {
         }
     }
 
+
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate Master Slave Location group creation with regular type")
+    @TestName(description = "Verify MS location group function for Regular")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMSLocationGroupFunctionForRegular(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            String currentTime =  dfs.format(new Date());
+            String locationName = "LGMSAuto" +currentTime;
+            setLGMSLocationName(locationName);
+
+            int index =0;
+            int childLocationNum = 1;
+            String searchCharactor = "No touch";
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check locations item
+            locationsPage.validateItemsInLocations();
+            //go to sub-locations tab
+            locationsPage.goToSubLocationsInLocationsPage();
+            //add new MS location group-parent and child
+            String  parentRelationship = "Parent location";
+            String locationType = "Regular";
+            locationsPage.verifyTheFiledOfLocationSetting();
+            locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.MS.getValue());
+
+            //add child location by child number
+            try {
+                for (int i = 0; i <childLocationNum ; i++) {
+                    String childLocationName = "childLocationForMS" + i +currentTime;
+                    setLGMSLocationName(childLocationName);
+                    String  childRelationship = "Part of a location group";
+                    locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);
+                }
+            }catch (Exception e){
+                SimpleUtils.fail("Child location creation failed",true);
+            }
+
+
+            //get location's  info
+            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+
+            //Validate to update MS location Group district
+            String originalDistrict = locationInfoDetails.get(0).get("locationDistrict");
+            locationsPage.updateParentLocationDistrict("a",index);
+            ArrayList<HashMap<String, String>> locationInfoDetailsAfterUpdate =locationsPage.getLocationInfo(locationName);
+            String districtAfterUpdate = locationInfoDetailsAfterUpdate.get(0).get("locationDistrict");
+            if (!districtAfterUpdate.equals(originalDistrict)) {
+                SimpleUtils.pass("District updated successfully");
+            }else
+                SimpleUtils.fail("Update failed",true);
+
+            //get location's  info
+            ArrayList<HashMap<String, String>> locationInfoDetailsSec =locationsPage.getLocationInfo(locationName);
+
+            //disable each location
+            String action="Disable";
+            locationsPage.disableEnableLocation(locationInfoDetailsSec.get(0).get("locationName"),action);
+            ArrayList<HashMap<String, String>> locationInfoDetailsAfterDisable =locationsPage.getLocationInfo(locationName);
+            for (int i = 1; i <locationInfoDetailsAfterDisable.size() ; i++) {
+                if (locationInfoDetailsAfterDisable.get(i).get("locationStatus").equals(locationInfoDetails.get(i).get("locationStatus"))) {
+                    SimpleUtils.pass("There is no impact for child location status after changed parent location ");
+                }else
+                    SimpleUtils.fail("Child location status is changed after changed parent location, it's not expect behavior ",true);
+            }
+
+            //disable child location
+            locationsPage.disableEnableLocation(locationInfoDetailsSec.get(1).get("locationName"),action);
+
+            //revert status to enable
+
+            String actionEnable="Enable";
+            for (int i = 0; i <locationInfoDetailsSec.size() ; i++) {
+                locationsPage.disableEnableLocation(locationInfoDetailsSec.get(i).get("locationName"),actionEnable);
+            }
+
+            //verify to change MS child location to None
+            String locationToNone = locationInfoDetails.get(1).get("locationName");
+            locationsPage.changeOneLocationToNone(locationToNone);
+            //search this location group again
+            ArrayList<HashMap<String, String>> locationInfoDetailsAftToNone =locationsPage.getLocationInfo(locationName);
+
+            if (locationInfoDetailsAftToNone.size() < locationInfoDetailsAftToNone.size()) {
+                SimpleUtils.pass("Child location:"+locationInfoDetailsAftToNone.get(locationInfoDetailsAftToNone.size()-1).get("locationName") +" was removed from this location group:"+LGMSLocationName);
+            }else
+                SimpleUtils.fail("Update child location to None failed",true);
+
+            //check location group navigation
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
+            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
+            //Go to Team tab to check location column for MS location group
+            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            if (teamPage.verifyThereIsLocationColumnForMSLocationGroup()) {
+                SimpleUtils.pass("Location column in Team Tab is showing for MS location group");
+            }else
+                SimpleUtils.fail("There is no location column in Team Tab for MS location group",true);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify create location group by regular type")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateMSLocationGroupWithRegularTypeFunction(String browser, String username, String password, String location) throws Exception {
 
@@ -498,13 +625,19 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate change MS location group to p2p")
+    @TestName(description = "Verify change MS location group to P2P")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyChangeMSToP2P(String browser, String username, String password, String location) throws Exception {
             try{
 
-                String locationName =getLGMSLocationName();
+                SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+                String currentTime =  dfs.format(new Date());
+                String locationName = "LGMSAuto" +currentTime;
+                setLGMSLocationName(locationName);
 
+                int index =0;
+                int childLocationNum = 1;
+                String searchCharactor = "No touch";
                 DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
                 SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -517,6 +650,24 @@ public class LocationsTest extends TestBase {
                 locationsPage.validateItemsInLocations();
                 //go to sub-locations tab
                 locationsPage.goToSubLocationsInLocationsPage();
+                //add new MS location group-parent and child
+                String  parentRelationship = "Parent location";
+                String locationType = "Regular";
+                locationsPage.verifyTheFiledOfLocationSetting();
+                locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.MS.getValue());
+
+                //add child location by child number
+                try {
+                    for (int i = 0; i <childLocationNum ; i++) {
+                        String childLocationName = "childLocationForMS" + i +currentTime;
+                        setLGMSLocationName(childLocationName);
+                        String  childRelationship = "Part of a location group";
+                        locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);
+                    }
+                }catch (Exception e){
+                    SimpleUtils.fail("Child location creation failed",true);
+                }
+
                 ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
                 //Verify the location relationship
                 if (locationsPage.isItMSLG()) {
@@ -540,9 +691,9 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate Peer to peer Location group creation  with regular type")
+    @TestName(description = "Verify Peer to Peer location group function for Regular")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateP2PLocationGroupWithRegularTypeFunction(String browser, String username, String password, String location) throws Exception {
+    public void verifyP2PLocationGroupFunctionForRegular(String browser, String username, String password, String location) throws Exception {
 
         try{
                 SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
@@ -581,6 +732,36 @@ public class LocationsTest extends TestBase {
 
                 //get location's  info
                 ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+
+                //update p2p location Group district
+                String originalDistrict = locationInfoDetails.get(0).get("locationDistrict");
+                locationsPage.updateParentLocationDistrict("a",index);
+                ArrayList<HashMap<String, String>> locationInfoDetailsAfterUpdate =locationsPage.getLocationInfo(locationName);
+                String districtAfterUpdate = locationInfoDetailsAfterUpdate.get(0).get("locationDistrict");
+                if (!districtAfterUpdate.equals(originalDistrict)) {
+                    SimpleUtils.pass("District updated successfully");
+                }else
+                    SimpleUtils.fail("Update failed",true);
+
+            //disable parent location
+            String action="Disable";
+            locationsPage.disableEnableLocation(locationInfoDetails.get(0).get("locationName"),action);
+            ArrayList<HashMap<String, String>> locationInfoDetailsAfterDisable =locationsPage.getLocationInfo(locationName);
+
+            for (int i = 1; i <locationInfoDetailsAfterDisable.size() ; i++) {
+                if (locationInfoDetailsAfterDisable.get(i).get("locationStatus").equals(locationInfoDetails.get(i).get("locationStatus"))) {
+                    SimpleUtils.pass("There is no impact for child location status after changed parent location ");
+                }else
+                    SimpleUtils.fail("Child location status is changed after changed parent location, it's not expect behavior ",true);
+            }
+
+            //disable child location
+            locationsPage.disableEnableLocation(locationInfoDetails.get(1).get("locationName"),action);
+
+            //revert status to enable
+            String actionEnable="Enable";
+            locationsPage.disableEnableLocation(locationInfoDetails.get(0).get("locationName"),actionEnable);
+            locationsPage.disableEnableLocation(locationInfoDetails.get(1).get("locationName"),actionEnable);
 
                 //check location group navigation
                 locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
@@ -662,7 +843,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate Master Slave Location group creation with SSO type")
+    @TestName(description = "Verify MS location group function for NSO")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateMSLocationGroupWithNSOTypeFunction(String browser, String username, String password, String location) throws Exception {
 
@@ -726,7 +907,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate Peer to peer Location group creation  with regular type")
+    @TestName(description = "Verify Peer to peer location group function for NSO")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateP2PLocationGroupWithNsoTypeFunction(String browser, String username, String password, String location) throws Exception {
 
@@ -813,7 +994,7 @@ public class LocationsTest extends TestBase {
             //get location's  info
             ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(LGPTPLocationName);
 
-            //disable child location
+            //disable parent location
             String action="Disable";
             locationsPage.disableEnableLocation(locationInfoDetails.get(0).get("locationName"),action);
             ArrayList<HashMap<String, String>> locationInfoDetailsAfterUpdate =locationsPage.getLocationInfo(LGPTPLocationName);
@@ -841,13 +1022,19 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate update one child location to None")
+    @TestName(description = "Validate to update MS location group to None")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyChangeMSChildLocationToNoneFunction(String browser, String username, String password, String location) throws Exception {
+    public void verifyChangeMSLocationsToNoneFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
-            String LGMSLocationName =getLGMSLocationName();
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            String currentTime =  dfs.format(new Date());
+            String locationName = "LGMSAuto" +currentTime;
+            setLGMSLocationName(locationName);
 
+            int index =0;
+            int childLocationNum = 1;
+            String searchCharactor = "No touch";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -860,18 +1047,37 @@ public class LocationsTest extends TestBase {
             locationsPage.validateItemsInLocations();
             //go to sub-locations tab
             locationsPage.goToSubLocationsInLocationsPage();
-            //get search result location info
-            ArrayList<HashMap<String, String>> locationInfoDetailsBeforeUpdate =locationsPage.getLocationInfo(LGMSLocationName);
-            //verify to change MS child location to None
-            String locationToNone = locationInfoDetailsBeforeUpdate.get(1).get("locationName");
-            locationsPage.changeOneLocationToNone(locationToNone);
-            //search this location group again
-            ArrayList<HashMap<String, String>> locationInfoDetailsAftUpdate =locationsPage.getLocationInfo(LGMSLocationName);
+            String  parentRelationship = "Parent location";
+            String locationType = "Regular";
+            locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.MS.getValue());
 
-            if (locationInfoDetailsAftUpdate.size() < locationInfoDetailsBeforeUpdate.size()) {
-                SimpleUtils.pass("Child location:"+locationInfoDetailsBeforeUpdate.get(locationInfoDetailsBeforeUpdate.size()-1).get("locationName") +" was removed from this location group:"+LGMSLocationName);
+            //add child location by child number
+            String childLocationName = "";
+            try {
+                for (int i = 0; i <childLocationNum ; i++) {
+                    childLocationName = "childLocationForMS" + i +currentTime;
+                    setLGMSChildLocationName(childLocationName);
+                    String  childRelationship = "Part of a location group";
+                    locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);
+                }
+            }catch (Exception e){
+                SimpleUtils.fail("Child location creation failed",true);
+            }
+            //get search result location info
+            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+            //verify to change MS child location to None
+            locationsPage.changeOneLocationToNone(childLocationName);
+            //search this location group again
+            ArrayList<HashMap<String, String>> locationInfoDetailsAftUpdate =locationsPage.getLocationInfo(locationName);
+
+            if (locationInfoDetailsAftUpdate.size() < locationInfoDetails.size()) {
+                SimpleUtils.pass("Child location:"+locationInfoDetails.get(locationInfoDetails.size()-1).get("locationName") +" was removed from this location group:"+LGMSLocationName);
             }else
                 SimpleUtils.fail("Update child location to None failed",true);
+            //change MS parent location to None
+            locationsPage.changeOneLocationToNone(locationName);
+
+
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -881,14 +1087,19 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate to update MS parent location to None")
+    @TestName(description = "Validate to update P2P location to None")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyChangeMSParentLocationToNoneFunction(String browser, String username, String password, String location) throws Exception {
+    public void verifyChangeP2PLocationsToNoneFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
 
-            String LGMSLocationName = "LGMSAuto20201030182112";
-//                    getLGMSLocationName();
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            String currentTime =  dfs.format(new Date());
+            String locationName = "LGPTPAuto" +currentTime;
+            setLGPTPLocationName(locationName);
+            int index =0;
+            int childLocationNum = 1;
+            String searchCharactor = "No touch";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -901,45 +1112,36 @@ public class LocationsTest extends TestBase {
             locationsPage.validateItemsInLocations();
             //go to sub-locations tab
             locationsPage.goToSubLocationsInLocationsPage();
-            //get search result location info
-            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(LGMSLocationName);
-            //verify to change MS parent location to None
-            locationsPage.changeOneLocationToNone(LGMSLocationName);
-
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-
-    }
-
-
-    @Automated(automated = "Automated")
-    @Owner(owner = "Estelle")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate to update P2P parent location to None")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyChangeP2PParentLocationToNoneFunction(String browser, String username, String password, String location) throws Exception {
-
-        try{
-            String LGPTPLocationName = getLGPTPLocationName();
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //check locations item
-            locationsPage.validateItemsInLocations();
-            //go to sub-locations tab
-            locationsPage.goToSubLocationsInLocationsPage();
+            //add new MS location group-parent and child
+            String  parentRelationship = "Parent location";
+            String locationType = "Regular";
+            locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.PTP.getValue());
+            String childLocationName = "";
+            try {
+                for (int i = 0; i <childLocationNum ; i++) {
+                    childLocationName = "childLocationForMS" + i +currentTime;
+                    setLGPTPChildLocationName(childLocationName);
+                    String  childRelationship = "Part of a location group";
+                    locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);
+                }
+            }catch (Exception e){
+                SimpleUtils.fail("Child location creation failed",true);
+            }
             //search location
-            locationsPage.searchLocation(LGPTPLocationName);
+            locationsPage.searchLocation(locationName);
             //get search result location info
-            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(LGPTPLocationName);
-            //verify to change MS parent location to None
-            locationsPage.changeOneLocationToNone(LGPTPLocationName);
+            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+            //verify to change MS child location to None
+            locationsPage.changeOneLocationToNone(childLocationName);
+            //search this location group again
+            ArrayList<HashMap<String, String>> locationInfoDetailsAftUpdate =locationsPage.getLocationInfo(locationName);
+
+            if (locationInfoDetailsAftUpdate.size() < locationInfoDetails.size()) {
+                SimpleUtils.pass("Child location:"+locationInfoDetails.get(locationInfoDetails.size()-1).get("locationName") +" was removed from this location group:"+LGMSLocationName);
+            }else
+                SimpleUtils.fail("Update child location to None failed",true);
+            //change MS parent location to None
+            locationsPage.changeOneLocationToNone(locationName);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -951,7 +1153,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate There is no location group related field for MOCK location")
+    @TestName(description = "Verify location group common function")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNoLocationGroupSettingForMock(String browser, String username, String password, String location) throws Exception {
 
@@ -1062,7 +1264,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate to change None location to P2P parent")
+    @TestName(description = "Validate to change None location to P2P child")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyChangeNoneLocationToChild(String browser, String username, String password, String location) throws Exception {
 
@@ -1137,8 +1339,14 @@ public class LocationsTest extends TestBase {
 
         try{
 
-            String LGP2PLocationName =getLGPTPLocationName();
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            String currentTime =  dfs.format(new Date());
+            String locationName = "LGP2PAuto" +currentTime;
+            setLGMSLocationName(locationName);
 
+            int index =0;
+            int childLocationNum = 1;
+            String searchCharactor = "No touch";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -1151,17 +1359,36 @@ public class LocationsTest extends TestBase {
             locationsPage.validateItemsInLocations();
             //go to sub-locations tab
             locationsPage.goToSubLocationsInLocationsPage();
-            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(LGP2PLocationName);
+            //add new MS location group-parent and child
+            String  parentRelationship = "Parent location";
+            String locationType = "Regular";
+            locationsPage.verifyTheFiledOfLocationSetting();
+            locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.PTP.getValue());
+
+            //add child location by child number
+            String childLocationName = "";
+            try {
+                for (int i = 0; i <childLocationNum ; i++) {
+                    childLocationName = "childLocationForP2P" + i +currentTime;
+                    setLGPTPChildLocationName(childLocationName);
+                    String  childRelationship = "Part of a location group";
+                    locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);
+                }
+            }catch (Exception e){
+                SimpleUtils.fail("Child location creation failed",true);
+            }
+
+            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
             //Verify the location relationship
             if (!locationsPage.isItMSLG()) {
                 locationsPage.changeLGToMSOrP2P(locationGroupSwitchOperation.MS.getValue());
             }else
                 SimpleUtils.fail("It's not P2P location group,select another one pls",false);
             //search location again
-            locationsPage.searchLocation(LGP2PLocationName);
+            locationsPage.searchLocation(locationName);
             if (locationsPage.isItMSLG()) {
                 SimpleUtils.pass("Change P2P location group to MS successfully");
-                setLGMSLocationName(LGP2PLocationName);
+                setLGMSLocationName(locationName);
             }else
                 SimpleUtils.fail("Change P2P location group to MS failed",true);
 
@@ -1173,7 +1400,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "verify Add New District")
+    @TestName(description = "Verify district list function")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDistrictListPageLoading(String browser, String username, String password, String location) throws Exception {
 
@@ -1208,7 +1435,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "verify search district")
+    @TestName(description = "Verify search district function")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySearchDistrictFunction(String browser, String username, String password, String location) throws Exception {
 
@@ -1238,7 +1465,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "verify Add New District or update")
+    @TestName(description = "Verify Add New District or update")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAddOrUpdateDistrictFunction(String browser, String username, String password, String location) throws Exception {
 
@@ -1275,7 +1502,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "verify disable and enable district")
+    @TestName(description = "Verify disable and enable district")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDisableEnableDistrictFunction(String browser, String username, String password, String location) throws Exception {
 
