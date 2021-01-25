@@ -155,8 +155,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement countrySelect;
 	@FindBy(css="input[aria-label=\"City\"]")
 	private WebElement city;
-	@FindBy(css = "select[aria-label=\"State\"]")
-	private WebElement stateSelect;
+	@FindBy(css = "ng-transclude > lg-select > div > lg-picker-input > div > input-field > ng-form")
+	private WebElement state;
+	@FindBy(xpath = "//ng-transclude/lg-select/div/lg-picker-input/div/div/ng-transclude/lg-search-options/div/div/div[1]/div")
+	private WebElement firstState;
 	@FindBy(css="input[aria-label=\"Zip Code\"]")
 	private WebElement zipCode;
 	@FindBy(css="input[aria-label=\"Primary Contact\"]")
@@ -210,7 +212,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+//			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			clickTheElement(state);
+			waitForSeconds(3);
+			clickTheElement(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			if (isElementEnabled(configTypeSelect,5)) {
@@ -261,7 +266,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+//			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			clickTheElement(state);
+			waitForSeconds(3);
+			clickTheElement(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -362,7 +370,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement cancelBtnInImportLocationPage;
 	@FindBy(css = "lg-button[label=\"Import\"]")
 	private WebElement importBtnInImportLocationPage;
-	@FindBy(css = "lg-button[label=\"Ok\"]")
+	@FindBy(css = "lg-button[label=\"OK\"]")
 	private WebElement okBtnInImportLocationPage;
 	@FindBy(css = "div[ng-if=\"loaded\"]>div:nth-child(4)")
 	private WebElement importFileLoadSuccessMessage;
@@ -370,13 +378,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void verifyImportLocationDistrict() {
+		  String pth = System.getProperty("user.dir");
 		if (isElementEnabled(importBtn,5)) {
 			click(importBtn);
 			if (verifyImportLocationsPageShow()) {
 				SimpleUtils.pass("Import location page show well");
 			}else
 				SimpleUtils.fail("Import location page load failed",true);
-			uploaderFileInputBtn.sendKeys("src/test/resources/LocationImportTemplate.csv");
+			uploaderFileInputBtn.sendKeys(pth+"/src/test/resources/LocationImportTemplate.csv");
 			waitForSeconds(5);
 			click(importBtnInImportLocationPage);
 			waitForSeconds(15);
@@ -434,7 +443,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+//			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			clickTheElement(state);
+			waitForSeconds(3);
+			clickTheElement(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -781,7 +793,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+//			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			clickTheElement(state);
+			waitForSeconds(3);
+			clickTheElement(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -817,7 +832,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+//			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			clickTheElement(state);
+			waitForSeconds(3);
+			clickTheElement(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -855,7 +873,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+//			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			clickTheElement(state);
+			waitForSeconds(3);
+			clickTheElement(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -909,7 +930,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+//			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			clickTheElement(state);
+			waitForSeconds(3);
+			clickTheElement(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
