@@ -109,4 +109,6 @@ public interface LocationsPage {
     public void disableEnableDistrict(String districtName, String action) throws Exception;
 
     public HashMap<String, String> getEnterpriseLogoAndDefaultLocationInfo();
+
+    public void verifyTheFiledOfLocationSetting() throws Exception;
 }
