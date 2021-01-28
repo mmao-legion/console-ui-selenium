@@ -23,7 +23,7 @@ public interface ScheduleDMViewPage {
     public boolean isNotStartedScheduleDisplay() throws Exception;
     public List<String> getLocationsWithNotStartedSchedules() throws Exception;
     public String getScheduleStatusForGivenLocation(String location) throws Exception;
-    public void verifyScheduleStatusAndHoursInScheduleList(String scheduleStatus) throws Exception;
+    public void verifyScheduleStatusAndHoursInScheduleList(Boolean isTAEnv, Boolean isDGEnv, String scheduleStatus, String specificWeek) throws Exception;
     public void verifyTheContentOnScheduleStatusCards() throws Exception;
     public void verifyTheScheduleStatusAccountOnScheduleStatusCards() throws Exception;
 }

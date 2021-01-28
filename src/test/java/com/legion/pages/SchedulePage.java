@@ -561,4 +561,5 @@ public interface SchedulePage {
 	public HashMap<String, Integer> getValueOnUnplannedClocksSummaryCardAndVerifyInfo() throws Exception;
 	public List<String> getListByColInTimesheetDMView(int index) throws Exception;
 	public HashMap<String, Integer> getValueOnUnplannedClocksSmartCardAndVerifyInfo() throws Exception;
+	public HashMap<String, String> getBudgetNScheduledHoursFromSmartCardOnDGEnv() throws Exception;
 }

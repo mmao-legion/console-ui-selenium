@@ -3430,4 +3430,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public HashMap<String, Integer> getValueOnUnplannedClocksSmartCardAndVerifyInfo() throws Exception {
         return null;
     }
+
+    @Override
+    public HashMap<String, String> getBudgetNScheduledHoursFromSmartCardOnDGEnv() throws Exception {
+        return null;
+    }
 }

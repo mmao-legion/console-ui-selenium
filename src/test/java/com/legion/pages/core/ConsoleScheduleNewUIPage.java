@@ -3763,6 +3763,29 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public HashMap<String, String> getBudgetNScheduledHoursFromSmartCardOnDGEnv() throws Exception {
+        HashMap<String, String> budgetNScheduledHours = new HashMap<>();
+        if (areListElementVisible(smartCardRows, 5) && smartCardRows.size() != 0) {
+            List<WebElement> ths = smartCardRows.get(0).findElements(By.tagName("th"));
+            List<WebElement> tds = smartCardRows.get(1).findElements(By.tagName("td"));
+            List<WebElement> td2s = smartCardRows.get(2).findElements(By.tagName("td"));
+            if (ths != null && tds != null && ths.size() == 6 && tds.size() == 6) {
+                for (int i =1 ;i< ths.size(); i++){
+                    budgetNScheduledHours.put(tds.get(0).getText() + ths.get(i).getText(), tds.get(i).getText());
+                    SimpleUtils.report("Smart Card: Get the hour: " + tds.get(0) + ths.get(i).getText() + " for: " + tds.get(i).getText());
+                    budgetNScheduledHours.put(td2s.get(0).getText() + ths.get(i).getText(), td2s.get(i).getText());
+                    SimpleUtils.report("Smart Card: Get the hour: " + td2s.get(0) + ths.get(i).getText() + " for: " + td2s.get(i).getText());
+                }
+            } else {
+                SimpleUtils.fail("Schedule Week View Page: The format of the budget and Scheduled hours' smart card is incorrect!", false);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Week View Page: Budget and Scheduled smart card not loaded Successfully!", false);
+        }
+        return budgetNScheduledHours;
+    }
+
+    @Override
     public HashMap<String, List<String>> getTheContentOfShiftsForEachWeekDay() throws Exception {
         HashMap<String, List<String>> shiftsForEachDay = new HashMap<>();
         if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 7) {
