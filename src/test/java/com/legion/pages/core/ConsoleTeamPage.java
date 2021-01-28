@@ -2863,7 +2863,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				if (isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1), 5)
 				&& isElementLoaded(saveProfileBtn, 5)) {
 					File file = new File(filePath);
-					getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(file.getAbsolutePath());
+					getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(file.getCanonicalPath());
 					// wait for the picture to be loaded
 					waitForSeconds(6);
 					clickTheElement(saveProfileBtn);
