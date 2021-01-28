@@ -3,6 +3,7 @@
 <suite verbose ="0" thread-count="10" name="LegionTest">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="no"/>
+    <parameter name="testRailRunName" value="Automation Test Purpose"/>
 
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
@@ -11,9 +12,9 @@
 
     <test name="Schedule Test LegionCoffee">
         <classes>
-            <class name="com.legion.tests.core.ScheduleTest">
+            <class name="com.legion.tests.core.ActivityTest">
                 <methods>
-                    <include name="verifyTheTeamScheduleOptionAsInternalAdmin" />
+                    <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />
                 </methods>
             </class>
         </classes>
