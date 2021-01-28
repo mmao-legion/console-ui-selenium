@@ -1,5 +1,6 @@
 package com.legion.pages.core;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -2851,6 +2852,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement imageInput;
 	@FindBy (id = "uploadBusinessFormInput")
 	private WebElement businessImageInput;
+	@FindBy (css = "lg-button[label=\"Save\"] button")
+	private WebElement saveProfileBtn;
 
 	@Override
 	public void updateBusinessProfilePicture(String filePath) throws Exception {
@@ -2858,11 +2861,12 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			if (isElementLoaded(profileSection, 10) && isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")), 10)) {
 				clickTheElement(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
 				if (isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1), 5)
-				&& areListElementVisible(getDriver().findElements(By.cssSelector("lg-button[label=\"Save\"]")), 5)) {
-					getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(pth + filePath);
+				&& isElementLoaded(saveProfileBtn, 5)) {
+					File file = new File(filePath);
+					getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(file.getAbsolutePath());
 					// wait for the picture to be loaded
 					waitForSeconds(6);
-					clickTheElement(getDriver().findElements(By.cssSelector("lg-button[label=\"Save\"]")).get(0));
+					clickTheElement(saveProfileBtn);
 					waitForSeconds(5);
 				} else {
 					SimpleUtils.fail("Business Profile Image input element isn't enabled!", true);
