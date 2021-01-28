@@ -451,6 +451,7 @@
                     <include name="verifyTotalViolationHrsInComplianceDMViewAsInternalAdmin" />
                     <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
                     <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
+                    <include name="verifyDMViewNavigationAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

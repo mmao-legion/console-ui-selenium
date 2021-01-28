@@ -525,7 +525,7 @@ public class DMViewTest extends TestBase {
             dashboardPage.clickViewSchedulesLinkOnOpenShiftsWidget();
             SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
             if (currentWeek.toLowerCase().contains(MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toLowerCase().split("\n")[MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toLowerCase().split("\n").length-1])) {
-                SimpleUtils.pass("Open Shifts: \"View Schedules\" butt591918on is to navigate to current week schedule page");
+                SimpleUtils.pass("Open Shifts: \"View Schedules\" button is to navigate to current week schedule page");
             } else {
                 SimpleUtils.fail("Open Shifts: \"View Schedules\" button failed to navigate to current week schedule page", false);
             }
@@ -1037,6 +1037,56 @@ public class DMViewTest extends TestBase {
             if (valuesFromLocationsWithViolationCard.containsKey("Doubletime (Hrs)")){
                 SimpleUtils.assertOnFail("Doubletime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Doubletime (Hrs)")-topViolationInDoubletimeCol)==0, false);
             }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "DM View Navigation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDMViewNavigationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            //Validate user has access to 1 district.
+            locationSelectorPage.reSelectDistrict(districtName);
+            locationSelectorPage.isDMView();
+            String currentWeek = dashboardPage.getWeekInfoFromDMView();
+
+            //Validate drilling into a store location.
+            locationSelectorPage.changeLocation(location);
+
+            //Validate navigating back to district view.
+            //Validate default date.
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            locationSelectorPage.reSelectDistrict(districtName);
+            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            if (currentWeek.toLowerCase().contains(MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toLowerCase().split("\n")[MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toLowerCase().split("\n").length-1])) {
+                SimpleUtils.pass("Open Shifts: \"View Schedules\" button is to navigate to current week schedule page");
+            } else {
+                SimpleUtils.fail("Open Shifts: \"View Schedules\" button failed to navigate to current week schedule page", false);
+            }
+
+            //Validate changing date and location.
+            dashboardPage.navigateToDashboard();
+            locationSelectorPage.changeLocation(location);
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab("Schedule");
+            schedulePage.navigateToNextWeek();
+            String weekInfo = schedulePage.getActiveWeekText();
+            locationSelectorPage.reSelectDistrict(districtName);
+            SimpleUtils.assertOnFail("Dates are inconsistent after changing date and location!", schedulePage.getActiveWeekText().equalsIgnoreCase(weekInfo), false);
+
+            //Changing district and navigate to Timesheet page(Checked in other script).
+            //Verify no timesheet tab in non-TA env.
+            SimpleUtils.assertOnFail("Timesheet tab should not be loaded!", !timeSheetPage.isTimeSheetConsoleMenuTabLoaded(), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

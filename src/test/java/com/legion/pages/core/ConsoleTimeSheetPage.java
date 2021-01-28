@@ -3089,4 +3089,12 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("Timesheet Page: Timesheet approval rate not loaded Successfully!", false);
 		return rate;
 	}
+
+	@Override
+	public boolean isTimeSheetConsoleMenuTabLoaded() throws Exception {
+		if(isElementLoaded(timeSheetConsoleMenuDiv))
+			return true;
+		else
+			return false;
+	}
 }
