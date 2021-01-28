@@ -167,4 +167,5 @@ public interface TimeSheetPage {
 	public void clickOnApproveButtonInTimesheetTable() throws Exception;
 	public boolean isTimeSheetApproveButtonActive() throws Exception;
 	public String getApprovalRateFromTIMESHEETDUESmartCard() throws Exception;
+	public boolean isTimeSheetConsoleMenuTabLoaded() throws Exception;
 }
