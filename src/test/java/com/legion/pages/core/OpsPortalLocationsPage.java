@@ -1122,7 +1122,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void changeOneLocationToNone(String locationToNone) throws Exception {
-		//update parent location to None
+		//update  location group  to None
+		searchInput.clear();
+		searchLocation(locationToNone);
 		if (locationRows.size()>0) {
 			if (verifyIsThisLocationGroup()) {
 //				for (WebElement eachRow: locationRows
@@ -1159,7 +1161,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			 ) {
 			iconInfoOfLG.add(icon.getAttribute("ng-src"));
 		}
-		if (iconInfoOfLG.contains("img/legion/lgComponents/group.svg") ) {
+		if (iconInfoOfLG.contains("img/legion/lgComponents/group.svg") ||iconInfoOfLG.contains("img/legion/lgComponents/group-master-slave.svg") ||
+				iconInfoOfLG.contains("img/legion/lgComponents/group-peer-to-peer.svg")) {
 			return true;
 		}else
 			return false;
@@ -1626,14 +1629,18 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private  WebElement msRadio;
 	@FindBy(css = "input-field[label=\"Peer to Peer\"]")
 	private  WebElement p2pRadio;
+
+	@FindBy(css = "lg-button[label=\"Leave this page\"]")
+	private  WebElement leaveThisPage;
 	@Override
 	public void verifyTheFiledOfLocationSetting() throws Exception {
 		if (isElementEnabled(addLocationBtn,5)) {
-			click(addLocationBtn);
+			clickTheElement(addLocationBtn);
 			clickTheElement(locationGroupSelect);
-			if (locationGroupSelect.getAttribute("option").contains("None") && locationGroupSelect.getAttribute("option").contains("Part of a location group")&&
-					locationGroupSelect.getAttribute("option").contains("Parent location")) {
-				SimpleUtils.pass("Location group setting field should include:None, Parent location ,Part of a location group");
+			String optionlist = locationGroupSelect.getAttribute("option");
+//			if (locationGroupSelect.getAttribute("option").contains("None") && locationGroupSelect.getAttribute("option").contains("Part of a location group")&&
+//					locationGroupSelect.getAttribute("option").contains("Parent location")) {
+//				SimpleUtils.pass("Location group setting field should include:None, Parent location ,Part of a location group");
 				selectByVisibleText(locationGroupSelect,"Parent location");
 				if (isElementEnabled(msRadio,3)&&isElementEnabled(p2pRadio,3)) {
 					SimpleUtils.pass("there are two radio button:Master Slave(default) ,Peer to peer after select parent location");
@@ -1643,15 +1650,18 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 						//back to location list page
 						clickTheElement(backBtnInLocationDetailsPage);
+						clickTheElement(leaveThisPage);
+						waitForSeconds(3);
 					}else {
 						SimpleUtils.fail("select parent location load failed",false);
 					}
-				}else {
-					SimpleUtils.fail("MS and p2p radio button load failed",false);
 				}
-			}else {
-				SimpleUtils.fail("Location group setting field show wrong",false);
-			}
+//				else {
+//					SimpleUtils.fail("MS and p2p radio button load failed",false);
+//				}
+//			}else {
+//				SimpleUtils.fail("Location group setting field show wrong",false);
+//			}
 		}
 	}
 

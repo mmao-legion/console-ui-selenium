@@ -205,7 +205,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	public void createBtnIsClickable() {
 		scrollToBottom();
 		click(createBtn);
-		SimpleUtils.report("Job creation done");
+		SimpleUtils.pass("Job creation done");
 		waitForSeconds(60); //
 		if (isElementEnabled(createNewJobBtn,5)) {
 			SimpleUtils.pass("Create button is clickable and can enter select location page");
@@ -268,21 +268,113 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 
 	@Override
-	public void iCanGoToJobDetailsPage(int index) {
+	public void iCanGoToCreateScheduleJobDetailsPage(int index) {
 		if (jobRows.size()>0) {
 			List<WebElement> locationDetailsLinks = jobRows.get(index).findElements(By.cssSelector("button[type='button']"));
 			click(locationDetailsLinks.get(index));
 			waitForSeconds(5);
+			String adbcdf  = jobDetails.getText();
 			for (int i = 0; i <jobDetailsSubHeaders.size() ; i++) {
 				if (jobDetails.getText().contains("Job Details") && jobDetails.getText().contains("Week for job to take place")
-						&& jobDetails.getText().contains("Create Schedule  Status")&& jobDetails.getText().contains("Locations Selected")
-						&& jobDetails.getText().contains("Notification")) {
+						&& jobDetails.getText().contains("Create Schedule Status")&& jobDetails.getText().contains("Locations Selected")
+						&& jobDetails.getText().contains("#with no schedules created for this week")  &&
+						jobDetails.getText().contains("#with schedules created but not released for this week")  &&
+						jobDetails.getText().contains("#with schedules released for this week")  &&
+						jobDetails.getText().contains("#with schedules published for this week")  &&
+						jobDetails.getText().contains("Export Result File")&& jobDetails.getText().contains("Export Task Summary")&&
+						jobDetails.getText().contains("Notification") &&
+						jobDetails.getText().contains("Enable Email Notification") &&
+						jobDetails.getText().contains("Close")
+				) {
 					SimpleUtils.pass("I can go to job details page successfully and the create schedule job details page show well");
 					break;
 				}else
 					SimpleUtils.fail("Create schedule job details page load failed",false);
 			}
 			
+		}else if (jobRows.size()==0)
+			SimpleUtils.report("There are no jobs that match your criteria. ");
+	}
+
+	@Override
+	public void iCanGoToReleaseScheduleJobDetailsPage(int index) {
+		if (jobRows.size()>0) {
+			List<WebElement> locationDetailsLinks = jobRows.get(index).findElements(By.cssSelector("button[type='button']"));
+			click(locationDetailsLinks.get(index));
+			waitForSeconds(5);
+			String adbcdf  = jobDetails.getText();
+			for (int i = 0; i <jobDetailsSubHeaders.size() ; i++) {
+				if (jobDetails.getText().contains("Job Details") && jobDetails.getText().contains("Week for job to take place")
+						&& jobDetails.getText().contains("Release Schedule Status")&& jobDetails.getText().contains("Locations Selected")
+						&& jobDetails.getText().contains("#with no schedules created for this week")  &&
+						jobDetails.getText().contains("#with schedules created but not released for this week")  &&
+						jobDetails.getText().contains("#with schedules released for this week")  &&
+						jobDetails.getText().contains("#with schedules published for this week")  &&
+						jobDetails.getText().contains("Export Result File")&&
+						jobDetails.getText().contains("Notification") &&
+						jobDetails.getText().contains("Enable Email Notification") &&
+						jobDetails.getText().contains("Close")
+				) {
+					SimpleUtils.pass("I can go to job details page successfully and the release schedule job details page show well");
+					break;
+				}else
+					SimpleUtils.fail("Release schedule job details page load failed",false);
+			}
+
+		}else if (jobRows.size()==0)
+			SimpleUtils.report("There are no jobs that match your criteria. ");
+	}
+
+	@Override
+	public void iCanGoToAdjustBudgetJobDetailsPage(int index) {
+		if (jobRows.size()>0) {
+			List<WebElement> locationDetailsLinks = jobRows.get(index).findElements(By.cssSelector("button[type='button']"));
+			click(locationDetailsLinks.get(index));
+			waitForSeconds(5);
+			String adbcdf  = jobDetails.getText();
+			for (int i = 0; i <jobDetailsSubHeaders.size() ; i++) {
+				if (jobDetails.getText().contains("Job Details") && jobDetails.getText().contains("Week for job to take place")
+						&& jobDetails.getText().contains("Adjust Budget Status")&&
+						jobDetails.getText().contains("Budget Adjustment")&&
+						jobDetails.getText().contains("Locations Selected")&&
+						jobDetails.getText().contains("Export Task Summary")  &&
+						jobDetails.getText().contains("Export Result File")&&
+						jobDetails.getText().contains("Notification") &&
+						jobDetails.getText().contains("Enable Email Notification") &&
+						jobDetails.getText().contains("Close")
+				) {
+					SimpleUtils.pass("I can go to job details page successfully and the adjust budget job details page show well");
+					break;
+				}else
+					SimpleUtils.fail("Adjust budget job details page load failed",false);
+			}
+
+		}else if (jobRows.size()==0)
+			SimpleUtils.report("There are no jobs that match your criteria. ");
+	}
+
+	@Override
+	public void iCanGoToAdjustForecastJobDetailsPage(int index) {
+		if (jobRows.size()>0) {
+			List<WebElement> locationDetailsLinks = jobRows.get(index).findElements(By.cssSelector("button[type='button']"));
+			click(locationDetailsLinks.get(index));
+			waitForSeconds(5);
+			String adbcdf  = jobDetails.getText();
+			for (int i = 0; i <jobDetailsSubHeaders.size() ; i++) {
+				if (jobDetails.getText().contains("Job Details") && jobDetails.getText().contains("Week for job to take place")
+						&& jobDetails.getText().contains("Adjust Forecast Status")&& jobDetails.getText().contains("Forecast Modifications")
+						&& jobDetails.getText().contains("Advanced Options")  &&
+						jobDetails.getText().contains("Export Result File")&&
+						jobDetails.getText().contains("Notification") &&
+						jobDetails.getText().contains("Enable Email Notification") &&
+						jobDetails.getText().contains("Close")
+				) {
+					SimpleUtils.pass("I can go to job details page successfully and the adjust forecast job details page show well");
+					break;
+				}else
+					SimpleUtils.fail("Adjust forecast job details page load failed",false);
+			}
+
 		}else if (jobRows.size()==0)
 			SimpleUtils.report("There are no jobs that match your criteria. ");
 	}
@@ -297,7 +389,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			click(backBtnInJobDetailsPage);
 			waitForSeconds(3);
 			if (isElementEnabled(createNewJobBtn,3)) {
-				SimpleUtils.pass("I can back to job list page successfully");
+				SimpleUtils.pass("I can back to job list page successfully via clicking back button in details page");
 			}
 		}else
 			SimpleUtils.fail("Back button load failed",false);
@@ -306,6 +398,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	@Override
 	public void iCanClickCloseBtnInJobDetailsPage() {
 		if (isElementEnabled(closeBtnInJobDetailsPage,5)) {
+			scrollToBottom();
 			click(closeBtnInJobDetailsPage);
 			waitForSeconds(3);
 			if (isElementEnabled(createNewJobBtn,3)) {

@@ -207,18 +207,27 @@ public class JobTest extends TestBase {
     public void verifyCheckJobDetailsFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
-            String searchText = "*";
+            String searchCreateSchedule = "Create Schedule";
+            String searchReleaseSchedule = "Release Schedule";
+            String searchAdjustBudget = "Adjust Budget";
+            String searchAdjustForecast = "Adjust Forecast";
             int index = 0;
 
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
             jobsPage.iCanEnterJobsTab();
-            jobsPage.iCanSearchTheJobWhichICreated(searchText);
-            jobsPage.iCanGoToJobDetailsPage(index);
-            jobsPage.iCanDownloadExportResultFile();
-            jobsPage.iCanDownloadExportTaskSummary();
+            jobsPage.iCanSearchTheJobWhichICreated(searchCreateSchedule);
+            jobsPage.iCanGoToCreateScheduleJobDetailsPage(index);
+//            jobsPage.iCanDownloadExportResultFile();
+//            jobsPage.iCanDownloadExportTaskSummary();
             jobsPage.iCanBackToJobListPage();
-            jobsPage.iCanSearchTheJobWhichICreated(searchText);
-            jobsPage.iCanGoToJobDetailsPage(index);
+            jobsPage.iCanSearchTheJobWhichICreated(searchReleaseSchedule);
+            jobsPage.iCanGoToReleaseScheduleJobDetailsPage(index);
+            jobsPage.iCanClickCloseBtnInJobDetailsPage();
+            jobsPage.iCanSearchTheJobWhichICreated(searchAdjustBudget);
+            jobsPage.iCanGoToAdjustBudgetJobDetailsPage(index);
+            jobsPage.iCanClickCloseBtnInJobDetailsPage();
+            jobsPage.iCanSearchTheJobWhichICreated(searchAdjustForecast);
+            jobsPage.iCanGoToAdjustForecastJobDetailsPage(index);
             jobsPage.iCanClickCloseBtnInJobDetailsPage();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
