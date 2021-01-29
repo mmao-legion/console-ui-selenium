@@ -13,6 +13,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.server.handler.DeleteSession;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -40,13 +41,13 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy(css = "div.header-navigation-label")
 	private WebElement timeSheetPageHeaderLabel;
 	
-	@FindBy(css = "div.lg-timesheet-table__grid-row.lg-timesheet-table__worker-row")
+	@FindBy(css = "div.lg-timesheet-table-improved__grid-row.lg-timesheet-table-improved__worker-row")
 	private List<WebElement> timeSheetWorkersRows;
 
-	@FindBy(css = "div.lg-timesheet-table")
+	@FindBy(css = "div.lg-timesheet-table-improved")
 	private WebElement timesheetTable;
 	
-	@FindBy(css = "div.lg-timesheet-table__grid-row.lg-timesheet-table__worker-day")
+	@FindBy(css = "div.lg-timesheet-table-improved__grid-row.lg-timesheet-table-improved__worker-day")
 	private List<WebElement> timeSheetTableWorkersDayRows;
 	
 	@FindBy(css = "div.timesheet-details-modal")
@@ -2765,16 +2766,13 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy (css = "last-updated-countdown span[ng-if^=\"$ctrl.minutes > 0\"] span")
 	private WebElement lastUpdatedMinutes;
 
-	@FindBy (className = "navigation-menu-compliance-icon")
-	private WebElement complianceConsoleMenu;
-
 	@FindBy (css = ".console-navigation-item-label.Schedule")
 	private WebElement scheduleConsoleMenu;
 
 	@FindBy (css = ".analytics-new.ng-scope")
 	private WebElement timesheetSection;
 
-	@FindBy (className = "analytics-new-table-group")
+	@FindBy (className = "analytics-new-table-group-row-open")
 	private List<WebElement> rowsInAnalyticsTable;
 
 	@FindBy (css = ".console-navigation-item-label.Timesheet")
@@ -2899,22 +2897,26 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				else
 					// SimpleUtils.fail("Schedule Page: The backstop is older than 1 hour stale",false);
 					SimpleUtils.warn("SCH-2589: [DM View] Refresh time is older than 1 hour stale");
-			}
-			if (timestamp.contains("MINS") && timestamp.contains(" ")) {
+			} else if (timestamp.contains("MINS") && timestamp.contains(" ")) {
 				timestamp = timestamp.split(" ")[0];
 				if (Integer.valueOf(timestamp) < 60 && Integer.valueOf(timestamp) >= 1)
 					SimpleUtils.pass("Timesheet Page: The backstop is last updated " + timestamp + " mins ago");
 				else
-					SimpleUtils.fail("Timesheet Page: The backstop isn't refreshed in 1 hour stale", false);
-			}
+					SimpleUtils.fail("Timesheet Page: The backup is last updated " + timestamp + " mins ago actually", false);
+			} else
+				SimpleUtils.fail("Timesheet Page: The backup display \'" + lastUpdated.getText() + "\'",false);
 		} else
 			SimpleUtils.fail("Timesheet Page: Timestamp failed to load", false);
 	}
 
 	@Override
 	public void navigateToSchedule() throws Exception {
-		if(isElementLoaded(scheduleConsoleMenu, 10)){
+		if (isElementLoaded(scheduleConsoleMenu, 10)) {
 			click(scheduleConsoleMenu);
+			if (scheduleConsoleMenu.findElement(By.xpath("./..")).getAttribute("class").contains("active"))
+				SimpleUtils.pass("Schedule Page: Click on Schedule console menu successfully");
+			else
+				SimpleUtils.fail("Schedule Page: It doesn't navigate to Schedule console menu after clicking", false);
 		} else {
 			SimpleUtils.fail("Schedule menu in left navigation is not loaded!",false);
 		}
@@ -2999,9 +3001,9 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	public void clickOnGivenLocation(String location) throws Exception {
 		if (areListElementVisible(rowsInAnalyticsTable,10)) {
 			for (WebElement row: rowsInAnalyticsTable) {
-				if (row.findElement(By.xpath("./div/div[1]/span/img/following-sibling::span")).getText().equals(location)) {
-					clickTheElement(row.findElement(By.xpath("./div/div[1]/span/img/following-sibling::span")));
-					SimpleUtils.pass("Timesheet Page: Find location successfully");
+				if (row.findElement(By.xpath("./div[1]/span/img/following-sibling::span")).getText().equals(location)) {
+					clickTheElement(row.findElement(By.xpath("./div[1]/span/img/following-sibling::span")));
+					SimpleUtils.pass("Timesheet Page: Find the location " + location + " successfully");
 					break;
 				}
 			}
@@ -3014,8 +3016,8 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		String timesheetApproval = "";
 		if (areListElementVisible(rowsInAnalyticsTable,10)) {
 			for (WebElement row : rowsInAnalyticsTable) {
-				if (row.findElement(By.xpath("./div/div[1]/span/img/following-sibling::span")).getText().equals(location)) {
-					timesheetApproval = row.findElement(By.xpath("./div/div[4]/span")).getText().trim();
+				if (row.findElement(By.xpath("./div[1]/span/img/following-sibling::span")).getText().equals(location)) {
+					timesheetApproval = row.findElement(By.xpath("./div[4]/span")).getText().trim();
 					SimpleUtils.pass("Timesheet Page: Find the location " + location + " with Timesheet Approval " + timesheetApproval);
 					break;
 				}
@@ -3090,11 +3092,144 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		return rate;
 	}
 
+	@FindBy(className = "lg-timeclocks-improved__action-buttons-save")
+	private WebElement timeSheetDetailsSaveBtn;
+
+	@FindBy(id = "id_back_button")
+	private WebElement timeSheetDetailsBackBtn;
+
+	@FindBy(id = "id_timesheet_clock_0_action_popup_trigger")
+	private WebElement timeSheetDetailsActionBtn;
+
+	@FindBy(id = "id_timesheet_clock_action_button_add_clock_after")
+	private WebElement timeSheetDetailsAddClockAfterBtn;
+
+	@FindBy(css = "lg-new-timeclock-editor-improved .field-container")
+	private List<WebElement> timeSheetDetailsClocks;
+
+	@FindBy(id = "id_timesheet_clock_action_button_delete_clock")
+	private WebElement timeSheetDetailsDeleteClock;
+
+	@FindBy(id = "id_timesheet_clock_action_button_add_clock_after")
+	private WebElement timeSheetDetailsAddClockAfter;
+
+	@FindBy(xpath = "//div[contains(text(), 'Add ')][contains(text(), 'lock')]")
+	private WebElement timeSheetDetailsAddClock;
+
+	@FindBy(css = "#id_timesheet_clock_0_location select")
+	private WebElement timeSheetDetailsLocationSelect;
+
+	@FindBy(className = "lgn-alert-modal")
+	private WebElement timeSheetDetailsAlertModal;
+
+	@FindBy(className = "lgn-action-button-success")
+	private WebElement timeSheetDetailsSaveBtnInAlertModal;
+
+	@FindBy(className = "dropdown-toggle")
+	private WebElement dropdownToggle;
+
+	@FindBy(className = "dropdown-menu-right")
+	private WebElement reaggregateTimesheetOption;
+
+	@FindBy(className = "lg-modal")
+	private WebElement reaggregateTimesheetPopup;
+
+	@FindBy(css = "[label=\"Confirm\"]")
+	private WebElement reaggregateTimesheetPopupConfirmBtn;
+
+	@Override
+	public void reaggregateTimesheet() throws Exception {
+		if (isElementLoaded(dropdownToggle,10)) {
+			click(dropdownToggle);
+			click(reaggregateTimesheetOption);
+			if (isElementLoaded(reaggregateTimesheetPopup,10))
+				click(reaggregateTimesheetPopupConfirmBtn);
+			if(isElementLoaded(successMsg, 30))
+				SimpleUtils.pass("Timesheet Page: Timesheet successfully re-aggregated");
+			else
+				SimpleUtils.fail("Timesheet Page: Timesheet failed to re-aggregate",false);
+		} else
+			SimpleUtils.fail("Timesheet Page: Dropdown Toggle icon failed to load",false);
+	}
+
+	@Override
+	public void saveTimeSheetDetail() throws Exception {
+		if(isElementLoaded(timeSheetDetailsSaveBtn,10)) {
+			click(timeSheetDetailsSaveBtn);
+			if (isElementLoaded(timeSheetDetailsAlertModal,2))
+				click(timeSheetDetailsSaveBtnInAlertModal);
+			if (isElementLoaded(successMsg, 5))
+				SimpleUtils.pass("Timesheet Page: Timesheet Details Edit popup Saved successfully");
+			else
+				SimpleUtils.fail("Timesheet Page: Timesheet Details Edit popup failed to save clock",false);
+		} else
+			SimpleUtils.fail("Timesheet Page: Timesheet Detail Popup Save Button not found!", true);
+	}
+
+	@Override
+	public void clickOnTimeSheetDetailBackBtn() throws Exception {
+		if(isElementLoaded(timeSheetDetailsBackBtn,10)) {
+			click(timeSheetDetailsBackBtn);
+			if(isElementLoaded(timesheetTable,10))
+				SimpleUtils.pass("Timesheet Page: Timesheet Details Edit popup goes back successfully");
+			else
+				SimpleUtils.fail("Timesheet Page: Timesheet Details Edit popup failed to go back",false);
+		} else
+			SimpleUtils.fail("Timesheet Page: Timesheet Detail Back Button not found!", true);
+	}
+
+	@Override
+	public void deleteExistingClocks() throws Exception {
+		if (areListElementVisible(timeSheetDetailsClocks,10)) {
+			for (WebElement clock : timeSheetDetailsClocks) {
+				WebElement action = clock.findElement(By.xpath("./div[contains(@id,'action_popup_trigger')]"));
+				click(action);
+				click(timeSheetDetailsDeleteClock);
+				WebElement timeSheetDetailsReasonSelect = clock.findElement(By.xpath("./following-sibling::div[1]//input-field[1]"));
+				if (isElementEnabled(timeSheetDetailsReasonSelect, 10)) {
+					click(timeSheetDetailsReasonSelect);
+					click(timeSheetDetailsReasonSelect.findElements(By.cssSelector("option[label]")).get(0));
+				}
+				WebElement timeSheetDetailsCommentBox = clock.findElement(By.xpath("./following-sibling::div[1]//input-field[@id='id_comment_box']"));
+				if (isElementEnabled(timeSheetDetailsCommentBox, 10) && !timeSheetDetailsCommentBox.getAttribute("class").contains("ng-hide")) {
+					timeSheetDetailsCommentBox.sendKeys("Test");
+				}
+			}
+		} else
+			SimpleUtils.fail("Timesheet Page: Cannot find existing clocks",false);
+	}
+
 	@Override
 	public boolean isTimeSheetConsoleMenuTabLoaded() throws Exception {
 		if(isElementLoaded(timeSheetConsoleMenuDiv))
 			return true;
 		else
 			return false;
+	}
+
+	@Override
+	public void addTimeClockCheckInOutOnDetailWithDefaultValue(String location) throws Exception {
+		String timeClockCheckOut = "11:30PM";
+		if (isElementLoaded(scheduleDetails,10))
+			timeClockCheckOut = scheduleDetails.getText().split("-")[1].trim();
+		if (!isElementLoaded(timeSheetDetailsAddClock, 10)) {
+			deleteExistingClocks();
+			saveTimeSheetDetail();
+		}
+		if (isElementLoaded(timeSheetDetailsAddClock, 10)) {
+			click(timeSheetDetailsAddClock);
+			selectByVisibleText(timeSheetDetailsLocationSelect,location);
+			click(timeSheetDetailsActionBtn);
+			click(timeSheetDetailsAddClockAfter);
+			WebElement selectClockType = timeSheetDetailsClocks.get(1).findElement(By.cssSelector("select"));
+			selectByVisibleText(selectClockType,"Clock out");
+			WebElement clockOutInput = timeSheetDetailsClocks.get(1).findElement(By.cssSelector("input-field[type=\"text\"] input"));
+			click(clockOutInput);
+			clockOutInput.sendKeys(timeClockCheckOut.split(":")[0]);
+			clockOutInput.sendKeys(Keys.TAB);
+			clockOutInput.sendKeys(timeClockCheckOut.split(":")[1].substring(0,2));
+			clockOutInput.sendKeys(Keys.TAB);
+			clockOutInput.sendKeys(timeClockCheckOut.split(":")[1].substring(2));
+		}
 	}
 }

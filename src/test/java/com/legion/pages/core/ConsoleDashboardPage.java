@@ -1468,14 +1468,14 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				else
 					// SimpleUtils.fail("Dashboard Page:  The backstop is older than 1 hour stale",false);
 					SimpleUtils.warn("SCH-2589: [DM View] Refresh time is older than 1 hour stale");
-			}
-			if (timestamp.contains("MINS") && timestamp.contains(" ")) {
+			} else if (timestamp.contains("MINS") && timestamp.contains(" ")) {
 				timestamp = timestamp.split(" ")[0];
 				if (Integer.valueOf(timestamp) < 60 && Integer.valueOf(timestamp) >= 1)
 					SimpleUtils.pass("Dashboard Page:  The backstop is last updated " + timestamp + " mins ago");
 				else
-					SimpleUtils.fail("Dashboard Page:  The backstop isn't refreshed in 1 hour stale", false);
-			}
+					SimpleUtils.fail("Dashboard Page: The backup is last updated " + timestamp + " mins ago actually", false);
+			} else
+				SimpleUtils.fail("Dashboard Page: The backup display \'" + lastUpdated.getText() + "\'",false);
 		} else
 			SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
 	}

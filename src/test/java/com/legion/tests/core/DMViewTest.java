@@ -27,6 +27,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.legion.utils.MyThreadLocal.getDriver;
+
 public class DMViewTest extends TestBase {
 
     private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
@@ -413,7 +415,6 @@ public class DMViewTest extends TestBase {
             }
             timeSheetPage.approveAnyTimesheet();
             String rateInTimesheetDueAfterApprove = timeSheetPage.getApprovalRateFromTIMESHEETDUESmartCard();
-            System.out.println("rateInTimesheetDueAfterApprove"+rateInTimesheetDueAfterApprove);
             dashboardPage.navigateToDashboard();
             locationSelectorPage.reSelectDistrict(districtName);
             timeSheetPage.clickOnTimeSheetConsoleMenu();
@@ -422,11 +423,118 @@ public class DMViewTest extends TestBase {
             String rateInAnalyticsTableAfterChange = timeSheetPage.getTimesheetApprovalForGivenLocationInDMView(location);
             if (rateInTimesheetDueAfterApprove.equals(rateInAnalyticsTableAfterChange)
                     && !rateWithin24OnSmartCardBeforeChange.equals(rateWithin24OnSmartCardAfterChange)
-            && !rateInAnalyticsTableBeforeChange.equals(rateInAnalyticsTableAfterChange))
+            && !rateInAnalyticsTableBeforeChange.equals(rateInAnalyticsTableAfterChange)) {
+                SimpleUtils.report("The rate <24 Hrs on smart card before change is " + rateWithin24OnSmartCardBeforeChange);
+                SimpleUtils.report("The rate <24 Hrs on smart card after change is " + rateWithin24OnSmartCardAfterChange);
+                SimpleUtils.report("The rate in analytics table for given location before change is " + rateInAnalyticsTableBeforeChange);
+                SimpleUtils.report("The rate in analytics table for given location after change is " + rateInAnalyticsTableAfterChange);
+                SimpleUtils.report("The rate in SM view for given location after updating is " + rateInTimesheetDueAfterApprove);
                 SimpleUtils.pass("Timesheet Page: The timesheet approval rate on smart card and in analytics table gets updating according to the new change");
-            else
-                // SimpleUtils.fail("",false);
+                        } else
+                // SimpleUtils.fail("Timesheet Page: The timesheet approval rate on smart card and in analytics table doesn't get updating according to the new change",false);
                 SimpleUtils.warn("TA-5015: Approved percentage cannot get updating after approving on TIMESHEET DUE smart card");
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "DGStage_Enterprise")
+    @TestName(description = "Verify Refresh feature on Dashboard in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRefreshFeatureOnComplianceInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        String districtName = dashboardPage.getCurrentDistrict();
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.reSelectDistrict(districtName);
+
+        CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        compliancePage.clickOnComplianceConsoleMenu();
+        SimpleUtils.assertOnFail("Compliance page not loaded successfully", compliancePage.isCompliancePageLoaded(), false);
+
+        // Validate the presence of Refresh button
+        compliancePage.validateThePresenceOfRefreshButton();
+
+        // Validate Refresh timestamp
+        compliancePage.validateRefreshTimestamp();
+
+        // Validate Refresh when navigation back
+        compliancePage.validateRefreshWhenNavigationBack();
+
+        // Validate Refresh function
+        compliancePage.validateRefreshFunction();
+
+        // Validate Refresh performance
+        compliancePage.validateRefreshPerformance();
+
+        // Validate Refresh function for past weeks
+        compliancePage.navigateToPreviousWeek();
+        compliancePage.validateRefreshTimestamp();
+        compliancePage.clickOnRefreshButton();
+        compliancePage.validateRefreshFunction();
+
+        // Validate Refresh function for future weeks
+        compliancePage.navigateToNextWeek();
+        compliancePage.navigateToNextWeek();
+        compliancePage.validateRefreshTimestamp();
+        compliancePage.clickOnRefreshButton();
+        compliancePage.validateRefreshFunction();
+
+        // Validate Refresh reflects timesheet change
+        compliancePage.navigateToPreviousWeek();
+        String totalViolationHrsBeforeChange = compliancePage.getTheTotalViolationHrsFromSmartCard();
+        List<String> dataFromComplianceTableBeforeChange = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
+        timeSheetPage.clickOnTimeSheetConsoleMenu();
+        timeSheetPage.clickOnGivenLocation(location);
+        if (!timeSheetPage.isWorkerDisplayInTimesheetTable()) {
+            timeSheetPage.navigateToSchedule();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            schedulePage.publishActiveSchedule();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+        }
+//        timeSheetPage.clickOnDayView();
+//        SimpleUtils.pass("Timesheet Day View: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"' loaded.");
+//        timeSheetPage.navigateDayWeekOrPayPeriodToPastOrFuture(TimeSheetTest.dayWeekOrPayPeriodViewType.Previous.getValue()
+//                , TimeSheetTest.dayWeekOrPayPeriodCount.One.getValue());
+//        SimpleUtils.pass("Timesheet Day View: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"' loaded.");
+        timeSheetPage.openFirstPendingTimeSheet();
+        timeSheetPage.addTimeClockCheckInOutOnDetailWithDefaultValue(location);
+        timeSheetPage.saveTimeSheetDetail();
+        timeSheetPage.clickOnTimeSheetDetailBackBtn();
+//        timeSheetPage.reaggregateTimesheet();
+
+        dashboardPage.navigateToDashboard();
+        locationSelectorPage.reSelectDistrict(districtName);
+        dashboardPage.clickOnRefreshButton();
+        SimpleUtils.assertOnFail("Compliance Violations widget not loaded successfully", dashboardPage.isComplianceViolationsWidgetDisplay(), false);
+        compliancePage.clickOnComplianceConsoleMenu();
+        compliancePage.clickOnRefreshButton();
+        String totalViolationHrsAfterChange = compliancePage.getTheTotalViolationHrsFromSmartCard();
+        List<String> dataFromComplianceTableAfterChange = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
+
+        if (Integer.valueOf(totalViolationHrsAfterChange.split(" ")[0]) != Integer.valueOf(totalViolationHrsBeforeChange.split(" ")[0])
+                && !dataFromComplianceTableBeforeChange.containsAll(dataFromComplianceTableAfterChange)
+        && !dataFromComplianceTableAfterChange.containsAll(dataFromComplianceTableBeforeChange)) {
+            SimpleUtils.report("The total violation hours before change is " + totalViolationHrsBeforeChange);
+            SimpleUtils.report("The total violation hours after change is " + totalViolationHrsAfterChange);
+            SimpleUtils.report("The total violation hours for the given location before change is " + dataFromComplianceTableBeforeChange.get(0));
+            SimpleUtils.report("The total violation hours for the given location after change is " + dataFromComplianceTableAfterChange.get(0));
+            SimpleUtils.pass("Compliance Page: The violation number or hours on smart card and in analytics table should get updating according to the new change");
+        } else
+            SimpleUtils.fail("Compliance Page: The timesheet approval rate on smart card and in analytics table doesn't get updating according to the new change",false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);

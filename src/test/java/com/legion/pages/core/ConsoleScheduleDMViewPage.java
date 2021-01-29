@@ -155,7 +155,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     @FindBy (xpath = "//span[contains(text(),'Not Started')]")
     private List<WebElement> notStartedSchedules;
 
-    @FindBy (className = "analytics-new-table-group")
+    @FindBy (className = "analytics-new-table-group-open")
     private List<WebElement> rowsInAnalyticsTable;
 
     @Override
@@ -226,14 +226,14 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                 else
                     // SimpleUtils.fail("Schedule Page:  The backstop is older than 1 hour stale",false);
                     SimpleUtils.warn("SCH-2589: [DM View] Refresh time is older than 1 hour stale");
-            }
-            if (timestamp.contains("MINS") && timestamp.contains(" ")) {
+            } else if (timestamp.contains("MINS") && timestamp.contains(" ")) {
                 timestamp = timestamp.split(" ")[0];
                 if (Integer.valueOf(timestamp) < 60 && Integer.valueOf(timestamp) >= 1)
                     SimpleUtils.pass("Schedule Page: The backstop is last updated " + timestamp + " mins ago");
                 else
-                    SimpleUtils.fail("Schedule Page: The backstop isn't refreshed in 1 hour stale", false);
-            }
+                SimpleUtils.fail("Schedule Page: The backup is last updated " + timestamp + " mins ago actually", false);
+            } else
+                SimpleUtils.fail("Schedule Page: The backup display \'" + lastUpdated.getText() + "\'",false);
         } else
             SimpleUtils.fail("Schedule Page: Timestamp failed to load", false);
     }
@@ -305,8 +305,8 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         String scheduleStatus = "";
         if (areListElementVisible(rowsInAnalyticsTable,10)) {
             for (WebElement row : rowsInAnalyticsTable) {
-                if (row.findElement(By.xpath("./div/div[1]/span/img/following-sibling::span")).getText().equals(location)) {
-                    scheduleStatus = row.findElement(By.xpath("./div/div[2]/span/span")).getText().trim();
+                if (row.findElement(By.xpath("./div[1]/span/img/following-sibling::span")).getText().equals(location)) {
+                    scheduleStatus = row.findElement(By.xpath("./div[2]/span/span")).getText().trim();
                     SimpleUtils.pass("Schedule Page: Find the location " + location + " with Schedule Status " + scheduleStatus);
                     break;
                 }

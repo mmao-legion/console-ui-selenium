@@ -167,5 +167,10 @@ public interface TimeSheetPage {
 	public void clickOnApproveButtonInTimesheetTable() throws Exception;
 	public boolean isTimeSheetApproveButtonActive() throws Exception;
 	public String getApprovalRateFromTIMESHEETDUESmartCard() throws Exception;
+	public void reaggregateTimesheet() throws Exception;
+	public void saveTimeSheetDetail() throws Exception;
+	public void clickOnTimeSheetDetailBackBtn() throws Exception;
+	public void addTimeClockCheckInOutOnDetailWithDefaultValue(String location) throws Exception;
+	public void deleteExistingClocks() throws Exception;
 	public boolean isTimeSheetConsoleMenuTabLoaded() throws Exception;
 }

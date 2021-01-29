@@ -14,4 +14,15 @@ public interface CompliancePage {
     public HashMap<String, Integer> getValueOnLocationsWithViolationCardAndVerifyInfo() throws Exception;
     public HashMap<String, Float> getViolationHrsFromTop1ViolationCardAndVerifyInfo() throws Exception;
     public float getTopOneViolationHrsOrNumOfACol(List<Float> list) throws Exception;
+    public void validateThePresenceOfRefreshButton() throws Exception;
+    public void validateRefreshTimestamp() throws Exception;
+    public void validateRefreshWhenNavigationBack() throws Exception;
+    public void validateRefreshFunction() throws Exception;
+    public void validateRefreshPerformance() throws Exception;
+    public void navigateToSchedule() throws Exception;
+    public void clickOnRefreshButton() throws Exception;
+    public void clickOnComplianceConsoleMenu() throws Exception;
+    public void navigateToPreviousWeek() throws Exception;
+    public void navigateToNextWeek() throws Exception;
+    public List<String> getDataFromComplianceTableForGivenLocationInDMView(String location) throws Exception;
 }
