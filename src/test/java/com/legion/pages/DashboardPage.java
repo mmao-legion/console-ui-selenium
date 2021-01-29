@@ -77,4 +77,5 @@ public interface DashboardPage {
     public void verifyIntegrationPageIsLoaded() throws Exception;
     public void verifyHeaderNavigationMessage(String headerNavigationMessage) throws Exception;
     public void closeNewFeatureEnhancementsPopup() throws Exception;
+    public List<String> getDistrcitListInDashboard() throws Exception;
 }

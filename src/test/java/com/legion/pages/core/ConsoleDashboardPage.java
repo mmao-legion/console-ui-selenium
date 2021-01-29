@@ -1357,4 +1357,21 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 	}
 
+	@FindBy(css = "div.lg-search-options__scroller div.lg-search-options__option.lg-search-options__subLabel")
+	private List<WebElement> distrcitsListInDashboardPage;
+	@Override
+	public List<String> getDistrcitListInDashboard() throws Exception{
+		click(currentDistrict);
+		waitForSeconds(3);
+		if (locationsListInDashboardPage.size()>0) {
+			List<String> districtList = new ArrayList<String>();
+			for (WebElement district: distrcitsListInDashboardPage
+			) {
+				districtList.add(district.getText().split("\n")[0]);
+			}
+			return districtList;
+		}
+		return null;
+	}
+
 }

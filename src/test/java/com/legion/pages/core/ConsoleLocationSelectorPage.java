@@ -345,6 +345,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                             click(districtSelectorButton);
                         }
                         if (isElementLoaded(districtDropDownButton, 5)) {
+                            availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
                             if (availableLocationCardsName.size() != 0) {
                                 for (WebElement locationCardName : availableLocationCardsName) {
                                     if (locationCardName.getText().contains(districtName)) {

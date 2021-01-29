@@ -78,6 +78,7 @@
                     <include name="verifyNavigationBarSearchDistrictFunctionInternalAdmin" />
                     <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />
                     <include name="verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin"/>
+                    <include name="verifyNavigationBarRecentlyViewListAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>

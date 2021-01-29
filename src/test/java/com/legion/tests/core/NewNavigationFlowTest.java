@@ -12,10 +12,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 public class NewNavigationFlowTest extends TestBase {
 
@@ -386,7 +383,49 @@ public class NewNavigationFlowTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validated navigation bar show after switch to other tabs and then return to dashboard page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyNavigationBarRecentlyViewListAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
+        List<String> searchDistrictsList = new ArrayList<String>(){{
+            add("District1002");
+            add("District1003");
+            add("OMDistrict1");
+            add("1204-1");
+            add("add district via con");
+            add("DistrictEmpty001");
+        }};
 
+        List<String> finalDistrictsList = new ArrayList<String>();
 
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
+
+        for(String district:searchDistrictsList){
+            if(district!=null) {
+                locationSelectorPage.changeDistrict(district);
+            }
+        }
+
+        finalDistrictsList = dashboardPage.getDistrcitListInDashboard();
+        Collections.reverse(searchDistrictsList);
+
+        if(finalDistrictsList.size()==5){
+        for(int i=0;i<finalDistrictsList.size();i++){
+            if(finalDistrictsList.get(i).equals(searchDistrictsList.get(i))){
+                SimpleUtils.pass("The " + (i+1) + " location is " + finalDistrictsList.get(i));
+            }else{
+                SimpleUtils.fail("The order of districts list is NOT correct",true);
+
+            }
+        }
+        }else {
+            SimpleUtils.fail("The count of districts is NOT correct",true);
+        }
+    }
 }
