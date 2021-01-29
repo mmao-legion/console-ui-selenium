@@ -1071,7 +1071,7 @@ public class LocationsTest extends TestBase {
             ArrayList<HashMap<String, String>> locationInfoDetailsAftUpdate =locationsPage.getLocationInfo(locationName);
 
             if (locationInfoDetailsAftUpdate.size() < locationInfoDetails.size()) {
-                SimpleUtils.pass("Child location:"+locationInfoDetails.get(locationInfoDetails.size()-1).get("locationName") +" was removed from this location group:"+LGMSLocationName);
+                SimpleUtils.pass("Child location:"+locationInfoDetails.get(locationInfoDetails.size()-1).get("locationName") +" was removed from this location group");
             }else
                 SimpleUtils.fail("Update child location to None failed",true);
             //change MS parent location to None

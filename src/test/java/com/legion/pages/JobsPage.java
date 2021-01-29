@@ -29,8 +29,6 @@ public interface JobsPage {
 
     public void iCanSearchTheJobWhichICreated(String jobTitle) throws Exception;
 
-    public void iCanGoToJobDetailsPage(int index);
-
     public void iCanBackToJobListPage();
 
     public void iCanClickCloseBtnInJobDetailsPage();
@@ -40,4 +38,12 @@ public interface JobsPage {
     public void iCanDownloadExportTaskSummary();
 
     public ArrayList<HashMap<String, String>> iCanGetJobInfo(String jobTitle);
+
+    public void iCanGoToCreateScheduleJobDetailsPage(int index);
+
+    public void iCanGoToReleaseScheduleJobDetailsPage(int index);
+
+    public void iCanGoToAdjustBudgetJobDetailsPage(int index);
+
+    public void iCanGoToAdjustForecastJobDetailsPage(int index);
 }
