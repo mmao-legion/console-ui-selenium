@@ -25,4 +25,5 @@ public interface CompliancePage {
     public void navigateToPreviousWeek() throws Exception;
     public void navigateToNextWeek() throws Exception;
     public List<String> getDataFromComplianceTableForGivenLocationInDMView(String location) throws Exception;
+    public boolean isLocationInCompliancePageClickable() throws Exception;
 }

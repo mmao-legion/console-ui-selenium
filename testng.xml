@@ -453,6 +453,8 @@
                     <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
                     <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
                     <include name="verifyDMViewNavigationAsInternalAdmin" />
+                    <include name="verifyLocationListAndSubLocationOnTimesheetInDMViewAsInternalAdmin" />
+                    <include name="verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

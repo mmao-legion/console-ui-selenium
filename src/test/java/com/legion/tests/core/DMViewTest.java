@@ -412,12 +412,14 @@ public class DMViewTest extends TestBase {
                 }
                 schedulePage.publishActiveSchedule();
                 timeSheetPage.clickOnTimeSheetConsoleMenu();
+                SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
             }
             timeSheetPage.approveAnyTimesheet();
             String rateInTimesheetDueAfterApprove = timeSheetPage.getApprovalRateFromTIMESHEETDUESmartCard();
             dashboardPage.navigateToDashboard();
             locationSelectorPage.reSelectDistrict(districtName);
             timeSheetPage.clickOnTimeSheetConsoleMenu();
+            SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
             timeSheetPage.clickOnRefreshButton();
             String rateWithin24OnSmartCardAfterChange = timeSheetPage.getTimesheetApprovalRateOnDMViewSmartCard().get(0);
             String rateInAnalyticsTableAfterChange = timeSheetPage.getTimesheetApprovalForGivenLocationInDMView(location);
@@ -492,6 +494,7 @@ public class DMViewTest extends TestBase {
         String totalViolationHrsBeforeChange = compliancePage.getTheTotalViolationHrsFromSmartCard();
         List<String> dataFromComplianceTableBeforeChange = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
         timeSheetPage.clickOnTimeSheetConsoleMenu();
+        SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
         timeSheetPage.clickOnGivenLocation(location);
         if (!timeSheetPage.isWorkerDisplayInTimesheetTable()) {
             timeSheetPage.navigateToSchedule();
@@ -504,6 +507,7 @@ public class DMViewTest extends TestBase {
             }
             schedulePage.publishActiveSchedule();
             timeSheetPage.clickOnTimeSheetConsoleMenu();
+            SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
         }
 //        timeSheetPage.clickOnDayView();
 //        SimpleUtils.pass("Timesheet Day View: '"+ timeSheetPage.getActiveDayWeekOrPayPeriod() +"' loaded.");
@@ -525,19 +529,130 @@ public class DMViewTest extends TestBase {
         String totalViolationHrsAfterChange = compliancePage.getTheTotalViolationHrsFromSmartCard();
         List<String> dataFromComplianceTableAfterChange = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
 
+        SimpleUtils.report("The total violation hours before change is " + totalViolationHrsBeforeChange);
+        SimpleUtils.report("The total violation hours after change is " + totalViolationHrsAfterChange);
+        SimpleUtils.report("The total violation hours for the given location before change is " + dataFromComplianceTableBeforeChange.get(0));
+        SimpleUtils.report("The total violation hours for the given location after change is " + dataFromComplianceTableAfterChange.get(0));
+
         if (Integer.valueOf(totalViolationHrsAfterChange.split(" ")[0]) != Integer.valueOf(totalViolationHrsBeforeChange.split(" ")[0])
-                && !dataFromComplianceTableBeforeChange.containsAll(dataFromComplianceTableAfterChange)
-        && !dataFromComplianceTableAfterChange.containsAll(dataFromComplianceTableBeforeChange)) {
-            SimpleUtils.report("The total violation hours before change is " + totalViolationHrsBeforeChange);
-            SimpleUtils.report("The total violation hours after change is " + totalViolationHrsAfterChange);
-            SimpleUtils.report("The total violation hours for the given location before change is " + dataFromComplianceTableBeforeChange.get(0));
-            SimpleUtils.report("The total violation hours for the given location after change is " + dataFromComplianceTableAfterChange.get(0));
+                    && !dataFromComplianceTableBeforeChange.containsAll(dataFromComplianceTableAfterChange)
+                    && !dataFromComplianceTableAfterChange.containsAll(dataFromComplianceTableBeforeChange))
             SimpleUtils.pass("Compliance Page: The violation number or hours on smart card and in analytics table should get updating according to the new change");
-        } else
+        else
             SimpleUtils.fail("Compliance Page: The timesheet approval rate on smart card and in analytics table doesn't get updating according to the new change",false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Owner(owner = "Julie")
+    @Enterprise(name = "DGStage_Enterprise")
+    @TestName(description = "Verify the availability of location list and sub location on Timesheet in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationListAndSubLocationOnTimesheetInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
+
+            // Validate the location list
+            // todo: Blocked By https://legiontech.atlassian.net/browse/SCH-2522
+
+            // Validate click one location
+            timeSheetPage.clickOnGivenLocation(location);
+
+            // Validate go back from selected location in current week
+            dashboardPage.navigateToDashboard();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            locationSelectorPage.reSelectDistrict(districtName);
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimesheetDMView(), false);
+
+            // Validate the data for selected location
+            List<String> dataFromTimesheetTable = timeSheetPage.getDataFromTimesheetTableForGivenLocationInDMView(location);
+
+            timeSheetPage.clickOnGivenLocation(location);
+            List<String> alertsDataFromSmartCard = timeSheetPage.getAlertsDataFromSmartCard();
+            int totalAlert = 0;
+            for (String alert: alertsDataFromSmartCard)
+                totalAlert += Integer.valueOf(alert.replace("\n", " ").split(" ")[0]);
+            String approvalRateFromTIMESHEETDUESmartCard = timeSheetPage.getApprovalRateFromTIMESHEETDUESmartCard();
+            int totalTimesheetsInSMView = timeSheetPage.getTotalTimesheetInSMView();
+
+            SimpleUtils.report("Unplanned Clocks for location \'" + location + "\' in DM View is " + dataFromTimesheetTable.get(0));
+            SimpleUtils.report("Total Timesheets for location \'" + location + "\' in DM View is " + dataFromTimesheetTable.get(1));
+            SimpleUtils.report("Timesheet Approval for location \'" + location + "\' in DM View is " + dataFromTimesheetTable.get(2));
+            SimpleUtils.report("Unplanned Clocks for location \'" + location + "\' in SM View is " + totalAlert);
+            SimpleUtils.report("Total Timesheets for location \'" + location + "\' in SM View is " + totalTimesheetsInSMView);
+            SimpleUtils.report("Timesheet Approval for location \'" + location + "\' in SM View is " + approvalRateFromTIMESHEETDUESmartCard);
+
+            if (dataFromTimesheetTable.get(0).equals(totalAlert) && dataFromTimesheetTable.get(1).equals(totalTimesheetsInSMView)
+            && dataFromTimesheetTable.get(2).equals(approvalRateFromTIMESHEETDUESmartCard))
+                SimpleUtils.pass("Timesheet Page: They are consistent between the rows in the table in DM view and in SM view");
+            else
+                //SimpleUtils.fail("Timesheet Page: They are inconsistent between the rows in the table in DM view and in SM view",false);
+                SimpleUtils.warn("LEG-12321: [DM View] Timesheet is inconsistent");
+
+            // Validate click given location and given week
+            timeSheetPage.navigateToPreviousWeek();
+            String weekInfo = timeSheetPage.getActiveDayWeekOrPayPeriod();
+            timeSheetPage.clickOnGivenLocation(location);
+            SimpleUtils.assertOnFail("It didn't navigate to the Timesheet page of the location in that week", weekInfo.equals(timeSheetPage.getActiveDayWeekOrPayPeriod()), false);
+
+            // Validate click other district in past week
+            dashboardPage.navigateToDashboard();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            locationSelectorPage.changeAnotherDistrictInDMView();
+            String anotherDistrictName = dashboardPage.getCurrentDistrict();
+            locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(anotherDistrictName);
+            locationSelectorPage.reSelectDistrict(districtName);
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+
+            timeSheetPage.navigateToPreviousWeek();
+            List<String> timesheetApprovalRateForOneDistrict = timeSheetPage.getTimesheetApprovalRateOnDMViewSmartCard();
+            locationSelectorPage.reSelectDistrict(anotherDistrictName);
+            SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimesheetDMView(), false);
+            List<String> timesheetApprovalRateForAnotherDistrict = timeSheetPage.getTimesheetApprovalRateOnDMViewSmartCard();
+            SimpleUtils.assertOnFail("Timesheet page: It didn't navigate to the Timesheet page of DM view with that district",!timesheetApprovalRateForOneDistrict.containsAll(timesheetApprovalRateForAnotherDistrict),false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Owner(owner = "Julie")
+    @Enterprise(name = "DGStage_Enterprise")
+    @TestName(description = "Verify the availability of location list and sub location on Timesheet in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            compliancePage.clickOnComplianceConsoleMenu();
+            SimpleUtils.assertOnFail("Compliance page not loaded successfully", compliancePage.isCompliancePageLoaded(), false);
+
+            // Validate the location list
+            // todo: Blocked By https://legiontech.atlassian.net/browse/SCH-2522
+
+            // Validate click one location
+            SimpleUtils.assertOnFail("Compliance Page: The location is clickable unexpectedly", !compliancePage.isLocationInCompliancePageClickable(), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 

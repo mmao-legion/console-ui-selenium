@@ -173,4 +173,7 @@ public interface TimeSheetPage {
 	public void addTimeClockCheckInOutOnDetailWithDefaultValue(String location) throws Exception;
 	public void deleteExistingClocks() throws Exception;
 	public boolean isTimeSheetConsoleMenuTabLoaded() throws Exception;
+	public boolean isTimesheetDMView() throws Exception;
+	public List<String> getDataFromTimesheetTableForGivenLocationInDMView(String location) throws Exception;
+	public int getTotalTimesheetInSMView() throws Exception;
 }

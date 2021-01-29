@@ -353,7 +353,7 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
         List<String> complianceViolationsOnDMViewSmartCard = new ArrayList<>();
         boolean isLocationFound = false;
         if (areListElementVisible(rowsInAnalyticsTable,10)) {
-            for (WebElement row :rowsInAnalyticsTable) {
+            for (WebElement row: rowsInAnalyticsTable) {
                 if (row.findElement(By.xpath("./div[1]/span/img/following-sibling::span")).getText().equals(location)) {
                     isLocationFound = true;
                     List<WebElement> dataElements = row.findElements(By.cssSelector(".ng-scope.col-fx-1"));
@@ -375,6 +375,7 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
 
     @FindBy(css = "div.header-navigation-label")
     private WebElement compliancePageHeaderLabel;
+
     @Override
     public boolean isCompliancePageLoaded() throws Exception {
         if(isElementLoaded(compliancePageHeaderLabel,10)){
@@ -385,6 +386,21 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean isLocationInCompliancePageClickable() throws Exception {
+        boolean isLocationClickable = true;
+        if (areListElementVisible(rowsInAnalyticsTable,10)) {
+            for (WebElement row: rowsInAnalyticsTable) {
+                click(row);
+                if (row.getCssValue("cursor").contains("pointer"))
+                    break;
+                else
+                    isLocationClickable = false;
+            }
+        }
+        return isLocationClickable;
     }
 
     @FindBy(css = "div.card-carousel-fixed")

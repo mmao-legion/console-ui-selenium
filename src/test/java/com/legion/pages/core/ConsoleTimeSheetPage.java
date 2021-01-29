@@ -3232,4 +3232,55 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			clockOutInput.sendKeys(timeClockCheckOut.split(":")[1].substring(2));
 		}
 	}
+
+	@FindBy(css = "div.analytics-new-table")
+	private WebElement analyticsTableInTimesheetDMViewPage;
+
+	@Override
+	public boolean isTimesheetDMView() throws Exception {
+		boolean result = false;
+		if (isElementLoaded(analyticsTableInTimesheetDMViewPage, 5)) {
+			result = true;
+		}
+		return result;
+	}
+
+	@Override
+	public List<String> getDataFromTimesheetTableForGivenLocationInDMView(String location) throws Exception {
+		List<String> complianceViolationsOnDMViewSmartCard = new ArrayList<>();
+		boolean isLocationFound = false;
+		if (areListElementVisible(rowsInAnalyticsTable,10)) {
+			for (WebElement row: rowsInAnalyticsTable) {
+				if (row.findElement(By.xpath("./div[1]/span/img/following-sibling::span")).getText().equals(location)) {
+					isLocationFound = true;
+					List<WebElement> dataElements = row.findElements(By.cssSelector(".ng-scope.col-fx-1"));
+					for (WebElement dataElement: dataElements) {
+						if (!dataElement.getAttribute("class").contains("ng-hide") && dataElement.getText() != null)
+							complianceViolationsOnDMViewSmartCard.add(dataElement.getText());
+					}
+					break;
+				}
+			}
+		} else
+			SimpleUtils.fail("Timesheet Page: There are no locations in current district or failed to load",false);
+		if (isLocationFound)
+			SimpleUtils.pass("Timesheet Page: Find the location " + location + " successfully");
+		else
+			SimpleUtils.fail("Timesheet Page: Failed to find the location, try another location again",false);
+		return complianceViolationsOnDMViewSmartCard;
+	}
+
+	@FindBy(className = "lg-timesheet-table-improved__grid-column--entries-count")
+	private List<WebElement> timeSheetDetailsEntriesCount;
+
+	@Override
+	public int getTotalTimesheetInSMView() throws Exception {
+		int totalTimesheetInSMView = 0;
+		if (areListElementVisible(timeSheetDetailsEntriesCount,10)) {
+			for (WebElement e: timeSheetDetailsEntriesCount) {
+				totalTimesheetInSMView += Integer.parseInt((e.getText().split(" "))[0]);
+			}
+		}
+		return totalTimesheetInSMView;
+	}
 }
