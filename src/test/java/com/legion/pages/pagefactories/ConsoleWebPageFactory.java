@@ -127,4 +127,7 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public AdminPage createConsoleAdminPage() { return new ConsoleAdminPage(); }
+
+	@Override
+	public ConfigurationPage createOpsPortalConfigurationPage() { return new OpsPortalConfigurationPage();}
 }
