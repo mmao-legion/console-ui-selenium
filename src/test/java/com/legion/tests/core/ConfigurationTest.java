@@ -156,16 +156,16 @@ public class ConfigurationTest extends TestBase {
             String searchText = "*";
             int index = 0;
 
-            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
-            jobsPage.iCanEnterJobsTab();
-            jobsPage.iCanSearchTheJobWhichICreated(searchText);
-            jobsPage.iCanGoToJobDetailsPage(index);
-            jobsPage.iCanDownloadExportResultFile();
-            jobsPage.iCanDownloadExportTaskSummary();
-            jobsPage.iCanBackToJobListPage();
-            jobsPage.iCanSearchTheJobWhichICreated(searchText);
-            jobsPage.iCanGoToJobDetailsPage(index);
-            jobsPage.iCanClickCloseBtnInJobDetailsPage();
+//            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+//            jobsPage.iCanEnterJobsTab();
+//            jobsPage.iCanSearchTheJobWhichICreated(searchText);
+//            jobsPage.iCanGoToJobDetailsPage(index);
+//            jobsPage.iCanDownloadExportResultFile();
+//            jobsPage.iCanDownloadExportTaskSummary();
+//            jobsPage.iCanBackToJobListPage();
+//            jobsPage.iCanSearchTheJobWhichICreated(searchText);
+//            jobsPage.iCanGoToJobDetailsPage(index);
+//            jobsPage.iCanClickCloseBtnInJobDetailsPage();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
