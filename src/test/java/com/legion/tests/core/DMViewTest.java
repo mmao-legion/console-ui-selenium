@@ -630,7 +630,7 @@ public class DMViewTest extends TestBase {
 
     @Owner(owner = "Julie")
     @Enterprise(name = "DGStage_Enterprise")
-    @TestName(description = "Verify the availability of location list and sub location on Timesheet in DM View")
+    @TestName(description = "Verify the availability of location list and sub location on Compliance in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
@@ -1310,6 +1310,68 @@ public class DMViewTest extends TestBase {
             //Changing district and navigate to Timesheet page(Checked in other script).
             //Verify no timesheet tab in non-TA env.
             SimpleUtils.assertOnFail("Timesheet tab should not be loaded!", !timeSheetPage.isTimeSheetConsoleMenuTabLoaded(), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Owner(owner = "Haya")
+    @Enterprise(name = "DGStage_Enterprise")
+    @TestName(description = "Verify analytics table on Timesheet in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAnalyticTableInTimesheetDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Validate fields name in analytic table.
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            String field1 = "Location";
+            String field2 = "Unplanned Clocks";
+            String field3 = "Total Timesheets";
+            String field4 = "Timesheet Approval";
+            String field5 = "Within 24 Hrs";
+            String field6 = "Within 48 Hrs";
+            String field7 = "Beyond 48 Hrs";
+            String field8 = "Avg. Approval Time";
+            SimpleUtils.assertOnFail(field1 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field1) > 0, false);
+            SimpleUtils.assertOnFail(field2 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field2) > 0, false);
+            SimpleUtils.assertOnFail(field3 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field3) > 0, false);
+            SimpleUtils.assertOnFail(field4 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field4) > 0, false);
+            SimpleUtils.assertOnFail(field5 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field5) > 0, false);
+            SimpleUtils.assertOnFail(field6 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field6) > 0, false);
+            SimpleUtils.assertOnFail(field7 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field7) > 0, false);
+            SimpleUtils.assertOnFail(field8 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field8) > 0, false);
+
+            //Validate the field colums can be ordered.
+            schedulePage.verifySortByColForLocationsInDMView(1);
+            schedulePage.verifySortByColForLocationsInDMView(2);
+            schedulePage.verifySortByColForLocationsInDMView(3);
+            schedulePage.verifySortByColForLocationsInDMView(4);
+            schedulePage.verifySortByColForLocationsInDMView(5);
+            schedulePage.verifySortByColForLocationsInDMView(6);
+            schedulePage.verifySortByColForLocationsInDMView(7);
+            schedulePage.verifySortByColForLocationsInDMView(8);
+
+            //Validate the data of analytics table for past week.
+            schedulePage.navigateToPreviousWeek();
+            schedulePage.clickSpecificLocationInDMViewAnalyticTable(location);
+            SimpleUtils.assertOnFail("This is not the Timesheet SM view page for past week!",timeSheetPage.isTimeSheetPageLoaded(), false);
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Validate the data of analytics table for current week.
+            schedulePage.navigateToNextWeek();
+            schedulePage.clickSpecificLocationInDMViewAnalyticTable(location);
+            SimpleUtils.assertOnFail("This is not the Timesheet SM view page for current!",timeSheetPage.isTimeSheetPageLoaded(), false);
+
+            //Validate the data of analytics table for future week.
+            //Cannot navigate to a future week now.
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

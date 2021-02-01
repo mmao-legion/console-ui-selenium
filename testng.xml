@@ -455,6 +455,7 @@
                     <include name="verifyDMViewNavigationAsInternalAdmin" />
                     <include name="verifyLocationListAndSubLocationOnTimesheetInDMViewAsInternalAdmin" />
                     <include name="verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyAnalyticTableInTimesheetDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

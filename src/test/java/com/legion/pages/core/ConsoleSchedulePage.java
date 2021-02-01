@@ -3435,4 +3435,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public HashMap<String, String> getBudgetNScheduledHoursFromSmartCardOnDGEnv() throws Exception {
         return null;
     }
+
+    @Override
+    public void clickSpecificLocationInDMViewAnalyticTable(String location) throws Exception {
+
+    }
 }

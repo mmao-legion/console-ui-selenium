@@ -12794,14 +12794,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifySortByColForLocationsInDMView(int index) throws Exception {
         List<String> listString = new ArrayList<String>();
         List<Float> listFloat = new ArrayList<Float>();
-        if (index > 0 && index < getNumOfColInDMViewTable()){
+        if (index > 0 && index <= getNumOfColInDMViewTable()){
             listString = getListByColInTimesheetDMView(index);
             if (locationTableHeader.findElements(By.cssSelector("i.analytics-new-table-header-sorter")).size()==getNumOfColInDMViewTable()){
                 click(locationTableHeader.findElements(By.cssSelector("i.analytics-new-table-header-sorter")).get(index-1));
                 if (locationTableHeader.findElements(By.cssSelector("i.analytics-new-table-header-sorter")).get(index-1).getAttribute("class").contains("sorter-up")){
                     if (transferStringToFloat(listString).size()==listString.size()){
                         listFloat = transferStringToFloat(listString).stream().sorted(Float::compareTo).collect(Collectors.toList());
-                        if (Math.abs(transferStringToFloat(getListByColInTimesheetDMView(index)).get(0)-listFloat.get(listFloat.size()-1)) == 0){
+                        if (Math.abs(transferStringToFloat(getListByColInTimesheetDMView(index)).get(listFloat.size()-1)-listFloat.get(listFloat.size()-1)) == 0){
                             SimpleUtils.pass("Sort result is correct!");
                         } else {
                             SimpleUtils.fail("Sort result is incorrect!", false);
@@ -13169,6 +13169,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return result;
     }
 
+    @Override
+    public void clickSpecificLocationInDMViewAnalyticTable(String location) throws Exception {
+        waitForSeconds(3);
+        if (areListElementVisible(locationsInTheList,10)){
+            for (WebElement element: locationsInTheList){
+                if (location.equalsIgnoreCase(element.findElement(By.cssSelector("img.analytics-new-table-location~span")).getText())){
+                    click(element);
+                    SimpleUtils.pass(location + " is clicked!");
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no location in the list!", false);
+        }
+    }
 
 }
 
