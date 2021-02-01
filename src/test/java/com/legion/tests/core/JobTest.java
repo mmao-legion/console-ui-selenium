@@ -8,15 +8,12 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.ro.Si;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -207,32 +204,84 @@ public class JobTest extends TestBase {
     public void verifyCheckJobDetailsFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
-            String searchCreateSchedule = "Create Schedule";
-            String searchReleaseSchedule = "Release Schedule";
-            String searchAdjustBudget = "Adjust Budget";
-            String searchAdjustForecast = "Adjust Forecast";
-            int index = 0;
 
-            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
-            jobsPage.iCanEnterJobsTab();
-            jobsPage.iCanSearchTheJobWhichICreated(searchCreateSchedule);
-            jobsPage.iCanGoToCreateScheduleJobDetailsPage(index);
-//            jobsPage.iCanDownloadExportResultFile();
-//            jobsPage.iCanDownloadExportTaskSummary();
-            jobsPage.iCanBackToJobListPage();
-            jobsPage.iCanSearchTheJobWhichICreated(searchReleaseSchedule);
-            jobsPage.iCanGoToReleaseScheduleJobDetailsPage(index);
-            jobsPage.iCanClickCloseBtnInJobDetailsPage();
-            jobsPage.iCanSearchTheJobWhichICreated(searchAdjustBudget);
-            jobsPage.iCanGoToAdjustBudgetJobDetailsPage(index);
-            jobsPage.iCanClickCloseBtnInJobDetailsPage();
-            jobsPage.iCanSearchTheJobWhichICreated(searchAdjustForecast);
-            jobsPage.iCanGoToAdjustForecastJobDetailsPage(index);
-            jobsPage.iCanClickCloseBtnInJobDetailsPage();
+            try{
+                String searchCreateSchedule = "Create Schedule";
+                String searchReleaseSchedule = "Release Schedule";
+                String searchAdjustBudget = "Adjust Budget";
+                String searchAdjustForecast = "Adjust Forecast";
+                int index = 0;
+
+                JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+                jobsPage.iCanEnterJobsTab();
+                jobsPage.iCanSearchTheJobWhichICreated(searchCreateSchedule);
+                jobsPage.iCanGoToCreateScheduleJobDetailsPage(index);
+                jobsPage.iCanBackToJobListPage();
+                jobsPage.iCanSearchTheJobWhichICreated(searchReleaseSchedule);
+                jobsPage.iCanGoToReleaseScheduleJobDetailsPage(index);
+                jobsPage.iCanClickCloseBtnInJobDetailsPage();
+                jobsPage.iCanSearchTheJobWhichICreated(searchAdjustBudget);
+                jobsPage.iCanGoToAdjustBudgetJobDetailsPage(index);
+                jobsPage.iCanClickCloseBtnInJobDetailsPage();
+                jobsPage.iCanSearchTheJobWhichICreated(searchAdjustForecast);
+                jobsPage.iCanGoToAdjustForecastJobDetailsPage(index);
+                jobsPage.iCanClickCloseBtnInJobDetailsPage();
+            } catch (Exception e){
+                SimpleUtils.fail(e.getMessage(), false);
+            }
+
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify copy stop resume and archive job function")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCopyStopResumeAndArchiveJobFunctionFunction(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            int index = 0;
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime =  dfs.format(new Date()).trim();
+            String jobType = "Create Schedule";
+            String jobTitle = "AutoCreateJob"+currentTime;
+            setJobName(jobTitle);
+            String commentText = "created by automation scripts";
+            String searchText = "QA";
+
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            //create new job firstly
+            jobsPage.iCanEnterCreateNewJobPage();
+            jobsPage.selectJobType(jobType);
+            jobsPage.selectWeekForJobToTakePlace();
+            jobsPage.clickOkBtnInCreateNewJobPage();
+            jobsPage.inputJobTitle(jobTitle);
+            jobsPage.inputJobComments(commentText);
+            jobsPage.addLocationBtnIsClickable();
+            jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
+//            jobsPage.iCanSelectDistrictByAddLocation(searchText,index);
+            jobsPage.createBtnIsClickable();
+            jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+            jobsPage.iCanStopJob(jobTitle);
+
+//            jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+//            jobsPage.iCanResumeJob(jobTitle);
+            jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+            jobsPage.iCanCopyJob(jobTitle);
+            jobsPage.iCanSearchTheJobWhichICreated("Copy Of "+jobTitle);
+            jobsPage.iCanArchiveJob("Copy Of "+jobTitle);
+
+
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")

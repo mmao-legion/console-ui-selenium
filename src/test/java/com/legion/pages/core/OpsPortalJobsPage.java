@@ -200,13 +200,34 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 		}else
 			SimpleUtils.fail("Select a location window load failed",true);
 	}
+	@FindBy(css=".lg-tabs__nav >.lg-tabs__nav-item:nth-child(2)")
+	private WebElement districtTabAftClickAddLocationBtn;
+
+	@Override
+	public void iCanSelectDistrictByAddLocation(String searchText, int index) {
+		click(districtTabAftClickAddLocationBtn);
+		if (isElementEnabled(selectALocationTitle,5)) {
+			searchInputInSelectALocation.sendKeys(searchText);
+			searchInputInSelectALocation.sendKeys(Keys.ENTER);
+			waitForSeconds(5);
+			if (locationRowsInSelectLocation.size()>0) {
+				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"checkbox\"]"));
+				click(firstRow);
+				click(addBtn);
+				click(okBtnInCreateNewJobPage);
+			}else
+				SimpleUtils.report("Search location result is 0");
+
+		}else
+			SimpleUtils.fail("Select a location window load failed",true);
+	}
 
 	@Override
 	public void createBtnIsClickable() {
 		scrollToBottom();
 		click(createBtn);
 		SimpleUtils.pass("Job creation done");
-		waitForSeconds(60); //
+//		waitForSeconds(3);
 		if (isElementEnabled(createNewJobBtn,5)) {
 			SimpleUtils.pass("Create button is clickable and can enter select location page");
 		}else
@@ -225,7 +246,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 				searchInputBox.sendKeys(searchJobCha[0]);
 				searchInputBox.sendKeys(Keys.ENTER);
 				waitForSeconds(3);
-				if (jobRows.size()>0) {
+				if (jobRows.size()-1>0) {
 					SimpleUtils.pass("Jobs: " + jobRows.size() + " job(s) found  "+ " by "+jobTitle);
 					if (getDriver().findElement(By.cssSelector("table.lg-table >tbody> tr:nth-child(1)")).getText().trim().contains("Job Type")&&
 						getDriver().findElement(By.cssSelector("table.lg-table >tbody> tr:nth-child(1)")).getText().trim().contains("Job Title") &&
@@ -237,7 +258,6 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 						SimpleUtils.pass("On each row show Job Type, Name, Created By, Date Created, Status, Actions");
 					}else
 						SimpleUtils.fail("Search result table header load failed",false);
-
 					break;
 				} else {
 					searchInputBox.clear();
@@ -273,7 +293,6 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			List<WebElement> locationDetailsLinks = jobRows.get(index).findElements(By.cssSelector("button[type='button']"));
 			click(locationDetailsLinks.get(index));
 			waitForSeconds(5);
-			String adbcdf  = jobDetails.getText();
 			for (int i = 0; i <jobDetailsSubHeaders.size() ; i++) {
 				if (jobDetails.getText().contains("Job Details") && jobDetails.getText().contains("Week for job to take place")
 						&& jobDetails.getText().contains("Create Schedule Status")&& jobDetails.getText().contains("Locations Selected")
@@ -434,27 +453,23 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	@Override
 	public ArrayList<HashMap<String, String>> iCanGetJobInfo(String jobTitle) {
 		ArrayList<HashMap<String,String>> jobInfo = new ArrayList<>();
-
 		if (isElementEnabled(searchInputBox, 10)) {
 			searchInputBox.clear();
 			searchInputBox.sendKeys(jobTitle);
 			searchInputBox.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
-			if (jobRows.size() > 0) {
-
-				for (WebElement row : jobRows) {
+			if (jobRows.size()> 0) {
+//				for (WebElement row : jobRows) {
 					HashMap<String, String> jobInfoInEachRow = new HashMap<>();
-					jobInfoInEachRow.put("Job Type", row.findElement(By.cssSelector("td:nth-child(2)")).getText());
-					jobInfoInEachRow.put("Job Title", row.findElement(By.cssSelector("td:nth-child(3)>lg-button>button[type=\"button\"]")).getText());
-					jobInfoInEachRow.put("Created By", row.findElement(By.cssSelector("td:nth-child(4)")).getText());
-					jobInfoInEachRow.put("Date Created", row.findElement(By.cssSelector("td:nth-child(5) ")).getText());
-					jobInfoInEachRow.put("# of Locations", row.findElement(By.cssSelector("td:nth-child(6) ")).getText());
-					jobInfoInEachRow.put("Status", row.findElement(By.cssSelector("td:nth-child(7) ")).getText());
-					jobInfoInEachRow.put("Action", row.findElement(By.cssSelector("td:nth-child(8) ")).getText());
+					jobInfoInEachRow.put("jobType", jobRows.get(0).findElement(By.cssSelector("td:nth-child(2)")).getText());
+					jobInfoInEachRow.put("jobTitle", jobRows.get(0).findElement(By.cssSelector("td:nth-child(3)>lg-button>button[type=\"button\"]")).getText());
+					jobInfoInEachRow.put("createdBy", jobRows.get(0).findElement(By.cssSelector("td:nth-child(4)")).getText());
+					jobInfoInEachRow.put("dateCreated", jobRows.get(0).findElement(By.cssSelector("td:nth-child(5) ")).getText());
+					jobInfoInEachRow.put("#ofLocations", jobRows.get(0).findElement(By.cssSelector("td:nth-child(6) ")).getText());
+					jobInfoInEachRow.put("status", jobRows.get(0).findElement(By.cssSelector("td:nth-child(7) ")).getText());
+					jobInfoInEachRow.put("action", jobRows.get(0).findElement(By.cssSelector("td:nth-child(8) ")).getText());
 					jobInfo.add(jobInfoInEachRow);
-				}
-
-
+//				}
 				return jobInfo;
 			}else
 				SimpleUtils.fail(jobTitle + "can't been searched", true);
@@ -589,7 +604,134 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			}
 
 		}
+		@FindBy(css="span[ng-click=\"applyAction(5,job)\"]")
+		private WebElement copyBtnInJobListPage;
+		@FindBy(css="span[ng-click=\"applyAction(6,job)\"]")
+		private WebElement archiveBtnInJobListPage;
+		@FindBy(css="span[ng-click=\"applyAction(7,job)\"]")
+		private WebElement stopBtnInJobListPage;
+		@FindBy(css=".lgn-alert-modal")
+		private WebElement stopJobPopUpWins;
+		@FindBy(css=".lgn-alert-title")
+		private WebElement stopJobPopUpWinsWarningTitle;
+		@FindBy(css=".lgn-alert-message")
+		private WebElement stopJobPopUpWinsWarningDesc;
+		@FindBy(css="div.cancel-button > div > button")
+		private WebElement cancelBtnInStopJobPopUpWins;
+		@FindBy(css="div.ok-button > div > button")
+		private WebElement confirmBtnInStopJobPopUpWins;
+		@FindBy(css="span[ng-click=\"applyAction(2,job)\"]")
+		private WebElement resumeBtnInJobListPage;
+		@Override
+		public void iCanStopJob(String jobTitle) {
+			if (isElementEnabled(stopBtnInJobListPage,5) ) {
+				clickTheElement(stopBtnInJobListPage);
+				if (verifyJobActionsWarningPageShowWell()) {
+					clickTheElement(confirmBtnInStopJobPopUpWins);
+					ArrayList<HashMap<String,String>> jobInfo = iCanGetJobInfo(jobTitle);
+					if (jobInfo.size()>0 && jobInfo.get(0).get("status").equalsIgnoreCase("Stopped")) {
+						SimpleUtils.pass("The job:" +jobTitle + " was stopped successfully");
+					}else
+						SimpleUtils.fail("The job:" +jobTitle + " failed to stop",false);
+					}
+			}else
+				SimpleUtils.report("There is no stop button and the job is not in progress");
+		}
+		@FindBy(css=".modal-content")
+		private WebElement copyJobPopUpWins;
+		@FindBy(css=".lg-modal__content > div:nth-child(1)")
+		private WebElement descForTypeOfJobCreating;
+		@FindBy(css=".lg-modal__content > div:nth-child(3)")
+		private WebElement descForWeekOfJobCreating;
+		@FindBy(css="lg-button[label=\"Cancel\"]")
+		private WebElement cancelBtnInCopyJobPopUpWins;
+		@FindBy(css="lg-button[label=\"Create\"]")
+		private WebElement createBtnInCopyJob;
+		@Override
+		public void iCanCopyJob(String jobTitle) throws Exception {
+			ArrayList<HashMap<String,String>> jobInfoBeforeCopy = iCanGetJobInfo(jobTitle);
+			if (isElementEnabled(copyBtnInJobListPage,5) ) {
+				clickTheElement(copyBtnInJobListPage);
+				if (verifyJobCopyPopUpWinsShowWell()) {
+					selectWeekForJobToTakePlace();
+					click(okBtnInCreateNewJobPage);
+					scrollToBottom();
+					click(createBtnInCopyJob);
+					ArrayList<HashMap<String,String>> jobInfoAfterCopy = iCanGetJobInfo(jobTitle);
+					if (!jobInfoAfterCopy.get(0).get("jobTitle").equalsIgnoreCase(jobInfoBeforeCopy.get(0).get("jobTitle"))) {
+						SimpleUtils.pass("Job was copied successfully");
+					}
+				}
+			}else {
+				SimpleUtils.fail("Copy button load failed",false);
+			}
 
+		}
 
+	private boolean verifyJobActionsWarningPageShowWell() {
+		if (isElementEnabled(stopJobPopUpWins,5)) {
+			if (stopJobPopUpWinsWarningTitle.getText().contains("Are you sure you want to") &&
+					stopJobPopUpWinsWarningDesc.getText().contains("Please confirm that you want to perform the above action.")
+			&& isElementEnabled(cancelBtnInStopJobPopUpWins,5) && isElementEnabled(confirmBtnInStopJobPopUpWins,5)) {
+				SimpleUtils.pass("Job pop up window for each action show well");
+				return true;
+			}
+		}else
+			SimpleUtils.fail("Job pop up window load failed",false);
+			return false;
+	}
+
+	private boolean verifyJobCopyPopUpWinsShowWell() {
+		if (isElementEnabled(copyJobPopUpWins,5)) {
+			if (descForTypeOfJobCreating.getText().contains("What type of job are you creating") &&
+					descForWeekOfJobCreating.getText().contains("Select week for job to take place")
+					&& isElementEnabled(cancelBtnInCopyJobPopUpWins,5) && isElementEnabled(okBtnInCreateNewJobPage,5)) {
+				SimpleUtils.pass("Copy job pop up window for each action show well");
+				return true;
+			}
+		}else
+			SimpleUtils.fail("Copy job  pop up window load failed",false);
+		return false;
+	}
+
+	@Override
+		public void iCanResumeJob(String jobTitle) throws Exception {
+			waitForSeconds(5);
+		if (isElementEnabled(resumeBtnInJobListPage,5) ) {
+			clickTheElement(resumeBtnInJobListPage);
+			if (verifyJobActionsWarningPageShowWell()) {
+				clickTheElement(confirmBtnInStopJobPopUpWins);
+				waitForSeconds(50);
+				iCanSearchTheJobWhichICreated(jobTitle);
+				if (isElementEnabled(stopBtnInJobListPage,5)) {
+					SimpleUtils.pass("Job was resumed successfully");
+				}
+			}
+		}else {
+			SimpleUtils.fail("Resume button load failed, may the status of job is completed",false);
+		}
+	}
+
+		@Override
+		public void iCanArchiveJob(String jobTitle) throws Exception {
+			if (isElementEnabled(archiveBtnInJobListPage,5) ) {
+				clickTheElement(archiveBtnInJobListPage);
+				if (verifyJobActionsWarningPageShowWell()) {
+					clickTheElement(confirmBtnInStopJobPopUpWins);
+					if (isElementEnabled(searchInputBox, 10)) {
+						searchInputBox.clear();
+						searchInputBox.sendKeys(jobTitle);
+						searchInputBox.sendKeys(Keys.ENTER);
+						waitForSeconds(5);
+						if (jobRows.size() <= 0) {
+							SimpleUtils.pass("The job:" +jobTitle + " was archived successfully");
+						}else
+							SimpleUtils.fail("The job:" +jobTitle + " failed to archive",false);
+					}
+				}
+			}else {
+				SimpleUtils.fail("Archive button load failed",false);
+			}
+		}
 
 	}
