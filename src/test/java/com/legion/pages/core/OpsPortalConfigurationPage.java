@@ -2,7 +2,6 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ConfigurationPage;
-import com.legion.pages.JobsPage;
 import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
@@ -28,22 +27,177 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public OpsPortalConfigurationPage() {
 		PageFactory.initElements(getDriver(), this);
 	}
-	/*private static Map<String, String> newLocationParas = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewLocation.json");
-	private static HashMap<String, String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
-	public enum jobSummarySmartCardData {
-		jobsCompleted("jobsCompleted"),
-		jobsInProgress("jobsInProgress"),
-		notStarted("notStarted"),
-		jobs("number");
+	@FindBy(css=".console-navigation-item-label.Configuration")
+	private WebElement configurationTab;
+
+	@FindBy(css="div[ng-repeat=\"cat in module\"] h1.categoryName")
+	private List<WebElement> categoryOfTemplateList;
+
+	@FindBy(css="[class=\"tb-wrapper ng-scope\"] lg-dashboard-card h1")
+	private List<WebElement> configurationCardsList;
+
+	@FindBy(css="div.card-carousel-card-title")
+	private List<WebElement> smartCardsList;
+
+	@FindBy(css="span[class=\"lg-paged-search__showing top-right-action-button ng-scope\"]")
+	private WebElement newTemplateBTN;
+
+	@FindBy(css="div.lg-tab-toolbar__search")
+	private WebElement searchField;
+
+	@FindBy(css="[class=\"lg-table ng-scope\"] tbody")
+	private List<WebElement> templatesList;
+
+	@FindBy(css="td.toggle i[class=\"fa fa-caret-right\"]")
+	private WebElement templateToggleButton;
+
+	@FindBy(css="[class=\"lg-table ng-scope\"] tbody tr.hasChildren.expanded")
+	private WebElement publishedVersionTemplate;
+
+	@FindBy(css="div.lg-page-heading h1")
+	private WebElement templateTitleOnDetailsPage;
+
+	@FindBy(css="div.lg-tabs nav[class=\"lg-tabs__nav\"]")
+	private WebElement templateDetailsAssociateTab;
+
+	@FindBy(css="lg-tab[tab-title=\"Details\"]")
+	private WebElement templateDetailsTab;
+
+	@FindBy(css="lg-tab[tab-title=\"Association\"]")
+	private WebElement templateAssociationTab;
+
+	@FindBy(css="form[name=\"$ctrl.generalForm\"]")
+	private WebElement templateDetailsPageForm;
+
+	@FindBy(css="lg-button[label=\"Close\"]")
+	private WebElement closeBTN;
+
+	public enum configurationLandingPageTemplateCards{
+		OperatingHours("Operating Hours"),
+		SchedulingPolicies("Scheduling Policies"),
+		ScheduleCollaboration("Schedule Collaboration"),
+		TimeAttendance("Time & Attendance"),
+		Compliance("Compliance"),
+		SchedulingRules("Scheduling Rules");
 		private final String value;
-		jobSummarySmartCardData(final String newValue) {
+
+		configurationLandingPageTemplateCards(final String newValue) {
 			value = newValue;
 		}
+
 		public String getValue() {
 			return value;
 		}
-	}*/
-
-
 	}
+
+	@Override
+	public void goToConfigurationPage() throws Exception {
+		if (isElementEnabled(configurationTab,3)) {
+			click(configurationTab);
+			waitForSeconds(20);
+			if(categoryOfTemplateList.size()!=0){
+				SimpleUtils.pass("User can click configuration tab successfully");
+				}else{
+				SimpleUtils.fail("User can't click configuration tab",false);
+			}
+		}else
+			SimpleUtils.fail("Configuration tab load failed",false);
+	}
+
+	@Override
+	public void checkAllTemplateCards() throws Exception {
+		if(configurationCardsList.size()!=0){
+			for(WebElement configurationCard:configurationCardsList){
+				if(configurationCard.getText().equals(configurationLandingPageTemplateCards.OperatingHours.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.OperatingHours.getValue() + " card is showing.");
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.SchedulingPolicies.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.SchedulingPolicies.getValue() + " card is showing.");
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.ScheduleCollaboration.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.ScheduleCollaboration.getValue() + " card is showing.");
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.TimeAttendance.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.TimeAttendance.getValue() + " card is showing.");
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.Compliance.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.Compliance.getValue() + " card is showing.");
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.SchedulingRules.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.SchedulingRules.getValue() + " card is showing.");
+				}else{
+					SimpleUtils.fail("Configuration template cards are incorrect",false);
+				}
+			}
+		}else{
+			SimpleUtils.fail("Configuration landing page was loading failed",false);
+		}
+	}
+
+	@Override
+	public boolean isTemplateListPageShow() throws Exception {
+			if(templatesList.size()!=0 && isElementEnabled(newTemplateBTN) && isElementEnabled(searchField)){
+				SimpleUtils.pass("Template landing page shows well");
+				return true;
+			}else{
+				SimpleUtils.fail("Template landing page was NOT loaing well",false);
+				return false;
+			}
+	}
+
+	@Override
+	public void clickOnTemplateName(String templateType) throws Exception {
+		if(isTemplateListPageShow()){
+			String classValue = templatesList.get(0).findElement(By.cssSelector("tr")).getAttribute("class");
+			if(classValue!=null && classValue.contains("hasChildren")){
+				clickTheElement(templateToggleButton);
+				waitForSeconds(3);
+				clickTheElement(templatesList.get(0).findElement(By.cssSelector("button")));
+				waitForSeconds(20);
+				if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
+				&&isElementEnabled(templateDetailsPageForm)){
+					SimpleUtils.pass("User can open one " + templateType + " published template succseefully");
+				}else{
+					SimpleUtils.fail("User open one " + templateType + " published template failed",false);
+				}
+			}else{
+				clickTheElement(templatesList.get(0).findElement(By.cssSelector("button")));
+				waitForSeconds(20);
+				if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
+						&&isElementEnabled(templateDetailsPageForm)){
+					SimpleUtils.pass("User can open one " + templateType + " published template succseefully");
+				}else{
+					SimpleUtils.fail("User open one " + templateType + " published template failed",false);
+				}
+			}
+
+		}else{
+			SimpleUtils.fail("There is No template now",false);
+		}
+	}
+
+	@Override
+	public void clickOnConfigurationCrad(String templateType) throws Exception {
+		if(templateType!=null){
+			waitForSeconds(30);
+			if(configurationCardsList.size()!=0) {
+				for (WebElement configurationCard : configurationCardsList) {
+					if(configurationCard.getText().contains(templateType)){
+						clickTheElement(configurationCard);
+						waitForSeconds(10);
+						SimpleUtils.pass("User can click " + templateType + " configuration card successfully!");
+						break;
+					}
+				}
+			}else{
+				SimpleUtils.fail("configuration landing page was loaded failed",false);
+			}
+		}else{
+			SimpleUtils.fail("Please specify which type of template would you open?",false);
+		}
+	}
+
+	@Override
+	public void goToTemplateDetailsPage(String templateType) throws Exception {
+		waitForSeconds(5);
+		clickOnConfigurationCrad(templateType);
+		clickOnTemplateName(templateType);
+	}
+
+}
