@@ -92,6 +92,7 @@
                     <include name="verifyCreateScheduleJobFunction" />
                     <include name="verifyCheckJobDetailsFunction" />
                     <include name="verifyCopyStopResumeAndArchiveJobFunctionFunction" />
+                    <include name="verifyFilterFunction" />
 
 
                 </methods>

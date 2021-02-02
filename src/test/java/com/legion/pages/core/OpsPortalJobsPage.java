@@ -502,7 +502,6 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			ArrayList<WebElement> statusFilters = availableFilters.get(statusFilterKey);
 			for (WebElement statusFilter : statusFilters) {
 				if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
-					click(statusFilter);
 				unCheckFilters(statusFilters);
 				click(statusFilter);
 				SimpleUtils.report("Data for job status: '" + statusFilter.getText() + "'");
@@ -513,6 +512,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 		}
 	}
 
+
 	public HashMap<String, ArrayList<WebElement>> getAvailableFilters() {
 		HashMap<String, ArrayList<WebElement>> jobFilters = new HashMap<String, ArrayList<WebElement>>();
 		try {
@@ -522,7 +522,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 				for (WebElement filterElementInJob : filterElementsInJob) {
 					WebElement filterLabel = filterElementInJob.findElement(By.className("lg-filter__category-label"));
 					String filterType = filterLabel.getText().toLowerCase().replace(" ", "");
-					List<WebElement> filters = filterElementInJob.findElements(By.cssSelector("input-filed[type=\"checkbox\"]"/*"[ng-repeat=\"opt in opts\"]"*/));
+					List<WebElement> filters = filterElementInJob.findElements(By.cssSelector("input-field[type=\"checkbox\"]"/*"[ng-repeat=\"opt in opts\"]"*/));
 					ArrayList<WebElement> filterList = new ArrayList<WebElement>();
 					for (WebElement filter : filters) {
 						filterList.add(filter);
