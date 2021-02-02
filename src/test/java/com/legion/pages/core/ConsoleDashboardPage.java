@@ -2313,7 +2313,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	public void verifyTheHrsUnderOrCoverBudgetOnScheduleVsGuidanceByDayWidget() throws Exception {
 
-		if (!areBudgetHoursAndScheduleHoursConsistent()) {
+		if (isElementLoaded(budgetHoursMessageOnLocationSummaryWidget, 5)) {
 			if (isElementLoaded(budgetHoursMessageSpan, 5) && isElementLoaded(budgetHoursCaret, 5)){
 				if (budgetHoursMessageSpan.getText().contains("Under")) {
 					if(budgetHoursMessageSpan.getAttribute("class").contains("green")
@@ -2459,11 +2459,11 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				&& areListElementVisible(projectedWithInOrOverBudgetLocations, 5)
 				&& projectedWithInOrOverBudgetLocations.size()==2){
 
-			String budgetedHrs = scheduledHours.get(0).getText();
+			String budgetedHrs = scheduledHours.get(0).getText().replaceAll(",","");
 			dataOnLocationSummaryWidget.add(budgetedHrs);
-			String scheduledHrs = scheduledHours.get(1).getText();
+			String scheduledHrs = scheduledHours.get(1).getText().replaceAll(",","");
 			dataOnLocationSummaryWidget.add(scheduledHrs);
-			String projectedHrs = scheduledHours.get(2).getText();
+			String projectedHrs = scheduledHours.get(2).getText().replaceAll(",","");
 			dataOnLocationSummaryWidget.add(projectedHrs);
 			String projectedWithinBudgetLocation = projectedWithInOrOverBudgetLocations.get(0).getText();
 			dataOnLocationSummaryWidget.add(projectedWithinBudgetLocation);
@@ -2488,7 +2488,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		clickOnRefreshButton();
 		String test1 = projectedHoursAsCurrentTime.getText();
 		if(isElementLoaded(locationSummaryWidgetTitle, 5)
-				&& locationSummaryWidgetTitle.getText().contains("Location Summary")
+				&& locationSummaryWidgetTitle.getText().contains("Locations Summary")
 				&& areListElementVisible(scheduledHoursTitles, 5)
 				&& scheduledHoursTitles.size() == 3
 				&& scheduledHoursTitles.get(0).getText().equalsIgnoreCase("Budgeted")

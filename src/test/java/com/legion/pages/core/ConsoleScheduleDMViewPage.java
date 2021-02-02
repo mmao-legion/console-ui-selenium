@@ -398,7 +398,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         */
 
         List<String> textFromChart = new ArrayList<>();
-        if (areListElementVisible(textFromTheChartInLocationSummarySmartCard)&&textFromTheChartInLocationSummarySmartCard.size()!=0){
+        if (areListElementVisible(textFromTheChartInLocationSummarySmartCard, 10)&&textFromTheChartInLocationSummarySmartCard.size()!=0){
             for(int i=0;i<textFromTheChartInLocationSummarySmartCard.size();i++){
                 textFromChart.add(textFromTheChartInLocationSummarySmartCard.get(i).getText());
             }
@@ -1018,15 +1018,17 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
 
     public void verifySmartCardsAreLoadedForPastOrFutureWeek(boolean isPastWeek) throws Exception {
         if(isPastWeek){
-            if(isElementLoaded(scheduleScoreSmartCard, 10)
-                    && isElementLoaded(locationSummarySmartCard, 10)
+            if(
+//                    isElementLoaded(scheduleScoreSmartCard, 10) &&  //Score smart card should be turn off
+                    isElementLoaded(locationSummarySmartCard, 10)
                     && areListElementVisible(scheduleStatusCards, 10)){
                 SimpleUtils.pass("All smart cards on Schedule DM view page for Past week loaded successfully! ");
             } else
                 SimpleUtils.fail("The smart cards on Schedule DM view page for past week loaded fail! ", false);
         } else {
-            if(!isElementLoaded(scheduleScoreSmartCard, 10)
-                    && isElementLoaded(locationSummarySmartCard, 10)
+            if(
+//                    !isElementLoaded(scheduleScoreSmartCard, 10) && //Score smart card should be turn off
+                    isElementLoaded(locationSummarySmartCard, 10)
                     && areListElementVisible(scheduleStatusCards, 10)){
                 SimpleUtils.pass("All smart cards on Schedule DM view page for Past week loaded successfully! ");
             } else
