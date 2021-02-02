@@ -46,4 +46,16 @@ public interface JobsPage {
     public void iCanGoToAdjustBudgetJobDetailsPage(int index);
 
     public void iCanGoToAdjustForecastJobDetailsPage(int index);
+
+    public void iCanCopyJob(String jobTitle) throws Exception;
+
+    public void iCanStopJob(String jobTitle) throws Exception;
+
+    public void iCanResumeJob(String jobTitle) throws Exception;
+
+    public void iCanArchiveJob(String jobTitle) throws Exception;
+
+    public void iCanSelectDistrictByAddLocation(String searchText, int index);
+
+    public void filterJobsByJobTypeAndStatus() throws Exception;
 }

@@ -491,7 +491,8 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 		}
 	}
-	public void filterJobsByJobTypeAndStatus(boolean isWeekView) throws Exception {
+	@Override
+	public void filterJobsByJobTypeAndStatus() throws Exception {
 		waitForSeconds(10);
 		String jobTypeFilterKey = "jobtype";
 		String statusFilterKey = "status";
@@ -521,7 +522,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 				for (WebElement filterElementInJob : filterElementsInJob) {
 					WebElement filterLabel = filterElementInJob.findElement(By.className("lg-filter__category-label"));
 					String filterType = filterLabel.getText().toLowerCase().replace(" ", "");
-					List<WebElement> filters = filterElementInJob.findElements(By.cssSelector("input-field[type=\"checkbox\"]"/*"[ng-repeat=\"opt in opts\"]"*/));
+					List<WebElement> filters = filterElementInJob.findElements(By.cssSelector("input-filed[type=\"checkbox\"]"/*"[ng-repeat=\"opt in opts\"]"*/));
 					ArrayList<WebElement> filterList = new ArrayList<WebElement>();
 					for (WebElement filter : filters) {
 						filterList.add(filter);
@@ -580,26 +581,16 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 					click(filterBtn);
 				unCheckFilters(jobTypeFilters);
 				String jobType = jobTypeFilter.getText();
-				SimpleUtils.report("Data for Job Type: '" + jobType + "'");
 				click(jobTypeFilter);
+				SimpleUtils.report("Data for Job Type: '" + jobType + "'" +" selected");
 				click(filterBtn);
-				String cardHoursAndWagesText = "";
-				HashMap<String, Float> hoursAndWagesCardData = getSummaryComplateInprogressAndNotStartNum();
-				for (Map.Entry<String, Float> hoursAndWages : hoursAndWagesCardData.entrySet()) {
-					if (cardHoursAndWagesText != "")
-						cardHoursAndWagesText = cardHoursAndWagesText + ", " + hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
-					else
-						cardHoursAndWagesText = hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
-				}
-				SimpleUtils.report("Active Week Card's Data: " + cardHoursAndWagesText);
-//				getHoursAndTeamMembersForEachDaysOfWeek();
-//				SimpleUtils.assertOnFail("Sum of Daily Schedule Hours not equal to Active Week Schedule Hours!", verifyActiveWeekDailyScheduleHoursInWeekView(), true);
-//
-//				if (!getActiveGroupByFilter().toLowerCase().contains(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyTM.getValue().toLowerCase())
-//						&& !shiftType.toLowerCase().contains("open"))
-//					verifyActiveWeekTeamMembersCountAvailableShiftCount();
+				if (jobRows.size()<0) {
+					SimpleUtils.report("There is no data with this filter: " + jobTypeFilter );
+				}else
+					SimpleUtils.pass("Jobs: " + jobRows.size() + " job(s) found  ");
+
 			} catch (Exception e) {
-				SimpleUtils.fail("Unable to get Card data for active week!", true);
+				SimpleUtils.fail("Unable to get data", true);
 			}
 			}
 

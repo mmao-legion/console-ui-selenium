@@ -286,17 +286,14 @@ public class JobTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate E2E flow of adjust forecast job")
+    @TestName(description = "Validate filter function")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAdjustForecastJobE2EFunction(String browser, String username, String password, String location) throws Exception {
+    public void verifyFilterFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
-            String searchText = "test1";
-
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
             jobsPage.iCanEnterJobsTab();
-
-
+            jobsPage.filterJobsByJobTypeAndStatus();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

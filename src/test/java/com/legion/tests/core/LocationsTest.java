@@ -383,7 +383,7 @@ public class LocationsTest extends TestBase {
 
             //Validate to update MS location Group district
             String originalDistrict = locationInfoDetails.get(0).get("locationDistrict");
-            locationsPage.updateParentLocationDistrict("a",index);
+            locationsPage.updateParentLocationDistrict("QA",index);
             ArrayList<HashMap<String, String>> locationInfoDetailsAfterUpdate =locationsPage.getLocationInfo(locationName);
             String districtAfterUpdate = locationInfoDetailsAfterUpdate.get(0).get("locationDistrict");
             if (!districtAfterUpdate.equals(originalDistrict)) {
@@ -421,7 +421,7 @@ public class LocationsTest extends TestBase {
             //search this location group again
             ArrayList<HashMap<String, String>> locationInfoDetailsAftToNone =locationsPage.getLocationInfo(locationName);
 
-            if (locationInfoDetailsAftToNone.size() < locationInfoDetailsAftToNone.size()) {
+            if (locationInfoDetailsAftToNone.size() < locationInfoDetailsSec.size()) {
                 SimpleUtils.pass("Child location:"+locationInfoDetailsAftToNone.get(locationInfoDetailsAftToNone.size()-1).get("locationName") +" was removed from this location group:"+LGMSLocationName);
             }else
                 SimpleUtils.fail("Update child location to None failed",true);
@@ -432,7 +432,6 @@ public class LocationsTest extends TestBase {
             locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
             locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
             //Go to Team tab to check location column for MS location group
-            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
             if (teamPage.verifyThereIsLocationColumnForMSLocationGroup()) {
@@ -721,7 +720,7 @@ public class LocationsTest extends TestBase {
                 locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.PTP.getValue());
                 try {
                     for (int i = 0; i <childLocationNum ; i++) {
-                        String childLocationName = "childLocationForMS" + i +currentTime;
+                        String childLocationName = "childLocationForPTP" + i +currentTime;
                         String  childRelationship = "Part of a location group";
                         locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);
                     }
@@ -735,7 +734,7 @@ public class LocationsTest extends TestBase {
 
                 //update p2p location Group district
                 String originalDistrict = locationInfoDetails.get(0).get("locationDistrict");
-                locationsPage.updateParentLocationDistrict("a",index);
+                locationsPage.updateParentLocationDistrict("QA",index);
                 ArrayList<HashMap<String, String>> locationInfoDetailsAfterUpdate =locationsPage.getLocationInfo(locationName);
                 String districtAfterUpdate = locationInfoDetailsAfterUpdate.get(0).get("locationDistrict");
                 if (!districtAfterUpdate.equals(originalDistrict)) {
@@ -1229,7 +1228,7 @@ public class LocationsTest extends TestBase {
         try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
             String currentTime =  dfs.format(new Date());
-            String locationName = "NoneToMSParent" +currentTime;
+            String locationName = "NoneToPTPParent" +currentTime;
             int index =0;
             String searchCharactor = "No touch";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1271,7 +1270,7 @@ public class LocationsTest extends TestBase {
         try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
             String currentTime =  dfs.format(new Date());
-            String locationName = "NoneToMSParent" +currentTime;
+            String locationName = "NoneToPTPChild" +currentTime;
             int index =0;
             String searchCharactor = "No touch";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1295,7 +1294,7 @@ public class LocationsTest extends TestBase {
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
             //change None to child
             String  locationRelationship = "Part of a location group";
-            String parentLocation = "LGMS";
+            String parentLocation = "LGPTP";
             locationsPage.changeOneLocationToChild(locationName,locationRelationship,parentLocation);
 
         } catch (Exception e){

@@ -550,10 +550,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				}
 			}else
 					SimpleUtils.report("This location has disabled");
-			}else
-			SimpleUtils.fail("Location can not be clickable",true);
+		}else
+			SimpleUtils.fail("Location can not been searched",true);
 		  return disableLocationName;
-		}
+	}
 
 	@FindBy(className = "modal-content")
 	private WebElement disableLocationAlertPage;
