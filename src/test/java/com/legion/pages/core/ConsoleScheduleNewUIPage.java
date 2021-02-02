@@ -183,7 +183,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "[ng-click=\"regenerateFromOverview()\"] button")
     private WebElement generateSheduleButton;
 
-    @FindBy(css = "[ng-click=\"regenerateFromManagerView()\"]")
+    @FindBy(css = "[ng-click*=\"regenerateFromManagerView()\"]")
     private WebElement reGenerateScheduleButton;
 
     @FindBy(css = "[label='Generate Schedule']")
@@ -3979,6 +3979,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (isReGenerateButtonLoadedForManagerView()) {
                         click(reGenerateScheduleButton);
                         generateScheduleFromCreateNewScheduleWindow(activeWeekText);
+                        selectWhichWeekToCopyFrom("SUGGESTED");
+                        clickOnFinishButtonOnCreateSchedulePage();
                     } else if (isElementLoaded(publishSheduleButton, 5)) {
                         SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
                     } else {
@@ -12559,7 +12561,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "[ng-click=\"$dismiss()\"] button[ng-click=\"$ctrl.onSubmit({type:'saveas',label:$ctrl.label})\"]")
     private WebElement editOperatingHourCancelButton;
 
-    @FindBy(css = "[ng-click=\"save()\"] button[ng-click=\"$ctrl.onSubmit({type:'saveas',label:$ctrl.label})\"]")
+    @FindBy(css = "[ng-click=\"save()\"] button")
     private WebElement editOperatingHourSaveButton;
 
 
@@ -12568,7 +12570,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(operatingHours, 5) && operatingHours.size()==7){
             for (WebElement operatingHour : operatingHours){
                 WebElement weekDay = operatingHour.findElement(By.cssSelector("td[class=\"ng-binding\"]"));
-                WebElement editButton = operatingHour.findElement(By.cssSelector("[ng-if=\"canEditWorkingHours\"]"));
+                WebElement editButton = operatingHour.findElement(By.cssSelector("span[ng-if=\"canEditWorkingHours\"]"));
                 WebElement openCloseHours = operatingHour.findElement(By.cssSelector("[ng-class=\"{dirty: day.isOverridden}\"]"));
 
                 if (isElementLoaded(weekDay, 5) && !weekDay.getText().equals("")
