@@ -99,4 +99,14 @@
         </classes>
     </test>
 
+    <test name="Configuration Test">
+        <classes>
+            <class name="com.legion.tests.core.ConfigurationTest">
+                <methods>
+                    <include name="verifyUserCanOpenEachTypeTemplate"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->
