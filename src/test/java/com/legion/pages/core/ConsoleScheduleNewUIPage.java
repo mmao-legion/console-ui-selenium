@@ -11364,11 +11364,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> rowDataInOverviewPage;
     @FindBy (xpath = "//div[contains(@class,\"background-current-week-legend-calendar\")]/preceding-sibling::div[1]")
     private WebElement lastWeekNavigation;
+    @FindBy (css = "i.fa-angle-left")
+    private WebElement leftAngle;
     @Override
     public List<String> getOverviewData() throws Exception {
         List<String> resultList = new ArrayList<String>();
-        if(isElementLoaded(lastWeekNavigation,10)){
-            click(lastWeekNavigation);// click on last in overview page
+        if(isElementLoaded(leftAngle,10)){
+            click(leftAngle);
+            if (isElementLoaded(lastWeekNavigation,10)){
+                click(lastWeekNavigation);// click on last in overview page
+            }
         }
         waitForSeconds(3);
         if (areListElementVisible(rowDataInOverviewPage,10)){
@@ -13186,5 +13191,24 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
+    public boolean hasNextWeek() throws Exception {
+        int currentWeekIndex = -1;
+        if (areListElementVisible(currentWeeks, 10)) {
+            for (int i = 0; i < currentWeeks.size(); i++) {
+                String className = currentWeeks.get(i).getAttribute("class");
+                if (className.contains("day-week-picker-period-active")) {
+                    currentWeekIndex = i;
+                }
+            }
+            if (currentWeekIndex == (currentWeeks.size() - 1) && !isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
+                return false;
+            }else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
 }
 

@@ -3440,4 +3440,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void clickSpecificLocationInDMViewAnalyticTable(String location) throws Exception {
 
     }
+
+    @Override
+    public boolean hasNextWeek() throws Exception {
+            return false;
+    }
 }

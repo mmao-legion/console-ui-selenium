@@ -1377,6 +1377,49 @@ public class DMViewTest extends TestBase {
         }
     }
 
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Controls in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyControlsInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Validate Controls existing from DM view.
+            //Validate navigate to Controls from DM view.
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls page is not loaded!", controlsNewUIPage.isControlsPageLoaded(), false);
+            locationSelectorPage.isLocationSelected("All Locations");
+
+            //Validate week navigation in DM view getting updated based on schedule planning window settings.
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            String s = controlsNewUIPage.getAdvanceScheduleWeekCountToCreate().replace(" weeks","").replace(" week","");
+            int weekCount = 0;
+            if (SimpleUtils.isNumeric(s)){
+                weekCount = Integer.parseInt(s);
+            } else {
+                SimpleUtils.fail("Advance schedule week count isn't expected!", false);
+            }
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            for (int i = 0; i < weekCount; i++ ){//There should be weekCount next weeks we can navigate to.
+                schedulePage.navigateToNextWeek();
+            }
+            SimpleUtils.assertOnFail("There shouldn't be another next week can access to!", !schedulePage.hasNextWeek(), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")
