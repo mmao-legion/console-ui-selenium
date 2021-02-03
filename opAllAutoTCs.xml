@@ -105,6 +105,7 @@
             <class name="com.legion.tests.core.ConfigurationTest">
                 <methods>
                     <include name="verifyUserCanOpenEachTypeTemplate"/>
+                    <include name="verifyNewAdvancedStaffingRulePage"/>
                 </methods>
             </class>
         </classes>
