@@ -5491,7 +5491,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy (css = "input[aria-label=\"Zip Code\"]")
 	private WebElement zipCode;
 
-	@FindBy (css = "[aria-label=\"State\"] [selected=\"selected\"]")
+	@FindBy (css = "[aria-label=\"State\"]")
 	private WebElement state;
 
 	@FindBy (css = ".lg-form-section-action")
@@ -5538,7 +5538,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 		if (isElementLoaded(locationAddress, 10) && isElementLoaded(zipCode, 10) &&
 				isElementLoaded(state, 10)) {
-			stateStr = state.getAttribute("value").split(":")[1];
+			stateStr = state.getAttribute("value").contains(" ")? state.getAttribute("value").split(" ")[0].substring(0,1) + state.getAttribute("value").split(" ")[1].substring(0,1): state.getAttribute("value").substring(0,1);
 			cityStr = city.getAttribute("value");
 			locationAddressStr = locationAddress.getAttribute("value");
 		} else {

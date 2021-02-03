@@ -50,7 +50,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     @FindBy(id = "gfe-average-hours")
     private WebElement gfeAverageHours;
 
-    @FindBy(css = "label.ng-binding")
+    @FindBy(css = "p label.ng-binding")
     private WebElement gfeLocation;
 
     @Override
