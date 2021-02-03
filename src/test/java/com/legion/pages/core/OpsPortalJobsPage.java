@@ -505,11 +505,45 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 				unCheckFilters(statusFilters);
 				click(statusFilter);
 				SimpleUtils.report("Data for job status: '" + statusFilter.getText() + "'");
-				filterJobsByJobType(jobTypeFilters);
+				filterJobByJobType(jobTypeFilters);
 			}
 		} else {
 			SimpleUtils.fail("Filters are not appears on job page!", false);
 		}
+	}
+
+	@Override
+	public void filterJobsByJobType() throws Exception {
+		waitForSeconds(10);
+		String jobTypeFilterKey = "jobtype";
+		String statusFilterKey = "status";
+		HashMap<String, ArrayList<WebElement>> availableFilters = getAvailableFilters();
+		if (availableFilters.size() > 1) {
+			ArrayList<WebElement> jobTypeFilters = availableFilters.get(jobTypeFilterKey);
+			filterJobsByJobType(jobTypeFilters);
+		} else {
+			SimpleUtils.fail("Filters are not appears on job page!", false);
+		}
+	}
+
+	@Override
+	public void filterJobsByJobStatus() throws Exception {
+		waitForSeconds(10);
+		String jobTypeFilterKey = "jobtype";
+		String statusFilterKey = "status";
+		HashMap<String, ArrayList<WebElement>> availableFilters = getAvailableFilters();
+		if (availableFilters.size() > 1) {
+			ArrayList<WebElement> statusFilters = availableFilters.get(statusFilterKey);
+			filterJobsByJobStatus(statusFilters);
+
+		} else {
+			SimpleUtils.fail("Filters are not appears on job page!", false);
+		}
+	}
+
+	@Override
+	public void filterClearFilterFunction() {
+
 	}
 
 
@@ -571,7 +605,6 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	}
 
 
-
 	public void filterJobsByJobType(ArrayList<WebElement> jobTypeFilters) throws Exception {
 
 		for (WebElement jobTypeFilter : jobTypeFilters) {
@@ -593,8 +626,56 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 				SimpleUtils.fail("Unable to get data", true);
 			}
 			}
-
+		unCheckFilters(jobTypeFilters);
 		}
+     //this is for job type combination filter
+	public void filterJobByJobType(ArrayList<WebElement> jobTypeFilters) throws Exception {
+
+		for (WebElement jobTypeFilter : jobTypeFilters) {
+			try {
+				Thread.sleep(1000);
+				if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+					click(filterBtn);
+				unCheckFilters(jobTypeFilters);
+				String jobType = jobTypeFilter.getText();
+				click(jobTypeFilter);
+				SimpleUtils.report("Data for Job Type: '" + jobType + "'" +" selected");
+				click(filterBtn);
+				if (jobRows.size()<0) {
+					SimpleUtils.report("There is no data with this filter: " + jobTypeFilter );
+				}else
+					SimpleUtils.pass("Jobs: " + jobRows.size() + " job(s) found  ");
+
+			} catch (Exception e) {
+				SimpleUtils.fail("Unable to get data", true);
+			}
+		}
+	}
+
+	public void filterJobsByJobStatus(ArrayList<WebElement> statusFilters) throws Exception {
+
+		for (WebElement jobTypeFilter : statusFilters) {
+			try {
+				Thread.sleep(1000);
+				if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+					click(filterBtn);
+				unCheckFilters(statusFilters);
+				String jobType = jobTypeFilter.getText();
+				click(jobTypeFilter);
+				SimpleUtils.report("Data for Job Type: '" + jobType + "'" +" selected");
+				click(filterBtn);
+				if (jobRows.size()<0) {
+					SimpleUtils.report("There is no data with this filter: " + jobTypeFilter );
+				}else
+					SimpleUtils.pass("Jobs: " + jobRows.size() + " job(s) found  ");
+
+			} catch (Exception e) {
+				SimpleUtils.fail("Unable to get data", true);
+			}
+		}
+		unCheckFilters(statusFilters);
+
+	}
 		@FindBy(css="span[ng-click=\"applyAction(5,job)\"]")
 		private WebElement copyBtnInJobListPage;
 		@FindBy(css="span[ng-click=\"applyAction(6,job)\"]")

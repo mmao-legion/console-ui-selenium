@@ -58,4 +58,10 @@ public interface JobsPage {
     public void iCanSelectDistrictByAddLocation(String searchText, int index);
 
     public void filterJobsByJobTypeAndStatus() throws Exception;
+
+    public void filterJobsByJobType() throws Exception;
+
+    public void filterJobsByJobStatus() throws Exception;
+
+    public void filterClearFilterFunction();
 }

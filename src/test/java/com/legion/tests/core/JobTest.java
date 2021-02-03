@@ -286,9 +286,9 @@ public class JobTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate filter function")
+    @TestName(description = "Validate filter function by job type and job status")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyFilterFunction(String browser, String username, String password, String location) throws Exception {
+    public void verifyFilterFunctionByJobTypeAndJobStatus(String browser, String username, String password, String location) throws Exception {
 
         try{
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
@@ -298,5 +298,54 @@ public class JobTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate filter function by job type")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyFilterFunctionByJobType(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.filterJobsByJobType();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate filter function by job status")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyFilterFunctionByJobStatus(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.filterJobsByJobStatus();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate clear filter function")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyClearFilterFunction(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.filterClearFilterFunction();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 
 }
