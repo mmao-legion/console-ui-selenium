@@ -3445,4 +3445,14 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public boolean hasNextWeek() throws Exception {
             return false;
     }
+
+    @Override
+    public float getTotalProjectionOpenShiftsHoursForCurrentWeek() throws Exception {
+        return 0;
+    }
+
+    @Override
+    public float newCalcTotalScheduledHourForDayInWeekView() throws Exception {
+        return 0;
+    }
 }

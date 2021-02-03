@@ -663,7 +663,8 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             //Check the buttons on schedule page
             DecimalFormat df1 = new DecimalFormat("###.#");
             HashMap<String, String> hoursFromScheduleSMOnDGEnv = new HashMap<>();
-                    switch (scheduleStatus) {
+
+            switch (scheduleStatus) {
                 case "Not Started":
                     if(!schedulePage.isWeekGenerated()){
                         SimpleUtils.pass("The 'Not Started' schedule status display correctly! ");
@@ -714,6 +715,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Budget"));
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Scheduled"));
                     }
+
                     break;
                 case "In Progress":
                     if(schedulePage.isPublishButtonLoadedOnSchedulePage()
@@ -733,6 +735,15 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                     break;
             }
 
+            float projectionOpenShiftsFromScheduleDetailPage = 0;
+            switch (specificWeek){
+                case "Current Week":
+                    projectionOpenShiftsFromScheduleDetailPage = schedulePage.getTotalProjectionOpenShiftsHoursForCurrentWeek();
+                    break;
+                case "Next Week":
+                    projectionOpenShiftsFromScheduleDetailPage = schedulePage.newCalcTotalScheduledHourForDayInWeekView();
+                    break;
+            }
             //Only for DG env: get timesheet hours from Time sheet page
             HashMap<String, Float> timeSheetDiffHoursByJobTitle = new HashMap<>();
             float asmHours = 0;
@@ -832,7 +843,8 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                                     (df1.format(Float.parseFloat(projectedOverBudgetHours.get("projectedUnderBudgetHours")))))
                             && (!isDGEnv || (scheduleHoursOnScheduleDMView.get("asmHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("asmHours")))
                             && scheduleHoursOnScheduleDMView.get("lsaHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("lsaHours")))
-                            && scheduleHoursOnScheduleDMView.get("saHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("saHours"))))))
+                            && scheduleHoursOnScheduleDMView.get("saHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("saHours"))))
+                            && scheduleHoursOnScheduleDMView.get("openHours").equalsIgnoreCase(df1.format(projectionOpenShiftsFromScheduleDetailPage))))
                        ||  (!isTAEnv
                         && scheduleHoursOnScheduleDMView.get("budgetedHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(0))
                             && scheduleHoursOnScheduleDMView.get("scheduledHours").equalsIgnoreCase(scheduleHoursOnScheduleDMView.get(3))              //blocking by https://legiontech.atlassian.net/browse/SCH-1874
@@ -859,7 +871,8 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                                     (df1.format(Float.parseFloat(projectedOverBudgetHours.get("projectedUnderBudgetHours")))))
                             && (!isDGEnv || (scheduleHoursOnScheduleDMView.get("asmHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("asmHours")))
                             && scheduleHoursOnScheduleDMView.get("lsaHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("lsaHours")))
-                            && scheduleHoursOnScheduleDMView.get("saHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("saHours"))))))
+                            && scheduleHoursOnScheduleDMView.get("saHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("saHours"))))
+                            && scheduleHoursOnScheduleDMView.get("openHours").equalsIgnoreCase(df1.format(projectionOpenShiftsFromScheduleDetailPage))))
                        ||  (!isTAEnv
                             && scheduleHoursOnScheduleDMView.get("budgetedHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(0))
                             && scheduleHoursOnScheduleDMView.get("scheduledHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(1))
@@ -886,7 +899,8 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                                     (df1.format(Float.parseFloat(projectedOverBudgetHours.get("projectedUnderBudgetHours")))))
                             && (!isDGEnv || (scheduleHoursOnScheduleDMView.get("asmHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("asmHours")))
                             && scheduleHoursOnScheduleDMView.get("lsaHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("lsaHours")))
-                            && scheduleHoursOnScheduleDMView.get("saHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("saHours"))))))
+                            && scheduleHoursOnScheduleDMView.get("saHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("saHours"))))
+                            && scheduleHoursOnScheduleDMView.get("openHours").equalsIgnoreCase(df1.format(projectionOpenShiftsFromScheduleDetailPage))))
                        ||  (!isTAEnv
                             && scheduleHoursOnScheduleDMView.get("budgetedHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(0))
                             && scheduleHoursOnScheduleDMView.get("scheduledHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(1))              //blocking by https://legiontech.atlassian.net/browse/SCH-1874
