@@ -80,19 +80,24 @@ public class ConfigurationTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Sanity Test Check point")
+    @TestName(description = "New advanced staffing rules page verify")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUserCanOpenSpecifyTemplate(String browser, String username, String password, String location) throws Exception {
+    public void verifyNewAdvancedStaffingRulePage(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
-            String mode = "view";
-            String templateName = "Copy OPX-US-CA";
+            String mode = "edit";
+            String templateName = "Test";
+            String workRole = "New Work Role";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.goToConfigurationPage();
                 configurationPage.clickOnConfigurationCrad(templateType);
                 configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                configurationPage.selectWorkRoleToEdit(workRole);
+                configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+                configurationPage.verifyAdvancedStaffingRulePageShowWell();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

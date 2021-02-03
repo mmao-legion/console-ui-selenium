@@ -13,4 +13,8 @@ public interface ConfigurationPage {
     public void clickOnTemplateName(String templateType) throws Exception;
     public void goToTemplateDetailsPage(String templateType) throws Exception;
     public void clickOnSpecifyTemplateName(String templateName,String editOrViewMode) throws Exception;
+    public void clickOnEditButtonOnTemplateDetailsPage() throws Exception;
+    public void selectWorkRoleToEdit(String workRole) throws Exception;
+    public void checkTheEntryOfAddAdvancedStaffingRule() throws Exception;
+    public void verifyAdvancedStaffingRulePageShowWell() throws Exception;
 }

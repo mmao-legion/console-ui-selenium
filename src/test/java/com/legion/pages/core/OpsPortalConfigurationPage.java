@@ -97,9 +97,6 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="lg-button[label=\"Close\"]")
 	private WebElement closeBTN;
 
-	@FindBy(css="table.lg-table.ng-scope tbody")
-	private WebElement workRoleList;
-
 	@FindBy(css="lg-template-rule-container img.settings-add-icon")
 	private WebElement addIconOnRulesListPage;
 
@@ -311,6 +308,88 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@Override
+	public void clickOnEditButtonOnTemplateDetailsPage() throws Exception {
+		if(isElementEnabled(editButton)){
+			clickTheElement(editButton);
+			waitForSeconds(3);
+			if(isElementEnabled(editTemplatePopupPage)){
+				SimpleUtils.pass("Click edit button successfully!");
+				clickTheElement(okButton);
+				if(isElementEnabled(dropdownArrowButton)){
+					SimpleUtils.pass("Template is in edit mode now");
+				}else{
+					SimpleUtils.fail("Template is not in edit mode now",false);
+				}
+			}else{
+				SimpleUtils.fail("Click edit button successfully!",false);
+			}
+		}else{
+			SimpleUtils.fail("Template details page is loaded failed",false);
+		}
+	}
+
+	@FindBy(css="table[ng-if*=\"template.workRoles\"] tbody")
+	private List<WebElement> workRoleList;
+
+	@Override
+	public void selectWorkRoleToEdit(String workRole) throws Exception {
+		if(workRoleList.size()!=0){
+			for(WebElement workRoleItem:workRoleList){
+				String workRoleName = workRoleItem.findElement(By.cssSelector("td.ng-binding")).getText().trim();
+				//get first char of the work role name
+				char fir = workRole.charAt(0);
+				String newWorkRole = String.valueOf(fir).toUpperCase() + " " + workRole;
+				if(workRoleName.equals(newWorkRole)){
+					WebElement staffingRulesAddButton = workRoleItem.findElement(By.cssSelector("lg-button"));
+					clickTheElement(staffingRulesAddButton);
+					waitForSeconds(5);
+					if(isElementEnabled(addIconOnRulesListPage)){
+						SimpleUtils.pass("Successful to select " + workRole + " to edit");
+					}
+					else{
+						SimpleUtils.fail("Failed to select " + workRole + " to edit",false);
+					}
+					break;
+				}
+			}
+		}else{
+			SimpleUtils.fail("There is no work role for enterprise now",false);
+		}
+	}
+
+	@Override
+	public void checkTheEntryOfAddAdvancedStaffingRule() throws Exception {
+		waitForSeconds(5);
+		if(isElementEnabled(addIconOnRulesListPage)){
+			clickTheElement(addIconOnRulesListPage);
+			if(isElementEnabled(addAdvancedStaffingRuleButton)){
+				SimpleUtils.pass("Advance staffing rules tab is show");
+				clickTheElement(addAdvancedStaffingRuleButton);
+				if(isElementEnabled(dynamicGroupSection)){
+					SimpleUtils.pass("Advance staffing rules tab is clickable");
+				}
+				else{
+					SimpleUtils.fail("Advance staffing rules tab is NOT clickable",false);
+				}
+			}else {
+				SimpleUtils.pass("Advance staffing rules tab is NOT show");
+			}
+		}else{
+			SimpleUtils.fail("Work role's staffing rules list page was loaded failed",false);
+		}
+	}
+
+	@Override
+	public void verifyAdvancedStaffingRulePageShowWell() throws Exception {
+		if(isElementEnabled(dynamicGroupSection) && isElementEnabled(daysOfWeekSection) && isElementEnabled(timeOfDaySection)
+				&& isElementEnabled(mealAndRestBreaksSection) && isElementEnabled(numberOfShiftsSection)
+				&& isElementEnabled(badgesSection) && isElementEnabled(cancelButton) && isElementEnabled(saveButton)){
+			SimpleUtils.pass("New advanced staffing rule page shows well");
+		}else{
+			SimpleUtils.fail("New advanced staffing rule page doesn't show well",false);
+		}
+	}
 
 
 }
