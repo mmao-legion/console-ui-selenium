@@ -93,7 +93,7 @@ public class LocationsTest extends TestBase {
             locationsPage.addNewRegularLocationWithMandatoryFields(locationName);
             //search created location
             if (locationsPage.searchNewLocation(locationName)) {
-                SimpleUtils.pass("Create new location successfully");
+                SimpleUtils.pass("Create new location successfully: "+locationName);
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
         } catch (Exception e){
@@ -130,7 +130,7 @@ public class LocationsTest extends TestBase {
 
                //search created location
             if (locationsPage.searchNewLocation(locationName)) {
-                SimpleUtils.pass("Create new location successfully");
+                SimpleUtils.pass("Create new location successfully: "+locationName);
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
             ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
@@ -1202,7 +1202,7 @@ public class LocationsTest extends TestBase {
             locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);
             //search created location
             if (locationsPage.searchNewLocation(locationName)) {
-                SimpleUtils.pass("Create new location successfully");
+                SimpleUtils.pass("Create new location successfully"+locationName);
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
             //change None to MS parent
@@ -1244,7 +1244,7 @@ public class LocationsTest extends TestBase {
             locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);
             //search created location
             if (locationsPage.searchNewLocation(locationName)) {
-                SimpleUtils.pass("Create new location successfully");
+                SimpleUtils.pass("Create new location successfully: " + locationName);
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
             //change None to MS parent
@@ -1286,10 +1286,10 @@ public class LocationsTest extends TestBase {
             locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);
             //search created location
             if (locationsPage.searchNewLocation(locationName)) {
-                SimpleUtils.pass("Create new location successfully");
+                SimpleUtils.pass("Create new location successfully: "+locationName);
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
-            //change None to child
+//            //change None to child
             String  locationRelationship = "Part of a location group";
             String parentLocation = "LGPTP";
             locationsPage.changeOneLocationToChild(locationName,locationRelationship,parentLocation);

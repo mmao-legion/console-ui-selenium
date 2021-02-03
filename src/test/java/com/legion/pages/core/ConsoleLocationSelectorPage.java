@@ -172,6 +172,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     private void searchLocationAndSelect(String locationName) throws Exception {
         if (isElementLoaded(locationSearchInput,5)) {
             locationSearchInput.sendKeys(locationName);
+            waitForSeconds(20);
             locationSearchInput.sendKeys(Keys.ENTER);
         }else
            SimpleUtils.fail("Location search input filed load failed",true);

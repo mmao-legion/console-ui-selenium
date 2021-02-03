@@ -1026,7 +1026,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("No search result",true);
 		waitForSeconds(10);
 		searchLocation(locationName);
-		if (!verifyIsThisLocationGroup()) {
+		if (verifyIsThisLocationGroup()) {
 			SimpleUtils.pass("Change None location to child successfully");
 		}else
 			SimpleUtils.fail("Change location to child Location failed",true);
@@ -1163,8 +1163,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			 ) {
 			iconInfoOfLG.add(icon.getAttribute("ng-src"));
 		}
-		if (iconInfoOfLG.contains("img/legion/lgComponents/group.svg") ||iconInfoOfLG.contains("img/legion/lgComponents/group-master-slave.svg") ||
-				iconInfoOfLG.contains("img/legion/lgComponents/group-peer-to-peer.svg")) {
+		if (iconInfoOfLG.contains("img/legion/lgComponents/group.svg")){
+			return true;
+		} else if (iconInfoOfLG.contains("img/legion/lgComponents/group-master-slave.svg")){
+			return true;
+		}else if (iconInfoOfLG.contains("img/legion/lgComponents/group-peer-to-peer.svg")){
 			return true;
 		}else
 			return false;
