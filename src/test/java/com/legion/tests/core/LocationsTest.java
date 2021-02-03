@@ -422,15 +422,15 @@ public class LocationsTest extends TestBase {
             ArrayList<HashMap<String, String>> locationInfoDetailsAftToNone =locationsPage.getLocationInfo(locationName);
 
             if (locationInfoDetailsAftToNone.size() < locationInfoDetailsSec.size()) {
-                SimpleUtils.pass("Child location:"+locationInfoDetailsAftToNone.get(locationInfoDetailsAftToNone.size()-1).get("locationName") +" was removed from this location group:"+LGMSLocationName);
+                SimpleUtils.pass("Child location:"+locationInfoDetailsAftToNone.get(locationInfoDetailsAftToNone.size()-1).get("locationName") +" was removed from this location group:");
             }else
                 SimpleUtils.fail("Update child location to None failed",true);
 
             //check location group navigation
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
-            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
+            locationSelectorPage.changeDistrict(locationInfoDetailsAftToNone.get(0).get("locationDistrict"));
+            locationSelectorPage.changeLocation(locationInfoDetailsAftToNone.get(0).get("locationName"));
             //Go to Team tab to check location column for MS location group
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
@@ -765,11 +765,8 @@ public class LocationsTest extends TestBase {
                 //check location group navigation
                 locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
                 LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-                locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
-
-                for (int i = 0; i <childLocationNum+1 ; i++) {
-                    locationSelectorPage.changeLocation(locationInfoDetails.get(i).get("locationName"));
-                }
+                locationSelectorPage.changeDistrict(locationInfoDetailsAfterUpdate.get(0).get("locationDistrict"));
+                locationSelectorPage.changeLocation(locationInfoDetailsAfterUpdate.get(0).get("locationName"));
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

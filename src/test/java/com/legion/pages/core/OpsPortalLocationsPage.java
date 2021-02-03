@@ -1639,8 +1639,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(addLocationBtn,5)) {
 			clickTheElement(addLocationBtn);
 			clickTheElement(locationGroupSelect);
-			String optionlist = locationGroupSelect.getAttribute("option");
-//			if (locationGroupSelect.getAttribute("option").contains("None") && locationGroupSelect.getAttribute("option").contains("Part of a location group")&&
+			//			if (locationGroupSelect.getAttribute("option").contains("None") && locationGroupSelect.getAttribute("option").contains("Part of a location group")&&
 //					locationGroupSelect.getAttribute("option").contains("Parent location")) {
 //				SimpleUtils.pass("Location group setting field should include:None, Parent location ,Part of a location group");
 				selectByVisibleText(locationGroupSelect,"Parent location");
@@ -1654,18 +1653,18 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						clickTheElement(backBtnInLocationDetailsPage);
 						clickTheElement(leaveThisPage);
 						waitForSeconds(3);
+						SimpleUtils.pass("The fields of location group show well");
 					}else {
 						SimpleUtils.fail("select parent location load failed",false);
 					}
+				} else {
+					SimpleUtils.fail("MS and p2p radio button load failed",false);
 				}
-//				else {
-//					SimpleUtils.fail("MS and p2p radio button load failed",false);
-//				}
-//			}else {
-//				SimpleUtils.fail("Location group setting field show wrong",false);
-//			}
+			}else {
+				SimpleUtils.fail("Location group setting field show wrong",false);
+			}
 		}
-	}
+
 
 }
 
