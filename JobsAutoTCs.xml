@@ -21,7 +21,9 @@
 <!--                    <include name="verifyCreateScheduleJobFunction" />-->
                     <include name="verifyCheckJobDetailsFunction" />
                     <include name="verifyCopyStopResumeAndArchiveJobFunctionFunction" />
-                    <include name="verifyFilterFunction" />
+                    <include name="verifyFilterFunctionByJobTypeAndJobStatus" />
+                    <include name="verifyFilterFunctionByJobStatus" />
+                    <include name="verifyFilterFunctionByJobType" />
 
 
                 </methods>
