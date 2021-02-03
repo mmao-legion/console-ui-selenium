@@ -1651,7 +1651,7 @@ public class ActivityTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate activity for claim the open shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyActivityOfClaimOpenShiftAsTeamMember(String browser, String username, String password, String location) throws Exception {
+    public void verifyActivityOfClaimOpenShiftAsTeamLead(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();

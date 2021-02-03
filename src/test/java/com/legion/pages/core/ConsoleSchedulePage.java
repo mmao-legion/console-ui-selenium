@@ -3440,4 +3440,19 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void clickSpecificLocationInDMViewAnalyticTable(String location) throws Exception {
 
     }
+
+    @Override
+    public boolean hasNextWeek() throws Exception {
+            return false;
+    }
+
+    @Override
+    public float getTotalProjectionOpenShiftsHoursForCurrentWeek() throws Exception {
+        return 0;
+    }
+
+    @Override
+    public float newCalcTotalScheduledHourForDayInWeekView() throws Exception {
+        return 0;
+    }
 }

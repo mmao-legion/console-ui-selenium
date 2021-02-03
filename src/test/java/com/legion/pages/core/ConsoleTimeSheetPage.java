@@ -1,34 +1,26 @@
 package com.legion.pages.core;
 
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-
-import com.legion.utils.JsonUtil;
-import cucumber.api.java.ro.Si;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.server.handler.DeleteSession;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-
 import com.legion.pages.BasePage;
 import com.legion.pages.TimeSheetPage;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.text.DateFormat;
-import java.time.Duration;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 
-import static com.legion.utils.MyThreadLocal.*;
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
@@ -37,55 +29,55 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	@FindBy(css = "div.console-navigation-item-label.Compliance")
 	private WebElement complianceConsoleMenuDiv;
-	
+
 	@FindBy(css = "div.header-navigation-label")
 	private WebElement timeSheetPageHeaderLabel;
-	
-	@FindBy(css = "div.lg-timesheet-table-improved__grid-row.lg-timesheet-table-improved__worker-row")
+
+	@FindBy(css = "div.lg-timesheet-table-improved__worker-row")
 	private List<WebElement> timeSheetWorkersRows;
 
 	@FindBy(css = "div.lg-timesheet-table-improved")
 	private WebElement timesheetTable;
-	
+
 	@FindBy(css = "div.lg-timesheet-table-improved__grid-row.lg-timesheet-table-improved__worker-day")
 	private List<WebElement> timeSheetTableWorkersDayRows;
-	
+
 	@FindBy(css = "div.timesheet-details-modal")
 	private WebElement timeSheetDetailModel;
-	
+
 	@FindBy(css = "[ng-repeat=\"clockIn in $ctrl.clockIns\"]")
 	private List<WebElement> timeSheetDetailPopUpClocks;
-	
+
 	@FindBy(css = "lg-button[label=\"Delete\"]")
 	private WebElement timeSheetDeleteClockBtn;
-	
+
 	@FindBy(css = "lg-button[label=\"Yes\"]")
 	private WebElement confirmDeleteShiftYesBtn;
-	
+
 	@FindBy(className = "timesheet-details-modal__close")
 	private WebElement timeSheetDetailsPopupCloseBtn;
-	
+
 	@FindBy(css = "div.lg-timeclocks__alert")
 	private List<WebElement> timeClockAlertIcons;
-	
+
 	@FindBy(css="div.popover.fade.in")
 	private WebElement popoverDiv;
 
 	@FindBy(css="lg-button[label=\"Add Timeclock\"]")
 	private WebElement addTimeClockBtn;
-	
+
 	@FindBy(css="lg-select[label=\"Location\"]")
 	private WebElement addTCLocationField;
-	
+
 	@FindBy(css="input-field[label=\"Date\"]")
 	private WebElement addTCDateField;
-	
+
 	@FindBy(css="lg-picker-input[label=\"Employee\"]")
 	private WebElement addTCEmployeeField;
-	
+
 	@FindBy(css="select[aria-label=\"Work Role\"]")
 	private WebElement addTCWorkRoleDropDown;
-	
+
 	@FindBy(css="input[aria-label=\"Shift Start\"]")
 	private WebElement addTCShiftStartTimeTextField;
 
@@ -100,25 +92,25 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	@FindBy(css="input[placeholder='Enter Comment (Optional)']")
 	private WebElement addTCAddNotesTextField;
-	
+
 	@FindBy(css="lg-button[label=\"Add\"]")
 	private WebElement addTimeClockSaveBtn;
-	
+
 	@FindBy(css="div.lg-search-options__option-wrapper")
 	private List<WebElement> dropdownOptions;
-	
+
 	@FindBy(className = "lg-single-calendar-month")
 	private WebElement timeClockCalendarLabel;
-	
+
 	@FindBy(css="[ng-click=\"$ctrl.changeMonth(-1)\"]")
 	private WebElement timeClockPreviousMonthArrow;
-	
+
 	@FindBy(css="[ng-click=\"$ctrl.changeMonth(1)\"]")
 	private WebElement timeClockNextMonthArrow;
-	
+
 	@FindBy(css="div.lg-single-calendar-date")
 	private List<WebElement> calenderDates;
-	
+
 	@FindBy(css = "div.lg-add-clock")
 	private WebElement addClockPopup;
 
@@ -130,28 +122,28 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	@FindBy(css="div.lg-button-group-last")
 	private WebElement payPeriodBtn;
-	
+
 	@FindBy(css="input[placeholder=\"You can search by name, location, and job title.\"]")
 	private WebElement timeSheetWorkerSearchBox;
-	
+
 	@FindBy(css = "div.lg-button-group-first")
 	private WebElement timeSheetDayViewBtn;
-	
+
 	@FindBy(css="[ng-repeat=\"clockIn in $ctrl.clockIns\"]")
 	private List<WebElement> savedClockes;
-	
+
 	@FindBy(css = "div.day-week-picker-period.day-week-picker-period-active")
 	private WebElement timeSheetActivePeriod;
-	
+
 	@FindBy(className="day-week-picker-arrow-left")
 	private WebElement timeSheetNavigationPreviousDurationArrow;
-	
+
 	@FindBy(className="day-week-picker-arrow-right")
 	private WebElement timeSheetNavigationNextDurationArrow;
-	
+
 	@FindBy(css = "lg-eg-status[type=\"Pending\"]")
 	private List<WebElement> timeSheetPendingStatusList;
-	
+
 	@FindBy(css = "lg-button[ng-click=\"$ctrl.approve()\"]")
 	private WebElement timeSheetPopUpApproveBtn;
 
@@ -160,19 +152,19 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	@FindBy(css= "div.lg-picker-input__wrapper.lg-ng-animate")
 	private WebElement locatioOrDatePickerPopup;
-	
+
 	@FindBy(css = "lg-single-calendar.lg-calendar-input__widget")
 	private WebElement calendarInputWidget;
 
 	@FindBy(css = "div.timesheet-details-modal")
 	private WebElement TSPopupDetailsModel;
-	
+
 	@FindBy(css = "div.timesheet-details-modal__status-icon")
 	private WebElement timeSheetDetailPopupApproveStatus;
-	
+
 	@FindBy(css = "div.lg-timeclock-activities")
 	private WebElement timeClockHistoryDetailsSection;
-	
+
 	@FindBy(css = "div.lg-scheduled-shifts__expand")
 	private WebElement expandHistoryBtn;
 
@@ -184,25 +176,25 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	@FindBy (css = "lg-button[label=\"+ Add Break\"]")
 	private WebElement addBreakLink;
-	
+
 	@FindBy(css = "input[type=\"time\"]")
 	private List<WebElement> timeInputFields;
-	
+
 	@FindBy(css = "button.lg-icon-button.lg-icon-button--confirm")
 	private WebElement timeClockConfirmBtn;
-	
+
 	@FindBy(css = "div.lg-timeclock-activities__collapse")
 	private WebElement timeClockActivitiesCollapseBtn;
-	
+
 	@FindBy(css = "div.lg-no-timeclock__block.lg-no-timeclock__block--add")
 	private WebElement addClockBtnOnDetailPopup;
-	
+
 	@FindBy(css= "lg-button[label=\"Export\"]")
 	private WebElement exportTimesheetBtn;
-	
+
 	@FindBy(css= "lg-button[label=\"Export Anyway\"]")
 	private WebElement exportAnywayTimesheetBtn;
-	
+
 	@FindBy(css = "div.card-carousel-fixed")
 	private WebElement timesheetCarouselCardHoursDiv;
 
@@ -275,17 +267,17 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy(css = "lg-smart-card[heading='Due Date'] div[ng-if='$ctrl.note']")
 	private WebElement dueDateTimesheetNote;
 
-    @FindBy(css = "div.card-carousel-card.card-carousel-card-primary")
-    private WebElement timesheetApprovalSmartCard;
+	@FindBy(css = "div.card-carousel-card.card-carousel-card-primary")
+	private WebElement timesheetApprovalSmartCard;
 
-    @FindBy(css = "div.card-carousel-card.card-carousel-card-analytics-card-color-yellow")
-    private WebElement totalUnplannedClocksSmartCard;
+	@FindBy(css = "div.card-carousel-card.card-carousel-card-analytics-card-color-yellow")
+	private WebElement totalUnplannedClocksSmartCard;
 
-    @FindBy(css = "div.card-carousel-card.card-carousel-card-card-carousel-card-yellow-top")
-    private WebElement SummaryOfUnplannedClocksSmartCard;
+	@FindBy(css = "div.card-carousel-card.card-carousel-card-card-carousel-card-yellow-top")
+	private WebElement SummaryOfUnplannedClocksSmartCard;
 
-		@FindBy(css = "div.analytics-new-table-group")
-    private List<WebElement> timesheetTblRow;
+	@FindBy(css = "div.analytics-new-table-group")
+	private List<WebElement> timesheetTblRow;
 
 	@FindBy(css = "div.card-carousel-card.card-carousel-card-analytics-card-color-yellow div")
 	private List<WebElement> totalUnplannedClocksSmartCardValueNTxt;
@@ -359,7 +351,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		else
 			SimpleUtils.fail("Compliance Console Menu not loaded Successfully!", false);
 	}
-	
+
 	@Override
 	public boolean isTimeSheetPageLoaded() throws Exception
 	{
@@ -368,11 +360,11 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				SimpleUtils.pass("Time Sheet Page loaded Successfully!");
 				return true;
 			}
-				
+
 		return false;
 	}
-	
-	
+
+
 	@Override
 	public void openATimeSheetWithClockInAndOut() throws Exception
 	{
@@ -419,7 +411,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("Time Sheet Page: Workers Table not Loaded successfully!", false);
 		}
 	}
-	
+
 	@Override
 	public List<WebElement> getTimeSheetDisplayedWorkersDayRows()
 	{
@@ -433,7 +425,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		return displayedDayRows;
 	}
 
-	
+
 	@Override
 	public void clickOnEditTimesheetClock(int index) throws Exception
 	{
@@ -450,7 +442,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("Time Sheet Detail Model/Popup not displayed!", true);
 		}
 	}
-	
+
 	@Override
 	public void clickOnEditTimesheetClock(WebElement webElement) throws Exception
 	{
@@ -467,8 +459,8 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("Time Sheet Detail Model/Popup not displayed!", true);
 		}
 	}
-	
-	
+
+
 	@Override
 	public void clickOnDeleteClockButton() throws Exception
 	{
@@ -484,7 +476,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("Delete Shift Clock button not loaded successfully!", true);
 		}
 	}
-	
+
 
 	@Override
 	public void closeTimeSheetDetailPopUp() throws Exception
@@ -497,7 +489,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		else
 			SimpleUtils.fail("Timesheet Detail Popup Close Button not found!", true);
 	}
-	
+
 	public ArrayList<String> hoverOnClockIconAndGetInfo() throws Exception
 	{
 		ArrayList<String> clocksInfo = new ArrayList<String>();
@@ -598,7 +590,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				addTCShiftEndTimeTextField.clear();
 				addTCShiftEndTimeTextField.sendKeys(endTime);
 
-			 	// Add Notes Field
+				// Add Notes Field
 				addTCAddNotesTextField.clear();
 				addTCAddNotesTextField.sendKeys(notes);
 
@@ -674,14 +666,14 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	public void navigateToDesiredWeek(String Date) throws Exception{
 		String dayOfWeek = null;
-	    LocalDate timesheetdate = LocalDate.parse(Date);
+		LocalDate timesheetdate = LocalDate.parse(Date);
 		String weekStartingDay = getWeekStartingDay();
 		String[] arrWeekStartingDay = weekStartingDay.split("\n");
 		String monthVal = getMonthValue((arrWeekStartingDay[1].split(" "))[0]);
 		LocalDate now = LocalDate.now();
 		if((arrWeekStartingDay[1].split(" "))[1].length() == 1){
-            dayOfWeek =  "0" + (arrWeekStartingDay[1].split(" "))[1];
-        }
+			dayOfWeek =  "0" + (arrWeekStartingDay[1].split(" "))[1];
+		}
 		String startingDayOfCurrentWeek = String.valueOf(now.getYear()) + "-" + monthVal + "-" + dayOfWeek;
 		LocalDate startingDayOfCurrentWeekDate = LocalDate.parse(startingDayOfCurrentWeek);
 		if(startingDayOfCurrentWeekDate.getMonthValue() - timesheetdate.getMonthValue() == 0){
@@ -705,7 +697,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				break;
 			}
 		}
-    }
+	}
 
 	public void clickPreviousDayArrow(int previousArrowCount) throws Exception{
 		if(isElementLoaded(previousDayArrow,5)){
@@ -725,27 +717,27 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	@Override
 	public void valiadteTimeClock(String location, String employee, String workRole,
-			String startTime, String endTime,String breakStartTime, String breakEndTime, String notes, String DaysFromTodayInPast ) throws Exception
+								  String startTime, String endTime,String breakStartTime, String breakEndTime, String notes, String DaysFromTodayInPast ) throws Exception
 	{
 		String detailsOfModifiedTimesheer[] = null;
 		if(startTime.startsWith("0"))
 			startTime = startTime.substring(1);
-        if(breakStartTime.startsWith("0"))
-            breakStartTime = breakStartTime.substring(1);
-        if(breakEndTime.startsWith("0"))
-            breakEndTime = breakEndTime.substring(1);
+		if(breakStartTime.startsWith("0"))
+			breakStartTime = breakStartTime.substring(1);
+		if(breakEndTime.startsWith("0"))
+			breakEndTime = breakEndTime.substring(1);
 		if(endTime.startsWith("0"))
 			endTime = endTime.substring(1);
 		boolean isShiftStartMatched = false;
-        boolean isBreakStartMatched = false;
-        boolean isBreakEndMatched = false;
+		boolean isBreakStartMatched = false;
+		boolean isBreakEndMatched = false;
 		boolean isShiftEndMatched = false;
 		clickOnTimeSheetConsoleMenu();
 //		String timesheetDateToCompare = selectDateForTimesheet(Integer.parseInt(DaysFromTodayInPast));
 		String timesheetDateToCompare = searchDateForTimesheet(Integer.parseInt(DaysFromTodayInPast));
-        navigateToDesiredWeek(timesheetDateToCompare);
-        String dateOnWhichTimesheetAdded[] = formatDateForTimesheet(DaysFromTodayInPast).split(",");
-        clickOnSelectedDate(dateOnWhichTimesheetAdded[0]);
+		navigateToDesiredWeek(timesheetDateToCompare);
+		String dateOnWhichTimesheetAdded[] = formatDateForTimesheet(DaysFromTodayInPast).split(",");
+		clickOnSelectedDate(dateOnWhichTimesheetAdded[0]);
 		if(seachAndSelectWorkerByName(employee))
 		{
 			for(WebElement WorkersDayRow : getTimeSheetDisplayedWorkersDayRows())
@@ -799,7 +791,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				}
 			}
 		}
-		
+
 		if(isShiftStartMatched == true && isBreakStartMatched==true && isBreakEndMatched==true && isShiftEndMatched == true )
 		{
 			SimpleUtils.pass("Successfully Verified timesheet added using Add Timeclock button for " + detailsOfModifiedTimesheer[0]);
@@ -1033,7 +1025,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		}
 		else
 			SimpleUtils.fail("Timesheet: Pay Period Button not loaded!", false);
-		}
+	}
 
 	@Override
 	public void clickOnWeekDuration() throws Exception
@@ -1051,7 +1043,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("Timesheet: WeekView Button not loaded!", false);
 	}
 
-   //added by Nishant
+	//added by Nishant
 
 	public void clickOnPPWeeklyDuration() throws Exception {
 		String activeButtonClassKeyword = "selected";
@@ -1243,14 +1235,14 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	//Coverting -- to 0
 	public String covertDashTo0(String textPicked){
-        String updatedTextPicked = textPicked;
-        if(textPicked.equalsIgnoreCase("--")){
-	        updatedTextPicked = "0";
-        }
-	    return updatedTextPicked;
-    }
+		String updatedTextPicked = textPicked;
+		if(textPicked.equalsIgnoreCase("--")){
+			updatedTextPicked = "0";
+		}
+		return updatedTextPicked;
+	}
 
-    public String dayDifferenceHour(String workerDayDiffHour, String workerDayScheduleHour){
+	public String dayDifferenceHour(String workerDayDiffHour, String workerDayScheduleHour){
 		if(workerDayDiffHour.equalsIgnoreCase("--")){
 			workerDayDiffHour = "(" + workerDayScheduleHour + ")";
 		}
@@ -1292,22 +1284,22 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			int noOfTimesheetEnteriesForTM = workerDayRow.size();
 			for (int j = 0; j <  workerDayRow.size(); j++) {
 				String workerDayScheduleHour = schedHourDayWise.get(j).getText();
-                String updatedWorkerDayScheduleHour = covertDashTo0(workerDayScheduleHour);
+				String updatedWorkerDayScheduleHour = covertDashTo0(workerDayScheduleHour);
 				totalSchedHourForTM = totalSchedHourForTM + Double.parseDouble(updatedWorkerDayScheduleHour);
 				String workerDayClockedHour = clockHourDayWise.get(j).getText();
-                String updatedworkerDayClockedHour = covertDashTo0(workerDayClockedHour);
+				String updatedworkerDayClockedHour = covertDashTo0(workerDayClockedHour);
 				totalClockedHourForTM = totalClockedHourForTM + Double.parseDouble(updatedworkerDayClockedHour);
 				String workerDayRegHour = regHourDayWise.get(j).getText();
-                String updatedworkerDayRegHour = covertDashTo0(workerDayRegHour);
+				String updatedworkerDayRegHour = covertDashTo0(workerDayRegHour);
 				totalRegHourForTM = totalRegHourForTM + Double.parseDouble(updatedworkerDayRegHour);
 				String workerDayOTHour = OTHourDayWise.get(j).getText();
-                String updatedworkerDayOTHour = covertDashTo0(workerDayOTHour);
+				String updatedworkerDayOTHour = covertDashTo0(workerDayOTHour);
 				totalOTHourForTM = totalOTHourForTM + Double.parseDouble(updatedworkerDayOTHour);
 				String workerDayDTHour = DTHourDayWise.get(j).getText();
-                String updatedworkerDayDTHour = covertDashTo0(workerDayDTHour);
+				String updatedworkerDayDTHour = covertDashTo0(workerDayDTHour);
 				totalDTHourForTM = totalDTHourForTM + Double.parseDouble(updatedworkerDayDTHour);
 				String workerDayDiffHour = diffHourDayWise.get(j).getText();
-                String updatedworkerDayDiffHour = dayDifferenceHour(workerDayDiffHour, workerDayScheduleHour);
+				String updatedworkerDayDiffHour = dayDifferenceHour(workerDayDiffHour, workerDayScheduleHour);
 				if (updatedworkerDayDiffHour.startsWith("(")) {
 					String diffValue1 = updatedworkerDayDiffHour.replace("(", "");
 					String diffValue2 = diffValue1.replace(")", "");
@@ -1386,7 +1378,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		{
 			for(WebElement WorkersDayRow : getTimeSheetDisplayedWorkersDayRows()) {
 				if(WorkersDayRow.getText().toLowerCase().contains(selectedDate.toLowerCase().split(",")[0])) {
-					allHours = getTimesheetWorkerHoursByDay(WorkersDayRow);								
+					allHours = getTimesheetWorkerHoursByDay(WorkersDayRow);
 				}
 			}
 		}
@@ -1404,10 +1396,10 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		}
 		else
 			SimpleUtils.fail("Timesheet duration list not loaded Successfully.", false);
-		
+
 		return activePeriodText;
 	}
-	
+
 
 	@Override
 	public void navigateDayWeekOrPayPeriodToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount)
@@ -1419,19 +1411,19 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			for(WebElement ScheduleCalendarDayLabel: timeSheetDurationNavigatorLabels)
 			{
 				if(ScheduleCalendarDayLabel.getAttribute("class").toString().contains("day-week-picker-period-active"))
-				{	
+				{
 					if(nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future"))
 					{
 						try {
-								int activeWeekIndex = timeSheetDurationNavigatorLabels.indexOf(ScheduleCalendarDayLabel);
-								if(activeWeekIndex < (displayedWeekCount - 1))
-								{
-									click(timeSheetDurationNavigatorLabels.get(activeWeekIndex + 1));
-								}
-								else {
-									click(timeSheetNavigationNextDurationArrow);
-									click(timeSheetDurationNavigatorLabels.get(0));
-								}
+							int activeWeekIndex = timeSheetDurationNavigatorLabels.indexOf(ScheduleCalendarDayLabel);
+							if(activeWeekIndex < (displayedWeekCount - 1))
+							{
+								click(timeSheetDurationNavigatorLabels.get(activeWeekIndex + 1));
+							}
+							else {
+								click(timeSheetNavigationNextDurationArrow);
+								click(timeSheetDurationNavigatorLabels.get(0));
+							}
 						}
 						catch (Exception e) {
 							SimpleUtils.report("Schedule page Calender Next Week Arrows Not Loaded/Clickable after '"+ScheduleCalendarDayLabel.getText().replace("\n", "")+ "'");
@@ -1459,7 +1451,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		}
 	}
 
-	
+
 	@Override
 	public void openFirstPendingTimeSheet() throws Exception
 	{
@@ -1486,11 +1478,11 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 						}
 						break;
 					}
-						
+
 				}
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -1504,20 +1496,20 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				if(approveBtnList.get(0).isEnabled())
 				{
 					return true;
-				}	
+				}
 			}
 		}
-		
+
 		return false;
 	}
-	
-	
+
+
 	@Override
 	public boolean seachAndSelectWorkerByName(String workerName) throws Exception
 	{
 		if(isElementLoaded(timeSheetWorkerSearchBox, 10))
 		{
-			
+
 			timeSheetWorkerSearchBox.click();
 			timeSheetWorkerSearchBox.clear();
 			timeSheetWorkerSearchBox.sendKeys(workerName.split(" ")[0]);
@@ -1533,9 +1525,9 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				}
 			}
 		}
-		return false;				
+		return false;
 	}
-	
+
 	@Override
 	public HashMap<String, Float> getTimesheetWorkerHoursByDay(WebElement WorkersDayRow)
 	{
@@ -1544,7 +1536,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		if(workerRowColumnsText.length > 10) {
 			float regHours = Float.valueOf(workerRowColumnsText[2]);
 			float oTHours = Float.valueOf(workerRowColumnsText[3]);
-			float dTHours = Float.valueOf(workerRowColumnsText[4]); 
+			float dTHours = Float.valueOf(workerRowColumnsText[4]);
 			float holHours = Float.valueOf(workerRowColumnsText[5]);
 			float totalHours = Float.valueOf(workerRowColumnsText[6]);
 			float schedHours = Float.valueOf(workerRowColumnsText[7]);
@@ -1587,16 +1579,16 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	@Override
 	public void openWorkerDayTimeSheetByElement(WebElement workersDayRow) throws Exception {
-		 WebElement activeRowPopUpLink = workersDayRow.findElement(By.cssSelector("lg-button[action-link]"));
-		 if(isElementLoaded(activeRowPopUpLink)) {
-			 click(activeRowPopUpLink);
-			 SimpleUtils.pass("Timesheet Details Edit popup Opened successfully.");
-		 }
-		 else {
-			 SimpleUtils.fail("Active Row PopUp Link not found.", false);
-		 }
+		WebElement activeRowPopUpLink = workersDayRow.findElement(By.cssSelector("lg-button[action-link]"));
+		if(isElementLoaded(activeRowPopUpLink)) {
+			click(activeRowPopUpLink);
+			SimpleUtils.pass("Timesheet Details Edit popup Opened successfully.");
+		}
+		else {
+			SimpleUtils.fail("Active Row PopUp Link not found.", false);
+		}
 	}
-	
+
 	@Override
 	public boolean isTimesheetPopupModelContainsKeyword(String keyword) throws Exception
 	{
@@ -1606,10 +1598,10 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		}
 		else
 			SimpleUtils.fail("Timesheet details popup not loaded successfully.", false);
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public boolean isWorkerDayRowStatusPending(WebElement workerDayRow) throws Exception
 	{
@@ -1621,7 +1613,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void clickOnApproveButton() throws Exception
 	{
@@ -1635,7 +1627,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		}
 	}
 
-	
+
 	@Override
 	public boolean isTimeSheetApproved() throws Exception
 	{
@@ -1644,11 +1636,11 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.pass("Timesheet approved for duration: '"+getActiveDayWeekOrPayPeriod()+"'.");
 			return true;
 		}
-		
+
 		return false;
 	}
 
-	
+
 	@Override
 	public String getTimeClockHistoryText() throws Exception
 	{
@@ -1656,11 +1648,11 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		if(isElementLoaded(timeClockHistoryDetailsSection))
 			if(timeClockHistoryDetailsSection.isDisplayed())
 				timeClockHistoryText = timeClockHistoryDetailsSection.getText();
-		
+
 		return timeClockHistoryText;
 	}
 
-	
+
 	@Override
 	public void displayTimeClockHistory() throws Exception
 	{
@@ -1672,25 +1664,25 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("Timesheet Details popup Expand History Button not loaded.", false);
 		}
 	}
-	
-	
+
+
 	@Override
 	public List<WebElement> getAllTimeSheetEditBtnElements() throws Exception
 	{
 		return timesheetEditBtns;
 	}
-	
-	
+
+
 	@Override
 	public boolean isTimeSheetWorkerRowContainsCheckbox(WebElement workerRow)
 	{
 		List<WebElement> workerCheckboxs = workerRow.findElements(By.cssSelector("input-field[value=\"worker.selected\"]"));
 		if(workerCheckboxs.size() > 0)
 			return true;
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public List<WebElement> getTimeSheetWorkersRow() throws Exception
 	{
@@ -1710,10 +1702,113 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		WebElement workerNameElement = workerRow.findElement(By.cssSelector("div.lg-timesheet-table__name"));
 		if(isElementLoaded(workerNameElement, 10))
 			workerName = workerNameElement.getText();
-		
+
 		return workerName;
 	}
 
+	@Override
+	public HashMap<String, Float> getWorkerAllHours(WebElement workerRow) {
+		HashMap<String, Float> workerTotalTimeClockHours = new HashMap<String, Float>();
+		float SchedHours = 0;
+		float ClockHours = 0;
+		float DiffHours = 0;
+		float RegHours = 0;
+		float OTHours = 0;
+		float DTHours = 0;
+		float PTOHours = 0;
+		float ExtraPay = 0;
+		int workerRowColumnRowLength = 12;
+		String[] workerRowColumnText = workerRow.getText().split("\n");
+		try
+		{
+			SchedHours = Float.valueOf(workerRowColumnText[workerRowColumnText.length-8]);
+		}
+		catch (NumberFormatException e)
+		{
+			SimpleUtils.report("TimeSheet worker Schedule Hours not a valid number, found: '"+ workerRowColumnText[4] +".");
+		}
+
+		try
+		{
+			ClockHours = Float.valueOf(workerRowColumnText[workerRowColumnText.length-7]);
+		}
+		catch (NumberFormatException e)
+		{
+			SimpleUtils.report("TimeSheet worker Clock Hours not a valid number, found: '"+ workerRowColumnText[5] +".");
+		}
+
+		try
+		{
+			String DiffHoursString = workerRowColumnText[workerRowColumnText.length-6];
+			if(DiffHoursString.contains("(") || DiffHoursString.contains(")")){
+				DiffHoursString = "-"+DiffHoursString.substring(1, DiffHoursString.length()-1);
+			}
+			DiffHours = Float.valueOf(DiffHoursString);
+		}
+		catch (NumberFormatException e)
+		{
+			SimpleUtils.report("TimeSheet worker Difference Hours not a valid number, found: '"+ workerRowColumnText[6] +".");
+		}
+		try
+		{
+			RegHours = Float.valueOf(workerRowColumnText[workerRowColumnText.length-5]);
+		}
+		catch (NumberFormatException e)
+		{
+			SimpleUtils.report("TimeSheet worker Total Regular Hours not a valid number, found: '"+ workerRowColumnText[7] +".");
+		}
+
+		try
+		{
+			OTHours = Float.valueOf(workerRowColumnText[workerRowColumnText.length-4]);
+		}
+		catch (NumberFormatException e)
+		{
+			SimpleUtils.report("TimeSheet worker Total Overtime Hours not a valid number, found: '"+ workerRowColumnText[8] +".");
+		}
+
+		try
+		{
+			DTHours = Float.valueOf(workerRowColumnText[workerRowColumnText.length-3]);
+		}
+		catch (NumberFormatException e)
+		{
+			SimpleUtils.report("TimeSheet worker Double Time Hours not a valid number, found: '"+ workerRowColumnText[9] +".");
+		}
+
+		try
+		{
+			PTOHours = Float.valueOf(workerRowColumnText[workerRowColumnText.length-2]);
+		}
+		catch (NumberFormatException e)
+		{
+			SimpleUtils.report("TimeSheet worker PTO Hours not a valid number, found: '"+ workerRowColumnText[10] +".");
+		}
+
+		try
+		{
+			ExtraPay = Float.valueOf(workerRowColumnText[workerRowColumnText.length-1]);
+		}
+		catch (NumberFormatException e)
+		{
+			SimpleUtils.report("TimeSheet worker Extra Pay Hours not a valid number, found: '"+ workerRowColumnText[11] +".");
+		}
+//		if(workerRowColumnText.length == workerRowColumnRowLength)
+//		{
+//
+//		}
+
+		workerTotalTimeClockHours.put("SchedHours", SchedHours);
+		workerTotalTimeClockHours.put("ClockHours", ClockHours);
+		workerTotalTimeClockHours.put("DiffHours", DiffHours);
+		workerTotalTimeClockHours.put("RegHours", RegHours);
+		workerTotalTimeClockHours.put("OTHours", OTHours);
+		workerTotalTimeClockHours.put("DTHours", DTHours);
+		workerTotalTimeClockHours.put("PTOHours", PTOHours);
+		workerTotalTimeClockHours.put("ExtraPay", ExtraPay);
+
+		return workerTotalTimeClockHours;
+	}
 
 
 	@Override
@@ -1732,87 +1827,87 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		String[] workerRowColumnText = workerRow.getText().split("\n");
 		if(workerRowColumnText.length == workerRowColumnRowLength)
 		{
-			try 
-	        { 
-				RegHours = Float.valueOf(workerRowColumnText[4]); 
-	        }  
-	        catch (NumberFormatException e)  
-	        { 
-	            SimpleUtils.report("TimeSheet worker Total Regular Hours not a valid number, found: '"+ workerRowColumnText[4] +"."); 
-	        } 
-			
-			try 
-	        { 
-				OTHours = Float.valueOf(workerRowColumnText[5]); 
-	        }  
-	        catch (NumberFormatException e)  
-	        { 
-	            SimpleUtils.report("TimeSheet worker Total Overtime Hours not a valid number, found: '"+ workerRowColumnText[5] +"."); 
-	        } 
-			
-			try 
-	        { 
-				DTHours = Float.valueOf(workerRowColumnText[6]); 
-	        }  
-	        catch (NumberFormatException e)  
-	        { 
-	            SimpleUtils.report("TimeSheet worker Double Time Hours not a valid number, found: '"+ workerRowColumnText[6] +"."); 
-	        } 
-			
-			try 
-	        { 
-				HolHours = Float.valueOf(workerRowColumnText[7]); 
-	        }  
-	        catch (NumberFormatException e)  
-	        { 
-	            SimpleUtils.report("TimeSheet worker Holiday Hours not a valid number, found: '"+ workerRowColumnText[7] +"."); 
-	        } 
-			
-			try 
-	        { 
-				TotalHours = Float.valueOf(workerRowColumnText[8]); 
-	        }  
-	        catch (NumberFormatException e)  
-	        { 
-	            SimpleUtils.report("TimeSheet worker Total Hours not a valid number, found: '"+ workerRowColumnText[8] +"."); 
-	        } 
-			
-			try 
-	        { 
-				SchedHours = Float.valueOf(workerRowColumnText[9]); 
-	        }  
-	        catch (NumberFormatException e)  
-	        { 
-	            SimpleUtils.report("TimeSheet worker Schedule Hours not a valid number, found: '"+ workerRowColumnText[9] +"."); 
-	        } 
-			
-			try 
-	        { 
-				DiffHours = Float.valueOf(workerRowColumnText[10]); 
-	        }  
-	        catch (NumberFormatException e)  
-	        { 
-	            SimpleUtils.report("TimeSheet worker Difference Hours not a valid number, found: '"+ workerRowColumnText[10] +"."); 
-	        } 
-			
-			try 
-	        { 
-				TipsHours = Float.valueOf(workerRowColumnText[11]); 
-	        }  
-	        catch (NumberFormatException e)  
-	        { 
-	            SimpleUtils.report("TimeSheet worker Tips Hours not a valid number, found: '"+ workerRowColumnText[7] +"."); 
-	        } 
-			
-			try 
-	        { 
-				MealHours = Float.valueOf(workerRowColumnText[12]); 
-	        }  
-	        catch (NumberFormatException e)  
-	        { 
-	            SimpleUtils.report("TimeSheet worker Meal Hours not a valid number, found: '"+ workerRowColumnText[12] +"."); 
-	        }
-	        
+			try
+			{
+				RegHours = Float.valueOf(workerRowColumnText[4]);
+			}
+			catch (NumberFormatException e)
+			{
+				SimpleUtils.report("TimeSheet worker Total Regular Hours not a valid number, found: '"+ workerRowColumnText[4] +".");
+			}
+
+			try
+			{
+				OTHours = Float.valueOf(workerRowColumnText[5]);
+			}
+			catch (NumberFormatException e)
+			{
+				SimpleUtils.report("TimeSheet worker Total Overtime Hours not a valid number, found: '"+ workerRowColumnText[5] +".");
+			}
+
+			try
+			{
+				DTHours = Float.valueOf(workerRowColumnText[6]);
+			}
+			catch (NumberFormatException e)
+			{
+				SimpleUtils.report("TimeSheet worker Double Time Hours not a valid number, found: '"+ workerRowColumnText[6] +".");
+			}
+
+			try
+			{
+				HolHours = Float.valueOf(workerRowColumnText[7]);
+			}
+			catch (NumberFormatException e)
+			{
+				SimpleUtils.report("TimeSheet worker Holiday Hours not a valid number, found: '"+ workerRowColumnText[7] +".");
+			}
+
+			try
+			{
+				TotalHours = Float.valueOf(workerRowColumnText[8]);
+			}
+			catch (NumberFormatException e)
+			{
+				SimpleUtils.report("TimeSheet worker Total Hours not a valid number, found: '"+ workerRowColumnText[8] +".");
+			}
+
+			try
+			{
+				SchedHours = Float.valueOf(workerRowColumnText[9]);
+			}
+			catch (NumberFormatException e)
+			{
+				SimpleUtils.report("TimeSheet worker Schedule Hours not a valid number, found: '"+ workerRowColumnText[9] +".");
+			}
+
+			try
+			{
+				DiffHours = Float.valueOf(workerRowColumnText[10]);
+			}
+			catch (NumberFormatException e)
+			{
+				SimpleUtils.report("TimeSheet worker Difference Hours not a valid number, found: '"+ workerRowColumnText[10] +".");
+			}
+
+			try
+			{
+				TipsHours = Float.valueOf(workerRowColumnText[11]);
+			}
+			catch (NumberFormatException e)
+			{
+				SimpleUtils.report("TimeSheet worker Tips Hours not a valid number, found: '"+ workerRowColumnText[7] +".");
+			}
+
+			try
+			{
+				MealHours = Float.valueOf(workerRowColumnText[12]);
+			}
+			catch (NumberFormatException e)
+			{
+				SimpleUtils.report("TimeSheet worker Meal Hours not a valid number, found: '"+ workerRowColumnText[12] +".");
+			}
+
 		}
 
 		workerTotalTimeClockHours.put("RegHours", RegHours);
@@ -1824,11 +1919,11 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		workerTotalTimeClockHours.put("DiffHours", DiffHours);
 		workerTotalTimeClockHours.put("TipsHours", TipsHours);
 		workerTotalTimeClockHours.put("MealHours", MealHours);
-		
+
 		return workerTotalTimeClockHours;
 	}
-	
-	
+
+
 	@Override
 	public void vadidateWorkerTimesheetLocationsForAllTimeClocks(WebElement workersDayRow) throws Exception {
 		String[] workerdayRowText = workersDayRow.getText().split("\n");
@@ -1844,13 +1939,13 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				for(WebElement location : shiftLocationAndHours)
 				{
 					if(location.getText().toLowerCase().contains(timeClockListViewLocation.toLowerCase()))
-						isLocationCorrect = true;	
+						isLocationCorrect = true;
 				}
-				
+
 				if(isLocationCorrect)
 				{
 					SimpleUtils.pass("Time Clock location matched with scheduled shift location for the day:'"+ workerdayRowText[0] +"'");
-				}	
+				}
 				else
 				{
 					SimpleUtils.fail("Time Clock location not matched with scheduled shift location or Shift not scheduled for the day:'"+
@@ -1864,11 +1959,11 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		else {
 			SimpleUtils.report("Shift is not Scheduled for the day: '"+ workerdayRowText[0] +"'.");
 		}
-		
+
 		closeTimeSheetDetailPopUp();
 	}
 
-	
+
 	@Override
 	public void addBreakToOpenedTimeClock(String breakStartTime, String breakEndTime) {
 		if(timeClockAddBreakButtons.size() != 0)
@@ -1886,7 +1981,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 						timeInputFields.get(0).click();
 						timeInputFields.get(0).sendKeys(breakStartTimeArray[0]);
 						timeInputFields.get(0).sendKeys(breakStartTimeArray[1]);
-						
+
 						// adding Break End Time
 						timeInputFields.get(0).sendKeys(Keys.TAB);;
 						timeInputFields.get(1).sendKeys(breakEndTimeArray[0]);
@@ -1894,7 +1989,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 						click(timeClockConfirmBtn);
 						SimpleUtils.pass("Time clock break added successfully with duration: '"+ breakStartTime +" - "+ breakEndTime +"'.");
 					}
-						
+
 					break;
 				}
 				else
@@ -1903,7 +1998,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		}
 		else
 			SimpleUtils.fail("'Add Break not found on time clock detail popup.", true);
-		
+
 	}
 
 	@Override
@@ -1925,7 +2020,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			click(timeClockConfirmBtn);
 			SimpleUtils.pass("Time clock default Check in added successfully with time: '"+ timeClockCheckIn +"'.");
 		}
-		
+
 	}
 
 
@@ -1940,7 +2035,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	@FindBy(css = "div[ng-repeat=\"key in ['in', 'out']\"]")
 	private List<WebElement> timeClockEntries;
-	
+
 	@Override
 	public void removeTimeClockEntryByLabel(String label) throws Exception
 	{
@@ -1954,11 +2049,11 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			}
 		}
 	}
-	
+
 
 	@FindBy(css = "div.lg-timesheet-table")
 	private WebElement timeSheetDetailsTable;
-	
+
 	@Override
 	public boolean isTimeSheetDetailsTableLoaded() throws Exception
 	{
@@ -1974,7 +2069,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	@FindBy(css = "div[ng-repeat=\"button in $ctrl.buttons\"]")
 	private List<WebElement> timeSheetDurationBtns;
-	
+
 	@Override
 	public void clickOnWeekView()
 	{
@@ -1993,7 +2088,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		else
 			SimpleUtils.fail("TimeSheet Duration Buttons not loaded.", false);
 	}
-	
+
 	@Override
 	public String getTimeSheetActiveDurationType()
 	{
@@ -2008,7 +2103,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		}
 		else
 			SimpleUtils.fail("TimeSheet Duration Buttons not loaded.", false);
-		
+
 		return timeSheetActiveDurationType;
 	}
 
@@ -2189,30 +2284,30 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	public String verifyTimesheetSmartCard() throws Exception {
 		String valDueDate ="";
-        String finalDueDate ="";
-	    if(isElementEnabled(dueDateSmartCard,5)){
+		String finalDueDate ="";
+		if(isElementEnabled(dueDateSmartCard,5)){
 			SimpleUtils.pass("Timesheet Due Date smart card loaded Successfullly");
-            verifyDueDateheader();
-            if(isElementLoaded(dueDateValue,5)){
-                valDueDate = dueDateValue.getText();
-                String[] arrValDueDate = valDueDate.split(" ");
-                finalDueDate = arrValDueDate[1];
-            }
+			verifyDueDateheader();
+			if(isElementLoaded(dueDateValue,5)){
+				valDueDate = dueDateValue.getText();
+				String[] arrValDueDate = valDueDate.split(" ");
+				finalDueDate = arrValDueDate[1];
+			}
 		}else{
 			SimpleUtils.fail("Timesheet Due Date smart card not loaded Successfullly",false);
 		}
-	    return valDueDate;
+		return valDueDate;
 	}
 
 	public void verifyDueDateheader() throws Exception {
-        if(isElementLoaded(dueDateHeader,5)){
-            if(dueDateHeader.getText().equalsIgnoreCase("DUE DATE")){
-                SimpleUtils.pass("Timesheet Due Date smart card header is " + dueDateHeader.getText() );
-            }
-        }else{
-            SimpleUtils.fail("Timesheet Due Date smart card Header loaded Successfullly",true);
-        }
-    }
+		if(isElementLoaded(dueDateHeader,5)){
+			if(dueDateHeader.getText().equalsIgnoreCase("DUE DATE")){
+				SimpleUtils.pass("Timesheet Due Date smart card header is " + dueDateHeader.getText() );
+			}
+		}else{
+			SimpleUtils.fail("Timesheet Due Date smart card Header loaded Successfullly",true);
+		}
+	}
 
 	public String verifyTimesheetDueHeader() throws Exception {
 		String timesheetDueDate ="";
@@ -2230,7 +2325,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		return timesheetDueDateValue;
 	}
 
-    public void validateLoadingOfTimeSheetSmartCard() throws Exception {
+	public void validateLoadingOfTimeSheetSmartCard() throws Exception {
 		if(isElementEnabled(timesheetApprovalSmartCard,5)){
 			SimpleUtils.pass("Timesheet Approval Smart Card loaded Successfully!!");
 		}else{
@@ -2259,7 +2354,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 
 
-//	public void clickImmediatePastToCurrentActiveWeekInDayPicker() {
+	//	public void clickImmediatePastToCurrentActiveWeekInDayPicker() {
 //		if (isElementEnabled(immediatePastToCurrentActiveWeek, 30)) {
 //			click(immediatePastToCurrentActiveWeek);
 //		} else {
@@ -2272,7 +2367,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	public void validateLoadingOfTimeSheetSmartCard(String nextWeekViewOrPreviousWeekView) throws Exception {
 		String weekSelected = null;
 		clickImmediatePastToCurrentActiveWeekInDayPicker();
-			weekSelected = daypicker.getText().replace("\n", " ");
+		weekSelected = daypicker.getText().replace("\n", " ");
 
 		if(isElementEnabled(timesheetApprovalSmartCard,5)){
 			SimpleUtils.pass("Timesheet Approval Smart Card loaded Successfully for week " + weekSelected);
@@ -2297,7 +2392,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	}
 
-    public int getUnplannedClocksValueNtext() throws Exception {
+	public int getUnplannedClocksValueNtext() throws Exception {
 		int totalUnplannedClocksOnDMViewSmartCard = 0;
 		if(areListElementVisible(totalUnplannedClocksSmartCardValueNTxt,1)){
 			for(int i=0;i<totalUnplannedClocksSmartCardValueNTxt.size();i++){
@@ -2327,7 +2422,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	public void goToSMView(List<String> searchLocation, String datePickerTxtDMView,
 						   int locationCount, int totalUnplannedClocksOnDMView, int totalTimesheetsOnDMView) throws Exception {
 		if(areListElementVisible(timesheetTblRow,2) && !searchLocation.isEmpty()
-			&& areListElementVisible(goToSMViewArrow,2)){
+				&& areListElementVisible(goToSMViewArrow,2)){
 			for(int j=0; j<timesheetTblRow.size();j++) {
 				if (j == locationCount) {
 					break;
@@ -2417,7 +2512,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	public int getAllTimesheetValOnSMView() throws Exception {
 		int totalTimehseetOnSMView = 0;
 		if(areListElementVisible(timesheetTableRow,2,1)
-		    && areListElementVisible(totalTimesheetsOnSMView,1,1)){
+				&& areListElementVisible(totalTimesheetsOnSMView,1,1)){
 			String paginationValue[] = pagination.getText().split("f ");
 			for(int j=0; j<Integer.parseInt(paginationValue[1]); j++) {
 				if(areListElementVisible(timesheetTableRow,10,1)){
@@ -2461,19 +2556,19 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		return totalUnplannedClocksOnDMView;
 	}
 
-    public int getTotalTimesheetsOnDMView() throws Exception {
-        int totalTimesheetsOnDMView = 0;
-        if(areListElementVisible(totalTimesheetsTblView,2)){
-            for(int i=0; i< totalTimesheetsTblView.size();i++){
-                totalTimesheetsOnDMView  = totalTimesheetsOnDMView + Integer.parseInt((totalTimesheetsTblView.get(i).getText()));
-            }
-        }else{
+	public int getTotalTimesheetsOnDMView() throws Exception {
+		int totalTimesheetsOnDMView = 0;
+		if(areListElementVisible(totalTimesheetsTblView,2)){
+			for(int i=0; i< totalTimesheetsTblView.size();i++){
+				totalTimesheetsOnDMView  = totalTimesheetsOnDMView + Integer.parseInt((totalTimesheetsTblView.get(i).getText()));
+			}
+		}else{
 			SimpleUtils.fail("Total Timesheet data not displayed on DM view of Timesheet table",true);
 		}
-        return totalTimesheetsOnDMView;
-    }
+		return totalTimesheetsOnDMView;
+	}
 
-    public void compareDMAndSMViewTimesheetCount(int totalTimesheetsOnDMView, int totalTimehseetOnSMView){
+	public void compareDMAndSMViewTimesheetCount(int totalTimesheetsOnDMView, int totalTimehseetOnSMView){
 		if(totalTimesheetsOnDMView== totalTimehseetOnSMView){
 			SimpleUtils.pass("Timesheet Count on DM View " + totalTimesheetsOnDMView + " " +
 					" matches with Timesheet Count on SM View " + totalTimehseetOnSMView);
@@ -2612,7 +2707,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				SimpleUtils.pass("Current Week: " + activeWeek.getText() + " is selected by default on TimeSheet page!");
 			}else {
 				SimpleUtils.fail("Current Week: " + activeWeek.getText() + " is not selected by default on TimeSheet page!"
-				+ " Selected week is: " + activeWeek.getText() + ", but current week on dashboard starts with: " + currentWeek, false);
+						+ " Selected week is: " + activeWeek.getText() + ", but current week on dashboard starts with: " + currentWeek, false);
 			}
 		}else {
 			SimpleUtils.fail("TimeSheet Page: active week not loaded Successfully!", false);
@@ -2645,7 +2740,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		filterTheLocationByName(location);
 		if (isElementLoaded(timesheetApprovalRate, 5)) {
 			SimpleUtils.pass("TimeSheet Page: Get the timesheet approval rate: " + timesheetApprovalRate.getText()
-			+ " for location: " + location + " Successfully");
+					+ " for location: " + location + " Successfully");
 			rate = timesheetApprovalRate.getText().contains("%") ? Integer.parseInt(timesheetApprovalRate.getText().replaceAll("%", "")) : 0;
 		}else {
 			SimpleUtils.fail("TimeSheet Page: timesheet approval rate not loaded Successfully!", false);
@@ -2703,7 +2798,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			SimpleUtils.fail("TimeSheet Page: Search Location Filter not loaded Successfully!", false);
 		}
 	}
-	
+
 	//added by Estelle
 	@FindBy(css = "lg-button[label=\"Approve\"]")
 	private WebElement approveBtn;
@@ -2719,11 +2814,11 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 					SimpleUtils.pass("Can enter "+ locationName+"location's timesheet page");
 				}else
 					SimpleUtils.fail("Enter location"+locationName+"location's timesheet page failed",false);
-			return locationName;
+				return locationName;
 			}
 		}else
 			SimpleUtils.report("There is no location for this district");
-		    return null;
+		return null;
 	}
 
 	// Added By Julie

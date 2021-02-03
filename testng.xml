@@ -195,7 +195,7 @@
                     <include name="verifyTheTeamScheduleOptionAsInternalAdmin" />
 <!--                    <include name="verifyTheFunctionalityOfSwapAndCoverAsInternalAdmin" />-->
                     <include name="verifyTheFeatureOfFilterAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamMember" />
+                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamLead" />
                 </methods>
             </class>
         </classes>
@@ -233,7 +233,7 @@
                     <include name="verifyTheContentOfShiftSwapActivityWithoutApprovalAsInternalAdmin" />
                     <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
-                    <include name="verifyActivityOfClaimOpenShiftAsTeamMember" />
+                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />
                     <include name="verifyActivityOfPublishUpdateSchedule" />
                     <include name="verifyTheNotificationForCancelTimeOffAsTeamMember"/>
 <!--                    <include name="verifyNoNotificationForActivateTMAsStoreManager"/>-->
@@ -444,7 +444,6 @@
                     <include name="verifyRefreshFeatureOnScheduleInDMViewAsInternalAdmin" />
                     <include name="verifyRefreshFeatureOnTimesheetInDMViewAsInternalAdmin" />
                     <include name="verifyRefreshFeatureOnComplianceInDMViewAsInternalAdmin" />
-                    <include name="verifyScheduleStatusOnScheduleDMViewAsInternalAdmin" />
                     <include name="verifyLocationSummaryInScheduleDMViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksForTimesheetInDMViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksSmartCardForTimesheetInDMViewAsInternalAdmin" />
@@ -456,6 +455,10 @@
                     <include name="verifyLocationListAndSubLocationOnTimesheetInDMViewAsInternalAdmin" />
                     <include name="verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyAnalyticTableInTimesheetDMViewAsInternalAdmin" />
+                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
+                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
+                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
+
                 </methods>
             </class>
         </classes>

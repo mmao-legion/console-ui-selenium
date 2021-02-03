@@ -14,6 +14,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.sql.Time;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -397,7 +398,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         */
 
         List<String> textFromChart = new ArrayList<>();
-        if (areListElementVisible(textFromTheChartInLocationSummarySmartCard)&&textFromTheChartInLocationSummarySmartCard.size()!=0){
+        if (areListElementVisible(textFromTheChartInLocationSummarySmartCard, 10)&&textFromTheChartInLocationSummarySmartCard.size()!=0){
             for(int i=0;i<textFromTheChartInLocationSummarySmartCard.size();i++){
                 textFromChart.add(textFromTheChartInLocationSummarySmartCard.get(i).getText());
             }
@@ -472,6 +473,11 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
 
     @FindBy(css = "div.card-carousel-card-primary.card-carousel-card-table")
     private WebElement  scheduleScoreSmartCard;
+
+    @FindBy(css = "[jj-switch-when=\"extraCells\"]")
+    private List<WebElement>  projectedUnderOrOverBudgetByJobTitleHours;
+
+
 
     public void verifyTheScheduleStatusAccountOnScheduleStatusCards() throws Exception {
         Map<String, Integer> scheduleStatusAccountFromScheduleStatusCards = getScheduleStatusAccountFromScheduleStatusCards();
@@ -595,14 +601,18 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     }
 
     @Override
-    public void verifyScheduleStatusAndHoursInScheduleList(Boolean isTAEnv, Boolean isDGEnv, String scheduleStatus, String specificWeek) throws Exception {
-        if (areListElementVisible(schedulesInDMView, 5)
+    public void verifyScheduleStatusAndHoursInScheduleList(String locationName, Boolean isTAEnv, Boolean isDGEnv, String scheduleStatus, String specificWeek) throws Exception {
+        if (areListElementVisible(schedulesInDMView, 10)
                 && schedulesInDMView.size()>0
-                && areListElementVisible(scheduleStatusOnScheduleDMViewPage, 5)
+                && areListElementVisible(scheduleStatusOnScheduleDMViewPage, 10)
                 && scheduleStatusOnScheduleDMViewPage.size()>0
                 && schedulesInDMView.size() == scheduleStatusOnScheduleDMViewPage.size()){
 
-            SchedulePage schedulePage = new ConsoleScheduleNewUIPage();
+            /*
+            *
+            *
+
+
             //Click the schedule by schedule status
             Map<String,String> scheduleHoursOnScheduleDMView = new HashMap<>();
             List<String> scheduleHoursOnScheduleDetailPage = new ArrayList<>();
@@ -630,9 +640,30 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                     schedulePage.createScheduleForNonDGFlowNewUI();
                 }
             }
+             */
+
+            //Select specific location schedule to test, because that not all schedules are available
+            SchedulePage schedulePage = new ConsoleScheduleNewUIPage();
+            Map<String,String> scheduleHoursOnScheduleDMView = new HashMap<>();
+            List<String> scheduleHoursOnScheduleDetailPage = new ArrayList<>();
+            String theSelectedScheduleLocationName = locationName;
+            clickSpecificScheduleByLocationName(theSelectedScheduleLocationName);
+            if (schedulePage.isWeekGenerated()){
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            if (scheduleStatus.equals("Published")){
+                List<String> toCloseDays = new ArrayList<>();
+                schedulePage.editOperatingHoursOnScheduleOldUIPage("8am", "8pm", toCloseDays);
+                schedulePage.createScheduleForNonDGFlowNewUI();
+                schedulePage.publishActiveSchedule();
+            } else if (scheduleStatus.equalsIgnoreCase("In Progress")){
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
 
             //Check the buttons on schedule page
             DecimalFormat df1 = new DecimalFormat("###.#");
+            HashMap<String, String> hoursFromScheduleSMOnDGEnv = new HashMap<>();
+
             switch (scheduleStatus) {
                 case "Not Started":
                     if(!schedulePage.isWeekGenerated()){
@@ -648,6 +679,14 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                     String scheduledHrsOnOverViewPage = df1.format(scheduleOverviewPage.
                             getWeekHoursByWeekElement(scheduleOverviewPage.getOverviewScheduleWeeks().get(0)).get("scheduledHours"));
                     scheduleHoursOnScheduleDetailPage.add(scheduledHrsOnOverViewPage);
+                    hoursFromScheduleSMOnDGEnv.put("BudgetedASM","0");
+                    hoursFromScheduleSMOnDGEnv.put("BudgetedLSA","0");
+                    hoursFromScheduleSMOnDGEnv.put("BudgetedSA","0");
+                    hoursFromScheduleSMOnDGEnv.put("BudgetedOpen","0");
+                    hoursFromScheduleSMOnDGEnv.put("ScheduledASM","0");
+                    hoursFromScheduleSMOnDGEnv.put("ScheduledLSA","0");
+                    hoursFromScheduleSMOnDGEnv.put("ScheduledSA","0");
+                    hoursFromScheduleSMOnDGEnv.put("ScheduledOpen","0");
                     break;
                 case "Published":
                     if(!schedulePage.isPublishButtonLoadedOnSchedulePage()
@@ -660,14 +699,23 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                     } else
                         SimpleUtils.fail("The 'Published' schedule status display incorrectly! ", false);
                     if(isDGEnv){
-                        Map<String, String> hoursFromScheduleSMOnDGEnv = schedulePage.getBudgetNScheduledHoursFromSmartCardOnDGEnv();
+                        hoursFromScheduleSMOnDGEnv = schedulePage.getBudgetNScheduledHoursFromSmartCardOnDGEnv();
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("BudgetedTotal"));
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("ScheduledTotal"));
+                        scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("BudgetedASM"));
+                        scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("BudgetedLSA"));
+                        scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("BudgetedSA"));
+                        scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("BudgetedOpen"));
+                        scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("ScheduledASM"));
+                        scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("ScheduledLSA"));
+                        scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("ScheduledSA"));
+                        scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("ScheduledOpen"));
                     } else {
                         Map<String, String> hoursFromScheduleSMOnNonDGEnv = schedulePage.getBudgetNScheduledHoursFromSmartCard();
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Budget"));
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Scheduled"));
                     }
+
                     break;
                 case "In Progress":
                     if(schedulePage.isPublishButtonLoadedOnSchedulePage()
@@ -676,8 +724,8 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                     } else
                         SimpleUtils.fail("The 'In Progress' schedule status display incorrectly! ", false);
                     if(isDGEnv){
-                        Map<String, String> hoursFromScheduleSMOnDGEnv = schedulePage.getBudgetNScheduledHoursFromSmartCardOnDGEnv();
-                        scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("BudgetTotal"));
+                        hoursFromScheduleSMOnDGEnv = schedulePage.getBudgetNScheduledHoursFromSmartCardOnDGEnv();
+                        scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("BudgetedTotal"));
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("ScheduledTotal"));
                     } else {
                         Map<String, String> hoursFromScheduleSMOnNonDGEnv = schedulePage.getBudgetNScheduledHoursFromSmartCard();
@@ -686,6 +734,54 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                     }
                     break;
             }
+
+            float projectionOpenShiftsFromScheduleDetailPage = 0;
+            switch (specificWeek){
+                case "Current Week":
+                    projectionOpenShiftsFromScheduleDetailPage = schedulePage.getTotalProjectionOpenShiftsHoursForCurrentWeek();
+                    break;
+                case "Next Week":
+                    projectionOpenShiftsFromScheduleDetailPage = schedulePage.newCalcTotalScheduledHourForDayInWeekView();
+                    break;
+            }
+            //Only for DG env: get timesheet hours from Time sheet page
+            HashMap<String, Float> timeSheetDiffHoursByJobTitle = new HashMap<>();
+            float asmHours = 0;
+            float lsaHours = 0;
+            float saHours = 0;
+            if(isDGEnv){
+                TimeSheetPage timeSheetPage = new ConsoleTimeSheetPage();
+                timeSheetPage.clickOnTimeSheetConsoleMenu();
+                timeSheetPage.clickOnWeekDuration();
+                if(specificWeek.equalsIgnoreCase("Previous Week")){
+                    timeSheetPage.navigateToPreviousWeek();
+                }
+                List<WebElement> allTimeSheetRows = timeSheetPage.getTimeSheetWorkersRow();
+                HashMap<String, Float> timeSheetHours = new HashMap<>();
+                if(!specificWeek.equalsIgnoreCase("Next Week")){
+                    if(allTimeSheetRows != null && allTimeSheetRows.size() != 0){
+                        for (WebElement timeSheetRow: allTimeSheetRows){
+
+                            String jobTitle = timeSheetRow.findElement(By.cssSelector(".lg-timesheet-table-improved__name span")).getAttribute("title");
+                            if(jobTitle.equalsIgnoreCase("Assistant Store Manager")){
+                                timeSheetHours = timeSheetPage.getWorkerAllHours(timeSheetRow);
+                                asmHours = asmHours + timeSheetHours.get("DiffHours");
+                            } else if (jobTitle.equalsIgnoreCase("Lead Sales Associate")){
+                                timeSheetHours = timeSheetPage.getWorkerAllHours(timeSheetRow);
+                                lsaHours = lsaHours + timeSheetHours.get("DiffHours");
+                            } else if (jobTitle.equalsIgnoreCase("Sales Associate")){
+                                timeSheetHours = timeSheetPage.getWorkerAllHours(timeSheetRow);
+                                saHours = saHours + timeSheetHours.get("DiffHours");
+                            }
+                        }
+                    } else
+                        SimpleUtils.fail("Get hours from timesheet page fail, the timesheet rows are null! ", false);
+                }
+                timeSheetDiffHoursByJobTitle.put("asmDiffHours", asmHours);
+                timeSheetDiffHoursByJobTitle.put("lsaDiffHours", lsaHours);
+                timeSheetDiffHoursByJobTitle.put("saDiffHours", saHours);
+            }
+
 
             LiquidDashboardPage liquidDashboardPage = new ConsoleLiquidDashboardPage();
             DashboardPage dashboardPage = new ConsoleDashboardPage();
@@ -729,7 +825,8 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             }
             dashboardPage.clickOnRefreshButton();
             scheduleHoursOnScheduleDMView = getAllScheduleInfoFromScheduleInDMViewByLocation(theSelectedScheduleLocationName);
-            Map<String,String> projectedOverBudgetHours= calculateProjectedUnderOrOverBudget(theSelectedScheduleLocationName);
+            Map<String,String> projectedOverBudgetHours= calculateProjectedUnderOrOverBudgetHours(theSelectedScheduleLocationName);
+            Map<String, Float> projectedOverBudgetHoursByJobTitle = calculateProjectedUnderOrOverBudgetByJobTitleHours(hoursFromScheduleSMOnDGEnv, timeSheetDiffHoursByJobTitle);
             switch (scheduleStatus) {
                 case "Not Started":
                     if((isTAEnv
@@ -743,7 +840,11 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                                     (df1.format(Float.parseFloat(projectedOverBudgetHours.get("projectedOverBudgetHours")))))
                             && scheduleHoursOnScheduleDMView.get("projectedUnderBudgetHours").
                             equalsIgnoreCase(projectedOverBudgetHours.get("projectedUnderBudgetHours").equalsIgnoreCase("")?"":
-                                    (df1.format(Float.parseFloat(projectedOverBudgetHours.get("projectedUnderBudgetHours"))))))
+                                    (df1.format(Float.parseFloat(projectedOverBudgetHours.get("projectedUnderBudgetHours")))))
+                            && (!isDGEnv || (scheduleHoursOnScheduleDMView.get("asmHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("asmHours")))
+                            && scheduleHoursOnScheduleDMView.get("lsaHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("lsaHours")))
+                            && scheduleHoursOnScheduleDMView.get("saHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("saHours"))))
+                            && scheduleHoursOnScheduleDMView.get("openHours").equalsIgnoreCase(df1.format(projectionOpenShiftsFromScheduleDetailPage))))
                        ||  (!isTAEnv
                         && scheduleHoursOnScheduleDMView.get("budgetedHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(0))
                             && scheduleHoursOnScheduleDMView.get("scheduledHours").equalsIgnoreCase(scheduleHoursOnScheduleDMView.get(3))              //blocking by https://legiontech.atlassian.net/browse/SCH-1874
@@ -767,7 +868,11 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                                     (df1.format(Float.parseFloat(projectedOverBudgetHours.get("projectedOverBudgetHours")))))
                             && scheduleHoursOnScheduleDMView.get("projectedUnderBudgetHours").
                             equalsIgnoreCase(projectedOverBudgetHours.get("projectedUnderBudgetHours").equalsIgnoreCase("")?"":
-                                    (df1.format(Float.parseFloat(projectedOverBudgetHours.get("projectedUnderBudgetHours"))))))
+                                    (df1.format(Float.parseFloat(projectedOverBudgetHours.get("projectedUnderBudgetHours")))))
+                            && (!isDGEnv || (scheduleHoursOnScheduleDMView.get("asmHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("asmHours")))
+                            && scheduleHoursOnScheduleDMView.get("lsaHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("lsaHours")))
+                            && scheduleHoursOnScheduleDMView.get("saHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("saHours"))))
+                            && scheduleHoursOnScheduleDMView.get("openHours").equalsIgnoreCase(df1.format(projectionOpenShiftsFromScheduleDetailPage))))
                        ||  (!isTAEnv
                             && scheduleHoursOnScheduleDMView.get("budgetedHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(0))
                             && scheduleHoursOnScheduleDMView.get("scheduledHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(1))
@@ -791,7 +896,11 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                                     (df1.format(Float.parseFloat(projectedOverBudgetHours.get("projectedOverBudgetHours")))))
                             && scheduleHoursOnScheduleDMView.get("projectedUnderBudgetHours").
                             equalsIgnoreCase(projectedOverBudgetHours.get("projectedUnderBudgetHours").equalsIgnoreCase("")?"":
-                                    (df1.format(Float.parseFloat(projectedOverBudgetHours.get("projectedUnderBudgetHours"))))))
+                                    (df1.format(Float.parseFloat(projectedOverBudgetHours.get("projectedUnderBudgetHours")))))
+                            && (!isDGEnv || (scheduleHoursOnScheduleDMView.get("asmHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("asmHours")))
+                            && scheduleHoursOnScheduleDMView.get("lsaHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("lsaHours")))
+                            && scheduleHoursOnScheduleDMView.get("saHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("saHours"))))
+                            && scheduleHoursOnScheduleDMView.get("openHours").equalsIgnoreCase(df1.format(projectionOpenShiftsFromScheduleDetailPage))))
                        ||  (!isTAEnv
                             && scheduleHoursOnScheduleDMView.get("budgetedHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(0))
                             && scheduleHoursOnScheduleDMView.get("scheduledHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(1))              //blocking by https://legiontech.atlassian.net/browse/SCH-1874
@@ -809,7 +918,33 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             SimpleUtils.fail("Schedules in schedule DM view page loaded fail! ", false);
     }
 
-    public Map<String, String> calculateProjectedUnderOrOverBudget (String locationName) throws Exception {
+    public Map<String, Float> calculateProjectedUnderOrOverBudgetByJobTitleHours (HashMap<String, String> hoursFromScheduleSMOnDGEnv, HashMap<String, Float> timeSheetDiffHoursByJobTitle) throws Exception {
+        HashMap<String, Float> projectedUnderOrOverBudgetByJobTitleHours = new HashMap();
+
+        if(hoursFromScheduleSMOnDGEnv != null && hoursFromScheduleSMOnDGEnv.size()!=0
+                && timeSheetDiffHoursByJobTitle !=null && timeSheetDiffHoursByJobTitle.size()!=0){
+
+            // Calculation formula： Schedule hours - Budget hours + Timesheet hours = projected Under Or Over Budget By Job Title Hours
+            float asmHours = Float.parseFloat(hoursFromScheduleSMOnDGEnv.get("ScheduledASM"))
+                    - Float.parseFloat(hoursFromScheduleSMOnDGEnv.get("BudgetedASM"))
+                    + timeSheetDiffHoursByJobTitle.get("asmDiffHours");
+            float lsaHours = Float.parseFloat(hoursFromScheduleSMOnDGEnv.get("ScheduledLSA"))
+                    - Float.parseFloat(hoursFromScheduleSMOnDGEnv.get("BudgetedLSA"))
+                    + timeSheetDiffHoursByJobTitle.get("lsaDiffHours");
+            float saHours = Float.parseFloat(hoursFromScheduleSMOnDGEnv.get("ScheduledSA"))
+                    - Float.parseFloat(hoursFromScheduleSMOnDGEnv.get("BudgetedSA"))
+                    + timeSheetDiffHoursByJobTitle.get("saDiffHours");
+
+            projectedUnderOrOverBudgetByJobTitleHours.put("asmHours", asmHours);
+            projectedUnderOrOverBudgetByJobTitleHours.put("lsaHours", lsaHours);
+            projectedUnderOrOverBudgetByJobTitleHours.put("saHours", saHours);
+        } else {
+            SimpleUtils.fail("Cannot calculate the Projected Under Or Over Budget By Job Title Hours, because the hours from schedule or timesheet page are null! ", false);
+        }
+        return projectedUnderOrOverBudgetByJobTitleHours;
+    }
+
+    public Map<String, String> calculateProjectedUnderOrOverBudgetHours (String locationName) throws Exception {
         Map<String, String> projectedUnderOrOverBudgetHours = new HashMap<>();
         String projectedUnderBudgetHours = "";
         String projectedOverBudgetHours = "";
@@ -863,6 +998,20 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                             allScheduleInfo.put("projectedOverBudgetHours", schedulesInDMView.get(i).findElement(By.cssSelector("[text-anchor=\"start\"]")).getText());
                             allScheduleInfo.put("projectedUnderBudgetHours", "");
                         }
+
+                        //add projectedUnderOrOverBudgetByJobTitleHours on TA-DG env
+                        if(areListElementVisible(projectedUnderOrOverBudgetByJobTitleHours, 5)){
+                            List<WebElement> projectedUnderOrOverBudgetByJobTitleHours = schedulesInDMView.get(i).findElements(By.cssSelector("[jj-switch-when=\"extraCells\"]"));
+                            if(areListElementVisible(projectedUnderOrOverBudgetByJobTitleHours, 5)
+                                    && projectedUnderOrOverBudgetByJobTitleHours.size()==4){
+                                allScheduleInfo.put("asmHours", projectedUnderOrOverBudgetByJobTitleHours.get(0).getText());
+                                allScheduleInfo.put("lsaHours", projectedUnderOrOverBudgetByJobTitleHours.get(1).getText());
+                                allScheduleInfo.put("saHours", projectedUnderOrOverBudgetByJobTitleHours.get(2).getText());
+                                allScheduleInfo.put("openHours", projectedUnderOrOverBudgetByJobTitleHours.get(3).getText());
+                                SimpleUtils.pass("Get Projected Under Or Over Budget By Job Title Hours successfully! ");
+                            } else
+                                SimpleUtils.fail("Get Projected Under Or Over Budget By Job Title Hours fail! ", false);
+                        }
                         break;
                     }
                 } else{
@@ -883,15 +1032,17 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
 
     public void verifySmartCardsAreLoadedForPastOrFutureWeek(boolean isPastWeek) throws Exception {
         if(isPastWeek){
-            if(isElementLoaded(scheduleScoreSmartCard, 10)
-                    && isElementLoaded(locationSummarySmartCard, 10)
+            if(
+//                    isElementLoaded(scheduleScoreSmartCard, 10) &&  //Score smart card should be turn off
+                    isElementLoaded(locationSummarySmartCard, 10)
                     && areListElementVisible(scheduleStatusCards, 10)){
                 SimpleUtils.pass("All smart cards on Schedule DM view page for Past week loaded successfully! ");
             } else
                 SimpleUtils.fail("The smart cards on Schedule DM view page for past week loaded fail! ", false);
         } else {
-            if(!isElementLoaded(scheduleScoreSmartCard, 10)
-                    && isElementLoaded(locationSummarySmartCard, 10)
+            if(
+//                    !isElementLoaded(scheduleScoreSmartCard, 10) && //Score smart card should be turn off
+                    isElementLoaded(locationSummarySmartCard, 10)
                     && areListElementVisible(scheduleStatusCards, 10)){
                 SimpleUtils.pass("All smart cards on Schedule DM view page for Past week loaded successfully! ");
             } else
@@ -944,5 +1095,26 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         } else
             SimpleUtils.fail("Schedules Table Headers on Schedule DM view loaded fail! ", false);
         return  isHeaderExist;
+    }
+
+    public void clickSpecificScheduleByLocationName(String locationName){
+        if(areListElementVisible(schedulesInDMView, 10) && schedulesInDMView.size()!=0){
+            boolean isLocationExist = false;
+            for (WebElement scheduleInDMView:schedulesInDMView){
+                String scheduleLocationName = scheduleInDMView.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_UNTOUCHED\"]")).getText();
+                if(scheduleLocationName.equalsIgnoreCase(locationName)){
+                    isLocationExist = true;
+                    click(scheduleInDMView);
+                    SimpleUtils.pass("Click the schedule of "+ locationName+ " successfully! ");
+                    break;
+                }
+            }
+            if(!isLocationExist){
+                SimpleUtils.fail("Click schedule in DM View failed, the location: "+locationName+" is not display in DM view" , false);
+            }
+        }  else{
+            SimpleUtils.fail("Click schedule in DM View failed, there is no schedules display in DM view" , false);
+        }
+
     }
 }
