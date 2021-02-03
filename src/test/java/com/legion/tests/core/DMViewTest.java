@@ -1377,6 +1377,49 @@ public class DMViewTest extends TestBase {
         }
     }
 
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Controls in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyControlsInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            //Validate Controls existing from DM view.
+            //Validate navigate to Controls from DM view.
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls page is not loaded!", controlsNewUIPage.isControlsPageLoaded(), false);
+            locationSelectorPage.isLocationSelected("All Locations");
+
+            //Validate week navigation in DM view getting updated based on schedule planning window settings.
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            String s = controlsNewUIPage.getAdvanceScheduleWeekCountToCreate().replace(" weeks","").replace(" week","");
+            int weekCount = 0;
+            if (SimpleUtils.isNumeric(s)){
+                weekCount = Integer.parseInt(s);
+            } else {
+                SimpleUtils.fail("Advance schedule week count isn't expected!", false);
+            }
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            for (int i = 0; i < weekCount; i++ ){//There should be weekCount next weeks we can navigate to.
+                schedulePage.navigateToNextWeek();
+            }
+            SimpleUtils.assertOnFail("There shouldn't be another next week can access to!", !schedulePage.hasNextWeek(), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")
@@ -1473,11 +1516,14 @@ public class DMViewTest extends TestBase {
         boolean isProjectedOverBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(4).equals(locationNumbersFromLocationSummarySmartCard.get(1));
         boolean isHrsOfUnderOrCoverBudgetCorrect = false;
         if(isTAEnv){
-            isHrsOfUnderOrCoverBudgetCorrect = dataFromLocationSummaryWidget.get(5).equals(textOnTheChartInLocationSummarySmartCard.get(6));
+            isHrsOfUnderOrCoverBudgetCorrect = dataFromLocationSummaryWidget.get(5).split(" ")[0].
+                    equals(textOnTheChartInLocationSummarySmartCard.get(6).split(" ")[0]);
         } else
-            isHrsOfUnderOrCoverBudgetCorrect = dataFromLocationSummaryWidget.get(5).equals(textOnTheChartInLocationSummarySmartCard.get(4));
+            isHrsOfUnderOrCoverBudgetCorrect = dataFromLocationSummaryWidget.get(5).split(" ")[0].
+                    equals(textOnTheChartInLocationSummarySmartCard.get(4).split(" ")[0]);
 
-        SimpleUtils.assertOnFail("The hours on Location Summary widget is inconsistent with the hours on schedule page! ", isBudgetedHrsCorrect && isScheduledHrsCorrect
+        SimpleUtils.assertOnFail("The hours on Location Summary widget is inconsistent with the hours on schedule page! ",
+                isBudgetedHrsCorrect && isScheduledHrsCorrect
                 && isProjectedHrsCorrect && isProjectedWithinBudgetLocationsCorrect
                 && isProjectedOverBudgetLocationsCorrect&&isHrsOfUnderOrCoverBudgetCorrect, false);
 
@@ -1559,22 +1605,22 @@ public class DMViewTest extends TestBase {
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
 
             //Validate the schedule status and hours on schedule list
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(false, false, "Published", "Current Week");   //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(false, false, "Not Started", "Current Week");       //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
-            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(false, false, "In Progress", "Current Week");
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Published", "Current Week");   //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Not Started", "Current Week");       //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "In Progress", "Current Week");
 
             //Validate the schedule status and hours on schedule list
-            schedulePage.navigateToNextWeek();
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(false, false, "Published", "Next Week");        //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(false, false, "Not Started", "Next Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
-            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(false, false, "In Progress", "Next Week");
+//            schedulePage.navigateToNextWeek();
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Published", "Next Week");        //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Not Started", "Next Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "In Progress", "Next Week");
 
             //Validate the schedule status and hours on schedule list
-            schedulePage.navigateToPreviousWeek();
-            schedulePage.navigateToPreviousWeek();
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(false, false, "Published", "Previous Week");        //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(false, false, "Not Started", "Previous Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(false, false, "In Progress", "Previous Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
+//            schedulePage.navigateToPreviousWeek();
+//            schedulePage.navigateToPreviousWeek();
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Published", "Previous Week");        //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Not Started", "Previous Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "In Progress", "Previous Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
 
             //Validate the numbers on Schedule Status Cards
             scheduleDMViewPage.verifyTheScheduleStatusAccountOnScheduleStatusCards();
@@ -1602,22 +1648,22 @@ public class DMViewTest extends TestBase {
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
 
             //Validate the schedule status and hours on schedule list
-            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, false, "Published", "Current Week");
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, false, "Not Started", "Current Week");            //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
-            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, false, "In Progress", "Current Week");
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Published", "Current Week");
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Not Started", "Current Week");            //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "In Progress", "Current Week");
 
             //Validate the schedule status and hours on schedule list
-            schedulePage.navigateToNextWeek();
-            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, false, "Published", "Next Week");
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, false, "Not Started", "Next Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
-            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, false, "In Progress", "Next Week");
+//            schedulePage.navigateToNextWeek();
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Published", "Next Week");
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Not Started", "Next Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "In Progress", "Next Week");
 
             //Validate the schedule status and hours on schedule list
-            schedulePage.navigateToPreviousWeek();
-            schedulePage.navigateToPreviousWeek();
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, false, "Published", "Previous Week");   //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, false, "Not Started", "Previous Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, false, "In Progress", "Previous Week"); //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482
+//            schedulePage.navigateToPreviousWeek();
+//            schedulePage.navigateToPreviousWeek();
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Published", "Previous Week");   //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Not Started", "Previous Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "In Progress", "Previous Week"); //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482
 
             //Validate the numbers on Schedule Status Cards
             scheduleDMViewPage.verifyTheScheduleStatusAccountOnScheduleStatusCards();
@@ -1645,22 +1691,22 @@ public class DMViewTest extends TestBase {
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
 
             //Validate the schedule status and hours on schedule list
-            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, true, "Published", "Current Week");
-            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, true, "Not Started", "Current Week");            //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
-            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, true, "In Progress", "Current Week");       // comment it because bug: https://legiontech.atlassian.net/browse/SCH-1653
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "Published", "Current Week");
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "Not Started", "Current Week");            //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "In Progress", "Current Week");       // comment it because bug: https://legiontech.atlassian.net/browse/SCH-1653
 
             //Validate the schedule status and hours on schedule list
-            schedulePage.navigateToNextWeek();
-            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, true, "Published", "Next Week");
-            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, true, "Not Started", "Next Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
-            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, true, "In Progress", "Next Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1653
+//            schedulePage.navigateToNextWeek();
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "Published", "Next Week");
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "Not Started", "Next Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "In Progress", "Next Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1653
 
             //Validate the schedule status and hours on schedule list
-            schedulePage.navigateToPreviousWeek();
-            schedulePage.navigateToPreviousWeek();
-            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, true, "Published", "Previous Week");   //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482
-            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, true, "Not Started", "Previous Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
-            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(true, true, "In Progress", "Previous Week"); //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482
+//            schedulePage.navigateToPreviousWeek();
+//            schedulePage.navigateToPreviousWeek();
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "Published", "Previous Week");   //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "Not Started", "Previous Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "In Progress", "Previous Week"); //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482
 
             //Validate the numbers on Schedule Status Cards
             scheduleDMViewPage.verifyTheScheduleStatusAccountOnScheduleStatusCards();

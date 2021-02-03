@@ -176,4 +176,5 @@ public interface TimeSheetPage {
 	public boolean isTimesheetDMView() throws Exception;
 	public List<String> getDataFromTimesheetTableForGivenLocationInDMView(String location) throws Exception;
 	public int getTotalTimesheetInSMView() throws Exception;
+	public HashMap<String, Float> getWorkerAllHours(WebElement workerRow);
 }

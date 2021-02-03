@@ -563,4 +563,5 @@ public interface SchedulePage {
 	public HashMap<String, Integer> getValueOnUnplannedClocksSmartCardAndVerifyInfo() throws Exception;
 	public HashMap<String, String> getBudgetNScheduledHoursFromSmartCardOnDGEnv() throws Exception;
 	public void clickSpecificLocationInDMViewAnalyticTable(String location) throws Exception;
+	public boolean hasNextWeek() throws Exception;
 }

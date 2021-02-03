@@ -183,7 +183,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "[ng-click=\"regenerateFromOverview()\"] button")
     private WebElement generateSheduleButton;
 
-    @FindBy(css = "[ng-click=\"regenerateFromManagerView()\"]")
+    @FindBy(css = "[ng-click*=\"regenerateFromManagerView()\"]")
     private WebElement reGenerateScheduleButton;
 
     @FindBy(css = "[label='Generate Schedule']")
@@ -3979,6 +3979,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (isReGenerateButtonLoadedForManagerView()) {
                         click(reGenerateScheduleButton);
                         generateScheduleFromCreateNewScheduleWindow(activeWeekText);
+                        selectWhichWeekToCopyFrom("SUGGESTED");
+                        clickOnFinishButtonOnCreateSchedulePage();
                     } else if (isElementLoaded(publishSheduleButton, 5)) {
                         SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
                     } else {
@@ -11362,11 +11364,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> rowDataInOverviewPage;
     @FindBy (xpath = "//div[contains(@class,\"background-current-week-legend-calendar\")]/preceding-sibling::div[1]")
     private WebElement lastWeekNavigation;
+    @FindBy (css = "i.fa-angle-left")
+    private WebElement leftAngle;
     @Override
     public List<String> getOverviewData() throws Exception {
         List<String> resultList = new ArrayList<String>();
-        if(isElementLoaded(lastWeekNavigation,10)){
-            click(lastWeekNavigation);// click on last in overview page
+        if(isElementLoaded(leftAngle,10)){
+            click(leftAngle);
+            if (isElementLoaded(lastWeekNavigation,10)){
+                click(lastWeekNavigation);// click on last in overview page
+            }
         }
         waitForSeconds(3);
         if (areListElementVisible(rowDataInOverviewPage,10)){
@@ -12559,7 +12566,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "[ng-click=\"$dismiss()\"] button[ng-click=\"$ctrl.onSubmit({type:'saveas',label:$ctrl.label})\"]")
     private WebElement editOperatingHourCancelButton;
 
-    @FindBy(css = "[ng-click=\"save()\"] button[ng-click=\"$ctrl.onSubmit({type:'saveas',label:$ctrl.label})\"]")
+    @FindBy(css = "[ng-click=\"save()\"] button")
     private WebElement editOperatingHourSaveButton;
 
 
@@ -12568,7 +12575,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(operatingHours, 5) && operatingHours.size()==7){
             for (WebElement operatingHour : operatingHours){
                 WebElement weekDay = operatingHour.findElement(By.cssSelector("td[class=\"ng-binding\"]"));
-                WebElement editButton = operatingHour.findElement(By.cssSelector("[ng-if=\"canEditWorkingHours\"]"));
+                WebElement editButton = operatingHour.findElement(By.cssSelector("span[ng-if=\"canEditWorkingHours\"]"));
                 WebElement openCloseHours = operatingHour.findElement(By.cssSelector("[ng-class=\"{dirty: day.isOverridden}\"]"));
 
                 if (isElementLoaded(weekDay, 5) && !weekDay.getText().equals("")
@@ -13184,5 +13191,24 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
+    public boolean hasNextWeek() throws Exception {
+        int currentWeekIndex = -1;
+        if (areListElementVisible(currentWeeks, 10)) {
+            for (int i = 0; i < currentWeeks.size(); i++) {
+                String className = currentWeeks.get(i).getAttribute("class");
+                if (className.contains("day-week-picker-period-active")) {
+                    currentWeekIndex = i;
+                }
+            }
+            if (currentWeekIndex == (currentWeeks.size() - 1) && !isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
+                return false;
+            }else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
 }
 
