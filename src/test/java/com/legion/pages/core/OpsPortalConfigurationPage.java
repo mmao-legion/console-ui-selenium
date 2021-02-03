@@ -49,11 +49,23 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="[class=\"lg-table ng-scope\"] tbody")
 	private List<WebElement> templatesList;
 
+	@FindBy(css="[class=\"lg-table ng-scope\"] button span.ng-binding")
+	private List<WebElement> templateNameList;
+
 	@FindBy(css="td.toggle i[class=\"fa fa-caret-right\"]")
 	private WebElement templateToggleButton;
 
-	@FindBy(css="[class=\"lg-table ng-scope\"] tbody tr.hasChildren.expanded")
-	private WebElement publishedVersionTemplate;
+	@FindBy(css="lg-button[label=\"Edit\"]")
+	private WebElement editButton;
+
+	@FindBy(css="div[class=\"lg-modal\"]")
+	private WebElement editTemplatePopupPage;
+
+	@FindBy(css="lg-button[label=\"OK\"]")
+	private WebElement okButton;
+
+	@FindBy(css="lg-button[label=\"Cancel\"]")
+	private WebElement cancelButton;
 
 	@FindBy(css="div.lg-page-heading h1")
 	private WebElement templateTitleOnDetailsPage;
@@ -70,8 +82,55 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="form[name=\"$ctrl.generalForm\"]")
 	private WebElement templateDetailsPageForm;
 
+	@FindBy(css="lg-button[label=\"Save as draft\"] i.fa.fa-sort-down")
+	private WebElement dropdownArrowButton;
+
+	@FindBy(css="lg-button[label=\"Save as draft\"] h3[ng-click*=\"publishNow\"]")
+	private WebElement publishNowButton;
+
+	@FindBy(css="lg-button[label=\"Save as draft\"] h3[ng-click*=\"saveAsDraft\"]")
+	private WebElement saveAsDraftButton;
+
+	@FindBy(css="lg-button[label=\"Save as draft\"] h3[ng-click*= publishLater]")
+	private WebElement publishLaterButton;
+
 	@FindBy(css="lg-button[label=\"Close\"]")
 	private WebElement closeBTN;
+
+	@FindBy(css="table.lg-table.ng-scope tbody")
+	private WebElement workRoleList;
+
+	@FindBy(css="lg-template-rule-container img.settings-add-icon")
+	private WebElement addIconOnRulesListPage;
+
+	@FindBy(css="li[ng-click*=\"'Staffing\"]")
+	private WebElement addStaffingRuleButton;
+
+	@FindBy(css="li[ng-click*=\"AdvancedStaffing\"]")
+	private WebElement addAdvancedStaffingRuleButton;
+
+	@FindBy(css="sub-content-box[box-title=\"Days of Week\"]")
+	private WebElement daysOfWeekSection;
+
+	@FindBy(css="sub-content-box[box-title=\"Dynamic Group\"]")
+	private WebElement dynamicGroupSection;
+
+	@FindBy(css="sub-content-box[box-title=\"Time of Day\"]")
+	private WebElement timeOfDaySection;
+
+	@FindBy(css="sub-content-box[box-title=\"Meal and Rest Breaks\"]")
+	private WebElement mealAndRestBreaksSection;
+
+	@FindBy(css="sub-content-box[box-title=\"Number of Shifts\"]")
+	private WebElement numberOfShiftsSection;
+
+	@FindBy(css="sub-content-box[box-title=\"Badges\"]")
+	private WebElement badgesSection;
+
+	@FindBy(css="lg-button[label=\"Save\"]")
+	private WebElement saveButton;
+
+
 
 	public enum configurationLandingPageTemplateCards{
 		OperatingHours("Operating Hours"),
@@ -97,6 +156,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			click(configurationTab);
 			waitForSeconds(20);
 			if(categoryOfTemplateList.size()!=0){
+				checkAllTemplateCards();
 				SimpleUtils.pass("User can click configuration tab successfully");
 				}else{
 				SimpleUtils.fail("User can't click configuration tab",false);
@@ -111,18 +171,24 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			for(WebElement configurationCard:configurationCardsList){
 				if(configurationCard.getText().equals(configurationLandingPageTemplateCards.OperatingHours.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.OperatingHours.getValue() + " card is showing.");
+					continue;
 				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.SchedulingPolicies.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.SchedulingPolicies.getValue() + " card is showing.");
+					continue;
 				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.ScheduleCollaboration.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.ScheduleCollaboration.getValue() + " card is showing.");
+					continue;
 				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.TimeAttendance.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.TimeAttendance.getValue() + " card is showing.");
+					continue;
 				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.Compliance.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.Compliance.getValue() + " card is showing.");
+					continue;
 				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.SchedulingRules.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.SchedulingRules.getValue() + " card is showing.");
+					continue;
 				}else{
-					SimpleUtils.fail("Configuration template cards are incorrect",false);
+					SimpleUtils.fail("Configuration template cards are loaded incorrect",false);
 				}
 			}
 		}else{
@@ -141,6 +207,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 	}
 
+// open the first one template on template list page
 	@Override
 	public void clickOnTemplateName(String templateType) throws Exception {
 		if(isTemplateListPageShow()){
@@ -152,18 +219,18 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				waitForSeconds(20);
 				if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
 				&&isElementEnabled(templateDetailsPageForm)){
-					SimpleUtils.pass("User can open one " + templateType + " published template succseefully");
+					SimpleUtils.pass("User can open one " + templateType + " template succseefully");
 				}else{
-					SimpleUtils.fail("User open one " + templateType + " published template failed",false);
+					SimpleUtils.fail("User open one " + templateType + " template failed",false);
 				}
 			}else{
 				clickTheElement(templatesList.get(0).findElement(By.cssSelector("button")));
 				waitForSeconds(20);
 				if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
 						&&isElementEnabled(templateDetailsPageForm)){
-					SimpleUtils.pass("User can open one " + templateType + " published template succseefully");
+					SimpleUtils.pass("User can open one " + templateType + " template succseefully");
 				}else{
-					SimpleUtils.fail("User open one " + templateType + " published template failed",false);
+					SimpleUtils.fail("User open one " + templateType + " template failed",false);
 				}
 			}
 
@@ -199,5 +266,51 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		clickOnConfigurationCrad(templateType);
 		clickOnTemplateName(templateType);
 	}
+
+
+//open the specify template to edit or view details
+	@Override
+	public void clickOnSpecifyTemplateName(String templateName,String editOrViewMode) throws Exception {
+
+		if(isTemplateListPageShow()){
+			for(int i=0;i<templateNameList.size();i++){
+				if(templateNameList.get(i).getText()!=null && templateNameList.get(i).getText().trim().equals(templateName)){
+					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+					if(classValue!=null && classValue.contains("hasChildren")){
+						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
+						waitForSeconds(3);
+						if(editOrViewMode!=null && editOrViewMode.toLowerCase().contains("edit")){
+							clickTheElement(templatesList.get(i).findElement(By.cssSelector("tr.child-row.ng-scope button")));
+						}else{
+							clickTheElement(templatesList.get(i).findElement(By.cssSelector("button")));
+						}
+						waitForSeconds(15);
+						if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
+								&&isElementEnabled(templateDetailsPageForm)){
+							SimpleUtils.pass("User can open " + templateName + " template succseefully");
+						}else{
+							SimpleUtils.fail("User open " + templateName + " template failed",false);
+						}
+					}else{
+						clickTheElement(templatesList.get(i).findElement(By.cssSelector("button")));
+						waitForSeconds(15);
+						if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
+								&&isElementEnabled(templateDetailsPageForm)){
+							SimpleUtils.pass("User can open " + templateName + " template succseefully");
+						}else{
+							SimpleUtils.fail("User open " + templateName + " template failed",false);
+						}
+					}
+					break;
+				}else if(i==templateNameList.size()-1){
+					SimpleUtils.fail("Can't find the specify template",false);
+				}
+			}
+		}else{
+			SimpleUtils.fail("There is No template now",false);
+		}
+	}
+
+
 
 }

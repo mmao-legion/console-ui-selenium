@@ -12,4 +12,5 @@ public interface ConfigurationPage {
     public void clickOnConfigurationCrad(String templateType) throws Exception;
     public void clickOnTemplateName(String templateType) throws Exception;
     public void goToTemplateDetailsPage(String templateType) throws Exception;
+    public void clickOnSpecifyTemplateName(String templateName,String editOrViewMode) throws Exception;
 }
