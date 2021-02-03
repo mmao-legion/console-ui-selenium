@@ -53,7 +53,7 @@
             <class name="com.legion.tests.core.ScheduleTest">
                 <methods>
                     <include name="verifyTheFeatureOfFilterAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamMember" />
+                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamLead" />
                 </methods>
             </class>
         </classes>
@@ -84,7 +84,7 @@
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
                     <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
                     <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
-                    <include name="verifyActivityOfClaimOpenShiftAsTeamMember" />
+                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />
                     <include name="verifyActivityOfPublishUpdateSchedule" />
                     <include name="verifyTheNotificationForCancelTimeOffAsTeamMember"/>
                     <include name="verifyTheNotificationForRequestTimeOffAsTeamMember"/>

@@ -1183,7 +1183,7 @@ public class ScheduleTest extends TestBase{
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the availibility and functionality of claiming open shift popup")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheFunctionalityOfClaimOpenShiftAsTeamMember(String browser, String username, String password, String location)
+	public void verifyTheFunctionalityOfClaimOpenShiftAsTeamLead(String browser, String username, String password, String location)
 			throws Exception {
 	  	try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
