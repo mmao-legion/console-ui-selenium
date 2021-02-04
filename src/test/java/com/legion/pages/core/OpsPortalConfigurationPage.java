@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.legion.tests.TestBase.flagForTestRun;
 import static com.legion.tests.TestBase.propertyMap;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -388,6 +389,58 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.pass("New advanced staffing rule page shows well");
 		}else{
 			SimpleUtils.fail("New advanced staffing rule page doesn't show well",false);
+		}
+	}
+
+	@FindBy(css="sub-content-box[box-title=\"Days of Week\"] input")
+	private List<WebElement> daysOfWeekCheckBoxList;
+
+	@FindBy(css="sub-content-box[box-title=\"Days of Week\"] label.input-label")
+	private List<WebElement> daysOfWeekLabelList;
+
+	@Override
+	public boolean isDaysOfWeekFormulaCheckBoxChecked(){
+		boolean flag = false;
+		if(daysOfWeekCheckBoxList.size()!=0){
+			String classValueOfCheckBox = daysOfWeekCheckBoxList.get(0).getAttribute("class");
+			if(classValueOfCheckBox.contains("ng-not-empty")){
+				SimpleUtils.pass("The formula check box of days of week is checked already!");
+				flag = true;
+			}else {
+				SimpleUtils.pass("The formula check box of days of week is NOT checked yet!");
+				flag = false;
+			}
+		}
+		return flag;
+	}
+
+	@Override
+	public void verifyCheckBoxOfDaysOfWeekSection() throws Exception {
+		if(isDaysOfWeekFormulaCheckBoxChecked()){
+			if(daysOfWeekCheckBoxList.size()==1){
+				SimpleUtils.pass("The select day sub-section is disappeared after check the formula checkbox");
+			}else{
+				SimpleUtils.fail("The select day sub-section is NOT disappeared after check the formula checkbox",true);
+			}
+		}else {
+			//verify check box for each day section
+			for(int i = 1; i < daysOfWeekCheckBoxList.size(); i++){
+				if(i<daysOfWeekCheckBoxList.size()-1){
+					clickTheElement(daysOfWeekCheckBoxList.get(i));
+				}
+				if(daysOfWeekCheckBoxList.get(i).getAttribute("class").contains("ng-not-empty")){
+					SimpleUtils.pass(daysOfWeekLabelList.get(i).getText().trim() + " has been selected successfully!");
+				}else{
+					SimpleUtils.fail(daysOfWeekLabelList.get(i).getText().trim() + " has NOT been selected successfully!",false);
+				}
+			}
+			//verify check box for Custom formula
+			clickTheElement(daysOfWeekCheckBoxList.get(0));
+			if(daysOfWeekCheckBoxList.get(0).getAttribute("class").contains("ng-not-empty") && daysOfWeekCheckBoxList.size() ==1){
+				SimpleUtils.pass(daysOfWeekLabelList.get(0).getText().trim() + " has been selected successfully!");
+			}else{
+				SimpleUtils.fail(daysOfWeekLabelList.get(0).getText().trim() + " has NOT been selected successfully!",false);
+			}
 		}
 	}
 

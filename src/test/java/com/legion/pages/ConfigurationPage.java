@@ -17,4 +17,6 @@ public interface ConfigurationPage {
     public void selectWorkRoleToEdit(String workRole) throws Exception;
     public void checkTheEntryOfAddAdvancedStaffingRule() throws Exception;
     public void verifyAdvancedStaffingRulePageShowWell() throws Exception;
+    public void verifyCheckBoxOfDaysOfWeekSection() throws Exception;
+    public boolean isDaysOfWeekFormulaCheckBoxChecked();
 }
