@@ -2,12 +2,13 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite verbose ="0" thread-count="10" name="LegionTest">
     <parameter name="environment" value="QA"/>
-    <parameter name="testRail" value="no"/>
-
+    <parameter name="testRail" value="Yes"/>
+    <parameter name="testRailRunName" value="Automation Regression OP"/>
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
+    <!--======================================================Start - This is OP tests===================================================-->
 
     <test name="Location Test">
         <classes>
@@ -17,29 +18,97 @@
                     <include name="verifyCreateMockLocationAndNavigate" />
                     <include name="verifyCreateNSOLocationAndNavigate" />
                     <include name="verifyDisableEnableLocationFunction" />
-                    <include name="verifyCreateMSLocationGroupWithRegularTypeFunction" />
-                    <include name="verifyCreateP2PLocationGroupWithRegularTypeFunction" />
+                    <!--                    <include name="verifyImportLocationDistrict" />-->
+                    <include name="verifyExportLocationDistrict" />
+
+                    <include name="verifyMSLocationGroupFunctionForRegular" />
+                    <include name="verifyChangeMSToP2P" />
+                    <include name="verifyP2PLocationGroupFunctionForRegular" />
+                    <include name="verifyChangeP2PToMS" />
+
+                    <!--                    <include name="verifyCreateMSLocationGroupWithRegularTypeFunction" />-->
+                    <!--                    <include name="verifyUpdateMSLocationGroupDistrictFunction" />-->
+                    <!--                    <include name="verifyDisableEnableParentChildLocationInLGMS" />-->
+
+
+                    <!--                    <include name="verifyCreateP2PLocationGroupWithRegularTypeFunction" />-->
+                    <!--                    <include name="verifyUpdateP2PLocationGroupDistrictFunction" />-->
+                    <!--                    <include name="verifyDisableEnableParentChildLocationInLGP2P" />-->
+
+
+                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
+                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />
+                    <include name="verifyNoLocationGroupSettingForMock" />
+
                     <include name="verifyChangeNoneLocationToChild" />
                     <include name="verifyChangeNoneLocationToP2PParent" />
                     <include name="verifyChangeNoneLocationToMSParent" />
-                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
-                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />
+                    <!--                    <include name="verifyAddNewDistricBtnAsInternalAdmin" />-->
+
+
+
+                    <!--                    <include name="verifyChangeMSChildLocationToNoneFunction" />-->
+                    <!--                    <include name="verifyChangeMSParentLocationToNoneFunction" />-->
+                    <include name="verifyChangeMSLocationsToNoneFunction" />
+                    <include name="verifyChangeP2PLocationsToNoneFunction" />
+                    <!--                    <include name="verifyChangeP2PParentLocationToNoneFunction" />-->
+                    <!--                    <include name="verifyChangeP2PParentLocationToNoneFunction" />-->
+
+                    <!--                    District test cases-->
+                    <include name="verifyDistrictListPageLoading" />
                     <include name="verifySearchDistrictFunction" />
-                    <include name="verifyAddOrUpdateDistrictFunction" />
+                    <!--                    <include name="verifyAddOrUpdateDistrictFunction" />-->
                     <include name="verifyDisableEnableDistrictFunction" />
                 </methods>
             </class>
         </classes>
     </test>
 
-    <test name="Job Test">
+    <test name="Navigation Test">
         <classes>
-            <class name="com.legion.tests.core.JobTest">
+            <class name="com.legion.tests.core.NewNavigationFlowTest">
                 <methods>
-                    <include name="verifyJobSearchFunction" />
-                    <include name="verifyCreateScheduleJobFunction" />
+                    <include name="verifyLocationProfilePageInControls" />
+                    <include name="verifyManagerLocationForOneUserInControlsInControls" />
+                    <!--                    <include name="verifyLocationListFunctionInTimesheet" />-->
+                    <!--                    <include name="verifyLegionBasicNavigationFunctionIn" />-->
+                    <include name="verifyDashboardViewAsInternalAdmin" />
+                    <include name="verifyDashboardViewAsDistrictManager" />
+                    <include name="verifyDashboardViewAsStoreManager" />
+                    <include name="verifyNavigationBarSearchDistrictFunctionInternalAdmin" />
+                    <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />
+                    <include name="verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin"/>
+                    <include name="verifyNavigationBarRecentlyViewListAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
     </test>
-</suite> 
+    <test name="Job Test">
+        <classes>
+            <class name="com.legion.tests.core.JobTest">
+                <methods>
+                    <include name="verifyJobLandingPage" />
+                    <include name="verifyJobSearchFunction" />
+<!--                    <include name="verifyCreateScheduleJobFunction" />-->
+                    <include name="verifyCheckJobDetailsFunction" />
+                    <include name="verifyCopyStopResumeAndArchiveJobFunctionFunction" />
+                    <include name="verifyFilterFunction" />
+
+
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Configuration Test">
+        <classes>
+            <class name="com.legion.tests.core.ConfigurationTest">
+                <methods>
+                    <include name="verifyUserCanOpenEachTypeTemplate"/>
+                    <include name="verifyNewAdvancedStaffingRulePage"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite> <!-- Suite -->

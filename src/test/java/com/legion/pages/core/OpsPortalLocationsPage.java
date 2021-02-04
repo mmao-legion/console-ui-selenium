@@ -1129,17 +1129,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		searchLocation(locationToNone);
 		if (locationRows.size()>0) {
 			if (verifyIsThisLocationGroup()) {
-//				for (WebElement eachRow: locationRows
-//					 ) {
-//					if (eachRow.findElement(By.cssSelector("button[type='button']")).getText().contains(locationToNone)) {
-//						click(eachRow.findElement(By.cssSelector("button[type='button']")));
-//					}
-//				}
 				List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
 				click(locationDetailsLinks.get(0));
 				click(editLocationBtn);
 				selectByVisibleText(locationGroupSelect, "None");
-				waitForSeconds(3);
+				waitForSeconds(5);
 				click(okBtnInLocationGroupConfirmPage);
 				scrollToBottom();
 				click(saveBtnInUpdateLocationPage);

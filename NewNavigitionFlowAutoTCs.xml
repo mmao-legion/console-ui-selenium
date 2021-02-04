@@ -16,7 +16,7 @@
                 <methods>
                     <include name="verifyLocationProfilePageInControls" />
                     <include name="verifyManagerLocationForOneUserInControlsInControls" />
-                    <include name="verifyLocationListFunctionInTimesheet" />
+<!--                    <include name="verifyLocationListFunctionInTimesheet" />-->
 <!--                    <include name="verifyLegionBasicNavigationFunctionIn" />-->
                     <include name="verifyDashboardViewAsInternalAdmin" />
                     <include name="verifyDashboardViewAsDistrictManager" />

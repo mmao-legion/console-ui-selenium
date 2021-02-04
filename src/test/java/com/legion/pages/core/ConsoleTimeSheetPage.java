@@ -2705,7 +2705,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	private WebElement approveBtn;
 	@Override
 	public String verifyLocationList() throws Exception {
-		if (areListElementVisible(timesheetTblRow,5)) {
+		if (areListElementVisible(timesheetTblRow,35)) {
 			if (timesheetTblRow.size()>0) {
 				SimpleUtils.pass("Location list load successfully");
 				String[] locationNameContext =timesheetTblRow.get(0).getText().split("\n");
