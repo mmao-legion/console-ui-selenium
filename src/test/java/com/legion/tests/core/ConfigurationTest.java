@@ -106,7 +106,7 @@ public class ConfigurationTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "New advanced staffing rules page verify")
+    @TestName(description = "Days of Week check box validation")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCheckBoxOfDaysOfWeek(String browser, String username, String password, String location) throws Exception {
 
