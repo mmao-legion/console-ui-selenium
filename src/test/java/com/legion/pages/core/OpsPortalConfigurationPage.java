@@ -7,8 +7,10 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
@@ -443,6 +445,71 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}
 	}
+
+	@FindBy(css="sub-content-box[box-title=\"Days of Week\"] textarea")
+	private WebElement formulaTextAreaOfDaysOfWeekSection;
+
+	@Override
+	public void inputFormulaInForDaysOfWeekSection(String formula) throws Exception{
+		if(isDaysOfWeekFormulaCheckBoxChecked()){
+			clickTheElement(formulaTextAreaOfDaysOfWeekSection);
+			formulaTextAreaOfDaysOfWeekSection.sendKeys(formula);
+		}else{
+			clickTheElement(daysOfWeekCheckBoxList.get(0));
+			clickTheElement(formulaTextAreaOfDaysOfWeekSection);
+			formulaTextAreaOfDaysOfWeekSection.sendKeys(formula);
+		}
+
+		String formulaValue = getDriver().findElement(By.cssSelector("sub-content-box[box-title=\"Days of Week\"] input-field[type=\"textarea\"] ng-form div")).getAttribute("innerText").trim();
+		if(formulaValue.equals(formula)){
+			SimpleUtils.pass("User can input formula for days of week successfully!");
+		}else{
+			SimpleUtils.fail("User can NOT input formula for days of week successfully!",false);
+		}
+
+	}
+
+	//获取输入的分钟数可在此元素基础上findelement(css="div")即可
+	@FindBy(css="div[class=\"mt-20\"] input-field[value*=\"timeEventOffsetMinutes\"]")
+	private WebElement shiftStartOffsetMinutes;
+	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeUnitOptions\"]")
+	private WebElement shiftStartTimeUnitOptions;
+	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeUnitOptions\"] select option")
+	private List<WebElement> shiftStartTimeUnitOptionsList;
+	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"eventPointOptions\"]")
+	private WebElement shiftStartEventPointOptions;
+	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"eventPointOptions\"] select option")
+	private List<WebElement> shiftStartEventPointOptionsList;
+	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeEventOptions\"]")
+	private WebElement shiftStartTimeEventOptions;
+	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeEventOptions\"] select option")
+	private List<WebElement> shiftStartTimeEventOptionsList;
+//	ng-valid-parse 用这个元素的class属性里面包含这个字符串去判断有没有被选中radio button
+	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.duartion input-field[type=\"radio\"] ng-form")
+	private WebElement shiftDuartionRadioButton;
+	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.duartion input-field[type=\"number\"] div")
+	private WebElement shiftDuartionMinutes;
+	//	ng-valid-parse 用这个元素的class属性里面包含这个字符串去判断有没有被选中radio button
+	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[type=\"radio\"] ng-form")
+	private WebElement shiftEndRadioButton;
+	//获取输入的分钟数可在此元素基础上findelement(css="div")即可
+	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[value*=\"timeEventOffsetMinutes\"]")
+	private WebElement shiftEndOffsetMinutes;
+	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.timeUnitOptions\"]")
+	private WebElement shiftEndTimeUnitOptions;
+	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.timeUnitOptions\"] select option")
+	private WebElement shiftEndTimeUnitOptionsList;
+	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.eventPointOptions\"]")
+	private WebElement shiftEndEventPointOptions;
+	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.eventPointOptions\"] select option")
+	private WebElement shiftEndEventPointOptionsList;
+	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"]")
+	private WebElement shiftEndTimeEventOptions;
+	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"] select option")
+	private WebElement shiftEndTimeEventOptionsList;
+
+
+
 
 
 }

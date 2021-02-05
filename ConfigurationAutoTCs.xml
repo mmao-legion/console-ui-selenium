@@ -18,6 +18,7 @@
                     <include name="verifyUserCanOpenEachTypeTemplate"/>
                     <include name="verifyNewAdvancedStaffingRulePage"/>
                     <include name="verifyCheckBoxOfDaysOfWeek"/>
+                    <include name="verifyInputFormulaForDaysOfWeek"/>
                 </methods>
             </class>
         </classes>

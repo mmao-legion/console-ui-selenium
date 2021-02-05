@@ -19,4 +19,5 @@ public interface ConfigurationPage {
     public void verifyAdvancedStaffingRulePageShowWell() throws Exception;
     public void verifyCheckBoxOfDaysOfWeekSection() throws Exception;
     public boolean isDaysOfWeekFormulaCheckBoxChecked();
+    public void inputFormulaInForDaysOfWeekSection(String formula) throws Exception;
 }
