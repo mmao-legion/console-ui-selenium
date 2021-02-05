@@ -82,4 +82,5 @@ public interface ForecastPage<pubic> {
 	public void clickOnSaveBtnOnConfirmPopup() throws Exception;
 	public void verifyPeakShoppersPeakTimeTotalShoppersEditedDataInDayView () throws Exception;
 	public List<String> getTooltipInfoWhenView() throws Exception;
+	public HashMap<String, Float> getInsightDataInShopperDayView() throws Exception;
 }

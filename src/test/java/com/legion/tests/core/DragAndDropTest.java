@@ -985,8 +985,9 @@ public class DragAndDropTest extends TestBase {
             SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-            controlsNewUIPage.clickOnGlobalLocationButton();
             controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+            controlsNewUIPage.clickOnGlobalLocationButton();
+
             controlsNewUIPage.enableOverRideAssignmentRuleAsNo();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
@@ -1021,6 +1022,7 @@ public class DragAndDropTest extends TestBase {
             String firstNameOfTM2 = shiftInfo2.get(0);
             String workRoleOfTM2 = shiftInfo2.get(4);
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.selectWorkRole(workRoleOfTM2);
             schedulePage.clearAllSelectedDays();

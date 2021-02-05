@@ -854,7 +854,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					By.cssSelector("div.lg-advanced-box__toggle"));
 			if (isElementLoaded(schedulingPoliciesShiftAdvanceBtn) && !schedulingPoliciesShiftAdvanceBtn.getAttribute("class")
 					.contains("--advanced")) {
-				click(schedulingPoliciesShiftAdvanceBtn);
+				scrollToElement(schedulingPoliciesShiftAdvanceBtn);
+				moveToElementAndClick(schedulingPoliciesShiftAdvanceBtn);
 				SimpleUtils.pass("Controls Page: - Scheduling Policies 'Shift' section: 'Advance' button clicked.");
 			} else
 				SimpleUtils.fail("Controls Page: - Scheduling Policies 'Shift' section: 'Advance' button not loaded.", false);
@@ -4953,14 +4954,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void enableOverRideAssignmentRuleAsNo() throws Exception {
-		waitForSeconds(3);
-		if (isElementEnabled(btnOverrideAssignmentRule, 5)) {
+		if (isElementEnabled(btnOverrideAssignmentRule, 10)) {
 			if (isElementEnabled(btnOverrideAssignmentRuleNo, 3)) {
+				waitForSeconds(5);
 				if (btnOverrideAssignmentRuleNo.getAttribute("class").contains("selected")) {
-					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button already enabled");
+					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'No' button already enabled");
 				} else {
-					scrollToElement(btnOverrideAssignmentRuleNo);
-					click(btnOverrideAssignmentRuleNo);
+					clickTheElement(btnOverrideAssignmentRuleNo);
 					Actions actions = new Actions(getDriver());
 					actions.moveByOffset(0, 0).click().build().perform();
 					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button selected!");

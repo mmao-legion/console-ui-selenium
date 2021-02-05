@@ -1198,13 +1198,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public Boolean isWeekGenerated() throws Exception {
-        if (isElementEnabled(generateSheduleButton, 5) && generateSheduleButton.getText().equalsIgnoreCase("Create schedule")) {
+        if (isElementEnabled(generateSheduleButton, 10) && generateSheduleButton.getText().equalsIgnoreCase("Create schedule")) {
             return false;
-        }else if(isElementEnabled(generateScheduleBtn, 5)){
+        }else if(isElementEnabled(generateScheduleBtn, 10)){
             return false;
-        }else if(isElementLoaded(publishSheduleButton, 5)) {
+        }else if(isElementLoaded(publishSheduleButton, 10)) {
             return true;
-        }else if(isElementLoaded(reGenerateScheduleButton, 5)) {
+        }else if(isElementLoaded(reGenerateScheduleButton, 10)) {
             return true;
         }
         if(areListElementVisible(shiftsWeekView,3)){
@@ -12359,7 +12359,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             for (WebElement warningMessageInWarningMode: warningMessagesInWarningMode){
                 warningMessage = warningMessage + warningMessageInWarningMode.getText()+"\n";
             }
-        } else{
+        } else {
             SimpleUtils.fail("Warning message fail to load", false);
         }
         return warningMessage;
