@@ -116,8 +116,8 @@ public class NewNavigationFlowTest extends TestBase {
         }else
             SimpleUtils.fail("Location switch in Timesheet failed",false);
 
-        //change location to default one in order to avoid other test case
-        locationSelectorPage.changeDistrict(currentDistrict);
+//        //change location to default one in order to avoid other test case
+//        locationSelectorPage.changeDistrict(currentDistrict);
 
     }
 

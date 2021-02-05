@@ -64,4 +64,12 @@ public interface JobsPage {
     public void filterJobsByJobStatus() throws Exception;
 
     public void filterClearFilterFunction();
+
+    public boolean verifyCreatNewJobPopUpWin();
+
+    public void iCanCloseJobCreatePopUpWindowByCloseBtn();
+
+    public void iCanCancelJobCreatePopUpWindowByCancelBtn();
+
+    public void iCanCancelJobInJobCreatPageByCancelBtn();
 }

@@ -68,10 +68,12 @@
                 <methods>
                     <include name="verifyJobLandingPage" />
                     <include name="verifyJobSearchFunction" />
-
                     <include name="verifyCheckJobDetailsFunction" />
                     <include name="verifyCopyStopResumeAndArchiveJobFunctionFunction" />
-                    <include name="verifyFilterFunction" />
+                    <include name="verifyFilterFunctionByJobTypeAndJobStatus" />
+                    <include name="verifyFilterFunctionByJobType" />
+                    <include name="verifyFilterFunctionByJobStatus" />
+                    <include name="verifyAbnormalCheatJobFunction" />
 
 
                 </methods>
