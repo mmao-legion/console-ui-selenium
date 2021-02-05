@@ -227,7 +227,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 		scrollToBottom();
 		click(createBtn);
 		SimpleUtils.pass("Job creation done");
-//		waitForSeconds(3);
+
 		if (isElementEnabled(createNewJobBtn,5)) {
 			SimpleUtils.pass("Create button is clickable and can enter select location page");
 		}else
@@ -472,10 +472,10 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 //				}
 				return jobInfo;
 			}else
-				SimpleUtils.fail(jobTitle + "can't been searched", true);
+				SimpleUtils.report("There is no data ");
 		}
 
-		return null;
+		return jobInfo;
 	}
 
 
@@ -544,6 +544,57 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	@Override
 	public void filterClearFilterFunction() {
 
+	}
+	@FindBy(css = "lg-button[label=\"OK\"]")
+	private WebElement okBtnInJobPopUpPage;
+	@FindBy(css = "lg-button[label=\"Cancel\"]")
+	private WebElement cancelBtnInJobPopUpPage;
+	@FindBy(css = "lg-close[ng-if=\"!$ctrl.hideClose\"]")
+	private WebElement closeBtnInJobPopUpPage;
+	@Override
+	public boolean verifyCreatNewJobPopUpWin() {
+		if (isElementEnabled(okBtnInJobPopUpPage,5) && isElementEnabled(cancelBtnInJobPopUpPage,5) &&
+				isElementEnabled(closeBtnInJobPopUpPage,5)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void iCanCloseJobCreatePopUpWindowByCloseBtn() {
+		if (isElementEnabled(closeBtnInJobPopUpPage,5)) {
+			click(closeBtnInJobPopUpPage);
+			if (isElementEnabled(createNewJobBtn,5) ) {
+				SimpleUtils.pass("Can close job pop up page by close button");
+			}
+
+		}else
+			SimpleUtils.fail("Close job pop up page failed",false);
+	}
+
+	@Override
+	public void iCanCancelJobCreatePopUpWindowByCancelBtn() {
+		if (isElementEnabled(cancelBtnInJobPopUpPage,5)) {
+			click(cancelBtnInJobPopUpPage);
+			if (isElementEnabled(createNewJobBtn,5) ) {
+				SimpleUtils.pass("Can close job pop up page by close button");
+			}
+
+		}else
+			SimpleUtils.fail("Close job pop up page failed",false);
+	}
+
+	@Override
+	public void iCanCancelJobInJobCreatPageByCancelBtn() {
+		if (isElementEnabled(cancelBtnInJobPopUpPage,5)) {
+			scrollToBottom();
+			click(cancelBtnInJobPopUpPage);
+			if (isElementEnabled(createNewJobBtn,5) ) {
+				SimpleUtils.pass("Can close job pop up page by close button");
+			}
+
+		}else
+			SimpleUtils.fail("Close job pop up page failed",false);
 	}
 
 
