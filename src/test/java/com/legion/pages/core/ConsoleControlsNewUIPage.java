@@ -5883,18 +5883,36 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "yes-no[value=\"sp.enterprisePreference.centralizedScheduleRelease\"]")
 	private WebElement centralizedScheduleRelease;
 
+
+
 	@Override
-	public boolean getCentralizedScheduleReleaseValue() throws Exception {
+	public boolean isCentralizedScheduleReleaseValueYes() throws Exception {
 		if (isElementLoaded(centralizedScheduleRelease)) {
 			WebElement centralizedScheduleReleaseGroup = centralizedScheduleRelease.findElement(
 					By.cssSelector("div.lg-button-group"));
-			if (centralizedScheduleReleaseGroup.getAttribute("class").contains("disabled")) {
-				SimpleUtils.report("Scheduling Policies: Centralized Schedule Release button is disabled.");
-				return false;
-			} else {
+			if (centralizedScheduleReleaseGroup.getAttribute("class").contains("lg-button-group-selected")) {
 				return true;
+			} else {
+				return false;
 			}
 		}
 		return false;
 	}
+
+	public List<WebElement> getAvailableSelector() {
+
+			List<WebElement> filters = centralizedScheduleRelease.findElements(By.cssSelector("ng-form > lg-button-group > div >div"/*"[ng-repeat=\"opt in opts\"]"*/));
+
+		    return filters;
+	}
+
+	@Override
+	public void updateCentralizedScheduleRelease(WebElement yesItem) throws Exception {
+		if (isElementLoaded(centralizedScheduleRelease)) {
+			clickTheElement(yesItem);
+			SimpleUtils.pass("Success! this setting has been updated to all locations");
+		}else
+			SimpleUtils.fail("Centralized scheduling release load failed",false);
+	}
+
 }
