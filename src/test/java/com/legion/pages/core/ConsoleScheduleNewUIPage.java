@@ -12502,5 +12502,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Override
+    public boolean suggestedButtonIsHighlighted() throws Exception {
+        if (isElementLoaded(scheduleTypeSystem, 5) && scheduleTypeSystem.getAttribute("class").contains("g-button-group-selected") ){
+            SimpleUtils.pass("The suggest button is high lighted");
+            return true;
+        }else {
+            SimpleUtils.fail("The suggest button load failed",true);
+        }
+        return false;
+    }
 }
 
