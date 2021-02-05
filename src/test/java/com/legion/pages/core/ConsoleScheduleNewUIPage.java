@@ -1044,7 +1044,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = ".sch-calendar-day-summary")
     private List<WebElement> daySummaries;
 
-    private float newCalcTotalScheduledHourForDayInWeekView() throws Exception {
+    @Override
+    public float newCalcTotalScheduledHourForDayInWeekView() throws Exception {
         float sumOfAllShiftsLength = 0;
         if (areListElementVisible(daySummaries,10)){
             for (int i=0; i<daySummaries.size();i++){
@@ -13209,6 +13210,36 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             return false;
         }
+    }
+
+
+    @FindBy(css = ".sch-calendar-day.week-view")
+    private List<WebElement> scheduleCalendarDaysHeaderInWeekView;
+
+    @Override
+    public float getTotalProjectionOpenShiftsHoursForCurrentWeek() throws Exception {
+        float totalProjectionOpenShiftsHours = 0;
+        boolean isPastDay = true;
+        selectShiftTypeFilterByText("Open");
+        if (areListElementVisible(daySummaries,10)
+                && areListElementVisible(scheduleCalendarDaysHeaderInWeekView, 10)
+                && daySummaries.size() == scheduleCalendarDaysHeaderInWeekView.size()){
+            for (int i=0; i<daySummaries.size();i++){
+                boolean isToday = scheduleCalendarDaysHeaderInWeekView.get(i).getAttribute("class").contains("today");
+                if(isToday){
+                    isPastDay = false;
+                }
+                if(!isPastDay){
+                    String[] TMShiftSize = daySummaries.get(i).findElement(By.cssSelector("span:nth-child(1)")).getText().split(" ");
+                    float shiftSizeInHour = Float.valueOf(TMShiftSize[0]);
+                    totalProjectionOpenShiftsHours = totalProjectionOpenShiftsHours + shiftSizeInHour;
+                }
+
+            }
+        } else {
+            SimpleUtils.fail("Schedule Calendar Days Header In WeekView are not loaded!", false);
+        }
+        return totalProjectionOpenShiftsHours;
     }
 }
 
