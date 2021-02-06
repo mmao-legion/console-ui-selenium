@@ -3,7 +3,7 @@
 <suite verbose ="0" thread-count="10" name="LegionTest">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
-    <parameter name="testRailRunName" value="Automation Regression OP"/>
+    <parameter name="testRailRunName" value="Automation - Daily Routine"/>
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
@@ -74,6 +74,10 @@
                     <include name="verifyFilterFunctionByJobType" />
                     <include name="verifyFilterFunctionByJobStatus" />
                     <include name="verifyAbnormalCheatJobFunction" />
+                    <include name="verifyCreateReleaseScheduleJobFunction" />
+                    <include name="verifyCreateScheduleJobFunction" />
+
+
 
 
                 </methods>

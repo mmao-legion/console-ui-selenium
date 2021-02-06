@@ -72,4 +72,10 @@ public interface JobsPage {
     public void iCanCancelJobCreatePopUpWindowByCancelBtn();
 
     public void iCanCancelJobInJobCreatPageByCancelBtn();
+
+    public void iCanSetUpDaysBeforeRelease(String releaseDay);
+
+    public void iCanSetUpTimeOfRelease(String timeForRelease) throws Exception;
+
+    public void iCanClickOnCreatAndReleaseCheckBox();
 }

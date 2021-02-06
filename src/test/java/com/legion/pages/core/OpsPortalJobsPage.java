@@ -596,6 +596,39 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 		}else
 			SimpleUtils.fail("Close job pop up page failed",false);
 	}
+	@FindBy(css = "input[type=\"number\"]")
+	private WebElement daysBeforeRelease;
+	@FindBy(css = "select[ng-attr-id=\"{{$ctrl.inputName}}\"]")
+	private WebElement releaseTimeSelector;
+	@FindBy(css = "input[aria-label=\"Also create and release schedules for locations that do not have schedules created yet\"]")
+	private WebElement createAndReleaseCheckbox;
+	@Override
+	public void iCanSetUpDaysBeforeRelease(String releaseDay) {
+		if (isElementEnabled(daysBeforeRelease,5) ) {
+			daysBeforeRelease.clear();
+			daysBeforeRelease.sendKeys(releaseDay);
+			SimpleUtils.pass("Release schedule " +releaseDay+" days before the Schedule week");
+		}else
+			SimpleUtils.fail("Days before release load failed",false);
+	}
+
+	@Override
+	public void iCanSetUpTimeOfRelease(String timeForRelease) throws Exception {
+		if (isElementEnabled(releaseTimeSelector,5) ) {
+			selectByVisibleText(releaseTimeSelector,timeForRelease);
+			SimpleUtils.pass("Release schedule at " +timeForRelease+" o'clock");
+		}else
+			SimpleUtils.fail("Time for  release load failed",false);
+	}
+
+	@Override
+	public void iCanClickOnCreatAndReleaseCheckBox() {
+		if (isElementEnabled(createAndReleaseCheckbox,5)) {
+			click(createAndReleaseCheckbox);
+			SimpleUtils.pass("Click on Also create and release schedules for locations that do not have schedules created yet successfully" );
+		}else
+			SimpleUtils.fail("Also create and release schedules for locations that do not have schedules created yet check box load failed",false);
+	}
 
 
 	public HashMap<String, ArrayList<WebElement>> getAvailableFilters() {
@@ -797,6 +830,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 					stopJobPopUpWinsWarningDesc.getText().contains("Please confirm that you want to perform the above action.")
 			&& isElementEnabled(cancelBtnInStopJobPopUpWins,5) && isElementEnabled(confirmBtnInStopJobPopUpWins,5)) {
 				SimpleUtils.pass("Job pop up window for each action show well");
+				waitForSeconds(2);
 				return true;
 			}
 		}else

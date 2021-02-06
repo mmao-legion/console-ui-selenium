@@ -297,28 +297,28 @@ public class JobTest extends TestBase {
 
 //            ArrayList<HashMap<String, String>> jobInfoDetails =jobsPage.iCanGetJobInfo(jobTitle);
 
-            //go to schedule page to see current week schedule generated or not
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrict("OMDistrict1");
-            locationSelectorPage.changeLocation(searchText);
-
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-
-            if (schedulePage.isWeekGenerated()){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
-            }else {
-                SimpleUtils.pass("Current week schedule is not  Generated!");
-                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+//            //go to schedule page to see current week schedule generated or not
+//            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+//            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+//
+//            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+//
+//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+//            locationSelectorPage.changeDistrict("OMDistrict1");
+//            locationSelectorPage.changeLocation(searchText);
+//
+//            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//            schedulePage.clickOnScheduleConsoleMenuItem();
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+//
+//            if (schedulePage.isWeekGenerated()){
+//                schedulePage.unGenerateActiveScheduleScheduleWeek();
+//            }else {
+//                SimpleUtils.pass("Current week schedule is not  Generated!");
+//                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
                 jobsPage.iCanEnterJobsTab();
                 jobsPage.iCanEnterCreateNewJobPage();
@@ -334,27 +334,27 @@ public class JobTest extends TestBase {
                     jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
                 }else
                     SimpleUtils.fail("Create job pop up page load failed",false);
-            }
+//            }
 
-            Thread.sleep(60000);//to wait for job completed
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-
-
-            locationSelectorPage.changeDistrict("OMDistrict1");
-            locationSelectorPage.changeLocation(searchText);
-
-
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-
-            if(!schedulePage.isWeekGenerated()&& schedulePage.suggestedButtonIsHighlighted()){
-                SimpleUtils.pass("Created schedule job doesn't generated the manager schedule");
-
-            }else
-                SimpleUtils.fail("It should not generated schedule in manager tab",false);
+//            Thread.sleep(60000);//to wait for job completed
+//            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+//            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+//
+//
+//            locationSelectorPage.changeDistrict("OMDistrict1");
+//            locationSelectorPage.changeLocation(searchText);
+//
+//
+//            schedulePage.clickOnScheduleConsoleMenuItem();
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+//
+//            if(!schedulePage.isWeekGenerated()&& schedulePage.suggestedButtonIsHighlighted()){
+//                SimpleUtils.pass("Created schedule job doesn't generated the manager schedule");
+//
+//            }else
+//                SimpleUtils.fail("It should not generated schedule in manager tab",false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -400,6 +400,94 @@ public class JobTest extends TestBase {
                     SimpleUtils.fail("",false);
             }else
                 SimpleUtils.fail("Create job pop up page load failed",false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate release schedule job function")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreateReleaseScheduleJobFunction(String browser, String username, String password, String location) throws Exception {
+
+
+        try {
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            String currentTime =  dfs.format(new Date());
+            String jobType = "Release Schedule";
+            String jobTitle = "AutoCreateJob"+currentTime;
+            setJobName(jobTitle);
+            String commentText = "created by automation scripts";
+            String searchText = "OMLocation3";
+            int index = 0;
+            String releaseDay = "10";
+            String timeForRelease = "0";
+
+//            ArrayList<HashMap<String, String>> jobInfoDetails =jobsPage.iCanGetJobInfo(jobTitle);
+
+//            //go to schedule page to see current week schedule generated or not
+//            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+//            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+//
+//            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+//
+//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+//            locationSelectorPage.changeDistrict("OMDistrict1");
+//            locationSelectorPage.changeLocation(searchText);
+//
+//            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//            schedulePage.clickOnScheduleConsoleMenuItem();
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+//
+//            if (schedulePage.isWeekGenerated()){
+//                schedulePage.unGenerateActiveScheduleScheduleWeek();
+//            }else {
+//                SimpleUtils.pass("Current week schedule is not  Generated!");
+//                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+                JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+                jobsPage.iCanEnterJobsTab();
+                jobsPage.iCanEnterCreateNewJobPage();
+                if (jobsPage.verifyCreatNewJobPopUpWin()) {
+                    jobsPage.selectJobType(jobType);
+                    jobsPage.selectWeekForJobToTakePlace();
+                    jobsPage.clickOkBtnInCreateNewJobPage();
+                    jobsPage.inputJobTitle(jobTitle);
+                    jobsPage.inputJobComments(commentText);
+                    jobsPage.addLocationBtnIsClickable();
+                    jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
+                    jobsPage.iCanClickOnCreatAndReleaseCheckBox();
+                    jobsPage.iCanSetUpDaysBeforeRelease(releaseDay);
+                    jobsPage.iCanSetUpTimeOfRelease(timeForRelease);
+                    jobsPage.createBtnIsClickable();
+                    jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+                }else
+                    SimpleUtils.fail("Create job pop up page load failed",false);
+//            }
+//
+//            Thread.sleep(60000);//to wait for job completed
+//            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+//            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+//
+//
+//            locationSelectorPage.changeDistrict("OMDistrict1");
+//            locationSelectorPage.changeLocation(searchText);
+//
+//
+//            schedulePage.clickOnScheduleConsoleMenuItem();
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+//
+//            if(!schedulePage.isWeekGenerated()&& schedulePage.suggestedButtonIsHighlighted()){
+//                SimpleUtils.pass("Created schedule job doesn't generated the manager schedule");
+//
+//            }else
+//                SimpleUtils.fail("It should not generated schedule in manager tab",false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
