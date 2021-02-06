@@ -21,4 +21,5 @@ public interface LocationSelectorPage {
 	public List<Integer> searchDistrict(String searchInputText) throws Exception;
 	public void verifyClickChangeDistrictButton() throws Exception;
 	public List<String> searchLocation(String searchInputText) throws Exception;
+	public void selectLocationByIndex(int i) throws Exception;
 }
