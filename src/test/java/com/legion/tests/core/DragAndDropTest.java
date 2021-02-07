@@ -668,9 +668,9 @@ public class DragAndDropTest extends TestBase {
             String clopeningWarningMessage = " will incur clopening";
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM1,1,firstNameOfTM2);
-            SimpleUtils.assertOnFail("Clopening message display successfully on swap section!",
+            SimpleUtils.assertOnFail("Clopening message display incorrectly on swap section!",
                     schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "swap"), false);
-            SimpleUtils.assertOnFail("Clopening message display successfully on assign section!",
+            SimpleUtils.assertOnFail("Clopening message display incorrectly on assign section!",
                     schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "assign"), false);
 
             // Swap TM1 and TM2, check the TMs been swapped successfully

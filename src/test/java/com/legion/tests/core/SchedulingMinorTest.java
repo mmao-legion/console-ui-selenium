@@ -164,7 +164,7 @@ public class SchedulingMinorTest extends TestBase {
 
             controlsNewUIPage.clickOnControlsComplianceSection();
             SimpleUtils.assertOnFail("collaboration page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
-            controlsNewUIPage.setSchedulingMinorRuleFor14N15("9:30 AM", "7:30 PM", "15", "6", "3", "7");
+            controlsNewUIPage.setSchedulingMinorRuleFor14N15("9:30 AM", "7:30 PM", "15", "6", "3", "5");
             controlsNewUIPage.setSchedulingMinorRuleFor16N17("10:00 AM", "7:00 PM", "20", "7", "5", "6");
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -747,8 +747,8 @@ public class SchedulingMinorTest extends TestBase {
             }
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "9:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            String firstNameOfTM1 = "Minor14";
-            String firstNameOfTM2 = "Minor16";
+            String firstNameOfTM1 = "Minor16";
+            String firstNameOfTM2 = "Minor14";
             String lastNameOfTM = "RC";
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);

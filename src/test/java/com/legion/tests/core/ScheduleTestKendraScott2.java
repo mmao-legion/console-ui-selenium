@@ -1991,7 +1991,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
 					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
 			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
 					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
 			boolean isWeekGenerated = schedulePage.isWeekGenerated();

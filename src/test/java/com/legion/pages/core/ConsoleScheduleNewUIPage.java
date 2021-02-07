@@ -11732,7 +11732,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (firstNameOfTM.equals(tmDetailName[0])|| firstNameOfTM.equals(tmDetailName[1])) {
                         SimpleUtils.pass("The search result display correctly when search by TM first name");
                     } else {
-                        SimpleUtils.fail("The search result incorrect when search by TM first name",true);
+                        SimpleUtils.fail("The search result incorrect when search by TM first name, the expected name is: " + firstNameOfTM+ ". The actual name is: " + tmDetailName[0] +" " +tmDetailName[1],false);
                         break;
                     }
                 }
@@ -11742,7 +11742,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (lastNameOfTM.equals(tmDetailName[0]) || lastNameOfTM.equals(tmDetailName[1])) {
                         SimpleUtils.pass("The search result display correctly when search by TM last name");
                     } else {
-                        SimpleUtils.fail("The search result incorrect when search by TM last name",true);
+                        SimpleUtils.fail("The search result incorrect when search by TM last name",false);
                         break;
                     }
                 }
