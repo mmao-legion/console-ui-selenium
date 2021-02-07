@@ -858,7 +858,6 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			clickTheElement(resumeBtnInJobListPage);
 			if (verifyJobActionsWarningPageShowWell()) {
 				clickTheElement(confirmBtnInStopJobPopUpWins);
-				waitForSeconds(50);
 				iCanSearchTheJobWhichICreated(jobTitle);
 				if (isElementEnabled(stopBtnInJobListPage,5)) {
 					SimpleUtils.pass("Job was resumed successfully");

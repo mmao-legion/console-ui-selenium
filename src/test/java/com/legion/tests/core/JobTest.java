@@ -192,16 +192,18 @@ public class JobTest extends TestBase {
             jobsPage.inputJobTitle(jobTitle);
             jobsPage.inputJobComments(commentText);
             jobsPage.addLocationBtnIsClickable();
-            jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
-//            jobsPage.iCanSelectDistrictByAddLocation(searchText,index);
+//            jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
+            jobsPage.iCanSelectDistrictByAddLocation(searchText,index);
             jobsPage.createBtnIsClickable();
             jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
             jobsPage.iCanStopJob(jobTitle);
 
-//            jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
-//            jobsPage.iCanResumeJob(jobTitle);
+            jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+            jobsPage.iCanResumeJob(jobTitle);
             jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
             jobsPage.iCanCopyJob(jobTitle);
+            jobsPage.iCanSearchTheJobWhichICreated("Copy Of "+jobTitle);
+            jobsPage.iCanStopJob("Copy Of "+jobTitle);
             jobsPage.iCanSearchTheJobWhichICreated("Copy Of "+jobTitle);
             jobsPage.iCanArchiveJob("Copy Of "+jobTitle);
 
