@@ -14,4 +14,10 @@ public interface LoginPage {
     public void verifyLoginDone(boolean isLoginDone, String selectedLocation) throws Exception;
     public void verifyNewTermsOfServicePopUp() throws Exception;
     public void verifyLoginPageIsLoaded() throws Exception;
+    public void verifyCreateAccountMessageDisplayCorrectly() throws Exception;
+    public void clickSignUpLink() throws Exception;
+    public boolean isVerifyLastNameAndInvitationCodePageLoaded() throws Exception;
+    public void verifyLastNameAndInvitationCode(String lastName, String invitationCode) throws Exception;
+    public boolean isErrorToastLoaded() throws Exception;
+    public boolean isCreateAccountPageLoaded() throws Exception;
 }

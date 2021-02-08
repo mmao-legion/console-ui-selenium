@@ -459,6 +459,7 @@
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
+                    <include name="verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin" />
 
                 </methods>
             </class>

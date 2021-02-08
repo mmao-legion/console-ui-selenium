@@ -227,5 +227,17 @@ public interface ProfileNewUIPage {
 
 	public void selectAGivenCalendarForMinor(String givenCalendar) throws Exception;
 
-	public String getUserProfileName() throws Exception;
+	public HashMap<String, String> getUserProfileName() throws Exception;
+
+	public void clickOnShowOrHideInvitationCodeButton(boolean toShowCode) throws Exception;
+
+	public String getInvitationCode() throws Exception;
+
+	public boolean isInvitationCodeLoaded() throws Exception;
+
+	public String getShowOrHideInvitationCodeButtonTooltip() throws Exception;
+
+	public boolean isInviteToLegionButtonLoaded() throws Exception;
+
+	public boolean isShowOrHideInvitationCodeButtonLoaded() throws Exception;
 }
