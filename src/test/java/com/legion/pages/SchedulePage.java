@@ -566,4 +566,5 @@ public interface SchedulePage {
 	public boolean hasNextWeek() throws Exception;
 	public float getTotalProjectionOpenShiftsHoursForCurrentWeek() throws Exception;
 	public float newCalcTotalScheduledHourForDayInWeekView() throws Exception;
+	public boolean isLocationGroup();
 }

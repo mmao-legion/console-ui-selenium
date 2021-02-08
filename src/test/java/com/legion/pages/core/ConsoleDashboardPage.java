@@ -730,7 +730,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			if (dateFromDashboard.equals(dateFromLocation)) {
 				SimpleUtils.pass("Date and time shows according to the US(Particular location) timing successfully");
 			} else {
-				SimpleUtils.fail("The date and time on Dashboard is different from the current location", true);
+				SimpleUtils.fail("The date and time on Dashboard is different from the current location", false);
 			}
 		} else {
 			SimpleUtils.fail("Current date and time failed to load", true);

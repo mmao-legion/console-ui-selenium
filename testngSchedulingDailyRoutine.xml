@@ -23,6 +23,12 @@
             <class name="com.legion.tests.core.DashboardTestKendraScott2">
                 <methods>
                     <include name="verifyDashboardFunctionalityAsTeamMember" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingSMAccessAsStoreManager" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamLead" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingTMAccessAsTeamMember" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin" />
                 </methods>
             </class>
         </classes>
@@ -33,6 +39,7 @@
            <class name="com.legion.tests.core.TeamTestKendraScott2">
                <methods>
                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
+                   <include name="verifyTheTeamFunctionalityInRosterForSort" />
                </methods>
            </class>
        </classes>

@@ -156,6 +156,7 @@
 <!--                   <include name="verifyTheTeamFunctionalityInInviteTeamMember" />-->
                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
 <!--                   <include name="verifyTheTeamFunctionalityInProfileSectionAsInternalAdmin" />-->
+                   <include name="verifyTheTeamFunctionalityInRosterForSort" />
                </methods>
            </class>
        </classes>

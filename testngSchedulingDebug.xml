@@ -18,21 +18,6 @@
         </classes>
     </test>
 
-		<test name="Dashboard Test">
-			<classes>
-				<class name="com.legion.tests.core.DashboardTestKendraScott2">
-					<methods>
-                        <include name="verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin" />
-                        <include name="verifyTheLeftNavigationMenuOnLoginUsingSMAccessAsStoreManager" />
-                        <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamLead" />
-                        <include name="verifyTheLeftNavigationMenuOnLoginUsingTMAccessAsTeamMember" />
-                        <include name="verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager" />
-                        <include name="verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin" />
-					</methods>
-				</class>
-		   </classes>
-	   </test>
-
     <test name="TeamTab Test">
         <classes>
             <class name="com.legion.tests.core.TeamTest">

@@ -685,6 +685,131 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private List<WebElement> approvedTimeOffRequests;
 	@FindBy(className = "request-buttons-reject")
 	private WebElement timeOffRejectBtn;
+	@FindBy(css = ".row.th div")
+	private List<WebElement> columnsInRoster;
+	@FindBy(css = ".tr .name")
+	private List<WebElement> namesInRoster;
+	@FindBy(css = ".tr [ng-if=\"showWorkerId\"]")
+	private List<WebElement> employeeIDsInRoster;
+	@FindBy(css = ".tr .lgn-xs-4 .title")
+	private List<WebElement> jobTitlesInRoster;
+
+	@Override
+	public void verifyTheSortFunctionInRosterByColumnName(String columnName) throws Exception {
+		try {
+			if (areListElementVisible(columnsInRoster, 5)) {
+				for (WebElement column : columnsInRoster) {
+					if (column.getText() != null && !column.getText().isEmpty() && column.getText().equals(columnName)) {
+						clickTheElement(column);
+						verifyTheSortFunction(columnName, column);
+						clickTheElement(column);
+						verifyTheSortFunction(columnName, column);
+					}
+				}
+			}
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	private void verifyTheSortFunction(String columnName, WebElement column) {
+		boolean isSorted = true;
+		List<String> targetList = new ArrayList<>();
+		if (columnName.equals("NAME")) {
+			targetList = getNameListInRoster();
+		} else if (columnName.equals("EMPLOYEE ID")) {
+			targetList = getEmployeeIDListInRoster();
+		} else if (columnName.equals("JOB TITLE")) {
+			targetList = getJobTitleListInRoster();
+		}
+		String className = column.getAttribute("class");
+		List<String> currentList = targetList;
+		if (!className.contains("roster-sort-reverse")) {
+			Collections.sort(targetList);
+			for (int i = 0; i < currentList.size(); i++) {
+				if (currentList.get(i) != targetList.get(i)) {
+					isSorted = false;
+					SimpleUtils.fail("Roster page column: " + columnName + " is not sorted asc!", false);
+				}
+			}
+		} else {
+			Collections.sort(targetList, Comparator.reverseOrder());
+			for (int i = 0; i < currentList.size(); i++) {
+				if (currentList.get(i) != targetList.get(i)) {
+					isSorted = false;
+					SimpleUtils.fail("Roster page column: " + columnName + " is not sorted desc!", false);
+				}
+			}
+		}
+		if (isSorted) {
+			SimpleUtils.pass("Roster page column: " + columnName + " is sorted!");
+		}
+	}
+
+	private List<String> getNameListInRoster() {
+		List<String> employeeIDs = new ArrayList<>();
+		if (areListElementVisible(employeeIDsInRoster, 5)) {
+			for (WebElement id : employeeIDsInRoster) {
+				employeeIDs.add(id.getText());
+			}
+		}
+		return employeeIDs;
+	}
+
+	private List<String> getEmployeeIDListInRoster() {
+		List<String> jobTitles = new ArrayList<>();
+		if (areListElementVisible(jobTitlesInRoster, 5)) {
+			for (WebElement title : jobTitlesInRoster) {
+				jobTitles.add(title.getText());
+			}
+		}
+		return jobTitles;
+	}
+
+	private List<String> getJobTitleListInRoster() {
+		List<String> names = new ArrayList<>();
+		if (areListElementVisible(namesInRoster, 5)) {
+			for (WebElement name : namesInRoster) {
+				names.add(name.getText());
+			}
+		}
+		return names;
+	}
+
+	@Override
+	public void verifyTheColumnInRosterPage(boolean isLocationGroup) throws Exception {
+		try {
+			List<String> expectedColumnsRegular = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "STATUS", "BADGES", "ACTION"));
+			List<String> expectedColumnsLG = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "LOCATION", "STATUS", "BADGES", "ACTION"));
+			List<String> actualColumns = new ArrayList<>();
+			if (areListElementVisible(columnsInRoster, 5)) {
+				for (WebElement column : columnsInRoster) {
+					if (column.getText() != null && !column.getText().isEmpty()) {
+						actualColumns.add(column.getText());
+					}
+				}
+			} else {
+				SimpleUtils.fail("Team Roster Page: Columns failed to load!", false);
+			}
+			if (isLocationGroup) {
+				if (actualColumns.containsAll(expectedColumnsLG) && expectedColumnsLG.containsAll(actualColumns)) {
+					SimpleUtils.pass("Team Roster: Verified the columns are correct for location group!");
+				} else {
+					SimpleUtils.fail("Team Roster: Verified the columns are incorrect for location group! Expected: "
+					+ expectedColumnsLG.toString() + ". But actual columns: " + actualColumns.toString(), false);
+				}
+			} else {
+				if (actualColumns.containsAll(expectedColumnsRegular) && expectedColumnsRegular.containsAll(actualColumns)) {
+					SimpleUtils.pass("Team Roster: Verified the columns are correct for regular location!");
+				} else {
+					SimpleUtils.fail("Team Roster: Verified the columns are incorrect for regular location! Expected: "
+							+ expectedColumnsRegular.toString() + ". But actual columns: " + actualColumns.toString(), false);
+				}
+			}
+		} catch (Exception e) {
+			SimpleUtils.fail("Team page: verify the columns in roster page failed!", false);
+		}
+	}
 
 	@Override
 	public void rejectAllTheTimeOffRequests() throws Exception {
@@ -841,25 +966,13 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					searchTextBox.sendKeys(testString);
 					if (teamMembers.size() > 0){
 						for (WebElement teamMember : teamMembers){
-							WebElement tr = teamMember.findElement(By.className("tr"));
-							if (tr != null) {
-								WebElement name = tr.findElement(By.cssSelector("span.name"));
-								WebElement title = tr.findElement(By.cssSelector("span.title"));
-								WebElement status = tr.findElement(By.cssSelector("span.status"));
-								if (name != null && title != null && status != null) {
-									String nameJobTitleStatus = name.getText() + title.getText() + status.getText();
-									if (nameJobTitleStatus.toLowerCase().contains(testString.toLowerCase())) {
-										SimpleUtils.pass("Verified " + teamMember.getText() + " contains test string: " + testString);
-									} else {
-										SimpleUtils.fail("Team member: " + teamMember.getText() + " doesn't contain the test String: "
-												+ testString, true);
-									}
-								}else {
-									SimpleUtils.fail("Failed to find the name, title and status elements!", true);
-								}
-							}else {
-								SimpleUtils.fail("Failed to find the tr element!", true);
+							if (teamMember.getText().toLowerCase().contains(testString.trim().toLowerCase())) {
+								SimpleUtils.pass("Verified " + teamMember.getText() + " contains test string: " + testString);
+							} else {
+								SimpleUtils.fail("Team member: " + teamMember.getText() + " doesn't contain the test String: "
+										+ testString, false);
 							}
+
 						}
 					}else{
 						SimpleUtils.report("Doesn't find the Team member that contains: " + testString);

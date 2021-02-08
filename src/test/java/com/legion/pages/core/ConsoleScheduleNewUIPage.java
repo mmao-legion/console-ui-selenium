@@ -5662,6 +5662,21 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> weekDayLabels;
     @FindBy(className = "week-schedule-shift")
     private List<WebElement> weekShifts;
+    @FindBy(css = "[icon*=\"search.svg'\"]")
+    private WebElement searchLocationBtn;
+
+    @Override
+    public boolean isLocationGroup() {
+        try {
+            if (isElementLoaded(searchLocationBtn, 10)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     @Override
     public int getTheIndexOfCurrentDayInDayView() throws Exception {
