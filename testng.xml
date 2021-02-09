@@ -195,7 +195,7 @@
                     <include name="verifyTheTeamScheduleOptionAsInternalAdmin" />
 <!--                    <include name="verifyTheFunctionalityOfSwapAndCoverAsInternalAdmin" />-->
                     <include name="verifyTheFeatureOfFilterAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamLead" />
+                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamMember" />
                 </methods>
             </class>
         </classes>
@@ -233,7 +233,7 @@
                     <include name="verifyTheContentOfShiftSwapActivityWithoutApprovalAsInternalAdmin" />
                     <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
-                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />
+                    <include name="verifyActivityOfClaimOpenShiftAsTeamMember" />
                     <include name="verifyActivityOfPublishUpdateSchedule" />
                     <include name="verifyTheNotificationForCancelTimeOffAsTeamMember"/>
 <!--                    <include name="verifyNoNotificationForActivateTMAsStoreManager"/>-->
@@ -458,7 +458,8 @@
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
-
+                    <include name="verifyAnalyticsTableOnComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

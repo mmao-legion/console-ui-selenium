@@ -5875,4 +5875,48 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private void test() throws Exception{
 
 	}
+
+	// Added By Julie
+	@FindBy(css = "input-field[value=\"sp.weeklySchedulePreference.publishDayWindow\"]")
+	private WebElement schedulingPoliciesDaysInAdvancePublishSchedules;
+
+	@FindBy(className = "lg-override-popup")
+	private WebElement overridePopup;
+
+	@Override
+	public String getDaysInAdvancePublishSchedulesInSchedulingPolicies() throws Exception {
+		// How many days in advance would you typically publish schedules? (this is the Schedule Publish Window).
+		String days = "";
+		if (isElementLoaded(schedulingPoliciesDaysInAdvancePublishSchedules,10)) {
+			WebElement daysInputBox = schedulingPoliciesDaysInAdvancePublishSchedules.findElement(By.cssSelector("input"));
+			days = daysInputBox.getAttribute("value");
+		} else
+			SimpleUtils.fail("Scheduling Policies: 'How many days in advance would you typically publish schedules?' not loaded", false);
+		return days;
+	}
+
+	@Override
+	public void updateDaysInAdvancePublishSchedulesInSchedulingPolicies(String days) throws Exception {
+		// How many days in advance would you typically publish schedules? (this is the Schedule Publish Window).
+		if (isElementLoaded(schedulingPoliciesDaysInAdvancePublishSchedules,10)) {
+			WebElement daysInputBox = schedulingPoliciesDaysInAdvancePublishSchedules.findElement(
+					By.cssSelector("input"));
+			if (daysInputBox.isEnabled()) {
+				daysInputBox.clear();
+				daysInputBox.sendKeys(days);
+				if (isElementLoaded(confirmSettingsChangeButton, 5))
+					click(confirmSettingsChangeButton);
+				if (isElementLoaded(overridePopup,10))
+					click(overridePopup.findElement(By.cssSelector("[label=\"Overwrite\"]")));
+				waitForSeconds(3);
+				String daysDisplayed = getDaysInAdvancePublishSchedulesInSchedulingPolicies();
+				if (daysDisplayed.equals(days))
+					SimpleUtils.pass("Scheduling Policies: The days in advance publish schedules '" + days + "' entered successfully");
+				else
+					SimpleUtils.fail("Scheduling Policies: The days in advance publish schedules '" + days + "' not entered", false);
+			} else
+				SimpleUtils.report("Scheduling Policies: The days in advance publish schedules 'Disabled'");
+		} else
+			SimpleUtils.fail("Scheduling Policies: 'How many days in advance would you typically publish schedules?' not loaded", false);
+	}
 }

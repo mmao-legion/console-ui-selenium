@@ -255,13 +255,13 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	//added by Nishant
 
-	@FindBy(css = "lg-smart-card[heading='Due Date'] content-box")
+	@FindBy(css = "lg-smart-card[heading='Timesheet Due'] content-box")
 	private WebElement dueDateSmartCard;
 
-	@FindBy(css = "lg-smart-card[heading='Due Date'] div[ng-if='$ctrl.heading']")
+	@FindBy(css = "lg-smart-card[heading='Timesheet Due'] div[ng-if='$ctrl.heading']")
 	private WebElement dueDateHeader;
 
-	@FindBy(css = "lg-smart-card[heading='Due Date'] div[ng-if='$ctrl.main']")
+	@FindBy(css = "lg-smart-card[heading='Timesheet Due'] div[ng-if='$ctrl.main']")
 	private WebElement dueDateValue;
 
 	@FindBy(css = "lg-smart-card[heading='Due Date'] div[ng-if='$ctrl.note']")
@@ -2286,7 +2286,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		String valDueDate ="";
 		String finalDueDate ="";
 		if(isElementEnabled(dueDateSmartCard,5)){
-			SimpleUtils.pass("Timesheet Due Date smart card loaded Successfullly");
+			SimpleUtils.pass("Timesheet Due Date smart card loaded Successfully");
 			verifyDueDateheader();
 			if(isElementLoaded(dueDateValue,5)){
 				valDueDate = dueDateValue.getText();
@@ -2294,7 +2294,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				finalDueDate = arrValDueDate[1];
 			}
 		}else{
-			SimpleUtils.fail("Timesheet Due Date smart card not loaded Successfullly",false);
+			SimpleUtils.fail("Timesheet Due Date smart card not loaded Successfully",false);
 		}
 		return valDueDate;
 	}
@@ -2305,7 +2305,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 				SimpleUtils.pass("Timesheet Due Date smart card header is " + dueDateHeader.getText() );
 			}
 		}else{
-			SimpleUtils.fail("Timesheet Due Date smart card Header loaded Successfullly",true);
+			SimpleUtils.fail("Timesheet Due Date smart card Header not loaded Successfully",true);
 		}
 	}
 
@@ -3377,5 +3377,51 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 			}
 		}
 		return totalTimesheetInSMView;
+	}
+
+	@FindBy(css = ".card-carousel-card-primary .card-carousel-card-title")
+	private WebElement timesheetApprovalRateSmartCardTitle;
+
+	@FindBy (className = "analytics-new-smart-card-timesheet-approval-legend")
+	private WebElement timesheetApprovalLegend;
+
+	@FindBy (className = "analytics-new-smart-card-timesheet-approval-graph")
+	private WebElement timesheetApprovalGraph;
+
+	@FindBy (className = "analytics-new-smart-card-timesheet-approval-due-date")
+	private WebElement timesheetApprovalDueDate;
+
+	@Override
+	public void validateTheContentOnTIMESHEETAPPROVALRATESmartCard(String dueDate) throws Exception {
+    /*
+    It should include:
+    - Title: TIMESHEET APPROVAL RATE
+    - Timesheet approval chart with <24 Hrs, 48 Hrs, > 48 Hrs and Unapproved
+    - Timesheet due Dec. 21, which depends on configuration settings in Time and Attendance -> Timesheet -> Approval level, if it is 72, it will be due today +3 days
+    */
+		if(isElementLoaded(timesheetApprovalRateSmartCardTitle,5) && timesheetApprovalRateSmartCardTitle.getText().toUpperCase().equals("TIMESHEET APPROVAL RATE"))
+			SimpleUtils.pass("Timesheet Page: The title of 'TIMESHEET APPROVAL RATE' smart card displays correctly");
+		else
+			SimpleUtils.fail("Timesheet Page: The title of 'TIMESHEET APPROVAL RATE' smart card failed to display or displays incorrectly",false);
+		List<String> fieldNamesExpected = Arrays.asList(new String[]{"< 24 Hrs", "24-48 Hrs", "48+ Hrs", "Unapproved"});
+		if(isElementLoaded(timesheetApprovalLegend,5) && isElementLoaded(timesheetApprovalGraph)) {
+			List<WebElement> timesheetApprovalLegendItems = timesheetApprovalLegend.findElements(By.className("analytics-new-smart-card-timesheet-approval-legend-item"));
+			boolean isMatched = false;
+			for (WebElement item: timesheetApprovalLegendItems) {
+				if (fieldNamesExpected.contains(item.getText().replace("\n", "")))
+					isMatched = true;
+				else
+					break;
+			}
+			if (isMatched)
+				SimpleUtils.pass("Timesheet Page: Timesheet approval chart with <24 Hrs, 48 Hrs, > 48 Hrs and Unapproved on smart card loaded successfully");
+			else
+				SimpleUtils.fail("Timesheet Page: Timesheet approval chart with <24 Hrs, 48 Hrs, > 48 Hrs and Unapproved failed to load",false);
+		} else
+			SimpleUtils.fail("Timesheet Page: Timesheet approval chart failed to load",false);
+		if (isElementLoaded(timesheetApprovalDueDate,5) && timesheetApprovalDueDate.getText().replace(".","").contains(dueDate))
+			SimpleUtils.pass("Timesheet Page: '" + timesheetApprovalDueDate.getText() + "' displays correctly");
+		else
+			SimpleUtils.fail("Timesheet Page: Timesheet due date on smart card failed to load or displays incorrectly",false);
 	}
 }

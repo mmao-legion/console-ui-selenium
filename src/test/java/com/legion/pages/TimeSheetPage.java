@@ -177,4 +177,5 @@ public interface TimeSheetPage {
 	public List<String> getDataFromTimesheetTableForGivenLocationInDMView(String location) throws Exception;
 	public int getTotalTimesheetInSMView() throws Exception;
 	public HashMap<String, Float> getWorkerAllHours(WebElement workerRow);
+	public void validateTheContentOnTIMESHEETAPPROVALRATESmartCard(String dueDate) throws Exception;
 }
