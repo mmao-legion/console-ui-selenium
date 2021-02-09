@@ -1199,13 +1199,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public Boolean isWeekGenerated() throws Exception {
-        if (isElementEnabled(generateSheduleButton, 5) && generateSheduleButton.getText().equalsIgnoreCase("Create schedule")) {
+        if (isElementEnabled(generateSheduleButton, 10) && generateSheduleButton.getText().equalsIgnoreCase("Create schedule")) {
             return false;
-        }else if(isElementEnabled(generateScheduleBtn, 5)){
+        }else if(isElementEnabled(generateScheduleBtn, 10)){
             return false;
-        }else if(isElementLoaded(publishSheduleButton, 5)) {
+        }else if(isElementLoaded(publishSheduleButton, 10)) {
             return true;
-        }else if(isElementLoaded(reGenerateScheduleButton, 5)) {
+        }else if(isElementLoaded(reGenerateScheduleButton, 10)) {
             return true;
         }
         if(areListElementVisible(shiftsWeekView,3)){
@@ -5662,6 +5662,21 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> weekDayLabels;
     @FindBy(className = "week-schedule-shift")
     private List<WebElement> weekShifts;
+    @FindBy(css = "[icon*=\"search.svg'\"]")
+    private WebElement searchLocationBtn;
+
+    @Override
+    public boolean isLocationGroup() {
+        try {
+            if (isElementLoaded(searchLocationBtn, 10)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     @Override
     public int getTheIndexOfCurrentDayInDayView() throws Exception {
@@ -11732,7 +11747,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (firstNameOfTM.equals(tmDetailName[0])|| firstNameOfTM.equals(tmDetailName[1])) {
                         SimpleUtils.pass("The search result display correctly when search by TM first name");
                     } else {
-                        SimpleUtils.fail("The search result incorrect when search by TM first name",true);
+                        SimpleUtils.fail("The search result incorrect when search by TM first name, the expected name is: " + firstNameOfTM+ ". The actual name is: " + tmDetailName[0] +" " +tmDetailName[1],false);
                         break;
                     }
                 }
@@ -11742,7 +11757,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (lastNameOfTM.equals(tmDetailName[0]) || lastNameOfTM.equals(tmDetailName[1])) {
                         SimpleUtils.pass("The search result display correctly when search by TM last name");
                     } else {
-                        SimpleUtils.fail("The search result incorrect when search by TM last name",true);
+                        SimpleUtils.fail("The search result incorrect when search by TM last name",false);
                         break;
                     }
                 }
@@ -12360,7 +12375,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             for (WebElement warningMessageInWarningMode: warningMessagesInWarningMode){
                 warningMessage = warningMessage + warningMessageInWarningMode.getText()+"\n";
             }
-        } else{
+        } else {
             SimpleUtils.fail("Warning message fail to load", false);
         }
         return warningMessage;

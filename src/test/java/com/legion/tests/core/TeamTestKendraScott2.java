@@ -344,6 +344,49 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the team functionality in Roster - Sort")
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInRosterForSort(String browser, String username, String password, String location) throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			// Check whether the location is location group or not
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+			if(isActiveWeekGenerated){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			boolean isLocationGroup = schedulePage.isLocationGroup();
+
+			// Verify TM Count is correct from roster
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+			teamPage.verifyTMCountIsCorrectOnRoster();
+			// Verify Search Team Members is working correctly
+			List<String> testStrings = new ArrayList<>(Arrays.asList("jam", "boris", "Retail", "a"));
+			teamPage.verifyTheFunctionOfSearchTMBar(testStrings);
+			// Verify the column in roster page
+			teamPage.verifyTheColumnInRosterPage(isLocationGroup);
+			// Verify NAME column can be sorted in ascending or descending order
+			teamPage.verifyTheSortFunctionInRosterByColumnName("NAME");
+			// Verify EMPLOYEE ID column can be sorted in ascending or descending order
+			teamPage.verifyTheSortFunctionInRosterByColumnName("EMPLOYEE ID");
+			// Verify JOB TITLE column can be sorted in ascending or descending order
+			teamPage.verifyTheSortFunctionInRosterByColumnName("JOB TITLE");
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team functionality>In Transfer")
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInTransfer(String browser, String username, String password, String location) throws Exception {
@@ -562,5 +605,74 @@ public class TeamTestKendraScott2 extends TestBase{
 			}
 		}
 		return currentDate;
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the profile invitation code in Profile UI")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		try {
+			// Login with Internal Admin Credentials
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			// Check invite to legion button and invitation code are not exists on the onboarded user profile page
+			teamPage.selectARandomOnboardedOrNotTeamMemberToViewProfile(true);
+			teamPage.isProfilePageLoaded();
+			SimpleUtils.assertOnFail("Invite buttons should not loaded on the onboarded TM profile page! ",
+					!profileNewUIPage.isInviteToLegionButtonLoaded()
+							&& !profileNewUIPage.isInvitationCodeLoaded()
+							&& !profileNewUIPage.isShowOrHideInvitationCodeButtonLoaded(), false);
+
+			teamPage.goToTeam();
+			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+			teamPage.selectARandomOnboardedOrNotTeamMemberToViewProfile(false);
+			teamPage.isProfilePageLoaded();
+			// Click Invite to Legion button
+			profileNewUIPage.userProfileInviteTeamMember();
+			// Check the tooltip of
+			String tooltipMessage = "This code has been sent to the team member";
+			SimpleUtils.assertOnFail("Show Or Hide Invitation Code Button tooltip is incorrectly",
+					tooltipMessage.equals(profileNewUIPage.getShowOrHideInvitationCodeButtonTooltip()), false);
+			// Click Show Invitation Code button
+			profileNewUIPage.clickOnShowOrHideInvitationCodeButton(true);
+			//Check invitation code is loaded
+			SimpleUtils.assertOnFail("Invitation code loaded fail! ", profileNewUIPage.isInvitationCodeLoaded(), false);
+			// Get invitation code
+			String invitationCode = profileNewUIPage.getInvitationCode();
+			String fullName = profileNewUIPage.getUserProfileName().get("fullName");
+			String lastName = fullName.substring(fullName.indexOf(" "));
+			// Click Hide Invitation Code button
+			profileNewUIPage.clickOnShowOrHideInvitationCodeButton(false);
+			SimpleUtils.assertOnFail("Invitation code should not loaded! ", !profileNewUIPage.isInvitationCodeLoaded(), false);
+
+			//Logout
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			loginPage.verifyLoginPageIsLoaded();
+
+			//Check Create Account message display correctly
+			loginPage.verifyCreateAccountMessageDisplayCorrectly();
+
+			//Click Sign Up button
+			loginPage.clickSignUpLink();
+			SimpleUtils.assertOnFail("Verify last name and invitation code page fail to loaded! ", loginPage.isVerifyLastNameAndInvitationCodePageLoaded(), false);
+
+			//Input the incorrect invitation code
+			loginPage.verifyLastNameAndInvitationCode(lastName, "123456");
+			SimpleUtils.assertOnFail("Error toast failed to loaded", loginPage.isErrorToastLoaded(), false);
+
+			//Input the correct invitation code
+			loginPage.verifyLastNameAndInvitationCode(lastName, invitationCode);
+			SimpleUtils.assertOnFail("Create Account page fail to loaded! ", loginPage.isCreateAccountPageLoaded(), false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 }

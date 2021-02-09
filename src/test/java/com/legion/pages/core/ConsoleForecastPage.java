@@ -760,6 +760,8 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"peakItems");
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+								"actualEditedPeakItems");
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
 								"actualPeakItems");
 					}
 					else if(peakShopperDay.toLowerCase().contains("peak shoppers"))
@@ -767,14 +769,17 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"peakShoppers");
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+								"peakEditedShoppers");
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
 								"actualPeakShoppers");
 					}
 					else if(peakShopperDay.toLowerCase().contains("peak day"))
 					{
 						Float peakday=null;
 						Float actualPeakday=null;
-						insightData.put(peakShopperDay.split(" ")[2],peakday);
-						insightData.put(peakShopperDay.split(" ")[3],actualPeakday);
+						//insightData.put(peakShopperDay.split(" ")[2],peakday);
+						insightData.put(peakShopperDay.split(" ")[3],actualPeakday);//Edited peak day
+						//insightData.put(peakShopperDay.split(" ")[4],actualPeakday);
 					}
 					else if(peakShopperDay.toLowerCase().contains("peak time"))
 					{
@@ -788,6 +793,8 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"totalItems");
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+								"totalEditedItems");
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
 								"actualTotalItems");
 					}
 					else if(peakShopperDay.toLowerCase().contains("total shoppers"))
@@ -795,6 +802,8 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"totalShoppers");
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+								"totalEditedShoppers");
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
 								"actualTotalShoppers");
 					}
 	//				else {
@@ -811,12 +820,14 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"peakShoppers");
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
-								"editedPeakShoppers");
+								"peakEditedShoppers");
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+								"actualTotalShoppers");
 					}
 					else if(peakShopperDay.toLowerCase().contains("peak day"))
 					{
 						Float peakday=null;
-						insightData.put(peakShopperDay.split(" ")[2],peakday);
+						insightData.put(peakShopperDay.split(" ")[3],peakday);
 					}
 					else if(peakShopperDay.toLowerCase().contains("peak time"))
 					{
@@ -833,7 +844,9 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"totalShoppers");
 						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
-								"editedTotalShoppers");
+								"totalEditedShoppers");
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+								"actualTotalShoppers");
 					}
 	//				else {
 	//				SimpleUtils.fail("this data is not which i wanted,ig",true);
@@ -848,6 +861,53 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		return insightData;
 	}
 
+	@Override
+	public HashMap<String, Float> getInsightDataInShopperDayView() throws Exception {
+		HashMap<String, Float> insightData = new HashMap<String, Float>();
+		WebElement insightIsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector(".card-carousel-fixed"));
+		if (isElementLoaded(insightIsDivElement,5)) {
+			String insightSmartCardText = insightIsDivElement.getText();
+			String[] peakShopperDayInInsight = insightSmartCardText.split("\n");
+			for (String peakShopperDay: peakShopperDayInInsight) {
+				if (SimpleUtils.isNumeric(peakShopperDay.split(" ")[2]) && SimpleUtils.isNumeric(peakShopperDay.split(" ")[3])){
+					if(peakShopperDay.toLowerCase().contains("peak items")) {
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+								"peakItems");
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+								"actualEditedPeakItems");
+					} else if(peakShopperDay.toLowerCase().contains("peak shoppers")) {
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+								"peakShoppers");
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+								"peakEditedShoppers");
+					} else if(peakShopperDay.toLowerCase().contains("peak day")) {
+						Float editedPeakday=null;
+						insightData.put(peakShopperDay.split(" ")[3],editedPeakday);//Edited peak day
+					} else if(peakShopperDay.toLowerCase().contains("peak time")) {
+						Float peaktime=null;
+						Float editedPeaktime=null;
+						insightData.put(peakShopperDay.split(" ")[2],peaktime);
+						insightData.put(peakShopperDay.split(" ")[3],editedPeaktime);
+					} else if(peakShopperDay.toLowerCase().contains("total items")) {
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+								"totalItems");
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+								"totalEditedItems");
+					} else if(peakShopperDay.toLowerCase().contains("total shoppers")) {
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+								"totalShoppers");
+						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+								"totalEditedShoppers");
+					}
+				} else {
+					SimpleUtils.fail("Data doesn't display on the smart card! Please check!", false);
+				}
+			}
+		}else {
+			SimpleUtils.fail("there is no insight smart card",false);
+		}
+		return insightData;
+	}
 
 	//added by haya
 	@FindBy(css = "lg-filter[label=\"Work role\"] .lg-filter__wrapper.lg-ng-animate div[ng-mouseover]")
@@ -1214,6 +1274,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 				SimpleUtils.pass("saveForecastBtn button is clicked!");
 				if (isElementLoaded(updateForecastValueDialog.findElement(By.cssSelector(".modal-instance-button.confirm")),10)){
 					click(updateForecastValueDialog.findElement(By.cssSelector(".modal-instance-button.confirm")));
+					waitForSeconds(3);
 				}
 			} else {
 				SimpleUtils.fail("saveForecastBtn button is not loaded!", false);
@@ -1223,9 +1284,9 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		}
 	}
 
-	@FindBy(css = "g[id*=\"bar-edit-handle-wrapper\"]")
+	@FindBy(css = "g[id*=\"bar-edit-handle-wrapper\"] path.bar-edit-handle")
 	private List<WebElement> forecastBars;
-	@FindBy(css = "svg[id=\"forecast-prediction\"] g g:not(.tick):not([fill=\"none\"])")
+	@FindBy(css = "svg[id=\"forecast-prediction\"] g g:not(.tick):not([fill=\"none\"]) .transparent-area")
 	private List<WebElement> forecastBarsInViewMode;
 
 	//index value range: 0-6
@@ -1233,14 +1294,9 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	public void verifyDoubleClickAndUpdateForecastBarValue(String index, String value) {
 		try{
 			if (areListElementVisible(forecastBars,10)){
-				for (WebElement bar: forecastBars){
-					if (bar.getAttribute("id").contains(index)){
-						doubleClick(bar);
-						SimpleUtils.pass("the bar has been clicked!");
-						updateForecastValue(value);
-						break;
-					}
-				}
+				doubleClick(forecastBars.get(Integer.parseInt(index)));
+				SimpleUtils.pass("the bar has been clicked!");
+				updateForecastValue(value);
 			} else {
 				SimpleUtils.fail("forecastBars are not loaded!", false);
 			}
@@ -1273,14 +1329,9 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		String info = "";
 		try{
 			if (areListElementVisible(forecastBarsPath,10)){
-				for (WebElement bar: forecastBarsPath){//.findElement(By.xpath("./.."))
-					if (bar.getAttribute("id").contains(index)){
-						scrollToElement(bar);
-						mouseToElement(bar);
-						waitForSeconds(2);
-						break;
-					}
-				}
+				scrollToElement(forecastBarsPath.get(Integer.parseInt(index)));
+				mouseToElement(forecastBarsPath.get(Integer.parseInt(index)));
+				waitForSeconds(2);
 				if (isElementLoaded(tooltipForForecastBar,20)){
 					//String s = "2 Wed Forecast 527 Legion 527 Edited Comparison N/A Actual";
 					info = tooltipForForecastBar.getText().replace("\n", " ");
@@ -1289,14 +1340,9 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 					SimpleUtils.fail("tooltipForForecastBar is not loaded!", false);
 				}
 			}else if (areListElementVisible(forecastBarsInViewMode,10)){
-				for (WebElement bar: forecastBarsInViewMode){//.findElement(By.xpath("./.."))
-					if (bar.getAttribute("id").contains(index)){
-						scrollToElement(bar);
-						mouseToElement(bar);
-						waitForSeconds(2);
-						break;
-					}
-				}
+				scrollToElement(forecastBarsInViewMode.get(Integer.parseInt(index)));
+				mouseToElement(forecastBarsInViewMode.get(Integer.parseInt(index)));
+				waitForSeconds(2);
 				if (isElementLoaded(tooltipForForecastBar,20)){
 					//String s = "2 Wed Forecast 527 Legion 527 Edited Comparison N/A Actual";
 					info = tooltipForForecastBar.getText().replace("\n", " ");
@@ -1399,12 +1445,12 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			} else {
 				SimpleUtils.fail("Peak day info is incorrect! Value from tooltips: "+dayIndex, false);
 			}
-			if (insightDataInWeek.get("peakShoppers")==legionPeakShopperInTooltip){
+			if (insightDataInWeek.get("peakEditedShoppers")==legionPeakShopperInTooltip){
 				SimpleUtils.pass("peakShoppers info is correct!");
 			} else {
 				SimpleUtils.fail("peakShoppers info is incorrect! Value from tooltips: "+legionPeakShopperInTooltip, false);
 			}
-			if (insightDataInWeek.get("totalShoppers")==total){
+			if (insightDataInWeek.get("totalEditedShoppers")==total){
 				SimpleUtils.pass("totalShoppers info is correct!");
 			} else {
 				SimpleUtils.fail("totalShoppers info is incorrect! Value from tooltips: "+total, false);
@@ -1624,7 +1670,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			int index = (new Random()).nextInt(forecastBarsPath.size() - 2);
 			scrollToElement(forecastBarsPath.get(index));
 			moveElement(forecastBarsPath.get(index), 20);
-			if (!forecastBarsPath.get(index).findElement(By.xpath("./..")).getAttribute("transform").contains("(0, 0)"))
+			if (!forecastBarsPath.get(index).findElement(By.xpath("./..")).getAttribute("transform").contains("(0, "))
 				SimpleUtils.pass("Forecast Page: Bar graph is draggable");
 			else
 				SimpleUtils.fail("Forecast Page: Bar graph is not draggable",false);

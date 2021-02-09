@@ -340,7 +340,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the left navigation menu on login using admin access")
+	@TestName(description = "Validate the left navigation menu on login using admin access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try{
@@ -354,7 +354,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the left navigation menu on login using admin access")
+	@TestName(description = "Validate the left navigation menu on login using SM access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheLeftNavigationMenuOnLoginUsingSMAccessAsStoreManager(String browser, String username, String password, String location) throws Exception {
 		try{
@@ -367,7 +367,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the left navigation menu on login using admin access")
+	@TestName(description = "Validate the left navigation menu on login using TL access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamLead(String browser, String username, String password, String location) throws Exception {
 		try{
@@ -380,7 +380,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify the left navigation menu on login using admin access")
+	@TestName(description = "Validate the left navigation menu on login using TM access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheLeftNavigationMenuOnLoginUsingTMAccessAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		try{
@@ -396,7 +396,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
 	@Enterprise(name = "Coffee_Enterprise")
-	@TestName(description = "Verify the left navigation menu on login using admin access")
+	@TestName(description = "Validate the left navigation menu on login using DM access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager(String browser, String username, String password, String location) throws Exception {
 		try{
@@ -409,7 +409,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
 	@Enterprise(name = "Coffee_Enterprise")
-	@TestName(description = "Verify the left navigation menu on login using admin access")
+	@TestName(description = "Validate the left navigation menu on login using CA (Customer Admin) access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin(String browser, String username, String password, String location) throws Exception {
 		try{

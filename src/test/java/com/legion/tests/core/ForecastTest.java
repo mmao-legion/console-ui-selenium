@@ -107,7 +107,7 @@ public class ForecastTest extends TestBase{
 				if (schedulePage.inActiveWeekDayClosed(index)){
 					SimpleUtils.report("Store is closed and there is no insight smartc");
 				}else {
-					insightData1 = ForecastPage.getInsightDataInShopperWeekView();
+					insightData1 = ForecastPage.getInsightDataInShopperDayView();
 					peakItemsShoppers[index] =insightData1.get("peakShoppers");
 					totalItemsShoppers[index] =insightData1.get("totalShoppers");
 					sum+=totalItemsShoppers[index];
@@ -263,7 +263,7 @@ public class ForecastTest extends TestBase{
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Haya")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify Edit Forecast in Week view")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyEditForecastInWeekViewViewAsInternalAdmin(String browser, String username, String password, String location) {
@@ -288,25 +288,26 @@ public class ForecastTest extends TestBase{
 			forecastPage.verifyAndClickCancelBtn();
 			forecastPage.verifyAndClickEditBtn();
 
+
 			//verify double click graph bar
 			forecastPage.verifyDoubleClickAndUpdateForecastBarValue(String.valueOf(index), value);
 			String tooltipInfo =forecastPage.getTooltipInfo(String.valueOf(index));
 			boolean flag = tooltipInfo.contains("Actual")||tooltipInfo.contains("Last Year")||tooltipInfo.contains("Recent Trend");
-//		SimpleUtils.assertOnFail("Info on tooltip is incorrect!",tooltipInfo.contains(weekDayInfo+" Forecast")&&tooltipInfo.contains(editedValueInfo)&&tooltipInfo.contains("Comparison")&&flag,false);
+			SimpleUtils.assertOnFail("Info on tooltip is incorrect!",tooltipInfo.contains(weekDayInfo+" Forecast")&&tooltipInfo.contains(editedValueInfo)&&tooltipInfo.contains("Comparison")&&flag,false);
 			//Save forecast and check the value.
 			forecastPage.verifyAndClickSaveBtn();
 			tooltipInfo =forecastPage.getTooltipInfo(String.valueOf(index));
-//		SimpleUtils.assertOnFail("Edited value is not saved!",tooltipInfo.contains(value),false);
+			SimpleUtils.assertOnFail("Edited value is not saved!",tooltipInfo.contains(value),false);
 			forecastPage.verifyAndClickEditBtn();
+			forecastPage.verifyLegionPeakShopperFromForecastGraphInWeekView();
 			schedulePage.navigateToNextWeek();
 			forecastPage.verifyWarningEditingForecast();
-			forecastPage.verifyLegionPeakShopperFromForecastGraphInWeekView();
-			//Verify graph bars are draggable.
-			forecastPage.verifyDraggingBarGraph();
-			//Save forecast and check the value.
 			forecastPage.verifyAndClickSaveBtn();
-			forecastPage.verifyLegionPeakShopperFromForecastGraphInWeekView();
-			forecastPage.verifyAndClickCancelBtn();
+
+
+			//Verify graph bars are draggable.
+			//forecastPage.verifyDraggingBarGraph();
+			//Save forecast and check the value.;
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
