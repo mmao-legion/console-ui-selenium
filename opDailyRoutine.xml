@@ -21,8 +21,8 @@
                     <include name="verifyExportLocationDistrict" />
                     <!--                    Location group test cases-->
                     <include name="verifyMSLocationGroupFunctionForRegular" />
-                    <include name="verifyChangeMSToP2P" />
-                    <include name="verifyP2PLocationGroupFunctionForRegular" />
+                    <!--include name="verifyChangeMSToP2P" /-->
+                    <!--include name="verifyP2PLocationGroupFunctionForRegular" /-->
                     <include name="verifyChangeP2PToMS" />
 
                     <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
