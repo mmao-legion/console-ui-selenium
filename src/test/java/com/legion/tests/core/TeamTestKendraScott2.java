@@ -675,4 +675,45 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Remove access to Employee Profile in Team Schedule view")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyRemoveAccessToEmployeeProfileInTeamScheduleAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		try {
+			// Login with Store manager Credential
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+			// Create schedule and publish it.
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+
+			if (!schedulePage.isWeekGenerated()){
+				schedulePage.createScheduleForNonDGFlowNewUI();
+				schedulePage.publishActiveSchedule();
+			}
+			if (!schedulePage.isWeekPublished()){
+				schedulePage.publishActiveSchedule();
+			}
+			SimpleUtils.assertOnFail("SM should be able to view profile info in SM view", !schedulePage.isProfileIconsEnable(), false);
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			profileNewUIPage.clickOnUserProfileImage();//.getNickNameFromProfile();
+			dashboardPage.clickOnSwitchToEmployeeView();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			schedulePage.clickOnScheduleSubTab("Team Schedule");
+			SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", schedulePage.isProfileIconsEnable(), false);
+
+
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
 }

@@ -898,9 +898,18 @@ public class DMViewTest extends TestBase {
             int shiftsNumForLoc2 = schedulePage.getShiftsNumberByName("");
             int openRateExpected = 0;
             if ((shiftsNumForLoc1+shiftsNumForLoc2)!=0){
-                openRateExpected = (openShiftsNumForLoc1+openShiftsNumForLoc2)*100/(shiftsNumForLoc1+shiftsNumForLoc2);
+                openRateExpected = Math.round((float)(openShiftsNumForLoc1+openShiftsNumForLoc2)*100/(shiftsNumForLoc1+shiftsNumForLoc2));
             }
-            int assignedRateExpected = 100-openRateExpected;
+            //int assignedRateExpected = 100-openRateExpected;
+            int assignedRateExpected = Math.round((float)(shiftsNumForLoc1+shiftsNumForLoc2-openShiftsNumForLoc1-openShiftsNumForLoc2)*100/(shiftsNumForLoc1+shiftsNumForLoc2));
+
+            // refresh shifts offer KPI.
+            dashboardPage.navigateToDashboard();
+            locationSelectorPage.changeLocation(location);
+            AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+            analyticsPage.gotoAnalyticsPage();
+            analyticsPage.switchAllLocationsOrSingleLocation(false);
+            analyticsPage.mouseHoverAndRefreshByName("Shift Offer KPI");
 
             dashboardPage.navigateToDashboard();
             locationSelectorPage.reSelectDistrict(districtName);
@@ -914,11 +923,14 @@ public class DMViewTest extends TestBase {
             // Verify navigation to schedule page by "View Schedules" button on Open_Shifts Widget
             dashboardPage.clickViewSchedulesLinkOnOpenShiftsWidget();
             SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
-            if (currentWeek.toLowerCase().contains(MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toLowerCase().split("\n")[MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toLowerCase().split("\n").length-1])) {
+            String[] weekInfoInDMView = MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toLowerCase().split("\n");
+            String weekInfoExpected = schedulePage.convertDateStringFormat(weekInfoInDMView[weekInfoInDMView.length-1]);
+            if (currentWeek.toLowerCase().contains(weekInfoExpected.toLowerCase())) {
                 SimpleUtils.pass("Open Shifts: \"View Schedules\" button is to navigate to current week schedule page");
             } else {
                 SimpleUtils.fail("Open Shifts: \"View Schedules\" button failed to navigate to current week schedule page", false);
             }
+
             // Verify the data on Open_Shifts Widget
             if (openRateExpected == valuesOnOpenShiftsWidget.get("open") && assignedRateExpected == valuesOnOpenShiftsWidget.get("assigned")){
                 SimpleUtils.pass("Data is correct!");
@@ -1044,9 +1056,6 @@ public class DMViewTest extends TestBase {
             locationSelectorPage.isLocationSelected("All Locations");
             List<String> locationInDistrict1 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
 
-            //Validate search function.
-            schedulePage.verifySearchLocationInScheduleDMView(location);
-
             //Validate changing district.
             locationSelectorPage.changeAnotherDistrictInDMView();
             String anotherDistrictName = dashboardPage.getCurrentDistrict();
@@ -1061,6 +1070,10 @@ public class DMViewTest extends TestBase {
             //Validate the clickability of forward button.
             schedulePage.navigateToNextWeek();
             SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+
+            //Validate search function.
+            locationSelectorPage.reSelectDistrict(districtName);
+            schedulePage.verifySearchLocationInScheduleDMView(location);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1143,7 +1156,7 @@ public class DMViewTest extends TestBase {
             }
             SimpleUtils.assertOnFail("Published hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) == 0, false);
             //Verify difference value between budgeted and projected.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Projected Hours")));
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clocked Hours")));
             projectedHours = 0;
             for (Float f: data){
                 projectedHours = projectedHours + f;

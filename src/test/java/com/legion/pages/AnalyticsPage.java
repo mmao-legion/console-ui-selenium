@@ -32,4 +32,6 @@ public interface AnalyticsPage {
 	public boolean isSpecificReportLoaded(String reportName) throws Exception;
 
 	public void mouseHoverAndExportReportByName(String reportName) throws Exception;
+
+	public void mouseHoverAndRefreshByName(String reportName) throws Exception;
 }
