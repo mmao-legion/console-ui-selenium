@@ -109,7 +109,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement profileContactPhoneInputBox;
 	@FindBy(css="input[name=\"email\"]")
 	private WebElement profileContactEmailInputBox;
-	@FindBy(css="lgn-action-button[ng-click=\"invite()\"]")
+	@FindBy(css="lg-button[ng-click=\"invite()\"]")
 	private WebElement userProfileInviteBtn;
 	@FindBy(css="section[ng-form=\"inviteTm\"]")
 	private WebElement inviteTeamMemberPopUp;
@@ -1003,7 +1003,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 						SimpleUtils.fail("'Invite Team Member' popup 'Phone' Input field contains Blank value.", true);
 				}
 				else
-					SimpleUtils.fail("'Invite Team Member' popup 'Phone' Input field not loaded.", true);
+					SimpleUtils.report("'Invite Team Member' popup 'Phone' Input field not loaded.");
 				
 				if(isElementLoaded(inviteTeamMemberPopUpEmailField,5)) {
 					String inviteTeamMemberPopUpEmailFieldValue = inviteTeamMemberPopUpEmailField.getAttribute("value");
@@ -1033,7 +1033,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				
 				if(isElementLoaded(inviteTeamMemberPopUpCancelBtn,5) && inviteTeamMemberPopUpCancelBtn.isEnabled()) {
 					SimpleUtils.pass("'Invite Team Member' popup 'Cancel' Button not loaded successfully.");
-					click(inviteTeamMemberPopUpCancelBtn);
+					click(inviteTeamMemberPopUpSendBtn);
 					SimpleUtils.pass("'Invite Team Member' popup 'Cancel' Button clicked successfully.");
 				}
 				else
@@ -1044,7 +1044,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.fail("Profile Page: user profile 'Invite Team Memeber' popup not loaded.", false);			
 		}
 		else
-			SimpleUtils.report("Profile Page: user profile 'Invite' button not Available.");
+			SimpleUtils.fail("Profile Page: user profile 'Invite' button not Available.", false);
 	}
 			
 	@Override
@@ -2771,12 +2771,22 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 
 	@Override
-	public String getUserProfileName() throws Exception {
-		String userProfileName = "";
+	public HashMap<String, String> getUserProfileName() throws Exception {
+		HashMap<String, String> userProfileNames = new HashMap<>();
+		String fullName = "";
+		String nickName = "";
 		if (isElementLoaded(nameOfProfile, 5)) {
-			userProfileName = nameOfProfile.getText().replaceAll("\"", "").trim();
-		}
-		return userProfileName;
+			String[] allNames = nameOfProfile.getText().replaceAll("\"", "").trim().split("\n");
+			fullName = allNames[0];
+			if(allNames.length ==2){
+				nickName = allNames[1];
+			}
+			userProfileNames.put("fullName", fullName);
+			userProfileNames.put("nickName", nickName);
+			SimpleUtils.pass("Get user profile names successfully! ");
+		} else
+			SimpleUtils.fail("Names on user profile failed to load! ", false);
+		return userProfileNames;
 	}
 
 	//added by Haya
@@ -3373,5 +3383,88 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}else{
 			SimpleUtils.fail("Save button is not loaded!", false);
 		}
+	}
+
+	@FindBy(css = "[ng-click=\"showInvitationCode.value = !showInvitationCode.value\"]")
+	private WebElement showOrHideInvitationCodeButton;
+
+	@FindBy(css = "[ng-if=\"showInvitationCode.value\"]")
+	private WebElement invitationCode;
+
+	@FindBy(css = "div.header-buttons-invite-code-wrapper")
+	private WebElement showOrHideInvitationCodeButtonHeader;
+
+
+	public void clickOnShowOrHideInvitationCodeButton(boolean toShowCode) throws Exception {
+		if (isElementLoaded(showOrHideInvitationCodeButton,5)){
+			if(toShowCode){
+				if(showOrHideInvitationCodeButton.getText().equalsIgnoreCase("Show Invitation Code")){
+					clickTheElement(showOrHideInvitationCodeButton);
+				}
+			} else{
+				if(showOrHideInvitationCodeButton.getText().equalsIgnoreCase("Hide Code")){
+					clickTheElement(showOrHideInvitationCodeButton);
+				}
+			}
+			SimpleUtils.pass("Show Or Hide Invitation Code button is clicked!");
+		}else{
+			SimpleUtils.fail("Show Or Hide Invitation Code button is not loaded!", false);
+		}
+	}
+
+	public String getInvitationCode() throws Exception {
+		String invitationCodeValue = "";
+		if (isElementLoaded(invitationCode,5)){
+			invitationCodeValue = invitationCode.getText();
+			SimpleUtils.pass("Get invitation Code successfully!");
+		}else{
+			SimpleUtils.fail("Invitation Code is not loaded!", false);
+		}
+		return invitationCodeValue;
+	}
+
+	public boolean isInvitationCodeLoaded() throws Exception {
+		boolean isInvitationCodeLoaded = false;
+		if (isElementLoaded(invitationCode,5)){
+			isInvitationCodeLoaded = true;
+			SimpleUtils.report("Invitation Code is loaded!");
+		}else{
+			SimpleUtils.report("Invitation Code is not loaded!");
+		}
+		return isInvitationCodeLoaded;
+	}
+
+	public String getShowOrHideInvitationCodeButtonTooltip() throws Exception {
+		String tooltip = "";
+		if(isElementLoaded(showOrHideInvitationCodeButtonHeader, 5)){
+			tooltip = showOrHideInvitationCodeButtonHeader.getAttribute("data-tootik");
+			SimpleUtils.pass("Get tooltip of Show Or Hide Invitation Code button successfully!");
+		} else
+			SimpleUtils.fail("Show Or Hide Invitation Code button is not loaded!", false);
+		return tooltip;
+	}
+
+	@Override
+	public boolean isInviteToLegionButtonLoaded() throws Exception {
+		boolean isInviteToLegionButtonLoaded = false;
+		if(isElementLoaded(userProfileInviteBtn, 5)) {
+			isInviteToLegionButtonLoaded =true;
+			SimpleUtils.report("Profile Page: Invite To Legion Button loaded successfully.");
+		} else
+			SimpleUtils.report("Profile Page: Invite To Legion Button failed to load.");
+
+		return isInviteToLegionButtonLoaded;
+	}
+
+	@Override
+	public boolean isShowOrHideInvitationCodeButtonLoaded() throws Exception {
+		boolean isShowOrHideInvitationCodeButtonLoaded = false;
+		if(isElementLoaded(showOrHideInvitationCodeButton, 5)) {
+			isShowOrHideInvitationCodeButtonLoaded =true;
+			SimpleUtils.report("Profile Page: Show Or Hide Invitation Code loaded successfully.");
+		} else
+			SimpleUtils.report("Profile Page: Show Or Hide Invitation Code failed to load.");
+
+		return isShowOrHideInvitationCodeButtonLoaded;
 	}
 }

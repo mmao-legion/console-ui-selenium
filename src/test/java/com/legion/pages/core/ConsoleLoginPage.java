@@ -147,4 +147,114 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 
 	}
 
+
+	@FindBy(css = "div.create-account")
+	private WebElement createAccountMessage;
+
+	@FindBy(css = "[ng-click=\"createAccount()\"]")
+	private WebElement signUpLink;
+
+	@FindBy(css = "div[class=\"user-onboarding-content\"]")
+	private WebElement createAccountPanel;
+
+	@FindBy(css = "input[placeholder=\"Last name\"]")
+	private WebElement lastNameInput;
+
+	@FindBy(css = "input[placeholder=\"Invitation code\"]")
+	private WebElement invitationCodeInput;
+
+	@FindBy(css = "button[ng-click=\"checkCodeAndLastName()\"]")
+	private WebElement verifyButton;
+
+	@FindBy(css = "div.lg-toast")
+	private WebElement errorToast;
+
+	@FindBy(css = "[ng-click=\"confirmEnteredEmail()\"]")
+	private WebElement createAccountButton;
+
+	@FindBy(css = "[placeholder=\"Email\"]")
+	private WebElement emailInput;
+
+	@FindBy(css = "[placeholder=\"Password\"]")
+	private WebElement passwordInput;
+
+	@FindBy(css = "[placeholder=\"Confirm Password\"]")
+	private WebElement confirmPasswordInput;
+
+
+	@Override
+	public void verifyCreateAccountMessageDisplayCorrectly() throws Exception {
+		if (isElementLoaded(createAccountMessage,15)
+				&& createAccountMessage.getText().equalsIgnoreCase("Don't have an account? Sign Up")) {
+			SimpleUtils.pass("Create Account Message display correctly! ");
+		}else
+			SimpleUtils.fail("Create Account Message display incorrectly!", false);
+	}
+
+	@Override
+	public void clickSignUpLink() throws Exception {
+		if (isElementLoaded(signUpLink,15)) {
+			clickTheElement(signUpLink);
+			SimpleUtils.pass("Click Sign Up link successfully! ");
+		}else
+			SimpleUtils.fail("Click Sign Up link fail to loaded!", false);
+	}
+
+	@Override
+	public boolean isVerifyLastNameAndInvitationCodePageLoaded() throws Exception {
+		boolean isVerifyLastNameAndInvitationCodePageLoaded = false;
+		if (isElementLoaded(createAccountPanel,15)) {
+			isVerifyLastNameAndInvitationCodePageLoaded = true;
+			SimpleUtils.report("Verify Last Name And Invitation Code Page is loaded successfully! ");
+		}else
+			SimpleUtils.fail("Verify Last Name And Invitation Code Page fail to loaded!", false);
+		return isVerifyLastNameAndInvitationCodePageLoaded;
+	}
+
+	@Override
+	public void verifyLastNameAndInvitationCode(String lastName, String invitationCode) throws Exception {
+
+		if (isElementLoaded(lastNameInput,15)
+				&& isElementLoaded(invitationCodeInput, 15)
+				&& isElementLoaded(verifyButton, 15)) {
+			lastNameInput.clear();
+			lastNameInput.sendKeys(lastName);
+			invitationCodeInput.clear();
+			invitationCodeInput.sendKeys(invitationCode);
+			clickTheElement(verifyButton);
+
+			SimpleUtils.pass("Verify last name and invitation code successfully! ");
+		}else
+			SimpleUtils.fail("Create Account page fail to loaded!", false);
+	}
+
+	@Override
+	public boolean isErrorToastLoaded() throws Exception {
+		boolean isErrorToastLoaded = false;
+		if (isElementLoaded(errorToast,5)) {
+			if(errorToast.getText().equals("Error! Last name or Invitation code is incorrect")){
+				isErrorToastLoaded = true;
+				SimpleUtils.pass("Error toast is loaded successfully! ");
+			} else
+				SimpleUtils.fail("Error toast is loaded successfully! ", false);
+		}else
+			SimpleUtils.fail("Error toast failed to load!", false);
+		return isErrorToastLoaded = true;
+	}
+
+	@Override
+	public boolean isCreateAccountPageLoaded() throws Exception {
+		boolean isCreateAccountPageLoaded = false;
+		if (isElementLoaded(createAccountButton,5)
+				&& isElementLoaded(emailInput, 5)
+				&& isElementLoaded(passwordInput, 5)
+				&& isElementLoaded(confirmPasswordInput, 5)) {
+			isCreateAccountPageLoaded = true;
+			SimpleUtils.report("Create Account page is loaded successfully! ");
+		}else
+			SimpleUtils.report("Create Account page fail to loaded!");
+		return isCreateAccountPageLoaded;
+	}
+
+
 }

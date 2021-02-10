@@ -602,6 +602,11 @@ public class DMViewTest extends TestBase {
                 SimpleUtils.warn("LEG-12321: [DM View] Timesheet is inconsistent");
 
             // Validate click given location and given week
+            dashboardPage.navigateToDashboard();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            locationSelectorPage.reSelectDistrict(districtName);
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+
             timeSheetPage.navigateToPreviousWeek();
             String weekInfo = timeSheetPage.getActiveDayWeekOrPayPeriod();
             timeSheetPage.clickOnGivenLocation(location);
@@ -650,6 +655,168 @@ public class DMViewTest extends TestBase {
 
             // Validate click one location
             SimpleUtils.assertOnFail("Compliance Page: The location is clickable unexpectedly", !compliancePage.isLocationInCompliancePageClickable(), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Owner(owner = "Julie")
+    @Enterprise(name = "DGStage_Enterprise")
+    @TestName(description = "Verify the availability of location list and sub location on Timesheet in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAnalyticsTableOnComplianceInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            compliancePage.clickOnComplianceConsoleMenu();
+            SimpleUtils.assertOnFail("Compliance page not loaded successfully", compliancePage.isCompliancePageLoaded(), false);
+
+            // Validate the field names in analytics table
+            compliancePage.verifyFieldNamesInAnalyticsTable();
+
+            // Validate the field columns can be ordered
+            compliancePage.verifySortByColForLocationsInDMView(1);
+            compliancePage.verifySortByColForLocationsInDMView(2);
+            compliancePage.verifySortByColForLocationsInDMView(3);
+            compliancePage.verifySortByColForLocationsInDMView(4);
+            compliancePage.verifySortByColForLocationsInDMView(5);
+            compliancePage.verifySortByColForLocationsInDMView(6);
+            compliancePage.verifySortByColForLocationsInDMView(7);
+            compliancePage.verifySortByColForLocationsInDMView(8);
+
+            // Validate the data of analytics table for past week.
+            compliancePage.navigateToPreviousWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for past week successfully",compliancePage.isComplianceDMView(), false);
+            List<String> dataInDMForPast = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
+            String totalExtraHoursInDMView = dataInDMForPast.get(0);
+
+            dashboardPage.navigateToDashboard();
+            locationSelectorPage.changeLocation(location);
+            liquidDashboardPage.clickOnCarouselOnWidget("compliance violation","left");
+            List<String> dataInSMForPast = liquidDashboardPage.getDataOnComplianceViolationWidget();
+            String totalHrsInSMForPast = dataInSMForPast.get(3);
+            SimpleUtils.report("Total Extra Hours In DM View for past week is "+totalExtraHoursInDMView);
+            SimpleUtils.report("Total Extra Hours In SM View for past week is "+totalHrsInSMForPast);
+            if(totalHrsInSMForPast.equals(String.valueOf(Math.round(Float.parseFloat(totalExtraHoursInDMView)))))
+                SimpleUtils.pass("Compliance Page: Analytics table matches the past week's data");
+            else
+                SimpleUtils.fail("Compliance Page: Analytics table doesn't match the past week's data",false);
+
+            // Validate the data of analytics table for current week.
+            liquidDashboardPage.clickOnCarouselOnWidget("compliance violation","right");
+            List<String> dataInSMForCurrent  = liquidDashboardPage.getDataOnComplianceViolationWidget();
+            String totalHrsInSMForCurrent = dataInSMForCurrent.get(6);
+            locationSelectorPage.reSelectDistrict(districtName);
+            compliancePage.clickOnComplianceConsoleMenu();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for current week successfully",compliancePage.isComplianceDMView(), false);
+            List<String> dataInDMForCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
+            String totalExtraHoursInDMViewForCurrent = dataInDMForCurrent.get(0);
+            SimpleUtils.report("Total Extra Hours In DM View for current week is " + totalExtraHoursInDMViewForCurrent);
+            SimpleUtils.report("Total Extra Hours In SM View for current week is " + totalHrsInSMForCurrent);
+            if(totalHrsInSMForCurrent.equals(String.valueOf(Math.round(Float.parseFloat((totalExtraHoursInDMViewForCurrent))))))
+                SimpleUtils.pass("Compliance Page: Analytics table matches the current week's data");
+            else
+                SimpleUtils.fail("Compliance Page: Analytics table doesn't match the current week's data",false);
+
+            // Validate the data of analytics table for future week
+            compliancePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for future week successfully",compliancePage.isComplianceDMView(), false);
+            List<String> dataInDMForFuture = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
+            String totalExtraHoursInDMViewForFuture = dataInDMForFuture.get(0);
+            SimpleUtils.report("Total Extra Hours In DM View for future week is " + totalExtraHoursInDMViewForFuture);
+            if(totalExtraHoursInDMViewForFuture.equals("0.0"))
+                SimpleUtils.pass("Compliance Page: Analytics table matches the future week's data");
+            else
+                SimpleUtils.fail("Compliance Page: Analytics table doesn't match the future week's data",false);
+            compliancePage.navigateToPreviousWeek();
+
+            // Validate Late Schedule is Yes
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            Thread.sleep(2000);
+            controlsNewUIPage.updateDaysInAdvancePublishSchedulesInSchedulingPolicies("7");
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
+            schedulePage.clickOnLocationNameInDMView(location);
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated)
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            schedulePage.createScheduleForNonDGFlowNewUI();
+            schedulePage.publishActiveSchedule();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            compliancePage.clickOnComplianceConsoleMenu();
+            List<String>  dataCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
+            String lateScheduleYes = dataCurrent.get(dataCurrent.size()-1);
+            if (lateScheduleYes.equals("Yes"))
+                SimpleUtils.pass("Compliance Page: Late Schedule is Yes as expected");
+            else
+                SimpleUtils.fail("Compliance Page: Late Schedule is not Yes",false);
+
+            // Validate Late Schedule is No
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnLocationNameInDMView(location);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated)
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            schedulePage.createScheduleForNonDGFlowNewUI();
+            schedulePage.publishActiveSchedule();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            compliancePage.clickOnComplianceConsoleMenu();
+            compliancePage.navigateToNextWeek();
+            compliancePage.navigateToNextWeek();
+            List<String>  dataNext = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
+            String lateScheduleNo = dataNext.get(dataNext.size()-1);
+            if (lateScheduleNo.equals("No"))
+                SimpleUtils.pass("Compliance Page: Late Schedule is No as expected");
+            else
+                SimpleUtils.fail("Compliance Page: Late Schedule is not No",false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Owner(owner = "Julie")
+    @Enterprise(name = "DGStage_Enterprise")
+    @TestName(description = "Verify the availability of location list and sub location on Timesheet in DM View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTIMESHEETAPPROVALRATEOnTimesheetInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            String timesheetDueDate = timeSheetPage.verifyTimesheetSmartCard();
+            dashboardPage.navigateToDashboard();
+            locationSelectorPage.reSelectDistrict(districtName);
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+
+            // Validate the content on TIMESHEET APPROVAL RATE smart card
+            timeSheetPage.validateTheContentOnTIMESHEETAPPROVALRATESmartCard(timesheetDueDate);
+
+            // Validate the data on TIMESHEET APPROVAL RATE smart card
+            //todo due to https://legiontech.atlassian.net/browse/LEG-12321
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1349,7 +1516,7 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail(field7 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field7) > 0, false);
             SimpleUtils.assertOnFail(field8 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field8) > 0, false);
 
-            //Validate the field colums can be ordered.
+            //Validate the field columns can be ordered.
             schedulePage.verifySortByColForLocationsInDMView(1);
             schedulePage.verifySortByColForLocationsInDMView(2);
             schedulePage.verifySortByColForLocationsInDMView(3);
@@ -1370,8 +1537,6 @@ public class DMViewTest extends TestBase {
             schedulePage.clickSpecificLocationInDMViewAnalyticTable(location);
             SimpleUtils.assertOnFail("This is not the Timesheet SM view page for current!",timeSheetPage.isTimeSheetPageLoaded(), false);
 
-            //Validate the data of analytics table for future week.
-            //Cannot navigate to a future week now.
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

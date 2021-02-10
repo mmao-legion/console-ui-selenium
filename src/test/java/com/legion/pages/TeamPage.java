@@ -168,4 +168,5 @@ public interface TeamPage {
 	public void clickOnDELETEANYWAYButton() throws Exception;
 	public void verifyTheColumnInRosterPage(boolean isLocationGroup) throws Exception;
 	public void verifyTheSortFunctionInRosterByColumnName(String columnName) throws Exception;
+	public void selectARandomOnboardedOrNotTeamMemberToViewProfile(boolean selectOnboardedTM) throws Exception;
 }

@@ -12927,9 +12927,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void clickOnLocationNameInDMView(String location) throws Exception {
         boolean flag = false;
-        if (areListElementVisible(locationsInTheList, 10)) {
+        if (areListElementVisible(locationsInTheList, 15)) {
             for (WebElement element : locationsInTheList) {
-                if (element.findElement(By.cssSelector("img.analytics-new-table-location~span")).getText().contains(location)) {
+                if (element.findElement(By.cssSelector("img.analytics-new-table-location~span")).getText().equals(location)) {
                     flag = true;
                     click(element.findElement(By.cssSelector("img.analytics-new-table-location~span")));
                     SimpleUtils.pass(location + "clicked!");

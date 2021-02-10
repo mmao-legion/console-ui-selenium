@@ -4208,6 +4208,8 @@ private WebElement locationColumn;
 		return false;
 	}
 
+	
+
 	//	{
 //    	if(isElementLoaded(rosterBodyElement))
 //    	{
@@ -4259,4 +4261,40 @@ private WebElement locationColumn;
 //    	}
 //    }
 //    
+
+
+	@Override
+	public void selectARandomOnboardedOrNotTeamMemberToViewProfile(boolean selectOnboardedTM) throws Exception {
+		WebElement teamMember = null;
+		String teamMemberStatus = "";
+		boolean isTMFound = false;
+		if (areListElementVisible(teamMembers, 15) && areListElementVisible(teamMemberNames)
+				&&teamMembers.size() == teamMemberNames.size()) {
+			Random random = new Random();
+			while(!isTMFound){
+				int randomIndex = random.nextInt(teamMembers.size());
+				teamMember = teamMembers.get(randomIndex);
+				teamMemberStatus = teamMember.findElement(By.className("status-wrapper")).getText();
+				if(selectOnboardedTM){
+					if(teamMemberStatus.equalsIgnoreCase("Active")){
+						clickTheElement(teamMemberNames.get(randomIndex));
+						String onBoardedDate = getOnBoardedDate();
+						if(onBoardedDate == null || onBoardedDate.equals("")){
+							isTMFound = true;
+						} else{
+							goToTeam();
+							verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+						}
+					}
+				} else {
+					if(!teamMemberStatus.equalsIgnoreCase("Active")){
+						clickTheElement(teamMemberNames.get(randomIndex));
+						isTMFound = true;
+					}
+				}
+			}
+		} else {
+			SimpleUtils.fail("Team Members are failed to load!", true);
+		}
+	}
 }

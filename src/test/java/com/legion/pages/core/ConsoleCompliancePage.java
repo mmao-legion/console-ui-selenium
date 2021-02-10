@@ -10,6 +10,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -491,6 +492,164 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
         float result = 0;
         if (list.size()>0){
             result = list.stream().sorted(Float::compareTo).collect(Collectors.toList()).get(list.size()-1);
+        }
+        return result;
+    }
+
+    @FindBy (className = "analytics-new-table-header")
+    private WebElement analyticsTableHeader;
+
+    @Override
+    public void verifyFieldNamesInAnalyticsTable() throws Exception {
+        /*It should include:
+        - Location
+        - Total Extra Hours
+        - Overtime (Hrs)
+        - Clopening (Hrs)
+        - Missed Meal
+        - Schedule Changed
+        - Doubletime (Hrs)
+        - Late Schedule?*/
+        boolean isMatched = false;
+        List<String> fieldNamesExpected = Arrays.asList(new String[]{"Location", "Total Extra Hours", "Overtime (Hrs)", "Clopening (Hrs)", "Missed Meal", "Schedule Changed", "Doubletime (Hrs)", "Late Schedule?"});
+        if (isElementLoaded(analyticsTableHeader,10)) {
+            List<WebElement> fields = analyticsTableHeader.findElements(By.xpath("./div"));
+            for (WebElement field: fields) {
+                if (!field.getAttribute("class").contains("ng-hide")) {
+                    if (fieldNamesExpected.contains(field.getText().replace("\n"," "))) {
+                        isMatched = true;
+                        SimpleUtils.report("Compliance Page: Expected field name is \'" + field.getText().replace("\n"," ") + "\'");
+                    } else {
+                        isMatched = false;
+                        SimpleUtils.report("Compliance Page: Unexpected field name is \'" + field.getText().replace("\n"," ") + "\'");
+                        break;
+                    }
+                }
+            }
+            if (isMatched)
+                SimpleUtils.pass("Compliance Page: The field names in analytics table are expected");
+            else
+                SimpleUtils.fail("Compliance Page: The field names in analytics table are unexpected",false);
+        } else
+            SimpleUtils.fail("Compliance Page: The header of analytics table failed to load",false);
+    }
+
+    @Override
+    public void verifySortByColForLocationsInDMView(int index) throws Exception {
+        List<String> listString = new ArrayList<String>();
+        List<Float> listFloat = new ArrayList<Float>();
+        if (index > 0 && index <= getNumOfColInDMViewTable()) {
+            listString = getListByColInTimesheetDMView(index);
+            if (analyticsTableHeader.findElements(By.cssSelector("i.analytics-new-table-header-sorter")).size()==getNumOfColInDMViewTable()){
+                click(analyticsTableHeader.findElements(By.cssSelector("i.analytics-new-table-header-sorter")).get(index-1));
+                if (analyticsTableHeader.findElements(By.cssSelector("i.analytics-new-table-header-sorter")).get(index-1).getAttribute("class").contains("sorter-up")){
+                    if (transferStringToFloat(listString).size()==listString.size()){
+                        listFloat = transferStringToFloat(listString).stream().sorted(Float::compareTo).collect(Collectors.toList());
+                        if (Math.abs(transferStringToFloat(getListByColInTimesheetDMView(index)).get(listFloat.size()-1)-listFloat.get(listFloat.size()-1)) == 0){
+                            SimpleUtils.pass("Sort result is correct!");
+                        } else {
+                            SimpleUtils.fail("Sort result is incorrect!", false);
+                        }
+                    } else {
+                        listString = listString.stream().sorted(String::compareTo).collect(Collectors.toList());
+                        if (getListByColInTimesheetDMView(index).get(0).equals(listString.get(0))){
+                            SimpleUtils.pass("Sort result is correct!");
+                        } else {
+                            SimpleUtils.fail("Sort result is incorrect!", false);
+                        }
+                    }
+                } else {
+                    if (transferStringToFloat(listString).size()==listString.size()){
+                        listFloat = transferStringToFloat(listString).stream().sorted(Float::compareTo).collect(Collectors.toList());
+                        if (Math.abs(transferStringToFloat(getListByColInTimesheetDMView(index)).get(0)-listFloat.get(listFloat.size()-1)) == 0){
+                            SimpleUtils.pass("Sort result is correct!");
+                        } else {
+                            SimpleUtils.fail("Sort result is incorrect!", false);
+                        }
+                    } else {
+                        listString = listString.stream().sorted(String::compareTo).collect(Collectors.toList());
+                        if (getListByColInTimesheetDMView(index).get(0).equals(listString.get(listString.size()-1))){
+                            SimpleUtils.pass("Sort result is correct!");
+                        } else {
+                            SimpleUtils.fail("Sort result is incorrect!", false);
+                        }
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Columns are not loaded correctly!", false);
+            }
+        } else {
+            SimpleUtils.fail("Index beyond range.", false);
+        }
+    }
+
+    @Override
+    public List<Float> transferStringToFloat(List<String> listString) throws Exception{
+        List<Float> result = new ArrayList<Float>();
+        boolean flag = true;
+        for (String s : listString){
+            if (!SimpleUtils.isNumeric(s)){
+                flag = false;
+                break;
+            }
+        }
+        if (flag){
+            for (String s : listString){
+                result.add(Float.parseFloat(s));
+            }
+        }
+        return result;
+    }
+
+    private int getNumOfColInDMViewTable() throws Exception {
+        int num = 0;
+        if (isElementLoaded(analyticsTableHeader, 10)){
+            num = analyticsTableHeader.getText().split("\n").length;
+        } else {
+            SimpleUtils.fail("Table header fail to load!", false);
+        }
+        return num;
+    }
+
+    @Override
+    public List<String> getListByColInTimesheetDMView(int index) throws Exception{
+        List<String> list = new ArrayList<String>();
+        for (WebElement element: rowsInAnalyticsTable){
+            if (index > 0 && index <= getNumOfColInDMViewTable() && element.findElements(By.cssSelector(".ng-scope.col-fx-1")).size()>=getNumOfColInDMViewTable()-1){
+                if (index == 1){
+                    list = getLocationsInScheduleDMViewLocationsTable();
+                } else {
+                    if (areListElementVisible(rowsInAnalyticsTable,10)){
+                        list.add(element.findElements(By.cssSelector(".ng-scope.col-fx-1")).get(index-2).getText().replace("%",""));
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Index beyond range.", false);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<String> getLocationsInScheduleDMViewLocationsTable() throws Exception {
+        waitForSeconds(3);
+        List<String> locations = new ArrayList<String>();
+        if (areListElementVisible(rowsInAnalyticsTable,10)){
+            for (WebElement element: rowsInAnalyticsTable){
+                locations.add(element.findElement(By.cssSelector("img.analytics-new-table-location~span")).getText());
+            }
+        }
+        return locations;
+    }
+
+    @FindBy(css = "div.analytics-new-table")
+    private WebElement analyticsTableInComplianceDMViewPage;
+
+    @Override
+    public boolean isComplianceDMView() throws Exception {
+        boolean result = false;
+        if (isElementLoaded(analyticsTableInComplianceDMViewPage, 10)) {
+            result = true;
         }
         return result;
     }
