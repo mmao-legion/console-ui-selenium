@@ -405,7 +405,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					&& Math.abs(overviewData.get("otherHours") - (scheduleSmartCardHoursWages.get("otherHours"))) <= 0.05) {
 				SimpleUtils.pass("Schedule/Budgeted smartcard-is showing the values in Hours and wages, it is displaying the same data as overview page have for the current week .");
 			}else {
-				SimpleUtils.fail("Scheduled Hours and Overview Schedule Hours not same",true);
+				SimpleUtils.fail("Scheduled Hours and Overview Schedule Hours not same",false);
 			}
 		}
 

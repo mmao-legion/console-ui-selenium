@@ -1745,7 +1745,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public void clickOnCreateOrNextBtn() throws Exception {
-        if (isElementEnabled(btnSave)) {
+        if (isElementLoaded(btnSave, 5)) {
             click(btnSave);
             SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
         } else {
@@ -8720,18 +8720,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             // Validate what happens next to the Edit!
             // When Status is finalized, look for extra popup.
             clickTheElement(editScheduleButton);
-            if(isElementLoaded(popupAlertPremiumPay,5) ) {
+            if(isElementLoaded(popupAlertPremiumPay,10) ) {
                 SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
                 // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
-                if(isElementEnabled(btnEditAnyway,5) && isElementEnabled(btnCancelOnAlertPopup,5)){
+                if(isElementEnabled(btnEditAnyway,10) && isElementEnabled(btnCancelOnAlertPopup,10)){
                     SimpleUtils.pass("CANCEL And EDIT ANYWAY Buttons are enabled on Alert Pop up");
                     SimpleUtils.report("Click on EDIT ANYWAY button and check for next save and cancel buttons");
-                    click(btnEditAnyway);
+                    clickTheElement(btnEditAnyway);
                 } else {
                     SimpleUtils.fail("CANCEL And EDIT ANYWAY Buttons are not enabled on Alert Popup ",false);
                 }
             }
-            waitForSeconds(3);
+            waitForSeconds(5);
             if(checkSaveButton() && checkCancelButton()) {
                 SimpleUtils.pass("Save and Cancel buttons are enabled ");
             } else{
