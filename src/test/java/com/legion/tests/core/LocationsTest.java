@@ -38,7 +38,7 @@ public class LocationsTest extends TestBase {
     }
     public enum locationGroupSwitchOperation{
 
-        MS("Master Slave"),
+        MS("Parent Child"),
         PTP("Peer to Peer");
 
         private final String value;
