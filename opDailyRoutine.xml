@@ -14,25 +14,25 @@
         <classes>
             <class name="com.legion.tests.core.LocationsTest">
                 <methods>
-                    <!--include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" /-->
+                    <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
                     <include name="verifyCreateMockLocationAndNavigate" />
                     <include name="verifyCreateNSOLocationAndNavigate" />
-                    <!--include name="verifyDisableEnableLocationFunction" /-->
+                    <include name="verifyDisableEnableLocationFunction" />
                     <include name="verifyExportLocationDistrict" />
                     <!--                    Location group test cases-->
-                    <!--include name="verifyMSLocationGroupFunctionForRegular" /-->
-                    <!--include name="verifyChangeMSToP2P" /-->
-                    <!--include name="verifyP2PLocationGroupFunctionForRegular" /-->
-                    <!--include name="verifyChangeP2PToMS" /-->
+                    <include name="verifyMSLocationGroupFunctionForRegular" />
+                    <include name="verifyChangeMSToP2P" />
+                    <include name="verifyP2PLocationGroupFunctionForRegular" />
+                    <include name="verifyChangeP2PToMS" />
 
-                    <!--include name="verifyCreateMSLocationGroupWithNSOTypeFunction" /-->
+                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
                     <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />
                     <include name="verifyNoLocationGroupSettingForMock" />
 
                     <include name="verifyChangeNoneLocationToChild" />
                     <include name="verifyChangeNoneLocationToP2PParent" />
-                    <!--include name="verifyChangeNoneLocationToMSParent" /-->
-                    <!--include name="verifyChangeMSLocationsToNoneFunction" /-->
+                    <include name="verifyChangeNoneLocationToMSParent" />
+                    <include name="verifyChangeMSLocationsToNoneFunction" />
                     <include name="verifyChangeP2PLocationsToNoneFunction" />
 
 

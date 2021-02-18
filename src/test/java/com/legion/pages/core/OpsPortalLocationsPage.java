@@ -1624,7 +1624,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	//added by Estelle
-	@FindBy(css = "input-field[label=\"Master Slave\"]")
+	@FindBy(css = "input-field[label=\"Parent Child\"]")
 	private  WebElement msRadio;
 	@FindBy(css = "input-field[label=\"Peer to Peer\"]")
 	private  WebElement p2pRadio;
