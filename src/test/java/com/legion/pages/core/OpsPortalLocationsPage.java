@@ -316,7 +316,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(selectALocationTitle,5)) {
 			searchInputInSelectALocation.sendKeys(searchCharactor);
 			searchInputInSelectALocation.sendKeys(Keys.ENTER);
-			waitForSeconds(5);
+			waitForSeconds(15);
 			if (locationRowsInSelectLocation.size()>0) {
 				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"checkbox\"]"));
 				click(firstRow);
