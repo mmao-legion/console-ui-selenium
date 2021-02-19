@@ -12991,7 +12991,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String weekType) throws Exception {
         HashMap<String, Float> result = new HashMap<String, Float>();
         if (isElementLoaded(locationSummary,10) && locationSummary.findElements(By.cssSelector("text")).size()>=6){
-            if (locationSummary.findElement(By.cssSelector(".card-carousel-card-title")).getText().toLowerCase().contains("location summary")){
+            if (locationSummary.findElement(By.cssSelector(".card-carousel-card-title")).getText().toLowerCase().contains("locations summary") || locationSummary.findElement(By.cssSelector(".card-carousel-card-title")).getText().toLowerCase().contains("location summary")){
                 SimpleUtils.pass("Location Summary smart title displays correctly!");
                 String numOfLocations = locationSummary.findElement(By.cssSelector(".card-carousel-card-title")).getText().split(" ")[0];
                 if (SimpleUtils.isNumeric(numOfLocations)){
@@ -13130,8 +13130,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public HashMap<String, Integer> getValueOnUnplannedClocksSummaryCardAndVerifyInfo() throws Exception {
         HashMap<String, Integer> result = new HashMap<String, Integer>();
-        if (isElementLoaded(cardContainerInDMView,10) && isElementLoaded(cardContainerInDMView.findElement(By.cssSelector("div.card-carousel-card-analytics-card-color-yellow")),10)){
-            List<String> strList = Arrays.asList(cardContainerInDMView.findElement(By.cssSelector("div.card-carousel-card-analytics-card-color-yellow")).getText().split("\n"));
+        if (isElementLoaded(cardContainerInDMView,10) && isElementLoaded(cardContainerInDMView.findElement(By.cssSelector("div[class*=\"card-carousel-card-analytics-card-color-\"]")),10)){
+            List<String> strList = Arrays.asList(cardContainerInDMView.findElement(By.cssSelector("div[class*=\"card-carousel-card-analytics-card-color-\"]")).getText().split("\n"));
             if (strList.size()==4 && strList.get(1).toLowerCase().contains("unplanned") && strList.get(2).toLowerCase().contains("clocks") && SimpleUtils.isNumeric(strList.get(0)) && SimpleUtils.isNumeric(strList.get(3).replace(" total timesheets", ""))){
                 result.put("unplanned clocks", Integer.parseInt(strList.get(0)));
                 result.put("total timesheets", Integer.parseInt(strList.get(3).replace(" total timesheets", "")));
