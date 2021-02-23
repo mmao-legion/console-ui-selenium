@@ -260,13 +260,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //    @FindBy(css = "div.lgn-time-slider-notch-selector-start span.lgn-time-slider-label")
 //    private WebElement customizeShiftStartdayLabelTimeFormat;
 
-    @FindBy(xpath = "//div[contains(@class,'lgn-time-slider-notch-selector-start')]/following-sibling::div[2]")
+    @FindBy(xpath = "//div[contains(@class,'lgn-time-slider-notch-selector-start')]/following-sibling::div[1]")
     private WebElement customizeShiftStartdayLabel;
 
 //    @FindBy(css = "div.lgn-time-slider-notch-selector-end span.lgn-time-slider-label")
 //    private WebElement customizeShiftEnddayLabelTimeFormat;
 
-    @FindBy(xpath = "//div[contains(@class,'lgn-time-slider-notch-selector-end')]/following-sibling::div[2]")
+    @FindBy(xpath = "//div[contains(@class,'lgn-time-slider-notch-selector-end')]/following-sibling::div[1]")
     private WebElement customizeShiftEnddayLabel;
 
     @FindBy(css = "div.lgn-time-slider-notch-selector-start")
