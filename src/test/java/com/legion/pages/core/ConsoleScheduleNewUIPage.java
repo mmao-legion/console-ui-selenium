@@ -3912,12 +3912,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             continue;
                         }
                     }
-                    clickTheElement(operatingHoursSaveBtn);
-                    if (isElementEnabled(editBudgetBtn, 5)) {
-                        SimpleUtils.pass("Create Schedule: Save the budget hours Successfully!");
-                    }else {
-                        SimpleUtils.fail("Create Schedule: Click on Save the budget hours button failed, Next button is not enabled!", false);
-                    }
+                }
+                clickTheElement(operatingHoursSaveBtn);
+                if (isElementEnabled(editBudgetBtn, 5)) {
+                    SimpleUtils.pass("Create Schedule: Save the budget hours Successfully!");
+                }else {
+                    SimpleUtils.fail("Create Schedule: Click on Save the budget hours button failed, Next button is not enabled!", false);
                 }
             }
         }else {
@@ -4485,33 +4485,44 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return false;
     }
 
+
+    @FindBy (css = "lg-button[ng-click=\"deleteSchedule()\"]")
+    private WebElement deleteScheduleButton;
+
+    @FindBy (css = "div.delete-schedule-modal")
+    private WebElement deleteSchedulePopup;
+
+    @FindBy (css = ".delete-schedule-modal input")
+    private WebElement deleteScheduleCheckBox;
+
+    @FindBy (css = "button.delete-schedule-modal-button-delete")
+    private WebElement deleteButtonOnDeleteSchedulePopup;
+
+    @FindBy (css = "button.delete-schedule-modal-button-cancel")
+    private WebElement cancelButtonOnDeleteSchedulePopup;
+
     @Override
     public void unGenerateActiveScheduleScheduleWeek() throws Exception {
-        String unGenerateScheduleOptionText = "Ungenerate Schedule";
-        if (isElementEnabled(scheduleAdminDropDownBtn)) {
-            click(scheduleAdminDropDownBtn);
-            if (scheduleAdminDropDownOptions.size() > 0) {
-                for (WebElement scheduleAdminDropDownOption : scheduleAdminDropDownOptions) {
-                    if (scheduleAdminDropDownOption.getText().toLowerCase().contains(unGenerateScheduleOptionText.toLowerCase())) {
-                        click(scheduleAdminDropDownOption);
-                        if (isElementEnabled(unGenerateBtnOnPopup)) {
-                            click(unGenerateBtnOnPopup);
-                            SimpleUtils.pass("Schedule Page: Active Week ('" + getActiveWeekText() + "') Ungenerated Successfully.");
-                        } else
-                            SimpleUtils.fail("Schedule Page: Ungenerate popup 'Ungenerate Button not loaded for the week: '"
-                                    + getActiveWeekText() + "'.", false);
-                        break;
-                    }
 
-                }
+        if(isElementLoaded(deleteScheduleButton, 5)){
+            click(deleteScheduleButton);
+            if(isElementLoaded(deleteSchedulePopup, 5)
+                    && isElementLoaded(deleteScheduleCheckBox, 5)
+                    && isElementLoaded(deleteButtonOnDeleteSchedulePopup, 5)){
+                click(deleteScheduleCheckBox);
+                waitForSeconds(1);
+                click(deleteButtonOnDeleteSchedulePopup);
+                SimpleUtils.pass("Schedule Page: Active Week ('" + getActiveWeekText() + "') Ungenerated Successfully.");
             } else
-                SimpleUtils.fail("Schedule Page: Admin dropdown Options not loaded to Ungenerate the Schedule for the Week : '"
+                SimpleUtils.fail("Schedule Page: Delete schedule popup or delete schedule Button not loaded for the week: '"
                         + getActiveWeekText() + "'.", false);
-        } else
-            SimpleUtils.fail("Schedule Page: Admin dropdown button not loaded to Ungenerate the Schedule for the Week : '"
-                    + getActiveWeekText() + "'.", false);
 
+        } else
+            SimpleUtils.fail("Schedule Page: Delete schedule button not loaded to Ungenerate the Schedule for the Week : '"
+                + getActiveWeekText() + "'.", false);
     }
+
+
 
     @Override
     public int getScheduleShiftIntervalCountInAnHour() throws Exception {
@@ -9411,6 +9422,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             } else {
                 SimpleUtils.fail("Shift roles are doesn't show well ", true);
             }
+            if(isElementLoaded(cancelButtonChangeRole, 5)){
+                click(cancelButtonChangeRole);
+            }
         }
     }
 
@@ -9807,8 +9821,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 click(cannelBtnInMealBreakButton);
                 selectedShift = clickOnProfileIcon();
             }
-            for (int i=0; i< deleteMealBreakButtons.size(); i++) {
-                click(deleteMealBreakButtons.get(i));
+            while(deleteMealBreakButtons.size()>0){
+                click(deleteMealBreakButtons.get(0));
             }
             click(continueBtnInMealBreakButton);
             if (isElementEnabled(confirmWindow, 5)) {
@@ -9824,11 +9838,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (!areListElementVisible(deleteMealBreakButtons, 5)) {
                 SimpleUtils.pass("Delete meal break times successfully");
             } else {
-                SimpleUtils.fail("Delete meal break failed",true);
+                SimpleUtils.fail("Delete meal break failed",false);
             }
 
         }else
-            SimpleUtils.fail("Delete meal break window load failed",true);
+            SimpleUtils.fail("Delete meal break window load failed",false);
         click(cannelBtnInMealBreakButton);
     }
 
@@ -11661,7 +11675,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(numberOfOffersMade,20)){
             SimpleUtils.pass("There is a offer list which is not null!");
         } else {
-            SimpleUtils.fail("Theoffer list is null!",false);
+            SimpleUtils.fail("The offer list is null!",false);
         }
     }
 
