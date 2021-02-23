@@ -139,8 +139,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	//new location page
-	@FindBy(css = "input[aria-label=\"Location Name\"]")
-	private WebElement locationNameInput;
+	@FindBy(css = "input[aria-label=\"Display Name\"]")
+	private WebElement displayNameInput;
+	@FindBy(css = "input[aria-label=\"Name\"]")
+	private WebElement nameInput;
 	@FindBy(css = "span[class *=locationDefault]")
 	private WebElement mockLocationName;
 	@FindBy(css = "input[aria-label=\"Location Id\"]")
@@ -206,9 +208,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
-			locationNameInput.sendKeys(locationName);
+			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			locationId.sendKeys(getLocationName());
+			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
@@ -260,9 +263,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void addNewRegularLocationWithAllFields(String locationName, String searchCharactor,int index) throws Exception {
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
-			locationNameInput.sendKeys(locationName);
+			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			locationId.sendKeys(getLocationName());
+			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
@@ -437,9 +441,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,newLocationParas.get("Location_Type_NSO"));
-			locationNameInput.sendKeys(locationName);
+			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			locationId.sendKeys(getLocationName());
+			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
@@ -710,8 +715,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			click(locationDetailsLinks.get(0));
 			click(editLocationBtn);
-			locationNameInput.clear();
-			locationNameInput.sendKeys(locationName+"update");
+			displayNameInput.clear();
+			displayNameInput.sendKeys(locationName+"update");
 			setLocationName(locationName);
 			locationId.clear();
 			locationId.sendKeys(getLocationName());
@@ -784,12 +789,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,locationType);
-			locationNameInput.sendKeys(childlocationName);
+			displayNameInput.sendKeys(childlocationName);
 			setLocationName(childlocationName);
 			selectByVisibleText(locationGroupSelect,newLocationParas.get(childRelationship));
 			click(selectParentLocation);
 			selectLocationOrDistrict(locationName,index);
 			locationId.sendKeys(getLocationName());
+			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
@@ -824,11 +830,12 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,locationType);
-			locationNameInput.sendKeys(locationName);
+			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			selectByVisibleText(locationGroupSelect,newLocationParas.get(parentRelationship));
 			click(getDriver().findElement(By.cssSelector("input[aria-label=\""+value+"\"] ")));
 			locationId.sendKeys(getLocationName());
+			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
@@ -865,11 +872,12 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,locationType);
-			locationNameInput.sendKeys(locationName);
+			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			selectByVisibleText(locationGroupSelect,newLocationParas.get(parentRelationship));
 			click(getDriver().findElement(By.cssSelector("input[aria-label=\""+value+"\"] ")));
 			locationId.sendKeys(getLocationName());
+			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
@@ -921,12 +929,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,locationType);
-			locationNameInput.sendKeys(childLocationName);
+			displayNameInput.sendKeys(childLocationName);
 			setLocationName(childLocationName);
 			selectByVisibleText(locationGroupSelect,newLocationParas.get(childRelationship));
 			click(selectParentLocation);
 			selectLocationOrDistrict(locationName,index);
 			locationId.sendKeys(getLocationName());
+			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
@@ -1404,15 +1413,31 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void verifyPaginationFunction() throws Exception {
 		if (isElementLoaded(pageNumSelector,3)) {
-           String iniPageText = pageNumberText.getText().trim();
-			String maxPageNumber = iniPageText.substring(iniPageText.length()-1);
-			for (int i = 1; i < Integer.valueOf(maxPageNumber); i++) {
+            String iniPageText = pageNumberText.getText().trim();
+			String[] maxPageNumberOri = iniPageText.split("of");
+			String maxPageNumber = maxPageNumberOri[1].trim();
+			for (int i = 1; i <= Integer.valueOf(maxPageNumber); i++) {
 				selectByVisibleText(pageNumSelector,String.valueOf(i));
 				if (i <= Integer.valueOf(maxPageNumber)) {
 					SimpleUtils.pass("Page Select work well");
 				}else
 					SimpleUtils.fail("Page select doesn't work",true);
 			}
+//			if (isElementEnabled(pageLeftBtnInDistrict,5)) {
+//				String pageText = pageNumberText.getText();
+//				click(pageLeftBtnInDistrict);
+//				String pageTextAftLeft = pageNumberText.getText();
+//				if (!pageTextAftLeft.equalsIgnoreCase(pageText) ) {
+//					SimpleUtils.pass("Left pagination button work well");
+//				}else
+//					SimpleUtils.fail("Left pagination button work wrong",false);
+//				click(pageRightBtnInDistrict);
+//				String pageTextAftRight = pageNumberText.getText();
+//				if (!pageTextAftRight.equalsIgnoreCase(pageTextAftLeft) ) {
+//					SimpleUtils.pass("Right pagination button work well");
+//				}else
+//					SimpleUtils.fail("Right pagination button work wrong",false);
+//			}
 		}else
 			SimpleUtils.fail("Page select load failed",true);
 
