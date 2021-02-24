@@ -1240,7 +1240,7 @@ public class LocationsTest extends TestBase {
             if (locationsPage.verifyDistrictListShowWellOrNot()) {
                 locationsPage.verifyBackBtnFunction();
                 locationsPage.goToSubDistrictsInLocationsPage();
-                locationsPage.verifyPaginationFunction();
+                locationsPage.verifyPaginationFunctionInLocation();
 
             }else
                 SimpleUtils.fail("District list page loading failed",false);
@@ -1398,4 +1398,36 @@ public class LocationsTest extends TestBase {
 
     }
 
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Global dynamic group in Locations tab  ")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyGlobalDynamicGroupFunction(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime =  dfs.format(new Date()).trim();
+            String groupName = "AutoCreate" +currentTime;
+            String description = "AutoCreate" +currentTime;
+            String criteria = "Location Name";
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check dynamic group item
+            locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
+            //go to dynamic group
+            locationsPage.goToDynamicGroup();
+            locationsPage.addWorkforceSharingDGWithOneCriteria(groupName,description,criteria);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
 }

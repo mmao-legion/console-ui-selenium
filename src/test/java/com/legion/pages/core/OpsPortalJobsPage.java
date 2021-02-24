@@ -890,4 +890,51 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			}
 		}
 
+	@FindBy(css = "select[ng-attr-aria-label=\"{{$ctrl.label}}\"]")
+	private WebElement pageNumSelector;
+	@FindBy(css = ".lg-pagination__pages.ng-binding")
+	private WebElement pageNumberText;
+	@FindBy (css = ".lg-pagination__arrow--left")
+	private WebElement pageLeftBtnInDistrict;
+	@FindBy (css = ".lg-pagination__arrow--right")
+	private WebElement pageRightBtnInDistrict;
+	@Override
+	public void verifyPaginationFunctionInJob() throws Exception {
+		if (isElementLoaded(pageNumSelector,3)) {
+			int minPageNum = 1;
+			String iniPageText = pageNumberText.getText().trim();
+			String[] maxPageNumberOri = iniPageText.split("of");
+			int maxPageNumber = Integer.valueOf(maxPageNumberOri[1].trim());
+			if (maxPageNumber == minPageNum && pageLeftBtnInDistrict.getAttribute("class").contains("disabled")
+					&& pageRightBtnInDistrict.getAttribute("class").contains("disabled")) {
+				SimpleUtils.pass("There is only one page");
+			}else {
+				for (int i = 1; i <= Integer.valueOf(maxPageNumber); i++) {
+					selectByVisibleText(pageNumSelector,String.valueOf(i));
+					if (i <= Integer.valueOf(maxPageNumber)) {
+						SimpleUtils.pass("Page Select work well");
+					}else
+						SimpleUtils.fail("Page select doesn't work",true);
+				}
+
+				String firstLineText = jobRows.get(0).getText();
+				click(pageLeftBtnInDistrict);
+				String firstLineTextAftLeft = jobRows.get(0).getText();
+				if (!firstLineTextAftLeft.equalsIgnoreCase(firstLineText) ) {
+					SimpleUtils.pass("Left pagination button work well" );
+				}else
+					SimpleUtils.fail("Left pagination button work wrong",false);
+				click(pageRightBtnInDistrict);
+				String firstLineTextAftRight = jobRows.get(0).getText();
+				if (!firstLineTextAftRight.equalsIgnoreCase(firstLineTextAftLeft) ) {
+					SimpleUtils.pass("Right pagination button work well");
+				}else
+					SimpleUtils.fail("Right pagination button work wrong",false);
+
+			}
+
+		}else
+			SimpleUtils.fail("Page select load failed",true);
+
+	}
 	}

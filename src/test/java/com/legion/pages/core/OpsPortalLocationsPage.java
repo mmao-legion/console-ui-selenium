@@ -5,6 +5,7 @@ import com.legion.pages.LocationsPage;
 import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -1027,6 +1028,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(selectParentLocation);
 			selectLocationOrDistrict(parentLocation,1);
 			locationId.sendKeys(parentLocation);
+			nameInput.sendKeys(parentLocation);
 			scrollToBottom();
 			click(saveBtnInUpdateLocationPage);
 			waitForSeconds(5);
@@ -1411,33 +1413,40 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	@Override
-	public void verifyPaginationFunction() throws Exception {
+	public void verifyPaginationFunctionInLocation() throws Exception {
 		if (isElementLoaded(pageNumSelector,3)) {
+			int minPageNum = 1;
             String iniPageText = pageNumberText.getText().trim();
 			String[] maxPageNumberOri = iniPageText.split("of");
-			String maxPageNumber = maxPageNumberOri[1].trim();
-			for (int i = 1; i <= Integer.valueOf(maxPageNumber); i++) {
-				selectByVisibleText(pageNumSelector,String.valueOf(i));
-				if (i <= Integer.valueOf(maxPageNumber)) {
-					SimpleUtils.pass("Page Select work well");
+			int maxPageNumber = Integer.valueOf(maxPageNumberOri[1].trim());
+			if (maxPageNumber == minPageNum && pageLeftBtnInDistrict.getAttribute("class").contains("disabled")
+			&& pageRightBtnInDistrict.getAttribute("class").contains("disabled")) {
+				SimpleUtils.pass("There is only one page");
+			}else {
+				for (int i = 1; i <= Integer.valueOf(maxPageNumber); i++) {
+					selectByVisibleText(pageNumSelector,String.valueOf(i));
+					if (i <= Integer.valueOf(maxPageNumber)) {
+						SimpleUtils.pass("Page Select work well");
+					}else
+						SimpleUtils.fail("Page select doesn't work",true);
+				}
+
+				String firstLineText = locationRows.get(0).getText();
+				click(pageLeftBtnInDistrict);
+				String firstLineTextAftLeft = locationRows.get(0).getText();
+				if (!firstLineTextAftLeft.equalsIgnoreCase(firstLineText) ) {
+					SimpleUtils.pass("Left pagination button work well" );
 				}else
-					SimpleUtils.fail("Page select doesn't work",true);
+					SimpleUtils.fail("Left pagination button work wrong",false);
+				click(pageRightBtnInDistrict);
+				String firstLineTextAftRight = locationRows.get(0).getText();
+				if (!firstLineTextAftRight.equalsIgnoreCase(firstLineTextAftLeft) ) {
+					SimpleUtils.pass("Right pagination button work well");
+				}else
+					SimpleUtils.fail("Right pagination button work wrong",false);
+
 			}
-//			if (isElementEnabled(pageLeftBtnInDistrict,5)) {
-//				String pageText = pageNumberText.getText();
-//				click(pageLeftBtnInDistrict);
-//				String pageTextAftLeft = pageNumberText.getText();
-//				if (!pageTextAftLeft.equalsIgnoreCase(pageText) ) {
-//					SimpleUtils.pass("Left pagination button work well");
-//				}else
-//					SimpleUtils.fail("Left pagination button work wrong",false);
-//				click(pageRightBtnInDistrict);
-//				String pageTextAftRight = pageNumberText.getText();
-//				if (!pageTextAftRight.equalsIgnoreCase(pageTextAftLeft) ) {
-//					SimpleUtils.pass("Right pagination button work well");
-//				}else
-//					SimpleUtils.fail("Right pagination button work wrong",false);
-//			}
+
 		}else
 			SimpleUtils.fail("Page select load failed",true);
 
@@ -1687,6 +1696,120 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			}
 		}
 
+	@FindBy(css = "lg-dashboard-card[title=\"Dynamic Groups\"]")
+	private  WebElement dynamicGroupCard;
+	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"workForceSharingDg\"]")
+	private  WebElement workForceSharingDg;
+	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"clockinDg\"]")
+	private  WebElement clockInDg;
+	@FindBy(css = "lg-button[label=\"Test\"]")
+	private  WebElement testBtn;
+	@FindBy(css = "input[aria-label=\"Group Name\"]")
+	private  WebElement groupNameInput;
+	@FindBy(css = "input-field[value=\"$ctrl.dynamicGroup.description\"] >ng-form>input")
+	private  WebElement groupDescriptionInput;
+	@FindBy(css = "input-field[value=\"group.fieldType\"] > ng-form > div.select-wrapper>select")
+	private  WebElement criteriaSelect;
+	@FindBy(css = "lg-button[label=\"Add More\"]")
+	private  WebElement addMoreBtn;
 
+	@FindBy(css = "i.deleteRule")
+	private  List<WebElement> deleteRuleIcon;
+	@FindBy(css = "lg-button[icon=\"'img/legion/add.png'\"]")
+	private  List<WebElement> addDynamicGroupBtn;
+	@FindBy(css = "input-field[placeholder=\"You can search by name and description\"]")
+	private  WebElement dgSearchInput;
+	@FindBy(css = "lg-button[icon=\"'fa-pencil'\"]")
+	private  List<WebElement> editDGIcon;
+	@FindBy(css = "lg-button[icon=\"''fa-times''\"]")
+	private  List<WebElement> deleteDGIcon;
+	@FindBy(css = "tr[ng-repeat=\"group in filterdynamicGroups\"]")
+	private  List<WebElement> groupRows;
+
+
+
+
+
+	@Override
+	public void iCanSeeDynamicGroupItemInLocationsTab() {
+		if (isElementEnabled(dynamicGroupCard,5)) {
+			SimpleUtils.pass("Dynamic group card is shown");
+			String contextInfo = dynamicGroupCard.getText();
+			if (contextInfo.contains("Dynamic Group") && contextInfo.contains("Dynamic Group Configuration") &&
+				contextInfo.contains("Work Force Sharing Group") &&contextInfo.contains("Dynamic Group") ) {
+				SimpleUtils.pass("Title and description show well");
+			}else
+				SimpleUtils.fail("Title and description are wrong",false);
+		}else
+			SimpleUtils.fail("There is no dynamic group card",false);
+	}
+
+	@Override
+	public void goToDynamicGroup() {
+		if (isElementEnabled(dynamicGroupCard,5)) {
+			click(dynamicGroupCard);
+			if (isElementEnabled(workForceSharingDg,5)) {
+				SimpleUtils.pass("Can go to dynamic group page successfully");
+			}else
+				SimpleUtils.fail("Go to dynamic group page failed",false);
+		}
+	}
+
+	@Override
+	public void addWorkforceSharingDGWithOneCriteria(String groupName, String description, String criteria) throws Exception {
+		if (areListElementVisible(addDynamicGroupBtn)) {
+			click(addDynamicGroupBtn.get(0));
+			if (isManagerDGpopShowWell()) {
+				groupNameInput.sendKeys(groupName);
+				groupDescriptionInput.sendKeys(description);
+				selectByVisibleText(criteriaSelect,criteria);
+				click(testBtn);
+				click(okBtnInSelectLocation);
+				waitForSeconds(3);
+				searchDynamicGroup(groupName);
+				if (groupRows.size()>0) {
+					SimpleUtils.pass("Dynamic group create successfully");
+				}else
+					SimpleUtils.fail("Dynamic group create failed",false);
+
+			}else
+				SimpleUtils.fail("Manager Dynamic Group win load failed",false);
+		}
+
+	}
+
+    @FindBy(css = "modal[modal-title=\"Manage Dynamic Group\"]>div")
+	private WebElement managerDGpop;
+	private boolean isManagerDGpopShowWell() {
+		if (isElementEnabled(managerDGpop,5)&& isElementEnabled(groupNameInput,5)&&
+				isElementEnabled(groupDescriptionInput,5)&&isElementEnabled(criteriaSelect,5)
+		&& isElementEnabled(testBtn,5) && isElementEnabled(addMoreBtn,5)) {
+			SimpleUtils.pass("Manager Dynamic Group win show well");
+			return true;
+		}else
+			return false;
+	}
+
+	public void searchDynamicGroup(String searchInputText) throws Exception {
+		String[] searchLocationCha = searchInputText.split(",");
+		if (isElementLoaded(dgSearchInput, 10) ) {
+			for (int i = 0; i < searchLocationCha.length; i++) {
+				dgSearchInput.clear();
+				dgSearchInput.sendKeys(searchLocationCha[0]);
+				dgSearchInput.sendKeys(Keys.ENTER);
+				waitForSeconds(3);
+				if (groupRows.size()>0) {
+					SimpleUtils.pass("Dynamic group: " + groupRows.size() + " group(s) found  ");
+					break;
+				} else {
+					dgSearchInput.clear();
+				}
+			}
+
+		} else {
+			SimpleUtils.fail("Search input is not clickable", true);
+		}
+
+	}
 }
 

@@ -98,8 +98,7 @@ public class JobTest extends TestBase {
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
             jobsPage.iCanEnterJobsTab();
             jobsPage.verifyJobLandingPageShowWell();
-//            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-//            locationsPage.verifyPaginationFunction();
+            jobsPage.verifyPaginationFunctionInJob();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

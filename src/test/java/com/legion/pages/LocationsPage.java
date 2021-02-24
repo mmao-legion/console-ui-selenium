@@ -94,7 +94,7 @@ public interface LocationsPage {
 
     public void verifyBackBtnFunction() throws Exception;
 
-    public void verifyPaginationFunction() throws Exception;
+    public void verifyPaginationFunctionInLocation() throws Exception;
 
     public void verifySearchFunction(String[] searchInfo) throws Exception;
 
@@ -111,4 +111,11 @@ public interface LocationsPage {
     public HashMap<String, String> getEnterpriseLogoAndDefaultLocationInfo();
 
     public void verifyTheFiledOfLocationSetting() throws Exception;
+
+    public void iCanSeeDynamicGroupItemInLocationsTab();
+
+    public void goToDynamicGroup();
+
+    public void addWorkforceSharingDGWithOneCriteria(String groupName, String description, String criteria) throws Exception;
+
 }

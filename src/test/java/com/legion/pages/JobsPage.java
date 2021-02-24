@@ -78,4 +78,6 @@ public interface JobsPage {
     public void iCanSetUpTimeOfRelease(String timeForRelease) throws Exception;
 
     public void iCanClickOnCreatAndReleaseCheckBox();
+
+    public void verifyPaginationFunctionInJob() throws Exception;
 }
