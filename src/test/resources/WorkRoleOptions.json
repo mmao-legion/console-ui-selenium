@@ -3,5 +3,6 @@
 	  "WorkRole_BARISTA" : "BARISTA",
 	  "changeWorkRole" : "Manager",
 	  "MOD": "MOD",
-	  "EVENT_MANAGER": "EVENT MANAGER"
+	  "EVENT_MANAGER": "EVENT MANAGER",
+	  "GENERAL MANAGER": "GENERAL MANAGER"
 }
