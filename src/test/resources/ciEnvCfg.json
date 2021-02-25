@@ -13,6 +13,7 @@
   "KendraScott2_Enterprise" : "KendraScott2",
   "DGStage_Enterprise" : "dgstage",
   "Op_Enterprise" : "op",
+  "CinemarkWkdy_Enterprise" : "cinemark-wkdy",
   "DEFAULT_USERNAME" : "admin2.a",
   "DEFAULT_PASSWORD" : "admin2.a",
   "ENVIRONMENT" : "QA",

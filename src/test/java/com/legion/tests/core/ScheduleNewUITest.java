@@ -100,7 +100,8 @@ public class ScheduleNewUITest extends TestBase {
 	public enum sliderShiftCount {
 		SliderShiftStartCount(2),
 		SliderShiftEndTimeCount(10),
-		SliderShiftEndTimeCount2(14);
+		SliderShiftEndTimeCount2(14),
+		SliderShiftEndTimeCount3(40);
 		private final int value;
 		sliderShiftCount(final int newValue) {
             value = newValue;
