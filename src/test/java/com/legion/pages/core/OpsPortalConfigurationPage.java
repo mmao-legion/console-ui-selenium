@@ -6,6 +6,7 @@ import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -138,7 +139,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		ScheduleCollaboration("Schedule Collaboration"),
 		TimeAttendance("Time & Attendance"),
 		Compliance("Compliance"),
-		SchedulingRules("Scheduling Rules");
+		SchedulingRules("Scheduling Rules"),
+		Communications("Communications");
 		private final String value;
 
 		configurationLandingPageTemplateCards(final String newValue) {
@@ -187,7 +189,11 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.SchedulingRules.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.SchedulingRules.getValue() + " card is showing.");
 					continue;
-				}else{
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.Communications.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.Communications.getValue() + " card is showing.");
+					continue;
+				}
+				else{
 					SimpleUtils.fail("Configuration template cards are loaded incorrect",false);
 				}
 			}
@@ -233,16 +239,15 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					SimpleUtils.fail("User open one " + templateType + " template failed",false);
 				}
 			}
-
 		}else{
-			SimpleUtils.fail("There is No template now",false);
+			SimpleUtils.pass("There is No " + templateType + "template now");
 		}
 	}
 
 	@Override
 	public void clickOnConfigurationCrad(String templateType) throws Exception {
 		if(templateType!=null){
-			waitForSeconds(30);
+			waitForSeconds(15);
 			if(configurationCardsList.size()!=0) {
 				for (WebElement configurationCard : configurationCardsList) {
 					if(configurationCard.getText().contains(templateType)){
@@ -468,45 +473,134 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 
 	}
-
-	//获取输入的分钟数可在此元素基础上findelement(css="div")即可
-	@FindBy(css="div[class=\"mt-20\"] input-field[value*=\"timeEventOffsetMinutes\"]")
+//below are advanced staffing rule element
+	@FindBy(css="div[class=\"mt-20\"] input-field[value*=\"timeEventOffsetMinutes\"] input")
 	private WebElement shiftStartOffsetMinutes;
-	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeUnitOptions\"]")
-	private WebElement shiftStartTimeUnitOptions;
-	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeUnitOptions\"] select option")
-	private List<WebElement> shiftStartTimeUnitOptionsList;
-	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"eventPointOptions\"]")
-	private WebElement shiftStartEventPointOptions;
+	@FindBy(css="div[class=\"mt-20\"] input-field[value*=\"timeEventOffsetMinutes\"] div")
+	private WebElement shiftStartOffsetMinutesValue;
+	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeUnitOptions\"] select")
+	private WebElement shiftStartTimeUnit;
+
+	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"eventPointOptions\"] select")
+	private WebElement shiftStartEventPoint;
 	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"eventPointOptions\"] select option")
-	private List<WebElement> shiftStartEventPointOptionsList;
+	private List<WebElement> shiftStartEventPointList;
 	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeEventOptions\"]")
-	private WebElement shiftStartTimeEventOptions;
+	private WebElement shiftStartTimeEvent;
 	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeEventOptions\"] select option")
-	private List<WebElement> shiftStartTimeEventOptionsList;
-//	ng-valid-parse 用这个元素的class属性里面包含这个字符串去判断有没有被选中radio button
+	private List<WebElement> shiftStartTimeEventList;
 	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.duartion input-field[type=\"radio\"] ng-form")
 	private WebElement shiftDuartionRadioButton;
 	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.duartion input-field[type=\"number\"] div")
 	private WebElement shiftDuartionMinutes;
-	//	ng-valid-parse 用这个元素的class属性里面包含这个字符串去判断有没有被选中radio button
 	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[type=\"radio\"] ng-form")
 	private WebElement shiftEndRadioButton;
-	//获取输入的分钟数可在此元素基础上findelement(css="div")即可
 	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[value*=\"timeEventOffsetMinutes\"]")
 	private WebElement shiftEndOffsetMinutes;
 	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.timeUnitOptions\"]")
-	private WebElement shiftEndTimeUnitOptions;
+	private WebElement shiftEndTimeUnit;
 	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.timeUnitOptions\"] select option")
-	private WebElement shiftEndTimeUnitOptionsList;
+	private WebElement shiftEndTimeUnitList;
 	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.eventPointOptions\"]")
-	private WebElement shiftEndEventPointOptions;
+	private WebElement shiftEndEventPoint;
 	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.eventPointOptions\"] select option")
-	private WebElement shiftEndEventPointOptionsList;
+	private WebElement shiftEndEventPointList;
 	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"]")
-	private WebElement shiftEndTimeEventOptions;
+	private WebElement shiftEndTimeEvent;
 	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"] select option")
-	private WebElement shiftEndTimeEventOptionsList;
+	private WebElement shiftEndTimeEventList;
+
+	@Override
+	public void inputOffsetTimeForShiftStart(String startOffsetTime,String startEventPoint) throws Exception{
+		if(isElementEnabled(shiftStartOffsetMinutes)){
+			clickTheElement(shiftStartOffsetMinutes);
+			shiftStartOffsetMinutes.clear();
+			shiftStartOffsetMinutes.sendKeys(startOffsetTime);
+		}else {
+			selectByVisibleText(shiftStartEventPoint,startEventPoint);
+			waitForSeconds(3);
+			clickTheElement(shiftStartOffsetMinutes);
+			shiftStartOffsetMinutes.clear();
+			shiftStartOffsetMinutes.sendKeys(startOffsetTime);
+		}
+		String offsetTimeValue = shiftStartOffsetMinutesValue.getAttribute("innerText").trim();
+		if(offsetTimeValue.equals(startOffsetTime)){
+			SimpleUtils.pass("User can set shift Start Offset Minutes as " + startOffsetTime + " successfully!");
+		}else {
+			SimpleUtils.fail("User can't input value for shift Start Offset Minutes field",true);
+		}
+	}
+
+	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeUnitOptions\"] select option")
+	private List<WebElement> shiftStartTimeUnitList;
+	List<String> unitList = new ArrayList<String>(){{
+		add("minutes");
+		add("am");
+		add("pm");
+	}};
+
+//verify list of start shift time unit
+	@Override
+	public void validateShiftStartTimeUnitList() throws Exception{
+		if(isElementEnabled(shiftStartTimeUnit)){
+			List<String> startTimeUnitList = null;
+			clickTheElement(shiftStartTimeUnit);
+			if(shiftStartTimeUnitList.size()!=0){
+				for(WebElement shiftStartTimeUnit:shiftStartTimeUnitList){
+					String startTimeUnit = shiftStartTimeUnit.getText().trim();
+					if(startTimeUnit!=null){
+						SimpleUtils.report("shift start time unit list: " + startTimeUnit);
+						startTimeUnitList.add(startTimeUnit);
+					}
+				}
+				if(ListUtils.isEqualList(unitList,startTimeUnitList)){
+					SimpleUtils.pass("The list of start time unit is correct");
+				}else {
+					SimpleUtils.fail("The list of start time unit is NOT correct",true);
+				}
+			}
+		}else {
+			SimpleUtils.fail("Shift start time unit isn't shown",false);
+		}
+	}
+
+//below are operation hour element
+	@FindBy(css="div.dayparts span.add-circle")
+	private WebElement addDayPartsBTNInOH;
+	@FindBy(css="modal[modal-title=\"Manage Dayparts\"] div[class*=\"lg-modal__title-icon\"]")
+	private WebElement manageDaypartsPageTitle;
+	@FindBy(css="div.lg-paged-search div.lg-paged-search__pagination select")
+	private WebElement dayPartsPagination;
+	@FindBy(css="div.lg-paged-search div.lg-paged-search__pagination select option")
+	private List<WebElement> dayPartsPaginationList;
+	@FindBy(css="table tr")
+	private List<WebElement> dayPartsList;
+
+	@Override
+	public List<String> getAllDayPartsNameInOH() throws Exception{
+		List<String> dayPartsNameList = null;
+		if(isElementEnabled(addDayPartsBTNInOH)){
+			clickTheElement(addDayPartsBTNInOH);
+			if(isElementEnabled(manageDaypartsPageTitle)){
+				for(int i = 1; i<=dayPartsPaginationList.size();i++){
+					selectByVisibleText(dayPartsPagination,Integer.toString(i));
+					if(dayPartsList.size()!=0){
+						for(WebElement dayParts:dayPartsList){
+							String dayPartsName = dayParts.findElement(By.cssSelector("span")).getText().trim();
+							dayPartsNameList.add(dayPartsName);
+						}
+					}else{
+						SimpleUtils.fail("Still have no any dayparts now",true
+						);
+					}
+				}
+				SimpleUtils.pass("User can click select dayparts button successfully!");
+			}else {
+				SimpleUtils.fail("User can't click select dayparts button successfully!",false);
+			}
+		}
+		return dayPartsNameList;
+	}
 
 
 

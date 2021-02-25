@@ -65,6 +65,7 @@ public class ConfigurationTest extends TestBase {
                 add("Time & Attendance");
                 add("Compliance");
                 add("Scheduling Rules");
+                add("Communications");
             }};
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -153,6 +154,36 @@ public class ConfigurationTest extends TestBase {
             configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
             configurationPage.verifyAdvancedStaffingRulePageShowWell();
             configurationPage.inputFormulaInForDaysOfWeekSection(formula);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Days of Week formula validation")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyInputFormulaForTimeOfDay(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "Test";
+            String workRole = "New Work Role";
+            String offsetTime ="10";
+            String startEventPoint = "before";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.inputOffsetTimeForShiftStart(offsetTime,startEventPoint);
+            configurationPage.validateShiftStartTimeUnitList();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
