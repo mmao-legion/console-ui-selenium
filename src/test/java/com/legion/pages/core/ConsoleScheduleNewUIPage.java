@@ -8720,6 +8720,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             // Validate what happens next to the Edit!
             // When Status is finalized, look for extra popup.
             clickTheElement(editScheduleButton);
+            waitForSeconds(3);
             if(isElementLoaded(popupAlertPremiumPay,10) ) {
                 SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
                 // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
@@ -10089,9 +10090,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
                     if (workerName != null) {
                         if (workerName.getText().toLowerCase().contains(teamMemberName.toLowerCase())) {
-                            WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
+                            WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized span"));
                             //WebElement image = shiftWeekView.findElement(By.cssSelector(".sch-day-view-shift-worker-detail"));
                             clickTheElement(image);
+                            waitForSeconds(3);
                             if (isElementLoaded(deleteShift, 5)) {
                                 clickTheElement(deleteShift);
                                 if (isElementLoaded(deleteBtnInDeleteWindows, 10)) {

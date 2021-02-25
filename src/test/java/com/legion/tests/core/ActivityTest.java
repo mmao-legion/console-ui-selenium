@@ -902,7 +902,7 @@ public class ActivityTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the content of Shift Swap activity when TM request to swap the shift")
+    @TestName(description = "Validate the content of shift swap activity when there is no TM request to cover/swap shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheContentOfShiftSwapActivityAsStoreManager(String browser, String username, String password, String location) throws Exception {
         try {
