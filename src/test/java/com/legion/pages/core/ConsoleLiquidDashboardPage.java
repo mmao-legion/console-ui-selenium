@@ -37,7 +37,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @FindBy (css = ".manageWidgetsEditLabel")
     private WebElement editDashboardBtn;
 
-    @FindBy (xpath = "//div[@gridster-item]")
+    @FindBy (css = ".widget-bg")
     private  List<WebElement> widgetsInDashboardPage;
 
     @FindBy (css = "[label=\"Save\"]")
@@ -175,20 +175,24 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     }
 
     //parameter option: helpful links and so on
-    private boolean verifyIfSpecificWidgetDisplayed(String widgetTitle) throws Exception{
+    private boolean verifyIfSpecificWidgetDisplayed(String widgetTitle) {
         waitForSeconds(10);
         if (areListElementVisible(widgetsInDashboardPage,20)){
             for (WebElement widgetTemp : widgetsInDashboardPage){
-                if(widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains(widgetsNameWrapper(widgetTitle))){
-                    if (widgetsNameWrapper(widgetTitle).equalsIgnoreCase("timesheet approval")){
-                        if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("timesheet approval status")){
-                            return false;
+                try {
+                    if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains(widgetsNameWrapper(widgetTitle))) {
+                        if (widgetsNameWrapper(widgetTitle).equalsIgnoreCase("timesheet approval")) {
+                            if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("timesheet approval status")) {
+                                return false;
+                            } else {
+                                return true;
+                            }
                         } else {
                             return true;
                         }
-                    } else {
-                        return true;
                     }
+                } catch (Exception e) {
+                    // Do nothing
                 }
             }
         } else {
