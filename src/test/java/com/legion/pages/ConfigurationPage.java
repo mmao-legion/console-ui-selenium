@@ -4,6 +4,7 @@ import cucumber.api.java.an.E;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public interface ConfigurationPage {
     public void goToConfigurationPage() throws Exception;
@@ -20,4 +21,7 @@ public interface ConfigurationPage {
     public void verifyCheckBoxOfDaysOfWeekSection() throws Exception;
     public boolean isDaysOfWeekFormulaCheckBoxChecked();
     public void inputFormulaInForDaysOfWeekSection(String formula) throws Exception;
+    public List<String> getAllDayPartsNameInOH() throws Exception;
+    public void inputOffsetTimeForShiftStart(String startOffsetTime,String startEventPoint) throws Exception;
+    public void validateShiftStartTimeUnitList() throws Exception;
 }
