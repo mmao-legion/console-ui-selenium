@@ -2862,7 +2862,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy(css = "lg-button[ng-click=\"changePassword()\"]")
 	private WebElement changePasswordButton;
 
-
+	@FindBy(css = ".console-navigation-item-label")
+	private List<WebElement> navigationTabs;
 
 
 
@@ -2949,16 +2950,43 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 
 	public void verifyFieldsInLegionInformationSection() throws Exception {
-		if (areListElementVisible(fieldsInLegionInformationSection, 5)
-				&& fieldsInLegionInformationSection.size() == 3
-				&& fieldsInLegionInformationSection.get(0).getText().equalsIgnoreCase("STATUS")
-				&& fieldsInLegionInformationSection.get(1).getText().equalsIgnoreCase("SCHEDULING POLICY GROUP")
-				&& fieldsInLegionInformationSection.get(2).findElement(By.cssSelector(".highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("TIMECLOCK PIN")
-				&& isElementLoaded(badgesSectionInLegionInformationSection, 5)
-				&& badgesSectionInLegionInformationSection.getText().equalsIgnoreCase("Badges")) {
-			SimpleUtils.pass("User Profile page: The fields in Legion Information section display correctly! ");
-		} else
-			SimpleUtils.fail("User Profile page: The fields in Legion Information section failed to display !", false);
+		boolean isTimeSheetTabLoaded = isTimeSheetLoaded();
+		if (isTimeSheetTabLoaded) {
+			if (areListElementVisible(fieldsInLegionInformationSection, 5)
+					&& fieldsInLegionInformationSection.size() == 3
+					&& fieldsInLegionInformationSection.get(0).getText().equalsIgnoreCase("STATUS")
+					&& fieldsInLegionInformationSection.get(1).getText().equalsIgnoreCase("SCHEDULING POLICY GROUP")
+					&& fieldsInLegionInformationSection.get(2).findElement(By.cssSelector(".highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("TIMECLOCK PIN")
+					&& isElementLoaded(badgesSectionInLegionInformationSection, 5)
+					&& badgesSectionInLegionInformationSection.getText().equalsIgnoreCase("Badges")) {
+				SimpleUtils.pass("User Profile page: The fields in Legion Information section display correctly! ");
+			} else
+				SimpleUtils.fail("User Profile page: The fields in Legion Information section failed to display !", false);
+		} else {
+			if (areListElementVisible(fieldsInLegionInformationSection, 5)
+					&& fieldsInLegionInformationSection.size() == 2
+					&& fieldsInLegionInformationSection.get(0).getText().equalsIgnoreCase("STATUS")
+					&& fieldsInLegionInformationSection.get(1).getText().equalsIgnoreCase("SCHEDULING POLICY GROUP")
+					&& isElementLoaded(badgesSectionInLegionInformationSection, 5)
+					&& badgesSectionInLegionInformationSection.getText().equalsIgnoreCase("Badges")) {
+				SimpleUtils.pass("User Profile page: The fields in Legion Information section display correctly! ");
+			} else
+				SimpleUtils.fail("User Profile page: The fields in Legion Information section failed to display !", false);
+		}
+	}
+
+	private boolean isTimeSheetLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (areListElementVisible(navigationTabs, 5)) {
+			for (WebElement navigationTab : navigationTabs) {
+				if (navigationTab.getText().toLowerCase().equals("timesheet")) {
+					isLoaded = true;
+					SimpleUtils.report("Timesheet tab is loaded!");
+					break;
+				}
+			}
+		}
+		return isLoaded;
 	}
 
 	public void verifyContentsInActionsSection() throws Exception {
