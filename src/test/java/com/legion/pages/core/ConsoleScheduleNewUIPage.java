@@ -9023,6 +9023,21 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
+    public boolean isProfileIconsClickable() throws Exception {
+        if(areListElementVisible(profileIcons,10)){
+            int randomIndex = (new Random()).nextInt(profileIcons.size());
+            try{
+                click(profileIcons.get(randomIndex));
+                return true;
+            } catch (Exception e){
+                //
+            }
+        } else {
+            SimpleUtils.fail("Profile Icon is not present for selected Employee", false);
+        }
+        return false;
+    }
 
     public WebElement clickOnProfileIcon() throws Exception {
         WebElement selectedShift = null;

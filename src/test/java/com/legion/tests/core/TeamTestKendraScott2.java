@@ -703,15 +703,29 @@ public class TeamTestKendraScott2 extends TestBase{
 			if (!schedulePage.isWeekPublished()){
 				schedulePage.publishActiveSchedule();
 			}
-			SimpleUtils.assertOnFail("SM should be able to view profile info in SM view", !schedulePage.isProfileIconsEnable(), false);
+			SimpleUtils.assertOnFail("SM should be able to view profile info in SM view", schedulePage.isProfileIconsClickable(), false);
 			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 			profileNewUIPage.clickOnUserProfileImage();//.getNickNameFromProfile();
 			dashboardPage.clickOnSwitchToEmployeeView();
 			schedulePage.clickOnScheduleConsoleMenuItem();
 			schedulePage.clickOnScheduleSubTab("Team Schedule");
-			SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", schedulePage.isProfileIconsEnable(), false);
+			SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !schedulePage.isProfileIconsClickable(), false);
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
 
 
+			// Login as Store Manager
+			String fileName = "UserCredentialsForComparableSwapShifts.json";
+			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+			fileName = "UsersCredentials.json";
+			fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+			userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+			Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+					, String.valueOf(teamMemberCredentials[0][2]));
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			schedulePage.clickOnScheduleSubTab("Team Schedule");
+			SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !schedulePage.isProfileIconsClickable(), false);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}

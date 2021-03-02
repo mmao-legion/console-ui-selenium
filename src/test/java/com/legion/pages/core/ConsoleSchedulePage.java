@@ -2133,6 +2133,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public boolean isProfileIconsClickable() throws Exception {
+        return false;
+    }
+
+    @Override
     public WebElement clickOnProfileIcon() throws Exception {
         return null;
     }

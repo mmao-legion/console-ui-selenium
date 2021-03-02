@@ -276,6 +276,7 @@ public interface SchedulePage {
 	public void selectSaveButton()		throws Exception;
 	public boolean isScheduleFinalized() throws Exception;
 	public boolean isProfileIconsEnable() throws Exception;
+	public boolean isProfileIconsClickable() throws Exception;
 	public WebElement clickOnProfileIcon() throws Exception;
 	public boolean isViewProfileEnable() throws Exception;
 	public boolean isViewOpenShiftEnable() throws Exception;
