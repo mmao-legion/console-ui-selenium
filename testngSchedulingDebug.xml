@@ -206,10 +206,25 @@
                     <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
                     <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />
                     <include name="verifyRefreshFeatureOnScheduleInDMViewAsInternalAdmin" />
-                    <include name="verifyScheduleStatusOnScheduleDMViewAsInternalAdmin" />
+                    <include name="verifyRefreshFeatureOnTimesheetInDMViewAsInternalAdmin" />
+                    <include name="verifyRefreshFeatureOnComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyLocationSummaryInScheduleDMViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksForTimesheetInDMViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksSmartCardForTimesheetInDMViewAsInternalAdmin" />
+                    <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyTotalViolationHrsInComplianceDMViewAsInternalAdmin" />
+                    <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
+                    <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
+                    <include name="verifyDMViewNavigationAsInternalAdmin" />
+                    <include name="verifyLocationListAndSubLocationOnTimesheetInDMViewAsInternalAdmin" />
+                    <include name="verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyAnalyticTableInTimesheetDMViewAsInternalAdmin" />
+                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
+                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
+                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
+                    <include name="verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin" />
+                    <include name="verifyAnalyticsTableOnComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
