@@ -1240,7 +1240,7 @@ public class LocationsTest extends TestBase {
             if (locationsPage.verifyDistrictListShowWellOrNot()) {
                 locationsPage.verifyBackBtnFunction();
                 locationsPage.goToSubDistrictsInLocationsPage();
-                locationsPage.verifyPaginationFunctionInLocation();
+                locationsPage.verifyPaginationFunctionInDistrict();
 
             }else
                 SimpleUtils.fail("District list page loading failed",false);
@@ -1412,6 +1412,7 @@ public class LocationsTest extends TestBase {
             String groupName = "AutoCreate" +currentTime;
             String description = "AutoCreate" +currentTime;
             String criteria = "Location Name";
+            String criteriaUpdate = "Country";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -1424,7 +1425,14 @@ public class LocationsTest extends TestBase {
             locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
             //go to dynamic group
             locationsPage.goToDynamicGroup();
-            locationsPage.addWorkforceSharingDGWithOneCriteria(groupName,description,criteria);
+            //remove existing dynamic group
+            locationsPage.iCanDeleteExistingDG();
+            //create new dynamic group
+            String locationNum = locationsPage.addWorkforceSharingDGWithOneCriteria(groupName,description,criteria);
+            String locationNumAftUpdate = locationsPage.updateDynamicGroup(groupName,criteriaUpdate);
+            if (!locationNumAftUpdate.equalsIgnoreCase(locationNum)) {
+                SimpleUtils.pass("Update dynamic group successfully");
+            }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

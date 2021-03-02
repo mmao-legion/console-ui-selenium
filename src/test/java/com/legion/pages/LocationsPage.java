@@ -116,6 +116,11 @@ public interface LocationsPage {
 
     public void goToDynamicGroup();
 
-    public void addWorkforceSharingDGWithOneCriteria(String groupName, String description, String criteria) throws Exception;
+    public String addWorkforceSharingDGWithOneCriteria(String groupName, String description, String criteria) throws Exception;
 
+    public void iCanDeleteExistingDG();
+
+    public String updateDynamicGroup(String groupName, String criteriaUpdate) throws Exception;
+
+    public void verifyPaginationFunctionInDistrict() throws Exception;
 }

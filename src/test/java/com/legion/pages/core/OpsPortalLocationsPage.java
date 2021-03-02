@@ -2,22 +2,17 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.LocationsPage;
-import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.testng.Assert;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
-import static com.legion.tests.TestBase.propertyMap;
 import static com.legion.tests.TestBase.switchToNewWindow;
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -1027,8 +1022,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(locationGroupSelect, locationRelationship);
 			click(selectParentLocation);
 			selectLocationOrDistrict(parentLocation,1);
-			locationId.sendKeys(parentLocation);
-			nameInput.sendKeys(parentLocation);
 			scrollToBottom();
 			click(saveBtnInUpdateLocationPage);
 			waitForSeconds(5);
@@ -1390,7 +1383,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public boolean verifyDistrictListShowWellOrNot() throws Exception {
-		waitForSeconds(5);//to wait the district load well
+
+		waitForSeconds(30);
 		if (isElementLoaded(backBtnInDistrictListPage,3) && isElementLoaded(addDistrictButton,3)
 		&& isElementLoaded(districtSearchInputBox,3) && isElementLoaded(smartCardInDistrictListPage,3)
 		&& isElementLoaded(pageLeftBtnInDistrict,3) && isElementLoaded(pageRightBtnInDistrict,3)
@@ -1411,9 +1405,51 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
-
 	@Override
 	public void verifyPaginationFunctionInLocation() throws Exception {
+		waitForSeconds(20);
+		if (isElementLoaded(pageNumSelector,3)) {
+			int minPageNum = 1;
+			String iniPageText = pageNumberText.getText().trim();
+			String[] maxPageNumberOri = iniPageText.split("of");
+			int maxPageNumber = Integer.valueOf(maxPageNumberOri[1].trim());
+			if (maxPageNumber == minPageNum && pageLeftBtnInDistrict.getAttribute("class").contains("disabled")
+					&& pageRightBtnInDistrict.getAttribute("class").contains("disabled")) {
+				SimpleUtils.pass("There is only one page");
+			}else {
+				for (int i = 1; i <= Integer.valueOf(maxPageNumber); i++) {
+					selectByVisibleText(pageNumSelector,String.valueOf(i));
+					if (i <= Integer.valueOf(maxPageNumber)) {
+						SimpleUtils.pass("Page " +i +" Select work well");
+					}else
+						SimpleUtils.fail("Page select doesn't work",true);
+				}
+				waitForSeconds(5);
+				String firstLineText = locationRows.get(0).getText();
+				click(pageLeftBtnInDistrict);
+				String firstLineTextAftLeft = locationRows.get(0).getText();
+				if (!firstLineTextAftLeft.equalsIgnoreCase(firstLineText) ) {
+					SimpleUtils.pass("Left pagination button work well" );
+				}else
+					SimpleUtils.fail("Left pagination button work wrong",false);
+				click(pageRightBtnInDistrict);
+				String firstLineTextAftRight = locationRows.get(0).getText();
+				if (!firstLineTextAftRight.equalsIgnoreCase(firstLineTextAftLeft) ) {
+					SimpleUtils.pass("Right pagination button work well");
+				}else
+					SimpleUtils.fail("Right pagination button work wrong",false);
+
+			}
+
+		}else
+			SimpleUtils.fail("Page select load failed",true);
+
+	}
+
+
+	@Override
+	public void verifyPaginationFunctionInDistrict() throws Exception {
+		waitForSeconds(20);
 		if (isElementLoaded(pageNumSelector,3)) {
 			int minPageNum = 1;
             String iniPageText = pageNumberText.getText().trim();
@@ -1426,20 +1462,20 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				for (int i = 1; i <= Integer.valueOf(maxPageNumber); i++) {
 					selectByVisibleText(pageNumSelector,String.valueOf(i));
 					if (i <= Integer.valueOf(maxPageNumber)) {
-						SimpleUtils.pass("Page Select work well");
+						SimpleUtils.pass("Page " +i +" Select work well");
 					}else
 						SimpleUtils.fail("Page select doesn't work",true);
 				}
-
-				String firstLineText = locationRows.get(0).getText();
+				waitForSeconds(5);
+				String firstLineText = districtsRows.get(0).getText();
 				click(pageLeftBtnInDistrict);
-				String firstLineTextAftLeft = locationRows.get(0).getText();
+				String firstLineTextAftLeft = districtsRows.get(0).getText();
 				if (!firstLineTextAftLeft.equalsIgnoreCase(firstLineText) ) {
 					SimpleUtils.pass("Left pagination button work well" );
 				}else
 					SimpleUtils.fail("Left pagination button work wrong",false);
 				click(pageRightBtnInDistrict);
-				String firstLineTextAftRight = locationRows.get(0).getText();
+				String firstLineTextAftRight = districtsRows.get(0).getText();
 				if (!firstLineTextAftRight.equalsIgnoreCase(firstLineTextAftLeft) ) {
 					SimpleUtils.pass("Right pagination button work well");
 				}else
@@ -1675,7 +1711,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 //				SimpleUtils.pass("Location group setting field should include:None, Parent location ,Part of a location group");
 				selectByVisibleText(locationGroupSelect,"Parent location");
 				if (isElementEnabled(msRadio,3)&&isElementEnabled(p2pRadio,3)) {
-					SimpleUtils.pass("there are two radio button:Master Slave(default) ,Peer to peer after select parent location");
+					SimpleUtils.pass("there are two radio button:Parent child(default) ,Peer to peer after select parent location");
 					selectByVisibleText(locationGroupSelect,"Part of a location group");
 					if (isElementEnabled(selectParentLocation,3)) {
 						SimpleUtils.pass("there is one link named select parent location after select part of a location group");
@@ -1708,7 +1744,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private  WebElement groupNameInput;
 	@FindBy(css = "input-field[value=\"$ctrl.dynamicGroup.description\"] >ng-form>input")
 	private  WebElement groupDescriptionInput;
-	@FindBy(css = "input-field[value=\"group.fieldType\"] > ng-form > div.select-wrapper>select")
+	@FindBy(css = "select.ng-pristine.ng-untouched.ng-valid")
 	private  WebElement criteriaSelect;
 	@FindBy(css = "lg-button[label=\"Add More\"]")
 	private  WebElement addMoreBtn;
@@ -1721,10 +1757,24 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private  WebElement dgSearchInput;
 	@FindBy(css = "lg-button[icon=\"'fa-pencil'\"]")
 	private  List<WebElement> editDGIcon;
-	@FindBy(css = "lg-button[icon=\"''fa-times''\"]")
+	@FindBy(css = "lg-button[icon=\"'fa-times'\"]")
 	private  List<WebElement> deleteDGIcon;
 	@FindBy(css = "tr[ng-repeat=\"group in filterdynamicGroups\"]")
 	private  List<WebElement> groupRows;
+	@FindBy(css = "lg-picker-input[value=\"group.values\"]")
+	private  WebElement criteriaValue;
+	@FindBy(css = "input[placeholder=\"Search \"")
+	private  WebElement searchBoxInCriteriaValue;
+	@FindBy(css = "input-field[type=\"checkbox\"]")
+	private  List<WebElement> checkboxInCriteriaValue;
+	@FindBy(css = "modal[modal-title=\"Remove Dynamic Group\"]")
+	private  WebElement removeDGPopup;
+	@FindBy(css = "ng-transclude.lg-modal__body")
+	private  WebElement removeDGPopupDes;
+	@FindBy(css = "lg-button[label=\"Remove\"]")
+	private  WebElement removeBtnInRemovDGPopup;
+	@FindBy(css = "div.mappingLocation.mt-20.ng-scope > span")
+	private  WebElement testBtnInfo;
 
 
 
@@ -1756,14 +1806,17 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public void addWorkforceSharingDGWithOneCriteria(String groupName, String description, String criteria) throws Exception {
+	public String addWorkforceSharingDGWithOneCriteria(String groupName, String description, String criteria) throws Exception {
 		if (areListElementVisible(addDynamicGroupBtn)) {
 			click(addDynamicGroupBtn.get(0));
 			if (isManagerDGpopShowWell()) {
 				groupNameInput.sendKeys(groupName);
 				groupDescriptionInput.sendKeys(description);
 				selectByVisibleText(criteriaSelect,criteria);
+				click(criteriaValue);
+				click(checkboxInCriteriaValue.get(0));
 				click(testBtn);
+				String testInfo = testBtnInfo.getText().trim();
 				click(okBtnInSelectLocation);
 				waitForSeconds(3);
 				searchDynamicGroup(groupName);
@@ -1771,14 +1824,65 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					SimpleUtils.pass("Dynamic group create successfully");
 				}else
 					SimpleUtils.fail("Dynamic group create failed",false);
-
+				return testInfo;
 			}else
 				SimpleUtils.fail("Manager Dynamic Group win load failed",false);
-		}
+		}else
+			SimpleUtils.fail("Global dynamic group page load failed",false);
 
+		 return null;
 	}
 
-    @FindBy(css = "modal[modal-title=\"Manage Dynamic Group\"]>div")
+	@Override
+	public void iCanDeleteExistingDG() {
+		waitForSeconds(20);
+		if (areListElementVisible(deleteDGIcon,5)) {
+			for (WebElement dg: deleteDGIcon) {
+				click(dg);
+				if (isRemoveDynamicGroupPopUpShowing()) {
+					waitForSeconds(3);
+					click(removeBtnInRemovDGPopup);
+				}
+			}
+
+		}else
+			SimpleUtils.report("There is not dynamic group yet");
+	}
+
+
+	@Override
+	public String updateDynamicGroup(String groupName, String criteriaUpdate) throws Exception {
+
+		if (isManagerDGpopShowWell()) {
+			groupNameInput.sendKeys(groupName+"Update");
+			selectByVisibleText(criteriaSelect,criteriaUpdate);
+			click(criteriaValue);
+			click(checkboxInCriteriaValue.get(0));
+			click(testBtn);
+			String testInfo = testBtnInfo.getText().trim();
+			click(okBtnInSelectLocation);
+			waitForSeconds(3);
+			searchDynamicGroup(groupName);
+			if (groupRows.size()>0) {
+				SimpleUtils.pass("Dynamic group create successfully");
+			}else
+				SimpleUtils.fail("Dynamic group create failed",false);
+			return testInfo;
+		}else
+			SimpleUtils.fail("Manager Dynamic Group win load failed",false);
+		return null;
+	}
+
+	private boolean isRemoveDynamicGroupPopUpShowing() {
+		if (isElementEnabled(removeDGPopup,5) && removeDGPopupDes.getText().contains("Are you sure you want to remove this dynamic group?")
+		&& isElementEnabled(removeBtnInRemovDGPopup,5)) {
+			SimpleUtils.pass("Remove dynamic group page show well");
+			return true;
+		}
+		return false;
+	}
+
+	@FindBy(css = "modal[modal-title=\"Manage Dynamic Group\"]>div")
 	private WebElement managerDGpop;
 	private boolean isManagerDGpopShowWell() {
 		if (isElementEnabled(managerDGpop,5)&& isElementEnabled(groupNameInput,5)&&

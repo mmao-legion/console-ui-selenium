@@ -39,6 +39,7 @@
                     <!--                    District test cases-->
                     <include name="verifyDistrictListPageLoading" />
                     <include name="verifySearchDistrictFunction" />
+                    <include name="verifyAddOrUpdateDistrictFunction" />
                     <include name="verifyDisableEnableDistrictFunction" />
                 </methods>
             </class>
