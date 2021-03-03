@@ -1580,10 +1580,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			districtIdInput.clear();
 			waitForSeconds(2);
 			if (isElementEnabled(districtIdChangePopUpWin,3)) {
-				click(okBtnInImportLocationPage);
+				click(okBtnInLocationGroupConfirmPage);
 				districtIdInput.sendKeys(districtName+"update");
 			}else
 				SimpleUtils.fail("District id change window not show",true);
+			scrollToBottom();
 			click(ManagerBtnInDistrictCreationPage);
 			managerDistrictLocations(searchChara,index);
 			scrollToBottom();
@@ -1643,7 +1644,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (districtCreateLandingPageShowWell()) {
 			districtNameInput.sendKeys(districtName);
 			districtIdInput.sendKeys(districtId);
-			selectByIndex(districtManagerSelector,1);
+//			selectByIndex(districtManagerSelector,1);
 			scrollToBottom();
 			click(createDistrictBtnInDistrictCreationPage);
 
@@ -1835,14 +1836,16 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void iCanDeleteExistingDG() {
-		waitForSeconds(20);
-		if (areListElementVisible(deleteDGIcon,5)) {
+
+		if (areListElementVisible(deleteDGIcon,30)) {
 			for (WebElement dg: deleteDGIcon) {
+				waitForSeconds(20);
 				click(dg);
 				if (isRemoveDynamicGroupPopUpShowing()) {
 					waitForSeconds(3);
 					click(removeBtnInRemovDGPopup);
-				}
+				}else
+					SimpleUtils.fail("loRemove dynamic group page load failed ",false);
 			}
 
 		}else

@@ -186,7 +186,7 @@ public class LocationsTest extends TestBase {
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
-            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
+            locationSelectorPage.changeLocation(locationName+"-MOCK");
            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
            schedulePage.clickOnScheduleConsoleMenuItem();
            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
@@ -1405,8 +1405,8 @@ public class LocationsTest extends TestBase {
     @TestName(description = "Global dynamic group in Locations tab  ")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyGlobalDynamicGroupFunction(String browser, String username, String password, String location) throws Exception {
-
-        try{
+//
+//        try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime =  dfs.format(new Date()).trim();
             String groupName = "AutoCreate" +currentTime;
@@ -1426,16 +1426,16 @@ public class LocationsTest extends TestBase {
             //go to dynamic group
             locationsPage.goToDynamicGroup();
             //remove existing dynamic group
-            locationsPage.iCanDeleteExistingDG();
+//            locationsPage.iCanDeleteExistingDG();
             //create new dynamic group
             String locationNum = locationsPage.addWorkforceSharingDGWithOneCriteria(groupName,description,criteria);
             String locationNumAftUpdate = locationsPage.updateDynamicGroup(groupName,criteriaUpdate);
             if (!locationNumAftUpdate.equalsIgnoreCase(locationNum)) {
                 SimpleUtils.pass("Update dynamic group successfully");
             }
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+//        } catch (Exception e){
+//            SimpleUtils.fail(e.getMessage(), false);
+//        }
 
     }
 }
