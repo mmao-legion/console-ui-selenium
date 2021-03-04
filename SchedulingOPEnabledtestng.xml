@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite verbose ="0" thread-count="10" name="LegionTest">
+    <parameter name="environment" value="QA"/>
+    <parameter name="testRail" value="No"/>
+    <parameter name="testRailRunName" value="Scheduling OP Enabled Regression"/>
+    <listeners>
+        <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
+    </listeners>
+
+<!--======================================================Start - This is OP tests===================================================-->
+
+    <test name="Scheduling OP Enabled Test">
+        <classes>
+            <class name="com.legion.tests.core.SchedulingOPEnabledTest">
+                <methods>
+                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />
+                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
+                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin" />
+                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
+                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
+  <!--                  <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />-->
+                    <include name="verifyComplianceSmartCardFunctionality" />
+
+                    <include name="verifyScheduleFunctionalityScheduleSmartCard" />
+                    <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
+ <!--                   <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView" />
+
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView" />-->
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView" />
+ <!--                   <include name="verifySchedulesWidgetsAsStoreManager" />-->
+
+                    <include name="verifyCommonUIOfWidgetsAsStoreManager" />
+                    <include name="verifyScheduleFunctionalityForecast" />
+                    <include name="verifyScheduleLaborForeCastFunctionality" />
+                    <include name="validateWeatherSmartCardOnForecastPage" />
+
+                    <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
+ <!--                   <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />-->
+                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
+
+ <!--                   <include name="verifyTheTeamFunctionalityInRosterForSort" />
+                    <include name="verifyScheduleFunctionalityOverviewAsStoreManager" />-->
+                    <include name="verifyTheContentOfActivityPageAsStoreManager" />
+                    <include name="verifyToCloseActivityFeedAsStoreManager" />
+                    <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
+
+                    <include name="verifyAccessControlsOnActivitiesPage" />
+                    <include name="verifyTheContentOnActivityAsStoreManager" />
+ <!--                   <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
+                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />
+                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheContentOfShiftSwapActivityAsStoreManager" />
+                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" />
+                    <include name="verifyTheNotificationForCancelTimeOffAsTeamMember" />
+                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin" />
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin" />-->
+                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
+    <!--                <include name="verifyDashboardFunctionalityAsTeamMember" />-->
+                    <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
+                    <include name="verificationOfMySchedulePageAsTeamMember" />
+                    <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
+                    <include name="verifyProfilePictureFunctionalityAsTeamMember" />
+                    <include name="verifyInfoIconFunctionalityAsTeamMember" />
+                    <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
+<!--                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamLead" /> -->
+                    <include name="verifyTheFeatureOfFilterAsInternalAdmin" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingSMAccessAsStoreManager" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamLead" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingTMAccessAsTeamMember" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin" />
+
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+<!--======================================================End - This is Scheduling tests==============================================-->
+
+</suite> <!-- Suite -->

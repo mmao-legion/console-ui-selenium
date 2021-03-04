@@ -38,7 +38,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     {
         float budgetedHours = 0;
         boolean isLocationMatched = false;
-        if (areListElementVisible(schedulesInDMView, 10) && schedulesInDMView.size() != 0){
+        if (areListElementVisible(schedulesInDMView, 60) && schedulesInDMView.size() != 0){
             for (WebElement schedule : schedulesInDMView){
                 WebElement locationInDMView = schedule.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_UNTOUCHED\"]"));
                 if (locationInDMView != null){
