@@ -24,7 +24,7 @@ public class GlobalVar {
 //retry times and report path
     public final static Integer RETRY_COUNTS = 1;
 
-    public static String REPORT_PATH = "target/reports/";
+    public static String REPORT_PATH = "target/";
 
     public final static ListenerUtils listenerUtils = new ListenerUtils();
 }

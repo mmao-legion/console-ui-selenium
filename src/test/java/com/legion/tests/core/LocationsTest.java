@@ -157,7 +157,7 @@ public class LocationsTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateMockLocationAndNavigate(String browser, String username, String password, String location) throws Exception {
        try{
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime =  dfs.format(new Date());
             String locationName = "AutoCreate" +currentTime;
             int index =0;
