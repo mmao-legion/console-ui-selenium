@@ -59,8 +59,6 @@
                     <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />
                     <include name="verifyTheContentOfShiftSwapActivityWithoutApprovalAsInternalAdmin" />
                     <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
-                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin"/>
-                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
@@ -70,7 +68,6 @@
         <classes>
             <class name="com.legion.tests.core.LiquidDashboardTest">
                 <methods>
-                    <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
                     <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
                 </methods>
             </class>
@@ -82,13 +79,6 @@
             <class name="com.legion.tests.core.InboxTest">
                 <methods>
                     <include name="verifyGFEReportsAreAbleToExportAsInternalAdmin"/>
-                    <include name="verifyTheContentOfOperationHoursAndTheFirstDayOfWeekAsInternalAdmin" />
-                    <include name="verifyVSLInfoShowsOrNotAsInternalAdmin" />
-                    <include name="verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin" />
-                    <include name="verifyTurnOnGFEAsInternalAdmin" />
-                    <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
-                    <include name="verifyContentOfGFEAsInternalAdmin" />
-                    <include name="verifyVSLInfoAsInternalAdmin" />
                     <include name="verifyTheMostRecentGFEIsInReportAsInternalAdmin" />
                 </methods>
             </class>
@@ -193,9 +183,6 @@
                     <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
                     <include name="verifyRefreshFeatureOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifyTimesheetApprovalRateWidgetOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnTAEnvAsInternalAdmin" />
                     <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnNonTAEnvAsInternalAdmin" />
                     <include name="verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin" />

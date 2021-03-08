@@ -673,12 +673,13 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateDateAndTimeAfterSelectingDifferentLocation() throws Exception {
-		String dateFromLocation = getDateFromTimeZoneOfLocation("EEEE, MMMM d h:mm a");
+		String dateFromLocation = getDateFromTimeZoneOfLocation("EEEE, MMMM d H:mm");
 		String dateFromDashboard = getCurrentDateFromDashboard() + " " + currentTime.getText().toUpperCase();
 		if (dateFromDashboard.equals(dateFromLocation)) {
 			SimpleUtils.pass("Dashboard Page: The date and time on Dashboard is consistent with the timezone of current location");
 		} else {
-			SimpleUtils.fail("Dashboard Page: The date and time on Dashboard is different from the timezone of the current location", false);
+			SimpleUtils.fail("Dashboard Page: The date and time on Dashboard is different from the timezone of the current location, date from dashboard is: "
+					+ dateFromDashboard + ", date from location is: " + dateFromLocation, false);
 		}
 
 		click(currentLocation);
@@ -726,11 +727,12 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		if (isElementLoaded(currentDate, 10) && isElementLoaded(currentTime, 10)) {
 			SimpleUtils.pass("Current date and time are loaded successfully");
 			String dateFromDashboard = getCurrentDateFromDashboard() + " " + currentTime.getText().toUpperCase();
-			String dateFromLocation = getDateFromTimeZoneOfLocation("EEEE, MMMM d h:mm a");
+			String dateFromLocation = getDateFromTimeZoneOfLocation("EEEE, MMMM d H:mm");
 			if (dateFromDashboard.equals(dateFromLocation)) {
 				SimpleUtils.pass("Date and time shows according to the US(Particular location) timing successfully");
 			} else {
-				SimpleUtils.fail("The date and time on Dashboard is different from the current location", false);
+				SimpleUtils.fail("Dashboard Page: The date and time on Dashboard is different from the timezone of the current location, date from dashboard is: "
+						+ dateFromDashboard + ", date from location is: " + dateFromLocation, false);
 			}
 		} else {
 			SimpleUtils.fail("Current date and time failed to load", true);

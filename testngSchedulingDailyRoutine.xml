@@ -97,6 +97,8 @@
                     <include name="verifyTheNotificationForRequestTimeOffAsTeamMember"/>
                     <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin"/>
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin" />
+                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -120,6 +122,7 @@
                 <methods>
                     <include name="verifyCommonUIOfWidgetsAsStoreManager" />
                     <include name="verifySchedulesWidgetsAsStoreManager" />
+                    <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -146,6 +149,34 @@
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Inbox Test">
+        <classes>
+            <class name="com.legion.tests.core.InboxTest">
+                <methods>
+                    <include name="verifyTheContentOfOperationHoursAndTheFirstDayOfWeekAsInternalAdmin" />
+                    <include name="verifyVSLInfoShowsOrNotAsInternalAdmin" />
+                    <include name="verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin" />
+                    <include name="verifyTurnOnGFEAsInternalAdmin" />
+                    <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
+                    <include name="verifyContentOfGFEAsInternalAdmin" />
+                    <include name="verifyVSLInfoAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="DM View Test">
+        <classes>
+            <class name="com.legion.tests.core.DMViewTest">
+                <methods>
+                    <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
