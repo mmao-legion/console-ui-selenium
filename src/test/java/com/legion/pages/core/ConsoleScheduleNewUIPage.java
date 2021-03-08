@@ -6645,6 +6645,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }else if(areListElementVisible(editWagesHrs,5)){
                 fillBudgetValues(editWagesHrs);
                 openBudgetPopUpGenerateSchedule();
+            } else if(isElementLoaded(btnGenerateBudgetPopUP, 5)){
+                openBudgetPopUpGenerateSchedule();
             }
         }
     }

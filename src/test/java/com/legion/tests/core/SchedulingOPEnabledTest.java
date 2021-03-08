@@ -45,8 +45,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
     @Owner(owner = "Estelle/Mary")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the Schedule functionality - Week View - Context Menu")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyScheduleFunctionalityWeekView(String username, String password, String browser, String location)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScheduleFunctionalityWeekViewAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -170,46 +170,46 @@ public class SchedulingOPEnabledTest  extends TestBase {
         schedulePage.verifyDeleteShift();
     }
 
-    @Automated(automated = "Automated")
-    @Owner(owner = "Mary")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify the budget hour in DM view schedule page for non dg flow")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        try{
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
-            if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
-            }
-            schedulePage.createScheduleForNonDGFlowNewUI();
-            float budgetHoursInSchedule = Float.parseFloat(schedulePage.getBudgetNScheduledHoursFromSmartCard().get("Budget"));
-
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrictDirect();
-
-            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            float budgetedHoursInDMViewSchedule = scheduleDMViewPage.getBudgetedHourOfScheduleInDMViewByLocation(location);
-            if (budgetHoursInSchedule != 0 && budgetHoursInSchedule == budgetedHoursInDMViewSchedule) {
-                SimpleUtils.pass("Verified the budget hour in DM view schedule page is consistent with the value saved in create schedule page!");
-            } else {
-                SimpleUtils.fail("Verified the budget hour in DM view schedule page is consistent with the value saved in create schedule page! The budget hour in DM view schedule page is " +
-                        budgetedHoursInDMViewSchedule + ". The value saved in create schedule page is " + budgetHoursInSchedule, false);
-            }
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-
-    }
+//    @Automated(automated = "Automated")
+//    @Owner(owner = "Mary")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @TestName(description = "Verify the budget hour in DM view schedule page for non dg flow")
+//    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+//    public void verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+//        try{
+//            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+//            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//            schedulePage.clickOnScheduleConsoleMenuItem();
+//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+//                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+//                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+//
+//            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+//            if (isWeekGenerated) {
+//                schedulePage.unGenerateActiveScheduleScheduleWeek();
+//            }
+//            schedulePage.createScheduleForNonDGFlowNewUI();
+//            float budgetHoursInSchedule = Float.parseFloat(schedulePage.getBudgetNScheduledHoursFromSmartCard().get("Budget"));
+//
+//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+//            locationSelectorPage.changeDistrictDirect();
+//
+//            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+//            float budgetedHoursInDMViewSchedule = scheduleDMViewPage.getBudgetedHourOfScheduleInDMViewByLocation(location);
+//            if (budgetHoursInSchedule != 0 && budgetHoursInSchedule == budgetedHoursInDMViewSchedule) {
+//                SimpleUtils.pass("Verified the budget hour in DM view schedule page is consistent with the value saved in create schedule page!");
+//            } else {
+//                SimpleUtils.fail("Verified the budget hour in DM view schedule page is consistent with the value saved in create schedule page! The budget hour in DM view schedule page is " +
+//                        budgetedHoursInDMViewSchedule + ". The value saved in create schedule page is " + budgetHoursInSchedule, false);
+//            }
+//        } catch (Exception e){
+//            SimpleUtils.fail(e.getMessage(), false);
+//        }
+//
+//    }
 
 
 
@@ -219,7 +219,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
     @TestName(description = "Assign TM warning: TM status is already Scheduled at Home location")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        try {
+//        try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -233,9 +233,10 @@ public class SchedulingOPEnabledTest  extends TestBase {
 
             schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = schedulePage.isWeekGenerated();
-            if (!isWeekGenerated) {
-                schedulePage.createScheduleForNonDGFlowNewUI();
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            schedulePage.createScheduleForNonDGFlowNewUI();
             List<String> firstShiftInfo = schedulePage.getTheShiftInfoByIndex(0);
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -246,9 +247,9 @@ public class SchedulingOPEnabledTest  extends TestBase {
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.verifyScheduledWarningWhenAssigning(firstShiftInfo.get(0), firstShiftInfo.get(2));
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+//        } catch (Exception e){
+//            SimpleUtils.fail(e.getMessage(), false);
+//        }
     }
 
 
@@ -633,7 +634,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             liquidDashboardPage.saveAndExitEditMode();
 
             // Refresh the dashboard to get the value updated
-            dashboardPage.clickOnRefreshButton();
+//            dashboardPage.clickOnRefreshButton();
 
             //verify view schedules link
             List<String> resultListOnWidget = liquidDashboardPage.getDataOnSchedulesWidget();
@@ -1238,8 +1239,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
     @Owner(owner = "Julie")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate access controls on Activities page when logon with Admin/TM or SM switch to employer view")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyAccessControlsOnActivitiesPage(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyAccessControlsOnActivitiesPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -2354,47 +2355,47 @@ public class SchedulingOPEnabledTest  extends TestBase {
         }
     }
 
-
-    @Automated(automated = "Automated")
-    @Owner(owner = "Julie")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verification of My Schedule Page")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verificationOfMySchedulePageAsTeamMember(String browser, String username, String password, String location) throws Exception {
-        try {
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-
-            //T1838603 Validate the availability of schedule table.
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String nickName = profileNewUIPage.getNickNameFromProfile();
-            schedulePage.validateTheAvailabilityOfScheduleTable(nickName);
-
-            //T1838604 Validate the disability of location selector on Schedule page.
-            schedulePage.validateTheDisabilityOfLocationSelectorOnSchedulePage();
-
-            //T1838605 Validate the availability of profile menu.
-            schedulePage.validateTheAvailabilityOfScheduleMenu();
-
-            //T1838606 Validate the focus of schedule.
-            schedulePage.validateTheFocusOfSchedule();
-
-            //T1838607 Validate the default filter is selected as Scheduled.
-            schedulePage.validateTheDefaultFilterIsSelectedAsScheduled();
-
-            //T1838608 Validate the focus of week.
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            dashboardPage.navigateToDashboard();
-            String currentDate = dashboardPage.getCurrentDateFromDashboard();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.validateTheFocusOfWeek(currentDate);
-
-            //T1838609 Validate the selection of previous and upcoming week.
-            schedulePage.verifySelectOtherWeeks();
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(),false);
-        }
-    }
+//    Need disable TA
+//    @Automated(automated = "Automated")
+//    @Owner(owner = "Julie")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @TestName(description = "Verification of My Schedule Page")
+//    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+//    public void verificationOfMySchedulePageAsTeamMember(String browser, String username, String password, String location) throws Exception {
+//        try {
+//            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//            schedulePage.clickOnScheduleConsoleMenuItem();
+//
+//            //T1838603 Validate the availability of schedule table.
+//            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+//            String nickName = profileNewUIPage.getNickNameFromProfile();
+//            schedulePage.validateTheAvailabilityOfScheduleTable(nickName);
+//
+//            //T1838604 Validate the disability of location selector on Schedule page.
+//            schedulePage.validateTheDisabilityOfLocationSelectorOnSchedulePage();
+//
+//            //T1838605 Validate the availability of profile menu.
+//            schedulePage.validateTheAvailabilityOfScheduleMenu();
+//
+//            //T1838606 Validate the focus of schedule.
+//            schedulePage.validateTheFocusOfSchedule();
+//
+//            //T1838607 Validate the default filter is selected as Scheduled.
+//            schedulePage.validateTheDefaultFilterIsSelectedAsScheduled();
+//
+//            //T1838608 Validate the focus of week.
+//            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//            dashboardPage.navigateToDashboard();
+//            String currentDate = dashboardPage.getCurrentDateFromDashboard();
+//            schedulePage.clickOnScheduleConsoleMenuItem();
+//            schedulePage.validateTheFocusOfWeek(currentDate);
+//
+//            //T1838609 Validate the selection of previous and upcoming week.
+//            schedulePage.verifySelectOtherWeeks();
+//        } catch (Exception e) {
+//            SimpleUtils.fail(e.getMessage(),false);
+//        }
+//    }
 
 
     @Automated(automated = "Automated")
@@ -2786,32 +2787,32 @@ public class SchedulingOPEnabledTest  extends TestBase {
         }
 
     }
-//
-//    @Automated(automated = "Automated")
-//    @Owner(owner = "Mary")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
-//    @TestName(description = "Validate the left navigation menu on login using DM access")
-//    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-//    public void verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager(String browser, String username, String password, String location) throws Exception {
-//        try{
-//            verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("DistrictManager");
-//        } catch (Exception e){
-//            SimpleUtils.fail(e.getMessage(), false);
-//        }
-//    }
-//
-//    @Automated(automated = "Automated")
-//    @Owner(owner = "Mary")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
-//    @TestName(description = "Validate the left navigation menu on login using CA (Customer Admin) access")
-//    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-//    public void verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin(String browser, String username, String password, String location) throws Exception {
-//        try{
-//            verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("CustomerAdmin");
-//        } catch (Exception e){
-//            SimpleUtils.fail(e.getMessage(), false);
-//        }
-//    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate the left navigation menu on login using DM access")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager(String browser, String username, String password, String location) throws Exception {
+        try{
+            verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("DistrictManager");
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate the left navigation menu on login using CA (Customer Admin) access")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess("CustomerAdmin");
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 
     private void verifyTheLeftNavigationMenuOnLoginUsingDifferentAccess(String userRole) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
