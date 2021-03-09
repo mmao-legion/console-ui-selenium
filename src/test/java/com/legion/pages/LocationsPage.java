@@ -123,4 +123,8 @@ public interface LocationsPage {
     public String updateDynamicGroup(String groupName, String criteriaUpdate) throws Exception;
 
     public void verifyPaginationFunctionInDistrict() throws Exception;
+
+    public List<String> getAllDayPartsFromGlobalConfiguration() throws Exception;
+
+    public void goToGlobalConfigurationInLocations() throws Exception;
 }

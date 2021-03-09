@@ -473,14 +473,13 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 
 	}
-//below are advanced staffing rule element
+ //below are advanced staffing rule element
 	@FindBy(css="div[class=\"mt-20\"] input-field[value*=\"timeEventOffsetMinutes\"] input")
 	private WebElement shiftStartOffsetMinutes;
 	@FindBy(css="div[class=\"mt-20\"] input-field[value*=\"timeEventOffsetMinutes\"] div")
 	private WebElement shiftStartOffsetMinutesValue;
 	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeUnitOptions\"] select")
 	private WebElement shiftStartTimeUnit;
-
 	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"eventPointOptions\"] select")
 	private WebElement shiftStartEventPoint;
 	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"eventPointOptions\"] select option")
@@ -539,16 +538,16 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		add("pm");
 	}};
 
-//verify list of start shift time unit
+ //verify list of start shift time unit
 	@Override
 	public void validateShiftStartTimeUnitList() throws Exception{
 		if(isElementEnabled(shiftStartTimeUnit)){
-			List<String> startTimeUnitList = null;
+			List<String> startTimeUnitList = new ArrayList<String>();
 			clickTheElement(shiftStartTimeUnit);
 			if(shiftStartTimeUnitList.size()!=0){
 				for(WebElement shiftStartTimeUnit:shiftStartTimeUnitList){
-					String startTimeUnit = shiftStartTimeUnit.getText().trim();
-					if(startTimeUnit!=null){
+					if(shiftStartTimeUnit!=null) {
+						String startTimeUnit = shiftStartTimeUnit.getText().trim();
 						SimpleUtils.report("shift start time unit list: " + startTimeUnit);
 						startTimeUnitList.add(startTimeUnit);
 					}
@@ -576,9 +575,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="table tr")
 	private List<WebElement> dayPartsList;
 
-	@Override
+	/*@Override
 	public List<String> getAllDayPartsNameInOH() throws Exception{
-		List<String> dayPartsNameList = null;
+		List<String> dayPartsNameList = new ArrayList<String>();
 		if(isElementEnabled(addDayPartsBTNInOH)){
 			clickTheElement(addDayPartsBTNInOH);
 			if(isElementEnabled(manageDaypartsPageTitle)){
@@ -600,10 +599,35 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}
 		return dayPartsNameList;
+	}*/
+
+	List<String> eventList = new ArrayList<String>(){{
+		add("Opening Operating Hours");
+		add("Closing Operating Hours");
+		add("Opening Business Hours");
+		add("Closing Business Hours");
+	}};
+
+	//verify list of Shift Start Time Event
+	@Override
+	public List<String> getShiftStartTimeEventList() throws Exception{
+		List<String> startTimeEventList = new ArrayList<String>();
+		if(isElementEnabled(shiftStartTimeEvent)){
+			clickTheElement(shiftStartTimeEvent);
+			if(shiftStartTimeEventList.size()!=0){
+				for(WebElement shiftStartTimeEvent:shiftStartTimeEventList){
+					String startTimeEvent = shiftStartTimeEvent.getText().trim();
+					if(startTimeEvent!=null){
+						SimpleUtils.report("shift start time event list: " + startTimeEvent);
+						startTimeEventList.add(startTimeEvent);
+					}
+				}
+			}
+		}else {
+			SimpleUtils.fail("Shift start time event isn't shown",false);
+		}
+		return startTimeEventList;
 	}
-
-
-
 
 
 }

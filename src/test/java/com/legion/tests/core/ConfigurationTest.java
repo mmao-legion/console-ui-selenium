@@ -8,6 +8,7 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
+import org.apache.commons.collections.ListUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -162,9 +163,9 @@ public class ConfigurationTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Days of Week formula validation")
+    @TestName(description = "Time of Day Start Section")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyInputFormulaForTimeOfDay(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimeOfDayStartSection(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -173,6 +174,22 @@ public class ConfigurationTest extends TestBase {
             String workRole = "New Work Role";
             String offsetTime ="10";
             String startEventPoint = "before";
+            List<String> dayPartsInGlobalConfig = new ArrayList<String>();
+            List<String> ShiftStartTimeEventList = new ArrayList<String>();
+            List<String> publicEventList = new ArrayList<String>(){{
+                add("Opening Operating Hours");
+                add("Closing Operating Hours");
+                add("Opening Business Hours");
+                add("Closing Business Hours");
+            }};
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //go to Global Configuration tab
+            locationsPage.goToGlobalConfigurationInLocations();
+            dayPartsInGlobalConfig = locationsPage.getAllDayPartsFromGlobalConfiguration();
+            publicEventList.addAll(dayPartsInGlobalConfig);
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
@@ -184,6 +201,12 @@ public class ConfigurationTest extends TestBase {
             configurationPage.verifyAdvancedStaffingRulePageShowWell();
             configurationPage.inputOffsetTimeForShiftStart(offsetTime,startEventPoint);
             configurationPage.validateShiftStartTimeUnitList();
+            ShiftStartTimeEventList = configurationPage.getShiftStartTimeEventList();
+            if (ListUtils.isEqualList(ShiftStartTimeEventList, publicEventList)) {
+                SimpleUtils.pass("The list of start time event is correct");
+            } else {
+                SimpleUtils.fail("The list of start time event is NOT correct", false);
+            }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

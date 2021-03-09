@@ -94,6 +94,7 @@
                     <include name="verifyNewAdvancedStaffingRulePage"/>
                     <include name="verifyCheckBoxOfDaysOfWeek"/>
                     <include name="verifyInputFormulaForDaysOfWeek"/>
+                    <include name="verifyTimeOfDayStartSection"/>
                 </methods>
             </class>
         </classes>

@@ -1918,5 +1918,41 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 
 	}
+// elements on global configuration page
+	@FindBy(css="lg-button[label=\"Edit\"]")
+	private WebElement editOnGlobalConfigPage;
+	@FindBy(css="form-section[form-title=\"Day Parts\"]")
+	private WebElement dayPartsSection;
+	@FindBy(css="div.daypart-container tbody tr")
+	private List<WebElement> dayPartsList;
+
+	public void goToGlobalConfigurationInLocations() throws Exception{
+		waitForSeconds(10);
+		if (isElementLoaded(globalConfigurationInLocations, 20)) {
+			click(globalConfigurationInLocations);
+			waitForSeconds(10);
+			if (isElementEnabled(editOnGlobalConfigPage, 20)) {
+				SimpleUtils.pass("global configuration page load successfully");
+			} else
+				SimpleUtils.fail("global congiguration page load failed", false);
+		} else
+			SimpleUtils.fail("locations tab load failed in location overview page", false);
+	}
+
+	public List<String> getAllDayPartsFromGlobalConfiguration() throws Exception{
+		List<String> dayPartsNameList = new ArrayList<String>();
+		if(dayPartsList.size()!=0){
+			for(WebElement dayParts:dayPartsList){
+				String dayPartsName = dayParts.findElement(By.cssSelector("td")).getText().trim();
+				if(dayPartsName!=null){
+					dayPartsNameList.add(dayPartsName);
+				}
+			}
+		}else{
+			SimpleUtils.pass("There is no day parts for this enterprise");
+		}
+        return dayPartsNameList;
+	}
+
 }
 

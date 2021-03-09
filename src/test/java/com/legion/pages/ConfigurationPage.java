@@ -21,7 +21,8 @@ public interface ConfigurationPage {
     public void verifyCheckBoxOfDaysOfWeekSection() throws Exception;
     public boolean isDaysOfWeekFormulaCheckBoxChecked();
     public void inputFormulaInForDaysOfWeekSection(String formula) throws Exception;
-    public List<String> getAllDayPartsNameInOH() throws Exception;
+//    public List<String> getAllDayPartsNameInOH() throws Exception;
     public void inputOffsetTimeForShiftStart(String startOffsetTime,String startEventPoint) throws Exception;
     public void validateShiftStartTimeUnitList() throws Exception;
+    public List<String> getShiftStartTimeEventList() throws Exception;
 }
