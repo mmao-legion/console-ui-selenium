@@ -149,6 +149,7 @@
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityForScheduleCopyRestrictionsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -174,9 +175,53 @@
         <classes>
             <class name="com.legion.tests.core.DMViewTest">
                 <methods>
+                    <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
                     <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
+<!--                    <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" blocked by bug: SCH-3315/>-->
                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
+                    <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Scheduling Minor Test">
+        <classes>
+            <class name="com.legion.tests.core.SchedulingMinorTest">
+                <methods>
+                    <include name="verifyEditMinorRulesAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Cinemark Minor Test">
+        <classes>
+            <class name="com.legion.tests.core.CinemarkMinorTest">
+                <methods>
+                    <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />
+                    <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" />
+                    <include name="verifySchoolCalendarListAsInternalAdmin" />
+                    <include name="verifyCreateCalendarAsInternalAdmin" />
+                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyAddDatesForBreaksAsInternalAdmin" />
+                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTurnOffMinorRuleAsInternalAdmin" />
+                    <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" />
+                    <include name="verifyAccessToEditCalendarsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

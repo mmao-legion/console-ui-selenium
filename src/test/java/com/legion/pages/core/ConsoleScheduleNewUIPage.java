@@ -3984,6 +3984,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         clickOnFinishButtonOnCreateSchedulePage();
                     } else if (isElementLoaded(publishSheduleButton, 5)) {
                         SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
+                    } else if (areListElementVisible(weekShifts, 5)) {
+                        SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
                     } else {
                         SimpleUtils.fail("Generate button or Publish Button not found on page", false);
                     }
@@ -3992,6 +3994,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         click(reGenerateScheduleButton);
                         generateScheduleFromCreateNewScheduleWindow(activeWeekText);
                     } else if (isElementLoaded(publishSheduleButton, 5)) {
+                        SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
+                    } else if (areListElementVisible(weekShifts, 5)) {
                         SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
                     } else {
                         SimpleUtils.fail("Generate button or Publish not found on page", false);

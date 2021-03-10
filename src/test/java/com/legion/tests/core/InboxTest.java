@@ -532,13 +532,13 @@ public class InboxTest extends TestBase {
             if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM1, schedulingPolicyGroupData_TM1) && contentOfWeekSummary_TM1.get("Location").equals(nickName1_LocationDetailInfo))
                 SimpleUtils.pass("Inbox: The content of week summary is consistent with the data from controls when selecting a tm");
             else
-                SimpleUtils.fail("Inbox: The content of week summary is inconsistent with the data from controls when selecting a tm",true);
+                SimpleUtils.fail("Inbox: The content of week summary is inconsistent with the data from controls when selecting a tm",false);
 
             SimpleUtils.report("Inbox: Compare another TM with the data from controls");
             if (inboxPage.compareDataInGFEWeekSummary(contentOfWeekSummary_TM2, schedulingPolicyGroupData_TM2) && contentOfWeekSummary_TM2.get("Location").equals(nickName2_LocationDetailInfo))
                 SimpleUtils.pass("Inbox: The content of week summary is consistent with the data from controls when selecting another tm");
             else
-                SimpleUtils.fail("Inbox: The content of week summary is inconsistent with the data from controls when selecting another tm",true);
+                SimpleUtils.fail("Inbox: The content of week summary is inconsistent with the data from controls when selecting another tm",false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }

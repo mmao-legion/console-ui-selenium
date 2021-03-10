@@ -678,11 +678,11 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
         }
     }
 
-    @FindBy(css = "div[label=\"'SEND'\"] button")
+    @FindBy(css = "[type=\"'success'\"] button")
     private WebElement sendBtn;
     @Override
     public void clickSendBtn() throws Exception {
-        if (isElementLoaded(sendBtn,5)){
+        if (isElementLoaded(sendBtn,10)){
             scrollToBottom();
             click(sendBtn);
             SimpleUtils.pass("Send button has been clicked!");

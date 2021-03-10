@@ -113,7 +113,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Prepare the calendar for all the minors")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void prepareTheCalendarForAllMinorsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -169,7 +169,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify add dates for breaks")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAddDatesForBreaksAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -201,7 +201,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify view details of  calendars and edit")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyViewDetailsAndEditAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -244,7 +244,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify delete calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDeleteCalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -281,7 +281,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify SM will have ability to select a calendar for the minor from a dropdown menu within the profile")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySMCanSelectACalendarForMinorAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -322,7 +322,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the default value of a minor without a calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -442,7 +442,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify create calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateCalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -530,7 +530,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify school calendar list")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySchoolCalendarListAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -558,7 +558,7 @@ public class CinemarkMinorTest extends TestBase {
 
             // Login as Store Manager
             String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("OP_Enterprise") + fileName;
+            fileName = SimpleUtils.getEnterprise("Op_Enterprise") + fileName;
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
             loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
@@ -599,7 +599,7 @@ public class CinemarkMinorTest extends TestBase {
     //Haya
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify turn off minor rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOffMinorRuleAsInternalAdmin(String browser, String username, String password, String location) {
@@ -661,7 +661,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "verify turn on minor rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -736,7 +736,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Admin can configure the access to edit calendars")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccessToEditCalendarsAsInternalAdmin(String browser, String username, String password, String location) {
@@ -820,7 +820,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify turn on minor rule and set rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOnAndSetMinorRuleAsInternalAdmin(String browser, String username, String password, String location) {
@@ -872,7 +872,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the School today and school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -895,7 +895,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the School today and school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -918,7 +918,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the School today and no school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -941,7 +941,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the School today and no school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -963,7 +963,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the no School today and no school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -987,7 +987,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the no School today and no school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1011,7 +1011,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the no School today and school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1034,7 +1034,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the no School today and school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1056,7 +1056,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the summer day settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1078,7 +1078,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the summer day  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
