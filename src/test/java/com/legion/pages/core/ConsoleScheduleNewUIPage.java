@@ -9,11 +9,9 @@ import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
+import cucumber.api.java.ro.Si;
+import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.FindBy;
@@ -3536,6 +3534,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement storeClosedText;
     @FindBy (css = "[ng-repeat*=\"summary.workingHours\"]")
     private List<WebElement> summaryWorkingHoursRows;
+    @FindBy (css = "span.loading-icon.ng-scope")
+    private WebElement loadingIcon;
+
+
 
     @Override
     public void verifyClosedDaysInToggleSummaryView(List<String> weekDaysToClose) throws Exception {
@@ -3652,8 +3654,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         if (weekContainer != null) {
                             WebElement scheduledHours = weekContainer.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
                             if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
+                                int i = 0;
+                                while (isElementLoaded(loadingIcon)&& i<20){
+                                    waitForSeconds(3);
+                                    i = i+1;
+                                }
                                 clickTheElement(weekContainer);
-                                SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + "with scheduled hour: " + scheduledHours.getText() + " Successfully!");
+                                waitForSeconds(3);
+                                SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + " with scheduled hour: " + scheduledHours.getText() + " Successfully!");
                                 break;
                             } else {
                                 selectOtherWeek = true;
@@ -3710,7 +3718,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(nextButtonOnCreateSchedule)) {
             clickTheElement(nextButtonOnCreateSchedule);
             waitForSeconds(10);
-            if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+            if (isElementEnabled(checkOutTheScheduleButton, 60)) {
                 checkoutSchedule();
             }
             if (areListElementVisible(shiftsWeekView, 15) && shiftsWeekView.size() > 0) {
@@ -3840,9 +3848,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void createScheduleForNonDGFlowNewUI() throws Exception {
         String subTitle = "Confirm Operating Hours";
         waitForSeconds(3);
-        if (isElementLoaded(generateSheduleButton,10)) {
+        if (isElementLoaded(generateSheduleButton,60)) {
             waitForSeconds(3);
             clickTheElement(generateSheduleButton);
+            waitForSeconds(3);
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
@@ -3925,10 +3934,92 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @FindBy (css = ".generate-modal-operating-hours-step-container .lg-picker-input")
+    private WebElement locationSelectorOnCreateSchedulePage;
+
+    @FindBy (css = ".modal-instance .lg-search-options__option")
+    private List<WebElement> locationsInLocationSelectorOnCreateSchedulePage;
+
+    @FindBy (css = "input[placeholder=\"Search Location\"]")
+    private WebElement searchLocationOnCreateSchedulePage;
+
+    @FindBy (css = ".generate-modal-subheader-location-name")
+    private WebElement selectedLocationOnCreateSchedulePage;
+
+    @FindBy (css = "[ng-click=\"openSearchDropDown()\"]")
+    private WebElement openSearchLocationBoxButton;
+
+    @FindBy (css = "[ng-click=\"closeSearchDropDown()\"]")
+    private WebElement closeSearchLocationBoxButton;
+
+    @FindBy (css = "input[placeholder=\"Search Locations\"]")
+    private WebElement searchLocationOnUngenerateSchedulePage;
+
+    @FindBy (css = "div[class=\"lg-picker-input__wrapper lg-ng-animate\"] .lg-search-options__option-wrapper")
+    private List<WebElement> locationsInLocationSelectorOnUngenerateSchedulePage;
+
+    @FindBy (css = "div.schedule-summary-location-picker span")
+    private WebElement selectedLocationOnUngenerateSchedulePage;
+
+    public void selectRandomLocationOnUngenerateScheduleEditOperatingHoursPage() throws Exception {
+        if (isElementLoaded(openSearchLocationBoxButton, 60)||(isElementLoaded(closeSearchLocationBoxButton, 60))){
+            if(isElementLoaded(openSearchLocationBoxButton, 5)){
+                click(openSearchLocationBoxButton);
+            }
+            if(isElementLoaded(searchLocationOnUngenerateSchedulePage, 5)){
+                click(searchLocationOnUngenerateSchedulePage);
+            } else
+                SimpleUtils.fail("Ungenerate schedule page: Search locations box fail to open! ", false);
+            if(areListElementVisible(locationsInLocationSelectorOnUngenerateSchedulePage, 5)
+                    && locationsInLocationSelectorOnUngenerateSchedulePage.size() >0){
+                int randomLocations = (new Random()).nextInt(locationsInLocationSelectorOnUngenerateSchedulePage.size());
+                String randomLocationName = locationsInLocationSelectorOnUngenerateSchedulePage.get(randomLocations).getText();
+
+                if(isElementLoaded(searchLocationOnUngenerateSchedulePage, 5)){
+                    searchLocationOnUngenerateSchedulePage.sendKeys(randomLocationName);
+                }
+                waitForSeconds(3);
+                click(locationsInLocationSelectorOnUngenerateSchedulePage.get(0));
+                if(areListElementVisible(locationsInLocationSelectorOnUngenerateSchedulePage)){
+
+                    click(locationsInLocationSelectorOnUngenerateSchedulePage.get(randomLocations));
+                }
+
+                if(selectedLocationOnUngenerateSchedulePage.getText().equals(randomLocationName)){
+                    SimpleUtils.pass("Ungenerate schedule page: Select locations on Edit Operating hours successfully! ");
+                } else
+                    SimpleUtils.fail("Ungenerate schedule page: Select locations on Edit Operating hours failed! ", false);
+
+            } else
+                SimpleUtils.fail("Ungenerate schedule page: Locations fail to list! ", false);
+        } else
+            SimpleUtils.fail("Ungenerate schedule page: Search location buttons fail to load! ", false);
+    }
+
+    public void selectRandomLocationOnCreateScheduleEditOperatingHoursPage() throws Exception {
+        int randomLocations = (new Random()).nextInt(locationsInLocationSelectorOnCreateSchedulePage.size());
+        String randomLocationName = locationsInLocationSelectorOnCreateSchedulePage.get(randomLocations).getText();
+        waitForSeconds(3);
+        if(isElementLoaded(searchLocationOnCreateSchedulePage, 5)){
+            searchLocationOnCreateSchedulePage.sendKeys(randomLocationName);
+        }
+        click(locationsInLocationSelectorOnCreateSchedulePage.get(0));
+        if(selectedLocationOnCreateSchedulePage.getText().equals(randomLocationName)){
+            SimpleUtils.pass("Select locations on Edit Operating hours successfully! ");
+        } else
+            SimpleUtils.fail("Select locations on Edit Operating hours failed! ", false);
+    }
+
     @Override
     public void editTheOperatingHours(List<String> weekDaysToClose) throws Exception {
         if (isElementLoaded(operatingHoursEditBtn, 10)) {
             clickTheElement(operatingHoursEditBtn);
+            if(isElementLoaded(locationSelectorOnCreateSchedulePage, 5)
+                    && areListElementVisible(locationsInLocationSelectorOnCreateSchedulePage, 5)
+                    && locationsInLocationSelectorOnCreateSchedulePage.size()>0){
+                click(locationSelectorOnCreateSchedulePage);
+                selectRandomLocationOnCreateScheduleEditOperatingHoursPage();
+            }
             if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
                 SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
                 if (areListElementVisible(operatingHoursDayLists, 15)) {
@@ -4061,6 +4152,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(backBtnOnCreateScheduleWindow);
         }else {
             SimpleUtils.fail("Back button on create schedule popup window is not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void clickExitBtnToExitCreateScheduleWindow() throws Exception {
+        if (isElementEnabled(backBtnOnCreateScheduleWindow,10)) {
+            click(backBtnOnCreateScheduleWindow);
+        }else {
+            SimpleUtils.fail("Exit button on create schedule popup window is not loaded Successfully!", false);
         }
     }
 
@@ -5146,7 +5246,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if(startingPoint.equalsIgnoreCase("End")){
             if(isElementLoaded(sliderNotchEnd,10) && sliderDroppableCount.size()>0){
                 SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
-                WebElement element = getDriver().findElement(By.xpath("//div[contains(@class,'lgn-time-slider-notch-label ng-binding ng-scope PM')][text()="+Integer.parseInt(shiftTime)+"]"));
+                WebElement element = getDriver().findElement(By.xpath("//div[contains(@class,'lgn-time-slider-notch-label ng-binding ng-scope "+shiftTime+"')]"));
                 mouseHoverDragandDrop(sliderNotchEnd,element);
             } else{
                 SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
@@ -5154,7 +5254,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else if(startingPoint.equalsIgnoreCase("Start")){
             if(isElementLoaded(sliderNotchStart,10) && sliderDroppableCount.size()>0){
                 SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
-                WebElement element = getDriver().findElement(By.xpath("//div[contains(@class,'lgn-time-slider-notch-label ng-binding ng-scope AM')][text()="+Integer.parseInt(shiftTime)+"]"));
+                WebElement element = getDriver().findElement(By.xpath("//div[contains(@class,'lgn-time-slider-notch-label ng-binding ng-scope "+ shiftTime+"')]"));
                 mouseHoverDragandDrop(sliderNotchStart,element);
             } else{
                 SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
@@ -12661,8 +12761,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                                 click(openOrCloseWeekDayButton);
                                 SimpleUtils.report("Week day: "+weekDay.getText()+" been opened successfully!");
                             }
-                            moveSliderAtCertainPoint(endTime.split("pm")[0], ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-                            moveSliderAtCertainPoint(startTime.split("am")[0], ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+                            moveSliderAtCertainPoint(endTime, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+                            moveSliderAtCertainPoint(startTime, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
                             click(editOperatingHourSaveButton);
                             openCloseHours = operatingHour.findElement(By.cssSelector("[ng-class=\"{dirty: day.isOverridden}\"]"));
                             if (openCloseHours.getText().equalsIgnoreCase(startTime+"-"+endTime)){
@@ -13292,6 +13392,23 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Schedule Calendar Days Header In WeekView are not loaded!", false);
         }
         return totalProjectionOpenShiftsHours;
+    }
+
+
+    @FindBy(css = "span[ng-if=\"canEditWorkingHours\"]")
+    private List<WebElement> editOperatingHousButtonOnUngenerateSchedulePage;
+
+    public boolean checkIfEditOperatingHoursButtonsAreShown() throws Exception {
+        boolean areEditButtonShown = false;
+        if(areListElementVisible(editOperatingHousButtonOnUngenerateSchedulePage, 10)){
+            areEditButtonShown = true;
+            SimpleUtils.report("Edit operating hours buttons are shown on ungenerate schedule page! ");
+        } else if(isElementLoaded(operatingHoursEditBtn, 5)){
+            areEditButtonShown = true;
+            SimpleUtils.report("Edit operating hours button are shown on create schedule page! ");
+        } else
+            SimpleUtils.report("Edit operating hours buttons are not shown! ");
+        return areEditButtonShown;
     }
 }
 

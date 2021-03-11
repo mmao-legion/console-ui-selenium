@@ -3465,4 +3465,17 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public boolean isLocationGroup() {
         return false;
     }
+
+    @Override
+    public void selectRandomLocationOnUngenerateScheduleEditOperatingHoursPage() throws Exception {
+
+    }
+    @Override
+    public boolean checkIfEditOperatingHoursButtonsAreShown() throws Exception{
+        return false;
+    }
+    @Override
+    public void clickExitBtnToExitCreateScheduleWindow() throws Exception{
+
+    }
 }

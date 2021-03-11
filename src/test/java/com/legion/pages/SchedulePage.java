@@ -568,4 +568,7 @@ public interface SchedulePage {
 	public float getTotalProjectionOpenShiftsHoursForCurrentWeek() throws Exception;
 	public float newCalcTotalScheduledHourForDayInWeekView() throws Exception;
 	public boolean isLocationGroup();
+	public void selectRandomLocationOnUngenerateScheduleEditOperatingHoursPage() throws Exception;
+	public boolean checkIfEditOperatingHoursButtonsAreShown() throws Exception;
+	public void clickExitBtnToExitCreateScheduleWindow() throws Exception;
 }
