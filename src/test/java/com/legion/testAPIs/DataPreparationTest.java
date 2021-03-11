@@ -12,7 +12,7 @@ import org.junit.Test;
 public class DataPreparationTest extends BaseRunner {
 
     private ApiList apiList = ProxyUtils.create(ApiList.class);
-//    private ABSwitch ABSwitch = ProxyUtils.create(ABSwitch.class);
+
 
     String sessionId = null;
     String enterpriseId = null;
@@ -36,8 +36,8 @@ public class DataPreparationTest extends BaseRunner {
 //        response = apiList.queryABSwitch("OPView",sessionId,"rc-enterprise.dev.legion.work","gzip,deflate,br","keep-alive");
 //        response.then().statusCode(200);
 
-        response = apiList.switches(sessionId);
-        response.then().statusCode(200);
+//        response = apiList.switches(sessionId);
+//        response.then().statusCode(200);
 
     }
 

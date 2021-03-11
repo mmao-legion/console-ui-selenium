@@ -18,12 +18,15 @@
                 <methods>
                     <include name="verifyJobLandingPage" />
                     <include name="verifyJobSearchFunction" />
-<!--                    <include name="verifyCreateScheduleJobFunction" />-->
                     <include name="verifyCheckJobDetailsFunction" />
                     <include name="verifyCopyStopResumeAndArchiveJobFunctionFunction" />
                     <include name="verifyFilterFunctionByJobTypeAndJobStatus" />
-                    <include name="verifyFilterFunctionByJobStatus" />
                     <include name="verifyFilterFunctionByJobType" />
+                    <include name="verifyFilterFunctionByJobStatus" />
+                    <include name="verifyAbnormalCheatJobFunction" />
+                    <include name="verifyCreateReleaseScheduleJobFunction" />
+                    <include name="verifyCreateScheduleJobFunction" />
+                    <include name="verifyAbnormalCheatJobFunction" />
 
 
                 </methods>

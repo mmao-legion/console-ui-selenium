@@ -77,6 +77,8 @@
                     <include name="verifyAbnormalCheatJobFunction" />
                     <include name="verifyCreateReleaseScheduleJobFunction" />
                     <include name="verifyCreateScheduleJobFunction" />
+                    <include name="verifyAbnormalCheatJobFunction" />
+
 
 
 

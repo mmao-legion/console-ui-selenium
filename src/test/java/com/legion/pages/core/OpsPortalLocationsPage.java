@@ -247,7 +247,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			searchInput.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
 			if (locationsName.getText().trim().equalsIgnoreCase(locationName.trim())) {
-				SimpleUtils.pass("the location is searched ");
+				SimpleUtils.pass("the location is searched");
 				return true;
 			}
 		}else
