@@ -472,7 +472,8 @@
         <classes>
             <class name="com.legion.tests.core.LocationGroupTest">
                 <methods>
-                    <include name="verifyManagerCanSearchAndSelectLocationsOnOperatingHoursPageBeforeOrDuringGenerateScheduleAsInternalAdmin" />
+                    <include name="validateTheGenerationOfLGScheduleAsInternalAdmin" />
+                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

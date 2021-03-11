@@ -4155,6 +4155,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
+    public void clickExitBtnToExitCreateScheduleWindow() throws Exception {
+        if (isElementEnabled(backBtnOnCreateScheduleWindow,10)) {
+            click(backBtnOnCreateScheduleWindow);
+        }else {
+            SimpleUtils.fail("Exit button on create schedule popup window is not loaded Successfully!", false);
+        }
+    }
+
     //added by haya, edit operating hours when create new schedule for non-dg flow.
     //e.g.: day: Sunday, startTime->09:00AM, endTime->05:00PM
     @Override
@@ -13383,6 +13392,23 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Schedule Calendar Days Header In WeekView are not loaded!", false);
         }
         return totalProjectionOpenShiftsHours;
+    }
+
+
+    @FindBy(css = "span[ng-if=\"canEditWorkingHours\"]")
+    private List<WebElement> editOperatingHousButtonOnUngenerateSchedulePage;
+
+    public boolean checkIfEditOperatingHoursButtonsAreShown() throws Exception {
+        boolean areEditButtonShown = false;
+        if(areListElementVisible(editOperatingHousButtonOnUngenerateSchedulePage, 10)){
+            areEditButtonShown = true;
+            SimpleUtils.report("Edit operating hours buttons are shown on ungenerate schedule page! ");
+        } else if(isElementLoaded(operatingHoursEditBtn, 5)){
+            areEditButtonShown = true;
+            SimpleUtils.report("Edit operating hours button are shown on create schedule page! ");
+        } else
+            SimpleUtils.report("Edit operating hours buttons are not shown! ");
+        return areEditButtonShown;
     }
 }
 
