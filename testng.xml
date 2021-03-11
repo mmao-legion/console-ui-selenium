@@ -468,6 +468,15 @@
         </classes>
     </test>
 
+    <test name="Location Group Test">
+        <classes>
+            <class name="com.legion.tests.core.LocationGroupTest">
+                <methods>
+                    <include name="verifyManagerCanSearchAndSelectLocationsOnOperatingHoursPageBeforeOrDuringGenerateScheduleAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 <!--======================================================End - This is Scheduling tests==============================================-->
 
 </suite> <!-- Suite -->
