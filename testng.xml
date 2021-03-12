@@ -468,6 +468,21 @@
         </classes>
     </test>
 
+    <test name="DM Schedule Test">
+        <classes>
+            <class name="com.legion.tests.core.DMScheduleTest">
+                <methods>
+                    <include name="validateDMScheduleAsInternalAdmin" />
+                    <include name="validateProjectedHoursFromDashBoardAndScheduleAsInternalAdmin" />
+                    <include name="validateDMDashboardAsInternalAdmin" />
+<!--                    <include name="validateDMViewDataWithSMViewAsInternalAdmin" />-->
+                    <include name="validateDMViewUnplannedClockAndTimesheetCountAsInternalAdmin" />
+                    <include name="validateDMtoSMNavigationNViceVersaAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 <!--======================================================End - This is Scheduling tests==============================================-->
 
 </suite> <!-- Suite -->

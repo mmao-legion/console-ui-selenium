@@ -458,7 +458,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.sch-week-view-day-summary")
     private List<WebElement> weekDaySummeryHoursAndTeamMembers;
 
-    @FindBy(css = "div.sch-shift-transpose-data-container")
+    @FindBy(css = ".shift-container.week-schedule-shift-wrapper")
     private List<WebElement> shiftsOnScheduleView;
 
 
@@ -5537,13 +5537,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //                    SimpleUtils.report("Budget Hours for " + locationName.get(i).getText() + " is : " + DMHours.get(counter).getText());
 //                    SimpleUtils.report("Publish Hours for " + locationName.get(i).getText() + " is : " + DMHours.get(counter+1).getText());
 //                    SimpleUtils.report("Clocked Hours for " + locationName.get(i).getText() + " is : " + DMHours.get(counter+2).getText());
-                    budgetHrs.add(DMHours.get(counter+1).getText());
-                    publishedHrs.add(DMHours.get(counter+2).getText());
-                    clockedHrs.add(DMHours.get(counter+3).getText());
+                    budgetHrs.add(DMHours.get(counter).getText());
+                    publishedHrs.add(DMHours.get(counter+1).getText());
+                    clockedHrs.add(DMHours.get(counter+2).getText());
                     budgetHours.put("Budgeted Hours",budgetHrs);
                     publishHours.put("Published Hours",publishedHrs);
                     clockHours.put("Clocked Hours",clockedHrs);
-                    counter = (i + 1) * 4;
+                    counter = (i + 1) * 3;
                 }
             }
             Float totalBudgetHoursFromSchTbl = calculateTotalHoursFromScheduleTable(budgetHours);
@@ -5569,7 +5569,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
             List<String> value = entry.getValue();
             for(String aString : value){
-                totalActualHours = Float.parseFloat(aString);
+                totalActualHours = Float.parseFloat(aString.replace(",",""));
                 totalActualHoursFromSchTbl = totalActualHoursFromSchTbl + totalActualHours;
             }
         }
@@ -6355,6 +6355,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.pass("Navigation from DM to SM View Works fine. " + "\n"
                     + "Expected selection of District from DM view i.e. " + districtName + " matches the selection in SM View i.e. " + selectedDistrict + ". \n"
                     + "Expected selection of Location from DM view i.e. " + locationToSelect + " matches the selection in SM View i.e. " + selectedLocation + ".");
+            System.out.println("compareDMAndSMViewDatePickerText(selectedWeek) is "+compareDMAndSMViewDatePickerText(selectedWeek));
             if(compareDMAndSMViewDatePickerText(selectedWeek) == true) {
                 if (areListElementVisible(carouselCards,10,1)) {
                     SimpleUtils.pass("Smartcard in SM Schedule loaded successfully! for selected week i.e " + selectedWeek);
@@ -6384,7 +6385,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(DMtableRowCount, 3) && DMtableRowCount.size() != 0) {
             for (int i = 0; i < DMtableRowCount.size(); i++) {
                 if (DMtableRowCount.get(i).getText().contains(locationToSelect)) {
-                    DMtoSMNavigationArrow.get(i).click();
+                    click(DMtableRowCount.get(i));
                     selectedDistrict = selectedDistrictSMView.getText();
                     selectedLocation = selectedLocationSMView.getText();
                     activeWeekSMView = getActiveWeekText();
@@ -6430,7 +6431,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         List<Float> totalHoursFromDashboardTbl = new ArrayList<>();
         if(areListElementVisible(hoursOnDashboardPage,10) && hoursOnDashboardPage.size()!=0){
             for(int i =0; i < hoursOnDashboardPage.size();i++){
-                totalHoursFromDashboardTbl.add(Float.parseFloat(hoursOnDashboardPage.get(i).getText()));
+                totalHoursFromDashboardTbl.add(Float.parseFloat(hoursOnDashboardPage.get(i).getText().replace(",","")));
             }
             for(int j=0; j < totalHoursFromSchTbl.size();j++){
                 if(totalHoursFromSchTbl.get(j).equals(totalHoursFromDashboardTbl.get(j))){
@@ -6467,11 +6468,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         List<Float> totalHoursFromDashboardTbl = new ArrayList<>();
         if(areListElementVisible(hoursOnDashboardPage,10) && hoursOnDashboardPage.size()!=0){
             for(int i =0; i < hoursOnDashboardPage.size();i++){
-                totalHoursFromDashboardTbl.add(Float.parseFloat(hoursOnDashboardPage.get(i).getText()));
+                totalHoursFromDashboardTbl.add(Float.parseFloat(hoursOnDashboardPage.get(i).getText().replace(",","")));
             }
             for(int j=0; j < totalHoursFromSchTbl.size();j++){
                 if(totalHoursFromSchTbl.get(j).equals(totalHoursFromDashboardTbl.get(j))){
-                    SimpleUtils.pass(titleOnDashboardPage.get(j).getText() +
+                    SimpleUtils.pass(titleOnDashboardPage.get(j).getText().replace(",","") +
                             " Hours from Dashboard page " + totalHoursFromDashboardTbl.get(j)
                             + " matching with the hours present on Schedule Page " + totalHoursFromSchTbl.get(j));
                 }
@@ -6482,11 +6483,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    public int getProjectedUnderBudget(){
-        int totalCountProjectedUnderBudget = 0;
+    public float getProjectedUnderBudget(){
+        float totalCountProjectedUnderBudget = 0;
         if(areListElementVisible(projectedUnderBudget,10) && projectedUnderBudget.size()!=0){
             for(int i=0;i<projectedUnderBudget.size();i++){
-                int countProjectedUnderBudget = Integer.parseInt(projectedUnderBudget.get(i).getText());
+                float countProjectedUnderBudget = Float.parseFloat(projectedUnderBudget.get(i).getText().replace(",",""));
                 totalCountProjectedUnderBudget = totalCountProjectedUnderBudget + countProjectedUnderBudget;
             }
         }else{
@@ -6496,11 +6497,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    public int getProjectedOverBudget(){
-        int totalCountProjectedOverBudget = 0;
+    public float getProjectedOverBudget(){
+        float totalCountProjectedOverBudget = 0.0f;
         if(areListElementVisible(projectedOverBudget,10) && projectedOverBudget.size()!=0){
             for(int i=0;i<projectedOverBudget.size();i++){
-                int countProjectedOverBudget = Integer.parseInt(projectedOverBudget.get(i).getText());
+                float countProjectedOverBudget = Float.parseFloat(projectedOverBudget.get(i).getText());
                 totalCountProjectedOverBudget = totalCountProjectedOverBudget + countProjectedOverBudget;
             }
         }else{
@@ -6509,15 +6510,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return totalCountProjectedOverBudget;
     }
 
-    public void compareProjectedWithinBudget(int totalCountProjectedOverBudget) throws Exception{
+    public void compareProjectedWithinBudget(float totalCountProjectedOverBudget) throws Exception{
         if(isElementLoaded(projectedWithinOrOverBudget,10)){
             String ProjectedWithinOrOverBudget = (projectedWithinOrOverBudget.getText().split(" "))[0];
-            if(totalCountProjectedOverBudget == Integer.parseInt(ProjectedWithinOrOverBudget)){
+            if(totalCountProjectedOverBudget == Float.parseFloat(ProjectedWithinOrOverBudget)){
                 SimpleUtils.pass("Count of Projected Over/Under Budget on Dashboard page" +
-                        " " + Integer.parseInt(ProjectedWithinOrOverBudget) + " is same as Schedule page " + totalCountProjectedOverBudget);
+                        " " + Float.parseFloat(ProjectedWithinOrOverBudget) + " is same as Schedule page " + totalCountProjectedOverBudget);
             }else{
                 SimpleUtils.fail("Count of Projected Over/Under Budget on Dashboard page" +
-                        " " + Integer.parseInt(ProjectedWithinOrOverBudget) + " not matching with Schedule page " + totalCountProjectedOverBudget,false);
+                        " " + Float.parseFloat(ProjectedWithinOrOverBudget) + " not matching with Schedule page " + totalCountProjectedOverBudget,false);
             }
         }else{
             SimpleUtils.fail("No data available for Projected Over/Under Budget section on Dashboard in DM view",false);
@@ -6618,7 +6619,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         " summary on Schedule page " +ListLocationSummaryOnSchedule.get(i));
             }else{
                 SimpleUtils.fail("Location Summary on Dashboard "
-                        + ListLocationSummaryOnDashboard.get(i) + " matches with location" +
+                        + ListLocationSummaryOnDashboard.get(i) + " doesn't match with location" +
                         " summary on Schedule page " +ListLocationSummaryOnSchedule.get(i),true);
             }
         }

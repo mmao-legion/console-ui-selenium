@@ -1846,12 +1846,9 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 					forecastInBar = dataInBar.get(i).replace(" pm",":00").split(" ")[2];
 					String timeInBar = dataInBar.get(i).split(" ")[0];
 					totalShoppersEditedInBar += Float.valueOf(forecastInBar);
-					System.out.println("totalShoppersEditedInBar is " + totalShoppersEditedInBar);
 					if (peakShoppersEditedInBar <= Float.valueOf(forecastInBar)) {
 						peakShoppersEditedInBar = Float.valueOf(forecastInBar);
-						System.out.println("peakShoppersEditedInBar is " + peakShoppersEditedInBar);
 						peakTimeEditedInBar = Float.valueOf(timeInBar.replace(":","."));
-						System.out.println("peakTimeEditedInBar is " + peakTimeEditedInBar);
 					}
 				}
 			}
