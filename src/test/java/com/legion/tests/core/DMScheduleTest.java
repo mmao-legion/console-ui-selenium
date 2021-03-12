@@ -252,13 +252,22 @@ public class DMScheduleTest extends TestBase{
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void validateDMScheduleAsInternalAdmin(String browser, String username, String password, String location)
             throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-		List<Float> totalHoursFromSchTbl = schedulePage.validateScheduleAndBudgetedHours();
-		dashboardPage.navigateToDashboard();
-		schedulePage.compareHoursFromScheduleAndDashboardPage(totalHoursFromSchTbl);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            List<Float> totalHoursFromSchTbl = schedulePage.validateScheduleAndBudgetedHours();
+            dashboardPage.navigateToDashboard();
+            schedulePage.compareHoursFromScheduleAndDashboardPage(totalHoursFromSchTbl);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
 
@@ -270,16 +279,26 @@ public class DMScheduleTest extends TestBase{
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void validateProjectedHoursFromDashBoardAndScheduleAsInternalAdmin(String browser, String username, String password, String location)
             throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.pass("Comments added Successfully in Test Rail");
-		List<Float> totalHoursFromSchTbl = schedulePage.getHoursOnLocationSummarySmartCard();
-		int totalCountProjectedUnderBudget = schedulePage.getProjectedOverBudget();
-		dashboardPage.navigateToDashboard();
-		schedulePage.compareHoursFromScheduleSmartCardAndDashboardSmartCard(totalHoursFromSchTbl);
-		schedulePage.compareProjectedWithinBudget(totalCountProjectedUnderBudget);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.pass("Comments added Successfully in Test Rail");
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            List<Float> totalHoursFromSchTbl = scheduleDMViewPage.getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();
+            float totalCountProjectedUnderBudget = schedulePage.getProjectedOverBudget();
+            dashboardPage.navigateToDashboard();
+            schedulePage.compareHoursFromScheduleSmartCardAndDashboardSmartCard(totalHoursFromSchTbl);
+            schedulePage.compareProjectedWithinBudget(totalCountProjectedUnderBudget);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
 
@@ -291,17 +310,26 @@ public class DMScheduleTest extends TestBase{
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void validateDMDashboardAsInternalAdmin(String browser, String username, String password, String location)
             throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        dashboardPage.navigateToDashboard();
-        String DateOnDashboard = schedulePage.getDateFromDashboard();
-        List<String> ListLocationSummaryOnDashboard = schedulePage.getLocationSummaryDataFromDashBoard();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        String dateOnSchdeule = schedulePage.getActiveWeekText();
-        schedulePage.compareDashboardAndScheduleWeekDate(dateOnSchdeule, DateOnDashboard);
-        List<String> ListLocationSummaryOnSchedule = schedulePage.getLocationSummaryDataFromSchedulePage();
-        schedulePage.compareLocationSummaryFromDashboardAndSchedule(ListLocationSummaryOnDashboard,ListLocationSummaryOnSchedule);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            dashboardPage.navigateToDashboard();
+            String DateOnDashboard = schedulePage.getDateFromDashboard();
+            List<String> ListLocationSummaryOnDashboard = schedulePage.getLocationSummaryDataFromDashBoard();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            String dateOnSchdeule = schedulePage.getActiveWeekText();
+            schedulePage.compareDashboardAndScheduleWeekDate(dateOnSchdeule, DateOnDashboard);
+            List<String> ListLocationSummaryOnSchedule = schedulePage.getLocationSummaryDataFromSchedulePage();
+            schedulePage.compareLocationSummaryFromDashboardAndSchedule(ListLocationSummaryOnDashboard,ListLocationSummaryOnSchedule);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
     // Added by Nishant
@@ -314,27 +342,33 @@ public class DMScheduleTest extends TestBase{
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void validateDMViewDataWithSMViewAsInternalAdmin(String browser, String username, String password, String location)
             throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        BasePage basePage = new BasePage();
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict("Demo District");
-        dashboardPage.navigateToDashboard();
-        String DateOnDashboard = schedulePage.getDateFromDashboard();
-        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
-        timeSheetPage.clickOnTimeSheetConsoleMenu();
-        String dateOnTimesheet = basePage.getActiveWeekText();
-        schedulePage.compareDashboardAndScheduleWeekDate(dateOnTimesheet, DateOnDashboard);
-        timeSheetPage.validateLoadingOfTimeSheetSmartCard();
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            BasePage basePage = new BasePage();
+            String DateOnDashboard = schedulePage.getDateFromDashboard();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            String dateOnTimesheet = basePage.getActiveWeekText();
+            schedulePage.compareDashboardAndScheduleWeekDate(dateOnTimesheet, DateOnDashboard);
+            timeSheetPage.validateLoadingOfTimeSheetSmartCard();
 //        List<String> listTotalUnplannedHrsText = timeSheetPage.getUnplannedClocksValueNtext();
 //        List<String> listDetailUnplannedHrsText = timeSheetPage.getUnplannedClocksDetailSummaryValue();
-        List<String> listLocationName = timeSheetPage.getLocationName();
-        int totalUnplannedClocksOnDMView = timeSheetPage.getUnplannedClocksOnDMView();
-        int totalTimesheetsOnDMView = timeSheetPage.getTotalTimesheetsOnDMView();
-        timeSheetPage.goToSMView(listLocationName, dateOnTimesheet,
-                Integer.parseInt(propertySelectLocation.get("LOCATION_COUNT")), totalUnplannedClocksOnDMView, totalTimesheetsOnDMView);
-
+            List<String> listLocationName = timeSheetPage.getLocationName();
+            int totalUnplannedClocksOnDMView = timeSheetPage.getUnplannedClocksOnDMView();
+            int totalTimesheetsOnDMView = timeSheetPage.getTotalTimesheetsOnDMView();
+            timeSheetPage.goToSMView(listLocationName, dateOnTimesheet,
+                    Integer.parseInt(propertySelectLocation.get("LOCATION_COUNT")), totalUnplannedClocksOnDMView, totalTimesheetsOnDMView);
+            // Failed due to https://legiontech.atlassian.net/browse/LEG-12321
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
     @Automated(automated =  "Automated")
@@ -345,27 +379,33 @@ public class DMScheduleTest extends TestBase{
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void validateDMViewUnplannedClockAndTimesheetCountAsInternalAdmin(String browser, String username, String password, String location)
             throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        BasePage basePage = new BasePage();
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict("Demo District");
-        dashboardPage.navigateToDashboard();
-        String DateOnDashboard = schedulePage.getDateFromDashboard();
-        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
-        timeSheetPage.clickOnTimeSheetConsoleMenu();
-        String dateOnTimesheet = basePage.getActiveWeekText();
-        schedulePage.compareDashboardAndScheduleWeekDate(dateOnTimesheet, DateOnDashboard);
-        timeSheetPage.validateLoadingOfTimeSheetSmartCard();
-        int totalUnplannedClockSmartCardValOnDMView = timeSheetPage.getUnplannedClockSmartCardOnDMView();
-        int totalUnplannedClocksOnDMViewSmartCardDetailSummary = timeSheetPage.getUnplannedClocksDetailSummaryValue();
-        int totalUnplannedClocksOnTblView = timeSheetPage.getUnplannedClocksOnDMView();
-        int totalTimesheetsOnTblView = timeSheetPage.getTotalTimesheetsOnDMView();
-        int totalTimesheetOnDMViewSmartCard = timeSheetPage.getTotalTimesheetFromSmartCardOnDMView();
-        verifyUnplannedClockOnDMView(totalUnplannedClockSmartCardValOnDMView, totalUnplannedClocksOnDMViewSmartCardDetailSummary,
-                totalUnplannedClocksOnTblView);
-        verifyTimesheetOnDMView(totalTimesheetOnDMViewSmartCard, totalTimesheetsOnTblView);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            BasePage basePage = new BasePage();
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            String DateOnDashboard = schedulePage.getDateFromDashboard();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            String dateOnTimesheet = basePage.getActiveWeekText();
+            schedulePage.compareDashboardAndScheduleWeekDate(dateOnTimesheet, DateOnDashboard);
+            timeSheetPage.validateLoadingOfTimeSheetSmartCard();
+            int totalUnplannedClockSmartCardValOnDMView = timeSheetPage.getUnplannedClockSmartCardOnDMView();
+            int totalUnplannedClocksOnDMViewSmartCardDetailSummary = timeSheetPage.getUnplannedClocksDetailSummaryValue();
+            int totalUnplannedClocksOnTblView = timeSheetPage.getUnplannedClocksOnDMView();
+            int totalTimesheetsOnTblView = timeSheetPage.getTotalTimesheetsOnDMView();
+            int totalTimesheetOnDMViewSmartCard = timeSheetPage.getTotalTimesheetFromSmartCardOnDMView();
+            verifyUnplannedClockOnDMView(totalUnplannedClockSmartCardValOnDMView, totalUnplannedClocksOnDMViewSmartCardDetailSummary,
+                    totalUnplannedClocksOnTblView);
+            verifyTimesheetOnDMView(totalTimesheetOnDMViewSmartCard, totalTimesheetsOnTblView);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
     public void verifyUnplannedClockOnDMView(int totalUnplannedClockSmartCardValOnDMView,
@@ -397,40 +437,47 @@ public class DMScheduleTest extends TestBase{
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void validateDMtoSMNavigationNViceVersaAsInternalAdmin(String browser, String username, String password, String location)
             throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        String locationToSelectFromDMViewSchedule = dmViewTestData.get("Location");
-        locationSelectorPage.changeDistrict(dmViewTestData.get("District"));
-        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        dashboardPage.navigateToDashboard();
-        String DateOnDashboard = schedulePage.getDateFromDashboard();
-        schedulePage.clickOnViewScheduleLocationSummaryDMViewDashboard();
-        String dateOnScheduleOnNavigatingFromLocSummary = schedulePage.getActiveWeekText();
-        schedulePage.compareDashboardAndScheduleWeekDate(dateOnScheduleOnNavigatingFromLocSummary, DateOnDashboard);
-        schedulePage.toNFroNavigationFromDMToSMSchedule(dateOnScheduleOnNavigatingFromLocSummary, locationToSelectFromDMViewSchedule, dmViewTestData.get("District"), weekViewType.Next.getValue());
-        dashboardPage.navigateToDashboard();
-        schedulePage.clickOnViewSchedulePayrollProjectionDMViewDashboard();
-        String dateOnSchdeuleOnNavigatingFromPayroleProjection = schedulePage.getActiveWeekText();
-        schedulePage.compareDashboardAndScheduleWeekDate(dateOnSchdeuleOnNavigatingFromPayroleProjection, DateOnDashboard);
-        schedulePage.toNFroNavigationFromDMDashboardToDMSchedule(dateOnSchdeuleOnNavigatingFromPayroleProjection);
-        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
-        timeSheetPage.clickOnTimeSheetConsoleMenu();
-        timeSheetPage.validateLoadingOfTimeSheetSmartCard();
-        timeSheetPage.goToSMView();
-        dashboardPage.navigateToDashboard();
-        schedulePage.districtSelectionSMView(dmViewTestData.get("District"));
-        timeSheetPage.clickOnTimeSheetConsoleMenu();
-        timeSheetPage.validateLoadingOfTimeSheetSmartCard(weekViewType.Previous.getValue());
-        timeSheetPage.goToSMView();
-        dashboardPage.navigateToDashboard();
-        schedulePage.districtSelectionSMView(dmViewTestData.get("District"));
-        timeSheetPage.clickOnComplianceConsoleMenu();
-        timeSheetPage.validateLoadingOfComplianceOnDMView(weekViewType.Previous.getValue(),true);
-        timeSheetPage.validateLoadingOfComplianceOnDMView(weekViewType.Previous.getValue(),false);
-        dashboardPage.navigateToDashboard();
-        timeSheetPage.clickOnComplianceViolationSectionOnDashboard();
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            dashboardPage.navigateToDashboard();
+            String DateOnDashboard = schedulePage.getDateFromDashboard();
+            schedulePage.clickOnViewScheduleLocationSummaryDMViewDashboard();
+            String dateOnScheduleOnNavigatingFromLocSummary = schedulePage.getActiveWeekText();
+            schedulePage.compareDashboardAndScheduleWeekDate(dateOnScheduleOnNavigatingFromLocSummary, DateOnDashboard);
+            schedulePage.toNFroNavigationFromDMToSMSchedule(dateOnScheduleOnNavigatingFromLocSummary, location, districtName, weekViewType.Next.getValue());
+            dashboardPage.navigateToDashboard();
+            schedulePage.clickOnViewSchedulePayrollProjectionDMViewDashboard();
+            String dateOnSchdeuleOnNavigatingFromPayroleProjection = schedulePage.getActiveWeekText();
+            schedulePage.compareDashboardAndScheduleWeekDate(dateOnSchdeuleOnNavigatingFromPayroleProjection, DateOnDashboard);
+            schedulePage.toNFroNavigationFromDMDashboardToDMSchedule(dateOnSchdeuleOnNavigatingFromPayroleProjection);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            timeSheetPage.validateLoadingOfTimeSheetSmartCard();
+            timeSheetPage.goToSMView();
+            dashboardPage.navigateToDashboard();
+            schedulePage.districtSelectionSMView(districtName);
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
+            timeSheetPage.validateLoadingOfTimeSheetSmartCard(weekViewType.Previous.getValue());
+            timeSheetPage.goToSMView();
+            dashboardPage.navigateToDashboard();
+            schedulePage.districtSelectionSMView(districtName);
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            timeSheetPage.validateLoadingOfComplianceOnDMView(weekViewType.Previous.getValue(),true);
+            timeSheetPage.validateLoadingOfComplianceOnDMView(weekViewType.Previous.getValue(),false);
+            dashboardPage.navigateToDashboard();
+            SimpleUtils.assertOnFail("Compliance Violations widget not loaded successfully", dashboardPage.isComplianceViolationsWidgetDisplay(), false);
+            timeSheetPage.clickOnComplianceViolationSectionOnDashboard();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
 

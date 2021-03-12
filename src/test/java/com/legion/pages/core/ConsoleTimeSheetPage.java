@@ -242,7 +242,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	private List<WebElement> locationCheckboxLabel;
 	@FindBy(xpath = "//div[contains(@class,'day-week-picker-period-active')]/preceding-sibling::div[contains(@class,'day-week-picker-period')]")
 	private WebElement immediatePastToCurrentActiveWeek;
-	@FindBy(css = "div.lg-timesheet-table div.lg-timesheet-table__grid-row")
+	@FindBy(css = ".lg-timesheet-table-improved__grid-row.lg-timesheet-table-improved__worker-row")
 	private List<WebElement> timesheetTableRow;
 	@FindBy(css = "div.day-week-picker-arrow-left")
 	private WebElement previousDayArrow;
@@ -270,7 +270,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy(css = "div.card-carousel-card.card-carousel-card-primary")
 	private WebElement timesheetApprovalSmartCard;
 
-	@FindBy(css = "div.card-carousel-card.card-carousel-card-analytics-card-color-yellow")
+	@FindBy(css = "div.card-carousel-card.analytics-card-color")
 	private WebElement totalUnplannedClocksSmartCard;
 
 	@FindBy(css = "div.card-carousel-card.card-carousel-card-card-carousel-card-yellow-top")
@@ -291,13 +291,13 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy(css = "div[ng-repeat*='smartCardData.Timesheet.UnplannedClocks']")
 	private List<WebElement> detailSummaryUnplannedClocksVal;
 
-	@FindBy(css = "div.analytics-new-table-group-row-open div.analytics-new-table-group-row-action")
-	private List<WebElement> goToSMViewArrow;
+//	@FindBy(css = "div.analytics-new-table-group-row-open div.analytics-new-table-group-row-action")
+//	private List<WebElement> goToSMViewArrow;
 
 	@FindBy(css = "input-field[placeholder='Search']")
 	private List<WebElement> searchTxt;
 
-	@FindBy(xpath = "//lg-smart-card[@heading='Due Date']/content-box | //lg-smart-card[@heading='Approval']/content-box")
+	@FindBy(xpath = "//lg-smart-card[@heading='Timesheet Due']/content-box | //lg-smart-card[@heading='Approval']/content-box")
 	private WebElement dueDateOrApprovalSmartCard;
 
 	@FindBy(css = "div.lg-smart-card.ng-scope.lg-smart-card--is-primary")
@@ -312,7 +312,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy(css = ".lg-timesheet-carousel__table-row--cell")
 	private List<WebElement> alertsSmartCardValue;
 
-	@FindBy(css = "div.lg-timesheet-table__grid-column--left.ng-binding")
+	@FindBy(className = "lg-timesheet-table-improved__grid-column--entries-count")
 	private List<WebElement> totalTimesheetsOnSMView;
 
 	@FindBy(xpath = "//div[contains(@class,'analytics-new-table-group-row-open')]//img[@ng-if='isLocation(el)']/following-sibling::span")
@@ -1112,7 +1112,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy (xpath = "//div[contains(@class,\"lg-timesheet-table__worker-day\")]//div[10]//span")
 	private List<WebElement> DTHourDayWise;
 
-	@FindBy (css = "div.lg-pagination__pages")
+	@FindBy (css = ".lg-paged-search__pagination div.lg-pagination__pages")
 	private WebElement pagination;
 
 	@FindBy (css = "div.lg-paged-search__pagination div.lg-pagination__arrow--right")
@@ -2367,6 +2367,8 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	public void validateLoadingOfTimeSheetSmartCard(String nextWeekViewOrPreviousWeekView) throws Exception {
 		String weekSelected = null;
 		clickImmediatePastToCurrentActiveWeekInDayPicker();
+		clickOnRefreshButton();
+		SimpleUtils.assertOnFail("Timesheet page not loaded successfully", isTimeSheetPageLoaded(), false);
 		weekSelected = daypicker.getText().replace("\n", " ");
 
 		if(isElementEnabled(timesheetApprovalSmartCard,5)){
@@ -2386,7 +2388,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		}
 		if(areListElementVisible(timesheetTblRow,5)){
 			SimpleUtils.pass("Rows of Timesheet table loaded Successfully for week " + weekSelected + " on page!!");
-		}else{
+		} else{
 			SimpleUtils.fail("Rows of Timesheet table not loaded Successfully or week " + weekSelected + " on page!!",false);
 		}
 
@@ -2421,16 +2423,14 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	public void goToSMView(List<String> searchLocation, String datePickerTxtDMView,
 						   int locationCount, int totalUnplannedClocksOnDMView, int totalTimesheetsOnDMView) throws Exception {
-		if(areListElementVisible(timesheetTblRow,2) && !searchLocation.isEmpty()
-				&& areListElementVisible(goToSMViewArrow,2)){
+		if(areListElementVisible(timesheetTblRow,2) && !searchLocation.isEmpty()) {
 			for(int j=0; j<timesheetTblRow.size();j++) {
 				if (j == locationCount) {
 					break;
 				}
-				click(goToSMViewArrow.get(j));
+				click(timesheetTblRow.get(j));
 				validateLoadingOfTimeSheetSmartCardSMView();
 				compareDMAndSMViewDatePickerText(datePickerTxtDMView);
-				clickOnLocationFilter(searchLocation);
 				int totalUnplannedClocksOnSMView = getAlertsSmartCardValue();
 				int totalTimehseetOnSMView = getAllTimesheetValOnSMView();
 				compareDMAndSMViewUnplannedClocksCount(totalUnplannedClocksOnDMView, totalUnplannedClocksOnSMView);
@@ -2458,9 +2458,11 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		}else{
 			SimpleUtils.fail("Alert Smart Card not loaded Successfully for week " + activeWeek,true);
 		}
-		if(areListElementVisible(timesheetTableRow,5) && timesheetTableRow.size()>1){
+		if(areListElementVisible(timesheetTableRow,10) && timesheetTableRow.size()>0){
 			SimpleUtils.pass("Rows of Timesheet table loaded Successfully for week " + activeWeek + " on page!!");
-		}else{
+		} else if (timesheetTable.getText().contains("There are no timesheets that match this period or filter. Please try again.")) {
+            SimpleUtils.report("There are no timesheets that match this period or filter. Please try again.");
+		} else {
 			SimpleUtils.fail("Rows of Timesheet table not loaded Successfully or week " + activeWeek + " on page!!",false);
 		}
 
@@ -2511,19 +2513,25 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	public int getAllTimesheetValOnSMView() throws Exception {
 		int totalTimehseetOnSMView = 0;
-		if(areListElementVisible(timesheetTableRow,2,1)
-				&& areListElementVisible(totalTimesheetsOnSMView,1,1)){
-			String paginationValue[] = pagination.getText().split("f ");
-			for(int j=0; j<Integer.parseInt(paginationValue[1]); j++) {
-				if(areListElementVisible(timesheetTableRow,10,1)){
-					for (int i = 0; i < totalTimesheetsOnSMView.size(); i++) {
+		if(areListElementVisible(timesheetTableRow,10)
+				&& areListElementVisible(totalTimesheetsOnSMView,10)){
+			String paginationValue = "";
+			if (pagination.getText().contains("f "))
+				paginationValue = pagination.getText().split("f ")[1];
+			System.out.println("paginationValue is "+paginationValue);
+			if (paginationValue.isEmpty())
+				paginationValue = "1";
+			for(int j=0; j<Integer.parseInt(paginationValue); j++) {
+				if(areListElementVisible(timesheetTableRow,10)
+						&& areListElementVisible(totalTimesheetsOnSMView,10)){
+					for (int i = 0; i < timesheetTableRow.size(); i++) {
 						totalTimehseetOnSMView = totalTimehseetOnSMView + Integer.parseInt((totalTimesheetsOnSMView.get(i).getText().split(" "))[0]);
 					}
-					if (isElementLoaded(footerRightNavigationDisabled, 2)) {
-						break;
-					} else {
-						click(footerRightNavigation);
-					}
+				}
+				if (isElementLoaded(footerRightNavigationDisabled, 2)) {
+					break;
+				} else {
+					clickTheElement(footerRightNavigation);
 				}
 			}
 		}else{
@@ -2606,12 +2614,12 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	public void goToSMView() throws Exception {
 		String activeWeekOnDMView = getActiveWeekText();
-		if(areListElementVisible(timesheetTblRow,2) && areListElementVisible(goToSMViewArrow,2)){
+		if(areListElementVisible(timesheetTblRow,2)){
 			for(int j=0; j<timesheetTblRow.size();j++) {
 				if (j == 1) {
 					break;
 				}
-				click(goToSMViewArrow.get(j));
+				click(timesheetTblRow.get(j));
 				validateLoadingOfTimeSheetSmartCardSMView(activeWeekOnDMView);
 			}
 		}else{
@@ -2637,8 +2645,10 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		}else{
 			SimpleUtils.fail("Alert Smart Card not loaded Successfully for week " + activeWeekOnDMView,true);
 		}
-		if(areListElementVisible(timesheetTableRow,5) && timesheetTableRow.size()>1){
+		if(areListElementVisible(timesheetTableRow,10) && timesheetTableRow.size()>0){
 			SimpleUtils.pass("Rows of Timesheet table loaded Successfully for week " + activeWeekOnDMView + " on page!!");
+		} else if (timesheetTable.getText().contains("There are no timesheets that match this period or filter. Please try again.")) {
+			SimpleUtils.report("There are no timesheets that match this period or filter. Please try again.");
 		}else{
 			SimpleUtils.fail("Rows of Timesheet table not loaded Successfully or week " + activeWeekOnDMView + " on page!!",false);
 		}
@@ -2679,7 +2689,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	public void clickOnComplianceViolationSectionOnDashboard() throws Exception {
 		if(isElementLoaded(viewViolationOnDashboard,5)){
-			click(viewViolationOnDashboard);
+			clickTheElement(viewViolationOnDashboard);
 			SimpleUtils.pass("View Violation link on Dashboard clicked Successfully!!");
 		}else{
 			SimpleUtils.fail("View Violation link on Dashboard not clicked Successfully!!",false);

@@ -1798,11 +1798,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         return null;
     }
 
-    public void compareProjectedWithinBudget(int totalCountProjectedOverBudget) throws Exception {
+    public void compareProjectedWithinBudget(float totalCountProjectedOverBudget) throws Exception {
 
     }
 
-    public int getProjectedOverBudget() {
+    public float getProjectedOverBudget() {
         return 0;
     }
 

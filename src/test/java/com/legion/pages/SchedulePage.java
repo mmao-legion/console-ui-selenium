@@ -154,8 +154,8 @@ public interface SchedulePage {
 	public void compareHoursFromScheduleAndDashboardPage(List<Float> totalHoursFromSchTbl) throws Exception;
 	public List<Float> getHoursOnLocationSummarySmartCard() throws Exception;
 	public void compareHoursFromScheduleSmartCardAndDashboardSmartCard(List<Float> totalHoursFromSchTbl) throws Exception;
-	public void compareProjectedWithinBudget(int totalCountProjectedOverBudget) throws Exception;
-	public int getProjectedOverBudget();
+	public void compareProjectedWithinBudget(float totalCountProjectedOverBudget) throws Exception;
+	public float getProjectedOverBudget();
 	public String getDateFromDashboard() throws Exception;
 	public void compareDashboardAndScheduleWeekDate(String DateOnSchdeule, String DateOnDashboard) throws Exception;
 	public List<String> getLocationSummaryDataFromDashBoard() throws Exception;
