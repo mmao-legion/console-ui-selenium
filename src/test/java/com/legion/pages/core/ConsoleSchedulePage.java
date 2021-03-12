@@ -3467,7 +3467,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void selectRandomLocationOnUngenerateScheduleEditOperatingHoursPage() throws Exception {
+    public void selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(String locationName) throws Exception {
 
     }
     @Override
@@ -3477,5 +3477,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @Override
     public void clickExitBtnToExitCreateScheduleWindow() throws Exception{
 
+    }
+    @Override
+    public boolean verifyScheduleNotPublishedSmartCardShowing() throws Exception {
+        return false;
     }
 }

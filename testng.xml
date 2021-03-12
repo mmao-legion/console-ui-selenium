@@ -474,6 +474,7 @@
                 <methods>
                     <include name="validateTheGenerationOfLGScheduleAsInternalAdmin" />
                     <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdmin" />
+                    <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
