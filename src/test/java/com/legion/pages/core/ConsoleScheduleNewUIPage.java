@@ -67,7 +67,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         groupbyAll("Group by All"),
         groupbyWorkRole("Group by Work Role"),
         groupbyTM("Group by TM"),
-        groupbyJobTitle("Group by Job Title");
+        groupbyJobTitle("Group by Job Title"),
+        groupbyLocation("Group by Location");
 
         private final String value;
 
@@ -1061,7 +1062,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@Override
 	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
 		HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
-		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector(".card-carousel-card.card-carousel-card-primary.card-carousel-card-table"));
+		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("[ng-if=\"(!showNewScheduleGeneratePage() || showPublishedSchedule()) && !isTitleBasedBudget()\"] .card-carousel-card"));
 		if(isElementEnabled(budgetedScheduledLabelsDivElement,5))
 		{
 //			Thread.sleep(2000);
@@ -3661,7 +3662,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                                 }
                                 clickTheElement(weekContainer);
                                 waitForSeconds(3);
-                                SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + " with scheduled hour: " + scheduledHours.getText() + " Successfully!");
+//                                SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + " with scheduled hour: " + scheduledHours.getText() + " Successfully!");
                                 break;
                             } else {
                                 selectOtherWeek = true;
@@ -3961,7 +3962,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = "div.schedule-summary-location-picker span")
     private WebElement selectedLocationOnUngenerateSchedulePage;
 
-    public void selectRandomLocationOnUngenerateScheduleEditOperatingHoursPage() throws Exception {
+    public void selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(String specificLocationName) throws Exception {
         if (isElementLoaded(openSearchLocationBoxButton, 60)||(isElementLoaded(closeSearchLocationBoxButton, 60))){
             if(isElementLoaded(openSearchLocationBoxButton, 5)){
                 click(openSearchLocationBoxButton);
@@ -3970,22 +3971,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 click(searchLocationOnUngenerateSchedulePage);
             } else
                 SimpleUtils.fail("Ungenerate schedule page: Search locations box fail to open! ", false);
+
             if(areListElementVisible(locationsInLocationSelectorOnUngenerateSchedulePage, 5)
                     && locationsInLocationSelectorOnUngenerateSchedulePage.size() >0){
-                int randomLocations = (new Random()).nextInt(locationsInLocationSelectorOnUngenerateSchedulePage.size());
-                String randomLocationName = locationsInLocationSelectorOnUngenerateSchedulePage.get(randomLocations).getText();
+                String locationName = specificLocationName;
+                if (locationName == null){
+                    int randomLocations = (new Random()).nextInt(locationsInLocationSelectorOnUngenerateSchedulePage.size());
+                    locationName = locationsInLocationSelectorOnUngenerateSchedulePage.get(randomLocations).getText();
+                }
 
                 if(isElementLoaded(searchLocationOnUngenerateSchedulePage, 5)){
-                    searchLocationOnUngenerateSchedulePage.sendKeys(randomLocationName);
+                    searchLocationOnUngenerateSchedulePage.sendKeys(locationName);
                 }
                 waitForSeconds(3);
                 click(locationsInLocationSelectorOnUngenerateSchedulePage.get(0));
-                if(areListElementVisible(locationsInLocationSelectorOnUngenerateSchedulePage)){
+//                if(areListElementVisible(locationsInLocationSelectorOnUngenerateSchedulePage)){
+//
+//                    click(locationsInLocationSelectorOnUngenerateSchedulePage.get(randomLocations));
+//                }
 
-                    click(locationsInLocationSelectorOnUngenerateSchedulePage.get(randomLocations));
-                }
-
-                if(selectedLocationOnUngenerateSchedulePage.getText().equals(randomLocationName)){
+                if(selectedLocationOnUngenerateSchedulePage.getText().equals(locationName)){
                     SimpleUtils.pass("Ungenerate schedule page: Select locations on Edit Operating hours successfully! ");
                 } else
                     SimpleUtils.fail("Ungenerate schedule page: Select locations on Edit Operating hours failed! ", false);
@@ -5375,7 +5380,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-        if (isElementLoaded(msgOnTop, 30) && msgOnTop.getText().contains("Success")) {
+        if (isElementLoaded(msgOnTop, 60) && msgOnTop.getText().contains("Success")) {
             SimpleUtils.pass("Save the Schedule Successfully!");
         } else {
             SimpleUtils.fail("Save Schedule Failed!", false);
@@ -13409,6 +13414,22 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else
             SimpleUtils.report("Edit operating hours buttons are not shown! ");
         return areEditButtonShown;
+    }
+
+
+    @FindBy(css = "[ng-if=\"controlPanel.fns.getVisibility('PUBLISH') && hasSchedule()\"] div.card-carousel-card")
+    private WebElement scheduleNotPublishedSmartCard;
+
+    @Override
+    public boolean verifyScheduleNotPublishedSmartCardShowing() throws Exception {
+        if (isElementLoaded(scheduleNotPublishedSmartCard,15)) {
+            SimpleUtils.pass("Schedule Not Published SmartCard is show ");
+            return true;
+        } else {
+            SimpleUtils.report("There is no Schedule Not Published SmartCard this week");
+            return false;
+        }
+
     }
 }
 
