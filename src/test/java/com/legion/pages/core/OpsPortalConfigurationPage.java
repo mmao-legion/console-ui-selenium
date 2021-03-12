@@ -488,26 +488,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement shiftStartTimeEvent;
 	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeEventOptions\"] select option")
 	private List<WebElement> shiftStartTimeEventList;
-	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.duartion input-field[type=\"radio\"] ng-form")
-	private WebElement shiftDuartionRadioButton;
-	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.duartion input-field[type=\"number\"] div")
-	private WebElement shiftDuartionMinutes;
-	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[type=\"radio\"] ng-form")
-	private WebElement shiftEndRadioButton;
-	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[value*=\"timeEventOffsetMinutes\"]")
-	private WebElement shiftEndOffsetMinutes;
-	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.timeUnitOptions\"]")
-	private WebElement shiftEndTimeUnit;
-	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.timeUnitOptions\"] select option")
-	private WebElement shiftEndTimeUnitList;
-	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.eventPointOptions\"]")
-	private WebElement shiftEndEventPoint;
-	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.eventPointOptions\"] select option")
-	private WebElement shiftEndEventPointList;
-	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"]")
-	private WebElement shiftEndTimeEvent;
-	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"] select option")
-	private WebElement shiftEndTimeEventList;
+
 
 	@Override
 	public void inputOffsetTimeForShiftStart(String startOffsetTime,String startEventPoint) throws Exception{
@@ -575,39 +556,6 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="table tr")
 	private List<WebElement> dayPartsList;
 
-	/*@Override
-	public List<String> getAllDayPartsNameInOH() throws Exception{
-		List<String> dayPartsNameList = new ArrayList<String>();
-		if(isElementEnabled(addDayPartsBTNInOH)){
-			clickTheElement(addDayPartsBTNInOH);
-			if(isElementEnabled(manageDaypartsPageTitle)){
-				for(int i = 1; i<=dayPartsPaginationList.size();i++){
-					selectByVisibleText(dayPartsPagination,Integer.toString(i));
-					if(dayPartsList.size()!=0){
-						for(WebElement dayParts:dayPartsList){
-							String dayPartsName = dayParts.findElement(By.cssSelector("span")).getText().trim();
-							dayPartsNameList.add(dayPartsName);
-						}
-					}else{
-						SimpleUtils.fail("Still have no any dayparts now",true
-						);
-					}
-				}
-				SimpleUtils.pass("User can click select dayparts button successfully!");
-			}else {
-				SimpleUtils.fail("User can't click select dayparts button successfully!",false);
-			}
-		}
-		return dayPartsNameList;
-	}*/
-
-	List<String> eventList = new ArrayList<String>(){{
-		add("Opening Operating Hours");
-		add("Closing Operating Hours");
-		add("Opening Business Hours");
-		add("Closing Business Hours");
-	}};
-
 	//verify list of Shift Start Time Event
 	@Override
 	public List<String> getShiftStartTimeEventList() throws Exception{
@@ -629,5 +577,185 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		return startTimeEventList;
 	}
 
+    @FindBy(css="div.dif.duartion input-field[type=\"radio\"] ng-form")
+	private WebElement shiftDuartionRadioButton;
+	@FindBy(css="div.dif.duartion input-field[type=\"number\"] input")
+	private WebElement shiftDuartionMinutes;
+	@FindBy(css="div.dif.duartion input-field[type=\"number\"] div")
+	private WebElement shiftDuartionMinutesValue;
+	@FindBy(css="div.dif.end-shift input-field[type=\"radio\"] ng-form")
+	private WebElement shiftEndRadioButton;
+	@FindBy(css="div.dif.end-shift input-field[value*=\"timeEventOffsetMinutes\"] input")
+	private WebElement shiftEndOffsetMinutes;
+	@FindBy(css="div.dif.end-shift input-field[value*=\"timeEventOffsetMinutes\"] div")
+	private WebElement shiftEndOffsetMinutesValue;
+	@FindBy(css="div.dif.end-shift input-field[options=\"$ctrl.timeUnitOptions\"] select")
+	private WebElement shiftEndTimeUnit;
+	@FindBy(css="div.dif.end-shift input-field[options=\"$ctrl.timeUnitOptions\"] select option")
+	private List<WebElement> shiftEndTimeUnitList;
+	@FindBy(css="div.dif.end-shift input-field[options=\"$ctrl.eventPointOptions\"] select")
+	private WebElement shiftEndEventPoint;
+	@FindBy(css="div.dif.end-shift input-field[options=\"$ctrl.eventPointOptions\"] select option")
+	private WebElement shiftEndEventPointList;
+	@FindBy(css="div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"]")
+	private WebElement shiftEndTimeEvent;
+	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"] select option")
+	private WebElement shiftEndTimeEventList;
+	@FindBy(css="div.dif.duartion input-field[type=\"number\"]+span")
+	private WebElement shiftDuartionMinutesUnit;
 
+	@Override
+	public void verifyRadioButtonInTimeOfDayIsSingletonSelect() throws Exception{
+		if(isElementEnabled(shiftDuartionRadioButton)&&isElementEnabled(shiftEndRadioButton)){
+			if(shiftDuartionRadioButton.getAttribute("class").trim().contains("ng-valid-parse")){
+				SimpleUtils.pass("shift Duartion Radio Button is selected now");
+				shiftEndRadioButton.click();
+				waitForSeconds(3);
+				if(shiftEndRadioButton.getAttribute("class").trim().contains("ng-valid-parse")){
+					if(shiftDuartionRadioButton.getAttribute("class").trim().contains("ng-valid-parse")){
+						SimpleUtils.pass("Both Duartion Radio Button and End Radio Button are selected");
+					}else{
+						SimpleUtils.pass("End Radio Button is selected, Duartion Radio Button is dis-selected automatically");
+					}
+				}else{
+					SimpleUtils.fail("User click shift End Radio Button failed",false);
+				}
+			}else{
+				SimpleUtils.pass("shift Duartion Radio Button is NOT selected now");
+				shiftDuartionRadioButton.click();
+				waitForSeconds(3);
+				if(shiftDuartionRadioButton.getAttribute("class").trim().contains("ng-valid-parse")){
+					if(shiftEndRadioButton.getAttribute("class").trim().contains("ng-valid-parse")){
+						SimpleUtils.pass("Both Duartion Radio Button and End Radio Button are selected");
+					}else{
+						SimpleUtils.pass("Duartion Radio Button is selected, End Radio Button is dis-selected automatically");
+					}
+				}else{
+					SimpleUtils.fail("User click shift Duartion Radio Button failed",false);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void inputShiftDuartionMinutes(String duringTime) throws Exception{
+		waitForSeconds(5);
+		clickTheElement(shiftDuartionMinutes);
+		shiftDuartionMinutes.clear();
+		shiftDuartionMinutes.sendKeys(duringTime);
+		String duringTimeValue = shiftDuartionMinutesValue.getAttribute("innerText").trim();
+		if(duringTimeValue.equals(duringTime)){
+			SimpleUtils.pass("User can set shift during Minutes as " + duringTimeValue + " successfully!");
+		}else {
+			SimpleUtils.fail("User can't input value for shift during Minutes field",true);
+		}
+	}
+
+	@Override
+	public void validateShiftDuartionTimeUnit() throws Exception{
+		String unit = "minutes";
+		if(shiftDuartionMinutesUnit.getText().trim()!=null && shiftDuartionMinutesUnit.getText().equals(unit)){
+			SimpleUtils.pass("The shift Duartion Minutes Unit is: " + shiftDuartionMinutesUnit.getText().trim());
+		}else{
+			SimpleUtils.fail("The The shift Duartion Minutes Unit is not correct.",false);
+		}
+
+	}
+
+	@Override
+	public void inputOffsetTimeForShiftEnd(String endOffsetTime,String endEventPoint) throws Exception{
+		if(isElementEnabled(shiftEndOffsetMinutes)){
+			clickTheElement(shiftEndOffsetMinutes);
+			shiftEndOffsetMinutes.clear();
+			shiftEndOffsetMinutes.sendKeys(endOffsetTime);
+		}else {
+			selectByVisibleText(shiftEndEventPoint,endEventPoint);
+			waitForSeconds(3);
+			clickTheElement(shiftEndOffsetMinutes);
+			shiftEndOffsetMinutes.clear();
+			shiftEndOffsetMinutes.sendKeys(endOffsetTime);
+		}
+		String offsetTimeValue = shiftEndOffsetMinutesValue.getAttribute("innerText").trim();
+		if(offsetTimeValue.equals(endOffsetTime)){
+			SimpleUtils.pass("User can set shift End Offset Minutes as " + offsetTimeValue + " successfully!");
+		}else {
+			SimpleUtils.fail("User can't input value for shift End Offset Minutes field",true);
+		}
+	}
+
+	//verify list of end shift time unit
+	@Override
+	public void validateShiftEndTimeUnitList() throws Exception{
+		if(isElementEnabled(shiftEndTimeUnit)){
+			List<String> endTimeUnitList = new ArrayList<String>();
+			clickTheElement(shiftEndTimeUnit);
+			if(shiftEndTimeUnitList.size()!=0){
+				for(WebElement shiftEndTimeUnit:shiftEndTimeUnitList){
+					if(shiftEndTimeUnit!=null) {
+						String endTimeUnit = shiftEndTimeUnit.getText().trim();
+						SimpleUtils.report("shift end time unit list: " + endTimeUnit);
+						endTimeUnitList.add(endTimeUnit);
+					}
+				}
+				if(ListUtils.isEqualList(unitList,endTimeUnitList)){
+					SimpleUtils.pass("The list of end time unit is correct");
+				}else {
+					SimpleUtils.fail("The list of end time unit is NOT correct",true);
+				}
+			}
+		}else {
+			SimpleUtils.fail("Shift end time unit isn't shown",false);
+		}
+	}
+
+//用class属性是否包含ng-not-empty来判断是否被勾选上
+	@FindBy(css="sub-content-box[box-title=\"Time of Day\"] input-field[label=\"Custom Formula?\"] input")
+	private WebElement checkBoxOfTimeOfDay;
+	@FindBy(css="div[ng-if=\"$ctrl.isTimeOfTheDayFormula\"] textarea")
+	private WebElement formulaTextAreaOfTimeOfDay;
+
+	public boolean isTimeOfDayFormulaCheckBoxChecked(){
+		boolean flag = false;
+		if(isElementEnabled(checkBoxOfTimeOfDay)){
+			String classValueOfCheckBox = checkBoxOfTimeOfDay.getAttribute("class");
+			if(classValueOfCheckBox.contains("ng-not-empty")){
+				flag = true;
+			}else {
+				flag = false;
+			}
+		}
+		return flag;
+	}
+
+	@Override
+	public void tickOnCheckBoxOfTimeOfDay() throws Exception{
+			if(!isTimeOfDayFormulaCheckBoxChecked()){
+				clickTheElement(checkBoxOfTimeOfDay);
+				waitForSeconds(3);
+			}
+			if(isElementEnabled(formulaTextAreaOfTimeOfDay)){
+				SimpleUtils.pass("User checked on check box of time of day successfully!");
+			}else{
+				SimpleUtils.fail("User checked on check box of time of day successfully!",false);
+			}
+	}
+
+	@Override
+	public void inputFormulaInTextAreaOfTimeOfDay(String formulaOfTimeOfDay){
+		String placeHolder = "Enter your custom formula here for the time of the day. The formula must evaluate to be an integer minutes.";
+		//verify formula text area show well or not?
+		if(formulaTextAreaOfTimeOfDay.getAttribute("placeholder").trim().equals(placeHolder)){
+			SimpleUtils.pass("formula Text Area Of Time Of Day shows well.");
+		}else {
+			SimpleUtils.fail("formula Text Area Of Time Of Day shows well.",false);
+		}
+		//input formula in text area
+		formulaTextAreaOfTimeOfDay.sendKeys(formulaOfTimeOfDay);
+		String formulaValue = getDriver().findElement(By.cssSelector("sub-content-box[box-title=\"Time of Day\"] input-field[type=\"textarea\"] ng-form div")).getAttribute("innerText").trim();
+		if(formulaValue.equals(formulaOfTimeOfDay)){
+			SimpleUtils.pass("User can input formula for time of day successfully!");
+		}else{
+			SimpleUtils.fail("User can NOT input formula for time of day!",false);
+		}
+	}
 }

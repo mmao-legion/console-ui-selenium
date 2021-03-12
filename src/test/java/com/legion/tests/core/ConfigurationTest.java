@@ -212,4 +212,93 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Time of Day During Section")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTimeOfDayDuringSection(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "Test";
+            String workRole = "New Work Role";
+            String duringTime ="10";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.verifyRadioButtonInTimeOfDayIsSingletonSelect();
+            configurationPage.inputShiftDuartionMinutes(duringTime);
+            configurationPage.validateShiftDuartionTimeUnit();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Time of Day End Section")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTimeOfDayEndSection(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "Test";
+            String workRole = "New Work Role";
+            String endOffsetTime ="10";
+            String endEventPoint = "before";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.inputOffsetTimeForShiftEnd(endOffsetTime,endEventPoint);
+            configurationPage.validateShiftEndTimeUnitList();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Time of Day Formula Section")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTimeOfDayFormulaSection(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "Test";
+            String workRole = "New Work Role";
+            String formulaOfTimeOfDay = "123";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.tickOnCheckBoxOfTimeOfDay();
+            configurationPage.inputFormulaInTextAreaOfTimeOfDay(formulaOfTimeOfDay);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }

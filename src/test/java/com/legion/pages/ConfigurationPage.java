@@ -21,8 +21,14 @@ public interface ConfigurationPage {
     public void verifyCheckBoxOfDaysOfWeekSection() throws Exception;
     public boolean isDaysOfWeekFormulaCheckBoxChecked();
     public void inputFormulaInForDaysOfWeekSection(String formula) throws Exception;
-//    public List<String> getAllDayPartsNameInOH() throws Exception;
     public void inputOffsetTimeForShiftStart(String startOffsetTime,String startEventPoint) throws Exception;
     public void validateShiftStartTimeUnitList() throws Exception;
     public List<String> getShiftStartTimeEventList() throws Exception;
+    public void verifyRadioButtonInTimeOfDayIsSingletonSelect() throws Exception;
+    public void inputShiftDuartionMinutes(String duringTime) throws Exception;
+    public void validateShiftDuartionTimeUnit() throws Exception;
+    public void inputOffsetTimeForShiftEnd(String endOffsetTime,String endEventPoint) throws Exception;
+    public void validateShiftEndTimeUnitList() throws Exception;
+    public void tickOnCheckBoxOfTimeOfDay() throws Exception;
+    public void inputFormulaInTextAreaOfTimeOfDay(String formulaOfTimeOfDay);
 }
