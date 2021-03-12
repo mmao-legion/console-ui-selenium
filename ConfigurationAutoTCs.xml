@@ -20,6 +20,9 @@
                     <include name="verifyCheckBoxOfDaysOfWeek"/>
                     <include name="verifyInputFormulaForDaysOfWeek"/>
                     <include name="verifyTimeOfDayStartSection"/>
+                    <include name="verifyTimeOfDayDuringSection"/>
+                    <include name="verifyTimeOfDayEndSection"/>
+                    <include name="verifyTimeOfDayFormulaSection"/>
                 </methods>
             </class>
         </classes>
