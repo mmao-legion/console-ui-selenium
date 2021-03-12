@@ -50,7 +50,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     @FindBy(id = "gfe-average-hours")
     private WebElement gfeAverageHours;
 
-    @FindBy(css = " div:nth-child(3) > p > label")
+    @FindBy(css = "div:nth-child(3) > p > label")
     private WebElement gfeLocation;
 
     @Override
@@ -148,7 +148,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     public void verifyVSLInfo(boolean isVSLTurnOn) throws Exception {
         if (isVSLTurnOn) {
             if (isElementLoaded(VSLInfo, 5) &&
-                    VSLInfo.getText().contains("Team members will be informed regarding opting in to the Volntary Standby List"))
+                    VSLInfo.getText().contains("Team members will be informed regarding opting in to the Voluntary Standby List"))
                 SimpleUtils.pass("Inbox: VSL info \"Team members will be informed regarding opting in to the Voluntary Standby List.\" is loaded successfully when VSL is turned on");
              else
                 SimpleUtils.fail("Inbox: VSL info failed to load", false);
@@ -678,11 +678,11 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
         }
     }
 
-    @FindBy(css = "div[label=\"'SEND'\"] button")
+    @FindBy(css = "[type=\"'success'\"] button")
     private WebElement sendBtn;
     @Override
     public void clickSendBtn() throws Exception {
-        if (isElementLoaded(sendBtn,5)){
+        if (isElementLoaded(sendBtn,10)){
             scrollToBottom();
             click(sendBtn);
             SimpleUtils.pass("Send button has been clicked!");

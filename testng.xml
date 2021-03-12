@@ -468,6 +468,18 @@
         </classes>
     </test>
 
+    <test name="Location Group Test">
+        <classes>
+            <class name="com.legion.tests.core.LocationGroupTest">
+                <methods>
+                    <include name="validateTheGenerationOfLGScheduleAsInternalAdmin" />
+                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdmin" />
+                    <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
     <test name="DM Schedule Test">
         <classes>
             <class name="com.legion.tests.core.DMScheduleTest">
