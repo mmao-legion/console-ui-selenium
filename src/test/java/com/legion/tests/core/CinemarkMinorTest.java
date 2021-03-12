@@ -766,7 +766,7 @@ public class CinemarkMinorTest extends TestBase {
 
             //Log in as SM to check
             String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("OP_Enterprise")+fileName;
+            fileName = SimpleUtils.getEnterprise("Op_Enterprise")+fileName;
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
             loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
@@ -873,7 +873,7 @@ public class CinemarkMinorTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Verify the School today and school tomorrow  settings for the Minors of Age 14 or 15")
+    @TestName(description = "Verify the School today and school tomorrow settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
