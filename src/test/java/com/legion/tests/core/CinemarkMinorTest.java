@@ -96,7 +96,7 @@ public class CinemarkMinorTest extends TestBase {
     public enum buttonGroup{
         Cancel("Cancel"),
         Close("Close"),
-        OKWhenEdit("Ok"),
+        OKWhenEdit("OK"),
         OKWhenPublish("OK"),
         Delete("Delete"),
         Save("Save"),
