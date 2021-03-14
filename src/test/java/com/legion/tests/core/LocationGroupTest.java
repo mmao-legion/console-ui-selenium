@@ -60,7 +60,7 @@ public class LocationGroupTest extends TestBase {
         // Edit random location's operating hours before generate schedule
         schedulePage.selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(null);
         List<String> toCloseDays = new ArrayList<>();
-        schedulePage.editOperatingHoursOnScheduleOldUIPage("8:00", "20:00", toCloseDays);
+        schedulePage.editOperatingHoursOnScheduleOldUIPage("8", "20", toCloseDays);
         // Edit random location's operating hours during generate schedule
         schedulePage.createScheduleForNonDGFlowNewUI();
     }
@@ -193,7 +193,7 @@ public class LocationGroupTest extends TestBase {
 
         schedulePage.selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage("Child1");
         List<String> toCloseDays = new ArrayList<>();
-        schedulePage.editOperatingHoursOnScheduleOldUIPage("5:00", "23:00", toCloseDays);
+        schedulePage.editOperatingHoursOnScheduleOldUIPage("5", "23", toCloseDays);
         // Edit random location's operating hours during generate schedule
         schedulePage.createScheduleForNonDGFlowNewUI();
 

@@ -5247,11 +5247,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
+    @FindBy(css = "div.lgn-time-slider-notch-label")
+    private List<WebElement> scheduleOperatingHrsOnEditPage;
+
     public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception {
+        WebElement element = null;
+        if(areListElementVisible(scheduleOperatingHrsOnEditPage, 15)
+                && scheduleOperatingHrsOnEditPage.size() >0){
+            for (WebElement scheduleOperatingHour: scheduleOperatingHrsOnEditPage){
+                if(scheduleOperatingHour.getText().equals(shiftTime)){
+                    element = scheduleOperatingHour;
+                    break;
+                }
+            }
+            if (element == null){
+                SimpleUtils.fail("Cannot found the operating hour on edit operating hour page! ", false);
+            }
+        }
         if(startingPoint.equalsIgnoreCase("End")){
             if(isElementLoaded(sliderNotchEnd,10) && sliderDroppableCount.size()>0){
                 SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
-                WebElement element = getDriver().findElement(By.xpath("//div[contains(@class,'lgn-time-slider-notch-label ng-binding ng-scope "+shiftTime+"')]"));
                 mouseHoverDragandDrop(sliderNotchEnd,element);
             } else{
                 SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
@@ -5259,7 +5274,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else if(startingPoint.equalsIgnoreCase("Start")){
             if(isElementLoaded(sliderNotchStart,10) && sliderDroppableCount.size()>0){
                 SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
-                WebElement element = getDriver().findElement(By.xpath("//div[contains(@class,'lgn-time-slider-notch-label ng-binding ng-scope "+ shiftTime+"')]"));
                 mouseHoverDragandDrop(sliderNotchStart,element);
             } else{
                 SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
@@ -12731,7 +12745,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void editOperatingHoursOnScheduleOldUIPage(String startTime, String endTime, List<String> weekDaysToClose) throws Exception {
-        if (areListElementVisible(operatingHours, 5) && operatingHours.size()==7){
+        if (areListElementVisible(operatingHours, 15) && operatingHours.size()==7){
             for (WebElement operatingHour : operatingHours){
                 WebElement weekDay = operatingHour.findElement(By.cssSelector("td[class=\"ng-binding\"]"));
                 WebElement editButton = operatingHour.findElement(By.cssSelector("span[ng-if=\"canEditWorkingHours\"]"));

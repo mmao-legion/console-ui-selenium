@@ -653,7 +653,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             }
             if (scheduleStatus.equals("Published")){
                 List<String> toCloseDays = new ArrayList<>();
-                schedulePage.editOperatingHoursOnScheduleOldUIPage("8am", "8pm", toCloseDays);
+                schedulePage.editOperatingHoursOnScheduleOldUIPage("8", "20", toCloseDays);
                 schedulePage.createScheduleForNonDGFlowNewUI();
                 schedulePage.publishActiveSchedule();
             } else if (scheduleStatus.equalsIgnoreCase("In Progress")){
