@@ -3850,7 +3850,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String subTitle = "Confirm Operating Hours";
         waitForSeconds(3);
         if (isElementLoaded(generateSheduleButton,60)) {
-            waitForSeconds(3);
+            waitForSeconds(5);
             clickTheElement(generateSheduleButton);
             waitForSeconds(3);
             openBudgetPopUp();
@@ -4319,6 +4319,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         } else {
             SimpleUtils.fail("There is no toggle drop down button in schedule page!", false);
+        }
+    }
+
+    @Override
+    public void clickToggleSummaryViewButton() throws Exception {
+        if (areListElementVisible(dropdownMenuFormDropdownToggle,10)){
+            click(dropdownMenuFormDropdownToggle.get(dropdownMenuFormDropdownToggle.size()-1));
+            SimpleUtils.pass("Toggle Summary View has been clicked!");
+        } else {
+            if (isElementLoaded(dropdownToggle,10)){
+                click(dropdownToggle);
+            } else {
+                SimpleUtils.fail("There is no toggle drop down button in schedule page!", false);
+            }
         }
     }
 
