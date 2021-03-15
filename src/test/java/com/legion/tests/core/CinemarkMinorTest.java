@@ -40,7 +40,7 @@ public class CinemarkMinorTest extends TestBase {
 
     //The template the location is using.
     public enum templateInUse{
-        TEMPLATE_NAME("test2");
+        TEMPLATE_NAME("clement-997");
         private final String value;
         templateInUse(final String newValue) {
             value = newValue;
@@ -83,9 +83,9 @@ public class CinemarkMinorTest extends TestBase {
     }
 
     public enum templateAction{
-        Save_As_Draft("Save as draft"),
-        Publish_Now("Publish now"),
-        Publish_Later("Publish later");
+        Save_As_Draft("saveAsDraft"),
+        Publish_Now("publishNow"),
+        Publish_Later("publishLater");
         private final String value;
         templateAction(final String newValue) {
             value = newValue;
@@ -641,7 +641,7 @@ public class CinemarkMinorTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
-            SimpleUtils.assertOnFail("School Calendar tab should not be loaded when minot rule turned off", !teamPage.isCalendarTabLoad(), false);
+            SimpleUtils.assertOnFail("School Calendar tab should not be loaded when minor rule turned off", !teamPage.isCalendarTabLoad(), false);
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             cinemarkMinorPage.clickConfigurationTabInOP();
@@ -665,70 +665,72 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "verify turn on minor rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+
+        //Go to OP page
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        //go to Configuration
+        cinemarkMinorPage.clickConfigurationTabInOP();
+        controlsNewUIPage.clickOnControlsComplianceSection();
+
+        //Find the template
+        cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
+        cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
+        cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
+        cinemarkMinorPage.minorRuleToggle("yes","14N15");
+
+        cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.School_Week.getValue(),"","");
+        cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Non_School_Week.getValue(),"","");
+        cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Summer_Week.getValue(),"","");
+        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), "","","");
+        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), "","","");
+        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), "","","");
+        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), "","","");
+        cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), "","","");
+
+        cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
+        cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
+
+        //Back to Console
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        String minorLocation = "Test For Minors";
+        locationSelectorPage.changeLocation(minorLocation);
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+        // Navigate to a week
+        schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
+        // create the schedule if not created
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (!isWeekGenerated){
+            schedulePage.createScheduleForNonDGFlowNewUI();
+        }
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor17"));
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.clearAllSelectedDays();
+        schedulePage.selectDaysByIndex(0,0,0);
+        schedulePage.selectWorkRole("MOD");
+        schedulePage.moveSliderAtSomePoint("8", 20, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchText(cinemarkMinors.get("Minor17"));
+        SimpleUtils.assertOnFail("Minor warning should not work when setting is empty", !schedulePage.getAllTheWarningMessageOfTMWhenAssign().contains("Minor"), false);
+
         try {
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 
-            //Go to OP page
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-            //go to Configuration
-            cinemarkMinorPage.clickConfigurationTabInOP();
-            controlsNewUIPage.clickOnControlsComplianceSection();
-
-            //Find the template
-            cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
-            cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
-            cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
-            cinemarkMinorPage.minorRuleToggle("yes","14N15");
-
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.School_Week.getValue(),"","");
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Non_School_Week.getValue(),"","");
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Summer_Week.getValue(),"","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), " "," ","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), " "," ","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), " "," ","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), " "," ","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), " "," ","");
-
-            cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
-            cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
-
-            //Back to Console
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            String minorLocation = "Test For Minors";
-            locationSelectorPage.changeLocation(minorLocation);
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-            // Navigate to a week
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
-            // create the schedule if not created
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
-            if (!isWeekGenerated){
-                schedulePage.createScheduleForNonDGFlowNewUI();
-            }
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor17"));
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.clearAllSelectedDays();
-            schedulePage.selectDaysByIndex(0,0,0);
-            schedulePage.selectWorkRole("MOD");
-            schedulePage.moveSliderAtSomePoint("8", 20, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchText(cinemarkMinors.get("Minor17"));
-            SimpleUtils.assertOnFail("Minor warning should not work when setting is empty", !schedulePage.getAllTheWarningMessageOfTMWhenAssign().contains("Minor"), false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
