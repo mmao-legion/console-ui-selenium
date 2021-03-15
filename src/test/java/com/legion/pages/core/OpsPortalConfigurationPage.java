@@ -6,6 +6,7 @@ import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.an.E;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -758,4 +759,156 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("User can NOT input formula for time of day!",false);
 		}
 	}
+
+	@FindBy(css="sub-content-box.breaks")
+	private WebElement mealAndRestBreakSection;
+	@FindBy(css="span[ng-click=\"$ctrl.addBreak('M')\"] span.ml-5.ng-binding")
+	private WebElement addMealBreakButton;
+	//每个元素的后面再➕一个 i 就是delete button 的定位了
+	@FindBy(css="sub-content-box.breaks div.col-sm-5:nth-child(1) table tr[ng-repeat]")
+	private List<WebElement> mealBreakList;
+	//每个元素的后面再➕一个 i 就是delete button 的定位了
+	@FindBy(css="sub-content-box.breaks div.col-sm-1.plr-0-0+div table tr[ng-repeat]")
+	private List<WebElement> restBreakList;
+	@FindBy(css="span[ng-click=\"$ctrl.addBreak('R')\"] span.ml-5.ng-binding")
+	private WebElement addRestBreakButton;
+
+	@Override
+	public void addNewMealBreak(List<String> mealBreakValue) throws Exception {
+		if(isElementEnabled(mealAndRestBreaksSection)){
+			clickTheElement(addMealBreakButton);
+			waitForSeconds(2);
+			if(mealBreakList.size()!=0){
+				SimpleUtils.pass("User click add button of Meal Break successfully");
+			}else{
+				SimpleUtils.fail("User click add button of Meal Break failed",false);
+			}
+			int index = mealBreakList.size() - 1;
+			List<WebElement> startOffsetAndBreakDuration = mealBreakList.get(index).findElements(By.cssSelector("input-field"));
+			for(int i = 0; i <=1; i++){
+				WebElement startOffsetAndBreakDurationInput = startOffsetAndBreakDuration.get(i).findElement(By.cssSelector("input"));
+				startOffsetAndBreakDurationInput.click();
+				startOffsetAndBreakDurationInput.clear();
+				startOffsetAndBreakDurationInput.sendKeys(mealBreakValue.get(i));
+				String startOffsetValue = startOffsetAndBreakDuration.get(i).findElement(By.cssSelector("div")).getAttribute("innerText").trim();
+				if(startOffsetValue.equals(mealBreakValue.get(i))){
+					SimpleUtils.pass("User can add Meal Break successfully!");
+				}else {
+					SimpleUtils.fail("User can NOT add Meal Break successfully!",false);
+				}
+				waitForSeconds(2);
+			}
+		}
+	}
+
+	@Override
+	public void addMultipleMealBreaks(List<String> mealBreakValue) throws Exception {
+		int count = mealBreakList.size();
+		for(int i =0;i<=9;i++){
+			addNewMealBreak(mealBreakValue);
+		}
+		count = count + 10;
+		if(mealBreakList.size()==count){
+			SimpleUtils.pass("User can add multiple Meal Breaks successfully!");
+			if(isElementEnabled(addMealBreakButton)&&isElementEnabled(addRestBreakButton)){
+				verifyAdvancedStaffingRulePageShowWell();
+				SimpleUtils.pass("The page shows well after adding multiple Meal Breaks");
+			}else {
+				SimpleUtils.fail("The page shows well after adding multiple Meal Breaks",false);
+			}
+		}else {
+			SimpleUtils.fail("User can NOT add multiple Meal Breaks successfully!",false);
+		}
+	}
+
+	@Override
+	public void deleteMealBreak() throws Exception{
+		int index = mealBreakList.size();
+		if(index != 0){
+			WebElement removeButton = mealBreakList.get(index-1).findElement(By.cssSelector("i"));
+			if(isElementEnabled(removeButton)){
+				clickTheElement(removeButton);
+				waitForSeconds(1);
+				if(mealBreakList.size() == index-1){
+					SimpleUtils.pass("User can remove meal break successfully!");
+				}else {
+					SimpleUtils.fail("User can NOT remove meal break successfully!",false);
+				}
+			}else {
+				SimpleUtils.fail("remove meal breaks button is not available.",false);
+			}
+		}else {
+			SimpleUtils.fail("Still have no meal break info!",false);
+		}
+	}
+
+	@Override
+	public void addNewRestBreak(List<String> restBreakValue) throws Exception {
+		if(isElementEnabled(mealAndRestBreaksSection)){
+			clickTheElement(addRestBreakButton);
+			waitForSeconds(2);
+			if(restBreakList.size()!=0){
+				SimpleUtils.pass("User click add button of Rest Break successfully");
+			}else{
+				SimpleUtils.fail("User click add button of Rest Break failed",false);
+			}
+			int index = restBreakList.size() - 1;
+			List<WebElement> startOffsetAndBreakDuration = restBreakList.get(index).findElements(By.cssSelector("input-field"));
+			for(int i = 0; i <=1; i++){
+				WebElement startOffsetAndBreakDurationInput = startOffsetAndBreakDuration.get(i).findElement(By.cssSelector("input"));
+				startOffsetAndBreakDurationInput.click();
+				startOffsetAndBreakDurationInput.clear();
+				startOffsetAndBreakDurationInput.sendKeys(restBreakValue.get(i));
+				String startOffsetValue = startOffsetAndBreakDuration.get(i).findElement(By.cssSelector("div")).getAttribute("innerText").trim();
+				if(startOffsetValue.equals(restBreakValue.get(i))){
+					SimpleUtils.pass("User can add Rest Break successfully!");
+				}else {
+					SimpleUtils.fail("User can NOT add Rest Break successfully!",false);
+				}
+				waitForSeconds(2);
+			}
+		}
+	}
+
+	@Override
+	public void addMultipleRestBreaks(List<String> restBreakValue) throws Exception {
+		int count = restBreakList.size();
+		for(int i =0;i<=9;i++){
+			addNewRestBreak(restBreakValue);
+		}
+		count = count + 10;
+		if(restBreakList.size()==count){
+			SimpleUtils.pass("User can add multiple Rest Breaks successfully!");
+			if(isElementEnabled(addMealBreakButton)&&isElementEnabled(addRestBreakButton)){
+				verifyAdvancedStaffingRulePageShowWell();
+				SimpleUtils.pass("The page shows well after adding multiple Rest Breaks");
+			}else {
+				SimpleUtils.fail("The page shows well after adding multiple Rest Breaks",false);
+			}
+		}else {
+			SimpleUtils.fail("User can NOT add multiple Rest Breaks successfully!",false);
+		}
+	}
+
+	@Override
+	public void deleteRestBreak() throws Exception{
+		int index = restBreakList.size();
+		if(index != 0){
+			WebElement removeButton = restBreakList.get(index-1).findElement(By.cssSelector("i"));
+			if(isElementEnabled(removeButton)){
+				clickTheElement(removeButton);
+				waitForSeconds(1);
+				if(restBreakList.size() == index-1){
+					SimpleUtils.pass("User can remove rest break successfully!");
+				}else {
+					SimpleUtils.fail("User can NOT remove rest break successfully!",false);
+				}
+			}else {
+				SimpleUtils.fail("remove rest breaks button is not available.",false);
+			}
+		}else {
+			SimpleUtils.fail("Still have no rest break info!",false);
+		}
+	}
+
 }

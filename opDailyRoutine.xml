@@ -100,6 +100,7 @@
                     <include name="verifyTimeOfDayDuringSection"/>
                     <include name="verifyTimeOfDayEndSection"/>
                     <include name="verifyTimeOfDayFormulaSection"/>
+                    <include name="verifyMealAndRestBreaks"/>
                 </methods>
             </class>
         </classes>

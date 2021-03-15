@@ -31,4 +31,10 @@ public interface ConfigurationPage {
     public void validateShiftEndTimeUnitList() throws Exception;
     public void tickOnCheckBoxOfTimeOfDay() throws Exception;
     public void inputFormulaInTextAreaOfTimeOfDay(String formulaOfTimeOfDay);
+    public void addNewMealBreak(List<String> mealBreakValue) throws Exception;
+    public void addMultipleMealBreaks(List<String> mealBreakValue) throws Exception;
+    public void deleteMealBreak() throws Exception;
+    public void addNewRestBreak(List<String> restBreakValue) throws Exception;
+    public void addMultipleRestBreaks(List<String> restBreakValue) throws Exception;
+    public void deleteRestBreak() throws Exception;
 }

@@ -301,4 +301,44 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Meal and Rest Breaks")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMealAndRestBreaks(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "Test";
+            String workRole = "New Work Role";
+            List<String> mealBreakInfo = new ArrayList<String>(){{
+                add("30");
+                add("60");
+            }};
+            List<String> restBreakInfo = new ArrayList<String>(){{
+                add("20");
+                add("45");
+            }};
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.addNewMealBreak(mealBreakInfo);
+            configurationPage.addMultipleMealBreaks(mealBreakInfo);
+            configurationPage.deleteMealBreak();
+            configurationPage.addNewRestBreak(restBreakInfo);
+            configurationPage.addMultipleRestBreaks(restBreakInfo);
+            configurationPage.deleteRestBreak();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }
