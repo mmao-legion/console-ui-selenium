@@ -12745,7 +12745,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void editOperatingHoursOnScheduleOldUIPage(String startTime, String endTime, List<String> weekDaysToClose) throws Exception {
-        if (areListElementVisible(operatingHours, 15) && operatingHours.size()==7){
+        waitForSeconds(5);
+        if (areListElementVisible(operatingHours, 20) && operatingHours.size()==7){
             for (WebElement operatingHour : operatingHours){
                 WebElement weekDay = operatingHour.findElement(By.cssSelector("td[class=\"ng-binding\"]"));
                 WebElement editButton = operatingHour.findElement(By.cssSelector("span[ng-if=\"canEditWorkingHours\"]"));
@@ -12783,9 +12784,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             }
                             moveSliderAtCertainPoint(endTime, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
                             moveSliderAtCertainPoint(startTime, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-                            click(editOperatingHourSaveButton);
+                            clickTheElement(editOperatingHourSaveButton);
+                            waitForSeconds(2);
+                            // If operating hours is consistent with the values wanted to change, then Save button is disabled
+                            if (isElementLoaded(operatingHoursCancelBtn, 5)) {
+                                clickTheElement(operatingHoursCancelBtn);
+                            }
                             openCloseHours = operatingHour.findElement(By.cssSelector("[ng-class=\"{dirty: day.isOverridden}\"]"));
-                            if (openCloseHours.getText().equalsIgnoreCase(startTime+"-"+endTime)){
+                            if (openCloseHours.getText().equalsIgnoreCase(startTime+":00-"+endTime+":00")){
                                 SimpleUtils.report("Week day: "+weekDay.getText()+" been edited successfully!");
                             } else{
                                 SimpleUtils.fail("Edit week day: "+weekDay.getText()+" failed!", false);
