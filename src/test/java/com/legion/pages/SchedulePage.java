@@ -572,4 +572,5 @@ public interface SchedulePage {
 	public boolean checkIfEditOperatingHoursButtonsAreShown() throws Exception;
 	public void clickExitBtnToExitCreateScheduleWindow() throws Exception;
 	public boolean verifyScheduleNotPublishedSmartCardShowing() throws Exception;
+	public void clickToggleSummaryViewButton() throws Exception;
 }

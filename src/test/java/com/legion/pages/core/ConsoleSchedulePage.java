@@ -3482,4 +3482,8 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public boolean verifyScheduleNotPublishedSmartCardShowing() throws Exception {
         return false;
     }
+    @Override
+    public void clickToggleSummaryViewButton() throws Exception {
+
+    }
 }

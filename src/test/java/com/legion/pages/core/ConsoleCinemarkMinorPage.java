@@ -36,7 +36,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
     }
 
     //Add by Haya
-    @FindBy(xpath = "//span[text()= \"New Template\"]")
+    @FindBy(xpath = "//span[contains(text(),\"New Template\")]")
     private WebElement newTemplateBtn;
     @FindBy(css = ".modal-dialog")
     private WebElement newTemplateDialog;
@@ -178,7 +178,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
                 SimpleUtils.fail("Cancel button does not present on the page",false);
             }
         } else {
-            if(isElementLoaded(getDriver().findElement(By.cssSelector("lg-button[label=\""+button+"\"]")), 15))
+            if(isElementLoaded(getDriver().findElement(By.cssSelector("lg-button[label=\""+button+"\"]")), 20))
             {
                 click(getDriver().findElement(By.cssSelector("lg-button[label=\""+button+"\"]")));
             }else{
@@ -253,6 +253,21 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
         }
     }
 
+    @FindBy(xpath = "//div[@class='lg-picker-input__wrapper lg-ng-animate']//div[@class='lg-search-options__option ng-binding lg-search-options__subLabel']")
+    private List<WebElement> options;
+    private void selectOptionForMinorRule(WebElement webElement, String value) throws Exception{
+        clickTheElement(webElement);
+        if (areListElementVisible(options, 15)){
+            for (WebElement element: options){
+                if (element.getText().equalsIgnoreCase(value)){
+                    clickTheElement(element);
+                }
+            }
+        } else {
+            SimpleUtils.fail("", false);
+        }
+    }
+
     @Override
     public void setMinorRuleByDay(String minorType, String dayType, String from, String to, String maxOfHrs) throws Exception {
         List<WebElement> dataFields = null; //new ArrayList<WebElement>();
@@ -263,36 +278,46 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
         }
         if (dataFields.size()>20){
             if (dayType.equalsIgnoreCase("School today, school tomorrow")){
-                selectByVisibleText(dataFields.get(6),from);
-                selectByVisibleText(dataFields.get(7),to);
+                //selectByVisibleText(dataFields.get(6),from);
+                selectOptionForMinorRule(dataFields.get(6), from);
+                //selectByVisibleText(dataFields.get(7),to);
+                selectOptionForMinorRule(dataFields.get(7), to);
                 dataFields.get(8).clear();
                 dataFields.get(8).sendKeys(maxOfHrs);
                 SimpleUtils.pass(dayType+" set");
             }
             if (dayType.equalsIgnoreCase("School today, no school tomorrow")){
-                selectByVisibleText(dataFields.get(9),from);
-                selectByVisibleText(dataFields.get(10),to);
+                //selectByVisibleText(dataFields.get(9),from);
+                //selectByVisibleText(dataFields.get(10),to);
+                selectOptionForMinorRule(dataFields.get(9), from);
+                selectOptionForMinorRule(dataFields.get(10), to);
                 dataFields.get(11).clear();
                 dataFields.get(11).sendKeys(maxOfHrs);
                 SimpleUtils.pass(dayType+" set");
             }
             if (dayType.equalsIgnoreCase("No school today, no school tomorrow")){
-                selectByVisibleText(dataFields.get(12),from);
-                selectByVisibleText(dataFields.get(13),to);
+                //selectByVisibleText(dataFields.get(12),from);
+                //selectByVisibleText(dataFields.get(13),to);
+                selectOptionForMinorRule(dataFields.get(12), from);
+                selectOptionForMinorRule(dataFields.get(13), to);
                 dataFields.get(14).clear();
                 dataFields.get(14).sendKeys(maxOfHrs);
                 SimpleUtils.pass(dayType+" set");
             }
             if (dayType.equalsIgnoreCase("No school today, school tomorrow")){
-                selectByVisibleText(dataFields.get(15),from);
-                selectByVisibleText(dataFields.get(16),to);
+                //selectByVisibleText(dataFields.get(15),from);
+                //selectByVisibleText(dataFields.get(16),to);
+                selectOptionForMinorRule(dataFields.get(15), from);
+                selectOptionForMinorRule(dataFields.get(16), to);
                 dataFields.get(17).clear();
                 dataFields.get(17).sendKeys(maxOfHrs);
                 SimpleUtils.pass(dayType+" set");
             }
             if (dayType.equalsIgnoreCase("Summer day")){
-                selectByVisibleText(dataFields.get(18),from);
-                selectByVisibleText(dataFields.get(19),to);
+                //selectByVisibleText(dataFields.get(18),from);
+                //selectByVisibleText(dataFields.get(19),to);
+                selectOptionForMinorRule(dataFields.get(18), from);
+                selectOptionForMinorRule(dataFields.get(19), to);
                 dataFields.get(20).clear();
                 dataFields.get(20).sendKeys(maxOfHrs);
                 SimpleUtils.pass(dayType+" set");
