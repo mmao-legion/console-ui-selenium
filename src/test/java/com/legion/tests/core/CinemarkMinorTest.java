@@ -880,11 +880,11 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "7,1";
-            String shiftTime2 = "9,4";
-            String shiftTime3 = "8,2";
-            String workRole = "Associates";
-            String scheduleFromToTime = "8AM - 4PM";
+            String shiftTime1 = "7,13";
+            String shiftTime2 = "9,16";
+            String shiftTime3 = "8,14";
+            String workRole = "MOD";
+            String scheduleFromToTime = "8:00 - 16:00";
             String scheduleMaxHours = "6";
             String selectWeekDayName = "Mon";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
@@ -903,11 +903,11 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "8,1";
-            String shiftTime2 = "9,4";
-            String shiftTime3 = "9,2";
+            String shiftTime1 = "8,13";
+            String shiftTime2 = "9,16";
+            String shiftTime3 = "9,14";
             String workRole = "MOD";
-            String scheduleFromToTime = "8:30AM - 4PM";
+            String scheduleFromToTime = "8:30 - 16:00";
             String scheduleMaxHours = "5";
             String selectWeekDayName = "Mon";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
@@ -926,11 +926,11 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "8,3";
-            String shiftTime2 = "9,5";
-            String shiftTime3 = "11,4";
-            String workRole = "Associates";
-            String scheduleFromToTime = "8:30AM - 5PM";
+            String shiftTime1 = "8,15";
+            String shiftTime2 = "9,17";
+            String shiftTime3 = "11,16";
+            String workRole = "MOD";
+            String scheduleFromToTime = "8:30 - 17:00";
             String scheduleMaxHours = "5";
             String selectWeekDayName = "Fri";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
@@ -949,11 +949,11 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "8,1";
-            String shiftTime2 = "9,5";
-            String shiftTime3 = "9,2";
+            String shiftTime1 = "8,13";
+            String shiftTime2 = "9,17";
+            String shiftTime3 = "9,14";
             String workRole = "MOD";
-            String scheduleFromToTime = "9AM - 5PM";
+            String scheduleFromToTime = "9:00 - 17:00";
             String scheduleMaxHours = "6";
             String selectWeekDayName = "Fri";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
@@ -971,11 +971,11 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "8,3";
-            String shiftTime2 = "9,6";
-            String shiftTime3 = "9,3";
-            String workRole = "Associates";
-            String scheduleFromToTime = "9AM - 6PM";
+            String shiftTime1 = "8,15";
+            String shiftTime2 = "9,18";
+            String shiftTime3 = "9,15";
+            String workRole = "MOD";
+            String scheduleFromToTime = "9:00 - 18:00";
             String scheduleMaxHours = "7";
             String selectWeekDayName = "Sat";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
@@ -995,11 +995,11 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "8,1";
-            String shiftTime2 = "10,7";
-            String shiftTime3 = "10,2";
+            String shiftTime1 = "8,13";
+            String shiftTime2 = "10,19";
+            String shiftTime3 = "10,14";
             String workRole = "MOD";
-            String scheduleFromToTime = "9:30AM - 7PM";
+            String scheduleFromToTime = "9:30 - 19:00";
             String scheduleMaxHours = "7";
             String selectWeekDayName = "Sat";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
@@ -1019,11 +1019,11 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "8,3";
-            String shiftTime2 = "10,9";
-            String shiftTime3 = "10,4";
-            String workRole = "Associates";
-            String scheduleFromToTime = "9:30AM - 9PM";
+            String shiftTime1 = "8,15";
+            String shiftTime2 = "10,21";
+            String shiftTime3 = "10,16";
+            String workRole = "MOD";
+            String scheduleFromToTime = "9:30 - 21:00";
             String scheduleMaxHours = "9";
             String selectWeekDayName = "Sun";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
@@ -1042,11 +1042,11 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "8,1";
-            String shiftTime2 = "10,8";
-            String shiftTime3 = "10,2";
+            String shiftTime1 = "8,13";
+            String shiftTime2 = "10,20";
+            String shiftTime3 = "10,14";
             String workRole = "MOD";
-            String scheduleFromToTime = "10AM - 8PM";
+            String scheduleFromToTime = "10:00 - 20:00";
             String scheduleMaxHours = "8";
             String selectWeekDayName = "Sun";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
@@ -1064,11 +1064,11 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "8,3";
-            String shiftTime2 = "10,10";
-            String shiftTime3 = "10,4";
-            String workRole = "Associates";
-            String scheduleFromToTime = "10AM - 10PM";
+            String shiftTime1 = "8,15";
+            String shiftTime2 = "10,22";
+            String shiftTime3 = "10,16";
+            String workRole = "MOD";
+            String scheduleFromToTime = "10:00 - 22:00";
             String scheduleMaxHours = "10";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
 
@@ -1086,11 +1086,11 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "8,1";
-            String shiftTime2 = "11,10";
-            String shiftTime3 = "11,7";
+            String shiftTime1 = "8,13";
+            String shiftTime2 = "11,22";
+            String shiftTime3 = "11,19";
             String workRole = "MOD";
-            String scheduleFromToTime = "10:30AM - 10PM";
+            String scheduleFromToTime = "10:30 - 22:00";
             String scheduleMaxHours = "9";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
 
@@ -1256,7 +1256,7 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         if(schedulePage.ifWarningModeDisplay()){
             String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
-            if (!warningMessage.contains("Minor")){
+            if (!warningMessage.contains("Minor ")){
                 SimpleUtils.pass("There is no minor warning message display when shift is not avoid the minor setting! ");
             } else
                 SimpleUtils.fail("There should no minor warning message display when shift is not avoid the minor setting! ", false);

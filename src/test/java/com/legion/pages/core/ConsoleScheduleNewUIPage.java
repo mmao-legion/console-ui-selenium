@@ -2730,7 +2730,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             for(int i=0; i<scheduleSearchTeamMemberStatus.size();i++){
                 if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Available")
                         || scheduleSearchTeamMemberStatus.get(i).getText().contains("Unknown")){
-                    if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Role Violation")){
+                    if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Minor")){
+                        click(radionBtnSearchTeamMembers.get(i));
+                        ScheduleStatus = true;
+                        break;
+                    } else if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Role Violation")){
                         click(radionBtnSearchTeamMembers.get(i));
                         displayAlertPopUpForRoleViolation();
                         setWorkerRole(searchWorkerRole.get(i).getText());
@@ -12759,7 +12763,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void editOperatingHoursOnScheduleOldUIPage(String startTime, String endTime, List<String> weekDaysToClose) throws Exception {
-        waitForSeconds(5);
+        waitForSeconds(6);
         if (areListElementVisible(operatingHours, 20) && operatingHours.size()==7){
             for (WebElement operatingHour : operatingHours){
                 WebElement weekDay = operatingHour.findElement(By.cssSelector("td[class=\"ng-binding\"]"));
