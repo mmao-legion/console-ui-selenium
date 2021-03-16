@@ -80,4 +80,24 @@ public interface JobsPage {
     public void iCanClickOnCreatAndReleaseCheckBox();
 
     public void verifyPaginationFunctionInJob() throws Exception;
+
+    public boolean verifyLayoutOfAdjustBudget();
+
+    public void iCanSetUpBudgetAssignmentNum(String budgetAssignmentNum);
+
+    public void addTaskButtonIsClickable();
+
+    public void iCanAddTasks(String searchText, int index, String taskName);
+
+    public void addWorkRoleButtonIsClickable();
+
+    public void iCanAddWorkRoles(String searchText, int index, String workRole);
+
+    public void executeBtnIsClickable();
+
+    public void createBtnIsClickableInAdjustBudgetJob() throws Exception;
+
+    public void verifyAdjustBudgetConfirmationPage(String jobTitle, String budgetAssignmentNum, String taskName, String workRole);
+
+    public void cancelBthInAdjustBudgetConfirmationPageIsClickable();
 }
