@@ -3486,4 +3486,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void clickToggleSummaryViewButton() throws Exception {
 
     }
+
+    @Override
+    public boolean isHourFormat24Hour() throws Exception {
+        return false;
+    }
 }

@@ -573,4 +573,5 @@ public interface SchedulePage {
 	public void clickExitBtnToExitCreateScheduleWindow() throws Exception;
 	public boolean verifyScheduleNotPublishedSmartCardShowing() throws Exception;
 	public void clickToggleSummaryViewButton() throws Exception;
+	public boolean isHourFormat24Hour() throws Exception;
 }

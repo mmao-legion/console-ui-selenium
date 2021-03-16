@@ -1206,6 +1206,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             return true;
         }else if(isElementLoaded(reGenerateScheduleButton, 10)) {
             return true;
+        }else if(isElementLoaded(deleteScheduleButton, 10)) {
+            return true;
         }
         if(areListElementVisible(shiftsWeekView,3)){
             SimpleUtils.pass("Week: '" + getActiveWeekText() + "' Already Generated!");
@@ -5268,6 +5270,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.lgn-time-slider-notch-label")
     private List<WebElement> scheduleOperatingHrsOnEditPage;
 
+    @Override
+    public boolean isHourFormat24Hour() throws Exception {
+        boolean is24Hour = true;
+        if (areListElementVisible(operatingHours, 15)) {
+            for (WebElement operatingHour : operatingHours) {
+                if (operatingHour.getText().toLowerCase().contains("am") || operatingHour.getText().contains("pm")) {
+                    is24Hour = false;
+                    break;
+                }
+            }
+        }
+        return is24Hour;
+    }
+
     public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception {
         WebElement element = null;
         if(areListElementVisible(scheduleOperatingHrsOnEditPage, 15)
@@ -8830,7 +8846,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (areListElementVisible(jobTitleNames, 10) && jobTitleNames.size() > 0) {
                 SimpleUtils.pass("In Week view: Shifts in schedule table are grouped by job title");
             } else {
-                SimpleUtils.fail("In Week view: Shifts in schedule table are failed group by job title ", true);
+                SimpleUtils.fail("In Week view: Shifts in schedule table are failed group by job title ", false);
             }
 
             //change back to Group by All
@@ -10283,7 +10299,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             }
         }else
-            SimpleUtils.fail("Schedule Week View: shifts load failed or there is no shift in this week",false);
+            SimpleUtils.report("Schedule Week View: shifts load failed or there is no shift in this week");
     }
 
     //added by Estelle for job title filter functionality
@@ -12811,7 +12827,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             openCloseHours = operatingHour.findElement(By.cssSelector("[ng-class=\"{dirty: day.isOverridden}\"]"));
                             if (openCloseHours.getText().equalsIgnoreCase(startTime+":00-"+endTime+":00")){
                                 SimpleUtils.report("Week day: "+weekDay.getText()+" been edited successfully!");
-                            } else{
+                            } else  if (openCloseHours.getText().equalsIgnoreCase(startTime+"-"+endTime)){
+                                SimpleUtils.report("Week day: "+weekDay.getText()+" been edited successfully!");
+                            } else  if (openCloseHours.getText().equalsIgnoreCase(startTime+"am-"+endTime+"pm")){
+                                SimpleUtils.report("Week day: "+weekDay.getText()+" been edited successfully!");
+                            } else {
                                 SimpleUtils.fail("Edit week day: "+weekDay.getText()+" failed!", false);
                             }
                         } else {

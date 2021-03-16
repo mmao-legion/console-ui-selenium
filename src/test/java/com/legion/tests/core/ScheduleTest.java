@@ -1200,6 +1200,16 @@ public class ScheduleTest extends TestBase{
 			Object[][] credentials = userCredentials.get("InternalAdmin");
 			loginToLegionAndVerifyIsLoginDone(String.valueOf(credentials[0][0]), String.valueOf(credentials[0][1]), String.valueOf(credentials[0][2]));
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			// Checking configuration in controls
+			String option = "Always";
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			controlsNewUIPage.clickOnControlsConsoleMenu();
+			controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+			boolean isScheduleCollaboration = controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+			SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
+			controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
+
 			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 			schedulePage.clickOnScheduleConsoleMenuItem();
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);

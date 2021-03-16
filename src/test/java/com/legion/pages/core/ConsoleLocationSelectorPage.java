@@ -150,7 +150,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                     }
                                 }
                                 if (!isLocationMatched) {
-                                    SimpleUtils.fail("Location does not match with '" + locationName + "'", true);
+                                    SimpleUtils.fail("Location does not match with '" + locationName + "'", false);
                                 }
                             }else
                                 SimpleUtils.report("No mapping data for this location,maybe it's disabled or child location for Master Slave ");

@@ -673,8 +673,14 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateDateAndTimeAfterSelectingDifferentLocation() throws Exception {
-		String dateFromLocation = getDateFromTimeZoneOfLocation("EEEE, MMMM d H:mm");
+		String dateFormat = "";
 		String dateFromDashboard = getCurrentDateFromDashboard() + " " + currentTime.getText().toUpperCase();
+		if (dateFromDashboard.toLowerCase().contains("am") || dateFromDashboard.toLowerCase().contains("pm")) {
+			dateFormat = "EEEE, MMMM d h:mm a";
+		} else {
+			dateFormat = "EEEE, MMMM d H:mm";
+		}
+		String dateFromLocation = getDateFromTimeZoneOfLocation(dateFormat);
 		if (dateFromDashboard.equals(dateFromLocation)) {
 			SimpleUtils.pass("Dashboard Page: The date and time on Dashboard is consistent with the timezone of current location");
 		} else {
@@ -724,10 +730,16 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateDateAndTime() throws Exception {
+		String dateFormat = "";
 		if (isElementLoaded(currentDate, 10) && isElementLoaded(currentTime, 10)) {
 			SimpleUtils.pass("Current date and time are loaded successfully");
 			String dateFromDashboard = getCurrentDateFromDashboard() + " " + currentTime.getText().toUpperCase();
-			String dateFromLocation = getDateFromTimeZoneOfLocation("EEEE, MMMM d H:mm");
+			if (dateFromDashboard.toLowerCase().contains("am") || dateFromDashboard.toLowerCase().contains("pm")) {
+				dateFormat = "EEEE, MMMM d h:mm a";
+			} else {
+				dateFormat = "EEEE, MMMM d H:mm";
+			}
+			String dateFromLocation = getDateFromTimeZoneOfLocation(dateFormat);
 			if (dateFromDashboard.equals(dateFromLocation)) {
 				SimpleUtils.pass("Date and time shows according to the US(Particular location) timing successfully");
 			} else {
