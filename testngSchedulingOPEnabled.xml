@@ -8,14 +8,12 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-<!--======================================================Start - This is OP tests===================================================-->
-
     <test name="Scheduling OP Enabled Test">
         <classes>
             <class name="com.legion.tests.core.SchedulingOPEnabledTest">
                 <methods>
                     <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />
-                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
+<!--                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />-->
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin" />
                     <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
@@ -73,12 +71,10 @@
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingTMAccessAsTeamMember" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin" />
-
+                    
                 </methods>
             </class>
         </classes>
     </test>
-
-<!--======================================================End - This is Scheduling tests==============================================-->
 
 </suite> <!-- Suite -->
