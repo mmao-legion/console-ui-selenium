@@ -709,7 +709,6 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
-//用class属性是否包含ng-not-empty来判断是否被勾选上
 	@FindBy(css="sub-content-box[box-title=\"Time of Day\"] input-field[label=\"Custom Formula?\"] input")
 	private WebElement checkBoxOfTimeOfDay;
 	@FindBy(css="div[ng-if=\"$ctrl.isTimeOfTheDayFormula\"] textarea")
@@ -764,10 +763,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement mealAndRestBreakSection;
 	@FindBy(css="span[ng-click=\"$ctrl.addBreak('M')\"] span.ml-5.ng-binding")
 	private WebElement addMealBreakButton;
-	//每个元素的后面再➕一个 i 就是delete button 的定位了
 	@FindBy(css="sub-content-box.breaks div.col-sm-5:nth-child(1) table tr[ng-repeat]")
 	private List<WebElement> mealBreakList;
-	//每个元素的后面再➕一个 i 就是delete button 的定位了
 	@FindBy(css="sub-content-box.breaks div.col-sm-1.plr-0-0+div table tr[ng-repeat]")
 	private List<WebElement> restBreakList;
 	@FindBy(css="span[ng-click=\"$ctrl.addBreak('R')\"] span.ml-5.ng-binding")
@@ -910,5 +907,107 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Still have no rest break info!",false);
 		}
 	}
+
+	@FindBy(css="sub-content-box.num-shifts input-field[type=\"number\"] input")
+	private WebElement shiftsNumberInputField;
+	@FindBy(css="sub-content-box.num-shifts input-field[type=\"number\"] div")
+	private WebElement valueOfShiftsNumber;
+	@FindBy(css="sub-content-box.num-shifts input-field[type=\"checkbox\"] input")
+	private WebElement checkBoxOfNumberOfShifts;
+	@FindBy(css="sub-content-box.num-shifts input-field[type=\"checkbox\"] input")
+	private WebElement checkBoxStatusOfNumberOfShifts;
+	@FindBy(css="sub-content-box.num-shifts input-field[type=\"textarea\"] textarea")
+	private WebElement formulaTextAreaOfNumberOfShifts;
+	@FindBy(css="sub-content-box.num-shifts input-field[type=\"textarea\"] div")
+	private WebElement formulaOfNumberOfShifts;
+
+	@Override
+	public void inputNumberOfShiftsField(String shiftsNumber) throws Exception{
+		if(isElementEnabled(shiftsNumberInputField)){
+			shiftsNumberInputField.click();
+			shiftsNumberInputField.clear();
+			shiftsNumberInputField.sendKeys(shiftsNumber);
+			waitForSeconds(2);
+			String shiftsNumberValue = valueOfShiftsNumber.getAttribute("innerText").trim();
+			if(shiftsNumberValue.equals(shiftsNumber)){
+				SimpleUtils.pass("User can input value in shifts number field successfully!");
+			}else{
+				SimpleUtils.fail("User can NOT input value in shifts number field successfully!",false);
+			}
+		}
+	}
+
+	@Override
+	public void validCheckBoxOfNumberOfShiftsIsClickable() throws Exception{
+		if(isElementEnabled(checkBoxOfNumberOfShifts)){
+			clickTheElement(checkBoxOfNumberOfShifts);
+			if(isElementEnabled(formulaTextAreaOfNumberOfShifts)){
+				SimpleUtils.pass("User can click the check box of Number Of Shifts successfully!");
+			}else {
+				SimpleUtils.fail("User failed to click the check box of Number Of Shifts!",false);
+			}
+		}else{
+			SimpleUtils.fail("The check box of Number Of Shifts is not shown.",false);
+		}
+	}
+
+	@Override
+	public void inputFormulaInFormulaTextAreaOfNumberOfShifts(String shiftNumberFormula) throws Exception{
+		if(isElementEnabled(formulaTextAreaOfNumberOfShifts)){
+			clickTheElement(formulaTextAreaOfNumberOfShifts);
+			formulaTextAreaOfNumberOfShifts.sendKeys(shiftNumberFormula);
+			if(formulaOfNumberOfShifts.getAttribute("innerText").trim().equals(shiftNumberFormula)){
+				SimpleUtils.pass("User can input formula for number of shifts successfully!");
+			}else{
+				SimpleUtils.fail("User can NOT input formula for number of shifts successfully!",false);
+			}
+		}else {
+			SimpleUtils.fail("Formula text area of Number Of Shifts is not showing yet.",false);
+		}
+	}
+
+	@FindBy(css="div.badges-edit-wrapper div.lg-button-group div")
+	private List<WebElement> badgeOptions;
+	@FindBy(css="div.badges-edit-wrapper-scroll tbody tr")
+	private List<WebElement> badgesList;
+
+	@Override
+	public void selectBadgesForAdvanceStaffingRules() throws Exception{
+		if(isElementEnabled(badgesSection)){
+			for(WebElement badgeOption:badgeOptions){
+				if(isElementEnabled(badgeOption)){
+					clickTheElement(badgeOption);
+					waitForSeconds(2);
+					String classValue = badgeOption.getAttribute("class").trim();
+					if(classValue.contains("lg-button-group-selected")){
+						SimpleUtils.pass("User can click badge option successfully!");
+					}else {
+						SimpleUtils.fail("User failed to click badge option successfully!",false);
+					}
+				}else {
+					SimpleUtils.fail(badgeOption.findElement(By.cssSelector("span")).getText().trim() + " is not shown for user!",false);
+				}
+			}
+			if(badgesList.size()!=0){
+				WebElement checkBoxInputField = badgesList.get(0).findElement(By.cssSelector("input"));
+				checkBoxInputField.click();
+				String classValue = checkBoxInputField.getAttribute("class").trim();
+				if(classValue.contains("ng-not-empty")){
+					String badgeName = badgesList.get(0).findElement(By.cssSelector("td")).getText().trim();
+					SimpleUtils.pass("User can select " + badgeName + " Successfully!");
+				}else {
+					SimpleUtils.fail("User failed to select badge.",false);
+				}
+			}else{
+				SimpleUtils.fail("There is no bage info in system so far!",false);
+			}
+		}
+	}
+
+	@FindBy(css="div.settings-work-rule-delete-icon")
+	private WebElement crossButton;
+	@FindBy(css="div.settings-work-rule-save-icon")
+	private WebElement checkMarkButton;
+
 
 }

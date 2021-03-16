@@ -101,6 +101,8 @@
                     <include name="verifyTimeOfDayEndSection"/>
                     <include name="verifyTimeOfDayFormulaSection"/>
                     <include name="verifyMealAndRestBreaks"/>
+                    <include name="verifyNumberOfShifts"/>
+                    <include name="verifyBadgesOfAdvanceStaffingRules"/>
                 </methods>
             </class>
         </classes>
