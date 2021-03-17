@@ -1115,4 +1115,80 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 	}
 
+	@FindBy(css = "modal[modal-title=\"Adjust Forecast Confirmation\"]")
+	private WebElement adjustForecastConfirmation;
+	@FindBy(css = "div[data-content=\"Decrease\"]>select")
+	private WebElement directionChoicesSelector;
+	@FindBy(css = "input-field[value=\"job.forecastCategoryType\"]>ng-form>div:nth-child(3)>select")
+	private WebElement categoryTypeSelector;
+	@FindBy(css = "input-field[value=\"job.adjustmentValue\"]>ng-form>input")
+	private WebElement adjustmentValueInput;
+	@FindBy(css = "input-field[options=\"adjustmentTypes\"]>ng-form>div:nth-child(3)>select")
+	private WebElement adjustmentTypeSelector;
+
+	@Override
+	public boolean verifyLayoutOfAdjustForecast() {
+		if (isElementEnabled(jobTitleInputBox,5)
+				&& isElementEnabled(jobCommentsInputBox,5) && isElementEnabled(addLocationBtn,5)
+				&& isElementEnabled(directionChoicesSelector,5) &&  isElementEnabled(categoryTypeSelector,5)
+				&& isElementEnabled(adjustmentValueInput,5) && isElementEnabled(adjustmentTypeSelector,5)
+		) {
+			SimpleUtils.pass("Adjust forecast page show well");
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void selectDirectionChoices(String directionChoices) throws Exception {
+		if (isElementEnabled(directionChoicesSelector,5)) {
+			selectByVisibleText(directionChoicesSelector,directionChoices);
+			SimpleUtils.pass("Direction Choices is " + directionChoices);
+		}else
+			SimpleUtils.fail("Direction Choices in adjust forecast  load failed",false);
+	}
+
+	@Override
+	public void selectCategoryTypes(String categoryType) throws Exception {
+		if (isElementEnabled(categoryTypeSelector,5)) {
+			selectByVisibleText(categoryTypeSelector,categoryType);
+			SimpleUtils.pass("Direction Choices is " +categoryType);
+		}else
+			SimpleUtils.fail("Category Type Selector in adjust forecast  load failed",false);
+	}
+
+	@Override
+	public void inputAdjustmentValue(String adjustmentValue) {
+		if (isElementEnabled(adjustmentValueInput,5)) {
+			adjustmentValueInput.clear();
+			adjustmentValueInput.sendKeys(adjustmentValue);
+			SimpleUtils.pass("Adjustment Value is " +adjustmentValue);
+		}else
+			SimpleUtils.fail("Adjustment Value in adjust forecast  load failed",false);
+	}
+
+	@Override
+	public void selectAdjustmentType(String adjustmentType) throws Exception {
+		if (isElementEnabled(adjustmentTypeSelector,5)) {
+			selectByVisibleText(adjustmentTypeSelector,adjustmentType);
+			SimpleUtils.pass("Adjustment Type is " +adjustmentType);
+		}else
+			SimpleUtils.fail("Adjustment Type selector in adjust forecast  load failed",false);
+	}
+
+	@Override
+	public void verifyAdjustForecastConfirmationPage(String jobTitle, String adjustmentValue, String directionChoices, String categoryType, String searchTaskText) {
+		String confirmationText = adjustForecastConfirmation.getText();
+
+		if (isElementEnabled(adjustForecastConfirmation,5)) {
+			if (confirmationText.contains(jobTitle)&& confirmationText.contains(adjustmentValue)&&
+					confirmationText.contains(directionChoices)&& confirmationText.contains(categoryType) && confirmationText.contains(searchTaskText) &&isElementEnabled(cancelBtnInJobPopUpPage,5)
+					&& isElementEnabled(executeButton,3)) {
+				SimpleUtils.pass("Adjust forecast confirmation page show well");
+			}
+		}else
+			SimpleUtils.fail("Adjust forecast confirmation page load failed",false);
+
+	}
+
 }

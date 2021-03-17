@@ -79,7 +79,7 @@
                     <include name="verifyCreateScheduleJobFunction" />
                     <include name="verifyAbnormalCheatJobFunction" />
                     <include name="verifyAdjustBudgetJobFunction" />
-
+                    <include name="verifyAdjustForecastJobFunction"/>
 
 
 

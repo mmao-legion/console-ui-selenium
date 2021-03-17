@@ -507,9 +507,10 @@ public class JobTest extends TestBase {
             String searchText = "OMLocation3";
             String searchTaskText = "OMLocation3";
             int index = 0;
-            String budgetAssignmentNum = "10";
-            String workRole = "Lead Sales Associate";
-            String taskName = "Cleaning";
+            String adjustmentValue = "10";
+            String directionChoices = "Decrease";
+            String categoryType = "Transactions";
+            String adjustmentType ="Percent";
 
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
             jobsPage.iCanEnterJobsTab();
@@ -518,20 +519,17 @@ public class JobTest extends TestBase {
                 jobsPage.selectJobType(jobType);
                 jobsPage.selectWeekForJobToTakePlace();
                 jobsPage.clickOkBtnInCreateNewJobPage();
-                if (jobsPage.verifyLayoutOfAdjustBudget()) {
+                if (jobsPage.verifyLayoutOfAdjustForecast()) {
                     jobsPage.inputJobTitle(jobTitle);
                     jobsPage.inputJobComments(commentText);
                     jobsPage.addLocationBtnIsClickable();
                     jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
-                    jobsPage.iCanSetUpBudgetAssignmentNum(budgetAssignmentNum);
-                    //add tasks
-                    jobsPage.addTaskButtonIsClickable();
-                    jobsPage.iCanAddTasks(searchText,index,taskName);
-                    //add work roles
-                    jobsPage.addWorkRoleButtonIsClickable();
-                    jobsPage.iCanAddWorkRoles(searchText,index,workRole);
+                    jobsPage.selectDirectionChoices(directionChoices);
+                    jobsPage.selectCategoryTypes(categoryType);
+                    jobsPage.inputAdjustmentValue(adjustmentValue);
+                    jobsPage.selectAdjustmentType(adjustmentType);
                     jobsPage.createBtnIsClickableInAdjustBudgetJob();
-                    jobsPage.verifyAdjustBudgetConfirmationPage(jobTitle,budgetAssignmentNum,taskName,workRole);
+                    jobsPage.verifyAdjustForecastConfirmationPage(jobTitle,adjustmentValue,directionChoices,categoryType,searchTaskText);
                     jobsPage.cancelBthInAdjustBudgetConfirmationPageIsClickable();
                     jobsPage.executeBtnIsClickable();
                     jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
