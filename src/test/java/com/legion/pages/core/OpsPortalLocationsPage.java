@@ -211,6 +211,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
+			waitForSeconds(3);
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			clickTheElement(state);
 			waitForSeconds(3);
@@ -603,7 +604,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Export location page show well");
 			}else
 				SimpleUtils.fail("Export location page load failed",true);
-
+			waitForSeconds(2);
 			click(exportAllRadio);
 			click(okBtnInExportLocationPage);
 			waitForSeconds(10);

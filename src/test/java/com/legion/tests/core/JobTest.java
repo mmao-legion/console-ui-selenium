@@ -440,22 +440,22 @@ public class JobTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate release schedule job function")
+    @TestName(description = "Validate adjust budget job function")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAdjustJobFunction(String browser, String username, String password, String location) throws Exception {
-
-
+    public void verifyAdjustBudgetJobFunction(String browser, String username, String password, String location) throws Exception {
         try {
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime =  dfs.format(new Date());
-            String jobType = "Release Schedule";
-            String jobTitle = "AutoReleaseJob"+currentTime;
+            String jobType = "Adjust Budget";
+            String jobTitle = "AutoAdjustBudgetJob"+currentTime;
             setJobName(jobTitle);
             String commentText = "created by automation scripts";
             String searchText = "OMLocation3";
+            String searchTaskText = "OMLocation3";
             int index = 0;
-            String releaseDay = "10";
-            String timeForRelease = "0";
+            String budgetAssignmentNum = "10";
+            String workRole = "Lead Sales Associate";
+            String taskName = "Cleaning";
 
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
             jobsPage.iCanEnterJobsTab();
@@ -464,15 +464,77 @@ public class JobTest extends TestBase {
                 jobsPage.selectJobType(jobType);
                 jobsPage.selectWeekForJobToTakePlace();
                 jobsPage.clickOkBtnInCreateNewJobPage();
-                jobsPage.inputJobTitle(jobTitle);
-                jobsPage.inputJobComments(commentText);
-                jobsPage.addLocationBtnIsClickable();
-                jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
-                jobsPage.iCanClickOnCreatAndReleaseCheckBox();
-                jobsPage.iCanSetUpDaysBeforeRelease(releaseDay);
-                jobsPage.iCanSetUpTimeOfRelease(timeForRelease);
-                jobsPage.createBtnIsClickable();
-                jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+                if (jobsPage.verifyLayoutOfAdjustBudget()) {
+                    jobsPage.inputJobTitle(jobTitle);
+                    jobsPage.inputJobComments(commentText);
+                    jobsPage.addLocationBtnIsClickable();
+                    jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
+                    jobsPage.iCanSetUpBudgetAssignmentNum(budgetAssignmentNum);
+                    //add tasks
+                    jobsPage.addTaskButtonIsClickable();
+                    jobsPage.iCanAddTasks(searchText,index,taskName);
+                    //add work roles
+                    jobsPage.addWorkRoleButtonIsClickable();
+                    jobsPage.iCanAddWorkRoles(searchText,index,workRole);
+                    jobsPage.createBtnIsClickableInAdjustBudgetJob();
+                    jobsPage.verifyAdjustBudgetConfirmationPage(jobTitle,budgetAssignmentNum,taskName,workRole);
+                    jobsPage.cancelBthInAdjustBudgetConfirmationPageIsClickable();
+                    jobsPage.executeBtnIsClickable();
+                    jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+                }
+
+            }else
+                SimpleUtils.fail("Create job pop up page load failed",false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate adjust forecast job function")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAdjustForecastJobFunction(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime =  dfs.format(new Date());
+            String jobType = "Adjust Forecast";
+            String jobTitle = "AutoAdjustForecastJob"+currentTime;
+            setJobName(jobTitle);
+            String commentText = "created by automation scripts";
+            String searchText = "OMLocation3";
+            String searchTaskText = "OMLocation3";
+            int index = 0;
+            String adjustmentValue = "10";
+            String directionChoices = "Decrease";
+            String categoryType = "Transactions";
+            String adjustmentType ="Percent";
+
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.iCanEnterCreateNewJobPage();
+            if (jobsPage.verifyCreatNewJobPopUpWin()) {
+                jobsPage.selectJobType(jobType);
+                jobsPage.selectWeekForJobToTakePlace();
+                jobsPage.clickOkBtnInCreateNewJobPage();
+                if (jobsPage.verifyLayoutOfAdjustForecast()) {
+                    jobsPage.inputJobTitle(jobTitle);
+                    jobsPage.inputJobComments(commentText);
+                    jobsPage.addLocationBtnIsClickable();
+                    jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
+                    jobsPage.selectDirectionChoices(directionChoices);
+                    jobsPage.selectCategoryTypes(categoryType);
+                    jobsPage.inputAdjustmentValue(adjustmentValue);
+                    jobsPage.selectAdjustmentType(adjustmentType);
+                    jobsPage.createBtnIsClickableInAdjustBudgetJob();
+                    jobsPage.verifyAdjustForecastConfirmationPage(jobTitle,adjustmentValue,directionChoices,categoryType,searchTaskText);
+                    jobsPage.cancelBthInAdjustBudgetConfirmationPageIsClickable();
+                    jobsPage.executeBtnIsClickable();
+                    jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+                }
+
             }else
                 SimpleUtils.fail("Create job pop up page load failed",false);
 

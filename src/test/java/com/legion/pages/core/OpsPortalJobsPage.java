@@ -937,4 +937,258 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			SimpleUtils.fail("Page select load failed",true);
 
 	}
+	@FindBy(css = "om-job-details__title")
+	private WebElement jobDetailsTitle;
+
+
+	@FindBy(css = "sub-content-box[box-title=\"Budget Adjustment\"]")
+	private WebElement subContentBudgetAdjustment;
+	@FindBy(css = "input-field[ng-attr-disabled=\"adjustBudgetDisabled\"]>ng-form>div.select-wrapper>select")
+	private List<WebElement> decreaseSelector;
+	@FindBy(css = "input[type=\"number\"]")
+	private WebElement budgetAdjustNum;
+	@FindBy(css = "sub-content-box[box-title=\"What tasks would you like to apply this budget to?\"]")
+	private WebElement subContentTask;
+	@FindBy(css = "lg-button[label=\"Add Task\"]")
+	private WebElement addTaskButton;
+	@FindBy(css = "sub-content-box[box-title=\"What work roles would you like to apply this budget to?\"]")
+	private WebElement subContentWorkRole;
+	@FindBy(css = "lg-button[label=\"Add Work Role\"]")
+	private WebElement addWorkRoleButton;
+	@FindBy(css="tr[ng-repeat=\"task in filteredTasks track by $index\"]")
+	private List<WebElement> taskRowsInAddTasks;
+	@FindBy(css = "input[placeholder=\"Search by task...\"]")
+	private WebElement searchTaskInputBox;
+	@FindBy(css = "modal[modal-title=\"Add Task For Adjust Budget\"]")
+	private WebElement addTaskForAdjustBudgetPopUp;
+	@FindBy(css = "lg-button[label=\"OK\"]")
+	private WebElement okBtnInAddTaskForAdjustBudgetPopUp;
+
+	@FindBy(css="tr[ng-repeat=\"wr in filteredWorkRoles\"]")
+	private List<WebElement> workRoleRowsInAddWorkRoles;
+	@FindBy(css = "modal[modal-title=\"Add Work Role For Adjust Budget\"]")
+	private WebElement addWorkRolesTitleForAdjustBudgetPopUp;
+	@FindBy(css = "input[placeholder=\"Search by work role...\"]")
+	private WebElement searchWorkRolesInputBox;
+
+	//adjust budget confirmation
+	@FindBy(css = "modal[modal-title=\"Adjust Budget Confirmation\"]")
+	private WebElement adjustBudgetConfirmationTitle;
+	@FindBy(css = "lg-button[label=\"Execute\"]")
+	private WebElement executeButton;
+
+	@Override
+	public boolean verifyLayoutOfAdjustBudget() {
+		if (isElementEnabled(jobTitleInputBox,5)
+		&& isElementEnabled(jobCommentsInputBox,5) && isElementEnabled(addLocationBtn,5)
+		&& isElementEnabled(subContentBudgetAdjustment,5) &&  areListElementVisible(decreaseSelector,5)
+				&& isElementEnabled(subContentTask,5) && isElementEnabled(subContentWorkRole,5)
+		) {
+			SimpleUtils.pass("Adjust budget page show well");
+			return true;
+		}
+		return false;
 	}
+
+	@Override
+	public void iCanSetUpBudgetAssignmentNum(String budgetAssignmentNum) {
+
+		if (isElementEnabled(budgetAdjustNum,5)) {
+			budgetAdjustNum.clear();
+			budgetAdjustNum.sendKeys(budgetAssignmentNum);
+		}else
+			SimpleUtils.fail("Adjust budget input box load failed",false);
+
+	}
+
+	@Override
+	public void addTaskButtonIsClickable() {
+		if ( isElementEnabled(addTaskButton,5)) {
+			click(addTaskButton);
+			if (areListElementVisible(taskRowsInAddTasks,5)) {
+				SimpleUtils.pass("Add task button in adjust budget is clickable");
+			}else
+				SimpleUtils.fail("Add task button load failed",false);
+		}
+
+	}
+
+	@Override
+	public void iCanAddTasks(String searchText, int index, String taskName) {
+		waitForSeconds(3);
+		if (isElementEnabled(addTaskForAdjustBudgetPopUp,5)) {
+			searchTaskInputBox.sendKeys(taskName);
+			searchTaskInputBox.sendKeys(Keys.ENTER);
+			waitForSeconds(5);
+			if (taskRowsInAddTasks.size()>0) {
+				WebElement firstRow = taskRowsInAddTasks.get(index).findElement(By.cssSelector("input[type=\"checkbox\"]"));
+				click(firstRow);
+				click(okBtnInCreateNewJobPage);
+			}else
+				SimpleUtils.report("Search task result is 0");
+
+		}else
+			SimpleUtils.fail("Select a task window load failed",true);
+	}
+
+	@Override
+	public void addWorkRoleButtonIsClickable() {
+		if ( isElementEnabled(addWorkRoleButton,5)) {
+			click(addWorkRoleButton);
+			if (isElementEnabled(addWorkRolesTitleForAdjustBudgetPopUp,5)) {
+				SimpleUtils.pass("Add work role button in adjust budget is clickable");
+			}else
+				SimpleUtils.fail("Add work role button load failed",false);
+		}
+	}
+
+	@Override
+	public void iCanAddWorkRoles(String searchText, int index, String workRole) {
+		if (isElementEnabled(addWorkRoleButton,5)) {
+			searchWorkRolesInputBox.sendKeys(workRole);
+			searchWorkRolesInputBox.sendKeys(Keys.ENTER);
+			waitForSeconds(5);
+			if (workRoleRowsInAddWorkRoles.size()>0) {
+				WebElement firstRow = workRoleRowsInAddWorkRoles.get(index).findElement(By.cssSelector("input[type=\"checkbox\"]"));
+				click(firstRow);
+				click(okBtnInCreateNewJobPage);
+			}else
+				SimpleUtils.report("Search work role result is 0");
+
+		}else
+			SimpleUtils.fail("Select work role window load failed",true);
+	}
+
+	@Override
+	public void executeBtnIsClickable() {
+		scrollToBottom();
+		click(createBtn);
+		if ( isElementEnabled(executeButton,5)) {
+			click(executeButton);
+			if (isElementEnabled(createNewJobBtn,10)) {
+				SimpleUtils.pass("Execute button in adjust budget is clickable");
+			}else
+				SimpleUtils.fail("Execute button load failed",false);
+		}
+	}
+
+	@Override
+	public void createBtnIsClickableInAdjustBudgetJob() throws Exception {
+			scrollToBottom();
+		if (isElementLoaded(createBtn,10)){
+			click(createBtn);
+			if(isElementLoaded(executeButton, 5)) {
+				SimpleUtils.pass("Create button in adjust budget job is clickable");
+			}
+		}else{
+			SimpleUtils.fail("Create button in adjust budget job load failed",false);
+		}
+	}
+
+
+	@FindBy(css = "modal[modal-title=\"Adjust Budget Confirmation\"]")
+	private WebElement adjustBudgetPopUp;
+	@Override
+	public void verifyAdjustBudgetConfirmationPage(String jobTitle, String budgetAssignmentNum, String taskName, String workRole) {
+		String confirmationText = adjustBudgetConfirmationTitle.getText();
+
+		if (isElementEnabled(adjustBudgetConfirmationTitle,5)) {
+			if (confirmationText.contains(jobTitle)&& confirmationText.contains(budgetAssignmentNum)&&
+			confirmationText.contains(taskName)&& confirmationText.contains(workRole) && isElementEnabled(cancelBtnInJobPopUpPage,5)
+			&& isElementEnabled(executeButton,3)) {
+				SimpleUtils.pass("Adjust budget confirmation page show well");
+			}
+		}else
+			SimpleUtils.fail("Adjust budget confirmation page load failed",false);
+				
+	}
+
+	@Override
+	public void cancelBthInAdjustBudgetConfirmationPageIsClickable(){
+		if (isElementEnabled(cancelBtnInJobPopUpPage,3)) {
+			click(cancelBtnInCopyJobPopUpWins);
+			if (isElementEnabled(createBtn,3)) {
+				SimpleUtils.pass("Cancel button in adjust budget confirmation page is clickable");
+			}
+		}else
+			SimpleUtils.fail("Cancel button in adjust budget confirmation page load failed",false);
+
+	}
+
+	@FindBy(css = "modal[modal-title=\"Adjust Forecast Confirmation\"]")
+	private WebElement adjustForecastConfirmation;
+	@FindBy(css = "div[data-content=\"Decrease\"]>select")
+	private WebElement directionChoicesSelector;
+	@FindBy(css = "input-field[value=\"job.forecastCategoryType\"]>ng-form>div:nth-child(3)>select")
+	private WebElement categoryTypeSelector;
+	@FindBy(css = "input-field[value=\"job.adjustmentValue\"]>ng-form>input")
+	private WebElement adjustmentValueInput;
+	@FindBy(css = "input-field[options=\"adjustmentTypes\"]>ng-form>div:nth-child(3)>select")
+	private WebElement adjustmentTypeSelector;
+
+	@Override
+	public boolean verifyLayoutOfAdjustForecast() {
+		if (isElementEnabled(jobTitleInputBox,5)
+				&& isElementEnabled(jobCommentsInputBox,5) && isElementEnabled(addLocationBtn,5)
+				&& isElementEnabled(directionChoicesSelector,5) &&  isElementEnabled(categoryTypeSelector,5)
+				&& isElementEnabled(adjustmentValueInput,5) && isElementEnabled(adjustmentTypeSelector,5)
+		) {
+			SimpleUtils.pass("Adjust forecast page show well");
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void selectDirectionChoices(String directionChoices) throws Exception {
+		if (isElementEnabled(directionChoicesSelector,5)) {
+			selectByVisibleText(directionChoicesSelector,directionChoices);
+			SimpleUtils.pass("Direction Choices is " + directionChoices);
+		}else
+			SimpleUtils.fail("Direction Choices in adjust forecast  load failed",false);
+	}
+
+	@Override
+	public void selectCategoryTypes(String categoryType) throws Exception {
+		if (isElementEnabled(categoryTypeSelector,5)) {
+			selectByVisibleText(categoryTypeSelector,categoryType);
+			SimpleUtils.pass("Direction Choices is " +categoryType);
+		}else
+			SimpleUtils.fail("Category Type Selector in adjust forecast  load failed",false);
+	}
+
+	@Override
+	public void inputAdjustmentValue(String adjustmentValue) {
+		if (isElementEnabled(adjustmentValueInput,5)) {
+			adjustmentValueInput.clear();
+			adjustmentValueInput.sendKeys(adjustmentValue);
+			SimpleUtils.pass("Adjustment Value is " +adjustmentValue);
+		}else
+			SimpleUtils.fail("Adjustment Value in adjust forecast  load failed",false);
+	}
+
+	@Override
+	public void selectAdjustmentType(String adjustmentType) throws Exception {
+		if (isElementEnabled(adjustmentTypeSelector,5)) {
+			selectByVisibleText(adjustmentTypeSelector,adjustmentType);
+			SimpleUtils.pass("Adjustment Type is " +adjustmentType);
+		}else
+			SimpleUtils.fail("Adjustment Type selector in adjust forecast  load failed",false);
+	}
+
+	@Override
+	public void verifyAdjustForecastConfirmationPage(String jobTitle, String adjustmentValue, String directionChoices, String categoryType, String searchTaskText) {
+		String confirmationText = adjustForecastConfirmation.getText();
+
+		if (isElementEnabled(adjustForecastConfirmation,5)) {
+			if (confirmationText.contains(jobTitle)&& confirmationText.contains(adjustmentValue)&&
+					confirmationText.contains(directionChoices)&& confirmationText.contains(categoryType) && confirmationText.contains(searchTaskText) &&isElementEnabled(cancelBtnInJobPopUpPage,5)
+					&& isElementEnabled(executeButton,3)) {
+				SimpleUtils.pass("Adjust forecast confirmation page show well");
+			}
+		}else
+			SimpleUtils.fail("Adjust forecast confirmation page load failed",false);
+
+	}
+
+}
