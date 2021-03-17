@@ -313,6 +313,7 @@ public abstract class TestBase {
 
     public static void visitPage(Method testMethod){
 
+        System.out.println("-------------------Start running test: " + testMethod.getName() + "-------------------");
         setEnvironment(propertyMap.get("ENVIRONMENT"));
         Enterprise e = testMethod.getAnnotation(Enterprise.class);
         String enterpriseName = null;
