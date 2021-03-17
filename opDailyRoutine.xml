@@ -41,6 +41,9 @@
                     <include name="verifySearchDistrictFunction" />
                     <include name="verifyAddOrUpdateDistrictFunction" />
                     <include name="verifyDisableEnableDistrictFunction" />
+                    <!--                    Global dynamic group test cases-->
+                    <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />
+
                 </methods>
             </class>
         </classes>

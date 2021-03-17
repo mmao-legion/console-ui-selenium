@@ -20,6 +20,8 @@
                     <include name="verifyDisableEnableLocationFunction" />
                     <include name="verifyImportLocationDistrict" />
                     <include name="verifyExportLocationDistrict" />
+                    <!--                    Global dynamic group test cases-->
+                    <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />
 
 
                 </methods>
