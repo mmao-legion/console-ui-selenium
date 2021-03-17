@@ -37,4 +37,8 @@ public interface ConfigurationPage {
     public void addNewRestBreak(List<String> restBreakValue) throws Exception;
     public void addMultipleRestBreaks(List<String> restBreakValue) throws Exception;
     public void deleteRestBreak() throws Exception;
+    public void inputNumberOfShiftsField(String shiftsNumber) throws Exception;
+    public void validCheckBoxOfNumberOfShiftsIsClickable() throws Exception;
+    public void inputFormulaInFormulaTextAreaOfNumberOfShifts(String shiftNumberFormula) throws Exception;
+    public void selectBadgesForAdvanceStaffingRules() throws Exception;
 }
