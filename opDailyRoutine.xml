@@ -104,6 +104,7 @@
                     <include name="verifyMealAndRestBreaks"/>
                     <include name="verifyNumberOfShifts"/>
                     <include name="verifyBadgesOfAdvanceStaffingRules"/>
+                    <include name="verifyCrossAndCheckMarkButtonOfAdvanceStaffingRules"/>
                 </methods>
             </class>
         </classes>

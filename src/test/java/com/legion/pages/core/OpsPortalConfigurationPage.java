@@ -474,6 +474,35 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 
 	}
+
+	@FindBy(css="sub-content-box[box-title=\"Days of Week\"] div.day-selector input-field")
+	private List<WebElement> daysOfWeekList;
+
+	@Override
+	public void selectDaysForDaysOfWeekSection(List<String> days) throws Exception{
+		if(daysOfWeekCheckBoxList.size()>1){
+			for(String day:days){
+				for(WebElement daysOfWeek:daysOfWeekList){
+					 String dayname = daysOfWeek.findElement(By.cssSelector("label.input-label")).getText().trim();
+					 WebElement checkBoxOfDay = daysOfWeek.findElement(By.cssSelector("input"));
+					if(day.equals(dayname)){
+						clickTheElement(checkBoxOfDay);
+						if(checkBoxOfDay.getAttribute("class").contains("ng-not-empty")){
+							SimpleUtils.pass(dayname + " has been selected successfully!");
+						}else {
+							SimpleUtils.fail("User failed to select " + dayname,false);
+						}
+						break;
+					}else {
+						continue;
+					}
+				}
+			}
+		}else{
+			SimpleUtils.fail("The formula check box of days of week have been checked on.",false);
+		}
+	}
+
  //below are advanced staffing rule element
 	@FindBy(css="div[class=\"mt-20\"] input-field[value*=\"timeEventOffsetMinutes\"] input")
 	private WebElement shiftStartOffsetMinutes;
@@ -1008,6 +1037,43 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement crossButton;
 	@FindBy(css="div.settings-work-rule-save-icon")
 	private WebElement checkMarkButton;
+	@FindBy(css="div.settings-work-role-detail-edit-rules div.settings-work-rule-container")
+	private List<WebElement> staffingRulesList;
+
+	@Override
+	public void verifyCrossButtonOnAdvanceStaffingRulePage() throws Exception{
+		if(isElementEnabled(crossButton)){
+			clickTheElement(crossButton);
+			String classValue = staffingRulesList.get(staffingRulesList.size()-1).getAttribute("class").trim();
+			if(classValue.contains("deleted")){
+				SimpleUtils.pass("User successfully to click the cross button.");
+			}else {
+				SimpleUtils.fail("User failed to click the cross button.",false);
+			}
+		}else {
+			SimpleUtils.fail("The cross button is not shown on page now",false);
+		}
+	}
+
+	@Override
+	public void verifyCheckMarkButtonOnAdvanceStaffingRulePage() throws Exception{
+		if(isElementEnabled(checkMarkButton)){
+			clickTheElement(checkMarkButton);
+			String classValue = staffingRulesList.get(staffingRulesList.size()-1).getAttribute("class").trim();
+			if(classValue.contains("settings-work-rule-container-border")){
+				SimpleUtils.pass("User successfully to click the checkmark button.");
+			}else {
+				SimpleUtils.fail("User failed to click the checkmark button.",false);
+			}
+		}else {
+			SimpleUtils.fail("The checkmark button is not shown on page now",false);
+		}
+	}
+
+
+
+
+
 
 
 }

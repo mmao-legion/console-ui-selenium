@@ -21,6 +21,7 @@ public interface ConfigurationPage {
     public void verifyCheckBoxOfDaysOfWeekSection() throws Exception;
     public boolean isDaysOfWeekFormulaCheckBoxChecked();
     public void inputFormulaInForDaysOfWeekSection(String formula) throws Exception;
+    public void selectDaysForDaysOfWeekSection(List<String> days) throws Exception;
     public void inputOffsetTimeForShiftStart(String startOffsetTime,String startEventPoint) throws Exception;
     public void validateShiftStartTimeUnitList() throws Exception;
     public List<String> getShiftStartTimeEventList() throws Exception;
@@ -41,4 +42,6 @@ public interface ConfigurationPage {
     public void validCheckBoxOfNumberOfShiftsIsClickable() throws Exception;
     public void inputFormulaInFormulaTextAreaOfNumberOfShifts(String shiftNumberFormula) throws Exception;
     public void selectBadgesForAdvanceStaffingRules() throws Exception;
+    public void verifyCrossButtonOnAdvanceStaffingRulePage() throws Exception;
+    public void verifyCheckMarkButtonOnAdvanceStaffingRulePage() throws Exception;
 }
