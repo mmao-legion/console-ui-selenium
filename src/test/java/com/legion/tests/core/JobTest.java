@@ -542,4 +542,91 @@ public class JobTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Export Result File and Export Task Summary function In Create Schedule Job")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportResultFileAndExportTaskSummaryFunctionInCreateScheduleJob(String browser, String username, String password, String location) throws Exception {
+        try{
+            int index =0;
+            String searchCharactor = "Create Schedule";
+            //go to job tab
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.iCanSearchTheJobWhichICreated(searchCharactor);
+            jobsPage.iCanGoToCreateScheduleJobDetailsPage(index);
+            jobsPage.verifyExportResultFunction();
+            jobsPage.verifyExportTaskSummaryFunction();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Export Result File and Export Task Summary function In Adjust Budget Job")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportResultFileAndExportTaskSummaryFunctionInAdjustBudgetJob(String browser, String username, String password, String location) throws Exception {
+        try{
+            int index =0;
+            String searchCharactor = "Adjust Budget";
+            //go to job tab
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.iCanSearchTheJobWhichICreated(searchCharactor);
+            jobsPage.iCanGoToAdjustBudgetJobDetailsPage(index);
+            jobsPage.verifyExportResultFunction();
+            jobsPage.verifyExportTaskSummaryFunction();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Export Result File In Release Schedule Job")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportResultFileFunctionInReleaseScheduleJob(String browser, String username, String password, String location) throws Exception {
+        try{
+            int index =0;
+            String searchCharactor = "Release Schedule";
+            //go to job tab
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.iCanSearchTheJobWhichICreated(searchCharactor);
+            jobsPage.iCanGoToReleaseScheduleJobDetailsPage(index);
+            jobsPage.verifyExportResultFunction();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Export Result File In Adjust Forecast Job")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportResultFileFunctionInAdjustForecastJob(String browser, String username, String password, String location) throws Exception {
+        try{
+            int index =0;
+            String searchCharactor = "Adjust Forecast";
+            //go to job tab
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.iCanSearchTheJobWhichICreated(searchCharactor);
+            jobsPage.iCanGoToAdjustForecastJobDetailsPage(index);
+            jobsPage.verifyExportResultFunction();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

@@ -80,6 +80,10 @@
                     <include name="verifyAbnormalCheatJobFunction" />
                     <include name="verifyAdjustBudgetJobFunction" />
                     <include name="verifyAdjustForecastJobFunction"/>
+                    <include name="verifyExportResultFileAndExportTaskSummaryFunctionInCreateScheduleJob"/>
+                    <include name="verifyExportResultFileAndExportTaskSummaryFunctionInAdjustBudgetJob"/>
+                    <include name="verifyExportResultFileFunctionInReleaseScheduleJob"/>
+                    <include name="verifyExportResultFileFunctionInAdjustForecastJob"/>
 
 
 
