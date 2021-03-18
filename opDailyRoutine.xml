@@ -112,6 +112,7 @@
                     <include name="verifyNumberOfShifts"/>
                     <include name="verifyBadgesOfAdvanceStaffingRules"/>
                     <include name="verifyCrossAndCheckMarkButtonOfAdvanceStaffingRules"/>
+                    <include name="verifySaveAndCancelButtonOfAdvanceStaffingRules"/>
                 </methods>
             </class>
         </classes>

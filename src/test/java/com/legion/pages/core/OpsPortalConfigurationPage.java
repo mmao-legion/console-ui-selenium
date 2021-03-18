@@ -367,6 +367,33 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	public String getCountOfStaffingRules(String workRole) {
+		String count = null;
+		if (workRoleList.size() != 0) {
+			for (WebElement workRoleItem : workRoleList) {
+				String workRoleName = workRoleItem.findElement(By.cssSelector("td.ng-binding")).getText().trim();
+				//get first char of the work role name
+				char fir = workRole.charAt(0);
+				String newWorkRole = String.valueOf(fir).toUpperCase() + " " + workRole;
+				if (workRoleName.equals(newWorkRole)) {
+					String firstLetter = workRoleItem.findElement(By.cssSelector("lg-button span.ng-binding")).getText().trim().split(" ")[0];
+					if(firstLetter.equals("+")){
+						count = "0";
+						SimpleUtils.pass("There is no staffing rules for this work role");
+					}else  {
+						count = firstLetter;
+						SimpleUtils.pass(workRole + " have " + count + " staffing rules now!");
+					}
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("There is no work role for enterprise now", false);
+		}
+		return count;
+	}
+
+
 	@Override
 	public void checkTheEntryOfAddAdvancedStaffingRule() throws Exception {
 		waitForSeconds(5);
@@ -1070,9 +1097,85 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@FindBy(css="lg-button[label=\"Save\"] button")
+	WebElement saveButtonOnAdvanceStaffingRulePage;
+	@FindBy(css="div.banner-container")
+	WebElement templateDescription;
 
+	public void clickOnSaveButtonOfAdvanceStaffingRule(){
+		if(isElementEnabled(saveButtonOnAdvanceStaffingRulePage)){
+				clickTheElement(saveButtonOnAdvanceStaffingRulePage);
+				waitForSeconds(2);
+				if(isElementEnabled(templateDescription)){
+					SimpleUtils.pass("User can click save button successfully!");
+				}else {
+					SimpleUtils.fail("User can NOT click save button successfully!",false);
+				}
+			}else {
+			SimpleUtils.fail("Save button is not shown well now.",false);
+		}
+	}
 
+	@Override
+	public void saveOneAdvanceStaffingRule(String workRole,List<String> days) throws Exception{
+		//get the staffing rules count before add one new rule
+		int countBeforeSaving = Integer.valueOf(getCountOfStaffingRules(workRole));
+		selectWorkRoleToEdit(workRole);
+		checkTheEntryOfAddAdvancedStaffingRule();
+		verifyAdvancedStaffingRulePageShowWell();
+		selectDaysForDaysOfWeekSection(days);
+		clickOnSaveButtonOfAdvanceStaffingRule();
+        //get the staffing rules count after add one new rule
+		int countAfterSaving = Integer.valueOf(getCountOfStaffingRules(workRole));
 
+		if((countAfterSaving - countBeforeSaving) == 1){
+			SimpleUtils.pass("User have successfully save one new staffing rule.");
+		}else {
+			SimpleUtils.fail("User failed to save one new staffing rule.",false);
+		}
+	}
+
+    @FindBy(css="lg-button[label=\"Cancel\"] button")
+	WebElement cancelButtonOnAdvanceStaffingRulePage;
+	@FindBy(css="lg-button[label=\"Leave this page\"] button")
+	WebElement leaveThisPageButton;
+
+	public void clickOnCancelButtonOfAdvanceStaffingRule(){
+		if(isElementEnabled(cancelButtonOnAdvanceStaffingRulePage)){
+			clickTheElement(cancelButtonOnAdvanceStaffingRulePage);
+			waitForSeconds(2);
+			if(isElementEnabled(leaveThisPageButton)){
+				clickTheElement(leaveThisPageButton);
+				waitForSeconds(2);
+				if(isElementEnabled(templateDescription)){
+					SimpleUtils.pass("User can click cancel button successfully!");
+				}
+			}else {
+				SimpleUtils.fail("User can NOT click cancel button successfully!",false);
+			}
+		}else {
+			SimpleUtils.fail("Cancel button is not shown well now.",false);
+		}
+	}
+
+	@Override
+	public void cancelSaveOneAdvanceStaffingRule(String workRole,List<String> days) throws Exception{
+		//get the staffing rules count before add one new rule
+		int countBeforeSaving = Integer.valueOf(getCountOfStaffingRules(workRole));
+		selectWorkRoleToEdit(workRole);
+		checkTheEntryOfAddAdvancedStaffingRule();
+		verifyAdvancedStaffingRulePageShowWell();
+		selectDaysForDaysOfWeekSection(days);
+		clickOnCancelButtonOfAdvanceStaffingRule();
+		//get the staffing rules count after add one new rule
+		int countAfterSaving = Integer.valueOf(getCountOfStaffingRules(workRole));
+
+		if((countAfterSaving - countBeforeSaving) == 0){
+			SimpleUtils.pass("User have successfully cancel save one new staffing rule.");
+		}else {
+			SimpleUtils.fail("User failed to cancel save one new staffing rule.",false);
+		}
+	}
 
 
 

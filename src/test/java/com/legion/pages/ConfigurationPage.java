@@ -44,4 +44,6 @@ public interface ConfigurationPage {
     public void selectBadgesForAdvanceStaffingRules() throws Exception;
     public void verifyCrossButtonOnAdvanceStaffingRulePage() throws Exception;
     public void verifyCheckMarkButtonOnAdvanceStaffingRulePage() throws Exception;
+    public void saveOneAdvanceStaffingRule(String workRole,List<String> days) throws Exception;
+    public void cancelSaveOneAdvanceStaffingRule(String workRole,List<String> days) throws Exception;
 }
