@@ -112,4 +112,8 @@ public interface JobsPage {
     public void selectAdjustmentType(String adjustmentType) throws Exception;
 
     public void verifyAdjustForecastConfirmationPage(String jobTitle, String adjustmentValue, String directionChoices, String categoryType, String searchTaskText);
+
+    public void verifyExportResultFunction();
+
+    public void verifyExportTaskSummaryFunction();
 }

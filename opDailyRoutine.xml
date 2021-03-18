@@ -41,6 +41,9 @@
                     <include name="verifySearchDistrictFunction" />
                     <include name="verifyAddOrUpdateDistrictFunction" />
                     <include name="verifyDisableEnableDistrictFunction" />
+                    <!--                    Global dynamic group test cases-->
+                    <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />
+
                 </methods>
             </class>
         </classes>
@@ -80,6 +83,10 @@
                     <include name="verifyAbnormalCheatJobFunction" />
                     <include name="verifyAdjustBudgetJobFunction" />
                     <include name="verifyAdjustForecastJobFunction"/>
+                    <include name="verifyExportResultFileAndExportTaskSummaryFunctionInCreateScheduleJob"/>
+                    <include name="verifyExportResultFileAndExportTaskSummaryFunctionInAdjustBudgetJob"/>
+                    <include name="verifyExportResultFileFunctionInReleaseScheduleJob"/>
+                    <include name="verifyExportResultFileFunctionInAdjustForecastJob"/>
 
 
 

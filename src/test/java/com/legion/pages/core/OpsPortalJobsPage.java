@@ -6,6 +6,7 @@ import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -321,7 +322,6 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			List<WebElement> locationDetailsLinks = jobRows.get(index).findElements(By.cssSelector("button[type='button']"));
 			click(locationDetailsLinks.get(index));
 			waitForSeconds(5);
-			String adbcdf  = jobDetails.getText();
 			for (int i = 0; i <jobDetailsSubHeaders.size() ; i++) {
 				if (jobDetails.getText().contains("Job Details") && jobDetails.getText().contains("Week for job to take place")
 						&& jobDetails.getText().contains("Release Schedule Status")&& jobDetails.getText().contains("Locations Selected")
@@ -350,7 +350,6 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			List<WebElement> locationDetailsLinks = jobRows.get(index).findElements(By.cssSelector("button[type='button']"));
 			click(locationDetailsLinks.get(index));
 			waitForSeconds(5);
-			String adbcdf  = jobDetails.getText();
 			for (int i = 0; i <jobDetailsSubHeaders.size() ; i++) {
 				if (jobDetails.getText().contains("Job Details") && jobDetails.getText().contains("Week for job to take place")
 						&& jobDetails.getText().contains("Adjust Budget Status")&&
@@ -1188,6 +1187,27 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			}
 		}else
 			SimpleUtils.fail("Adjust forecast confirmation page load failed",false);
+
+	}
+
+	@Override
+	public void verifyExportResultFunction() {
+		scrollToBottom();
+		if (isElementEnabled(exportResultFileBtn,3) ) {
+			click(exportResultFileBtn);
+			SimpleUtils.pass("Export Result File button is clickable and can download file");
+		}else
+			SimpleUtils.fail("Export Result File button load failed",false);
+
+	}
+
+	@Override
+	public void verifyExportTaskSummaryFunction() {
+		if (isElementEnabled(exportResultSummaryBtn,3) ) {
+			click(exportResultSummaryBtn);
+			SimpleUtils.pass("Export Task Summary button is clickable and can download file");
+		}else
+			SimpleUtils.fail("Export Task Summary button load failed",false);
 
 	}
 

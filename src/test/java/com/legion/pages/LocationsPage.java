@@ -118,13 +118,23 @@ public interface LocationsPage {
 
     public String addWorkforceSharingDGWithOneCriteria(String groupName, String description, String criteria) throws Exception;
 
-    public void iCanDeleteExistingDG();
+    public void iCanDeleteExistingWFSDG();
 
-    public String updateDynamicGroup(String groupName, String criteriaUpdate) throws Exception;
+    public String updateWFSDynamicGroup(String groupName, String criteriaUpdate) throws Exception;
 
     public void verifyPaginationFunctionInDistrict() throws Exception;
 
     public List<String> getAllDayPartsFromGlobalConfiguration() throws Exception;
 
     public void goToGlobalConfigurationInLocations() throws Exception;
+
+    public void searchWFSDynamicGroup(String searchText);
+
+    public void searchClockInDynamicGroup(String searchText) throws Exception;
+
+    public String addClockInDGWithOneCriteria(String groupName, String description, String criteria) throws Exception;
+
+    public String updateClockInDynamicGroup(String groupNameForCloIn, String criteriaUpdate) throws Exception;
+
+    public void iCanDeleteExistingClockInDG();
 }

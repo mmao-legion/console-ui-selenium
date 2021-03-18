@@ -1755,12 +1755,17 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private  List<WebElement> deleteRuleIcon;
 	@FindBy(css = "lg-button[icon=\"'img/legion/add.png'\"]")
 	private  List<WebElement> addDynamicGroupBtn;
-	@FindBy(css = "input-field[placeholder=\"You can search by name and description\"]")
-	private  WebElement dgSearchInput;
-	@FindBy(css = "lg-button[icon=\"'fa-pencil'\"]")
-	private  List<WebElement> editDGIcon;
-	@FindBy(css = "lg-button[icon=\"'fa-times'\"]")
-	private  List<WebElement> deleteDGIcon;
+	@FindBy(css = "input[placeholder=\"You can search by name and description\"]")
+	private  List<WebElement> dgSearchInput;
+	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"clockinDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr:nth-child(2) > td.tr > div > lg-button:nth-child(1) > button")
+	private  List<WebElement> editDGIconInClockIn;
+	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"workForceSharingDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr:nth-child(2) > td.tr > div > lg-button:nth-child(1)")
+	private  List<WebElement> editDGIconInWFS;
+	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"workForceSharingDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr.ng-scope > td.tr > div > lg-button:nth-child(2)")
+	private  List<WebElement> deleteDGIconInWFS;
+	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"clockinDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr.ng-scope > td.tr > div > lg-button:nth-child(2)")
+	private  List<WebElement> deleteDGIconInClockIn;
+
 	@FindBy(css = "tr[ng-repeat=\"group in filterdynamicGroups\"]")
 	private  List<WebElement> groupRows;
 	@FindBy(css = "lg-picker-input[value=\"group.values\"]")
@@ -1821,7 +1826,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				String testInfo = testBtnInfo.getText().trim();
 				click(okBtnInSelectLocation);
 				waitForSeconds(3);
-				searchDynamicGroup(groupName);
+				searchWFSDynamicGroup(groupName);
 				if (groupRows.size()>0) {
 					SimpleUtils.pass("Dynamic group create successfully");
 				}else
@@ -1836,28 +1841,56 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public void iCanDeleteExistingDG() {
+	public void iCanDeleteExistingWFSDG() {
+		waitForSeconds(20);
+		if (groupRows.size()>0) {
+			if (areListElementVisible(deleteDGIconInWFS,30)) {
+				for (WebElement dg: deleteDGIconInWFS) {
+					waitForSeconds(10);
+					click(dg);
+					if (isRemoveDynamicGroupPopUpShowing()) {
+						waitForSeconds(3);
+						click(removeBtnInRemovDGPopup);
+					}else
+						SimpleUtils.fail("loRemove dynamic group page load failed ",false);
+				}
 
-		if (areListElementVisible(deleteDGIcon,30)) {
-			for (WebElement dg: deleteDGIcon) {
-				waitForSeconds(20);
-				click(dg);
-				if (isRemoveDynamicGroupPopUpShowing()) {
-					waitForSeconds(3);
-					click(removeBtnInRemovDGPopup);
-				}else
-					SimpleUtils.fail("loRemove dynamic group page load failed ",false);
-			}
-
+			}else
+				SimpleUtils.report("There is not dynamic group yet");
 		}else
-			SimpleUtils.report("There is not dynamic group yet");
+			SimpleUtils.report("There is no groups which selected");
+
+
+	}
+	@Override
+	public void iCanDeleteExistingClockInDG() {
+		waitForSeconds(20);
+		if (groupRows.size()>0) {
+			if (areListElementVisible(deleteDGIconInClockIn,30)) {
+				for (WebElement dg: deleteDGIconInClockIn) {
+					waitForSeconds(10);
+					click(dg);
+					if (isRemoveDynamicGroupPopUpShowing()) {
+						waitForSeconds(3);
+						click(removeBtnInRemovDGPopup);
+					}else
+						SimpleUtils.fail("loRemove dynamic group page load failed ",false);
+				}
+
+			}else
+				SimpleUtils.report("There is not dynamic group yet");
+		}else
+			SimpleUtils.report("There is no groups which selected");
+
+
 	}
 
-
 	@Override
-	public String updateDynamicGroup(String groupName, String criteriaUpdate) throws Exception {
-
+	public String updateWFSDynamicGroup(String groupName, String criteriaUpdate) throws Exception {
+		waitForSeconds(3);
+		click(editDGIconInWFS.get(0));
 		if (isManagerDGpopShowWell()) {
+			groupNameInput.clear();
 			groupNameInput.sendKeys(groupName+"Update");
 			selectByVisibleText(criteriaSelect,criteriaUpdate);
 			click(criteriaValue);
@@ -1866,7 +1899,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			String testInfo = testBtnInfo.getText().trim();
 			click(okBtnInSelectLocation);
 			waitForSeconds(3);
-			searchDynamicGroup(groupName);
+			searchWFSDynamicGroup(groupName);
 			if (groupRows.size()>0) {
 				SimpleUtils.pass("Dynamic group create successfully");
 			}else
@@ -1897,14 +1930,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}else
 			return false;
 	}
-
-	public void searchDynamicGroup(String searchInputText) throws Exception {
+	@Override
+	public void searchClockInDynamicGroup(String searchInputText) throws Exception {
 		String[] searchLocationCha = searchInputText.split(",");
-		if (isElementLoaded(dgSearchInput, 10) ) {
+		if (areListElementVisible(dgSearchInput, 10) ) {
 			for (int i = 0; i < searchLocationCha.length; i++) {
-				dgSearchInput.clear();
-				dgSearchInput.sendKeys(searchLocationCha[0]);
-				dgSearchInput.sendKeys(Keys.ENTER);
+				dgSearchInput.get(1).clear();
+				dgSearchInput.get(1).sendKeys(searchLocationCha[0]);
+//				dgSearchInput.get(0).sendKeys(Keys.ENTER);
 				waitForSeconds(3);
 				if (groupRows.size()>0) {
 					SimpleUtils.pass("Dynamic group: " + groupRows.size() + " group(s) found  ");
@@ -1919,7 +1952,62 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 
 	}
-// elements on global configuration page
+
+	@Override
+	public String addClockInDGWithOneCriteria(String groupName, String description, String criteria) throws Exception {
+
+		if (areListElementVisible(addDynamicGroupBtn)) {
+			click(addDynamicGroupBtn.get(1));
+			if (isManagerDGpopShowWell()) {
+				groupNameInput.sendKeys(groupName);
+				groupDescriptionInput.sendKeys(description);
+				selectByVisibleText(criteriaSelect,criteria);
+				click(criteriaValue);
+				click(checkboxInCriteriaValue.get(0));
+				click(testBtn);
+				String testInfo = testBtnInfo.getText().trim();
+				click(okBtnInSelectLocation);
+				waitForSeconds(3);
+				searchClockInDynamicGroup(groupName);
+				if (groupRows.size()>0) {
+					SimpleUtils.pass("Dynamic group create successfully");
+				}else
+					SimpleUtils.fail("Dynamic group create failed",false);
+				return testInfo;
+			}else
+				SimpleUtils.fail("Manager Dynamic Group win load failed",false);
+		}else
+			SimpleUtils.fail("Global dynamic group page load failed",false);
+
+		return null;
+	}
+
+	@Override
+	public String updateClockInDynamicGroup(String groupNameForCloIn, String criteriaUpdate) throws Exception {
+		waitForSeconds(3);
+		click(editDGIconInClockIn.get(0));
+		if (isManagerDGpopShowWell()) {
+			groupNameInput.clear();
+			groupNameInput.sendKeys(groupNameForCloIn+"Update");
+			selectByVisibleText(criteriaSelect,criteriaUpdate);
+			click(criteriaValue);
+			click(checkboxInCriteriaValue.get(0));
+			click(testBtn);
+			String testInfo = testBtnInfo.getText().trim();
+			click(okBtnInSelectLocation);
+			waitForSeconds(3);
+			searchClockInDynamicGroup(groupNameForCloIn);
+			if (groupRows.size()>0) {
+				SimpleUtils.pass("Dynamic group create successfully");
+			}else
+				SimpleUtils.fail("Dynamic group create failed",false);
+			return testInfo;
+		}else
+			SimpleUtils.fail("Manager Dynamic Group win load failed",false);
+		return null;
+	}
+
+	// elements on global configuration page
 	@FindBy(css="lg-button[label=\"Edit\"]")
 	private WebElement editOnGlobalConfigPage;
 	@FindBy(css="form-section[form-title=\"Day Parts\"]")
@@ -1935,11 +2023,32 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (isElementEnabled(editOnGlobalConfigPage, 20)) {
 				SimpleUtils.pass("global configuration page load successfully");
 			} else
-				SimpleUtils.fail("global congiguration page load failed", false);
+				SimpleUtils.fail("global configuration page load failed", false);
 		} else
 			SimpleUtils.fail("locations tab load failed in location overview page", false);
 	}
 
+	@Override
+	public void searchWFSDynamicGroup(String searchText) {
+		String[] searchGroupText = searchText.split(",");
+		if (areListElementVisible(dgSearchInput, 10) ) {
+			for (int i = 0; i < searchGroupText.length; i++) {
+				dgSearchInput.clear();
+				dgSearchInput.get(0).sendKeys(searchGroupText[0]);
+				dgSearchInput.get(0).sendKeys(Keys.ENTER);
+				waitForSeconds(3);
+				if (groupRows.size()>0) {
+					SimpleUtils.pass("Dynamic group: " + groupRows.size() + " group(s) found  ");
+					break;
+				} else {
+					dgSearchInput.clear();
+				}
+			}
+
+		} else {
+			SimpleUtils.fail("Search input is not clickable", true);
+		}
+	}
 	public List<String> getAllDayPartsFromGlobalConfiguration() throws Exception{
 		List<String> dayPartsNameList = new ArrayList<String>();
 		if(dayPartsList.size()!=0){

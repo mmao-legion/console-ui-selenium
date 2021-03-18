@@ -1404,15 +1404,17 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Global dynamic group in Locations tab  ")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyGlobalDynamicGroupFunction(String browser, String username, String password, String location) throws Exception {
-//
-//        try{
+    public void verifyGlobalDynamicGroupFunctionInLocationsTab(String browser, String username, String password, String location) throws Exception {
+
+        try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime =  dfs.format(new Date()).trim();
-            String groupName = "AutoCreate" +currentTime;
+            String groupNameForWFS = "AutoWFS" +currentTime;
+            String groupNameForCloIn = "AutoClockIn" +currentTime;
             String description = "AutoCreate" +currentTime;
             String criteria = "Location Name";
             String criteriaUpdate = "Country";
+            String searchText = "AutoCreate";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -1425,17 +1427,25 @@ public class LocationsTest extends TestBase {
             locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
             //go to dynamic group
             locationsPage.goToDynamicGroup();
+            locationsPage.searchWFSDynamicGroup(searchText);
             //remove existing dynamic group
-//            locationsPage.iCanDeleteExistingDG();
-            //create new dynamic group
-            String locationNum = locationsPage.addWorkforceSharingDGWithOneCriteria(groupName,description,criteria);
-            String locationNumAftUpdate = locationsPage.updateDynamicGroup(groupName,criteriaUpdate);
+            locationsPage.iCanDeleteExistingWFSDG();
+            //create new workforce sharing dynamic group
+            String locationNum = locationsPage.addWorkforceSharingDGWithOneCriteria(groupNameForWFS,description,criteria);
+            String locationNumAftUpdate = locationsPage.updateWFSDynamicGroup(groupNameForWFS,criteriaUpdate);
             if (!locationNumAftUpdate.equalsIgnoreCase(locationNum)) {
-                SimpleUtils.pass("Update dynamic group successfully");
+                SimpleUtils.pass("Update workforce sharing dynamic group successfully");
             }
-//        } catch (Exception e){
-//            SimpleUtils.fail(e.getMessage(), false);
-//        }
+            locationsPage.searchClockInDynamicGroup(searchText);
+            locationsPage.iCanDeleteExistingClockInDG();
+            String locationNumForClockIn = locationsPage.addClockInDGWithOneCriteria(groupNameForCloIn,description,criteria);
+            String locationNumForClockInAftUpdate = locationsPage.updateClockInDynamicGroup(groupNameForCloIn,criteriaUpdate);
+            if (!locationNumForClockInAftUpdate.equalsIgnoreCase(locationNumForClockIn)) {
+                SimpleUtils.pass("Update clock in dynamic group successfully");
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
 
     }
 }
