@@ -207,8 +207,8 @@
                 <methods>
                     <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />
                     <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" />
-                    <include name="verifySchoolCalendarListAsInternalAdmin" />
-                    <include name="verifyCreateCalendarAsInternalAdmin" />
+<!--                    <include name="verifySchoolCalendarListAsInternalAdmin" Blocked by bug: SCH-3430/>-->
+<!--                    <include name="verifyCreateCalendarAsInternalAdmin" Blocked by bug: SCH-3430/>-->
 <!--                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" blocked by Bug:SCH-3250/>-->
 <!--                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
 <!--                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
