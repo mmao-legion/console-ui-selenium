@@ -1176,6 +1176,88 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("User failed to cancel save one new staffing rule.",false);
 		}
 	}
+	
+	@Override
+	public void addMutipleAdvanceStaffingRule(String workRole,List<String> days) throws Exception{
+		//get the staffing rules count before add one new rule
+		int countBeforeSaving = Integer.valueOf(getCountOfStaffingRules(workRole));
+		selectWorkRoleToEdit(workRole);
+		checkTheEntryOfAddAdvancedStaffingRule();
+		verifyAdvancedStaffingRulePageShowWell();
+		selectDaysForDaysOfWeekSection(days);
+		verifyCheckMarkButtonOnAdvanceStaffingRulePage();
+		checkTheEntryOfAddAdvancedStaffingRule();
+		verifyAdvancedStaffingRulePageShowWell();
+		selectDaysForDaysOfWeekSection(days);
+		verifyCheckMarkButtonOnAdvanceStaffingRulePage();
+		int countAfterSaving = staffingRulesList.size();
+		if(countAfterSaving - countBeforeSaving == 2){
+			SimpleUtils.pass("User can add multiple advance staffing rule successfully!");
+		}else {
+			SimpleUtils.fail("User can NOT add multiple advance staffing rule successfully!",false);
+		}
+	}
+
+	@FindBy(css="div.settings-work-role-detail-edit-rules div[ng-if=\"ifAdvancedStaffingRule()\"]")
+	private List<WebElement> advancedStaffingRuleList;
+
+	@Override
+	public void editAdvanceStaffingRule(String shiftsNumber) throws Exception{
+		if(advancedStaffingRuleList.size()!=0){
+			WebElement editButton = advancedStaffingRuleList.get(0).findElement(By.cssSelector("i.fa-pencil"));
+			clickTheElement(editButton);
+			waitForSeconds(2);
+			inputNumberOfShiftsField(shiftsNumber);
+			if(isElementEnabled(checkMarkButton)){
+				clickTheElement(checkMarkButton);
+				waitForSeconds(2);
+				String shiftNumberValueInRule =advancedStaffingRuleList.get(0).findElement(By.cssSelector("div.rule-label span:nth-child(2)")).getText().trim();
+				if(shiftNumberValueInRule.equals(shiftsNumber)){
+					SimpleUtils.pass("User can edit advance staffing rule successfully!");
+				}else {
+					SimpleUtils.fail("User can't edit advance staffing rule successfully!",false);
+				}
+			}
+		}else {
+			SimpleUtils.fail("There is no advanced staffing rule.",false);
+		}
+	}
+
+	@FindBy(css="div.modal-dialog button[ng-click=\"confirmDeleteAction()\"]")
+	WebElement deleteButtonOnDialogPage;
+
+	@Override
+	public void deleteAdvanceStaffingRule() throws Exception{
+		int countOfAdvancedStaffingRule = advancedStaffingRuleList.size();
+		if(countOfAdvancedStaffingRule!=0){
+			WebElement deleteButton = advancedStaffingRuleList.get(0).findElement(By.cssSelector("span.settings-work-rule-edit-delete-icon"));
+			clickTheElement(deleteButton);
+			waitForSeconds(2);
+			/*if(isElementEnabled(deleteButtonOnDialogPage)){
+				SimpleUtils.pass("The delete button of rule list is clickable.");
+				clickTheElement(deleteButtonOnDialogPage);
+				waitForSeconds(2);
+				if(!isElementEnabled(deleteButton)){
+					SimpleUtils.pass("User can delete advance staffing rule successfully!");
+				}else {
+					SimpleUtils.fail("User can't delete advance staffing rule successfully!",false);
+				}
+			}else {
+				SimpleUtils.fail("The delete button of rule list is not clickable.",false);
+			}*/
+			if(advancedStaffingRuleList.get(0).findElements(By.cssSelector("div[ng-if=\"$ctrl.isViewMode()\"]>div")).size()==1){
+				SimpleUtils.pass("User can delete advance staffing rule successfully!");
+			}else {
+				SimpleUtils.fail("User can't delete advance staffing rule successfully!",false);
+			}
+		}else {
+			SimpleUtils.fail("There is no advanced staffing rule.",false);
+		}
+	}
+
+	
+
+
 
 
 

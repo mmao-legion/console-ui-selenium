@@ -46,4 +46,7 @@ public interface ConfigurationPage {
     public void verifyCheckMarkButtonOnAdvanceStaffingRulePage() throws Exception;
     public void saveOneAdvanceStaffingRule(String workRole,List<String> days) throws Exception;
     public void cancelSaveOneAdvanceStaffingRule(String workRole,List<String> days) throws Exception;
+    public void addMutipleAdvanceStaffingRule(String workRole,List<String> days) throws Exception;
+    public void editAdvanceStaffingRule(String shiftsNumber) throws Exception;
+    public void deleteAdvanceStaffingRule() throws Exception;
 }
