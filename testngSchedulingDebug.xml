@@ -89,12 +89,6 @@
         <classes>
             <class name="com.legion.tests.core.DragAndDropTest">
                 <methods>
-                    <include name="verifyWarningModelForTimeOffAsInternalAdmin"/>
-                    <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" />
-                    <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
-                    <include name="verifyWarningModelForClopeningAsInternalAdmin" />
-                    <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
-                    <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
                     <include name="verifySwapWarningModelForRoleViolationConfigNoAsInternalAdmin" />
                 </methods>
             </class>

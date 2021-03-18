@@ -3770,7 +3770,7 @@ private WebElement locationColumn;
 	public void clickOnSaveCalendar() throws Exception {
 		if (isElementLoaded(savePreferButton,5)) {
 			clickTheElement(savePreferButton);
-			if (isElementLoaded(popMessage,5) && popMessage.getText().contains("Success"))
+			if (isElementLoaded(popMessage,10) && popMessage.getText().contains("Success"))
 				SimpleUtils.pass("School Calendars Page: School Calendar is saved successfully");
 			else
 				SimpleUtils.fail("School Calendars Page: School Calendar failed to save",false);
