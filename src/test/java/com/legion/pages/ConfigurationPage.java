@@ -50,8 +50,5 @@ public interface ConfigurationPage {
     public void setWFS(String wfsMode);
     public void selectWFSGroup(String wfsName) throws Exception;
     public void publishNowTheTemplate() throws Exception;
-    public void verifyClockInDisplayAndSelect(List<String> clockInGroup) throws Exception;
-    public void setWFS(String wfsMode);
-    public void selectWFSGroup(String wfsName) throws Exception;
-    public void publishNowTheTemplate() throws Exception;
+
 }

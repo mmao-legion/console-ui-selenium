@@ -1178,5 +1178,77 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 
+	//added by Estelle to verify ClockIn
+	@FindBy(css="input-field[options=\"$ctrl.dynamicGroupList\"] > ng-form > div.select-wrapper>select")
+	private WebElement clockInSelector;
+	@FindBy(css="form-section[form-title=\"Clock in Group\"")
+	private WebElement clockInForm;
+	@Override
+	public void verifyClockInDisplayAndSelect(List<String> clockInGroup) throws Exception {
+		scrollToBottom();
+		if (isElementLoaded(clockInForm,5)&&clockInForm.getText().contains("Locations that employees can clock-in\n")&&isElementLoaded(clockInSelector,5)) {
+			SimpleUtils.pass("Clock in form show well");
+			click(clockInSelector);
+			List<WebElement> clockInOptionList = clockInSelector.findElements(By.cssSelector("option"));
+			List<String> clockInOptionListText = new ArrayList<>();
+			for (WebElement option:clockInOptionList) {
+				if (!option.getText().equalsIgnoreCase("")) {
+					clockInOptionListText.add(option.getText());
+				}
+			}
+			if (clockInOptionListText.size() != clockInGroup.size()) {
+				SimpleUtils.fail("Clock-in list size in TA is not as same as Clock-in list size in Global dynamic group",false);
 
+			}else
+				for (Object object : clockInOptionListText) {
+					if (!clockInGroup.contains(object)){
+						SimpleUtils.fail("Clock-in list in TA is not as same as Clock-in list in Global dynamic group",false);
+						break;
+					}else
+						SimpleUtils.pass("Clock-in list size in TA is as same as Clock-in list size in Global dynamic group");
+				}
+			for (int i = 0; i < Integer.valueOf(clockInOptionListText.size()); i++) {
+				selectByVisibleText(clockInSelector,clockInOptionListText.get(i));
+			}
+		}else
+			SimpleUtils.fail("Clock-in form load failed",false);
+	}
+
+	@FindBy(css ="question-input[question-title=\"Do you want to send Shift Offers to other locations?\"] > div > div.lg-question-input__wrapper > ng-transclude > yes-no > ng-form > lg-button-group >div>div")
+	private List<WebElement> yesNoForWFS;
+	@Override
+	public void setWFS(String wfsMode) {
+		if (areListElementVisible(yesNoForWFS,5)) {
+			for (WebElement yesNoOption : yesNoForWFS
+				 ) {
+				if (yesNoOption.getText().equalsIgnoreCase(wfsMode)) {
+					click(yesNoOption);
+					break;
+				}
+			}
+ 			SimpleUtils.pass("Do you want to send Shift Offers to other locations?  to "+ wfsMode);
+		}else
+			SimpleUtils.fail("Workforce sharing group ",false);
+	}
+	@FindBy(css = "input-field[options=\"$ctrl.groupOptions\"]>ng-form>div:nth-child(3)>select")
+	private WebElement wfsSelector;
+	@Override
+	public void selectWFSGroup(String wfsName) throws Exception {
+		if (isElementLoaded(wfsSelector,5)) {
+			selectByVisibleText(wfsSelector,wfsName);
+		}else
+			SimpleUtils.fail("Workforce sharing group selector load failed",false);
+
+	}
+
+	@Override
+	public void publishNowTheTemplate() throws Exception {
+
+		if (isElementLoaded(dropdownArrowButton,5)) {
+			click(dropdownArrowButton);
+			click(publishNowButton);
+		}else
+			SimpleUtils.fail("Workforce sharing group selector load failed",false);
+
+	}
 }
