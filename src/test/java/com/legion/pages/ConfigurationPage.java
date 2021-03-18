@@ -46,4 +46,12 @@ public interface ConfigurationPage {
     public void verifyCheckMarkButtonOnAdvanceStaffingRulePage() throws Exception;
     public void saveOneAdvanceStaffingRule(String workRole,List<String> days) throws Exception;
     public void cancelSaveOneAdvanceStaffingRule(String workRole,List<String> days) throws Exception;
+    public void verifyClockInDisplayAndSelect(List<String> clockInGroup) throws Exception;
+    public void setWFS(String wfsMode);
+    public void selectWFSGroup(String wfsName) throws Exception;
+    public void publishNowTheTemplate() throws Exception;
+    public void verifyClockInDisplayAndSelect(List<String> clockInGroup) throws Exception;
+    public void setWFS(String wfsMode);
+    public void selectWFSGroup(String wfsName) throws Exception;
+    public void publishNowTheTemplate() throws Exception;
 }

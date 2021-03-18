@@ -12513,5 +12513,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         return false;
     }
+
+    @Override
+    public boolean verifyWFSFunction() {
+        if (searchResults.size()!=0) {
+            SimpleUtils.pass("Can search team members in same district");
+            return true;
+        }else
+            SimpleUtils.fail("Workforce Sharing function work wrong",false);
+        return false;
+    }
 }
 
