@@ -137,4 +137,13 @@ public interface LocationsPage {
     public String updateClockInDynamicGroup(String groupNameForCloIn, String criteriaUpdate) throws Exception;
 
     public void iCanDeleteExistingClockInDG();
+
+    public List<String> getClockInGroupFromGlobalConfig();
+
+    public void verifyCreateExistingDGAndGroupNameIsNull(String s) throws Exception;
+
+    public List<String> getWFSGroupFromGlobalConfig();
+
+
+
 }

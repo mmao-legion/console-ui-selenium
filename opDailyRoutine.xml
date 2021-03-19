@@ -43,6 +43,9 @@
                     <include name="verifyDisableEnableDistrictFunction" />
                     <!--                    Global dynamic group test cases-->
                     <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />
+                    <include name="verifyGlobalDynamicGroupAbnormalScenarios" />
+                    <include name="verifyGlobalDynamicGroupInClockInFunction" />
+                    <include name="verifyGlobalDynamicGroupInWFS" />
 
                 </methods>
             </class>

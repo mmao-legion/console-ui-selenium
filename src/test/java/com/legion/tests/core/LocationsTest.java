@@ -8,7 +8,10 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
+import org.openqa.selenium.WebElement;
 import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.annotations.AfterMethod;
@@ -25,6 +28,7 @@ import static com.legion.utils.MyThreadLocal.*;
 
 public class LocationsTest extends TestBase {
 
+    private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
     public enum modelSwitchOperation{
 
         Console("Console"),
@@ -1447,5 +1451,180 @@ public class LocationsTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
 
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Global dynamic group for Clock in")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyGlobalDynamicGroupInClockInFunction(String browser, String username, String password, String location) throws Exception {
+
+        try{
+
+            List<String> clockInGroup = new ArrayList<>();
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check dynamic group item
+            locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
+            //go to dynamic group
+            locationsPage.goToDynamicGroup();
+            clockInGroup = locationsPage.getClockInGroupFromGlobalConfig();
+            String templateType = "Time & Attendance";
+            String mode = "edit";
+            String templateName = "UsedByAuto_NoTouchNoDelete";
+
+            //go to configuration page
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.verifyClockInDisplayAndSelect(clockInGroup);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify abnormal scenarios")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyGlobalDynamicGroupAbnormalScenarios(String browser, String username, String password, String location) throws Exception {
+
+        try{
+
+            List<String> wfsGroup = new ArrayList<>();
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check dynamic group item
+            locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
+            //go to dynamic group
+            locationsPage.goToDynamicGroup();
+            wfsGroup = locationsPage.getWFSGroupFromGlobalConfig();
+            //go to dynamic group
+            locationsPage.verifyCreateExistingDGAndGroupNameIsNull(wfsGroup.get(0));
+
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Global dynamic group for Workforce Sharing")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyGlobalDynamicGroupInWFS(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String templateType = "Schedule Collaboration";
+            String mode = "edit";
+            String templateName = "UsedByAuto_NoTouchNoDelete";
+            String wfsMode = "Yes";
+            String wfsName = "Same District";
+            String locationName = "OMLocation6";
+            String districtName = "OMDistrict1";
+            String criteria = "Custom";
+
+            List<String> wfsGroup = new ArrayList<>();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict(districtName);
+            locationSelectorPage.changeLocation(locationName);
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+
+            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                schedulePage.clickOnDayViewAddNewShiftButton();
+                schedulePage.customizeNewShiftPage();
+                if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                    schedulePage.selectWorkRole(scheduleWorkRoles.get("Lead_Sales_Associate"));
+                } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+                }
+                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+                schedulePage.clickOnCreateOrNextBtn();
+                schedulePage.searchTeamMemberByName("summer");
+                if (!schedulePage.verifyWFSFunction()) {
+                    //to check WFS group exist or not
+                    LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+                    locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+                    SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+                    //go to locations tab
+                    locationsPage.clickOnLocationsTab();
+                    //check dynamic group item
+                    locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
+                    //go to dynamic group
+                    locationsPage.goToDynamicGroup();
+                    wfsGroup = locationsPage.getWFSGroupFromGlobalConfig();
+                    for (int i = 0; i <wfsGroup.size() ; i++) {
+                        if (wfsGroup.get(i).contains(wfsName)) {
+                            SimpleUtils.report("Same District group existing");
+                            break;
+                        }else
+                            locationsPage.addWorkforceSharingDGWithOneCriteria(wfsName,"Used by auto",criteria);
+                    }
+
+                    //to check wfs is on or off in schedule collaboration configuration page
+                    ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+                    configurationPage.goToConfigurationPage();
+                    configurationPage.clickOnConfigurationCrad(templateType);
+                    configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+                    configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                    configurationPage.setWFS(wfsMode);
+                    configurationPage.selectWFSGroup(wfsName);
+                    configurationPage.publishNowTheTemplate();
+
+                    //go to schedule to generate schedule
+
+                    locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+                    SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+                }else
+                    SimpleUtils.pass("Workforce sharing function work well");
+
+            }
+//            else
+//                schedulePage.createScheduleForNonDGFlowNewUI();
+//                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+//                schedulePage.clickOnDayViewAddNewShiftButton();
+//                schedulePage.customizeNewShiftPage();
+//                if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+//                    schedulePage.selectWorkRole(scheduleWorkRoles.get("Lead_Sales_Associate"));
+//                } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+//                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+//                }
+//                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+//                schedulePage.clickOnCreateOrNextBtn();
+//                schedulePage.searchTeamMemberByName("summer");
+//                if (schedulePage.verifyWFSFunction()) {
+//
+//                }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 }

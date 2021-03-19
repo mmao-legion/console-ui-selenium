@@ -3291,5 +3291,10 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         return false;
     }
 
+    @Override
+    public boolean verifyWFSFunction() {
+        return false;
+    }
+
 
 }

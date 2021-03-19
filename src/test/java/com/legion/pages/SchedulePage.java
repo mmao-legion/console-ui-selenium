@@ -530,4 +530,5 @@ public interface SchedulePage {
 	public boolean isEditMealBreakEnabled() throws Exception;
 	public void verifyTMSchedulePanelDisplay() throws Exception;
 	public  boolean suggestedButtonIsHighlighted() throws Exception;
+	public boolean verifyWFSFunction();
 }

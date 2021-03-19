@@ -1811,7 +1811,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.fail("Go to dynamic group page failed",false);
 		}
 	}
-
+	@FindBy(css = "textarea[id=\"omjob\"]")
+	private WebElement formulaInputBox;
 	@Override
 	public String addWorkforceSharingDGWithOneCriteria(String groupName, String description, String criteria) throws Exception {
 		if (areListElementVisible(addDynamicGroupBtn)) {
@@ -1819,19 +1820,27 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (isManagerDGpopShowWell()) {
 				groupNameInput.sendKeys(groupName);
 				groupDescriptionInput.sendKeys(description);
-				selectByVisibleText(criteriaSelect,criteria);
-				click(criteriaValue);
-				click(checkboxInCriteriaValue.get(0));
-				click(testBtn);
-				String testInfo = testBtnInfo.getText().trim();
-				click(okBtnInSelectLocation);
-				waitForSeconds(3);
-				searchWFSDynamicGroup(groupName);
-				if (groupRows.size()>0) {
-					SimpleUtils.pass("Dynamic group create successfully");
+				if (!criteriaValue.getText().equalsIgnoreCase("Custom")) {
+					selectByVisibleText(criteriaSelect,criteria);
+					click(criteriaValue);
+					click(checkboxInCriteriaValue.get(0));
+					click(testBtn);
+					String testInfo = testBtnInfo.getText().trim();
+					click(okBtnInSelectLocation);
+					waitForSeconds(3);
+					searchWFSDynamicGroup(groupName);
+					if (groupRows.size()>0) {
+						SimpleUtils.pass("Dynamic group create successfully");
+					}else
+						SimpleUtils.fail("Dynamic group create failed",false);
+					return testInfo;
 				}else
-					SimpleUtils.fail("Dynamic group create failed",false);
-				return testInfo;
+					selectByVisibleText(criteriaSelect,criteria);
+					formulaInputBox.sendKeys("Parent(1)");
+					click(okBtnInSelectLocation);
+					waitForSeconds(3);
+
+
 			}else
 				SimpleUtils.fail("Manager Dynamic Group win load failed",false);
 		}else
@@ -2063,6 +2072,72 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
         return dayPartsNameList;
 	}
+	@FindBy (css = " lg-global-dynamic-group-table[dynamic-groups=\"clockinDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr.ng-scope")
+	private  List<WebElement> clockInGroups;
+	@Override
+	public List<String> getClockInGroupFromGlobalConfig() {
+		waitForSeconds(15);
+		List<String> clockInGroup = new ArrayList<>();
+		if (clockInGroups.size()>0) {
+			for(WebElement clockIn:clockInGroups){
+				String clockInName = clockIn.findElement(By.cssSelector("td")).getText().trim();
+				if(clockInName!=""){
+					clockInGroup.add(clockInName);
+				}
+			}
+			return clockInGroup;
+		}else
+			return null;
+	}
 
+	@FindBy(css = "lg-input-error[ng-if=\"!$ctrl.hideInputErrorHint\"]>div>span>i")
+	private WebElement groupNameRequired;
+
+	@Override
+	public void verifyCreateExistingDGAndGroupNameIsNull(String s) throws Exception {
+		if (areListElementVisible(addDynamicGroupBtn)) {
+			click(addDynamicGroupBtn.get(0));
+			if (isManagerDGpopShowWell()) {
+				//verify group name is null
+				groupNameInput.sendKeys(s);
+				groupNameInput.clear();
+				if (isElementEnabled(groupNameRequired,5)) {
+					SimpleUtils.pass("Group Name is required show well if the name is null");
+				}
+				//verify create existing group
+				groupNameInput.sendKeys(s);
+				click(okBtnInSelectLocation);
+				waitForSeconds(5);
+				click(cancelBtn);
+				searchWFSDynamicGroup(s);
+				int a = wfsGroups.size();
+				if (wfsGroups.size()>1) {
+					SimpleUtils.fail("Should not create existing group",false);
+				}else
+					SimpleUtils.pass("Can not create existing Dynamic group");
+				//verify existing criteria ,but group name is not same
+			}else
+				SimpleUtils.fail("Manager Dynamic Group win load failed",false);
+		}else
+			SimpleUtils.fail("Global dynamic group page load failed",false);
+
+	}
+	@FindBy (css = " lg-global-dynamic-group-table[dynamic-groups=\"workForceSharingDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr.ng-scope")
+	private  List<WebElement> wfsGroups;
+	@Override
+	public List<String> getWFSGroupFromGlobalConfig() {
+		waitForSeconds(15);
+		List<String> wfsGroup = new ArrayList<>();
+		if (wfsGroups.size()>0) {
+			for(WebElement clockIn:wfsGroups){
+				String wfsGroupName = clockIn.findElement(By.cssSelector("td")).getText().trim();
+				if(wfsGroupName!=""){
+					wfsGroup.add(wfsGroupName);
+				}
+			}
+			return wfsGroup;
+		}else
+			return null;
+	}
 }
 
