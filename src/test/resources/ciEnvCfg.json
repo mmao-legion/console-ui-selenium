@@ -34,6 +34,6 @@
   "isParallelBrowser" : "false",
   "Download_File_Default_Dir" : "/var/lib/jenkins/workspace/createRemoteSeleniumGridForHydsoft/chinaQA",
   "isHeadlessBrowser" : "false",
-  "isGridEnabled" : "false",
+  "isGridEnabled" : "true",
   "URL" : "http://localhost:4455/wd/hub"
 }
