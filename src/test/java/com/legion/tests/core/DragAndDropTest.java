@@ -594,7 +594,8 @@ public class DragAndDropTest extends TestBase {
     @TestName(description = "Validate the box interaction color and message when TM will incur clopening")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyWarningModelForClopeningAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        try{DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             controlsNewUIPage.clickOnControlsConsoleMenu();
@@ -651,7 +652,7 @@ public class DragAndDropTest extends TestBase {
             //Create new shift for TM2 on Tuesday
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
-            schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME_2"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME_2"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount3.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME_2"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clearAllSelectedDays();
             schedulePage.selectDaysByIndex(1, 1, 1);
@@ -692,10 +693,10 @@ public class DragAndDropTest extends TestBase {
             List<WebElement> shiftsOfWednesday = schedulePage.getOneDayShiftByName(2, firstNameOfTM1);
             SimpleUtils.assertOnFail("Get compliance shift failed",shiftsOfWednesday.size()>0, false);
 
-            SimpleUtils.assertOnFail("Clopening comliance message display failed",
+            SimpleUtils.assertOnFail("Clopening compliance message display failed",
                     schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfTuesday.get(shiftsOfTuesday.size()-1)).contains("Clopening"), false);
 
-            SimpleUtils.assertOnFail("Clopening comliance message display failed",
+            SimpleUtils.assertOnFail("Clopening compliance message display failed",
                     schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfWednesday.get(0)).contains("Clopening"), false);
 
             // Swap TM1 and TM2 back, check the TMs been swapped successfully
@@ -741,10 +742,10 @@ public class DragAndDropTest extends TestBase {
             shiftsOfWednesday = schedulePage.getOneDayShiftByName(2, firstNameOfTM1);
             SimpleUtils.assertOnFail("Get compliance shift failed",shiftsOfWednesday.size()>0, false);
 
-            SimpleUtils.assertOnFail("Clopening comliance message display failed",
+            SimpleUtils.assertOnFail("Clopening compliance message display failed",
                     schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfTuesday.get(shiftsOfTuesday.size()-1)).contains("Clopening"), false);
 
-            SimpleUtils.assertOnFail("Clopening comliance message display failed",
+            SimpleUtils.assertOnFail("Clopening compliance message display failed",
                     schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfWednesday.get(0)).contains("Clopening"), false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
