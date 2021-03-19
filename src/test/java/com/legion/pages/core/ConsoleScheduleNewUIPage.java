@@ -6311,7 +6311,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public List<Integer> getAddedShiftIndexes(String name) throws Exception {
         // Wait for the shifts to be loaded
-        waitForSeconds(3);
+        waitForSeconds(5);
         List<Integer> indexes = new ArrayList<>();
         if (areListElementVisible(shiftsWeekView, 5)) {
             for (int i = 0; i < shiftsWeekView.size(); i++) {
@@ -6325,7 +6325,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }
         if (indexes.size() == 0) {
-            SimpleUtils.fail("Failed to get the index of the newly added shifts!", true);
+            SimpleUtils.fail("Failed to get the index of the newly added shifts!", false);
         }
         return indexes;
     }
