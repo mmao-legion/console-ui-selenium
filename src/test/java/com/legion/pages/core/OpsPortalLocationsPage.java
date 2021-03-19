@@ -1805,6 +1805,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void goToDynamicGroup() {
 		if (isElementEnabled(dynamicGroupCard,5)) {
 			click(dynamicGroupCard);
+			waitForSeconds(15);
 			if (isElementEnabled(workForceSharingDg,5)) {
 				SimpleUtils.pass("Can go to dynamic group page successfully");
 			}else
@@ -1820,8 +1821,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (isManagerDGpopShowWell()) {
 				groupNameInput.sendKeys(groupName);
 				groupDescriptionInput.sendKeys(description);
-				if (!criteriaValue.getText().equalsIgnoreCase("Custom")) {
-					selectByVisibleText(criteriaSelect,criteria);
+				selectByVisibleText(criteriaSelect,criteria);
+				if (!isElementEnabled(formulaInputBox)) {
 					click(criteriaValue);
 					click(checkboxInCriteriaValue.get(0));
 					click(testBtn);
@@ -1835,7 +1836,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						SimpleUtils.fail("Dynamic group create failed",false);
 					return testInfo;
 				}else
-					selectByVisibleText(criteriaSelect,criteria);
 					formulaInputBox.sendKeys("Parent(1)");
 					click(okBtnInSelectLocation);
 					waitForSeconds(3);
@@ -1941,6 +1941,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 	@Override
 	public void searchClockInDynamicGroup(String searchInputText) throws Exception {
+		scrollToBottom();
 		String[] searchLocationCha = searchInputText.split(",");
 		if (areListElementVisible(dgSearchInput, 10) ) {
 			for (int i = 0; i < searchLocationCha.length; i++) {
@@ -2126,7 +2127,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private  List<WebElement> wfsGroups;
 	@Override
 	public List<String> getWFSGroupFromGlobalConfig() {
-		waitForSeconds(15);
 		List<String> wfsGroup = new ArrayList<>();
 		if (wfsGroups.size()>0) {
 			for(WebElement clockIn:wfsGroups){
