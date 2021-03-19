@@ -267,7 +267,7 @@ public interface SchedulePage {
 	public void verifyShiftRequestStatus(String expectedStatus) throws Exception;
 	public Boolean isGenerateButtonLoadedForManagerView() throws Exception;
 
-	public void validateGroupBySelectorSchedulePage() throws Exception;
+	public void validateGroupBySelectorSchedulePage(boolean isLocationGroup) throws Exception;
 	public boolean checkEditButton() 	throws Exception;
 	public void verifyEditButtonFuntionality() 		throws Exception;
 	public boolean checkCancelButton() 	throws Exception;
@@ -462,7 +462,7 @@ public interface SchedulePage {
 	public List<String> getTheShiftInfoByIndex(int index) throws Exception;
 	public void selectWorkingDaysOnNewShiftPageByIndex(int index) throws Exception;
 	public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception;
-	public void validateScheduleTableWhenSelectAnyOfGroupByOptions() throws Exception;
+	public void validateScheduleTableWhenSelectAnyOfGroupByOptions(boolean isLocationGroup) throws Exception;
 	public void changeWorkRoleInPrompt(boolean isApplyChange) throws Exception;
 	public void switchSearchTMAndRecommendedTMsTab() throws Exception;
 	public String convertToOpenShiftAndOfferToSpecificTMs() throws Exception;

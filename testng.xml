@@ -476,6 +476,7 @@
                     <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdmin" />
                     <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
                     <include name="validateTheButtonsOnSchedulePageAsInternalAdmin" />
+                    <include name="validateTheGroupByDropdownListAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
