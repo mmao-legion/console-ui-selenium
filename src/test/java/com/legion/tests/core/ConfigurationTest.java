@@ -89,8 +89,8 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "Test";
-            String workRole = "New Work Role";
+            String templateName = "test";
+            String workRole = "AM Bartender";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.goToConfigurationPage();
@@ -115,8 +115,8 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "Test";
-            String workRole = "New Work Role";
+            String templateName = "test";
+            String workRole = "AM Bartender";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
@@ -142,8 +142,8 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "Test";
-            String workRole = "New Work Role";
+            String templateName = "test";
+            String workRole = "AM Bartender";
             String formula ="IsDay(p_Truck_Date,-1)";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -170,8 +170,8 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "Test";
-            String workRole = "New Work Role";
+            String templateName = "test";
+            String workRole = "AM Bartender";
             String offsetTime ="10";
             String startEventPoint = "before";
             List<String> dayPartsInGlobalConfig = new ArrayList<String>();
@@ -222,8 +222,8 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "Test";
-            String workRole = "New Work Role";
+            String templateName = "test";
+            String workRole = "AM Bartender";
             String duringTime ="10";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -252,8 +252,8 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "Test";
-            String workRole = "New Work Role";
+            String templateName = "test";
+            String workRole = "AM Bartender";
             String endOffsetTime ="10";
             String endEventPoint = "before";
 
@@ -282,8 +282,8 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "Test";
-            String workRole = "New Work Role";
+            String templateName = "test";
+            String workRole = "AM Bartender";
             String formulaOfTimeOfDay = "123";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -311,8 +311,8 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "Test";
-            String workRole = "New Work Role";
+            String templateName = "test";
+            String workRole = "AM Bartender";
             List<String> mealBreakInfo = new ArrayList<String>(){{
                 add("30");
                 add("60");
@@ -351,8 +351,8 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "Test";
-            String workRole = "New Work Role";
+            String templateName = "test";
+            String workRole = "AM Bartender";
             String shiftsNumber = "6";
             String shiftsNumberFormula = "5";
 
@@ -381,8 +381,8 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "Test";
-            String workRole = "New Work Role";
+            String templateName = "test";
+            String workRole = "AM Bartender";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
@@ -407,8 +407,8 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "Test";
-            String workRole = "New Work Role";
+            String templateName = "test";
+            String workRole = "AM Bartender";
             List<String> days = new ArrayList<String>(){{
                 add("Sunday");
                 add("Friday");
@@ -442,9 +442,9 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "Test";
-            String workRole1 = "New Work Role";
-            String workRole2 = "1223add";
+            String templateName = "test";
+            String workRole1 = "AM Bartender";
+            String workRole2 = "AM Server";
             List<String> days = new ArrayList<String>(){{
                 add("Sunday");
                 add("Friday");
@@ -471,8 +471,8 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "Test";
-            String workRole = "New Work Role";
+            String templateName = "test";
+            String workRole = "AM Bartender";
             String shiftsNumber = "7";
             List<String> days = new ArrayList<String>(){{
                 add("Sunday");
