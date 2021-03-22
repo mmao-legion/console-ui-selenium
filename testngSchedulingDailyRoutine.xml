@@ -3,7 +3,7 @@
 <suite verbose ="0" thread-count="10" name="LegionTest">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="yes"/>
-    <parameter name="testRailRunName" value="Go/No Go"/>
+    <parameter name="testRailRunName" value="Automation - Daily Routine"/>
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
@@ -85,7 +85,7 @@
                     <include name="verifyAccessControlsOnActivitiesPage"/>
                     <include name="verifyTheContentOnActivityAsStoreManager"/>
                     <include name="verifyTheContentOfShiftSwapActivityAsStoreManager"/>
-<!--                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" Blocked by Bug: SCH-3109/>-->
+                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyTheContentOfActivityPageAsStoreManager" />
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
@@ -94,9 +94,9 @@
                     <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />
                     <include name="verifyActivityOfPublishUpdateSchedule" />
                     <include name="verifyTheNotificationForCancelTimeOffAsTeamMember"/>
-<!--                    <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" Blocked by Bug: SCH-3109/>-->
+                    <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" />
                     <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
-<!--                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin" Blocked by Bug: SCH-3109/>-->
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin" />
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin" />
                     <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin" />
                 </methods>
@@ -164,7 +164,7 @@
                     <include name="verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin" />
                     <include name="verifyTurnOnGFEAsInternalAdmin" />
                     <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
-<!--                    <include name="verifyContentOfGFEAsInternalAdmin" Blocked by bug: SCH-3380/>-->
+                    <include name="verifyContentOfGFEAsInternalAdmin" />
                     <include name="verifyVSLInfoAsInternalAdmin" />
                 </methods>
             </class>
@@ -177,7 +177,7 @@
                 <methods>
                     <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
                     <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
-<!--                    <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" blocked by bug: SCH-3315/>-->
+                    <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
                     <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
@@ -207,8 +207,8 @@
                 <methods>
                     <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />
                     <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" />
-<!--                    <include name="verifySchoolCalendarListAsInternalAdmin" Blocked by bug: SCH-3430/>-->
-<!--                    <include name="verifyCreateCalendarAsInternalAdmin" Blocked by bug: SCH-3430/>-->
+                    <include name="verifySchoolCalendarListAsInternalAdmin" />
+                    <include name="verifyCreateCalendarAsInternalAdmin" />
 <!--                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" blocked by Bug:SCH-3250/>-->
 <!--                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
 <!--                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->

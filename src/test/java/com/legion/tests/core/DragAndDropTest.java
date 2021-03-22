@@ -902,6 +902,7 @@ public class DragAndDropTest extends TestBase {
             //edit schedule
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView("Open");
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
             List<String> shiftInfo = new ArrayList<>();
             while (shiftInfo.size() == 0) {
                 shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
