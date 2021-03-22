@@ -45,6 +45,7 @@ public interface SchedulePage {
 	public void moveSliderAtSomePoint(String shiftTime, int shiftStartingCount, String startingPoint) throws Exception;
 	public HashMap<String, String> calculateHourDifference() throws Exception;
 	public void selectWorkRole(String workRoles) throws Exception;
+	public void selectChildLocInCreateShiftWindow(String location) throws Exception;
 	public void clickRadioBtnStaffingOption(String staffingOption) throws Exception;
 	public void clickOnCreateOrNextBtn() throws Exception;
 	public HashMap<List<String>,List<String>> calculateTeamCount()throws Exception;
@@ -85,6 +86,8 @@ public interface SchedulePage {
 	public boolean isRequiredActionUnAssignedShiftForActiveWeek() throws Exception;
 	public void clickOnRefreshButton() throws Exception;
 	public void selectShiftTypeFilterByText(String filterText) throws Exception;
+	public void selectChildLocationFilterByText(String location) throws Exception;
+	public void verifyEditMealBreakTimeFunctionalityForAShift(boolean isSavedChange, WebElement shift) throws Exception;
 	public List<WebElement> getAvailableShiftsInDayView();
 	public void dragShiftToRightSide(WebElement shift, int xOffSet);
 	public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception;
@@ -278,6 +281,12 @@ public interface SchedulePage {
 	public boolean isProfileIconsEnable() throws Exception;
 	public boolean isProfileIconsClickable() throws Exception;
 	public WebElement clickOnProfileIcon() throws Exception;
+	public WebElement clickOnProfileIconOfOpenShift() throws Exception;
+	public WebElement clickOnProfileIconOfShiftInDayView(String openOrNot) throws Exception;
+	public void verifyEditMealBreakTimeFunctionalityForAShiftInDayView(boolean isSavedChange, String shiftid) throws Exception;
+	public void changeWorkRoleInPromptOfAShiftInDayView(boolean isApplyChange, String shiftid) throws Exception;
+	public void chooseLocationInCreateSchedulePopupWindow(String location) throws Exception;
+	public void selectRandomLocationOnCreateScheduleEditOperatingHoursPage() throws Exception;
 	public boolean isViewProfileEnable() throws Exception;
 	public boolean isViewOpenShiftEnable() throws Exception;
 	public boolean isChangeRoleEnable() throws Exception;
@@ -294,6 +303,7 @@ public interface SchedulePage {
 	public void verifyWorkPreferenceDisplayed() throws Exception;
 	public void verifyAvailabilityDisplayed() throws Exception;
 	public void closeViewProfileContainer() throws Exception;
+	public void closeViewStatusContainer() throws Exception;
 
 
 	public boolean  verifyContextOfTMDisplay() throws Exception;
@@ -437,6 +447,7 @@ public interface SchedulePage {
 	public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception;
 	public void createScheduleForNonDGFlowNewUIWithGivingParameters(String day, String startTime, String endTime) throws Exception;
 	public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception;
+	public void editTheOperatingHoursForLGInPopupWinodw(List<String> weekDaysToClose) throws Exception;
 	public void goToToggleSummaryView() throws Exception;
 	public void verifyOperatingHrsInToggleSummary(String day, String startTime, String endTime) throws Exception;
 	public void verifyDayHasShifts(String day) throws Exception;
@@ -464,6 +475,7 @@ public interface SchedulePage {
 	public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception;
 	public void validateScheduleTableWhenSelectAnyOfGroupByOptions() throws Exception;
 	public void changeWorkRoleInPrompt(boolean isApplyChange) throws Exception;
+	public void changeWorkRoleInPromptOfAShift(boolean isApplyChange, WebElement shift) throws Exception;
 	public void switchSearchTMAndRecommendedTMsTab() throws Exception;
 	public String convertToOpenShiftAndOfferToSpecificTMs() throws Exception;
 	public void clickOnEditShiftTime() throws Exception;
@@ -504,6 +516,7 @@ public interface SchedulePage {
     public void selectSwapOrAssignOption(String action) throws Exception;
     public void clickConfirmBtnOnDragAndDropConfirmPage() throws Exception;
 	public WebElement getShiftById(String id) throws Exception;
+	public int getShiftIndexById(String id) throws Exception;
 	public List<String> getShiftSwapDataFromConfirmPage(String action) throws Exception;
 	public int verifyDayHasShiftByName(int indexOfDay, String name) throws Exception;
 	public String getWeekDayTextByIndex(int index) throws Exception;
@@ -574,4 +587,5 @@ public interface SchedulePage {
 	public boolean verifyScheduleNotPublishedSmartCardShowing() throws Exception;
 	public void clickToggleSummaryViewButton() throws Exception;
 	public boolean isHourFormat24Hour() throws Exception;
+	public String getTheShiftInfoByIndexInDayview(int index) throws Exception;
 }
