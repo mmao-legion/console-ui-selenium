@@ -7415,7 +7415,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void clickOnFilterBtn() throws Exception {
-        if (isElementLoaded(filterButton,10)) {
+        if (isElementLoaded(filterButton,30)) {
             click(filterButton);
             SimpleUtils.pass("filter button is clickable");
         } else {
@@ -14060,7 +14060,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
                 waitForSeconds(3);
                 click(locationsInLocationSelectorOnUngenerateSchedulePage.get(0));
-                System.out.println("  mihbg nih  ".trim());
+                Actions actions = new Actions(getDriver());
+                actions.moveByOffset(0, 0).click().build().perform();
                 if(selectedLocationOnCreateScheduleWindow.getAttribute("innerHTML").replace("\n","").trim().equalsIgnoreCase(location)){
                     SimpleUtils.pass("Create schedule window: Select locations on Edit Operating hours successfully! ");
                 } else
