@@ -283,9 +283,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "button.lgn-dropdown-button:nth-child(1)")
     private WebElement btnWorkRole;
 
-    @FindBy(css = "lgn-drop-down.tma-locations-dropdown button.lgn-dropdown-button")
-    private WebElement btnChildLocation;
-
     @FindBy(xpath = "//div[contains(text(),'Open Shift: Auto')]")
     private WebElement textOpenShift;
 
@@ -515,8 +512,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.card-carousel-card.card-carousel-card-smart-card-required")
     private WebElement requiredActionCard;
 
-    //@FindBy(className = "sch-day-view-shift-outer")
-    @FindBy(css = ".sch-day-view-shift")
+    @FindBy(className = "sch-day-view-shift-outer")
     private List<WebElement> dayViewAvailableShifts;
 
     @FindBy(css = "div.card-carousel-card")
@@ -1724,30 +1720,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
-    public void selectChildLocInCreateShiftWindow(String location) throws Exception {
-        if (isElementLoaded(btnChildLocation, 20)) {
-            click(btnChildLocation);
-            SimpleUtils.pass("Child location button clicked Successfully");
-        } else {
-            SimpleUtils.fail("Child location button is not clickable", false);
-        }
-        if (listWorkRoles.size() > 0) {
-            for (WebElement listWorkRole : listWorkRoles) {
-                if (listWorkRole.getText().toLowerCase().contains(location.toLowerCase())) {
-                    click(listWorkRole);
-                    SimpleUtils.pass("Child location " + location + "selected Successfully");
-                    break;
-                } else {
-                    SimpleUtils.report("Child location" + location + " not selected");
-                }
-            }
-
-        } else {
-            SimpleUtils.fail("Child location size are empty", false);
-        }
-
-    }
-
     public void clickRadioBtnStaffingOption(String staffingOption) throws Exception {
         boolean flag = false;
         int index = -1;
@@ -2483,20 +2455,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         unCheckFilters(shiftTypeFilters);
         for (WebElement shiftTypeOption : shiftTypeFilters) {
             if (shiftTypeOption.getText().toLowerCase().contains(filterText.toLowerCase())) {
-                click(shiftTypeOption);
-                break;
-            }
-        }
-        if (!filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
-            click(filterButton);
-    }
-
-    public void selectChildLocationFilterByText(String location) throws Exception {
-        String shiftTypeFilterKey = "location";
-        ArrayList<WebElement> shiftTypeFilters = getAvailableFilters().get(shiftTypeFilterKey);
-        unCheckFilters(shiftTypeFilters);
-        for (WebElement shiftTypeOption : shiftTypeFilters) {
-            if (shiftTypeOption.getText().toLowerCase().contains(location.toLowerCase())) {
                 click(shiftTypeOption);
                 break;
             }
@@ -4114,51 +4072,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    @Override
-    public void editTheOperatingHoursForLGInPopupWinodw(List<String> weekDaysToClose) throws Exception {
-        if (isElementLoaded(operatingHoursEditBtn, 10)) {
-            clickTheElement(operatingHoursEditBtn);
-            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
-                SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
-                if (areListElementVisible(operatingHoursDayLists, 15)) {
-                    for (WebElement dayList : operatingHoursDayLists) {
-                        WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
-                        if (weekDay != null) {
-                            WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
-                            if (!weekDaysToClose.contains(weekDay.getText())) {
-                                if (checkbox.getAttribute("class").contains("ng-empty")) {
-                                    clickTheElement(checkbox);
-                                }
-                                String[] operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
-                                List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
-                                startNEndTimes.get(0).clear();
-                                startNEndTimes.get(1).clear();
-                                startNEndTimes.get(0).sendKeys(operatingHours[0].trim());
-                                startNEndTimes.get(1).sendKeys(operatingHours[1].trim());
-                            } else {
-                                if (!checkbox.getAttribute("class").contains("ng-empty")) {
-                                    clickTheElement(checkbox);
-                                }
-                            }
-                        } else {
-                            SimpleUtils.fail("Failed to find weekday element!", false);
-                        }
-                    }
-                    clickTheElement(operatingHoursSaveBtn);
-                    if (isElementEnabled(operatingHoursEditBtn, 15)) {
-                        SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
-                    }else {
-                        SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
-                    }
-                }
-            }else {
-                SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
-            }
-        }else {
-            SimpleUtils.fail("Operating Hours Edit button not loaded Successfully!", false);
-        }
-    }
-
     public void switchToManagerViewToCheckForSecondGenerate() throws Exception {
         try {
             String activeWeekText = getActiveWeekText();
@@ -5515,12 +5428,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-/*        if (isElementLoaded(msgOnTop, 120) && msgOnTop.getText().contains("Success")) {
+        if (isElementLoaded(msgOnTop, 60) && msgOnTop.getText().contains("Success")) {
             SimpleUtils.pass("Save the Schedule Successfully!");
         } else {
             SimpleUtils.fail("Save Schedule Failed!", false);
         }
-*/        waitForSeconds(3);
+        waitForSeconds(3);
     }
 
     public void convertToOpen(int i) {
@@ -5977,43 +5890,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 //To close the info popup
                 clickTheElement(weekShifts.get(index));
             } else {
-                //For open shift
-                String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
-                String lastName = "open";
-                String jobTitle = "";
-                String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
-                WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
-                clickTheElement(infoIcon);
-                String workRole = shiftJobTitleAsWorkRole.getText().trim();
-                if (isElementLoaded(shiftDuration, 10)) {
-                    String shiftTime = shiftDuration.getText();
-                    shiftInfo.add(firstName);
-                    shiftInfo.add(dayIndex);
-                    shiftInfo.add(shiftTime);
-                    shiftInfo.add(jobTitle);
-                    shiftInfo.add(workRole);
-                    shiftInfo.add(lastName);
-                    shiftInfo.add(shiftTimeWeekView);
-                }
-                //To close the info popup
-                clickTheElement(weekShifts.get(index));
+                SimpleUtils.report("This is an Open Shift");
+                return shiftInfo;
             }
         } else {
             SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
         }
         if (shiftInfo.size() != 7) {
             SimpleUtils.fail("Failed to get the shift info!", false);
-        }
-        return shiftInfo;
-    }
-
-    @Override
-    public String getTheShiftInfoByIndexInDayview(int index) throws Exception {
-        String shiftInfo = "";
-        if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
-            shiftInfo = dayViewAvailableShifts.get(index).getText();
-        } else {
-            SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
         }
         return shiftInfo;
     }
@@ -8719,8 +8603,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         int count = 0;
         if (areListElementVisible(wholeWeekShifts, 5)) {
             count = wholeWeekShifts.size();
-        } else if (areListElementVisible(dayViewAvailableShifts, 5)){
-            count = wholeWeekShifts.size();
+        }else {
+            SimpleUtils.fail("Whole Week Shifts not loaded Successfully!", false);
         }
         return count;
     }
@@ -9201,9 +9085,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = ".week-schedule-shift .shift-container .rows .worker-image-optimized img")
     private List<WebElement> profileIcons;
 
-    @FindBy(css = ".sch-day-view-shift .sch-shift-worker-img-cursor")
-    private List<WebElement> profileIconsInDayView;
-
     @FindBy(css = "div.sch-open-shift")
     private List<WebElement> openShiftIcon;
 
@@ -9334,56 +9215,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
             clickTheElement(scheduleTableWeekViewWorkerDetail.get(randomIndex));
             selectedShift = dayViewAvailableShifts.get(randomIndex);
-        } else {
+        } else
             SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
-        }
 
-        return selectedShift;
-    }
-
-    public WebElement clickOnProfileIconOfOpenShift() throws Exception {
-        WebElement selectedShift = null;
-        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
-            int randomIndex = (new Random()).nextInt(profileIcons.size());
-            while (!profileIcons.get(randomIndex).getAttribute("src").contains("openShiftImage")){
-                randomIndex = (new Random()).nextInt(profileIcons.size());
-            }
-            clickTheElement(profileIcons.get(randomIndex));
-            selectedShift = shifts.get(randomIndex);
-        } else if (areListElementVisible(scheduleTableWeekViewWorkerDetail, 10) && areListElementVisible(dayViewAvailableShifts, 10)) {
-            int randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
-            while (!dayViewAvailableShifts.get(randomIndex).findElement(By.className("sch-day-view-shift-worker-name")).getText().contains("Open")){
-                randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
-            }
-            clickTheElement(scheduleTableWeekViewWorkerDetail.get(randomIndex));
-            selectedShift = dayViewAvailableShifts.get(randomIndex);
-        } else {
-            SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
-        }
-        return selectedShift;
-    }
-
-    public WebElement clickOnProfileIconOfShiftInDayView(String openOrNot) throws Exception {
-        WebElement selectedShift = null;
-        if(isProfileIconsEnable()&& areListElementVisible(dayViewAvailableShifts, 10)) {
-            if (openOrNot.toLowerCase().contains("open")){
-                int randomIndex = (new Random()).nextInt(profileIconsInDayView.size());
-                while (!dayViewAvailableShifts.get(randomIndex).findElement(By.cssSelector(".sch-day-view-shift-worker-name")).getText().toLowerCase().contains("open")){
-                    randomIndex = (new Random()).nextInt(dayViewAvailableShifts.size());
-                }
-                clickTheElement(profileIconsInDayView.get(randomIndex));
-                selectedShift = dayViewAvailableShifts.get(randomIndex);
-            } else {
-                int randomIndex = (new Random()).nextInt(profileIconsInDayView.size());
-                while (dayViewAvailableShifts.get(randomIndex).findElement(By.cssSelector(".sch-day-view-shift-worker-name")).getText().toLowerCase().contains("open")){
-                    randomIndex = (new Random()).nextInt(profileIconsInDayView.size());
-                }
-                clickTheElement(profileIconsInDayView.get(randomIndex));
-                selectedShift = dayViewAvailableShifts.get(randomIndex);
-            }
-        } else {
-            SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
-        }
         return selectedShift;
     }
 
@@ -9490,9 +9324,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.profile-close-button-container")
     private WebElement closeViewProfileContainer;
 
-    @FindBy(css = ".tma-dismiss-button")
-    private WebElement closeViewStatusBtn;
-
     @FindBy(css = "[ng-click=\"getLastWeekData()\"]")
     private WebElement getLastWeekArrow;
 
@@ -9509,18 +9340,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         else
         { SimpleUtils.fail("Close Button is not enabled ", true); }
-
-    }
-
-    @Override
-    public void closeViewStatusContainer() throws Exception{
-        if(isElementEnabled(closeViewStatusBtn,5)){
-            click(closeViewStatusBtn);
-            SimpleUtils.pass("Close button is available and clicked");
-        }
-        else {
-            SimpleUtils.fail("Close Button is not enabled ", true);
-        }
 
     }
 
@@ -9755,179 +9574,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             //check the shift role
             if (!isElementEnabled(changeRole, 5)) {
                 click(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
-            }
-            clickOnChangeRole();
-            if (areListElementVisible(shiftRoleList, 5) && shiftRoleList.size() >1) {
-                for (WebElement shiftRole : shiftRoleList) {
-                    if (shiftRole.getAttribute("class").contains("sch-worker-change-role-body-selected")) {
-                        if (isApplyChange) {
-                            if (shiftRole.findElement(By.cssSelector("span.sch-worker-change-role-name")).getText().equals(newSelectedWorkRoleName)) {
-                                SimpleUtils.pass("Shift role been changed successfully ");
-                            } else {
-                                SimpleUtils.fail("Shift role failed to change ", true);
-                            }
-                        } else {
-                            if (shiftRole.findElement(By.cssSelector("span.sch-worker-change-role-name")).getText().equals(originSelectedWorkRoleName)) {
-                                SimpleUtils.pass("Shift role is not change ");
-                            } else {
-                                SimpleUtils.fail("Shift role still been changed when click Cancel button ", true);
-                            }
-                        }
-                        break;
-                    }
-                }
-            } else {
-                SimpleUtils.fail("Shift roles are doesn't show well ", true);
-            }
-            if(isElementLoaded(cancelButtonChangeRole, 5)){
-                click(cancelButtonChangeRole);
-            }
-        }
-    }
-
-    public void changeWorkRoleInPromptOfAShift(boolean isApplyChange, WebElement shift) throws Exception {
-        WebElement clickedShift = shift;
-        clickOnChangeRole();
-        if(isElementEnabled(schWorkerInfoPrompt,5)) {
-            SimpleUtils.pass("Various Work Role Prompt is displayed ");
-            String newSelectedWorkRoleName = null;
-            String originSelectedWorkRoleName = null;
-            if (areListElementVisible(shiftRoleList, 5) && shiftRoleList.size() > 0) {
-                if (shiftRoleList.size() == 1) {
-                    SimpleUtils.pass("There is only one Work Role in Work Role list ");
-                    return;
-                } else {
-                    for (WebElement shiftRole : shiftRoleList) {
-                        if (shiftRole.getAttribute("class").contains("sch-worker-change-role-body-selected")) {
-                            originSelectedWorkRoleName = shiftRole.findElement(By.cssSelector("span.sch-worker-change-role-name")).getText();
-                            SimpleUtils.pass("The original selected Role is '" + originSelectedWorkRoleName);
-                            break;
-                        }
-                    }
-                    for (WebElement shiftRole : shiftRoleList) {
-                        if (!shiftRole.getAttribute("class").contains("sch-worker-change-role-body-selected")) {
-                            click(shiftRole);
-                            newSelectedWorkRoleName = shiftRole.findElement(By.cssSelector("span.sch-worker-change-role-name")).getText();
-                            SimpleUtils.pass("Role '" + newSelectedWorkRoleName + "' is selected!");
-                            break;
-                        }
-                    }
-
-                }
-            } else {
-                SimpleUtils.fail("Work roles are doesn't show well ", true);
-            }
-
-            if (isElementEnabled(applyButtonChangeRole, 5) && isElementEnabled(cancelButtonChangeRole, 5)) {
-                SimpleUtils.pass("Apply and Cancel buttons are enabled");
-                if (isApplyChange) {
-                    click(applyButtonChangeRole);
-                    if (isElementEnabled(roleViolationAlter, 5)) {
-                        click(roleViolationAlterOkButton);
-                    }
-                    //to close the popup
-                    waitForSeconds(5);
-                    clickTheElement(clickedShift);
-
-                    clickTheElement(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
-                    SimpleUtils.pass("Apply button has been clicked ");
-                } else {
-                    click(cancelButtonChangeRole);
-                    SimpleUtils.pass("Cancel button has been clicked ");
-                }
-            } else {
-                SimpleUtils.fail("Apply and Cancel buttons are doesn't show well ", true);
-            }
-
-            //check the shift role
-            if (!isElementEnabled(changeRole, 5)) {
-                click(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
-            }
-            clickOnChangeRole();
-            if (areListElementVisible(shiftRoleList, 5) && shiftRoleList.size() >1) {
-                for (WebElement shiftRole : shiftRoleList) {
-                    if (shiftRole.getAttribute("class").contains("sch-worker-change-role-body-selected")) {
-                        if (isApplyChange) {
-                            if (shiftRole.findElement(By.cssSelector("span.sch-worker-change-role-name")).getText().equals(newSelectedWorkRoleName)) {
-                                SimpleUtils.pass("Shift role been changed successfully ");
-                            } else {
-                                SimpleUtils.fail("Shift role failed to change ", true);
-                            }
-                        } else {
-                            if (shiftRole.findElement(By.cssSelector("span.sch-worker-change-role-name")).getText().equals(originSelectedWorkRoleName)) {
-                                SimpleUtils.pass("Shift role is not change ");
-                            } else {
-                                SimpleUtils.fail("Shift role still been changed when click Cancel button ", true);
-                            }
-                        }
-                        break;
-                    }
-                }
-            } else {
-                SimpleUtils.fail("Shift roles are doesn't show well ", true);
-            }
-            if(isElementLoaded(cancelButtonChangeRole, 5)){
-                click(cancelButtonChangeRole);
-            }
-        }
-    }
-
-    public void changeWorkRoleInPromptOfAShiftInDayView(boolean isApplyChange, String shiftid) throws Exception {
-        clickOnChangeRole();
-        if(isElementEnabled(schWorkerInfoPrompt,5)) {
-            SimpleUtils.pass("Various Work Role Prompt is displayed ");
-            String newSelectedWorkRoleName = null;
-            String originSelectedWorkRoleName = null;
-            if (areListElementVisible(shiftRoleList, 5) && shiftRoleList.size() > 0) {
-                if (shiftRoleList.size() == 1) {
-                    SimpleUtils.pass("There is only one Work Role in Work Role list ");
-                    return;
-                } else {
-                    for (WebElement shiftRole : shiftRoleList) {
-                        if (shiftRole.getAttribute("class").contains("sch-worker-change-role-body-selected")) {
-                            originSelectedWorkRoleName = shiftRole.findElement(By.cssSelector("span.sch-worker-change-role-name")).getText();
-                            SimpleUtils.pass("The original selected Role is '" + originSelectedWorkRoleName);
-                            break;
-                        }
-                    }
-                    for (WebElement shiftRole : shiftRoleList) {
-                        if (!shiftRole.getAttribute("class").contains("sch-worker-change-role-body-selected")) {
-                            click(shiftRole);
-                            newSelectedWorkRoleName = shiftRole.findElement(By.cssSelector("span.sch-worker-change-role-name")).getText();
-                            SimpleUtils.pass("Role '" + newSelectedWorkRoleName + "' is selected!");
-                            break;
-                        }
-                    }
-
-                }
-            } else {
-                SimpleUtils.fail("Work roles are doesn't show well ", true);
-            }
-
-            if (isElementEnabled(applyButtonChangeRole, 5) && isElementEnabled(cancelButtonChangeRole, 5)) {
-                SimpleUtils.pass("Apply and Cancel buttons are enabled");
-                if (isApplyChange) {
-                    click(applyButtonChangeRole);
-                    if (isElementEnabled(roleViolationAlter, 5)) {
-                        click(roleViolationAlterOkButton);
-                    }
-                    //to close the popup
-                    waitForSeconds(5);
-                    clickTheElement(getShiftById(shiftid));
-
-                    clickTheElement(getShiftById(shiftid).findElement(By.cssSelector(".sch-shift-worker-img-cursor")));
-                    SimpleUtils.pass("Apply button has been clicked ");
-                } else {
-                    click(cancelButtonChangeRole);
-                    SimpleUtils.pass("Cancel button has been clicked ");
-                }
-            } else {
-                SimpleUtils.fail("Apply and Cancel buttons are doesn't show well ", true);
-            }
-
-            //check the shift role
-            if (!isElementEnabled(changeRole, 5)) {
-                click(getShiftById(shiftid).findElement(By.cssSelector(".sch-shift-worker-img-cursor")));
             }
             clickOnChangeRole();
             if (areListElementVisible(shiftRoleList, 5) && shiftRoleList.size() >1) {
@@ -10407,104 +10053,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Meal break window load failed",true);
 
         click(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
-        clickOnEditMeaLBreakTime();
-        if (isMealBreakTimeWindowDisplayWell(true)) {
-            if (isSavedChange) {
-                if (mealBreakTimes.get(0).getText().equals(mealBreakTimeAfterEdit)) {
-                    SimpleUtils.pass("Edit meal break times successfully");
-                } else
-                    SimpleUtils.fail("Edit meal break time failed",true);
-            } else {
-                if (mealBreakTimes.get(0).getText().equals(mealBreakTimeBeforeEdit)) {
-                    SimpleUtils.pass("Edit meal break times not been changed after click Cancel button");
-                } else
-                    SimpleUtils.fail("Edit meal break times still been changed after click Cancel button",true);
-            }
-        }else
-            SimpleUtils.fail("Meal break window load failed",true);
-        click(cannelBtnInMealBreakButton);
-    }
-
-    public void verifyEditMealBreakTimeFunctionalityForAShift(boolean isSavedChange, WebElement shift) throws Exception {
-        String mealBreakTimeBeforeEdit = null;
-        String mealBreakTimeAfterEdit = null;
-
-        WebElement selectedShift = shift;
-        clickOnEditMeaLBreakTime();
-        if (isMealBreakTimeWindowDisplayWell(true)) {
-            if (mealBreakBar.getAttribute("class").contains("disabled")) {
-                click(addMealBreakButton);
-                click(continueBtnInMealBreakButton);
-                if (isElementEnabled(confirmWindow, 5)) {
-                    click(okBtnOnConfirm);
-                }
-                click(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
-                clickOnEditMeaLBreakTime();
-            }
-            mealBreakTimeBeforeEdit = mealBreakTimes.get(0).getText();
-            moveDayViewCards(mealBreaks.get(0), 40);
-            mealBreakTimeAfterEdit = mealBreakTimes.get(0).getText();
-            if (isSavedChange) {
-                click(continueBtnInMealBreakButton);
-                if (isElementEnabled(confirmWindow, 5)) {
-                    click(okBtnOnConfirm);
-                }
-            } else {
-                click(cannelBtnInMealBreakButton);
-            }
-        }else
-            SimpleUtils.fail("Meal break window load failed",true);
-
-        click(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
-        clickOnEditMeaLBreakTime();
-        if (isMealBreakTimeWindowDisplayWell(true)) {
-            if (isSavedChange) {
-                if (mealBreakTimes.get(0).getText().equals(mealBreakTimeAfterEdit)) {
-                    SimpleUtils.pass("Edit meal break times successfully");
-                } else
-                    SimpleUtils.fail("Edit meal break time failed",true);
-            } else {
-                if (mealBreakTimes.get(0).getText().equals(mealBreakTimeBeforeEdit)) {
-                    SimpleUtils.pass("Edit meal break times not been changed after click Cancel button");
-                } else
-                    SimpleUtils.fail("Edit meal break times still been changed after click Cancel button",true);
-            }
-        }else
-            SimpleUtils.fail("Meal break window load failed",true);
-        click(cannelBtnInMealBreakButton);
-    }
-
-    public void verifyEditMealBreakTimeFunctionalityForAShiftInDayView(boolean isSavedChange, String shiftid) throws Exception {
-        String mealBreakTimeBeforeEdit = null;
-        String mealBreakTimeAfterEdit = null;
-
-        WebElement selectedShift = getShiftById(shiftid);
-        clickOnEditMeaLBreakTime();
-        if (isMealBreakTimeWindowDisplayWell(true)) {
-            if (mealBreakBar.getAttribute("class").contains("disabled")) {
-                click(addMealBreakButton);
-                click(continueBtnInMealBreakButton);
-                if (isElementEnabled(confirmWindow, 5)) {
-                    click(okBtnOnConfirm);
-                }
-                click(getShiftById(shiftid).findElement(By.cssSelector(".sch-shift-worker-img-cursor")));
-                clickOnEditMeaLBreakTime();
-            }
-            mealBreakTimeBeforeEdit = mealBreakTimes.get(0).getText();
-            moveDayViewCards(mealBreaks.get(0), 40);
-            mealBreakTimeAfterEdit = mealBreakTimes.get(0).getText();
-            if (isSavedChange) {
-                click(continueBtnInMealBreakButton);
-                if (isElementEnabled(confirmWindow, 5)) {
-                    click(okBtnOnConfirm);
-                }
-            } else {
-                click(cannelBtnInMealBreakButton);
-            }
-        }else
-            SimpleUtils.fail("Meal break window load failed",true);
-
-        click(getShiftById(shiftid).findElement(By.cssSelector(".sch-shift-worker-img-cursor")));
         clickOnEditMeaLBreakTime();
         if (isMealBreakTimeWindowDisplayWell(true)) {
             if (isSavedChange) {
@@ -12866,36 +12414,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return shift;
     }
 
-    public int getShiftIndexById(String id) throws Exception {
-        waitForSeconds(5);
-        WebElement shift = null;
-        int index = 0;
-        if (id != null && !id.equals("")) {
-            String css = "[data-shift-id=\""+ id+"\"]";
-            shift = MyThreadLocal.getDriver().findElement(By.cssSelector(css));
-            if (isElementLoaded(shift, 5) && areListElementVisible(weekShifts,10)) {
-                for (WebElement element: weekShifts){
-                    if (element.getText().equalsIgnoreCase(shift.getText())){
-                        return index;
-                    }
-                    index++;
-                }
-            } else if (isElementLoaded(shift, 5) && areListElementVisible(dayViewAvailableShifts,10)) {
-                for (WebElement element: dayViewAvailableShifts){
-                    if (element.getText().equalsIgnoreCase(shift.getText())){
-                        return index;
-                    }
-                    index++;
-                }
-            }else{
-                SimpleUtils.fail("Cannot find shift by the id !",false);
-            }
-        } else {
-            SimpleUtils.fail("The shift id is null or empty!",false);
-        }
-        return index;
-    }
-
 
     @FindBy(css = "div[ng-repeat=\"error in swapError\"]")
     private List<WebElement> warningMessagesInSwap;
@@ -13972,41 +13490,5 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
 
     }
-
-    @FindBy(css = ".modal-dialog .lg-picker-input")
-    private WebElement locationInput;
-    @FindBy(css = ".modal-dialog input[placeholder=\"Search Location\"]")
-    private WebElement searchInputForLocationInPopupWindow;
-    @FindBy (css = ".modal-dialog .lg-picker-input__wrapper.lg-ng-animate.ng-hide .input-faked")
-    private WebElement selectedLocationOnCreateScheduleWindow;
-    @Override
-    public void chooseLocationInCreateSchedulePopupWindow(String location) throws Exception{
-        if (isElementLoaded(locationInput, 60)){
-            click(locationInput);
-            if(areListElementVisible(locationsInLocationSelectorOnUngenerateSchedulePage, 5)
-                    && locationsInLocationSelectorOnUngenerateSchedulePage.size() >0){
-                if (location == null){
-                    int randomLocations = (new Random()).nextInt(locationsInLocationSelectorOnUngenerateSchedulePage.size());
-                    location = locationsInLocationSelectorOnUngenerateSchedulePage.get(randomLocations).getText();
-                }
-
-                if(isElementLoaded(searchInputForLocationInPopupWindow, 5)){
-                    searchInputForLocationInPopupWindow.sendKeys(location);
-                }
-                waitForSeconds(3);
-                click(locationsInLocationSelectorOnUngenerateSchedulePage.get(0));
-                System.out.println("  mihbg nih  ".trim());
-                if(selectedLocationOnCreateScheduleWindow.getAttribute("innerHTML").replace("\n","").trim().equalsIgnoreCase(location)){
-                    SimpleUtils.pass("Create schedule window: Select locations on Edit Operating hours successfully! ");
-                } else
-                    SimpleUtils.fail("Create schedule window: Select locations on Edit Operating hours failed! ", false);
-
-            } else {
-                SimpleUtils.fail("Create schedule window: Locations fail to list! ", false);
-            }
-        } else
-            SimpleUtils.fail("location input in popup window fail to load! ", false);
-    }
-
 }
 
