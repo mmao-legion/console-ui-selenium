@@ -3491,4 +3491,76 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public boolean isHourFormat24Hour() throws Exception {
         return false;
     }
+
+    @Override
+    public void selectChildLocInCreateShiftWindow(String location) throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void selectChildLocationFilterByText(String location) throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void verifyEditMealBreakTimeFunctionalityForAShift(boolean isSavedChange, WebElement shift) throws Exception {
+
+    }
+
+    @Override
+    public WebElement clickOnProfileIconOfOpenShift() throws Exception {
+        return null;
+    }
+
+    @Override
+    public WebElement clickOnProfileIconOfShiftInDayView(String openOrNot) throws Exception {
+        return null;
+    }
+
+    @Override
+    public String getTheShiftInfoByIndexInDayview(int index) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyEditMealBreakTimeFunctionalityForAShiftInDayView(boolean isSavedChange, String shiftid) throws Exception {
+
+    }
+
+    @Override
+    public void changeWorkRoleInPromptOfAShiftInDayView(boolean isApplyChange, String shiftid) throws Exception {
+
+    }
+
+    @Override
+    public void chooseLocationInCreateSchedulePopupWindow(String location) throws Exception {
+
+    }
+
+    @Override
+    public void selectRandomLocationOnCreateScheduleEditOperatingHoursPage() throws Exception {
+
+    }
+
+    @Override
+    public void editTheOperatingHoursForLGInPopupWinodw(List<String> weekDaysToClose) throws Exception {
+
+    }
+
+    @Override
+    public void closeViewStatusContainer() throws Exception {
+
+    }
+
+    @Override
+    public void changeWorkRoleInPromptOfAShift(boolean isApplyChange, WebElement shift) throws Exception {
+
+    }
+
+    @Override
+    public int getShiftIndexById(String id) throws Exception {
+        return 0;
+    }
 }

@@ -574,4 +574,18 @@ public interface SchedulePage {
 	public boolean verifyScheduleNotPublishedSmartCardShowing() throws Exception;
 	public void clickToggleSummaryViewButton() throws Exception;
 	public boolean isHourFormat24Hour() throws Exception;
+	public void selectChildLocInCreateShiftWindow(String location) throws Exception;
+	public void selectChildLocationFilterByText(String location) throws Exception;
+	public void verifyEditMealBreakTimeFunctionalityForAShift(boolean isSavedChange, WebElement shift) throws Exception;
+	public WebElement clickOnProfileIconOfOpenShift() throws Exception;
+	public WebElement clickOnProfileIconOfShiftInDayView(String openOrNot) throws Exception;
+	public void verifyEditMealBreakTimeFunctionalityForAShiftInDayView(boolean isSavedChange, String shiftid) throws Exception;
+	public void changeWorkRoleInPromptOfAShiftInDayView(boolean isApplyChange, String shiftid) throws Exception;
+	public void chooseLocationInCreateSchedulePopupWindow(String location) throws Exception;
+	public void selectRandomLocationOnCreateScheduleEditOperatingHoursPage() throws Exception;
+	public void closeViewStatusContainer() throws Exception;
+	public void editTheOperatingHoursForLGInPopupWinodw(List<String> weekDaysToClose) throws Exception;
+	public void changeWorkRoleInPromptOfAShift(boolean isApplyChange, WebElement shift) throws Exception;
+	public int getShiftIndexById(String id) throws Exception;
+	public String getTheShiftInfoByIndexInDayview(int index) throws Exception;
 }
