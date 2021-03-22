@@ -2087,7 +2087,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void validateGroupBySelectorSchedulePage() throws Exception {
+    public void validateGroupBySelectorSchedulePage(boolean isLocationGroup) throws Exception{
 
     }
 
@@ -2903,7 +2903,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void validateScheduleTableWhenSelectAnyOfGroupByOptions() throws Exception {
+    public void validateScheduleTableWhenSelectAnyOfGroupByOptions(boolean isLocationGroup) throws Exception {
 
     }
 

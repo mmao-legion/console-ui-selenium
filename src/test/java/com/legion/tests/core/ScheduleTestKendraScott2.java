@@ -432,9 +432,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
 		//In week view, Group by All filter have 4 filters:1.Group by all  2. Group by work role  3. Group by TM 4.Group by job title
-		schedulePage.validateGroupBySelectorSchedulePage();
+		schedulePage.validateGroupBySelectorSchedulePage(false);
 		//Selecting any of them, check the schedule table
-		schedulePage.validateScheduleTableWhenSelectAnyOfGroupByOptions();
+		schedulePage.validateScheduleTableWhenSelectAnyOfGroupByOptions(false);
 
 		//Edit button should be clickable
 		//While click on edit button,if Schedule is finalized then prompt is available and Prompt is in proper alignment and correct msg info.

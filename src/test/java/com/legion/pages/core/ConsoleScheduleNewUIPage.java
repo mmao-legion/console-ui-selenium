@@ -9,7 +9,6 @@ import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.ro.Si;
 import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.interactions.Actions;
@@ -418,6 +417,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(xpath = "//option[contains(@value,'string:JobTitle')]")
     private WebElement groupByJobTitle;
+
+    @FindBy(xpath = "//option[contains(@value,'string:Location')]")
+    private WebElement groupByLocation;
 
     // Verify Group by work Role
     @FindBy(css = "div.week-schedule-shift-place.ng-scope.week-schedule-shift-place-ribbon")
@@ -6311,7 +6313,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public List<Integer> getAddedShiftIndexes(String name) throws Exception {
         // Wait for the shifts to be loaded
-        waitForSeconds(3);
+        waitForSeconds(5);
         List<Integer> indexes = new ArrayList<>();
         if (areListElementVisible(shiftsWeekView, 5)) {
             for (int i = 0; i < shiftsWeekView.size(); i++) {
@@ -6325,7 +6327,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }
         if (indexes.size() == 0) {
-            SimpleUtils.fail("Failed to get the index of the newly added shifts!", true);
+            SimpleUtils.fail("Failed to get the index of the newly added shifts!", false);
         }
         return indexes;
     }
@@ -8796,13 +8798,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     //added by Estelle
     @Override
-    public void validateGroupBySelectorSchedulePage() throws Exception {
+    public void validateGroupBySelectorSchedulePage(boolean isLocationGroup) throws Exception {
 
         if(isElementLoaded(groupBySelector,5))
         {
             click( groupBySelector);
             // Validate the each button on dropdown
-            if(isElementEnabled(groupByAll,3) && isElementEnabled(groupByWorkRole,3) && isElementEnabled(groupByTM,3) && isElementLoaded(groupByJobTitle,3))
+            if(isElementEnabled(groupByAll,3)
+                    && isElementEnabled(groupByWorkRole,3)
+                    && isElementEnabled(groupByTM,3)
+                    && isElementLoaded(groupByJobTitle,3)
+                    && (isLocationGroup? isElementLoaded(groupByLocation, 5):true))
+                if(isLocationGroup){
+                    SimpleUtils.pass("In Week view: 'Group by All' filter have 5 filters:1.Group by all 2. Group by work role 3. Group by TM 4.Group by job title 5 Group by location");
+                } else
                 SimpleUtils.pass("In Week view: 'Group by All' filter have 4 filters:1.Group by all 2. Group by work role 3. Group by TM 4.Group by job title");
             else SimpleUtils.fail("Group by All filter does not have 4 filters:1.Group by all 2. Group by work role 3. Group by TM 4.Group by job title",true);
         }
@@ -8820,10 +8829,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement tMHourAndAverageShiftLengthColumn;
 
     @FindBy(css = "[class=\"week-schedule-shift-title\"]")
-    private List<WebElement> jobTitleNames;
+    private List<WebElement> scheduleShiftTitles;
+
+    @FindBy(css = "div.week-schedule-ribbon-location-toggle")
+    private List<WebElement> groupByLocationToggles;
 
     @Override
-    public void validateScheduleTableWhenSelectAnyOfGroupByOptions() throws Exception {
+    public void validateScheduleTableWhenSelectAnyOfGroupByOptions(boolean isLocationGroup) throws Exception {
         if(isElementLoaded(groupBySelector,5)) {
             //validate the schedule table when group by Work Role
             selectGroupByFilter(scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
@@ -8843,10 +8855,64 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
             //validate the schedule table when group by Job Title
             selectGroupByFilter(scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
-            if (areListElementVisible(jobTitleNames, 10) && jobTitleNames.size() > 0) {
+            if (areListElementVisible(scheduleShiftTitles, 10) && scheduleShiftTitles.size() > 0) {
                 SimpleUtils.pass("In Week view: Shifts in schedule table are grouped by job title");
             } else {
                 SimpleUtils.fail("In Week view: Shifts in schedule table are failed group by job title ", false);
+            }
+
+            //validate the schedule table when group by Location
+            if(isLocationGroup){
+                selectGroupByFilter(scheduleGroupByFilterOptions.groupbyLocation.getValue());
+                if (areListElementVisible(scheduleShiftTitles, 10) && scheduleShiftTitles.size() > 0
+                        && areListElementVisible(groupByLocationToggles, 10) && groupByLocationToggles.size()> 0
+                        && groupByLocationToggles.size() == scheduleShiftTitles.size()) {
+                    SimpleUtils.pass("In Week view: Shifts in schedule table are grouped by Location");
+
+                    // Check the sub-location display in alphabetical order
+                    List<String>  locationsNamesInSchedule = new ArrayList<>();
+                    for(int i = 0; i< scheduleShiftTitles.size(); i++){
+                        locationsNamesInSchedule.add(scheduleShiftTitles.get(i).getText());
+                    }
+                    List<String>  locationsNamesBySorted = locationsNamesInSchedule;
+                    Collections.sort(locationsNamesBySorted);
+
+                    if(locationsNamesBySorted.equals(locationsNamesInSchedule)){
+                        SimpleUtils.pass("In Week view: Sub-location display in alphabetical order when grouped by Location");
+                    } else
+                        SimpleUtils.fail("In Week view: Sub-location are not display in alphabetical order when grouped by Location", false);
+
+                    //Check the first location will be opened
+                    if(groupByLocationToggles.get(0).getAttribute("class").contains("open")){
+                        SimpleUtils.pass("In Week view: The first location is opened ");
+                    } else
+                        SimpleUtils.fail("In Week view: The first location is not opened ", false);
+
+                    //Check all locations can be expanded and closed
+                    int randomIndex = (new Random()).nextInt(groupByLocationToggles.size()-1)+1;
+
+                    if(groupByLocationToggles.get(randomIndex).getAttribute("class").contains("close")){
+                        scheduleShiftTitles.get(randomIndex).click();
+                        if(groupByLocationToggles.get(randomIndex).getAttribute("class").contains("open")){
+                            SimpleUtils.pass("In Week view: Location can be expanded ");
+                        } else
+                            SimpleUtils.fail("In Week view: Location cannot be expanded ", false);
+
+                        scheduleShiftTitles.get(randomIndex).click();
+                        if(groupByLocationToggles.get(randomIndex).getAttribute("class").contains("close")){
+                            SimpleUtils.pass("In Week view: Location can be closed ");
+                        } else
+                            SimpleUtils.fail("In Week view: Location cannot be closed ", false);
+                    } else if(groupByLocationToggles.get(randomIndex).getAttribute("class").contains("open")){
+                        scheduleShiftTitles.get(randomIndex).click();
+                        if(groupByLocationToggles.get(randomIndex).getAttribute("class").contains("close")){
+                            SimpleUtils.pass("In Week view: Location can be closed ");
+                        } else
+                            SimpleUtils.fail("In Week view: Location cannot be closed ", false);
+                    }
+                } else {
+                    SimpleUtils.fail("In Week view: Shifts in schedule table are failed group by Location ", false);
+                }
             }
 
             //change back to Group by All
