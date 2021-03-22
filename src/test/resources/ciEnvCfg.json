@@ -2,7 +2,7 @@
   "CHROME_DRIVER_PATH": "src/test/resources/Driver/chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "/usr/local/bin/geckodriver",
   "DEVURL": "https://mobilestage.legion.work/",
-  "QAURL": "https://rc-enterprise.dev.legion.work/",
+  "QAURL": "https://enterprise.rel.legion.work//",
   "Screenshot_Path": "/var/lib/jenkins/workspace/createRemoteSeleniumGridForHydsoft/chinaQA",
   "ENTERPRISE" : "LegionCoffee2",
   "Coffee_Enterprise" : "LegionCoffee",
