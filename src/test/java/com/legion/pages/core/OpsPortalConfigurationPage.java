@@ -134,14 +134,15 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 
 
-	public enum configurationLandingPageTemplateCards{
+	public enum configurationLandingPageTemplateCards
+	{
 		OperatingHours("Operating Hours"),
 		SchedulingPolicies("Scheduling Policies"),
 		ScheduleCollaboration("Schedule Collaboration"),
 		TimeAttendance("Time & Attendance"),
 		Compliance("Compliance"),
-		SchedulingRules("Scheduling Rules");
-//		Communications("Communications");
+		SchedulingRules("Scheduling Rules"),
+		Communications("Communications");
 		private final String value;
 
 		configurationLandingPageTemplateCards(final String newValue) {
@@ -170,8 +171,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void checkAllTemplateCards() throws Exception {
-		if(configurationCardsList.size()!=0){
-			for(WebElement configurationCard:configurationCardsList){
+		if(configurationCardsList.size()==6){
+			for(WebElement configurationCard:configurationCardsList) {
 				if(configurationCard.getText().equals(configurationLandingPageTemplateCards.OperatingHours.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.OperatingHours.getValue() + " card is showing.");
 					continue;
@@ -190,16 +191,39 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.SchedulingRules.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.SchedulingRules.getValue() + " card is showing.");
 					continue;
-				}
-				/*else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.Communications.getValue())){
-					SimpleUtils.pass(configurationLandingPageTemplateCards.Communications.getValue() + " card is showing.");
-					continue;
-				}*/
-				else{
+				}else{
 					SimpleUtils.fail("Configuration template cards are loaded incorrect",false);
 				}
 			}
-		}else{
+		}else if(configurationCardsList.size()==7){
+			for(WebElement configurationCard:configurationCardsList) {
+				if(configurationCard.getText().equals(configurationLandingPageTemplateCards.OperatingHours.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.OperatingHours.getValue() + " card is showing.");
+					continue;
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.SchedulingPolicies.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.SchedulingPolicies.getValue() + " card is showing.");
+					continue;
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.ScheduleCollaboration.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.ScheduleCollaboration.getValue() + " card is showing.");
+					continue;
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.TimeAttendance.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.TimeAttendance.getValue() + " card is showing.");
+					continue;
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.Compliance.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.Compliance.getValue() + " card is showing.");
+					continue;
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.SchedulingRules.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.SchedulingRules.getValue() + " card is showing.");
+					continue;
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.Communications.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.Communications.getValue() + " card is showing.");
+					continue;
+				}else{
+					SimpleUtils.fail("Configuration template cards are loaded incorrect",false);
+				}
+			}
+		}
+		else{
 			SimpleUtils.fail("Configuration landing page was loading failed",false);
 		}
 	}
