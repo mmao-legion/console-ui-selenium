@@ -1,9 +1,9 @@
 {
-  "Sunday": "08:00 - 20:00",
-  "Monday": "08:00 - 20:00",
-  "Tuesday": "08:00 - 20:00",
-  "Wednesday": "08:00 - 20:00",
-  "Thursday": "08:00 - 20:00",
-  "Friday": "08:00 - 20:00",
-  "Saturday": "08:00 - 20:00"
+  "Sunday": "08:00AM - 08:00PM",
+  "Monday": "08:00AM - 08:00PM",
+  "Tuesday": "08:00AM - 08:00PM",
+  "Wednesday": "08:00AM - 08:00PM",
+  "Thursday": "08:00AM - 08:00PM",
+  "Friday": "08:00AM - 08:00PM",
+  "Saturday": "08:00AM - 08:00PM"
 }
