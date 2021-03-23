@@ -393,6 +393,9 @@ public abstract class TestBase {
         if (getDriver().getCurrentUrl().contains(propertyMap.get("DGStage_Enterprise"))) {
             locationSelectorPage.changeDistrict(districtsMap.get("DGStage_Enterprise"));
         }
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+            locationSelectorPage.changeDistrict(districtsMap.get("CinemarkWkdy_Enterprise"));
+        }
     }
 
     public abstract void firstTest(Method testMethod, Object[] params) throws Exception;
