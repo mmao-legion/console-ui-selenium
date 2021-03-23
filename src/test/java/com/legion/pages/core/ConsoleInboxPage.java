@@ -653,9 +653,9 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     private String getTimeFormat(String time) throws Exception{
         String result = time.substring(0,2);
         if (time.contains("AM") | time.contains("am")){
-            result = result.concat(":00 am");
+            result = result.concat(":00am");
         } else {
-            result = result.concat(":00 pm");
+            result = result.concat(":00pm");
         }
         if (result.indexOf("0")==0){
             result = result.substring(1);
