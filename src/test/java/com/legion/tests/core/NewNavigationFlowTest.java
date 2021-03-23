@@ -277,7 +277,7 @@ public class NewNavigationFlowTest extends TestBase {
 
         //change district to show all locations
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict("Test District");
+        locationSelectorPage.changeDistrict("add district via con");
 
         String searchLocationText = "*";
         Thread.sleep(4000);
@@ -325,8 +325,8 @@ public class NewNavigationFlowTest extends TestBase {
     @TestName(description = "Validated navigation bar show after switch to other tabs and then return to dashboard page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String districtName="Cinemark";
-        String locationName="00840";
+        String districtName="OMDistrict1";
+        String locationName="OMLocation2";
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -392,12 +392,12 @@ public class NewNavigationFlowTest extends TestBase {
     public void verifyNavigationBarRecentlyViewListAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         List<String> searchDistrictsList = new ArrayList<String>(){{
-            add("Cinemark");
-            add("Central Texas Region");
-            add("Southwest Region");
-            add("Atlantic Central Region");
-            add("Upper Midwest Region");
-            add("Western Region");
+            add("District1002");
+            add("District1003");
+            add("OMDistrict1");
+            add("1204-1");
+            add("add district via con");
+            add("DistrictEmpty001");
         }};
 
         List<String> finalDistrictsList = new ArrayList<String>();

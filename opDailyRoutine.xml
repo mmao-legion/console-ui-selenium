@@ -42,10 +42,10 @@
                     <include name="verifyAddOrUpdateDistrictFunction" />
                     <include name="verifyDisableEnableDistrictFunction" />
                     <!--                    Global dynamic group test cases-->
-<!--                    <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />-->
-<!--                    <include name="verifyGlobalDynamicGroupAbnormalScenarios" />-->
-<!--                    <include name="verifyGlobalDynamicGroupInClockInFunction" />-->
-<!--                    <include name="verifyGlobalDynamicGroupInWFS" />-->
+                    <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />
+                    <include name="verifyGlobalDynamicGroupAbnormalScenarios" />
+                    <include name="verifyGlobalDynamicGroupInClockInFunction" />
+                    <include name="verifyGlobalDynamicGroupInWFS" />
 
                 </methods>
             </class>
@@ -59,7 +59,7 @@
                     <include name="verifyLocationProfilePageInControls" />
                     <include name="verifyManagerLocationForOneUserInControlsInControls" />
                     <include name="verifyDashboardViewAsInternalAdmin" />
-                    <!--include name="verifyDashboardViewAsDistrictManager" /-->
+                    <include name="verifyDashboardViewAsDistrictManager" />
                     <include name="verifyDashboardViewAsStoreManager" />
                     <include name="verifyNavigationBarSearchDistrictFunctionInternalAdmin" />
                     <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />
