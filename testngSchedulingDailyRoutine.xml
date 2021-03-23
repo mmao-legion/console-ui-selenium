@@ -224,7 +224,7 @@
 <!--                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
 <!--                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
 <!--                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-                    <include name="verifyTurnOffMinorRuleAsInternalAdmin" />
+<!--                    <include name="verifyTurnOffMinorRuleAsInternalAdmin" Blocked by OPS-2122/>-->
                     <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" />
                     <include name="verifyAccessToEditCalendarsAsInternalAdmin" />
                 </methods>

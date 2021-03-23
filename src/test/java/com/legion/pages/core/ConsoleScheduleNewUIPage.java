@@ -5428,15 +5428,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         if (isElementEnabled(saveOnSaveConfirmationPopup, 3)) {
             clickTheElement(saveOnSaveConfirmationPopup);
+            waitForSeconds(3);
+            if (isElementLoaded(msgOnTop, 60) && msgOnTop.getText().contains("Success")) {
+                SimpleUtils.pass("Save the Schedule Successfully!");
+            } else {
+                SimpleUtils.fail("Save Schedule Failed!", false);
+            }
+            waitForSeconds(3);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-        if (isElementLoaded(msgOnTop, 60) && msgOnTop.getText().contains("Success")) {
-            SimpleUtils.pass("Save the Schedule Successfully!");
-        } else {
-            SimpleUtils.fail("Save Schedule Failed!", false);
-        }
-        waitForSeconds(3);
     }
 
     public void convertToOpen(int i) {
@@ -12288,7 +12289,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         int index = -1;
         if (areListElementVisible(schCalendarDateLabel, 10)) {
             for (int i = 0; i < schCalendarDateLabel.size(); i++) {
-                if (schCalendarDateLabel.get(i).getText().contains(date.trim())) {
+                if (Integer.parseInt(schCalendarDateLabel.get(i).getText().trim()) == Integer.parseInt(date.trim())) {
                     index = i;
                     SimpleUtils.pass("Get the index of Date" + date + ", the index is: " + i);
                     break;
