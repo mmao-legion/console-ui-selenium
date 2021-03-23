@@ -140,8 +140,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		ScheduleCollaboration("Schedule Collaboration"),
 		TimeAttendance("Time & Attendance"),
 		Compliance("Compliance"),
-		SchedulingRules("Scheduling Rules"),
-		Communications("Communications");
+		SchedulingRules("Scheduling Rules");
+//		Communications("Communications");
 		private final String value;
 
 		configurationLandingPageTemplateCards(final String newValue) {
@@ -190,10 +190,11 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.SchedulingRules.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.SchedulingRules.getValue() + " card is showing.");
 					continue;
-				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.Communications.getValue())){
+				}
+				/*else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.Communications.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.Communications.getValue() + " card is showing.");
 					continue;
-				}
+				}*/
 				else{
 					SimpleUtils.fail("Configuration template cards are loaded incorrect",false);
 				}
@@ -541,7 +542,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement shiftStartEventPoint;
 	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"eventPointOptions\"] select option")
 	private List<WebElement> shiftStartEventPointList;
-	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeEventOptions\"]")
+	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeEventOptions\"] select")
 	private WebElement shiftStartTimeEvent;
 	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeEventOptions\"] select option")
 	private List<WebElement> shiftStartTimeEventList;
@@ -601,6 +602,23 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeUnitOptions\"] div.input-faked")
+	private WebElement startTimeUnitValue;
+
+	@Override
+	public void selectShiftStartTimeUnit(String startTimeUnit) throws Exception{
+		if(isElementEnabled(shiftStartTimeUnit)){
+			selectByVisibleText(shiftStartTimeUnit,startTimeUnit);
+			waitForSeconds(2);
+			String startTimeUnitVal = startTimeUnitValue.getAttribute("innerText").trim();
+			if(startTimeUnitVal.equals(startTimeUnit)){
+				SimpleUtils.pass("User successfully select start event: " + startTimeUnitVal);
+			}else {
+				SimpleUtils.fail("User failed to select start event: " + startTimeUnitVal,false);
+			}
+		}
+	}
+
 //below are operation hour element
 	@FindBy(css="div.dayparts span.add-circle")
 	private WebElement addDayPartsBTNInOH;
@@ -634,6 +652,23 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		return startTimeEventList;
 	}
 
+	@FindBy(css="div[class=\"mt-20\"] input-field[options*=\"timeEventOptions\"] div.input-faked")
+	private WebElement shiftStartTimeEventValue;
+
+	@Override
+	public void selectShiftStartTimeEvent(String startEvent) throws Exception{
+		if(isElementEnabled(shiftStartTimeEvent)){
+			selectByVisibleText(shiftStartTimeEvent,startEvent);
+			waitForSeconds(2);
+			String shiftStartTimeEventVal = shiftStartTimeEventValue.getAttribute("innerText").trim();
+			if(shiftStartTimeEventVal.equals(startEvent)){
+				SimpleUtils.pass("User successfully select start event.");
+			}else {
+				SimpleUtils.fail("User failed to select start event.",false);
+			}
+		}
+	}
+
     @FindBy(css="div.dif.duartion input-field[type=\"radio\"] ng-form")
 	private WebElement shiftDuartionRadioButton;
 	@FindBy(css="div.dif.duartion input-field[type=\"number\"] input")
@@ -654,9 +689,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement shiftEndEventPoint;
 	@FindBy(css="div.dif.end-shift input-field[options=\"$ctrl.eventPointOptions\"] select option")
 	private WebElement shiftEndEventPointList;
-	@FindBy(css="div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"]")
+	@FindBy(css="div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"] select")
 	private WebElement shiftEndTimeEvent;
-	@FindBy(css="div[class=\"mt-20 dif\"] div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"] select option")
+	@FindBy(css="div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"] select option")
 	private WebElement shiftEndTimeEventList;
 	@FindBy(css="div.dif.duartion input-field[type=\"number\"]+span")
 	private WebElement shiftDuartionMinutesUnit;
@@ -1233,18 +1268,6 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			WebElement deleteButton = advancedStaffingRuleList.get(0).findElement(By.cssSelector("span.settings-work-rule-edit-delete-icon"));
 			clickTheElement(deleteButton);
 			waitForSeconds(2);
-			/*if(isElementEnabled(deleteButtonOnDialogPage)){
-				SimpleUtils.pass("The delete button of rule list is clickable.");
-				clickTheElement(deleteButtonOnDialogPage);
-				waitForSeconds(2);
-				if(!isElementEnabled(deleteButton)){
-					SimpleUtils.pass("User can delete advance staffing rule successfully!");
-				}else {
-					SimpleUtils.fail("User can't delete advance staffing rule successfully!",false);
-				}
-			}else {
-				SimpleUtils.fail("The delete button of rule list is not clickable.",false);
-			}*/
 			if(advancedStaffingRuleList.get(0).findElements(By.cssSelector("div[ng-if=\"$ctrl.isViewMode()\"]>div")).size()==1){
 				SimpleUtils.pass("User can delete advance staffing rule successfully!");
 			}else {
@@ -1331,6 +1354,11 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			click(publishNowButton);
 		}else
 			SimpleUtils.fail("Workforce sharing group selector load failed",false);
+	}
 
+	public void validateStartAfterEndBeforeOpertingHoursRule(String StartTimeEvent,String startOffsetTime,String startEventPoint,String startTimeUnit) throws Exception{
+		selectShiftStartTimeEvent(StartTimeEvent);
+		inputOffsetTimeForShiftStart(startOffsetTime,startEventPoint);
+		selectShiftStartTimeUnit(startTimeUnit);
 	}
 }

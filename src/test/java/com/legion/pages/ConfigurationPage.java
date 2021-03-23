@@ -53,5 +53,7 @@ public interface ConfigurationPage {
     public void setWFS(String wfsMode);
     public void selectWFSGroup(String wfsName) throws Exception;
     public void publishNowTheTemplate() throws Exception;
+    public void selectShiftStartTimeEvent(String startEvent) throws Exception;
+    public void selectShiftStartTimeUnit(String startTimeUnit) throws Exception;
 
 }
