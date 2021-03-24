@@ -8900,8 +8900,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     for(int i = 0; i< scheduleShiftTitles.size(); i++){
                         locationsNamesInSchedule.add(scheduleShiftTitles.get(i).getText());
                     }
-                    List<String>  locationsNamesBySorted = locationsNamesInSchedule;
-                    Collections.sort(locationsNamesBySorted);
+                    List<String>  locationsNamesBySorted = new ArrayList<>();
+                    locationsNamesBySorted.addAll(locationsNamesInSchedule);
+                    locationsNamesInSchedule.sort(null);
 
                     if(locationsNamesBySorted.equals(locationsNamesInSchedule)){
                         SimpleUtils.pass("In Week view: Sub-location display in alphabetical order when grouped by Location");

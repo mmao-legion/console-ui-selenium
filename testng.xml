@@ -472,11 +472,16 @@
         <classes>
             <class name="com.legion.tests.core.LocationGroupTest">
                 <methods>
-                    <include name="validateTheGenerationOfLGScheduleAsInternalAdmin" />
-                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdmin" />
-                    <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
-                    <include name="validateTheButtonsOnSchedulePageAsInternalAdmin" />
-                    <include name="validateTheGroupByDropdownListAsInternalAdmin" />
+                    <include name="validateTheGenerationOfLGScheduleForMSAsInternalAdmin" />
+                    <include name="validateTheGenerationOfLGScheduleForP2PAsInternalAdmin" />
+                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForMSAsInternalAdmin" />
+                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForP2PAsInternalAdmin" />
+                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleForMSAsInternalAdmin" />
+                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleForP2PAsInternalAdmin"/>
+                    <include name="validateTheButtonsOnSchedulePageForMSAsInternalAdmin" />
+                    <include name="validateTheButtonsOnSchedulePageForP2PAsInternalAdmin" />
+                    <include name="validateTheGroupByDropdownListForMSAsInternalAdmin" />
+                    <include name="validateTheGroupByDropdownListForP2PAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
