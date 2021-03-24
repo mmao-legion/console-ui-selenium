@@ -379,7 +379,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(xpath="//div[@class='tma-search-action']/following-sibling::div[1]//div[@class='worker-edit-search-worker-name']/following-sibling::div[2]")
     private List<WebElement> searchWorkerLocation;
 
-    @FindBy(css="tr.table-row.ng-scope")
+    @FindBy(css="[ng-show=\"hasSearchResults()\"] tr.table-row.ng-scope")
     private List<WebElement> searchTMRows;
 
     @FindBy(xpath="//div[@class='sch-day-view-shift ng-scope']//div[contains(@class,'sch-day-view-shift-time')]")
@@ -478,7 +478,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.tab.ng-scope")
     private List<WebElement> selectTeamMembersOption;
 
-    @FindBy(xpath = "//span[contains(text(),'TMs')]")
+    @FindBy(xpath = ".tab-set .select .tab-label-text")
     private WebElement selectRecommendedOption;
 
     @FindBy(css = "div.tma-scroll-table tr")
@@ -2569,7 +2569,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public void verifySelectTeamMembersOption() throws Exception {
-        if (isElementEnabled(selectRecommendedOption)) {
+        waitForSeconds(3);
+        if (isElementLoaded(selectRecommendedOption, 20)) {
             clickTheElement(selectRecommendedOption);
             waitForSeconds(3);
             if (areListElementVisible(recommendedScrollTable, 5)) {
@@ -2613,8 +2614,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public String selectTeamMembers() throws Exception {
         String newSelectedTM = null;
-        if (areListElementVisible(recommendedScrollTable, 5)) {
-            if (isElementEnabled(selectRecommendedOption)) {
+        waitForSeconds(5);
+        if (areListElementVisible(recommendedScrollTable, 20)) {
+            if (isElementLoaded(selectRecommendedOption, 5)) {
                 String[] txtRecommendedOption = selectRecommendedOption.getText().replaceAll("\\p{P}", "").split(" ");
                 if (Integer.parseInt(txtRecommendedOption[2]) == 0) {
                     SimpleUtils.report(txtRecommendedOption[0] + " Option no recommended TMs");
@@ -2627,7 +2629,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             } else {
                 click(btnSearchteamMember.get(0));
                 newSelectedTM = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
-                SimpleUtils.fail("Recommended option not available on page", false);
+                SimpleUtils.report("Recommended option not available on page");
             }
         } else if (isElementLoaded(textSearch, 5)) {
             newSelectedTM = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
@@ -2693,7 +2695,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             }
 
-            if (selectedTMName == null) {
+            if (selectedTMName == null || (selectedTMName != null && selectedTMName.isEmpty())) {
                 SimpleUtils.fail("Not able to found Available TMs in SearchResult", false);
             }
 
@@ -5430,6 +5432,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             clickTheElement(saveOnSaveConfirmationPopup);
             waitForSeconds(3);
             if (isElementLoaded(msgOnTop, 60) && msgOnTop.getText().contains("Success")) {
+                SimpleUtils.pass("Save the Schedule Successfully!");
+            } else if (isElementLoaded(editScheduleButton, 10)) {
                 SimpleUtils.pass("Save the Schedule Successfully!");
             } else {
                 SimpleUtils.fail("Save Schedule Failed!", false);
@@ -12490,7 +12494,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         waitForSeconds(5);
         WebElement shift = null;
         if (id != null && !id.equals("")) {
-            String css = "[data-shift-id=\""+ id+"\"]";
+            String css = "div[data-shift-id=\""+ id+"\"]";
             shift = MyThreadLocal.getDriver().findElement(By.cssSelector(css));
             if (isElementLoaded(shift, 5)) {
                 SimpleUtils.pass("Get one shift by the id successfully");

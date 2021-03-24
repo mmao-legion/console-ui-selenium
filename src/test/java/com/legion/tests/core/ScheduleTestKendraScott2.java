@@ -428,7 +428,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		schedulePage.navigateToNextWeek();
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
-		if(!isActiveWeekGenerated){
+		if(isActiveWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
 			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
 		//In week view, Group by All filter have 4 filters:1.Group by all  2. Group by work role  3. Group by TM 4.Group by job title
@@ -484,7 +485,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.clickonAssignTM();
 		String firstNameOfSelectedTM = schedulePage.selectTeamMembers();
 		schedulePage.clickOnOfferOrAssignBtn();
-		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" , firstNameOfSelectedTM.equals(schedulePage.getShiftById(selectedShiftId).findElement(By.className("week-schedule-worker-name")).getText()), false);
+		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" , firstNameOfSelectedTM.equals(schedulePage.getShiftById(selectedShiftId).findElement(By.className("week-schedule-worker-name")).getText().trim()), false);
 		//Select new TM from Recommended TMs tab
 		selectedShift = schedulePage.clickOnProfileIcon();
 		String selectedShiftId2 = selectedShift.getAttribute("id").toString();
@@ -492,7 +493,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.switchSearchTMAndRecommendedTMsTab();
 		String firstNameOfSelectedTM2 = schedulePage.selectTeamMembers();
 		schedulePage.clickOnOfferOrAssignBtn();
-		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" , firstNameOfSelectedTM2.equals(schedulePage.getShiftById(selectedShiftId2).findElement(By.className("week-schedule-worker-name")).getText()), false);
+		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" , firstNameOfSelectedTM2.equals(schedulePage.getShiftById(selectedShiftId2).findElement(By.className("week-schedule-worker-name")).getText().trim()), false);
 
 		//Click on the Convert to open shift, checkbox is available to offer the shift to any specific TM[optional] Cancel /yes
 		//if checkbox is unselected then, shift is convert to open
