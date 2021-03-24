@@ -7420,6 +7420,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void clickOnFilterBtn() throws Exception {
+        waitForSeconds(10);
         if (isElementLoaded(filterButton,30)) {
             click(filterButton);
             SimpleUtils.pass("filter button is clickable");
@@ -8632,7 +8633,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(wholeWeekShifts, 5)) {
             count = wholeWeekShifts.size();
         } else if (areListElementVisible(dayViewAvailableShifts, 5)){
-        count = wholeWeekShifts.size();
+        count = dayViewAvailableShifts.size();
         }
         return count;
     }
@@ -8900,8 +8901,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     for(int i = 0; i< scheduleShiftTitles.size(); i++){
                         locationsNamesInSchedule.add(scheduleShiftTitles.get(i).getText());
                     }
-                    List<String>  locationsNamesBySorted = locationsNamesInSchedule;
-                    Collections.sort(locationsNamesBySorted);
+                    List<String>  locationsNamesBySorted = new ArrayList<>();
+                    locationsNamesBySorted.addAll(locationsNamesInSchedule);
+                    locationsNamesInSchedule.sort(null);
 
                     if(locationsNamesBySorted.equals(locationsNamesInSchedule)){
                         SimpleUtils.pass("In Week view: Sub-location display in alphabetical order when grouped by Location");
