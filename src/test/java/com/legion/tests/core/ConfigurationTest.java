@@ -66,7 +66,7 @@ public class ConfigurationTest extends TestBase {
                 add("Time & Attendance");
                 add("Compliance");
                 add("Scheduling Rules");
-                add("Communications");
+//                add("Communications");
             }};
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
