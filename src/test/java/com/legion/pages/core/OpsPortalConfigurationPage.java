@@ -45,7 +45,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="div.card-carousel-card-title")
 	private List<WebElement> smartCardsList;
 
-	@FindBy(css="span[class=\"lg-paged-search__showing top-right-action-button ng-scope\"]")
+	@FindBy(css="span[class=\"lg-paged-search__showing top-right-action-button ng-scope\"] button")
 	private WebElement newTemplateBTN;
 
 	@FindBy(css="div.lg-tab-toolbar__search")
@@ -93,7 +93,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="lg-button[label=\"Save as draft\"] h3[ng-click*=\"publishNow\"]")
 	private WebElement publishNowButton;
 
-	@FindBy(css="lg-button[label=\"Save as draft\"] h3[ng-click*=\"saveAsDraft\"]")
+	@FindBy(css="lg-button[label=\"Save as draft\"] button.pre-saveas")
 	private WebElement saveAsDraftButton;
 
 	@FindBy(css="lg-button[label=\"Save as draft\"] h3[ng-click*= publishLater]")
@@ -230,13 +230,15 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public boolean isTemplateListPageShow() throws Exception {
+		boolean flag = false;
 			if(templatesList.size()!=0 && isElementEnabled(newTemplateBTN) && isElementEnabled(searchField)){
 				SimpleUtils.pass("Template landing page shows well");
-				return true;
+				flag = true;
 			}else{
 				SimpleUtils.fail("Template landing page was NOT loaing well",false);
-				return false;
+				flag = false;
 			}
+			return flag;
 	}
 
 // open the first one template on template list page
@@ -1385,4 +1387,72 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		inputOffsetTimeForShiftStart(startOffsetTime,startEventPoint);
 		selectShiftStartTimeUnit(startTimeUnit);
 	}
+
+	@FindBy(css="div.lg-modal")
+	private WebElement createNewTemplatePopupWindow;
+	@FindBy(css="input-field[label=\"Name this template\"] input")
+	private WebElement newTemplateName;
+	@FindBy(css="input-field[label=\"Description\"] textarea")
+	WebElement newTemplateDescription;
+	@FindBy(css="lg-button[label=\"Continue\"] button")
+	private WebElement continueBTN;
+	@FindBy(css="span.wm-close-link")
+	private WebElement welcomeCloseButton;
+	@FindBy(css="question-input[question-title=\"How many minutes late can employees clock in to scheduled shifts?\"]")
+	private WebElement taTemplateSpecialField;
+
+	@Override
+	public void createNewTemplate(String templateName) throws Exception{
+		if(isTemplateListPageShow()){
+			clickTheElement(newTemplateBTN);
+			waitForSeconds(1);
+			if(isElementEnabled(createNewTemplatePopupWindow)){
+				SimpleUtils.pass("User can click new template button successfully!");
+				clickTheElement(newTemplateName);
+				newTemplateName.sendKeys(templateName);
+				clickTheElement(newTemplateDescription);
+				newTemplateDescription.sendKeys(templateName);
+				clickTheElement(continueBTN);
+				waitForSeconds(2);
+				if(isElementEnabled(welcomeCloseButton)){
+					clickTheElement(welcomeCloseButton);
+				}
+				if(isElementEnabled(taTemplateSpecialField)){
+					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
+					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
+					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
+				}
+				if(isElementEnabled(saveAsDraftButton)){
+					SimpleUtils.pass("User can click continue button successfully!");
+					clickTheElement(saveAsDraftButton);
+					waitForSeconds(3);
+				}else {
+					SimpleUtils.fail("User can't click continue button successfully!",false);
+				}
+			}else {
+				SimpleUtils.fail("User can't click new template button successfully!",false);
+			}
+		}
+		String newTemplateName = templateNameList.get(0).getText().trim();
+		if(newTemplateName.contains(templateName)){
+			SimpleUtils.pass("User can add new template successfully!");
+		}else {
+			SimpleUtils.fail("User can't add new template successfully",false);
+		}
+	}
+
+    @Override
+	public void addAllTypeOfTemplate(String templateName) throws Exception {
+			for(int i = 0 ;i < configurationCardsList.size(); i++){
+				if(! configurationCardsList.get(i).getText().equals(configurationLandingPageTemplateCards.Communications.getValue())){
+					clickTheElement(configurationCardsList.get(i));
+					waitForSeconds(1);
+					createNewTemplate(templateName);
+					goToConfigurationPage();
+//					List<WebElement> configurationCardsList = getDriver().findElement(By.cssSelector("[class=\"tb-wrapper ng-scope\"] lg-dashboard-card h1"))
+				}
+			}
+	}
+
+
 }

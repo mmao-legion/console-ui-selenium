@@ -118,6 +118,7 @@
                     <include name="verifyCrossAndCheckMarkButtonOfAdvanceStaffingRules"/>
                     <include name="verifySaveAndCancelButtonOfAdvanceStaffingRules"/>
                     <include name="verifyAddEditDeleteFunctionOfAdvanceStaffingRules"/>
+                    <include name="verifyCreateAllTypeTemplate"/>
                 </methods>
             </class>
         </classes>

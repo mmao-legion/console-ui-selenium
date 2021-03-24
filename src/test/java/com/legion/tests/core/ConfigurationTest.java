@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.setJobName;
@@ -487,6 +488,27 @@ public class ConfigurationTest extends TestBase {
             configurationPage.addMutipleAdvanceStaffingRule(workRole,days);
             configurationPage.editAdvanceStaffingRule(shiftsNumber);
             configurationPage.deleteAdvanceStaffingRule();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Create all type template")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreateAllTypeTemplate(String browser, String username, String password, String location) throws Exception {
+        try{
+
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            String currentTime=dfs.format(new Date()).trim();
+            String templateName="AutoCreate"+currentTime;
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.addAllTypeOfTemplate(templateName);
+
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

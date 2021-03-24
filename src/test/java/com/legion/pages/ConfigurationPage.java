@@ -55,5 +55,6 @@ public interface ConfigurationPage {
     public void publishNowTheTemplate() throws Exception;
     public void selectShiftStartTimeEvent(String startEvent) throws Exception;
     public void selectShiftStartTimeUnit(String startTimeUnit) throws Exception;
-
+    public void createNewTemplate(String templateName) throws Exception;
+    public void addAllTypeOfTemplate(String templateName) throws Exception;
 }
