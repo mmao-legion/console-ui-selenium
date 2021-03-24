@@ -482,6 +482,13 @@
                     <include name="validateTheButtonsOnSchedulePageForP2PAsInternalAdmin" />
                     <include name="validateTheGroupByDropdownListForMSAsInternalAdmin" />
                     <include name="validateTheGroupByDropdownListForP2PAsInternalAdmin" />
+                    <include name="validateTheFunctionOfAutoOpenShiftForP2PAsInternalAdmin" />
+                    <include name="validateTheFunctionOfAutoOpenShiftForMSAsInternalAdmin" />
+                    <include name="validateTheFunctionOfAutoOpenShiftForMSInDayViewAsInternalAdmin" />
+                    <include name="validateTheFunctionOfAutoOpenShiftForP2PInDayViewAsInternalAdmin" />
+                    <!--           <include name="validateTheFunctionOfManualOpenShiftForP2PAsInternalAdmin" />   P2P doesn't turn on travel time needed violation -->
+                    <include name="validateTheFunctionOfManualOpenShiftForMSAsInternalAdmin" />
+                    <include name="validateTheFunctionOfManualOpenShiftInDayViewForMSAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -495,6 +502,24 @@
                     <include name="validateProjectedHoursFromDashBoardAndScheduleAsInternalAdmin" />
                     <include name="validateDMDashboardAsInternalAdmin" />
 <!--                    <include name="validateDMViewDataWithSMViewAsInternalAdmin" />-->
+                    <include name="validateTheGenerationOfLGScheduleAsInternalAdmin" />
+                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdmin" />
+                    <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
+                    <include name="validateTheButtonsOnSchedulePageAsInternalAdmin" />
+                    <include name="validateTheGroupByDropdownListAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="DM Schedule Test">
+        <classes>
+            <class name="com.legion.tests.core.DMScheduleTest">
+                <methods>
+                    <include name="validateDMScheduleAsInternalAdmin" />
+                    <include name="validateProjectedHoursFromDashBoardAndScheduleAsInternalAdmin" />
+                    <include name="validateDMDashboardAsInternalAdmin" />
+                    <!--                    <include name="validateDMViewDataWithSMViewAsInternalAdmin" />-->
                     <include name="validateDMViewUnplannedClockAndTimesheetCountAsInternalAdmin" />
                     <include name="validateDMtoSMNavigationNViceVersaAsInternalAdmin" />
                 </methods>

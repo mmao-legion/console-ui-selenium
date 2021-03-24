@@ -919,7 +919,7 @@ public class LocationGroupTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the function of auto open shift")
+    @TestName(description = "Validate the function of auto open shift in day view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheFunctionOfAutoOpenShiftForMSInDayViewAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1010,7 +1010,7 @@ public class LocationGroupTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Validate the function of auto open shift")
+    @TestName(description = "Validate the function of auto open shift in day view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheFunctionOfAutoOpenShiftForP2PInDayViewAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
         try{
@@ -1100,7 +1100,7 @@ public class LocationGroupTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Validate the function of auto open shift")
+    @TestName(description = "Validate the function of manual open shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheFunctionOfManualOpenShiftForP2PAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
         try{
@@ -1130,15 +1130,17 @@ public class LocationGroupTest extends TestBase {
             schedulePage.selectWhichWeekToCopyFrom("SUGGESTED");
             schedulePage.clickNextBtnOnCreateScheduleWindow();
 
+
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectChildLocationFilterByText("Carmel Club DG Oregon");
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView("Open");
+            schedulePage.deleteTMShiftInWeekView("Abigayle");
             schedulePage.clickOnFilterBtn();
             schedulePage.selectChildLocationFilterByText("Mountain View");
-            schedulePage.clickOnFilterBtn();
-            if (schedulePage.getShiftsCount()>0){
-                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                schedulePage.deleteTMShiftInWeekView("Open");
-                schedulePage.deleteTMShiftInWeekView("Marlon");
-                schedulePage.saveSchedule();
-            }
+            schedulePage.deleteTMShiftInWeekView("Open");
+            schedulePage.deleteTMShiftInWeekView("Marlon");
+            schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             //Create shift and assign to TM.
@@ -1174,7 +1176,7 @@ public class LocationGroupTest extends TestBase {
             //Create auto open shift.
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.selectWorkRole("KEY MANAGER");
-            schedulePage.selectChildLocInCreateShiftWindow("Mountain View");
+            schedulePage.selectChildLocInCreateShiftWindow("Carmel Club DG Oregon");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
@@ -1258,7 +1260,7 @@ public class LocationGroupTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the function of auto open shift")
+    @TestName(description = "Validate the function of manual open shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheFunctionOfManualOpenShiftForMSAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
         try{
@@ -1289,14 +1291,15 @@ public class LocationGroupTest extends TestBase {
             schedulePage.clickNextBtnOnCreateScheduleWindow();
 
             schedulePage.clickOnFilterBtn();
-            schedulePage.selectChildLocationFilterByText("Child1");
+            schedulePage.selectChildLocationFilterByText("Child2");
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView("Open");
+            schedulePage.deleteTMShiftInWeekView("Abigayle");
             schedulePage.clickOnFilterBtn();
-            if (schedulePage.getShiftsCount()>0){
-                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                schedulePage.deleteTMShiftInWeekView("Open");
-                schedulePage.deleteTMShiftInWeekView("Abigayle");
-                schedulePage.saveSchedule();
-            }
+            schedulePage.selectChildLocationFilterByText("Child1");
+            schedulePage.deleteTMShiftInWeekView("Open");
+            schedulePage.deleteTMShiftInWeekView("Abigayle");
+            schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             //Create shift and assign to TM.
@@ -1314,7 +1317,7 @@ public class LocationGroupTest extends TestBase {
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.selectWorkRole("LIFT OPERATOR");
-            schedulePage.selectChildLocInCreateShiftWindow("Child1");
+            schedulePage.selectChildLocInCreateShiftWindow("Child2");
             schedulePage.moveSliderAtSomePoint("40", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
@@ -1408,6 +1411,143 @@ public class LocationGroupTest extends TestBase {
             schedulePage.searchTeamMemberByName("Abigayle");
             String actualMessage = schedulePage.getAllTheWarningMessageOfTMWhenAssign();
             SimpleUtils.assertOnFail("No travel time needed violation!", actualMessage.toLowerCase().contains("travel time needed"), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the function of manual open shift in day view")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateTheFunctionOfManualOpenShiftInDayViewForMSAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict("District Whistler");
+            locationSelectorPage.changeLocation("Lift Ops_Parent");
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+
+            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            List<String> toCloseDays = new ArrayList<>();
+            schedulePage.clickCreateScheduleBtn();
+            schedulePage.chooseLocationInCreateSchedulePopupWindow("Child1");
+            schedulePage.editTheOperatingHoursForLGInPopupWinodw(toCloseDays);
+            schedulePage.chooseLocationInCreateSchedulePopupWindow("Child2");
+            schedulePage.editTheOperatingHoursForLGInPopupWinodw(toCloseDays);
+            schedulePage.clickNextBtnOnCreateScheduleWindow();
+            schedulePage.selectWhichWeekToCopyFrom("SUGGESTED");
+            schedulePage.clickNextBtnOnCreateScheduleWindow();
+
+            schedulePage.clickOnDayView();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectChildLocationFilterByText("Child1");
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteAllShiftsInDayView();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectChildLocationFilterByText("Child2");
+            schedulePage.deleteAllShiftsInDayView();
+            schedulePage.saveSchedule();
+
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            //Create shift and assign to TM.
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.selectWorkRole("LIFT OPERATOR");
+            schedulePage.selectChildLocInCreateShiftWindow("Child1");
+            schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtSomePoint("20", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.searchTeamMemberByName("Abigayle");
+            schedulePage.clickOnOfferOrAssignBtn();
+
+            //Create shift and assign to TM.
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.selectWorkRole("LIFT OPERATOR");
+            schedulePage.selectChildLocInCreateShiftWindow("Child2");
+            schedulePage.moveSliderAtSomePoint("44", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.searchTeamMemberByName("Abigayle");
+            schedulePage.clickOnOfferOrAssignBtn();
+
+            schedulePage.saveSchedule();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteAllShiftsInDayView();
+            schedulePage.saveSchedule();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            //Create manual open shift.
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.selectWorkRole("LIFT OPERATOR");
+            schedulePage.selectChildLocInCreateShiftWindow("Child2");
+            schedulePage.moveSliderAtSomePoint("44", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.searchTeamMemberByName("Abigayle");
+            String actualMessage = schedulePage.getAllTheWarningMessageOfTMWhenAssign();
+            SimpleUtils.assertOnFail("No travel time needed violation!", actualMessage.toLowerCase().contains("travel time needed"), false);
+            schedulePage.clickOnOfferOrAssignBtn();
+
+
+            //Edit meal break
+            WebElement selectedShift = null;
+            selectedShift = schedulePage.clickOnProfileIconOfShiftInDayView("open");
+            String selectedShiftId= selectedShift.getAttribute("id");
+            schedulePage.verifyEditMealBreakTimeFunctionalityForAShiftInDayView(true, selectedShiftId);
+
+            //edit shift time
+            int index = schedulePage.getShiftIndexById(selectedShiftId);
+            String shiftInfoBefore = schedulePage.getTheShiftInfoByIndexInDayview(index);
+            schedulePage.clickOnProfileIconOfShiftInDayView("open");
+            schedulePage.clickOnEditShiftTime();
+            schedulePage.verifyEditShiftTimePopUpDisplay();
+            schedulePage.editShiftTimeToTheLargest();
+            schedulePage.clickOnUpdateEditShiftTimeButton();
+            index = schedulePage.getShiftIndexById(selectedShiftId);
+            String shiftInfoAfter= schedulePage.getTheShiftInfoByIndexInDayview(index);
+            SimpleUtils.assertOnFail("Auto shift time is not updated!", !shiftInfoBefore.contains(shiftInfoAfter), false);
+
+
+            //change work role
+            schedulePage.clickOnProfileIconOfShiftInDayView("open");
+            //check the work role by click Apply button
+            schedulePage.changeWorkRoleInPromptOfAShiftInDayView(true, selectedShiftId);
+            index = schedulePage.getShiftIndexById(selectedShiftId);
+            String shiftInfoAfterChangeRole= schedulePage.getTheShiftInfoByIndexInDayview(index);
+            SimpleUtils.assertOnFail("Work role is not updated!", !shiftInfoBefore.contains(shiftInfoAfterChangeRole), false);
+
+            //View status
+            schedulePage.clickOnProfileIconOfShiftInDayView("open");
+            schedulePage.clickViewStatusBtn();
+            //schedulePage.verifyListOfOfferNotNull();
+            schedulePage.closeViewStatusContainer();
+
+            //assign TM.
+            schedulePage.clickOnProfileIconOfShiftInDayView("open");
+            schedulePage.clickonAssignTM();
+            schedulePage.verifySelectTeamMembersOption();
+            schedulePage.clickOnOfferOrAssignBtn();
+            index = schedulePage.getShiftIndexById(selectedShiftId);
+            String shiftInfoAfterAssignTM= schedulePage.getTheShiftInfoByIndexInDayview(index);
+            SimpleUtils.assertOnFail("TM is not assigned!", !shiftInfoBefore.contains(shiftInfoAfterAssignTM), false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
