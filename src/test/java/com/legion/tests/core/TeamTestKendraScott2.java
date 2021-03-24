@@ -696,13 +696,11 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
 					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
 
-			if (!schedulePage.isWeekGenerated()){
-				schedulePage.createScheduleForNonDGFlowNewUI();
-				schedulePage.publishActiveSchedule();
+			if (schedulePage.isWeekGenerated()){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
-			if (!schedulePage.isWeekPublished()){
-				schedulePage.publishActiveSchedule();
-			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.publishActiveSchedule();
 			SimpleUtils.assertOnFail("SM should be able to view profile info in SM view", schedulePage.isProfileIconsClickable(), false);
 			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 			profileNewUIPage.clickOnUserProfileImage();//.getNickNameFromProfile();

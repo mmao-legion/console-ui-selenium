@@ -12401,6 +12401,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(swapAndAssignOptions,15)&&swapAndAssignOptions.size()==2){
             if (action.equalsIgnoreCase("swap")){
                 click(swapAndAssignOptions.get(0));
+                waitForSeconds(1);
                 if (!swapAndAssignOptions.get(0).findElement(By.cssSelector(".tma-staffing-option-inner-circle")).getAttribute("class").contains("ng-hide")){
                     SimpleUtils.pass("swap option selected successfully!");
                 } else {

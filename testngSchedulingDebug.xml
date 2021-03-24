@@ -28,6 +28,17 @@
         </classes>
     </test>
 
+    <test name="TeamTab Test KendraScott2">
+        <classes>
+            <class name="com.legion.tests.core.TeamTestKendraScott2">
+                <methods>
+                    <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsStoreManager" />
+                    <include name="verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
     <test name="Schedule Test LegionCoffee">
         <classes>
             <class name="com.legion.tests.core.ScheduleTest">

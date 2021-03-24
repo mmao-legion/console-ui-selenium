@@ -158,6 +158,7 @@
 <!--                   <include name="verifyTheTeamFunctionalityInProfileSectionAsInternalAdmin" />-->
                    <include name="verifyTheTeamFunctionalityInRosterForSort" />
                    <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsStoreManager" />
+                   <include name="verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin" />
                </methods>
            </class>
        </classes>
@@ -460,7 +461,6 @@
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
-                    <include name="verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin" />
                     <include name="verifyAnalyticsTableOnComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInDMViewAsInternalAdmin" />
                 </methods>
