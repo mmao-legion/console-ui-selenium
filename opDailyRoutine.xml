@@ -37,10 +37,10 @@
 
 
                     <!--                    District test cases-->
-                    <include name="verifyDistrictListPageLoading" />
-                    <include name="verifySearchDistrictFunction" />
-                    <include name="verifyAddOrUpdateDistrictFunction" />
-                    <include name="verifyDisableEnableDistrictFunction" />
+<!--                    <include name="verifyDistrictListPageLoading" />-->
+<!--                    <include name="verifySearchDistrictFunction" />-->
+<!--                    <include name="verifyAddOrUpdateDistrictFunction" />-->
+<!--                    <include name="verifyDisableEnableDistrictFunction" />-->
                     <!--                    Global dynamic group test cases-->
                     <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />
                     <include name="verifyGlobalDynamicGroupAbnormalScenarios" />
@@ -52,23 +52,23 @@
         </classes>
     </test>
 
-    <test name="Navigation Test">
-        <classes>
-            <class name="com.legion.tests.core.NewNavigationFlowTest">
-                <methods>
-                    <include name="verifyLocationProfilePageInControls" />
-                    <include name="verifyManagerLocationForOneUserInControlsInControls" />
-                    <include name="verifyDashboardViewAsInternalAdmin" />
-                    <include name="verifyDashboardViewAsDistrictManager" />
-                    <include name="verifyDashboardViewAsStoreManager" />
-                    <include name="verifyNavigationBarSearchDistrictFunctionInternalAdmin" />
-                    <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />
-                    <include name="verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin"/>
-                    <include name="verifyNavigationBarRecentlyViewListAsInternalAdmin"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
+<!--    <test name="Navigation Test">-->
+<!--        <classes>-->
+<!--            <class name="com.legion.tests.core.NewNavigationFlowTest">-->
+<!--                <methods>-->
+<!--                    <include name="verifyLocationProfilePageInControls" />-->
+<!--                    <include name="verifyManagerLocationForOneUserInControlsInControls" />-->
+<!--                    <include name="verifyDashboardViewAsInternalAdmin" />-->
+<!--                    <include name="verifyDashboardViewAsDistrictManager" />-->
+<!--                    <include name="verifyDashboardViewAsStoreManager" />-->
+<!--                    <include name="verifyNavigationBarSearchDistrictFunctionInternalAdmin" />-->
+<!--                    <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />-->
+<!--                    <include name="verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin"/>-->
+<!--                    <include name="verifyNavigationBarRecentlyViewListAsInternalAdmin"/>-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
     <test name="Job Test">
         <classes>
             <class name="com.legion.tests.core.JobTest">

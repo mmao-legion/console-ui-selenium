@@ -1681,8 +1681,9 @@ public class SimpleUtils {
 			Map<String, Object> data = new HashMap<String, Object>();
 			try{
 				date = format.parse(timestamp.toString());
-				String[] arrDate = format.format(date).split(" ");
-				strDate = arrDate[1];
+//				String[] arrDate = format.format(date).split(" ");
+//				strDate = arrDate[1];
+				strDate = format.format(date);
 			}catch(ParseException e){
 				System.err.println(e.getMessage());
 			}

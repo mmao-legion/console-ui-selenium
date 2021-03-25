@@ -47,8 +47,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement globalConfigurationInLocations;
 	@FindBy(css="[title='Locations']")
 	private WebElement locationsInLocations;
-	@FindBy(css="[title='Districts']")
-	private WebElement districtsInLocations;
+	@FindBy(css="[title='Upperfields']")
+	private WebElement upperfieldsInLocations;
 
 	// sub-location page
 	@FindBy(css = "lg-button[label=\"Add Location\"]")
@@ -106,13 +106,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void validateItemsInLocations() throws Exception {
 		if(isElementLoaded(goToConfigurationButton,5)){
 			if (isElementLoaded(enterPriseProfileInLocations,5) && isElementLoaded(globalConfigurationInLocations,5)
-			&& isElementLoaded(locationsInLocations,5) && isElementLoaded(districtsInLocations)) {
+			&& isElementLoaded(locationsInLocations,5) && isElementLoaded(upperfieldsInLocations)) {
 				SimpleUtils.pass("Location overview page show well when OPview turn on");
 			}else
 				SimpleUtils.fail("Location overview page load failed when OPview turn on",false);
 		}else {
 			if (isElementLoaded(enterPriseProfileInLocations,5)
-					&& isElementLoaded(locationsInLocations,5) && isElementLoaded(districtsInLocations)) {
+					&& isElementLoaded(locationsInLocations,5) && isElementLoaded(upperfieldsInLocations)) {
 				SimpleUtils.pass("Location overview page show well when OPview turn off");
 			}else
 				SimpleUtils.fail("Location overview page load failed when OPview turn off",false);
@@ -1180,8 +1180,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	// Added by Fiona
 	// sub dsitrict page
-	@FindBy(css = "lg-button[label=\"Add District\"]")
-	private WebElement addDistrictButton;
+	@FindBy(css = "lg-button[label=\"Add Upperfield\"]")
+	private WebElement addUpperfieldsButton;
 
 	@FindBy(css = "input[placeholder=\"You can search by name,id.\"]")
 	private WebElement districtSearchInputBox;
@@ -1234,9 +1234,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void goToSubDistrictsInLocationsPage() throws Exception {
-		if (isElementLoaded(districtsInLocations, 20)) {
-			click(districtsInLocations);
-			if (isElementEnabled(addDistrictButton, 20)) {
+		if (isElementLoaded(upperfieldsInLocations, 20)) {
+			click(upperfieldsInLocations);
+			if (isElementEnabled(addUpperfieldsButton, 20)) {
 				SimpleUtils.pass("sub-district page load successfully");
 			} else
 				SimpleUtils.fail("sub-dsitrict page load failed", false);
@@ -1246,7 +1246,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void validateTheAddDistrictBtn() throws Exception {
-		if (isElementLoaded(addDistrictButton, 5)) {
+		if (isElementLoaded(addUpperfieldsButton, 5)) {
 			SimpleUtils.pass("Add new district button shows well");
 		} else {
 			SimpleUtils.pass("Add new district button doesn't show");
@@ -1386,7 +1386,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public boolean verifyDistrictListShowWellOrNot() throws Exception {
 
 		waitForSeconds(30);
-		if (isElementLoaded(backBtnInDistrictListPage,3) && isElementLoaded(addDistrictButton,3)
+		if (isElementLoaded(backBtnInDistrictListPage,3) && isElementLoaded(addUpperfieldsButton,3)
 		&& isElementLoaded(districtSearchInputBox,3) && isElementLoaded(smartCardInDistrictListPage,3)
 		&& isElementLoaded(pageLeftBtnInDistrict,3) && isElementLoaded(pageRightBtnInDistrict,3)
 		) {
@@ -1522,7 +1522,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void addNewDistrict(String districtName, String districtId, String searchChara,int index) throws Exception {
-		click(addDistrictButton);
+		click(addUpperfieldsButton);
 		if (districtCreateLandingPageShowWell()) {
 			districtNameInput.sendKeys(districtName);
 			districtIdInput.sendKeys(districtId);
@@ -1641,7 +1641,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void addNewDistrictWithoutLocation(String districtName, String districtId) throws Exception {
-		click(addDistrictButton);
+		click(addUpperfieldsButton);
 		if (districtCreateLandingPageShowWell()) {
 			districtNameInput.sendKeys(districtName);
 			districtIdInput.sendKeys(districtId);
