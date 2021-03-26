@@ -1143,6 +1143,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     waitForSeconds(5);
                     clickTheElement(ScheduleSubTabElement);
                     waitForSeconds(3);
+                    break;
                 }
             }
 
@@ -12698,6 +12699,22 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement moveAnywayDialog;
 
     @Override
+    public void verifyConfirmStoreOpenCloseHours() throws Exception {
+        try {
+            if (ifMoveAnywayDialogDisplay()) {
+                if (isElementLoaded(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")), 10)) {
+                    if (moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")).getText().equals("CONFIRM")) {
+                        click(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
+                        SimpleUtils.pass("CONFIRM button clicked!");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Do nothing
+        }
+    }
+
+    @Override
     public boolean ifMoveAnywayDialogDisplay() throws Exception {
         if (isElementLoaded(moveAnywayDialog,10)){
             return true;
@@ -12708,8 +12725,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void moveAnywayWhenChangeShift() throws Exception {
         if (isElementLoaded(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")),10)){
-            click(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
-            SimpleUtils.pass("move anyway button clicked!");
+            if (moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")).getText().equals("MOVE ANYWAY")) {
+                click(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
+                SimpleUtils.pass("move anyway button clicked!");
+            } else {
+                SimpleUtils.fail("move anyway button fail to load!",false);
+            }
         } else {
             SimpleUtils.fail("move anyway button fail to load!",false);
         }

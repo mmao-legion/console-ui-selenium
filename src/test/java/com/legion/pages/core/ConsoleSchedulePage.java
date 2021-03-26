@@ -3525,6 +3525,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void verifyConfirmStoreOpenCloseHours() throws Exception {
+
+    }
+
+    @Override
     public void verifyEditMealBreakTimeFunctionalityForAShiftInDayView(boolean isSavedChange, String shiftid) throws Exception {
 
     }

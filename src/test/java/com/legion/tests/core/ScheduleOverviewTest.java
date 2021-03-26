@@ -107,7 +107,7 @@ public class ScheduleOverviewTest extends TestBase{
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Estelle")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Schedule functionality > Overview")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyScheduleFunctionalityOverviewAsStoreManager(String username, String password, String browser, String location) throws Exception {
@@ -136,9 +136,6 @@ public class ScheduleOverviewTest extends TestBase{
 			//	Current Date is in Red color
 			SimpleUtils.assertOnFail("Current Date is not in Red color", scheduleOverviewPage.isCurrentDateRed(), false);
 
-			//	Weekly Budgeted/Scheduled,other hour are showing in overview and matching with the Schedule smartcard of Schedule page
-			List<WebElement> scheduleOverViewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
-			HashMap<String, Float> overviewData = scheduleOverviewPage.getWeekHoursByWeekElement(scheduleOverViewWeeks.get(0));
 			//	user can click on Schedule week which will navigate to Schedule page
 			scheduleOverviewPage.clickOnCurrentWeekToOpenSchedule();
 			SimpleUtils.pass("user can click on Schedule week which will navigate to Schedule page");
@@ -148,6 +145,14 @@ public class ScheduleOverviewTest extends TestBase{
 				schedulePage.createScheduleForNonDGFlowNewUI();
 			}
 			HashMap<String, Float> scheduleSmartCardHoursWages = schedulePage.getScheduleBudgetedHoursInScheduleSmartCard();
+
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            //	Weekly Budgeted/Scheduled,other hour are showing in overview and matching with the Schedule smartcard of Schedule page
+			List<WebElement> scheduleOverViewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+			HashMap<String, Float> overviewData = scheduleOverviewPage.getWeekHoursByWeekElement(scheduleOverViewWeeks.get(0));
+
 			if ((scheduleSmartCardHoursWages.get("budgetedHours") - overviewData.get("guidanceHours") <= 0.05)
 					& (scheduleSmartCardHoursWages.get("scheduledHours") - overviewData.get("scheduledHours") <= 0.05)
 					& (scheduleSmartCardHoursWages.get("otherHours") - overviewData.get("otherHours") <= 0.05)) {
@@ -158,7 +163,6 @@ public class ScheduleOverviewTest extends TestBase{
 						+ ". But hours on Overview page are: " + overviewData.get("guidanceHours") + ", " + overviewData.get("scheduledHours") + ", " + overviewData.get("otherHours"),false);
 			}
 
-			schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 			//	After Generating Schedule, status will be in draft and scheduled hour will also updated.
 			List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
 			Float guidanceHoursForGuidanceSchedule = 0.0f;

@@ -145,8 +145,8 @@
                     <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
                     <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
                     <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />
-                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
-                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
+<!--                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" Blocked by Bug: SCH-3539/>-->
+<!--                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" Blocked by Bug: SCH-3539/>-->
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
                     <include name="verifyTheFunctionalityForScheduleCopyRestrictionsAsInternalAdmin" />
@@ -208,7 +208,7 @@
                     <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />
                     <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" />
 <!--                    <include name="verifySchoolCalendarListAsInternalAdmin" Blocked by SCH-3493/>-->
-<!--                    <include name="verifyCreateCalendarAsInternalAdmin" Blocked by SCH-349/>-->
+<!--                    <include name="verifyCreateCalendarAsInternalAdmin" Blocked by SCH-3493/>-->
 <!--                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" blocked by Bug:SCH-3250/>-->
 <!--                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
 <!--                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->

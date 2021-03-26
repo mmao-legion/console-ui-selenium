@@ -147,6 +147,9 @@ public class DragAndDropTest extends TestBase {
                 SimpleUtils.warn("The message is incorrect since there is the bug!");
             }
 
+            // Verify if Confirm Store opening closing hour window pops up
+            schedulePage.verifyConfirmStoreOpenCloseHours();
+
             if (schedulePage.ifMoveAnywayDialogDisplay()) {
                 schedulePage.moveAnywayWhenChangeShift();
             } else {

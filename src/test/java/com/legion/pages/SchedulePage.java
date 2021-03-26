@@ -588,4 +588,5 @@ public interface SchedulePage {
 	public void changeWorkRoleInPromptOfAShift(boolean isApplyChange, WebElement shift) throws Exception;
 	public int getShiftIndexById(String id) throws Exception;
 	public String getTheShiftInfoByIndexInDayview(int index) throws Exception;
+	public void verifyConfirmStoreOpenCloseHours() throws Exception;
 }

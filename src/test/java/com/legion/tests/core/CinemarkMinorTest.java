@@ -880,11 +880,11 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "7,13";
-            String shiftTime2 = "9,16";
-            String shiftTime3 = "8,14";
+            String shiftTime1 = "7,1";
+            String shiftTime2 = "9,4";
+            String shiftTime3 = "8,2";
             String workRole = "MOD";
-            String scheduleFromToTime = "8:00 - 16:00";
+            String scheduleFromToTime = "8AM - 4PM";
             String scheduleMaxHours = "6";
             String selectWeekDayName = "Mon";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
@@ -1120,7 +1120,7 @@ public class CinemarkMinorTest extends TestBase {
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
         List<String> toCloseDays = new ArrayList<>();
-        schedulePage.editOperatingHoursOnScheduleOldUIPage("6", "23", toCloseDays);
+        schedulePage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
         schedulePage.createScheduleForNonDGFlowNewUI();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
