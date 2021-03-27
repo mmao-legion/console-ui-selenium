@@ -8685,7 +8685,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public boolean isSpecificSmartCardLoaded(String cardName) throws Exception {
         boolean isLoaded = false;
-        waitForSeconds(8);
+        waitForSeconds(15);
         if (areListElementVisible(smartCards, 15)) {
             for (WebElement smartCard : smartCards) {
                 WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
@@ -11957,11 +11957,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "[ng-click=\"closeSearchBox()\"]")
     private WebElement closeSearchBoxButton;
 
-    @FindBy(css = "input[placeholder=\"Search by Employee Name, Work Role or Title\"]")
+    @FindBy(css = "input[placeholder*=\"Search by Employee Name, Work Role")
     private WebElement searchBox;
-
-    @FindBy(css = "input[placeholder=\"Search by Employee Name, Work Role or Title\"]")
-    private WebElement textInSearchBox;
 
     @FindBy(css = "div[ng-show=\"!forbidModeChange\"]")
     private WebElement switchDayViewAndWeeKViewButton;
@@ -11971,7 +11968,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifyGhostTextInSearchBox () throws Exception{
         if (isElementEnabled(searchBox, 5)) {
             String ghostText = "Search by Employee Name, Work Role or Title";
-            if (textInSearchBox.getAttribute("placeholder").equals(ghostText)) {
+            if (searchBox.getAttribute("placeholder").equals(ghostText)) {
                 SimpleUtils.pass("The ghost text in search box display correctly");
             } else
                 SimpleUtils.fail("The ghost text in search box display incorrectly",true);
@@ -11984,7 +11981,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void clickOnOpenSearchBoxButton() throws Exception {
         if (isElementEnabled(openSearchBoxButton, 5)) {
             click(openSearchBoxButton);
-            if (isElementEnabled(searchBox, 5)) {
+            if (isElementLoaded(searchBox, 15)) {
                 SimpleUtils.pass("Search box is opened successfully");
             } else {
                 SimpleUtils.fail("Search box is not opened successfully", false);
@@ -12018,7 +12015,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (areListElementVisible(weekShifts, 5) && weekShifts.size() >0) {
                 searchResult = weekShifts;
             } else
-                SimpleUtils.fail("Cannot search on schedule page!",false);
+                SimpleUtils.report("Cannot search on schedule page!");
         } else {
             SimpleUtils.fail("Search box on schedule page load fail!",false);
         }
@@ -12686,7 +12683,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         List<String> selectedDates = new ArrayList<>();
         if (areListElementVisible(selectedDaysOnCreateShiftPage, 5) && selectedDaysOnCreateShiftPage.size()>0) {
             for (WebElement selectedDate: selectedDaysOnCreateShiftPage){
-                String test = selectedDate.getText();
                 selectedDates.add(selectedDate.getText());
             }
             SimpleUtils.pass("Get selected days info successfully");
@@ -14101,6 +14097,30 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         } else
             SimpleUtils.fail("location input in popup window fail to load! ", false);
+    }
+
+    @FindBy(css = " [ng-if=\"isLocationGroup()\"] [ng-click=\"selectChoice($event, choice)\"]")
+    private List<WebElement> listLocationGroup;
+
+    public List<String> getAllLocationGroupLocationsFromCreateShiftWindow() throws Exception{
+        if (isElementLoaded(btnChildLocation, 20)) {
+            click(btnChildLocation);
+            SimpleUtils.pass("Child location button clicked Successfully");
+        } else {
+            SimpleUtils.fail("Child location button is not clickable", false);
+        }
+        List<String> locationGroupLocations = new ArrayList<>();
+        if(areListElementVisible(listLocationGroup, 10) && listLocationGroup.size()>0){
+            for (WebElement location: listLocationGroup){
+                 locationGroupLocations.add(location.getText());
+            }
+            SimpleUtils.pass("Get location group locations from create shift window successfully! ");
+        }else
+            SimpleUtils.fail("Location group dropdown loaded fail! ", false);
+
+        //close the dropdown list
+        click(btnChildLocation);
+        return locationGroupLocations;
     }
 }
 

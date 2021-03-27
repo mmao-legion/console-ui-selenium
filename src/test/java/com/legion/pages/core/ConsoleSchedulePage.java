@@ -3568,4 +3568,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public int getShiftIndexById(String id) throws Exception {
         return 0;
     }
+
+    @Override
+    public List<String> getAllLocationGroupLocationsFromCreateShiftWindow() throws Exception{
+        return null;
+    }
 }

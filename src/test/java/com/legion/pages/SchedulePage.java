@@ -589,4 +589,5 @@ public interface SchedulePage {
 	public int getShiftIndexById(String id) throws Exception;
 	public String getTheShiftInfoByIndexInDayview(int index) throws Exception;
 	public void verifyConfirmStoreOpenCloseHours() throws Exception;
+	public List<String> getAllLocationGroupLocationsFromCreateShiftWindow() throws Exception;
 }

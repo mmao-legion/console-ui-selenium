@@ -489,6 +489,8 @@
                     <!--           <include name="validateTheFunctionOfManualOpenShiftForP2PAsInternalAdmin" />   P2P doesn't turn on travel time needed violation -->
                     <include name="validateTheFunctionOfManualOpenShiftForMSAsInternalAdmin" />
                     <include name="validateTheFunctionOfManualOpenShiftInDayViewForMSAsInternalAdmin" />
+                    <include name="verifyActivityOfClaimOpenShiftForMSAsTeamMemberLG" />
+                    <include name="verifyActivityOfClaimOpenShiftForP2PAsTeamMemberLG" />
                 </methods>
             </class>
         </classes>

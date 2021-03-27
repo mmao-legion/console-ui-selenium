@@ -9,7 +9,6 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -1416,6 +1415,7 @@ public class LocationGroupTest extends TestBase {
         }
     }
 
+
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
@@ -1551,5 +1551,241 @@ public class LocationGroupTest extends TestBase {
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate activity for claim the open shift")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyActivityOfClaimOpenShiftForMSAsTeamMemberLG(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String teamMemberName = profileNewUIPage.getNickNameFromProfile();
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+
+        String fileName = "UsersCredentials.json";
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
+        userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] credential = userCredentials.get("InternalAdmin");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1]), String.valueOf(credential[0][2]));
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeDistrict("District Whistler");
+        locationSelectorPage.changeLocation("Lift Ops_Parent");
+
+        // 1.Checking configuration in controls
+        String option = "Always";
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+        boolean isScheduleCollaboration = controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+        SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
+        //String selectedOption = controlsNewUIPage.getIsApprovalByManagerRequiredWhenEmployeeClaimsOpenShiftSelectedOption();
+        controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
+        // 2.admin create one manual open shift and assign to specific TM
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        //to generate schedule  if current week is not generated
+        schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
+        boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+        if(!isActiveWeekGenerated){
+            schedulePage.createScheduleForNonDGFlowNewUI();
+        }
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnOpenSearchBoxButton();
+        schedulePage.searchShiftOnSchedulePage(teamMemberName);
+        schedulePage.deleteTMShiftInWeekView("Unassigned");
+        schedulePage.deleteTMShiftInWeekView(teamMemberName);
+        schedulePage.saveSchedule();
+
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.selectWorkRole("LIFT OPERATOR");
+        schedulePage.clearAllSelectedDays();
+        schedulePage.selectSpecificWorkDay(1);
+        List<String> locations = schedulePage.getAllLocationGroupLocationsFromCreateShiftWindow();
+        schedulePage.selectChildLocInCreateShiftWindow(locations.get((new Random()).nextInt(locations.size()-1)+1));
+        schedulePage.moveSliderAtSomePoint("40", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtSomePoint("20", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        if(schedulePage.ifWarningModeDisplay()){
+            schedulePage.clickOnOkButtonInWarningMode();
+        }
+        schedulePage.searchTeamMemberByName(teamMemberName);
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
+        loginPage.logOut();
+
+        // 3.Login with the TM to claim the shift
+        loginToLegionAndVerifyIsLoginDone(username, password, location);
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+//        dashboardPage.goToTodayForNewUI();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
+        schedulePage.isSchedule();
+        String cardName = "WANT MORE HOURS?";
+        SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(cardName), false);
+        String linkName = "View Shifts";
+        schedulePage.clickLinkOnSmartCardByName(linkName);
+        SimpleUtils.assertOnFail("Open shifts not loaed Successfully!", schedulePage.areShiftsPresent(), false);
+        List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
+        schedulePage.selectOneShiftIsClaimShift(claimShift);
+        schedulePage.clickTheShiftRequestByName(claimShift.get(0));
+        schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+
+        loginPage.logOut();
+
+        // 4.Login with SM to check activity
+        Object[][] storeManagerCredentials = userCredentials.get("StoreManagerLG");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                , String.valueOf(storeManagerCredentials[0][2]));
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+        activityPage.verifyActivityBellIconLoaded();
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
+        activityPage.verifyActivityOfShiftOffer(teamMemberName);
+        activityPage.approveOrRejectShiftOfferRequestOnActivity(teamMemberName, ActivityTest.approveRejectAction.Approve.getValue());
+
+        //Check the shift been scheduled
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        //to generate schedule  if current week is not generated
+        schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
+        schedulePage.clickOnOpenSearchBoxButton();
+        schedulePage.searchShiftOnSchedulePage(teamMemberName);
+        SimpleUtils.assertOnFail("", schedulePage.getOneDayShiftByName(0, teamMemberName).size()>0, false);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Validate activity for claim the open shift")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyActivityOfClaimOpenShiftForP2PAsTeamMemberLG(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String teamMemberName = profileNewUIPage.getNickNameFromProfile();
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+
+        String fileName = "UsersCredentials.json";
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
+        userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] credential = userCredentials.get("InternalAdmin");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1]), String.valueOf(credential[0][2]));
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeDistrict("Bay Area District");
+        locationSelectorPage.changeLocation("LocGroup2");
+
+        // 1.Checking configuration in controls
+        String option = "Always";
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+        boolean isScheduleCollaboration = controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+        SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
+        //String selectedOption = controlsNewUIPage.getIsApprovalByManagerRequiredWhenEmployeeClaimsOpenShiftSelectedOption();
+        controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
+        // 2.admin create one manual open shift and assign to specific TM
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        //to generate schedule  if current week is not generated
+        schedulePage.navigateToNextWeek();
+        boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+        if(!isActiveWeekGenerated){
+            schedulePage.createScheduleForNonDGFlowNewUI();
+        }
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnOpenSearchBoxButton();
+        schedulePage.searchShiftOnSchedulePage(teamMemberName);
+        schedulePage.deleteTMShiftInWeekView("Unassigned");
+        schedulePage.deleteTMShiftInWeekView(teamMemberName);
+        schedulePage.saveSchedule();
+
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.selectWorkRole("KEY MANAGER");
+        schedulePage.clearAllSelectedDays();
+        schedulePage.selectSpecificWorkDay(1);
+//        List<String> locations = schedulePage.getAllLocationGroupLocationsFromCreateShiftWindow();
+        schedulePage.selectChildLocInCreateShiftWindow("Carmel Club DG Oregon");
+        schedulePage.moveSliderAtSomePoint("44", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.moveSliderAtSomePoint("22", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        if(schedulePage.ifWarningModeDisplay()){
+            schedulePage.clickOnOkButtonInWarningMode();
+        }
+        schedulePage.searchTeamMemberByName(teamMemberName);
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
+        loginPage.logOut();
+
+        // 3.Login with the TM to claim the shift
+        loginToLegionAndVerifyIsLoginDone(username, password, location);
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+//        dashboardPage.goToTodayForNewUI();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.navigateToNextWeek();
+        schedulePage.isSchedule();
+        String cardName = "WANT MORE HOURS?";
+        SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(cardName), false);
+        String linkName = "View Shifts";
+        schedulePage.clickLinkOnSmartCardByName(linkName);
+        SimpleUtils.assertOnFail("Open shifts not loaed Successfully!", schedulePage.areShiftsPresent(), false);
+        List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
+        schedulePage.selectOneShiftIsClaimShift(claimShift);
+        schedulePage.clickTheShiftRequestByName(claimShift.get(0));
+        schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+
+        loginPage.logOut();
+
+        // 4.Login with SM to check activity
+        Object[][] storeManagerCredentials = userCredentials.get("StoreManagerLG");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                , String.valueOf(storeManagerCredentials[0][2]));
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+//        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+        activityPage.verifyActivityBellIconLoaded();
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
+        activityPage.verifyActivityOfShiftOffer(teamMemberName);
+        activityPage.approveOrRejectShiftOfferRequestOnActivity(teamMemberName, ActivityTest.approveRejectAction.Approve.getValue());
+
+        //Check the shift been scheduled
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        //to generate schedule  if current week is not generated
+        schedulePage.navigateToNextWeek();
+        schedulePage.clickOnOpenSearchBoxButton();
+        schedulePage.searchShiftOnSchedulePage(teamMemberName);
+        SimpleUtils.assertOnFail("", schedulePage.getOneDayShiftByName(0, teamMemberName).size()>0, false);
     }
 }
