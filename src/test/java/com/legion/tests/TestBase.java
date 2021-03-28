@@ -359,8 +359,8 @@ public abstract class TestBase {
         loginPage.loginToLegionWithCredential(username, Password);
         loginPage.verifyNewTermsOfServicePopUp();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        changeDistrictAccordingToEnterprise(locationSelectorPage);
-        locationSelectorPage.changeLocation(location);
+//        changeDistrictAccordingToEnterprise(locationSelectorPage);
+//        locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, location);
     }
