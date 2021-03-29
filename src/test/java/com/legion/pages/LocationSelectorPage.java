@@ -27,4 +27,6 @@ public interface LocationSelectorPage {
 	public void changeAnotherDistrict() throws Exception;
 	public void reSelectDistrictInDMView(String districtName) throws Exception;
 	public void changeAnotherDistrictInDMView() throws Exception;
+	public void changeUpperFields(String upperFields) throws Exception;
+	public void changeUpperFieldsByName(String upperFieldType, String upperFieldName) throws Exception;
 }

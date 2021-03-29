@@ -31,7 +31,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy(css = "div.console-navigation-item.active")
     private WebElement activeConsoleMenuItem;
 
-    @FindBy(css = ".lg-new-location-chooser__highlight .lg-search-options")
+    @FindBy(css = "[search-hint=\"Search Location\"] .lg-search-options")
     private WebElement locationDropDownButton;
 
     @FindBy(className = "location-selector-dropdown-menu-items")
@@ -83,6 +83,17 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     String dashboardConsoleMenuText = "Dashboard";
     private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
+    public enum typeOfUpperFields {
+        BusinessUnit("Business Unit"),
+        Region("Region"),
+        District("District");
+        private final String value;
+
+        typeOfUpperFields(final String name) {
+            value = name;
+        }
+    }
+
     
     public ConsoleLocationSelectorPage(){
         PageFactory.initElements(getDriver(), this);
@@ -102,8 +113,8 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     {
         // Avoid "New Feature Enhancement" pops up
         waitForSeconds(6);
-        getDriver().navigate().refresh();
-        waitForSeconds(2);
+        //getDriver().navigate().refresh();
+        //waitForSeconds(2);
         try {
             Boolean isLocationMatched = false;
             if (isElementLoaded(activeConsoleMenuItem, 10)) {
@@ -119,8 +130,8 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                             click(locationSelectorButton);
                         }
                         List<WebElement> locationItems = new ArrayList<>();
-                        if (areListElementVisible(districtAndLocationDropDownList, 5) && districtAndLocationDropDownList.size() == 2){
-                            locationItems = districtAndLocationDropDownList.get(1).findElements(By.cssSelector("div.lg-search-options__option"));
+                        if (areListElementVisible(districtAndLocationDropDownList, 5) && districtAndLocationDropDownList.size() > 0){
+                            locationItems = districtAndLocationDropDownList.get(districtAndLocationDropDownList.size() - 1).findElements(By.cssSelector("div.lg-search-options__option"));
                         }
                         if (areListElementVisible(locationItems, 10) || isElementLoaded(locationDropDownButton)) {
                             if (locationItems.size() > 0) {
@@ -137,7 +148,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                     searchLocationAndSelect(locationName);
                                     waitForSeconds(3);
 //                                    availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
-                                    locationItems = districtAndLocationDropDownList.get(1).findElements(By.cssSelector("div.lg-search-options__option"));
+                                    locationItems = districtAndLocationDropDownList.get(districtAndLocationDropDownList.size() - 1).findElements(By.cssSelector("div.lg-search-options__option"));
                                     if (locationItems.size() > 0) {
                                         for (WebElement locationItem : locationItems) {
                                             if (locationItem.getText().contains(locationName)) {
@@ -156,12 +167,12 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                 SimpleUtils.report("No mapping data for this location,maybe it's disabled or child location for Master Slave ");
                         }
                     }
-                } else {
-                    WebElement dashboardConsoleMenu = SimpleUtils.getSubTabElement(consoleMenuItems, dashboardConsoleMenuText);
-                    if (isElementLoaded(dashboardConsoleMenu)) {
-                        click(dashboardConsoleMenu);
-                        changeLocation(locationName);
-                    }
+                }
+            } else {
+                WebElement dashboardConsoleMenu = SimpleUtils.getSubTabElement(consoleMenuItems, dashboardConsoleMenuText);
+                if (isElementLoaded(dashboardConsoleMenu)) {
+                    click(dashboardConsoleMenu);
+                    changeLocation(locationName);
                 }
             }
         }
@@ -395,6 +406,102 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
         catch(Exception e) {
             SimpleUtils.fail("Unable to change District!", true);
+        }
+    }
+
+    @Override
+    public void changeUpperFields(String upperFields) throws Exception {
+        try {
+            String[] upperFieldsList = null;
+            if (upperFields != null && !upperFields.isEmpty()) {
+                if (upperFields.contains(">")) {
+                    upperFieldsList = upperFields.split(">");
+                    if (upperFieldsList.length == 3) {
+                        changeUpperFieldsByName(typeOfUpperFields.BusinessUnit.value, upperFieldsList[0].trim());
+                        changeUpperFieldsByName(typeOfUpperFields.Region.value, upperFieldsList[1].trim());
+                        changeUpperFieldsByName(typeOfUpperFields.District.value, upperFieldsList[2].trim());
+                    } else if (upperFieldsList.length == 2) {
+                        changeUpperFieldsByName(typeOfUpperFields.Region.value, upperFieldsList[0].trim());
+                        changeUpperFieldsByName(typeOfUpperFields.District.value, upperFieldsList[1].trim());
+                    } else {
+                        SimpleUtils.fail("Upperfield List is incorrect, please update the Upperfiled in UpperfieldsForDifferentEnterprises.json file", false);
+                    }
+                } else {
+                    changeUpperFieldsByName(typeOfUpperFields.District.value, upperFields.trim());
+                }
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Failed to get the Upperfields List!", false);
+        }
+    }
+
+    @Override
+    public void changeUpperFieldsByName(String upperFieldType, String upperFieldName) {
+        try {
+            Boolean isUpperFieldMatched = false;
+            if (isElementLoaded(activeConsoleMenuItem, 10)) {
+                activeConsoleName = activeConsoleMenuItem.getText();
+            }
+            setScreenshotConsoleName(activeConsoleName);
+            WebElement upperFieldSelectorButton = getDriver().findElement(By.cssSelector("[search-hint='Search " + upperFieldType + "'] div.input-faked"));
+            if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
+                if (isElementLoaded(upperFieldSelectorButton, 5)) {
+                    if (upperFieldSelectorButton.getText().contains(upperFieldName)) {
+                        SimpleUtils.pass("Given '" + upperFieldType + " " + upperFieldName + "' already selected!");
+                    } else {
+                        if(isElementLoaded(upperFieldSelectorButton, 10)){
+                            click(upperFieldSelectorButton);
+                        }
+                        WebElement upperFieldDropDownButton = getDriver().findElement(By.cssSelector("[search-hint=\"Search " +
+                                upperFieldType + "\"] div.lg-search-options"));
+                        if (isElementLoaded(upperFieldDropDownButton, 5)) {
+                            if (availableLocationCardsName.size() != 0) {
+                                for (WebElement upperFieldCardName : availableLocationCardsName) {
+                                    if (upperFieldCardName.getText().contains(upperFieldName)) {
+                                        isUpperFieldMatched = true;
+                                        clickTheElement(upperFieldCardName);
+                                        SimpleUtils.pass(upperFieldType + " changed successfully to '" + upperFieldName + "'");
+                                        break;
+                                    }
+                                }
+                                if (!isUpperFieldMatched) {
+                                    WebElement upperFieldSearchInput = getDriver().findElement(By.cssSelector("input[placeholder=\"Search " + upperFieldType + "\"]"));
+                                    if (isElementLoaded(upperFieldSearchInput,5)) {
+                                        upperFieldSearchInput.sendKeys(upperFieldName);
+                                        upperFieldSearchInput.sendKeys(Keys.ENTER);
+                                    }else {
+                                        SimpleUtils.fail("Search " + upperFieldType + "input failed to load!", false);
+                                    }
+                                    waitForSeconds(3);
+                                    availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
+                                    if (availableLocationCardsName.size() > 0) {
+                                        for (WebElement upperFieldCardName : availableLocationCardsName) {
+                                            if (upperFieldCardName.getText().contains(upperFieldName)) {
+                                                isUpperFieldMatched = true;
+                                                click(upperFieldCardName);
+                                                SimpleUtils.pass(upperFieldType + " changed successfully to '" + upperFieldName + "'");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (!isUpperFieldMatched) {
+                                    SimpleUtils.fail(upperFieldType + " does matched with '" + upperFieldName + "'", false);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                WebElement dashboardConsoleMenu = SimpleUtils.getSubTabElement(consoleMenuItems, dashboardConsoleMenuText);
+                if (isElementLoaded(dashboardConsoleMenu)) {
+                    click(dashboardConsoleMenu);
+                    changeDistrict(upperFieldName);
+                }
+            }
+        }
+        catch(Exception e) {
+            // Do nothing
         }
     }
 

@@ -78,7 +78,7 @@ public abstract class TestBase {
     String TestID = null;
 //  public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
-    public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/DistrictsForDifferentEnterprises.json");
+    public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/UpperfieldsForDifferentEnterprises.json");
     private static ExtentReports extent = ExtentReportManager.getInstance();
     static HashMap<String,String> testRailCfg = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
     public static AndroidDriver<MobileElement> driver;
@@ -374,27 +374,27 @@ public abstract class TestBase {
         loginPage.loginToLegionWithCredential(username, Password);
         loginPage.verifyNewTermsOfServicePopUp();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        changeDistrictAccordingToEnterprise(locationSelectorPage);
+        changeUpperFieldsAccordingToEnterprise(locationSelectorPage);
         locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, location);
     }
 
-    private void changeDistrictAccordingToEnterprise(LocationSelectorPage locationSelectorPage) {
+    private void changeUpperFieldsAccordingToEnterprise(LocationSelectorPage locationSelectorPage) throws Exception {
         if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
-            locationSelectorPage.changeDistrict(districtsMap.get("Coffee_Enterprise"));
+            locationSelectorPage.changeUpperFields(districtsMap.get("Coffee_Enterprise"));
         }
         if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
-            locationSelectorPage.changeDistrict(districtsMap.get("KendraScott2_Enterprise"));
+            locationSelectorPage.changeUpperFields(districtsMap.get("KendraScott2_Enterprise"));
         }
         if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-            locationSelectorPage.changeDistrict(districtsMap.get("Op_Enterprise"));
+            locationSelectorPage.changeUpperFields(districtsMap.get("Op_Enterprise"));
         }
         if (getDriver().getCurrentUrl().contains(propertyMap.get("DGStage_Enterprise"))) {
-            locationSelectorPage.changeDistrict(districtsMap.get("DGStage_Enterprise"));
+            locationSelectorPage.changeUpperFields(districtsMap.get("DGStage_Enterprise"));
         }
         if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-            locationSelectorPage.changeDistrict(districtsMap.get("CinemarkWkdy_Enterprise"));
+            locationSelectorPage.changeUpperFields(districtsMap.get("CinemarkWkdy_Enterprise"));
         }
     }
 
