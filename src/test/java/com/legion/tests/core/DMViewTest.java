@@ -550,7 +550,7 @@ public class DMViewTest extends TestBase {
     @Enterprise(name = "DGStage_Enterprise")
     @TestName(description = "Verify the availability of location list and sub location on Timesheet in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationListAndSubLocationOnTimesheetInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
+    public void verifyLocationListAndSubLocationOnTimesheetInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);

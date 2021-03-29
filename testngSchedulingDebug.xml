@@ -216,4 +216,25 @@
         </classes>
     </test>
 
+    <test name="Location Group Test">
+        <classes>
+            <class name="com.legion.tests.core.LocationGroupTest">
+                <methods>
+                    <include name="validateTheGenerationOfLGScheduleForMSAsInternalAdmin" />
+                    <include name="validateTheGenerationOfLGScheduleForP2PAsInternalAdmin" />
+                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForMSAsInternalAdmin" />
+                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForP2PAsInternalAdmin" />
+                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleForMSAsInternalAdmin" />
+                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleForP2PAsInternalAdmin"/>
+                    <include name="validateTheButtonsOnSchedulePageForMSAsInternalAdmin" />
+                    <include name="validateTheButtonsOnSchedulePageForP2PAsInternalAdmin" />
+                    <include name="validateTheGroupByDropdownListForMSAsInternalAdmin" />
+                    <include name="validateTheGroupByDropdownListForP2PAsInternalAdmin" />
+                    <include name="verifyActivityOfClaimOpenShiftForMSAsTeamMemberLG" />
+                    <include name="verifyActivityOfClaimOpenShiftForP2PAsTeamMemberLG" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->

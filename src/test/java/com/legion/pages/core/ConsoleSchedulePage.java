@@ -3568,4 +3568,29 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public int getShiftIndexById(String id) throws Exception {
         return 0;
     }
+
+    @Override
+    public List<String> getAllLocationGroupLocationsFromCreateShiftWindow() throws Exception{
+        return null;
+    }
+
+    @Override
+    public boolean isLocationLoaded() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void selectLocation(String location) throws Exception {
+
+    }
+
+    @Override
+    public void addOpenShiftWithDefaultTime(String workRole, String location) throws Exception {
+
+    }
+
+    @Override
+    public void selectLocationFilterByText(String filterText) throws Exception {
+
+    }
 }

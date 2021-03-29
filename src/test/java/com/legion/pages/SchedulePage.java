@@ -574,6 +574,10 @@ public interface SchedulePage {
 	public boolean verifyScheduleNotPublishedSmartCardShowing() throws Exception;
 	public void clickToggleSummaryViewButton() throws Exception;
 	public boolean isHourFormat24Hour() throws Exception;
+	public boolean isLocationLoaded() throws Exception;
+	public void selectLocation(String location) throws Exception;
+	public void addOpenShiftWithDefaultTime(String workRole, String location) throws Exception;
+	public void selectLocationFilterByText(String filterText) throws Exception;
 	public void selectChildLocInCreateShiftWindow(String location) throws Exception;
 	public void selectChildLocationFilterByText(String location) throws Exception;
 	public void verifyEditMealBreakTimeFunctionalityForAShift(boolean isSavedChange, WebElement shift) throws Exception;
@@ -589,4 +593,5 @@ public interface SchedulePage {
 	public int getShiftIndexById(String id) throws Exception;
 	public String getTheShiftInfoByIndexInDayview(int index) throws Exception;
 	public void verifyConfirmStoreOpenCloseHours() throws Exception;
+	public List<String> getAllLocationGroupLocationsFromCreateShiftWindow() throws Exception;
 }
