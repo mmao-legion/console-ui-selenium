@@ -17,7 +17,7 @@
         <datatable.version>1.0.3</datatable.version>
         <tag-expressions.version>1.1.1</tag-expressions.version>
         <gherkin.version>5.1.0</gherkin.version>
-        <enterprise>op</enterprise>
+        <!--        <enterprise>KendraScott2</enterprise> -->
         <env>https://rc-enterprise.dev.legion.work/</env>
 
     </properties>
@@ -233,6 +233,13 @@
             <version>8.0.22</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.itextpdf/itextpdf -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itextpdf</artifactId>
+            <version>5.5.13.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -258,7 +265,7 @@
 
                     <systemPropertyVariables>
                         <env>${env}</env>
-                        <enterprise>${enterprise}</enterprise>
+<!--                        <enterprise>${enterprise}</enterprise>-->
                     </systemPropertyVariables>
                     <forkCount>5</forkCount>
                     <reuseForks>true</reuseForks>

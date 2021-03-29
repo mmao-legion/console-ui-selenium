@@ -8,15 +8,23 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static com.legion.utils.MyThreadLocal.getDriver;
+
 public class LocationGroupTest extends TestBase {
+
+    private static HashMap<String, String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
     @Override
     @BeforeMethod()
@@ -1787,5 +1795,491 @@ public class LocationGroupTest extends TestBase {
         schedulePage.clickOnOpenSearchBoxButton();
         schedulePage.searchShiftOnSchedulePage(teamMemberName);
         SimpleUtils.assertOnFail("", schedulePage.getOneDayShiftByName(0, teamMemberName).size()>0, false);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate that operate LG schedule by different user")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateOperateLGScheduleByDifferentUserForMSAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict("District Whistler");
+            locationSelectorPage.changeLocation("Lift Ops_Parent");
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            schedulePage.navigateToNextWeek();
+
+            // Verify operate schedule by admin user
+            /// Generate schedule
+            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            /// Publish schedule
+            if(schedulePage.isPublishButtonLoadedOnSchedulePage() || schedulePage.isRepublishButtonLoadedOnSchedulePage())
+                schedulePage.publishActiveSchedule();
+
+            /// Add shifts in schedule
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.addOpenShiftWithDefaultTime("MOD","Child2");
+
+            /// Edit shifts(include edit shift time, assign TM, delete...)
+            schedulePage.clickOnProfileIcon();
+            schedulePage.clickOnEditShiftTime();
+            schedulePage.editShiftTime();
+            schedulePage.clickOnUpdateEditShiftTimeButton();
+
+            schedulePage.clickOnProfileIcon();
+            schedulePage.clickonAssignTM();
+            schedulePage.selectTeamMembers();
+            schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.saveSchedule();
+
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.selectShiftTypeFilterByText("Compliance Review");
+            schedulePage.clickOnProfileIcon();
+            schedulePage.verifyDeleteShift();
+
+            /// Republish schedule
+            schedulePage.publishActiveSchedule();
+
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
+            // Verify operate schedule by SM user
+            /// Login as Store Manager
+            String fileName = "UsersCredentials.json";
+            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            Object[][] teamMemberCredentials = userCredentials.get("StoreManagerLG");
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                    , String.valueOf(teamMemberCredentials[0][2]));
+            dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            schedulePage.navigateToNextWeek();
+
+            /// Generate schedule
+            isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            /// Publish schedule
+            if(schedulePage.isPublishButtonLoadedOnSchedulePage() || schedulePage.isRepublishButtonLoadedOnSchedulePage())
+                schedulePage.publishActiveSchedule();
+
+            /// Add shifts in schedule
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.addOpenShiftWithDefaultTime("MOD","Child2");
+
+            /// Edit shifts(include edit shift time, assign TM, delete...)
+            schedulePage.clickOnProfileIcon();
+            schedulePage.clickOnEditShiftTime();
+            schedulePage.editShiftTime();
+            schedulePage.clickOnUpdateEditShiftTimeButton();
+
+            schedulePage.clickOnProfileIcon();
+            schedulePage.clickonAssignTM();
+            schedulePage.selectTeamMembers();
+            schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.saveSchedule();
+
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.selectShiftTypeFilterByText("Compliance Review");
+            schedulePage.clickOnProfileIcon();
+            schedulePage.verifyDeleteShift();
+
+            /// Republish schedule
+            schedulePage.publishActiveSchedule();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Validate that operate LG schedule by different user")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateOperateLGScheduleByDifferentUserForP2PAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict("Bay Area District");
+            locationSelectorPage.changeLocation("LocGroup2");
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+
+            // Verify operate schedule by admin user
+
+            /// Generate schedule
+            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            /// Publish schedule
+            if(schedulePage.isPublishButtonLoadedOnSchedulePage() || schedulePage.isRepublishButtonLoadedOnSchedulePage())
+                schedulePage.publishActiveSchedule();
+
+            /// Add shifts in schedule
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.addOpenShiftWithDefaultTime("MOD","Mountain View");
+
+            /// Edit shifts(include edit shift time, assign TM, delete...)
+            schedulePage.clickOnProfileIcon();
+            schedulePage.clickOnEditShiftTime();
+            schedulePage.editShiftTime();
+            schedulePage.clickOnUpdateEditShiftTimeButton();
+
+            schedulePage.clickOnProfileIcon();
+            schedulePage.clickonAssignTM();
+            schedulePage.selectTeamMembers();
+            schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.saveSchedule();
+
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.selectShiftTypeFilterByText("Compliance Review");
+            schedulePage.clickOnProfileIcon();
+            schedulePage.verifyDeleteShift();
+
+            /// Republish schedule
+            schedulePage.publishActiveSchedule();
+
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
+            // Verify operate schedule by SM user
+            /// Login as Store Manager
+            String fileName = "UsersCredentials.json";
+            fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            Object[][] teamMemberCredentials = userCredentials.get("StoreManagerLG");
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                    , String.valueOf(teamMemberCredentials[0][2]));
+            dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            schedulePage.navigateToNextWeek();
+
+            /// Generate schedule
+            isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            /// Publish schedule
+            if(schedulePage.isPublishButtonLoadedOnSchedulePage() || schedulePage.isRepublishButtonLoadedOnSchedulePage())
+                schedulePage.publishActiveSchedule();
+
+            /// Add shifts in schedule
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.addOpenShiftWithDefaultTime("MOD");
+
+            /// Edit shifts(include edit shift time, assign TM, delete...)
+            schedulePage.clickOnProfileIcon();
+            schedulePage.clickOnEditShiftTime();
+            schedulePage.editShiftTime();
+            schedulePage.clickOnUpdateEditShiftTimeButton();
+
+            schedulePage.clickOnProfileIcon();
+            schedulePage.clickonAssignTM();
+            schedulePage.selectTeamMembers();
+            schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.saveSchedule();
+
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.selectShiftTypeFilterByText("Compliance Review");
+            schedulePage.clickOnProfileIcon();
+            schedulePage.verifyDeleteShift();
+
+            /// Republish schedule
+            schedulePage.publishActiveSchedule();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate UI performance for large roster (500 employees) with one location as well as multiple location groups")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateUIPerformanceForLargeRosterForMSAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict("District Whistler");
+            locationSelectorPage.changeLocation("Lift Ops_Parent");
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+
+            // Verify LG schedule can be generated with large TMs in 2 mins
+            /// Generate one schedule with more than 500 TMs
+            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.createScheduleForNonDGFlowNewUI();
+
+            // Verify LG schedule can be edited with large TMs in 2 mins
+            /// Edit this schedule, save and publish it
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.saveSchedule();
+            schedulePage.publishActiveSchedule();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Validate UI performance for large roster (500 employees) with one location as well as multiple location groups")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateUIPerformanceForLargeRosterForP2PAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict("Bay Area District");
+            locationSelectorPage.changeLocation("LocGroup2");
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+
+            // Verify LG schedule can be generated with large TMs in 2 mins
+            /// Generate one schedule with more than 500 TMs
+            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.createScheduleForNonDGFlowNewUI();
+
+            // Verify LG schedule can be edited with large TMs in 2 mins
+            /// Edit this schedule, save and publish it
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.saveSchedule();
+            schedulePage.publishActiveSchedule();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate Print Schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validatePrintScheduleForMSAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict("District Whistler");
+            locationSelectorPage.changeLocation("Lift Ops_Parent");
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+
+            // Verify the LG schedule can be printed and the shift display correctly in print file in week view
+            /// Go to one generated schedule
+            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            /// In week view, print the schedule by click Print button
+            SimpleUtils.assertOnFail("Print Icon not loaded Successfully!", schedulePage.isPrintIconLoaded(), false);
+            String handle = getDriver().getWindowHandle();
+            schedulePage.verifyThePrintFunction();
+
+            /// Get the content in print file
+            String downloadPath = parameterMap.get("Download_File_Default_Dir");
+            Thread.sleep(5000);
+            File latestFile = SimpleUtils.getLatestFileFromDirectory(downloadPath);
+            String fileName = latestFile.getName();
+            PdfReader reader = new PdfReader(downloadPath+"\\"+fileName);
+            String content = PdfTextExtractor.getTextFromPage(reader, 1);
+
+            /// Get scheduled hours and shifts count for one sub location on schedule page
+            String subLocation = content.split(" ")[0];
+            getDriver().switchTo().window(handle);
+            schedulePage.selectLocationFilterByText(subLocation);
+            HashMap<String, String> hoursOnSchedule = schedulePage.getHoursFromSchedulePage();
+            int shiftsCount = schedulePage.getShiftsCount();
+
+            /// Compare the data for one sub location in printed file and schedule page
+            if (content.contains(hoursOnSchedule.get("Scheduled")) && content.contains(""+shiftsCount)) {
+                SimpleUtils.report("The scheduled hours of " + subLocation+ " is " + hoursOnSchedule.get("Scheduled") + " Hrs");
+                SimpleUtils.report("The shifts count  of " + subLocation + " is " + shiftsCount + " Shifts");
+                SimpleUtils.pass("Schedule page: The content in printed file in week view displays correctly");
+            } else
+                SimpleUtils.fail("Schedule page: The content in printed file in week view displays incorrectly",false);
+
+            // Verify the LG schedule can be printed and the shift display correctly in print file in day view
+            /// In day view, print the schedule by click Print button
+            schedulePage.clickOnDayView();
+            SimpleUtils.assertOnFail("Print Icon not loaded Successfully!", schedulePage.isPrintIconLoaded(), false);
+            schedulePage.verifyThePrintFunction();
+
+            /// Get the content in print file
+            downloadPath = parameterMap.get("Download_File_Default_Dir");
+            Thread.sleep(5000);
+            latestFile = SimpleUtils.getLatestFileFromDirectory(downloadPath);
+            fileName = latestFile.getName();
+            reader = new PdfReader(downloadPath+"\\"+fileName);
+            content = PdfTextExtractor.getTextFromPage(reader, 1);
+
+            /// Get scheduled hours and shifts count for one sub location on schedule page
+            subLocation = content.split(" ")[0];
+            getDriver().switchTo().window(handle);
+            schedulePage.selectLocationFilterByText(subLocation);
+            hoursOnSchedule = schedulePage.getHoursFromSchedulePage();
+            shiftsCount = schedulePage.getAvailableShiftsInDayView().size();
+
+            /// Compare the data for one sub location in printed file and schedule page
+            if (content.contains(hoursOnSchedule.get("Scheduled")) && content.contains(""+shiftsCount)) {
+                SimpleUtils.report("The scheduled hours of " + subLocation+ " is " + hoursOnSchedule.get("Scheduled") + " Hrs");
+                SimpleUtils.report("The shifts count  of " + subLocation + " is " + shiftsCount + " Shifts");
+                SimpleUtils.pass("Schedule page: The content in printed file in day view displays correctly");
+            } else
+                SimpleUtils.fail("Schedule page: The content in printed file in day view displays incorrectly",false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Validate Print Schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validatePrintScheduleForP2PAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict("Bay Area District");
+            locationSelectorPage.changeLocation("LocGroup2");
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+
+            // Verify the LG schedule can be printed and the shift display correctly in print file in week view
+            /// Go to one generated schedule
+            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            /// In week view, print the schedule by click Print button
+            SimpleUtils.assertOnFail("Print Icon not loaded Successfully!", schedulePage.isPrintIconLoaded(), false);
+            String handle = getDriver().getWindowHandle();
+            schedulePage.verifyThePrintFunction();
+
+            /// Get the content in print file
+            String downloadPath = parameterMap.get("Download_File_Default_Dir");
+            Thread.sleep(5000);
+            File latestFile = SimpleUtils.getLatestFileFromDirectory(downloadPath);
+            String fileName = latestFile.getName();
+            PdfReader reader = new PdfReader(downloadPath+"\\"+fileName);
+            String content = PdfTextExtractor.getTextFromPage(reader, 1);
+
+            /// Get scheduled hours and shifts count for one sub location on schedule page
+            String subLocation = content.split(" ")[0];
+            getDriver().switchTo().window(handle);
+            schedulePage.selectLocationFilterByText(subLocation);
+            HashMap<String, String> hoursOnSchedule = schedulePage.getHoursFromSchedulePage();
+            int shiftsCount = schedulePage.getShiftsCount();
+
+            /// Compare the data for one sub location in printed file and schedule page
+            if (content.contains(hoursOnSchedule.get("Scheduled")) && content.contains(""+shiftsCount)) {
+                SimpleUtils.report("The scheduled hours of " + subLocation+ " is " + hoursOnSchedule.get("Scheduled") + " Hrs");
+                SimpleUtils.report("The shifts count  of " + subLocation + " is " + shiftsCount + " Shifts");
+                SimpleUtils.pass("Schedule page: The content in printed file in week view displays correctly");
+            } else
+                SimpleUtils.fail("Schedule page: The content in printed file in week view displays incorrectly",false);
+
+            // Verify the LG schedule can be printed and the shift display correctly in print file in day view
+            /// In day view, print the schedule by click Print button
+            schedulePage.clickOnDayView();
+            SimpleUtils.assertOnFail("Print Icon not loaded Successfully!", schedulePage.isPrintIconLoaded(), false);
+            schedulePage.verifyThePrintFunction();
+
+            /// Get the content in print file
+            downloadPath = parameterMap.get("Download_File_Default_Dir");
+            Thread.sleep(5000);
+            latestFile = SimpleUtils.getLatestFileFromDirectory(downloadPath);
+            fileName = latestFile.getName();
+            reader = new PdfReader(downloadPath+"\\"+fileName);
+            content = PdfTextExtractor.getTextFromPage(reader, 1);
+
+            /// Get scheduled hours and shifts count for one sub location on schedule page
+            subLocation = content.split(" ")[0];
+            getDriver().switchTo().window(handle);
+            schedulePage.selectLocationFilterByText(subLocation);
+            hoursOnSchedule = schedulePage.getHoursFromSchedulePage();
+            shiftsCount = schedulePage.getAvailableShiftsInDayView().size();
+
+            /// Compare the data for one sub location in printed file and schedule page
+            if (content.contains(hoursOnSchedule.get("Scheduled")) && content.contains(""+shiftsCount)) {
+                SimpleUtils.report("The scheduled hours of " + subLocation+ " is " + hoursOnSchedule.get("Scheduled") + " Hrs");
+                SimpleUtils.report("The shifts count  of " + subLocation + " is " + shiftsCount + " Shifts");
+                SimpleUtils.pass("Schedule page: The content in printed file in day view displays correctly");
+            } else
+                SimpleUtils.fail("Schedule page: The content in printed file in day view displays incorrectly",false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 }

@@ -509,6 +509,12 @@
                     <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
                     <include name="validateTheButtonsOnSchedulePageAsInternalAdmin" />
                     <include name="validateTheGroupByDropdownListAsInternalAdmin" />
+                    <include name="validateOperateLGScheduleByDifferentUserForMSAsInternalAdmin" />
+                    <include name="validateOperateLGScheduleByDifferentUserForP2PAsInternalAdmin" />
+                    <include name="validateUIPerformanceForLargeRosterForMSAsInternalAdmin" />
+                    <include name="validateUIPerformanceForLargeRosterForP2PAsInternalAdmin" />
+                    <include name="validatePrintScheduleForMSAsInternalAdmin" />
+                    <include name="validatePrintScheduleForP2PAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
