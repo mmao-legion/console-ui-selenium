@@ -237,7 +237,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement searchInput;
 	@FindBy(css = ".lg-search-icon")
 	private WebElement searchBtn;
-	@FindBy(xpath = "//table/tbody/tr[2]/td[1]/lg-button/button/span/span")
+	@FindBy(xpath = "//table/tbody/tr[2]/td[1]/div/lg-button/button/span/span")
 	private WebElement locationsName;
 
 	@Override
