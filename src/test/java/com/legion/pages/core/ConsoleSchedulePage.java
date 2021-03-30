@@ -3286,4 +3286,46 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     }
 
+    @Override
+<<<<<<<<< Temporary merge branch 1
+    public void verifyPreviousWeekWhenCreateAndCopySchedule(String weekInfo, boolean shouldBeSelected) throws Exception {
+
+    }
+
+    @Override
+    public void clickNextBtnOnCreateScheduleWindow() throws Exception {
+
+    }
+
+    @Override
+    public void clickBackBtnAndExitCreateScheduleWindow() throws Exception {
+
+    }
+
+    @Override
+    public void editTheOperatingHours(List<String> weekDaysToClose) throws Exception {
+
+    }
+
+    @Override
+    public float getStaffingGuidanceHrs() throws Exception {
+        return (float) 0;
+    }
+
+    @Override
+    public void verifyTooltipForCopyScheduleWeek(String weekInfo) throws Exception {
+
+    }
+=========
+    public boolean suggestedButtonIsHighlighted() {
+        return false;
+    }
+
+    @Override
+    public boolean verifyWFSFunction() {
+        return false;
+    }
+
+
+>>>>>>>>> Temporary merge branch 2
 }

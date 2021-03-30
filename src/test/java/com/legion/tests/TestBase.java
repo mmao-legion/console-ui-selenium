@@ -360,21 +360,12 @@ public abstract class TestBase {
         loginPage.loginToLegionWithCredential(username, Password);
         loginPage.verifyNewTermsOfServicePopUp();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        changeDistrictAccordingToEnterprise(locationSelectorPage);
-        locationSelectorPage.changeLocation(location);
+//        changeDistrictAccordingToEnterprise(locationSelectorPage);
+//        locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, location);
     }
 
-
-    public synchronized void loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String username, String Password, String location) throws Exception
-    {
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        loginPage.loginToLegionWithCredential(username, Password);
-        loginPage.verifyNewTermsOfServicePopUp();
-        boolean isLoginDone = loginPage.isLoginDone();
-        loginPage.verifyLoginDone(isLoginDone, location);
-    }
     private void changeDistrictAccordingToEnterprise(LocationSelectorPage locationSelectorPage) {
         if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
             locationSelectorPage.changeDistrict(districtsMap.get("Coffee_Enterprise"));

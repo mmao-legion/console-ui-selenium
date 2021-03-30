@@ -130,4 +130,7 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public ConfigurationPage createOpsPortalConfigurationPage() { return new OpsPortalConfigurationPage();}
+
+	@Override
+	public CompliancePage createConsoleCompliancePage() { return new ConsoleCompliancePage(); }
 }

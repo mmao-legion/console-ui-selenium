@@ -134,7 +134,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		if (areListElementVisible(activityFilters, 10)) {
 			if (index < activityFilters.size()) {
 				clickTheElement(activityFilters.get(index));
-				waitForSeconds(2);
+				waitForSeconds(3);
 				if (isElementLoaded(filterTitle, 10)) {
 					if (filterName.equalsIgnoreCase(filterTitle.getText().replaceAll("\\s*", ""))) {
 						SimpleUtils.pass("Switch to :" + filterTitle.getText() + " tab Successfully!");
@@ -391,12 +391,12 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 					SimpleUtils.pass("Find Card: " + actualMessage + " Successfully!");
 					isFound = true;
 					if (timeOffAction.toLowerCase().contains("cancel")) {
-						waitForSeconds(3);
+						waitForSeconds(5);
 						String cancelInfo = activityCard.findElement(By.cssSelector(".notification-approved")).getText();
-						if (cancelInfo.equalsIgnoreCase(expectedCancelInfo)) {
+						if (cancelInfo.contains(expectedCancelInfo)) {
 							SimpleUtils.pass("Cancel Info load!");
 						} else {
-							SimpleUtils.fail("Cancel Info is not loaded!", true);
+							SimpleUtils.fail("Cancel Info is not loaded!", false);
 						}
 					}
 					//check the detail
@@ -408,7 +408,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 							click(detail);
 							SimpleUtils.pass("detail load!");
 						} else {
-							SimpleUtils.fail("detail is not loaded!", true);
+							SimpleUtils.fail("detail is not loaded!", false);
 						}
 					}
 					break;
@@ -615,9 +615,9 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
             if (filterTitle.getText().contains("Shift Swap")) {
                 if (notificationsContainer.getText().contains("requested to swap shifts") || notificationsContainer.getText().contains("agreed to cover")) {
                     SimpleUtils.pass("The content of shift swap activity displays successfully");
-                } else if ( notificationsContainerEmpty.getText().toLowerCase().contains("No activities available for the selected filter")) {
+                } else if (notificationsContainerEmpty.getText().contains("No activities available")) {
                     SimpleUtils.pass("No activities available for the selected filter");
-                } else SimpleUtils.fail("The content of shift swap activity displays incorrectly", true);
+                } else SimpleUtils.fail("The content of shift swap activity displays incorrectly", false);
             } else SimpleUtils.fail("The content of Shift Swap Activity is incorrect", true);
         } else SimpleUtils.fail("Shift Swap Activity failed to Load",true);
     }

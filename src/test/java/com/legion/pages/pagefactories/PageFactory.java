@@ -1,5 +1,6 @@
 package com.legion.pages.pagefactories;
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleCompliancePage;
 
 /**
  * Yanming
@@ -62,4 +63,5 @@ public interface PageFactory {
     AdminPage createConsoleAdminPage();
 
     ConfigurationPage createOpsPortalConfigurationPage();
+    CompliancePage createConsoleCompliancePage();
 }

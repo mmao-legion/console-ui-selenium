@@ -2616,6 +2616,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     newSelectedTM = firstnameOfTM.getText();
                 }
             } else {
+                click(btnSearchteamMember.get(0));
+                newSelectedTM = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
                 SimpleUtils.fail("Recommended option not available on page", false);
             }
         } else if (isElementLoaded(textSearch, 5)) {
@@ -3661,7 +3663,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (isElementLoaded(generateModalTitle, 15) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
                 editTheBudgetForNondgFlow();
-                waitForSeconds(15);
+                waitForSeconds(18);
                 try {
                     List<WebElement> trs = enterBudgetTable.findElements(By.tagName("tr"));
                     if (areListElementVisible(trs, 5) && trs.size() > 0) {
@@ -3673,6 +3675,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     // Nothing
                 }
                 clickTheElement(nextButtonOnCreateSchedule);
+            }
+            if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+                checkoutSchedule();
             }
         } catch (Exception e) {
             // do nothing
@@ -3831,6 +3836,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
+    public void clickNextBtnOnCreateScheduleWindow() throws Exception {
+        if (isElementLoaded(nextButtonOnCreateSchedule, 15)){
+            clickTheElement(nextButtonOnCreateSchedule);
+            checkEnterBudgetWindowLoadedForNonDG();
+        } else {
+            SimpleUtils.fail("There is not next button!", false);
+        }
+    }
+
     public void editTheBudgetForNondgFlow() throws Exception {
         if (isElementLoaded(editBudgetBtn, 5)) {
             clickTheElement(editBudgetBtn);
@@ -3867,6 +3882,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
     public void editTheOperatingHours(List<String> weekDaysToClose) throws Exception {
         if (isElementLoaded(operatingHoursEditBtn, 10)) {
             clickTheElement(operatingHoursEditBtn);
@@ -3945,7 +3961,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 SimpleUtils.fail("Not able to generate the schedule successfully for non dg flow!", false);
             }
         }else{
-            SimpleUtils.fail("Schedule Type " + scheduleTypeManager.getText() + " is disabled",false);
+            SimpleUtils.report("Schedule Type " + scheduleTypeManager.getText() + " is disabled");
         }
     }
 
@@ -3955,8 +3971,21 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementEnabled(generateSheduleButton,10)) {
             click(generateSheduleButton);
             openBudgetPopUp();
+
         }else {
             SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+        }
+    }
+
+    @FindBy(css = "div[ng-click=\"back()\"]")
+    private WebElement backBtnOnCreateScheduleWindow;
+    @Override
+    public void clickBackBtnAndExitCreateScheduleWindow() throws Exception {
+        if (isElementEnabled(backBtnOnCreateScheduleWindow,10)) {
+            click(backBtnOnCreateScheduleWindow);
+            click(backBtnOnCreateScheduleWindow);
+        }else {
+            SimpleUtils.fail("Back button on create schedule popup window is not loaded Successfully!", false);
         }
     }
 
@@ -7286,7 +7315,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             }
             if (currentWeekIndex == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
-                click(calendarNavigationNextWeekArrow);
+                clickTheElement(calendarNavigationNextWeekArrow);
                 if (areListElementVisible(currentWeeks, 5)) {
                     clickTheElement(currentWeeks.get(0));
                     SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(0).getText() + "' Successfully!");
@@ -9939,7 +9968,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             clickTheElement(image);
                             if (isElementLoaded(deleteShift, 5)) {
                                 clickTheElement(deleteShift);
-                                if (isElementLoaded(deleteBtnInDeleteWindows, 3)) {
+                                if (isElementLoaded(deleteBtnInDeleteWindows, 10)) {
                                     click(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
                                 } else
@@ -12503,6 +12532,111 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }catch(Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
+    }
+
+<<<<<<<<< Temporary merge branch 1
+    @FindBy(css = "div[ng-repeat=\"schedule in previousWeeksSchedules\"]")
+    private List<WebElement> previousWeeks;
+    @FindBy(css = ".schedule-disabled-tooltip")
+    private WebElement scheduleDisabledTooltip;
+    @Override
+    public void verifyPreviousWeekWhenCreateAndCopySchedule(String weekInfo, boolean shouldBeSelected) throws Exception {
+        //Need to prepare 2 previous week to check.
+        if (areListElementVisible(previousWeeks, 10) && previousWeeks.size()>=2){
+            for (WebElement element: previousWeeks){
+                String weekDayInfo = null;
+                String[] items = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1].split(" - ");
+                if (items.length==2){
+                    weekDayInfo = convertDateString(items[0]) + " - " +convertDateString(items[1]);
+                } else {
+                    SimpleUtils.fail("week day info format is not expected!", false);
+                }
+
+                if (weekInfo.equalsIgnoreCase(weekDayInfo)){
+                    if (shouldBeSelected == !element.findElement(By.cssSelector(".generate-modal-week")).getAttribute("class").contains("disabled")){
+                        SimpleUtils.pass("Should the week:"+weekInfo+" be selected is correct!");
+                    } else {
+                        SimpleUtils.fail("Should the week:"+weekInfo+" be selected is not the expected!", false);
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no previous week to copy", false);
+        }
+    }
+
+    private String convertDateString(String dateString) throws Exception{
+        String result = null;
+        // dateString format: JAN 02, will convert 02 to 2, return JAN 2
+        String[] items = dateString.split(" ");
+        if (items.length == 2 && SimpleUtils.isNumeric(items[1])) {
+            items[1] = Integer.toString(Integer.parseInt(items[1]));
+            result = items[0] + " " + items[1];
+        }else {
+            SimpleUtils.fail("Split String: '" + dateString + "' failed!", false);
+        }
+        return result;
+    }
+
+    @FindBy(css = ".generate-schedule-staffing tr:not([ng-repeat]) th[class=\"text-right ng-binding\"]")
+    private WebElement staffingGuidanceHrs;
+    @Override
+    public float getStaffingGuidanceHrs() throws Exception {
+        float staffingGuidanceHours = 0;
+        if (isElementLoaded(staffingGuidanceHrs,20) && SimpleUtils.isNumeric(staffingGuidanceHrs.getText().replace("\n",""))){
+            staffingGuidanceHours = Float.parseFloat(staffingGuidanceHrs.getText().replace("\n",""));
+        } else {
+            SimpleUtils.fail("There is no Staffing guidance hours!", false);
+        }
+        return staffingGuidanceHours;
+    }
+
+    @Override
+    public void verifyTooltipForCopyScheduleWeek(String weekInfo) throws Exception {
+        //Need to prepare 2 previous week to check.
+        if (areListElementVisible(previousWeeks, 10) && previousWeeks.size()>=2){
+            for (WebElement element: previousWeeks){
+                String weekDayInfo = null;
+                String[] items = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1].split(" - ");
+                if (items.length==2){
+                    weekDayInfo = convertDateString(items[0]) + " - " +convertDateString(items[1]);
+                } else {
+                    SimpleUtils.fail("week day info format is not expected!", false);
+                }
+                if (weekInfo.equalsIgnoreCase(weekDayInfo)){
+                    mouseHover(element);
+                    String tooltipText = "Policy: Max. 2 violations and 0% over budget";
+                    if (scheduleDisabledTooltip.getAttribute("style").contains("visible") && tooltipText.equalsIgnoreCase(scheduleDisabledTooltip.getText())){
+                        SimpleUtils.pass("Tooltip is expected!");
+                    } else {
+                        SimpleUtils.fail("Tooltip should display when mouse hover the week!", false);
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no previous week to copy", false);
+        }
+=========
+    @Override
+    public boolean suggestedButtonIsHighlighted() throws Exception {
+        if (isElementLoaded(scheduleTypeSystem, 5) && scheduleTypeSystem.getAttribute("class").contains("g-button-group-selected") ){
+            SimpleUtils.pass("The suggest button is high lighted");
+            return true;
+        }else {
+            SimpleUtils.fail("The suggest button load failed",true);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean verifyWFSFunction() {
+        if (searchResults.size()!=0) {
+            SimpleUtils.pass("Can search team members in same district");
+            return true;
+        }else
+            SimpleUtils.fail("Workforce Sharing function work wrong",false);
+        return false;
+>>>>>>>>> Temporary merge branch 2
     }
 }
 
