@@ -3,7 +3,7 @@
   "FIREFOX_DRIVER_PATH": "/usr/local/bin/geckodriver",
   "DEVURL": "https://mobilestage.legion.work/",
   "QAURL": "https://rc-enterprise.dev.legion.work/",
-  "Screenshot_Path": "/home/circleci/project/screenshots",
+  "Screenshot_Path": "/var/lib/jenkins/workspace/createRemoteSeleniumGridForHydsoft/chinaQA",
   "ENTERPRISE" : "LegionCoffee2",
   "Coffee_Enterprise" : "LegionCoffee",
   "LegionTech_Enterprise" : "LegionTech",

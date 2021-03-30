@@ -60,5 +60,8 @@ public interface PageFactory {
 
     CinemarkMinorPage createConsoleCinemarkMinorPage();
 
+    AdminPage createConsoleAdminPage();
+
+    ConfigurationPage createOpsPortalConfigurationPage();
     CompliancePage createConsoleCompliancePage();
 }

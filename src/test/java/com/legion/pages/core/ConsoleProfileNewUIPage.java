@@ -2879,7 +2879,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		if(isElementLoaded(syncTMInfoButton, 5)){
 			SimpleUtils.pass("User Profile page: Sync TM info button loaded successfully! ");
 		} else {
-			SimpleUtils.report("User Profile page: Sync TM info button button not loaded, please check the integration setting!");
+			SimpleUtils.report("User Profile page: Sync TM info button  not loaded, please check the integration setting!");
 		}
 	}
 

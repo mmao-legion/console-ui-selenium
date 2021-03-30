@@ -3297,6 +3297,16 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public boolean suggestedButtonIsHighlighted() {
+        return false;
+    }
+
+    @Override
+    public boolean verifyWFSFunction() {
+        return false;
+    }
+
+    @Override
     public void verifyPreviousWeekWhenCreateAndCopySchedule(String weekInfo, boolean shouldBeSelected) throws Exception {
 
     }

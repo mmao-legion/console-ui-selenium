@@ -290,6 +290,11 @@ public interface ControlsNewUIPage {
 	public String getCurrentLocationInControls() throws Exception;
 	public void verifyRolePermissionExists(String section, String permission) throws Exception;
 	public void turnOnOrOffSpecificPermissionForSM(String section, String permission, String action) throws Exception;
+	public boolean isCentralizedScheduleReleaseValueYes() throws Exception;
+
+	public List<WebElement> getAvailableSelector();
+
+	public void updateCentralizedScheduleRelease(WebElement yesItem) throws Exception;
 	public String getDaysInAdvancePublishSchedulesInSchedulingPolicies() throws Exception;
 	public void updateDaysInAdvancePublishSchedulesInSchedulingPolicies(String days) throws Exception;
 }

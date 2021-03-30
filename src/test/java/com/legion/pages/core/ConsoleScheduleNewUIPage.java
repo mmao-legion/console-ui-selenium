@@ -13052,6 +13052,27 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
+    public boolean suggestedButtonIsHighlighted() throws Exception {
+        if (isElementLoaded(scheduleTypeSystem, 5) && scheduleTypeSystem.getAttribute("class").contains("g-button-group-selected") ){
+            SimpleUtils.pass("The suggest button is high lighted");
+            return true;
+        }else {
+            SimpleUtils.fail("The suggest button load failed",true);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean verifyWFSFunction() {
+        if (searchResults.size()!=0) {
+            SimpleUtils.pass("Can search team members in same district");
+            return true;
+        }else
+            SimpleUtils.fail("Workforce Sharing function work wrong",false);
+        return false;
+    }
+    
     @FindBy(css = "div[ng-repeat=\"schedule in previousWeeksSchedules\"]")
     private List<WebElement> previousWeeks;
     @FindBy(css = ".schedule-disabled-tooltip")
