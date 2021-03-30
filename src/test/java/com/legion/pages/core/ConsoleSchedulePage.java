@@ -1679,6 +1679,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void selectWhichWeekToCopyFrom(String weekInfo) throws Exception{
+
+    }
+
+    @Override
     public boolean isScheduleOperatingHoursUpdated(String startTime, String endTime) throws Exception {
         // TODO Auto-generated method stub
         return false;
@@ -1793,11 +1798,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
         return null;
     }
 
-    public void compareProjectedWithinBudget(int totalCountProjectedOverBudget) throws Exception {
+    public void compareProjectedWithinBudget(float totalCountProjectedOverBudget) throws Exception {
 
     }
 
-    public int getProjectedOverBudget() {
+    public float getProjectedOverBudget() {
         return 0;
     }
 
@@ -1887,7 +1892,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void currentWeekIsGettingOpenByDefault() {
+    public void currentWeekIsGettingOpenByDefault(String location) {
 
     }
 
@@ -2082,7 +2087,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void validateGroupBySelectorSchedulePage() throws Exception {
+    public void validateGroupBySelectorSchedulePage(boolean isLocationGroup) throws Exception{
 
     }
 
@@ -2124,6 +2129,11 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @Override
     public boolean isProfileIconsEnable() throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isProfileIconsClickable() throws Exception {
         return false;
     }
 
@@ -2893,7 +2903,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public void validateScheduleTableWhenSelectAnyOfGroupByOptions() throws Exception {
+    public void validateScheduleTableWhenSelectAnyOfGroupByOptions(boolean isLocationGroup) throws Exception {
 
     }
 
@@ -3195,7 +3205,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyShiftIsMovedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
-        
+
     }
 
     public String getTheMessageOfTMScheduledStatus() throws Exception {
@@ -3287,7 +3297,16 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-<<<<<<<<< Temporary merge branch 1
+    public boolean suggestedButtonIsHighlighted() {
+        return false;
+    }
+
+    @Override
+    public boolean verifyWFSFunction() {
+        return false;
+    }
+
+    @Override
     public void verifyPreviousWeekWhenCreateAndCopySchedule(String weekInfo, boolean shouldBeSelected) throws Exception {
 
     }
@@ -3316,16 +3335,272 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void verifyTooltipForCopyScheduleWeek(String weekInfo) throws Exception {
 
     }
-=========
-    public boolean suggestedButtonIsHighlighted() {
+
+    @Override
+    public String convertDateStringFormat(String dateString) throws Exception{
+        return null;
+    }
+
+    @Override
+    public void verifyDifferentOperatingHours(String weekInfo) throws Exception {
+
+    }
+
+    @Override
+    public void clickOnFinishButtonOnCreateSchedulePage() throws Exception{
+
+    }
+
+    @Override
+    public List<String> getDayShifts(String index) throws Exception {
+        return null;
+    }
+
+    @Override
+    public boolean isScheduleDMView() throws Exception {
         return false;
     }
 
     @Override
-    public boolean verifyWFSFunction() {
+    public int getShiftsNumberByName(String name) throws Exception {
+        return 0;
+    }
+
+    @Override
+    public List<String> getLocationsInScheduleDMViewLocationsTable() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifySortByColForLocationsInDMView(int index) throws Exception {
+
+    }
+
+    @Override
+    public void verifySearchLocationInScheduleDMView(String location) throws Exception {
+
+    }
+
+    @Override
+    public boolean isPublishButtonLoadedOnSchedulePage() throws Exception {
         return false;
     }
 
+    @Override
+    public boolean isRepublishButtonLoadedOnSchedulePage() throws Exception {
+        return false;
+    }
 
->>>>>>>>> Temporary merge branch 2
+    @Override
+    public boolean isCreateScheduleBtnLoadedOnSchedulePage() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void clickOnRepublishButtonLoadedOnSchedulePage() throws Exception {
+
+    }
+
+    @Override
+    public void navigateToPreviousWeek() throws Exception{
+
+    }
+
+    @Override
+    public void clickOnLocationNameInDMView(String location) throws Exception {
+
+    }
+
+    @Override
+    public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String weekType) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<Float> transferStringToFloat(List<String> listString) throws Exception{
+        return null;
+    }
+
+    @Override
+    public void verifyClockedOrProjectedInDMViewTable(String expected) throws Exception {
+
+    }
+
+    @Override
+    public int getIndexOfColInDMViewTable(String colName) throws Exception {
+        return 0;
+    }
+
+    @Override
+    public HashMap<String, Integer> getValueOnUnplannedClocksSummaryCardAndVerifyInfo() throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<String> getListByColInTimesheetDMView(int index) throws Exception {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, Integer> getValueOnUnplannedClocksSmartCardAndVerifyInfo() throws Exception {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, String> getBudgetNScheduledHoursFromSmartCardOnDGEnv() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void clickSpecificLocationInDMViewAnalyticTable(String location) throws Exception {
+
+    }
+
+    @Override
+    public boolean hasNextWeek() throws Exception {
+        return false;
+    }
+
+    @Override
+    public float getTotalProjectionOpenShiftsHoursForCurrentWeek() throws Exception {
+        return 0;
+    }
+
+    @Override
+    public float newCalcTotalScheduledHourForDayInWeekView() throws Exception {
+        return 0;
+    }
+
+    @Override
+    public boolean isLocationGroup() {
+        return false;
+    }
+
+    @Override
+    public void selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(String locationName) throws Exception {
+
+    }
+    @Override
+    public boolean checkIfEditOperatingHoursButtonsAreShown() throws Exception{
+        return false;
+    }
+    @Override
+    public void clickExitBtnToExitCreateScheduleWindow() throws Exception{
+
+    }
+    @Override
+    public boolean verifyScheduleNotPublishedSmartCardShowing() throws Exception {
+        return false;
+    }
+    @Override
+    public void clickToggleSummaryViewButton() throws Exception {
+
+    }
+
+    @Override
+    public boolean isHourFormat24Hour() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void selectChildLocInCreateShiftWindow(String location) throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void selectChildLocationFilterByText(String location) throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void verifyEditMealBreakTimeFunctionalityForAShift(boolean isSavedChange, WebElement shift) throws Exception {
+
+    }
+
+    @Override
+    public WebElement clickOnProfileIconOfOpenShift() throws Exception {
+        return null;
+    }
+
+    @Override
+    public WebElement clickOnProfileIconOfShiftInDayView(String openOrNot) throws Exception {
+        return null;
+    }
+
+    @Override
+    public String getTheShiftInfoByIndexInDayview(int index) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyConfirmStoreOpenCloseHours() throws Exception {
+
+    }
+
+    @Override
+    public void verifyEditMealBreakTimeFunctionalityForAShiftInDayView(boolean isSavedChange, String shiftid) throws Exception {
+
+    }
+
+    @Override
+    public void changeWorkRoleInPromptOfAShiftInDayView(boolean isApplyChange, String shiftid) throws Exception {
+
+    }
+
+    @Override
+    public void chooseLocationInCreateSchedulePopupWindow(String location) throws Exception {
+
+    }
+
+    @Override
+    public void selectRandomLocationOnCreateScheduleEditOperatingHoursPage() throws Exception {
+
+    }
+
+    @Override
+    public void editTheOperatingHoursForLGInPopupWinodw(List<String> weekDaysToClose) throws Exception {
+
+    }
+
+    @Override
+    public void closeViewStatusContainer() throws Exception {
+
+    }
+
+    @Override
+    public void changeWorkRoleInPromptOfAShift(boolean isApplyChange, WebElement shift) throws Exception {
+
+    }
+
+    @Override
+    public int getShiftIndexById(String id) throws Exception {
+        return 0;
+    }
+
+    @Override
+    public List<String> getAllLocationGroupLocationsFromCreateShiftWindow() throws Exception{
+        return null;
+    }
+
+    @Override
+    public boolean isLocationLoaded() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void selectLocation(String location) throws Exception {
+
+    }
+
+    @Override
+    public void addOpenShiftWithDefaultTime(String workRole, String location) throws Exception {
+
+    }
+
+    @Override
+    public void selectLocationFilterByText(String filterText) throws Exception {
+
+    }
 }

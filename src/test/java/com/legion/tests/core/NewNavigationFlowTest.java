@@ -34,7 +34,7 @@ public class NewNavigationFlowTest extends TestBase {
     public void firstTest(Method testMethod, Object[] params) throws Exception{
         this.createDriver((String)params[0],"83","Window");
         visitPage(testMethod);
-        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
     }
 
 

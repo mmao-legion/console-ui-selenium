@@ -66,7 +66,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         groupbyAll("Group by All"),
         groupbyWorkRole("Group by Work Role"),
         groupbyTM("Group by TM"),
-        groupbyJobTitle("Group by Job Title");
+        groupbyJobTitle("Group by Job Title"),
+        groupbyLocation("Group by Location");
 
         private final String value;
 
@@ -1041,7 +1042,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = ".sch-calendar-day-summary")
     private List<WebElement> daySummaries;
 
-    private float newCalcTotalScheduledHourForDayInWeekView() throws Exception {
+    @Override
+    public float newCalcTotalScheduledHourForDayInWeekView() throws Exception {
         float sumOfAllShiftsLength = 0;
         if (areListElementVisible(daySummaries,10)){
             for (int i=0; i<daySummaries.size();i++){
@@ -1056,7 +1058,142 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
-	@Override
+    @Override
+    public boolean isLocationGroup() {
+        return false;
+    }
+
+    @Override
+    public void selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(String locationName) throws Exception {
+
+    }
+
+    @Override
+    public boolean checkIfEditOperatingHoursButtonsAreShown() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void clickExitBtnToExitCreateScheduleWindow() throws Exception {
+
+    }
+
+    @Override
+    public boolean verifyScheduleNotPublishedSmartCardShowing() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void clickToggleSummaryViewButton() throws Exception {
+
+    }
+
+    @Override
+    public boolean isHourFormat24Hour() throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isLocationLoaded() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void selectLocation(String location) throws Exception {
+
+    }
+
+    @Override
+    public void addOpenShiftWithDefaultTime(String workRole, String location) throws Exception {
+
+    }
+
+    @Override
+    public void selectLocationFilterByText(String filterText) throws Exception {
+
+    }
+
+    @Override
+    public void selectChildLocInCreateShiftWindow(String location) throws Exception {
+
+    }
+
+    @Override
+    public void selectChildLocationFilterByText(String location) throws Exception {
+
+    }
+
+    @Override
+    public void verifyEditMealBreakTimeFunctionalityForAShift(boolean isSavedChange, WebElement shift) throws Exception {
+
+    }
+
+    @Override
+    public WebElement clickOnProfileIconOfOpenShift() throws Exception {
+        return null;
+    }
+
+    @Override
+    public WebElement clickOnProfileIconOfShiftInDayView(String openOrNot) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyEditMealBreakTimeFunctionalityForAShiftInDayView(boolean isSavedChange, String shiftid) throws Exception {
+
+    }
+
+    @Override
+    public void changeWorkRoleInPromptOfAShiftInDayView(boolean isApplyChange, String shiftid) throws Exception {
+
+    }
+
+    @Override
+    public void chooseLocationInCreateSchedulePopupWindow(String location) throws Exception {
+
+    }
+
+    @Override
+    public void selectRandomLocationOnCreateScheduleEditOperatingHoursPage() throws Exception {
+
+    }
+
+    @Override
+    public void closeViewStatusContainer() throws Exception {
+
+    }
+
+    @Override
+    public void editTheOperatingHoursForLGInPopupWinodw(List<String> weekDaysToClose) throws Exception {
+
+    }
+
+    @Override
+    public void changeWorkRoleInPromptOfAShift(boolean isApplyChange, WebElement shift) throws Exception {
+
+    }
+
+    @Override
+    public int getShiftIndexById(String id) throws Exception {
+        return 0;
+    }
+
+    @Override
+    public String getTheShiftInfoByIndexInDayview(int index) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyConfirmStoreOpenCloseHours() throws Exception {
+
+    }
+
+    @Override
+    public List<String> getAllLocationGroupLocationsFromCreateShiftWindow() throws Exception {
+        return null;
+    }
+
+    @Override
 	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
 		HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
 		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector(".card-carousel-card.card-carousel-card-primary.card-carousel-card-table"));
@@ -4261,6 +4398,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
+    public List<String> getDayShifts(String index) throws Exception {
+        return null;
+    }
+
     public void checkOutGenerateScheduleBtn(WebElement checkOutTheScheduleButton) {
         Wait<WebDriver> wait = new FluentWait<WebDriver>(
                 MyThreadLocal.getDriver()).withTimeout(Duration.ofSeconds(60))
@@ -6359,6 +6501,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
+    public void compareProjectedWithinBudget(float totalCountProjectedOverBudget) throws Exception {
+
+    }
+
 
     public int getProjectedUnderBudget(){
         int totalCountProjectedUnderBudget = 0;
@@ -6374,7 +6521,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    public int getProjectedOverBudget(){
+    public float getProjectedOverBudget(){
         int totalCountProjectedOverBudget = 0;
         if(areListElementVisible(projectedOverBudget,10) && projectedOverBudget.size()!=0){
             for(int i=0;i<projectedOverBudget.size();i++){
@@ -6785,6 +6932,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else {
             SimpleUtils.fail("Legion Schedule load failed", true);
         }
+    }
+
+    @Override
+    public void currentWeekIsGettingOpenByDefault(String location) throws Exception {
+
     }
 
 
@@ -7327,6 +7479,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else {
             SimpleUtils.fail("Current weeks' elements not loaded Successfully!", false);
         }
+    }
+
+    @Override
+    public void navigateToPreviousWeek() throws Exception {
+
     }
 
     @Override
@@ -8510,7 +8667,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     //added by Estelle
     @Override
-    public void validateGroupBySelectorSchedulePage() throws Exception {
+    public void validateGroupBySelectorSchedulePage(boolean isLocationGroup) throws Exception {
 
         if(isElementLoaded(groupBySelector,5))
         {
@@ -8537,7 +8694,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> jobTitleNames;
 
     @Override
-    public void validateScheduleTableWhenSelectAnyOfGroupByOptions() throws Exception {
+    public void validateScheduleTableWhenSelectAnyOfGroupByOptions(boolean isLocationGroup) throws Exception {
         if(isElementLoaded(groupBySelector,5)) {
             //validate the schedule table when group by Work Role
             selectGroupByFilter(scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
@@ -8894,6 +9051,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Profile Icon is not present for selected Employee", false);
             return false;
         }
+    }
+
+    @Override
+    public boolean isProfileIconsClickable() throws Exception {
+        return false;
     }
 
 
@@ -12534,7 +12696,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-<<<<<<<<< Temporary merge branch 1
+
     @FindBy(css = "div[ng-repeat=\"schedule in previousWeeksSchedules\"]")
     private List<WebElement> previousWeeks;
     @FindBy(css = ".schedule-disabled-tooltip")
@@ -12580,6 +12742,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(css = ".generate-schedule-staffing tr:not([ng-repeat]) th[class=\"text-right ng-binding\"]")
     private WebElement staffingGuidanceHrs;
+
     @Override
     public float getStaffingGuidanceHrs() throws Exception {
         float staffingGuidanceHours = 0;
@@ -12594,19 +12757,19 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void verifyTooltipForCopyScheduleWeek(String weekInfo) throws Exception {
         //Need to prepare 2 previous week to check.
-        if (areListElementVisible(previousWeeks, 10) && previousWeeks.size()>=2){
-            for (WebElement element: previousWeeks){
+        if (areListElementVisible(previousWeeks, 10) && previousWeeks.size() >= 2) {
+            for (WebElement element : previousWeeks) {
                 String weekDayInfo = null;
                 String[] items = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1].split(" - ");
-                if (items.length==2){
-                    weekDayInfo = convertDateString(items[0]) + " - " +convertDateString(items[1]);
+                if (items.length == 2) {
+                    weekDayInfo = convertDateString(items[0]) + " - " + convertDateString(items[1]);
                 } else {
                     SimpleUtils.fail("week day info format is not expected!", false);
                 }
-                if (weekInfo.equalsIgnoreCase(weekDayInfo)){
+                if (weekInfo.equalsIgnoreCase(weekDayInfo)) {
                     mouseHover(element);
                     String tooltipText = "Policy: Max. 2 violations and 0% over budget";
-                    if (scheduleDisabledTooltip.getAttribute("style").contains("visible") && tooltipText.equalsIgnoreCase(scheduleDisabledTooltip.getText())){
+                    if (scheduleDisabledTooltip.getAttribute("style").contains("visible") && tooltipText.equalsIgnoreCase(scheduleDisabledTooltip.getText())) {
                         SimpleUtils.pass("Tooltip is expected!");
                     } else {
                         SimpleUtils.fail("Tooltip should display when mouse hover the week!", false);
@@ -12616,7 +12779,123 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("There is no previous week to copy", false);
         }
-=========
+    }
+
+    @Override
+    public String convertDateStringFormat(String dateString) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyDifferentOperatingHours(String weekInfo) throws Exception {
+
+    }
+
+    @Override
+    public boolean isScheduleDMView() throws Exception {
+        return false;
+    }
+
+    @Override
+    public int getShiftsNumberByName(String name) throws Exception {
+        return 0;
+    }
+
+    @Override
+    public List<String> getLocationsInScheduleDMViewLocationsTable() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifySortByColForLocationsInDMView(int index) throws Exception {
+
+    }
+
+    @Override
+    public void verifySearchLocationInScheduleDMView(String location) throws Exception {
+
+    }
+
+    @Override
+    public void clickOnLocationNameInDMView(String location) throws Exception {
+
+    }
+
+    @Override
+    public boolean isPublishButtonLoadedOnSchedulePage() throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isRepublishButtonLoadedOnSchedulePage() throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isCreateScheduleBtnLoadedOnSchedulePage() throws Exception {
+        return false;
+    }
+
+    @Override
+    public void clickOnRepublishButtonLoadedOnSchedulePage() throws Exception {
+
+    }
+
+    @Override
+    public List<Float> transferStringToFloat(List<String> listString) throws Exception {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String weekType) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void verifyClockedOrProjectedInDMViewTable(String expected) throws Exception {
+
+    }
+
+    @Override
+    public int getIndexOfColInDMViewTable(String colName) throws Exception {
+        return 0;
+    }
+
+    @Override
+    public HashMap<String, Integer> getValueOnUnplannedClocksSummaryCardAndVerifyInfo() throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<String> getListByColInTimesheetDMView(int index) throws Exception {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, Integer> getValueOnUnplannedClocksSmartCardAndVerifyInfo() throws Exception {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, String> getBudgetNScheduledHoursFromSmartCardOnDGEnv() throws Exception {
+        return null;
+    }
+
+    @Override
+    public void clickSpecificLocationInDMViewAnalyticTable(String location) throws Exception {
+
+    }
+
+    @Override
+    public boolean hasNextWeek() throws Exception {
+        return false;
+    }
+
+    @Override
+    public float getTotalProjectionOpenShiftsHoursForCurrentWeek() throws Exception {
+        return 0;
+    }
+
     @Override
     public boolean suggestedButtonIsHighlighted() throws Exception {
         if (isElementLoaded(scheduleTypeSystem, 5) && scheduleTypeSystem.getAttribute("class").contains("g-button-group-selected") ){
@@ -12636,7 +12915,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else
             SimpleUtils.fail("Workforce Sharing function work wrong",false);
         return false;
->>>>>>>>> Temporary merge branch 2
+
     }
 }
 

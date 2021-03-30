@@ -78,7 +78,7 @@ public abstract class TestBase {
     String TestID = null;
 //  public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
-    public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/DistrictsForDifferentEnterprises.json");
+    public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/UpperfieldsForDifferentEnterprises.json");
     private static ExtentReports extent = ExtentReportManager.getInstance();
     static HashMap<String,String> testRailCfg = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
     public static AndroidDriver<MobileElement> driver;
@@ -366,6 +366,16 @@ public abstract class TestBase {
         loginPage.verifyLoginDone(isLoginDone, location);
     }
 
+
+    public synchronized void loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String username, String Password, String location) throws Exception
+    {
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        SimpleUtils.report(getDriver().getCurrentUrl());
+        loginPage.loginToLegionWithCredential(username, Password);
+        loginPage.verifyNewTermsOfServicePopUp();
+        boolean isLoginDone = loginPage.isLoginDone();
+        loginPage.verifyLoginDone(isLoginDone, location);
+    }
     private void changeDistrictAccordingToEnterprise(LocationSelectorPage locationSelectorPage) {
         if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
             locationSelectorPage.changeDistrict(districtsMap.get("Coffee_Enterprise"));

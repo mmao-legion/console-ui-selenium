@@ -34,7 +34,7 @@ public class NavigationTest extends TestBase {
 	public void firstTest(Method testMethod, Object[] params) throws Exception{
 	  this.createDriver((String)params[0],"69","Window");
       visitPage(testMethod);
-        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
+        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
 	}
     
     @Automated(automated = "Automated")
