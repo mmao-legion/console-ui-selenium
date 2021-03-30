@@ -1059,7 +1059,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 	@Override
 	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
 		HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
-		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class='card-carousel-card card-carousel-card-primary card-carousel-card-table']"));
+		WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector(".card-carousel-card.card-carousel-card-primary.card-carousel-card-table"));
 		if(isElementEnabled(budgetedScheduledLabelsDivElement,5))
 		{
 //			Thread.sleep(2000);
@@ -3791,7 +3791,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void createScheduleForNonDGFlowNewUI() throws Exception {
         String subTitle = "Confirm Operating Hours";
+        waitForSeconds(3);
         if (isElementLoaded(generateSheduleButton,10)) {
+            waitForSeconds(3);
             clickTheElement(generateSheduleButton);
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
@@ -12501,27 +12503,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }catch(Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
-    }
-
-    @Override
-    public boolean suggestedButtonIsHighlighted() throws Exception {
-        if (isElementLoaded(scheduleTypeSystem, 5) && scheduleTypeSystem.getAttribute("class").contains("g-button-group-selected") ){
-            SimpleUtils.pass("The suggest button is high lighted");
-            return true;
-        }else {
-            SimpleUtils.fail("The suggest button load failed",true);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean verifyWFSFunction() {
-        if (searchResults.size()!=0) {
-            SimpleUtils.pass("Can search team members in same district");
-            return true;
-        }else
-            SimpleUtils.fail("Workforce Sharing function work wrong",false);
-        return false;
     }
 }
 

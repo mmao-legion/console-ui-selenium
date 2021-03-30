@@ -100,6 +100,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public void changeLocation(String locationName)
     {
+        // Avoid "New Feature Enhancement" pops up
+        waitForSeconds(6);
+        getDriver().navigate().refresh();
         waitForSeconds(2);
         try {
             Boolean isLocationMatched = false;

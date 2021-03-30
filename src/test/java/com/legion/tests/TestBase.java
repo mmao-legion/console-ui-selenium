@@ -303,7 +303,7 @@ public abstract class TestBase {
         setEnvironment(propertyMap.get("ENVIRONMENT"));
         Enterprise e = testMethod.getAnnotation(Enterprise.class);
         String enterpriseName = null;
-        if (System.getProperty("enterprise")!=null) {
+        if (System.getProperty("enterprise")!=null && !System.getProperty("enterprise").isEmpty()) {
             enterpriseName = System.getProperty("enterprise");
         }else if(e != null ){
             enterpriseName = SimpleUtils.getEnterprise(e.name());
@@ -356,6 +356,7 @@ public abstract class TestBase {
     public synchronized void loginToLegionAndVerifyIsLoginDone(String username, String Password, String location) throws Exception
     {
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        SimpleUtils.report(getDriver().getCurrentUrl());
         loginPage.loginToLegionWithCredential(username, Password);
         loginPage.verifyNewTermsOfServicePopUp();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();

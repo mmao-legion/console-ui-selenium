@@ -31,7 +31,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @FindBy (xpath = "//ng-container[contains(@ng-repeat, \"groupedWidgets\")]")
     private List<WebElement> widgetsInManagePage;
 
-    @FindBy (xpath = "//span[text()=\"Manage\"]")
+    @FindBy (css = "[label=\"Manage\"]")
     private WebElement manageBtn;
 
     @FindBy (css = ".manageWidgetsEditLabel")
@@ -40,13 +40,13 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @FindBy (xpath = "//div[@gridster-item]")
     private  List<WebElement> widgetsInDashboardPage;
 
-    @FindBy (xpath = "//span[text()=\"Save\"]")
+    @FindBy (css = "[label=\"Save\"]")
     private WebElement saveBtn;
 
     @FindBy (xpath = "//span[text()=\"Cancel\"]")
     private WebElement cancelBtn;
 
-    @FindBy (xpath = "//span[text()=\"Back\"]")
+    @FindBy (css = "[label=\"Back\"]")
     private WebElement backBtn;
 
     @FindBy (css = "input[placeholder=\"Search for widgets\"]")
@@ -88,9 +88,9 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @Override
     public void enterEditMode() throws Exception {
         scrollToTop();
-        if (isElementLoaded(editBtn,5)){
-            click(editBtn.findElement(By.cssSelector("button")));
-            if (isElementLoaded(editDasboardText,5)){
+        if (isElementLoaded(editBtn,10)){
+            clickTheElement(editBtn.findElement(By.cssSelector("button")));
+            if (isElementLoaded(editDasboardText,5) && isElementLoaded(manageBtn, 10)){
                 SimpleUtils.pass("Edit mode load successfully!");
             } else {
                 SimpleUtils.fail("Edit mode fail to load!", false);
@@ -105,7 +105,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         String widgetName ="";
         List<WebElement> widgets = widgetsInManagePage;
         if (isElementLoaded(manageBtn,10)){
-            click(manageBtn);
+            clickTheElement(manageBtn);
             if (areListElementVisible(widgets,10)){
                 for (int i=0; i<widgets.size(); i++) {
                     widgetName = widgets.get(i).findElement(By.cssSelector("div[class=\"detail-div\"] :nth-child(1)")).getText().toLowerCase();
@@ -131,7 +131,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                 SimpleUtils.fail("Widgets in Manage page fail to load!",true);
             }
         } else {
-            SimpleUtils.fail("Manage button fail to load!",true);
+            SimpleUtils.fail("Manage button fail to load!",false);
         }
     }
 
@@ -270,7 +270,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                 SimpleUtils.fail("Edit Dashboard Page: Click on Save button failed, Dashboard welcome text not loaded Successfully!", false);
             }
         } else {
-            SimpleUtils.fail("save button is not loaded!",true);
+            SimpleUtils.fail("save button is not loaded!",false);
         }
     }
 
@@ -291,7 +291,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                 click(backBtn);
                 SimpleUtils.pass("Back button is working fine!");
             } else {
-                SimpleUtils.fail("Back button is not loaded!",true);
+                SimpleUtils.fail("Back button is not loaded!",false);
             }
         } else {
             SimpleUtils.fail("verifyBackBtn: Manage button fail to load!",true);
