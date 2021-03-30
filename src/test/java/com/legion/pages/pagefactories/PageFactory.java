@@ -1,5 +1,6 @@
 package com.legion.pages.pagefactories;
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleCompliancePage;
 
 /**
  * Yanming
@@ -58,4 +59,6 @@ public interface PageFactory {
     InboxPage createConsoleInboxPage();
 
     CinemarkMinorPage createConsoleCinemarkMinorPage();
+
+    CompliancePage createConsoleCompliancePage();
 }

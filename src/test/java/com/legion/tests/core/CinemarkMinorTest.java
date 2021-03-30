@@ -29,14 +29,18 @@ public class CinemarkMinorTest extends TestBase {
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception {
-        this.createDriver((String) params[0], "69", "Window");
-        visitPage(testMethod);
-        loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+        try {
+            this.createDriver((String) params[0], "69", "Window");
+            visitPage(testMethod);
+            loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     //The template the location is using.
     public enum templateInUse{
-        TEMPLATE_NAME("test2");
+        TEMPLATE_NAME("clement-997");
         private final String value;
         templateInUse(final String newValue) {
             value = newValue;
@@ -79,9 +83,9 @@ public class CinemarkMinorTest extends TestBase {
     }
 
     public enum templateAction{
-        Save_As_Draft("Save as draft"),
-        Publish_Now("Publish now"),
-        Publish_Later("Publish later");
+        Save_As_Draft("saveAsDraft"),
+        Publish_Now("publishNow"),
+        Publish_Later("publishLater");
         private final String value;
         templateAction(final String newValue) {
             value = newValue;
@@ -92,7 +96,7 @@ public class CinemarkMinorTest extends TestBase {
     public enum buttonGroup{
         Cancel("Cancel"),
         Close("Close"),
-        OKWhenEdit("Ok"),
+        OKWhenEdit("OK"),
         OKWhenPublish("OK"),
         Delete("Delete"),
         Save("Save"),
@@ -109,461 +113,493 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Prepare the calendar for all the minors")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void prepareTheCalendarForAllMinorsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-        schedulePage.clickOnDayView();
-        int currentDayIndex = schedulePage.getTheIndexOfCurrentDayInDayView();
-        int nextSatIndex = 6 - currentDayIndex + 6;
+            schedulePage.clickOnDayView();
+            int currentDayIndex = schedulePage.getTheIndexOfCurrentDayInDayView();
+            int nextSatIndex = 6 - currentDayIndex + 6;
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
-        String calendarName  = "Start Next Saturday";
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            String calendarName = "Start Next Saturday";
 
-        teamPage.deleteCalendarByName(calendarName);
-        teamPage.clickOnCreateNewCalendarButton();
-        teamPage.clickOnSchoolSessionStart();
-        teamPage.selectSchoolSessionStartNEndDate(nextSatIndex);
-        teamPage.clickOnSaveSchoolSessionCalendarBtn();
-        teamPage.inputCalendarName(calendarName);
-        teamPage.clickOnSaveSchoolCalendarBtn();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.deleteCalendarByName(calendarName);
+            teamPage.clickOnCreateNewCalendarButton();
+            teamPage.clickOnSchoolSessionStart();
+            teamPage.selectSchoolSessionStartNEndDate(nextSatIndex);
+            teamPage.clickOnSaveSchoolSessionCalendarBtn();
+            teamPage.inputCalendarName(calendarName);
+            teamPage.clickOnSaveSchoolCalendarBtn();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        List<String> minorNames = new ArrayList<>();
-        minorNames.add(cinemarkMinors.get("Minor13"));
-        minorNames.add(cinemarkMinors.get("Minor14"));
-        minorNames.add(cinemarkMinors.get("Minor15"));
-        minorNames.add(cinemarkMinors.get("Minor16"));
-        minorNames.add(cinemarkMinors.get("Minor17"));
+            List<String> minorNames = new ArrayList<>();
+            minorNames.add(cinemarkMinors.get("Minor13"));
+            minorNames.add(cinemarkMinors.get("Minor14"));
+            minorNames.add(cinemarkMinors.get("Minor15"));
+            minorNames.add(cinemarkMinors.get("Minor16"));
+            minorNames.add(cinemarkMinors.get("Minor17"));
 
-        teamPage.setTheCalendarForMinors(minorNames, calendarName, profileNewUIPage);
+            teamPage.setTheCalendarForMinors(minorNames, calendarName, profileNewUIPage);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify add dates for breaks")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAddDatesForBreaksAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        teamPage.clickTheCalendarByRandom();
-        teamPage.verifySchoolSessionPageLoaded();
-        teamPage.clickOnEditCalendarButton();
-        teamPage.verifyEditCalendarAlertModelPopsUp();
-        teamPage.clickOnEditAnywayButton();
-        SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
+            teamPage.clickTheCalendarByRandom();
+            teamPage.verifySchoolSessionPageLoaded();
+            teamPage.clickOnEditCalendarButton();
+            teamPage.verifyEditCalendarAlertModelPopsUp();
+            teamPage.clickOnEditAnywayButton();
+            SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
 
-        // Verify the clicked days are highlighted as "Non School Day" color
-        teamPage.verifyClickedDayIsHighlighted();
+            // Verify the clicked days are highlighted as "Non School Day" color
+            teamPage.verifyClickedDayIsHighlighted();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify view details of  calendars and edit")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyViewDetailsAndEditAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        // Verify the visibility of calendars on School Calendars page
-        teamPage.verifyTheCalendarListLoaded();
-        // Verify the content of each calendar
-        teamPage.verifyTheContentOnEachCalendarList();
-        // Verify the visibility of the detailed calendar page
-        teamPage.clickTheCalendarByRandom();
-        teamPage.verifySchoolSessionPageLoaded();
-        // Verify the content on detailed calendar page
-        teamPage.verifyTheContentOnDetailedCalendarPage();
-        // Verify the functionality of Edit button
-        teamPage.clickOnEditCalendarButton();
-        teamPage.verifyEditCalendarAlertModelPopsUp();
-        teamPage.clickOnEditAnywayButton();
-        SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
+            // Verify the visibility of calendars on School Calendars page
+            teamPage.verifyTheCalendarListLoaded();
+            // Verify the content of each calendar
+            teamPage.verifyTheContentOnEachCalendarList();
+            // Verify the visibility of the detailed calendar page
+            teamPage.clickTheCalendarByRandom();
+            teamPage.verifySchoolSessionPageLoaded();
+            // Verify the content on detailed calendar page
+            teamPage.verifyTheContentOnDetailedCalendarPage();
+            // Verify the functionality of Edit button
+            teamPage.clickOnEditCalendarButton();
+            teamPage.verifyEditCalendarAlertModelPopsUp();
+            teamPage.clickOnEditAnywayButton();
+            SimpleUtils.assertOnFail("Edit Calendar page not loaded Successfully!", teamPage.isEditCalendarModeLoaded(), false);
 
-        // Verify the functionality of Save button
-        teamPage.clickOnSaveSchoolCalendarBtn();
-        // Verify the functionality of "School Schedules" button
-        teamPage.clickOnSchoolSchedulesButton();
-        teamPage.verifyTheCalendarListLoaded();
+            // Verify the functionality of Save button
+            teamPage.clickOnSaveSchoolCalendarBtn();
+            // Verify the functionality of "School Schedules" button
+            teamPage.clickOnSchoolSchedulesButton();
+            teamPage.verifyTheCalendarListLoaded();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify delete calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDeleteCalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        // Verify the visibility of calendars on School Calendars page
-        teamPage.verifyTheCalendarListLoaded();
+            // Verify the visibility of calendars on School Calendars page
+            teamPage.verifyTheCalendarListLoaded();
 
-        teamPage.clickTheCalendarByRandom();
-        teamPage.verifySchoolSessionPageLoaded();
+            teamPage.clickTheCalendarByRandom();
+            teamPage.verifySchoolSessionPageLoaded();
 
-        // Verify the presence of DELETE button
-        // Verify the functionality of DELETE button
-        teamPage.clickOnDeleteCalendarButton();
-        // Verify the functionality of CANCEL button
-        teamPage.clickOnCancelButtonOnPopup();
-        // Verify the functionality of DELETE ANYWAY button
-        teamPage.clickOnDELETEANYWAYButton();
-        teamPage.verifyTheCalendarListLoaded();
+            // Verify the presence of DELETE button
+            // Verify the functionality of DELETE button
+            teamPage.clickOnDeleteCalendarButton();
+            // Verify the functionality of CANCEL button
+            teamPage.clickOnCancelButtonOnPopup();
+            // Verify the functionality of DELETE ANYWAY button
+            teamPage.clickOnDELETEANYWAYButton();
+            teamPage.verifyTheCalendarListLoaded();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify SM will have ability to select a calendar for the minor from a dropdown menu within the profile")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySMCanSelectACalendarForMinorAsStoreManager(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        teamPage.selectATeamMemberToViewProfile();
-        teamPage.isProfilePageLoaded();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.selectATeamMemberToViewProfile();
+            teamPage.isProfilePageLoaded();
 
-        // Verify Minor filed is displayed on TM Profile
-        if (profileNewUIPage.isMINORYesOrNo())
-            profileNewUIPage.verifyMINORField(true);
-        else
-            profileNewUIPage.verifyMINORField(false);
+            // Verify Minor filed is displayed on TM Profile
+            if (profileNewUIPage.isMINORYesOrNo())
+                profileNewUIPage.verifyMINORField(true);
+            else
+                profileNewUIPage.verifyMINORField(false);
 
-        // Search out a TM who is a minor
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        String minorName = teamPage.searchAndSelectTeamMemberByName(cinemarkMinors.get("Minor14"));
-        teamPage.isProfilePageLoaded();
-        if (minorName != "")
-            SimpleUtils.pass("Team Page: search out one minor to View Profile successfully");
-        else
-            SimpleUtils.fail("Team Page: Failed to search out one minor to View Profile",false);
+            // Search out a TM who is a minor
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            String minorName = teamPage.searchAndSelectTeamMemberByName(cinemarkMinors.get("Minor14"));
+            teamPage.isProfilePageLoaded();
+            if (minorName != "")
+                SimpleUtils.pass("Team Page: search out one minor to View Profile successfully");
+            else
+                SimpleUtils.fail("Team Page: Failed to search out one minor to View Profile",false);
 
-        // Verify SM can select a calendar from a dropdown menu within the profile
-        profileNewUIPage.verifySMCanSelectACalendarForMinor();
+            // Verify SM can select a calendar from a dropdown menu within the profile
+            profileNewUIPage.verifySMCanSelectACalendarForMinor();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the default value of a minor without a calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
-        // Get Cinemark minor settings from Jason file
-        String schoolWeekMaxScheduleHrs = cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[1];
-        String nonSchoolWeekMaxScheduleHrs = cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1];
+            // Get Cinemark minor settings from Jason file
+            String schoolWeekMaxScheduleHrs = cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[1];
+            String nonSchoolWeekMaxScheduleHrs = cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1];
 
-        // Search out a TM who is a minor and get minor name to enter profile page
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        teamPage.searchAndSelectTeamMemberByName(cinemarkMinors.get("Minor14"));
-        teamPage.isProfilePageLoaded();
+            // Search out a TM who is a minor and get minor name to enter profile page
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.searchAndSelectTeamMemberByName(cinemarkMinors.get("Minor14"));
+            teamPage.isProfilePageLoaded();
 
-        // Edit, select "None" from the calendar dropdown menu, and save the profile
-        profileNewUIPage.selectAGivenCalendarForMinor("None");
+            // Edit, select "None" from the calendar dropdown menu, and save the profile
+            profileNewUIPage.selectAGivenCalendarForMinor("None");
 
-        // Go to Schedule page and navigate to a week
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-        schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
+            // Go to Schedule page and navigate to a week
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
 
-        // Get the current holiday information if have
-        String holidaySmartCard = "HOLIDAYS";
-        List<String> holidays = null;
-        if (schedulePage.isSpecificSmartCardLoaded(holidaySmartCard)) {
-            schedulePage.navigateToTheRightestSmartCard();
-            schedulePage.clickLinkOnSmartCardByName("View All");
-            holidays = schedulePage.getHolidaysOfCurrentWeek();
-            // Close popup window
-            schedulePage.closeAnalyzeWindow();
-        }
-
-        // Ungenerate the schedule if it is created or published
-        boolean isWeekGenerated = schedulePage.isWeekGenerated();
-        if (isWeekGenerated){
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
-        }
-
-        // Create new shift for the minor at weekday, weekend and holiday if have
-        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "05:00AM", "11:00PM");
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor14"));
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.clearAllSelectedDays();
-        schedulePage.selectSpecificWorkDay(7);
-        schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtCertainPoint("6", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-        schedulePage.selectWorkRole("Associate");
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(cinemarkMinors.get("Minor14"));
-        schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(cinemarkMinors.get("Minor14"));
-        schedulePage.clickOnAssignAnywayButton();
-        schedulePage.clickOnOfferOrAssignBtn();
-        schedulePage.saveSchedule();
-
-        // Get holidays index if have
-        ArrayList<Integer> holidayIndexes = new ArrayList<>();
-        ArrayList<Integer> weekdayIndexes = new ArrayList<>();
-        if (holidays!= null) {
-            for (int index = 0; index < 5; index ++) {
-                for (String s: holidays) {
-                    if (s.contains(schedulePage.getWeekDayTextByIndex(index)))
-                        holidayIndexes.add(index);
-                    else
-                        weekdayIndexes.add(index);
-                }
+            // Get the current holiday information if have
+            String holidaySmartCard = "HOLIDAYS";
+            List<String> holidays = null;
+            if (schedulePage.isSpecificSmartCardLoaded(holidaySmartCard)) {
+                schedulePage.navigateToTheRightestSmartCard();
+                schedulePage.clickLinkOnSmartCardByName("View All");
+                holidays = schedulePage.getHolidaysOfCurrentWeek();
+                // Close popup window
+                schedulePage.closeAnalyzeWindow();
             }
-        } else
-            weekdayIndexes.add(0);
 
-        // Validate weekday should apply the settings of school day
-        WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(weekdayIndexes.get(0)));
-        if (newAddedShift != null && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
-            SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
-        else
-            SimpleUtils.fail("Get new added shift failed", false);
+            // Ungenerate the schedule if it is created or published
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
 
-        // Validate weekend should apply the settings of non school day
-        newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(5));
-        if (newAddedShift != null && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
-            SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
-        else
-            SimpleUtils.fail("Get new added shift failed", false);
+            // Create new shift for the minor at weekday, weekend and holiday if have
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "05:00AM", "11:00PM");
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor14"));
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.clearAllSelectedDays();
+            schedulePage.selectSpecificWorkDay(7);
+            schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("6", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.selectWorkRole("Associate");
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchTeamMemberByName(cinemarkMinors.get("Minor14"));
+            schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(cinemarkMinors.get("Minor14"));
+            schedulePage.clickOnAssignAnywayButton();
+            schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.saveSchedule();
 
-
-        // Validate holiday should apply the settings of non school day
-        if (holidays != null) {
-            newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(holidayIndexes.get(0)));
-            if (newAddedShift != null) {
-                if (holidayIndexes.size() == 5 && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + nonSchoolWeekMaxScheduleHrs + " hrs"))
-                    SimpleUtils.pass("Schedule Page: Holiday applies the settings of non school day");
-                else if (holidayIndexes.size() < 5 && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
-                    SimpleUtils.pass("Schedule Page: Holiday applies the settings of non school day");
-                else
-                    SimpleUtils.fail("Schedule Page: Holiday does not apply the settings of non school day",false);
+            // Get holidays index if have
+            ArrayList<Integer> holidayIndexes = new ArrayList<>();
+            ArrayList<Integer> weekdayIndexes = new ArrayList<>();
+            if (holidays!= null) {
+                for (int index = 0; index < 5; index ++) {
+                    for (String s: holidays) {
+                        if (s.contains(schedulePage.getWeekDayTextByIndex(index)))
+                            holidayIndexes.add(index);
+                        else
+                            weekdayIndexes.add(index);
+                    }
+                }
             } else
+                weekdayIndexes.add(0);
+
+            // Validate weekday should apply the settings of school day
+            WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(weekdayIndexes.get(0)));
+            if (newAddedShift != null && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
+                SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
+            else
                 SimpleUtils.fail("Get new added shift failed", false);
+
+            // Validate weekend should apply the settings of non school day
+            newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(5));
+            if (newAddedShift != null && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
+                SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
+            else
+                SimpleUtils.fail("Get new added shift failed", false);
+
+
+            // Validate holiday should apply the settings of non school day
+            if (holidays != null) {
+                newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(holidayIndexes.get(0)));
+                if (newAddedShift != null) {
+                    if (holidayIndexes.size() == 5 && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + nonSchoolWeekMaxScheduleHrs + " hrs"))
+                        SimpleUtils.pass("Schedule Page: Holiday applies the settings of non school day");
+                    else if (holidayIndexes.size() < 5 && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
+                        SimpleUtils.pass("Schedule Page: Holiday applies the settings of non school day");
+                    else
+                        SimpleUtils.fail("Schedule Page: Holiday does not apply the settings of non school day",false);
+                } else
+                    SimpleUtils.fail("Get new added shift failed", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
         }
     }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify create calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateCalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        int randomDigits = (new Random()).nextInt(100);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            int randomDigits = (new Random()).nextInt(100);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        // Go to School Calendars sub tab
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            // Go to School Calendars sub tab
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        // Click on Create New Calendar button, verify the Cancel and Save button display correctly
-        teamPage.clickOnCreateNewCalendarButton();
+            // Click on Create New Calendar button, verify the Cancel and Save button display correctly
+            teamPage.clickOnCreateNewCalendarButton();
 
-        // Verify the Session Start and Session End fields are mandatory fields
-        teamPage.verifyCreateCalendarLoaded();
-        teamPage.verifySessionStartNEndIsMandatory();
+            // Verify the Session Start and Session End fields are mandatory fields
+            teamPage.verifyCreateCalendarLoaded();
+            teamPage.verifySessionStartNEndIsMandatory();
 
-        // Click on School Session Start
-        teamPage.clickOnSchoolSessionStart();
+            // Click on School Session Start
+            teamPage.clickOnSchoolSessionStart();
 
-        // Select random start and end day and verify they display correctly
-        String startDate = teamPage.selectRandomDayInSessionStart(); //08-25-2020
-        String endDate = teamPage.selectRandomDayInSessionEnd(); //05-31-2021
+            // Select random start and end day and verify they display correctly
+            String startDate = teamPage.selectRandomDayInSessionStart(); //08-25-2020
+            String endDate = teamPage.selectRandomDayInSessionEnd(); //05-31-2021
 
-        // Save after setting session start and end time
-        teamPage.clickOnSaveSchoolSessionCalendarBtn();
+            // Save after setting session start and end time
+            teamPage.clickOnSaveSchoolSessionCalendarBtn();
 
-        // Verify dates will be color coded by start and end time
-        teamPage.verifyDatesInCalendar(startDate,endDate);
+            // Verify dates will be color coded by start and end time
+            teamPage.verifyDatesInCalendar(startDate,endDate);
 
-        // Input calendar name, and verify the calendar name can be edited and changed
-        String calendarName = "Calendar" + randomDigits;
-        teamPage.inputCalendarName(calendarName);
+            // Input calendar name, and verify the calendar name can be edited and changed
+            String calendarName = "Calendar" + randomDigits;
+            teamPage.inputCalendarName(calendarName);
 
-        // Verify calendar for the next year will show the same calendar name until enter the start and end date, the calendar is editable
-        teamPage.checkNextYearInEditMode();
+            // Verify calendar for the next year will show the same calendar name until enter the start and end date, the calendar is editable
+            teamPage.checkNextYearInEditMode();
 
-        // Verify the year display when going back to current calendar
-        teamPage.clickOnPriorYearInEditMode();
+            // Verify the year display when going back to current calendar
+            teamPage.clickOnPriorYearInEditMode();
 
-        // Verify that cannot go to prior year
-        teamPage.checkPriorYearInEditMode();
+            // Verify that cannot go to prior year
+            teamPage.checkPriorYearInEditMode();
 
-        // Verify the calendar can be saved
-        teamPage.clickOnSaveCalendar();
+            // Verify the calendar can be saved
+            teamPage.clickOnSaveCalendar();
 
-        // Verify the new created calendar will list in the calendar list
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
-        if (teamPage.isCalendarDisplayedByName("Calendar" + randomDigits))
-            SimpleUtils.pass("School Calendar: Calendar just created is in the list");
-        else
-            SimpleUtils.fail("School Calendar: ACalendar just created is not in the list",false);
+            // Verify the new created calendar will list in the calendar list
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            if (teamPage.isCalendarDisplayedByName("Calendar" + randomDigits))
+                SimpleUtils.pass("School Calendar: Calendar just created is in the list");
+            else
+                SimpleUtils.fail("School Calendar: ACalendar just created is not in the list",false);
 
-        // Verify the calendar can be deleted
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
-        teamPage.deleteCalendarByName(calendarName);
+            // Verify the calendar can be deleted
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            teamPage.deleteCalendarByName(calendarName);
 
-        // Verify the the change for calendar will not been saved after click Cancel button
-        teamPage.clickOnCreateNewCalendarButton();
-        teamPage.clickOnSchoolSessionStart();
-        teamPage.selectRandomDayInSessionStart();
-        teamPage.selectRandomDayInSessionEnd();
-        teamPage.clickOnSaveSchoolSessionCalendarBtn();
-        teamPage.inputCalendarName("CancelledCalendar");
-        teamPage.clickOnCancelEditCalendarBtn();
-        if (!teamPage.isCalendarDisplayedByName("CancelledCalendar"))
-            SimpleUtils.pass("School Calendar: Create action is cancelled, there will not be this calendar in the list");
-        else
-            SimpleUtils.fail("School Calendar: Create action failed to cancel",false);
+            // Verify the the change for calendar will not been saved after click Cancel button
+            teamPage.clickOnCreateNewCalendarButton();
+            teamPage.clickOnSchoolSessionStart();
+            teamPage.selectRandomDayInSessionStart();
+            teamPage.selectRandomDayInSessionEnd();
+            teamPage.clickOnSaveSchoolSessionCalendarBtn();
+            teamPage.inputCalendarName("CancelledCalendar");
+            teamPage.clickOnCancelEditCalendarBtn();
+            if (!teamPage.isCalendarDisplayedByName("CancelledCalendar"))
+                SimpleUtils.pass("School Calendar: Create action is cancelled, there will not be this calendar in the list");
+            else
+                SimpleUtils.fail("School Calendar: Create action failed to cancel",false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify school calendar list")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySchoolCalendarListAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        int random1 = (new Random()).nextInt(100);
-        int random2 = (new Random()).nextInt(100);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            int random1 = (new Random()).nextInt(100);
+            int random2 = (new Random()).nextInt(100);
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        // Create a new calendar via Admin
-        teamPage.createNewCalendarByName("Calendar" + random1);
+            // Create a new calendar via Admin
+            teamPage.createNewCalendarByName("Calendar" + random1);
 
-       // Create another new calendar via Admin
-        teamPage.createNewCalendarByName("Calendar" + random2);
+            // Create another new calendar via Admin
+            teamPage.createNewCalendarByName("Calendar" + random2);
 
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        loginPage.logOut();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
 
-        // Login as Store Manager
-        String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("OP_Enterprise") + fileName;
-        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                , String.valueOf(storeManagerCredentials[0][2]));
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        int random3 = (new Random()).nextInt(100);
-        int random4 = (new Random()).nextInt(100);
+            // Login as Store Manager
+            String fileName = "UsersCredentials.json";
+            fileName = SimpleUtils.getEnterprise("Op_Enterprise") + fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+                    , String.valueOf(storeManagerCredentials[0][2]));
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            int random3 = (new Random()).nextInt(100);
+            int random4 = (new Random()).nextInt(100);
 
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
-        SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
 
-        // Create a new calendar via Store Manager
-        teamPage.createNewCalendarByName("Calendar" + random3);
+            // Create a new calendar via Store Manager
+            teamPage.createNewCalendarByName("Calendar" + random3);
 
-        // Create another new calendar via Store Manager
-        teamPage.createNewCalendarByName("Calendar" + random4);
+            // Create another new calendar via Store Manager
+            teamPage.createNewCalendarByName("Calendar" + random4);
 
-        // Check the School Calendars list
-       if (teamPage.isCalendarDisplayedByName("Calendar" + random1) && teamPage.isCalendarDisplayedByName("Calendar" + random2)
-       && teamPage.isCalendarDisplayedByName("Calendar" + random3) && teamPage.isCalendarDisplayedByName("Calendar" + random4))
-           SimpleUtils.pass("School Calendar: All the calendars have been created display in the list");
-       else
-           SimpleUtils.fail("School Calendar: All the calendars have been created don't display in the list",false);
+            // Check the School Calendars list
+            if (teamPage.isCalendarDisplayedByName("Calendar" + random1) && teamPage.isCalendarDisplayedByName("Calendar" + random2)
+                    && teamPage.isCalendarDisplayedByName("Calendar" + random3) && teamPage.isCalendarDisplayedByName("Calendar" + random4))
+                SimpleUtils.pass("School Calendar: All the calendars have been created display in the list");
+            else
+                SimpleUtils.fail("School Calendar: All the calendars have been created don't display in the list",false);
 
-        // Clean up data
-        teamPage.deleteCalendarByName("Calendar" + random1);
-        teamPage.deleteCalendarByName("Calendar" + random2);
-        teamPage.deleteCalendarByName("Calendar" + random3);
-        teamPage.deleteCalendarByName("Calendar" + random4);
+            // Clean up data
+            teamPage.deleteCalendarByName("Calendar" + random1);
+            teamPage.deleteCalendarByName("Calendar" + random2);
+            teamPage.deleteCalendarByName("Calendar" + random3);
+            teamPage.deleteCalendarByName("Calendar" + random4);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
     //Haya
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify turn off minor rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOffMinorRuleAsInternalAdmin(String browser, String username, String password, String location) {
@@ -605,7 +641,7 @@ public class CinemarkMinorTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
-            SimpleUtils.assertOnFail("School Calendar tab should not be loaded when minot rule turned off", !teamPage.isCalendarTabLoad(), false);
+            SimpleUtils.assertOnFail("School Calendar tab should not be loaded when minor rule turned off", !teamPage.isCalendarTabLoad(), false);
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             cinemarkMinorPage.clickConfigurationTabInOP();
@@ -625,7 +661,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "verify turn on minor rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -652,11 +688,11 @@ public class CinemarkMinorTest extends TestBase {
             cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.School_Week.getValue(),"","");
             cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Non_School_Week.getValue(),"","");
             cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Summer_Week.getValue(),"","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), " "," ","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), " "," ","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), " "," ","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), " "," ","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), " "," ","");
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), "","","");
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), "","","");
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), "","","");
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), "","","");
+            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), "","","");
 
             cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
@@ -700,7 +736,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Admin can configure the access to edit calendars")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccessToEditCalendarsAsInternalAdmin(String browser, String username, String password, String location) {
@@ -730,7 +766,7 @@ public class CinemarkMinorTest extends TestBase {
 
             //Log in as SM to check
             String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("OP_Enterprise")+fileName;
+            fileName = SimpleUtils.getEnterprise("Op_Enterprise")+fileName;
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
             loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
@@ -784,7 +820,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify turn on minor rule and set rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOnAndSetMinorRuleAsInternalAdmin(String browser, String username, String password, String location) {
@@ -836,190 +872,229 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
-    @TestName(description = "Verify the School today and school tomorrow  settings for the Minors of Age 14 or 15")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify the School today and school tomorrow settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-
-        String minorName = "Minor14";
-        String shiftTime1 = "7,1";
-        String shiftTime2 = "9,4";
-        String shiftTime3 = "8,2";
-        String workRole = "Associates";
-        String scheduleFromToTime = "8AM - 4PM";
-        String scheduleMaxHours = "6";
-        String selectWeekDayName = "Mon";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
-                workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
-
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "7,1";
+            String shiftTime2 = "9,4";
+            String shiftTime3 = "8,2";
+            String workRole = "MOD";
+            String scheduleFromToTime = "8AM - 4PM";
+            String scheduleMaxHours = "6";
+            String selectWeekDayName = "Mon";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
+                    workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the School today and school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-
-
-        String minorName = "Minor17";
-        String shiftTime1 = "8,1";
-        String shiftTime2 = "9,4";
-        String shiftTime3 = "9,2";
-        String workRole = "MOD";
-        String scheduleFromToTime = "8:30AM - 4PM";
-        String scheduleMaxHours = "5";
-        String selectWeekDayName = "Mon";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
-                scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "8,13";
+            String shiftTime2 = "9,16";
+            String shiftTime3 = "9,14";
+            String workRole = "MOD";
+            String scheduleFromToTime = "8:30 - 16:00";
+            String scheduleMaxHours = "5";
+            String selectWeekDayName = "Mon";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
+                    scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the School today and no school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "8,3";
-        String shiftTime2 = "9,5";
-        String shiftTime3 = "11,4";
-        String workRole = "Associates";
-        String scheduleFromToTime = "8:30AM - 5PM";
-        String scheduleMaxHours = "5";
-        String selectWeekDayName = "Fri";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
-                workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
-
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "8,15";
+            String shiftTime2 = "9,17";
+            String shiftTime3 = "11,16";
+            String workRole = "MOD";
+            String scheduleFromToTime = "8:30 - 17:00";
+            String scheduleMaxHours = "5";
+            String selectWeekDayName = "Fri";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
+                    workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the School today and no school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-
-        String minorName = "Minor17";
-        String shiftTime1 = "8,1";
-        String shiftTime2 = "9,5";
-        String shiftTime3 = "9,2";
-        String workRole = "MOD";
-        String scheduleFromToTime = "9AM - 5PM";
-        String scheduleMaxHours = "6";
-        String selectWeekDayName = "Fri";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
-                scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "8,13";
+            String shiftTime2 = "9,17";
+            String shiftTime3 = "9,14";
+            String workRole = "MOD";
+            String scheduleFromToTime = "9:00 - 17:00";
+            String scheduleMaxHours = "6";
+            String selectWeekDayName = "Fri";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
+                    scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the no School today and no school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "8,3";
-        String shiftTime2 = "9,6";
-        String shiftTime3 = "9,3";
-        String workRole = "Associates";
-        String scheduleFromToTime = "9AM - 6PM";
-        String scheduleMaxHours = "7";
-        String selectWeekDayName = "Sat";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
-                workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "8,15";
+            String shiftTime2 = "9,18";
+            String shiftTime3 = "9,15";
+            String workRole = "MOD";
+            String scheduleFromToTime = "9:00 - 18:00";
+            String scheduleMaxHours = "7";
+            String selectWeekDayName = "Sat";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
+                    workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
     }
 
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the no School today and no school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "8,13";
+            String shiftTime2 = "10,19";
+            String shiftTime3 = "10,14";
+            String workRole = "MOD";
+            String scheduleFromToTime = "9:30 - 19:00";
+            String scheduleMaxHours = "7";
+            String selectWeekDayName = "Sat";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
+                    scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
 
-        String minorName = "Minor17";
-        String shiftTime1 = "8,1";
-        String shiftTime2 = "10,7";
-        String shiftTime3 = "10,2";
-        String workRole = "MOD";
-        String scheduleFromToTime = "9:30AM - 7PM";
-        String scheduleMaxHours = "7";
-        String selectWeekDayName = "Sat";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
-                scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
     }
 
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the no School today and school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "8,3";
-        String shiftTime2 = "10,9";
-        String shiftTime3 = "10,4";
-        String workRole = "Associates";
-        String scheduleFromToTime = "9:30AM - 9PM";
-        String scheduleMaxHours = "9";
-        String selectWeekDayName = "Sun";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "8,15";
+            String shiftTime2 = "10,21";
+            String shiftTime3 = "10,16";
+            String workRole = "MOD";
+            String scheduleFromToTime = "9:30 - 21:00";
+            String scheduleMaxHours = "9";
+            String selectWeekDayName = "Sun";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
     }
 
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the no School today and school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor17";
-        String shiftTime1 = "8,1";
-        String shiftTime2 = "10,8";
-        String shiftTime3 = "10,2";
-        String workRole = "MOD";
-        String scheduleFromToTime = "10AM - 8PM";
-        String scheduleMaxHours = "8";
-        String selectWeekDayName = "Sun";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
-    }
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "8,13";
+            String shiftTime2 = "10,20";
+            String shiftTime3 = "10,14";
+            String workRole = "MOD";
+            String scheduleFromToTime = "10:00 - 20:00";
+            String scheduleMaxHours = "8";
+            String selectWeekDayName = "Sun";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+      }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the summer day settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "8,3";
-        String shiftTime2 = "10,10";
-        String shiftTime3 = "10,4";
-        String workRole = "Associates";
-        String scheduleFromToTime = "10AM - 10PM";
-        String scheduleMaxHours = "10";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "8,15";
+            String shiftTime2 = "10,22";
+            String shiftTime3 = "10,16";
+            String workRole = "MOD";
+            String scheduleFromToTime = "10:00 - 22:00";
+            String scheduleMaxHours = "10";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the summer day  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor17";
-        String shiftTime1 = "8,1";
-        String shiftTime2 = "11,10";
-        String shiftTime3 = "11,7";
-        String workRole = "MOD";
-        String scheduleFromToTime = "10:30AM - 10PM";
-        String scheduleMaxHours = "9";
-        verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "8,13";
+            String shiftTime2 = "11,22";
+            String shiftTime3 = "11,19";
+            String workRole = "MOD";
+            String scheduleFromToTime = "10:30 - 22:00";
+            String scheduleMaxHours = "9";
+            verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -1179,7 +1254,7 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         if(schedulePage.ifWarningModeDisplay()){
             String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
-            if (!warningMessage.contains("Minor")){
+            if (!warningMessage.contains("Minor ")){
                 SimpleUtils.pass("There is no minor warning message display when shift is not avoid the minor setting! ");
             } else
                 SimpleUtils.fail("There should no minor warning message display when shift is not avoid the minor setting! ", false);
@@ -1206,17 +1281,22 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the school week settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "10,1";
-        String shiftTime2 = "10,4";
-        int needCreateShiftsNumber1 = 4;
-        int needCreateShiftsNumber2 = 2;
-        String workRole = "Associates";
-        String maxOfDays = "4";
-        String maxOfScheduleHours = "15";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, true, false);
-    }
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "10,1";
+            String shiftTime2 = "10,4";
+            int needCreateShiftsNumber1 = 4;
+            int needCreateShiftsNumber2 = 2;
+            String workRole = "Associates";
+            String maxOfDays = "4";
+            String maxOfScheduleHours = "15";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, true, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+     }
 
 
     @Automated(automated = "Automated")
@@ -1225,16 +1305,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the non school week settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNonSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "11,1";
-        String shiftTime2 = "10,4";
-        int needCreateShiftsNumber1 = 5;
-        int needCreateShiftsNumber2 = 2;
-        String workRole = "Associates";
-        String maxOfDays = "5";
-        String maxOfScheduleHours = "16";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, true);
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "11,1";
+            String shiftTime2 = "10,4";
+            int needCreateShiftsNumber1 = 5;
+            int needCreateShiftsNumber2 = 2;
+            String workRole = "Associates";
+            String maxOfDays = "5";
+            String maxOfScheduleHours = "16";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, true);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -1244,16 +1329,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the summer week settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor14";
-        String shiftTime1 = "11,1";
-        String shiftTime2 = "10,5";
-        int needCreateShiftsNumber1 = 6;
-        int needCreateShiftsNumber2 = 2;
-        String workRole = "Associates";
-        String maxOfDays = "6";
-        String maxOfScheduleHours = "17";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, false);
+        try{
+            String minorName = "Minor14";
+            String shiftTime1 = "11,1";
+            String shiftTime2 = "10,5";
+            int needCreateShiftsNumber1 = 6;
+            int needCreateShiftsNumber2 = 2;
+            String workRole = "Associates";
+            String maxOfDays = "6";
+            String maxOfScheduleHours = "17";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -1262,16 +1352,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the school week  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor17";
-        String shiftTime1 = "11,1";
-        String shiftTime2 = "11,4";
-        int needCreateShiftsNumber1 = 6;
-        int needCreateShiftsNumber2 = 3;
-        String workRole = "Mod";
-        String maxOfDays = "6";
-        String maxOfScheduleHours = "18";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, true, false);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "11,1";
+            String shiftTime2 = "11,4";
+            int needCreateShiftsNumber1 = 6;
+            int needCreateShiftsNumber2 = 3;
+            String workRole = "Mod";
+            String maxOfDays = "6";
+            String maxOfScheduleHours = "18";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, true, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -1280,16 +1375,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the non school week  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNonSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor17";
-        String shiftTime1 = "11,1";
-        String shiftTime2 = "11,4";
-        int needCreateShiftsNumber1 = 4;
-        int needCreateShiftsNumber2 = 3;
-        String workRole = "Mod";
-        String maxOfDays = "4";
-        String maxOfScheduleHours = "16";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, true);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "11,1";
+            String shiftTime2 = "11,4";
+            int needCreateShiftsNumber1 = 4;
+            int needCreateShiftsNumber2 = 3;
+            String workRole = "Mod";
+            String maxOfDays = "4";
+            String maxOfScheduleHours = "16";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, true);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -1298,16 +1398,21 @@ public class CinemarkMinorTest extends TestBase {
     @TestName(description = "Verify the summer week settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String minorName = "Minor17";
-        String shiftTime1 = "11,1";
-        String shiftTime2 = "11,5";
-        int needCreateShiftsNumber1 = 5;
-        int needCreateShiftsNumber2 = 3;
-        String workRole = "Mod";
-        String maxOfDays = "5";
-        String maxOfScheduleHours = "17";
-        verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
-                needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, false);
+        try{
+            String minorName = "Minor17";
+            String shiftTime1 = "11,1";
+            String shiftTime2 = "11,5";
+            int needCreateShiftsNumber1 = 5;
+            int needCreateShiftsNumber2 = 3;
+            String workRole = "Mod";
+            String maxOfDays = "5";
+            String maxOfScheduleHours = "17";
+            verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
+                    needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     public void verifyWeekOvertimeViolationsForMinors(String minorName, String shiftTime1, String shiftTime2, String workRole,
@@ -1335,7 +1440,7 @@ public class CinemarkMinorTest extends TestBase {
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
         List<String> toCloseDays = new ArrayList<>();
-        schedulePage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
+        schedulePage.editOperatingHoursOnScheduleOldUIPage("6", "23", toCloseDays);
         schedulePage.createScheduleForNonDGFlowNewUI();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);

@@ -22,9 +22,13 @@ public class PrepareSettingsTest extends TestBase {
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception{
-        this.createDriver((String)params[0],"83","Window");
-        visitPage(testMethod);
-        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+        try {
+            this.createDriver((String) params[0], "83", "Window");
+            visitPage(testMethod);
+            loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated ="Automated")
@@ -33,41 +37,50 @@ public class PrepareSettingsTest extends TestBase {
     @TestName(description = "Prepare the control settings First")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void prepareSettingsInControlsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        // Go to Team page, reject all the time off request
+            // Go to Team page, reject all the time off request
 //        TeamPage teamPage = pageFactory.createConsoleTeamPage();
 //        teamPage.goToTeam();
 //        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 //        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 //        teamPage.rejectAllTeamMembersTimeOffRequest(profileNewUIPage, 0);
 
-        // Set time off policy
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            // Set time off policy
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
 
-        dashboardPage.navigateToDashboard();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            dashboardPage.navigateToDashboard();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
 
-        controlsNewUIPage.clickOnControlsSchedulingPolicies();
-        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-        controlsNewUIPage.updateCanWorkerRequestTimeOff("Yes");
-        controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
-        controlsNewUIPage.updateShowTimeOffReasons("Yes");
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            controlsNewUIPage.updateCanWorkerRequestTimeOff("Yes");
+            controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+            controlsNewUIPage.updateShowTimeOffReasons("Yes");
 
-        controlsNewUIPage.clickOnGlobalLocationButton();
-        controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
-        controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
+            controlsNewUIPage.clickOnGlobalLocationButton();
+            controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
+            controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
 
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-        controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-        SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
-        controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("Yes, anytime");
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+            SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+            controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("Yes, anytime");
+
+            controlsPage.gotoControlsPage();
+            controlsPage.clickGlobalSettings();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.enableOrDisableScheduleCopyRestriction("no");
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 }

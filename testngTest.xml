@@ -3,21 +3,18 @@
 <suite verbose ="0" thread-count="10" name="LegionTest">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="no"/>
+    <parameter name="testRailRunName" value="Automation Test Purpose"/>
 
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
 
-    <test name="Dashboard Test">
+    <test name="Schedule Test LegionCoffee">
         <classes>
-            <class name="com.legion.tests.core.DashboardTestKendraScott2">
+            <class name="com.legion.tests.core.ActivityTest">
                 <methods>
-                    <include name="verifyTheDisplayLocationWithSelectedLocation"/>
-                    <include name="verifyTheClickActionOnChangeLocationButton"/>
-                    <include name="verifyTheContentDisplayedInChangeLocationLayout"/>
-                    <include name="verifyTheFunctionOfSearchTextBox"/>
-                    <include name="verifyDashboardFunctionalityAsTeamMember" />
+                    <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />
                 </methods>
             </class>
         </classes>

@@ -109,7 +109,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement profileContactPhoneInputBox;
 	@FindBy(css="input[name=\"email\"]")
 	private WebElement profileContactEmailInputBox;
-	@FindBy(css="lgn-action-button[ng-click=\"invite()\"]")
+	@FindBy(css="lg-button[ng-click=\"invite()\"]")
 	private WebElement userProfileInviteBtn;
 	@FindBy(css="section[ng-form=\"inviteTm\"]")
 	private WebElement inviteTeamMemberPopUp;
@@ -689,9 +689,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void clickOnCancelUserProfileBtn() throws Exception {
-		if(isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Cancel\"]")),5))
-			click(profileSection.findElement(By.xpath("//span[text()=\"Cancel\"]")));
-		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]"))))
+		if(areListElementVisible(cancelBtnsOnProfile,5))
+			clickTheElement(cancelBtnsOnProfile.get(0));
+		waitForSeconds(2);
+		if(isElementLoaded(getDriver().findElement(By.cssSelector("[on-action=\"editProfile()\"] lg-button[label=\"Edit\"]")), 10))
 			SimpleUtils.pass("Profile Page: User profile Cancel Button clicked.");
 		else
 			SimpleUtils.fail("Profile Page: unable to cancel edit User profile popup.", false);
@@ -701,6 +702,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement editProfileButton;
 	@FindBy (className = "btn-success")
 	private WebElement saveTMBtn;
+	@FindBy (css = "[label=\"Cancel\"]")
+	private List<WebElement> cancelBtnsOnProfile;
 
 	@Override
 	public void clickOnEditUserProfilePencilIcon() throws Exception
@@ -708,7 +711,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),10))
 			clickTheElement(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
 		//verify if edit profile mode load
-		if(isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")),10))
+		if(areListElementVisible(saveBtnsOfProfile,10))
 			SimpleUtils.pass("Profile Page: User profile edit form loaded successfully.");
 		else
 			SimpleUtils.fail("Profile Page: User profile edit form not loaded.", false);
@@ -717,15 +720,19 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public void clickOnSaveUserProfileBtn() throws Exception
 	{
-		if(isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")), 5)){
-			scrollToElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
-			clickTheElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
-		}
-		waitForSeconds(3);
-		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")), 15)){
-			SimpleUtils.pass("Profile Page: User profile successfully saved.");
-		} else{
-			SimpleUtils.fail("Profile Page: unable to save User profile.", false);
+		try {
+			if (areListElementVisible(saveBtnsOfProfile, 5) && saveBtnsOfProfile.size() > 0) {
+				scrollToElement(saveBtnsOfProfile.get(0));
+				clickTheElement(saveBtnsOfProfile.get(0));
+			}
+			waitForSeconds(3);
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")), 15)) {
+				SimpleUtils.pass("Profile Page: User profile successfully saved.");
+			} else {
+				SimpleUtils.fail("Profile Page: unable to save User profile.", false);
+			}
+		} catch (Exception e) {
+			SimpleUtils.fail(e.toString(), false);
 		}
 	}
 
@@ -807,24 +814,16 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			}
 
 			// Updating Home Address State
-			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
-				selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), state);
-/*			boolean isStateSelected = false;
-			Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")));
-			if(statesDropdown.getFirstSelectedOption().getText().toLowerCase().contains(state.toLowerCase()))
-				SimpleUtils.pass("Profile Page: User Profile Nick Name already updated with value: '"+state+"'.");
-			else {
-				for(WebElement stateOption : statesDropdown.getOptions()) {
-					if(stateOption.getText().toLowerCase().contains(state.toLowerCase())) {
-						click(stateOption);
-						isStateSelected = true;
-					}
+			try {
+				if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
+					selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), state);
+				} else if (isElementLoaded(getDriver().findElement(By.cssSelector("input-field[label=\"Province\"] select")), 5)) {
+					selectByVisibleText(getDriver().findElement(By.cssSelector("input-field[label=\"Province\"] select")), state);
+				} else {
+					SimpleUtils.fail("Profile page: State/Province select failed to load!", false);
 				}
-				if(isStateSelected)
-					SimpleUtils.pass("Profile Page: User Profile Home Address 'State' updated with value: '"+state+"'.");
-				else
-					SimpleUtils.fail("Profile Page: User Profile Home Address State: '"+state+"' not found.", true);
-			} */
+			} catch (Exception e) {
+				// Do nothing
 			}
 
 			// Updating Home Address Zip
@@ -1004,7 +1003,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 						SimpleUtils.fail("'Invite Team Member' popup 'Phone' Input field contains Blank value.", true);
 				}
 				else
-					SimpleUtils.fail("'Invite Team Member' popup 'Phone' Input field not loaded.", true);
+					SimpleUtils.report("'Invite Team Member' popup 'Phone' Input field not loaded.");
 				
 				if(isElementLoaded(inviteTeamMemberPopUpEmailField,5)) {
 					String inviteTeamMemberPopUpEmailFieldValue = inviteTeamMemberPopUpEmailField.getAttribute("value");
@@ -1034,7 +1033,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				
 				if(isElementLoaded(inviteTeamMemberPopUpCancelBtn,5) && inviteTeamMemberPopUpCancelBtn.isEnabled()) {
 					SimpleUtils.pass("'Invite Team Member' popup 'Cancel' Button not loaded successfully.");
-					click(inviteTeamMemberPopUpCancelBtn);
+					click(inviteTeamMemberPopUpSendBtn);
 					SimpleUtils.pass("'Invite Team Member' popup 'Cancel' Button clicked successfully.");
 				}
 				else
@@ -1045,7 +1044,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.fail("Profile Page: user profile 'Invite Team Memeber' popup not loaded.", false);			
 		}
 		else
-			SimpleUtils.report("Profile Page: user profile 'Invite' button not Available.");
+			SimpleUtils.fail("Profile Page: user profile 'Invite' button not Available.", false);
 	}
 			
 	@Override
@@ -2024,15 +2023,17 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> pendingTimeOffRequests;
 	@FindBy(css = ".user-profile-section .request-status-Pending")
 	private List<WebElement> pendingAvailabilityRequests;
+	@FindBy(css = ".request-buttons-approve")
+	private WebElement approveAvailabilityButton;
 
 	@Override
-	public void cancelAllPendingAvailabilityRequest() throws Exception {
+	public void approveAllPendingAvailabilityRequest() throws Exception {
 		if (areListElementVisible(pendingAvailabilityRequests, 10)) {
 			for (WebElement pendingRequest : pendingAvailabilityRequests) {
 				clickTheElement(pendingRequest);
-				if (isElementLoaded(cancelButtonOfPendingRequest, 10)) {
-					clickTheElement(cancelButtonOfPendingRequest);
-					SimpleUtils.pass("Cancel the pending availabiltiy request successfully!");
+				if (isElementLoaded(approveAvailabilityButton, 10)) {
+					clickTheElement(approveAvailabilityButton);
+					SimpleUtils.pass("Approve the pending availability request successfully!");
 				}
 			}
 		}
@@ -2770,12 +2771,22 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 
 	@Override
-	public String getUserProfileName() throws Exception {
-		String userProfileName = "";
+	public HashMap<String, String> getUserProfileName() throws Exception {
+		HashMap<String, String> userProfileNames = new HashMap<>();
+		String fullName = "";
+		String nickName = "";
 		if (isElementLoaded(nameOfProfile, 5)) {
-			userProfileName = nameOfProfile.getText().replaceAll("\"", "").trim();
-		}
-		return userProfileName;
+			String[] allNames = nameOfProfile.getText().replaceAll("\"", "").trim().split("\n");
+			fullName = allNames[0];
+			if(allNames.length ==2){
+				nickName = allNames[1];
+			}
+			userProfileNames.put("fullName", fullName);
+			userProfileNames.put("nickName", nickName);
+			SimpleUtils.pass("Get user profile names successfully! ");
+		} else
+			SimpleUtils.fail("Names on user profile failed to load! ", false);
+		return userProfileNames;
 	}
 
 	//added by Haya
@@ -2851,7 +2862,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy(css = "lg-button[ng-click=\"changePassword()\"]")
 	private WebElement changePasswordButton;
 
-
+	@FindBy(css = ".console-navigation-item-label")
+	private List<WebElement> navigationTabs;
 
 
 
@@ -2938,16 +2950,43 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 
 	public void verifyFieldsInLegionInformationSection() throws Exception {
-		if (areListElementVisible(fieldsInLegionInformationSection, 5)
-				&& fieldsInLegionInformationSection.size() == 3
-				&& fieldsInLegionInformationSection.get(0).getText().equalsIgnoreCase("STATUS")
-				&& fieldsInLegionInformationSection.get(1).getText().equalsIgnoreCase("SCHEDULING POLICY GROUP")
-				&& fieldsInLegionInformationSection.get(2).findElement(By.cssSelector(".highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("TIMECLOCK PIN")
-				&& isElementLoaded(badgesSectionInLegionInformationSection, 5)
-				&& badgesSectionInLegionInformationSection.getText().equalsIgnoreCase("Badges")) {
-			SimpleUtils.pass("User Profile page: The fields in Legion Information section display correctly! ");
-		} else
-			SimpleUtils.fail("User Profile page: The fields in Legion Information section failed to display !", false);
+		boolean isTimeSheetTabLoaded = isTimeSheetLoaded();
+		if (isTimeSheetTabLoaded) {
+			if (areListElementVisible(fieldsInLegionInformationSection, 5)
+					&& fieldsInLegionInformationSection.size() == 3
+					&& fieldsInLegionInformationSection.get(0).getText().equalsIgnoreCase("STATUS")
+					&& fieldsInLegionInformationSection.get(1).getText().equalsIgnoreCase("SCHEDULING POLICY GROUP")
+					&& fieldsInLegionInformationSection.get(2).findElement(By.cssSelector(".highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("TIMECLOCK PIN")
+					&& isElementLoaded(badgesSectionInLegionInformationSection, 5)
+					&& badgesSectionInLegionInformationSection.getText().equalsIgnoreCase("Badges")) {
+				SimpleUtils.pass("User Profile page: The fields in Legion Information section display correctly! ");
+			} else
+				SimpleUtils.fail("User Profile page: The fields in Legion Information section failed to display !", false);
+		} else {
+			if (areListElementVisible(fieldsInLegionInformationSection, 5)
+					&& fieldsInLegionInformationSection.size() == 2
+					&& fieldsInLegionInformationSection.get(0).getText().equalsIgnoreCase("STATUS")
+					&& fieldsInLegionInformationSection.get(1).getText().equalsIgnoreCase("SCHEDULING POLICY GROUP")
+					&& isElementLoaded(badgesSectionInLegionInformationSection, 5)
+					&& badgesSectionInLegionInformationSection.getText().equalsIgnoreCase("Badges")) {
+				SimpleUtils.pass("User Profile page: The fields in Legion Information section display correctly! ");
+			} else
+				SimpleUtils.fail("User Profile page: The fields in Legion Information section failed to display !", false);
+		}
+	}
+
+	private boolean isTimeSheetLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (areListElementVisible(navigationTabs, 5)) {
+			for (WebElement navigationTab : navigationTabs) {
+				if (navigationTab.getText().toLowerCase().equals("timesheet")) {
+					isLoaded = true;
+					SimpleUtils.report("Timesheet tab is loaded!");
+					break;
+				}
+			}
+		}
+		return isLoaded;
 	}
 
 	public void verifyContentsInActionsSection() throws Exception {
@@ -3042,9 +3081,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).clear();
 				profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).sendKeys(testEmail);
 				if (!testEmail.matches(regex)) {
-					if(isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")), 5)){
-						scrollToElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
-						clickTheElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
+					if(areListElementVisible(saveBtnsOfProfile, 5)){
+						scrollToElement(saveBtnsOfProfile.get(0));
+						clickTheElement(saveBtnsOfProfile.get(0));
 						verifyAlertDialog();
 					}
 				}
@@ -3102,14 +3141,22 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.fail("No City field!",false);
 			}
 
-			// State
-			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
-				SimpleUtils.pass("State loaded!");
-				Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")));
-				results.put("State",statesDropdown.getFirstSelectedOption().getText());
-				//selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), state);
-			} else {
-				SimpleUtils.fail("No State field!",false);
+			try {
+				// State
+				if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
+					SimpleUtils.pass("State loaded!");
+					Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")));
+					results.put("State", statesDropdown.getFirstSelectedOption().getText());
+					//selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), state);
+				} else if (isElementLoaded(getDriver().findElement(By.cssSelector("input-field[label=\"Province\"] select")), 5)) {
+					SimpleUtils.pass("Province loaded!");
+					Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"Province\"] select")));
+					results.put("State", statesDropdown.getFirstSelectedOption().getText());
+				} else {
+					SimpleUtils.fail("No State field!", false);
+				}
+			} catch (Exception e) {
+				// Do nothing
 			}
 
 			// Zip Code
@@ -3219,12 +3266,19 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.fail("No City field!",false);
 			}
 
-			// State
-			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
-				selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), values.get("State"));
-				SimpleUtils.pass("Profile Page: User Profile 'State' updated with value: '" + values.get("State") + "'.");
-			} else {
-				SimpleUtils.fail("No State field!",false);
+			try {
+				// State
+				if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
+					selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), values.get("State"));
+					SimpleUtils.pass("Profile Page: User Profile 'State' updated with value: '" + values.get("State") + "'.");
+				} else if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Province\"] select")), 5)) {
+					selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"Province\"] select")), values.get("State"));
+					SimpleUtils.pass("Profile Page: User Profile 'State' updated with value: '" + values.get("State") + "'.");
+				} else {
+					SimpleUtils.fail("No State field!", false);
+				}
+			} catch (Exception e) {
+				// Do nothing
 			}
 
 			// Zip Code
@@ -3357,5 +3411,88 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}else{
 			SimpleUtils.fail("Save button is not loaded!", false);
 		}
+	}
+
+	@FindBy(css = "[ng-click=\"showInvitationCode.value = !showInvitationCode.value\"]")
+	private WebElement showOrHideInvitationCodeButton;
+
+	@FindBy(css = "[ng-if=\"showInvitationCode.value\"]")
+	private WebElement invitationCode;
+
+	@FindBy(css = "div.header-buttons-invite-code-wrapper")
+	private WebElement showOrHideInvitationCodeButtonHeader;
+
+
+	public void clickOnShowOrHideInvitationCodeButton(boolean toShowCode) throws Exception {
+		if (isElementLoaded(showOrHideInvitationCodeButton,5)){
+			if(toShowCode){
+				if(showOrHideInvitationCodeButton.getText().equalsIgnoreCase("Show Invitation Code")){
+					clickTheElement(showOrHideInvitationCodeButton);
+				}
+			} else{
+				if(showOrHideInvitationCodeButton.getText().equalsIgnoreCase("Hide Code")){
+					clickTheElement(showOrHideInvitationCodeButton);
+				}
+			}
+			SimpleUtils.pass("Show Or Hide Invitation Code button is clicked!");
+		}else{
+			SimpleUtils.fail("Show Or Hide Invitation Code button is not loaded!", false);
+		}
+	}
+
+	public String getInvitationCode() throws Exception {
+		String invitationCodeValue = "";
+		if (isElementLoaded(invitationCode,5)){
+			invitationCodeValue = invitationCode.getText();
+			SimpleUtils.pass("Get invitation Code successfully!");
+		}else{
+			SimpleUtils.fail("Invitation Code is not loaded!", false);
+		}
+		return invitationCodeValue;
+	}
+
+	public boolean isInvitationCodeLoaded() throws Exception {
+		boolean isInvitationCodeLoaded = false;
+		if (isElementLoaded(invitationCode,5)){
+			isInvitationCodeLoaded = true;
+			SimpleUtils.report("Invitation Code is loaded!");
+		}else{
+			SimpleUtils.report("Invitation Code is not loaded!");
+		}
+		return isInvitationCodeLoaded;
+	}
+
+	public String getShowOrHideInvitationCodeButtonTooltip() throws Exception {
+		String tooltip = "";
+		if(isElementLoaded(showOrHideInvitationCodeButtonHeader, 5)){
+			tooltip = showOrHideInvitationCodeButtonHeader.getAttribute("data-tootik");
+			SimpleUtils.pass("Get tooltip of Show Or Hide Invitation Code button successfully!");
+		} else
+			SimpleUtils.fail("Show Or Hide Invitation Code button is not loaded!", false);
+		return tooltip;
+	}
+
+	@Override
+	public boolean isInviteToLegionButtonLoaded() throws Exception {
+		boolean isInviteToLegionButtonLoaded = false;
+		if(isElementLoaded(userProfileInviteBtn, 5)) {
+			isInviteToLegionButtonLoaded =true;
+			SimpleUtils.report("Profile Page: Invite To Legion Button loaded successfully.");
+		} else
+			SimpleUtils.report("Profile Page: Invite To Legion Button failed to load.");
+
+		return isInviteToLegionButtonLoaded;
+	}
+
+	@Override
+	public boolean isShowOrHideInvitationCodeButtonLoaded() throws Exception {
+		boolean isShowOrHideInvitationCodeButtonLoaded = false;
+		if(isElementLoaded(showOrHideInvitationCodeButton, 5)) {
+			isShowOrHideInvitationCodeButtonLoaded =true;
+			SimpleUtils.report("Profile Page: Show Or Hide Invitation Code loaded successfully.");
+		} else
+			SimpleUtils.report("Profile Page: Show Or Hide Invitation Code failed to load.");
+
+		return isShowOrHideInvitationCodeButtonLoaded;
 	}
 }

@@ -824,7 +824,7 @@ public class BasePage {
     //added by Nishant
     public String getActiveWeekText() throws Exception {
         WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
-        if (isElementLoaded(activeWeek))
+        if (isElementLoaded(activeWeek,10))
             return activeWeek.getText().replace("\n", " ");
         return "";
     }

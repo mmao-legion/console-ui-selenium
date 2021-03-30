@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite verbose ="0" thread-count="10" name="LegionTest">
     <parameter name="environment" value="QA"/>
-    <parameter name="testRail" value="Yes"/>
+    <parameter name="testRail" value="No"/>
     <parameter name="testRailRunName" value="Automation Regression"/>
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
@@ -156,6 +156,9 @@
 <!--                   <include name="verifyTheTeamFunctionalityInInviteTeamMember" />-->
                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
 <!--                   <include name="verifyTheTeamFunctionalityInProfileSectionAsInternalAdmin" />-->
+                   <include name="verifyTheTeamFunctionalityInRosterForSort" />
+                   <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsStoreManager" />
+                   <include name="verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin" />
                </methods>
            </class>
        </classes>
@@ -415,6 +418,100 @@
                     <include name="verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin" />
                     <include name="verifyTheFunctionalityForScheduleCopyRestrictionsAsInternalAdmin" />
                     <include name="verifyViolationLimitAndBudgetOverageLimitAsInternalAdmin" />
+                    <include name="verifyTurnOffCopyRestrictionAsInternalAdmin" />
+                    <include name="verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="DM View Test">
+        <classes>
+            <class name="com.legion.tests.core.DMViewTest">
+                <methods>
+                    <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
+                    <include name="verifyRefreshFeatureOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyTimesheetApprovalRateWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnTAEnvAsInternalAdmin" />
+                    <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnNonTAEnvAsInternalAdmin" />
+                    <include name="verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin" />
+                    <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
+                    <include name="verifyComplianceViolationsWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyPayrollProjectionWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyTheContentBetweenWeeksOnScheduleInDMViewAsInternalAdmin" />
+                    <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
+                    <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />
+                    <include name="verifyRefreshFeatureOnScheduleInDMViewAsInternalAdmin" />
+                    <include name="verifyRefreshFeatureOnTimesheetInDMViewAsInternalAdmin" />
+                    <include name="verifyRefreshFeatureOnComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyLocationSummaryInScheduleDMViewAsInternalAdmin" />
+                    <include name="verifyUnplannedClocksForTimesheetInDMViewAsInternalAdmin" />
+                    <include name="verifyUnplannedClocksSmartCardForTimesheetInDMViewAsInternalAdmin" />
+                    <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyTotalViolationHrsInComplianceDMViewAsInternalAdmin" />
+                    <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
+                    <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
+                    <include name="verifyDMViewNavigationAsInternalAdmin" />
+                    <include name="verifyLocationListAndSubLocationOnTimesheetInDMViewAsInternalAdmin" />
+                    <include name="verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyAnalyticTableInTimesheetDMViewAsInternalAdmin" />
+                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
+                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
+                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
+                    <include name="verifyAnalyticsTableOnComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInDMViewAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Location Group Test">
+        <classes>
+            <class name="com.legion.tests.core.LocationGroupTest">
+                <methods>
+                    <include name="validateTheGenerationOfLGScheduleForMSAsInternalAdmin" />
+                    <include name="validateTheGenerationOfLGScheduleForP2PAsInternalAdmin" />
+                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForMSAsInternalAdmin" />
+                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForP2PAsInternalAdmin" />
+                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleForMSAsInternalAdmin" />
+                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleForP2PAsInternalAdmin"/>
+                    <include name="validateTheButtonsOnSchedulePageForMSAsInternalAdmin" />
+                    <include name="validateTheButtonsOnSchedulePageForP2PAsInternalAdmin" />
+                    <include name="validateTheGroupByDropdownListForMSAsInternalAdmin" />
+                    <include name="validateTheGroupByDropdownListForP2PAsInternalAdmin" />
+                    <include name="validateTheFunctionOfAutoOpenShiftForP2PAsInternalAdmin" />
+                    <include name="validateTheFunctionOfAutoOpenShiftForMSAsInternalAdmin" />
+                    <include name="validateTheFunctionOfAutoOpenShiftForMSInDayViewAsInternalAdmin" />
+                    <include name="validateTheFunctionOfAutoOpenShiftForP2PInDayViewAsInternalAdmin" />
+                    <!--           <include name="validateTheFunctionOfManualOpenShiftForP2PAsInternalAdmin" />   P2P doesn't turn on travel time needed violation -->
+                    <include name="validateTheFunctionOfManualOpenShiftForMSAsInternalAdmin" />
+                    <include name="validateTheFunctionOfManualOpenShiftInDayViewForMSAsInternalAdmin" />
+                    <include name="verifyActivityOfClaimOpenShiftForMSAsTeamMemberLG" />
+                    <include name="verifyActivityOfClaimOpenShiftForP2PAsTeamMemberLG" />
+                    <include name="validateOperateLGScheduleByDifferentUserForMSAsInternalAdmin" />
+                    <include name="validateOperateLGScheduleByDifferentUserForP2PAsInternalAdmin" />
+                    <include name="validateUIPerformanceForLargeRosterForMSAsInternalAdmin" />
+                    <include name="validateUIPerformanceForLargeRosterForP2PAsInternalAdmin" />
+                    <include name="validatePrintScheduleForMSAsInternalAdmin" />
+                    <include name="validatePrintScheduleForP2PAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="DM Schedule Test">
+        <classes>
+            <class name="com.legion.tests.core.DMScheduleTest">
+                <methods>
+                    <include name="validateDMScheduleAsInternalAdmin" />
+                    <include name="validateProjectedHoursFromDashBoardAndScheduleAsInternalAdmin" />
+                    <include name="validateDMDashboardAsInternalAdmin" />
+                    <!--                    <include name="validateDMViewDataWithSMViewAsInternalAdmin" />-->
+                    <include name="validateDMViewUnplannedClockAndTimesheetCountAsInternalAdmin" />
+                    <include name="validateDMtoSMNavigationNViceVersaAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

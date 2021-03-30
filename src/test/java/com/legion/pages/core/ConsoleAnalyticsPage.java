@@ -554,4 +554,25 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 			SimpleUtils.fail("Analytics: Report rows not loaded Successfully!", false);
 		}
 	}
+
+	@Override
+	public void mouseHoverAndRefreshByName(String reportName) throws Exception {
+		if (areListElementVisible(reportRows, 5)) {
+			for (WebElement reportRow : reportRows) {
+				WebElement text = reportRow.findElement(By.className("sch-kpi-title-text"));
+				if (text != null && text.getText().equalsIgnoreCase(reportName)) {
+					mouseToElement(text);
+					WebElement refreshBtn = reportRow.findElement(By.cssSelector("span.sch-control-button-label"));
+					if (refreshBtn != null) {
+						moveToElementAndClick(refreshBtn);
+						break;
+					} else {
+						SimpleUtils.fail("Analytics: Failed to find the Refresh button for report: " + reportName, false);
+					}
+				}
+			}
+		} else {
+			SimpleUtils.fail("Analytics: Report rows not loaded Successfully!", false);
+		}
+	}
 }

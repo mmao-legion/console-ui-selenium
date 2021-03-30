@@ -150,4 +150,32 @@ public interface TimeSheetPage {
 	public void verifyCurrentWeekIsSelectedByDefault(String currentWeek) throws Exception;
 
 	public String verifyLocationList() throws Exception;
+	public List<String> getTimesheetApprovalRateOnDMViewSmartCard() throws Exception;
+	public void validateThePresenceOfRefreshButton() throws Exception;
+	public void validateRefreshTimestamp() throws Exception;
+	public void validateRefreshWhenNavigationBack() throws Exception;
+	public void validateRefreshFunction() throws Exception;
+	public void validateRefreshPerformance() throws Exception;
+	public void navigateToSchedule() throws Exception;
+	public void clickOnRefreshButton() throws Exception;
+	public void navigateToPreviousWeek() throws Exception;
+	public void navigateToNextWeek() throws Exception;
+	public void clickOnGivenLocation(String location) throws Exception;
+	public String getTimesheetApprovalForGivenLocationInDMView(String location) throws Exception;
+	public boolean isWorkerDisplayInTimesheetTable() throws Exception;
+	public void approveAnyTimesheet() throws Exception;
+	public void clickOnApproveButtonInTimesheetTable() throws Exception;
+	public boolean isTimeSheetApproveButtonActive() throws Exception;
+	public String getApprovalRateFromTIMESHEETDUESmartCard() throws Exception;
+	public void reaggregateTimesheet() throws Exception;
+	public void saveTimeSheetDetail() throws Exception;
+	public void clickOnTimeSheetDetailBackBtn() throws Exception;
+	public void addTimeClockCheckInOutOnDetailWithDefaultValue(String location) throws Exception;
+	public void deleteExistingClocks() throws Exception;
+	public boolean isTimeSheetConsoleMenuTabLoaded() throws Exception;
+	public boolean isTimesheetDMView() throws Exception;
+	public List<String> getDataFromTimesheetTableForGivenLocationInDMView(String location) throws Exception;
+	public int getTotalTimesheetInSMView() throws Exception;
+	public HashMap<String, Float> getWorkerAllHours(WebElement workerRow);
+	public void validateTheContentOnTIMESHEETAPPROVALRATESmartCard(String dueDate) throws Exception;
 }

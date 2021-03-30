@@ -854,7 +854,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					By.cssSelector("div.lg-advanced-box__toggle"));
 			if (isElementLoaded(schedulingPoliciesShiftAdvanceBtn) && !schedulingPoliciesShiftAdvanceBtn.getAttribute("class")
 					.contains("--advanced")) {
-				click(schedulingPoliciesShiftAdvanceBtn);
+				scrollToElement(schedulingPoliciesShiftAdvanceBtn);
+				moveToElementAndClick(schedulingPoliciesShiftAdvanceBtn);
 				SimpleUtils.pass("Controls Page: - Scheduling Policies 'Shift' section: 'Advance' button clicked.");
 			} else
 				SimpleUtils.fail("Controls Page: - Scheduling Policies 'Shift' section: 'Advance' button not loaded.", false);
@@ -1374,10 +1375,11 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				SimpleUtils.report("Scheduling Policies: Apply Labor Budget to Schedules buttons are disabled.");
 			} else {
 				List<WebElement> applyLaborBudgetToSchedulesBtns = applyLaborBudgetToSchedules.findElements(
-						By.cssSelector("div[ng-click=\"$ctrl.change(button.value)\"]"));
+						By.cssSelector("div[ng-click=\"!button.disabled && $ctrl.change(button.value)\"]"));
 				if (applyLaborBudgetToSchedulesBtns.size() > 0) {
 					for (WebElement applyLaborBudgetToSchedulesBtn : applyLaborBudgetToSchedulesBtns) {
 						if (applyLaborBudgetToSchedulesBtn.getText().toLowerCase().contains(isLaborBudgetToApply.toLowerCase())) {
+							scrollToElement(applyLaborBudgetToSchedulesBtn);
 							click(applyLaborBudgetToSchedulesBtn);
 							preserveTheSetting();
 						}
@@ -4377,14 +4379,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 
 	public void displaySuccessMessage() throws Exception {
-		if (isElementLoaded(successMsg, 20)) {
-			SimpleUtils.pass("Success pop up displayed successfully.");
-			if (successMsg.getText().contains("Success!")) {
-				SimpleUtils.pass("Success message displayed successfully." + successMsg.getText());
-				waitForSeconds(2);
-			} else {
-				SimpleUtils.fail("Success message not displayed successfully.", true);
-			}
+		if (isElementLoaded(successMsg, 20) && successMsg.getText().contains("Success!")) {
+			SimpleUtils.pass("Success message displayed successfully." + successMsg.getText());
+			waitForSeconds(2);
 		} else {
 			SimpleUtils.report("Success pop up not displayed successfully.");
 			waitForSeconds(3);
@@ -4957,14 +4954,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void enableOverRideAssignmentRuleAsNo() throws Exception {
-		waitForSeconds(3);
-		if (isElementEnabled(btnOverrideAssignmentRule, 5)) {
+		if (isElementEnabled(btnOverrideAssignmentRule, 10)) {
 			if (isElementEnabled(btnOverrideAssignmentRuleNo, 3)) {
+				waitForSeconds(5);
 				if (btnOverrideAssignmentRuleNo.getAttribute("class").contains("selected")) {
-					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button already enabled");
+					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'No' button already enabled");
 				} else {
-					scrollToElement(btnOverrideAssignmentRuleNo);
-					click(btnOverrideAssignmentRuleNo);
+					clickTheElement(btnOverrideAssignmentRuleNo);
 					Actions actions = new Actions(getDriver());
 					actions.moveByOffset(0, 0).click().build().perform();
 					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button selected!");
@@ -5495,7 +5491,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy (css = "input[aria-label=\"Zip Code\"]")
 	private WebElement zipCode;
 
-	@FindBy (css = "[aria-label=\"State\"] [selected=\"selected\"]")
+	@FindBy (css = "[aria-label=\"State\"]")
 	private WebElement state;
 
 	@FindBy (css = ".lg-form-section-action")
@@ -5542,7 +5538,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 		if (isElementLoaded(locationAddress, 10) && isElementLoaded(zipCode, 10) &&
 				isElementLoaded(state, 10)) {
-			stateStr = state.getAttribute("value").split(":")[1];
+			stateStr = state.getAttribute("value").contains(" ")? state.getAttribute("value").split(" ")[0].substring(0,1) + state.getAttribute("value").split(" ")[1].substring(0,1): state.getAttribute("value").substring(0,1);
 			cityStr = city.getAttribute("value");
 			locationAddressStr = locationAddress.getAttribute("value");
 		} else {
@@ -5864,12 +5860,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				clickTheElement(confirmSaveButton);
 			}
 			displaySuccessMessage();
-			if (scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Budget overage limit\"] .input-faked.ng-binding")).getAttribute("innerText").contains(value)){
-				SimpleUtils.pass("Budget overage limit is set as "+value);
-			} else {
-				SimpleUtils.fail("Violation limit value fail to save!", false);
+			if (!value.equals("0")){
+				if (scheduleCopyRestrictionSection.findElement(By.cssSelector("[question-title=\"Budget overage limit\"] .input-faked.ng-binding")).getAttribute("innerText").contains(value)){
+					SimpleUtils.pass("Budget overage limit is set as "+value);
+				} else {
+					SimpleUtils.fail("Violation limit value fail to save!", false);
+				}
 			}
-
 		} else {
 			SimpleUtils.fail("Budget overage limit fail to load!", false);
 		}
@@ -5877,5 +5874,49 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	private void test() throws Exception{
 
+	}
+
+	// Added By Julie
+	@FindBy(css = "input-field[value=\"sp.weeklySchedulePreference.publishDayWindow\"]")
+	private WebElement schedulingPoliciesDaysInAdvancePublishSchedules;
+
+	@FindBy(className = "lg-override-popup")
+	private WebElement overridePopup;
+
+	@Override
+	public String getDaysInAdvancePublishSchedulesInSchedulingPolicies() throws Exception {
+		// How many days in advance would you typically publish schedules? (this is the Schedule Publish Window).
+		String days = "";
+		if (isElementLoaded(schedulingPoliciesDaysInAdvancePublishSchedules,10)) {
+			WebElement daysInputBox = schedulingPoliciesDaysInAdvancePublishSchedules.findElement(By.cssSelector("input"));
+			days = daysInputBox.getAttribute("value");
+		} else
+			SimpleUtils.fail("Scheduling Policies: 'How many days in advance would you typically publish schedules?' not loaded", false);
+		return days;
+	}
+
+	@Override
+	public void updateDaysInAdvancePublishSchedulesInSchedulingPolicies(String days) throws Exception {
+		// How many days in advance would you typically publish schedules? (this is the Schedule Publish Window).
+		if (isElementLoaded(schedulingPoliciesDaysInAdvancePublishSchedules,10)) {
+			WebElement daysInputBox = schedulingPoliciesDaysInAdvancePublishSchedules.findElement(
+					By.cssSelector("input"));
+			if (daysInputBox.isEnabled()) {
+				daysInputBox.clear();
+				daysInputBox.sendKeys(days);
+				if (isElementLoaded(confirmSettingsChangeButton, 5))
+					click(confirmSettingsChangeButton);
+				if (isElementLoaded(overridePopup,10))
+					click(overridePopup.findElement(By.cssSelector("[label=\"Overwrite\"]")));
+				waitForSeconds(3);
+				String daysDisplayed = getDaysInAdvancePublishSchedulesInSchedulingPolicies();
+				if (daysDisplayed.equals(days))
+					SimpleUtils.pass("Scheduling Policies: The days in advance publish schedules '" + days + "' entered successfully");
+				else
+					SimpleUtils.fail("Scheduling Policies: The days in advance publish schedules '" + days + "' not entered", false);
+			} else
+				SimpleUtils.report("Scheduling Policies: The days in advance publish schedules 'Disabled'");
+		} else
+			SimpleUtils.fail("Scheduling Policies: 'How many days in advance would you typically publish schedules?' not loaded", false);
 	}
 }

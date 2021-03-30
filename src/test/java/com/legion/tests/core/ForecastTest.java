@@ -107,7 +107,7 @@ public class ForecastTest extends TestBase{
 				if (schedulePage.inActiveWeekDayClosed(index)){
 					SimpleUtils.report("Store is closed and there is no insight smartc");
 				}else {
-					insightData1 = ForecastPage.getInsightDataInShopperWeekView();
+					insightData1 = ForecastPage.getInsightDataInShopperDayView();
 					peakItemsShoppers[index] =insightData1.get("peakShoppers");
 					totalItemsShoppers[index] =insightData1.get("totalShoppers");
 					sum+=totalItemsShoppers[index];
@@ -263,7 +263,7 @@ public class ForecastTest extends TestBase{
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Haya")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify Edit Forecast in Week view")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyEditForecastInWeekViewViewAsInternalAdmin(String browser, String username, String password, String location) {
@@ -288,25 +288,26 @@ public class ForecastTest extends TestBase{
 			forecastPage.verifyAndClickCancelBtn();
 			forecastPage.verifyAndClickEditBtn();
 
+
 			//verify double click graph bar
 			forecastPage.verifyDoubleClickAndUpdateForecastBarValue(String.valueOf(index), value);
 			String tooltipInfo =forecastPage.getTooltipInfo(String.valueOf(index));
 			boolean flag = tooltipInfo.contains("Actual")||tooltipInfo.contains("Last Year")||tooltipInfo.contains("Recent Trend");
-//		SimpleUtils.assertOnFail("Info on tooltip is incorrect!",tooltipInfo.contains(weekDayInfo+" Forecast")&&tooltipInfo.contains(editedValueInfo)&&tooltipInfo.contains("Comparison")&&flag,false);
+			SimpleUtils.assertOnFail("Info on tooltip is incorrect!",tooltipInfo.contains(weekDayInfo+" Forecast")&&tooltipInfo.contains(editedValueInfo)&&tooltipInfo.contains("Comparison")&&flag,false);
 			//Save forecast and check the value.
 			forecastPage.verifyAndClickSaveBtn();
 			tooltipInfo =forecastPage.getTooltipInfo(String.valueOf(index));
-//		SimpleUtils.assertOnFail("Edited value is not saved!",tooltipInfo.contains(value),false);
+			SimpleUtils.assertOnFail("Edited value is not saved!",tooltipInfo.contains(value),false);
 			forecastPage.verifyAndClickEditBtn();
+			forecastPage.verifyLegionPeakShopperFromForecastGraphInWeekView();
 			schedulePage.navigateToNextWeek();
 			forecastPage.verifyWarningEditingForecast();
-			forecastPage.verifyLegionPeakShopperFromForecastGraphInWeekView();
-			//Verify graph bars are draggable.
-			forecastPage.verifyDraggingBarGraph();
-			//Save forecast and check the value.
 			forecastPage.verifyAndClickSaveBtn();
-			forecastPage.verifyLegionPeakShopperFromForecastGraphInWeekView();
-			forecastPage.verifyAndClickCancelBtn();
+
+
+			//Verify graph bars are draggable.
+			//forecastPage.verifyDraggingBarGraph();
+			//Save forecast and check the value.;
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
@@ -318,105 +319,109 @@ public class ForecastTest extends TestBase{
 	@TestName(description = "Verify Edit Forecast in Day View")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyEditForecastInDayViewViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-		ForecastPage forecastPage  = pageFactory.createForecastPage();
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()),false);
-        forecastPage.clickOnDayView();
-        String currentDay = forecastPage.getActiveDayText();
+			ForecastPage forecastPage  = pageFactory.createForecastPage();
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()),false);
+			forecastPage.clickOnDayView();
+			String currentDay = forecastPage.getActiveDayText();
 
-		// Verify the presence of Edit button on Forecast page
-        forecastPage.verifyEditBtnVisible();
+			// Verify the presence of Edit button on Forecast page
+			forecastPage.verifyEditBtnVisible();
 
-        // Verify Edit button is clickable
-		forecastPage.verifyAndClickEditBtn();
+			// Verify Edit button is clickable
+			forecastPage.verifyAndClickEditBtn();
 
-		// Verify the content after clicking on Edit button on Forecast page
-		forecastPage.verifyContentInEditMode();
+			// Verify the content after clicking on Edit button on Forecast page
+			forecastPage.verifyContentInEditMode();
 
-		// Verify warning message pops up when clicking other day in Edit mode, and verify OK button is clickable on the warning pop up model
-        forecastPage.navigateToOtherDay();
-        forecastPage.verifyWarningEditingForecast();
+			// Verify warning message pops up when clicking other day in Edit mode, and verify OK button is clickable on the warning pop up model
+			forecastPage.navigateToOtherDay();
+			forecastPage.verifyWarningEditingForecast();
 
-        // Verify cancel button is clickable
-		forecastPage.verifyAndClickCancelBtn();
+			// Verify cancel button is clickable
+			forecastPage.verifyAndClickCancelBtn();
 
-		// Verify mouse hover on each bar graph
-		forecastPage.verifyAndClickEditBtn();
-		forecastPage.verifyTooltipWhenMouseEachBarGraph();
+			// Verify mouse hover on each bar graph
+			forecastPage.verifyAndClickEditBtn();
+			forecastPage.verifyTooltipWhenMouseEachBarGraph();
 
-		// Verify the Peak value, Peak Time, Total Sum are correct on smart card
-		forecastPage.verifyPeakShoppersPeakTimeTotalShoppersLegionDataInDayView();
+			// Verify the Peak value, Peak Time, Total Sum are correct on smart card
+			forecastPage.verifyPeakShoppersPeakTimeTotalShoppersLegionDataInDayView();
 
-		// Verify dragging the bar graph
-       forecastPage.verifyDraggingBarGraph();
+			// Verify dragging the bar graph
+			forecastPage.verifyDraggingBarGraph();
 
-        // Verify double clicking the bar graph
-		String index = "3";
-		String legionValueInBar = forecastPage.getLegionValueFromBarTooltip(Integer.valueOf(index));
-		forecastPage.verifyDoubleClickBarGraph(index);
+			// Verify double clicking the bar graph
+			String index = "3";
+			String legionValueInBar = forecastPage.getLegionValueFromBarTooltip(Integer.valueOf(index));
+			forecastPage.verifyDoubleClickBarGraph(index);
 
-		// Verify the content of Specify a value layout
-		forecastPage.verifyContentOfSpecifyAValueLayout(index,legionValueInBar);
+			// Verify the content of Specify a value layout
+			forecastPage.verifyContentOfSpecifyAValueLayout(index,legionValueInBar);
 
-		// Verify Close button on pop up is clickable
-        forecastPage.verifyAndClickCloseBtn();
+			// Verify Close button on pop up is clickable
+			forecastPage.verifyAndClickCloseBtn();
 
-        // Verify Cancel button on Pop up is clickable
-		forecastPage.verifyDoubleClickBarGraph(index);
-		forecastPage.verifyAndClickCancelBtn();
+			// Verify Cancel button on Pop up is clickable
+			forecastPage.verifyDoubleClickBarGraph(index);
+			forecastPage.verifyAndClickCancelBtn();
 
-		// Verify inputting the new value when double clicking the bar graph
-		String editedValue = "2";
-		forecastPage.verifyDoubleClickAndUpdateForecastBarValue(index, editedValue);
+			// Verify inputting the new value when double clicking the bar graph
+			String editedValue = "2";
+			forecastPage.verifyDoubleClickAndUpdateForecastBarValue(index, editedValue);
 
-		// Verify OK button on pop up is clickable
-		forecastPage.verifyDoubleClickBarGraph(index);
-		forecastPage.verifyAndClickOKBtn();
+			// Verify OK button on pop up is clickable
+			forecastPage.verifyDoubleClickBarGraph(index);
+			forecastPage.verifyAndClickOKBtn();
 
-		// Verify the value is changed to the new value and percentage when mouse hovering
-		String editedValueInBar = forecastPage.getEditedValueFromBarTooltip(Integer.valueOf(index));
-		String percentageInBar = forecastPage.getPercentageFromBarTooltip(Integer.valueOf(index));
-		String percentageExpected = "";
-		if (legionValueInBar.equals("0"))
-			percentageExpected = "↑%";
-		else {
-			if (Integer.valueOf(legionValueInBar) > Integer.valueOf(editedValue))
-				percentageExpected = "↓" + (Integer.valueOf(legionValueInBar) - Integer.valueOf(editedValue))* 100/Integer.valueOf(legionValueInBar)  + "%";
+			// Verify the value is changed to the new value and percentage when mouse hovering
+			String editedValueInBar = forecastPage.getEditedValueFromBarTooltip(Integer.valueOf(index));
+			String percentageInBar = forecastPage.getPercentageFromBarTooltip(Integer.valueOf(index));
+			String percentageExpected = "";
+			if (legionValueInBar.equals("0"))
+				percentageExpected = "↑%";
+			else {
+				if (Integer.valueOf(legionValueInBar) > Integer.valueOf(editedValue))
+					percentageExpected = "↓" + (Integer.valueOf(legionValueInBar) - Integer.valueOf(editedValue))* 100/Integer.valueOf(legionValueInBar)  + "%";
+				else
+					percentageExpected = "↑" + (Integer.valueOf(editedValue) - Integer.valueOf(legionValueInBar))*100/Integer.valueOf(legionValueInBar) + "%";
+			}
+			if (editedValueInBar.equals(editedValue) && percentageInBar.equals(percentageExpected))
+				SimpleUtils.pass("Forecast Page: The value is changed to the new value and percentage when mouse hovering");
 			else
-				percentageExpected = "↑" + (Integer.valueOf(editedValue) - Integer.valueOf(legionValueInBar))*100/Integer.valueOf(legionValueInBar) + "%";
+				SimpleUtils.warn("SCH-2396: Failed to update the value when double clicking the bar graph");
+
+			// Verify the Confirm Message when saving the edits
+			forecastPage.verifyAndClickSaveBtn();
+			forecastPage.verifyConfirmMessageWhenSaveForecast("day", currentDay);
+
+			// Verify the Cancel button is clickable on the confirm pop up
+			forecastPage.clickOnCancelBtnOnConfirmPopup();
+
+			// Verify Save forecast button is clickable on the confirm pop up
+			forecastPage.verifyAndClickSaveBtn();
+			forecastPage.clickOnSaveBtnOnConfirmPopup();
+
+			// Verify the values are saved successfully
+			String newValueInBar = forecastPage.getLegionValueFromBarTooltip(Integer.valueOf(index));
+			if (newValueInBar.equals(editedValue))
+				SimpleUtils.pass("Forecast Page: the values are saved successfully");
+			else
+				SimpleUtils.fail("Forecast Page: the values failed to save",false);
+
+			// Verify the value on smart card is correct after saving
+			forecastPage.verifyPeakShoppersPeakTimeTotalShoppersEditedDataInDayView();
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(),false);
 		}
-		if (editedValueInBar.equals(editedValue) && percentageInBar.equals(percentageExpected))
-			SimpleUtils.pass("Forecast Page: The value is changed to the new value and percentage when mouse hovering");
-		else
-			SimpleUtils.warn("SCH-2396: Failed to update the value when double clicking the bar graph");
-
-		// Verify the Confirm Message when saving the edits
-		forecastPage.verifyAndClickSaveBtn();
-		forecastPage.verifyConfirmMessageWhenSaveForecast("day", currentDay);
-
-		// Verify the Cancel button is clickable on the confirm pop up
-        forecastPage.clickOnCancelBtnOnConfirmPopup();
-
-		// Verify Save forecast button is clickable on the confirm pop up
-		forecastPage.verifyAndClickSaveBtn();
-		forecastPage.clickOnSaveBtnOnConfirmPopup();
-
-		// Verify the values are saved successfully
-		String newValueInBar = forecastPage.getLegionValueFromBarTooltip(Integer.valueOf(index));
-		if (newValueInBar.equals(editedValue))
-			SimpleUtils.pass("Forecast Page: the values are saved successfully");
-		else
-			SimpleUtils.fail("Forecast Page: the values failed to save",false);
-
-		// Verify the value on smart card is correct after saving
-		forecastPage.verifyPeakShoppersPeakTimeTotalShoppersEditedDataInDayView();
 	}
 }
