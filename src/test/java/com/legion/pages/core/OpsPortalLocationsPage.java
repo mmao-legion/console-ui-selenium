@@ -2139,5 +2139,20 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}else
 			return null;
 	}
+
+//	@FindBy(css = "")
+//	private WebElement T;
+//	@Override
+//	public ArrayList<HashMap<String, String>> getWFSGroupForm() {
+//		ArrayList<> wfsGroupInfo = new ArrayList();
+//		HashMap<String,String> eachLineGroupInfo = new HashMap<>();
+//		if (areListElementVisible(wfsGroups,5)&& wfsGroups.size()!=0) {
+//			for (WebElement eachRow: wfsGroups) {
+//				eachLineGroupInfo.put("groupName", eachRow.findElement(By.cssSelector("td:nth-child(4) ")));
+//				String groupName = each.findElement(By.cssSelector("td")).getText().trim();
+//				String
+//		}
+//		}
+//	}
 }
 

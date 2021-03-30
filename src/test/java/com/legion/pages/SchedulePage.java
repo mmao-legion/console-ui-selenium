@@ -531,13 +531,13 @@ public interface SchedulePage {
 	public void navigateToTheRightestSmartCard() throws Exception;
 	public boolean isEditMealBreakEnabled() throws Exception;
 	public void verifyTMSchedulePanelDisplay() throws Exception;
-<<<<<<<<< Temporary merge branch 1
+
 	public void verifyPreviousWeekWhenCreateAndCopySchedule(String weekInfo, boolean shouldBeSelected) throws Exception;
 	public void clickNextBtnOnCreateScheduleWindow() throws Exception;
 	public float getStaffingGuidanceHrs() throws Exception;
 	public void verifyTooltipForCopyScheduleWeek(String weekInfo) throws Exception;
-=========
+
 	public  boolean suggestedButtonIsHighlighted() throws Exception;
 	public boolean verifyWFSFunction();
->>>>>>>>> Temporary merge branch 2
+
 }

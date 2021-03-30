@@ -143,7 +143,6 @@ public interface LocationsPage {
     public void verifyCreateExistingDGAndGroupNameIsNull(String s) throws Exception;
 
     public List<String> getWFSGroupFromGlobalConfig();
-
-
-
+//
+//    public ArrayList<HashMap<String, String>> getWFSGroupForm();
 }
