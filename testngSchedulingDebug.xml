@@ -232,6 +232,12 @@
                     <include name="validateTheGroupByDropdownListForP2PAsInternalAdmin" />
                     <include name="verifyActivityOfClaimOpenShiftForMSAsTeamMemberLG" />
                     <include name="verifyActivityOfClaimOpenShiftForP2PAsTeamMemberLG" />
+                    <include name="validateOperateLGScheduleByDifferentUserForMSAsInternalAdmin" />
+                    <include name="validateOperateLGScheduleByDifferentUserForP2PAsInternalAdmin" />
+                    <include name="validateUIPerformanceForLargeRosterForMSAsInternalAdmin" />
+                    <include name="validateUIPerformanceForLargeRosterForP2PAsInternalAdmin" />
+                    <include name="validatePrintScheduleForMSAsInternalAdmin" />
+                    <include name="validatePrintScheduleForP2PAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

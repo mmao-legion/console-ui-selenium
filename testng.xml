@@ -491,24 +491,6 @@
                     <include name="validateTheFunctionOfManualOpenShiftInDayViewForMSAsInternalAdmin" />
                     <include name="verifyActivityOfClaimOpenShiftForMSAsTeamMemberLG" />
                     <include name="verifyActivityOfClaimOpenShiftForP2PAsTeamMemberLG" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="DM Schedule Test">
-        <classes>
-            <class name="com.legion.tests.core.DMScheduleTest">
-                <methods>
-                    <include name="validateDMScheduleAsInternalAdmin" />
-                    <include name="validateProjectedHoursFromDashBoardAndScheduleAsInternalAdmin" />
-                    <include name="validateDMDashboardAsInternalAdmin" />
-<!--                    <include name="validateDMViewDataWithSMViewAsInternalAdmin" />-->
-                    <include name="validateTheGenerationOfLGScheduleAsInternalAdmin" />
-                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdmin" />
-                    <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
-                    <include name="validateTheButtonsOnSchedulePageAsInternalAdmin" />
-                    <include name="validateTheGroupByDropdownListAsInternalAdmin" />
                     <include name="validateOperateLGScheduleByDifferentUserForMSAsInternalAdmin" />
                     <include name="validateOperateLGScheduleByDifferentUserForP2PAsInternalAdmin" />
                     <include name="validateUIPerformanceForLargeRosterForMSAsInternalAdmin" />
