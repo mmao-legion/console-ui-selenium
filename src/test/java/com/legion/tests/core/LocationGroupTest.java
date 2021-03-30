@@ -1562,6 +1562,102 @@ public class LocationGroupTest extends TestBase {
     }
 
     @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate Assign TM when TM has max no. of shifts scheduled")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateAssignTMWhenTMHasMaxNoOfShiftsScheduledForMSAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeDistrict("District Whistler");
+        locationSelectorPage.changeLocation("Lift Ops_Parent");
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+        //Go to controls set max no. of shifts per week
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        controlsPage.gotoControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        controlsNewUIPage.updateSchedulingPolicyGroupsShiftsPerWeek(3, 5, 5);
+
+
+        //Go to schedule page to check assign TM.
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
+/*        boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+        if(isActiveWeekGenerated){
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        List<String> toCloseDays = new ArrayList<>();
+        schedulePage.clickCreateScheduleBtn();
+        schedulePage.chooseLocationInCreateSchedulePopupWindow("Child1");
+        schedulePage.editTheOperatingHoursForLGInPopupWinodw(toCloseDays);
+        schedulePage.clickNextBtnOnCreateScheduleWindow();
+        schedulePage.selectWhichWeekToCopyFrom("SUGGESTED");
+        schedulePage.clickNextBtnOnCreateScheduleWindow();
+*/        //schedulePage.clickOnFilterBtn();
+        //schedulePage.selectChildLocationFilterByText("Child1");
+        List<String> shiftInfo = new ArrayList<>();
+        while (shiftInfo.size() == 0) {
+            shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+        }
+        String firstNameOfTM1 = shiftInfo.get(0);
+        String workRoleOfTM1 = shiftInfo.get(4);
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.searchShiftOnSchedulePage(firstNameOfTM1);
+        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        schedulePage.clickOnCloseSearchBoxButton();
+        schedulePage.saveSchedule();
+
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectChildLocationFilterByText("Child1");
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+        //Create shift and assign to TM.
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.selectWorkRole(workRoleOfTM1);
+        schedulePage.selectChildLocInCreateShiftWindow("Child1");
+        schedulePage.selectSpecificWorkDay(1);
+        schedulePage.selectSpecificWorkDay(2);
+        schedulePage.selectSpecificWorkDay(3);
+        schedulePage.selectSpecificWorkDay(4);
+        schedulePage.selectSpecificWorkDay(5);
+        schedulePage.moveSliderAtCertainPoint("9", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.moveSliderAtCertainPoint("11", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        //schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        //schedulePage.moveSliderAtSomePoint("20", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.searchTeamMemberByName(firstNameOfTM1);
+        schedulePage.clickOnOfferOrAssignBtn();
+
+        //Create manual open shift and assign TM.
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.selectWorkRole(workRoleOfTM1);
+        schedulePage.selectChildLocInCreateShiftWindow("Child1");
+        schedulePage.selectSpecificWorkDay(6);
+        schedulePage.moveSliderAtCertainPoint("9", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        schedulePage.moveSliderAtCertainPoint("11", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.searchTeamMemberByName(firstNameOfTM1);
+        String actualMessage = schedulePage.getAllTheWarningMessageOfTMWhenAssign();
+        SimpleUtils.assertOnFail("No max no. of shifts violation!", actualMessage.toLowerCase().contains("too many shifts"), false);
+
+        try{
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate activity for claim the open shift")
@@ -1600,6 +1696,7 @@ public class LocationGroupTest extends TestBase {
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+
         //to generate schedule  if current week is not generated
         schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
@@ -2277,7 +2374,6 @@ public class LocationGroupTest extends TestBase {
                 SimpleUtils.pass("Schedule page: The content in printed file in day view displays correctly");
             } else
                 SimpleUtils.fail("Schedule page: The content in printed file in day view displays incorrectly",false);
-
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
