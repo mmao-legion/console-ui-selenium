@@ -41,6 +41,8 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     @FindBy (css = "div.console-navigation-item-label.Dashboard")
     private WebElement dashboardConsoleName;
 
+	@FindBy(css = "lg-select[search-hint='Search Location'] div.input-faked")
+	private WebElement locationSelectorButton;
 
     public ConsoleLoginPage() {
     	PageFactory.initElements(getDriver(), this);
@@ -91,9 +93,13 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     {
     	if(isLoginDone){
             getActiveConsoleName(dashboardConsoleName);
-    	    SimpleUtils.pass("Login to Legion Application "+displayCurrentURL()+ " Successfully with selected location: '"+selectedLocation+"'.");
+            if (isElementLoaded(locationSelectorButton, 5) && locationSelectorButton.getText().contains(selectedLocation)) {
+				SimpleUtils.pass("Login to Legion Application " + displayCurrentURL() + " Successfully with selected location: '" + selectedLocation + "'.");
+			} else {
+				SimpleUtils.fail("Not able to select the location: " + selectedLocation + " Successfully!",false);
+			}
     	}else{
-    		SimpleUtils.fail("Not able to Login to Legion Application Successfully!",true);
+    		SimpleUtils.fail("Not able to Login to Legion Application Successfully!",false);
     	}
     	
     }
