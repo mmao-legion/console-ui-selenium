@@ -42,7 +42,7 @@ public class ConfigurationTest extends TestBase {
 
         this.createDriver((String)params[0],"83","Window");
         visitPage(testMethod);
-        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
