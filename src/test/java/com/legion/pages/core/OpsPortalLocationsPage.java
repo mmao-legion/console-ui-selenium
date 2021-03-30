@@ -64,7 +64,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void clickModelSwitchIconInDashboardPage(String value) {
 		if (isElementEnabled(modeSwitchIcon,10)) {
-			click(modeSwitchIcon);
+			clickTheElement(modeSwitchIcon);
 			waitForSeconds(5);
 			if (modelSwitchOption.size() != 0) {
 				for (WebElement subOption : modelSwitchOption) {

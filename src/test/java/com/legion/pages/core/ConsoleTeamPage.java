@@ -1,5 +1,6 @@
 package com.legion.pages.core;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,6 +27,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
 	private static HashMap<String, String> searchDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/searchDetails.json");
 	int teamMemberRecordsCount=0;
+	public static String pth = System.getProperty("user.dir");
 	
 	 @FindBy(css="[class='console-navigation-item-label Team']")
 	 private WebElement goToTeamButton;
@@ -683,6 +685,131 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private List<WebElement> approvedTimeOffRequests;
 	@FindBy(className = "request-buttons-reject")
 	private WebElement timeOffRejectBtn;
+	@FindBy(css = ".row.th div")
+	private List<WebElement> columnsInRoster;
+	@FindBy(css = ".tr .name")
+	private List<WebElement> namesInRoster;
+	@FindBy(css = ".tr [ng-if=\"showWorkerId\"]")
+	private List<WebElement> employeeIDsInRoster;
+	@FindBy(css = ".tr .lgn-xs-4 .title")
+	private List<WebElement> jobTitlesInRoster;
+
+	@Override
+	public void verifyTheSortFunctionInRosterByColumnName(String columnName) throws Exception {
+		try {
+			if (areListElementVisible(columnsInRoster, 5)) {
+				for (WebElement column : columnsInRoster) {
+					if (column.getText() != null && !column.getText().isEmpty() && column.getText().equals(columnName)) {
+						clickTheElement(column);
+						verifyTheSortFunction(columnName, column);
+						clickTheElement(column);
+						verifyTheSortFunction(columnName, column);
+					}
+				}
+			}
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	private void verifyTheSortFunction(String columnName, WebElement column) {
+		boolean isSorted = true;
+		List<String> targetList = new ArrayList<>();
+		if (columnName.equals("NAME")) {
+			targetList = getNameListInRoster();
+		} else if (columnName.equals("EMPLOYEE ID")) {
+			targetList = getEmployeeIDListInRoster();
+		} else if (columnName.equals("JOB TITLE")) {
+			targetList = getJobTitleListInRoster();
+		}
+		String className = column.getAttribute("class");
+		List<String> currentList = targetList;
+		if (!className.contains("roster-sort-reverse")) {
+			Collections.sort(targetList);
+			for (int i = 0; i < currentList.size(); i++) {
+				if (currentList.get(i) != targetList.get(i)) {
+					isSorted = false;
+					SimpleUtils.fail("Roster page column: " + columnName + " is not sorted asc!", false);
+				}
+			}
+		} else {
+			Collections.sort(targetList, Comparator.reverseOrder());
+			for (int i = 0; i < currentList.size(); i++) {
+				if (currentList.get(i) != targetList.get(i)) {
+					isSorted = false;
+					SimpleUtils.fail("Roster page column: " + columnName + " is not sorted desc!", false);
+				}
+			}
+		}
+		if (isSorted) {
+			SimpleUtils.pass("Roster page column: " + columnName + " is sorted!");
+		}
+	}
+
+	private List<String> getNameListInRoster() {
+		List<String> employeeIDs = new ArrayList<>();
+		if (areListElementVisible(employeeIDsInRoster, 5)) {
+			for (WebElement id : employeeIDsInRoster) {
+				employeeIDs.add(id.getText());
+			}
+		}
+		return employeeIDs;
+	}
+
+	private List<String> getEmployeeIDListInRoster() {
+		List<String> jobTitles = new ArrayList<>();
+		if (areListElementVisible(jobTitlesInRoster, 5)) {
+			for (WebElement title : jobTitlesInRoster) {
+				jobTitles.add(title.getText());
+			}
+		}
+		return jobTitles;
+	}
+
+	private List<String> getJobTitleListInRoster() {
+		List<String> names = new ArrayList<>();
+		if (areListElementVisible(namesInRoster, 5)) {
+			for (WebElement name : namesInRoster) {
+				names.add(name.getText());
+			}
+		}
+		return names;
+	}
+
+	@Override
+	public void verifyTheColumnInRosterPage(boolean isLocationGroup) throws Exception {
+		try {
+			List<String> expectedColumnsRegular = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "STATUS", "BADGES", "ACTION"));
+			List<String> expectedColumnsLG = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "LOCATION", "STATUS", "BADGES", "ACTION"));
+			List<String> actualColumns = new ArrayList<>();
+			if (areListElementVisible(columnsInRoster, 5)) {
+				for (WebElement column : columnsInRoster) {
+					if (column.getText() != null && !column.getText().isEmpty()) {
+						actualColumns.add(column.getText());
+					}
+				}
+			} else {
+				SimpleUtils.fail("Team Roster Page: Columns failed to load!", false);
+			}
+			if (isLocationGroup) {
+				if (actualColumns.containsAll(expectedColumnsLG) && expectedColumnsLG.containsAll(actualColumns)) {
+					SimpleUtils.pass("Team Roster: Verified the columns are correct for location group!");
+				} else {
+					SimpleUtils.fail("Team Roster: Verified the columns are incorrect for location group! Expected: "
+					+ expectedColumnsLG.toString() + ". But actual columns: " + actualColumns.toString(), false);
+				}
+			} else {
+				if (actualColumns.containsAll(expectedColumnsRegular) && expectedColumnsRegular.containsAll(actualColumns)) {
+					SimpleUtils.pass("Team Roster: Verified the columns are correct for regular location!");
+				} else {
+					SimpleUtils.fail("Team Roster: Verified the columns are incorrect for regular location! Expected: "
+							+ expectedColumnsRegular.toString() + ". But actual columns: " + actualColumns.toString(), false);
+				}
+			}
+		} catch (Exception e) {
+			SimpleUtils.fail("Team page: verify the columns in roster page failed!", false);
+		}
+	}
 
 	@Override
 	public void rejectAllTheTimeOffRequests() throws Exception {
@@ -839,25 +966,13 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					searchTextBox.sendKeys(testString);
 					if (teamMembers.size() > 0){
 						for (WebElement teamMember : teamMembers){
-							WebElement tr = teamMember.findElement(By.className("tr"));
-							if (tr != null) {
-								WebElement name = tr.findElement(By.cssSelector("span.name"));
-								WebElement title = tr.findElement(By.cssSelector("span.title"));
-								WebElement status = tr.findElement(By.cssSelector("span.status"));
-								if (name != null && title != null && status != null) {
-									String nameJobTitleStatus = name.getText() + title.getText() + status.getText();
-									if (nameJobTitleStatus.toLowerCase().contains(testString.toLowerCase())) {
-										SimpleUtils.pass("Verified " + teamMember.getText() + " contains test string: " + testString);
-									} else {
-										SimpleUtils.fail("Team member: " + teamMember.getText() + " doesn't contain the test String: "
-												+ testString, true);
-									}
-								}else {
-									SimpleUtils.fail("Failed to find the name, title and status elements!", true);
-								}
-							}else {
-								SimpleUtils.fail("Failed to find the tr element!", true);
+							if (teamMember.getText().toLowerCase().contains(testString.trim().toLowerCase())) {
+								SimpleUtils.pass("Verified " + teamMember.getText() + " contains test string: " + testString);
+							} else {
+								SimpleUtils.fail("Team member: " + teamMember.getText() + " doesn't contain the test String: "
+										+ testString, false);
 							}
+
 						}
 					}else{
 						SimpleUtils.report("Doesn't find the Team member that contains: " + testString);
@@ -2850,22 +2965,30 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement imageInput;
 	@FindBy (id = "uploadBusinessFormInput")
 	private WebElement businessImageInput;
+	@FindBy (css = "lg-button[label=\"Save\"] button")
+	private WebElement saveProfileBtn;
 
 	@Override
 	public void updateBusinessProfilePicture(String filePath) throws Exception {
-		if(isElementLoaded(profileSection, 10) && isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),10)){
-			click(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
-			if (isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1), 5)) {
-				getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(filePath);
-				// wait for the picture to be loaded
-				waitForSeconds(5);
-				scrollToElement(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
-				click(profileSection.findElement(By.xpath("//span[text()=\"Save\"]")));
-			}else {
-				SimpleUtils.fail("Business Profile Image input element isn't enabled!", true);
+		try {
+			if (isElementLoaded(profileSection, 10) && isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")), 10)) {
+				clickTheElement(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
+				if (isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1), 5)
+				&& isElementLoaded(saveProfileBtn, 5)) {
+					File file = new File(filePath);
+					getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(1).sendKeys(file.getCanonicalPath());
+					// wait for the picture to be loaded
+					waitForSeconds(6);
+					clickTheElement(saveProfileBtn);
+					waitForSeconds(5);
+				} else {
+					SimpleUtils.fail("Business Profile Image input element isn't enabled!", true);
+				}
+			} else {
+				SimpleUtils.fail("Edit button is not loaded!", true);
 			}
-		} else {
-			SimpleUtils.fail("Edit button is not loaded!",true);
+		} catch (Exception e) {
+			SimpleUtils.fail(e.toString(), false);
 		}
 	}
 
@@ -3647,7 +3770,7 @@ private WebElement locationColumn;
 	public void clickOnSaveCalendar() throws Exception {
 		if (isElementLoaded(savePreferButton,5)) {
 			clickTheElement(savePreferButton);
-			if (isElementLoaded(popMessage,5) && popMessage.getText().contains("Success"))
+			if (isElementLoaded(popMessage,10) && popMessage.getText().contains("Success"))
 				SimpleUtils.pass("School Calendars Page: School Calendar is saved successfully");
 			else
 				SimpleUtils.fail("School Calendars Page: School Calendar failed to save",false);
@@ -4085,6 +4208,8 @@ private WebElement locationColumn;
 		return false;
 	}
 
+	
+
 	//	{
 //    	if(isElementLoaded(rosterBodyElement))
 //    	{
@@ -4136,4 +4261,40 @@ private WebElement locationColumn;
 //    	}
 //    }
 //    
+
+
+	@Override
+	public void selectARandomOnboardedOrNotTeamMemberToViewProfile(boolean selectOnboardedTM) throws Exception {
+		WebElement teamMember = null;
+		String teamMemberStatus = "";
+		boolean isTMFound = false;
+		if (areListElementVisible(teamMembers, 15) && areListElementVisible(teamMemberNames)
+				&&teamMembers.size() == teamMemberNames.size()) {
+			Random random = new Random();
+			while(!isTMFound){
+				int randomIndex = random.nextInt(teamMembers.size());
+				teamMember = teamMembers.get(randomIndex);
+				teamMemberStatus = teamMember.findElement(By.className("status-wrapper")).getText();
+				if(selectOnboardedTM){
+					if(teamMemberStatus.equalsIgnoreCase("Active")){
+						clickTheElement(teamMemberNames.get(randomIndex));
+						String onBoardedDate = getOnBoardedDate();
+						if(onBoardedDate == null || onBoardedDate.equals("")){
+							isTMFound = true;
+						} else{
+							goToTeam();
+							verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+						}
+					}
+				} else {
+					if(!teamMemberStatus.equalsIgnoreCase("Active")){
+						clickTheElement(teamMemberNames.get(randomIndex));
+						isTMFound = true;
+					}
+				}
+			}
+		} else {
+			SimpleUtils.fail("Team Members are failed to load!", true);
+		}
+	}
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite verbose ="0" thread-count="10" name="LegionTest">
+    <parameter name="environment" value="QA"/>
+    <parameter name="testRail" value="no"/>
+    <parameter name="testRailRunName" value="Automation Test Purpose"/>
+
+    <listeners>
+        <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
+    </listeners>
+
+
+    <test name="Schedule Test LegionCoffee">
+        <classes>
+            <class name="com.legion.tests.core.ActivityTest">
+                <methods>
+                    <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite> 

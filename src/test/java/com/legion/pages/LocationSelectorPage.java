@@ -22,4 +22,12 @@ public interface LocationSelectorPage {
 	public void verifyClickChangeDistrictButton() throws Exception;
 	public List<String> searchLocation(String searchInputText) throws Exception;
 	public void selectLocationByIndex(int i) throws Exception;
+	public String getLocationNameFromDashboard() throws Exception;
+	public void verifyTheDisplayDistrictWithSelectedDistrictConsistent(String districtName) throws Exception;
+	public void reSelectDistrict(String districtName) throws Exception;
+	public void changeAnotherDistrict() throws Exception;
+	public void reSelectDistrictInDMView(String districtName) throws Exception;
+	public void changeAnotherDistrictInDMView() throws Exception;
+	public void changeUpperFields(String upperFields) throws Exception;
+	public void changeUpperFieldsByName(String upperFieldType, String upperFieldName) throws Exception;
 }

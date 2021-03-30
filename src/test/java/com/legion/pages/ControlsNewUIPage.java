@@ -295,4 +295,6 @@ public interface ControlsNewUIPage {
 	public List<WebElement> getAvailableSelector();
 
 	public void updateCentralizedScheduleRelease(WebElement yesItem) throws Exception;
+	public String getDaysInAdvancePublishSchedulesInSchedulingPolicies() throws Exception;
+	public void updateDaysInAdvancePublishSchedulesInSchedulingPolicies(String days) throws Exception;
 }

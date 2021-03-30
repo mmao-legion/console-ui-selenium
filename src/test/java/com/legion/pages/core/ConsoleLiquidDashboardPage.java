@@ -31,22 +31,22 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @FindBy (xpath = "//ng-container[contains(@ng-repeat, \"groupedWidgets\")]")
     private List<WebElement> widgetsInManagePage;
 
-    @FindBy (xpath = "//span[text()=\"Manage\"]")
+    @FindBy (css = "[label=\"Manage\"]")
     private WebElement manageBtn;
 
     @FindBy (css = ".manageWidgetsEditLabel")
     private WebElement editDashboardBtn;
 
-    @FindBy (xpath = "//div[@gridster-item]")
+    @FindBy (css = ".widget-bg")
     private  List<WebElement> widgetsInDashboardPage;
 
-    @FindBy (xpath = "//span[text()=\"Save\"]")
+    @FindBy (css = "[label=\"Save\"]")
     private WebElement saveBtn;
 
     @FindBy (xpath = "//span[text()=\"Cancel\"]")
     private WebElement cancelBtn;
 
-    @FindBy (xpath = "//span[text()=\"Back\"]")
+    @FindBy (css = "[label=\"Back\"]")
     private WebElement backBtn;
 
     @FindBy (css = "input[placeholder=\"Search for widgets\"]")
@@ -88,9 +88,9 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @Override
     public void enterEditMode() throws Exception {
         scrollToTop();
-        if (isElementLoaded(editBtn,5)){
-            click(editBtn.findElement(By.cssSelector("button")));
-            if (isElementLoaded(editDasboardText,5)){
+        if (isElementLoaded(editBtn,10)){
+            clickTheElement(editBtn.findElement(By.cssSelector("button")));
+            if (isElementLoaded(editDasboardText,5) && isElementLoaded(manageBtn, 10)){
                 SimpleUtils.pass("Edit mode load successfully!");
             } else {
                 SimpleUtils.fail("Edit mode fail to load!", false);
@@ -105,7 +105,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         String widgetName ="";
         List<WebElement> widgets = widgetsInManagePage;
         if (isElementLoaded(manageBtn,10)){
-            click(manageBtn);
+            clickTheElement(manageBtn);
             if (areListElementVisible(widgets,10)){
                 for (int i=0; i<widgets.size(); i++) {
                     widgetName = widgets.get(i).findElement(By.cssSelector("div[class=\"detail-div\"] :nth-child(1)")).getText().toLowerCase();
@@ -131,7 +131,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                 SimpleUtils.fail("Widgets in Manage page fail to load!",true);
             }
         } else {
-            SimpleUtils.fail("Manage button fail to load!",true);
+            SimpleUtils.fail("Manage button fail to load!",false);
         }
     }
 
@@ -175,24 +175,28 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     }
 
     //parameter option: helpful links and so on
-    private boolean verifyIfSpecificWidgetDisplayed(String widgetTitle) throws Exception{
+    private boolean verifyIfSpecificWidgetDisplayed(String widgetTitle) {
         waitForSeconds(10);
         if (areListElementVisible(widgetsInDashboardPage,20)){
             for (WebElement widgetTemp : widgetsInDashboardPage){
-                if(widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains(widgetsNameWrapper(widgetTitle))){
-                    if (widgetsNameWrapper(widgetTitle).equalsIgnoreCase("timesheet approval")){
-                        if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("timesheet approval status")){
-                            return false;
+                try {
+                    if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains(widgetsNameWrapper(widgetTitle))) {
+                        if (widgetsNameWrapper(widgetTitle).equalsIgnoreCase("timesheet approval")) {
+                            if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("timesheet approval status")) {
+                                return false;
+                            } else {
+                                return true;
+                            }
                         } else {
                             return true;
                         }
-                    } else {
-                        return true;
                     }
+                } catch (Exception e) {
+                    // Do nothing
                 }
             }
         } else {
-            SimpleUtils.fail("Widgets in Dashboard page fail to load!",true);
+            SimpleUtils.fail("Widgets in Dashboard page fail to load!",false);
         }
         return false;
     }
@@ -270,7 +274,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                 SimpleUtils.fail("Edit Dashboard Page: Click on Save button failed, Dashboard welcome text not loaded Successfully!", false);
             }
         } else {
-            SimpleUtils.fail("save button is not loaded!",true);
+            SimpleUtils.fail("save button is not loaded!",false);
         }
     }
 
@@ -291,7 +295,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                 click(backBtn);
                 SimpleUtils.pass("Back button is working fine!");
             } else {
-                SimpleUtils.fail("Back button is not loaded!",true);
+                SimpleUtils.fail("Back button is not loaded!",false);
             }
         } else {
             SimpleUtils.fail("verifyBackBtn: Manage button fail to load!",true);
@@ -330,7 +334,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             return "starting";
         } else if (widgetTitleInManagePage.contains("timesheet approval rate")){
             return "timesheet approval";
-        } else if (widgetTitleInManagePage.contains("compilance violation")){
+        } else if (widgetTitleInManagePage.contains("compliance violation")){
             return "compliance violation";
         } else if (widgetTitleInManagePage.contains("today")){
             return "today";
@@ -792,12 +796,29 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     public void clickOnCarouselOnWidget(String widgetTitle, String rightOrLeft) throws Exception {
         if (areListElementVisible(widgetsInDashboardPage,10)){
             for (WebElement widgetTemp : widgetsInDashboardPage){
-                if(widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains(widgetsNameWrapper(widgetTitle))){
-                    if (widgetsNameWrapper(widgetTitle).equalsIgnoreCase("timesheet approval")){
-                        if (!widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("timesheet approval status")){
+                WebElement title = widgetTemp.findElement(By.cssSelector(".dms-box-title"));
+                if (isElementLoaded(title,10)) {
+                    if (title.getText().toLowerCase().contains(widgetsNameWrapper(widgetTitle))) {
+                        if (widgetsNameWrapper(widgetTitle).equalsIgnoreCase("timesheet approval")) {
+                            if (!title.getText().toLowerCase().contains("timesheet approval status")) {
+                                List<WebElement> buttonOnCarousel = widgetTemp.findElements(By.cssSelector(".carosel-div .cus-carousel-control"));
+                                if (areListElementVisible(buttonOnCarousel, 10)) {
+                                    if (rightOrLeft.toLowerCase().contains("left")) {
+                                        scrollToElement(buttonOnCarousel.get(0));
+                                        click(buttonOnCarousel.get(0));
+                                        SimpleUtils.pass("click left on carousel");
+                                    } else {
+                                        scrollToElement(buttonOnCarousel.get(1));
+                                        click(buttonOnCarousel.get(1));
+                                        SimpleUtils.pass("click right on carousel");
+                                    }
+                                    break;
+                                }
+                            }
+                        } else {
                             List<WebElement> buttonOnCarousel = widgetTemp.findElements(By.cssSelector(".carosel-div .cus-carousel-control"));
-                            if (areListElementVisible(buttonOnCarousel,10)){
-                                if (rightOrLeft.toLowerCase().contains("left")){
+                            if (areListElementVisible(buttonOnCarousel, 10)) {
+                                if (rightOrLeft.toLowerCase().contains("left")) {
                                     scrollToElement(buttonOnCarousel.get(0));
                                     click(buttonOnCarousel.get(0));
                                     SimpleUtils.pass("click left on carousel");
@@ -809,21 +830,9 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                                 break;
                             }
                         }
-                    } else {
-                        List<WebElement> buttonOnCarousel = widgetTemp.findElements(By.cssSelector(".carosel-div .cus-carousel-control"));
-                        if (areListElementVisible(buttonOnCarousel,10)){
-                            if (rightOrLeft.toLowerCase().contains("left")){
-                                scrollToElement(buttonOnCarousel.get(0));
-                                click(buttonOnCarousel.get(0));
-                                SimpleUtils.pass("click left on carousel");
-                            } else {
-                                scrollToElement(buttonOnCarousel.get(1));
-                                click(buttonOnCarousel.get(1));
-                                SimpleUtils.pass("click right on carousel");
-                            }
-                            break;
-                        }
                     }
+                } else {
+                    SimpleUtils.fail("Widget title element in Dashboard page fail to load",false);
                 }
             }
         } else {

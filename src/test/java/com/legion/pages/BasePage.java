@@ -584,11 +584,16 @@ public class BasePage {
     }
 
     public void selectDate(int daysFromToday) {
+        int numClicks = -1;
         LocalDate now = LocalDate.now();
         LocalDate wanted = LocalDate.now().plusDays(daysFromToday);
         WebElement btnNextMonth = null;
         List<String> listMonthText = new ArrayList<>();
-        int numClicks = wanted.getMonthValue() - now.getMonthValue();
+        if (wanted.getYear() == now.getYear()) {
+            numClicks = wanted.getMonthValue() - now.getMonthValue();
+        } else {
+            numClicks = 12 + wanted.getMonthValue() - now.getMonthValue();
+        }
         if (numClicks < 0) {
             numClicks = daysFromToday / 30;
         }
@@ -611,7 +616,7 @@ public class BasePage {
             }
         }
 
-        List<WebElement> mCalendarDates = getDriver().findElements(By.cssSelector("div.ranged-calendar__day.ng-binding.ng-scope.real-day"));
+        List<WebElement> mCalendarDates = getDriver().findElements(By.cssSelector("div.ranged-calendar__day.ng-binding.ng-scope.real-day:not(.can-not-select)"));
         for (WebElement mDate : mCalendarDates) {
             if (Integer.parseInt(mDate.getText()) == wanted.getDayOfMonth()) {
                 mDate.click();
@@ -819,7 +824,7 @@ public class BasePage {
     //added by Nishant
     public String getActiveWeekText() throws Exception {
         WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
-        if (isElementLoaded(activeWeek))
+        if (isElementLoaded(activeWeek,10))
             return activeWeek.getText().replace("\n", " ");
         return "";
     }
