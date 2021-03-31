@@ -36,9 +36,8 @@
                     <include name="verifyChangeP2PLocationsToNoneFunction" />
 
 
-                    <!--                    District test cases-->
-<!--                    <include name="verifyDistrictListPageLoading" />-->
-<!--                    <include name="verifySearchDistrictFunction" />-->
+                    <!--                    Upperfield test cases-->
+                    <include name="verifyUpperFieldsListPageAndSearchFunction" />
 <!--                    <include name="verifyAddOrUpdateDistrictFunction" />-->
 <!--                    <include name="verifyDisableEnableDistrictFunction" />-->
                     <!--                    Global dynamic group test cases-->

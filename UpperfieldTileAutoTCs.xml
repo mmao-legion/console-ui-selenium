@@ -17,11 +17,11 @@
             <class name="com.legion.tests.core.LocationsTest">
                 <methods>
 
-                    <!--                    District test cases-->
-                    <include name="verifyDistrictListPageLoading" />
-                    <include name="verifySearchDistrictFunction" />
+                    <!--                    Upperfield test cases-->
+                    <include name="verifyUpperFieldsListPageAndSearchFunction" />
+<!--                    <include name="verifySearchDistrictFunction" />-->
 <!--                    <include name="verifyAddOrUpdateDistrictFunction" />-->
-                    <include name="verifyDisableEnableDistrictFunction" />
+<!--                    <include name="verifyDisableEnableDistrictFunction" />-->
                 </methods>
             </class>
         </classes>
