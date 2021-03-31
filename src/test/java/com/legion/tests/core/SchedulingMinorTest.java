@@ -935,7 +935,7 @@ public class SchedulingMinorTest extends TestBase {
 
             //check the violation message in Status column
             SimpleUtils.assertOnFail("There should have minor warning message display as: Age < 14yr old! ",
-                    schedulePage.getTheMessageOfTMScheduledStatus().contains("Age < 14yr old"), false);
+                    schedulePage.getTheMessageOfTMScheduledStatus().contains("Age < 14 yr old"), false);
 
             schedulePage.clickOnOfferOrAssignBtn();
             schedulePage.saveSchedule();
@@ -944,7 +944,7 @@ public class SchedulingMinorTest extends TestBase {
             WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
             if (newAddedShift != null) {
                 SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
-                        schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Age < 14yr old"), false);
+                        schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Age < 14 yr old"), false);
             } else
                 SimpleUtils.fail("Get new added shift failed! ", false);
         } catch (Exception e){

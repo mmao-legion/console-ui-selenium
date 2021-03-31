@@ -411,25 +411,25 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                             List<WebElement> allAnnouncementTypes = dropdown.getOptions();
 
                             if (allAnnouncementTypes != null && allAnnouncementTypes.size() > 1) {
-                                if (allAnnouncementTypes.get(0).getText().equals("Message") && allAnnouncementTypes.get(1).getText().equals("Good Faith Estimate")) {
+                                if (allAnnouncementTypes.get(0).getText().equalsIgnoreCase("Message") && allAnnouncementTypes.get(1).getText().equalsIgnoreCase("Good Faith Estimate")) {
                                     SimpleUtils.pass("Inbox: Announcement type: Message & Good Faith Estimate shows correctly, Message is the first option, Good Faith Estimate is the second option.");
                                 } else {
-                                    SimpleUtils.fail("Inbox: Announcement type: Message & Good Faith Estimate shows incorrectly", true);
+                                    SimpleUtils.fail("Inbox: Announcement type: Message & Good Faith Estimate shows incorrectly", false);
                                 }
                             } else {
-                                SimpleUtils.fail("Inbox: Announcement type: Message & Good Faith Estimate failed to load", true);
+                                SimpleUtils.fail("Inbox: Announcement type: Message & Good Faith Estimate failed to load", false);
                             }
                         } else {
-                            SimpleUtils.fail("Inbox: Announcement types selector failed to load", true);
+                            SimpleUtils.fail("Inbox: Announcement types selector failed to load", false);
                         }
                     } else{
-                        SimpleUtils.fail("Inbox: Announcement type failed to load",true);
+                        SimpleUtils.fail("Inbox: Announcement type failed to load",false);
                     }
                 } else {
                     if(!isElementLoaded(announcementTypeSection, 5)){
                         SimpleUtils.pass("Inbox: Announcement type is not displayed, because GFE is turned off");
                     } else{
-                        SimpleUtils.fail("Inbox: Announcement type should not display, because GFE is turned off",true);
+                        SimpleUtils.fail("Inbox: Announcement type should not display, because GFE is turned off",false);
                     }
                 }
 
@@ -439,30 +439,30 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                     if (sendToText !=null && sendToText.getText().equals("Send to:") && sendToTextBox != null){
                         SimpleUtils.pass("Inbox: Send to: section display successfully");
                     } else{
-                        SimpleUtils.fail("Inbox: Send to text or textbox failed to load",true);
+                        SimpleUtils.fail("Inbox: Send to text or textbox failed to load",false);
                     }
 
                 } else{
-                    SimpleUtils.fail("Inbox: Send to: section failed to load",true);
+                    SimpleUtils.fail("Inbox: Send to: section failed to load",false);
                 }
 
                 //check Message section
                 if (messageText !=null && messageText.getText().equals("Message:") && titleArea !=null && messageArea != null){
                     SimpleUtils.pass("Inbox: Message section display successfully");
                 } else{
-                    SimpleUtils.fail("Inbox: Message section failed to load",true);
+                    SimpleUtils.fail("Inbox: Message section failed to load",false);
                 }
 
                 //check Cancel and Send button
                 if(isElementLoaded(cancelButton, 5)){
                     SimpleUtils.pass("Inbox: Cancel button display successfully");
                 } else{
-                    SimpleUtils.fail("Inbox: Cancel button failed to load",true);
+                    SimpleUtils.fail("Inbox: Cancel button failed to load",false);
                 }
                 if (isElementLoaded(saveButton, 5)){
                     SimpleUtils.pass("Inbox: Save button display successfully");
                 } else{
-                    SimpleUtils.fail("Inbox: Save button failed to load",true);
+                    SimpleUtils.fail("Inbox: Save button failed to load",false);
                 }
             } else{
                 SimpleUtils.fail("Inbox: Create Announcement page failed to load",false);

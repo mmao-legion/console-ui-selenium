@@ -958,7 +958,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return null;
 	}
 
-	@FindBy(css = "[ng-if=\"$ctrl.parentLocation\"]")
+	@FindBy(css = "lg-select[search-hint=\"Search District\"]")
 	private WebElement currentDistrict;
 	@Override
 	public String getCurrentDistrict() throws Exception {
@@ -1075,21 +1075,21 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 
 	@FindBy(css = "div.console-navigation-item-label.Report")
-	private WebElement analyticsConsoleMenu;
+	private WebElement reportConsoleMenu;
 
 	@Override
-	public boolean isAnalyticsConsoleMenuDisplay() throws Exception {
-		boolean isAnalyticsConsoleMenuDisplay = false;
+	public boolean isReportConsoleMenuDisplay() throws Exception {
+		boolean isReportConsoleMenuDisplay = false;
 		try{
-			if(isElementLoaded(analyticsConsoleMenu, 5)) {
-				isAnalyticsConsoleMenuDisplay = true;
-				SimpleUtils.report("Analytics Console Menu is loaded Successfully!");
+			if(isElementLoaded(reportConsoleMenu, 5)) {
+				isReportConsoleMenuDisplay = true;
+				SimpleUtils.report("Report Console Menu is loaded Successfully!");
 			} else
-				SimpleUtils.report("Analytics Console Menu not loaded Successfully!");
+				SimpleUtils.report("Report Console Menu not loaded Successfully!");
 		} catch(Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
-		return isAnalyticsConsoleMenuDisplay;
+		return isReportConsoleMenuDisplay;
 	}
 
 

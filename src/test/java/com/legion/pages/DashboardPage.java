@@ -71,7 +71,7 @@ public interface DashboardPage {
     public boolean isDashboardConsoleMenuDisplay() throws Exception;
     public boolean isTeamConsoleMenuDisplay() throws Exception;
     public boolean isScheduleConsoleMenuDisplay() throws Exception;
-    public boolean isAnalyticsConsoleMenuDisplay() throws Exception;
+    public boolean isReportConsoleMenuDisplay() throws Exception;
     public boolean isInboxConsoleMenuDisplay() throws Exception;
     public boolean isAdminConsoleMenuDisplay() throws Exception;
     public void clickOnAdminConsoleMenu() throws Exception;

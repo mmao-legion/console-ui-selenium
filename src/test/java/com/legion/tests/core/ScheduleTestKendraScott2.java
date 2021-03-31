@@ -1066,7 +1066,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				schedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			List<String> weekDaysToClose = new ArrayList<>();
-			schedulePage.createScheduleForNonDGByWeekInfo(firstWeekInfo, weekDaysToClose);
+			schedulePage.createScheduleForNonDGByWeekInfo(firstWeekInfo, weekDaysToClose, null);
 
 			HashMap<String, String> hoursNTMsCountSecondWeek = schedulePage.getTheHoursNTheCountOfTMsForEachWeekDays();
 			HashMap<String, List<String>> shiftsForEachDaySecondWeek = schedulePage.getTheContentOfShiftsForEachWeekDay();
@@ -1125,7 +1125,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				schedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			List<String> weekDaysToClose = new ArrayList<>(Arrays.asList("Sunday", "Tuesday"));
-			schedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose);
+			schedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose, null);
 
 			// Verify that the closed week day should not have any shifts
 			schedulePage.verifyNoShiftsForSpecificWeekDay(weekDaysToClose);
