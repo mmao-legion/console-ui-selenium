@@ -250,7 +250,7 @@ public class NewNavigationFlowTest extends TestBase {
         //go to locations tab
         locationsPage.clickOnLocationsTab();
         //go to sub-district tab
-        locationsPage.goToSubDistrictsInLocationsPage();
+        locationsPage.goToUpperFieldsPage();
 
         //get the count of all enabled status districts in location-district smart card
         int alldistrictsCountOnDistrcitsPage = locationsPage.getTotalEnabledDistrictsCount();
@@ -297,7 +297,7 @@ public class NewNavigationFlowTest extends TestBase {
         //go to locations tab
         locationsPage.clickOnLocationsTab();
         //go to sub-district tab
-        locationsPage.goToSubDistrictsInLocationsPage();
+        locationsPage.goToUpperFieldsPage();
         //get all locations in specify district in OPS-District function
         locationsInDistrictPage = locationsPage.getLocationsInDistrict(currentDistrict);
         //compare these two list

@@ -137,18 +137,18 @@ public class LocationsTest extends TestBase {
                 SimpleUtils.pass("Create new location successfully: "+locationName);
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
-            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
-            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
+//            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+//            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
+//            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
+//            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//            schedulePage.clickOnScheduleConsoleMenuItem();
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+//                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -181,23 +181,23 @@ public class LocationsTest extends TestBase {
             //add one mock location，first create one new location and then to mock that -to avoid duplication
             locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);;
             locationsPage.addNewMockLocationWithAllFields(locationName,locationName,index);
-//            //search created location
-//            if (locationsPage.searchNewLocation(getLocationName())) {
-//                SimpleUtils.pass("Create new mock location successfully");
-//            }else
-//                SimpleUtils.fail("Create new location failed or can't search created location",true);
-            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
-            locationSelectorPage.changeLocation(locationName+"-MOCK");
-           SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-           schedulePage.clickOnScheduleConsoleMenuItem();
-           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-           SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
-           SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
-                   schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
+            //search created location
+            if (locationsPage.searchNewLocation(getLocationName())) {
+                SimpleUtils.pass("Create new mock location successfully");
+            }else
+                SimpleUtils.fail("Create new location failed or can't search created location",true);
+//            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+//            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
+//            locationSelectorPage.changeLocation(locationName+"-MOCK");
+//           SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//           schedulePage.clickOnScheduleConsoleMenuItem();
+//           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+//           SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+//           SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+//                   schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
        } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -228,15 +228,15 @@ public class LocationsTest extends TestBase {
             //go to sub-locations tab
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.addNewNSOLocation(locationName,searchCharactor, index);
-//            if (locationsPage.searchNewLocation(getLocationName())) {
-//                SimpleUtils.pass("Create new mock location successfully");
-//            }else
-//                SimpleUtils.fail("Create new location failed or can't search created location",true);
-            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
-            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
+            if (locationsPage.searchNewLocation(getLocationName())) {
+                SimpleUtils.pass("Create new mock location successfully");
+            }else
+                SimpleUtils.fail("Create new location failed or can't search created location",true);
+//            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+//            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
+//            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -1145,7 +1145,7 @@ public class LocationsTest extends TestBase {
             //check locations item
             locationsPage.validateItemsInLocations();
             //go to sub-district tab
-            locationsPage.goToSubDistrictsInLocationsPage();
+            locationsPage.goToUpperFieldsPage();
             locationsPage.validateTheAddDistrictBtn();
 
         } catch (Exception e){
@@ -1224,11 +1224,12 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Verify district list function")
+    @TestName(description = "Verify UpperFields list page and search function")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDistrictListPageLoading(String browser, String username, String password, String location) throws Exception {
+    public void verifyUpperFieldsListPageAndSearchFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
+            String[] searchInfo = {"BU1","Level: District","Level: Region","Level: Region","status:enabled","status: disabled"};
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -1240,14 +1241,15 @@ public class LocationsTest extends TestBase {
             //check locations item
             locationsPage.validateItemsInLocations();
             //go to sub-district  tab
-            locationsPage.goToSubDistrictsInLocationsPage();
-            if (locationsPage.verifyDistrictListShowWellOrNot()) {
+            locationsPage.goToUpperFieldsPage();
+            if (locationsPage.verifyUpperFieldListShowWellOrNot()) {
                 locationsPage.verifyBackBtnFunction();
-                locationsPage.goToSubDistrictsInLocationsPage();
+                locationsPage.goToUpperFieldsPage();
                 locationsPage.verifyPaginationFunctionInDistrict();
-
             }else
-                SimpleUtils.fail("District list page loading failed",false);
+                SimpleUtils.fail("UpperFields list page loading failed",false);
+
+            locationsPage.verifySearchUpperFieldsFunction(searchInfo);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -1275,10 +1277,10 @@ public class LocationsTest extends TestBase {
             //check locations item
             locationsPage.validateItemsInLocations();
             //go to sub-district  tab
-            locationsPage.goToSubDistrictsInLocationsPage();
+            locationsPage.goToUpperFieldsPage();
 
             String[] searchInfo = {"No Touch","status:enabled"};
-            locationsPage.verifySearchFunction(searchInfo);
+//            locationsPage.verifySearchFunction(searchInfo);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -1313,9 +1315,9 @@ public class LocationsTest extends TestBase {
                 //check locations item
                 locationsPage.validateItemsInLocations();
                 //go to sub-district  tab
-                locationsPage.goToSubDistrictsInLocationsPage();
+                locationsPage.goToUpperFieldsPage();
                 locationsPage.addNewDistrictWithoutLocation( districtName, districtId);
-                locationsPage.searchDistrict(districtName);
+                locationsPage.searchUpperFields(districtName);
                 locationsPage.updateDistrict(districtName,districtId,searchChara,index);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -1351,7 +1353,7 @@ public class LocationsTest extends TestBase {
             //check locations item
             locationsPage.validateItemsInLocations();
             //go to sub-district  tab
-            locationsPage.goToSubDistrictsInLocationsPage();
+            locationsPage.goToUpperFieldsPage();
             locationsPage.addNewDistrictWithoutLocation( districtName, districtId);
 
             //disable and enable district

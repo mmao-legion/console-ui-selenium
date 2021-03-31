@@ -63,6 +63,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void clickModelSwitchIconInDashboardPage(String value) {
+		waitForSeconds(3);
 		if (isElementEnabled(modeSwitchIcon,10)) {
 			clickTheElement(modeSwitchIcon);
 			waitForSeconds(5);
@@ -1183,8 +1184,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "lg-button[label=\"Add Upperfield\"]")
 	private WebElement addUpperfieldsButton;
 
-	@FindBy(css = "input[placeholder=\"You can search by name,id.\"]")
-	private WebElement districtSearchInputBox;
+	@FindBy(css = "input[placeholder=\"You can search upperfield by name, status or creator.\"]")
+	private WebElement upperfieldsSearchInputBox;
 
 	@FindBy(css = ".lg-search-icon")
 	private WebElement searchDistrictBtn;
@@ -1195,8 +1196,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(xpath = "//table/tbody/tr[2]/td[1]/lg-button/button/span/span")
 	private WebElement districtName;
 
-	@FindBy(css = "tr[ng-repeat=\"district in filteredDistricts\"]")
-	private List<WebElement> districtsRows;
+	@FindBy(css = "tr[ng-repeat=\"upperfield in filteredUpperfields\"]")
+	private List<WebElement> upperfieldRows;
 
 	@FindBy(css = "select[ng-attr-aria-label=\"{{$ctrl.label}}\"]")
 	private WebElement pageNumSelector;
@@ -1233,13 +1234,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	@Override
-	public void goToSubDistrictsInLocationsPage() throws Exception {
-		if (isElementLoaded(upperfieldsInLocations, 20)) {
+	public void goToUpperFieldsPage() throws Exception {
+		if (isElementLoaded(upperfieldsInLocations, 20)&& upperfieldsInLocations.getText().contains("Upperfields") &&
+				upperfieldsInLocations.getText().contains("Upperfields Configured")&&upperfieldsInLocations.getText().contains("Upperfield Information")
+		&&upperfieldsInLocations.getText().contains("Add, remove upperfields")) {
 			click(upperfieldsInLocations);
 			if (isElementEnabled(addUpperfieldsButton, 20)) {
-				SimpleUtils.pass("sub-district page load successfully");
+				SimpleUtils.pass("UpperFields tile load successfully");
 			} else
-				SimpleUtils.fail("sub-dsitrict page load failed", false);
+				SimpleUtils.fail("UpperFields load failed", false);
 		} else
 			SimpleUtils.fail("locations tab load failed in location overview page", false);
 	}
@@ -1254,23 +1257,22 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 
-	@Override
-	public void searchDistrict(String searchInputText) throws Exception {
-		String[] searchLocationCha = searchInputText.split(",");
-		if (isElementLoaded(districtSearchInputBox, 10)) {
 
+	public void searchUpperFields(String searchInputText) throws Exception {
+		String[] searchLocationCha = searchInputText.split(",");
+		if (isElementLoaded(upperfieldsSearchInputBox, 10)) {
 			for (int i = 0; i < searchLocationCha.length; i++) {
-				districtSearchInputBox.clear();
-				districtSearchInputBox.sendKeys(searchInputText);
-				districtSearchInputBox.sendKeys(Keys.ENTER);
+				upperfieldsSearchInputBox.clear();
+				upperfieldsSearchInputBox.sendKeys(searchInputText);
+				upperfieldsSearchInputBox.sendKeys(Keys.ENTER);
 				waitForSeconds(3);
-				if (districtsRows.size() > 0) {
-					SimpleUtils.pass("Can search out district by using " + searchInputText);
+				if (upperfieldRows.size() > 0) {
+					SimpleUtils.pass("Can search out upperfield by using " + searchInputText);
 					break;
 				} else {
-					SimpleUtils.fail("Can't search out any district by using " + searchInputText,false);
+					SimpleUtils.fail("Can't search out any upperfieds by using " + searchInputText,false);
 					waitForSeconds(5);
-					districtSearchInputBox.clear();
+					upperfieldsSearchInputBox.clear();
 				}
 			}
 
@@ -1304,10 +1306,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		String[] searchLocationCha = searchInputText.split(",");
 		int searchedDistrictsCount = 0;
 
-		if (isElementLoaded(districtSearchInputBox, 15)) {
+		if (isElementLoaded(upperfieldsInLocations, 15)) {
 			for (int i = 0; i < searchLocationCha.length; i++) {
 
-				searchDistrict(searchLocationCha[i]);
+				searchUpperFields(searchLocationCha[i]);
 
 				//Get the total count of search results
 				String totalResultsPages = null;
@@ -1315,12 +1317,12 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				if (pageText.length > 0 && !pageText[1].isEmpty()) {
 					totalResultsPages = pageText[1];
 					selectByVisibleText(pageNumSelector, totalResultsPages);
-					if (districtsRows.size() > 0) {
+					if (upperfieldRows.size() > 0) {
 						int maxPageNumber = Integer.parseInt(totalResultsPages);
-						searchedDistrictsCount = (maxPageNumber - 1) * 10 + districtsRows.size();
+						searchedDistrictsCount = (maxPageNumber - 1) * 10 + upperfieldRows.size();
 						SimpleUtils.pass("Districts: " + searchedDistrictsCount + " district(s) found by " + searchLocationCha[i]);
 						searchResultsList.add(searchedDistrictsCount);
-						districtSearchInputBox.clear();
+						upperfieldsInLocations.clear();
 					} else {
 						SimpleUtils.pass("Can Not search out any district");
 					}
@@ -1338,13 +1340,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public List<String> getLocationsInDistrict(String districtName) throws Exception {
 		List<WebElement> locationsInManageLocation = new ArrayList<>();
 		List<String> locations = new ArrayList<>();
-		if (isElementLoaded(districtSearchInputBox, 15)) {
+		if (isElementLoaded(upperfieldsInLocations, 15)) {
 			if (districtName != null && !districtName.isEmpty()) {
-				districtSearchInputBox.clear();
-				searchDistrict(districtName);
+				upperfieldsInLocations.clear();
+				searchUpperFields(districtName);
 				waitForSeconds(10);
-				if (districtsRows.size() > 0) {
-					click(districtsRows.get(0).findElement(By.cssSelector("lg-button")));
+				if (upperfieldRows.size() > 0) {
+					click(upperfieldRows.get(0).findElement(By.cssSelector("lg-button")));
 					waitUntilElementIsVisible(editDistrictBtn);
 					click(editDistrictBtn);
 					click(managementLocationBtn);
@@ -1383,11 +1385,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement pageRightBtnInDistrict;
 
 	@Override
-	public boolean verifyDistrictListShowWellOrNot() throws Exception {
+	public boolean verifyUpperFieldListShowWellOrNot() throws Exception {
 
 		waitForSeconds(30);
 		if (isElementLoaded(backBtnInDistrictListPage,3) && isElementLoaded(addUpperfieldsButton,3)
-		&& isElementLoaded(districtSearchInputBox,3) && isElementLoaded(smartCardInDistrictListPage,3)
+		&& isElementLoaded(upperfieldsSearchInputBox,3) && isElementLoaded(smartCardInDistrictListPage,3)
 		&& isElementLoaded(pageLeftBtnInDistrict,3) && isElementLoaded(pageRightBtnInDistrict,3)
 		) {
 			return true;
@@ -1468,15 +1470,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						SimpleUtils.fail("Page select doesn't work",true);
 				}
 				waitForSeconds(5);
-				String firstLineText = districtsRows.get(0).getText();
+				String firstLineText = upperfieldRows.get(0).getText();
 				click(pageLeftBtnInDistrict);
-				String firstLineTextAftLeft = districtsRows.get(0).getText();
+				String firstLineTextAftLeft = upperfieldRows.get(0).getText();
 				if (!firstLineTextAftLeft.equalsIgnoreCase(firstLineText) ) {
 					SimpleUtils.pass("Left pagination button work well" );
 				}else
 					SimpleUtils.fail("Left pagination button work wrong",false);
 				click(pageRightBtnInDistrict);
-				String firstLineTextAftRight = districtsRows.get(0).getText();
+				String firstLineTextAftRight = upperfieldRows.get(0).getText();
 				if (!firstLineTextAftRight.equalsIgnoreCase(firstLineTextAftLeft) ) {
 					SimpleUtils.pass("Right pagination button work well");
 				}else
@@ -1490,10 +1492,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public void verifySearchFunction(String[] searchInfo) throws Exception {
-		if (isElementEnabled(districtSearchInputBox,3)) {
+	public void verifySearchUpperFieldsFunction(String[] searchInfo) throws Exception {
+		if (isElementEnabled(upperfieldsSearchInputBox,3)) {
 			for (String info:searchInfo) {
-				searchDistrict(info);
+				searchUpperFields(info);
 			}
 		}else
 			SimpleUtils.fail("District search input element load failed",false);
@@ -1572,8 +1574,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void updateDistrict(String districtName, String districtId,  String searchChara, int index) {
 
-		if (districtsRows.size() > 0) {
-			List<WebElement> districtDetailsLinks = districtsRows.get(0).findElements(By.cssSelector("button[type='button']"));
+		if (upperfieldRows.size() > 0) {
+			List<WebElement> districtDetailsLinks = upperfieldRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			click(districtDetailsLinks.get(0));
 			click(editDistrictBtn);
 			districtNameInput.clear();
@@ -1615,14 +1617,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public ArrayList<HashMap<String, String>> getDistrictInfo(String districtName) {
 		ArrayList<HashMap<String,String>> districtInfo = new ArrayList<>();
 
-		if (isElementEnabled(districtSearchInputBox, 10)) {
-			districtSearchInputBox.clear();
-			districtSearchInputBox.sendKeys(districtName);
-			districtSearchInputBox.sendKeys(Keys.ENTER);
+		if (isElementEnabled(upperfieldsInLocations, 10)) {
+			upperfieldsInLocations.clear();
+			upperfieldsInLocations.sendKeys(districtName);
+			upperfieldsInLocations.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
-			if (districtsRows.size() > 0) {
+			if (upperfieldRows.size() > 0) {
 
-				for (WebElement district : districtsRows) {
+				for (WebElement district : upperfieldRows) {
 					HashMap<String, String> districtInfoInEachRow = new HashMap<>();
 					districtInfoInEachRow.put("districtName", district.findElement(By.cssSelector("button[type='button']")).getText());
 					districtInfoInEachRow.put("districtStatus", district.findElement(By.cssSelector("td:nth-child(3) > lg-eg-status ")).getAttribute("type"));
@@ -1657,10 +1659,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void disableEnableDistrict(String districtName, String action) throws Exception {
-		districtSearchInputBox.clear();
-		searchDistrict(districtName);
-		if (districtsRows.size() > 0) {
-			List<WebElement> districtDetailsLinks = districtsRows.get(0).findElements(By.cssSelector("button[type='button']"));
+		upperfieldsInLocations.clear();
+		searchUpperFields(districtName);
+		if (upperfieldRows.size() > 0) {
+			List<WebElement> districtDetailsLinks = upperfieldRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			click(districtDetailsLinks.get(0));
 			click(getDriver().findElement(By.cssSelector("lg-button[label=\""+action+"\"] ")));
 			click(getDriver().findElement(By.cssSelector("lg-button[label=\""+action+"\"] ")));

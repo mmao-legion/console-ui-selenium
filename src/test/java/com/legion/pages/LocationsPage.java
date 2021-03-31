@@ -72,9 +72,9 @@ public interface LocationsPage {
 
     public void disableEnableLocation(String locationName, String action) throws Exception;
 
-    public void goToSubDistrictsInLocationsPage() throws Exception;
+    public void goToUpperFieldsPage() throws Exception;
 
-    public void searchDistrict(String searchInputText) throws Exception;
+    public void searchUpperFields(String searchInputText) throws Exception;
 
     public int getTotalEnabledDistrictsCount() throws Exception;
 
@@ -90,13 +90,13 @@ public interface LocationsPage {
 
     public void changeLGToMSOrP2P(String value) throws Exception;
 
-    public boolean verifyDistrictListShowWellOrNot() throws Exception;
+    public boolean verifyUpperFieldListShowWellOrNot() throws Exception;
 
     public void verifyBackBtnFunction() throws Exception;
 
     public void verifyPaginationFunctionInLocation() throws Exception;
 
-    public void verifySearchFunction(String[] searchInfo) throws Exception;
+    public void verifySearchUpperFieldsFunction(String[] searchInfo) throws Exception;
 
     public void addNewDistrict(String districtName, String districtId,String searchChara,int index) throws Exception;
 
