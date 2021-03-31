@@ -81,7 +81,7 @@ public abstract class TestBase {
     public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/UpperfieldsForDifferentEnterprises.json");
     private static ExtentReports extent = ExtentReportManager.getInstance();
     static HashMap<String,String> testRailCfg = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
-    static HashMap<String,String> testRailCfgOp = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_Op.json");
+    static HashMap<String,String> testRailCfgOp = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_OP.json");
     public static AndroidDriver<MobileElement> driver;
     public static String versionString;
     public static int version;
@@ -393,7 +393,10 @@ public abstract class TestBase {
         loginPage.loginToLegionWithCredential(username, Password);
         loginPage.verifyNewTermsOfServicePopUp();
         boolean isLoginDone = loginPage.isLoginDone();
-        loginPage.verifyLoginDone(isLoginDone, location);
+        if (isLoginDone) {
+            SimpleUtils.pass("Login legion without update upperfield successfully");
+        }else
+            SimpleUtils.fail("Login legion  failed",false);
     }
     private void changeUpperFieldsAccordingToEnterprise(LocationSelectorPage locationSelectorPage) throws Exception {
         if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
