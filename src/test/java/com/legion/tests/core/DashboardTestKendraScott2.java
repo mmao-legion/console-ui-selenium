@@ -483,17 +483,17 @@ public class DashboardTestKendraScott2 extends TestBase {
 			}
 		}
 
-		//Check Analytics console menu is display or not
+		//Check Report console menu is display or not
 		if (userRole.contains("TeamLead") || userRole.contains("TeamMember")) {
-			SimpleUtils.assertOnFail("Analytics console menu should not be loaded Successfully!",
-					!dashboardPage.isAnalyticsConsoleMenuDisplay(), false);
+			SimpleUtils.assertOnFail("Report console menu should not be loaded Successfully!",
+					!dashboardPage.isReportConsoleMenuDisplay(), false);
 		} else {
-			SimpleUtils.assertOnFail("Analytics console menu not loaded Successfully!", dashboardPage.isAnalyticsConsoleMenuDisplay(), false);
-			//Check Analytics page is display after click Analytics tab
+			SimpleUtils.assertOnFail("Report console menu not loaded Successfully!", dashboardPage.isReportConsoleMenuDisplay(), false);
+			//Check Report page is display after click Report tab
 			AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
 			analyticsPage.clickOnAnalyticsConsoleMenu();
-			SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
-			dashboardPage.verifyHeaderNavigationMessage("Analytics");
+			SimpleUtils.assertOnFail("Report Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+			dashboardPage.verifyHeaderNavigationMessage("Report");
 		}
 
 
@@ -541,6 +541,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 		SimpleUtils.assertOnFail("Logout console menu not loaded Successfully!", dashboardPage.isLogoutConsoleMenuDisplay(), false);
 		//Check Login page is display after click Logout tab
 		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		Thread.sleep(5000);
 		loginPage.logOut();
 		loginPage.verifyLoginPageIsLoaded();
 	}

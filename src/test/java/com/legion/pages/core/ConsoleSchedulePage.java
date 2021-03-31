@@ -2766,7 +2766,7 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose) throws Exception {
+    public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose, List<String> copyShiftAssignments) throws Exception {
         return 0;
     }
 
@@ -3592,5 +3592,20 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     @Override
     public void selectLocationFilterByText(String filterText) throws Exception {
 
+    }
+
+    @Override
+    public void clickOnViewShiftsBtnOnRequiredActionSmartCard() throws Exception{
+
+    }
+
+    @Override
+    public void clickOnClearFilterOnFilterDropdownPopup() throws Exception{
+
+    }
+
+    @Override
+    public boolean isRequiredActionSmartCardLoaded() throws Exception {
+        return false;
     }
 }

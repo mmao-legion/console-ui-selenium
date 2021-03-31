@@ -1389,7 +1389,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 								+ isLaborBudgetToApply + "'.");
 					else
 						SimpleUtils.fail("Scheduling Policies: Apply Labor Budget to Schedules not updated with value: '"
-								+ isLaborBudgetToApply + "'.", true);
+								+ isLaborBudgetToApply + "'.", false);
 				} else
 					SimpleUtils.fail("Scheduling Policies: Apply Labor Budget to Schedules buttons not loaded.", true);
 			}

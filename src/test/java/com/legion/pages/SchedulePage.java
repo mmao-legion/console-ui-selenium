@@ -431,7 +431,7 @@ public interface SchedulePage {
 	public HashMap<String, List<String>> getTheContentOfShiftsForEachWeekDay() throws Exception;
 	public HashMap<String, String> getBudgetNScheduledHoursFromSmartCard() throws Exception;
 	public int getComplianceShiftCountFromSmartCard(String cardName) throws Exception;
-	public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose) throws Exception;
+	public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose, List<String> copyShiftAssignments) throws Exception;
 	public void clickCreateScheduleBtn() throws Exception;
 	public void clickBackBtnAndExitCreateScheduleWindow() throws Exception;
 	public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception;
@@ -594,4 +594,7 @@ public interface SchedulePage {
 	public String getTheShiftInfoByIndexInDayview(int index) throws Exception;
 	public void verifyConfirmStoreOpenCloseHours() throws Exception;
 	public List<String> getAllLocationGroupLocationsFromCreateShiftWindow() throws Exception;
+	public void clickOnViewShiftsBtnOnRequiredActionSmartCard() throws Exception;
+	public void clickOnClearFilterOnFilterDropdownPopup() throws Exception;
+	public boolean isRequiredActionSmartCardLoaded() throws Exception;
 }

@@ -2881,9 +2881,9 @@ public class SchedulingOPEnabledTest  extends TestBase {
         //Check Analytics console menu is display or not
         if (userRole.contains("TeamLead") || userRole.contains("TeamMember")) {
             SimpleUtils.assertOnFail("Analytics console menu should not be loaded Successfully!",
-                    !dashboardPage.isAnalyticsConsoleMenuDisplay(), false);
+                    !dashboardPage.isReportConsoleMenuDisplay(), false);
         } else {
-            SimpleUtils.assertOnFail("Analytics console menu not loaded Successfully!", dashboardPage.isAnalyticsConsoleMenuDisplay(), false);
+            SimpleUtils.assertOnFail("Analytics console menu not loaded Successfully!", dashboardPage.isReportConsoleMenuDisplay(), false);
             //Check Analytics page is display after click Analytics tab
             AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
             analyticsPage.clickOnAnalyticsConsoleMenu();

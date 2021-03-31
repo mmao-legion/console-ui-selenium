@@ -259,7 +259,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
         clickTheElement(webElement);
         if (areListElementVisible(options, 15)){
             for (WebElement element: options){
-                if (element.getText().equalsIgnoreCase(value)){
+                if (element.getAttribute("title").equalsIgnoreCase(value)){
                     clickTheElement(element);
                 }
             }
