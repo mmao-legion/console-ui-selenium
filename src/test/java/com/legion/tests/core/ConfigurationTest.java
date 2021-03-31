@@ -514,5 +514,62 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate advance staffing rule should be shown correct")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAdvancedStaffingRulesShowWell(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "Test";
+            String workRole = "New Work Role";
+            String shiftsNumber = "7";
+            List<String> days = new ArrayList<String>(){{
+                add("Sunday");
+                add("Friday");
+            }};
+            String startOffsetTime = "30";
+            String startTimeUnit = "minutes";
+            String startEventPoint = "after";
+            String startEvent = "Opening Operating Hours";
+            String endOffsetTime = "35";
+            String endTimeUnit = "minutes";
+            String endEventPoint = "before";
+            String endEvent = "Closing Operating Hours";
 
+            String shiftsNumber1 = "10";
+            List<String> days1 = new ArrayList<String>(){{
+                add("Tuesday");
+                add("Saturday");
+            }};
+            String startOffsetTime1 = "40";
+            String startTimeUnit1 = "minutes";
+            String startEventPoint1 = "after";
+            String startEvent1 = "Opening Business Hours";
+            String endOffsetTime1 = "55";
+            String endTimeUnit1 = "minutes";
+            String endEventPoint1 = "before";
+            String endEvent1 = "Closing Business Hours";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.validateAdvanceStaffingRuleShowing(startEvent,startOffsetTime,startEventPoint,startTimeUnit,
+                    endEvent,endOffsetTime,endEventPoint,endTimeUnit,days,shiftsNumber);
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.validateAdvanceStaffingRuleShowing(startEvent1,startOffsetTime1,startEventPoint1,startTimeUnit1,
+                    endEvent1,endOffsetTime1,endEventPoint1,endTimeUnit1,days1,shiftsNumber1);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
