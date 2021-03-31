@@ -345,8 +345,8 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the team functionality in Roster - Sort")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInRosterForSort(String browser, String username, String password, String location) throws Exception {
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -369,7 +369,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 			teamPage.verifyTMCountIsCorrectOnRoster();
 			// Verify Search Team Members is working correctly
-			List<String> testStrings = new ArrayList<>(Arrays.asList("jam", "boris", "Retail", "a"));
+			List<String> testStrings = new ArrayList<>(Arrays.asList("jam", "boris", "Retail Manager", "abc"));
 			teamPage.verifyTheFunctionOfSearchTMBar(testStrings);
 			// Verify the column in roster page
 			teamPage.verifyTheColumnInRosterPage(isLocationGroup);

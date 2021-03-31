@@ -5858,7 +5858,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> weekDayLabels;
     @FindBy(className = "week-schedule-shift")
     private List<WebElement> weekShifts;
-    @FindBy(css = "[icon*=\"search.svg'\"]")
+    @FindBy(css = ".schedule-summary-search-dropdown [icon*=\"search.svg'\"]")
     private WebElement searchLocationBtn;
 
     @Override
@@ -6071,13 +6071,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String[] swapData2 = swapData.get(1).split("\n");
         if (areListElementVisible(weekDayLabels, 10)) {
             for (int i = 0; i < weekDayLabels.size(); i++) {
-                if (weekDayLabels.get(i).getText().equalsIgnoreCase(swapData1[2].substring(0, 3))) {
+                if (weekDayLabels.get(i).getText().equalsIgnoreCase(swapData1[3].substring(0, 3))) {
                     swapRequestIndex1 = i;
-                    SimpleUtils.pass("Get the index of " + swapData1[2] + ", the index is: " + i);
+                    SimpleUtils.pass("Get the index of " + swapData1[3] + ", the index is: " + i);
                 }
-                if (weekDayLabels.get(i).getText().equalsIgnoreCase(swapData2[2].substring(0, 3))) {
+                if (weekDayLabels.get(i).getText().equalsIgnoreCase(swapData2[3].substring(0, 3))) {
                     swapRequestIndex2 = i;
-                    SimpleUtils.pass("Get the index of " + swapData2[2] + ", the index is: " + i);
+                    SimpleUtils.pass("Get the index of " + swapData2[3] + ", the index is: " + i);
                 }
             }
 
@@ -6085,18 +6085,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             List<WebElement> workerNames2 = getDriver().findElements(By.cssSelector("[data-day-index=\"" + swapRequestIndex2 + "\"] .week-schedule-shift-wrapper .week-schedule-worker-name"));
             for (WebElement workerName1 : workerNames1) {
                 if (workerName1.getText().equals(swapData1[0])) {
-                    SimpleUtils.fail("Swap failed, still can find the swap Name: " + swapData1[0] + " at: " + swapData1[2], false);
+                    SimpleUtils.fail("Swap failed, still can find the swap Name: " + swapData1[0] + " at: " + swapData1[3], false);
                 }
                 if (workerName1.getText().equals(swapData2[0])) {
-                    SimpleUtils.pass("Swap Successfully, can find the swap Name: " + swapData2[0] + " at: " + swapData1[2]);
+                    SimpleUtils.pass("Swap Successfully, can find the swap Name: " + swapData2[0] + " at: " + swapData1[3]);
                 }
             }
             for (WebElement workerName2 : workerNames2) {
                 if (workerName2.getText().equals(swapData2[0])) {
-                    SimpleUtils.fail("Swap failed, still can find the swap Name: " + swapData2[0] + " at: " + swapData2[2], false);
+                    SimpleUtils.fail("Swap failed, still can find the swap Name: " + swapData2[0] + " at: " + swapData2[3], false);
                 }
                 if (workerName2.getText().equals(swapData1[0])) {
-                    SimpleUtils.pass("Swap Successfully, can find the swap Name: " + swapData1[0] + " at: " + swapData2[2]);
+                    SimpleUtils.pass("Swap Successfully, can find the swap Name: " + swapData1[0] + " at: " + swapData2[3]);
                 }
             }
         }else {
@@ -8410,7 +8410,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 click(currentWeeks.get(i));
                 if (isElementLoaded(filterButton, 15)) {
                     String selectedValue = filterButton.findElement(By.cssSelector("input-field[placeholder=\"None\"] input")).getAttribute("value");
-                    if (selectedFilter.equalsIgnoreCase(selectedValue)) {
+                    if (selectedFilter.contains(selectedValue)) {
                         SimpleUtils.pass("Selected Filter is persist on Week: " + currentWeeks.get(i).getText());
                     }else {
                         SimpleUtils.fail("Selected filter is changed on Week: " + currentWeeks.get(i).getText()
@@ -8520,7 +8520,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (availableFilters.size() > 0) {
                 ArrayList<WebElement> shiftTypeFilters = availableFilters.get(shiftTypeFilterKey);
                 if (shiftTypeFilters.size() == 2) {
-                    if (shiftTypeFilters.get(0).getText().equalsIgnoreCase(scheduled) && shiftTypeFilters.get(1).getText().equalsIgnoreCase(open)) {
+                    if (shiftTypeFilters.get(0).getText().contains(scheduled) && shiftTypeFilters.get(1).getText().contains(open)) {
                         SimpleUtils.pass("Filter is enabled and it has two filters - Scheduled and Open");
                     } else {
                         SimpleUtils.fail("Two filters are incorrect, expected are Scheduled and Open, actual are: "

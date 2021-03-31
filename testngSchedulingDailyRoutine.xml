@@ -39,21 +39,21 @@
            <class name="com.legion.tests.core.TeamTestKendraScott2">
                <methods>
                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
-                   <include name="verifyTheTeamFunctionalityInRosterForSort" />
+                   <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
                </methods>
            </class>
        </classes>
    </test>
 
-    <test name="Overview Test">
+   <!-- <test name="Overview Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleOverviewTest">
                 <methods>
-                    <include name="verifyScheduleFunctionalityOverviewAsStoreManager"/>
+                    <include name="verifyScheduleFunctionalityOverviewAsStoreManager Blocked by SCH-3607"/>
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
     <test name="Schedule Test LegionCoffee">
         <classes>
@@ -70,7 +70,7 @@
         <classes>
             <class name="com.legion.tests.core.ForecastTest">
                 <methods>
-                    <include name="verifyScheduleLaborForeCastFunctionality"/>
+                    <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin"/>
                     <include name="validateWeatherSmartCardOnForecastPage"/>
                     <include name="verifyScheduleFunctionalityForecast"/>
                 </methods>
@@ -134,10 +134,10 @@
                 <methods>
                     <include name="verifyComplianceSmartCardFunctionality" />
                     <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
-                    <include name="verifyScheduleFunctionalityWeekView"/>
-                    <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView"/>
-                    <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView"/>
-                    <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView"/>
+                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin"/>
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleInDayViewAsInternalAdmin"/>
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsInternalAdmin"/>
                     <include name="verificationOfMySchedulePageAsTeamMember" />
                     <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
                     <include name="verifyProfilePictureFunctionalityAsTeamMember" />

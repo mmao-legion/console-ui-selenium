@@ -416,8 +416,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Owner(owner = "Estelle/Mary")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Schedule functionality - Week View - Context Menu")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyScheduleFunctionalityWeekView(String username, String password, String browser, String location)
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyScheduleFunctionalityWeekViewAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -724,8 +724,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the Schedule functionality > Job Title Filter Functionality > Week View")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void viewAndFilterScheduleWithGroupByJobTitleInWeekView(String username, String password, String browser, String location)
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
 
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -755,8 +755,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the Schedule functionality > Job Title Filter Functionality > Day View")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void viewAndFilterScheduleWithGroupByJobTitleInDayView(String username, String password, String browser, String location)
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void viewAndFilterScheduleWithGroupByJobTitleInDayViewAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
 
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -784,8 +784,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the Schedule functionality > Job Title Filter Functionality > Combination")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView(String username, String password, String browser, String location)
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
 
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
