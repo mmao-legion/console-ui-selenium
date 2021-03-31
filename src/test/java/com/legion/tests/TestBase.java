@@ -76,11 +76,12 @@ public abstract class TestBase {
     protected PageFactory pageFactory = null;
     protected MobilePageFactory mobilePageFactory = null;
     String TestID = null;
-//  public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+    //  public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
     public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/UpperfieldsForDifferentEnterprises.json");
     private static ExtentReports extent = ExtentReportManager.getInstance();
     static HashMap<String,String> testRailCfg = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
+    static HashMap<String,String> testRailCfgOp = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_Op.json");
     public static AndroidDriver<MobileElement> driver;
     public static String versionString;
     public static int version;
@@ -100,8 +101,14 @@ public abstract class TestBase {
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
-        MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
+        if (System.getProperty("enterprise")!="op") {
+            MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
+            MyThreadLocal.setTestRailRunName(testRailRunName);
+            MyThreadLocal.setIfAddNewTestRun(true);
+        }else
+            MyThreadLocal.setTestSuiteID(testRailCfgOp.get("TEST_RAIL_SUITE_ID"));
         MyThreadLocal.setTestRailRunName(testRailRunName);
+        MyThreadLocal.setIfAddNewTestRun(true);
         if (MyThreadLocal.getTestCaseIDList()==null){
             MyThreadLocal.setTestCaseIDList(new ArrayList<Integer>());
         }
@@ -241,7 +248,7 @@ public abstract class TestBase {
             // Launch remote browser and set it as the current thread
             createRemoteChrome(url);
         }
-        }
+    }
 
 
     private void createRemoteChrome(String url){
@@ -254,6 +261,7 @@ public abstract class TestBase {
         caps.setCapability("visual", true);
         caps.setCapability("video", true);
         caps.setCapability("console", true);
+        caps.setCapability("idleTimeout", 600);
 
 //        caps.setCapability("selenium_version","3.141.59");
         caps.setCapability("chrome.driver","87.0");
@@ -297,9 +305,21 @@ public abstract class TestBase {
 //        stopServer();
     }
 
+    @AfterSuite
+    public void afterSuiteWorker() throws IOException{
+        if(getTestRailReporting()!=null){
+            List<Integer> testRunList = new ArrayList<Integer>();
+            testRunList.add(getTestRailRunId());
+            if (SimpleUtils.isTestRunEmpty(getTestRailRunId())){
+                SimpleUtils.deleteTestRail(testRunList);
+            }
+        }
+    }
+
 
     public static void visitPage(Method testMethod){
 
+        System.out.println("-------------------Start running test: " + testMethod.getName() + "-------------------");
         setEnvironment(propertyMap.get("ENVIRONMENT"));
         Enterprise e = testMethod.getAnnotation(Enterprise.class);
         String enterpriseName = null;
@@ -360,12 +380,11 @@ public abstract class TestBase {
         loginPage.loginToLegionWithCredential(username, Password);
         loginPage.verifyNewTermsOfServicePopUp();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-//        changeDistrictAccordingToEnterprise(locationSelectorPage);
-//        locationSelectorPage.changeLocation(location);
+        changeUpperFieldsAccordingToEnterprise(locationSelectorPage);
+        locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, location);
     }
-
 
     public synchronized void loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String username, String Password, String location) throws Exception
     {
@@ -376,18 +395,21 @@ public abstract class TestBase {
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, location);
     }
-    private void changeDistrictAccordingToEnterprise(LocationSelectorPage locationSelectorPage) {
+    private void changeUpperFieldsAccordingToEnterprise(LocationSelectorPage locationSelectorPage) throws Exception {
         if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
-            locationSelectorPage.changeDistrict(districtsMap.get("Coffee_Enterprise"));
+            locationSelectorPage.changeUpperFields(districtsMap.get("Coffee_Enterprise"));
         }
         if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
-            locationSelectorPage.changeDistrict(districtsMap.get("KendraScott2_Enterprise"));
+            locationSelectorPage.changeUpperFields(districtsMap.get("KendraScott2_Enterprise"));
         }
         if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-            locationSelectorPage.changeDistrict(districtsMap.get("Op_Enterprise"));
+            locationSelectorPage.changeUpperFields(districtsMap.get("Op_Enterprise"));
         }
         if (getDriver().getCurrentUrl().contains(propertyMap.get("DGStage_Enterprise"))) {
-            locationSelectorPage.changeDistrict(districtsMap.get("DGStage_Enterprise"));
+            locationSelectorPage.changeUpperFields(districtsMap.get("DGStage_Enterprise"));
+        }
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+            locationSelectorPage.changeUpperFields(districtsMap.get("CinemarkWkdy_Enterprise"));
         }
     }
 
