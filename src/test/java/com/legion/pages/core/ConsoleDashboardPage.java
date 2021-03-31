@@ -1074,7 +1074,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 
-	@FindBy(css = "div.console-navigation-item-label.Analytics")
+	@FindBy(css = "div.console-navigation-item-label.Report")
 	private WebElement analyticsConsoleMenu;
 
 	@Override
