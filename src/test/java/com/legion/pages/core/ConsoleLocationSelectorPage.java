@@ -766,7 +766,8 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         if (isElementLoaded(districtDropDownButton, 5)) {
             if (availableLocationCardsName.size() != 0) {
                 for (WebElement locationCardName : availableLocationCardsName) {
-                    if (locationCardName.getText().contains(districtName)) {
+                    if (locationCardName != null && locationCardName.getText() != null && !locationCardName.getText().isEmpty()
+                            && locationCardName.getText().contains(districtName)) {
                         isDistrictMatched = true;
                         clickTheElement(locationCardName);
                         if (isElementLoaded(windowNewFeatureEnhancements,5))

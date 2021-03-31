@@ -97,7 +97,7 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	 @FindBy(css = "tr[ng-repeat=\"kpi in kpiReports\"]")
 	 private List<WebElement> kpiReportRows;
 
-	 @FindBy(css = "div.console-navigation-item-label.Analytics")
+	 @FindBy(css = "div.console-navigation-item-label.Report")
 	 private WebElement consoleNavigationAnalytics;
 
 	 @FindBy(css = "div.lgnCheckBox")
