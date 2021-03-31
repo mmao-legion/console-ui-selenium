@@ -2887,8 +2887,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
             //Check Analytics page is display after click Analytics tab
             AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
             analyticsPage.clickOnAnalyticsConsoleMenu();
-            SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
-            dashboardPage.verifyHeaderNavigationMessage("Analytics");
+            SimpleUtils.assertOnFail("Report Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+            dashboardPage.verifyHeaderNavigationMessage("Report");
         }
 
 
