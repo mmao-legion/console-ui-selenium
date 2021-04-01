@@ -936,14 +936,14 @@ public class LocationsTest extends TestBase {
             locationsPage.validateItemsInLocations();
             //go to sub-locations tab
             locationsPage.goToSubLocationsInLocationsPage();
-            //add new MS location group-parent and child
+            //add new p2p location group-parent and child
             String  parentRelationship = "Parent location";
             String locationType = "Regular";
             locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.PTP.getValue());
             String childLocationName = "";
             try {
                 for (int i = 0; i <childLocationNum ; i++) {
-                    childLocationName = "childLocationForMS" + i +currentTime;
+                    childLocationName = "childLocationForP2P" + i +currentTime;
                     setLGPTPChildLocationName(childLocationName);
                     String  childRelationship = "Part of a location group";
                     locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);
@@ -955,15 +955,15 @@ public class LocationsTest extends TestBase {
             locationsPage.searchLocation(locationName);
             //get search result location info
             ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
-            //verify to change MS child location to None
+            //verify to change P2P child location to None
             locationsPage.changeOneLocationToNone(childLocationName);
             //search this location group again
             ArrayList<HashMap<String, String>> locationInfoDetailsAftUpdate =locationsPage.getLocationInfo(locationName);
 
             if (locationInfoDetailsAftUpdate.size() < locationInfoDetails.size()) {
-                SimpleUtils.pass("Child location:"+locationInfoDetails.get(locationInfoDetails.size()-1).get("locationName") +" was removed from this location group:"+LGMSLocationName);
+                SimpleUtils.pass("Child location:"+locationInfoDetails.get(locationInfoDetails.size()-1).get("locationName") +" was removed from this location group:"+LGPTPLocationName.get());
             }else
-                SimpleUtils.fail("Update child location to None failed",true);
+                SimpleUtils.fail("Child location was not removed from parent location",true);
             //change MS parent location to None
             locationsPage.changeOneLocationToNone(locationName);
 
@@ -1229,7 +1229,7 @@ public class LocationsTest extends TestBase {
     public void verifyUpperFieldsListPageAndSearchFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
-            String[] searchInfo = {"BU1","Level: District","Level: Region","Level: Region","status:enabled","status: disabled"};
+            String[] searchInfo = {"BU1","Level: District","Level: Region","status:enabled","status: disabled"};
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -1262,17 +1262,18 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Verify Add New District or update")
+    @TestName(description = "Verify Add New Upperfields with different level")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddOrUpdateDistrictFunction(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddUpperFieldsWithDiffLevel(String browser, String username, String password, String location) throws Exception {
 
         try{
-                SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+                SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
                 String currentTime =  dfs.format(new Date()).trim();
-                String districtName = currentTime;
-                String districtId = currentTime;
+                String upperfieldsName = currentTime;
+                String upperfieldsId = currentTime;
                 String searchChara = "Auto";
                 int index = 0;
+                String levelInfo = "District,Region,";
 
 
                 DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1285,11 +1286,16 @@ public class LocationsTest extends TestBase {
                 locationsPage.clickOnLocationsTab();
                 //check locations item
                 locationsPage.validateItemsInLocations();
-                //go to sub-district  tab
+
+                //get organization hierarchy info
+                locationsPage.goToGlobalConfigurationInLocations();
+                ArrayList<HashMap<String ,String>> organizationHierarchyInfo = locationsPage.getOrganizationHierarchyInfo();
+                locationsPage.goBackToLocationsTab();
+                //go to sub-upperfield  tab
                 locationsPage.goToUpperFieldsPage();
-                locationsPage.addNewDistrictWithoutLocation( districtName, districtId);
-                locationsPage.searchUpperFields(districtName);
-                locationsPage.updateDistrict(districtName,districtId,searchChara,index);
+                locationsPage.addNewUpperfieldsWithoutParentAndChild( upperfieldsName, upperfieldsId,searchChara,index,organizationHierarchyInfo);
+                locationsPage.searchUpperFields(upperfieldsName);
+                locationsPage.updateDistrict(upperfieldsName,upperfieldsId,searchChara,index);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
