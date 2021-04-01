@@ -461,6 +461,7 @@ public abstract class TestBase {
         String winHandleBefore =getDriver().getWindowHandle();
         for(String winHandle : getDriver().getWindowHandles()) {
             if (winHandle.equals(winHandleBefore)) {
+                getDriver().close();
                 continue;
             }
             getDriver().switchTo().window(winHandle);

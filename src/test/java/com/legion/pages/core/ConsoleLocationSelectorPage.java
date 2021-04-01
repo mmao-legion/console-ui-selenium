@@ -513,7 +513,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
     }
 
-    @FindBy(css = "[search-hint=\"Search District\"] [placeholder=\"Select...\"] .input-faked")
+    @FindBy(css = "[search-hint=\"Search District\"] input-field.picker-input .input-faked")
     private WebElement selectedDistrict;
 
     public void changeDistrictDirect() throws Exception {

@@ -670,6 +670,9 @@ public class CinemarkMinorTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            String districtName = dashboardPage.getCurrentDistrict();
 
             //Go to OP page
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -699,11 +702,12 @@ public class CinemarkMinorTest extends TestBase {
 
             //Back to Console
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByName("Business Unit", "BU1");
+            locationSelectorPage.changeUpperFieldsByName("Region", "Region1");
+            locationSelectorPage.changeDistrict(districtName);
             String minorLocation = "Test For Minors";
             locationSelectorPage.changeLocation(minorLocation);
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);

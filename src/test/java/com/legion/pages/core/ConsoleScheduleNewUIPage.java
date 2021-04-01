@@ -13204,7 +13204,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public boolean isScheduleDMView() throws Exception {
         boolean result = false;
-        if (isElementLoaded(analyticsTableInScheduleDMViewPage, 5)) {
+        if (isElementLoaded(analyticsTableInScheduleDMViewPage, 60)) {
             result = true;
         }
         return result;

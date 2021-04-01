@@ -164,8 +164,8 @@ public class SchedulingMinorTest extends TestBase {
 
             controlsNewUIPage.clickOnControlsComplianceSection();
             SimpleUtils.assertOnFail("collaboration page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
-            controlsNewUIPage.setSchedulingMinorRuleFor14N15("9:30 AM", "7:30 PM", "15", "6", "3", "5");
-            controlsNewUIPage.setSchedulingMinorRuleFor16N17("10:00 AM", "7:00 PM", "20", "7", "5", "6");
+            controlsNewUIPage.setSchedulingMinorRuleFor14N15("9:30 am", "7:30 pm", "15", "6", "3", "5");
+            controlsNewUIPage.setSchedulingMinorRuleFor16N17("10:00 am", "7:00 pm", "20", "7", "5", "6");
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
