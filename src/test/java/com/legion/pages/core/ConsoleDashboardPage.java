@@ -534,7 +534,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "[ng-show*=\"showLocation()\"]")
 	private WebElement showLocation;
 
-	@FindBy(css = "[search-hint=\"Search Location\"] input-field[placeholder=\"Select...\"] div.input-faked")
+	@FindBy(css = "[search-hint=\"Search Location\"]")
 	private WebElement currentLocation;
 
 	@FindBy(css = ".lg-search-options__option")
@@ -618,7 +618,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				SimpleUtils.fail("Dashboard Page: Location isn't present", true);
 			}
 		} else {
-			SimpleUtils.fail("Dashboard Page: Location failed to load", true);
+			SimpleUtils.fail("Dashboard Page: Location isn't present", false);
 		}
 	}
 
