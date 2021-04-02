@@ -2,7 +2,6 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.LocationsPage;
-import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
@@ -10,13 +9,10 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.testng.Assert;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
-import static com.legion.tests.TestBase.propertyMap;
 import static com.legion.tests.TestBase.switchToNewWindow;
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -51,8 +47,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement globalConfigurationInLocations;
 	@FindBy(css="[title='Locations']")
 	private WebElement locationsInLocations;
-	@FindBy(css="[title='Districts']")
-	private WebElement districtsInLocations;
+	@FindBy(css="[title='Upperfields']")
+	private WebElement upperfieldsInLocations;
 
 	// sub-location page
 	@FindBy(css = "lg-button[label=\"Add Location\"]")
@@ -92,7 +88,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public boolean isOpsPortalPageLoaded() throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(goToLocationsButton, 10))
+		if (isElementLoaded(goToLocationsButton, 150))
 			isLoaded = true;
 		return isLoaded;
 	}
@@ -110,13 +106,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void validateItemsInLocations() throws Exception {
 		if(isElementLoaded(goToConfigurationButton,5)){
 			if (isElementLoaded(enterPriseProfileInLocations,5) && isElementLoaded(globalConfigurationInLocations,5)
-			&& isElementLoaded(locationsInLocations,5) && isElementLoaded(districtsInLocations)) {
+			&& isElementLoaded(locationsInLocations,5) && isElementLoaded(upperfieldsInLocations)) {
 				SimpleUtils.pass("Location overview page show well when OPview turn on");
 			}else
 				SimpleUtils.fail("Location overview page load failed when OPview turn on",false);
 		}else {
 			if (isElementLoaded(enterPriseProfileInLocations,5)
-					&& isElementLoaded(locationsInLocations,5) && isElementLoaded(districtsInLocations)) {
+					&& isElementLoaded(locationsInLocations,5) && isElementLoaded(upperfieldsInLocations)) {
 				SimpleUtils.pass("Location overview page show well when OPview turn off");
 			}else
 				SimpleUtils.fail("Location overview page load failed when OPview turn off",false);
@@ -139,8 +135,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	//new location page
-	@FindBy(css = "input[aria-label=\"location Name\"]")
-	private WebElement locationNameInput;
+	@FindBy(css = "input[aria-label=\"Display Name\"]")
+	private WebElement displayNameInput;
+	@FindBy(css = "input[aria-label=\"Name\"]")
+	private WebElement nameInput;
 	@FindBy(css = "span[class *=locationDefault]")
 	private WebElement mockLocationName;
 	@FindBy(css = "input[aria-label=\"Location Id\"]")
@@ -155,15 +153,17 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement countrySelect;
 	@FindBy(css="input[aria-label=\"City\"]")
 	private WebElement city;
-	@FindBy(css = "select[aria-label=\"State\"]")
-	private WebElement stateSelect;
+	@FindBy(css = "ng-transclude > lg-select > div > lg-picker-input > div > input-field > ng-form")
+	private WebElement state;
+	@FindBy(xpath = "//ng-transclude/lg-select/div/lg-picker-input/div/div/ng-transclude/lg-search-options/div/div/div[1]/div")
+	private WebElement firstState;
 	@FindBy(css="input[aria-label=\"Zip Code\"]")
 	private WebElement zipCode;
-	@FindBy(css="input[aria-label=\"primary contact\"]")
+	@FindBy(css="input[aria-label=\"Primary Contact\"]")
 	private WebElement primaryContact;
-	@FindBy(css="input[aria-label=\"Phone number\"]")
+	@FindBy(css="input[aria-label=\"Phone Number\"]")
 	private WebElement phoneNumber;
-	@FindBy(css="input[aria-label=\"Email address\"]")
+	@FindBy(css="input[aria-label=\"Email Address\"]")
 	private WebElement emailAddress;
 	@FindBy(css="input-field[label=\"Source Location\"] > ng-form > div.input-choose > span")
 	private WebElement selectOneInSourceLocation;
@@ -187,14 +187,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "select[aria-label=\"Configuration Type\"]")
 	private WebElement configTypeSelect;
 
-	@FindBy(css="input-field[label=\"Effective date\"]")
+	@FindBy(css="input-field[label=\"Effective Date\"]")
 	private WebElement effectiveDateSelect;
 	@FindBy(css = "div.lg-single-calendar-date-wrapper")
 	private WebElement firstDay;
 	@FindBy(css = "a[ng-click=\"$ctrl.changeMonth(-1)\"]")
 	private List<WebElement> previousMonthBtn;
 
-	@FindBy(css="lg-button[label=\"Create location\"]")
+	@FindBy(css="lg-button[label=\"Create Location\"]")
 	private WebElement createLocationBtn;
 	@FindBy(css="lg-button[label=\"Cancel\"]")
 	private WebElement cancelBtn;
@@ -204,13 +204,18 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
-			locationNameInput.sendKeys(locationName);
+			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			locationId.sendKeys(getLocationName());
+			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			waitForSeconds(3);
+//			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			clickTheElement(state);
+			waitForSeconds(3);
+			clickTheElement(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			if (isElementEnabled(configTypeSelect,5)) {
@@ -232,7 +237,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement searchInput;
 	@FindBy(css = ".lg-search-icon")
 	private WebElement searchBtn;
-	@FindBy(xpath = "//table/tbody/tr[2]/td[1]/lg-button/button/span/span")
+	@FindBy(xpath = "//table/tbody/tr[2]/td[1]/div/lg-button/button/span/span")
 	private WebElement locationsName;
 
 	@Override
@@ -243,7 +248,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			searchInput.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
 			if (locationsName.getText().trim().equalsIgnoreCase(locationName.trim())) {
-				SimpleUtils.pass("the location is searched ");
+				SimpleUtils.pass("the location is searched");
 				return true;
 			}
 		}else
@@ -255,13 +260,17 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void addNewRegularLocationWithAllFields(String locationName, String searchCharactor,int index) throws Exception {
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
-			locationNameInput.sendKeys(locationName);
+			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			locationId.sendKeys(getLocationName());
+			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+//			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			clickTheElement(state);
+			waitForSeconds(3);
+			clickTheElement(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -291,7 +300,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (isElementEnabled(selectALocationTitle,5)) {
 				searchInputInSelectALocation.sendKeys(searchCharactor);
 				searchInputInSelectALocation.sendKeys(Keys.ENTER);
-				waitForSeconds(5);
+				waitForSeconds(20);
 				if (locationRowsInSelectLocation.size()>0) {
 				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"radio\"]"));
 				click(firstRow);
@@ -308,7 +317,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(selectALocationTitle,5)) {
 			searchInputInSelectALocation.sendKeys(searchCharactor);
 			searchInputInSelectALocation.sendKeys(Keys.ENTER);
-			waitForSeconds(5);
+			waitForSeconds(15);
 			if (locationRowsInSelectLocation.size()>0) {
 				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"checkbox\"]"));
 				click(firstRow);
@@ -321,9 +330,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-	@FindBy(css = "select[aria-label=\"location Type\"]")
+	@FindBy(css = "select[aria-label=\"Location Type\"]")
 	private WebElement locationTypeSelector;
-	@FindBy(css="input-field[label=\"Select Base Location to Mock \"] > ng-form > div.input-choose > span")
+	@FindBy(css=" input-field:nth-child(2) > ng-form > div.input-choose.ng-scope > span")
 	private WebElement selectOneInBaseLocation;
 	@FindBy(css="lg-button[label=\"Leave this page\"]")
 	private WebElement leaveThisPageBtn;
@@ -362,7 +371,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement cancelBtnInImportLocationPage;
 	@FindBy(css = "lg-button[label=\"Import\"]")
 	private WebElement importBtnInImportLocationPage;
-	@FindBy(css = "lg-button[label=\"Ok\"]")
+	@FindBy(css = "lg-button[label=\"OK\"]")
 	private WebElement okBtnInImportLocationPage;
 	@FindBy(css = "div[ng-if=\"loaded\"]>div:nth-child(4)")
 	private WebElement importFileLoadSuccessMessage;
@@ -370,13 +379,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void verifyImportLocationDistrict() {
+		  String pth = System.getProperty("user.dir");
 		if (isElementEnabled(importBtn,5)) {
 			click(importBtn);
 			if (verifyImportLocationsPageShow()) {
 				SimpleUtils.pass("Import location page show well");
 			}else
 				SimpleUtils.fail("Import location page load failed",true);
-			uploaderFileInputBtn.sendKeys("D:\\Automation\\console-ui-selenium\\src\\test\\resources\\LocationImportTemplate.csv");
+			uploaderFileInputBtn.sendKeys(pth+"/src/test/resources/LocationImportTemplate.csv");
 			waitForSeconds(5);
 			click(importBtnInImportLocationPage);
 			waitForSeconds(15);
@@ -428,13 +438,17 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,newLocationParas.get("Location_Type_NSO"));
-			locationNameInput.sendKeys(locationName);
+			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			locationId.sendKeys(getLocationName());
+			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+//			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			clickTheElement(state);
+			waitForSeconds(3);
+			clickTheElement(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -449,7 +463,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectLocationOrDistrict(searchCharactor,index);
 			click(effectiveDateSelect);
 			click(previousMonthBtn.get(0));
-			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Effective date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(8)")));
+			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Effective Date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(8)")));
 
 			click(launchDateSelecter);
 			click(previousMonthBtn.get(1));
@@ -487,6 +501,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		String[] searchLocationCha = searchInputText.split(",");
 		if (isElementLoaded(searchInput, 10) ) {
 			for (int i = 0; i < searchLocationCha.length; i++) {
+				searchInput.clear();
 				searchInput.sendKeys(searchLocationCha[0]);
 				searchInput.sendKeys(Keys.ENTER);
 				waitForSeconds(3);
@@ -537,10 +552,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				}
 			}else
 					SimpleUtils.report("This location has disabled");
-			}else
-			SimpleUtils.fail("Location can not be clickable",true);
+		}else
+			SimpleUtils.fail("Location can not been searched",true);
 		  return disableLocationName;
-		}
+	}
 
 	@FindBy(className = "modal-content")
 	private WebElement disableLocationAlertPage;
@@ -589,17 +604,17 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Export location page show well");
 			}else
 				SimpleUtils.fail("Export location page load failed",true);
-
+			waitForSeconds(2);
 			click(exportAllRadio);
 			click(okBtnInExportLocationPage);
 			waitForSeconds(10);
 
-			TimeZone timeZone = TimeZone.getTimeZone("America/Chicago");
-			SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM");
-			dfs.setTimeZone(timeZone);
-			String currentTime =  dfs.format(new Date());
-			String downloadPath = propertyMap.get("Download_File_Default_Dir");//when someone run ,need to change this path
-			Assert.assertTrue(FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "LEG-"), "Download successfully");
+//			TimeZone timeZone = TimeZone.getTimeZone("America/Chicago");
+//			SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM");
+//			dfs.setTimeZone(timeZone);
+//			String currentTime =  dfs.format(new Date());
+//			String downloadPath = propertyMap.get("Download_File_Default_Dir");//when someone run ,need to change this path
+//			Assert.assertTrue(FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "LEG-"), "Download successfully");
 
 		}else
 			SimpleUtils.fail("Export button load failed",true);
@@ -637,12 +652,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(okBtnInExportLocationPage);
 			waitForSeconds(10);
 
-			TimeZone timeZone = TimeZone.getTimeZone("America/Chicago");
-			SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM");
-			dfs.setTimeZone(timeZone);
-			String currentTime =  dfs.format(new Date());
-			String downloadPath = propertyMap.get("Download_File_Default_Dir");//when someone run ,need to change this path
-			Assert.assertTrue(FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "LEG-"+currentTime), "Download successfully");
+//			TimeZone timeZone = TimeZone.getTimeZone("America/Chicago");
+//			SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM");
+//			dfs.setTimeZone(timeZone);
+//			String currentTime =  dfs.format(new Date());
+//			String downloadPath = propertyMap.get("Download_File_Default_Dir");//when someone run ,need to change this path
+//			System.out.println(downloadPath);
+//			Assert.assertTrue(FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "LEG-"), "Download successfully");
 
 		}else
 			SimpleUtils.fail("Export button load failed",true);
@@ -696,8 +712,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			click(locationDetailsLinks.get(0));
 			click(editLocationBtn);
-			locationNameInput.clear();
-			locationNameInput.sendKeys(locationName+"update");
+			displayNameInput.clear();
+			displayNameInput.sendKeys(locationName+"update");
 			setLocationName(locationName);
 			locationId.clear();
 			locationId.sendKeys(getLocationName());
@@ -742,7 +758,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			searchInput.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
 			if (locationRows.size() > 0) {
-
+				SimpleUtils.pass("Search parent location successfully and show parent and all sub-location ");
 				for (WebElement row : locationRows) {
 					HashMap<String, String> locationInfoInEachRow = new HashMap<>();
 					locationInfoInEachRow.put("locationName", row.findElement(By.cssSelector("button[type='button']")).getText());
@@ -752,8 +768,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					locationInfoInEachRow.put("locationDistrict", row.findElement(By.cssSelector("td:nth-child(7) ")).getText());
 					locationinfo.add(locationInfoInEachRow);
 				}
-
-
 				return locationinfo;
 			}else
 				SimpleUtils.fail(locationName + "can't been searched", true);
@@ -764,7 +778,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "select[aria-label=\"Location Group Setting\"]")
 	private WebElement locationGroupSelect;
-	@FindBy(css = "input-field[value=\"'Select parent location'\"] > ng-form > div.input-choose.ng-scope > span")
+	@FindBy(css = "inline-input:nth-child(2) > ng-transclude > div > input-field > ng-form > div.input-choose.ng-scope > span")
 	private WebElement selectParentLocation;
 
 	@Override
@@ -772,16 +786,20 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,locationType);
-			locationNameInput.sendKeys(childlocationName);
+			displayNameInput.sendKeys(childlocationName);
 			setLocationName(childlocationName);
 			selectByVisibleText(locationGroupSelect,newLocationParas.get(childRelationship));
 			click(selectParentLocation);
 			selectLocationOrDistrict(locationName,index);
 			locationId.sendKeys(getLocationName());
+			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+//			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			clickTheElement(state);
+			waitForSeconds(3);
+			clickTheElement(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -809,15 +827,19 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,locationType);
-			locationNameInput.sendKeys(locationName);
+			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			selectByVisibleText(locationGroupSelect,newLocationParas.get(parentRelationship));
 			click(getDriver().findElement(By.cssSelector("input[aria-label=\""+value+"\"] ")));
 			locationId.sendKeys(getLocationName());
+			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+//			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			clickTheElement(state);
+			waitForSeconds(3);
+			clickTheElement(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -847,15 +869,19 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,locationType);
-			locationNameInput.sendKeys(locationName);
+			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			selectByVisibleText(locationGroupSelect,newLocationParas.get(parentRelationship));
 			click(getDriver().findElement(By.cssSelector("input[aria-label=\""+value+"\"] ")));
 			locationId.sendKeys(getLocationName());
+			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+//			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			clickTheElement(state);
+			waitForSeconds(3);
+			clickTheElement(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -870,7 +896,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectLocationOrDistrict(searchCharactor,index);
 			click(effectiveDateSelect);
 			click(previousMonthBtn.get(0));
-			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Effective date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(8)")));
+			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Effective Date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(8)")));
 
 			click(launchDateSelecter);
 			click(previousMonthBtn.get(1));
@@ -900,16 +926,20 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(addLocationBtn,5)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,locationType);
-			locationNameInput.sendKeys(childLocationName);
+			displayNameInput.sendKeys(childLocationName);
 			setLocationName(childLocationName);
 			selectByVisibleText(locationGroupSelect,newLocationParas.get(childRelationship));
 			click(selectParentLocation);
 			selectLocationOrDistrict(locationName,index);
 			locationId.sendKeys(getLocationName());
+			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect,newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
-			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+//			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			clickTheElement(state);
+			waitForSeconds(3);
+			clickTheElement(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -923,7 +953,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 			click(effectiveDateSelect);
 			click(previousMonthBtn.get(0));
-			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Effective date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(8)")));
+			click(getDriver().findElement(By.cssSelector("lg-picker-input[label=\"Effective Date\"] > div > div > ng-transclude > lg-single-calendar > div.lg-single-calendar-body > div.lg-single-calendar-date-wrapper > div:nth-child(8)")));
 
 			click(launchDateSelecter);
 			click(previousMonthBtn.get(1));
@@ -993,7 +1023,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(locationGroupSelect, locationRelationship);
 			click(selectParentLocation);
 			selectLocationOrDistrict(parentLocation,1);
-			locationId.sendKeys(parentLocation);
 			scrollToBottom();
 			click(saveBtnInUpdateLocationPage);
 			waitForSeconds(5);
@@ -1002,7 +1031,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("No search result",true);
 		waitForSeconds(10);
 		searchLocation(locationName);
-		if (!verifyIsThisLocationGroup()) {
+		if (verifyIsThisLocationGroup()) {
 			SimpleUtils.pass("Change None location to child successfully");
 		}else
 			SimpleUtils.fail("Change location to child Location failed",true);
@@ -1100,29 +1129,26 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void changeOneLocationToNone(String locationToNone) throws Exception {
-		//update parent location to None
+		//update  location group  to None
+		searchInput.clear();
+		searchLocation(locationToNone);
 		if (locationRows.size()>0) {
 			if (verifyIsThisLocationGroup()) {
-				for (WebElement eachRow: locationRows
-					 ) {
-					if (eachRow.findElement(By.cssSelector("button[type='button']")).getText().contains(locationToNone)) {
-						click(eachRow.findElement(By.cssSelector("button[type='button']")));
-					}
-				}
-//				List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
-//				click(locationDetailsLinks.get(0));
+				List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
+				click(locationDetailsLinks.get(0));
 				click(editLocationBtn);
 				selectByVisibleText(locationGroupSelect, "None");
+				waitForSeconds(5);
 				click(okBtnInLocationGroupConfirmPage);
 				scrollToBottom();
 				click(saveBtnInUpdateLocationPage);
 			}else
-				SimpleUtils.fail("It's not a parent location",true);
+				SimpleUtils.fail("It's not a parent location",false);
 		}
 		waitForSeconds(10);
 		searchLocation(locationToNone);
 		if (!verifyIsThisLocationGroup()) {
-			SimpleUtils.pass(locationToNone+" was updated to None");
+			SimpleUtils.pass(locationToNone+" was updated to None successfully");
 		}else
 			SimpleUtils.fail("Update failed",true);
 
@@ -1136,7 +1162,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			 ) {
 			iconInfoOfLG.add(icon.getAttribute("ng-src"));
 		}
-		if (iconInfoOfLG.contains("img/legion/lgComponents/group.svg") ) {
+		if (iconInfoOfLG.contains("img/legion/lgComponents/group.svg")){
+			return true;
+		} else if (iconInfoOfLG.contains("img/legion/lgComponents/group-master-slave.svg")){
+			return true;
+		}else if (iconInfoOfLG.contains("img/legion/lgComponents/group-peer-to-peer.svg")){
 			return true;
 		}else
 			return false;
@@ -1150,8 +1180,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	// Added by Fiona
 	// sub dsitrict page
-	@FindBy(css = "lg-button[label=\"Add District\"]")
-	private WebElement addDistrictButton;
+	@FindBy(css = "lg-button[label=\"Add Upperfield\"]")
+	private WebElement addUpperfieldsButton;
 
 	@FindBy(css = "input[placeholder=\"You can search by name,id.\"]")
 	private WebElement districtSearchInputBox;
@@ -1204,9 +1234,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void goToSubDistrictsInLocationsPage() throws Exception {
-		if (isElementLoaded(districtsInLocations, 20)) {
-			click(districtsInLocations);
-			if (isElementEnabled(addDistrictButton, 20)) {
+		if (isElementLoaded(upperfieldsInLocations, 20)) {
+			click(upperfieldsInLocations);
+			if (isElementEnabled(addUpperfieldsButton, 20)) {
 				SimpleUtils.pass("sub-district page load successfully");
 			} else
 				SimpleUtils.fail("sub-dsitrict page load failed", false);
@@ -1216,7 +1246,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void validateTheAddDistrictBtn() throws Exception {
-		if (isElementLoaded(addDistrictButton, 5)) {
+		if (isElementLoaded(addUpperfieldsButton, 5)) {
 			SimpleUtils.pass("Add new district button shows well");
 		} else {
 			SimpleUtils.pass("Add new district button doesn't show");
@@ -1354,8 +1384,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public boolean verifyDistrictListShowWellOrNot() throws Exception {
-		waitForSeconds(5);//to wait the district load well
-		if (isElementLoaded(backBtnInDistrictListPage,3) && isElementLoaded(addDistrictButton,3)
+
+		waitForSeconds(30);
+		if (isElementLoaded(backBtnInDistrictListPage,3) && isElementLoaded(addUpperfieldsButton,3)
 		&& isElementLoaded(districtSearchInputBox,3) && isElementLoaded(smartCardInDistrictListPage,3)
 		&& isElementLoaded(pageLeftBtnInDistrict,3) && isElementLoaded(pageRightBtnInDistrict,3)
 		) {
@@ -1375,19 +1406,84 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
+	@Override
+	public void verifyPaginationFunctionInLocation() throws Exception {
+		waitForSeconds(20);
+		if (isElementLoaded(pageNumSelector,3)) {
+			int minPageNum = 1;
+			String iniPageText = pageNumberText.getText().trim();
+			String[] maxPageNumberOri = iniPageText.split("of");
+			int maxPageNumber = Integer.valueOf(maxPageNumberOri[1].trim());
+			if (maxPageNumber == minPageNum && pageLeftBtnInDistrict.getAttribute("class").contains("disabled")
+					&& pageRightBtnInDistrict.getAttribute("class").contains("disabled")) {
+				SimpleUtils.pass("There is only one page");
+			}else {
+				for (int i = 1; i <= Integer.valueOf(maxPageNumber); i++) {
+					selectByVisibleText(pageNumSelector,String.valueOf(i));
+					if (i <= Integer.valueOf(maxPageNumber)) {
+						SimpleUtils.pass("Page " +i +" Select work well");
+					}else
+						SimpleUtils.fail("Page select doesn't work",true);
+				}
+				waitForSeconds(5);
+				String firstLineText = locationRows.get(0).getText();
+				click(pageLeftBtnInDistrict);
+				String firstLineTextAftLeft = locationRows.get(0).getText();
+				if (!firstLineTextAftLeft.equalsIgnoreCase(firstLineText) ) {
+					SimpleUtils.pass("Left pagination button work well" );
+				}else
+					SimpleUtils.fail("Left pagination button work wrong",false);
+				click(pageRightBtnInDistrict);
+				String firstLineTextAftRight = locationRows.get(0).getText();
+				if (!firstLineTextAftRight.equalsIgnoreCase(firstLineTextAftLeft) ) {
+					SimpleUtils.pass("Right pagination button work well");
+				}else
+					SimpleUtils.fail("Right pagination button work wrong",false);
+
+			}
+
+		}else
+			SimpleUtils.fail("Page select load failed",true);
+
+	}
+
 
 	@Override
-	public void verifyPaginationFunction() throws Exception {
+	public void verifyPaginationFunctionInDistrict() throws Exception {
+		waitForSeconds(20);
 		if (isElementLoaded(pageNumSelector,3)) {
-           String iniPageText = pageNumberText.getText().trim();
-			String maxPageNumber = iniPageText.substring(iniPageText.length()-1);
-			for (int i = 1; i < Integer.valueOf(maxPageNumber); i++) {
-				selectByVisibleText(pageNumSelector,String.valueOf(i));
-				if (i <= Integer.valueOf(maxPageNumber)) {
-					SimpleUtils.pass("Page Select work well");
+			int minPageNum = 1;
+            String iniPageText = pageNumberText.getText().trim();
+			String[] maxPageNumberOri = iniPageText.split("of");
+			int maxPageNumber = Integer.valueOf(maxPageNumberOri[1].trim());
+			if (maxPageNumber == minPageNum && pageLeftBtnInDistrict.getAttribute("class").contains("disabled")
+			&& pageRightBtnInDistrict.getAttribute("class").contains("disabled")) {
+				SimpleUtils.pass("There is only one page");
+			}else {
+				for (int i = 1; i <= Integer.valueOf(maxPageNumber); i++) {
+					selectByVisibleText(pageNumSelector,String.valueOf(i));
+					if (i <= Integer.valueOf(maxPageNumber)) {
+						SimpleUtils.pass("Page " +i +" Select work well");
+					}else
+						SimpleUtils.fail("Page select doesn't work",true);
+				}
+				waitForSeconds(5);
+				String firstLineText = districtsRows.get(0).getText();
+				click(pageLeftBtnInDistrict);
+				String firstLineTextAftLeft = districtsRows.get(0).getText();
+				if (!firstLineTextAftLeft.equalsIgnoreCase(firstLineText) ) {
+					SimpleUtils.pass("Left pagination button work well" );
 				}else
-					SimpleUtils.fail("Page select doesn't work",true);
+					SimpleUtils.fail("Left pagination button work wrong",false);
+				click(pageRightBtnInDistrict);
+				String firstLineTextAftRight = districtsRows.get(0).getText();
+				if (!firstLineTextAftRight.equalsIgnoreCase(firstLineTextAftLeft) ) {
+					SimpleUtils.pass("Right pagination button work well");
+				}else
+					SimpleUtils.fail("Right pagination button work wrong",false);
+
 			}
+
 		}else
 			SimpleUtils.fail("Page select load failed",true);
 
@@ -1405,9 +1501,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy( css =".console-detail")
 	private WebElement districtDetailsPage;
-	@FindBy( css ="input[aria-label=\"district Name\"]")
+	@FindBy( css ="input[aria-label=\"District Name\"]")
 	private WebElement districtNameInput;
-	@FindBy( css ="input[aria-label=\"district Id\"]")
+	@FindBy( css ="input[aria-label=\"District Id\"]")
 	private WebElement districtIdInput;
 	@FindBy( css ="select[aria-label=\"District Manager\"]")
 	private WebElement districtManagerSelector;
@@ -1419,18 +1515,18 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement uploadImageBtn;
 	@FindBy( css ="lg-button[label=\"Manage\"]")
 	private WebElement ManagerBtnInDistrictCreationPage;
-	@FindBy( css ="lg-button[label=\"Create district\"]")
+	@FindBy( css ="lg-button[label=\"Create District\"]")
 	private WebElement createDistrictBtnInDistrictCreationPage;
-	@FindBy( css ="lg-button[label=\"Cancel district\"]")
+	@FindBy( css ="lg-button[label=\"Cancel\"]")
 	private WebElement CancelDistrictBtnInDistrictCreationPage;
 
 	@Override
-	public void addNewDistrict(String districtName, String districtId, String districtManager,String searchChara,int index) throws Exception {
-		click(addDistrictButton);
+	public void addNewDistrict(String districtName, String districtId, String searchChara,int index) throws Exception {
+		click(addUpperfieldsButton);
 		if (districtCreateLandingPageShowWell()) {
 			districtNameInput.sendKeys(districtName);
 			districtIdInput.sendKeys(districtId);
-			selectByIndex(districtManagerSelector,0);
+			selectByIndex(districtManagerSelector,1);
 			waitForSeconds(3);
 			click(ManagerBtnInDistrictCreationPage);
 			managerDistrictLocations(searchChara,index);
@@ -1485,10 +1581,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			districtIdInput.clear();
 			waitForSeconds(2);
 			if (isElementEnabled(districtIdChangePopUpWin,3)) {
-				click(okBtnInImportLocationPage);
+				click(okBtnInLocationGroupConfirmPage);
 				districtIdInput.sendKeys(districtName+"update");
 			}else
 				SimpleUtils.fail("District id change window not show",true);
+			scrollToBottom();
 			click(ManagerBtnInDistrictCreationPage);
 			managerDistrictLocations(searchChara,index);
 			scrollToBottom();
@@ -1543,14 +1640,16 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public void addNewDistrictWithoutLocation(String districtName, String districtId, String districtManager) throws Exception {
-		click(addDistrictButton);
+	public void addNewDistrictWithoutLocation(String districtName, String districtId) throws Exception {
+		click(addUpperfieldsButton);
 		if (districtCreateLandingPageShowWell()) {
 			districtNameInput.sendKeys(districtName);
 			districtIdInput.sendKeys(districtId);
-			selectByIndex(districtManagerSelector,0);
+//			selectByIndex(districtManagerSelector,1);
+			scrollToBottom();
 			click(createDistrictBtnInDistrictCreationPage);
-			SimpleUtils.report("District creation done");
+
+			SimpleUtils.report("District creation done  :"+districtName);
 			waitForSeconds(10);
 		}else
 			SimpleUtils.fail("District landing page load failed",true);
@@ -1595,5 +1694,450 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return null;
 	}
 
+
+	//added by Estelle
+	@FindBy(css = "input-field[label=\"Parent Child\"]")
+	private  WebElement msRadio;
+	@FindBy(css = "input-field[label=\"Peer to Peer\"]")
+	private  WebElement p2pRadio;
+
+	@FindBy(css = "lg-button[label=\"Leave this page\"]")
+	private  WebElement leaveThisPage;
+	@Override
+	public void verifyTheFiledOfLocationSetting() throws Exception {
+		if (isElementEnabled(addLocationBtn,5)) {
+			clickTheElement(addLocationBtn);
+			clickTheElement(locationGroupSelect);
+			//			if (locationGroupSelect.getAttribute("option").contains("None") && locationGroupSelect.getAttribute("option").contains("Part of a location group")&&
+//					locationGroupSelect.getAttribute("option").contains("Parent location")) {
+//				SimpleUtils.pass("Location group setting field should include:None, Parent location ,Part of a location group");
+				selectByVisibleText(locationGroupSelect,"Parent location");
+				if (isElementEnabled(msRadio,3)&&isElementEnabled(p2pRadio,3)) {
+					SimpleUtils.pass("there are two radio button:Parent child(default) ,Peer to peer after select parent location");
+					selectByVisibleText(locationGroupSelect,"Part of a location group");
+					if (isElementEnabled(selectParentLocation,3)) {
+						SimpleUtils.pass("there is one link named select parent location after select part of a location group");
+
+						//back to location list page
+						clickTheElement(backBtnInLocationDetailsPage);
+						clickTheElement(leaveThisPage);
+						waitForSeconds(3);
+						SimpleUtils.pass("The fields of location group show well");
+					}else {
+						SimpleUtils.fail("select parent location load failed",false);
+					}
+				} else {
+					SimpleUtils.fail("MS and p2p radio button load failed",false);
+				}
+			}else {
+				SimpleUtils.fail("Location group setting field show wrong",false);
+			}
+		}
+
+	@FindBy(css = "lg-dashboard-card[title=\"Dynamic Groups\"]")
+	private  WebElement dynamicGroupCard;
+	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"workForceSharingDg\"]")
+	private  WebElement workForceSharingDg;
+	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"clockinDg\"]")
+	private  WebElement clockInDg;
+	@FindBy(css = "lg-button[label=\"Test\"]")
+	private  WebElement testBtn;
+	@FindBy(css = "input[aria-label=\"Group Name\"]")
+	private  WebElement groupNameInput;
+	@FindBy(css = "input-field[value=\"$ctrl.dynamicGroup.description\"] >ng-form>input")
+	private  WebElement groupDescriptionInput;
+	@FindBy(css = "select.ng-pristine.ng-untouched.ng-valid")
+	private  WebElement criteriaSelect;
+	@FindBy(css = "lg-button[label=\"Add More\"]")
+	private  WebElement addMoreBtn;
+
+	@FindBy(css = "i.deleteRule")
+	private  List<WebElement> deleteRuleIcon;
+	@FindBy(css = "lg-button[icon=\"'img/legion/add.png'\"]")
+	private  List<WebElement> addDynamicGroupBtn;
+	@FindBy(css = "input[placeholder=\"You can search by name and description\"]")
+	private  List<WebElement> dgSearchInput;
+	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"clockinDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr:nth-child(2) > td.tr > div > lg-button:nth-child(1) > button")
+	private  List<WebElement> editDGIconInClockIn;
+	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"workForceSharingDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr:nth-child(2) > td.tr > div > lg-button:nth-child(1)")
+	private  List<WebElement> editDGIconInWFS;
+	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"workForceSharingDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr.ng-scope > td.tr > div > lg-button:nth-child(2)")
+	private  List<WebElement> deleteDGIconInWFS;
+	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"clockinDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr.ng-scope > td.tr > div > lg-button:nth-child(2)")
+	private  List<WebElement> deleteDGIconInClockIn;
+
+	@FindBy(css = "tr[ng-repeat=\"group in filterdynamicGroups\"]")
+	private  List<WebElement> groupRows;
+	@FindBy(css = "lg-picker-input[value=\"group.values\"]")
+	private  WebElement criteriaValue;
+	@FindBy(css = "input[placeholder=\"Search \"")
+	private  WebElement searchBoxInCriteriaValue;
+	@FindBy(css = "input-field[type=\"checkbox\"]")
+	private  List<WebElement> checkboxInCriteriaValue;
+	@FindBy(css = "modal[modal-title=\"Remove Dynamic Group\"]")
+	private  WebElement removeDGPopup;
+	@FindBy(css = "ng-transclude.lg-modal__body")
+	private  WebElement removeDGPopupDes;
+	@FindBy(css = "lg-button[label=\"Remove\"]")
+	private  WebElement removeBtnInRemovDGPopup;
+	@FindBy(css = "div.mappingLocation.mt-20.ng-scope > span")
+	private  WebElement testBtnInfo;
+
+
+
+
+
+	@Override
+	public void iCanSeeDynamicGroupItemInLocationsTab() {
+		if (isElementEnabled(dynamicGroupCard,5)) {
+			SimpleUtils.pass("Dynamic group card is shown");
+			String contextInfo = dynamicGroupCard.getText();
+			if (contextInfo.contains("Dynamic Group") && contextInfo.contains("Dynamic Group Configuration") &&
+				contextInfo.contains("Work Force Sharing Group") &&contextInfo.contains("Dynamic Group") ) {
+				SimpleUtils.pass("Title and description show well");
+			}else
+				SimpleUtils.fail("Title and description are wrong",false);
+		}else
+			SimpleUtils.fail("There is no dynamic group card",false);
+	}
+
+	@Override
+	public void goToDynamicGroup() {
+		if (isElementEnabled(dynamicGroupCard,5)) {
+			click(dynamicGroupCard);
+			waitForSeconds(15);
+			if (isElementEnabled(workForceSharingDg,5)) {
+				SimpleUtils.pass("Can go to dynamic group page successfully");
+			}else
+				SimpleUtils.fail("Go to dynamic group page failed",false);
+		}
+	}
+	@FindBy(css = "textarea[id=\"omjob\"]")
+	private WebElement formulaInputBox;
+	@Override
+	public String addWorkforceSharingDGWithOneCriteria(String groupName, String description, String criteria) throws Exception {
+		if (areListElementVisible(addDynamicGroupBtn)) {
+			click(addDynamicGroupBtn.get(0));
+			if (isManagerDGpopShowWell()) {
+				groupNameInput.sendKeys(groupName);
+				groupDescriptionInput.sendKeys(description);
+				selectByVisibleText(criteriaSelect,criteria);
+				if (!isElementEnabled(formulaInputBox)) {
+					click(criteriaValue);
+					click(checkboxInCriteriaValue.get(0));
+					click(testBtn);
+					String testInfo = testBtnInfo.getText().trim();
+					click(okBtnInSelectLocation);
+					waitForSeconds(3);
+					searchWFSDynamicGroup(groupName);
+					if (groupRows.size()>0) {
+						SimpleUtils.pass("Dynamic group create successfully");
+					}else
+						SimpleUtils.fail("Dynamic group create failed",false);
+					return testInfo;
+				}else
+					formulaInputBox.sendKeys("Parent(1)");
+					click(okBtnInSelectLocation);
+					waitForSeconds(3);
+
+
+			}else
+				SimpleUtils.fail("Manager Dynamic Group win load failed",false);
+		}else
+			SimpleUtils.fail("Global dynamic group page load failed",false);
+
+		 return null;
+	}
+
+	@Override
+	public void iCanDeleteExistingWFSDG() {
+		waitForSeconds(20);
+		if (groupRows.size()>0) {
+			if (areListElementVisible(deleteDGIconInWFS,30)) {
+				for (WebElement dg: deleteDGIconInWFS) {
+					waitForSeconds(10);
+					click(dg);
+					if (isRemoveDynamicGroupPopUpShowing()) {
+						waitForSeconds(3);
+						click(removeBtnInRemovDGPopup);
+					}else
+						SimpleUtils.fail("loRemove dynamic group page load failed ",false);
+				}
+
+			}else
+				SimpleUtils.report("There is not dynamic group yet");
+		}else
+			SimpleUtils.report("There is no groups which selected");
+
+
+	}
+	@Override
+	public void iCanDeleteExistingClockInDG() {
+		waitForSeconds(20);
+		if (groupRows.size()>0) {
+			if (areListElementVisible(deleteDGIconInClockIn,30)) {
+				for (WebElement dg: deleteDGIconInClockIn) {
+					waitForSeconds(10);
+					click(dg);
+					if (isRemoveDynamicGroupPopUpShowing()) {
+						waitForSeconds(3);
+						click(removeBtnInRemovDGPopup);
+					}else
+						SimpleUtils.fail("loRemove dynamic group page load failed ",false);
+				}
+
+			}else
+				SimpleUtils.report("There is not dynamic group yet");
+		}else
+			SimpleUtils.report("There is no groups which selected");
+
+
+	}
+
+	@Override
+	public String updateWFSDynamicGroup(String groupName, String criteriaUpdate) throws Exception {
+		waitForSeconds(3);
+		click(editDGIconInWFS.get(0));
+		if (isManagerDGpopShowWell()) {
+			groupNameInput.clear();
+			groupNameInput.sendKeys(groupName+"Update");
+			selectByVisibleText(criteriaSelect,criteriaUpdate);
+			click(criteriaValue);
+			click(checkboxInCriteriaValue.get(0));
+			click(testBtn);
+			String testInfo = testBtnInfo.getText().trim();
+			click(okBtnInSelectLocation);
+			waitForSeconds(3);
+			searchWFSDynamicGroup(groupName);
+			if (groupRows.size()>0) {
+				SimpleUtils.pass("Dynamic group create successfully");
+			}else
+				SimpleUtils.fail("Dynamic group create failed",false);
+			return testInfo;
+		}else
+			SimpleUtils.fail("Manager Dynamic Group win load failed",false);
+		return null;
+	}
+
+	private boolean isRemoveDynamicGroupPopUpShowing() {
+		if (isElementEnabled(removeDGPopup,5) && removeDGPopupDes.getText().contains("Are you sure you want to remove this dynamic group?")
+		&& isElementEnabled(removeBtnInRemovDGPopup,5)) {
+			SimpleUtils.pass("Remove dynamic group page show well");
+			return true;
+		}
+		return false;
+	}
+
+	@FindBy(css = "modal[modal-title=\"Manage Dynamic Group\"]>div")
+	private WebElement managerDGpop;
+	private boolean isManagerDGpopShowWell() {
+		if (isElementEnabled(managerDGpop,5)&& isElementEnabled(groupNameInput,5)&&
+				isElementEnabled(groupDescriptionInput,5)&&isElementEnabled(criteriaSelect,5)
+		&& isElementEnabled(testBtn,5) && isElementEnabled(addMoreBtn,5)) {
+			SimpleUtils.pass("Manager Dynamic Group win show well");
+			return true;
+		}else
+			return false;
+	}
+	@Override
+	public void searchClockInDynamicGroup(String searchInputText) throws Exception {
+		scrollToBottom();
+		String[] searchLocationCha = searchInputText.split(",");
+		if (areListElementVisible(dgSearchInput, 10) ) {
+			for (int i = 0; i < searchLocationCha.length; i++) {
+				dgSearchInput.get(1).clear();
+				dgSearchInput.get(1).sendKeys(searchLocationCha[0]);
+//				dgSearchInput.get(0).sendKeys(Keys.ENTER);
+				waitForSeconds(3);
+				if (groupRows.size()>0) {
+					SimpleUtils.pass("Dynamic group: " + groupRows.size() + " group(s) found  ");
+					break;
+				} else {
+					dgSearchInput.clear();
+				}
+			}
+
+		} else {
+			SimpleUtils.fail("Search input is not clickable", true);
+		}
+
+	}
+
+	@Override
+	public String addClockInDGWithOneCriteria(String groupName, String description, String criteria) throws Exception {
+
+		if (areListElementVisible(addDynamicGroupBtn)) {
+			click(addDynamicGroupBtn.get(1));
+			if (isManagerDGpopShowWell()) {
+				groupNameInput.sendKeys(groupName);
+				groupDescriptionInput.sendKeys(description);
+				selectByVisibleText(criteriaSelect,criteria);
+				click(criteriaValue);
+				click(checkboxInCriteriaValue.get(0));
+				click(testBtn);
+				String testInfo = testBtnInfo.getText().trim();
+				click(okBtnInSelectLocation);
+				waitForSeconds(3);
+				searchClockInDynamicGroup(groupName);
+				if (groupRows.size()>0) {
+					SimpleUtils.pass("Dynamic group create successfully");
+				}else
+					SimpleUtils.fail("Dynamic group create failed",false);
+				return testInfo;
+			}else
+				SimpleUtils.fail("Manager Dynamic Group win load failed",false);
+		}else
+			SimpleUtils.fail("Global dynamic group page load failed",false);
+
+		return null;
+	}
+
+	@Override
+	public String updateClockInDynamicGroup(String groupNameForCloIn, String criteriaUpdate) throws Exception {
+		waitForSeconds(3);
+		click(editDGIconInClockIn.get(0));
+		if (isManagerDGpopShowWell()) {
+			groupNameInput.clear();
+			groupNameInput.sendKeys(groupNameForCloIn+"Update");
+			selectByVisibleText(criteriaSelect,criteriaUpdate);
+			click(criteriaValue);
+			click(checkboxInCriteriaValue.get(0));
+			click(testBtn);
+			String testInfo = testBtnInfo.getText().trim();
+			click(okBtnInSelectLocation);
+			waitForSeconds(3);
+			searchClockInDynamicGroup(groupNameForCloIn);
+			if (groupRows.size()>0) {
+				SimpleUtils.pass("Dynamic group create successfully");
+			}else
+				SimpleUtils.fail("Dynamic group create failed",false);
+			return testInfo;
+		}else
+			SimpleUtils.fail("Manager Dynamic Group win load failed",false);
+		return null;
+	}
+
+	// elements on global configuration page
+	@FindBy(css="lg-button[label=\"Edit\"]")
+	private WebElement editOnGlobalConfigPage;
+	@FindBy(css="form-section[form-title=\"Day Parts\"]")
+	private WebElement dayPartsSection;
+	@FindBy(css="div.daypart-container tbody tr")
+	private List<WebElement> dayPartsList;
+
+	public void goToGlobalConfigurationInLocations() throws Exception{
+		waitForSeconds(10);
+		if (isElementLoaded(globalConfigurationInLocations, 20)) {
+			click(globalConfigurationInLocations);
+			waitForSeconds(10);
+			if (isElementEnabled(editOnGlobalConfigPage, 20)) {
+				SimpleUtils.pass("global configuration page load successfully");
+			} else
+				SimpleUtils.fail("global configuration page load failed", false);
+		} else
+			SimpleUtils.fail("locations tab load failed in location overview page", false);
+	}
+
+	@Override
+	public void searchWFSDynamicGroup(String searchText) {
+		String[] searchGroupText = searchText.split(",");
+		if (areListElementVisible(dgSearchInput, 10) ) {
+			for (int i = 0; i < searchGroupText.length; i++) {
+				dgSearchInput.clear();
+				dgSearchInput.get(0).sendKeys(searchGroupText[0]);
+				dgSearchInput.get(0).sendKeys(Keys.ENTER);
+				waitForSeconds(3);
+				if (groupRows.size()>0) {
+					SimpleUtils.pass("Dynamic group: " + groupRows.size() + " group(s) found  ");
+					break;
+				} else {
+					dgSearchInput.clear();
+				}
+			}
+
+		} else {
+			SimpleUtils.fail("Search input is not clickable", true);
+		}
+	}
+	public List<String> getAllDayPartsFromGlobalConfiguration() throws Exception{
+		List<String> dayPartsNameList = new ArrayList<String>();
+		if(dayPartsList.size()!=0){
+			for(WebElement dayParts:dayPartsList){
+				String dayPartsName = dayParts.findElement(By.cssSelector("td")).getText().trim();
+				if(dayPartsName!=null){
+					dayPartsNameList.add(dayPartsName);
+				}
+			}
+		}else{
+			SimpleUtils.pass("There is no day parts for this enterprise");
+		}
+        return dayPartsNameList;
+	}
+	@FindBy (css = " lg-global-dynamic-group-table[dynamic-groups=\"clockinDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr.ng-scope")
+	private  List<WebElement> clockInGroups;
+	@Override
+	public List<String> getClockInGroupFromGlobalConfig() {
+		waitForSeconds(15);
+		List<String> clockInGroup = new ArrayList<>();
+		if (clockInGroups.size()>0) {
+			for(WebElement clockIn:clockInGroups){
+				String clockInName = clockIn.findElement(By.cssSelector("td")).getText().trim();
+				if(clockInName!=""){
+					clockInGroup.add(clockInName);
+				}
+			}
+			return clockInGroup;
+		}else
+			return null;
+	}
+
+	@FindBy(css = "lg-input-error[ng-if=\"!$ctrl.hideInputErrorHint\"]>div>span>i")
+	private WebElement groupNameRequired;
+
+	@Override
+	public void verifyCreateExistingDGAndGroupNameIsNull(String s) throws Exception {
+		if (areListElementVisible(addDynamicGroupBtn)) {
+			click(addDynamicGroupBtn.get(0));
+			if (isManagerDGpopShowWell()) {
+				//verify group name is null
+				groupNameInput.sendKeys(s);
+				groupNameInput.clear();
+				if (isElementEnabled(groupNameRequired,5)) {
+					SimpleUtils.pass("Group Name is required show well if the name is null");
+				}
+				//verify create existing group
+				groupNameInput.sendKeys(s);
+				click(okBtnInSelectLocation);
+				waitForSeconds(5);
+				click(cancelBtn);
+				searchWFSDynamicGroup(s);
+				int a = wfsGroups.size();
+				if (wfsGroups.size()>1) {
+					SimpleUtils.fail("Should not create existing group",false);
+				}else
+					SimpleUtils.pass("Can not create existing Dynamic group");
+				//verify existing criteria ,but group name is not same
+			}else
+				SimpleUtils.fail("Manager Dynamic Group win load failed",false);
+		}else
+			SimpleUtils.fail("Global dynamic group page load failed",false);
+
+	}
+	@FindBy (css = " lg-global-dynamic-group-table[dynamic-groups=\"workForceSharingDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr.ng-scope")
+	private  List<WebElement> wfsGroups;
+	@Override
+	public List<String> getWFSGroupFromGlobalConfig() {
+		List<String> wfsGroup = new ArrayList<>();
+		if (wfsGroups.size()>0) {
+			for(WebElement clockIn:wfsGroups){
+				String wfsGroupName = clockIn.findElement(By.cssSelector("td")).getText().trim();
+				if(wfsGroupName!=""){
+					wfsGroup.add(wfsGroupName);
+				}
+			}
+			return wfsGroup;
+		}else
+			return null;
+	}
 }
 

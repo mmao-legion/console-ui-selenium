@@ -8,7 +8,7 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.ro.Si;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -50,6 +51,40 @@ public class JobTest extends TestBase {
         SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
     }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate to enable centralized schedule release function")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOpenCentralizedScheduleReleaseToYes(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+
+            // Validate Controls Scheduling Policies Section
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnGlobalLocationButton();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            boolean isSchedulingPolicies = controlsNewUIPage.isControlsSchedulingPoliciesLoaded();
+            SimpleUtils.assertOnFail("Controls Page: Scheduling Policies Section not Loaded.", isSchedulingPolicies, true);
+            controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
+            //check the centralized schedule release button is yes or no
+            List<WebElement> CentralizedScheduleReleaseSelector = controlsNewUIPage.getAvailableSelector();
+            WebElement yesItem = CentralizedScheduleReleaseSelector.get(0);
+            WebElement noItem = CentralizedScheduleReleaseSelector.get(1);
+
+            if (controlsNewUIPage.isCentralizedScheduleReleaseValueYes()) {
+                SimpleUtils.pass("Scheduling Policies: Centralized Schedule Release button is Yes");
+            }else
+                controlsNewUIPage.updateCentralizedScheduleRelease(yesItem);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 
 
     @Automated(automated = "Automated")
@@ -63,6 +98,7 @@ public class JobTest extends TestBase {
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
             jobsPage.iCanEnterJobsTab();
             jobsPage.verifyJobLandingPageShowWell();
+            jobsPage.verifyPaginationFunctionInJob();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -90,6 +126,144 @@ public class JobTest extends TestBase {
         }
     }
 
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate check create schedule  job details page")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCheckJobDetailsFunction(String browser, String username, String password, String location) throws Exception {
+
+        try{
+
+            try{
+                String searchCreateSchedule = "Create Schedule";
+                String searchReleaseSchedule = "Release Schedule";
+                String searchAdjustBudget = "Adjust Budget";
+                String searchAdjustForecast = "Adjust Forecast";
+                int index = 0;
+
+                JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+                jobsPage.iCanEnterJobsTab();
+                jobsPage.iCanSearchTheJobWhichICreated(searchCreateSchedule);
+                jobsPage.iCanGoToCreateScheduleJobDetailsPage(index);
+                jobsPage.iCanBackToJobListPage();
+                jobsPage.iCanSearchTheJobWhichICreated(searchReleaseSchedule);
+                jobsPage.iCanGoToReleaseScheduleJobDetailsPage(index);
+                jobsPage.iCanClickCloseBtnInJobDetailsPage();
+                jobsPage.iCanSearchTheJobWhichICreated(searchAdjustBudget);
+                jobsPage.iCanGoToAdjustBudgetJobDetailsPage(index);
+                jobsPage.iCanClickCloseBtnInJobDetailsPage();
+                jobsPage.iCanSearchTheJobWhichICreated(searchAdjustForecast);
+                jobsPage.iCanGoToAdjustForecastJobDetailsPage(index);
+                jobsPage.iCanClickCloseBtnInJobDetailsPage();
+            } catch (Exception e){
+                SimpleUtils.fail(e.getMessage(), false);
+            }
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify copy stop resume and archive job function")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCopyStopResumeAndArchiveJobFunctionFunction(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            int index = 0;
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime =  dfs.format(new Date()).trim();
+            String jobType = "Create Schedule";
+            String jobTitle = "AutoCreateJob"+currentTime;
+            setJobName(jobTitle);
+            String commentText = "created by automation scripts";
+            String searchText = "QA";
+
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            //create new job firstly
+            jobsPage.iCanEnterCreateNewJobPage();
+            jobsPage.selectJobType(jobType);
+            jobsPage.selectWeekForJobToTakePlace();
+            jobsPage.clickOkBtnInCreateNewJobPage();
+            jobsPage.inputJobTitle(jobTitle);
+            jobsPage.inputJobComments(commentText);
+            jobsPage.addLocationBtnIsClickable();
+//            jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
+            jobsPage.iCanSelectDistrictByAddLocation(searchText,index);
+            jobsPage.createBtnIsClickable();
+            jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+            jobsPage.iCanStopJob(jobTitle);
+
+            jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+            jobsPage.iCanResumeJob(jobTitle);
+            jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+            jobsPage.iCanCopyJob(jobTitle);
+            jobsPage.iCanSearchTheJobWhichICreated("Copy Of "+jobTitle);
+            jobsPage.iCanStopJob("Copy Of "+jobTitle);
+            jobsPage.iCanSearchTheJobWhichICreated("Copy Of "+jobTitle);
+            jobsPage.iCanArchiveJob("Copy Of "+jobTitle);
+
+
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate filter function by job type and job status")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyFilterFunctionByJobTypeAndJobStatus(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.filterJobsByJobTypeAndStatus();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate filter function by job type")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyFilterFunctionByJobType(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.filterJobsByJobType();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate filter function by job status")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyFilterFunctionByJobStatus(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.filterJobsByJobStatus();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
@@ -98,77 +272,166 @@ public class JobTest extends TestBase {
     public void verifyCreateScheduleJobFunction(String browser, String username, String password, String location) throws Exception {
 
 
-       try {
+        try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
             String currentTime =  dfs.format(new Date());
             String jobType = "Create Schedule";
-            String jobTitle = currentTime;
+            String jobTitle = "AutoCreateJob"+currentTime;
             setJobName(jobTitle);
             String commentText = "created by automation scripts";
-            String searchText = "omlocation2";
+            String searchText = "OMLocation3";
+            int index = 0;
+
+//            ArrayList<HashMap<String, String>> jobInfoDetails =jobsPage.iCanGetJobInfo(jobTitle);
+
+//            //go to schedule page to see current week schedule generated or not
+//            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+//            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+//
+//            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+//
+//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+//            locationSelectorPage.changeDistrict("OMDistrict1");
+//            locationSelectorPage.changeLocation(searchText);
+//
+//            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//            schedulePage.clickOnScheduleConsoleMenuItem();
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+//
+//            if (schedulePage.isWeekGenerated()){
+//                schedulePage.unGenerateActiveScheduleScheduleWeek();
+//            }else {
+//                SimpleUtils.pass("Current week schedule is not  Generated!");
+//                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+                JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+                jobsPage.iCanEnterJobsTab();
+                jobsPage.iCanEnterCreateNewJobPage();
+                if (jobsPage.verifyCreatNewJobPopUpWin()) {
+                    jobsPage.selectJobType(jobType);
+                    jobsPage.selectWeekForJobToTakePlace();
+                    jobsPage.clickOkBtnInCreateNewJobPage();
+                    jobsPage.inputJobTitle(jobTitle);
+                    jobsPage.inputJobComments(commentText);
+                    jobsPage.addLocationBtnIsClickable();
+                    jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
+                    jobsPage.createBtnIsClickable();
+                    jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+                }else
+                    SimpleUtils.fail("Create job pop up page load failed",false);
+//            }
+
+//            Thread.sleep(60000);//to wait for job completed
+//            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+//            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+//
+//
+//            locationSelectorPage.changeDistrict("OMDistrict1");
+//            locationSelectorPage.changeLocation(searchText);
+//
+//
+//            schedulePage.clickOnScheduleConsoleMenuItem();
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+//
+//            if(!schedulePage.isWeekGenerated()&& schedulePage.suggestedButtonIsHighlighted()){
+//                SimpleUtils.pass("Created schedule job doesn't generated the manager schedule");
+//
+//            }else
+//                SimpleUtils.fail("It should not generated schedule in manager tab",false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate abnormal create job flow")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAbnormalCheatJobFunction(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            String currentTime =  dfs.format(new Date());
+            String jobType = "Create Schedule";
+            String jobTitle = "AutoCreateJob"+currentTime;
+            setJobName(jobTitle);
+            String commentText = "created by automation scripts";
+            String searchText = "OMLocation3";
             int index = 0;
 
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
             jobsPage.iCanEnterJobsTab();
             jobsPage.iCanEnterCreateNewJobPage();
-            jobsPage.selectJobType(jobType);
-            jobsPage.selectWeekForJobToTakePlace();
-            jobsPage.clickOkBtnInCreateNewJobPage();
-            jobsPage.inputJobTitle(jobTitle);
-            jobsPage.inputJobComments(commentText);
-            jobsPage.addLocationBtnIsClickable();
-            jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
-            jobsPage.createBtnIsClickable();
-            jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
-//            ArrayList<HashMap<String, String>> jobInfoDetails =jobsPage.iCanGetJobInfo(jobTitle);
-            //go to schedule page to see the schedule info
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+            jobsPage.iCanCloseJobCreatePopUpWindowByCloseBtn();
+            jobsPage.iCanEnterCreateNewJobPage();
+            jobsPage.iCanCancelJobCreatePopUpWindowByCancelBtn();
+            jobsPage.iCanEnterCreateNewJobPage();
 
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrict("OMDistrict1");
-            locationSelectorPage.changeLocation(searchText);
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-            schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            if(!schedulePage.isWeekGenerated()){
-               SimpleUtils.pass("Created schedule job doesn't generated the manager schedule");
-//                if () {
-//                    SimpleUtils.pass("Created schedule job generated suggested schedule");
-//                }else
-//                    SimpleUtils.fail("Created schedule job generated suggested schedule failed",false);
+            if (jobsPage.verifyCreatNewJobPopUpWin()) {
+                jobsPage.selectJobType(jobType);
+                jobsPage.selectWeekForJobToTakePlace();
+                jobsPage.clickOkBtnInCreateNewJobPage();
+                jobsPage.inputJobTitle(jobTitle);
+                jobsPage.inputJobComments(commentText);
+                jobsPage.addLocationBtnIsClickable();
+                jobsPage.iCanSelectLocationsByAddLocation(searchText, index);
+                jobsPage.iCanCancelJobInJobCreatPageByCancelBtn();
+                ArrayList<HashMap<String, String>> jobInfoDetails =jobsPage.iCanGetJobInfo(jobTitle);
+                if (jobInfoDetails.size()==0) {
+                    SimpleUtils.pass("The creating job was canceled successfully after clicking cancel button");
+                }else
+                    SimpleUtils.fail("",false);
             }else
-                SimpleUtils.fail("It should not generated schedule in manager tab",false);
-       } catch (Exception e){
-           SimpleUtils.fail(e.getMessage(), false);
-       }
+                SimpleUtils.fail("Create job pop up page load failed",false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate check create schedule  job details page ")
+    @TestName(description = "Validate release schedule job function")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCheckJobDetailsFunction(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateReleaseScheduleJobFunction(String browser, String username, String password, String location) throws Exception {
 
-        try{
-            String searchText = "*";
+
+        try {
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            String currentTime =  dfs.format(new Date());
+            String jobType = "Release Schedule";
+            String jobTitle = "AutoReleaseJob"+currentTime;
+            setJobName(jobTitle);
+            String commentText = "created by automation scripts";
+            String searchText = "OMLocation3";
             int index = 0;
+            String releaseDay = "10";
+            String timeForRelease = "0";
+            
+                JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+                jobsPage.iCanEnterJobsTab();
+                jobsPage.iCanEnterCreateNewJobPage();
+                if (jobsPage.verifyCreatNewJobPopUpWin()) {
+                    jobsPage.selectJobType(jobType);
+                    jobsPage.selectWeekForJobToTakePlace();
+                    jobsPage.clickOkBtnInCreateNewJobPage();
+                    jobsPage.inputJobTitle(jobTitle);
+                    jobsPage.inputJobComments(commentText);
+                    jobsPage.addLocationBtnIsClickable();
+                    jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
+                    jobsPage.iCanClickOnCreatAndReleaseCheckBox();
+                    jobsPage.iCanSetUpDaysBeforeRelease(releaseDay);
+                    jobsPage.iCanSetUpTimeOfRelease(timeForRelease);
+                    jobsPage.createBtnIsClickable();
+                    jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+                }else
+                    SimpleUtils.fail("Create job pop up page load failed",false);
 
-            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
-            jobsPage.iCanEnterJobsTab();
-            jobsPage.iCanSearchTheJobWhichICreated(searchText);
-            jobsPage.iCanGoToJobDetailsPage(index);
-            jobsPage.iCanDownloadExportResultFile();
-            jobsPage.iCanDownloadExportTaskSummary();
-            jobsPage.iCanBackToJobListPage();
-            jobsPage.iCanSearchTheJobWhichICreated(searchText);
-            jobsPage.iCanGoToJobDetailsPage(index);
-            jobsPage.iCanClickCloseBtnInJobDetailsPage();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -177,20 +440,193 @@ public class JobTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate E2E flow of adjust forecast job")
+    @TestName(description = "Validate adjust budget job function")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAdjustForecastJobE2EFunction(String browser, String username, String password, String location) throws Exception {
-
-        try{
-            String searchText = "test1";
+    public void verifyAdjustBudgetJobFunction(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime =  dfs.format(new Date());
+            String jobType = "Adjust Budget";
+            String jobTitle = "AutoAdjustBudgetJob"+currentTime;
+            setJobName(jobTitle);
+            String commentText = "created by automation scripts";
+            String searchText = "OMLocation3";
+            String searchTaskText = "OMLocation3";
+            int index = 0;
+            String budgetAssignmentNum = "10";
+            String workRole = "Lead Sales Associate";
+            String taskName = "Cleaning";
 
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
             jobsPage.iCanEnterJobsTab();
+            jobsPage.iCanEnterCreateNewJobPage();
+            if (jobsPage.verifyCreatNewJobPopUpWin()) {
+                jobsPage.selectJobType(jobType);
+                jobsPage.selectWeekForJobToTakePlace();
+                jobsPage.clickOkBtnInCreateNewJobPage();
+                if (jobsPage.verifyLayoutOfAdjustBudget()) {
+                    jobsPage.inputJobTitle(jobTitle);
+                    jobsPage.inputJobComments(commentText);
+                    jobsPage.addLocationBtnIsClickable();
+                    jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
+                    jobsPage.iCanSetUpBudgetAssignmentNum(budgetAssignmentNum);
+                    //add tasks
+                    jobsPage.addTaskButtonIsClickable();
+                    jobsPage.iCanAddTasks(searchText,index,taskName);
+                    //add work roles
+                    jobsPage.addWorkRoleButtonIsClickable();
+                    jobsPage.iCanAddWorkRoles(searchText,index,workRole);
+                    jobsPage.createBtnIsClickableInAdjustBudgetJob();
+                    jobsPage.verifyAdjustBudgetConfirmationPage(jobTitle,budgetAssignmentNum,taskName,workRole);
+                    jobsPage.cancelBthInAdjustBudgetConfirmationPageIsClickable();
+                    jobsPage.executeBtnIsClickable();
+                    jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+                }
 
+            }else
+                SimpleUtils.fail("Create job pop up page load failed",false);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate adjust forecast job function")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAdjustForecastJobFunction(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime =  dfs.format(new Date());
+            String jobType = "Adjust Forecast";
+            String jobTitle = "AutoAdjustForecastJob"+currentTime;
+            setJobName(jobTitle);
+            String commentText = "created by automation scripts";
+            String searchText = "OMLocation3";
+            String searchTaskText = "OMLocation3";
+            int index = 0;
+            String adjustmentValue = "10";
+            String directionChoices = "Decrease";
+            String categoryType = "Transactions";
+            String adjustmentType ="Percent";
+
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.iCanEnterCreateNewJobPage();
+            if (jobsPage.verifyCreatNewJobPopUpWin()) {
+                jobsPage.selectJobType(jobType);
+                jobsPage.selectWeekForJobToTakePlace();
+                jobsPage.clickOkBtnInCreateNewJobPage();
+                if (jobsPage.verifyLayoutOfAdjustForecast()) {
+                    jobsPage.inputJobTitle(jobTitle);
+                    jobsPage.inputJobComments(commentText);
+                    jobsPage.addLocationBtnIsClickable();
+                    jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
+                    jobsPage.selectDirectionChoices(directionChoices);
+                    jobsPage.selectCategoryTypes(categoryType);
+                    jobsPage.inputAdjustmentValue(adjustmentValue);
+                    jobsPage.selectAdjustmentType(adjustmentType);
+                    jobsPage.createBtnIsClickableInAdjustBudgetJob();
+                    jobsPage.verifyAdjustForecastConfirmationPage(jobTitle,adjustmentValue,directionChoices,categoryType,searchTaskText);
+                    jobsPage.cancelBthInAdjustBudgetConfirmationPageIsClickable();
+                    jobsPage.executeBtnIsClickable();
+                    jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+                }
+
+            }else
+                SimpleUtils.fail("Create job pop up page load failed",false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Export Result File and Export Task Summary function In Create Schedule Job")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportResultFileAndExportTaskSummaryFunctionInCreateScheduleJob(String browser, String username, String password, String location) throws Exception {
+        try{
+            int index =0;
+            String searchCharactor = "Create Schedule";
+            //go to job tab
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.iCanSearchTheJobWhichICreated(searchCharactor);
+            jobsPage.iCanGoToCreateScheduleJobDetailsPage(index);
+            jobsPage.verifyExportResultFunction();
+            jobsPage.verifyExportTaskSummaryFunction();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Export Result File and Export Task Summary function In Adjust Budget Job")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportResultFileAndExportTaskSummaryFunctionInAdjustBudgetJob(String browser, String username, String password, String location) throws Exception {
+        try{
+            int index =0;
+            String searchCharactor = "Adjust Budget";
+            //go to job tab
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.iCanSearchTheJobWhichICreated(searchCharactor);
+            jobsPage.iCanGoToAdjustBudgetJobDetailsPage(index);
+            jobsPage.verifyExportResultFunction();
+            jobsPage.verifyExportTaskSummaryFunction();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Export Result File In Release Schedule Job")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportResultFileFunctionInReleaseScheduleJob(String browser, String username, String password, String location) throws Exception {
+        try{
+            int index =0;
+            String searchCharactor = "Release Schedule";
+            //go to job tab
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.iCanSearchTheJobWhichICreated(searchCharactor);
+            jobsPage.iCanGoToReleaseScheduleJobDetailsPage(index);
+            jobsPage.verifyExportResultFunction();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Export Result File In Adjust Forecast Job")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportResultFileFunctionInAdjustForecastJob(String browser, String username, String password, String location) throws Exception {
+        try{
+            int index =0;
+            String searchCharactor = "Adjust Forecast";
+            //go to job tab
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.iCanSearchTheJobWhichICreated(searchCharactor);
+            jobsPage.iCanGoToAdjustForecastJobDetailsPage(index);
+            jobsPage.verifyExportResultFunction();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

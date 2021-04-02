@@ -94,19 +94,56 @@ public interface LocationsPage {
 
     public void verifyBackBtnFunction() throws Exception;
 
-    public void verifyPaginationFunction() throws Exception;
+    public void verifyPaginationFunctionInLocation() throws Exception;
 
     public void verifySearchFunction(String[] searchInfo) throws Exception;
 
-    public void addNewDistrict(String districtName, String districtId, String districtManager,String searchChara,int index) throws Exception;
+    public void addNewDistrict(String districtName, String districtId,String searchChara,int index) throws Exception;
 
     public void updateDistrict(String districtName, String districtId, String searchChara, int index);
 
     public ArrayList<HashMap<String, String>> getDistrictInfo(String districtName);
 
-    public void addNewDistrictWithoutLocation(String districtName, String districtId, String districtManager) throws Exception;
+    public void addNewDistrictWithoutLocation(String districtName, String districtId) throws Exception;
 
     public void disableEnableDistrict(String districtName, String action) throws Exception;
 
     public HashMap<String, String> getEnterpriseLogoAndDefaultLocationInfo();
+
+    public void verifyTheFiledOfLocationSetting() throws Exception;
+
+    public void iCanSeeDynamicGroupItemInLocationsTab();
+
+    public void goToDynamicGroup();
+
+    public String addWorkforceSharingDGWithOneCriteria(String groupName, String description, String criteria) throws Exception;
+
+    public void iCanDeleteExistingWFSDG();
+
+    public String updateWFSDynamicGroup(String groupName, String criteriaUpdate) throws Exception;
+
+    public void verifyPaginationFunctionInDistrict() throws Exception;
+
+    public List<String> getAllDayPartsFromGlobalConfiguration() throws Exception;
+
+    public void goToGlobalConfigurationInLocations() throws Exception;
+
+    public void searchWFSDynamicGroup(String searchText);
+
+    public void searchClockInDynamicGroup(String searchText) throws Exception;
+
+    public String addClockInDGWithOneCriteria(String groupName, String description, String criteria) throws Exception;
+
+    public String updateClockInDynamicGroup(String groupNameForCloIn, String criteriaUpdate) throws Exception;
+
+    public void iCanDeleteExistingClockInDG();
+
+    public List<String> getClockInGroupFromGlobalConfig();
+
+    public void verifyCreateExistingDGAndGroupNameIsNull(String s) throws Exception;
+
+    public List<String> getWFSGroupFromGlobalConfig();
+
+
+
 }
