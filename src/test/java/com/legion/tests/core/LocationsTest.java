@@ -1295,7 +1295,7 @@ public class LocationsTest extends TestBase {
                 locationsPage.goToUpperFieldsPage();
                 locationsPage.addNewUpperfieldsWithoutParentAndChild( upperfieldsName, upperfieldsId,searchChara,index,organizationHierarchyInfo);
                 locationsPage.searchUpperFields(upperfieldsName);
-                locationsPage.updateDistrict(upperfieldsName,upperfieldsId,searchChara,index);
+//                locationsPage.updateDistrict(upperfieldsName,upperfieldsId,searchChara,index);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

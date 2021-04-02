@@ -125,6 +125,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void goToSubLocationsInLocationsPage() throws Exception {
 		if ( isElementLoaded(locationsInLocations,5)) {
 			click(locationsInLocations);
+			waitForSeconds(20);
 			if (isElementEnabled(addLocationBtn,5)) {
 				SimpleUtils.pass("sub-location page load successfully");
 			}else
@@ -505,7 +506,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				searchInput.clear();
 				searchInput.sendKeys(searchLocationCha[0]);
 				searchInput.sendKeys(Keys.ENTER);
-				waitForSeconds(7);
+				waitForSeconds(20);
 				if (locationRows.size()>0) {
 					SimpleUtils.pass("Locations: " + locationRows.size() + " location(s) found  ");
 					break;
