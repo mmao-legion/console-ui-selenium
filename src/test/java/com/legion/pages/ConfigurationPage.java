@@ -57,4 +57,5 @@ public interface ConfigurationPage {
     public void selectShiftStartTimeUnit(String startTimeUnit) throws Exception;
     public void createNewTemplate(String templateName) throws Exception;
     public void addAllTypeOfTemplate(String templateName) throws Exception;
+    public void verifyConvertUnassignedShiftsToOpenSetting() throws Exception;
 }

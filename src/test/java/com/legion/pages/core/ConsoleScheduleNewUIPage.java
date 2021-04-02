@@ -3663,7 +3663,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         float budgetHours = 0;
         String subTitle = "Confirm Operating Hours";
         waitForSeconds(2);
-        if (isElementLoaded(generateSheduleButton,10)) {
+        if (isElementLoaded(generateSheduleButton,60)) {
             clickTheElement(generateSheduleButton);
             if (isElementLoaded(generateModalTitle, 20) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 20)) {
@@ -4693,7 +4693,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void unGenerateActiveScheduleScheduleWeek() throws Exception {
 
-        if(isElementLoaded(deleteScheduleButton, 10)){
+        if(isElementLoaded(deleteScheduleButton, 60)){
             click(deleteScheduleButton);
             if(isElementLoaded(deleteSchedulePopup, 5)
                     && isElementLoaded(deleteScheduleCheckBox, 5)

@@ -15,6 +15,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 
 import java.util.ArrayList;
@@ -1452,6 +1453,82 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 //					List<WebElement> configurationCardsList = getDriver().findElement(By.cssSelector("[class=\"tb-wrapper ng-scope\"] lg-dashboard-card h1"))
 				}
 			}
+	}
+
+	//Added by Mary to check 'Automatically convert unassigned shifts to open shifts when creating a new schedule?' and 'Automatically convert unassigned shifts to open shifts when coping a schedule?'
+	@FindBy(css = "question-input[question-title=\"Automatically convert unassigned shifts to open shifts when creating a new schedule?\"]")
+	private WebElement convertUnassignedShiftsToOpenWhenCreatingScheduleSetting;
+
+	@FindBy(css = "question-input[question-title=\"Automatically convert unassigned shifts to open shifts when creating a new schedule?\"] .lg-question-input__text")
+	private WebElement convertUnassignedShiftsToOpenWhenCreatingScheduleSettingMessage;
+
+	@FindBy(css = "question-input[question-title=\"Automatically convert unassigned shifts to open shifts when creating a new schedule?\"] select[ng-change=\"$ctrl.handleChange()\"]")
+	private WebElement convertUnassignedShiftsToOpenWhenCreatingScheduleSettingDropdown;
+
+	@FindBy(css = "question-input[question-title=\"Automatically convert unassigned shifts to open shifts when copying a schedule?\"]")
+	private WebElement convertUnassignedShiftsToOpenWhenCopyingScheduleSetting;
+
+	@FindBy(css = "question-input[question-title=\"Automatically convert unassigned shifts to open shifts when copying a schedule?\"] .lg-question-input__text")
+	private WebElement convertUnassignedShiftsToOpenWhenCopyingScheduleSettingMessage;
+
+	@FindBy(css = "question-input[question-title=\"Automatically convert unassigned shifts to open shifts when copying a schedule?\"] select[ng-change=\"$ctrl.handleChange()\"]")
+	private WebElement convertUnassignedShiftsToOpenWhenCopyingScheduleSettingDropdown;
+
+	@Override
+	public void verifyConvertUnassignedShiftsToOpenSetting() throws Exception {
+		if (isElementLoaded(convertUnassignedShiftsToOpenWhenCreatingScheduleSetting, 10)
+				&& isElementLoaded(convertUnassignedShiftsToOpenWhenCreatingScheduleSettingMessage, 10)
+				&& isElementLoaded(convertUnassignedShiftsToOpenWhenCreatingScheduleSettingDropdown, 10)
+				&& isElementLoaded(convertUnassignedShiftsToOpenWhenCopyingScheduleSetting, 10)
+				&& isElementLoaded(convertUnassignedShiftsToOpenWhenCopyingScheduleSettingMessage, 10)
+				&& isElementLoaded(convertUnassignedShiftsToOpenWhenCopyingScheduleSettingDropdown, 10)) {
+
+			//Check the message
+			String createScheduleMessage = "Automatically convert unassigned shifts to open shifts when creating a new schedule?";
+			String copyScheduleMessage = "Automatically convert unassigned shifts to open shifts when copying a schedule?";
+			if (convertUnassignedShiftsToOpenWhenCreatingScheduleSettingMessage.getText().equalsIgnoreCase(createScheduleMessage)){
+				SimpleUtils.pass("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open settings creating schedule settings message display correctly! ");
+			} else
+				SimpleUtils.fail("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when creating schedule settings message display incorrectly!  Expected message is :'"
+						+ createScheduleMessage + "'. Actual message is : '" +convertUnassignedShiftsToOpenWhenCreatingScheduleSettingMessage.getText()+ "'", false);
+
+			if (convertUnassignedShiftsToOpenWhenCopyingScheduleSettingMessage.getText().equalsIgnoreCase(copyScheduleMessage)){
+				SimpleUtils.pass("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when coping schedule settings message display correctly! ");
+			} else
+				SimpleUtils.fail("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when coping schedule settings message display incorrectly!  Expected message is :'"
+						+ createScheduleMessage + "'. Actual message is : '" +convertUnassignedShiftsToOpenWhenCopyingScheduleSettingMessage.getText()+ "'", false);
+
+
+
+			List<String> convertUnassignedShiftsToOpenSettingOptions = new ArrayList<>();
+			convertUnassignedShiftsToOpenSettingOptions.add("Yes, all unassigned shifts");
+			convertUnassignedShiftsToOpenSettingOptions.add("Yes, except opening/closing shifts");
+			convertUnassignedShiftsToOpenSettingOptions.add("No, keep as unassigned");
+
+			//Check the options
+			Select dropdown = new Select(convertUnassignedShiftsToOpenWhenCreatingScheduleSettingDropdown);
+			List<WebElement> dropdownOptions = dropdown.getOptions();
+			for (int i = 0; i< dropdownOptions.size(); i++) {
+				if (dropdownOptions.get(i).getText().equalsIgnoreCase(convertUnassignedShiftsToOpenSettingOptions.get(i))) {
+					SimpleUtils.pass("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when creating schedule settings option: '" +dropdownOptions.get(i).getText()+ "' display correctly! ");
+				} else
+					SimpleUtils.fail("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when creating schedule settings option display incorrectly, expected is : '" +convertUnassignedShiftsToOpenSettingOptions.get(i)+
+							"' , the actual is : '"+ dropdownOptions.get(i).getText()+"'. ", false);
+			}
+
+			//Check the options
+			dropdown = new Select(convertUnassignedShiftsToOpenWhenCopyingScheduleSettingDropdown);
+			dropdownOptions = dropdown.getOptions();
+			for (int i = 0; i< dropdownOptions.size(); i++) {
+				if (dropdownOptions.get(i).getText().equalsIgnoreCase(convertUnassignedShiftsToOpenSettingOptions.get(i))) {
+					SimpleUtils.pass("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when coping schedule settings option: '" +dropdownOptions.get(i).getText()+ "' display correctly! ");
+				} else
+					SimpleUtils.fail("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when coping schedule settings option display incorrectly, expected is : '" +convertUnassignedShiftsToOpenSettingOptions.get(i)+
+							"' , the actual is : '"+ dropdownOptions.get(i).getText()+"'. ", false);
+			}
+
+		} else
+			SimpleUtils.fail("OP Configuration Page: Schedule Collaboration: Open Shift : Convert unassigned shifts to open when coping schedule settings not loaded.", false);
 	}
 
 
