@@ -3665,26 +3665,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         waitForSeconds(2);
         if (isElementLoaded(generateSheduleButton,10)) {
             clickTheElement(generateSheduleButton);
-            if (isElementLoaded(generateModalTitle, 10) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
-                    && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
+            if (isElementLoaded(generateModalTitle, 20) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
+                    && isElementLoaded(nextButtonOnCreateSchedule, 20)) {
                 editTheOperatingHours(weekDaysToClose);
                 waitForSeconds(1);
                 clickTheElement(nextButtonOnCreateSchedule);
                 budgetHours = checkEnterBudgetWindowLoadedForNonDG();
-                if (isElementEnabled(checkOutTheScheduleButton)) {
-                    checkoutSchedule();
-                }
                 selectWhichWeekToCopyFrom(weekInfo);
                 if(copyShiftAssignments !=null && copyShiftAssignments.size()>0){
                     if (isElementLoaded(copyPartialScheduleSwitch, 10)){
                         click(copyPartialScheduleSwitch);
                     } else
                         SimpleUtils.fail("Copy Partial Schedule Switch loaded fail! ", false);
-                    clickOnFinishButtonOnCreateSchedulePage();
+                    clickTheElement(nextButtonOnCreateSchedule);
                     selectSpecificCopyShiftAssignments(copyShiftAssignments);
-                    clickOnFinishButtonOnCreateSchedulePage();
+                    clickTheElement(nextButtonOnCreateSchedule);
                 } else
                     clickOnFinishButtonOnCreateSchedulePage();
+                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+                    checkoutSchedule();
+                }
 
             } else {
                 SimpleUtils.fail("Not able to generate schedule Successfully!", false);
@@ -9422,7 +9422,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         else
         {
-            SimpleUtils.fail("Personal Details Container is not Loaded in Popup!",true);
+            SimpleUtils.fail("Personal Details Container is not Loaded in Popup!",false);
         }
         //
         if(isElementLoaded(personalDetailsName,5))
@@ -9431,7 +9431,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         else
         {
-            SimpleUtils.fail("Personal Details Name is not Loaded in Popup!",true);
+            SimpleUtils.fail("Personal Details Name is not Loaded in Popup!",false);
         }
 
         if(isElementLoaded(personalDetailsPhone,8) || isElementLoaded(personalDetailsEmailAddress,5))
@@ -9440,7 +9440,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         else
         {
-            SimpleUtils.fail("Phone/Email details are not Loaded in Popup!",true);
+            SimpleUtils.report("Phone/Email details are not Loaded in Popup!");
         }
     }
 
@@ -9609,7 +9609,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (isElementLoaded(deleteShiftImg,5)) {
                 SimpleUtils.pass("delete shift draft successfully");
             }else
-                SimpleUtils.fail("delete shift draft failed",true);
+                SimpleUtils.fail("delete shift draft failed",false);
         }
         saveSchedule();
         waitForSeconds(3);
@@ -9618,7 +9618,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (count1 > count2) {
             SimpleUtils.pass("delete shift successfully");
         }else
-            SimpleUtils.fail("delete shift draft failed",true);
+            SimpleUtils.fail("delete shift draft failed",false);
     }
 
     private boolean isDeleteShiftShowWell() throws Exception {
@@ -11091,9 +11091,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if ((Integer.valueOf(theEarliestAndLatestTimeInScheduleSummary.split("-")[0]) <= Integer.valueOf(theEarliestAndLatestTimeInScheduleTable.split("-")[0])) && (Integer.valueOf(theEarliestAndLatestTimeInScheduleSummary.split("-")[1]) >= Integer.valueOf(theEarliestAndLatestTimeInScheduleTable.split("-")[1]))) {
                 SimpleUtils.pass("My Schedule Page: Seven days - Sunday to Saturday show in the schedule table according to the operating hours");
             } else
-                SimpleUtils.fail("My Schedule Page: Seven days - Sunday to Saturday don't show in the schedule table according to the operating hours", true);
+                SimpleUtils.fail("My Schedule Page: Seven days - Sunday to Saturday don't show in the schedule table according to the operating hours", false);
         } else
-            SimpleUtils.fail("My Schedule Page: Operation hours display wrong, please check whether the shift is generated and published", true);
+            SimpleUtils.fail("My Schedule Page: Operation hours display wrong, please check whether the shift is generated and published", false);
     }
 
     @Override

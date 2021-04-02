@@ -799,7 +799,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             if (isShopperSelectedByDefaultAndLaborClickable){
                 SimpleUtils.pass("Forecast Functionality show well");
             } else {
-                SimpleUtils.warn("there is no shopper in this enterprise!");
+                SimpleUtils.report("there is no shopper in this enterprise!");
             }
         }else {
             SimpleUtils.warn("forecast default functionality work error");
@@ -2880,10 +2880,10 @@ public class SchedulingOPEnabledTest  extends TestBase {
 
         //Check Analytics console menu is display or not
         if (userRole.contains("TeamLead") || userRole.contains("TeamMember")) {
-            SimpleUtils.assertOnFail("Analytics console menu should not be loaded Successfully!",
+            SimpleUtils.assertOnFail("Report console menu should not be loaded Successfully!",
                     !dashboardPage.isReportConsoleMenuDisplay(), false);
         } else {
-            SimpleUtils.assertOnFail("Analytics console menu not loaded Successfully!", dashboardPage.isReportConsoleMenuDisplay(), false);
+            SimpleUtils.assertOnFail("Report console menu not loaded Successfully!", dashboardPage.isReportConsoleMenuDisplay(), false);
             //Check Analytics page is display after click Analytics tab
             AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
             analyticsPage.clickOnAnalyticsConsoleMenu();
