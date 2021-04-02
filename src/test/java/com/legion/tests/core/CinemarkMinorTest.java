@@ -40,7 +40,7 @@ public class CinemarkMinorTest extends TestBase {
 
     //The template the location is using.
     public enum templateInUse{
-        TEMPLATE_NAME("clement-997");
+        TEMPLATE_NAME("New Hampshire Compliance");
         private final String value;
         templateInUse(final String newValue) {
             value = newValue;
@@ -169,7 +169,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify add dates for breaks")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAddDatesForBreaksAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -599,7 +599,7 @@ public class CinemarkMinorTest extends TestBase {
     //Haya
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify turn off minor rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOffMinorRuleAsInternalAdmin(String browser, String username, String password, String location) {
@@ -632,12 +632,13 @@ public class CinemarkMinorTest extends TestBase {
             cinemarkMinorPage.minorRuleToggle("no","16N17");
             cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
+            Thread.sleep(3000);
 
             //Back to Console
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            String minorLocation = "Test For Minors";
-            locationSelectorPage.changeLocation(minorLocation);
+//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+//            String minorLocation = "Test For Minors";
+//            locationSelectorPage.changeLocation(minorLocation);
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
@@ -740,7 +741,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Admin can configure the access to edit calendars")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccessToEditCalendarsAsInternalAdmin(String browser, String username, String password, String location) {
@@ -770,7 +771,7 @@ public class CinemarkMinorTest extends TestBase {
 
             //Log in as SM to check
             String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("Op_Enterprise")+fileName;
+            fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise")+fileName;
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
             loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])

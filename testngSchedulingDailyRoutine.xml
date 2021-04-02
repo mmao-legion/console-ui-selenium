@@ -70,7 +70,7 @@
         <classes>
             <class name="com.legion.tests.core.ForecastTest">
                 <methods>
-                    <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin"/>
+<!--                    <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin" Blocked by SCH-3539/>-->
                     <include name="validateWeatherSmartCardOnForecastPage"/>
                     <include name="verifyScheduleFunctionalityForecast"/>
                 </methods>
@@ -223,10 +223,10 @@
 <!--                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
 <!--                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
 <!--                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-<!--                    <include name="verifyTurnOffMinorRuleAsInternalAdmin" Blocked by OPS-2122/>-->
+                    <include name="verifyTurnOffMinorRuleAsInternalAdmin" />
                     <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" />
-<!--                    <include name="verifyAccessToEditCalendarsAsInternalAdmin" Blocked by SCH-3493/>-->
-                    <!--                    <include name="verifyAddDatesForBreaksAsInternalAdmin" Blocked by SCH-3493/>-->
+                    <include name="verifyAccessToEditCalendarsAsInternalAdmin" />
+                    <include name="verifyAddDatesForBreaksAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

@@ -79,8 +79,11 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
 
     @Override
     public void minorRuleToggle(String action, String witchOne) throws Exception {
+        waitForSeconds(2);
+        schedulingMinorRuleFor14N15 = getDriver().findElement(By.cssSelector("form-section[form-title=\"Scheduling Minors (Age 14 & 15)\"]"));
+        schedulingMinorRuleFor16N17 = getDriver().findElement(By.cssSelector("form-section[form-title=\"Scheduling Minors (Age 16 & 17)\"]"));
         if (witchOne.equalsIgnoreCase("14N15")){
-            if (isElementLoaded(schedulingMinorRuleFor14N15,10)
+            if (isElementLoaded(schedulingMinorRuleFor14N15,15)
                     && isElementLoaded(schedulingMinorRuleFor14N15.findElement(By.cssSelector(" .lg-button-group-last")),10)
                     && isElementLoaded(schedulingMinorRuleFor14N15.findElement(By.cssSelector(" .lg-button-group-first")),10)){
                 //WebElement yesBtn = schedulingMinorRuleFor14N15.findElement(By.cssSelector(" .lg-button-group-first"));
@@ -173,14 +176,14 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
         if (button.equalsIgnoreCase("edit template")){
             if(isElementLoaded(getDriver().findElement(By.cssSelector("lg-button[ng-click=\"editTemplate()\"]")), 15))
             {
-                click(getDriver().findElement(By.cssSelector("lg-button[ng-click=\"editTemplate()\"]")));
+                clickTheElement(getDriver().findElement(By.cssSelector("lg-button[ng-click=\"editTemplate()\"]")));
             }else{
                 SimpleUtils.fail("Cancel button does not present on the page",false);
             }
         } else {
-            if(isElementLoaded(getDriver().findElement(By.cssSelector("lg-button[label=\""+button+"\"]")), 20))
+            if(isElementLoaded(getDriver().findElement(By.cssSelector("lg-button[label=\""+button+"\"]")), 30))
             {
-                click(getDriver().findElement(By.cssSelector("lg-button[label=\""+button+"\"]")));
+                clickTheElement(getDriver().findElement(By.cssSelector("lg-button[label=\""+button+"\"]")));
             }else{
                 SimpleUtils.fail("Cancel button does not present on the page",false);
             }
@@ -196,20 +199,27 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
         if (isElementLoaded(searchInput,15)){
             searchInput.clear();
             searchInput.sendKeys(templateName);
+            waitForSeconds(2);
             //click(defaultTemplate);
+            templateList = getDriver().findElements(By.cssSelector("tbody[ng-repeat*=\"item\"]"));
             if (areListElementVisible(templateList,10) && templateList.size()>0){
-                WebElement template = templateList.get(0);
-                if (!template.findElement(By.tagName("tr")).getAttribute("class").contains("expanded")){
-                    waitForSeconds(3);
-                    moveToElementAndClick(getDriver().findElements(By.cssSelector("tbody[ng-repeat*=\"item\"] td.toggle")).get(0));
-                    //click(template.findElement(By.cssSelector("td.toggle")));
+                for (int i = 0; i < templateList.size(); i++) {
+                    WebElement template = getDriver().findElements(By.cssSelector("tbody[ng-repeat*=\"item\"]")).get(i);
+                    if (template.findElement(By.cssSelector("span.ng-binding")).getText().equalsIgnoreCase(templateName)) {
+                        if (!template.findElement(By.tagName("tr")).getAttribute("class").contains("expanded")) {
+                            waitForSeconds(3);
+                            moveToElementAndClick(template.findElements(By.cssSelector("td.toggle")).get(0));
+                            //click(template.findElement(By.cssSelector("td.toggle")));
+                        }
+                        if (isElementLoaded(childTemplate, 10)) {
+                            click(childTemplate);
+                        } else {
+                            moveToElementAndClick(template.findElements(By.cssSelector("lg-button")).get(0));
+                        }
+                        waitForSeconds(5);
+                        break;
+                    }
                 }
-                if (isElementLoaded(childTemplate,10)){
-                    click(childTemplate);
-                } else {
-                    moveToElementAndClick(getDriver().findElements(By.cssSelector("tbody[ng-repeat*=\"item\"] lg-button")).get(0));
-                }
-                waitForSeconds(5);
             } else {
                 SimpleUtils.fail("There is no child template", false);
             }
