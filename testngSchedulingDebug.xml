@@ -243,4 +243,15 @@
         </classes>
     </test>
 
+    <test name="Schedule Copy Improvement Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
+                <methods>
+                    <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInControlAsInternalAdmin" />
+                    <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInOPAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->

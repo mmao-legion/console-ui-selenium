@@ -29,8 +29,6 @@ public interface JobsPage {
 
     public void iCanSearchTheJobWhichICreated(String jobTitle) throws Exception;
 
-    public void iCanGoToJobDetailsPage(int index);
-
     public void iCanBackToJobListPage();
 
     public void iCanClickCloseBtnInJobDetailsPage();
@@ -40,4 +38,82 @@ public interface JobsPage {
     public void iCanDownloadExportTaskSummary();
 
     public ArrayList<HashMap<String, String>> iCanGetJobInfo(String jobTitle);
+
+    public void iCanGoToCreateScheduleJobDetailsPage(int index);
+
+    public void iCanGoToReleaseScheduleJobDetailsPage(int index);
+
+    public void iCanGoToAdjustBudgetJobDetailsPage(int index);
+
+    public void iCanGoToAdjustForecastJobDetailsPage(int index);
+
+    public void iCanCopyJob(String jobTitle) throws Exception;
+
+    public void iCanStopJob(String jobTitle) throws Exception;
+
+    public void iCanResumeJob(String jobTitle) throws Exception;
+
+    public void iCanArchiveJob(String jobTitle) throws Exception;
+
+    public void iCanSelectDistrictByAddLocation(String searchText, int index);
+
+    public void filterJobsByJobTypeAndStatus() throws Exception;
+
+    public void filterJobsByJobType() throws Exception;
+
+    public void filterJobsByJobStatus() throws Exception;
+
+    public void filterClearFilterFunction();
+
+    public boolean verifyCreatNewJobPopUpWin();
+
+    public void iCanCloseJobCreatePopUpWindowByCloseBtn();
+
+    public void iCanCancelJobCreatePopUpWindowByCancelBtn();
+
+    public void iCanCancelJobInJobCreatPageByCancelBtn();
+
+    public void iCanSetUpDaysBeforeRelease(String releaseDay);
+
+    public void iCanSetUpTimeOfRelease(String timeForRelease) throws Exception;
+
+    public void iCanClickOnCreatAndReleaseCheckBox();
+
+    public void verifyPaginationFunctionInJob() throws Exception;
+
+    public boolean verifyLayoutOfAdjustBudget();
+
+    public void iCanSetUpBudgetAssignmentNum(String budgetAssignmentNum);
+
+    public void addTaskButtonIsClickable();
+
+    public void iCanAddTasks(String searchText, int index, String taskName);
+
+    public void addWorkRoleButtonIsClickable();
+
+    public void iCanAddWorkRoles(String searchText, int index, String workRole);
+
+    public void executeBtnIsClickable();
+
+    public void createBtnIsClickableInAdjustBudgetJob() throws Exception;
+
+    public void verifyAdjustBudgetConfirmationPage(String jobTitle, String budgetAssignmentNum, String taskName, String workRole);
+
+    public void cancelBthInAdjustBudgetConfirmationPageIsClickable();
+
+    public boolean verifyLayoutOfAdjustForecast();
+
+    public void selectDirectionChoices(String directionChoices) throws Exception;
+
+    public void selectCategoryTypes(String categoryType) throws Exception;
+
+    public void inputAdjustmentValue(String adjustmentValue);
+
+    public void selectAdjustmentType(String adjustmentType) throws Exception;
+
+    public void verifyAdjustForecastConfirmationPage(String jobTitle, String adjustmentValue, String directionChoices, String categoryType, String searchTaskText);
+
+    public void verifyExportResultFunction();
+
+    public void verifyExportTaskSummaryFunction();
 }

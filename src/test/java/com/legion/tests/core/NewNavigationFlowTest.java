@@ -12,10 +12,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 public class NewNavigationFlowTest extends TestBase {
 
@@ -51,10 +48,12 @@ public class NewNavigationFlowTest extends TestBase {
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.selectLocationByIndex(1);
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         controlsNewUIPage.clickOnControlsConsoleMenu();
         SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+
         // Validate Controls Location Profile Section
         controlsNewUIPage.clickOnControlsLocationProfileSection();
         boolean isLocationProfile = controlsNewUIPage.isControlsLocationProfileLoaded();
@@ -100,7 +99,7 @@ public class NewNavigationFlowTest extends TestBase {
         String currentDistrict = dashboardPage.getCurrentDistrict();
         //change district to show all locations
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict("No touch no delete");
+//        locationSelectorPage.changeDistrict("No touch no delete");
 
         TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
 
@@ -118,8 +117,8 @@ public class NewNavigationFlowTest extends TestBase {
         }else
             SimpleUtils.fail("Location switch in Timesheet failed",false);
 
-        //change location to default one in order to avoid other test case
-        locationSelectorPage.changeDistrict(currentDistrict);
+//        //change location to default one in order to avoid other test case
+//        locationSelectorPage.changeDistrict(currentDistrict);
 
     }
 
@@ -229,7 +228,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate search function for location")
+    @TestName(description = "Validate search district function in navigation bar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNavigationBarSearchDistrictFunctionInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
@@ -270,7 +269,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate search function for location")
+    @TestName(description = "Validate search location function in navigation bar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNavigationBarSearchLocationFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -278,16 +277,18 @@ public class NewNavigationFlowTest extends TestBase {
 
         //change district to show all locations
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict("No touch no delete");
+        locationSelectorPage.changeDistrict("add district via con");
 
-        String searchDistrictText = "*";
+        String searchLocationText = "*";
+        Thread.sleep(4000);
         String currentDistrict = dashboardPage.getCurrentDistrict();
+        SimpleUtils.report(currentDistrict);
 
         List<String> locationsInNavigationBar = new ArrayList<>();
         List<String> locationsInDistrictPage = new ArrayList<>();
 
         //input * to search all locations in specify district
-        locationsInNavigationBar = locationSelectorPage.searchLocation(searchDistrictText);
+        locationsInNavigationBar = locationSelectorPage.searchLocation(searchLocationText);
 
         //go to OPS -> Locations -> District function
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -325,13 +326,14 @@ public class NewNavigationFlowTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         String districtName="OMDistrict1";
-        String locationName="OMLocation11";
+        String locationName="OMLocation2";
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
 
         locationSelectorPage.changeDistrict(districtName);
+        Thread.sleep(4000);
         locationSelectorPage.changeLocation(locationName);
 
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
@@ -382,7 +384,49 @@ public class NewNavigationFlowTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validated the recently views list should show correctly for user")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyNavigationBarRecentlyViewListAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
+        List<String> searchDistrictsList = new ArrayList<String>(){{
+            add("District1002");
+            add("District1003");
+            add("OMDistrict1");
+            add("1204-1");
+            add("add district via con");
+            add("DistrictEmpty001");
+        }};
 
+        List<String> finalDistrictsList = new ArrayList<String>();
 
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
+
+        for(String district:searchDistrictsList){
+            if(district!=null) {
+                locationSelectorPage.changeDistrict(district);
+            }
+        }
+
+        finalDistrictsList = dashboardPage.getDistrcitListInDashboard();
+        Collections.reverse(searchDistrictsList);
+
+        if(finalDistrictsList.size()==5){
+        for(int i=0;i<finalDistrictsList.size();i++){
+            if(finalDistrictsList.get(i).equals(searchDistrictsList.get(i))){
+                SimpleUtils.pass("The " + (i+1) + " location is " + finalDistrictsList.get(i));
+            }else{
+                SimpleUtils.fail("The order of districts list is NOT correct",true);
+
+            }
+        }
+        }else {
+            SimpleUtils.fail("The count of districts is NOT correct",true);
+        }
+    }
 }

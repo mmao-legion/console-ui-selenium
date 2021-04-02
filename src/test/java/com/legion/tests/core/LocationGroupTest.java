@@ -77,7 +77,7 @@ public class LocationGroupTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Validate the generation of LG schedule")
+    @TestName(description = "P2P:Validate the generation of LG schedule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheGenerationOfLGScheduleForP2PAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
@@ -148,7 +148,7 @@ public class LocationGroupTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate manager cannot edit operating hours when disable it's Manage Working Hours Setting permission")
+    @TestName(description = "Validate mananger cannot edit operating hours when disable it's Manage Working Hours Setting permission")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForMSAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
@@ -254,7 +254,7 @@ public class LocationGroupTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Validate manager cannot edit operating hours when disable it's Manage Working Hours Setting permission")
+    @TestName(description = "P2P:Validate mananger cannot edit operating hours when disable it's Manage Working Hours Setting permission")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForP2PAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
@@ -447,7 +447,7 @@ public class LocationGroupTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Validate all smart cards display correctly after generate schedule ")
+    @TestName(description = "P2P:Validate all smart cards display correctly after generate schedule ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleForP2PAsInternalAdmin (String username, String password, String browser, String location)
             throws Exception {
@@ -597,7 +597,7 @@ public class LocationGroupTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Validate the buttons on schedule page")
+    @TestName(description = "P2P:Validate the buttons on schedule page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheButtonsOnSchedulePageForP2PAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
@@ -702,7 +702,7 @@ public class LocationGroupTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Validate the group by dropdown list")
+    @TestName(description = "P2P:Validate the group by dropdown list")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheGroupByDropdownListForP2PAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
@@ -1658,9 +1658,10 @@ public class LocationGroupTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate activity for claim the open shift")
+    @TestName(description = "Validate TMs Can Receive & Accept Offers for Multiple Shifts and Multiple Locations")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyActivityOfClaimOpenShiftForMSAsTeamMemberLG(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1780,7 +1781,7 @@ public class LocationGroupTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Validate activity for claim the open shift")
+    @TestName(description = "P2P:Validate TMs Can Receive & Accept Offers for Multiple Shifts and Multiple Locations")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyActivityOfClaimOpenShiftForP2PAsTeamMemberLG(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -2588,8 +2589,8 @@ public class LocationGroupTest extends TestBase {
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-//            schedulePage.navigateToNextWeek();
-//            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = schedulePage.isWeekGenerated();
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -2601,13 +2602,17 @@ public class LocationGroupTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.saveSchedule();
             //Create auto open shift.
+
+            //Create auto open shift.
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("BARTENDER");
-            schedulePage.selectChildLocInCreateShiftWindow("Mountain View");
-            schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.selectWorkRole("LIFT OPERATOR");
+            schedulePage.selectChildLocInCreateShiftWindow("Child1");
+            schedulePage.moveSliderAtSomePoint("40", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtSomePoint("22", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.saveSchedule();
             schedulePage.publishActiveSchedule();
 
             // Get the hours and the count of the tms for each day, ex: "37.5 Hrs 5TMs"

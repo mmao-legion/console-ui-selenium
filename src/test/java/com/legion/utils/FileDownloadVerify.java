@@ -30,6 +30,7 @@ public class FileDownloadVerify {
         for (int i = 1; i < files.length; i++) {
             if(files[i].getName().contains(ext)) {
                 flag=true;
+                break;
             }
         }
         return flag;
