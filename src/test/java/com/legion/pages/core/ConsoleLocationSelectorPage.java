@@ -67,7 +67,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy (css = ".lg-new-location-chooser__highlight [placeholder=\"Select...\"] .input-faked")
     private WebElement changeLocationButton;
 
-    @FindBy(css = "[search-hint='Search District'] div.input-faked")
+    @FindBy(css = "[search-hint='Search District'] div>input-field div.input-faked")
     private WebElement districtSelectorButton;
     @FindBy(css = "[search-hint=\"Search District\"] div.lg-search-options")
     private WebElement districtDropDownButton;
@@ -751,7 +751,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         if (isDistrictSelected(districtName))
             SimpleUtils.pass("Dashboard Page: Display district is consistent with the selected district");
         else
-            SimpleUtils.fail("Dashboard Page: Display district is not consistent with the selected district", true);
+            SimpleUtils.fail("Dashboard Page: Display district is not consistent with the selected district", false);
     }
 
     @Override
@@ -800,6 +800,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
     }
 
+    @FindBy(css = "[search-hint=\"Search District\"] div.lg-search-options__option")
+    private List<WebElement> availableDistrictCardsName;
+
     @Override
     public void changeAnotherDistrict() throws Exception {
         waitForSeconds(4);
@@ -811,11 +814,11 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                             click(districtSelectorButton);
                         }
                         if (isElementLoaded(districtDropDownButton, 5)) {
-                            if (availableLocationCardsName.size() != 0) {
-                                for (WebElement locationCardName : availableLocationCardsName) {
-                                    if (!locationCardName.getText().contains(districtName)) {
-                                        clickTheElement(locationCardName);
-                                        SimpleUtils.pass("District changed successfully to '" + locationCardName.getText() + "'");
+                            if (availableDistrictCardsName.size() != 0) {
+                                for (WebElement districtCardName : availableDistrictCardsName) {
+                                    if (!districtCardName.getText().contains(districtName)) {
+                                        clickTheElement(districtCardName);
+                                        SimpleUtils.pass("District changed successfully to '" + districtCardName.getText() + "'");
                                         break;
                                     }
                                 }
@@ -845,11 +848,11 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                     click(districtSelectorButton);
                 }
                 if (isElementLoaded(districtDropDownButton, 5)) {
-                    if (availableLocationCardsName.size() != 0) {
-                        for (WebElement locationCardName : availableLocationCardsName) {
-                            if (!locationCardName.getText().contains(districtName)) {
-                                clickTheElement(locationCardName);
-                                SimpleUtils.pass("District changed successfully to '" + locationCardName.getText() + "'");
+                    if (availableDistrictCardsName.size() != 0) {
+                        for (WebElement districtCardName : availableDistrictCardsName) {
+                            if (!districtCardName.getText().contains(districtName)) {
+                                clickTheElement(districtCardName);
+                                SimpleUtils.pass("District changed successfully to '" + districtCardName.getText() + "'");
                                 waitForSeconds(1);
                                 break;
                             }

@@ -3608,4 +3608,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public boolean isRequiredActionSmartCardLoaded() throws Exception {
         return false;
     }
+
+    @Override
+    public void verifyFilterDropdownList(boolean isLG) throws Exception {
+
+    }
 }

@@ -17,6 +17,7 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.getEnterprise;
 
 public class DashboardTestKendraScott2 extends TestBase {
 
@@ -151,12 +152,12 @@ public class DashboardTestKendraScott2 extends TestBase {
 			//T1838584 Validate the visibility of Username.
 			dashboardPage.validateTheVisibilityOfUsername(nickName);
 
-			//T1838583 Validate the information after selecting different location.
+			// T1838583 Validate the information after selecting different location.
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
 
 			String fileName = "UsersCredentials.json";
-			fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
+			fileName = getEnterprise() + fileName;
 			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
 			Object[][] internalAdminCredentials = userCredentials.get("InternalAdmin");
 			loginToLegionAndVerifyIsLoginDone(String.valueOf(internalAdminCredentials[0][0]), String.valueOf(internalAdminCredentials[0][1])
@@ -219,7 +220,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 			dashboardPage.validateDateAndTime();
 
 			//T1838586 Validate the upcoming schedules.
-			dashboardPage.validateTheUpcomingSchedules(nickName);
+			dashboardPage.validateTheUpcomingSchedules(location);
 
 			//T1838587 Validate the click ability of VIEW MY SCHEDULE button.
 			dashboardPage.validateVIEWMYSCHEDULEButtonClickable();

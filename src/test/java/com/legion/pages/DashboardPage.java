@@ -40,7 +40,7 @@ public interface DashboardPage {
     public void validateDateAndTimeAfterSelectingDifferentLocation() throws Exception;
     public void validateTheVisibilityOfUsername(String userName) throws Exception;
     public void validateDateAndTime() throws Exception;
-    public void validateTheUpcomingSchedules(String userName) throws Exception;
+    public void validateTheUpcomingSchedules(String location) throws Exception;
     public void validateVIEWMYSCHEDULEButtonClickable() throws Exception;
     public void validateTheVisibilityOfProfilePicture() throws Exception;
     public void validateProfilePictureIconClickable() throws Exception;
