@@ -417,7 +417,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			String WeekPeriodTextAftBack = currentWeekPeriod.getText().trim().replace("\n", "").replace(" ", "").replace("-", "");
 			SimpleUtils.report("WeekPeriodTextAftBack======" + WeekPeriodTextAftBack);
 			if (WeekPeriodTextAftBack.trim().equals(currentWeekPeriodText.trim())) {
-				SimpleUtils.fail(" Back buttons are not working", true);
+				SimpleUtils.fail(" Back buttons are not working", false);
 			} else {
 				SimpleUtils.pass(" Back button is working normally");
 			}
@@ -426,7 +426,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			if (WeekPeriodTextAftForeword.trim().equals(currentWeekPeriodText.trim())) {
 				SimpleUtils.pass(" Foreword button is working normally");
 			} else {
-				SimpleUtils.fail(" Foreword buttons are not working normally",true);
+				SimpleUtils.fail(" Foreword buttons are not working normally",false);
 			}
 		}
 			else {

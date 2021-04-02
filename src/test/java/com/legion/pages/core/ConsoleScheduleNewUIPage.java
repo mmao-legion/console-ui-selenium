@@ -8641,13 +8641,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (areListElementVisible(wholeWeekShifts, 5)) {
                     for (WebElement shift : wholeWeekShifts) {
                         WebElement name = shift.findElement(By.className("week-schedule-worker-name"));
-                        if (shiftType.equalsIgnoreCase("Open")) {
+                        if (shiftType.contains("Open")) {
                             if (!name.getText().equalsIgnoreCase("Open")) {
-                                SimpleUtils.fail("Shift: " + name.getText() + " isn't for shift type: " + shiftType, true);
+                                SimpleUtils.fail("Shift: " + name.getText() + " isn't for shift type: " + shiftType, false);
                             }
                         }else {
-                            if (name.getText().equalsIgnoreCase("Open")) {
-                                SimpleUtils.fail("Shift: " + name.getText() + " isn't for shift type: " + shiftType, true);
+                            if (name.getText().contains("Open")) {
+                                SimpleUtils.fail("Shift: " + name.getText() + " isn't for shift type: " + shiftType, false);
                             }
                         }
                     }
@@ -8674,12 +8674,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     for (WebElement shift : dayViewAvailableShifts) {
                         WebElement name = shift.findElement(By.className("sch-day-view-shift-worker-name"));
                         if (shiftType.equalsIgnoreCase("Open")) {
-                            if (!name.getText().equalsIgnoreCase("Open")) {
-                                SimpleUtils.fail("Shift: " + name.getText() + " isn't for shift type: " + shiftType, true);
+                            if (!name.getText().contains("Open")) {
+                                SimpleUtils.fail("Shift: " + name.getText() + " isn't for shift type: " + shiftType, false);
                             }
                         }else {
-                            if (name.getText().equalsIgnoreCase("Open")) {
-                                SimpleUtils.fail("Shift: " + name.getText() + " isn't for shift type: " + shiftType, true);
+                            if (name.getText().contains("Open")) {
+                                SimpleUtils.fail("Shift: " + name.getText() + " isn't for shift type: " + shiftType, false);
                             }
                         }
                     }
