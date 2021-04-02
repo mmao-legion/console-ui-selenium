@@ -513,7 +513,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
     }
 
-    @FindBy(css = "[search-hint=\"Search District\"] input-field.picker-input .input-faked")
+    @FindBy(css = "lg-select[search-hint=\"Search District\"]")
     private WebElement selectedDistrict;
 
     public void changeDistrictDirect() throws Exception {
@@ -542,8 +542,6 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                             }
                             SimpleUtils.fail("District does not matched with '" + districtName + "'", true);
                         }
-                        //to close the district dropdown list
-                        click(districtSelectorButton);
                     }
                 }
             }

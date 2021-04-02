@@ -417,7 +417,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			String WeekPeriodTextAftBack = currentWeekPeriod.getText().trim().replace("\n", "").replace(" ", "").replace("-", "");
 			SimpleUtils.report("WeekPeriodTextAftBack======" + WeekPeriodTextAftBack);
 			if (WeekPeriodTextAftBack.trim().equals(currentWeekPeriodText.trim())) {
-				SimpleUtils.fail(" Back buttons are not working", true);
+				SimpleUtils.fail(" Back buttons are not working", false);
 			} else {
 				SimpleUtils.pass(" Back button is working normally");
 			}
@@ -509,7 +509,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			SimpleUtils.pass("can navigate to next or previous week");
 
 		} else {
-			SimpleUtils.fail("element is not displayed", true);
+			SimpleUtils.fail("element is not displayed", false);
 		}
 	}
 
@@ -1193,7 +1193,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 					SimpleUtils.fail("shopper forecast is not selected by default",false);
 				}
 			} else {
-				SimpleUtils.warn("Shopper tap is not loaded!");
+				SimpleUtils.report("Shopper tap is not loaded!");
 			}
 		}else {
 			flag = false;
@@ -1215,7 +1215,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 					SimpleUtils.pass("week forecast is open");
 				} else {
 					flag=true;
-					SimpleUtils.warn("No weather smart card!");
+					SimpleUtils.report("No weather smart card!");
 				}
 			}else {
 				SimpleUtils.fail("weekly forecast is not selected by default",false);

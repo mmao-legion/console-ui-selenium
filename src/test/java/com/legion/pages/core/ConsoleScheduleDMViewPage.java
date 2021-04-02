@@ -26,7 +26,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     private List<WebElement>  schedulesInDMView;
 
 
-    @FindBy(css = "[jj-switch-when=\\\"cells.CELL_BUDGET_HOURS\\\"]")
+    @FindBy(css = "[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")
     private List<WebElement>  budgetHours;
 
     public ConsoleScheduleDMViewPage() {
