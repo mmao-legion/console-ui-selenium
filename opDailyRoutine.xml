@@ -40,6 +40,7 @@
                     <include name="verifyUpperFieldsListPageAndSearchFunction" />
                     <include name="verifyAddUpperFieldsWithDiffLevel" />
                     <include name="verifyDefaultOrganizationHierarchyShow"/>
+                    <include name="verifyAddEditRemoveOrganizationHierarchy"/>
 <!--                    <include name="verifyDisableEnableDistrictFunction" />-->
                     <!--                    Global dynamic group test cases-->
 <!--                    <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />-->

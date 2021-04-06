@@ -23,6 +23,7 @@
 <!--                    <include name="verifyAddOrUpdateDistrictFunction" />-->
 <!--                    <include name="verifyDisableEnableDistrictFunction" />-->
                     <include name="verifyDefaultOrganizationHierarchyShow"/>
+                    <include name="verifyAddEditRemoveOrganizationHierarchy"/>
                 </methods>
             </class>
         </classes>
