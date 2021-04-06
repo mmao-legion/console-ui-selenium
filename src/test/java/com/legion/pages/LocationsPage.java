@@ -100,13 +100,13 @@ public interface LocationsPage {
 
     public void addNewDistrict(String districtName, String districtId,String searchChara,int index) throws Exception;
 
-    public void updateDistrict(String districtName, String districtId, String searchChara, int index);
+    public void updateUpperfield(String districtName, String districtId, String searchChara, int index) throws Exception;
 
-    public ArrayList<HashMap<String, String>> getDistrictInfo(String districtName);
+    public ArrayList<HashMap<String, String>> getUpperfieldsInfo(String districtName);
 
     public void addNewDistrictWithoutLocation(String districtName, String districtId) throws Exception;
 
-    public void disableEnableDistrict(String districtName, String action) throws Exception;
+    public void disableEnableUpperfield(String districtName, String action) throws Exception;
 
     public HashMap<String, String> getEnterpriseLogoAndDefaultLocationInfo();
 
@@ -149,6 +149,14 @@ public interface LocationsPage {
     public ArrayList<HashMap<String, String>> getOrganizationHierarchyInfo();
 
     public void goBackToLocationsTab();
+
+    public void verifyBackBtnInCreateNewUpperfieldPage();
+
+    public void verifyCancelBtnInCreateNewUpperfieldPage();
+
+    public void addNewUpperfieldsWithRandomLevel(String upperfieldsName, String upperfieldsId, String searchChara, int index) throws Exception;
+
+
 //
 //    public ArrayList<HashMap<String, String>> getWFSGroupForm();
 

@@ -20,6 +20,7 @@
                     <!--                    Upperfield test cases-->
                     <include name="verifyUpperFieldsListPageAndSearchFunction" />
                     <include name="verifyAddUpperFieldsWithDiffLevel" />
+                    <include name="verifyDisableEnableUpperFieldFunction"/>
 <!--                    <include name="verifyAddOrUpdateDistrictFunction" />-->
 <!--                    <include name="verifyDisableEnableDistrictFunction" />-->
                     <include name="verifyDefaultOrganizationHierarchyShow"/>

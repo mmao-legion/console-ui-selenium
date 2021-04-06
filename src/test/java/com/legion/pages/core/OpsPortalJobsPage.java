@@ -622,7 +622,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 	@Override
 	public void iCanClickOnCreatAndReleaseCheckBox() {
-		if (isElementEnabled(createAndReleaseCheckbox,5)) {
+		if (isElementEnabled(createAndReleaseCheckbox,15)) {
 			click(createAndReleaseCheckbox);
 			SimpleUtils.pass("Click on Also create and release schedules for locations that do not have schedules created yet successfully" );
 		}else

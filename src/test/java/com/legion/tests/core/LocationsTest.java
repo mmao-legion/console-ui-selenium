@@ -1271,10 +1271,8 @@ public class LocationsTest extends TestBase {
                 String currentTime =  dfs.format(new Date()).trim();
                 String upperfieldsName = currentTime;
                 String upperfieldsId = currentTime;
-                String searchChara = "Auto";
+                String searchChara = "test";
                 int index = 0;
-                String levelInfo = "District,Region,";
-
 
                 DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
                 SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1293,9 +1291,9 @@ public class LocationsTest extends TestBase {
                 locationsPage.goBackToLocationsTab();
                 //go to sub-upperfield  tab
                 locationsPage.goToUpperFieldsPage();
+                locationsPage.verifyBackBtnInCreateNewUpperfieldPage();
                 locationsPage.addNewUpperfieldsWithoutParentAndChild( upperfieldsName, upperfieldsId,searchChara,index,organizationHierarchyInfo);
-                locationsPage.searchUpperFields(upperfieldsName);
-//                locationsPage.updateDistrict(upperfieldsName,upperfieldsId,searchChara,index);
+
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1305,19 +1303,15 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Verify disable and enable district")
+    @TestName(description = "Verify disable and enable upperfield")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDisableEnableDistrictFunction(String browser, String username, String password, String location) throws Exception {
+    public void verifyDisableEnableUpperFieldFunction(String browser, String username, String password, String location) throws Exception {
 
        try{
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-            String currentTime =  dfs.format(new Date()).trim();
-            String districtName = currentTime;
-            String districtId = currentTime;
-            String districtManager = "Estelle Yan";
             String disableAction = "Disable";
             String enableAction = "Enable";
-
+           String searchChara = "status:Disabled";
+           int index = 0;
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1331,18 +1325,63 @@ public class LocationsTest extends TestBase {
             locationsPage.validateItemsInLocations();
             //go to sub-district  tab
             locationsPage.goToUpperFieldsPage();
-            locationsPage.addNewDistrictWithoutLocation( districtName, districtId);
-
-            //disable and enable district
-            locationsPage.disableEnableDistrict(districtName,disableAction);
-            locationsPage.disableEnableDistrict(districtName,enableAction);
+           String upperfieldsName = "";
+           ArrayList<HashMap<String, String>> upperfieldInfo = locationsPage.getUpperfieldsInfo(searchChara);
+           for (int i = 0; i <upperfieldInfo.size() ; i++) {
+               if (upperfieldInfo.get(i).get("upperfieldStatus").equalsIgnoreCase("DISABLED") &&
+                       upperfieldInfo.get(i).get("numOfLocations").equals("0")) {
+                   upperfieldsName = upperfieldInfo.get(i).get("upperfieldName");
+                   break;
+               }
+           }
+            //disable and enable upperfield
+            locationsPage.disableEnableUpperfield(upperfieldsName,enableAction);
+            locationsPage.disableEnableUpperfield(upperfieldsName,disableAction);
 
        } catch (Exception e){
            SimpleUtils.fail(e.getMessage(), false);
        }
 
     }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify update upperfield")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUpdateUpperFieldFunction(String browser, String username, String password, String location) throws Exception {
 
+        try{
+
+            String upperfieldsName = "Level:Region";
+            String searchChara = "test";
+            int index = 1;
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check locations item
+            locationsPage.validateItemsInLocations();
+            //go to sub-district  tab
+            locationsPage.goToUpperFieldsPage();
+
+            //update upperfield
+            locationsPage.updateUpperfield(upperfieldsName, upperfieldsName,  searchChara, index);
+            ArrayList<HashMap<String, String>> upperfieldInfo = locationsPage.getUpperfieldsInfo("Change"+searchChara.replaceAll(":","")+"ToDistrict");
+            if (upperfieldInfo.get(0).get("upperfieldLevel").equalsIgnoreCase("District")) {
+                SimpleUtils.pass("Upperfield update successfully");
+            }else
+                SimpleUtils.fail("Upperfield update failed",false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
