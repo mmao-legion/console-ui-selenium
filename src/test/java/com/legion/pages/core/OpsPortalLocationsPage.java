@@ -4,6 +4,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.LocationsPage;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -2156,5 +2157,57 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 //		}
 //		}
 //	}
+	//add by Fiona for Organization Hierarchy
+	@FindBy(css="form-section[form-title=\"Organization Hierarchy\"]")
+	private WebElement organizationHierarchySection;
+	@FindBy(css="div.hierarchy-container tbody tr")
+	private List<WebElement> hierarchyList;
+	@FindBy(css="div.hierarchy-header.dif div")
+	private WebElement addHierarchyBTN;
+
+
+	@Override
+	public void verifyDefaultOrganizationHierarchy() throws Exception{
+		List<String> levelNameList = new ArrayList<String>(){{
+			add("Location");
+			add("District");
+		}};
+		List<String> hierarchyLevelNameList = new ArrayList<>();
+		if(isElementEnabled(organizationHierarchySection)){
+			SimpleUtils.pass("The organization hierarchy section show correctly.");
+			clickTheElement(editOnGlobalConfigPage);
+			if(hierarchyList.size() != 0){
+				if(hierarchyList.size() == 1){
+					clickTheElement(addHierarchyBTN);
+					waitForSeconds(2);
+					for(WebElement hierarchy:hierarchyList){
+						String hierarchyLevelName = hierarchy.findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
+						hierarchyLevelNameList.add(hierarchyLevelName);
+					}
+				}else {
+					for(int i=0;i<=1;i++){
+						String hierarchyLevelName = hierarchyList.get(i).findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
+						hierarchyLevelNameList.add(hierarchyLevelName);
+					}
+				}
+			}
+		}else {
+			SimpleUtils.fail("The organization hierarchy section Can NOT show correctly.",false);
+		}
+
+		if(ListUtils.isEqualList(levelNameList,hierarchyLevelNameList)){
+			SimpleUtils.pass("The hierarchy level name is correct.");
+		}else{
+			SimpleUtils.fail("The hierarchy level name is NOT correct.",false);
+		}
+
+	}
+
+
+
+
+
+
+
 }
 
