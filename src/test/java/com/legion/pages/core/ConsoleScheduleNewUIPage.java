@@ -10872,10 +10872,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 for (WebElement shiftType : shiftTypes) {
                     WebElement filterCheckBox = shiftType.findElement(By.tagName("input"));
                     if (filterCheckBox.getAttribute("class").contains("ng-not-empty")) {
-                        if (shiftType.getText().equals("Scheduled"))
+                        if (shiftType.getText().contains("Scheduled"))
                             SimpleUtils.pass("My Schedule Page: Scheduled filter is applied by default successfully");
                         else
-                            SimpleUtils.fail("My Schedule Page: Scheduled filter isn't applied by default successfully", true);
+                            SimpleUtils.fail("My Schedule Page: Scheduled filter isn't applied by default successfully", false);
                     }
                 }
             } else if (isElementLoaded(myScheduleNoSchedule, 10)) {
