@@ -2347,11 +2347,38 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 
 	}
+	@FindBy(css = "card-carousel-card")
+	private WebElement upperfieldSmartCard;
+	@Override
+	public HashMap<String, Integer> getUpperfieldsSmartCardInfo() {
 
+		HashMap<String, Integer> upperfieldSmartCardText = new HashMap<>();
+		if (isElementEnabled(upperfieldSmartCard,5)) {
+			upperfieldSmartCardText.put("Enabled", Integer.valueOf(upperfieldSmartCard.findElement(By.cssSelector("div > ng-transclude > table > tbody > tr:nth-child(2)")).getText().split(" ")[1]));
+			upperfieldSmartCardText.put("Disabled", Integer.valueOf(upperfieldSmartCard.findElement(By.cssSelector("div > ng-transclude > table > tbody > tr:nth-child(3)")).getText().split(" ")[1]));
+			return upperfieldSmartCardText;
+		}
 
+		return null;
+	}
 
+	@Override
+	public int getSearchResultNum() throws Exception {
+		int totalNum = 0;
+		if (isElementEnabled(pageNumberText,5)) {
+			int maxPageNum = Integer.valueOf(pageNumberText.getText().trim().split("of")[1].trim());
+			if (maxPageNum != 1) {
+				selectByVisibleText(pageNumSelector,String.valueOf(maxPageNum));
+				totalNum = (maxPageNum-1)*10+upperfieldRows.size();
 
+			}else
+				totalNum = upperfieldRows.size();
 
+			return totalNum;
+		}else
+			SimpleUtils.fail("Pagination element load failed",false);
+		return 0;
+	}
 
 
 }

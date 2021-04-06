@@ -161,4 +161,8 @@ public interface LocationsPage {
 //    public ArrayList<HashMap<String, String>> getWFSGroupForm();
 
     public void verifyDefaultOrganizationHierarchy() throws Exception;
+
+    public  HashMap<String, Integer> getUpperfieldsSmartCardInfo();
+
+    public int getSearchResultNum() throws Exception;
 }

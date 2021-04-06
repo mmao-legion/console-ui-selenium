@@ -41,8 +41,7 @@
                     <include name="verifyAddUpperFieldsWithDiffLevel" />
                     <include name="verifyDefaultOrganizationHierarchyShow"/>
                     <include name="verifyDisableEnableUpperFieldFunction"/>
-
-<!--                    <include name="verifyDisableEnableDistrictFunction" />-->
+                    <include name="verifyUpperFieldSmartCardData" />
                     <!--                    Global dynamic group test cases-->
 <!--                    <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />-->
                     <include name="verifyGlobalDynamicGroupAbnormalScenarios" />
