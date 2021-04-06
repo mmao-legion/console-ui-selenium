@@ -2361,6 +2361,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 		return null;
 	}
+	public void clickOnAddHierarchyBTN(){
+		if(isElementEnabled(addHierarchyBTN)){
+			clickTheElement(addHierarchyBTN);
+			waitForSeconds(2);
+		}else {
+			SimpleUtils.fail("add Hierarchy BTN is not available.",false);
+		}
+	}
 
 	@Override
 	public int getSearchResultNum() throws Exception {
@@ -2370,16 +2378,137 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (maxPageNum != 1) {
 				selectByVisibleText(pageNumSelector,String.valueOf(maxPageNum));
 				totalNum = (maxPageNum-1)*10+upperfieldRows.size();
+	@Override
+	public void addOrganizatioHierarchy(List<String> hierarchyNames) throws Exception{
+		int beforeAdd = hierarchyList.size();
+		if(isElementEnabled(organizationHierarchySection)){
+			SimpleUtils.pass("The organization hierarchy section show correctly.");
+			clickTheElement(editOnGlobalConfigPage);
+			for(int i = 0; i < hierarchyNames.size(); i++){
+				clickOnAddHierarchyBTN();
+				WebElement hierarchyDisplayName = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(3) input"));
+				clickTheElement(hierarchyDisplayName);
+				hierarchyDisplayName.sendKeys(hierarchyNames.get(i));
+				WebElement hierarchyCheckIcon = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(5) i.fa-check-circle"));
+				clickTheElement(hierarchyCheckIcon);
+				waitForSeconds(1);
+			}
+			int afterAdd = hierarchyList.size();
+			if(afterAdd - beforeAdd == hierarchyNames.size()){
+				SimpleUtils.pass("User has added " + hierarchyNames.size() + " hierarchies");
+			}else {
+				SimpleUtils.fail("User failed to add hierarchies",false);
+			}
+		}else {
+			SimpleUtils.fail("The organization hierarchy section Can NOT show correctly.",false);
+		}
+	}
 
 			}else
 				totalNum = upperfieldRows.size();
+	@Override
+	public void deleteOrganizatioHierarchy() throws Exception{
+		int beforeDelete = hierarchyList.size();
+		if(hierarchyList.size()>1){
+			WebElement hierarchyDeleteRowButton = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(5) i[ng-click=\"$ctrl.deleteRowClick($index)\"]"));
+			if(isElementEnabled(hierarchyDeleteRowButton)){
+				clickTheElement(hierarchyDeleteRowButton);
+				waitForSeconds(1);
+			}else {
+				SimpleUtils.fail("User can't delete hierarchy.",false);
+			}
+		}else {
+			SimpleUtils.fail("Have only one hierarchy, can't delete it!", false);
+		}
+		int afterDelete = hierarchyList.size();
+		if(afterDelete + 1 == beforeDelete){
+			SimpleUtils.pass("User delete hierarchy successfully!");
+		}else {
+			SimpleUtils.fail("User failed to delete hierarchy.",false);
+		}
+	}
 
 			return totalNum;
 		}else
 			SimpleUtils.fail("Pagination element load failed",false);
 		return 0;
 	}
+	@Override
+	public void updateOrganizatioHierarchyDisplayName() throws Exception{
+		if(hierarchyList.size()!=0){
+			WebElement editRowButton = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(5) i[ng-click=\"$ctrl.editRow(hierarchy)\"]"));
+			clickTheElement(editRowButton);
+			waitForSeconds(1);
+			WebElement hierarchyDisplayName = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(3) input"));
+			clickTheElement(hierarchyDisplayName);
+			hierarchyDisplayName.sendKeys("-Update");
+			WebElement hierarchyCheckIcon = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(5) i.fa-check-circle"));
+			clickTheElement(hierarchyCheckIcon);
+			waitForSeconds(1);
+			String hierarchyDisplayNameNew = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(3)")).getText().trim();
+			if(hierarchyDisplayNameNew.contains("-Update")){
+				SimpleUtils.pass("User update hierarchy display name successfully");
+			}else {
+				SimpleUtils.fail("User failed to update hierarchy display name",false);
+			}
+		}else {
+			SimpleUtils.fail("There is no hierarchy now.",false);
+		}
+	}
 
-
+	@Override
+	public void updateEnableUpperfieldViewOfHierarchy() throws Exception{
+		if(hierarchyList.size() <= 4){
+			WebElement editRowButton = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(5) i[ng-click=\"$ctrl.editRow(hierarchy)\"]"));
+			clickTheElement(editRowButton);
+			waitForSeconds(1);
+			WebElement hierarchyCheckBox = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(4) input"));
+			String checkBoxStatus = hierarchyCheckBox.getAttribute("class").trim();
+			if(checkBoxStatus.contains("ng-not-empty")){
+				clickTheElement(hierarchyCheckBox);
+				waitForSeconds(1);
+				String checkBoxStatusNew = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(4) input")).getAttribute("class").trim();
+				if(checkBoxStatusNew.contains("ng-empty")){
+					SimpleUtils.pass("User un-checked check box of hierarchy successfully.");
+				}else {
+					SimpleUtils.fail("User failed to un-checked check box of hierarchy.",false);
+				}
+			}else {
+				clickTheElement(hierarchyCheckBox);
+				waitForSeconds(1);
+				String checkBoxStatusNew = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(4) input")).getAttribute("class").trim();
+				if(checkBoxStatusNew.contains("ng-not-empty")){
+					SimpleUtils.pass("User checked check box of hierarchy successfully.");
+				}else {
+					SimpleUtils.fail("User failed to tick on check box of hierarchy.",false);
+				}
+			}
+		}else {
+			WebElement editRowButton = hierarchyList.get(3).findElement(By.cssSelector("td:nth-child(5) i[ng-click=\"$ctrl.editRow(hierarchy)\"]"));
+			clickTheElement(editRowButton);
+			waitForSeconds(1);
+			WebElement hierarchyCheckBox = hierarchyList.get(3).findElement(By.cssSelector("td:nth-child(4) input"));
+			String checkBoxStatus = hierarchyCheckBox.getAttribute("class").trim();
+			if(checkBoxStatus.contains("ng-not-empty")){
+				clickTheElement(hierarchyCheckBox);
+				waitForSeconds(1);
+				String checkBoxStatusNew = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(4) input")).getAttribute("class").trim();
+				if(checkBoxStatusNew.contains("ng-empty")){
+					SimpleUtils.pass("User un-checked check box of hierarchy successfully.");
+				}else {
+					SimpleUtils.fail("User failed to un-checked check box of hierarchy.",false);
+				}
+			}else {
+				clickTheElement(hierarchyCheckBox);
+				waitForSeconds(1);
+				String checkBoxStatusNew = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(4) input")).getAttribute("class").trim();
+				if(checkBoxStatusNew.contains("ng-not-empty")){
+					SimpleUtils.pass("User checked check box of hierarchy successfully.");
+				}else {
+					SimpleUtils.fail("User failed to tick on check box of hierarchy.",false);
+				}
+			}
+		}
+	}
 }
 

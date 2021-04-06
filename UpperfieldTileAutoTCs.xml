@@ -23,6 +23,7 @@
                     <include name="verifyDisableEnableUpperFieldFunction"/>
                     <include name="verifyUpperFieldSmartCardData" />
                     <include name="verifyDefaultOrganizationHierarchyShow"/>
+                    <include name="verifyAddEditRemoveOrganizationHierarchy"/>
                 </methods>
             </class>
         </classes>

@@ -162,6 +162,14 @@ public interface LocationsPage {
 
     public void verifyDefaultOrganizationHierarchy() throws Exception;
 
+    public void addOrganizatioHierarchy(List<String> hierarchyNames) throws Exception;
+
+    public void deleteOrganizatioHierarchy() throws Exception;
+
+    public void updateOrganizatioHierarchyDisplayName() throws Exception;
+
+    public void updateEnableUpperfieldViewOfHierarchy() throws Exception;
+
     public  HashMap<String, Integer> getUpperfieldsSmartCardInfo();
 
     public int getSearchResultNum() throws Exception;

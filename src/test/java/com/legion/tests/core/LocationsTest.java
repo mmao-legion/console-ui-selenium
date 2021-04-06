@@ -1712,4 +1712,34 @@ public class LocationsTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate add edit remove organization hierarchy")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAddEditRemoveOrganizationHierarchy(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            List<String> hierarchyNames = new ArrayList<String>(){{
+                add("AutoDistrcit");
+                add("AutoRegion");
+                add("AutoBU");
+            }};
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            locationsPage.addOrganizatioHierarchy(hierarchyNames);
+            locationsPage.deleteOrganizatioHierarchy();
+            locationsPage.updateOrganizatioHierarchyDisplayName();
+            locationsPage.updateEnableUpperfieldViewOfHierarchy();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }
