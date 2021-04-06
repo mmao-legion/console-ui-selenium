@@ -5,12 +5,14 @@ import com.legion.pages.LocationsPage;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -156,9 +158,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement countrySelect;
 	@FindBy(css="input[aria-label=\"City\"]")
 	private WebElement city;
-	@FindBy(css = "ng-transclude > lg-select > div > lg-picker-input > div > input-field > ng-form")
+	@FindBy(css = "input-field[label=\"State\"]>ng-form")
 	private WebElement state;
-	@FindBy(xpath = "//ng-transclude/lg-select/div/lg-picker-input/div/div/ng-transclude/lg-search-options/div/div/div[1]/div")
+	@FindBy(css = "div.lg-search-options__scroller")
+	private WebElement stateList;
+	@FindBy(css = "div.lg-search-options__scroller>div:nth-child(1)")
 	private WebElement firstState;
 	@FindBy(css="input[aria-label=\"Zip Code\"]")
 	private WebElement zipCode;
@@ -205,7 +209,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void addNewRegularLocationWithMandatoryFields(String locationName) throws Exception {
 
-		if (isElementEnabled(addLocationBtn,5)) {
+		if (isElementEnabled(addLocationBtn,15)) {
 			click(addLocationBtn);
 			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
@@ -216,9 +220,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
 			waitForSeconds(3);
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
-			clickTheElement(state);
-			waitForSeconds(3);
-			clickTheElement(firstState);
+			click(state);
+			if (!isElementEnabled(stateList, 10)) {
+				click(state);
+			}
+			click(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			if (isElementEnabled(configTypeSelect,5)) {
@@ -261,7 +267,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void addNewRegularLocationWithAllFields(String locationName, String searchCharactor,int index) throws Exception {
-		if (isElementEnabled(addLocationBtn,5)) {
+		if (isElementEnabled(addLocationBtn,15)) {
 			click(addLocationBtn);
 			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
@@ -271,9 +277,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
-			clickTheElement(state);
-			waitForSeconds(3);
-			clickTheElement(firstState);
+			click(state);
+			if (!isElementEnabled(stateList, 10)) {
+				click(state);
+			}
+			click(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -341,7 +349,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement leaveThisPageBtn;
 	@Override
 	public void addNewMockLocationWithAllFields(String locationName, String searchCharactor, int index) throws Exception {
-		if (isElementEnabled(addLocationBtn,5)) {
+		if (isElementEnabled(addLocationBtn,15)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,newLocationParas.get("Location_Type_Mock"));
 			click(selectOneInBaseLocation);
@@ -418,7 +426,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void verifyThereIsNoLocationGroupField() {
-		if (isElementEnabled(addLocationBtn,5)) {
+		if (isElementEnabled(addLocationBtn,15)) {
 			click(addLocationBtn);
 			if (isElementEnabled(locationGroupSettingSelect,5)) {
 				SimpleUtils.fail("Location Group Setting is still show",true);
@@ -438,7 +446,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void addNewNSOLocation(String locationName, String searchCharactor, int index) throws Exception {
-		if (isElementEnabled(addLocationBtn,5)) {
+		if (isElementEnabled(addLocationBtn,15)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,newLocationParas.get("Location_Type_NSO"));
 			displayNameInput.sendKeys(locationName);
@@ -449,9 +457,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
-			clickTheElement(state);
-			waitForSeconds(3);
-			clickTheElement(firstState);
+			click(state);
+			if (!isElementEnabled(stateList, 10)) {
+				click(state);
+			}
+			click(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -786,7 +796,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void addChildLocation(String locationType, String childlocationName, String locationName, String searchCharactor, int index, String childRelationship) throws Exception {
-		if (isElementEnabled(addLocationBtn,5)) {
+		if (isElementEnabled(addLocationBtn,15)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,locationType);
 			displayNameInput.sendKeys(childlocationName);
@@ -800,9 +810,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
-			clickTheElement(state);
-			waitForSeconds(3);
-			clickTheElement(firstState);
+			click(state);
+			if (!isElementEnabled(stateList, 10)) {
+				click(state);
+			}
+			click(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -827,7 +839,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void addParentLocation(String locationType, String locationName, String searchCharactor, int index, String parentRelationship, String value) throws Exception {
-		if (isElementEnabled(addLocationBtn,5)) {
+		if (isElementEnabled(addLocationBtn,20)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,locationType);
 			displayNameInput.sendKeys(locationName);
@@ -840,9 +852,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
-			clickTheElement(state);
-			waitForSeconds(3);
-			clickTheElement(firstState);
+			click(state);
+			if (!isElementEnabled(stateList, 10)) {
+				click(state);
+			}
+			click(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -869,7 +883,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void addParentLocationForNsoType(String locationType, String locationName, String searchCharactor, int index, String parentRelationship, String value) throws Exception {
-		if (isElementEnabled(addLocationBtn,5)) {
+		if (isElementEnabled(addLocationBtn,20)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,locationType);
 			displayNameInput.sendKeys(locationName);
@@ -882,9 +896,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
-			clickTheElement(state);
-			waitForSeconds(3);
-			clickTheElement(firstState);
+			click(state);
+			if (!isElementEnabled(stateList, 10)) {
+				click(state);
+			}
+			click(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -926,7 +942,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void addChildLocationForNSO(String locationType, String childLocationName, String locationName, String searchCharactor, int index, String childRelationship) throws Exception {
-		if (isElementEnabled(addLocationBtn,5)) {
+		if (isElementEnabled(addLocationBtn,20)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector,locationType);
 			displayNameInput.sendKeys(childLocationName);
@@ -940,9 +956,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			selectByVisibleText(countrySelect,newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
-			clickTheElement(state);
-			waitForSeconds(3);
-			clickTheElement(firstState);
+			click(state);
+			if (!isElementEnabled(stateList, 10)) {
+				click(state);
+			}
+			click(firstState);
 			city.sendKeys(newLocationParas.get("City"));
 			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
 			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
@@ -983,7 +1001,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void checkThereIsNoLocationGroupSettingFieldWhenLocationTypeIsMock() throws Exception {
-		if (isElementEnabled(addLocationBtn, 5)) {
+		if (isElementEnabled(addLocationBtn, 20)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector, newLocationParas.get("Location_Type_Mock"));
 			if (isElementEnabled(locationGroupSelect,5) ) {
@@ -1210,8 +1228,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "lg-select[search-hint='Search Location'] div.input-faked")
 	private WebElement locationSelectorButton;
 
-	@FindBy(css = "lg-button[label=\"Edit District\"]")
-	private WebElement editDistrictBtn;
+	@FindBy(css = "lg-button[label=\"Edit Upperfield\"]")
+	private WebElement editUpperfieldBtn;
 
 	@FindBy(css = "lg-button[label=\"Manage\"]")
 	private  WebElement managementLocationBtn;
@@ -1272,7 +1290,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					SimpleUtils.pass("Can search out upperfield by using " + searchInputText);
 					break;
 				} else {
-					SimpleUtils.fail("Can't search out any upperfieds by using " + searchInputText,false);
+					SimpleUtils.report("There are no upperfields that match your criteria by using " + searchInputText);
 					waitForSeconds(5);
 					upperfieldsSearchInputBox.clear();
 				}
@@ -1349,8 +1367,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				waitForSeconds(10);
 				if (upperfieldRows.size() > 0) {
 					click(upperfieldRows.get(0).findElement(By.cssSelector("lg-button")));
-					waitUntilElementIsVisible(editDistrictBtn);
-					click(editDistrictBtn);
+					waitUntilElementIsVisible(editUpperfieldBtn);
+					click(editUpperfieldBtn);
 					click(managementLocationBtn);
 					if(isElementLoaded(locationsInManageLocationPopup,5)){
 						SimpleUtils.pass("Manage location popup window is showing Now");
@@ -1545,14 +1563,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			waitForSeconds(10);
 		if (isElementEnabled(upperfieldNameInput,3)&&isElementEnabled(upperfieldIdInput,3)
 		&& isElementEnabled(upperfieldManagerSelector,3) && isElementEnabled(upperfieldManagerPhone,3)
-		&& isElementEnabled(upperfieldManagerEmail,3)) {
+		&& isElementEnabled(upperfieldManagerEmail,3)&& isElementEnabled(cancelBtn,5)&&
+		isElementEnabled(createUpperfieldBtnInDistrictCreationPage)) {
 			return true;
 		}
 		return false;
 	}
 	@FindBy(css = ".lg-modal__title")
 	private WebElement selectDistrictPopUpWins;
-	@FindBy(css = "input[placeholder=\"Search by district name\"]")
+	@FindBy(css = "input[placeholder=\"Search by upperfield name\"]")
 	private WebElement searchDistrictInputInSelectDistrictPopUpWins;
 	private void managerDistrictLocations(String searchChara,int index) {
 		if (isElementEnabled(selectALocationTitle, 5)) {
@@ -1560,41 +1579,51 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			searchInputInSelectALocation.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
 			if (locationRowsInSelectLocation.size() > 0) {
-				for (int i = 0; i < locationRowsInSelectLocation.size(); i++) {
+				for (int i = 0; i < index; i++) {
 					WebElement firstRow = locationRowsInSelectLocation.get(i).findElement(By.cssSelector("input[type=\"checkbox\"]"));
 					click(firstRow);
 				}
 				click(okBtnInSelectLocation);
 			} else
-				SimpleUtils.fail("Select a location window load failed", true);
+				SimpleUtils.fail("Select a upperfield window load failed", true);
 
 		}
 	}
 	@FindBy(css = ".modal-dialog")
 	private WebElement districtIdChangePopUpWin;
-
+	@FindBy(css = "modal[modal-title=\"Upperfield Level Change\"]")
+	private WebElement upperfieldLevelChangeWin;
 	@Override
-	public void updateDistrict(String districtName, String districtId,  String searchChara, int index) {
-
+	public void updateUpperfield(String upperfieldsName, String upperfieldsId,  String searchChara, int index) throws Exception {
+		SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+		String currentTime =  dfs.format(new Date()).trim();
+		searchUpperFields(upperfieldsName);
 		if (upperfieldRows.size() > 0) {
 			List<WebElement> districtDetailsLinks = upperfieldRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			click(districtDetailsLinks.get(0));
-			click(editDistrictBtn);
+			click(editUpperfieldBtn);
+			selectByVisibleText(levelDropDownList,"District");
+
+			if (isElementEnabled(upperfieldLevelChangeWin,10)) {
+				click(okBtnInLocationGroupConfirmPage);
+				SimpleUtils.pass("Upperfield Level Change done");
+			}else
+				SimpleUtils.fail("Upperfield Level Change window load failed",false);
 			upperfieldNameInput.clear();
-			upperfieldNameInput.sendKeys(districtName+"update");
+			upperfieldNameInput.sendKeys(upperfieldsName.replaceAll(":","")+"ToDistrict");
 			upperfieldIdInput.clear();
 			waitForSeconds(2);
 			if (isElementEnabled(districtIdChangePopUpWin,3)) {
 				click(okBtnInLocationGroupConfirmPage);
-				upperfieldIdInput.sendKeys(districtName+"update");
+				upperfieldIdInput.sendKeys(upperfieldsName.replaceAll(":","")+currentTime);
 			}else
-				SimpleUtils.fail("District id change window not show",true);
+				SimpleUtils.fail("Upperfield id change window not show",true);
 			scrollToBottom();
 			click(ManagerBtnInDistrictCreationPage);
 			managerDistrictLocations(searchChara,index);
 			scrollToBottom();
 			click(saveBtnInUpdateLocationPage);
-			waitForSeconds(10);
+			waitForSeconds(20);
 			if (isElementEnabled(selectDistrictPopUpWins, 5)) {
 				searchDistrictInputInSelectDistrictPopUpWins.sendKeys("No touch no delete");
 				searchDistrictInputInSelectDistrictPopUpWins.sendKeys(Keys.ENTER);
@@ -1608,7 +1637,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				}
 			} else
 				SimpleUtils.report("Search location result is 0");
-			SimpleUtils.pass("District update done");
+			SimpleUtils.pass("Upperfield update done");
 		}else
 			SimpleUtils.fail("No search result",true);
 
@@ -1616,26 +1645,28 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 
-	public ArrayList<HashMap<String, String>> getDistrictInfo(String districtName) {
-		ArrayList<HashMap<String,String>> districtInfo = new ArrayList<>();
+	public ArrayList<HashMap<String, String>> getUpperfieldsInfo(String districtName) {
+		ArrayList<HashMap<String,String>> upperfieldInfo = new ArrayList<>();
 
-		if (isElementEnabled(upperfieldsInLocations, 10)) {
-			upperfieldsInLocations.clear();
-			upperfieldsInLocations.sendKeys(districtName);
-			upperfieldsInLocations.sendKeys(Keys.ENTER);
+		if (isElementEnabled(upperfieldsSearchInputBox, 10)) {
+			upperfieldsSearchInputBox.clear();
+			upperfieldsSearchInputBox.sendKeys(districtName);
+			upperfieldsSearchInputBox.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
 			if (upperfieldRows.size() > 0) {
 
-				for (WebElement district : upperfieldRows) {
-					HashMap<String, String> districtInfoInEachRow = new HashMap<>();
-					districtInfoInEachRow.put("districtName", district.findElement(By.cssSelector("button[type='button']")).getText());
-					districtInfoInEachRow.put("districtStatus", district.findElement(By.cssSelector("td:nth-child(3) > lg-eg-status ")).getAttribute("type"));
-					districtInfoInEachRow.put("numOfLocations", district.findElement(By.cssSelector("td:nth-child(4)")).getText());
-					districtInfo.add(districtInfoInEachRow);
+				for (WebElement upperfield : upperfieldRows) {
+					HashMap<String, String> upperfieldInfoInEachRow = new HashMap<>();
+					upperfieldInfoInEachRow.put("upperfieldName", upperfield.findElement(By.cssSelector("button[type='button']")).getText());
+					upperfieldInfoInEachRow.put("upperfieldLevel", upperfield.findElement(By.cssSelector("td:nth-child(2) ")).getText());
+					upperfieldInfoInEachRow.put("upperfieldCreator", upperfield.findElement(By.cssSelector("td:nth-child(3)")).getText());
+					upperfieldInfoInEachRow.put("upperfieldStatus", upperfield.findElement(By.cssSelector("td:nth-child(4) > lg-eg-status ")).getAttribute("type"));
+					upperfieldInfoInEachRow.put("numOfLocations", upperfield.findElement(By.cssSelector("td:nth-child(5)")).getText());
+					upperfieldInfo.add(upperfieldInfoInEachRow);
 				}
 
 
-				return districtInfo;
+				return upperfieldInfo;
 			}else
 				SimpleUtils.fail(districtName + "can't been searched", true);
 		}
@@ -1658,25 +1689,31 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}else
 			SimpleUtils.fail("District landing page load failed",true);
 	}
+	@FindBy(css = "div.lg-modal")
+	private WebElement enabledDisableUpperfieldModal;
 
 	@Override
-	public void disableEnableDistrict(String districtName, String action) throws Exception {
-		upperfieldsInLocations.clear();
-		searchUpperFields(districtName);
+	public void disableEnableUpperfield(String upperfieldName, String action) throws Exception {
+		upperfieldsSearchInputBox.clear();
+		searchUpperFields(upperfieldName);
 		if (upperfieldRows.size() > 0) {
-			List<WebElement> districtDetailsLinks = upperfieldRows.get(0).findElements(By.cssSelector("button[type='button']"));
-			click(districtDetailsLinks.get(0));
+			List<WebElement> upperfieldDetailsLinks = upperfieldRows.get(0).findElements(By.cssSelector("button[type='button']"));
+			click(upperfieldDetailsLinks.get(0));
 			click(getDriver().findElement(By.cssSelector("lg-button[label=\""+action+"\"] ")));
-			click(getDriver().findElement(By.cssSelector("lg-button[label=\""+action+"\"] ")));
-			waitForSeconds(3);
-			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/lg-button[1]/button")).getText().equals(action)) {
-				SimpleUtils.pass(action+" " +districtName +" successfully");
+			if (isElementEnabled(enabledDisableUpperfieldModal,10)) {
+				click(getDriver().findElement(By.cssSelector("lg-button[label=\""+action+"\"] ")));
 			}else
-				SimpleUtils.fail(action+" " +districtName +" successfully",true);
+				SimpleUtils.fail("Enable/Disabled Upperfield windows load failed",false);
+			waitForSeconds(5);
+			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/lg-button[1]/button")).getText().equals(action)) {
+				SimpleUtils.pass(action+" " +upperfieldName +" successfully");
+			}else
+				SimpleUtils.fail(action+" " +upperfieldName +" failed",true);
 			click(backBtnInLocationDetailsPage);
 		}else
 			SimpleUtils.fail("No search result",true);
 	}
+
 
 	//added by Estelle to verify internal location picture
 	@FindBy(css="form-section[form-title=\"Default Location Picture\"]")
@@ -1709,7 +1746,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private  WebElement leaveThisPage;
 	@Override
 	public void verifyTheFiledOfLocationSetting() throws Exception {
-		if (isElementEnabled(addLocationBtn,5)) {
+		if (isElementEnabled(addLocationBtn,20)) {
 			clickTheElement(addLocationBtn);
 			clickTheElement(locationGroupSelect);
 			//			if (locationGroupSelect.getAttribute("option").contains("None") && locationGroupSelect.getAttribute("option").contains("Part of a location group")&&
@@ -2164,7 +2201,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				scrollToBottom();
 				click(createUpperfieldBtnInDistrictCreationPage);
 				SimpleUtils.report("Upperfield creation done");
-				waitForSeconds(10);
+				waitForSeconds(20);
+				searchUpperFields(levelInfo.get(i)+upperfieldsName);
 			}else
 				SimpleUtils.fail("Upperfield landing page load failed",true);
 		}
@@ -2208,6 +2246,45 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.fail("Failed to back to Locations Tab",false);
 		}else
 			SimpleUtils.fail("Back button in add upperfields page load failed",false);
+	}
+
+	@Override
+	public void verifyBackBtnInCreateNewUpperfieldPage() {
+		if (isElementEnabled(addUpperfieldsButton,5)) {
+			click(addUpperfieldsButton);
+			if (upperfieldCreateLandingPageShowWell()) {
+				click(backBtnInLocationDetailsPage);
+				if (isElementEnabled(addUpperfieldsButton,5)) {
+					SimpleUtils.pass("Back button on the create new Upperfield page work well");
+				}else
+					SimpleUtils.fail("Back to upperfield landing page faield",false);
+			}
+
+		}else
+			SimpleUtils.fail("Upperfield landing page load failed",false);
+	}
+
+	@Override
+	public void verifyCancelBtnInCreateNewUpperfieldPage() {
+
+	}
+
+	@Override
+	public void addNewUpperfieldsWithRandomLevel(String upperfieldsName, String upperfieldsId, String searchChara, int index) throws Exception {
+		click(addUpperfieldsButton);
+		if (upperfieldCreateLandingPageShowWell()) {
+			selectByIndex(levelDropDownList,1);
+			upperfieldNameInput.sendKeys(upperfieldsName);
+			upperfieldIdInput.sendKeys(upperfieldsId);
+			selectByIndex(upperfieldManagerSelector,1);
+			waitForSeconds(3);
+//				click(ManagerBtnInDistrictCreationPage);
+//				managerDistrictLocations(searchChara,index);
+			scrollToBottom();
+			click(createUpperfieldBtnInDistrictCreationPage);
+			SimpleUtils.report("Upperfield creation done");
+		}else
+			SimpleUtils.fail("Upperfield landing page load failed",true);
 	}
 
 
