@@ -623,7 +623,6 @@ public class InboxTest extends TestBase {
             } else{
                 SimpleUtils.fail("Analytics: Analytics: GFE report failed to load in all location tab", true);
             }
-            analyticsPage.switchAllLocationsOrSingleLocation(false);
             if (analyticsPage.isSpecificReportLoaded(gfe)){
                 SimpleUtils.pass("Analytics: GFE report loaded successfully in location: " +location+ " tab");
             } else{

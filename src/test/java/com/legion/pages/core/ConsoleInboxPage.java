@@ -252,11 +252,11 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                 if (sendToText !=null && sendToText.getText().equals("Send to:") && sendToTextBox != null){
                     SimpleUtils.pass("Inbox: Send to: section display successfully");
                 } else{
-                    SimpleUtils.fail("Inbox: Send to text or textbox failed to load",true);
+                    SimpleUtils.fail("Inbox: Send to text or textbox failed to load",false);
                 }
 
             } else{
-                SimpleUtils.fail("Inbox: Send to: section failed to load",true);
+                SimpleUtils.fail("Inbox: Send to: section failed to load",false);
             }
 
             //Check Message
@@ -276,11 +276,11 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                 }
                 else{
                     SimpleUtils.fail("Inbox: Message in create GFE page display incorrectly, the expected message is: " + expectedTextInMessageSection
-                            + "the actual message is: "+ messageInCreateGFETemplate.getAttribute("value"),true);
+                            + "the actual message is: "+ messageInCreateGFETemplate.getAttribute("value"),false);
                 }
             }
             else{
-                SimpleUtils.fail("Inbox: Message in create GFE page failed to load",true);
+                SimpleUtils.fail("Inbox: Message in create GFE page failed to load",false);
             }
 
             if (isElementLoaded(textOfVSL)){
@@ -289,7 +289,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                     SimpleUtils.pass("Inbox: VSL text in create GFR page display correctly");
                 } else{
                     SimpleUtils.fail("Inbox: VSL text in create GFR page display incorrectly. The expected text is: " +expectedTextOfVSL
-                            + " the actual text is: " + textOfVSL, true);
+                            + " the actual text is: " + textOfVSL, false);
                 }
             }
 
@@ -307,7 +307,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                         SimpleUtils.pass("Inbox: Text in operating hours section display correctly");
                     } else{
                         SimpleUtils.fail("Inbox: Text in operating hours section display incorrectly, the expected message is: \n" + expectedTextInOperatingHoursSection + "\n"
-                                + "the actual message is: \n"+ textInOperatingHoursSection,true);
+                                + "the actual message is: \n"+ textInOperatingHoursSection,false);
                     }
                 }
 
@@ -320,17 +320,17 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                         if (weekDay!=null){
                             weekDay = weekDayElment.getText();
                         } else{
-                            SimpleUtils.fail("Inbox: Week days display incorrectly",true);
+                            SimpleUtils.fail("Inbox: Week days display incorrectly",false);
                         }
                         if (workingDay.getAttribute("class").contains("selected")){
                             SimpleUtils.pass("Inbox: Working day:  "+ weekDay + " display correctly and selected");
                         } else {
-                            SimpleUtils.fail("Inbox: Working day " + weekDay + "display incorrectly",true);
+                            SimpleUtils.fail("Inbox: Working day " + weekDay + " display incorrectly",false);
                         }
                     }
 
                 } else{
-                    SimpleUtils.fail("Inbox: Working days failed to load",true);
+                    SimpleUtils.fail("Inbox: Working days failed to load",false);
                 }
 
                 //check Week Summary
@@ -341,7 +341,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                         SimpleUtils.fail("Inbox:  Week Summary text display incorrectly. The expected text is: WEEK SUMMARY, the actual text is :  " + weekSummaryText.getText(), true);
                     }
                 } else {
-                    SimpleUtils.fail("Inbox: Week Summary text failed to load",true);
+                    SimpleUtils.fail("Inbox: Week Summary text failed to load",false);
                 }
 
                 if (areListElementVisible(weekSummaryItems) && weekSummaryItems.size()==3){
@@ -351,10 +351,10 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                             SimpleUtils.pass("Inbox:  Week Summary -> Minimum Shifts display correctly.");
                         } else{
                             SimpleUtils.fail("Inbox:  Week Summary -> Minimum Shifts display incorrectly. The expected text is Minimum Shifts, the actual text is "
-                                    + minimumShifts.findElement(By.tagName("label")).getText(), true);
+                                    + minimumShifts.findElement(By.tagName("label")).getText(), false);
                         }
                     } else {
-                        SimpleUtils.fail("Inbox: Week Summary -> Minimum Shifts failed to load",true);
+                        SimpleUtils.fail("Inbox: Week Summary -> Minimum Shifts failed to load",false);
                     }
 
                     WebElement averageHours = weekSummaryItems.get(1);
@@ -363,16 +363,16 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                             SimpleUtils.pass("Inbox:  Week Summary -> Average Hours display correctly.");
                         } else{
                             SimpleUtils.fail("Inbox:  Week Summary -> Average Hours display incorrectly. The expected text is Average Hours, the actual text is "
-                                    + averageHours.findElement(By.tagName("label")).getText(), true);
+                                    + averageHours.findElement(By.tagName("label")).getText(), false);
                         }
                     } else{
-                        SimpleUtils.fail("Inbox: Week Summary -> Average Hours failed to load",true);
+                        SimpleUtils.fail("Inbox: Week Summary -> Average Hours failed to load",false);
                     }
                 } else {
-                    SimpleUtils.fail("Inbox: Week Summary items failed to load",true);
+                    SimpleUtils.fail("Inbox: Week Summary items failed to load",false);
                 }
             } else{
-                SimpleUtils.fail("Inbox: Operating hours section in create GFE page failed to load",true);
+                SimpleUtils.fail("Inbox: Operating hours section in create GFE page failed to load",false);
             }
         } else{
             SimpleUtils.fail("Inbox: Create GFE page failed to load",false);
