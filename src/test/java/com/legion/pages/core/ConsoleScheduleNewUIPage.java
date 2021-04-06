@@ -8363,7 +8363,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public List<String> getShiftHoursFromInfoLayout() throws Exception {
         List<String> shiftHours = new ArrayList<>();
-        if (areListElementVisible(hoverIcons, 15)) {
+        waitForSeconds(2);
+        if (areListElementVisible(hoverIcons, 20)) {
             for (WebElement hoverIcon : hoverIcons) {
                 waitForSeconds(5);
                 scrollToBottom();

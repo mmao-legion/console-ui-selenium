@@ -40,7 +40,8 @@ public class CinemarkMinorTest extends TestBase {
 
     //The template the location is using.
     public enum templateInUse{
-        TEMPLATE_NAME("New Hampshire Compliance");
+        TEMPLATE_NAME("New Hampshire Compliance"),
+        TEMPLATE_OP("clement-997");
         private final String value;
         templateInUse(final String newValue) {
             value = newValue;
@@ -662,7 +663,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "verify turn on minor rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -703,11 +704,11 @@ public class CinemarkMinorTest extends TestBase {
 
             //Back to Console
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-            locationSelectorPage.changeUpperFieldsByName("Business Unit", "BU1");
-            locationSelectorPage.changeUpperFieldsByName("Region", "Region1");
-            locationSelectorPage.changeDistrict(districtName);
-            String minorLocation = "Test For Minors";
-            locationSelectorPage.changeLocation(minorLocation);
+//            locationSelectorPage.changeUpperFieldsByName("Business Unit", "BU1");
+//            locationSelectorPage.changeUpperFieldsByName("Region", "Region1");
+//            locationSelectorPage.changeDistrict(districtName);
+//            String minorLocation = "Test For Minors";
+//            locationSelectorPage.changeLocation(minorLocation);
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
