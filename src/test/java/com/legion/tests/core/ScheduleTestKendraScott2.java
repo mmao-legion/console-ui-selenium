@@ -1965,6 +1965,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//schedulePage.verifyAllShiftsAssigned();
 			//schedulePage.clickOnEditButton();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("unassigned");
+			schedulePage.saveSchedule();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.clickOnProfileIcon();
 			schedulePage.clickOnConvertToOpenShift();
 			schedulePage.convertToOpenShiftDirectly();

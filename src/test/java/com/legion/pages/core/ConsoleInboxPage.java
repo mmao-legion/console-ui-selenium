@@ -533,6 +533,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     //e.g.: SUN,MON,TUE,WED,THU,FRI,SAT
     @Override
     public void chooseOneDayToClose(String day) throws Exception {
+        selectAllWorkingDays();
         if (areListElementVisible(allWorkingDays,5)){
             for (WebElement element: allWorkingDays){
                 if (element.findElement(By.cssSelector(".weekdays-column-header")).getText().contains(day)){
@@ -546,6 +547,19 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
             SimpleUtils.fail("Working days are not loaded!", false);
         }
     }
+
+    private void selectAllWorkingDays() throws Exception{
+        if (areListElementVisible(allWorkingDays,5)){
+            for (WebElement element: allWorkingDays){
+                if (!element.getAttribute("class").contains("selected")){
+                    click(element.findElement(By.cssSelector(".weekdays-column-header")));
+                }
+            }
+        } else {
+            SimpleUtils.fail("Working days are not loaded!", false);
+        }
+    }
+
     private void verifyDayIsNotSelected(WebElement day){
         if (!day.getAttribute("class").contains("selected")){
             SimpleUtils.pass("Operating day is unselected!");
