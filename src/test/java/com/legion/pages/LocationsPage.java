@@ -143,6 +143,12 @@ public interface LocationsPage {
     public void verifyCreateExistingDGAndGroupNameIsNull(String s) throws Exception;
 
     public List<String> getWFSGroupFromGlobalConfig();
+
+    public void addNewUpperfieldsWithoutParentAndChild(String upperfieldsName, String upperfieldsId, String searchChara, int index, ArrayList<HashMap<String, String>> organizationHierarchyInfo) throws Exception;
+
+    public ArrayList<HashMap<String, String>> getOrganizationHierarchyInfo();
+
+    public void goBackToLocationsTab();
 //
 //    public ArrayList<HashMap<String, String>> getWFSGroupForm();
 

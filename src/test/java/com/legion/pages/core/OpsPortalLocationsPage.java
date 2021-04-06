@@ -126,6 +126,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void goToSubLocationsInLocationsPage() throws Exception {
 		if ( isElementLoaded(locationsInLocations,5)) {
 			click(locationsInLocations);
+			waitForSeconds(20);
 			if (isElementEnabled(addLocationBtn,5)) {
 				SimpleUtils.pass("sub-location page load successfully");
 			}else
@@ -506,7 +507,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				searchInput.clear();
 				searchInput.sendKeys(searchLocationCha[0]);
 				searchInput.sendKeys(Keys.ENTER);
-				waitForSeconds(3);
+				waitForSeconds(20);
 				if (locationRows.size()>0) {
 					SimpleUtils.pass("Locations: " + locationRows.size() + " location(s) found  ");
 					break;
@@ -530,7 +531,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (locationRows.size() > 0) {
 			List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			List<String> locationStatusAfterFirstSearch = getLocationStatus();
-			waitForSeconds(3);
+			waitForSeconds(10);
 			for (int i = 0; i <locationDetailsLinks.size() ; i++) {
 				if (locationDetailsLinks.size() > 0 && locationStatusAfterFirstSearch.get(i).equals("ENABLED")) {
 					click(locationDetailsLinks.get(i));
@@ -542,7 +543,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				click(disableBtn);
 				if (validateDisableLocationAlertPage()) {
 					click(disableBtn);
-					waitForSeconds(2);
+					waitForSeconds(5);
 				}
 				click(backBtnInLocationDetailsPage);
 				waitForSeconds(15);
@@ -1504,47 +1505,47 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy( css =".console-detail")
 	private WebElement districtDetailsPage;
-	@FindBy( css ="input[aria-label=\"District Name\"]")
-	private WebElement districtNameInput;
-	@FindBy( css ="input[aria-label=\"District Id\"]")
-	private WebElement districtIdInput;
-	@FindBy( css ="select[aria-label=\"District Manager\"]")
-	private WebElement districtManagerSelector;
-	@FindBy( css ="input-field[label=\"District Manager Phone\"]")
-	private WebElement districtManagerPhone;
-	@FindBy( css ="input-field[label=\"District Manager Email\"]")
-	private WebElement districtManagerEmail;
+	@FindBy( css ="input[aria-label=\"Upperfield Name\"]")
+	private WebElement upperfieldNameInput;
+	@FindBy( css ="input[aria-label=\"Upperfield Id\"]")
+	private WebElement upperfieldIdInput;
+	@FindBy( css ="select[aria-label=\"Upperfield Manager\"]")
+	private WebElement upperfieldManagerSelector;
+	@FindBy( css ="input-field[label=\"Upperfield Manager Phone\"]")
+	private WebElement upperfieldManagerPhone;
+	@FindBy( css ="input-field[label=\"Upperfield Manager Email\"]")
+	private WebElement upperfieldManagerEmail;
 	@FindBy( css ="lg-button[label=\"Upload image\"]")
 	private WebElement uploadImageBtn;
 	@FindBy( css ="lg-button[label=\"Manage\"]")
 	private WebElement ManagerBtnInDistrictCreationPage;
-	@FindBy( css ="lg-button[label=\"Create District\"]")
-	private WebElement createDistrictBtnInDistrictCreationPage;
+	@FindBy( css ="lg-button[label=\"Create Upperfield\"]")
+	private WebElement createUpperfieldBtnInDistrictCreationPage;
 	@FindBy( css ="lg-button[label=\"Cancel\"]")
 	private WebElement CancelDistrictBtnInDistrictCreationPage;
 
 	@Override
 	public void addNewDistrict(String districtName, String districtId, String searchChara,int index) throws Exception {
 		click(addUpperfieldsButton);
-		if (districtCreateLandingPageShowWell()) {
-			districtNameInput.sendKeys(districtName);
-			districtIdInput.sendKeys(districtId);
-			selectByIndex(districtManagerSelector,1);
+		if (upperfieldCreateLandingPageShowWell()) {
+			upperfieldNameInput.sendKeys(districtName);
+			upperfieldIdInput.sendKeys(districtId);
+			selectByIndex(upperfieldManagerSelector,1);
 			waitForSeconds(3);
 			click(ManagerBtnInDistrictCreationPage);
 			managerDistrictLocations(searchChara,index);
-			click(createDistrictBtnInDistrictCreationPage);
+			click(createUpperfieldBtnInDistrictCreationPage);
 			SimpleUtils.report("District creation done");
 			waitForSeconds(10);
 		}else
 			SimpleUtils.fail("District landing page load failed",true);
 	}
 
-	private boolean districtCreateLandingPageShowWell() {
-
-		if (isElementEnabled(districtNameInput,3)&&isElementEnabled(districtIdInput,3)
-		&& isElementEnabled(districtManagerSelector,3) && isElementEnabled(districtManagerPhone,3)
-		&& isElementEnabled(districtManagerEmail,3) && isElementEnabled(ManagerBtnInDistrictCreationPage,3)) {
+	private boolean upperfieldCreateLandingPageShowWell() {
+			waitForSeconds(10);
+		if (isElementEnabled(upperfieldNameInput,3)&&isElementEnabled(upperfieldIdInput,3)
+		&& isElementEnabled(upperfieldManagerSelector,3) && isElementEnabled(upperfieldManagerPhone,3)
+		&& isElementEnabled(upperfieldManagerEmail,3)) {
 			return true;
 		}
 		return false;
@@ -1579,13 +1580,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			List<WebElement> districtDetailsLinks = upperfieldRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			click(districtDetailsLinks.get(0));
 			click(editDistrictBtn);
-			districtNameInput.clear();
-			districtNameInput.sendKeys(districtName+"update");
-			districtIdInput.clear();
+			upperfieldNameInput.clear();
+			upperfieldNameInput.sendKeys(districtName+"update");
+			upperfieldIdInput.clear();
 			waitForSeconds(2);
 			if (isElementEnabled(districtIdChangePopUpWin,3)) {
 				click(okBtnInLocationGroupConfirmPage);
-				districtIdInput.sendKeys(districtName+"update");
+				upperfieldIdInput.sendKeys(districtName+"update");
 			}else
 				SimpleUtils.fail("District id change window not show",true);
 			scrollToBottom();
@@ -1645,12 +1646,12 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void addNewDistrictWithoutLocation(String districtName, String districtId) throws Exception {
 		click(addUpperfieldsButton);
-		if (districtCreateLandingPageShowWell()) {
-			districtNameInput.sendKeys(districtName);
-			districtIdInput.sendKeys(districtId);
+		if (upperfieldCreateLandingPageShowWell()) {
+			upperfieldNameInput.sendKeys(districtName);
+			upperfieldIdInput.sendKeys(districtId);
 //			selectByIndex(districtManagerSelector,1);
 			scrollToBottom();
-			click(createDistrictBtnInDistrictCreationPage);
+			click(createUpperfieldBtnInDistrictCreationPage);
 
 			SimpleUtils.report("District creation done  :"+districtName);
 			waitForSeconds(10);
@@ -2142,6 +2143,73 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}else
 			return null;
 	}
+	@FindBy(css = "select[aria-label=\"Level\"]")
+	private  WebElement levelDropDownList;
+	@Override
+	public void addNewUpperfieldsWithoutParentAndChild(String upperfieldsName, String upperfieldsId, String searchChara, int index, ArrayList<HashMap<String, String>> organizationHierarchyInfo) throws Exception {
+		ArrayList<String> levelInfo = new ArrayList<>();
+			for (int i = 0; i <organizationHierarchyInfo.size() ; i++) {
+				levelInfo.add(organizationHierarchyInfo.get(i).get("Display Name"));
+			}
+		for (int i = 1; i <levelInfo.size() ; i++) {
+			click(addUpperfieldsButton);
+			if (upperfieldCreateLandingPageShowWell()) {
+				selectByVisibleText(levelDropDownList,levelInfo.get(i));
+				upperfieldNameInput.sendKeys(levelInfo.get(i)+upperfieldsName);
+				upperfieldIdInput.sendKeys(levelInfo.get(i).replace(" ","")+upperfieldsId);
+				selectByIndex(upperfieldManagerSelector,1);
+				waitForSeconds(3);
+//				click(ManagerBtnInDistrictCreationPage);
+//				managerDistrictLocations(searchChara,index);
+				scrollToBottom();
+				click(createUpperfieldBtnInDistrictCreationPage);
+				SimpleUtils.report("Upperfield creation done");
+				waitForSeconds(10);
+			}else
+				SimpleUtils.fail("Upperfield landing page load failed",true);
+		}
+
+	}
+	@FindBy(css ="tr[ng-if=\"!hierarchy.isEditing\"]")
+	private List<WebElement> hierarchyRows;
+	@Override
+	public ArrayList<HashMap<String, String>> getOrganizationHierarchyInfo() {
+
+		ArrayList<HashMap<String,String>> hierarchyInfo = new ArrayList<>();
+
+		if (areListElementVisible(hierarchyRows, 10)) {
+			if (hierarchyRows.size() > 0) {
+				for (WebElement row : hierarchyRows) {
+					HashMap<String, String> hierarchyInfoEachRow = new HashMap<>();
+					hierarchyInfoEachRow.put("Level", row.findElement(By.cssSelector("td:nth-child(1)")).getText());
+					hierarchyInfoEachRow.put("Level Name", row.findElement(By.cssSelector("td:nth-child(2)")).getText());
+					hierarchyInfoEachRow.put("Display Name", row.findElement(By.cssSelector("td:nth-child(3)")).getText());
+					hierarchyInfoEachRow.put("Enable Upperfield View", row.findElement(By.cssSelector("td:nth-child(4)>input-field>ng-form")).getAttribute("class"));
+
+					hierarchyInfo.add(hierarchyInfoEachRow);
+				}
+				return hierarchyInfo;
+			}else
+				SimpleUtils.fail("Default Organization Hierarchy info is missing", true);
+		}else
+			SimpleUtils.fail("Organization Hierarchy load failed in global configuration page",false);
+
+		return null;
+	}
+
+	@Override
+	public void goBackToLocationsTab() {
+		if (isElementEnabled(backBtnInLocationDetailsPage,3)) {
+			click(backBtnInLocationDetailsPage);
+			scrollToBottom();
+			if (isElementEnabled(upperfieldsInLocations,3)) {
+				SimpleUtils.pass("Back to Locations Tab successfully");
+			}else
+				SimpleUtils.fail("Failed to back to Locations Tab",false);
+		}else
+			SimpleUtils.fail("Back button in add upperfields page load failed",false);
+	}
+
 
 //	@FindBy(css = "")
 //	private WebElement T;

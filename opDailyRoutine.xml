@@ -38,7 +38,7 @@
 
                     <!--                    Upperfield test cases-->
                     <include name="verifyUpperFieldsListPageAndSearchFunction" />
-<!--                    <include name="verifyAddOrUpdateDistrictFunction" />-->
+                    <include name="verifyAddUpperFieldsWithDiffLevel" />
 <!--                    <include name="verifyDisableEnableDistrictFunction" />-->
                     <!--                    Global dynamic group test cases-->
 <!--                    <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />-->

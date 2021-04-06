@@ -19,7 +19,7 @@
 
                     <!--                    Upperfield test cases-->
                     <include name="verifyUpperFieldsListPageAndSearchFunction" />
-<!--                    <include name="verifySearchDistrictFunction" />-->
+                    <include name="verifyAddUpperFieldsWithDiffLevel" />
 <!--                    <include name="verifyAddOrUpdateDistrictFunction" />-->
 <!--                    <include name="verifyDisableEnableDistrictFunction" />-->
                 </methods>
