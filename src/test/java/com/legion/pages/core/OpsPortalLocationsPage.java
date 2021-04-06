@@ -2361,14 +2361,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 		return null;
 	}
-	public void clickOnAddHierarchyBTN(){
-		if(isElementEnabled(addHierarchyBTN)){
-			clickTheElement(addHierarchyBTN);
-			waitForSeconds(2);
-		}else {
-			SimpleUtils.fail("add Hierarchy BTN is not available.",false);
-		}
-	}
 
 	@Override
 	public int getSearchResultNum() throws Exception {
@@ -2378,6 +2370,22 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (maxPageNum != 1) {
 				selectByVisibleText(pageNumSelector,String.valueOf(maxPageNum));
 				totalNum = (maxPageNum-1)*10+upperfieldRows.size();
+			}else
+				totalNum = upperfieldRows.size();
+			return totalNum;
+		}else
+			SimpleUtils.fail("Pagination element load failed",false);
+		return 0;
+	}
+	public void clickOnAddHierarchyBTN(){
+		if(isElementEnabled(addHierarchyBTN)){
+			clickTheElement(addHierarchyBTN);
+			waitForSeconds(2);
+		}else {
+			SimpleUtils.fail("add Hierarchy BTN is not available.",false);
+		}
+	}
+
 	@Override
 	public void addOrganizatioHierarchy(List<String> hierarchyNames) throws Exception{
 		int beforeAdd = hierarchyList.size();
@@ -2403,9 +2411,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("The organization hierarchy section Can NOT show correctly.",false);
 		}
 	}
-
-			}else
-				totalNum = upperfieldRows.size();
 	@Override
 	public void deleteOrganizatioHierarchy() throws Exception{
 		int beforeDelete = hierarchyList.size();
@@ -2426,12 +2431,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}else {
 			SimpleUtils.fail("User failed to delete hierarchy.",false);
 		}
-	}
-
-			return totalNum;
-		}else
-			SimpleUtils.fail("Pagination element load failed",false);
-		return 0;
 	}
 	@Override
 	public void updateOrganizatioHierarchyDisplayName() throws Exception{
