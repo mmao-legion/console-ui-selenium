@@ -2297,7 +2297,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 //            dashboardPage.validateDateAndTime();
 //
 //            //T1838586 Validate the upcoming schedules.
-//            dashboardPage.validateTheUpcomingSchedules(nickName);
+//            dashboardPage.validateTheUpcomingSchedules(location);
 //
 //            //T1838587 Validate the click ability of VIEW MY SCHEDULE button.
 //            dashboardPage.validateVIEWMYSCHEDULEButtonClickable();

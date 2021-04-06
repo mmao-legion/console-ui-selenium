@@ -76,7 +76,7 @@ public class DMViewTest extends TestBase {
             dashboardPage.verifyTheWelcomeMessageOfDM(nickName);
 
             // Validate changing districts on Dashboard
-            locationSelectorPage.changeAnotherDistrict();
+            locationSelectorPage.changeAnotherDistrictInDMView();
             districtName = dashboardPage.getCurrentDistrict();
             districtName = districtName.contains("\n")? districtName.split("\n")[0]:districtName;
             String districtOnDashboard = dashboardPage.getDistrictNameOnDashboard();

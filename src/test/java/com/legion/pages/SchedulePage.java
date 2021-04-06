@@ -595,6 +595,7 @@ public interface SchedulePage {
 	public String getTheShiftInfoByIndexInDayview(int index) throws Exception;
 	public void verifyConfirmStoreOpenCloseHours() throws Exception;
 	public List<String> getAllLocationGroupLocationsFromCreateShiftWindow() throws Exception;
+	public void verifyFilterDropdownList(boolean isLG) throws Exception;
 	public void clickOnViewShiftsBtnOnRequiredActionSmartCard() throws Exception;
 	public void clickOnClearFilterOnFilterDropdownPopup() throws Exception;
 	public boolean isRequiredActionSmartCardLoaded() throws Exception;

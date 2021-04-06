@@ -8363,19 +8363,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public List<String> getShiftHoursFromInfoLayout() throws Exception {
         List<String> shiftHours = new ArrayList<>();
-        if (areListElementVisible(infoIcons, 15)) {
-            for (WebElement infoIcon : infoIcons) {
+        if (areListElementVisible(hoverIcons, 15)) {
+            for (WebElement hoverIcon : hoverIcons) {
+                waitForSeconds(5);
                 scrollToBottom();
-                click(infoIcon);
+                clickTheElement(hoverIcon);
                 if (isElementLoaded(shiftDuration, 5)) {
                     shiftHours.add(shiftDuration.getText());
                     SimpleUtils.report("Get the Shift time: " + shiftDuration.getText() + " Successfully!");
-                    click(infoIcon);
+                    click(hoverIcon);
                 }else {
                     SimpleUtils.fail("Shift time duration not loaded Successfully!", false);
                 }
             }
-            if (shiftHours.size() != infoIcons.size()) {
+            if (shiftHours.size() != hoverIcons.size()) {
                 SimpleUtils.fail("Failed to get the shift hours, the count is incorrect!", false);
             }
         }else {
@@ -11779,6 +11780,33 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         if (!filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
             click(filterButton);
+    }
+
+    @FindBy (className = "lg-filter__category-label")
+    private List<WebElement> filterLabels;
+
+    @Override
+    public void verifyFilterDropdownList(boolean isLG) throws Exception {
+        if (isElementLoaded(filterPopup,5)) {
+            for (WebElement filterLabel: filterLabels) {
+                String label = filterLabel.getText();
+                HashMap<String, ArrayList<WebElement>> availableFilters= getAvailableFilters();
+                if (!availableFilters.get("location").isEmpty()) {
+                    if (isLG)
+                        SimpleUtils.pass("Schedule Page: 'LOCATION' is one label when current env is LG");
+                    else
+                        SimpleUtils.fail("Schedule Page: 'LOCATION' should not be one label when current env isn't LG",false);
+                }
+                if (availableFilters.get("shifttype").size() == 7 && availableFilters.get("jobtitle").size() >1 && availableFilters.get("workrole").size() >1 ) {
+                    if (isLG)
+                        SimpleUtils.pass("Schedule Page: 'SHIFT TYPE'/'JOB TITLE/'WORK ROLE' display as expected");
+                    else
+                        SimpleUtils.fail("Schedule Page: 'SHIFT TYPE'/'JOB TITLE/'WORK ROLE' display unexpectedly",false);
+                }
+            }
+
+        } else
+            SimpleUtils.fail("Schedule Page: The drop down list does not pop up",false);
     }
 
     //added by haya.  return a List has 4 week's data including last week

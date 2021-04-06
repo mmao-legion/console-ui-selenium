@@ -2767,4 +2767,51 @@ public class LocationGroupTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the filter on schedule page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateTheFilterOnSchedulePageForMSAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict("District Whistler");
+            locationSelectorPage.changeLocation("Lift Ops_Parent");
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            schedulePage.navigateToNextWeek();
+
+            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            if (!isActiveWeekGenerated) {
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+
+            schedulePage.selectChildLocationFilterByText("Mountain View");
+            if (schedulePage.getShiftsCount()>0){
+                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                schedulePage.deleteTMShiftInWeekView("Open");
+                schedulePage.saveSchedule();
+            }
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            // Verify the filter UI display correctly
+            schedulePage.clickOnFilterBtn();
+            schedulePage.verifyFilterDropdownList(true);
+
+            // Verify the location filter has been moved to the left
+
+
+
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
