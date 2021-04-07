@@ -2059,7 +2059,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	// elements on global configuration page
-	@FindBy(css="lg-button[label=\"Edit\"]")
+	@FindBy(css="lg-button[label=\"Edit\"] button")
 	private WebElement editOnGlobalConfigPage;
 	@FindBy(css="form-section[form-title=\"Day Parts\"]")
 	private WebElement dayPartsSection;
@@ -2386,6 +2386,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
+	@FindBy(css="form-buttons.ng-scope lg-button[label=\"Save\"] button")
+	private WebElement saveButtonOnGlobalConfiguration;
+
 	@Override
 	public void addOrganizatioHierarchy(List<String> hierarchyNames) throws Exception{
 		int beforeAdd = hierarchyList.size();
@@ -2401,6 +2404,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				clickTheElement(hierarchyCheckIcon);
 				waitForSeconds(1);
 			}
+			clickTheElement(saveButtonOnGlobalConfiguration);
 			int afterAdd = hierarchyList.size();
 			if(afterAdd - beforeAdd == hierarchyNames.size()){
 				SimpleUtils.pass("User has added " + hierarchyNames.size() + " hierarchies");
@@ -2412,21 +2416,34 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 	@Override
-	public void deleteOrganizatioHierarchy() throws Exception{
+	public void deleteOrganizatioHierarchy(List<String> hierarchyNames) throws Exception{
 		int beforeDelete = hierarchyList.size();
+		if(isElementEnabled(editOnGlobalConfigPage,5)){
+			clickTheElement(editOnGlobalConfigPage);
+			waitForSeconds(2);
+		}
 		if(hierarchyList.size()>1){
-			WebElement hierarchyDeleteRowButton = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(5) i[ng-click=\"$ctrl.deleteRowClick($index)\"]"));
-			if(isElementEnabled(hierarchyDeleteRowButton)){
-				clickTheElement(hierarchyDeleteRowButton);
-				waitForSeconds(1);
-			}else {
-				SimpleUtils.fail("User can't delete hierarchy.",false);
+			Collections.reverse(hierarchyNames);
+			for(String hierarchyName:hierarchyNames){
+				for(WebElement hierarchy:hierarchyList){
+					String hierarchyNameInUI = hierarchy.findElement(By.cssSelector("td:nth-child(3)")).getText().trim();
+					if(hierarchyName.equals(hierarchyNameInUI)){
+						WebElement hierarchyDeleteRowButton = hierarchy.findElement(By.cssSelector("td:nth-child(5) i[ng-click=\"$ctrl.deleteRowClick($index)\"]"));
+						if(isElementEnabled(hierarchyDeleteRowButton)){
+							clickTheElement(hierarchyDeleteRowButton);
+							waitForSeconds(1);
+						}else {
+							SimpleUtils.fail("User can't delete this hierarchy.",false);
+						}
+					}
+				}
 			}
 		}else {
 			SimpleUtils.fail("Have only one hierarchy, can't delete it!", false);
 		}
+		clickTheElement(saveButtonOnGlobalConfiguration);
 		int afterDelete = hierarchyList.size();
-		if(afterDelete + 1 == beforeDelete){
+		if(afterDelete + hierarchyNames.size() == beforeDelete){
 			SimpleUtils.pass("User delete hierarchy successfully!");
 		}else {
 			SimpleUtils.fail("User failed to delete hierarchy.",false);
@@ -2435,6 +2452,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void updateOrganizatioHierarchyDisplayName() throws Exception{
 		if(hierarchyList.size()!=0){
+			if(isElementEnabled(editOnGlobalConfigPage,5)){
+				clickTheElement(editOnGlobalConfigPage);
+				waitForSeconds(2);
+			}
 			WebElement editRowButton = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(5) i[ng-click=\"$ctrl.editRow(hierarchy)\"]"));
 			clickTheElement(editRowButton);
 			waitForSeconds(1);

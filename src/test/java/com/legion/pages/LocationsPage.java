@@ -164,7 +164,7 @@ public interface LocationsPage {
 
     public void addOrganizatioHierarchy(List<String> hierarchyNames) throws Exception;
 
-    public void deleteOrganizatioHierarchy() throws Exception;
+    public void deleteOrganizatioHierarchy(List<String> hierarchyNames) throws Exception;
 
     public void updateOrganizatioHierarchyDisplayName() throws Exception;
 

@@ -1734,7 +1734,7 @@ public class LocationsTest extends TestBase {
             locationsPage.clickOnLocationsTab();
             locationsPage.goToGlobalConfigurationInLocations();
             locationsPage.addOrganizatioHierarchy(hierarchyNames);
-            locationsPage.deleteOrganizatioHierarchy();
+            locationsPage.deleteOrganizatioHierarchy(hierarchyNames);
             locationsPage.updateOrganizatioHierarchyDisplayName();
             locationsPage.updateEnableUpperfieldViewOfHierarchy();
         } catch (Exception e){
