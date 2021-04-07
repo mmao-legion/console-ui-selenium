@@ -1139,7 +1139,7 @@ public class ActivityTest extends TestBase {
      }
 
     @Owner(owner = "Haya")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Verify the notification when TM is requesting time off")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyTheNotificationForRequestTimeOffAsTeamMember(String browser, String username, String password, String location) {
@@ -1150,7 +1150,7 @@ public class ActivityTest extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
 
             String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+            fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String requestUserName = profileNewUIPage.getNickNameFromProfile();
@@ -1214,7 +1214,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Verify the notification when TM cancels time off request")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyTheNotificationForCancelTimeOffAsTeamMember(String browser, String username, String password, String location) {
@@ -1223,7 +1223,7 @@ public class ActivityTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+            fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String requestUserName = profileNewUIPage.getNickNameFromProfile();

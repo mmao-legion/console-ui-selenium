@@ -237,6 +237,7 @@ public class DragAndDropTest extends TestBase {
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstName);
             schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
 
             // Save the Schedule
             schedulePage.saveSchedule();

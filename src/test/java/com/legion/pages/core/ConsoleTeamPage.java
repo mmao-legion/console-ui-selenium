@@ -2679,19 +2679,31 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void verifyCurrentShiftPrefIsConsistentWithTheChanged(List<String> shiftPrefs, List<String> changedShiftPrefs,
 																 List<String> status) throws Exception {
+		boolean isConsistent = false;
 		if (shiftPrefs != null && changedShiftPrefs != null && status != null) {
 			if (shiftPrefs.size() == (changedShiftPrefs.size() + status.size())) {
-				changedShiftPrefs.addAll(status);
-				if (shiftPrefs.containsAll(changedShiftPrefs) && changedShiftPrefs.containsAll(shiftPrefs)) {
+				if (shiftPrefs.containsAll(changedShiftPrefs)) {
+					if (shiftPrefs.size() == 4) {
+						if (shiftPrefs.get(3).equalsIgnoreCase(status.get(0))) {
+							isConsistent = true;
+						}
+					} else if (shiftPrefs.size() == 5) {
+						if ((shiftPrefs.get(3).contains(status.get(0)) && shiftPrefs.get(4).contains(status.get(1))) ||
+								(shiftPrefs.get(3).contains(status.get(1)) && shiftPrefs.get(4).contains(status.get(0)))) {
+							isConsistent = true;
+						}
+					}
+				}
+				if (isConsistent) {
 					SimpleUtils.pass("Current shift preferences are consistent with the changed one.");
-				}else {
-					SimpleUtils.fail("Current shift preferences are inconsistent with the changed one.", true);
+				} else {
+					SimpleUtils.fail("Current shift preferences are inconsistent with the changed one.", false);
 				}
 			}else {
-				SimpleUtils.fail("Current shift preferences are inconsistent with the changed one.", true);
+				SimpleUtils.fail("Current shift preferences are inconsistent with the changed one.", false);
 			}
 		}else {
-			SimpleUtils.fail("Shift preferences are null!", true);
+			SimpleUtils.fail("Shift preferences are null!", false);
 		}
 	}
 

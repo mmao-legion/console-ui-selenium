@@ -15,8 +15,8 @@
                     <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />
 <!--                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />-->
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin" />
-                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
-                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
+<!--                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" Blocked by bug: SCH-3539/>-->
+<!--                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" Blocked by bug: SCH-3539/>-->
   <!--                  <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />-->
                     <include name="verifyComplianceSmartCardFunctionality" />
                     <include name="verifyScheduleFunctionalityScheduleSmartCard" />
@@ -27,7 +27,7 @@
  <!--                   <include name="verifySchedulesWidgetsAsStoreManager" />-->
                     <include name="verifyCommonUIOfWidgetsAsStoreManager" />
                     <include name="verifyScheduleFunctionalityForecast" />
-                    <include name="verifyScheduleLaborForeCastFunctionality" />
+<!--                    <include name="verifyScheduleLaborForeCastFunctionality" Blocked by bug: SCH-3539/>-->
                     <include name="validateWeatherSmartCardOnForecastPage" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
  <!--                   <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />-->
