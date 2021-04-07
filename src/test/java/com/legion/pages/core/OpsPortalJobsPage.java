@@ -863,7 +863,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 				}
 			}
 		}else {
-			SimpleUtils.fail("Resume button load failed, may the status of job is completed",false);
+			SimpleUtils.report("Resume button load failed or the status of job has completed");
 		}
 	}
 

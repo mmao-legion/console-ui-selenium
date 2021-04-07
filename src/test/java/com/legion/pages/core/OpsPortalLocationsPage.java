@@ -251,8 +251,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public boolean searchNewLocation(String locationName) {
-
-		if (isElementEnabled(searchInput,10)) {
+		waitForSeconds(20);
+		if (isElementEnabled(searchInput,8)) {
 			searchInput.sendKeys(locationName);
 			searchInput.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
