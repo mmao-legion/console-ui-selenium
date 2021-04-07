@@ -169,4 +169,8 @@ public interface LocationsPage {
     public void updateOrganizatioHierarchyDisplayName() throws Exception;
 
     public void updateEnableUpperfieldViewOfHierarchy() throws Exception;
+
+    public void abnormalCaseOfEmptyDisplayNameForHierarchy() throws Exception;
+
+    public void abnormalCaseOfLongDisplayNameForHierarchy() throws Exception;
 }

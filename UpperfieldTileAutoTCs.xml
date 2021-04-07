@@ -25,6 +25,7 @@
 <!--                    <include name="verifyDisableEnableDistrictFunction" />-->
                     <include name="verifyDefaultOrganizationHierarchyShow"/>
                     <include name="verifyAddEditRemoveOrganizationHierarchy"/>
+                    <include name="verifyAbnormalCasesOfOrganizationHierarchy"/>
                 </methods>
             </class>
         </classes>

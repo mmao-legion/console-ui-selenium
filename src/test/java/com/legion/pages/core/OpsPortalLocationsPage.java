@@ -2318,7 +2318,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			add("District");
 		}};
 		List<String> hierarchyLevelNameList = new ArrayList<>();
-		if(isElementEnabled(organizationHierarchySection)){
+		if(isElementEnabled(organizationHierarchySection,10)){
 			SimpleUtils.pass("The organization hierarchy section show correctly.");
 			clickTheElement(editOnGlobalConfigPage);
 			if(hierarchyList.size() != 0){
@@ -2360,7 +2360,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void addOrganizatioHierarchy(List<String> hierarchyNames) throws Exception{
 		int beforeAdd = hierarchyList.size();
-		if(isElementEnabled(organizationHierarchySection)){
+		if(isElementEnabled(organizationHierarchySection,10)){
 			SimpleUtils.pass("The organization hierarchy section show correctly.");
 			clickTheElement(editOnGlobalConfigPage);
 			for(int i = 0; i < hierarchyNames.size(); i++){
@@ -2479,6 +2479,46 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				}else {
 					SimpleUtils.fail("User failed to tick on check box of hierarchy.",false);
 				}
+			}
+		}
+	}
+
+	@Override
+	public void abnormalCaseOfEmptyDisplayNameForHierarchy() throws Exception{
+		if(isElementEnabled(organizationHierarchySection,10)) {
+			SimpleUtils.pass("The organization hierarchy section show correctly.");
+			clickTheElement(editOnGlobalConfigPage);
+			clickOnAddHierarchyBTN();
+			WebElement hierarchyDisplayName = hierarchyList.get(hierarchyList.size() - 1).findElement(By.cssSelector("td:nth-child(3) input"));
+			clickTheElement(hierarchyDisplayName);
+			hierarchyDisplayName.sendKeys(" ");
+			String borderCorlor = hierarchyDisplayName.getCssValue("border-color").trim();
+			WebElement hierarchyCheckIcon = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(5) i.fa-check-circle"));
+			String checkIconStatus = hierarchyCheckIcon.getAttribute("class").trim();
+			if(borderCorlor.contains("rgb(237, 99, 71)") && checkIconStatus.contains("disabled")){
+				SimpleUtils.pass("User can't save hierarchy when display name is blank.");
+			}else {
+				SimpleUtils.fail("The check icon can't work normally when hierarchy name is empty.",false);
+			}
+		}
+	}
+
+	@Override
+	public void abnormalCaseOfLongDisplayNameForHierarchy() throws Exception{
+		if(isElementEnabled(organizationHierarchySection,10)) {
+			clickOnAddHierarchyBTN();
+			WebElement hierarchyDisplayName = hierarchyList.get(hierarchyList.size() - 1).findElement(By.cssSelector("td:nth-child(3) input"));
+			clickTheElement(hierarchyDisplayName);
+			hierarchyDisplayName.sendKeys("abcdefghijklmnopqrstuvwxyz");
+			String borderCorlor = hierarchyDisplayName.getCssValue("border-color").trim();
+			WebElement hierarchyCheckIcon = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(5) i.fa-check-circle"));
+			String checkIconStatus = hierarchyCheckIcon.getAttribute("class").trim();
+			String errorMsg = hierarchyList.get(hierarchyList.size() - 1).findElement(By.cssSelector("td:nth-child(3) span")).getText().trim();
+			String expectedErrorMsg = "The length of display name must be less than 25.";
+			if(borderCorlor.contains("rgb(237, 99, 71)") && checkIconStatus.contains("disabled") && expectedErrorMsg.contains(errorMsg)){
+				SimpleUtils.pass("User can't save hierarchy when display name is more than 25.");
+			}else {
+				SimpleUtils.fail("The check icon can't work normally when hierarchy name is too long.",false);
 			}
 		}
 	}

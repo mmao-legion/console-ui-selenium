@@ -42,6 +42,7 @@
                     <include name="verifyDefaultOrganizationHierarchyShow"/>
                     <include name="verifyAddEditRemoveOrganizationHierarchy"/>
                     <include name="verifyDisableEnableUpperFieldFunction"/>
+                    <include name="verifyAbnormalCasesOfOrganizationHierarchy"/>
 
 <!--                    <include name="verifyDisableEnableDistrictFunction" />-->
                     <!--                    Global dynamic group test cases-->
