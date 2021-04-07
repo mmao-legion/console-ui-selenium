@@ -74,6 +74,7 @@
             <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
                 <methods>
                     <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInOPAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsSettingAsAllUnassignedShiftsInControlAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
