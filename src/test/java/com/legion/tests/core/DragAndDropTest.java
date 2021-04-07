@@ -622,6 +622,12 @@ public class DragAndDropTest extends TestBase {
             if (isWeekGenerated){
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+
+            schedulePage.navigateToNextWeek();
+            isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "11:00PM");
             // Edit the Schedule
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
