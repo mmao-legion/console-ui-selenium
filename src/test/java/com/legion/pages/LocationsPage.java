@@ -162,11 +162,11 @@ public interface LocationsPage {
 
     public void verifyDefaultOrganizationHierarchy() throws Exception;
 
-    public void addOrganizatioHierarchy(List<String> hierarchyNames) throws Exception;
+    public void addOrganizationHierarchy(List<String> hierarchyNames) throws Exception;
 
-    public void deleteOrganizatioHierarchy(List<String> hierarchyNames) throws Exception;
+    public void deleteOrganizationHierarchy(List<String> hierarchyNames) throws Exception;
 
-    public void updateOrganizatioHierarchyDisplayName() throws Exception;
+    public void updateOrganizationHierarchyDisplayName() throws Exception;
 
     public void updateEnableUpperfieldViewOfHierarchy() throws Exception;
 

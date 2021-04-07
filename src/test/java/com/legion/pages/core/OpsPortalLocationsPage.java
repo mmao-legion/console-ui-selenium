@@ -2390,7 +2390,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement saveButtonOnGlobalConfiguration;
 
 	@Override
-	public void addOrganizatioHierarchy(List<String> hierarchyNames) throws Exception{
+	public void addOrganizationHierarchy(List<String> hierarchyNames) throws Exception{
 		int beforeAdd = hierarchyList.size();
 		if(isElementEnabled(organizationHierarchySection,10)){
 			SimpleUtils.pass("The organization hierarchy section show correctly.");
@@ -2416,7 +2416,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 	@Override
-	public void deleteOrganizatioHierarchy(List<String> hierarchyNames) throws Exception{
+	public void deleteOrganizationHierarchy(List<String> hierarchyNames) throws Exception{
 		int beforeDelete = hierarchyList.size();
 		if(isElementEnabled(editOnGlobalConfigPage,5)){
 			clickTheElement(editOnGlobalConfigPage);
@@ -2450,7 +2450,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 	@Override
-	public void updateOrganizatioHierarchyDisplayName() throws Exception{
+	public void updateOrganizationHierarchyDisplayName() throws Exception{
 		if(hierarchyList.size()!=0){
 			if(isElementEnabled(editOnGlobalConfigPage,5)){
 				clickTheElement(editOnGlobalConfigPage);
