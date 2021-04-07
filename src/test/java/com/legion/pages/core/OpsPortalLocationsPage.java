@@ -2540,10 +2540,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			WebElement hierarchyDisplayName = hierarchyList.get(hierarchyList.size() - 1).findElement(By.cssSelector("td:nth-child(3) input"));
 			clickTheElement(hierarchyDisplayName);
 			hierarchyDisplayName.sendKeys(" ");
-			String borderCorlor = hierarchyDisplayName.getCssValue("border-color").trim();
+			String borderColor = hierarchyDisplayName.getCssValue("border-color").trim();
 			WebElement hierarchyCheckIcon = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(5) i.fa-check-circle"));
 			String checkIconStatus = hierarchyCheckIcon.getAttribute("class").trim();
-			if(borderCorlor.contains("rgb(237, 99, 71)") && checkIconStatus.contains("disabled")){
+			if(borderColor.contains("rgb(237, 99, 71)") && checkIconStatus.contains("disabled")){
 				SimpleUtils.pass("User can't save hierarchy when display name is blank.");
 			}else {
 				SimpleUtils.fail("The check icon can't work normally when hierarchy name is empty.",false);
@@ -2558,12 +2558,12 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			WebElement hierarchyDisplayName = hierarchyList.get(hierarchyList.size() - 1).findElement(By.cssSelector("td:nth-child(3) input"));
 			clickTheElement(hierarchyDisplayName);
 			hierarchyDisplayName.sendKeys("abcdefghijklmnopqrstuvwxyz");
-			String borderCorlor = hierarchyDisplayName.getCssValue("border-color").trim();
+			String borderColor = hierarchyDisplayName.getCssValue("border-color").trim();
 			WebElement hierarchyCheckIcon = hierarchyList.get(hierarchyList.size()-1).findElement(By.cssSelector("td:nth-child(5) i.fa-check-circle"));
 			String checkIconStatus = hierarchyCheckIcon.getAttribute("class").trim();
 			String errorMsg = hierarchyList.get(hierarchyList.size() - 1).findElement(By.cssSelector("td:nth-child(3) span")).getText().trim();
 			String expectedErrorMsg = "The length of display name must be less than 25.";
-			if(borderCorlor.contains("rgb(237, 99, 71)") && checkIconStatus.contains("disabled") && expectedErrorMsg.contains(errorMsg)){
+			if(borderColor.contains("rgb(237, 99, 71)") && checkIconStatus.contains("disabled") && expectedErrorMsg.contains(errorMsg)){
 				SimpleUtils.pass("User can't save hierarchy when display name is more than 25.");
 			}else {
 				SimpleUtils.fail("The check icon can't work normally when hierarchy name is too long.",false);
