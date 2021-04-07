@@ -84,7 +84,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
     public enum typeOfUpperFields {
-        BusinessUnit("BU"),
+        BusinessUnit("Business Unit"),
         Region("Region"),
         District("District");
         private final String value;
