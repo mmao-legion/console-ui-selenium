@@ -173,4 +173,7 @@ public interface LocationsPage {
     public void abnormalCaseOfEmptyDisplayNameForHierarchy() throws Exception;
 
     public void abnormalCaseOfLongDisplayNameForHierarchy() throws Exception;
+    public  HashMap<String, Integer> getUpperfieldsSmartCardInfo();
+
+    public int getSearchResultNum() throws Exception;
 }

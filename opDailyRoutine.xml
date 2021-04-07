@@ -45,6 +45,7 @@
                     <include name="verifyAbnormalCasesOfOrganizationHierarchy"/>
 
 <!--                    <include name="verifyDisableEnableDistrictFunction" />-->
+                    <include name="verifyUpperFieldSmartCardData" />
                     <!--                    Global dynamic group test cases-->
 <!--                    <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />-->
                     <include name="verifyGlobalDynamicGroupAbnormalScenarios" />

@@ -251,8 +251,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public boolean searchNewLocation(String locationName) {
-
-		if (isElementEnabled(searchInput,10)) {
+		waitForSeconds(20);
+		if (isElementEnabled(searchInput,8)) {
 			searchInput.sendKeys(locationName);
 			searchInput.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
@@ -2347,7 +2347,36 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 
 	}
+	@FindBy(css = "card-carousel-card")
+	private WebElement upperfieldSmartCard;
+	@Override
+	public HashMap<String, Integer> getUpperfieldsSmartCardInfo() {
 
+		HashMap<String, Integer> upperfieldSmartCardText = new HashMap<>();
+		if (isElementEnabled(upperfieldSmartCard,5)) {
+			upperfieldSmartCardText.put("Enabled", Integer.valueOf(upperfieldSmartCard.findElement(By.cssSelector("div > ng-transclude > table > tbody > tr:nth-child(2)")).getText().split(" ")[1]));
+			upperfieldSmartCardText.put("Disabled", Integer.valueOf(upperfieldSmartCard.findElement(By.cssSelector("div > ng-transclude > table > tbody > tr:nth-child(3)")).getText().split(" ")[1]));
+			return upperfieldSmartCardText;
+		}
+
+		return null;
+	}
+
+	@Override
+	public int getSearchResultNum() throws Exception {
+		int totalNum = 0;
+		if (isElementEnabled(pageNumberText,5)) {
+			int maxPageNum = Integer.valueOf(pageNumberText.getText().trim().split("of")[1].trim());
+			if (maxPageNum != 1) {
+				selectByVisibleText(pageNumSelector,String.valueOf(maxPageNum));
+				totalNum = (maxPageNum-1)*10+upperfieldRows.size();
+			}else
+				totalNum = upperfieldRows.size();
+			return totalNum;
+		}else
+			SimpleUtils.fail("Pagination element load failed",false);
+		return 0;
+	}
 	public void clickOnAddHierarchyBTN(){
 		if(isElementEnabled(addHierarchyBTN)){
 			clickTheElement(addHierarchyBTN);
@@ -2382,7 +2411,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("The organization hierarchy section Can NOT show correctly.",false);
 		}
 	}
-
 	@Override
 	public void deleteOrganizatioHierarchy() throws Exception{
 		int beforeDelete = hierarchyList.size();
@@ -2404,7 +2432,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("User failed to delete hierarchy.",false);
 		}
 	}
-
 	@Override
 	public void updateOrganizatioHierarchyDisplayName() throws Exception{
 		if(hierarchyList.size()!=0){
