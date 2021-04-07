@@ -249,6 +249,7 @@
                 <methods>
                     <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInControlAsInternalAdmin" />
                     <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInOPAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsSettingAsAllUnassignedShiftsInControlAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

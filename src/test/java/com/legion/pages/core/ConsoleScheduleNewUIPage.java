@@ -14332,5 +14332,21 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else
             SimpleUtils.fail("Clear Filter button loaded fail! ", false);
     }
+
+
+    @Override
+    public List<WebElement> getAllUnassignedShifts() throws Exception {
+        List<WebElement> allUnassignedShifts = new ArrayList<>();
+        if (areListElementVisible(shiftsWeekView, 15)) {
+            for (WebElement shiftWeekView : shiftsWeekView) {
+                WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
+                if (workerName != null && workerName.getText().toLowerCase().contains("Unassigned")) {
+                    allUnassignedShifts.add(shiftWeekView);
+                }
+            }
+        }else
+            SimpleUtils.fail("Schedule Week View: shifts load failed or there is no shift in this week", false);
+        return allUnassignedShifts;
+    }
 }
 

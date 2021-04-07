@@ -3623,4 +3623,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public void verifyFilterDropdownList(boolean isLG) throws Exception {
 
     }
+
+    @Override
+    public List<WebElement> getAllUnassignedShifts() throws Exception{
+        return null;
+    }
 }
