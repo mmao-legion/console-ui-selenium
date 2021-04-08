@@ -18,13 +18,14 @@
                 <methods>
 
                     <!--                    Upperfield test cases-->
+                    <include name="verifyDefaultOrganizationHierarchyShow"/>
+                    <include name="verifyAddEditRemoveOrganizationHierarchy"/>
+                    <include name="verifyAbnormalCasesOfOrganizationHierarchy"/>
                     <include name="verifyUpperFieldsListPageAndSearchFunction" />
                     <include name="verifyAddUpperFieldsWithDiffLevel" />
                     <include name="verifyDisableEnableUpperFieldFunction"/>
                     <include name="verifyUpperFieldSmartCardData" />
-                    <include name="verifyDefaultOrganizationHierarchyShow"/>
-                    <include name="verifyAddEditRemoveOrganizationHierarchy"/>
-                    <include name="verifyAbnormalCasesOfOrganizationHierarchy"/>
+                    <include name="verifyUpperFieldSmartCardData" />
                 </methods>
             </class>
         </classes>

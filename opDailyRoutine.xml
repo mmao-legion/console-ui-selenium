@@ -37,15 +37,16 @@
 
 
                     <!--                    Upperfield test cases-->
-                    <include name="verifyUpperFieldsListPageAndSearchFunction" />
-                    <include name="verifyAddUpperFieldsWithDiffLevel" />
                     <include name="verifyDefaultOrganizationHierarchyShow"/>
                     <include name="verifyAddEditRemoveOrganizationHierarchy"/>
-                    <include name="verifyDisableEnableUpperFieldFunction"/>
                     <include name="verifyAbnormalCasesOfOrganizationHierarchy"/>
-
-<!--                    <include name="verifyDisableEnableDistrictFunction" />-->
+                    <include name="verifyUpperFieldsListPageAndSearchFunction" />
+                    <include name="verifyAddUpperFieldsWithDiffLevel" />
+                    <include name="verifyDisableEnableUpperFieldFunction"/>
                     <include name="verifyUpperFieldSmartCardData" />
+                    <include name="verifyUpperFieldSmartCardData" />
+
+
                     <!--                    Global dynamic group test cases-->
 <!--                    <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />-->
                     <include name="verifyGlobalDynamicGroupAbnormalScenarios" />
