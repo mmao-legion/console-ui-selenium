@@ -1967,6 +1967,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//schedulePage.clickOnEditButton();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.deleteTMShiftInWeekView("unassigned");
+			schedulePage.deleteTMShiftInWeekView("open");
 			schedulePage.saveSchedule();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.clickOnProfileIcon();

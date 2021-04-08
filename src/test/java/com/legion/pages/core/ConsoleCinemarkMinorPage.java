@@ -5,6 +5,7 @@ import com.legion.pages.CinemarkMinorPage;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -91,10 +92,14 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
                 if (action.equalsIgnoreCase("no")){
                     scrollToElement(schedulingMinorRuleFor14N15.findElement(By.cssSelector(" .lg-button-group-last")));
                     click(schedulingMinorRuleFor14N15.findElement(By.cssSelector(" .lg-button-group-last")));
+                    Actions actions = new Actions(getDriver());
+                    actions.moveByOffset(0, 0).click().build().perform();
                     SimpleUtils.pass("Minor Rule For 14N15 is OFF");
                 } else {
                     scrollToElement(schedulingMinorRuleFor14N15.findElement(By.cssSelector(" .lg-button-group-first")));
                     click(schedulingMinorRuleFor14N15.findElement(By.cssSelector(" .lg-button-group-first")));
+                    Actions actions = new Actions(getDriver());
+                    actions.moveByOffset(0, 0).click().build().perform();
                     SimpleUtils.pass("Minor Rule For 14N15 is ON");
                 }
             }else{
@@ -109,10 +114,14 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
                 if (action.equalsIgnoreCase("no")){
                     scrollToElement(noBtn);
                     click(noBtn);
-                    SimpleUtils.pass("Minor Rule For 14N15 is OFF");
+                    Actions actions = new Actions(getDriver());
+                    actions.moveByOffset(0, 0).click().build().perform();
+                    SimpleUtils.pass("Minor Rule For 16N17 is OFF");
                 } else {
                     scrollToElement(yesBtn);
                     click(yesBtn);
+                    Actions actions = new Actions(getDriver());
+                    actions.moveByOffset(0, 0).click().build().perform();
                     SimpleUtils.pass("Minor Rule For 14N15 is ON");
                 }
             }else{
