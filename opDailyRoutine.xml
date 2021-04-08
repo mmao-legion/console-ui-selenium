@@ -44,7 +44,7 @@
                     <include name="verifyAddUpperFieldsWithDiffLevel" />
                     <include name="verifyDisableEnableUpperFieldFunction"/>
                     <include name="verifyUpperFieldSmartCardData" />
-                    <include name="verifyUpperFieldSmartCardData" />
+                    <include name="verifyUpdateUpperFieldFunction" />
 
 
                     <!--                    Global dynamic group test cases-->
