@@ -223,10 +223,10 @@
 <!--                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
 <!--                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
 <!--                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
+                    <include name="verifyAddDatesForBreaksAsInternalAdmin" />
                     <include name="verifyTurnOffMinorRuleAsInternalAdmin" />
 <!--                    <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" Need fix/>-->
                     <include name="verifyAccessToEditCalendarsAsInternalAdmin" />
-                    <include name="verifyAddDatesForBreaksAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
