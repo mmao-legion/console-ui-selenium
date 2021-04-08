@@ -1216,7 +1216,6 @@ public class ScheduleTest extends TestBase{
 			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), true);
 			schedulePage.navigateToNextWeek();
-			schedulePage.navigateToNextWeek();
 
 			boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
 			if (isActiveWeekGenerated) {
@@ -1245,7 +1244,7 @@ public class ScheduleTest extends TestBase{
 			schedulePage = dashboardPage.goToTodayForNewUI();
 			schedulePage.isSchedule();
 			schedulePage.navigateToNextWeek();
-			schedulePage.navigateToNextWeek();
+
 			// Validate the clickability of claim open text in popup
 			String cardName = "WANT MORE HOURS?";
 			SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(cardName), false);

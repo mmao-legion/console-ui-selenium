@@ -3777,7 +3777,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(nextButtonOnCreateSchedule, 5)) {
             clickTheElement(nextButtonOnCreateSchedule);
             WebElement element = (new WebDriverWait(getDriver(), 120))
-                    .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[ng-click=\"goToSchedule()\"]")));
+                    .until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[ng-click=\"goToSchedule()\"]")));
             if (isElementLoaded(element, 5)) {
                 checkoutSchedule();
                 SimpleUtils.pass("Schedule Page: Schedule is generated within 2 minutes successfully");
