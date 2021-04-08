@@ -5,7 +5,6 @@ import com.legion.pages.LocationsPage;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
-import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -1593,8 +1592,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement districtIdChangePopUpWin;
 	@FindBy(css = "modal[modal-title=\"Upperfield Level Change\"]")
 	private WebElement upperfieldLevelChangeWin;
+	@FindBy(css = "input-field[label=\"Select parent upperfield\"]> ng-form > div.input-choose > span")
+	private WebElement selectParentUpperfield;
+	@FindBy(css= "sub-content-box>h2.lg-sub-content-box-title")
+	private WebElement locationNum;
+
+
 	@Override
-	public void updateUpperfield(String upperfieldsName, String upperfieldsId,  String searchChara, int index) throws Exception {
+	public String updateUpperfield(String upperfieldsName, String upperfieldsId, String searchChara, int index) throws Exception {
 		SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
 		String currentTime =  dfs.format(new Date()).trim();
 		searchUpperFields(upperfieldsName);
@@ -1603,19 +1608,22 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(districtDetailsLinks.get(0));
 			click(editUpperfieldBtn);
 			selectByVisibleText(levelDropDownList,"District");
-
 			if (isElementEnabled(upperfieldLevelChangeWin,10)) {
 				click(okBtnInLocationGroupConfirmPage);
 				SimpleUtils.pass("Upperfield Level Change done");
 			}else
 				SimpleUtils.fail("Upperfield Level Change window load failed",false);
+			//add parent upperfield
+			click(selectParentUpperfield);
+			selectLocationOrDistrict(searchChara,index);
+
 			upperfieldNameInput.clear();
-			upperfieldNameInput.sendKeys(upperfieldsName.replaceAll(":","")+"ToDistrict");
+			upperfieldNameInput.sendKeys("FromRegionToDistrict"+currentTime);
 			upperfieldIdInput.clear();
 			waitForSeconds(2);
 			if (isElementEnabled(districtIdChangePopUpWin,3)) {
 				click(okBtnInLocationGroupConfirmPage);
-				upperfieldIdInput.sendKeys(upperfieldsName.replaceAll(":","")+currentTime);
+				upperfieldIdInput.sendKeys("FromRegionToDistrict"+currentTime);
 			}else
 				SimpleUtils.fail("Upperfield id change window not show",true);
 			scrollToBottom();
@@ -1623,8 +1631,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			managerDistrictLocations(searchChara,index);
 			scrollToBottom();
 			click(saveBtnInUpdateLocationPage);
-			waitForSeconds(20);
-			if (isElementEnabled(selectDistrictPopUpWins, 5)) {
+			if (isElementEnabled(selectDistrictPopUpWins, 15)) {
 				searchDistrictInputInSelectDistrictPopUpWins.sendKeys("No touch no delete");
 				searchDistrictInputInSelectDistrictPopUpWins.sendKeys(Keys.ENTER);
 				waitForSeconds(5);
@@ -1636,16 +1643,17 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					click(okBtnInSelectLocation);
 				}
 			} else
-				SimpleUtils.report("Search location result is 0");
+				SimpleUtils.report("There is no location under this upperfield and no need to move");
 			SimpleUtils.pass("Upperfield update done");
 		}else
 			SimpleUtils.fail("No search result",true);
 
+		return "FromRegionToDistrict"+currentTime;
 	}
 
 
-
 	public ArrayList<HashMap<String, String>> getUpperfieldsInfo(String districtName) {
+		waitForSeconds(10);
 		ArrayList<HashMap<String,String>> upperfieldInfo = new ArrayList<>();
 
 		if (isElementEnabled(upperfieldsSearchInputBox, 10)) {
@@ -2188,10 +2196,12 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			for (int i = 0; i <organizationHierarchyInfo.size() ; i++) {
 				levelInfo.add(organizationHierarchyInfo.get(i).get("Display Name"));
 			}
+
 		for (int i = 1; i <levelInfo.size() ; i++) {
 			click(addUpperfieldsButton);
 			if (upperfieldCreateLandingPageShowWell()) {
 				selectByVisibleText(levelDropDownList,levelInfo.get(i));
+
 				upperfieldNameInput.sendKeys(levelInfo.get(i)+upperfieldsName);
 				upperfieldIdInput.sendKeys(levelInfo.get(i).replace(" ","")+upperfieldsId);
 				selectByIndex(upperfieldManagerSelector,1);

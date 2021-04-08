@@ -1353,7 +1353,7 @@ public class LocationsTest extends TestBase {
         try{
 
             String upperfieldsName = "Level:Region";
-            String searchChara = "test";
+            String searchChara = "reg";
             int index = 1;
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1370,8 +1370,9 @@ public class LocationsTest extends TestBase {
             locationsPage.goToUpperFieldsPage();
 
             //update upperfield
-            locationsPage.updateUpperfield(upperfieldsName, upperfieldsName,  searchChara, index);
-            ArrayList<HashMap<String, String>> upperfieldInfo = locationsPage.getUpperfieldsInfo("Change"+searchChara.replaceAll(":","")+"ToDistrict");
+            String updateUpperfield = locationsPage.updateUpperfield(upperfieldsName, upperfieldsName,  searchChara, index);
+
+            ArrayList<HashMap<String, String>> upperfieldInfo = locationsPage.getUpperfieldsInfo(updateUpperfield);
             if (upperfieldInfo.get(0).get("upperfieldLevel").equalsIgnoreCase("District")) {
                 SimpleUtils.pass("Upperfield update successfully");
             }else
