@@ -690,7 +690,6 @@ public class DragAndDropTest extends TestBase {
             schedulePage.verifyDayHasShiftByName(1, firstNameOfTM1);
             schedulePage.verifyDayHasShiftByName(0, firstNameOfTM2);
             schedulePage.saveSchedule();
-
             //check compliance smart card display
             SimpleUtils.assertOnFail("Compliance smart card display successfully!",
                     schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
@@ -724,9 +723,9 @@ public class DragAndDropTest extends TestBase {
             schedulePage.verifyDayHasShiftByName(0, firstNameOfTM1);
             schedulePage.verifyDayHasShiftByName(1, firstNameOfTM2);
             schedulePage.saveSchedule();
-
             // Edit the Schedule and try to drag TM1 on Monday to TM2 on Tuesday again
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM1,1,firstNameOfTM2);
             schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM1,1,firstNameOfTM2);
             SimpleUtils.assertOnFail("Clopening message display successfully on swap section!",
                     schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "swap"), false);
