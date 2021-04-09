@@ -3628,4 +3628,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public List<WebElement> getAllUnassignedShifts() throws Exception{
         return null;
     }
+
+    @Override
+    public String getMessageFromActionRequiredSmartCard() throws Exception {
+        return null;
+    }
 }

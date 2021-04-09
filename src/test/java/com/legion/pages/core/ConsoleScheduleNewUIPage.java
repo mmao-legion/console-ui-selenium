@@ -3778,6 +3778,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             clickTheElement(nextButtonOnCreateSchedule);
             WebElement element = (new WebDriverWait(getDriver(), 120))
                     .until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[ng-click=\"goToSchedule()\"]")));
+            waitForSeconds(3);
             if (isElementLoaded(element, 5)) {
                 checkoutSchedule();
                 SimpleUtils.pass("Schedule Page: Schedule is generated within 2 minutes successfully");
@@ -14376,6 +14377,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else
             SimpleUtils.fail("Schedule Week View: shifts load failed or there is no shift in this week", false);
         return allUnassignedShifts;
+    }
+
+
+    @Override
+    public String getMessageFromActionRequiredSmartCard() throws Exception {
+        String message = "";
+        if (isElementLoaded(requiredActionSmartCard, 5)) {
+            message = requiredActionSmartCard.getText();
+        } else
+            SimpleUtils.fail("Required Action smart card fail to load! ", false);
+        return message;
     }
 }
 

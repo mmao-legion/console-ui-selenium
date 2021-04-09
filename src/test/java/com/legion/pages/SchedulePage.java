@@ -600,4 +600,5 @@ public interface SchedulePage {
 	public void clickOnClearFilterOnFilterDropdownPopup() throws Exception;
 	public boolean isRequiredActionSmartCardLoaded() throws Exception;
 	public List<WebElement> getAllUnassignedShifts() throws Exception;
+	public String getMessageFromActionRequiredSmartCard() throws Exception;
 }
