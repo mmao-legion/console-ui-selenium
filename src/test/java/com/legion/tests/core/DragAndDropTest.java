@@ -937,6 +937,7 @@ public class DragAndDropTest extends TestBase {
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstNameOfTM1);
+            SimpleUtils.report("teammember1: "+ firstNameOfTM1);
             schedulePage.clickOnOfferOrAssignBtn();
 
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -947,6 +948,7 @@ public class DragAndDropTest extends TestBase {
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstNameOfTM2);
+            SimpleUtils.report("teammember2: "+ firstNameOfTM2);
             schedulePage.clickOnOfferOrAssignBtn();
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
