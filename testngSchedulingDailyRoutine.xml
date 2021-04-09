@@ -224,27 +224,27 @@
 <!--                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
 <!--                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
                     <include name="verifyAddDatesForBreaksAsInternalAdmin" />
-                    <include name="verifyTurnOffMinorRuleAsInternalAdmin" />
-<!--                    <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" Need fix/>-->
-                    <include name="verifyAccessToEditCalendarsAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+                    <!-- blocked by cache                   <include name="verifyTurnOffMinorRuleAsInternalAdmin" />-->
+                    <!--                    <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" Need fix/>-->
+                    <!-- blocked by cache                   <include name="verifyAccessToEditCalendarsAsInternalAdmin" />-->
+                                    </methods>
+                                </class>
+                            </classes>
+                        </test>
 
-    <test name="Drag And Drop Test">
-        <classes>
-            <class name="com.legion.tests.core.DragAndDropTest">
-                <methods>
-                    <include name="verifyWarningModelForTimeOffAsInternalAdmin"/>
-                    <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" />
-                    <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
-                    <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
-                    <include name="verifyWarningModelForClopeningAsInternalAdmin" />
-                    <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+                        <test name="Drag And Drop Test">
+                            <classes>
+                                <class name="com.legion.tests.core.DragAndDropTest">
+                                    <methods>
+                                        <include name="verifyWarningModelForTimeOffAsInternalAdmin"/>
+                                        <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" />
+                                        <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
+                                        <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
+                                        <include name="verifyWarningModelForClopeningAsInternalAdmin" />
+                                        <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
+                                    </methods>
+                                </class>
+                            </classes>
+                        </test>
 
-</suite> <!-- Suite -->
+                    </suite> <!-- Suite -->
