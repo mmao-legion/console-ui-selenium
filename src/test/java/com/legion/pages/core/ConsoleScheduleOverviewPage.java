@@ -374,10 +374,14 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
 	@Override
 	public List<WebElement> getOverviewScheduleWeeks() {
-		if(areListElementVisible(overviewTableRows,10)){
-			return overviewScheduleWeekList;
+		waitForSeconds(3);
+		List<WebElement> overviewWeekList = new ArrayList<>();
+		if(areListElementVisible(overviewTableRows,15) && areListElementVisible(overviewScheduleWeekList)){
+			overviewWeekList = overviewScheduleWeekList;
+		} else {
+			SimpleUtils.fail("Overview Page: Week List not loaded Successfully!", false);
 		}
-		return overviewScheduleWeekList;
+		return overviewWeekList;
 	}
 
 	public void clickScheduleDraftAndGuidanceStatus(List<String> overviewScheduleWeeksStatus){

@@ -637,13 +637,28 @@ public class CinemarkMinorTest extends TestBase {
 
             //Back to Console
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-//            String minorLocation = "Test For Minors";
-//            locationSelectorPage.changeLocation(minorLocation);
+
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
+            String fileName = "UsersCredentials.json";
+            fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise")+fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                    , String.valueOf(teamMemberCredentials[0][2]));
+
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
             SimpleUtils.assertOnFail("School Calendar tab should not be loaded when minor rule turned off", !teamPage.isCalendarTabLoad(), false);
+
+            loginPage.logOut();
+
+            // Login as Internal Admin
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             cinemarkMinorPage.clickConfigurationTabInOP();
