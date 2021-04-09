@@ -1387,6 +1387,43 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify cancel creating upperfield")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCancelCreatingUpperfieldFunction(String browser, String username, String password, String location) throws Exception {
+
+        try{
+
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime =  dfs.format(new Date()).trim();
+            String upperfieldsName = currentTime;
+            String upperfieldsId = currentTime;
+            String level = "District";
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check locations item
+            locationsPage.validateItemsInLocations();
+            //go to sub-district  tab
+            locationsPage.goToUpperFieldsPage();
+
+            //cancel creating upperfield
+            locationsPage.cancelCreatingUpperfield(level,upperfieldsName,upperfieldsId);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify upperfield smartcard data")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUpperFieldSmartCardData(String browser, String username, String password, String location) throws Exception {
