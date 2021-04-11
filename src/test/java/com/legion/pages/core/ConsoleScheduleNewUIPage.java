@@ -4081,55 +4081,52 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void editTheOperatingHours(List<String> weekDaysToClose) throws Exception {
         if (isElementLoaded(operatingHoursEditBtn, 10)) {
-            boolean isConsistentWithTheRequiredHours = isOperatingHoursConsistentWithTheRequiredHours();
-            if (!isConsistentWithTheRequiredHours) {
-                clickTheElement(operatingHoursEditBtn);
-                if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)
-                        && areListElementVisible(locationsInLocationSelectorOnCreateSchedulePage, 5)
-                        && locationsInLocationSelectorOnCreateSchedulePage.size() > 0) {
-                    click(locationSelectorOnCreateSchedulePage);
-                    selectRandomLocationOnCreateScheduleEditOperatingHoursPage();
-                }
-                if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
-                    SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
-                    if (areListElementVisible(operatingHoursDayLists, 15)) {
-                        for (WebElement dayList : operatingHoursDayLists) {
-                            WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
-                            if (weekDay != null) {
-                                WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
-                                if (!weekDaysToClose.contains(weekDay.getText())) {
-                                    if (checkbox.getAttribute("class").contains("ng-empty")) {
-                                        clickTheElement(checkbox);
-                                    }
-                                    String[] operatingHours = null;
-                                    if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)) {
-                                        operatingHours = propertyOperatingHoursLG.get(weekDay.getText()).split("-");
-                                    } else
-                                        operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
-                                    List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
-                                    startNEndTimes.get(0).clear();
-                                    startNEndTimes.get(1).clear();
-                                    startNEndTimes.get(0).sendKeys(operatingHours[0].trim());
-                                    startNEndTimes.get(1).sendKeys(operatingHours[1].trim());
-                                } else {
-                                    if (!checkbox.getAttribute("class").contains("ng-empty")) {
-                                        clickTheElement(checkbox);
-                                    }
+            clickTheElement(operatingHoursEditBtn);
+            if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)
+                    && areListElementVisible(locationsInLocationSelectorOnCreateSchedulePage, 5)
+                    && locationsInLocationSelectorOnCreateSchedulePage.size() > 0) {
+                click(locationSelectorOnCreateSchedulePage);
+                selectRandomLocationOnCreateScheduleEditOperatingHoursPage();
+            }
+            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
+                SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
+                if (areListElementVisible(operatingHoursDayLists, 15)) {
+                    for (WebElement dayList : operatingHoursDayLists) {
+                        WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
+                        if (weekDay != null) {
+                            WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+                            if (!weekDaysToClose.contains(weekDay.getText())) {
+                                if (checkbox.getAttribute("class").contains("ng-empty")) {
+                                    clickTheElement(checkbox);
                                 }
+                                String[] operatingHours = null;
+                                if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)) {
+                                    operatingHours = propertyOperatingHoursLG.get(weekDay.getText()).split("-");
+                                } else
+                                    operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
+                                List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+                                startNEndTimes.get(0).clear();
+                                startNEndTimes.get(1).clear();
+                                startNEndTimes.get(0).sendKeys(operatingHours[0].trim());
+                                startNEndTimes.get(1).sendKeys(operatingHours[1].trim());
                             } else {
-                                SimpleUtils.fail("Failed to find weekday element!", false);
+                                if (!checkbox.getAttribute("class").contains("ng-empty")) {
+                                    clickTheElement(checkbox);
+                                }
                             }
-                        }
-                        clickTheElement(operatingHoursSaveBtn);
-                        if (isElementEnabled(operatingHoursEditBtn, 15)) {
-                            SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
                         } else {
-                            SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
+                            SimpleUtils.fail("Failed to find weekday element!", false);
                         }
                     }
-                } else {
-                    SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
+                    clickTheElement(operatingHoursSaveBtn);
+                    if (isElementEnabled(operatingHoursEditBtn, 15)) {
+                        SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
+                    } else {
+                        SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
+                    }
                 }
+            } else {
+                SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
             }
         }else {
             SimpleUtils.fail("Operating Hours Edit button not loaded Successfully!", false);
