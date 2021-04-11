@@ -45,15 +45,15 @@
        </classes>
    </test>
 
-   <!-- <test name="Overview Test">
+    <test name="Overview Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleOverviewTest">
                 <methods>
-                    <include name="verifyScheduleFunctionalityOverviewAsStoreManager Blocked by SCH-3607"/>
+                    <include name="verifyScheduleFunctionalityOverviewAsStoreManager"/>
                 </methods>
             </class>
         </classes>
-    </test>-->
+    </test>
 
     <test name="Schedule Test LegionCoffee">
         <classes>
@@ -70,7 +70,7 @@
         <classes>
             <class name="com.legion.tests.core.ForecastTest">
                 <methods>
-<!--                    <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin" Blocked by SCH-3539/>-->
+                    <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin"/>
                     <include name="validateWeatherSmartCardOnForecastPage"/>
                     <include name="verifyScheduleFunctionalityForecast"/>
                 </methods>
@@ -145,8 +145,8 @@
                     <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
                     <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
                     <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />
-<!--                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" Blocked by Bug: SCH-3539/>-->
-<!--                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" Blocked by Bug: SCH-3539/>-->
+                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
+                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
                     <include name="verifyTheFunctionalityForScheduleCopyRestrictionsAsInternalAdmin" />
