@@ -208,8 +208,8 @@
                     <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
                     <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />
 <!--                    <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" Debug/>-->
-<!--                    <include name="verifySchoolCalendarListAsInternalAdmin" Blocked by SCH-3493/>-->
-<!--                    <include name="verifyCreateCalendarAsInternalAdmin" Blocked by SCH-3493/>-->
+                    <include name="verifySchoolCalendarListAsInternalAdmin" />
+                    <include name="verifyCreateCalendarAsInternalAdmin" />
                     <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
                     <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
                     <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />

@@ -432,7 +432,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify create calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateCalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -520,7 +520,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify school calendar list")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySchoolCalendarListAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -548,7 +548,7 @@ public class CinemarkMinorTest extends TestBase {
 
             // Login as Store Manager
             String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("Op_Enterprise") + fileName;
+            fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise") + fileName;
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
             loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
@@ -1094,9 +1094,9 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "8,1";
-            String shiftTime2 = "11,10";
-            String shiftTime3 = "11,7";
+            String shiftTime1 = "8am,1pm";
+            String shiftTime2 = "11am,10pm";
+            String shiftTime3 = "11am,7pm";
             String workRole = "Team Member Corporate-Theatre";
             String scheduleFromToTime = "10:30am - 10pm";
             String scheduleMaxHours = "9";
@@ -1129,7 +1129,7 @@ public class CinemarkMinorTest extends TestBase {
         }
         List<String> toCloseDays = new ArrayList<>();
         //schedulePage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
-        schedulePage.createScheduleForNonDGFlowNewUI();
+        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
@@ -1293,8 +1293,8 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "10,1";
-            String shiftTime2 = "10,4";
+            String shiftTime1 = "10am,1pm";
+            String shiftTime2 = "10am,4pm";
             int needCreateShiftsNumber1 = 4;
             int needCreateShiftsNumber2 = 2;
             String workRole = "Team Member Corporate-Theatre";
@@ -1317,8 +1317,8 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheNonSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "11,1";
-            String shiftTime2 = "10,4";
+            String shiftTime1 = "11am,1pm";
+            String shiftTime2 = "10am,4pm";
             int needCreateShiftsNumber1 = 5;
             int needCreateShiftsNumber2 = 2;
             String workRole = "Team Member Corporate-Theatre";
@@ -1341,8 +1341,8 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "11,1";
-            String shiftTime2 = "10,5";
+            String shiftTime1 = "11am,1pm";
+            String shiftTime2 = "10am,5pm";
             int needCreateShiftsNumber1 = 6;
             int needCreateShiftsNumber2 = 2;
             String workRole = "Team Member Corporate-Theatre";
@@ -1364,8 +1364,8 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "11,1";
-            String shiftTime2 = "11,4";
+            String shiftTime1 = "11am,1pm";
+            String shiftTime2 = "11am,4pm";
             int needCreateShiftsNumber1 = 6;
             int needCreateShiftsNumber2 = 3;
             String workRole = "Team Member Corporate-Theatre";
@@ -1387,8 +1387,8 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheNonSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "11,1";
-            String shiftTime2 = "11,4";
+            String shiftTime1 = "11am,1pm";
+            String shiftTime2 = "11am,4pm";
             int needCreateShiftsNumber1 = 4;
             int needCreateShiftsNumber2 = 3;
             String workRole = "Team Member Corporate-Theatre";
@@ -1410,8 +1410,8 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "11,1";
-            String shiftTime2 = "11,5";
+            String shiftTime1 = "11am,1pm";
+            String shiftTime2 = "11am,5pm";
             int needCreateShiftsNumber1 = 5;
             int needCreateShiftsNumber2 = 3;
             String workRole = "Team Member Corporate-Theatre";
@@ -1449,9 +1449,9 @@ public class CinemarkMinorTest extends TestBase {
         if (isWeekGenerated){
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
-        List<String> toCloseDays = new ArrayList<>();
-        schedulePage.editOperatingHoursOnScheduleOldUIPage("6", "23", toCloseDays);
-        schedulePage.createScheduleForNonDGFlowNewUI();
+//        List<String> toCloseDays = new ArrayList<>();
+        //schedulePage.editOperatingHoursOnScheduleOldUIPage("6", "23", toCloseDays);
+        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);

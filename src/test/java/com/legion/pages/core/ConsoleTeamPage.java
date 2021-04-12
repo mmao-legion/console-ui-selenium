@@ -3820,10 +3820,22 @@ private WebElement locationColumn;
 
 	@Override
 	public void checkPriorYearInEditMode() throws Exception {
-		if (priorYearArrow.getAttribute("class").contains("invisible")) {
-			SimpleUtils.pass("School Calendars Page: Prior year arrow is invisible in edit mode as expected");
-		} else
-			SimpleUtils.fail("School Calendars Page: Prior year arrow is displayed unexpectedly",false);
+		Calendar calder = Calendar.getInstance();
+		calder.setTime(new Date());
+		int month = calder.get(Calendar.MONTH);
+		// If month is before August, previous year should show
+		if (month < 7) {
+			if (isElementLoaded(priorYearArrow, 5)) {
+				SimpleUtils.pass("School Calendars Page: Prior year arrow is visible in edit mode when it is before August current year");
+			} else {
+				SimpleUtils.fail("School Calendars Page: Prior year arrow is invisible when it is before August current year, which is unexpected!", false);
+			}
+		} else {
+			if (priorYearArrow.getAttribute("class").contains("invisible")) {
+				SimpleUtils.pass("School Calendars Page: Prior year arrow is invisible in edit mode as expected");
+			} else
+				SimpleUtils.fail("School Calendars Page: Prior year arrow is displayed unexpectedly", false);
+		}
 	}
 
 	@Override
