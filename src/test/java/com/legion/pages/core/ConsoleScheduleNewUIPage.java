@@ -5373,17 +5373,33 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception {
         WebElement element = null;
-        if(areListElementVisible(scheduleOperatingHrsOnEditPage, 15)
-                && scheduleOperatingHrsOnEditPage.size() >0){
-            for (WebElement scheduleOperatingHour: scheduleOperatingHrsOnEditPage){
-                if(scheduleOperatingHour.getText().equals(shiftTime)){
-                    element = scheduleOperatingHour;
-                    break;
+        String am = "am";
+        String pm = "pm";
+        if (shiftTime.length() > 2 && (shiftTime.contains(am) || shiftTime.contains(pm))) {
+            if(areListElementVisible(scheduleOperatingHrsOnEditPage, 15)
+                    && scheduleOperatingHrsOnEditPage.size() >0){
+                for (WebElement scheduleOperatingHour: scheduleOperatingHrsOnEditPage){
+                    if (scheduleOperatingHour.getAttribute("class").contains(shiftTime.substring(shiftTime.length() - 2))) {
+                        if(scheduleOperatingHour.getText().equals(shiftTime.substring(0, shiftTime.length() - 2))){
+                            element = scheduleOperatingHour;
+                            break;
+                        }
+                    }
                 }
             }
-            if (element == null){
-                SimpleUtils.fail("Cannot found the operating hour on edit operating hour page! ", false);
+        } else {
+            if(areListElementVisible(scheduleOperatingHrsOnEditPage, 15)
+                    && scheduleOperatingHrsOnEditPage.size() >0){
+                for (WebElement scheduleOperatingHour: scheduleOperatingHrsOnEditPage){
+                    if(scheduleOperatingHour.getText().equals(shiftTime)){
+                        element = scheduleOperatingHour;
+                        break;
+                    }
+                }
             }
+        }
+        if (element == null){
+            SimpleUtils.fail("Cannot found the operating hour on edit operating hour page! ", false);
         }
         if(startingPoint.equalsIgnoreCase("End")){
             if(isElementLoaded(sliderNotchEnd,10) && sliderDroppableCount.size()>0){

@@ -114,25 +114,13 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Prepare the calendar for all the minors")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void prepareTheCalendarForAllMinorsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-
-            schedulePage.clickOnDayView();
-            int currentDayIndex = schedulePage.getTheIndexOfCurrentDayInDayView();
-            int nextSatIndex = 6 - currentDayIndex + 6;
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -147,8 +135,9 @@ public class CinemarkMinorTest extends TestBase {
 
             teamPage.deleteCalendarByName(calendarName);
             teamPage.clickOnCreateNewCalendarButton();
+            teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
-            teamPage.selectSchoolSessionStartNEndDate(nextSatIndex);
+            teamPage.selectSchoolSessionStartNEndDate();
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
             teamPage.inputCalendarName(calendarName);
             teamPage.clickOnSaveSchoolCalendarBtn();
@@ -282,7 +271,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify SM will have ability to select a calendar for the minor from a dropdown menu within the profile")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySMCanSelectACalendarForMinorAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -323,7 +312,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the default value of a minor without a calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -382,9 +371,9 @@ public class CinemarkMinorTest extends TestBase {
             schedulePage.customizeNewShiftPage();
             schedulePage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(7);
-            schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("6", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.selectWorkRole("Associate");
+            schedulePage.moveSliderAtCertainPoint("10pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("6am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.selectWorkRole("Team Member Corporate-Theatre");
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(cinemarkMinors.get("Minor14"));
@@ -899,9 +888,9 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "7,1";
-            String shiftTime2 = "9,4";
-            String shiftTime3 = "8,2";
+            String shiftTime1 = "7am,1pm";
+            String shiftTime2 = "9am,4pm";
+            String shiftTime3 = "8am,2pm";
             String workRole = "Team Member Corporate-Theatre";
             String scheduleFromToTime = "8am - 4pm";
             String scheduleMaxHours = "6";
@@ -922,9 +911,9 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "8,1";
-            String shiftTime2 = "9,4";
-            String shiftTime3 = "9,2";
+            String shiftTime1 = "8am,1pm";
+            String shiftTime2 = "9am,4pm";
+            String shiftTime3 = "9am,2pm";
             String workRole = "Team Member Corporate-Theatre";
             String scheduleFromToTime = "8:30am - 4pm";
             String scheduleMaxHours = "5";
@@ -945,9 +934,9 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "8,3";
-            String shiftTime2 = "9,5";
-            String shiftTime3 = "11,4";
+            String shiftTime1 = "8am,3pm";
+            String shiftTime2 = "9am,5pm";
+            String shiftTime3 = "11am,4pm";
             String workRole = "Team Member Corporate-Theatre";
             String scheduleFromToTime = "8:30am - 5pm";
             String scheduleMaxHours = "5";
@@ -968,9 +957,9 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "8,1";
-            String shiftTime2 = "9,5";
-            String shiftTime3 = "9,2";
+            String shiftTime1 = "8am,1pm";
+            String shiftTime2 = "9am,5pm";
+            String shiftTime3 = "9am,2pm";
             String workRole = "Team Member Corporate-Theatre";
             String scheduleFromToTime = "9am - 5pm";
             String scheduleMaxHours = "6";
@@ -990,9 +979,9 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "8,3";
-            String shiftTime2 = "9,6";
-            String shiftTime3 = "9,3";
+            String shiftTime1 = "8am,3pm";
+            String shiftTime2 = "9am,6pm";
+            String shiftTime3 = "9am,3pm";
             String workRole = "Team Member Corporate-Theatre";
             String scheduleFromToTime = "9am - 6pm";
             String scheduleMaxHours = "7";
@@ -1014,9 +1003,9 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "8,1";
-            String shiftTime2 = "10,7";
-            String shiftTime3 = "10,2";
+            String shiftTime1 = "8am,1pm";
+            String shiftTime2 = "10am,7pm";
+            String shiftTime3 = "10am,2pm";
             String workRole = "Team Member Corporate-Theatre";
             String scheduleFromToTime = "9:30am - 7pm";
             String scheduleMaxHours = "7";
@@ -1038,9 +1027,9 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "8,3";
-            String shiftTime2 = "10,9";
-            String shiftTime3 = "10,4";
+            String shiftTime1 = "8am,3pm";
+            String shiftTime2 = "10am,9pm";
+            String shiftTime3 = "10am,4pm";
             String workRole = "Team Member Corporate-Theatre";
             String scheduleFromToTime = "9:30am - 9pm";
             String scheduleMaxHours = "9";
@@ -1061,9 +1050,9 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "8,1";
-            String shiftTime2 = "10,8";
-            String shiftTime3 = "10,2";
+            String shiftTime1 = "8am,1pm";
+            String shiftTime2 = "10am,8pm";
+            String shiftTime3 = "10am,2pm";
             String workRole = "Team Member Corporate-Theatre";
             String scheduleFromToTime = "10am - 8pm";
             String scheduleMaxHours = "8";
@@ -1083,9 +1072,9 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "8,3";
-            String shiftTime2 = "10,10";
-            String shiftTime3 = "10,4";
+            String shiftTime1 = "8am,3pm";
+            String shiftTime2 = "10am,10pm";
+            String shiftTime3 = "10am,4pm";
             String workRole = "Team Member Corporate-Theatre";
             String scheduleFromToTime = "10am - 10pm";
             String scheduleMaxHours = "10";

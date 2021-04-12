@@ -612,14 +612,14 @@ public class BasePage {
 
         for (int i = 0; i < numClicks; i++) {
             if(!listMonthText.get(0).equalsIgnoreCase(wanted.getMonth().toString())){
-                click(btnNextMonth);
+                clickTheElement(btnNextMonth);
             }
         }
 
         List<WebElement> mCalendarDates = getDriver().findElements(By.cssSelector("div.ranged-calendar__day.ng-binding.ng-scope.real-day:not(.can-not-select)"));
         for (WebElement mDate : mCalendarDates) {
             if (Integer.parseInt(mDate.getText()) == wanted.getDayOfMonth()) {
-                mDate.click();
+                clickTheElement(mDate);
                 return;
             }
         }

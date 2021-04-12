@@ -4187,10 +4187,38 @@ private WebElement locationColumn;
 	}
 
 	@Override
-	public void selectSchoolSessionStartNEndDate(int nextSatIndex) throws Exception {
-		goToTheCurrentMonth();
-		selectDate(nextSatIndex);
-		selectDate(100);
+	public void selectSchoolSessionStartNEndDate() throws Exception {
+		if (areListElementVisible(realDays, 10) && realDays.size() > 57) {
+			clickTheElement(realDays.get(0));
+			waitForSeconds(1);
+			clickTheElement(realDays.get(realDays.size() - 1));
+		} else {
+			SimpleUtils.fail("School Calendar: Session start and end date calendar failed to loade!", false);
+		}
+	}
+
+	@FindBy (css = ".school-calendars-year-switcher .fa-chevron-left")
+	private WebElement yearSwitchLeft;
+
+	@Override
+	public void selectSchoolYear() throws Exception {
+		try {
+			Calendar calder = Calendar.getInstance();
+			calder.setTime(new Date());
+			int month = calder.get(Calendar.MONTH);
+			// If month is before August, need to switch to the previous year
+			if (month < 7) {
+				if (isElementLoaded(yearSwitchLeft, 5)) {
+					clickTheElement(yearSwitchLeft);
+					waitForSeconds(2);
+					SimpleUtils.pass("School Calendar: Click on previous year switch successfully!");
+				} else {
+					SimpleUtils.fail("School Calendar: Previous Year Switch button not loaded Successfully!", false);
+				}
+			}
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	@Override
