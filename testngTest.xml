@@ -10,11 +10,53 @@
     </listeners>
 
 
-    <test name="Schedule Test LegionCoffee">
+    <test name="Dashboard Test">
+        <classes>
+            <class name="com.legion.tests.core.DashboardTestKendraScott2">
+                <methods>
+                    <include name="verifyDashboardFunctionalityAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Activity Test">
         <classes>
             <class name="com.legion.tests.core.ActivityTest">
                 <methods>
-                    <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Schedule Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleTestKendraScott2">
+                <methods>
+                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Scheduling Minor Test">
+        <classes>
+            <class name="com.legion.tests.core.SchedulingMinorTest">
+                <methods>
+                    <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin" />
+                    <include name="verifyTheWarningMessageAndViolationWhenMinorShiftsExceedTheWeeklyHoursAsInternalAdmin" />
+                    <include name="verifyTheWarningMessageAndViolationWhenMinorIsUnder14YearsOldAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Drag And Drop Test">
+        <classes>
+            <class name="com.legion.tests.core.DragAndDropTest">
+                <methods>
+                    <include name="verifyWarningModelForClopeningAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
