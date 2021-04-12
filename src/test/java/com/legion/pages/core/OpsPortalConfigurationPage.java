@@ -2,6 +2,7 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ConfigurationPage;
+import com.legion.pages.ControlsNewUIPage;
 import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
@@ -1373,14 +1374,41 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	}
 
+	@FindBy(css = "[ng-if=\"$ctrl.saveAsLabel\"]")
+	private WebElement publishTemplateButton;
+
+	@FindBy(css = "div.modal-dialog")
+	private WebElement publishTemplateConfirmModal;
+
+	@FindBy(css = "[ng-click=\"$ctrl.submit(true)\"]")
+	private WebElement okButtonOnPublishTemplateConfirmModal;
+
+	@FindBy(css = "div.lg-toast")
+	private WebElement successMsg;
+
+	public void displaySuccessMessage() throws Exception {
+		if (isElementLoaded(successMsg, 20) && successMsg.getText().contains("Success!")) {
+			SimpleUtils.pass("Success message displayed successfully." + successMsg.getText());
+			waitForSeconds(2);
+		} else {
+			SimpleUtils.report("Success pop up not displayed successfully.");
+			waitForSeconds(3);
+		}
+	}
+
 	@Override
 	public void publishNowTheTemplate() throws Exception {
-
 		if (isElementLoaded(dropdownArrowButton,5)) {
 			click(dropdownArrowButton);
 			click(publishNowButton);
+			click(publishTemplateButton);
+			if(isElementLoaded(publishTemplateConfirmModal, 5)){
+				click(okButtonOnPublishTemplateConfirmModal);
+				displaySuccessMessage();
+			} else
+				SimpleUtils.fail("Publish template confirm modal fail to load", false);
 		}else
-			SimpleUtils.fail("Workforce sharing group selector load failed",false);
+			SimpleUtils.fail("Publish template dropdown button load failed",false);
 	}
 
 	public void validateStartAfterEndBeforeOpertingHoursRule(String StartTimeEvent,String startOffsetTime,String startEventPoint,String startTimeUnit) throws Exception{

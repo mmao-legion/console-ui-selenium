@@ -1284,9 +1284,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     public Boolean isScheduleDayViewActive() {
+//        WebElement scheduleDayViewButton = MyThreadLocal.getDriver().
+//                findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'day')\"]"));
         WebElement scheduleDayViewButton = MyThreadLocal.getDriver().
-                findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'day')\"]"));
-        if (scheduleDayViewButton.getAttribute("class").toString().contains("enabled")) {
+                findElement(By.cssSelector("div.lg-button-group-first"));
+        if (scheduleDayViewButton.getAttribute("class").contains("selected")) {
             return true;
         }
         return false;
@@ -2993,11 +2995,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void convertAllUnAssignedShiftToOpenShift() throws Exception {
         if (verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue())) {
             clickOnWeekView();
-            clickOnEditButton();
+            clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             for (WebElement unAssignedShift : getUnAssignedShifts()) {
                 convertUnAssignedShiftToOpenShift(unAssignedShift);
             }
-            clickSaveBtn();
+            saveSchedule();
         } else {
             SimpleUtils.fail("Unable to convert UnAssigned Shift to Open Shift as 'Schedule' tab not active.", false);
         }
@@ -3005,12 +3007,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public void convertUnAssignedShiftToOpenShift(WebElement unAssignedShift) throws Exception {
-        By isUnAssignedShift = By.cssSelector("[ng-if=\"isUnassignedShift()\"]");
+//        By isUnAssignedShift = By.cssSelector("[ng-if=\"isUnassignedShift()\"]");
+        By isUnAssignedShift = By.cssSelector(".rows .week-view-shift-image-optimized span");
         WebElement unAssignedPlusBtn = unAssignedShift.findElement(isUnAssignedShift);
         if (isElementLoaded(unAssignedPlusBtn)) {
             click(unAssignedPlusBtn);
             if (isElementLoaded(shiftPopover)) {
-                WebElement convertToOpenOption = shiftPopover.findElement(By.cssSelector("[ng-if=\"canConvertToOpenShift()\"]"));
+                WebElement convertToOpenOption = shiftPopover.findElement(By.cssSelector("[ng-if=\"canConvertToOpenShift() && !isTmView()\"]"));
                 if (isElementLoaded(convertToOpenOption)) {
                     click(convertToOpenOption);
                     if (isElementLoaded(convertToOpenYesBtn)) {
@@ -12529,7 +12532,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         WebElement endAvatar = null;
         int i = 0;
         int j = 0;
-        waitForSeconds(3);
+        waitForSeconds(5);
         if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0) {
             for (WebElement start : startElements) {
                 i++;
@@ -12783,7 +12786,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(shift, 5)){
             waitForSeconds(3);
             scrollToElement(shift);
-            click(shift.findElement(By.cssSelector("img.week-schedule-shit-open-popover")));
+            if(isScheduleDayViewActive()){
+                click(shift.findElement(By.cssSelector("img[ng-if=\"hasViolateCompliance(shift)\"]")));
+            } else
+                click(shift.findElement(By.cssSelector("img.week-schedule-shit-open-popover")));
             if (isElementLoaded(popOverContent, 5)){
                 if (areListElementVisible(complianceMessageInInfoIconPopup, 5) && complianceMessageInInfoIconPopup.size()>0){
                     for (int i=0; i< complianceMessageInInfoIconPopup.size(); i++){
@@ -14379,12 +14385,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     @Override
-    public List<WebElement> getAllUnassignedShifts() throws Exception {
+    public List<WebElement> getAllShiftsOfOneTM(String name) throws Exception{
         List<WebElement> allUnassignedShifts = new ArrayList<>();
         if (areListElementVisible(shiftsWeekView, 15)) {
             for (WebElement shiftWeekView : shiftsWeekView) {
                 WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
-                if (workerName != null && workerName.getText().toLowerCase().contains("Unassigned")) {
+                if (workerName != null && workerName.getText().toLowerCase().contains(name)) {
                     allUnassignedShifts.add(shiftWeekView);
                 }
             }
@@ -14395,7 +14401,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     @Override
-    public String getMessageFromActionRequiredSmartCard() throws Exception {
+    public String getWholeMessageFromActionRequiredSmartCard() throws Exception {
         String message = "";
         if (isElementLoaded(requiredActionSmartCard, 5)) {
             message = requiredActionSmartCard.getText();
@@ -14403,5 +14409,48 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Required Action smart card fail to load! ", false);
         return message;
     }
+
+
+
+    @FindBy (css = "[ng-if=\"scheduleSmartCard.unassignedShifts && scheduleSmartCard.outsideOperatingHoursShifts\"] .col-fx-1")
+    private List<WebElement> unassignedAndOOOHMessageOnActionRequiredSmartCard;
+
+    @FindBy (css = "[ng-if=\"!scheduleSmartCard.outsideOperatingHoursShifts\"]")
+    private WebElement unassignedMessageOnActionRequiredSmartCard;
+
+    @FindBy (css = "[ng-if=\"!scheduleSmartCard.unassignedShifts\"]")
+    private WebElement oOOHMessageOnActionRequiredSmartCard;
+
+    @Override
+    public HashMap<String, String> getUnassignedAndOOOHMessageFromActionRequiredSmartCard() throws Exception {
+        HashMap<String, String> unassignedAndOOOHMessage = new HashMap<String, String>();
+        if (isElementLoaded(requiredActionSmartCard, 5)) {
+            if (areListElementVisible(unassignedAndOOOHMessageOnActionRequiredSmartCard, 5)) {
+                unassignedAndOOOHMessage.put("unassigned", unassignedAndOOOHMessageOnActionRequiredSmartCard.get(0).getText());
+                unassignedAndOOOHMessage.put("OOOH", unassignedAndOOOHMessageOnActionRequiredSmartCard.get(1).getText());
+            } else if (isElementLoaded(unassignedMessageOnActionRequiredSmartCard, 5)) {
+                unassignedAndOOOHMessage.put("unassigned", unassignedMessageOnActionRequiredSmartCard.getText());
+                unassignedAndOOOHMessage.put("OOOH", "");
+            } else if (isElementLoaded(oOOHMessageOnActionRequiredSmartCard, 5)) {
+                unassignedAndOOOHMessage.put("OOOH", oOOHMessageOnActionRequiredSmartCard.getText());
+                unassignedAndOOOHMessage.put("unassigned", "");
+            } else
+                SimpleUtils.fail("No available message display on Action Required smart card! ", false);
+        } else
+            SimpleUtils.fail("Required Action smart card fail to load! ", false);
+        return unassignedAndOOOHMessage;
+    }
+
+    @Override
+    public String getTooltipOfPublishButton() throws Exception {
+        String tooltip = "";
+        if (isElementLoaded(publishSheduleButton, 5)) {
+            tooltip = publishSheduleButton.getAttribute("data-tootik");
+        } else
+            SimpleUtils.fail("Publish schedule button fail to load! ", false);
+        return tooltip;
+    }
+
+
 }
 

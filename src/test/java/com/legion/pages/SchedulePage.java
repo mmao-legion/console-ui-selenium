@@ -599,6 +599,8 @@ public interface SchedulePage {
 	public void clickOnViewShiftsBtnOnRequiredActionSmartCard() throws Exception;
 	public void clickOnClearFilterOnFilterDropdownPopup() throws Exception;
 	public boolean isRequiredActionSmartCardLoaded() throws Exception;
-	public List<WebElement> getAllUnassignedShifts() throws Exception;
-	public String getMessageFromActionRequiredSmartCard() throws Exception;
+	public List<WebElement> getAllShiftsOfOneTM(String name) throws Exception;
+	public String getWholeMessageFromActionRequiredSmartCard() throws Exception;
+	public String getTooltipOfPublishButton() throws Exception;
+	public HashMap<String, String> getUnassignedAndOOOHMessageFromActionRequiredSmartCard() throws Exception;
 }

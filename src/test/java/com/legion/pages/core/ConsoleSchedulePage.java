@@ -3625,12 +3625,22 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     }
 
     @Override
-    public List<WebElement> getAllUnassignedShifts() throws Exception{
+    public List<WebElement> getAllShiftsOfOneTM(String name) throws Exception{
         return null;
     }
 
     @Override
-    public String getMessageFromActionRequiredSmartCard() throws Exception {
+    public String getWholeMessageFromActionRequiredSmartCard() throws Exception {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, String> getUnassignedAndOOOHMessageFromActionRequiredSmartCard() throws Exception {
+        return null;
+    }
+
+    @Override
+    public String getTooltipOfPublishButton() throws Exception {
         return null;
     }
 }
