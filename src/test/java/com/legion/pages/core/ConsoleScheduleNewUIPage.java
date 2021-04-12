@@ -12529,6 +12529,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         WebElement endAvatar = null;
         int i = 0;
         int j = 0;
+        waitForSeconds(3);
         if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0) {
             for (WebElement start : startElements) {
                 i++;
