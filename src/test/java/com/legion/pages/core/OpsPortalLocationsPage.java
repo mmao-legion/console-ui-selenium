@@ -1158,7 +1158,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				click(locationDetailsLinks.get(0));
 				click(editLocationBtn);
 				selectByVisibleText(locationGroupSelect, "None");
-				waitForSeconds(5);
+				waitForSeconds(10);
 				click(okBtnInLocationGroupConfirmPage);
 				scrollToBottom();
 				click(saveBtnInUpdateLocationPage);

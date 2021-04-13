@@ -938,4 +938,13 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
     }
 
+    //added by Estelle for upperfield view
+    @FindBy(css = "div[ng-repeat-start=\"hierarchy in $ctrl.getNavHierarchy()\"]")
+    private List<WebElement> levelDisplay;
+    @FindBy(css = "input[placeholder=\"Search BU\"]")
+    private WebElement buSearchInput;
+    @FindBy(css = "input[placeholder=\"Search Region\"]")
+    private WebElement regionSearchInput;
+    
+
 }

@@ -59,23 +59,23 @@
         </classes>
     </test>
 
-<!--    <test name="Navigation Test">-->
-<!--        <classes>-->
-<!--            <class name="com.legion.tests.core.NewNavigationFlowTest">-->
-<!--                <methods>-->
+    <test name="Navigation Test">
+        <classes>
+            <class name="com.legion.tests.core.NewNavigationFlowTest">
+                <methods>
 <!--                    <include name="verifyLocationProfilePageInControls" />-->
-<!--                    <include name="verifyManagerLocationForOneUserInControlsInControls" />-->
+                    <include name="verifyManagerLocationForOneUserInControlsInControls" />
 <!--                    <include name="verifyDashboardViewAsInternalAdmin" />-->
 <!--                    <include name="verifyDashboardViewAsDistrictManager" />-->
-<!--                    <include name="verifyDashboardViewAsStoreManager" />-->
+                    <include name="verifyDashboardViewAsStoreManager" />
 <!--                    <include name="verifyNavigationBarSearchDistrictFunctionInternalAdmin" />-->
 <!--                    <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />-->
 <!--                    <include name="verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin"/>-->
 <!--                    <include name="verifyNavigationBarRecentlyViewListAsInternalAdmin"/>-->
-<!--                </methods>-->
-<!--            </class>-->
-<!--        </classes>-->
-<!--    </test>-->
+                </methods>
+            </class>
+        </classes>
+    </test>
     <test name="Job Test">
         <classes>
             <class name="com.legion.tests.core.JobTest">
