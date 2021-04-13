@@ -3966,7 +3966,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public void editTheBudgetForNondgFlow() throws Exception {
-        if (isElementLoaded(editBudgetBtn, 5)) {
+        if (isElementLoaded(editBudgetBtn, 20)) {
             clickTheElement(editBudgetBtn);
             // Cancel and Save buttons are consistent with operating hours
             if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {

@@ -1543,7 +1543,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void updateMyAvailability(String hoursType, int sliderIndex,
 										String leftOrRightSliderArrow, double durationhours, String repeatChanges) throws Exception
 	{
-		if (isElementLoaded(editBtn,15)){
+		if (isElementLoaded(editBtn,30)){
 			click(editBtn);
 			updatePreferredOrBusyHoursDurationNew(sliderIndex,durationhours,leftOrRightSliderArrow, hoursType);
 			saveMyAvailabilityEditMode(repeatChanges);

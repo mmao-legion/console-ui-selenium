@@ -1976,9 +1976,15 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			int index = schedulePage.getTheIndexOfEditedShift();
 			schedulePage.saveSchedule();
 			schedulePage.publishActiveSchedule();
+			//debug log---start
+			for (String s: schedulePage.getTheShiftInfoByIndex(index)){
+				SimpleUtils.report(s);
+			}
+			//debug log---end
 			schedulePage.clickProfileIconOfShiftByIndex(index);
 			schedulePage.clickViewStatusBtn();
 			schedulePage.verifyListOfOfferNotNull();
+
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
