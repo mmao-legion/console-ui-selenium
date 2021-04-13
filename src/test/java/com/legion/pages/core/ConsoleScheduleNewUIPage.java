@@ -399,7 +399,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement updateAndGenerateScheduleButton;
 
 
-    @FindBy(css = "select.ng-pristine.ng-valid.ng-not-empty.ng-valid-required")
+    @FindBy(css = ".group-by-select-box select")
     private WebElement groupBySelector;
 
     // Options of group by selectors
@@ -8939,8 +8939,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     //added by Estelle
     @Override
     public void validateGroupBySelectorSchedulePage(boolean isLocationGroup) throws Exception {
-
-        if(isElementLoaded(groupBySelector,5))
+        waitForSeconds(3);
+        if(isElementLoaded(groupBySelector,10))
         {
             click( groupBySelector);
             // Validate the each button on dropdown
@@ -8955,7 +8955,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     SimpleUtils.pass("In Week view: 'Group by All' filter have 4 filters:1.Group by all 2. Group by work role 3. Group by TM 4.Group by job title");
             else SimpleUtils.fail("Group by All filter does not have 4 filters:1.Group by all 2. Group by work role 3. Group by TM 4.Group by job title",true);
         }
-        else SimpleUtils.fail("Group By Selector is not available on screen ", true);
+        else SimpleUtils.fail("Group By Selector is not available on screen ", false);
 
     }
 
