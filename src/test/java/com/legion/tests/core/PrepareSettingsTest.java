@@ -75,6 +75,10 @@ public class PrepareSettingsTest extends TestBase {
             SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
             controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("Yes, anytime");
 
+            //Set 'Automatically convert unassigned shifts to open shifts when generating the schedule?' set as Yes, all unassigned shifts
+            controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
+            controlsNewUIPage.updateConvertUnassignedShiftsToOpenSettingOption("Yes, all unassigned shifts");
+
             controlsPage.gotoControlsPage();
             controlsPage.clickGlobalSettings();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
