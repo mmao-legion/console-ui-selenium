@@ -170,7 +170,11 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.createScheduleForNonDGFlowNewUI();
 
             //Get one random TM name from shifts
-            List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+            List<String> shiftInfo = new ArrayList<>();
+            while(shiftInfo.size() == 0 || shiftInfo.get(0).equalsIgnoreCase("open")
+                    || shiftInfo.get(0).equalsIgnoreCase("unassigned")){
+                shiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+            }
             String firstNameOfTM = shiftInfo.get(0);
             String workRoleOfTM = shiftInfo.get(4);
 
@@ -227,7 +231,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clickOnFinishButtonOnCreateSchedulePage();
 
             //Check the Action required smart card is not display
-            if (schedulePage.isRequiredActionSmartCardLoaded()) {
+            if (!schedulePage.isRequiredActionSmartCardLoaded()) {
                 SimpleUtils.pass("Action Required smart card should not be loaded! ");
             } else
                 SimpleUtils.assertOnFail("Action Required smart card should not be loaded! ",
