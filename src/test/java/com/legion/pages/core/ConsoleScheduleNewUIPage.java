@@ -12759,7 +12759,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         int count = 0;
         List<WebElement> shiftsOfOneTM = new ArrayList<>();;
         List<WebElement> shifts = getDriver().findElements(By.cssSelector("[data-day-index=\"" + indexOfDay + "\"] .week-schedule-shift-wrapper"));
-        if (shifts != null && shifts.size() > 0) {
+        if (areListElementVisible(shifts, 5) && shifts != null && shifts.size() > 0) {
             for (WebElement shift : shifts) {
                 WebElement name1 = shift.findElement(By.className("week-schedule-worker-name"));
                 if (name1 != null && name1.getText().equalsIgnoreCase(name)) {
@@ -14451,6 +14451,19 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return tooltip;
     }
 
+    @FindBy(css = ".swap-modal.modal-instance")
+    private WebElement dragAndDropConfirmPage;
+    @Override
+    public boolean isDragAndDropConfirmPageLoaded() throws Exception {
+        boolean isConfirmPageDisplay = false;
+        if (isElementLoaded(dragAndDropConfirmPage,15) ){
+            isConfirmPageDisplay = true;
+            SimpleUtils.report("Drag and Drop confirm page is display!");
+        } else {
+            SimpleUtils.report("Drag and Drop confirm page is not display!");
+        }
+        return isConfirmPageDisplay;
+    }
 
 }
 

@@ -3643,4 +3643,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public String getTooltipOfPublishButton() throws Exception {
         return null;
     }
+
+    @Override
+    public boolean isDragAndDropConfirmPageLoaded() throws Exception{
+        return false;
+    }
 }
