@@ -11955,18 +11955,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement dialogWarningModel;
     @FindBy(css = ".tma-dismiss-button")
     private WebElement closeSelectTMWindowBtn;
-    @FindBy(css = "div[label=\"'OK'\"]")
+    @FindBy(css = ".lgn-action-button-success")
     private WebElement okButton;
 
     @Override
     public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception {
-        String expectedMessageOnWarningModel1 = nickName.toLowerCase()+" is approved for time off.";
+        String expectedMessageOnWarningModel1 = nickName.toLowerCase()+" is approved for time off";
         String expectedMessageOnWarningModel2 = "please cancel the approved time off before assigning";
         if (isElementLoaded(alertMessage,15)) {
             String s = alertMessage.getText();
             if (s.toLowerCase().contains(expectedMessageOnWarningModel1) && s.toLowerCase().contains(expectedMessageOnWarningModel2)
-                    && isElementLoaded(okButton,5)){
-                click(okButton);
+                    && isElementLoaded(okButton,5) && okButton.getText().equalsIgnoreCase("OK")){
+                clickTheElement(okButton);
                 SimpleUtils.pass("There is a warning model with one button labeled OK! and the message is expected!");
                 if (isElementLoaded(closeSelectTMWindowBtn,5)){
                     click(closeSelectTMWindowBtn);

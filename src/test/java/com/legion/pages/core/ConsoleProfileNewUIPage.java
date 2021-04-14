@@ -2179,13 +2179,13 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				if(nickName != null && !nickName.isEmpty()){
 					SimpleUtils.pass("Get User's NickName: " + nickName + "Successfully");
 				}else{
-					SimpleUtils.fail("The NickName is null!", true);
+					SimpleUtils.fail("The NickName is null!", false);
 				}
 			}else{
-				SimpleUtils.fail("User Profile Image doesn't Load Successfully!", true);
+				SimpleUtils.fail("User Profile Image doesn't Load Successfully!", false);
 			}
 		}catch (Exception e){
-			SimpleUtils.fail("Get NickName of the logged in user failed", true);
+			SimpleUtils.fail("Get NickName of the logged in user failed", false);
 		}
 		return nickName;
 	}
