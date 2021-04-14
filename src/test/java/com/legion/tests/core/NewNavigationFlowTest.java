@@ -83,7 +83,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate location navigation function for BU manager")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationNavigationFunction(String browser, String username, String password, String location) throws Exception {
+    public void verifyLocationNavigationFunctionForBUManager(String browser, String username, String password, String location) throws Exception {
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
