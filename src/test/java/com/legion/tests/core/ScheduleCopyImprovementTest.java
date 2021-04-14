@@ -16,9 +16,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -154,14 +153,19 @@ public class ScheduleCopyImprovementTest extends TestBase {
             String option = "Yes, all unassigned shifts";
             changeConvertToOpenShiftsSettings(option);
 
-//            //Go to schedule page and create new schedule
+            //Go to schedule page and create new schedule
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
 
             boolean isWeekGenerated = schedulePage.isWeekGenerated();
             if (isWeekGenerated) {
@@ -177,6 +181,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             }
             String firstNameOfTM = shiftInfo.get(0);
             String workRoleOfTM = shiftInfo.get(4);
+            String lastNameOfTM = shiftInfo.get(5);
 
             // Delete all the shifts that are assigned to the team member
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -214,6 +219,41 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             //Go to schedule page and create new schedule by copy last week schedule
             schedulePage.navigateToNextWeek();
+            //Get the date info of the week
+            String activeWeek = schedulePage.getActiveWeekText();
+            List<String> year = schedulePage.getYearsFromCalendarMonthYearText();
+            String[] items = activeWeek.split(" ");
+            String fromDate = year.get(0)+ " " + items[3] + " " + items[4];
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            //Go to team page and create time off for tm
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            String username1 = firstNameOfTM.trim() + " " + lastNameOfTM.trim();
+            teamPage.searchAndSelectTeamMemberByName(username1);
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            profileNewUIPage.selectProfilePageSubSectionByLabel("Time Off");
+            String timeOffReasonLabel = "VACATION";
+            String timeOffExplanationText = "Sample Explanation Text";
+            profileNewUIPage.rejectAllTimeOff();
+            profileNewUIPage.cancelAllTimeOff();
+            profileNewUIPage.createTimeOffOnSpecificDays(timeOffReasonLabel, timeOffExplanationText, fromDate, 6);
+
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
             isWeekGenerated = schedulePage.isWeekGenerated();
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -238,17 +278,30 @@ public class ScheduleCopyImprovementTest extends TestBase {
                     !schedulePage.getWholeMessageFromActionRequiredSmartCard().contains("Unassigned"), false);
             //Check there is no unassigned shifts
             SimpleUtils.assertOnFail("The unassigned shifts should not display in this schedule! ",
-                    schedulePage.getAllShiftsOfOneTM("Unassigned").size()==0, false);
+                    schedulePage.getAllShiftsOfOneTM("unassigned").size()==0, false);
+            //Check there are open shifts
+            SimpleUtils.assertOnFail("The open shifts should display in this schedule! ",
+                    schedulePage.getAllShiftsOfOneTM("open").size() > 7, false);
             //Check the schedule can be saved and published
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
-            schedulePage.selectWorkRole(scheduleWorkRoles.get(workRoleOfTM));
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
+                schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+                schedulePage.selectWorkRole(scheduleWorkRoles.get("GENERAL MANAGER"));
+            }
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
 
             schedulePage.saveSchedule();
             schedulePage.publishActiveSchedule();
+
+            //Reject the approved time offs
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName(username1);
+            profileNewUIPage.selectProfilePageSubSectionByLabel("Time Off");
+            profileNewUIPage.rejectAllTimeOff();
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);

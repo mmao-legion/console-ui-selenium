@@ -4367,6 +4367,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 editOperatingHoursWithGivingPrameters("Saturday", startTime, endTime);
                 waitForSeconds(3);
                 clickTheElement(nextButtonOnCreateSchedule);
+                waitForSeconds(2);
                 checkEnterBudgetWindowLoadedForNonDG();
                 selectWhichWeekToCopyFrom("SUGGESTED");
                 clickOnFinishButtonOnCreateSchedulePage();
@@ -12503,7 +12504,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return index;
     }
 
-    private List<String> getYearsFromCalendarMonthYearText() throws Exception {
+    public List<String> getYearsFromCalendarMonthYearText() throws Exception {
         List<String> years = new ArrayList<>();
         if (isElementLoaded(calMonthYear, 5)) {
             if (calMonthYear.getText().contains("-")) {
@@ -14464,6 +14465,5 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         return isConfirmPageDisplay;
     }
-
 }
 

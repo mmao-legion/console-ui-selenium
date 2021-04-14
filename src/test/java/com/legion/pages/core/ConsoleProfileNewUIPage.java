@@ -1,5 +1,6 @@
 package com.legion.pages.core;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -3494,5 +3495,33 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.report("Profile Page: Show Or Hide Invitation Code failed to load.");
 
 		return isShowOrHideInvitationCodeButtonLoaded;
+	}
+
+	public void createTimeOffOnSpecificDays(String timeOffReasonLabel, String timeOffExplanationText,String fromDay, int duration) throws Exception {
+		final int timeOffRequestCount = timeOffRequestRows.size();
+		clickOnCreateTimeOffBtn();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd");
+//		String d="2021 Apr 15";
+		String d= fromDay;
+		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("PST", dateFormat);
+		long to = dateFormat.parse(d).getTime();
+		long from = dateFormat.parse(today).getTime();
+		int days = (int) ((to - from)/(1000 * 60 * 60 * 24));
+		selectTimeOffReason(timeOffReasonLabel);
+		updateTimeOffExplanation(timeOffExplanationText);
+		selectDate(days);
+		selectDate(days+ duration);
+		HashMap<String, String> timeOffDate = getTimeOffDate(days, duration);
+		String timeOffStartDate = timeOffDate.get("startDateTimeOff");
+		String timeOffEndDate = timeOffDate.get("endDateTimeOff");
+		setTimeOffStartTime(timeOffStartDate);
+		setTimeOffEndTime(timeOffEndDate);
+		clickOnSaveTimeOffRequestBtn();
+		Thread.sleep(1000);
+		if(timeOffRequestRows.size() > timeOffRequestCount)
+			SimpleUtils.pass("Profile Page: New Time Off Save Successfully.");
+		else
+			SimpleUtils.fail("Profile Page: New Time Off not Save Successfully.", false);
+
 	}
 }

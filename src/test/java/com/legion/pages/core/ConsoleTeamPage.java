@@ -331,9 +331,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			return flag;
 		}
 
-
-
-
 		@Override
 		public String searchAndSelectTeamMemberByName(String username) throws Exception {
 	 		String selectedName = "";
@@ -342,6 +339,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				teamMemberSearchBox.clear();
 				teamMemberSearchBox.sendKeys(username);
 				waitForSeconds(2);
+				if(teamMembers.size() == 0){
+					teamMemberSearchBox.clear();
+					teamMemberSearchBox.sendKeys(username);
+				}
 				if (teamMembers.size() > 0){
 					for (WebElement teamMember : teamMembers){
 						WebElement tr = teamMember.findElement(By.className("tr"));
