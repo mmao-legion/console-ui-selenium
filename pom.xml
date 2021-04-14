@@ -18,8 +18,8 @@
         <tag-expressions.version>1.1.1</tag-expressions.version>
         <gherkin.version>5.1.0</gherkin.version>
         <enterprise>op</enterprise>
-       <env>https://rc-enterprise.dev.legion.work/</env>
-
+        <env>https://rc-enterprise.dev.legion.work/</env>
+        <testRail>Yes</testRail>
     </properties>
 
     <profiles>
@@ -291,6 +291,11 @@
                     <systemPropertyVariables>
                         <env>${env}</env>
                         <enterprise>${enterprise}</enterprise>
+                        <testrail>${testRail}</testrail>
+                    </systemPropertyVariables>
+
+                    <systemPropertyVariables>
+
                     </systemPropertyVariables>
                     <forkCount>5</forkCount>
                     <reuseForks>true</reuseForks>
