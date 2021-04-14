@@ -105,10 +105,13 @@ public abstract class TestBase {
             MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
             MyThreadLocal.setTestRailRunName(testRailRunName);
             MyThreadLocal.setIfAddNewTestRun(true);
-        }else
+        }else{
             MyThreadLocal.setTestSuiteID(testRailCfgOp.get("TEST_RAIL_SUITE_ID"));
-        MyThreadLocal.setTestRailRunName(testRailRunName);
-        MyThreadLocal.setIfAddNewTestRun(true);
+            MyThreadLocal.setTestRailRunName(testRailRunName);
+            MyThreadLocal.setIfAddNewTestRun(true);
+        }
+
+
         if (MyThreadLocal.getTestCaseIDList()==null){
             MyThreadLocal.setTestCaseIDList(new ArrayList<Integer>());
         }
@@ -176,7 +179,6 @@ public abstract class TestBase {
         }
         List<Integer> testRailId =  new ArrayList<Integer>();
         setTestRailRun(testRailId);
-
         if(getTestRailReporting()!=null){
             SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
         }
