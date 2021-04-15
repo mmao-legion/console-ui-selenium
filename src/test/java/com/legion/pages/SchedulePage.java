@@ -604,4 +604,5 @@ public interface SchedulePage {
 	public String getTooltipOfPublishButton() throws Exception;
 	public HashMap<String, String> getUnassignedAndOOOHMessageFromActionRequiredSmartCard() throws Exception;
 	public boolean isDragAndDropConfirmPageLoaded() throws Exception;
+	public void verifyUngenerateButtonIsRemoved() throws Exception;
 }

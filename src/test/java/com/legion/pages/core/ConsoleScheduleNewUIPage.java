@@ -5943,6 +5943,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement searchLocationBtn;
 
     @Override
+    public void verifyUngenerateButtonIsRemoved() throws Exception {
+
+    }
+
+    @Override
     public boolean isLocationGroup() {
         try {
             if (isElementLoaded(searchLocationBtn, 10)) {

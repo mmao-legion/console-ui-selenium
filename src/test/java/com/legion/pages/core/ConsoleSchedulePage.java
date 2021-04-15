@@ -3648,4 +3648,9 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
     public boolean isDragAndDropConfirmPageLoaded() throws Exception{
         return false;
     }
+
+    @Override
+    public void verifyUngenerateButtonIsRemoved() throws Exception {
+
+    }
 }
