@@ -5944,8 +5944,46 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement searchLocationBtn;
 
     @Override
-    public void verifyUngenerateButtonIsRemoved() throws Exception {
+    public boolean isDeleteScheduleButtonLoaded() throws Exception {
+        try {
+            if (isElementLoaded(deleteScheduleButton, 5)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
+    @Override
+    public void verifyUngenerateButtonIsRemoved() throws Exception {
+        String unGenerateScheduleOptionText = "Ungenerate Schedule";
+        boolean isRemoved = true;
+        try {
+            if (isElementLoaded(scheduleAdminDropDownBtn, 5)) {
+                click(scheduleAdminDropDownBtn);
+                if (scheduleAdminDropDownOptions.size() > 0) {
+                    for (WebElement scheduleAdminDropDownOption : scheduleAdminDropDownOptions) {
+                        if (scheduleAdminDropDownOption.getText().toLowerCase().contains(unGenerateScheduleOptionText.toLowerCase())) {
+                            isRemoved = false;
+                            break;
+                        }
+                    }
+                } else {
+                    isRemoved = false;
+                }
+            } else {
+                isRemoved = false;
+            }
+            if (isRemoved) {
+                SimpleUtils.pass("Schedule page: Ungenerate Schedule option is removed!");
+            } else {
+                SimpleUtils.fail("Schedule page: Ungenerate Schedule option still shows!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Override

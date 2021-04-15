@@ -57,6 +57,8 @@ public class DeleteScheduleTest extends TestBase {
 
             // Verify ungenerate button is removed
             schedulePage.verifyUngenerateButtonIsRemoved();
+            // Verify the visibility of Delete button
+            SimpleUtils.assertOnFail("Schedule page: Delete button is not visible!", schedulePage.isDeleteScheduleButtonLoaded(), false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

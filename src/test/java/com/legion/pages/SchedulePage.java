@@ -606,4 +606,5 @@ public interface SchedulePage {
 	public boolean isDragAndDropConfirmPageLoaded() throws Exception;
 	public void verifyUngenerateButtonIsRemoved() throws Exception;
 	public List<String> getYearsFromCalendarMonthYearText() throws Exception;
+	public boolean isDeleteScheduleButtonLoaded() throws Exception;
 }

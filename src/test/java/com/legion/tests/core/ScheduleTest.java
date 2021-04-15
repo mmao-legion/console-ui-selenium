@@ -238,7 +238,7 @@ public class ScheduleTest extends TestBase{
 //	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
 	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-	        SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+	        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 	        schedulePage.clickOnScheduleConsoleMenuItem();
 	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 	        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
@@ -299,7 +299,7 @@ public class ScheduleTest extends TestBase{
 		@TestName(description = "FOR-596:Budget modal header should display the week instead of UNDEFINED")
 	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	    public void enterBudgetPopUpHeaderStoreManager(String username, String password, String browser, String location) throws Throwable {
-	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+	    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 	    	schedulePage.clickOnScheduleConsoleMenuItem();
 			List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
@@ -313,7 +313,7 @@ public class ScheduleTest extends TestBase{
 		@TestName(description = "TP-100: FOR-620: Budget smartcard shows budget hrs when no budget was entered ,if navigate from a week with budget")
 	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	    public void noBudgetHourDisplayWhenBudgetNotEnteredStoreManager(String username, String password, String browser, String location) throws Throwable {
-	    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+	    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 	    	schedulePage.clickOnScheduleConsoleMenuItem();
 			List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();

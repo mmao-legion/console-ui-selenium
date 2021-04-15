@@ -179,7 +179,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
         SimpleUtils.pass("Dashboard Page Loaded Successfully!");
         activeConsoleName = scheduleConsoleName.getText();
         click(goToTodayScheduleButton);
-        return new ConsoleSchedulePage();
+        return new ConsoleScheduleNewUIPage();
     }
 
     @Override
