@@ -155,7 +155,9 @@ public class SimpleUtils {
 	}
 
 	public static void assertOnFail(String message, boolean isAssert, Boolean isExecutionContinue) {
-		SimpleUtils.addTestResultIntoTestRail(5,message);
+		if(getTestRailReporting()!=null && MyThreadLocal.getTestCaseExistsFlag()){
+			SimpleUtils.addTestResultIntoTestRailN(5, message);
+		}
 		if (isExecutionContinue) {
 			try {
 				assertTrue(isAssert);
