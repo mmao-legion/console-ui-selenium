@@ -605,4 +605,5 @@ public interface SchedulePage {
 	public HashMap<String, String> getUnassignedAndOOOHMessageFromActionRequiredSmartCard() throws Exception;
 	public boolean isDragAndDropConfirmPageLoaded() throws Exception;
 	public void verifyUngenerateButtonIsRemoved() throws Exception;
+	public List<String> getYearsFromCalendarMonthYearText() throws Exception;
 }

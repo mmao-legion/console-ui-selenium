@@ -3651,6 +3651,10 @@ public class ConsoleSchedulePage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyUngenerateButtonIsRemoved() throws Exception {
+        
+    }
 
+    public List<String> getYearsFromCalendarMonthYearText() throws Exception{
+        return null;
     }
 }
