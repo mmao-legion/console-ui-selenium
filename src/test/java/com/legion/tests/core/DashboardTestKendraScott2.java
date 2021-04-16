@@ -199,6 +199,8 @@ public class DashboardTestKendraScott2 extends TestBase {
 			SchedulePage schedulePageTM = pageFactory.createConsoleScheduleNewUIPage();
 			schedulePageTM.clickOnScheduleConsoleMenuItem();
 			schedulePageTM.navigateToNextWeek();
+			SimpleUtils.assertOnFail("My Schedule page failed to load!", schedulePageTM.isSchedule(), false);
+
 			List<String> scheduleListTM = new ArrayList<>();
 			if (schedulePageTM.getShiftHoursFromInfoLayout().size() > 0) {
 				for (String tmShiftTime : schedulePageTM.getShiftHoursFromInfoLayout()) {
