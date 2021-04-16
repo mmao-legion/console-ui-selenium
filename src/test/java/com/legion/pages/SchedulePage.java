@@ -610,4 +610,7 @@ public interface SchedulePage {
 	public void verifyClickOnDeleteScheduleButton() throws Exception;
 	public void verifyTheContentOnDeleteScheduleDialog(String confirmMessage, String week) throws Exception;
 	public String getDeleteScheduleForWhichWeekText() throws Exception;
+	public void verifyDeleteBtnDisabledOnDeleteScheduleDialog() throws Exception;
+	public void verifyDeleteButtonEnabledWhenClickingCheckbox() throws Exception;
+	public void verifyClickOnCancelBtnOnDeleteScheduleDialog() throws Exception;
 }

@@ -5954,14 +5954,65 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement deleteScheduleWeek;
 
     @Override
+    public void verifyClickOnCancelBtnOnDeleteScheduleDialog() throws Exception {
+        try {
+            if (isElementLoaded(cancelButtonOnDeleteSchedulePopup, 5)) {
+                clickTheElement(cancelButtonOnDeleteSchedulePopup);
+                waitForSeconds(2);
+                if (!isElementLoaded(deleteScheduleDialog, 5)) {
+                    SimpleUtils.pass("Delete Schedule Dialog: Click on Cancel button successfully!");
+                } else {
+                    SimpleUtils.fail("Delete Schedule Dialog: Click on Cancel button failed!", false);
+                }
+            } else {
+                SimpleUtils.fail("Delete Schedule Dialog: Cancel button is not loaded successfully!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Override
+    public void verifyDeleteBtnDisabledOnDeleteScheduleDialog() throws Exception {
+        try {
+            if (isElementLoaded(deleteButtonOnDeleteSchedulePopup, 5) &&
+                    deleteButtonOnDeleteSchedulePopup.getAttribute("disabled").equalsIgnoreCase("true")) {
+                SimpleUtils.pass("Delete Schedule Dialog: Delete button is disabled by default!");
+            } else {
+                SimpleUtils.fail("Delete Schedule Dialog: Delete button is not disabled by default!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Override
+    public void verifyDeleteButtonEnabledWhenClickingCheckbox() throws Exception {
+        try {
+            if (isElementLoaded(deleteScheduleCheckBox, 5)) {
+                clickTheElement(deleteScheduleCheckBox);
+                if (isElementLoaded(deleteButtonOnDeleteSchedulePopup, 5) && deleteButtonOnDeleteSchedulePopup.getAttribute("disabled") == null) {
+                    SimpleUtils.pass("Delete Schedule Dialog: Delete Button is enabled when clicking the checkbox!");
+                } else {
+                    SimpleUtils.fail("Delete Schedule Dialog: Delete Button is not enabled when clicking the checkbox!", false);
+                }
+            } else {
+                SimpleUtils.fail("Delete Schedule Dialog: Check box is not loaded successfully!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Override
     public String getDeleteScheduleForWhichWeekText() throws Exception {
         String scheduleWeekText = "";
         if (isElementLoaded(weekPeriod, 5) && isElementLoaded(calMonthYear, 5)) {
             String year = calMonthYear.getText().trim().substring(calMonthYear.getText().trim().length() - 4);
             String [] items = weekPeriod.getText().split(" ");
             if (items.length == 7) {
-                scheduleWeekText = "Delete " + items[0] + " " + items[2] + " " + (items[3].length() == 2 ? items[3] : ("0" + items[3]))
-                        + " " + items[4] + " " + items[5] + " " + (items[6].length() == 2 ? items[6] : ("0" + items[6])) + ", " + year;
+                scheduleWeekText = "Delete " + items[0] + " " + items[1] + " " + items[2].substring(0, 3) + " " + (items[3].length() == 2 ? items[3] : ("0" + items[3]))
+                        + " " + items[4] + " " + items[5].substring(0, 3) + " " + (items[6].length() == 2 ? items[6] : ("0" + items[6])) + ", " + year;
                 SimpleUtils.report("Delete Schedule For Which Weeek Text: " + scheduleWeekText);
             }
         }
@@ -5976,7 +6027,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(deleteScheduleDialog, 10)) {
             if (isElementLoaded(deleteScheduleIcon, 5) && isElementLoaded(deleteScheduleTitle, 5)
                     && deleteScheduleTitle.getText().equalsIgnoreCase("Delete Schedule") && isElementLoaded(deleteScheduleTitle, 5)
-            && deleteScheduleTitle.getText().equalsIgnoreCase(confirmMessage) && isElementLoaded(deleteScheduleWeek, 5)
+            && deleteScheduleText.getText().equalsIgnoreCase(confirmMessage) && isElementLoaded(deleteScheduleWeek, 5)
             && deleteScheduleWeek.getText().toLowerCase().contains(week.toLowerCase()) && isElementLoaded(cancelButtonOnDeleteSchedulePopup, 5)
             && isElementLoaded(deleteButtonOnDeleteSchedulePopup, 5) && isElementLoaded(deleteScheduleCheckBox, 5)) {
                 SimpleUtils.pass("Delete Schedule Dialog: Verified the content is correct!");

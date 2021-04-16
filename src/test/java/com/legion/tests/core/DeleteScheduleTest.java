@@ -50,15 +50,13 @@ public class DeleteScheduleTest extends TestBase {
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
             boolean isWeekGenerated = schedulePage.isWeekGenerated();
-            if (!isWeekGenerated) {
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
                 schedulePage.createScheduleForNonDGFlowNewUI();
             }
-            schedulePage.publishActiveSchedule();
-
-            String publishedDeleteMessage = "This action can’t be undone. The schedule has been published, it will be withdrawn from team members";
 
             String deleteForWeekText = schedulePage.getDeleteScheduleForWhichWeekText();
-
+            String unPublishedMessage = "This action can’t be undone.";
             // Verify ungenerate button is removed
             schedulePage.verifyUngenerateButtonIsRemoved();
             // Verify the visibility of Delete button
@@ -66,7 +64,32 @@ public class DeleteScheduleTest extends TestBase {
             // Verify the functionality of Delete button
             schedulePage.verifyClickOnDeleteScheduleButton();
             // Verify the content on Delete Schedule confirm window
+            schedulePage.verifyTheContentOnDeleteScheduleDialog(unPublishedMessage, deleteForWeekText);
+            // Verify the Delete button is disabled by default
+            schedulePage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
+            // Verify the Delete button is enabled when clicking the check box
+            schedulePage.verifyDeleteButtonEnabledWhenClickingCheckbox();
+            // Verify the functionality of Cancel button
+            schedulePage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
+
+            // Delete the Unassigned shifts to unblock publishing
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
+            schedulePage.saveSchedule();
+
+            schedulePage.publishActiveSchedule();
+            String publishedDeleteMessage = "This action can’t be undone. The schedule has been published, it will be withdrawn from team members";
+            schedulePage.verifyClickOnDeleteScheduleButton();
+            // Verify the content of Delete Schedule window when schedule is published
             schedulePage.verifyTheContentOnDeleteScheduleDialog(publishedDeleteMessage, deleteForWeekText);
+            // Verify the Delete button is disabled by default when schedule is published
+            schedulePage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
+            // Verify the Delete button is enabled when clicking the check box when schedule is published
+            schedulePage.verifyDeleteButtonEnabledWhenClickingCheckbox();
+            // Verify the functionality of Cancel button when schedule is published
+            schedulePage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
+            // Verify the functionality of Delete button when schedule is published
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
