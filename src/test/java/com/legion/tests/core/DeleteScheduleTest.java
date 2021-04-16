@@ -55,10 +55,18 @@ public class DeleteScheduleTest extends TestBase {
             }
             schedulePage.publishActiveSchedule();
 
+            String publishedDeleteMessage = "This action can’t be undone. The schedule has been published, it will be withdrawn from team members";
+
+            String deleteForWeekText = schedulePage.getDeleteScheduleForWhichWeekText();
+
             // Verify ungenerate button is removed
             schedulePage.verifyUngenerateButtonIsRemoved();
             // Verify the visibility of Delete button
             SimpleUtils.assertOnFail("Schedule page: Delete button is not visible!", schedulePage.isDeleteScheduleButtonLoaded(), false);
+            // Verify the functionality of Delete button
+            schedulePage.verifyClickOnDeleteScheduleButton();
+            // Verify the content on Delete Schedule confirm window
+            schedulePage.verifyTheContentOnDeleteScheduleDialog(publishedDeleteMessage, deleteForWeekText);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

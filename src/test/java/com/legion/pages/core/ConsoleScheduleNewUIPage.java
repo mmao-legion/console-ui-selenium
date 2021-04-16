@@ -5942,6 +5942,65 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> weekShifts;
     @FindBy(css = ".schedule-summary-search-dropdown [icon*=\"search.svg'\"]")
     private WebElement searchLocationBtn;
+    @FindBy(css = ".delete-schedule-modal")
+    private WebElement deleteScheduleDialog;
+    @FindBy(css = ".delete-schedule-modal-icon")
+    private WebElement deleteScheduleIcon;
+    @FindBy(css = ".delete-schedule-modal-title")
+    private WebElement deleteScheduleTitle;
+    @FindBy(css = ".delete-schedule-modal-text")
+    private WebElement deleteScheduleText;
+    @FindBy(css = "[label*=\"Delete Schedule\"]")
+    private WebElement deleteScheduleWeek;
+
+    @Override
+    public String getDeleteScheduleForWhichWeekText() throws Exception {
+        String scheduleWeekText = "";
+        if (isElementLoaded(weekPeriod, 5) && isElementLoaded(calMonthYear, 5)) {
+            String year = calMonthYear.getText().trim().substring(calMonthYear.getText().trim().length() - 4);
+            String [] items = weekPeriod.getText().split(" ");
+            if (items.length == 7) {
+                scheduleWeekText = "Delete " + items[0] + " " + items[2] + " " + (items[3].length() == 2 ? items[3] : ("0" + items[3]))
+                        + " " + items[4] + " " + items[5] + " " + (items[6].length() == 2 ? items[6] : ("0" + items[6])) + ", " + year;
+                SimpleUtils.report("Delete Schedule For Which Weeek Text: " + scheduleWeekText);
+            }
+        }
+        if (scheduleWeekText == "") {
+            SimpleUtils.fail("Failed to get the delete schedule for which week Text", false);
+        }
+        return scheduleWeekText;
+    }
+
+    @Override
+    public void verifyTheContentOnDeleteScheduleDialog(String confirmMessage, String week) throws Exception {
+        if (isElementLoaded(deleteScheduleDialog, 10)) {
+            if (isElementLoaded(deleteScheduleIcon, 5) && isElementLoaded(deleteScheduleTitle, 5)
+                    && deleteScheduleTitle.getText().equalsIgnoreCase("Delete Schedule") && isElementLoaded(deleteScheduleTitle, 5)
+            && deleteScheduleTitle.getText().equalsIgnoreCase(confirmMessage) && isElementLoaded(deleteScheduleWeek, 5)
+            && deleteScheduleWeek.getText().toLowerCase().contains(week.toLowerCase()) && isElementLoaded(cancelButtonOnDeleteSchedulePopup, 5)
+            && isElementLoaded(deleteButtonOnDeleteSchedulePopup, 5) && isElementLoaded(deleteScheduleCheckBox, 5)) {
+                SimpleUtils.pass("Delete Schedule Dialog: Verified the content is correct!");
+            } else {
+                SimpleUtils.fail("Delete Schedule Dialog: The content is unexpected!", false);
+            }
+        } else {
+            SimpleUtils.fail("Delete Schedule Dialog failed to pop up!", false);
+        }
+    }
+
+    @Override
+    public void verifyClickOnDeleteScheduleButton() throws Exception {
+        try {
+            if (isElementLoaded(deleteScheduleButton, 5)) {
+                clickTheElement(deleteScheduleButton);
+                SimpleUtils.pass("Schedule: Click on Delete Schedule button Successfully!");
+            } else {
+                SimpleUtils.fail("Schedule: Delete Schedule button is not loaded Successfully!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 
     @Override
     public boolean isDeleteScheduleButtonLoaded() throws Exception {

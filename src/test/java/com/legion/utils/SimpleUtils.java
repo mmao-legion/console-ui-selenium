@@ -155,15 +155,11 @@ public class SimpleUtils {
 	}
 
 	public static void assertOnFail(String message, boolean isAssert, Boolean isExecutionContinue) {
-		if(getTestRailReporting()!=null && MyThreadLocal.getTestCaseExistsFlag()){
-			SimpleUtils.addTestResultIntoTestRailN(5, message);
-		}
 		if (isExecutionContinue) {
 			try {
 				assertTrue(isAssert);
 			} catch (Throwable e) {
 				addVerificationFailure(e);
-				//TestBase.extentTest.log(Status.ERROR, message);
 				ExtentTestManager.getTest().log(Status.ERROR, "<div class=\"row\" style=\"background-color:#FDB45C; color:white; padding: 7px 5px;\">" + message
 						+ "</div>");
 			}

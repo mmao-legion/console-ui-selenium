@@ -607,4 +607,7 @@ public interface SchedulePage {
 	public void verifyUngenerateButtonIsRemoved() throws Exception;
 	public List<String> getYearsFromCalendarMonthYearText() throws Exception;
 	public boolean isDeleteScheduleButtonLoaded() throws Exception;
+	public void verifyClickOnDeleteScheduleButton() throws Exception;
+	public void verifyTheContentOnDeleteScheduleDialog(String confirmMessage, String week) throws Exception;
+	public String getDeleteScheduleForWhichWeekText() throws Exception;
 }
