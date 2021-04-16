@@ -14,7 +14,6 @@
   "DGStage_Enterprise" : "dgstage",
   "Op_Enterprise" : "op",
   "CinemarkWkdy_Enterprise" : "cinemark-wkdy",
-  "Vailqacn_Enterprise" : "vailqacn",
   "DEFAULT_USERNAME" : "admin2.a",
   "DEFAULT_PASSWORD" : "admin2.a",
   "ENVIRONMENT" : "QA",
