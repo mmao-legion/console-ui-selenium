@@ -6134,7 +6134,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
             String firstName = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText();
-            if (!firstName.equalsIgnoreCase("Open")) {
+            if (!firstName.equalsIgnoreCase("Open") && !firstName.equalsIgnoreCase("Unassigned")) {
                 String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
                 String lastName = getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
                 String jobTitle = weekShifts.get(index).findElement(By.className("week-schedule-role-name")).getText();
@@ -6159,7 +6159,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 //return shiftInfo;
                 //For open shift
                 String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
-                String lastName = "open";
+                String lastName = "";
+                if (firstName.equalsIgnoreCase("Unassigned")){
+                    lastName = "unassigned";
+                } else
+                    lastName = "open";
                 String jobTitle = "";
                 String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
                 WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
