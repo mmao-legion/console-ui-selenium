@@ -6254,7 +6254,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 moveSliderAtSomePoint("20", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
                 selectWorkRole("Lift Maintenance");
             } else
-                selectWorkRole("Event Manager");
+                selectWorkRole("MOD");
             clearAllSelectedDays();
             if (i == 0) {
                 selectDaysByIndex(2, 4, 6);
